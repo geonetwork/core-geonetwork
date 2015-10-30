@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://control.management.openwis.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://control.management.openwis.org/" version="1.0">
+<xs:element name="addFeedingFilter" type="tns:addFeedingFilter"/>
+<xs:element name="addFeedingFilterResponse" type="tns:addFeedingFilterResponse"/>
+<xs:element name="addIngestionFilter" type="tns:addIngestionFilter"/>
+<xs:element name="addIngestionFilterResponse" type="tns:addIngestionFilterResponse"/>
+<xs:element name="addReplicationFilter" type="tns:addReplicationFilter"/>
+<xs:element name="addReplicationFilterResponse" type="tns:addReplicationFilterResponse"/>
+<xs:element name="editReplicationFilter" type="tns:editReplicationFilter"/>
+<xs:element name="editReplicationFilterResponse" type="tns:editReplicationFilterResponse"/>
+<xs:element name="getFeedingFilters" type="tns:getFeedingFilters"/>
+<xs:element name="getFeedingFiltersResponse" type="tns:getFeedingFiltersResponse"/>
+<xs:element name="getIngestionFilters" type="tns:getIngestionFilters"/>
+<xs:element name="getIngestionFiltersResponse" type="tns:getIngestionFiltersResponse"/>
+<xs:element name="getReplicationFilterStatus" type="tns:getReplicationFilterStatus"/>
+<xs:element name="getReplicationFilterStatusResponse" type="tns:getReplicationFilterStatusResponse"/>
+<xs:element name="getReplicationFilters" type="tns:getReplicationFilters"/>
+<xs:element name="getReplicationFiltersResponse" type="tns:getReplicationFiltersResponse"/>
+<xs:element name="getServiceStatus" type="tns:getServiceStatus"/>
+<xs:element name="getServiceStatusResponse" type="tns:getServiceStatusResponse"/>
+<xs:element name="isServiceEnabled" type="tns:isServiceEnabled"/>
+<xs:element name="isServiceEnabledResponse" type="tns:isServiceEnabledResponse"/>
+<xs:element name="removeFeedingFilter" type="tns:removeFeedingFilter"/>
+<xs:element name="removeFeedingFilterResponse" type="tns:removeFeedingFilterResponse"/>
+<xs:element name="removeIngestionFilter" type="tns:removeIngestionFilter"/>
+<xs:element name="removeIngestionFilterResponse" type="tns:removeIngestionFilterResponse"/>
+<xs:element name="removeReplicationFilter" type="tns:removeReplicationFilter"/>
+<xs:element name="removeReplicationFilterResponse" type="tns:removeReplicationFilterResponse"/>
+<xs:element name="resetFeedingFilters" type="tns:resetFeedingFilters"/>
+<xs:element name="resetFeedingFiltersResponse" type="tns:resetFeedingFiltersResponse"/>
+<xs:element name="setReplicationFilterStatus" type="tns:setReplicationFilterStatus"/>
+<xs:element name="setReplicationFilterStatusResponse" type="tns:setReplicationFilterStatusResponse"/>
+<xs:element name="setServiceStatus" type="tns:setServiceStatus"/>
+<xs:element name="setServiceStatusResponse" type="tns:setServiceStatusResponse"/>
+<xs:complexType name="getFeedingFilters">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getFeedingFiltersResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:feedingFilter"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="feedingFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="description" type="xs:string"/>
+      <xs:element minOccurs="0" name="regex" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="setServiceStatus">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="serviceId" type="tns:managedServiceIdentifier"/>
+      <xs:element minOccurs="0" name="serviceStatus" type="tns:managedServiceStatus"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="setServiceStatusResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="isServiceEnabled">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="serviceId" type="tns:managedServiceIdentifier"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="isServiceEnabledResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="setReplicationFilterStatus">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="source" type="xs:string"/>
+      <xs:element minOccurs="0" name="regex" type="xs:string"/>
+      <xs:element name="status" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="setReplicationFilterStatusResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="editReplicationFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="oldSource" type="xs:string"/>
+      <xs:element minOccurs="0" name="oldRegex" type="xs:string"/>
+      <xs:element minOccurs="0" name="type" type="xs:string"/>
+      <xs:element minOccurs="0" name="source" type="xs:string"/>
+      <xs:element minOccurs="0" name="regex" type="xs:string"/>
+      <xs:element minOccurs="0" name="description" type="xs:string"/>
+      <xs:element name="active" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="editReplicationFilterResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="addReplicationFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="type" type="xs:string"/>
+      <xs:element minOccurs="0" name="source" type="xs:string"/>
+      <xs:element minOccurs="0" name="regex" type="xs:string"/>
+      <xs:element minOccurs="0" name="description" type="xs:string"/>
+      <xs:element name="active" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="addReplicationFilterResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getIngestionFilters">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getIngestionFiltersResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:ingestionFilter"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="ingestionFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="description" type="xs:string"/>
+      <xs:element minOccurs="0" name="regex" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="removeFeedingFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="regex" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="removeFeedingFilterResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="removeReplicationFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="source" type="xs:string"/>
+      <xs:element minOccurs="0" name="regex" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="removeReplicationFilterResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="addIngestionFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="regex" type="xs:string"/>
+      <xs:element minOccurs="0" name="description" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="addIngestionFilterResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getReplicationFilters">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getReplicationFiltersResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:replicationFilter"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="replicationFilter">
+    <xs:sequence>
+      <xs:element name="active" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="description" type="xs:string"/>
+      <xs:element minOccurs="0" name="regex" type="xs:string"/>
+      <xs:element minOccurs="0" name="source" type="xs:string"/>
+      <xs:element minOccurs="0" name="type" type="xs:string"/>
+      <xs:element minOccurs="0" name="uptime" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getReplicationFilterStatus">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="source" type="xs:string"/>
+      <xs:element minOccurs="0" name="regex" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getReplicationFilterStatusResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="addFeedingFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="regex" type="xs:string"/>
+      <xs:element minOccurs="0" name="description" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="addFeedingFilterResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getServiceStatus">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="serviceId" type="tns:managedServiceIdentifier"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getServiceStatusResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="removeIngestionFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="regex" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="removeIngestionFilterResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="resetFeedingFilters">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="resetFeedingFiltersResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:feedingFilter"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:simpleType name="managedServiceIdentifier">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FEEDING_SERVICE"/>
+      <xs:enumeration value="INGESTION_SERVICE"/>
+      <xs:enumeration value="REPLICATION_SERVICE"/>
+      <xs:enumeration value="DISSEMINATION_SERVICE"/>
+      <xs:enumeration value="REQUEST_SERVICE"/>
+      <xs:enumeration value="SUBSCRIPTION_SERVICE"/>
+      <xs:enumeration value="PRODUCT_METADATA_SERVICE"/>
+      <xs:enumeration value="PROCESSED_REQUEST_SERVICE"/>
+      <xs:enumeration value="CACHE_EXTRACT_SERVICE"/>
+      <xs:enumeration value="LOCAL_DATASOURCE_EXTRACT_SERVICE"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="managedServiceStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="UNKNOWN"/>
+      <xs:enumeration value="ENABLED"/>
+      <xs:enumeration value="DISABLED"/>
+      <xs:enumeration value="DEGRADED"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

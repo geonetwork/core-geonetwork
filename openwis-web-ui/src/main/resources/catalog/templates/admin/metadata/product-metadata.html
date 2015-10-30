@@ -87,7 +87,77 @@
         </div>
 
 
+        <div id="addToIngestionFilter" class="modal fade modal-stack" tabindex="-1"
+             role="dialog" style="display: none"
+             data-ng-controller="GnOpenwisProductMetadataModalFilterController">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title">Add To Ingestion Filter</h3>
+              </div>
+              <div class="modal-body">
+                <form role="form">
+                  <div class="row">
+                    <div class="form-group">
+                      <label class="control-label">Description:</label>
+                      <input type="text" class="form-control" name="description" data-ng-model="filter.description" />
+                    </div>
+                  </div>
 
+                  <div class="row">
+                    <div class="form-group">
+                      <label class="control-label">Regex:</label>
+                      <input type="text" class="form-control" name="regex" data-ng-model="filter.regex" />
+                    </div>
+                  </div>
+
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" type="button"
+                        data-ng-click="saveToIngestionFilter()" data-translate="">Save</button>
+                <button class="btn btn-warning" type="button"
+                        data-ng-click="cancelToIngestionFilter()" data-translate="">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="addToFeedingFilter" class="modal fade modal-stack" tabindex="-1"
+             role="dialog" style="display: none"
+             data-ng-controller="GnOpenwisProductMetadataModalFilterController" data-backdrop="static">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title">Add To Feeding Filter</h3>
+              </div>
+              <div class="modal-body">
+                <form role="form">
+                  <div class="row">
+                    <div class="form-group">
+                      <label class="control-label">Description:</label>
+                      <input type="text" class="form-control" name="description" data-ng-model="filter.description" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="form-group">
+                      <label class="control-label">Regex:</label>
+                      <input type="text" class="form-control" name="regex" data-ng-model="filter.regex" />
+                    </div>
+                  </div>
+
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" type="button"
+                        data-ng-click="saveToFeedingFilter()" data-translate="">Save</button>
+                <button class="btn btn-warning" type="button"
+                        data-ng-click="cancelToFeedingFilter()" data-translate="">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div id="editProductMetadata" class="modal fade" tabindex="-1"
              role="dialog" style="display: none"
@@ -132,7 +202,7 @@
                     </div>
 
                     <div class="col-sm-6 form-group">
-                      <label class="control-label "> Overriden GTS Category:</label> <input type="text" class="form-control" name="overridenGtsCategory" data-ng-model="product.overridenGtsCategory" />
+                      <label class="control-label" for="overridenGtsCategory"> Overriden GTS Category:</label> <input type="text" class="form-control" id="overridenGtsCategory" name="overridenGtsCategory" data-ng-model="product.overridenGtsCategory" />
                     </div>
                   </div>
 
@@ -142,8 +212,8 @@
                     </div>
 
                     <div class="col-sm-6 form-group">
-                      <label class="control-label ">Overriden Data Policy:</label>
-                      <select lass="form-control" name="overridenDataPolicy" data-ng-model="product.overridenDataPolicy">
+                      <label class="control-label" for="overridenDataPolicy" >Overriden Data Policy:</label>
+                      <select class="form-control" id="overridenDataPolicy" name="overridenDataPolicy" data-ng-model="product.overridenDataPolicy">
                         <option value="additional-default">Additional Default</option>
                         <option value="public">Public</option>
                         <option value="unknown">Unknown</option>
@@ -156,7 +226,7 @@
                       <strong>FNC Pattern:</strong>{{product.fncPattern}}
                     </div>
                     <div class="col-sm-6 form-group">
-                      <label>Overriden FNC Pattern:</label> <input type="text" name="overridenFncPattern" class="form-control" data-ng-model="product.overridenFncPattern" />
+                      <label for="overridenFncPattern">Overriden FNC Pattern:</label> <input type="text" id="overridenFncPattern" name="overridenFncPattern" class="form-control" data-ng-model="product.overridenFncPattern" />
                     </div>
                   </div>
 
@@ -165,7 +235,7 @@
                       <strong>GTS Priority:</strong>{{element.priority}}
                     </div>
                     <div class="col-sm-6 form-group">
-                      <label>Overriden GTS Priority:</label> <input type="number" name="overridenPriority" class="form-control" data-ng-model="product.overridenPriority" />
+                      <label for="overridenPriority">Overriden GTS Priority:</label> <input type="number" id="overridenPriority" name="overridenPriority" class="form-control" data-ng-model="product.overridenPriority" />
                     </div>
                   </div>
 
@@ -174,7 +244,18 @@
                       <strong>File Extension:</strong>{{element.fileExtension}}
                     </div>
                     <div class="col-sm-6 form-group">
-                      <label>Overriden File Extension:</label> <input type="text" name="overridenFileExtension" class="form-control" data-ng-model="product.overridenFileExtension" />
+                      <label for="overridenFileExtension">Overriden File Extension:</label> <input type="text" id="overridenFileExtension" name="overridenFileExtension" class="form-control" data-ng-model="product.overridenFileExtension" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-6 form-group">
+                      <strong>Ingested:</strong><br/>
+                      <button class="btn btn-default" data-ng-click="addIngestFilter()">Add Ingestion Filter</button>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                      <strong>Fed:</strong><br/>
+                      <button class="btn btn-default" data-ng-click="addFeedingFilter()">Add Feeding Filter</button>
                     </div>
                   </div>
                 </form>

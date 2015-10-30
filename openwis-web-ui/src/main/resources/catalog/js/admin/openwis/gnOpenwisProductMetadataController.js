@@ -92,6 +92,10 @@
             params : {urn: metadataUrn}
           }).success(function(data) {
             $scope.product = data;
+            $scope.filter = {};
+
+            $scope.filter.regex = '^' + $scope.product.urn + '$';
+            $scope.filter.description = 'Description';
 
             $("#editProductMetadata").modal();
           }).error(function(data) {
@@ -124,6 +128,16 @@
 
   module.controller('GnOpenwisProductMetadataModalController', function($scope,
                                                                   $http, $rootScope) {
+
+    $scope.addIngestFilter = function() {
+      $("#addToIngestionFilter").modal();
+    };
+
+
+    $scope.addFeedingFilter = function() {
+      $("#addToFeedingFilter").modal();
+    };
+
     $scope.ok = function() {
       $http({
         url : $scope.url + 'openwis.productmetadata.set',
@@ -172,6 +186,56 @@
 
     $scope.cancel = function() {
       $("#deleteMetadata").modal('hide');
+    };
+  });
+
+  module.controller('GnOpenwisProductMetadataModalFilterController', function($scope,
+                                                                        $http, $rootScope) {
+
+    $scope.saveToIngestionFilter = function() {
+      $http({
+        url : $scope.url + 'openwis.controlservice.saveingestionfilter',
+        method : 'POST',
+        params : {description: $scope.filter.description, regex: $scope.filter.regex },
+      }).success(function(data) {
+        $scope.updateData();
+        $("#addToIngestionFilter").modal('hide');
+      }).error(function(data) {
+        console.log(data);
+        $scope.updateData();
+        $rootScope.$broadcast('StatusUpdated', {
+          title : 'Error',
+          msg : 'Error saving to ingestion filter. Please try again.',
+          type : 'danger'
+        });
+      });
+    };
+
+    $scope.saveToFeedingFilter = function() {
+      $http({
+        url : $scope.url + 'openwis.controlservice.savefeedingfilter',
+        method : 'POST',
+        params : {description: $scope.filter.description, regex: $scope.filter.regex },
+      }).success(function(data) {
+        $scope.updateData();
+        $("#addToFeedingFilter").modal('hide');
+      }).error(function(data) {
+        console.log(data);
+        $scope.updateData();
+        $rootScope.$broadcast('StatusUpdated', {
+          title : 'Error',
+          msg : 'Error saving to feeding filter. Please try again.',
+          type : 'danger'
+        });
+      });
+    };
+
+    $scope.cancelToIngestionFilter = function() {
+      $("#addToIngestionFilter").modal('hide');
+    };
+
+    $scope.cancelToFeedingFilter = function() {
+      $("#addToFeedingFilter").modal('hide');
     };
   });
 

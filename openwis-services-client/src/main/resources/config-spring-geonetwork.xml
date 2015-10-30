@@ -56,7 +56,12 @@
 	<bean class="org.openwis.cacheindex.client.CacheIndexClient">
 		<property name="webServiceTemplate" ref="cacheWebServiceTemplate" />
 	</bean>
-	<!-- Initialize marshallers (one for each client) -->
+
+  <bean class="org.openwis.controlservice.client.ControlServiceClient">
+    <property name="webServiceTemplate" ref="controlServiceWebServiceTemplate" />
+  </bean>
+
+  <!-- Initialize marshallers (one for each client) -->
 	<oxm:jaxb2-marshaller id="cacheMarshaller"
 		contextPath="org.openwis.cacheindex.client" />
 
@@ -86,6 +91,9 @@
         
     <oxm:jaxb2-marshaller id="processedRequestmarshaller"
         contextPath="org.openwis.processedrequest.client" />
+
+  <oxm:jaxb2-marshaller id="controlservicemarshaller"
+    contextPath="org.openwis.controlservice.client" />
 
 	<!-- Initialize webServiceTemplates (one for each client) -->
 	<bean id="cacheWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
@@ -167,6 +175,14 @@
 		<property name="defaultUri"
 			value="http://localhost:8061/openwis-management-service-openwis-management-service-ejb/IngestedDataStatistics" />
 	</bean>
+
+  <bean id="controlServiceWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+    <constructor-arg ref="messageFactory" />
+    <property name="marshaller" ref="controlservicemarshaller" />
+    <property name="unmarshaller" ref="controlservicemarshaller" />
+    <property name="defaultUri"
+              value="http://localhost:8061/openwis-management-service-openwis-management-service-ejb/ControlService" />
+  </bean>
 
 	<!-- Common message factory -->
 	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />

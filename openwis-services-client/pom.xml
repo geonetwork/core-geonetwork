@@ -308,6 +308,34 @@
               </schemas>
             </configuration>
           </execution>
+          <execution>
+            <id>controlService</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <schemaLanguage>WSDL</schemaLanguage>
+              <generatePackage>org.openwis.controlservice.client</generatePackage>
+              <generateDirectory>${project.build.directory}/generated-sources/controlservice</generateDirectory>
+
+              <schemas>
+                <!--<schema>
+                  <url>http://wsf.cdyne.com/WeatherWS/Weather.asmx?wsdl</url>
+                </schema>-->
+                <schema>
+                  <fileset>
+                    <!-- Defaults to schemaDirectory. -->
+                    <directory>${basedir}/src/main/resources/schemas</directory>
+                    <!-- Defaults to schemaIncludes. -->
+                    <includes>
+                      <!--<include>*.xsd</include>-->
+                      <include>ControlService.wsdl</include>
+                    </includes>
+                  </fileset>
+                </schema>
+              </schemas>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>

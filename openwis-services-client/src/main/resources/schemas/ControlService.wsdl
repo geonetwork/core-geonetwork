@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ControlService" targetNamespace="http://control.management.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://control.management.openwis.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://control.management.openwis.org/" schemaLocation="ControlService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="setReplicationFilterStatusResponse">
+    <wsdl:part name="parameters" element="tns:setReplicationFilterStatusResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getServiceStatus">
+    <wsdl:part name="parameters" element="tns:getServiceStatus">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addIngestionFilterResponse">
+    <wsdl:part name="parameters" element="tns:addIngestionFilterResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicationFilterStatusResponse">
+    <wsdl:part name="parameters" element="tns:getReplicationFilterStatusResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="resetFeedingFiltersResponse">
+    <wsdl:part name="parameters" element="tns:resetFeedingFiltersResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeIngestionFilter">
+    <wsdl:part name="parameters" element="tns:removeIngestionFilter">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="editReplicationFilterResponse">
+    <wsdl:part name="parameters" element="tns:editReplicationFilterResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeReplicationFilter">
+    <wsdl:part name="parameters" element="tns:removeReplicationFilter">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setReplicationFilterStatus">
+    <wsdl:part name="parameters" element="tns:setReplicationFilterStatus">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeFeedingFilterResponse">
+    <wsdl:part name="parameters" element="tns:removeFeedingFilterResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addReplicationFilter">
+    <wsdl:part name="parameters" element="tns:addReplicationFilter">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getIngestionFilters">
+    <wsdl:part name="parameters" element="tns:getIngestionFilters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeIngestionFilterResponse">
+    <wsdl:part name="parameters" element="tns:removeIngestionFilterResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getIngestionFiltersResponse">
+    <wsdl:part name="parameters" element="tns:getIngestionFiltersResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicationFiltersResponse">
+    <wsdl:part name="parameters" element="tns:getReplicationFiltersResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="resetFeedingFilters">
+    <wsdl:part name="parameters" element="tns:resetFeedingFilters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setServiceStatus">
+    <wsdl:part name="parameters" element="tns:setServiceStatus">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addIngestionFilter">
+    <wsdl:part name="parameters" element="tns:addIngestionFilter">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicationFilterStatus">
+    <wsdl:part name="parameters" element="tns:getReplicationFilterStatus">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="isServiceEnabledResponse">
+    <wsdl:part name="parameters" element="tns:isServiceEnabledResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="isServiceEnabled">
+    <wsdl:part name="parameters" element="tns:isServiceEnabled">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setServiceStatusResponse">
+    <wsdl:part name="parameters" element="tns:setServiceStatusResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getServiceStatusResponse">
+    <wsdl:part name="parameters" element="tns:getServiceStatusResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeReplicationFilterResponse">
+    <wsdl:part name="parameters" element="tns:removeReplicationFilterResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="editReplicationFilter">
+    <wsdl:part name="parameters" element="tns:editReplicationFilter">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFeedingFiltersResponse">
+    <wsdl:part name="parameters" element="tns:getFeedingFiltersResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addFeedingFilterResponse">
+    <wsdl:part name="parameters" element="tns:addFeedingFilterResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFeedingFilters">
+    <wsdl:part name="parameters" element="tns:getFeedingFilters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeFeedingFilter">
+    <wsdl:part name="parameters" element="tns:removeFeedingFilter">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicationFilters">
+    <wsdl:part name="parameters" element="tns:getReplicationFilters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addFeedingFilter">
+    <wsdl:part name="parameters" element="tns:addFeedingFilter">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addReplicationFilterResponse">
+    <wsdl:part name="parameters" element="tns:addReplicationFilterResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ControlService">
+    <wsdl:operation name="getFeedingFilters">
+      <wsdl:input name="getFeedingFilters" message="tns:getFeedingFilters">
+    </wsdl:input>
+      <wsdl:output name="getFeedingFiltersResponse" message="tns:getFeedingFiltersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setServiceStatus">
+      <wsdl:input name="setServiceStatus" message="tns:setServiceStatus">
+    </wsdl:input>
+      <wsdl:output name="setServiceStatusResponse" message="tns:setServiceStatusResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="isServiceEnabled">
+      <wsdl:input name="isServiceEnabled" message="tns:isServiceEnabled">
+    </wsdl:input>
+      <wsdl:output name="isServiceEnabledResponse" message="tns:isServiceEnabledResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setReplicationFilterStatus">
+      <wsdl:input name="setReplicationFilterStatus" message="tns:setReplicationFilterStatus">
+    </wsdl:input>
+      <wsdl:output name="setReplicationFilterStatusResponse" message="tns:setReplicationFilterStatusResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="editReplicationFilter">
+      <wsdl:input name="editReplicationFilter" message="tns:editReplicationFilter">
+    </wsdl:input>
+      <wsdl:output name="editReplicationFilterResponse" message="tns:editReplicationFilterResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addReplicationFilter">
+      <wsdl:input name="addReplicationFilter" message="tns:addReplicationFilter">
+    </wsdl:input>
+      <wsdl:output name="addReplicationFilterResponse" message="tns:addReplicationFilterResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getIngestionFilters">
+      <wsdl:input name="getIngestionFilters" message="tns:getIngestionFilters">
+    </wsdl:input>
+      <wsdl:output name="getIngestionFiltersResponse" message="tns:getIngestionFiltersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeFeedingFilter">
+      <wsdl:input name="removeFeedingFilter" message="tns:removeFeedingFilter">
+    </wsdl:input>
+      <wsdl:output name="removeFeedingFilterResponse" message="tns:removeFeedingFilterResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeReplicationFilter">
+      <wsdl:input name="removeReplicationFilter" message="tns:removeReplicationFilter">
+    </wsdl:input>
+      <wsdl:output name="removeReplicationFilterResponse" message="tns:removeReplicationFilterResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addIngestionFilter">
+      <wsdl:input name="addIngestionFilter" message="tns:addIngestionFilter">
+    </wsdl:input>
+      <wsdl:output name="addIngestionFilterResponse" message="tns:addIngestionFilterResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReplicationFilters">
+      <wsdl:input name="getReplicationFilters" message="tns:getReplicationFilters">
+    </wsdl:input>
+      <wsdl:output name="getReplicationFiltersResponse" message="tns:getReplicationFiltersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReplicationFilterStatus">
+      <wsdl:input name="getReplicationFilterStatus" message="tns:getReplicationFilterStatus">
+    </wsdl:input>
+      <wsdl:output name="getReplicationFilterStatusResponse" message="tns:getReplicationFilterStatusResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addFeedingFilter">
+      <wsdl:input name="addFeedingFilter" message="tns:addFeedingFilter">
+    </wsdl:input>
+      <wsdl:output name="addFeedingFilterResponse" message="tns:addFeedingFilterResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getServiceStatus">
+      <wsdl:input name="getServiceStatus" message="tns:getServiceStatus">
+    </wsdl:input>
+      <wsdl:output name="getServiceStatusResponse" message="tns:getServiceStatusResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeIngestionFilter">
+      <wsdl:input name="removeIngestionFilter" message="tns:removeIngestionFilter">
+    </wsdl:input>
+      <wsdl:output name="removeIngestionFilterResponse" message="tns:removeIngestionFilterResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="resetFeedingFilters">
+      <wsdl:input name="resetFeedingFilters" message="tns:resetFeedingFilters">
+    </wsdl:input>
+      <wsdl:output name="resetFeedingFiltersResponse" message="tns:resetFeedingFiltersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ControlServiceSoapBinding" type="tns:ControlService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getFeedingFilters">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getFeedingFilters">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFeedingFiltersResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setServiceStatus">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="setServiceStatus">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setServiceStatusResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="isServiceEnabled">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="isServiceEnabled">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="isServiceEnabledResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setReplicationFilterStatus">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="setReplicationFilterStatus">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setReplicationFilterStatusResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="editReplicationFilter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="editReplicationFilter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="editReplicationFilterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addReplicationFilter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="addReplicationFilter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addReplicationFilterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getIngestionFilters">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getIngestionFilters">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getIngestionFiltersResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeFeedingFilter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="removeFeedingFilter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removeFeedingFilterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeReplicationFilter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="removeReplicationFilter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removeReplicationFilterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addIngestionFilter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="addIngestionFilter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addIngestionFilterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReplicationFilterStatus">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getReplicationFilterStatus">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getReplicationFilterStatusResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReplicationFilters">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getReplicationFilters">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getReplicationFiltersResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addFeedingFilter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="addFeedingFilter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addFeedingFilterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getServiceStatus">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getServiceStatus">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getServiceStatusResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeIngestionFilter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="removeIngestionFilter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removeIngestionFilterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="resetFeedingFilters">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="resetFeedingFilters">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="resetFeedingFiltersResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ControlService">
+    <wsdl:port name="ControlServicePort" binding="tns:ControlServiceSoapBinding">
+      <soap:address location="http://localhost:9090/ControlServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
