@@ -52,6 +52,10 @@
       <a href="" ng-click="mdService.openCategoriesBatchPanel(getCatScope())">
       <i class="fa fa-tags"></i>&nbsp;<span translate>updateCategories</span></a></li>
     <li ng-if="user.isEditorOrMore()">
+      <a href="" ng-click="mdService.validateMd()"
+         data-gn-confirm-click="{{'validateSelectedRecordConfirm' | translate:searchResults}}">
+        <i class="fa fa-check"></i>&nbsp;<span translate>validate</span></a></li>
+    <li ng-if="user.isEditorOrMore()">
       <a href="" ng-click="mdService.deleteMd()"
          data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:searchResults}}">
       <i class="fa fa-times"></i>&nbsp;<span translate>delete</span></a></li>

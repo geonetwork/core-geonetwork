@@ -31,14 +31,14 @@
 
       var parseKvpParams = function(str) {
         var escaper = function(match, p1) {
-          return '='+gnUrlUtils.encodeUriQuery(p1);
+          return '=' + gnUrlUtils.encodeUriQuery(p1);
         };
         str = str.replace(/=\[([^&]*)\]/gi, escaper);
 
         var queryParams = gnUrlUtils.parseKeyValue(str);
         var defaults = {};
-        for ( var prop in queryParams ) {
-          if ( queryParams.hasOwnProperty( prop ) ) {
+        for (var prop in queryParams) {
+          if (queryParams.hasOwnProperty(prop)) {
             defaults[prop.toLowerCase()] = queryParams[prop];
           }
         }
@@ -116,7 +116,8 @@
                       function(input) {
                         var value;
                         var defaultValue;
-                        var datainput = defaults.datainputs[input.identifier.value];
+                        var datainput =
+                          defaults.datainputs[input.identifier.value];
                         if (datainput != undefined) {
                           defaultValue = datainput.value;
                         }
@@ -124,7 +125,8 @@
                         if (input.literalData != undefined) {
 
                           // Input type
-                          input.type = inputTypes[input.literalData.dataType.value];
+                          input.type =
+                            inputTypes[input.literalData.dataType.value];
 
                           // Default value
                           if (input.literalData.defaultValue != undefined) {
@@ -147,34 +149,40 @@
                         if (input.boundingBoxData != undefined) {
                           input.value = '';
                           if (defaultValue) {
-                            input.value = defaultValue.split(',').slice(0, 4).join(',');
+                            input.value = defaultValue.split(',')
+                              .slice(0, 4).join(',');
                           }
                         }
                       }
                   );
 
-                  angular.forEach(scope.processDescription.processOutputs.output,
+                  angular.forEach(
+                    scope.processDescription.processOutputs.output,
                       function(output) {
                         output.asReference = true;
 
-                        var outputDefault = defaults.responsedocument[output.identifier.value]
+                        var outputDefault =
+                          defaults.responsedocument[output.identifier.value];
                         if (outputDefault) {
                           output.value = true;
-                          var defaultAsReference = outputDefault.attributes['asreference'];
+                          var defaultAsReference =
+                            outputDefault.attributes['asreference'];
                           if (defaultAsReference !== undefined) {
                             output.asReference = toBool(defaultAsReference);
                           }
                         }
                       }
                   );
-                  if (scope.processDescription.processOutputs.output.length == 1) {
-                    scope.processDescription.processOutputs.output[0].value = true;
+                  var output = scope.processDescription.processOutputs.output;
+                  if (output.length == 1) {
+                    output[0].value = true;
                   }
                   scope.outputsVisible = true;
 
                   scope.responseDocument = {
                     lineage: toBool(defaults.lineage, false),
-                    storeExecuteResponse: toBool(defaults.storeexecuteresponse, false),
+                    storeExecuteResponse:
+                      toBool(defaults.storeexecuteresponse, false),
                     status: toBool(defaults.status, false)
                   };
                   scope.optionsVisible = true;
@@ -184,7 +192,7 @@
                 scope.describeState = 'failed';
                 scope.describeResponse = response;
               }
-          );
+              );
 
           scope.close = function() {
             element.remove();
@@ -195,7 +203,7 @@
           };
 
           scope.toggleOptions = function() {
-             scope.optionsVisible = !scope.optionsVisible;
+            scope.optionsVisible = !scope.optionsVisible;
           };
 
           scope.submit = function() {
@@ -257,7 +265,9 @@
                       response.status.processPaused != undefined ||
                       response.status.processStarted != undefined) {
                     scope.executeState = 'pending';
-                    scope.statusPromise = $timeout(function() { updateStatus(response.statusLocation); }, 1000, true);
+                    scope.statusPromise = $timeout(function() {
+                      updateStatus(response.statusLocation);
+                    }, 1000, true);
                   }
                   if (response.status.ProcessSucceeded != undefined ||
                       response.status.ProcessFailed != undefined) {

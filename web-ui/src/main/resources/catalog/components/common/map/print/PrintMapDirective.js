@@ -297,8 +297,8 @@
       }
 
       encLegend = gnPrint.encoders.legends['base'].call(
-        this, layer, layerConfig
-      );
+          this, layer, layerConfig
+          );
 
       if (encLegend && encLegend.classes[0] && !encLegend.classes[0].icon) {
         encLegend = undefined;

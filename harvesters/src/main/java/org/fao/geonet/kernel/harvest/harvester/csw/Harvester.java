@@ -205,23 +205,21 @@ class Harvester implements IHarvester<HarvestResult>
 	/**
 	 * Does CSW GetRecordsRequest.
 	 */
-	private Set<RecordInfo> search(CswServer server, Search s) throws Exception
-	{
-		int start =  1;
+    private Set<RecordInfo> search(CswServer server, Search s) throws Exception {
+        int start = 1;
 
-		GetRecordsRequest request = new GetRecordsRequest(context);
+        GetRecordsRequest request = new GetRecordsRequest(context);
 
-		request.setResultType(ResultType.RESULTS);
-		//request.setOutputSchema(OutputSchema.OGC_CORE);	// Use default value
-		request.setElementSetName(ElementSetName.SUMMARY);
-		request.setMaxRecords(GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE + "");
+        request.setResultType(ResultType.RESULTS);
+        //request.setOutputSchema(OutputSchema.OGC_CORE);	// Use default value
+        request.setElementSetName(ElementSetName.SUMMARY);
+        request.setMaxRecords(GETRECORDS_REQUEST_MAXRECORDS);
         request.setDistribSearch(params.queryScope.equalsIgnoreCase("true"));
-        request.setHopCount(params.hopCount + "");
+        request.setHopCount(params.hopCount);
 
-		CswOperation oper = server.getOperation(CswServer.GET_RECORDS);
+        CswOperation oper = server.getOperation(CswServer.GET_RECORDS);
 
         // Use the preferred HTTP method and check one exist.
-
         configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD);
 
         if (params.isUseAccount()) {
@@ -230,83 +228,96 @@ class Harvester implements IHarvester<HarvestResult>
         }
         // Simple fallback mechanism. Try search with PREFERRED_HTTP_METHOD method, if fails change it
         try {
-            log.info("Re-trying the search with another HTTP method.");
-            request.setStartPosition(start +"");
-		    doSearch(request, start, 1);
-        } catch(Exception ex) {
-            if(log.isDebugEnabled()) {
+            log.info(String.format("Trying the search with HTTP %s method.", PREFERRED_HTTP_METHOD));
+            request.setStartPosition(start);
+            doSearch(request, start, 1);
+        } catch (Exception ex) {
+            if (log.isDebugEnabled()) {
                 log.debug(ex.getMessage());
-                log.debug("Changing to CSW harvester to use " + (PREFERRED_HTTP_METHOD.equals("GET")?"POST":"GET"));
+                log.debug(String.format("Due to errors, changing CSW harvester method to HTTP %s method.", PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET"));
             }
             errors.add(new HarvestError(ex, log));
 
-            configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD.equals("GET")?"POST":"GET");
+            configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET");
         }
 
-		Set<RecordInfo> records = new HashSet<RecordInfo>();
+        Set<RecordInfo> records = new HashSet<RecordInfo>();
 
-		while (true)
-		{
-			request.setStartPosition(start +"");
-			Element response = doSearch(request, start, GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE);
-            if(log.isDebugEnabled())
+        while (true) {
+            request.setStartPosition(start);
+            Element response = doSearch(request, start, GETRECORDS_REQUEST_MAXRECORDS);
+            if (log.isDebugEnabled()) {
                 log.debug("Number of child elements in response: " + response.getChildren().size());
+            }
 
-			Element results  = response.getChild("SearchResults", Csw.NAMESPACE_CSW);
-			// heikki: some providers forget to update their CSW namespace to the CSW 2.0.2 specification
-			if(results == null) {
-				// in that case, try to accommodate them anyway:
-				results = response.getChild("SearchResults", Csw.NAMESPACE_CSW_OLD);
-				if (results == null) {
-					throw new OperationAbortedEx("Missing 'SearchResults'", response);
-				}
-				else {
-					log.warning("Received GetRecords response with incorrect namespace: " + Csw.NAMESPACE_CSW_OLD);
-				}
-			}
+            Element results = response.getChild("SearchResults", Csw.NAMESPACE_CSW);
+            // heikki: some providers forget to update their CSW namespace to the CSW 2.0.2 specification
+            if (results == null) {
+                // in that case, try to accommodate them anyway:
+                results = response.getChild("SearchResults", Csw.NAMESPACE_CSW_OLD);
+                if (results == null) {
+                    throw new OperationAbortedEx("Missing 'SearchResults'", response);
+                } else {
+                    log.warning("Received GetRecords response with incorrect namespace: " + Csw.NAMESPACE_CSW_OLD);
+                }
+            }
 
-			@SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked")
             List<Element> list = results.getChildren();
-			int counter = 0;
+            int foundCnt = 0;
 
-			log.debug("Extracting all elements in the csw harvesting response");
-			for (Element record :list) {
+            log.debug("Extracting all elements in the csw harvesting response");
+            for (Element record : list) {
+                foundCnt++;
                 try {
-    				RecordInfo recInfo= getRecordInfo((Element)record.clone());
+                    RecordInfo recInfo = getRecordInfo((Element) record.clone());
 
-    				if (recInfo != null)
-    					records.add(recInfo);
-
-    				counter++;
+                    if (recInfo != null) {
+                        records.add(recInfo);
+                    }
 
                 } catch (Exception ex) {
                     errors.add(new HarvestError(ex, log));
                     log.error("Unable to process record from csw (" + this.params.getName() + ")");
-                    log.error("   Record failed: " + counter); 
-                    log.debug("   Record: " +  ((Element)record).getName()); 
+                    log.error("   Record failed: " + foundCnt);
+                    log.debug("   Record: " + ((Element) record).getName());
                 }
 
             }
 
-			//--- check to see if we have to perform other searches
+            //--- check to see if we have to perform other searches
+            int matchedCount = getSearchResultAttribute(results, ATTRIB_SEARCHRESULT_MATCHED);
+            int returnedCount = getSearchResultAttribute(results, ATTRIB_SEARCHRESULT_RETURNED);
+            int nextRecord = getSearchResultAttribute(results, ATTRIB_SEARCHRESULT_NEXT);
 
-			int recCount = getRecordCount(results);
-
-            if(log.isDebugEnabled()) {
-                log.debug("Records declared in response : "+ recCount);
-			    log.debug("Records found in response    : "+ counter);
+            if (log.isDebugEnabled()) {
+                log.debug("Records matched by the query : " + matchedCount);
+                log.debug("Records declared in response : " + returnedCount);
+                log.debug("Records found in response    : " + foundCnt);
+                log.debug("Next record                  : " + nextRecord);
             }
 
-			if (start+GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE > recCount)
-				break;
+            if (returnedCount != GETRECORDS_REQUEST_MAXRECORDS) {
+                log.warning("Declared number of returned records (" + returnedCount + ") does not match requested record count (" + GETRECORDS_REQUEST_MAXRECORDS + ")");
+            }
 
-			start += GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE;
-		}
+            if (returnedCount != foundCnt) {
+                log.warning("Declared number of returned records (" + returnedCount + ") does not match actual record count (" + foundCnt + ")");
+            }
 
-		log.info("Records added to result list : "+ records.size());
+            // As indicated in CSW: A value of 0 means all records have been returned.
+            if (nextRecord == 0) {
+                break;
+            }
 
-		return records;
-	}
+            // Start position of next record.
+            start = nextRecord;
+        }
+
+        log.info("Records added to result list : " + records.size());
+
+        return records;
+    }
 
     //---------------------------------------------------------------------------
 
@@ -538,7 +549,7 @@ class Harvester implements IHarvester<HarvestResult>
 		try
 		{
 			log.info("Searching on : "+ params.getName() +" ("+ start +".."+ (start + max) +")");
-			Element response = request.execute();
+            Element response = request.execute();
             if(log.isDebugEnabled()) {
                 log.debug("Sent request "+request.getSentData());
                 log.debug("Search results:\n"+Xml.getString(response));
@@ -556,17 +567,18 @@ class Harvester implements IHarvester<HarvestResult>
 
 	//---------------------------------------------------------------------------
 
-	private int getRecordCount(Element results) throws OperationAbortedEx
-	{
-		String numRec = results.getAttributeValue("numberOfRecordsMatched");
+    private int getSearchResultAttribute(Element results, String attribName) throws OperationAbortedEx	{
+            String value = results.getAttributeValue(attribName);
 
-		if (numRec == null)
-			throw new OperationAbortedEx("Missing 'numberOfRecordsMatched' in 'SearchResults'");
+            if (value == null) {
+                throw new OperationAbortedEx("Missing '" + attribName + "' attribute in 'SearchResults'");
+            }
 
-		if (!Lib.type.isInteger(numRec))
-			throw new OperationAbortedEx("Bad value for 'numberOfRecordsMatched'", numRec);
+            if (!Lib.type.isInteger(value)) {
+                throw new OperationAbortedEx("Bad value for '" + attribName + "'", value);
+            }
 
-		return Integer.parseInt(numRec);
+            return Integer.parseInt(value);
 	}
 
 	//---------------------------------------------------------------------------
@@ -621,9 +633,13 @@ class Harvester implements IHarvester<HarvestResult>
 	//---------------------------------------------------------------------------
 	// FIXME : Currently switch from POST to GET for testing mainly.
 	public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.GET.toString();
-	private static int GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE = 20;
-	private static String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
-	
+    private static int GETRECORDS_REQUEST_MAXRECORDS = 20;
+    private static String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
+
+    private final static String ATTRIB_SEARCHRESULT_MATCHED = "numberOfRecordsMatched";
+    private final static String ATTRIB_SEARCHRESULT_RETURNED = "numberOfRecordsReturned";
+    private final static String ATTRIB_SEARCHRESULT_NEXT = "nextRecord";
+
 	//FIXME version should be parametrized
 	private static String GETCAPABILITIES_PARAMETERS = "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
 	private Logger         log;

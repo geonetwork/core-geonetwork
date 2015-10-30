@@ -12,11 +12,14 @@
                data-ng-change="change()"/>
                
         <!--Source catalog Logo-->
-        <a data-ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
-            <img ng-src="../..{{md.logo}}" class="gn-source-logo"/>
+        <a data-ng-if="md.groupWebsite"
+           href="{{md.groupWebsite}}" target="_blank">
+            <img data-ng-src="../..{{md.logo}}"
+                 class="gn-source-logo"/>
         </a>
         <img data-ng-if="!md.groupWebsite"
-             data-ng-src="../..{{md.logo}}" class="gn-source-logo"/>
+             data-ng-src="../..{{md.logo}}"
+             class="gn-source-logo"/>
 
         <div class="gn-md-category"
              data-ng-class="md.category.length > 0 ||
@@ -81,11 +84,12 @@
           </div>
 
           <div class="row gn-md-details">
-            <p data-ng-if="md.getContacts().resource">
-              <!--<h5 data-translate="">contacts</h5>-->
-              {{::md.getContacts().resource}}
+            <p data-ng-repeat="c in md.getAllContacts().resource">
+              <img data-ng-if="c.logo"
+                   data-ng-src="{{::c.logo}}"
+                   title="{{::c.name}} ({{::c.role}})"/>
+              {{::c.name}}
             </p>
-
             <!--<p data-ng-if="md.Constraints">
               <h5 data-translate="">license</h5>
               <span data-ng-repeat="c in ::md.Constraints">{{c}}, </span>

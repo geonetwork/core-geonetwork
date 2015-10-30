@@ -8,4 +8,13 @@
   <refDate>Reference date</refDate>
   <temporalRef>Temporal information</temporalRef>
   <constraintInfo>Access constraint information</constraintInfo>
+
+  <!-- New strings added for the AngularJS editor -->
+  <!-- View and tabs -->
+  <advanced>Volledig</advanced>
+  <default>Standaard</default>
+  <simple>Eenvoudig</simple>
+  <inspire>INSPIRE</inspire>
+  <resource>Bron</resource>
+  <xml>XML</xml>
 </strings>

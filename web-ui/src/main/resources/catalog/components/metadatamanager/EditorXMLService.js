@@ -36,7 +36,9 @@
           "xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'>" +
           '    <mcc:MD_Identifier>' +
           '     <mcc:code>' +
-          '       <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/{{code}}</gco:CharacterString>' +
+          '       <gco:CharacterString>' +
+          'http://www.opengis.net/def/crs/EPSG/0/{{code}}' +
+          '</gco:CharacterString>' +
           '     </mcc:code>' +
           '     <mcc:description>' +
           '       <gco:CharacterString>{{description}}</gco:CharacterString>' +

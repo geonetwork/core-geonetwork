@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.File;
+import java.net.URL;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -19,9 +20,9 @@ import static org.junit.Assert.assertTrue;
 public class IsoMatchersTest extends AbstractFormatterTest {
 
     @Override
-    protected File getTestMetadataFile() {
-        final String mdFile = AbstractFullViewFormatterTest.class.getResource("/iso19139/example.xml").getFile();
-        return new File(mdFile);
+    protected File getTestMetadataFile() throws Exception {
+        final URL mdFile = AbstractFullViewFormatterTest.class.getResource("/iso19139/example.xml");
+        return new File(mdFile.toURI());
     }
 
     @Test

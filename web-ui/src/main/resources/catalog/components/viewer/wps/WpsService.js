@@ -105,7 +105,8 @@
        * @param {string} processId of the process
        * @param {Object} inputs of the process
        * @param {Object} output of the process
-       * @param {Object} options such as storeExecuteResponse, lineage and status
+       * @param {Object} options such as storeExecuteResponse,
+       * lineage and status
        */
       this.execute = function(uri, processId, inputs, responseDocument) {
         var defer = $q.defer();
@@ -174,10 +175,10 @@
 
               request.value.responseForm = {
                 responseDocument: $.extend(true, {
-                    lineage: false,
-                    storeExecuteResponse: true,
-                    status: false
-                  }, responseDocument)
+                  lineage: false,
+                  storeExecuteResponse: true,
+                  status: false
+                }, responseDocument)
               };
 
               var body = marshaller.marshalString(request);
@@ -217,22 +218,22 @@
        * @param {string} url of status document
        */
       this.getStatus = function(url) {
-          var defer = $q.defer();
+        var defer = $q.defer();
 
-          var proxyUrl = this.proxyUrl(url);
-          $http.get(proxyUrl, {
-            cache: true
-          }).then(
-              function(data) {
-                var response = unmarshaller.unmarshalString(data.data).value;
-                defer.resolve(response);
-              },
-              function(data) {
-                defer.reject(data);
-              }
-          );
+        var proxyUrl = this.proxyUrl(url);
+        $http.get(proxyUrl, {
+          cache: true
+        }).then(
+            function(data) {
+              var response = unmarshaller.unmarshalString(data.data).value;
+              defer.resolve(response);
+            },
+            function(data) {
+              defer.reject(data);
+            }
+        );
 
-          return defer.promise;
+        return defer.promise;
       };
     }
   ]);
