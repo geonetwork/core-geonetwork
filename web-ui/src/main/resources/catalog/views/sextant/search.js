@@ -91,12 +91,11 @@
     '$q',
     'gnUrlUtils',
     'gnGlobalSettings',
-      '$parse',
     function($scope, $location, $window, suggestService,
              $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
         $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
-        $translate, $q, gnUrlUtils, gnGlobalSettings, $parse) {
+        $translate, $q, gnUrlUtils, gnGlobalSettings) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -105,16 +104,6 @@
       $scope.gnMetadataActions = gnMetadataActions;
 
       var localStorage = $window.localStorage || {};
-
-      window.Liferay = {
-        ThemeDisplay: {
-          getLanguageId: function() {
-            return 'fr_FR';
-          }
-        }
-      };
-      var getter = $parse('Liferay.ThemeDisplay');
-      var test = getter(window);
 
 
       $scope.gnUrl = gnGlobalSettings.gnUrl || '';
