@@ -19303,6 +19303,27 @@ yx-axis
 .g input.ng-invalid {
   border-color: #a94442;
 }
+.gn ul.invalid .list-group-item,
+.g ul.invalid .list-group-item {
+  border-left-color: #a94442;
+  border-right-color: #a94442;
+}
+.gn ul.invalid .list-group-item:first-child,
+.g ul.invalid .list-group-item:first-child {
+  border-top-color: #a94442;
+}
+.gn ul.invalid .list-group-item:last-child,
+.g ul.invalid .list-group-item:last-child {
+  border-bottom-color: #a94442;
+}
+.gn .modal,
+.g .modal {
+  overflow: auto;
+}
+.gn [gn-popup],
+.g [gn-popup] {
+  position: fixed !important;
+}
 .gn [sxt-main-viewer] .sx-toolbar[gn-localisation-input],
 .g [sxt-main-viewer] .sx-toolbar[gn-localisation-input] {
   width: 15em;
@@ -19502,5 +19523,5 @@ yx-axis
   pointer-events: auto;
 }
 .modal-open {
-  overflow: hidden;
+  overflow: visible;
 }
