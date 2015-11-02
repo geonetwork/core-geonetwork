@@ -64,6 +64,8 @@ public class SextantExtractor {
 	@Autowired
 	private File panierXmlPathAnonymous;
 
+    private final String IFREMER_PATTERN = "@ifremer.fr";
+
 	@PostConstruct
 	public void init() throws Exception {
 		// ensures directories are created
@@ -108,7 +110,7 @@ public class SextantExtractor {
 				out.write(String.format(
 						"<user lastname=\"%s\" firstname=\"%s\" mail=\"%s\" is_ifremer=\"%s\""
 								+ " uidNumber=\"%s\" login=\"%s\" org=\"%s\" usage=\"%s\" />", us.getSurname(),
-						us.getName(), us.getEmailAddr(), us.getEmailAddr().contains("@ifremer.fr"),
+						us.getName(), us.getEmailAddr(), us.getEmailAddr().contains(IFREMER_PATTERN),
 						uidNumberStr, us.getUsername(), jsonExtractionSpec.getUser().getOrg(),
 						jsonExtractionSpec.getUser().getUsage()).getBytes());
 			} else {
@@ -120,7 +122,7 @@ public class SextantExtractor {
 				out.write(String.format(
 						"<user lastname=\"%s\" firstname=\"%s\" mail=\"%s\" is_ifremer=\"%s\""
 								+ " uidNumber=\"\" login=\"\" org=\"%s\" usage=\"%s\" />", usr.getLastname(), usr.getFirstname(), usr.getMail(),
-						"false", usr.getOrg(), usr.getUsage()).getBytes());
+                        usr.getMail().contains(IFREMER_PATTERN), usr.getOrg(), usr.getUsage()).getBytes());
 			}
 			out.write("<layers>".getBytes());
 			for (LayerSpec l : jsonExtractionSpec.getLayers()) {
