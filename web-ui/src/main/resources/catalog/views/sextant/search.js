@@ -541,6 +541,9 @@
       if(md.type.indexOf('dataset')>=0) {
         md.icon = {cls: 'fa-database', title: 'dataset'}
       }
+      else if(md.type.indexOf('series')>=0) {
+        md.icon = {cls: 'fa-database', title: 'series'}
+      }
       else if(md.type.indexOf('software')>=0) {
         md.icon = {cls: 'fa-hdd-o', title: 'software'}
       }
