@@ -268,12 +268,24 @@ yx-axis
 }
 .gn .gn-metadata-view p,
 .g .gn-metadata-view p {
-  font-size: 12px;
+  font-size: 13px;
 }
 .gn .gn-metadata-view ul,
 .g .gn-metadata-view ul,
 .gn .gn-metadata-view ul li,
 .g .gn-metadata-view ul li {
+  font-size: 13px;
+}
+.gn ul.dropdown-menu,
+.g ul.dropdown-menu,
+.gn .gn-facet ul,
+.g .gn-facet ul {
+  font-size: 12px;
+}
+.gn ul.dropdown-menu li,
+.g ul.dropdown-menu li,
+.gn .gn-facet ul li,
+.g .gn-facet ul li {
   font-size: 12px;
 }
 @font-face {
