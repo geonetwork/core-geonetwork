@@ -10,12 +10,15 @@ import org.geotools.styling.*;
 import org.geotools.styling.builder.NamedLayerBuilder;
 import org.geotools.styling.builder.StyleBuilder;
 import org.geotools.styling.builder.StyledLayerDescriptorBuilder;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
 
 import javax.mail.internet.ContentType;
 import javax.mail.internet.ParseException;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -163,6 +166,87 @@ public class SLDUtil {
         }
         return res.toArray(new Style[0]);
     }
-    
+
+    /**
+     * Generate a SLD Filter from filters defined in a JSON
+     *
+     * @param userFilters JSON representation of filters
+     * @return Filter instance that represent combination of filters specified in JSON
+     * @throws JSONException if some have wrong parameter count or malformed JSON
+     */
+
+    public Filter generateCustomFilter(JSONObject userFilters) throws JSONException {
+        FilterFactory2 ff2 = CommonFactoryFinder.getFilterFactory2();
+
+        JSONArray filters = userFilters.getJSONArray("filters");
+        List<Filter> res = new LinkedList<Filter>();
+
+        for(int i=0;i<filters.length();i++)
+            res.add(SLDUtil.generateFilter(filters.getJSONObject(i)));
+
+        return ff2.and(res);
+
+    }
+
+    private static Filter generateFilter(JSONObject jsonObject) throws JSONException {
+
+        FilterFactory2 ff2 = CommonFactoryFinder.getFilterFactory2();
+
+        String fieldName = jsonObject.getString("field_name");
+
+        List<Filter> res = new LinkedList<Filter>();
+
+        JSONArray filters = jsonObject.getJSONArray("filter");
+        for(int i=0;i<filters.length();i++)
+            res.add(SLDUtil.generateFilter2(fieldName, filters.getJSONObject(i)));
+
+        return ff2.or(res);
+    }
+
+    private static Filter generateFilter2(String fieldName, JSONObject jsonObject) throws JSONException {
+
+        FilterFactory2 ff2 = CommonFactoryFinder.getFilterFactory2();
+
+        String filterType = jsonObject.getString("filter_type");
+
+        List parameters = new LinkedList();
+
+        JSONArray params = jsonObject.getJSONArray("params");
+        for(int i=0;i<params.length();i++)
+            parameters.add(params.get(i));
+
+        if(filterType.equals("PropertyIsEqualTo")) {
+            if(parameters.size() != 1) throw new JSONException("Invalid parameter count");
+            return ff2.equals(ff2.property(fieldName), ff2.literal(parameters.get(0)));
+        } else if(filterType.equals("PropertyIsNotEqualTo")) {
+            if (parameters.size() != 1) throw new JSONException("Invalid parameter count");
+            return ff2.notEqual(ff2.property(fieldName), ff2.literal(parameters.get(0)));
+        } else if(filterType.equals("PropertyIsLessThan")) {
+            if (parameters.size() != 1) throw new JSONException("Invalid parameter count");
+            return ff2.less(ff2.property(fieldName), ff2.literal(parameters.get(0)));
+        } else if(filterType.equals("PropertyIsLessThanOrEqualTo")) {
+            if (parameters.size() != 1) throw new JSONException("Invalid parameter count");
+            return ff2.lessOrEqual(ff2.property(fieldName), ff2.literal(parameters.get(0)));
+        } else if(filterType.equals("PropertyIsGreaterThan")) {
+            if (parameters.size() != 1) throw new JSONException("Invalid parameter count");
+            return ff2.greater(ff2.property(fieldName), ff2.literal(parameters.get(0)));
+        } else if(filterType.equals("PropertyIsGreaterThanOrEqualTo")) {
+            if (parameters.size() != 1) throw new JSONException("Invalid parameter count");
+            return ff2.greaterOrEqual(ff2.property(fieldName), ff2.literal(parameters.get(0)));
+        } else if(filterType.equals("PropertyIsLike")) {
+            if (parameters.size() != 1) throw new JSONException("Invalid parameter count");
+            return ff2.like(ff2.property(fieldName), (String) parameters.get(0));
+        } else if(filterType.equals("PropertyIsNull")) {
+            if (parameters.size() != 0) throw new JSONException("Invalid parameter count");
+            return ff2.isNull(ff2.property(fieldName));
+        } else if(filterType.equals("PropertyIsBetween")) {
+            if (parameters.size() != 2) throw new JSONException("Invalid parameter count");
+            return ff2.between(ff2.property(fieldName), ff2.literal(parameters.get(0)), ff2.literal(parameters.get(1)));
+        } else {
+            // Currently, no implementation of topological or distance operators
+            throw new JSONException("No implementation for filter type : " + filterType);
+        }
+
+    }
 
 }
