@@ -13,10 +13,15 @@ public class HarvesterRouteBuilder extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
+//        final String url = "http4://geoservices.brgm.fr/risques?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=BASIAS_LOCALISE&maxFeatures=10000";
+        //http://visi-sextant.ifremer.fr/cgi-bin/sextant/wfs/bgmb?REQUEST=GetFeature&SERVICE=WFS&VERSION=1.1.0&TypeName=SISMER_prelevements&maxFeatures=100 [
+
         from("spring-event:default")
                 .filter(body().startsWith("http"))
                 .log(LoggingLevel.DEBUG, LOGGER_NAME, "${body.url}")
                 .setHeader("Exchange.HTTP_URI", simple("${body.url}"))
+                .setProperty("mduuid", simple("${body.uuid}"))
+                .setProperty("linkage", simple("${body.linkage}"))
                 .setBody(simple(""))
                 .to("http4://temp")
                 .convertBodyTo(Document.class)

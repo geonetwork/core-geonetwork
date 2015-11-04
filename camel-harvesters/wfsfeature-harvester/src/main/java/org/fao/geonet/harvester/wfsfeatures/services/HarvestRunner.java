@@ -62,21 +62,25 @@ public class HarvestRunner {
 
             Element linkageElt = (Element)Xml.selectSingle(element, "gmd:linkage/gmd:URL", NAMESPACES);
             Element ftElt = (Element)Xml.selectSingle(element, "gmd:name/gco:CharacterString", NAMESPACES);
+            Element configElt = (Element)Xml.selectSingle(element, "gmd:applicationProfile/gco:CharacterString", NAMESPACES);
 
-            URIBuilder builder = new URIBuilder(linkageElt.getText());
+            String linkage = linkageElt.getText();
+            String featureType = ftElt.getText();
+
+            URIBuilder builder = new URIBuilder(linkage);
             builder.addParameter("request", "GetFeature");
             builder.addParameter("service", "WFS");
             builder.addParameter("maxFeatures", "100");
             builder.addParameter("version", "1.0.0");
-            builder.addParameter("TYPENAME", ftElt.getText());
+            builder.addParameter("TYPENAME", featureType);
 
             String url = builder.build().toURL().toString();
-            WfsIndexingEvent event = new WfsIndexingEvent(appContext, url);
+            WfsIndexingEvent event = new WfsIndexingEvent(appContext, uuid, linkage, url);
             appContext.publishEvent(event);
 
             JSONObject j = new JSONObject();
             j.put("url", url);
-            j.put("featureType", ftElt.getText());
+            j.put("featureType", featureType);
             a.add(j);
         }
 
