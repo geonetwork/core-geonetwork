@@ -36,21 +36,32 @@
     var catModule = angular.module('gn_cat_controller');
     catModule.config(['gnGlobalSettings',
       function(gnGlobalSettings) {
-        var lang;
-        if(sxtSettings.langDetector) {
+        var lang,
+            lCfg = sxtSettings.langDetector;
 
-          var res = new RegExp(sxtSettings.langDetector).exec(location.pathname);
-          if(angular.isArray(res)) {
-            lang = res[1];
-            if(lang == 'fr') lang == 'fre';
-            else if(lang == 'en') lang == 'eng';
-            else lang = '';
+        if(lCfg) {
+          if(lCfg.fromHtmlTag) {
+            lang = $('html').attr('lang').substr(0,2);
           }
+          else if(lCfg.regexp) {
+            var res = new RegExp(lCfg.regexp).exec(location.pathname);
+            if(angular.isArray(res)) {
+              lang = res[1];
+            }
+          }
+          else if (lCfg.lang) {
+            lang = lCfg.lang
+          }
+          if(lang == 'fr') lang = 'fre';
+          else if(lang == 'en') lang = 'eng';
+          else lang = '';
         }
-        lang = lang || sxtSettings.lang || 'eng';
+        lang = lang || 'eng';
         gnGlobalSettings.locale = {
           lang: lang.substr(0,2)
         };
+
+        // ${api.gn.url}
         if(sxtGnUrl) {
           gnGlobalSettings.gnUrl =
               sxtGnUrl + lang + '/';
@@ -540,6 +551,9 @@
 
       if(md.type.indexOf('dataset')>=0) {
         md.icon = {cls: 'fa-database', title: 'dataset'}
+      }
+      else if(md.type.indexOf('series')>=0) {
+        md.icon = {cls: 'fa-database', title: 'series'}
       }
       else if(md.type.indexOf('software')>=0) {
         md.icon = {cls: 'fa-hdd-o', title: 'software'}

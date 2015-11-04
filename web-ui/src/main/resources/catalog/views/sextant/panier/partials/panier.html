@@ -50,14 +50,14 @@
           <div class="modal-body">
             <form name="panierForm" class="form-horizontal">
               <div class="form-group">
-                <label class="col-sm-2 control-label" translate>name</label>
+                <label class="col-sm-2 control-label" translate>firstname</label>
                 <div class="col-sm-10">
                   <input maxlength="80" data-ng-required="true" data-ng-disabled="user.isConnected()"
                          type="text" class="form-control" name="firstname" ng-model="formObj.user.firstname">
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label" translate>surname</label>
+                <label class="col-sm-2 control-label" translate>lastname</label>
                 <div class="col-sm-10">
                   <input maxlength="80" data-ng-required="true" data-ng-disabled="user.isConnected()" type="text"
                          class="form-control" name="lastname" ng-model="formObj.user.lastname">
@@ -84,7 +84,7 @@
               </div>
             </form>
             <h4 translate>validateConstraints</h4>
-            <ul class="list-group">
+            <ul class="list-group" data-ng-class="{invalid : downloadDisabled}">
               <li ng-repeat="elt in panier" class="list-group-item">
                 <label>
                   <input type="checkbox" ng-model="elt.validated" ng-change="validateDownload()"/>

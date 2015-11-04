@@ -360,6 +360,9 @@
         if(sxtSettings.layerFilter)  {
           viewerSettings.layerFilter = sxtSettings.layerFilter;
         }
+        if(sxtSettings.defaultContext)  {
+          viewerSettings.defaultContext = sxtSettings.defaultContext;
+        }
 
         if(angular.isUndefined(searchSettings.tabOverflow.search)) {
           delete searchSettings.mainTabs.search;

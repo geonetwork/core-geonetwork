@@ -202,11 +202,6 @@ yx-axis
 }
 */
   /* Pagination */
-  /* .sxt-panier { */
-  /*   .modal-body { */
-  /*     max-height: 200px; */
-  /*   } */
-  /* } */
   /* @media (max-width: @screen-md) { */
 }
 .gn > div:first-of-type,
@@ -273,12 +268,24 @@ yx-axis
 }
 .gn .gn-metadata-view p,
 .g .gn-metadata-view p {
-  font-size: 12px;
+  font-size: 13px;
 }
 .gn .gn-metadata-view ul,
 .g .gn-metadata-view ul,
 .gn .gn-metadata-view ul li,
 .g .gn-metadata-view ul li {
+  font-size: 13px;
+}
+.gn ul.dropdown-menu,
+.g ul.dropdown-menu,
+.gn .gn-facet ul,
+.g .gn-facet ul {
+  font-size: 12px;
+}
+.gn ul.dropdown-menu li,
+.g ul.dropdown-menu li,
+.gn .gn-facet ul li,
+.g .gn-facet ul li {
   font-size: 12px;
 }
 @font-face {
@@ -19304,6 +19311,31 @@ yx-axis
 .g .g {
   height: auto;
 }
+.gn input.ng-invalid,
+.g input.ng-invalid {
+  border-color: #a94442;
+}
+.gn ul.invalid .list-group-item,
+.g ul.invalid .list-group-item {
+  border-left-color: #a94442;
+  border-right-color: #a94442;
+}
+.gn ul.invalid .list-group-item:first-child,
+.g ul.invalid .list-group-item:first-child {
+  border-top-color: #a94442;
+}
+.gn ul.invalid .list-group-item:last-child,
+.g ul.invalid .list-group-item:last-child {
+  border-bottom-color: #a94442;
+}
+.gn .modal,
+.g .modal {
+  overflow: auto;
+}
+.gn [gn-popup],
+.g [gn-popup] {
+  position: fixed !important;
+}
 .gn [sxt-main-viewer] .sx-toolbar[gn-localisation-input],
 .g [sxt-main-viewer] .sx-toolbar[gn-localisation-input] {
   width: 15em;
@@ -19503,5 +19535,5 @@ yx-axis
   pointer-events: auto;
 }
 .modal-open {
-  overflow: hidden;
+  overflow: visible;
 }

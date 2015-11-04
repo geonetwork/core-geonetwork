@@ -140,6 +140,10 @@
 
           });
 
+          scope.keys = function(obj){
+            return obj? Object.keys(obj) : [];
+          }
+
           scope.$watch('pending', function(v) {
             mapElement.toggleClass('gn-gfi-loading', (v !== 0));
           });
@@ -153,17 +157,15 @@
 
   .filter('attributes', function() {
         return function(properties) {
-          var props = {};
           var exclude = ['FID', 'boundedBy', 'the_geom', 'thegeom'];
-          Object.keys(properties).forEach(function(k) {
-            if (exclude.indexOf(k) !== -1) return;
-            if (properties[k]) {
-              props[k] = properties[k].toString();
-            } else {
-              props[k] = '';
+          // sextant the properties is already keys)
+          for(var i = properties.length - 1; i >= 0; i--) {
+            if (exclude.indexOf(properties[i]) !== -1) {
+              properties.splice(i, 1);
+              //properties.length --;
             }
-          });
-          return props;
+          }
+          return properties;
         };
       });
 
