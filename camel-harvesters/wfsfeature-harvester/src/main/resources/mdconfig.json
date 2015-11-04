@@ -1,0 +1,19 @@
+{
+  "fields": [{
+    "name": "GRIDCODE",
+    "type": "integer",
+    "interval": {
+      "sets": [
+          "[0,150]",
+          "(150, 400]"
+      ]
+    },
+    "range": {
+      "start": 0,
+      "end": 500,
+      "gap": 150
+    }
+  }, {
+    "name": "LABEL"
+  }]
+}
