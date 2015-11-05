@@ -3,6 +3,8 @@ package org.fao.geonet.harvester.wfsfeatures.services;
 import com.google.common.collect.Lists;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.fao.geonet.harvester.wfsfeatures.event.WfsIndexingEvent;
 import org.fao.geonet.kernel.DataManager;
@@ -13,6 +15,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import javax.jms.*;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,7 +45,15 @@ public class HarvestRunner {
     @Autowired
     private DataManager dataManager;
 
+    @Autowired
+    private JMSMessager jmsMessager;
+
     private static final ArrayList<Namespace> NAMESPACES = Lists.newArrayList(GMD, GCO);
+
+//    public static void main(String[] args) throws Exception {
+//        HarvestRunner runner = new HarvestRunner();
+//        jmsMessager.sendMessage(null);
+//    }
 
     @RequestMapping(value = "/{uiLang}/wfs.harvest/{uuid}")
     @ResponseBody
@@ -76,7 +88,9 @@ public class HarvestRunner {
 
             String url = builder.build().toURL().toString();
             WfsIndexingEvent event = new WfsIndexingEvent(appContext, uuid, linkage, url);
-            appContext.publishEvent(event);
+//            appContext.publishEvent(event);
+            jmsMessager.sendMessage("harvest-wfs-features", event);
+
 
             JSONObject j = new JSONObject();
             j.put("url", url);

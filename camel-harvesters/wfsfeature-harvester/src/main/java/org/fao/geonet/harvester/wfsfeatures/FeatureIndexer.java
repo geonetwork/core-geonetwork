@@ -82,7 +82,7 @@ public class FeatureIndexer {
         // TODO: Discuss unique IDs
         document.addField("id", featureName + ID_DELIMITER + UUID.randomUUID());
         document.addField("docType", "feature");
-        document.addField("fid", featureName + ID_DELIMITER + linkage);
+        document.addField("ftid", featureName + ID_DELIMITER + linkage);
 
         NodeList featureAttributes = feature.getFirstChild().getChildNodes();
         if (featureAttributes != null && featureAttributes.getLength() > 0) {

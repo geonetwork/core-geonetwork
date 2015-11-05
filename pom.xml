@@ -1212,6 +1212,8 @@
     <lucene.version>4.9.0</lucene.version>
     <solr.version>5.3.1</solr.version>
     <solr.port>8984</solr.port>
+    <solr.collection>srv-catalog</solr.collection>
+    <jms.url>tcp://localhost:61616</jms.url>
     <spring.version>3.2.5.RELEASE</spring.version>
     <spring.security.version>3.1.4.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>

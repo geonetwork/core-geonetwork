@@ -13,26 +13,37 @@ public class HarvesterRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        final String url = "http://geoservices.brgm.fr/risques?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=BASIAS_LOCALISE&maxFeatures=10000";
-
+        final String url = "http://geoservices.brgm.fr/risques?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=BASIAS_LOCALISE&maxFeatures=1";
 //        final String url = "http4://geoservices.brgm.fr/risques?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=BASIAS_LOCALISE&maxFeatures=10000";
         //http://visi-sextant.ifremer.fr/cgi-bin/sextant/wfs/bgmb?REQUEST=GetFeature&SERVICE=WFS&VERSION=1.1.0&TypeName=SISMER_prelevements&maxFeatures=100 [
 
+
+        // Sample route using JMS
         from("timer://start?repeatCount=1").autoStartup(false)
                 .log(LoggingLevel.DEBUG, LOGGER_NAME, "Harvesting ${body.url} one time.")
                 .setHeader(Exchange.HTTP_URI, simple(url))
                 .setProperty("mduuid", simple(""))
                 .setProperty("linkage", simple("test"))
-                .to("direct:index-wfs");
+                .to("activemq:queue:harvest-wfs-features");
 
-        from("spring-event:default")
-                .filter(body().startsWith("http"))
-                .log(LoggingLevel.DEBUG, LOGGER_NAME, "${body.url}")
+        from("activemq:queue:harvest-wfs-features")
+                .log(LoggingLevel.DEBUG, LOGGER_NAME, "### ActiveMQ message received.")
+                .log(LoggingLevel.DEBUG, LOGGER_NAME, "${body}")
                 .setHeader("Exchange.HTTP_URI", simple("${body.url}"))
                 .setProperty("mduuid", simple("${body.uuid}"))
                 .setProperty("linkage", simple("${body.linkage}"))
                 .setBody(simple(""))
                 .to("direct:index-wfs");
+
+
+//        from("spring-event:default")
+//                .filter(body().startsWith("http"))
+//                .log(LoggingLevel.DEBUG, LOGGER_NAME, "${body.url}")
+//                .setHeader("Exchange.HTTP_URI", simple("${body.url}"))
+//                .setProperty("mduuid", simple("${body.uuid}"))
+//                .setProperty("linkage", simple("${body.linkage}"))
+//                .setBody(simple(""))
+//                .to("direct:index-wfs");
 
         // TODO drop feature before adding new one ?
         from("direct:index-wfs")
