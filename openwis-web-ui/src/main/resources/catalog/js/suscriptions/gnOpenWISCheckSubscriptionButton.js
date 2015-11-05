@@ -58,7 +58,7 @@
           $http.get(
               'openwis.processrequest.check?urn=' + $scope.md['geonet:info'].uuid)
               .success(function(data) {
-                if (data) {
+                if (!data) {
                   $scope.isRequested = false;
                   $scope.directDownload = false;
                 } else {
