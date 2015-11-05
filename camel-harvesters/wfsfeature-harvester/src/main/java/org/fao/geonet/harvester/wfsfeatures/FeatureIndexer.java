@@ -1,5 +1,6 @@
 package org.fao.geonet.harvester.wfsfeatures;
 
+import com.google.common.collect.ImmutableMap;
 import org.apache.camel.Exchange;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -21,8 +22,31 @@ import java.util.UUID;
 @Component
 public class FeatureIndexer {
 
+    // TODO move to config
+    public static final int SOLR_COMMIT_WITHIN_MS = 10000;
+    public static final String DEFAULT_WFS_DATATYPE = "character";
     private SolrClient solr;
 
+    /**
+     * Define for each attribute type the Solr field suffix.
+     */
+    private static Map<String, String> XSDTYPES_TO_SOLRFIELDSUFFIX;
+
+    // TODO: Move attributeType / solr dynamic index field suffix to config
+    // maybe make a bean taking care of this which could also do more
+    // complex mapping like based on feature type column name defined suffix
+    public static final String DEFAULT_SOLRFIELDSUFFIX = "_s";
+
+    static {
+        XSDTYPES_TO_SOLRFIELDSUFFIX = ImmutableMap.<String, String>builder()
+                .put("integer", "_i")
+                .put("character", DEFAULT_SOLRFIELDSUFFIX)
+                .put("real", "_d")
+                .put("boolean", "_b")
+                .put("date", "_dt")
+                .put("datetime", "_dt")
+                .build();
+    }
     @Autowired
     private DataManager dataManager;
 
@@ -47,7 +71,7 @@ public class FeatureIndexer {
         }
 
         // NPE ?
-        linkage = linkage.replaceFirst("^(http://|https://)", "");
+        linkage = linkage != null ? linkage.replaceFirst("^(http://|https://)", "") : "";
 
         // TODO move to config
         String urlString = "http://localhost:8984/solr/srv-catalog";
@@ -78,14 +102,10 @@ public class FeatureIndexer {
                                 attributeValue = attributeValue.trim();
                                 // TODO: Get geometry
                                 // TODO: Visit complex features ?
-                                String fieldType;
-                                String attributeConfig = fieldsConfig.get(attributeName);
-                                // TODO: Move attributeType / solr dynamic index field suffix to config
-                                if(attributeConfig != null && attributeConfig.equals("integer")) {
-                                    fieldType = "_i";
-                                    //TODO: maybe use _ti for better intervals performances
-                                } else {
-                                    fieldType = "_s";
+                                String attributeConfig = fieldsConfig != null ? fieldsConfig.get(attributeName) : DEFAULT_WFS_DATATYPE;
+                                String fieldType = XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeConfig);
+                                if (fieldType == null) {
+                                    fieldType = DEFAULT_SOLRFIELDSUFFIX;
                                 }
                                 document.addField(attributeName + fieldType, attributeValue);
                             }
@@ -95,9 +115,7 @@ public class FeatureIndexer {
             }
         }
         try {
-            // Commit within 10s
-            // TODO move to config
-            UpdateResponse response = solr.add(document, 10000);
+            UpdateResponse response = solr.add(document, SOLR_COMMIT_WITHIN_MS);
         } catch (SolrServerException e) {
             e.printStackTrace();
         } catch (IOException e) {
