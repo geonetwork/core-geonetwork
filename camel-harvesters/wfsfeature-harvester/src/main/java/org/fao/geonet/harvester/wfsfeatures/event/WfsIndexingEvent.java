@@ -7,31 +7,31 @@ import org.springframework.context.ApplicationEvent;
 
 public class WfsIndexingEvent extends ApplicationEvent{
 
-    final String url;
-    final String linkage;
+    final String featureType;
+    final String wfsUrl;
     final String uuid;
 
-    public String getUrl() {
-        return url;
+    public String getFeatureType() {
+        return featureType;
     }
 
-    public String getLinkage() {
-        return linkage;
+    public String getWfsUrl() {
+        return wfsUrl;
     }
 
     public String getUuid() {
         return uuid;
     }
 
-    public WfsIndexingEvent(Object source, final String uuid, final String linkage, final String url ) {
+    public WfsIndexingEvent(Object source, final String uuid, final String wfsUrl, final String featureType ) {
         super(source);
-        this.url = url;
+        this.featureType = featureType;
         this.uuid = uuid;
-        this.linkage = linkage;
-        System.out.println("Created a Custom event with url = " + this.url);
+        this.wfsUrl = wfsUrl;
+        System.out.println("Created a Custom event with url = " + this.featureType);
     }
 
     @Override
     public String toString() {
-        return this.url;
+        return this.featureType;
     }}

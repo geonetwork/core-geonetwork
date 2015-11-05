@@ -122,7 +122,8 @@
     * feature
     * metadata
     -->
-    <field name="docType" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+  <field name="docType" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+  <field name="featureTypeId" type="string" indexed="true" stored="true" required="true" multiValued="false" />
 
     <field name="_version_" type="long" indexed="true" stored="true"/>
     <field name="_root_" type="string" indexed="true" stored="false"/>

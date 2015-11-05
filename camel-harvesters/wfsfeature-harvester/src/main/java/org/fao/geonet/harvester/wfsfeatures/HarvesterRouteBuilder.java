@@ -17,23 +17,49 @@ public class HarvesterRouteBuilder extends RouteBuilder {
 //        final String url = "http4://geoservices.brgm.fr/risques?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=BASIAS_LOCALISE&maxFeatures=10000";
         //http://visi-sextant.ifremer.fr/cgi-bin/sextant/wfs/bgmb?REQUEST=GetFeature&SERVICE=WFS&VERSION=1.1.0&TypeName=SISMER_prelevements&maxFeatures=100 [
 
-
-        // Sample route using JMS
-        from("timer://start?repeatCount=1").autoStartup(false)
+        from("timer://start?repeatCount=1").autoStartup(true)
                 .log(LoggingLevel.DEBUG, LOGGER_NAME, "Harvesting ${body.url} one time.")
                 .setHeader(Exchange.HTTP_URI, simple(url))
                 .setProperty("mduuid", simple(""))
                 .setProperty("linkage", simple("test"))
                 .to("activemq:queue:harvest-wfs-features");
 
+        /**
+         * This route get `uuid` `wfsUrl` and `featureType` properties from JSM message.
+         * It creates a bean FeatureTypeBean to store these properties, the attribute
+         * types and the WFSDatastore.
+         * This bean will be pass to next Route.
+         */
         from("activemq:queue:harvest-wfs-features")
                 .log(LoggingLevel.DEBUG, LOGGER_NAME, "### ActiveMQ message received.")
-                .log(LoggingLevel.DEBUG, LOGGER_NAME, "${body}")
+                .setProperty("mduuid", simple("${body.uuid}"))
+/*
+                .setProperty("wfsUrl", simple("${body.wfsUrl}"))
+                .setProperty("featureType", simple("${body.featureType}"))
+*/
+                .setProperty("featureType", simple("menhirs"))
+                .setProperty("wfsUrl", simple("http://sdi.georchestra.org/geoserver/geor/wfs"))
+
+                .bean(FeatureTypeBean.class, "initialize")
+                .to("direct:index-wfs");
+
+/*
+        from("direct:describe")
+                .log(LoggingLevel.DEBUG, LOGGER_NAME, "### Direct describeFeatureType.")
+                .setProperty("featureType", simple("menhirs"))
+                .setProperty("linkage", simple("http://sdi.georchestra.org/geoserver/geor/wfs"))
+                .bean(FeatureTypeBean.class, "initialize");
+*/
+
+/*
+        .log(LoggingLevel.DEBUG, LOGGER_NAME, "${body}")
                 .setHeader("Exchange.HTTP_URI", simple("${body.url}"))
                 .setProperty("mduuid", simple("${body.uuid}"))
                 .setProperty("linkage", simple("${body.linkage}"))
                 .setBody(simple(""))
                 .to("direct:index-wfs");
+*/
+
 
 
 //        from("spring-event:default")
@@ -47,12 +73,7 @@ public class HarvesterRouteBuilder extends RouteBuilder {
 
         // TODO drop feature before adding new one ?
         from("direct:index-wfs")
-                .to("http4://wfs-server-url")
-                .convertBodyTo(Document.class)
-                .split()
-                    .xpath("//gml:featureMember/*|//wfs2:member/*", WfsNamespaces.wfsNamespaces.getNamespaces())
-                    .parallelProcessing()
-                    .bean(FeatureIndexer.class, "featureToIndexDocument");
+            .bean(FeatureIndexer.class, "featureToIndexDocument");
     }
 }
 

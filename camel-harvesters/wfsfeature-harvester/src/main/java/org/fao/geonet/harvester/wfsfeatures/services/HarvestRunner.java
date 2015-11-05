@@ -79,6 +79,7 @@ public class HarvestRunner {
             String linkage = linkageElt.getText();
             String featureType = ftElt.getText();
 
+            // TODO move to route
             URIBuilder builder = new URIBuilder(linkage);
             builder.addParameter("request", "GetFeature");
             builder.addParameter("service", "WFS");

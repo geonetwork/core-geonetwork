@@ -8,16 +8,20 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.fao.geonet.kernel.DataManager;
+import org.geotools.data.FeatureSource;
+import org.geotools.data.wfs.WFSDataStore;
+import org.geotools.feature.FeatureCollection;
+import org.geotools.feature.FeatureIterator;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 public class FeatureIndexer {
@@ -39,12 +43,11 @@ public class FeatureIndexer {
 
     static {
         XSDTYPES_TO_SOLRFIELDSUFFIX = ImmutableMap.<String, String>builder()
-                .put("integer", "_i")
-                .put("character", DEFAULT_SOLRFIELDSUFFIX)
-                .put("real", "_d")
+                .put("integer", "_ti")
+                .put("string", DEFAULT_SOLRFIELDSUFFIX)
+                .put("double", "_d")
                 .put("boolean", "_b")
                 .put("date", "_dt")
-                .put("datetime", "_dt")
                 .build();
     }
     @Autowired
@@ -54,71 +57,56 @@ public class FeatureIndexer {
 
     public void featureToIndexDocument(Exchange exchange) {
 
-        Document feature = exchange.getIn().getBody(Document.class);
-        String uuid = (String)exchange.getProperty("mduuid");
-        String linkage = (String)exchange.getProperty("linkage");
-        String featureName = feature.getFirstChild().getLocalName();
+        FeatureTypeConfig ftConfig = (FeatureTypeConfig)exchange.getProperty("featureTypeConfig");
+        String wfsUrl = ftConfig.getWfsUrl();
+        WFSDataStore wfs = ftConfig.getWfsDatastore();
+        String featureTypeName = ftConfig.getFeatureType();
+        Map<String, String> fields = ftConfig.getFields();
 
-        //TODO: use describeFeatureType for init ?
-        FeatureTypeConfig featureTypeConfig = new FeatureTypeConfig(dataManager);
-        Map<String, String> fieldsConfig = null;
-        try {
-            featureTypeConfig.load(uuid, linkage, featureName);
-            fieldsConfig = featureTypeConfig.getFields();
-        } catch (Exception e) {
-            //TODO: log
-            e.printStackTrace();
-        }
-
-        // NPE ?
-        linkage = linkage != null ? linkage.replaceFirst("^(http://|https://)", "") : "";
+        wfsUrl = wfsUrl != null ? wfsUrl.replaceFirst("^(http://|https://)", "") : "";
 
         // TODO move to config
         String urlString = "http://localhost:8984/solr/srv-catalog";
         solr = new HttpSolrClient(urlString);
 
-        SolrInputDocument document = new SolrInputDocument();
+        try {
+            FeatureSource<SimpleFeatureType, SimpleFeature> source = wfs.getFeatureSource(featureTypeName);
+            FeatureCollection<SimpleFeatureType, SimpleFeature> featuresCollection = source.getFeatures();
 
-        // TODO: Discuss unique IDs
-        document.addField("id", featureName + ID_DELIMITER + UUID.randomUUID());
-        document.addField("docType", "feature");
-        document.addField("ftid", featureName + ID_DELIMITER + linkage);
+            final FeatureIterator<SimpleFeature> features = featuresCollection.features();
+            int numInBatch = 0;
+            Collection<SolrInputDocument> docCollection = new ArrayList<SolrInputDocument>();
 
-        NodeList featureAttributes = feature.getFirstChild().getChildNodes();
-        if (featureAttributes != null && featureAttributes.getLength() > 0) {
-            for (int i = 0; i < featureAttributes.getLength(); i++) {
-                // TODO: Discuss index attributes ?
-                if (featureAttributes.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                    Element attribute = (Element) featureAttributes.item(i);
-                    String attributeName = attribute.getLocalName();
-                    Node node = attribute.getFirstChild();
+            while(features.hasNext()) {
+                SimpleFeature feature = features.next();
 
-                    // Only index fields from config or all if no config.
-                    if((fieldsConfig == null || fieldsConfig.size() == 0) ||
-                       (fieldsConfig != null && fieldsConfig.get(attributeName) != null)) {
-                        if (node != null && node.getNodeType() == Node.TEXT_NODE) {
-                            String attributeValue = node.getTextContent();
-                            if (attributeValue != null) {
-                                attributeValue = attributeValue.trim();
-                                // TODO: Get geometry
-                                // TODO: Visit complex features ?
-                                String attributeConfig = fieldsConfig != null ? fieldsConfig.get(attributeName) : DEFAULT_WFS_DATATYPE;
-                                String fieldType = XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeConfig);
-                                if (fieldType == null) {
-                                    fieldType = DEFAULT_SOLRFIELDSUFFIX;
-                                }
-                                document.addField(attributeName + fieldType, attributeValue);
-                            }
-                        }
+                SolrInputDocument document = new SolrInputDocument();
+
+                // TODO: Discuss unique IDs
+                document.addField("id", feature.getID());
+                document.addField("docType", "feature");
+                document.addField("featureTypeId", wfsUrl + "#" + featureTypeName);
+
+                for (String attributeName : fields.keySet()) {
+                    String attributeType = fields.get(attributeName);
+                    Object attributeValue = feature.getAttribute(attributeName);
+                    if(attributeValue != null) {
+                        document.addField(attributeName + XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType), attributeValue);
                     }
                 }
+
+                docCollection.add(document);
+                numInBatch++;
+                if (numInBatch >= 200) {
+                    UpdateResponse response = solr.add(docCollection, SOLR_COMMIT_WITHIN_MS);
+                    docCollection.clear();
+                    numInBatch = 0;
+                }
             }
+            UpdateResponse response = solr.add(docCollection, SOLR_COMMIT_WITHIN_MS);
         }
-        try {
-            UpdateResponse response = solr.add(document, SOLR_COMMIT_WITHIN_MS);
+        catch (IOException e) {
         } catch (SolrServerException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }

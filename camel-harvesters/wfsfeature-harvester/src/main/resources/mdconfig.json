@@ -1,6 +1,11 @@
 {
   "fields": [{
-    "name": "GRIDCODE",
+    "name": "GRIDCODE_i",
+    fq: {
+      interval.set:
+    },
+    i18n:
+
     "type": "integer",
     "interval": {
       "sets": [
