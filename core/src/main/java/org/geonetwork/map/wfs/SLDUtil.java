@@ -18,15 +18,12 @@ import org.opengis.filter.FilterFactory2;
 
 import javax.mail.internet.ContentType;
 import javax.mail.internet.ParseException;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-/**
- * Created by Vampouille on 11/2/15.
- */
+
 public class SLDUtil {
 
     /**
@@ -70,7 +67,7 @@ public class SLDUtil {
 
 
     /**
-     * Contruct a SLD document from list of styles and name
+     * Construct a SLD document from list of styles and name
      *
      * @param styles list iof styles to include in SLd
      * @param namedLayerName name of namedLayer entity
@@ -170,12 +167,32 @@ public class SLDUtil {
     /**
      * Generate a SLD Filter from filters defined in a JSON
      *
+     * JSON example :
+     * <pre>
+     * {
+     *     "baseStyle" : "Test:MuiltiRoad",
+     *     "filters": [ {"field_name": "longueur",
+     *                   "filter": [ { "filter_type": "PropertyIsBetween",
+     *                                 "params": [0,500]},
+     *                               { "filter_type": "PropertyIsBetween",
+     *                                 "params": [500,5000]}]},
+     *                  {"field_name": "departement",
+     *                   "filter": [ { "filter_type": "PropertyIsEqualTo",
+     *                                 "params": ["Ain"]}]},
+     *                  {"field_name": "date_renovation",
+     *                   "filter": [ { "filter_type": "PropertyIsBetween",
+     *                                 "params": ["2015-07-01", "2015-08-31"]},
+     *                               { "filter_type": "PropertyIsBetween",
+     *                                 "params": ["2014-07-01", "2014-08-31"]}]}
+     *                ]
+     * }</pre>
+     *
      * @param userFilters JSON representation of filters
      * @return Filter instance that represent combination of filters specified in JSON
      * @throws JSONException if some have wrong parameter count or malformed JSON
      */
 
-    public Filter generateCustomFilter(JSONObject userFilters) throws JSONException {
+    public static Filter generateCustomFilter(JSONObject userFilters) throws JSONException {
         FilterFactory2 ff2 = CommonFactoryFinder.getFilterFactory2();
 
         JSONArray filters = userFilters.getJSONArray("filters");

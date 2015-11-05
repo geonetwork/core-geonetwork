@@ -29,7 +29,12 @@
 			<artifactId>csw-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+        <dependency>
+            <groupId>org.geonetwork-opensource</groupId>
+            <artifactId>domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
 		
         <dependency>
             <groupId>${project.groupId}</groupId>

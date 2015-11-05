@@ -68,7 +68,7 @@ import java.util.List;
 
 public class DownloadArchive implements Service
 {
-	private static String FS = File.separator;
+	private static String FS = java.io.File.separator;
 	private Path stylePath;
 
 	//----------------------------------------------------------------------------
