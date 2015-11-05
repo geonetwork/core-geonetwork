@@ -33,24 +33,24 @@
 
     * facet: the name of a facet defined above
     * (optional) sortBy: the ordering for the facet. Defaults to by count.
-	* (optional) sortOrder: asc or desc. Defaults is descendant.
+    * (optional) sortOrder: asc or desc. Defaults is descendant.
     * (optional) max: the number of values to be returned for the facet. Defaults to 10.
     * (optional) depth: the depth to which hierarchical facets should be summarised. Defaults to 1.
     * (optional) format: the format to be used for generating facet summary elements. Defaults to 
         'FACET_NAME'. Can also be 'DIMENSION', which uses a top level
         dimension tag and category tags for sub-categories which is more suitable for hierarchical facets. 
-  * (optional) translator: Define a DB translator to retrieve label from description
-  tables (eg. categoriesdes) or codelist translator to retrieve label from schema
-  codelists files.
+    * (optional) translator: Define a DB translator to retrieve label from description
+        tables (eg. categoriesdes) or codelist translator to retrieve label from schema
+        codelists files.
 
   eg. for category
 
-            <item dimension="category" plural="categories" indexKey="_cat" max="45"
+        <item dimension="category" plural="categories" indexKey="_cat" max="45"
             translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
 
   or for group
 
-            <item dimension="groupOwner" plural="groupOwners" indexKey="_groupOwner"
+        <item dimension="groupOwner" plural="groupOwners" indexKey="_groupOwner"
         max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
 
 -->
@@ -61,6 +61,7 @@
         <facet name="category" indexKey="_cat" label="categories" localized="true"/>
         <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
         <facet name="inspireThemeWithAc" indexKey="inspirethemewithac" label="inspireThemesWithAc"/>
+        <facet name="inspireThemeURI" indexKey="inspirethemeuri" label="inspireThemesURI"/>
         <facet name="denominator" indexKey="denominator" label="denominators"/>
         <facet name="resolution" indexKey="resolution" label="resolutions"/>
         <facet name="spatialRepresentationType" indexKey="cl_spatialRepresentationType"
@@ -105,7 +106,8 @@
         <summaryType name="details" format="DIMENSION">
           <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
           <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
-          <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
+          <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35" translator="term:http://geonetwork-opensource.org/inspire-theme"/>
+          <!--<item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>-->
           <!--<item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>-->
           <item facet="keyword" max="15"/>
           <item facet="orgName" max="25"/>
@@ -151,6 +153,7 @@
             <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
             <item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>
+            <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35" translator="term:http://geonetwork-opensource.org/inspire-theme"/>
             <item facet="keyword" max="15"/>
             <item facet="orgName" max="25"/>
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
