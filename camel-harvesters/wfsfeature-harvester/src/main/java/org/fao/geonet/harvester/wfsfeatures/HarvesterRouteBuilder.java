@@ -17,7 +17,7 @@ public class HarvesterRouteBuilder extends RouteBuilder {
 //        final String url = "http4://geoservices.brgm.fr/risques?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=BASIAS_LOCALISE&maxFeatures=10000";
         //http://visi-sextant.ifremer.fr/cgi-bin/sextant/wfs/bgmb?REQUEST=GetFeature&SERVICE=WFS&VERSION=1.1.0&TypeName=SISMER_prelevements&maxFeatures=100 [
 
-        from("timer://start?repeatCount=1").autoStartup(true)
+        from("timer://start?repeatCount=1").autoStartup(false)
                 .log(LoggingLevel.DEBUG, LOGGER_NAME, "Harvesting ${body.url} one time.")
                 .setHeader(Exchange.HTTP_URI, simple(url))
                 .setProperty("mduuid", simple(""))
@@ -33,12 +33,14 @@ public class HarvesterRouteBuilder extends RouteBuilder {
         from("activemq:queue:harvest-wfs-features")
                 .log(LoggingLevel.DEBUG, LOGGER_NAME, "### ActiveMQ message received.")
                 .setProperty("mduuid", simple("${body.uuid}"))
-/*
+
                 .setProperty("wfsUrl", simple("${body.wfsUrl}"))
                 .setProperty("featureType", simple("${body.featureType}"))
-*/
+
+/*
                 .setProperty("featureType", simple("menhirs"))
                 .setProperty("wfsUrl", simple("http://sdi.georchestra.org/geoserver/geor/wfs"))
+*/
 
                 .bean(FeatureTypeBean.class, "initialize")
                 .to("direct:index-wfs");

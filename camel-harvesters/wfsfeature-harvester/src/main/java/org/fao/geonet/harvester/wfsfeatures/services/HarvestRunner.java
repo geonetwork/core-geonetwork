@@ -50,14 +50,47 @@ public class HarvestRunner {
 
     private static final ArrayList<Namespace> NAMESPACES = Lists.newArrayList(GMD, GCO);
 
-//    public static void main(String[] args) throws Exception {
-//        HarvestRunner runner = new HarvestRunner();
-//        jmsMessager.sendMessage(null);
-//    }
 
+    /**
+     * Index a featureType from a wfs service URL and a typename
+     *
+     * @param uiLang lang
+     * @param wfsUrl wfs service url
+     * @param featureType feature type name
+     * @param webRequest
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/{uiLang}/wfs.harvest")
+    @ResponseBody
+    public JSONObject indexWfs(
+            @PathVariable String uiLang,
+            @RequestParam("url") String wfsUrl,
+            @RequestParam("typename") String featureType,
+            NativeWebRequest webRequest) throws Exception {
+
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("indexedFeatures", sendMessage(null, wfsUrl, featureType));
+
+        return result;
+    }
+
+    /**
+     * Index all featureTypes that are contained in the metadata.
+     * Feature types are extracted from the online resources of the metedata.
+     * The protocol should be WFS, the typename is from gmd:name element, and
+     * the url from the gmd:linkage.
+     *
+     * @param uiLang lang
+     * @param uuid uuid of the metadata
+     * @param webRequest
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/{uiLang}/wfs.harvest/{uuid}")
     @ResponseBody
-    public JSONObject localServiceDescribe(
+    public JSONObject indexWfs(
             @PathVariable String uiLang,
             @PathVariable String uuid,
             NativeWebRequest webRequest) throws Exception {
@@ -74,29 +107,8 @@ public class HarvestRunner {
 
             Element linkageElt = (Element)Xml.selectSingle(element, "gmd:linkage/gmd:URL", NAMESPACES);
             Element ftElt = (Element)Xml.selectSingle(element, "gmd:name/gco:CharacterString", NAMESPACES);
-            Element configElt = (Element)Xml.selectSingle(element, "gmd:applicationProfile/gco:CharacterString", NAMESPACES);
 
-            String linkage = linkageElt.getText();
-            String featureType = ftElt.getText();
-
-            // TODO move to route
-            URIBuilder builder = new URIBuilder(linkage);
-            builder.addParameter("request", "GetFeature");
-            builder.addParameter("service", "WFS");
-            builder.addParameter("maxFeatures", "100");
-            builder.addParameter("version", "1.0.0");
-            builder.addParameter("TYPENAME", featureType);
-
-            String url = builder.build().toURL().toString();
-            WfsIndexingEvent event = new WfsIndexingEvent(appContext, uuid, linkage, url);
-//            appContext.publishEvent(event);
-            jmsMessager.sendMessage("harvest-wfs-features", event);
-
-
-            JSONObject j = new JSONObject();
-            j.put("url", url);
-            j.put("featureType", featureType);
-            a.add(j);
+            a.add(sendMessage(uuid, linkageElt.getText(), ftElt.getText()));
         }
 
         JSONObject result = new JSONObject();
@@ -104,5 +116,17 @@ public class HarvestRunner {
         result.put("indexedFeatures", a);
 
         return result;
+    }
+
+    private JSONObject sendMessage(final String uuid, final String wfsUrl, final String featureType) {
+
+        WfsIndexingEvent event = new WfsIndexingEvent(appContext, uuid, wfsUrl, featureType);
+        jmsMessager.sendMessage("harvest-wfs-features", event);
+
+        JSONObject j = new JSONObject();
+        j.put("url", wfsUrl);
+        j.put("featureType", featureType);
+
+        return j;
     }
 }
