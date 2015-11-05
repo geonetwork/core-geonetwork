@@ -140,6 +140,8 @@ public class Service {
     @RequestMapping(value = { "/{lang}/openwis.cache.check" }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody Boolean get(@RequestParam String urn) {
+        urn = urn.toLowerCase();
+        
         Date d = new Date(System.currentTimeMillis());
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss'Z'");
