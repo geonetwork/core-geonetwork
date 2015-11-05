@@ -217,6 +217,10 @@
         var map = scope.$eval(attrs['sxtFullScreen']);
         // FIXME: which element to maximize??
         var elem = $('[sxt-main-viewer]')[0];
+        $(document).on(
+          'mozfullscreenchange webkitfullscreenchange fullscreenchange',
+          function() { map.updateSize(); }
+        );
         element.on('click', function() {
           if (!document.fullscreenElement && !document.mozFullScreenElement &&
             !document.webkitFullscreenElement) {
