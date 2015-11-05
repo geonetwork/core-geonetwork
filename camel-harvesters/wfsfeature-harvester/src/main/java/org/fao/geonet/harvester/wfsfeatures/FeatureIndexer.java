@@ -46,8 +46,10 @@ public class FeatureIndexer {
             e.printStackTrace();
         }
 
+        // NPE ?
         linkage = linkage.replaceFirst("^(http://|https://)", "");
 
+        // TODO move to config
         String urlString = "http://localhost:8984/solr/srv-catalog";
         solr = new HttpSolrClient(urlString);
 
@@ -67,8 +69,9 @@ public class FeatureIndexer {
                     String attributeName = attribute.getLocalName();
                     Node node = attribute.getFirstChild();
 
-                    // Only index fields from config
-                    if(fieldsConfig != null && fieldsConfig.get(attributeName) != null) {
+                    // Only index fields from config or all if no config.
+                    if((fieldsConfig == null || fieldsConfig.size() == 0) ||
+                       (fieldsConfig != null && fieldsConfig.get(attributeName) != null)) {
                         if (node != null && node.getNodeType() == Node.TEXT_NODE) {
                             String attributeValue = node.getTextContent();
                             if (attributeValue != null) {
@@ -76,11 +79,12 @@ public class FeatureIndexer {
                                 // TODO: Get geometry
                                 // TODO: Visit complex features ?
                                 String fieldType;
-                                if(fieldsConfig.get(attributeName).equals("integer")) {
+                                String attributeConfig = fieldsConfig.get(attributeName);
+                                // TODO: Move attributeType / solr dynamic index field suffix to config
+                                if(attributeConfig != null && attributeConfig.equals("integer")) {
                                     fieldType = "_i";
                                     //TODO: maybe use _ti for better intervals performances
-                                }
-                                else {
+                                } else {
                                     fieldType = "_s";
                                 }
                                 document.addField(attributeName + fieldType, attributeValue);
@@ -92,6 +96,7 @@ public class FeatureIndexer {
         }
         try {
             // Commit within 10s
+            // TODO move to config
             UpdateResponse response = solr.add(document, 10000);
         } catch (SolrServerException e) {
             e.printStackTrace();
