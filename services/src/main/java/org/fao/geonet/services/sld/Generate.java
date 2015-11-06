@@ -1,8 +1,8 @@
 package org.fao.geonet.services.sld;
 
-import org.fao.geonet.domain.File;
-import org.fao.geonet.repository.FileRepository;
-import org.geonetwork.map.wfs.SLDUtil;
+import org.fao.geonet.domain.TextFile;
+import org.fao.geonet.repository.TextFileRepository;
+import org.geonetwork.map.wms.SLDUtil;
 import org.geotools.styling.SLDTransformer;
 import org.geotools.styling.Style;
 import org.geotools.styling.StyledLayerDescriptor;
@@ -23,7 +23,7 @@ import java.net.URL;
 public class Generate {
 
     @Autowired
-    private FileRepository fileRepository;
+    private TextFileRepository fileRepository;
 
 
     @RequestMapping(value = "/{lang}/generateSLD", method= RequestMethod.GET)
@@ -115,7 +115,7 @@ public class Generate {
             String xml = styleTransform.transform(newSLD);
 
 
-            File sld = new File();
+            TextFile sld = new TextFile();
             sld.setContent(xml);
             sld.setMimeType("application/xml");
             fileRepository.save(sld);
@@ -134,7 +134,7 @@ public class Generate {
     @RequestMapping("/{lang}/getSLD/{id:\\d+}.{extension}")
     public void handleFileDownload(@PathVariable("id") int id, HttpServletResponse response) throws IOException {
 
-        File file = fileRepository.findOne(id);
+        TextFile file = fileRepository.findOne(id);
         response.setContentType(file.getMimeType()+ "; charset=utf-8");
 
         PrintWriter writer = response.getWriter();

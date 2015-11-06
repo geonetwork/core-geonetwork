@@ -9,13 +9,13 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "files")
-@SequenceGenerator(name= File.ID_SEQ_NAME, initialValue=1, allocationSize=1)
-public class File extends GeonetEntity {
+@SequenceGenerator(name= TextFile.ID_SEQ_NAME, initialValue=1, allocationSize=1)
+public class TextFile extends GeonetEntity {
 
     static final String ID_SEQ_NAME = "files_id_seq";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = File.ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = TextFile.ID_SEQ_NAME)
     @Column(nullable = false)
     private int _id;
 
@@ -43,7 +43,7 @@ public class File extends GeonetEntity {
      * @param id new identifier of the file.
      * @return this file object
      */
-    public File setId(int id) {
+    public TextFile setId(int id) {
         this._id = id;
         return this;
     }
@@ -64,7 +64,7 @@ public class File extends GeonetEntity {
      * @param content content of file
      * @return this file object
      */
-    public File setContent(String content) {
+    public TextFile setContent(String content) {
         this._content = content;
         return this;
     }
@@ -83,7 +83,7 @@ public class File extends GeonetEntity {
      * @param mimeType MIME Type of file
      * @return this file object
      */
-    public File setMimeType(String mimeType) {
+    public TextFile setMimeType(String mimeType) {
         this._mimeType = mimeType;
         return this;
     }
@@ -104,7 +104,7 @@ public class File extends GeonetEntity {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        File other = (File) obj;
+        TextFile other = (TextFile) obj;
         return this._id == other._id;
     }
 
