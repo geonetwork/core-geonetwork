@@ -577,7 +577,7 @@
           && !user.isReviewerOrMore());
 
 
-      scope.links = md.getLinksByType('LINK');
+      scope.links = md.getLinksByType('LINK', 'DOWNLOAD');
 
       var transferOpts = md.getLinksByType('OGC:WMS').length != 1;
       if(transferOpts) {
