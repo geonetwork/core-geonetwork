@@ -1,4 +1,4 @@
-package org.geonetwork.map.wfs;
+package org.geonetwork.map.wms;
 import org.geotools.data.ows.Specification;
 import org.geotools.data.wms.WMS1_1_1;
 import org.geotools.data.wms.WebMapServer;
