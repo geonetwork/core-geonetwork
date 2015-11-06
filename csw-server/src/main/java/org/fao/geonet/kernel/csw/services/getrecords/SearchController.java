@@ -52,7 +52,9 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -105,7 +107,7 @@ public class SearchController {
      * @throws CatalogException hmm
      */
     public Pair<Element, Element> search(ServiceContext context, int startPos, int maxRecords,
-                                         ResultType resultType, OutputSchema outSchema, ElementSetName setName,
+                                         ResultType resultType, String outSchema, ElementSetName setName,
                                          Element filterExpr, String filterVersion, Sort sort,
                                          Set<String> elemNames, String typeName, int maxHitsFromSummary,
                                          String cswServiceSpecificContraint, String strategy) throws CatalogException {
@@ -167,7 +169,7 @@ public class SearchController {
                                                 Element results,
                                                 Pair<Element, List<ResultItem>> summaryAndSearchResults,
                                                 int maxRecords, ElementSetName elementSetName,
-                                                OutputSchema outputSchema, Set<String> elementNames,
+                                                String outputSchema, Set<String> elementNames,
                                                 String typeName, ResultType resultType, String strategy, String displayLanguage)
             throws CatalogException {
 
@@ -211,7 +213,7 @@ public class SearchController {
      * conversion available for the schema (eg. fgdc record can not be converted to ISO).
      * @throws CatalogException hmm
      */
-  public static Element retrieveMetadata(ServiceContext context, String id, ElementSetName setName, OutputSchema
+  public static Element retrieveMetadata(ServiceContext context, String id, ElementSetName setName, String
           outSchema, Set<String> elemNames, String typeName, ResultType resultType, String strategy, String displayLanguage) throws CatalogException {
 
 	try	{
@@ -227,21 +229,6 @@ public class SearchController {
 		String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
 
 
-		// --- transform iso19115 record to iso19139
-		// --- If this occur user should probably migrate the catalogue from iso19115 to iso19139.
-		// --- But sometimes you could harvest remote node in iso19115 and make them available through CSW
-		if (schema.equals("iso19115")) {
-            Path styleSheetPath =
-                    context.getAppPath().resolve("xsl").resolve("conversion").resolve("import").resolve("ISO19115-to-ISO19139.xsl");
-            res = Xml.transform(res, styleSheetPath);
-			schema = "iso19139";
-		}
-		
-		//--- skip metadata with wrong schemas
-		if (schema.equals("fgdc-std") || schema.equals("dublin-core"))
-		    if(outSchema != OutputSchema.OGC_CORE)
-		    	return null;
-        
 		// apply stylesheet according to setName and schema
         //
         // OGC 07-045 :
@@ -285,35 +272,31 @@ public class SearchController {
      * @throws InvalidParameterValueEx hmm
      */
     private static Element applyElementSetName(ServiceContext context, SchemaManager schemaManager, String schema,
-                                               Element result, OutputSchema outputSchema, ElementSetName elementSetName,
+                                               Element result, String outputSchema, ElementSetName elementSetName,
                                                ResultType resultType, String id, String displayLanguage) throws InvalidParameterValueEx {
-        String prefix ;
-        if (outputSchema == OutputSchema.OGC_CORE) {
-            prefix = "ogc";
-        } else if (outputSchema == OutputSchema.ISO_PROFILE) {
-            prefix = "iso";
-        } else if (outputSchema == OutputSchema.OWN) {
-            prefix = "own";
-        } else {
-            throw new InvalidParameterValueEx("outputSchema not supported for metadata " + id + " schema.", schema);
-        }
-
 		Path schemaDir  = schemaManager.getSchemaCSWPresentDir(schema);
-		Path styleSheet = schemaDir.resolve(prefix +"-"+ elementSetName +".xsl");
+		Path styleSheet = schemaDir.resolve(outputSchema + "-" + elementSetName + ".xsl");
 
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("lang", displayLanguage);
-		params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
+        if (!Files.exists(styleSheet)) {
+            context.warning(
+                    String.format(
+                            "OutputSchema '%s' not supported for metadata with '%s' (%s). Corresponding XSL transformation '%s' does not exist. The record will not be returned in response.",
+                            outputSchema, id, schema, styleSheet.toString()));
+            return null;
+        } else {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("lang", displayLanguage);
+            params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 
-		try {
-		    result = Xml.transform(result, styleSheet, params);
-		}
-        catch (Exception e) {
-		    context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
-	        context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
-		    return null;
-		}
-        return result;
+            try {
+                result = Xml.transform(result, styleSheet, params);
+            } catch (Exception e) {
+                context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
+                context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
+                return null;
+            }
+            return result;
+        }
     }
 
     public final static String DEFAULT_ELEMENTNAMES_STRATEGY = "relaxed";

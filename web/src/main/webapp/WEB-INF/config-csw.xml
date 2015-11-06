@@ -228,28 +228,10 @@
 				<value>Filter</value>
 				<value>CQL</value>
 			</constraintLanguage>
-			<typenames>
-				<typename namespace="http://www.isotc211.org/2005/gmd" 
-				prefix="gmd" name="MD_Metadata" />
-				<!-- FIXME ISO PROFIL : Use declared primeNS in current node. 
-				<typename namespace="http://www.cnig.gouv.fr/2005/fra"
-				prefix="fra" name="MD_Metadata" />-->
-				<typename namespace="http://www.opengis.net/cat/csw/2.0.2" 
-					prefix="csw" name="Record" />
-			</typenames>
 		</operation>
 		<operation name="DescribeRecord">
 			<!-- schema attribute must defined an existing schema file name -->
 			<!-- located at /web/geonetwork/xml/validation/csw/2.0.2/ -->
-			<typenames>
-				<typename namespace="http://www.isotc211.org/2005/gmd" 
-				    prefix="gmd" name="MD_Metadata" schema="identification.xsd" />
-				<!-- FIXME ISO PROFIL : Use declared primeNS in current node. 
-					<typename namespace="http://www.cnig.gouv.fr/2005/fra"
-					prefix="fra" name="MD_Metadata" schema="fra.xsd" />-->
-				<typename namespace="http://www.opengis.net/cat/csw/2.0.2" 
-				    prefix="csw" name="Record" schema="record.xsd" />
-			</typenames>
 			<outputformat>
 				<format>application/xml</format>
 			</outputformat>

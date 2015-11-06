@@ -38,6 +38,7 @@ import org.fao.geonet.csw.common.exceptions.VersionNegotiationFailedEx;
 import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
@@ -52,6 +53,7 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
@@ -86,7 +88,8 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
     private CatalogConfiguration _catalogConfig;
     @Autowired
     private FieldMapper _fieldMapper;
-
+    @Autowired
+    private SchemaManager _schemaManager;
 	//---------------------------------------------------------------------------
 	//---
 	//--- API methods
@@ -567,35 +570,65 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 				fillGetRecordsParams(op);
 				continue;
 			}
+            if (op.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME)
+                    .equals(Csw.ConfigFile.Operation.Attr.Value.GET_RECORD_BY_ID)) {
+                populateTypeNameAndOutputSchema(op);
+                continue;
+            }
 			if (op.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME)
 					.equals(Csw.ConfigFile.Operation.Attr.Value.DESCRIBE_RECORD)) {
-				fillDescribeRecordTypenames(op);
+                populateTypeNameAndOutputSchema(op);
             }
 		}
 	}
 
     /**
-     * TODO javadoc.
+     * Based on loaded schema plugins populate the list of typeNames and outputSchema
+     * available in that catalog.
+     *
+     * <pre>
+     *   <ows:Parameter xmlns:gfc="http://www.isotc211.org/2005/gfc" name="outputSchema">
+     *      <!-- Set depending on schema plugins -->
+     *      <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+     *      <ows:Value>http://www.isotc211.org/2005/gfc</ows:Value>
+     *      <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
+     *    </ows:Parameter>
+     *    <ows:Parameter xmlns:gfc="http://www.isotc211.org/2005/gfc" name="typeNames">
+     *      <!-- Set depending on schema plugins -->
+     *      <ows:Value>csw:Record</ows:Value>
+     *      <ows:Value>gfc:FC_FeatureCatalogue</ows:Value>
+     *      <ows:Value>gmd:MD_Metadata</ows:Value>
+     *    </ows:Parameter>
+     * </pre>
      *
      * @param op
      */
-	private void fillDescribeRecordTypenames(Element op) {
-		Element parameter = new Element("Parameter", Csw.NAMESPACE_OWS)
-			.setAttribute("name", "typeName");
-		
-		Set<String> typenames = _catalogConfig.getDescribeRecordTypename().keySet();
-		for (String typename : typenames) {
-			parameter.addContent(new Element("Value", Csw.NAMESPACE_OWS)
-				.setText(typename));
-		}
-
-		// Add Parameter node before constraint node if exist
-		Element constraintNode = op.getChild("Constraint", Csw.NAMESPACE_OWS);
-		if (constraintNode != null)
-			op.addContent(op.indexOf(constraintNode) - 1, parameter);
-		else
-			op.addContent(parameter);
-	}
+    private void populateTypeNameAndOutputSchema(Element op) {
+        Map<String, Namespace> typenames = _schemaManager.getHmSchemasTypenames();
+        List<Element> operations = op.getChildren("Parameter", Csw.NAMESPACE_OWS);
+        for (Element operation : operations) {
+            if ("typeNames".equals(operation.getAttributeValue("name"))) {
+                Iterator<String> iterator = typenames.keySet().iterator();
+                while(iterator.hasNext()) {
+                    String typeName = iterator.next();
+                    Namespace ns = typenames.get(typeName);
+                    String typename = typeName;
+                    operation.addNamespaceDeclaration(ns);
+                    operation.addContent(new Element("Value", Csw.NAMESPACE_OWS)
+                            .setText(typename));
+                }
+            } else if ("outputSchema".equals(operation.getAttributeValue("name"))) {
+                Iterator<String> iterator = typenames.keySet().iterator();
+                while(iterator.hasNext()) {
+                    String typeName = iterator.next();
+                    Namespace ns = typenames.get(typeName);
+                    operation.addNamespaceDeclaration(ns);
+                    operation.addContent(new Element("Value", Csw.NAMESPACE_OWS)
+                            .setText(ns.getURI()));
+                }
+            }
+        }
+    }
 
     /**
      * TODO javadoc.
@@ -625,6 +658,8 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		}
 		op.addContent(isoConstraint);
 		op.addContent(additionalConstraint);
+
+        populateTypeNameAndOutputSchema(op);
 	}
 
 }

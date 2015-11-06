@@ -28,6 +28,7 @@ import jeeves.server.overrides.ConfigurationOverrides;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -35,11 +36,7 @@ import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import javax.servlet.ServletContext;
 
 public class CatalogConfiguration {
@@ -74,6 +71,8 @@ public class CatalogConfiguration {
     private GeonetworkDataDirectory _dataDir;
     @Autowired(required = false)
     private ServletContext _servletContext;
+    @Autowired
+    private SchemaManager _schemaManager;
 
     private volatile boolean initialized = false;
 
@@ -180,33 +179,23 @@ public class CatalogConfiguration {
 	 */
 	private void initDescribeRecordConfig(Element operation) {
 		// Handle typename parameter list value
-		List<Element> typenameList = getTypenamesConfig(operation);
-		
-		String name, prefix, uri, schema;
-		Namespace namespace;
-
-        for (Element typename : typenameList) {
-            name = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.NAME);
-            prefix = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.PREFIX);
-            schema = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.SCHEMA);
-            uri = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.NAMESPACE);
-            namespace = Namespace.getNamespace(prefix, uri);
-            _describeRecordNamespaces.add(namespace);
-            _describeRecordTypenames.put(prefix + ":" + name, schema);
+        Map<String, Namespace> typenames = _schemaManager.getHmSchemasTypenames();
+        Iterator<String> iterator = typenames.keySet().iterator();
+        while(iterator.hasNext()) {
+            String typeName = iterator.next();
+            Namespace ns = typenames.get(typeName);
+            String typename = typeName;
+            // TODO: Schema plugin schema should be published in
+            // /web/geonetwork/xml/validation/csw/2.0.2 for validation.
+            String schema = ns.getPrefix().equals("csw") ? "record.xsd" : (
+                        ns.getPrefix().equals("gmd") ? "identification.xsd" : "unknown.xsd"
+                    );
+            _describeRecordNamespaces.add(ns);
+            _describeRecordTypenames.put(typename, schema);
         }
-		
 		// Handle outputFormat parameter
 		_describeRecordOutputFormat.addAll(getOutputFormat(operation));
 
-	}
-
-	private List<Element> getTypenamesConfig(Element operation) {
-		Element typenames = operation
-				.getChild(Csw.ConfigFile.Operation.Child.TYPENAMES);
-
-        @SuppressWarnings("unchecked")
-        List<Element> typenamesConfig = typenames.getChildren(Csw.ConfigFile.Typenames.Child.TYPENAME);
-        return typenamesConfig;
 	}
 
 	private void initGetRecordsConfig(Element operation) {
@@ -279,17 +268,16 @@ public class CatalogConfiguration {
         }
 		
 		// Handle typenames parameter list value
-		List<Element> typenameList = getTypenamesConfig(operation);
-		String tname, prefix, uri;
-        for (Element typename : typenameList) {
-            tname = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.NAME);
-            prefix = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.PREFIX);
-            uri = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.NAMESPACE);
-            _getRecordsOutputSchema.add(uri);
-            _getRecordsTypenames.add(prefix + ":" + tname);
+        Map<String, Namespace> typenames = _schemaManager.getHmSchemasTypenames();
+        Iterator<String> iterator = typenames.keySet().iterator();
+        while(iterator.hasNext()) {
+            String typeName = iterator.next();
+            Namespace ns = typenames.get(typeName);
+            String typename = ns.getPrefix() +
+                    ":" + typeName;
+            _getRecordsOutputSchema.add(ns.getURI());
+            _getRecordsTypenames.add(typename);
         }
-		
-		
 	}
 	
 	/**

@@ -28,6 +28,7 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -84,6 +85,9 @@ public class GetRecordById extends AbstractOperation implements CatalogService
     private CatalogConfiguration _catalogConfig;
 
     @Autowired
+    private SchemaManager _schemaManager;
+
+    @Autowired
     public GetRecordById(ApplicationContext applicationContext) {
         _searchController = new SearchController(applicationContext);
     }
@@ -104,7 +108,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 		checkVersion(request);
 		//-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
 		checkOutputFormat(request);
-		OutputSchema outSchema = OutputSchema.parse(request.getAttributeValue("outputSchema"));
+		String outSchema = OutputSchema.parse(request.getAttributeValue("outputSchema"), _schemaManager);
 		//--------------------------------------------------------
 
 		ElementSetName setName = getElementSetName(request, ElementSetName.SUMMARY);
@@ -143,7 +147,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
                     Element filterExpr = new Element("Filter", Csw.NAMESPACE_OGC);
 
-                    Pair<Element, Element> results= _searchController.search(context, 0, 1, ResultType.HITS, OutputSchema.OGC_CORE,
+                    Pair<Element, Element> results= _searchController.search(context, 0, 1, ResultType.HITS, "csw",
                             ElementSetName.BRIEF,  filterExpr, Csw.FILTER_VERSION_1_1, null, null, null, 0, cswServiceSpecificContraint, null);
 
 
