@@ -172,7 +172,7 @@
         params : {id: $scope.metadataId }
       }).success(function(data) {
         $scope.updateData();
-        $("#deleteProductMetadata").modal('hide');
+        $("#deleteMetadata").modal('hide');
       }).error(function(data) {
         console.log(data);
         $scope.updateData();
