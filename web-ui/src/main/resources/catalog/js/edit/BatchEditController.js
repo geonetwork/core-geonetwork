@@ -21,8 +21,9 @@
     'gnSearchSettings',
     'gnMetadataActions',
     'gnGlobalSettings',
+    'Metadata',
     function($scope, $location, $rootScope, $translate, $q, $http,
-        gnSearchSettings, gnMetadataActions, gnGlobalSettings) {
+        gnSearchSettings, gnMetadataActions, gnGlobalSettings, Metadata) {
       $scope.onlyMyRecord = false;
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.defaultSearchObj = {
@@ -57,7 +58,24 @@
         value ? setOwner() : unsetOwner();
       });
 
-
+      $scope.$watch('searchResults.selectedCount',
+        function (newvalue, oldvalue) {
+          if (oldvalue != newvalue) {
+            $http.get('md.selected?_content_type=json').success(function(uuids) {
+              $http.get('q?_content_type=json&fast=index&_uuid=' + uuids.join(' or ')).success(
+                function (data) {
+                  // TODO: If too many records - only list the first 20.
+                  $scope.selectedRecords = {records: []};
+                  for (var i = 0; i < data.metadata.length; i++) {
+                    $scope.selectedRecords.records.push(new Metadata(data.metadata[i]));
+                  }
+                  $scope.selectedRecords.count = data.count;
+                  $scope.selectedRecords.facet = data.facet;
+                  $scope.selectedRecords.dimension = data.dimension;
+                });
+            });
+          }
+        });
       /***
        * Get current selection which returns the list of uuids.
        * Then search those records.
@@ -101,7 +119,14 @@
         'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/' +
             'gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString',
         'label': 'title',
+        'mandatory': true,
         'type': 'text',
+        'value': null
+      },{
+        'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/' +
+        'gmd:pointOfContact',
+        'label': 'resourceContact',
+        'type': 'data-gn-contact-picker',
         'value': null
       },{
         'xpath': 'gmd:language/language/LanguageCode/@codeListValue',
@@ -132,6 +157,10 @@
         hitsPerPage: gnSearchSettings.hitsperpageValues[1]
       };
 
+      $scope.selectedRecords = null;
+      $scope.markFieldAsDeleted = function(field) {
+        // TODO
+      };
       $scope.applyChanges = function() {
         var params = {}, i = 0;
         angular.forEach($scope.fieldConfig, function(field) {

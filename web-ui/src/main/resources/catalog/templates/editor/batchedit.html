@@ -227,13 +227,31 @@
             <div class="form-group"
                  data-ng-repeat="field in fieldConfig">
               <label for="field{{$index}}"
-                     class="col-sm-2 control-label">{{field.label}}</label>
+                     class="col-sm-2 control-label">{{field.label | translate}}</label>
               <div class="col-sm-8">
-                <input type="text"
-                       class="form-control"
-                       id="field{{$index}}"
-                       data-ng-model="field.value"/>
-                <!-- Add search and replace mode ? -->
+                <div class="input-group">
+                  <input type="text"
+                         data-ng-if="field.type === 'text'"
+                         class="form-control"
+                         id="field{{$index}}"
+                         data-ng-model="field.value"/>
+                  <input type="textarea"
+                         class="form-control"
+                         data-ng-if="field.type === 'data-gn-language-picker'"
+                         id="field{{$index}}"
+                         data-gn-language-picker=""
+                         data-ng-model="field.value"/>
+                  <input type="textarea"
+                         class="form-control"
+                         data-ng-if="field.type === 'data-gn-contact-picker'"/>
+
+                  <span class="btn btn-default input-group-addon"
+                        data-ng-if="!field.mandatory"
+                        data-ng-click="markFieldAsDeleted(field)"
+                        title="{{'removeField' | translate}}">
+                    <i class="fa fa-times text-alert"></i>&nbsp;
+                  </span>
+                </div>
               </div>
             </div>
           </form>
@@ -250,7 +268,7 @@
         <div data-ng-show="searchResults.records.length > 0">
           <h4 data-translate="">aboutToUpdateTheFollowing</h4>
           <ul>
-            <li data-ng-repeat="record in searchResults.records">
+            <li data-ng-repeat="record in selectedRecords.records">
               {{record.title || record.defaultTitle}}
             </li>
           </ul>
