@@ -1,11 +1,19 @@
 package org.fao.geonet.harvester.wfsfeatures.services;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,16 +22,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 
 /**
  * Created by fgravin on 11/4/15.
@@ -32,20 +40,107 @@ import java.util.zip.GZIPOutputStream;
 @Controller
 public class SolrProxy {
 
-    /**
-     * List of valid content types
-     */
+    @Autowired
+    private DataManager dataManager;
+
     public static final String[] _validContentTypes = {
             "application/json", "text/plain"
     };
+
+    private static final ArrayList<Namespace> NAMESPACES = Lists.newArrayList(GMD, GCO);
+
+    private static final String SOLR_URL = "http://localhost:8984/solr/srv-catalog";
+
 
     @RequestMapping(value = "/{uiLang}/solrproxy/{query}")
     @ResponseBody
     public void handleGETRequest(@PathVariable("query") String selectUrl, HttpServletRequest request, HttpServletResponse response) {
         //String solrUrl = System.getProperty("solr.server");
-        String solrUrl = "http://localhost:8984/solr/srv-catalog";
 
-        handleRequest(request, response, solrUrl +"/" + selectUrl + "?" + request.getQueryString());
+        handleRequest(request, response, SOLR_URL +"/" + selectUrl + "?" + request.getQueryString());
+    }
+
+    /**
+     * Return facets config WFS layer.
+     * The config is computed from applicationProfile tag in the online resource
+     * of the metadaid for the given featuretype.
+     * The applicationProfile JSON is parsed, and we build a SOLR request on top of it
+     * to retrieve of facets values (fields, ranges, intervals, dates) that will be
+     * exploited from the UI to build the facet panel.
+     *
+     * ex:
+     * http://localhost:8080/geonetwork/srv/eng/solrfacets/26f848cc-2a3b-4623-a395-61048d2f5e91?url=http%3A%2F%2Fvisi-sextant.ifremer.fr%2Fcgi-bin%2Fsextant%2Fwfs%2Fbgmb&typename=SISMER_mesures
+     *
+     * @param uiLang
+     * @param uuid
+     * @param linkage
+     * @param featureType
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(value = "/{uiLang}/solrfacets/{uuid}")
+    @ResponseBody
+    public void buildFacetQuery(
+            @PathVariable("uiLang") String uiLang,
+            @PathVariable("uuid") String uuid,
+            @RequestParam("url") String linkage,
+            @RequestParam("typename") String featureType,
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        final String id = dataManager.getMetadataId(uuid);
+        Element xml = dataManager.getMetadata(id);
+
+        final Element applicationProfile =
+                (Element) Xml.selectSingle(xml,
+                        "*//gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'WFS' " +
+                                "and gmd:name/gco:CharacterString = '" + featureType + "' " +
+                                "and gmd:linkage/gmd:URL = '" + linkage + "']/gmd:applicationProfile/gco:CharacterString", NAMESPACES
+                );
+
+        if (applicationProfile != null) {
+            JSONObject conf = new JSONObject(applicationProfile.getText());
+            JSONArray fields = conf.getJSONArray("fields");
+
+            List<String> params = new ArrayList<String>();
+
+            params.add("facet=true");
+
+            for (int i = 0 ; i<fields.length(); i++) {
+                JSONObject field = fields.getJSONObject(i);
+                String fieldName = field.getString("name") + "_d";
+                String prefix = "f." + fieldName;
+                params.add("facet.field=" + fieldName);
+                if(field.has("fq")) {
+                    JSONObject facets = field.getJSONObject("fq");
+
+                    Iterator<?> keys = facets.keys();
+                    while( keys.hasNext() ) {
+                        String key = (String)keys.next();
+                        JSONArray a = facets.optJSONArray(key);
+                        if(a != null) {
+                            for (int j = 0; j < a.length(); j++) {
+                                params.add("f." + fieldName + "." + key + "=" + a.get(j));
+                            }
+                        }
+                        else {
+                            String value = facets.optString(key);
+                            if(key.equals("facet.interval") || key.equals("facet.range")) {
+                                params.add(key + "=" + value);
+                            }
+                            else {
+                                params.add("f." + fieldName + "." + key + "=" + value);
+                            }
+                        }
+                    }
+                }
+            }
+            String solrFacets = StringUtils.join(params, "&");
+            String solrQuery = "q=featureTypeId:*" + featureType;
+            String solrUrl = SOLR_URL + "/select?wt=json&indent=true&rows=0&" + solrQuery + "&" + solrFacets;
+            handleRequest(request, response, solrUrl);
+        }
+        //return "No configuration";
     }
 
     /**

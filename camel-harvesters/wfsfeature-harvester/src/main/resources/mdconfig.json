@@ -1,24 +1,12 @@
 {
   "fields": [{
-    "name": "GRIDCODE_i",
-    fq: {
-      interval.set:
-    },
-    i18n:
-
-    "type": "integer",
-    "interval": {
-      "sets": [
-          "[0,150]",
-          "(150, 400]"
-      ]
-    },
-    "range": {
-      "start": 0,
-      "end": 500,
-      "gap": 150
+    "name": "PNT_PROF",
+    "type": "double",
+    "fq" : {
+      "facet.interval": "PNT_PROF_d",
+      "facet.interval.set": ["[0,10]", "(10,10000]"]
     }
   }, {
-    "name": "LABEL"
+    "name": "EQU_CATEGORIE"
   }]
 }
