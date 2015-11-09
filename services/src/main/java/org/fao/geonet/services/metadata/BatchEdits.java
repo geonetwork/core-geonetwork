@@ -27,14 +27,21 @@ import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
+import net.sf.json.JSON;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.editorconfig.BatchEditing;
+import org.fao.geonet.kernel.schema.editorconfig.Editor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -48,6 +55,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -58,81 +70,127 @@ import java.util.*;
 public class BatchEdits implements ApplicationContextAware { // extends NotInReadOnlyModeService {
     private ApplicationContext context;
 
+    @Autowired
+    SchemaManager _schemaManager;
+
+
     public synchronized void setApplicationContext(ApplicationContext context) {
         this.context = context;
     }
 
     /**
-     * Service providing 2 types of metadata edits:
-     * <ul>
-     *     <li>Search & replace</li>
-     *     <li>Inserts</li>
-     * </ul>
+     * Service returning the batch editor configuration for all
+     * schema plugin loaded.
      *
-     * The service applies to the current selection or a set of uuids.
+     * Batch editor configuration is defined in config-editor.xml in each
+     * schema plugins.
      *
-     * <h4>Search & replace</h4>
-     * Parameters for search and replace is composed of a set of parameters composed of
-     * <ul>
-     *     <li>xpath_id: The XPath of the element to search in</li>
-     *     <li>search_id: The value to search in the matching element (can be a regex)</li>
-     *     <li>replace_id: The replacement.</li>
-     *     <li>? case insensitive ?</li>
-     * </ul>
-     *
-     *
-     * eg.
-     * <ul>
-     *     <li>xpath: //gmd:MD_Keywords</li>
-     * </ul>
-     *
-     *
-     * <h4>Schema plugin replacement list</h4>
-     *
-     * The schema plugin can provide a list of predifined elements that can be updated
-     * to avoid end-user to type XPath. The location is described by:
-     * <ul>
-     *     <li>An XPath expression</li>
-     *     <li>A label</li>
-     * </ul>
-     *
-     * <h4>Batch editing</h4>
-     *
-     * Parameters:
-     * <ul>
-     *     <li>xpath_id: The XPath of the element to search in</li>
-     *     <li>replace_id: The value to search in the matching element (can be a regex)</li>
-     *     <li>mode: Adding, Replace</li>
-     * </ul>
-     *
-     * field, value, mode (add if absent, replace existing)
-     * eg.
-     * Identification:
-     * title
-     * keyword
-     * constraints
-     * Contact: metadata contact, resource contact, distributor : from directory only XML + role
-     * Related resources: parentIdentifier, source dataset
-     *
-     *
-     * Actions
-     * Run / Stop
-     * Process report
-     * md.batch.edit
-     * xpath_1=
-     * value=string or XML
-     *
-     * <h4>Deprecated features</h4>
-     *
-     * This will replace:
-     * <ul>
-     *     <li>search & replace process</li>
-     *     <li>keyword mapper</li>
-     * </ul>
-     *
+     * @param schema Optional schema identifier to retrieve config to one or more
+     *               schema and not all.
      * @return
      * @throws Exception
      */
+    @RequestMapping(value = "/{lang}/md.edits.batch.config", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
+    Map<String, BatchEditing> getConfiguration(
+            @RequestParam(required = false) String[] schema) throws Exception {
+        List<String> listOfRequestedSchema = schema == null ? new ArrayList<String>() : Arrays.asList(schema);
+        Set<String> listOfSchemas = _schemaManager.getSchemas();
+        Map<String, BatchEditing> schemasConfig = new HashMap<>();
+        for (String schemaIdentifier : listOfSchemas) {
+            if (listOfRequestedSchema.size() == 0 || listOfRequestedSchema.contains(schemaIdentifier)) {
+                MetadataSchema metadataSchema = _schemaManager.getSchema(schemaIdentifier);
+                Path metadataSchemaConfig = metadataSchema.getSchemaDir().resolve("layout").resolve("config-editor.xml");
+                if (metadataSchemaConfig.toFile().exists()) {
+                    JAXBContext jaxbContext = null;
+                    Editor editorConfiguration = null;
+                    try {
+                        jaxbContext = JAXBContext.newInstance(Editor.class);
+                        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+                        editorConfiguration = (Editor) unmarshaller.unmarshal(metadataSchemaConfig.toFile());
+                        schemasConfig.put(schemaIdentifier, editorConfiguration.getBatchEditing());
+                    } catch (JAXBException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+        return schemasConfig;
+    }
+
+        /**
+         * Service providing 2 types of metadata edits:
+         * <ul>
+         *     <li>Search & replace</li>
+         *     <li>Inserts</li>
+         * </ul>
+         *
+         * The service applies to the current selection or a set of uuids.
+         *
+         * <h4>Search & replace</h4>
+         * Parameters for search and replace is composed of a set of parameters composed of
+         * <ul>
+         *     <li>xpath_id: The XPath of the element to search in</li>
+         *     <li>search_id: The value to search in the matching element (can be a regex)</li>
+         *     <li>replace_id: The replacement.</li>
+         *     <li>? case insensitive ?</li>
+         * </ul>
+         *
+         *
+         * eg.
+         * <ul>
+         *     <li>xpath: //gmd:MD_Keywords</li>
+         * </ul>
+         *
+         *
+         * <h4>Schema plugin replacement list</h4>
+         *
+         * The schema plugin can provide a list of predifined elements that can be updated
+         * to avoid end-user to type XPath. The location is described by:
+         * <ul>
+         *     <li>An XPath expression</li>
+         *     <li>A label</li>
+         * </ul>
+         *
+         * <h4>Batch editing</h4>
+         *
+         * Parameters:
+         * <ul>
+         *     <li>xpath_id: The XPath of the element to search in</li>
+         *     <li>replace_id: The value to search in the matching element (can be a regex)</li>
+         *     <li>mode: Adding, Replace</li>
+         * </ul>
+         *
+         * field, value, mode (add if absent, replace existing)
+         * eg.
+         * Identification:
+         * title
+         * keyword
+         * constraints
+         * Contact: metadata contact, resource contact, distributor : from directory only XML + role
+         * Related resources: parentIdentifier, source dataset
+         *
+         *
+         * Actions
+         * Run / Stop
+         * Process report
+         * md.batch.edit
+         * xpath_1=
+         * value=string or XML
+         *
+         * <h4>Deprecated features</h4>
+         *
+         * This will replace:
+         * <ul>
+         *     <li>search & replace process</li>
+         *     <li>keyword mapper</li>
+         * </ul>
+         *
+         * @return
+         * @throws Exception
+         */
     @RequestMapping(value = "/{lang}/md.edits.batch", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
