@@ -13,11 +13,15 @@ import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.jdom.Namespace;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.OpenwisDownload;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.guiservices.metadata.GetRelated;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OpenwisDownloadRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -27,6 +31,8 @@ import org.fao.geonet.services.openwis.util.Request;
 import org.fao.geonet.services.openwis.util.Request.ColumnCriterias;
 import org.fao.geonet.services.openwis.util.Request.OrderCriterias;
 import org.fao.geonet.services.openwis.util.Response;
+import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
 import org.openwis.request.client.AdHoc;
 import org.openwis.request.client.RequestClient;
 import org.openwis.subscription.client.ProductMetadata;
@@ -37,6 +43,7 @@ import org.openwis.subscription.client.Subscription;
 import org.openwis.subscription.client.SubscriptionColumn;
 import org.openwis.subscription.client.Temporal;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
@@ -46,7 +53,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.ws.soap.client.SoapFaultClientException;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -328,7 +334,8 @@ public class SubscriptionController {
 
     @RequestMapping(value = { "/{lang}/openwis.subscription.new" }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody Long create(HttpServletRequest request) {
+    public @ResponseBody Long create(@PathVariable String lang,
+            HttpServletRequest request) {
 
         DisseminationPair disseminationPair = conversionService
                 .convert(request.getParameter("data"), DisseminationPair.class);
@@ -341,13 +348,67 @@ public class SubscriptionController {
                 .setSecondaryDissemination(disseminationPair.getSecondary());
         subscription.setExtractMode(disseminationPair.getExtractMode());
 
+        // subscribe to all children
+        try {
+            List<String> urns = getAllDisseminationGroupElements(
+                    disseminationPair.getMetadataUrn(), lang, request);
+            for (String u : urns) {
+                try {
+                    manager.create(u, subscription);
+                } catch (Throwable t) {
+                    // Do nothing
+                }
+            }
+        } catch (Throwable t) {
+            // Do nothing
+        }
+
         return manager.create(disseminationPair.getMetadataUrn(), subscription);
+    }
+
+    /**
+     * Get all the children of this metadata. This is a dissemination group
+     * 
+     * @param metadataUrn
+     * @return
+     * @throws Exception
+     */
+    private List<String> getAllDisseminationGroupElements(String metadataUrn,
+            String lang, HttpServletRequest request) throws Exception {
+        List<String> urns = new LinkedList<String>();
+
+        ConfigurableApplicationContext appContext = ApplicationContextHolder
+                .get();
+        final ServiceContext context = serviceManager
+                .createServiceContext("xml.relation", lang, request);
+        GetRelated getRelated = appContext.getBean(GetRelated.class);
+        DataManager dm = appContext.getBean(DataManager.class);
+
+        Element relations = getRelated.getRelated(context,
+                Integer.valueOf(dm.getMetadataId(metadataUrn)), metadataUrn,
+                "children", 1, 1000, true);
+
+        Element children = relations.getChild("children");
+        Element response = children.getChild("response");
+
+        XMLOutputter output = new XMLOutputter();
+        System.out.println(output.outputString(response));
+
+        for (Object o : response.getChildren("metadata")) {
+            Element relation = (Element) o;
+            Element geonetinfo = relation.getChild("info", Namespace
+                    .getNamespace("geonet", "http://www.fao.org/geonetwork"));
+            urns.add(geonetinfo.getChildText("uuid"));
+        }
+
+        return urns;
     }
 
     @RequestMapping(value = {
             "/{lang}/openwis.requestdeliver.new" }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody Long requestdeliver(HttpServletRequest request) {
+    public @ResponseBody Long requestdeliver(@PathVariable String lang,
+            HttpServletRequest request) {
 
         DisseminationPairRequest disseminationPair = conversionService.convert(
                 request.getParameter("data"), DisseminationPairRequest.class);
@@ -362,6 +423,23 @@ public class SubscriptionController {
         adHoc.setUser(disseminationPair.getUsername());
 
         String urn = (disseminationPair.getMetadataUrn());
+
+        // subscribe to all children
+        try {
+            List<String> urns = getAllDisseminationGroupElements(urn, lang,
+                    request);
+            for (String u : urns) {
+                try {
+                    requestClient.create(u, adHoc);
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                    // Do nothing
+                }
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+            // Do nothing
+        }
 
         return requestClient.create(urn, adHoc);
     }

@@ -13,6 +13,6 @@ import org.jdom.Element;
  * Time: 1:23 PM
  */
 public interface RelatedMetadata {
-    public Element getRelated(ServiceContext context, int metadataId, String uuid, String relationType, int from, int to,
+    public Element getRelated(ServiceContext context, Integer metadataId, String uuid, String relationType, int from, int to,
                               boolean fast) throws Exception;
 }

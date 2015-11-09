@@ -310,7 +310,7 @@ public class GetRelated implements Service, RelatedMetadata {
     }
 
     @Override
-    public Element getRelated(ServiceContext context, int iId, String uuid, String type, int from_, int to_, boolean fast_)
+    public Element getRelated(ServiceContext context, Integer iId, String uuid, String type, int from_, int to_, boolean fast_)
             throws Exception {
         final String id = String.valueOf(iId);
         final String from = "" + from_;
