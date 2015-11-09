@@ -325,7 +325,7 @@ public class BatchEditing {
             @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             public boolean isRemovable() {
                 if (removable == null) {
-                    return true;
+                    return false;
                 } else {
                     return removable;
                 }
