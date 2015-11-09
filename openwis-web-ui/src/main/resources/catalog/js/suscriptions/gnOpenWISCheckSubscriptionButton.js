@@ -15,6 +15,7 @@
         $scope.isAvailable = false;
         $scope.isRequested = false;
         $scope.directDownload = false;
+        $scope.hasChildren = false;
 
         $scope.addMetadataObject = function(type, md) {
 
@@ -49,6 +50,16 @@
                 }).error(function(data) {
                   $scope.isAvailable = false;
                 });
+            
+
+            $http.get(
+                'xml.relation?_content_type=json&type=children&uuid=' + md['geonet:info'].uuid)
+                .success(function(data) {
+                  $scope.hasChildren = data && data.relation;
+                }).error(function(data) {
+                  $scope.hasChildren = false;
+                });
+
 
             $scope.checkDirectDownload();
           }

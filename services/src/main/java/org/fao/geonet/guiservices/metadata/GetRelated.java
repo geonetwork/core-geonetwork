@@ -64,6 +64,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -198,7 +199,8 @@ public class GetRelated implements Service, RelatedMetadata {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value="/{lang}/xml.relation")
+    @RequestMapping(value="/{lang}/xml.relation", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public HttpEntity<byte[]> exec(@PathVariable String lang,
                        @RequestParam (required = false) Integer id,
                        @RequestParam (required = false) String uuid,

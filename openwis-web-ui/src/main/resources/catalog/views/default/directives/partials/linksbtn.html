@@ -85,7 +85,7 @@
 				data-target="#subscribeModal"
 				data-ng-click="addMetadataObject('gnOpenWISSubscribe')"><span
 					class="fa fa-refresh" data-translate="">openwisSubscribe</span></a></li>
-			<li data-ng-show="isVisible && exists && isAvailable"><a
+			<li data-ng-show="isVisible && exists && (isAvailable || hasChildren)"><a
 				data-toggle="modal" data-target="#deliverModal"
                 data-ng-click="addMetadataObject('gnOpenWISDeliver')"><span
 					class="fa fa-download" data-translate="">openwisDeliver</span></a></li>
