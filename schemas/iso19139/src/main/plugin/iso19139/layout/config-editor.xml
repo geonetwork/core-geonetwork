@@ -143,7 +143,6 @@
     <name>gmd:processStep</name>
     <name>gmd:lineage</name>
     <name>gmd:centerPoint</name>
-    <name>gmd:verticalCRS</name>
     <name>gml:verticalCS</name>
     <name>gml:verticalDatum</name>
     <name>gmd:identifier</name>
@@ -1336,4 +1335,25 @@
       <tab id="xml" default="true"/>
     </view>
   </views>
+  <batchEditing>
+    <section name="identification">
+      <field xpath="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"
+             name="title"/>
+      <field xpath="gmd:parentIdentifier/gco:CharacterString"
+             name="parentIdentifier"
+             use="data-gn-metadata-picker"
+             removable="true"/>
+    </section>
+    <section name="contact">
+      <field xpath="/gmd:MD_Metadata/gmd:contact"
+             name="mdContact"
+             use="data-gn-contact-picker"/>
+    </section>
+    <section name="metadata">
+      <field xpath="/gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue"
+             name="mdLanguage"
+             use="data-gn-language-picker"
+             removable="true"/>
+    </section>
+  </batchEditing>
 </editor>
