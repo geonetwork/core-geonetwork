@@ -2795,12 +2795,15 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @throws Exception
      */
     public void activateWorkflowIfConfigured(ServiceContext context, String newId, String groupOwner) throws Exception {
+        if (groupOwner == null) {
+            return;
+        }
         String groupMatchingRegex =
                 getApplicationContext().getBean(SettingManager.class).
-                    getValue("metadata/workflow/draftWhenInGroup");
+                        getValue("metadata/workflow/draftWhenInGroup");
         if (!StringUtils.isEmpty(groupMatchingRegex)) {
             final Group group = getApplicationContext().getBean(GroupRepository.class)
-                    .findOne(Integer.valueOf(Integer.valueOf(groupOwner)));
+                    .findOne(Integer.valueOf(groupOwner));
             String groupName = "";
             if (group != null) {
                 groupName = group.getName();
