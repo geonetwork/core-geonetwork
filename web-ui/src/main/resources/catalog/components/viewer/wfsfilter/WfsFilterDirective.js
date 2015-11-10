@@ -52,17 +52,29 @@
                   type: facetType
                 };
 
-                // TODO: manage all facet type (ranges, dates)
-                // facet.field
-                if(angular.isArray(field) && field.length > 0) {
+                if(kind == 'facet_ranges') {
+                  var counts = field.counts;
+                  for (var i = 0; i < counts.length; i+=2) {
+                    if(counts[i+1] > 0) {
+                      var label = '';
+                      if(i >= counts.length-2) {
+                        label = '> ' + counts[i];
+                      }
+                      else {
+                        label = counts[i] + ',' + counts[i+2];
+                      }
+                      facetField.values[label] = counts[i+1];
+                    }
+                  }
+                  fields.push(facetField);
+                }
+                else if(kind == 'facet_fields' && field.length > 0) {
                   for (var i = 0; i<  field.length; i+=2) {
                     facetField.values[field[i]] = field[i+1];
                   }
                   fields.push(facetField);
                 }
-
-                // facet.interval
-                else if(Object.keys(field).length > 0) {
+                else if(kind == 'facet_intervals' && Object.keys(field).length > 0) {
                   facetField.values = field;
                   fields.push(facetField);
                 }
@@ -89,7 +101,7 @@
 
           var buildSldFilter = function(key, type) {
             var res;
-            if(type == 'interval' ) {
+            if(type == 'interval' || type == 'range') {
               res = {
                 filter_type: 'PropertyIsBetween',
                 params: key.match(/\d+(?:[.]\d+)*/g)

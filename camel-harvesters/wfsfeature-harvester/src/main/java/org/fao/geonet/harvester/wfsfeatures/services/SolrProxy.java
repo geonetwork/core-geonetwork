@@ -61,11 +61,11 @@ public class SolrProxy {
     }
 
     /**
-     * Return facets config WFS layer.
+     * Return facets config for WFS layer.
      * The config is computed from applicationProfile tag in the online resource
-     * of the metadaid for the given featuretype.
-     * The applicationProfile JSON is parsed, and we build a SOLR request on top of it
-     * to retrieve of facets values (fields, ranges, intervals, dates) that will be
+     * of the metadata (uuid) for the given featuretype.
+     * The JSON applicationProfile is parsed, and we build a SOLR request on top of it
+     * to retrieve all facets values (fields, ranges, intervals, dates) that will be
      * exploited from the UI to build the facet panel.
      *
      * ex:
