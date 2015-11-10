@@ -19,11 +19,13 @@
     '$q',
     '$http',
     'gnSearchSettings',
+    'gnSearchManagerService',
     'gnMetadataActions',
     'gnGlobalSettings',
     'Metadata',
     function($scope, $location, $rootScope, $translate, $q, $http,
-        gnSearchSettings, gnMetadataActions, gnGlobalSettings, Metadata) {
+        gnSearchSettings, gnSearchManagerService,
+             gnMetadataActions, gnGlobalSettings, Metadata) {
       $scope.onlyMyRecord = false;
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.defaultSearchObj = {
@@ -61,17 +63,13 @@
       $scope.$watch('searchResults.selectedCount',
         function (newvalue, oldvalue) {
           if (oldvalue != newvalue) {
-            $http.get('md.selected?_content_type=json').success(function(uuids) {
-              $http.get('q?_content_type=json&fast=index&_uuid=' + uuids.join(' or ')).success(
+            $http.get('md.selected?_content_type=json').
+              success(function(uuids) {
+              $http.get('q?_content_type=json&_isTemplate=y or n or s&' +
+                          'fast=index&_uuid=' + uuids.join(' or ')).success(
                 function (data) {
+                  $scope.selectedRecords = gnSearchManagerService.format(data);
                   // TODO: If too many records - only list the first 20.
-                  $scope.selectedRecords = {records: []};
-                  for (var i = 0; i < data.metadata.length; i++) {
-                    $scope.selectedRecords.records.push(new Metadata(data.metadata[i]));
-                  }
-                  $scope.selectedRecords.count = data.count;
-                  $scope.selectedRecords.facet = data.facet;
-                  $scope.selectedRecords.dimension = data.dimension;
                 });
             });
           }
@@ -108,32 +106,52 @@
 
       $scope.selectedStep = 1;
       $scope.selectedStep1Tab = 1;
-      $scope.selectedRecords = [];
+      $scope.fieldConfig = null;
+      $scope.changes = [];
 
-      // TODO: Move config to schema plugins
-      // * group field by sections
-      // * use directive when relevant (eg. date, contact, bbox)
-      // * add option to search & replace ?
-      // * add option to drop a field ?
-      $scope.fieldConfig = [{
-        'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/' +
-            'gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString',
-        'label': 'title',
-        'mandatory': true,
-        'type': 'text',
-        'value': null
-      },{
-        'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/' +
-        'gmd:pointOfContact',
-        'label': 'resourceContact',
-        'type': 'data-gn-contact-picker',
-        'value': null
-      },{
-        'xpath': 'gmd:language/language/LanguageCode/@codeListValue',
-        'label': 'mdLanguage',
-        'type': 'data-gn-language-picker',
-        'value': null
-      }];
+      /**
+       * Add field with only one value allowed.
+       */
+      $scope.putChange = function (field, $event) {
+        var index = $scope.changes.length;
+
+        if ($event.target.value === '') {
+          $scope.removeChange(field);
+        } else {
+          for (var j = 0; j < $scope.changes.length; j++) {
+            if($scope.changes[j].xpath === field.xpath) {
+              index = j;
+              break;
+            }
+          }
+          insertChange(field, $event.target.value, index);
+        }
+      };
+      /**
+       * Add field with multiple value allowed.
+       */
+      $scope.addChange = function (field, $event) {
+        insertChange(field, $event.target.value, $scope.changes.length);
+      };
+      /**
+       * Remove field. If value is undefined, remove all changes for that field.
+       */
+      $scope.removeChange = function (field, value) {
+        for (var j = 0; j < $scope.changes.length; j++) {
+          if($scope.changes[j].xpath === field.xpath &&
+            (value === undefined || $scope.changes[j].value === value)) {
+            $scope.changes.splice(j, 1);
+            return;
+          }
+        }
+      };
+      var insertChange = function (field, value, index) {
+        $scope.changes[index] = {
+          field: field.name,
+          xpath: field.xpath,
+          value: value
+        };
+      };
 
       gnSearchSettings.resultTemplate =
           gnSearchSettings.resultViewTpls[0].tplUrl;
@@ -157,13 +175,23 @@
         hitsPerPage: gnSearchSettings.hitsperpageValues[1]
       };
 
-      $scope.selectedRecords = null;
+      function init() {
+        $http({
+          method: 'GET',
+          url: 'md.edits.batch.config'
+        }).success(function (data) {
+          $scope.fieldConfig = data.iso19139;
+        }).error(function(response) {
+          console.log(response);
+        });
+      }
+
       $scope.markFieldAsDeleted = function(field) {
         // TODO
       };
       $scope.applyChanges = function() {
         var params = {}, i = 0;
-        angular.forEach($scope.fieldConfig, function(field) {
+        angular.forEach($scope.changes, function(field) {
           // TODO: How to drop a field value ?
           if (field.value != null) {
             params['xpath_' + i] = field.xpath;
@@ -185,6 +213,8 @@
           console.log(response);
         });
       };
+
+     init();
     }
   ]);
 })();

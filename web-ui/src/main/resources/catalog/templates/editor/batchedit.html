@@ -224,38 +224,53 @@
       <div class="panel-body">
         <div class="container">
           <form class="form-horizontal">
-            <div class="form-group"
-                 data-ng-repeat="field in fieldConfig">
-              <label for="field{{$index}}"
-                     class="col-sm-2 control-label">{{field.label | translate}}</label>
-              <div class="col-sm-8">
-                <div class="input-group">
-                  <input type="text"
-                         data-ng-if="field.type === 'text'"
-                         class="form-control"
-                         id="field{{$index}}"
-                         data-ng-model="field.value"/>
-                  <input type="textarea"
-                         class="form-control"
-                         data-ng-if="field.type === 'data-gn-language-picker'"
-                         id="field{{$index}}"
-                         data-gn-language-picker=""
-                         data-ng-model="field.value"/>
-                  <input type="textarea"
-                         class="form-control"
-                         data-ng-if="field.type === 'data-gn-contact-picker'"/>
+            <fieldset data-ng-repeat="section in fieldConfig.section">
+              <legend>{{section.name | translate}}</legend>
+              <div class="form-group"
+                   data-ng-repeat="field in section.field"
+                   data-ng-init="field.value = ''">
+                <label class="col-sm-2 control-label">{{field.name | translate}}</label>
+                <div class="col-sm-8">
+                  <div class="input-group">
+                    <input type="text"
+                           data-ng-if="field.use === null"
+                           data-ng-blur="putChange(field, $event)"
+                           class="form-control"/>
+                    <input type="text"
+                           class="form-control"
+                           data-ng-if="field.use === 'data-gn-language-picker'"
+                           data-gn-language-picker=""
+                           data-ng-blur="putChange(field, $event)"/>
+                    <input type="text"
+                           class="form-control"
+                           data-ng-if="field.use === 'data-gn-metadata-picker'"
+                           data-gn-metadata-picker=""
+                           data-display-field="defaultTitle"
+                           data-value-field="uuid"
+                           data-ng-blur="putChange(field, $event)"/>
+                    <input type="textarea"
+                           class="form-control"
+                           data-ng-if="field.use === 'data-gn-contact-picker'"
+                           data-ng-blur="addChange(field, $event)"/>
 
                   <span class="btn btn-default input-group-addon"
-                        data-ng-if="!field.mandatory"
+                        data-ng-if="field.removable"
                         data-ng-click="markFieldAsDeleted(field)"
                         title="{{'removeField' | translate}}">
                     <i class="fa fa-times text-alert"></i>&nbsp;
                   </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </fieldset>
+            <fieldset>
+              <legend data-translate>advancedBatchEditMode</legend>
+
+            </fieldset>
           </form>
           {{fieldConfig}}
+          <hr/>
+          {{changes}}
         </div>
       </div>
     </div>
@@ -265,13 +280,24 @@
 
       <div class="panel-body">
 
-        <div data-ng-show="searchResults.records.length > 0">
-          <h4 data-translate="">aboutToUpdateTheFollowing</h4>
-          <ul>
-            <li data-ng-repeat="record in selectedRecords.records">
-              {{record.title || record.defaultTitle}}
-            </li>
-          </ul>
+        <div data-ng-show="searchResults.records.length > 0"
+             class="row">
+          <div class="col-sm-6">
+            <h4 data-translate="">changesToApply</h4>
+            <ul>
+              <li data-ng-repeat="change in changes">
+                {{change.field | translate}}: {{change.value}}
+              </li>
+            </ul>
+          </div>
+          <div class="col-sm-6">
+            <h4 data-translate="">aboutToUpdateTheFollowing</h4>
+            <ul>
+              <li data-ng-repeat="record in selectedRecords.metadata">
+                {{record.title || record.defaultTitle}}
+              </li>
+            </ul>
+          </div>
         </div>
 
         <p class="alert alert-info"
