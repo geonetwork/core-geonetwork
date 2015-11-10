@@ -17910,6 +17910,7 @@ yx-axis
   .g [search-results] {
     height: calc(100% -  2.8em);
     overflow: auto;
+    padding-bottom: 10em;
   }
   .gn .gn-searchform,
   .g .gn-searchform {
