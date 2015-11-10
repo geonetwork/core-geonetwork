@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.schema.editorconfig;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -38,15 +37,12 @@ import javax.xml.bind.annotation.XmlType;
     "key"
 })
 @XmlRootElement(name = "values")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class Values {
 
     @XmlElement(required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected List<Key> key;
     @XmlAttribute(name = "readonlyIf")
     @XmlSchemaType(name = "anySimpleType")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String readonlyIf;
 
     /**
@@ -71,7 +67,6 @@ public class Values {
      * 
      * 
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public List<Key> getKey() {
         if (key == null) {
             key = new ArrayList<Key>();
@@ -87,7 +82,6 @@ public class Values {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getReadonlyIf() {
         return readonlyIf;
     }
@@ -100,7 +94,6 @@ public class Values {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setReadonlyIf(String value) {
         this.readonlyIf = value;
     }

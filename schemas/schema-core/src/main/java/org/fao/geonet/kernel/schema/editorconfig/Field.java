@@ -1,7 +1,6 @@
 
 package org.fao.geonet.kernel.schema.editorconfig;
 
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -43,41 +42,30 @@ import javax.xml.bind.annotation.XmlType;
     "template"
 })
 @XmlRootElement(name = "field")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class Field {
 
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Template template;
     @XmlAttribute(name = "if")
     @XmlSchemaType(name = "anySimpleType")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String _if;
     @XmlAttribute(name = "name")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String name;
     @XmlAttribute(name = "xpath", required = true)
     @XmlSchemaType(name = "anySimpleType")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String xpath;
     @XmlAttribute(name = "isMissingLabel")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String isMissingLabel;
     @XmlAttribute(name = "or")
     @XmlSchemaType(name = "anySimpleType")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String or;
     @XmlAttribute(name = "in")
     @XmlSchemaType(name = "anySimpleType")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String in;
     @XmlAttribute(name = "del")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String del;
     @XmlAttribute(name = "templateModeOnly")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Boolean templateModeOnly;
     @XmlAttribute(name = "notDisplayedIfMissing")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Boolean notDisplayedIfMissing;
 
     /**
@@ -88,7 +76,6 @@ public class Field {
      *     {@link Template }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public Template getTemplate() {
         return template;
     }
@@ -101,7 +88,6 @@ public class Field {
      *     {@link Template }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setTemplate(Template value) {
         this.template = value;
     }
@@ -114,7 +100,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getIf() {
         return _if;
     }
@@ -127,7 +112,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setIf(String value) {
         this._if = value;
     }
@@ -140,7 +124,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getName() {
         return name;
     }
@@ -153,7 +136,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setName(String value) {
         this.name = value;
     }
@@ -166,7 +148,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getXpath() {
         return xpath;
     }
@@ -179,7 +160,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setXpath(String value) {
         this.xpath = value;
     }
@@ -192,7 +172,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getIsMissingLabel() {
         return isMissingLabel;
     }
@@ -205,7 +184,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setIsMissingLabel(String value) {
         this.isMissingLabel = value;
     }
@@ -218,7 +196,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getOr() {
         return or;
     }
@@ -231,7 +208,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setOr(String value) {
         this.or = value;
     }
@@ -244,7 +220,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getIn() {
         return in;
     }
@@ -257,7 +232,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setIn(String value) {
         this.in = value;
     }
@@ -270,7 +244,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getDel() {
         return del;
     }
@@ -283,7 +256,6 @@ public class Field {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setDel(String value) {
         this.del = value;
     }
@@ -296,7 +268,6 @@ public class Field {
      *     {@link Boolean }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public boolean isTemplateModeOnly() {
         if (templateModeOnly == null) {
             return true;
@@ -313,7 +284,6 @@ public class Field {
      *     {@link Boolean }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setTemplateModeOnly(Boolean value) {
         this.templateModeOnly = value;
     }
@@ -326,7 +296,6 @@ public class Field {
      *     {@link Boolean }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public boolean isNotDisplayedIfMissing() {
         if (notDisplayedIfMissing == null) {
             return true;
@@ -343,7 +312,6 @@ public class Field {
      *     {@link Boolean }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setNotDisplayedIfMissing(Boolean value) {
         this.notDisplayedIfMissing = value;
     }

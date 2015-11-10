@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.schema.editorconfig;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -35,11 +34,9 @@ import javax.xml.bind.annotation.XmlType;
     "name"
 })
 @XmlRootElement(name = "expanded")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class Expanded {
 
     @XmlElement(required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected List<String> name;
 
     /**
@@ -64,7 +61,6 @@ public class Expanded {
      * 
      * 
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public List<String> getName() {
         if (name == null) {
             name = new ArrayList<String>();

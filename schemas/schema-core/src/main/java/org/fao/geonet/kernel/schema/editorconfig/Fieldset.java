@@ -1,7 +1,6 @@
 
 package org.fao.geonet.kernel.schema.editorconfig;
 
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -35,14 +34,11 @@ import javax.xml.bind.annotation.XmlType;
     "field"
 })
 @XmlRootElement(name = "fieldset")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class Fieldset {
 
     @XmlElement(required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Field field;
     @XmlAttribute(name = "name", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String name;
 
     /**
@@ -53,7 +49,6 @@ public class Fieldset {
      *     {@link Field }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public Field getField() {
         return field;
     }
@@ -66,7 +61,6 @@ public class Fieldset {
      *     {@link Field }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setField(Field value) {
         this.field = value;
     }
@@ -79,7 +73,6 @@ public class Fieldset {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getName() {
         return name;
     }
@@ -92,7 +85,6 @@ public class Fieldset {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setName(String value) {
         this.name = value;
     }

@@ -1,7 +1,6 @@
 
 package org.fao.geonet.kernel.schema.editorconfig;
 
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -36,19 +35,14 @@ import javax.xml.bind.annotation.XmlType;
     "directiveAttributes"
 })
 @XmlRootElement(name = "for")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class For {
 
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected DirectiveAttributes directiveAttributes;
     @XmlAttribute(name = "name", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String name;
     @XmlAttribute(name = "use")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String use;
     @XmlAttribute(name = "addDirective")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String addDirective;
 
     /**
@@ -59,7 +53,6 @@ public class For {
      *     {@link DirectiveAttributes }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public DirectiveAttributes getDirectiveAttributes() {
         return directiveAttributes;
     }
@@ -72,7 +65,6 @@ public class For {
      *     {@link DirectiveAttributes }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setDirectiveAttributes(DirectiveAttributes value) {
         this.directiveAttributes = value;
     }
@@ -85,7 +77,6 @@ public class For {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getName() {
         return name;
     }
@@ -98,7 +89,6 @@ public class For {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setName(String value) {
         this.name = value;
     }
@@ -111,7 +101,6 @@ public class For {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getUse() {
         return use;
     }
@@ -124,7 +113,6 @@ public class For {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setUse(String value) {
         this.use = value;
     }
@@ -137,7 +125,6 @@ public class For {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getAddDirective() {
         return addDirective;
     }
@@ -150,7 +137,6 @@ public class For {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setAddDirective(String value) {
         this.addDirective = value;
     }

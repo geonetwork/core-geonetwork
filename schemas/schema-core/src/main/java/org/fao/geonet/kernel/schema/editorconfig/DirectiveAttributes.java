@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.schema.editorconfig;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyAttribute;
@@ -32,11 +31,9 @@ import javax.xml.namespace.QName;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "directiveAttributes")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class DirectiveAttributes {
 
     @XmlAnyAttribute
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     private Map<QName, String> otherAttributes = new HashMap<QName, String>();
 
     /**
@@ -53,7 +50,6 @@ public class DirectiveAttributes {
      * @return
      *     always non-null
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public Map<QName, String> getOtherAttributes() {
         return otherAttributes;
     }

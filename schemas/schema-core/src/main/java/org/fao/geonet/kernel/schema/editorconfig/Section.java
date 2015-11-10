@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.schema.editorconfig;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -46,7 +45,6 @@ import javax.xml.bind.annotation.XmlType;
     "fieldOrActionOrText"
 })
 @XmlRootElement(name = "section")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class Section {
 
     @XmlElements({
@@ -56,22 +54,16 @@ public class Section {
         @XmlElement(name = "section", type = Section.class),
         @XmlElement(name = "fieldset", type = Fieldset.class)
     })
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected List<Object> fieldOrActionOrText;
     @XmlAttribute(name = "mode")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String mode;
     @XmlAttribute(name = "name")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String name;
     @XmlAttribute(name = "xpath")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String xpath;
     @XmlAttribute(name = "or")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String or;
     @XmlAttribute(name = "in")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String in;
 
     /**
@@ -100,7 +92,6 @@ public class Section {
      * 
      * 
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public List<Object> getFieldOrActionOrText() {
         if (fieldOrActionOrText == null) {
             fieldOrActionOrText = new ArrayList<Object>();
@@ -116,7 +107,6 @@ public class Section {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getMode() {
         if (mode == null) {
             return "flat";
@@ -133,7 +123,6 @@ public class Section {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setMode(String value) {
         this.mode = value;
     }
@@ -146,7 +135,6 @@ public class Section {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getName() {
         return name;
     }
@@ -159,7 +147,6 @@ public class Section {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setName(String value) {
         this.name = value;
     }
@@ -172,7 +159,6 @@ public class Section {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getXpath() {
         return xpath;
     }
@@ -185,7 +171,6 @@ public class Section {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setXpath(String value) {
         this.xpath = value;
     }
@@ -198,7 +183,6 @@ public class Section {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getOr() {
         return or;
     }
@@ -211,7 +195,6 @@ public class Section {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setOr(String value) {
         this.or = value;
     }
@@ -224,7 +207,6 @@ public class Section {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getIn() {
         return in;
     }
@@ -237,7 +219,6 @@ public class Section {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setIn(String value) {
         this.in = value;
     }

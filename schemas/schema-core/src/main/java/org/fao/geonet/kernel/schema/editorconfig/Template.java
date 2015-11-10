@@ -1,7 +1,6 @@
 
 package org.fao.geonet.kernel.schema.editorconfig;
 
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -35,13 +34,10 @@ import javax.xml.bind.annotation.XmlType;
     "snippet"
 })
 @XmlRootElement(name = "template")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class Template {
 
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Values values;
     @XmlElement(required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Snippet snippet;
 
     /**
@@ -52,7 +48,6 @@ public class Template {
      *     {@link Values }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public Values getValues() {
         return values;
     }
@@ -65,7 +60,6 @@ public class Template {
      *     {@link Values }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setValues(Values value) {
         this.values = value;
     }
@@ -78,7 +72,6 @@ public class Template {
      *     {@link Snippet }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public Snippet getSnippet() {
         return snippet;
     }
@@ -91,7 +84,6 @@ public class Template {
      *     {@link Snippet }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setSnippet(Snippet value) {
         this.snippet = value;
     }

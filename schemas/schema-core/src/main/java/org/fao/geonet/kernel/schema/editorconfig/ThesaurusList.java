@@ -4,7 +4,6 @@ package org.fao.geonet.kernel.schema.editorconfig;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -47,11 +46,9 @@ import javax.xml.bind.annotation.XmlType;
     "thesaurus"
 })
 @XmlRootElement(name = "thesaurusList")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class ThesaurusList {
 
     @XmlElement(required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected List<ThesaurusList.Thesaurus> thesaurus;
 
     /**
@@ -76,7 +73,6 @@ public class ThesaurusList {
      * 
      * 
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public List<ThesaurusList.Thesaurus> getThesaurus() {
         if (thesaurus == null) {
             thesaurus = new ArrayList<ThesaurusList.Thesaurus>();
@@ -106,17 +102,13 @@ public class ThesaurusList {
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public static class Thesaurus {
 
         @XmlAttribute(name = "key", required = true)
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         protected String key;
         @XmlAttribute(name = "maxtags")
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         protected BigInteger maxtags;
         @XmlAttribute(name = "transformations")
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         protected String transformations;
 
         /**
@@ -127,7 +119,6 @@ public class ThesaurusList {
          *     {@link String }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public String getKey() {
             return key;
         }
@@ -140,7 +131,6 @@ public class ThesaurusList {
          *     {@link String }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public void setKey(String value) {
             this.key = value;
         }
@@ -153,7 +143,6 @@ public class ThesaurusList {
          *     {@link BigInteger }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public BigInteger getMaxtags() {
             return maxtags;
         }
@@ -166,7 +155,6 @@ public class ThesaurusList {
          *     {@link BigInteger }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public void setMaxtags(BigInteger value) {
             this.maxtags = value;
         }
@@ -179,7 +167,6 @@ public class ThesaurusList {
          *     {@link String }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public String getTransformations() {
             return transformations;
         }
@@ -192,7 +179,6 @@ public class ThesaurusList {
          *     {@link String }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public void setTransformations(String value) {
             this.transformations = value;
         }

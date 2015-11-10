@@ -1368,6 +1368,15 @@ An XML snippet with replacement for each key defined in that field.
                       </xs:documentation>
                     </xs:annotation>
                   </xs:attribute>
+                  <xs:attribute name="codelist" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation>
+                        <![CDATA[
+                        The codelist identifier. eg. gmd:MD_TopicCategoryCode for topic category.
+                        ]]>
+                      </xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>

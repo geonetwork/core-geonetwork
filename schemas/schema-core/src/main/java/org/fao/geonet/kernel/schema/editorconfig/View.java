@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.schema.editorconfig;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -47,35 +46,25 @@ import javax.xml.bind.annotation.XmlType;
     "thesaurusList"
 })
 @XmlRootElement(name = "view")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class View {
 
     @XmlElement(required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected List<Tab> tab;
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected FlatModeExceptions flatModeExceptions;
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected ThesaurusList thesaurusList;
     @XmlAttribute(name = "name", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String name;
     @XmlAttribute(name = "disabled")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Boolean disabled;
     @XmlAttribute(name = "upAndDownControlHidden")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Boolean upAndDownControlHidden;
     @XmlAttribute(name = "displayIfRecord")
     @XmlSchemaType(name = "anySimpleType")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String displayIfRecord;
     @XmlAttribute(name = "displayIfServiceInfo")
     @XmlSchemaType(name = "anySimpleType")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String displayIfServiceInfo;
     @XmlAttribute(name = "hideTimeInCalendar")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Boolean hideTimeInCalendar;
 
     /**
@@ -102,7 +91,6 @@ public class View {
      * 
      * 
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public List<Tab> getTab() {
         if (tab == null) {
             tab = new ArrayList<Tab>();
@@ -118,7 +106,6 @@ public class View {
      *     {@link FlatModeExceptions }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public FlatModeExceptions getFlatModeExceptions() {
         return flatModeExceptions;
     }
@@ -131,7 +118,6 @@ public class View {
      *     {@link FlatModeExceptions }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setFlatModeExceptions(FlatModeExceptions value) {
         this.flatModeExceptions = value;
     }
@@ -144,7 +130,6 @@ public class View {
      *     {@link ThesaurusList }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public ThesaurusList getThesaurusList() {
         return thesaurusList;
     }
@@ -157,7 +142,6 @@ public class View {
      *     {@link ThesaurusList }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setThesaurusList(ThesaurusList value) {
         this.thesaurusList = value;
     }
@@ -170,7 +154,6 @@ public class View {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getName() {
         return name;
     }
@@ -183,7 +166,6 @@ public class View {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setName(String value) {
         this.name = value;
     }
@@ -196,7 +178,6 @@ public class View {
      *     {@link Boolean }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public boolean isDisabled() {
         if (disabled == null) {
             return true;
@@ -213,7 +194,6 @@ public class View {
      *     {@link Boolean }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setDisabled(Boolean value) {
         this.disabled = value;
     }
@@ -226,7 +206,6 @@ public class View {
      *     {@link Boolean }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public boolean isUpAndDownControlHidden() {
         if (upAndDownControlHidden == null) {
             return true;
@@ -243,7 +222,6 @@ public class View {
      *     {@link Boolean }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setUpAndDownControlHidden(Boolean value) {
         this.upAndDownControlHidden = value;
     }
@@ -256,7 +234,6 @@ public class View {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getDisplayIfRecord() {
         return displayIfRecord;
     }
@@ -269,7 +246,6 @@ public class View {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setDisplayIfRecord(String value) {
         this.displayIfRecord = value;
     }
@@ -282,7 +258,6 @@ public class View {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getDisplayIfServiceInfo() {
         return displayIfServiceInfo;
     }
@@ -295,7 +270,6 @@ public class View {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setDisplayIfServiceInfo(String value) {
         this.displayIfServiceInfo = value;
     }
@@ -308,7 +282,6 @@ public class View {
      *     {@link Boolean }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public boolean isHideTimeInCalendar() {
         if (hideTimeInCalendar == null) {
             return true;
@@ -325,7 +298,6 @@ public class View {
      *     {@link Boolean }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setHideTimeInCalendar(Boolean value) {
         this.hideTimeInCalendar = value;
     }

@@ -1336,22 +1336,69 @@
     </view>
   </views>
   <batchEditing>
+    <!-- TODO: Service identification section ? -->
     <section name="identification">
-      <field xpath="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"
-             name="title"/>
+      <field name="title"
+             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+                      gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
+      <field name="keyword"
+             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+                      gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString"/>
+      <field name="topicCategory"
+             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+                      gmd:topicCategory/gmd:MD_TopicCategoryCode"
+             use="data-gn-codelist-picker"
+             codelist="gmd:MD_TopicCategoryCode"/>
+      <field name="extent"
+             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+                      gmd:extent/gmd:EX_Extent/gmd:geographicElement"
+              use="textarea"/>
+      <field name="resourceLanguage"
+             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+                      gmd:language/gmd:LanguageCode/@codeListValue"
+             use="data-gn-language-picker"
+             removable="true"/>
       <field xpath="gmd:parentIdentifier/gco:CharacterString"
              name="parentIdentifier"
              use="data-gn-metadata-picker"
              removable="true"/>
     </section>
+    <section name="constraint">
+      <field name="accessConstraints"
+             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+                      gmd:resourceConstraints/gmd:MD_LegalConstraints/
+                        gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue"
+             use="data-gn-codelist-picker"
+             codelist="gmd:MD_RestrictionCode"
+             removable="true"/>
+      <field name="otherConstraint"
+             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+                      gmd:resourceConstraints/gmd:MD_LegalConstraints/
+                        gmd:otherConstraints/gco:CharacterString"
+             use="textarea"
+             removable="true"/>
+    </section>
+    <section name="quality">
+      <field name="lineage"
+             xpath="gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                      gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString"
+             use="textarea"
+             removable="true"/>
+    </section>
     <section name="contact">
-      <field xpath="/gmd:MD_Metadata/gmd:contact"
-             name="mdContact"
+      <field name="resourceContact"
+             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact"
+             use="data-gn-contact-picker"/>
+      <field name="distributor"
+             xpath="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact"
+             use="data-gn-contact-picker"/>
+      <field name="mdContact"
+             xpath="gmd:contact"
              use="data-gn-contact-picker"/>
     </section>
     <section name="metadata">
-      <field xpath="/gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue"
-             name="mdLanguage"
+      <field name="mdLanguage"
+             xpath="gmd:language/gmd:LanguageCode/@codeListValue"
              use="data-gn-language-picker"
              removable="true"/>
     </section>

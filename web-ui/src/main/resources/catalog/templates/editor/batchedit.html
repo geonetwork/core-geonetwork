@@ -236,10 +236,21 @@
                            data-ng-if="field.use === null"
                            data-ng-blur="putChange(field, $event)"
                            class="form-control"/>
+                    <textarea
+                           data-ng-if="field.use === 'textarea'"
+                           data-ng-blur="putChange(field, $event)"
+                           class="form-control"/>
                     <input type="text"
                            class="form-control"
                            data-ng-if="field.use === 'data-gn-language-picker'"
                            data-gn-language-picker=""
+                           data-ng-blur="putChange(field, $event)"/>
+                    <div class="form-control"
+                           data-ng-if="field.use === 'data-gn-codelist-picker'"
+                           data-schema-info-combo="codelist"
+                           data-gn-schema-info="{{field.codelist}}"
+                           data-selected-info="field.value"
+                           lang="lang"
                            data-ng-blur="putChange(field, $event)"/>
                     <input type="text"
                            class="form-control"
@@ -248,7 +259,7 @@
                            data-display-field="defaultTitle"
                            data-value-field="uuid"
                            data-ng-blur="putChange(field, $event)"/>
-                    <input type="textarea"
+                    <input type="text"
                            class="form-control"
                            data-ng-if="field.use === 'data-gn-contact-picker'"
                            data-ng-blur="addChange(field, $event)"/>

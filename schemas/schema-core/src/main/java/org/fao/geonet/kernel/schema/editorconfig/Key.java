@@ -1,7 +1,6 @@
 
 package org.fao.geonet.kernel.schema.editorconfig;
 
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -58,26 +57,18 @@ import javax.xml.bind.annotation.XmlType;
     "directiveAttributes"
 })
 @XmlRootElement(name = "key")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class Key {
 
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Key.Codelist codelist;
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Key.Helper helper;
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected DirectiveAttributes directiveAttributes;
     @XmlAttribute(name = "label", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String label;
     @XmlAttribute(name = "xpath", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String xpath;
     @XmlAttribute(name = "tooltip")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String tooltip;
     @XmlAttribute(name = "use")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected String use;
 
     /**
@@ -88,7 +79,6 @@ public class Key {
      *     {@link Key.Codelist }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public Key.Codelist getCodelist() {
         return codelist;
     }
@@ -101,7 +91,6 @@ public class Key {
      *     {@link Key.Codelist }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setCodelist(Key.Codelist value) {
         this.codelist = value;
     }
@@ -114,7 +103,6 @@ public class Key {
      *     {@link Key.Helper }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public Key.Helper getHelper() {
         return helper;
     }
@@ -127,7 +115,6 @@ public class Key {
      *     {@link Key.Helper }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setHelper(Key.Helper value) {
         this.helper = value;
     }
@@ -140,7 +127,6 @@ public class Key {
      *     {@link DirectiveAttributes }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public DirectiveAttributes getDirectiveAttributes() {
         return directiveAttributes;
     }
@@ -153,7 +139,6 @@ public class Key {
      *     {@link DirectiveAttributes }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setDirectiveAttributes(DirectiveAttributes value) {
         this.directiveAttributes = value;
     }
@@ -166,7 +151,6 @@ public class Key {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getLabel() {
         return label;
     }
@@ -179,7 +163,6 @@ public class Key {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setLabel(String value) {
         this.label = value;
     }
@@ -192,7 +175,6 @@ public class Key {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getXpath() {
         return xpath;
     }
@@ -205,7 +187,6 @@ public class Key {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setXpath(String value) {
         this.xpath = value;
     }
@@ -218,7 +199,6 @@ public class Key {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getTooltip() {
         return tooltip;
     }
@@ -231,7 +211,6 @@ public class Key {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setTooltip(String value) {
         this.tooltip = value;
     }
@@ -244,7 +223,6 @@ public class Key {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public String getUse() {
         return use;
     }
@@ -257,7 +235,6 @@ public class Key {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setUse(String value) {
         this.use = value;
     }
@@ -282,11 +259,9 @@ public class Key {
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public static class Codelist {
 
         @XmlAttribute(name = "name")
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         protected String name;
 
         /**
@@ -297,7 +272,6 @@ public class Key {
          *     {@link String }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public String getName() {
             return name;
         }
@@ -310,7 +284,6 @@ public class Key {
          *     {@link String }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public void setName(String value) {
             this.name = value;
         }
@@ -338,14 +311,11 @@ public class Key {
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public static class Helper {
 
         @XmlAttribute(name = "name")
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         protected String name;
         @XmlAttribute(name = "context")
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         protected String context;
 
         /**
@@ -356,7 +326,6 @@ public class Key {
          *     {@link String }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public String getName() {
             return name;
         }
@@ -369,7 +338,6 @@ public class Key {
          *     {@link String }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public void setName(String value) {
             this.name = value;
         }
@@ -382,7 +350,6 @@ public class Key {
          *     {@link String }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public String getContext() {
             return context;
         }
@@ -395,7 +362,6 @@ public class Key {
          *     {@link String }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public void setContext(String value) {
             this.context = value;
         }

@@ -1,7 +1,6 @@
 
 package org.fao.geonet.kernel.schema.editorconfig;
 
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -41,19 +40,13 @@ import javax.xml.bind.annotation.XmlType;
     "batchEditing"
 })
 @XmlRootElement(name = "editor")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class Editor {
 
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Fields fields;
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected FieldsWithFieldset fieldsWithFieldset;
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected MultilingualFields multilingualFields;
     @XmlElement(required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected Views views;
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected BatchEditing batchEditing;
 
     /**
@@ -64,7 +57,6 @@ public class Editor {
      *     {@link Fields }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public Fields getFields() {
         return fields;
     }
@@ -77,7 +69,6 @@ public class Editor {
      *     {@link Fields }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setFields(Fields value) {
         this.fields = value;
     }
@@ -90,7 +81,6 @@ public class Editor {
      *     {@link FieldsWithFieldset }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public FieldsWithFieldset getFieldsWithFieldset() {
         return fieldsWithFieldset;
     }
@@ -103,7 +93,6 @@ public class Editor {
      *     {@link FieldsWithFieldset }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setFieldsWithFieldset(FieldsWithFieldset value) {
         this.fieldsWithFieldset = value;
     }
@@ -116,7 +105,6 @@ public class Editor {
      *     {@link MultilingualFields }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public MultilingualFields getMultilingualFields() {
         return multilingualFields;
     }
@@ -129,7 +117,6 @@ public class Editor {
      *     {@link MultilingualFields }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setMultilingualFields(MultilingualFields value) {
         this.multilingualFields = value;
     }
@@ -142,7 +129,6 @@ public class Editor {
      *     {@link Views }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public Views getViews() {
         return views;
     }
@@ -155,7 +141,6 @@ public class Editor {
      *     {@link Views }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setViews(Views value) {
         this.views = value;
     }
@@ -168,7 +153,6 @@ public class Editor {
      *     {@link BatchEditing }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public BatchEditing getBatchEditing() {
         return batchEditing;
     }
@@ -181,7 +165,6 @@ public class Editor {
      *     {@link BatchEditing }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public void setBatchEditing(BatchEditing value) {
         this.batchEditing = value;
     }

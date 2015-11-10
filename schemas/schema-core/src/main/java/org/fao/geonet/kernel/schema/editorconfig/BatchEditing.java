@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.schema.editorconfig;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -35,6 +34,7 @@ import javax.xml.bind.annotation.XmlType;
  *                           &lt;attribute name="xpath" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *                           &lt;attribute name="use" type="{http://www.w3.org/2001/XMLSchema}string" />
  *                           &lt;attribute name="removable" type="{http://www.w3.org/2001/XMLSchema}boolean" fixed="true" />
+ *                           &lt;attribute name="codelist" type="{http://www.w3.org/2001/XMLSchema}string" />
  *                         &lt;/restriction>
  *                       &lt;/complexContent>
  *                     &lt;/complexType>
@@ -58,11 +58,9 @@ import javax.xml.bind.annotation.XmlType;
     "section"
 })
 @XmlRootElement(name = "batchEditing")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
 public class BatchEditing {
 
     @XmlElement(required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     protected List<BatchEditing.Section> section;
 
     /**
@@ -87,7 +85,6 @@ public class BatchEditing {
      * 
      * 
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public List<BatchEditing.Section> getSection() {
         if (section == null) {
             section = new ArrayList<BatchEditing.Section>();
@@ -114,6 +111,7 @@ public class BatchEditing {
      *                 &lt;attribute name="xpath" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
      *                 &lt;attribute name="use" type="{http://www.w3.org/2001/XMLSchema}string" />
      *                 &lt;attribute name="removable" type="{http://www.w3.org/2001/XMLSchema}boolean" fixed="true" />
+     *                 &lt;attribute name="codelist" type="{http://www.w3.org/2001/XMLSchema}string" />
      *               &lt;/restriction>
      *             &lt;/complexContent>
      *           &lt;/complexType>
@@ -131,14 +129,11 @@ public class BatchEditing {
     @XmlType(name = "", propOrder = {
         "field"
     })
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
     public static class Section {
 
         @XmlElement(required = true)
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         protected List<BatchEditing.Section.Field> field;
         @XmlAttribute(name = "name", required = true)
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         protected String name;
 
         /**
@@ -163,7 +158,6 @@ public class BatchEditing {
          * 
          * 
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public List<BatchEditing.Section.Field> getField() {
             if (field == null) {
                 field = new ArrayList<BatchEditing.Section.Field>();
@@ -179,7 +173,6 @@ public class BatchEditing {
          *     {@link String }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public String getName() {
             return name;
         }
@@ -192,7 +185,6 @@ public class BatchEditing {
          *     {@link String }
          *     
          */
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public void setName(String value) {
             this.name = value;
         }
@@ -211,6 +203,7 @@ public class BatchEditing {
          *       &lt;attribute name="xpath" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
          *       &lt;attribute name="use" type="{http://www.w3.org/2001/XMLSchema}string" />
          *       &lt;attribute name="removable" type="{http://www.w3.org/2001/XMLSchema}boolean" fixed="true" />
+         *       &lt;attribute name="codelist" type="{http://www.w3.org/2001/XMLSchema}string" />
          *     &lt;/restriction>
          *   &lt;/complexContent>
          * &lt;/complexType>
@@ -220,21 +213,18 @@ public class BatchEditing {
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
-        @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
         public static class Field {
 
             @XmlAttribute(name = "name", required = true)
-            @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             protected String name;
             @XmlAttribute(name = "xpath", required = true)
-            @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             protected String xpath;
             @XmlAttribute(name = "use")
-            @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             protected String use;
             @XmlAttribute(name = "removable")
-            @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             protected Boolean removable;
+            @XmlAttribute(name = "codelist")
+            protected String codelist;
 
             /**
              * Gets the value of the name property.
@@ -244,7 +234,6 @@ public class BatchEditing {
              *     {@link String }
              *     
              */
-            @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             public String getName() {
                 return name;
             }
@@ -257,7 +246,6 @@ public class BatchEditing {
              *     {@link String }
              *     
              */
-            @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             public void setName(String value) {
                 this.name = value;
             }
@@ -270,7 +258,6 @@ public class BatchEditing {
              *     {@link String }
              *     
              */
-            @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             public String getXpath() {
                 return xpath;
             }
@@ -283,7 +270,6 @@ public class BatchEditing {
              *     {@link String }
              *     
              */
-            @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             public void setXpath(String value) {
                 this.xpath = value;
             }
@@ -296,7 +282,6 @@ public class BatchEditing {
              *     {@link String }
              *     
              */
-            @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             public String getUse() {
                 return use;
             }
@@ -309,7 +294,6 @@ public class BatchEditing {
              *     {@link String }
              *     
              */
-            @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             public void setUse(String value) {
                 this.use = value;
             }
@@ -322,10 +306,9 @@ public class BatchEditing {
              *     {@link Boolean }
              *     
              */
-            @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             public boolean isRemovable() {
                 if (removable == null) {
-                    return false;
+                    return false; // FIXME
                 } else {
                     return removable;
                 }
@@ -339,9 +322,32 @@ public class BatchEditing {
              *     {@link Boolean }
              *     
              */
-            @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2015-11-09T11:51:19+01:00", comments = "JAXB RI v2.2.4-2")
             public void setRemovable(Boolean value) {
                 this.removable = value;
+            }
+
+            /**
+             * Gets the value of the codelist property.
+             * 
+             * @return
+             *     possible object is
+             *     {@link String }
+             *     
+             */
+            public String getCodelist() {
+                return codelist;
+            }
+
+            /**
+             * Sets the value of the codelist property.
+             * 
+             * @param value
+             *     allowed object is
+             *     {@link String }
+             *     
+             */
+            public void setCodelist(String value) {
+                this.codelist = value;
             }
 
         }
