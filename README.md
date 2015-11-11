@@ -1,3 +1,7 @@
+# Build Health
+
+[![Build Status](https://travis-ci.org/geonetwork/core-geonetwork.svg?branch=develop)](https://travis-ci.org/geonetwork/core-geonetwork)
+
 # Features
 
 * Immediate search access to local and distributed geospatial catalogues
