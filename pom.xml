@@ -1095,7 +1095,6 @@
       <name>Developer k-int repository</name>
       <url>http://developer.k-int.com/maven2/</url>
     </repository>
-
     
     <repository>
       <snapshots>
@@ -1122,6 +1121,11 @@
       <url>http://maven.seasar.org/maven2</url>
     </repository>
 
+    <repository>
+      <id>oss.sonatype.org</id>
+      <name>Plexus Release</name>
+      <url>https://oss.sonatype.org/content/groups/plexus-with-staging/</url>
+    </repository>	
   </repositories>
 
 
