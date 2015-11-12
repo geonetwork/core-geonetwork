@@ -728,8 +728,8 @@
 
               //Add spatial extent
               if (layer.wgs84BoundingBox && layer.wgs84BoundingBox[0] &&
-                layer.wgs84BoundingBox[0].lowerCorner &&
-                layer.wgs84BoundingBox[0].upperCorner) {
+                  layer.wgs84BoundingBox[0].lowerCorner &&
+                  layer.wgs84BoundingBox[0].upperCorner) {
                 extent = ol.extent.boundingExtent(
                     [layer.wgs84BoundingBox[0].lowerCorner,
                      layer.wgs84BoundingBox[0].upperCorner]);

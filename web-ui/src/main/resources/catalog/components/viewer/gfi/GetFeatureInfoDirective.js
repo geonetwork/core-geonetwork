@@ -16,9 +16,9 @@
       scope: {
         map: '=gnVectorFeatureToolTip'
       },
-      link: function (scope, element, attrs) {
+      link: function(scope, element, attrs) {
         $('body').append('<div id="feature-info" data-content=""' +
-          '                       style="position: absolute; z-index: 100;"/>');
+            'style="position: absolute; z-index: 100;"/>');
         var info = $('#feature-info');
         info.popover({
           animation: false,
@@ -35,17 +35,17 @@
           });
           var feature = scope.map.forEachFeatureAtPixel(pixel,
               function(feature, layer) {
-            return feature;
-          });
+                return feature;
+              });
           if (feature) {
             var props = feature.getProperties();
             var tooltipContent = '<ul>';
-            $.each(props, function (key, values) {
+            $.each(props, function(key, values) {
               if (typeof values !== 'object') {
                 tooltipContent += '<li>' + key + ': ' + values + '</li>';
               }
             });
-            tooltipContent += '</ul>'
+            tooltipContent += '</ul>';
             info.popover('hide');
             info.data('bs.popover').options.content = tooltipContent;
             info.popover('show');
@@ -63,7 +63,7 @@
           displayFeatureInfo(scope.map.getEventPixel(evt.originalEvent));
         });
       }
-    }
+    };
   }]);
   /**
    * @ngdoc directive
