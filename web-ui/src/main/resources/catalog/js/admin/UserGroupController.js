@@ -72,12 +72,12 @@
 
       $scope.isLoadingUsers = false;
       $scope.isLoadingGroups = false;
-      
+
       $http.get('info?type=categories&_content_type=json').
-        success(function(data) {
-          $scope.categories = data.metadatacategory;
-      });
-      
+          success(function(data) {
+            $scope.categories = data.metadatacategory;
+          });
+
 
       function loadGroups() {
         $scope.isLoadingGroups = true;
@@ -87,11 +87,11 @@
               //Fixing true not equal to "true" and
               //Simplifying the allowed categories list
               angular.forEach($scope.groups, function(u) {
-                if (u.enableallowedcategories == "true") {
+                if (u.enableallowedcategories == 'true') {
                   u.enableallowedcategories = true;
                   u.allowedcategoriessimp = [];
                   angular.forEach(u.allowedcategories, function(c) {
-                    if(c.id) {
+                    if (c.id) {
                       u.allowedcategoriessimp.push(c.id);
                     }
                   });
