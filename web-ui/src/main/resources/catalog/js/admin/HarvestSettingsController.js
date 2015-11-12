@@ -438,6 +438,8 @@
        */
       $scope.cswGetCapabilities = function() {
         $scope.cswCriteriaInfo = null;
+        $scope.cswCapabilitiesUrl = null;
+        $scope.errorRetrievingCswCapabilities = false;
 
         if ($scope.harvesterSelected &&
             $scope.harvesterSelected.site &&
@@ -453,6 +455,7 @@
             url += (url.indexOf('?') === -1 ? '?' : '&') +
                 'SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2';
           }
+          $scope.cswCapabilitiesUrl = url;
 
           $http.get($scope.proxyUrl +
               encodeURIComponent(url))
@@ -509,7 +512,8 @@
                 }
 
               }).error(function(data) {
-                // TODO
+                $scope.cswCriteria = [];
+                $scope.errorRetrievingCswCapabilities = true;
               });
         }
       };

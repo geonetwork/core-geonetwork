@@ -93,7 +93,7 @@
         gnViewerSettings.initialExtent = extent;
 
         // $timeout used to avoid map no rendered (eg: null size)
-        $timeout(function(){
+        $timeout(function() {
           map.getView().fit(extent, map.getSize(), { nearest: true });
         }, 0, false);
 

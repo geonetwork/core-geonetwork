@@ -228,13 +228,13 @@ class Harvester implements IHarvester<HarvestResult>
         }
         // Simple fallback mechanism. Try search with PREFERRED_HTTP_METHOD method, if fails change it
         try {
-            log.info("Re-trying the search with another HTTP method.");
+            log.info(String.format("Trying the search with HTTP %s method.", PREFERRED_HTTP_METHOD));
             request.setStartPosition(start);
             doSearch(request, start, 1);
         } catch (Exception ex) {
             if (log.isDebugEnabled()) {
                 log.debug(ex.getMessage());
-                log.debug("Changing to CSW harvester to use " + (PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET"));
+                log.debug(String.format("Due to errors, changing CSW harvester method to HTTP %s method.", PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET"));
             }
             errors.add(new HarvestError(ex, log));
 
@@ -549,7 +549,7 @@ class Harvester implements IHarvester<HarvestResult>
 		try
 		{
 			log.info("Searching on : "+ params.getName() +" ("+ start +".."+ (start + max) +")");
-			Element response = request.execute();
+            Element response = request.execute();
             if(log.isDebugEnabled()) {
                 log.debug("Sent request "+request.getSentData());
                 log.debug("Search results:\n"+Xml.getString(response));
