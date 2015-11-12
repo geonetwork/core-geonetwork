@@ -1122,13 +1122,13 @@
     </repository>
 
     <repository>
-      <id>oss.sonatype.org</id>
-      <name>Plexus Release</name>
-      <url>https://oss.sonatype.org/content/groups/plexus-with-staging/</url>
+      <id>repository.sonatype.org</id>
+      <name>Sonatype</name>
+      <url>https://repository.sonatype.org/content/groups/forge/</url>
     </repository>	
   </repositories>
-
-
+  
+  
   <pluginRepositories>
     <pluginRepository>
       <name>oss.sonatype.org - github-releases</name>
