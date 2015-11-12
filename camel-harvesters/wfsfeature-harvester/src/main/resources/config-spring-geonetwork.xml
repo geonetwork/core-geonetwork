@@ -21,7 +21,8 @@
     </amq:transportConnectors>
   </amq:broker>
 
-  <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+  <bean id="activemq"
+        class="org.apache.activemq.camel.component.ActiveMQComponent">
     <property name="connectionFactory">
       <bean class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL" value="${jms.url}"/>
@@ -29,9 +30,18 @@
     </property>
   </bean>
 
-  <bean id="jmsMessager" class="org.fao.geonet.harvester.wfsfeatures.services.JMSMessager">
+  <bean id="jmsMessager"
+        class="org.fao.geonet.harvester.wfsfeatures.services.JMSMessager">
     <property name="jmsUrl" value="${jms.url}"/>
   </bean>
+
+  <bean id="featureIndexer"
+        class="org.fao.geonet.harvester.wfsfeatures.FeatureIndexer">
+    <property name="solrCollectionUrl" value="${solr.url}/${solr.collection}"/>
+    <property name="featureCommitInterval" value="500"/>
+    <property name="solrCommitWithinMs" value="10000"/>
+  </bean>
+
 
   <cm:camelContext>
     <cm:jmxAgent id="agent" disabled="false"/>

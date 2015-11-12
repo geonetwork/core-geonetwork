@@ -15,6 +15,10 @@ import java.util.Map;
  */
 public class FeatureTypeConfig {
 
+    // TODO: move to config
+    public static final int wfsTimeOut = 60000;
+    public static final int wfsMaxFeatures = 2000;
+    public static final String wfsEncoding = "UTF-8";
     private String uuid;
     private String wfsUrl;
     private String featureType;
@@ -56,10 +60,10 @@ public class FeatureTypeConfig {
             String getCapUrl = OwsUtils.getGetCapabilitiesUrl(wfsUrl);
 
             m.put(WFSDataStoreFactory.URL.key, getCapUrl);
-            m.put(WFSDataStoreFactory.TIMEOUT.key, 60000);
+            m.put(WFSDataStoreFactory.TIMEOUT.key, wfsTimeOut);
             m.put(WFSDataStoreFactory.TRY_GZIP, true);
-            m.put(WFSDataStoreFactory.MAXFEATURES.key, 2000);
-            m.put(WFSDataStoreFactory.ENCODING, "UTF-8");
+            m.put(WFSDataStoreFactory.MAXFEATURES.key, wfsMaxFeatures);
+            m.put(WFSDataStoreFactory.ENCODING, wfsEncoding);
 
             wfsDatastore = factory.createDataStore(m);
 
@@ -71,6 +75,7 @@ public class FeatureTypeConfig {
             }
             String toto = null;
         } catch (IOException e) {
+            // TODO: log errors
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();

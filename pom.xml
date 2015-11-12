@@ -1212,6 +1212,7 @@
     <lucene.version>4.9.0</lucene.version>
     <solr.version>5.3.1</solr.version>
     <solr.port>8984</solr.port>
+    <solr.url>http://localhost:${solr.port}/solr</solr.url>
     <solr.collection>srv-catalog</solr.collection>
     <jms.url>tcp://localhost:61616</jms.url>
     <spring.version>3.2.5.RELEASE</spring.version>

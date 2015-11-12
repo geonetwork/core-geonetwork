@@ -9,6 +9,7 @@ import javax.jms.*;
  * Created by francois on 05/11/15.
  */
 public class JMSMessager {
+    private String jmsUrl;
 
     public String getJmsUrl() {
         return jmsUrl;
@@ -17,8 +18,6 @@ public class JMSMessager {
     public void setJmsUrl(String jmsUrl) {
         this.jmsUrl = jmsUrl;
     }
-
-    private String jmsUrl;
 
     void sendMessage(String queue, ApplicationEvent event) {
         try {
