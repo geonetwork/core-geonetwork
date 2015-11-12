@@ -9,11 +9,20 @@ import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.StringUtils;
 import org.geotools.data.FeatureSource;
+import org.geotools.data.Query;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.referencing.CRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.metadata.extent.Extent;
+import org.opengis.metadata.extent.GeographicBoundingBox;
+import org.opengis.metadata.extent.GeographicExtent;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -126,6 +135,23 @@ public class FeatureIndexer {
 
         try {
             FeatureSource<SimpleFeatureType, SimpleFeature> source = wfs.getFeatureSource(featureTypeName);
+            CoordinateReferenceSystem wgs84 = CRS.decode("EPSG:4326");
+            Extent crsExtent = wgs84.getDomainOfValidity();
+            ReferencedEnvelope wgs84bbox = null;
+            for (GeographicExtent element : crsExtent.getGeographicElements()) {
+                if (element instanceof GeographicBoundingBox) {
+                    GeographicBoundingBox bounds = (GeographicBoundingBox) element;
+                    wgs84bbox = new ReferencedEnvelope(
+                            bounds.getSouthBoundLatitude(),
+                            bounds.getNorthBoundLatitude(),
+                            bounds.getWestBoundLongitude(),
+                            bounds.getEastBoundLongitude(),
+                            CRS.decode("EPSG:4326")
+                    );
+                }
+            }
+
+            // TODO : retrieve features in WGS 84
             FeatureCollection<SimpleFeatureType, SimpleFeature> featuresCollection = source.getFeatures();
 
             final FeatureIterator<SimpleFeature> features = featuresCollection.features();
@@ -145,7 +171,17 @@ public class FeatureIndexer {
                     String attributeType = fields.get(attributeName);
                     Object attributeValue = feature.getAttribute(attributeName);
                     if (attributeValue != null) {
-                        document.addField(attributeName + XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType), attributeValue);
+                        if (attributeType.equals("geometry")) {
+                            if (!feature.getBounds().getCoordinateReferenceSystem().equals(wgs84)) {
+                                // Geometry is not in WGS84
+                            } else if (wgs84bbox.contains(feature.getBounds())) {
+                                document.addField("geom", attributeValue);
+                            } else {
+                                // Geometry is out of CRS extent
+                            }
+                        } else {
+                            document.addField(attributeName + XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType), attributeValue);
+                        }
                     }
                 }
 
@@ -168,6 +204,10 @@ public class FeatureIndexer {
         } catch (SolrServerException e) {
             e.printStackTrace();
             // TODO: Log
+        } catch (NoSuchAuthorityCodeException e) {
+            e.printStackTrace();
+        } catch (FactoryException e) {
+            e.printStackTrace();
         }
     }
 

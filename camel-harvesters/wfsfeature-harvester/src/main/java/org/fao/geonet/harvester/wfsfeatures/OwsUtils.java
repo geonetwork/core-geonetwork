@@ -2,9 +2,7 @@ package org.fao.geonet.harvester.wfsfeatures;
 
 import org.apache.http.client.utils.URIBuilder;
 import org.opengis.feature.type.AttributeDescriptor;
-import org.springframework.stereotype.Component;
 
-import java.net.URISyntaxException;
 import java.util.Date;
 
 /**
@@ -33,7 +31,7 @@ public class OwsUtils {
         String url = builder.build().toURL().toString();
         return url;
     }
-    
+
     public static String getTypeFromFeatureType(final AttributeDescriptor descriptor) {
         String type;
         if (descriptor.getType().getBinding().isAssignableFrom(String.class)) {
@@ -56,6 +54,15 @@ public class OwsUtils {
         } else if (descriptor.getType().getBinding().isAssignableFrom(
                 Short.class)) {
             type = "integer";
+        } else if (descriptor.getType().getBinding().getSuperclass().isAssignableFrom(
+                        com.vividsolutions.jts.geom.Geometry.class)
+                || descriptor.getType().getBinding().getSuperclass().isAssignableFrom(
+                        com.vividsolutions.jts.geom.GeometryCollection.class)
+                || descriptor.getType().getBinding().isAssignableFrom(
+                        com.vividsolutions.jts.geom.Geometry.class)
+                || descriptor.getType().getBinding().isAssignableFrom(
+                        com.vividsolutions.jts.geom.GeometryCollection.class)) {
+            type = "geometry";
         } else {
             type = "string";
         }

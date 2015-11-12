@@ -118,12 +118,15 @@
       -->
     <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
 
-    <!-- TYpe of document. Values are:
+    <!-- Type of document. Values are:
     * feature
     * metadata
     -->
   <field name="docType" type="string" indexed="true" stored="true" required="true" multiValued="false" />
   <field name="featureTypeId" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+
+    <!-- Feature indexing coming from WFS are using dynamic field name. -->
+    <field name="geom"  type="location_rpt" indexed="true" stored="true" multiValued="true"/>
 
     <field name="_version_" type="long" indexed="true" stored="true"/>
     <field name="_root_" type="string" indexed="true" stored="false"/>
