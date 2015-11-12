@@ -36,27 +36,13 @@ formats:
 hosts:
   - !localMatch
     dummy: true
- 
+
   - !ipMatch
     host: 127.0.0.1
     # Allow to all hosts
     mask: 0.0.0.0
-   
+
 layouts:
-  #===========================================================================
-  Thumbnail:
-    mainPage:
-      rotation: false
-      pageSize: LEGAL
-      landscape: true
-      backgroundPdf: '${configDir}/template-thumbnail.pdf'
-      items:
-        - !map
-          spacingAfter: 0
-          width: 1008
-          height: 612
-          absoluteX: 0
-          absoluteY: 612
   #===========================================================================
   A4 portrait:
     mainPage:
@@ -123,7 +109,7 @@ layouts:
     lastPage:
       items:
          - !columns
-          condition: legends
+          condition: enableLegends
           absoluteX: 51
           absoluteY: 808
           width: 511
@@ -132,7 +118,72 @@ layouts:
               inline: false
               defaultScale: 0.5
               maxHeight: 400
-              maxWidth: 250
+              maxWidth: 500
+              iconMaxHeight: 0
+              iconMaxWidth: 0
+              horizontalAlignment: left
+              columnMargin: 10
+              classIndentation: 3
+              classSpace: 5
+              backgroundColor: white
+              layerFontSize: 9
+  #===========================================================================
+  A4 paysage:
+    mainPage:
+      rotation: false
+      pageSize: LEGAL
+      landscape: true
+      backgroundPdf: '${configDir}/template-thumbnail.pdf'
+      items:
+        - !map
+          spacingAfter: 0
+          width: 1008
+          height: 612
+          absoluteX: 0
+          absoluteY: 612
+        - !columns
+          absoluteX: 10
+          absoluteY: 600
+          width: 575
+          items:
+            - !text
+              font: Helvetica
+              fontSize: 24
+              text: '${title}'
+        - !columns
+          absoluteX: 15
+          absoluteY: 30
+          width: 160
+          items:
+            - !scalebar
+              align: left
+              maxSize: 160
+              type: 'bar sub'
+              intervals: 5
+        - !columns
+          absoluteX: 965
+          absoluteY: 45
+          width: 30
+          items:
+            - !image
+              maxWidth: 30
+              maxHeight: 30
+              url: 'file://${configDir}/Arrow_North_CFCF.svg'
+              rotation: '${rotation}'
+    lastPage:
+      landscape: true
+      items:
+         - !columns
+          condition: enableLegends
+          absoluteX: 21
+          absoluteY: 588
+          width: 801
+          items:
+            - !legends
+              inline: false
+              defaultScale: 0.5
+              maxHeight: 400
+              maxWidth: 800
               iconMaxHeight: 0
               iconMaxWidth: 0
               horizontalAlignment: left

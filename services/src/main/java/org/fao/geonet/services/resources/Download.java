@@ -99,6 +99,10 @@ public class Download {
 		// Build the response
 		Path dir = Lib.resource.getDir(context, access, id);
 		Path file= dir.resolve(fname);
+		
+		if(fname.startsWith("/") || fname.startsWith("://", 1)) {
+		    throw new SecurityException("Wrong filename");
+		}
 
 		context.info("File is : " +file);
 

@@ -91,8 +91,7 @@ public class XmlViewFormatterTest extends AbstractFormatterTest {
     }
 
     @Override
-    protected File getTestMetadataFile() {
-        final String mdFile =  XmlViewFormatterTest.class.getResource("xml_view/test.xml").getFile();
-        return new File(mdFile);
+    protected File getTestMetadataFile() throws Exception {
+        return new File(XmlViewFormatterTest.class.getResource("xml_view/test.xml").toURI());
     }
 }

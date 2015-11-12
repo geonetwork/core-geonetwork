@@ -1,7 +1,25 @@
 package jeeves.server.overrides;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import jeeves.config.springutil.JeevesApplicationContext;
+
 import org.apache.log4j.Level;
 import org.fao.geonet.Constants;
 import org.fao.geonet.utils.IO;
@@ -11,19 +29,6 @@ import org.jdom.JDOMException;
 import org.junit.Test;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.Collection;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class ConfigurationOverridesTest {
 	private static final ClassLoader classLoader;
@@ -197,7 +202,49 @@ public class ConfigurationOverridesTest {
 
         assertEquals(Xml.selectString(unchanged,"default/gui/xml[@name = 'countries']/@file"), Xml.selectString(config,"default/gui/xml[@name = 'countries']/@file"));
     }
-    
+
+    @Test
+    public void resolveRessourcesWithEnvVariable() throws Exception {
+        // Ensures the testcase begins in correct conditions
+        System.clearProperty("geonetwork.datadir");
+        System.clearProperty("another_one");
+
+        // No properties defined, it should resolve as "//test.xml"
+
+        try {
+            boolean exCaught = false;
+            URL u = this.getClass().getResource("/");
+
+            try {
+                loader.loadXmlResource("${env:geonetwork.datadir}/${env:another_one}/test.xml");
+            } catch (Throwable e) {
+                System.out.println(e.getMessage());
+                exCaught = e.getMessage().contains("//test.xml");
+            }
+            assertTrue(
+                    "Expected to fail on loading //test.xml file, no exception encountered",
+                    exCaught);
+
+            // Same defining the previously missing env variables
+            File f = new File(u.toURI());
+            System.setProperty("geonetwork.datadir", f.getAbsolutePath());
+            System.setProperty("another_one", "test-spring-config.xml");
+
+            exCaught = false;
+            try {
+                loader.loadXmlResource("${env:geonetwork.datadir}/${env:another_one}");
+            } catch (Throwable e) {
+                exCaught = true;
+            }
+            assertFalse("Unexepected exception caught with a legit file.",
+                    exCaught);
+        } finally {
+            // Cleanup after testing
+            System.clearProperty("geonetwork.datadir");
+            System.clearProperty("another_one");
+        }
+    }
+
     // TODO no property
     // no overrides
     // invalid appPath

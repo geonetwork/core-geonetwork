@@ -6,6 +6,7 @@
       <jsSource webappPath="/catalog/components/" />
       <cssSource webappPath="/catalog/views/" />
       <cssSource webappPath="/catalog/style/" />
+      <cssSource webappPath="/catalog/lib/bootstrap-table/dist" />
   </require>
   <declarative name="libcesium" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/ol3cesium/Cesium/Cesium.js"/>
@@ -54,6 +55,7 @@
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
+    <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/zip/zip.js"/>
     <jsSource webappPath="/catalog/lib/zip/include.js"/>
     <jsSource webappPath="/catalog/lib/base64.js"/>

@@ -47,22 +47,24 @@
         defaultLang: 'eng',
         pages: {
           editor: {
-            eng: 'eng/users/quickstartguide/new_metadata/index.html',
-            fre: 'fra/users/editor/index.html'
+            eng: 'eng/users/user-guide/describing-information/' +
+                'creating-metadata.html',
+            fre: 'fra/users/user-guide/describing-information/' +
+                'creating-metadata.html'
           },
           editor_sharing: {
-            eng: 'eng/users/managing_metadata/ownership/index.html',
-            fre: 'fra/users/editor/metadata_ownership/index.html'
+            eng: 'eng/users/user-guide/publishing/index.html',
+            fre: 'fra/users/user-guide/publishing/index.html'
           },
           editor_geopublisher: {
-            eng: 'eng/users/quickstartguide/new_metadata/linking.html' +
-                '#publish-uploaded-data-as-wms-wfs',
-            fre: 'fra/users/editor/metadata_link/linking.html' +
-                '#publier-les-donnees-telechargees-en-wms-wfs-wcs'
+            eng: 'eng/users/user-guide/workflow/geopublication.html',
+            fre: 'fra/users/user-guide/workflow/geopublication.html'
           },
           admin_settings: {
-            eng: 'eng/users/admin/configuration/index.html',
-            fre: 'fra/users/admin/configuration/index.html'
+            eng: 'eng/users/administrator-guide/configuring-the-catalog/' +
+                'system-configuration.html',
+            fre: 'fra/users/administrator-guide/configuring-the-catalog/' +
+                'system-configuration.html'
           }
         }
       };

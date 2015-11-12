@@ -57,6 +57,11 @@
             <class name=".services.group.List" />
         </service>
         
+        <service name="admin.group.get">
+            <documentation>Returns a specific group given its id.</documentation>
+            <class name=".services.group.Get" />
+        </service>
+        
         <service name="admin.group.update.labels">
             <documentation>The service can be used to update group's label
                 translations.</documentation>

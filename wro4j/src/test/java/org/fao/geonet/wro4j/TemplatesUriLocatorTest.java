@@ -1,5 +1,7 @@
 package org.fao.geonet.wro4j;
 
+import java.io.File;
+import java.net.URL;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import ro.isdc.wro.config.Context;
@@ -16,12 +18,15 @@ public class TemplatesUriLocatorTest {
     public void testLocate() throws Exception {
     	Context.set(Context.standaloneContext());
         final TemplatesUriLocator locator = new TemplatesUriLocator();
-        String path = TemplatesUriLocatorTest.class.getResource("/partials/").getFile();
+        URL path = TemplatesUriLocatorTest.class.getResource("/partials/");
+        File file = new File(path.toURI());
         final Resource resource = new Resource();
-        resource.setUri(TemplatesUriLocator.URI_PREFIX + path);
+        resource.setUri(TemplatesUriLocator.URI_PREFIX + file.getPath());
 
         assertTrue(locator.accept(resource.getUri()));
         final String actual = IOUtils.toString(locator.locate(resource.getUri()));
-        assertEquals(String.format("$templateCache.put('%stemplate.html', '<html><div ng-class=\"test | \\'bold\\'\"></div></html>');","../.."+path.replace('\\','/')), actual);
+        String expected = String.format("$templateCache.put('%s/template.html', '<html><div ng-class=\"test | \\'bold\\'\"></div></html>');",
+                "../.." + file.getPath().replace('\\', '/'));
+        assertEquals(expected, actual);
     }
 }

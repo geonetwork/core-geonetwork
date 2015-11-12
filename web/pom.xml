@@ -36,7 +36,6 @@
       <dependency>
           <groupId>org.tuckey</groupId>
           <artifactId>urlrewritefilter</artifactId>
-          <version>3.2.0</version>
       </dependency>
 
     <dependency>
@@ -63,7 +62,7 @@
     <dependency>
       <groupId>org.openrdf</groupId>
       <artifactId>sesame</artifactId>
-    </dependency>	
+    </dependency>	 
     <dependency>
       <groupId>org.openrdf</groupId>
       <artifactId>rio</artifactId>
@@ -83,17 +82,14 @@
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-webmvc</artifactId>
-         <version>${spring.version}</version>
       </dependency>
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-web</artifactId>
-         <version>${spring.version}</version>
       </dependency>
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-test</artifactId>
-         <version>${spring.version}</version>
           <scope>compile</scope>
       </dependency>
 
@@ -207,7 +203,6 @@
     <dependency>
       <groupId>org.apache.avalon.framework</groupId>
       <artifactId>avalon-framework-impl</artifactId>
-      <version>4.3.1</version>
     </dependency>
     <dependency>
       <groupId>commons-digester</groupId>
@@ -395,7 +390,6 @@
       <dependency>
           <groupId>net.arnx.jsonic</groupId>
           <artifactId>jsonic</artifactId>
-          <version>1.2.0</version>
       </dependency>
       <!-- end language detection -->
 		<dependency>

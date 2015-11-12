@@ -34,7 +34,7 @@ public class ClosureRequireDependencyManagerTest {
     private ClosureRequireDependencyManager _depManager;
 
     @Before
-    public void configureTestFile() throws IOException {
+    public void configureTestFile() throws Exception {
         this._depManager = new ClosureRequireDependencyManager();
         final File rootOfSearch = getJsTestBaseDir();
         final Iterator<File> fileIterator = FileUtils.iterateFiles(rootOfSearch, new String[]{"js"}, true);
@@ -49,14 +49,14 @@ public class ClosureRequireDependencyManagerTest {
 
     }
 
-    static File getJsTestBaseDir() {
+    static File getJsTestBaseDir() throws Exception {
         final Class<ClosureRequireDependencyManagerTest> cls = ClosureRequireDependencyManagerTest
                 .class;
         final URL resource = cls.getResource(cls.getSimpleName() + ".class");
         if (resource == null) {
             throw new Error("Programming error");
         }
-        return new File(resource.getFile()).getParentFile();
+        return new File(resource.toURI()).getParentFile();
     }
 
     @Test(expected = IllegalArgumentException.class)

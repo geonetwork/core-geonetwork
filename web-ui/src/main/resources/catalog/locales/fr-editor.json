@@ -44,8 +44,10 @@
     "createChildOf": "Créer une fiche enfant de",
     "createCopyOf": "Créer une copie de",
     "createMetadata": "Créer",
+    "createMetadataError": "Create metadata error",
     "createMetadataForGroup": "Créer et publier pour le groupe",
     "createMetadataForGroup-help": "La fiche pourra être modifiée par tous les membres du groupe",
+    "createMetadataUniformResourceName": "Metadata Uniform Resource Name",
     "createNewMetadata": "Créer une fiche",
     "createSmall": "Créer une miniature",
     "current": "actuel",
@@ -72,7 +74,7 @@
     "mcc:MD_BrowseGraphic": "Logos",
     "gmd:MD_Distribution": "Ressources en ligne",
     "hasFeatureCatalog": "Utilisant ce catalogue d'attributs",
-    "importCPResult": "Un enregistrement importé. L'identificateur d'enregistrement est: {{id}}.",
+    "importCPResult": "One record imported. Record identifier is: {{id}} <br/> UUID: {{uuid}}.",
     "importEntry": "Importer un élément dans un annuaire",
     "importFromDir": "Importer un ensemble de fichiers d'un dossier sur le serveur",
     "importFromDirReport": "{{success}}/{{records}} fiches(s) importée(s) en {{time}} secondes.",
@@ -194,5 +196,6 @@
     "minorEdit": "Modification mineure",
     "notEvaluated": "Non évaluée",
     "notConformant": "Non conforme",
+    "capabilitiesParseError": "Error parsing WMS capabilities",
     "conformant": "Conforme"
 }

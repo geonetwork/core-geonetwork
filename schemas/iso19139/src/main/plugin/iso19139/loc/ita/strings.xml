@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <understandResource>Info sul dataset</understandResource>
+  <relatedResources>Servizi correlati e dati collegati</relatedResources>
+  <techInfo>Info tecniche</techInfo>
+  <contactInfo>Dettagli sui contatti</contactInfo>
+  <mdContactInfo>Contatti per i metadati</mdContactInfo>
+  <refDate>Data di riferimento</refDate>
+  <temporalRef>Informazioni temporali</temporalRef>
+  <constraintInfo>Info sui vincoli di accesso</constraintInfo>
+  <xml_iso19139>Salva questo metadato come file XML ISO19139</xml_iso19139>
+  <xml_iso19139Tooai_dc>Salva questo metadato come file XML OAI Dublin Core</xml_iso19139Tooai_dc>
+  
+  <!-- New strings added for the AngularJS editor -->
+  <!-- View and tabs -->
+  <advanced>Completo</advanced>
+  <default>Base</default>
+  <simple>Base</simple>
+  <inspire>INSPIRE</inspire>
+  <resource>Risorsa</resource>
+  <xml>XML</xml>
+  <metadata>Metadato</metadata>
+  <identificationInfo>Identificazione</identificationInfo>
+  <distributionInfo>Distribuzione</distributionInfo>
+  <dataQualityInfo>Qualità</dataQualityInfo>
+  <spatialRepresentationInfo>Rappres. spaziale</spatialRepresentationInfo>
+  <referenceSystemInfo>Sistema di rif.</referenceSystemInfo>
+  <contentInfo>Contenuto</contentInfo>
+  <portrayalCatalogueInfo>Portrayal</portrayalCatalogueInfo>
+  <metadataConstraints>Vincoli sul MD</metadataConstraints>
+  <metadataMaintenance>Manutenzione del MD</metadataMaintenance>
+  <applicationSchemaInfo>Info sullo schema</applicationSchemaInfo>
+  <noThesaurusName>Parole chiave</noThesaurusName>
+  <bboxesSection>Geographic coverage</bboxesSection>
+
+  <!-- XSD error translation -->
+  <invalidElement>Elemento non valido. È stato trovato del contenuto non valido a partire dall'elemento: </invalidElement>
+  <onElementOf>Uno tra gli elementi seguenti</onElementOf>
+  <isExpected> è richiesto.</isExpected>
+  <isNotComplete> non è completo.</isNotComplete>
+  <elementLocated>L'elemento superiore è </elementLocated>
+  <missingElement>Elemento mancante. Il contenuto dell'elemento: </missingElement>
+  <invalidValue>Valore non valido o assente.</invalidValue>
+  <notValidFor> non è un valore valido per </notValidFor>
+  <xsdErrorIs>Errore XSD: </xsdErrorIs>
+  <inElement> nell'elemento </inElement>
+  <enum1>Valore </enum1>
+  <enum2> non valido per il campo </enum2>
+  <enum3>La lista di valori è:</enum3>
+
+  <!-- INSPIRE view labels and help -->
+  <url>Risorsa online</url>
+  <identifier>Id di risorsa</identifier>
+  <rsIdentifier>Proiezione</rsIdentifier>
+  <referenceDate>Info temporale</referenceDate>
+  <creationDate>Data di creazione</creationDate>
+  <hierarchyLevel>Livello gerarchico</hierarchyLevel>
+  <publicationDate>Data di pubblicazione</publicationDate>
+  <revisionDate>Data di revisione</revisionDate>
+  <temporalRangeSection>Estensione temporale</temporalRangeSection>
+  <beginPosition>Inizio</beginPosition>
+  <endPosition>Fine</endPosition>
+  <conformity>Conformità</conformity>
+  <conformity_title>Titolo</conformity_title>
+  <conformity_date>Data</conformity_date>
+  <explanation>Spiegazione</explanation>
+  <pass>Pass</pass>
+  <indeterminatePosition>Posizione indeterminata</indeterminatePosition>
+  <pointOfContact>Contatto per la risorsa</pointOfContact>
+  <metadataPointOfContact>Contatto per il metadato</metadataPointOfContact>
+  <organisationName>Nome dell'organizzazione</organisationName>
+  <electronicMailAddress>Email</electronicMailAddress>
+  <role>Ruolo</role>
+  <encoding>Codifica</encoding>
+  <inspireTheme>Temi INSPIRE</inspireTheme>
+  <inspireThemeURI>Temi INSPIRE</inspireThemeURI>
+  <format>Formato</format>
+  <format_version>Versione</format_version>
+  <lineage>Lineage</lineage>
+  <spatialResolution>Risoluzione spaziale (scala)</spatialResolution>
+  <spatialDistance>Risoluzione spaziale (distanza)</spatialDistance>
+  <accessConstraints>Vincoli di accesso</accessConstraints>
+  <useLimitation>Limitazioni d'uso</useLimitation>
+  <add-resource-id>Crea un id di risorsa</add-resource-id>
+  <add-resource-idHelp>Costruisce l'id di risorsa usando la URL del catalogo e l'id del metadato (es. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).</add-resource-idHelp>
+  <add-extent-from-geokeywords>Calcola l'estensione dalle parole chiavi</add-extent-from-geokeywords>
+  <add-extent-from-geokeywordsHelp>Analizza ogni parola chiave di tipo Luogo e ne usa l'estensione relativa.</add-extent-from-geokeywordsHelp>
+</strings>
