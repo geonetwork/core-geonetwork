@@ -28,8 +28,8 @@ angular.module('bootstrap-tagsinput', [])
         var select = $('select', element);
         
         if (attrs.placeholder) {
-+          select.attr('placeholder', attrs.placeholder);
-+        }
+          select.attr('placeholder', attrs.placeholder);
+        }
 
         select.tagsinput({
           typeahead : {
