@@ -25,15 +25,15 @@ import java.util.Map;
 @Component
 public class FeatureTypeBean {
 
-    public void initialize(Exchange exchange) {
+    public void initialize(Exchange exchange, boolean connect) {
         String uuid = (String)exchange.getProperty("mduuid");
         String wfsUrl = (String)exchange.getProperty("wfsUrl");
         String featureType = (String)exchange.getProperty("featureType");
 
         FeatureTypeConfig config = new FeatureTypeConfig(uuid, wfsUrl, featureType);
-        config.connectToWfsService();
-
+        if (connect) {
+            config.connectToWfsService();
+        }
         exchange.setProperty("featureTypeConfig", config);
-
     }
 }

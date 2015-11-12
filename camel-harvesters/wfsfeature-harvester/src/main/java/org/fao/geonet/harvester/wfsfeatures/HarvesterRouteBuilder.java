@@ -16,12 +16,11 @@ public class HarvesterRouteBuilder extends RouteBuilder {
          */
         from("timer://start?repeatCount=1").autoStartup(false)
                 .log(LoggingLevel.DEBUG, LOGGER_NAME, "Harvesting ${body.url} one time.")
-                .setProperty("wfsUrl", simple("http://geoservices.brgm.fr/risques"))
-                .setProperty("featureType", simple("BASIAS_LOCALISE"))
-//                .setProperty("wfsUrl", simple("http://sdi.georchestra.org/geoserver/geor/wfs"))
-//                .setProperty("featureType", simple("menhirs"))
-                .bean(FeatureTypeBean.class, "initialize")
-                .to("direct:delete-wfs-featuretype-features")
+//                .setProperty("wfsUrl", simple("http://geoservices.brgm.fr/risques"))
+//                .setProperty("featureType", simple("BASIAS_LOCALISE"))
+                .setProperty("wfsUrl", simple("http://sdi.georchestra.org/geoserver/geor/wfs"))
+                .setProperty("featureType", simple("menhirs"))
+                .bean(FeatureTypeBean.class, "initialize(*, true)")
                 .to("direct:index-wfs");
 
         /**
@@ -31,13 +30,20 @@ public class HarvesterRouteBuilder extends RouteBuilder {
          * This bean will be pass to next Route.
          */
         from("activemq:queue:harvest-wfs-features")
-                .log(LoggingLevel.DEBUG, LOGGER_NAME, "### ActiveMQ message received.")
+                .log(LoggingLevel.DEBUG, LOGGER_NAME, "### WFS harvest feature message received.")
                 .setProperty("mduuid", simple("${body.uuid}"))
                 .setProperty("wfsUrl", simple("${body.wfsUrl}"))
                 .setProperty("featureType", simple("${body.featureType}"))
-                .bean(FeatureTypeBean.class, "initialize")
+                .bean(FeatureTypeBean.class, "initialize(*, true)")
                 .to("direct:delete-wfs-featuretype-features")
                 .to("direct:index-wfs");
+
+        from("activemq:queue:delete-wfs-features")
+                .log(LoggingLevel.DEBUG, LOGGER_NAME, "### WFS delete features message received.")
+                .setProperty("wfsUrl", simple("${body.wfsUrl}"))
+                .setProperty("featureType", simple("${body.featureType}"))
+                .bean(FeatureTypeBean.class, "initialize(*, false)")
+                .to("direct:delete-wfs-featuretype-features");
 
 /*
         from("direct:describe")

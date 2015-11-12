@@ -77,6 +77,12 @@ public class FeatureIndexer {
     }
 
 
+    /**
+     * Delete all Solr documents matching a WFS server and a specific
+     * typename.
+     *
+     * @param exchange
+     */
     public void deleteFeatures(Exchange exchange) {
         FeatureTypeConfig ftConfig = (FeatureTypeConfig) exchange.getProperty("featureTypeConfig");
         String wfsUrl = ftConfig.getWfsUrl();
@@ -98,6 +104,11 @@ public class FeatureIndexer {
         }
     }
 
+    /**
+     * Index all features found in a WFS server
+     *
+     * @param exchange
+     */
     public void featureToIndexDocument(Exchange exchange) {
 
         FeatureTypeConfig ftConfig = (FeatureTypeConfig) exchange.getProperty("featureTypeConfig");
