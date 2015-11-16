@@ -45,15 +45,15 @@
     <ul class="nav nav-tabs">
       <li role="presentation"
               data-ng-class="{'active' : selectedStep === 1}"
-              data-ng-click="selectedStep = 1">
+              data-ng-click="setStep(1)">
         <a href="" data-translate="">chooseASet</a></li>
       <li role="presentation"
           data-ng-class="{'active': selectedStep === 2, 'disabled': searchResults.selectedCount < 1}"
-          data-ng-click="selectedStep = 2">
+          data-ng-click="setStep(2)">
         <a href="" data-translate="">defineEdits</a></li>
       <li role="presentation"
           data-ng-class="{'active' : selectedStep === 3, 'disabled': searchResults.selectedCount < 1}"
-          data-ng-click="selectedStep = 3">
+          data-ng-click="setStep(3)">
         <a href="" data-translate="">confirmAndSave</a></li>
       <li class="gn-batch-editor-info">{{searchResults.selectedCount}} <span data-translate="">recordsInSelection</span></li>
     </ul>
@@ -250,8 +250,16 @@
                            data-schema-info-combo="codelist"
                            data-gn-schema-info="{{field.codelist}}"
                            data-selected-info="field.value"
-                           lang="lang"
-                           data-ng-blur="putChange(field, $event)"/>
+                           lang="lang"/>
+                    <div data-ng-if="field.use === 'data-gn-draw-bbox'">
+                      <div class=""
+                           data-gn-draw-bbox=""
+                           data-extent-xml="xmlExtents[field.xpath]"
+                           lang="lang">
+                      </div>
+                      <input id="bboxField"
+                             data-ng-model="xmlExtents[field.xpath]"/>
+                    </div>
                     <input type="text"
                            class="form-control"
                            data-ng-if="field.use === 'data-gn-metadata-picker'"

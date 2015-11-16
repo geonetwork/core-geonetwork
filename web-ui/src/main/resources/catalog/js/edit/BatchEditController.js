@@ -94,8 +94,9 @@
     '$scope',
     '$location',
     '$http',
+    '$compile',
     'gnSearchSettings',
-    function($scope, $location, $http, gnSearchSettings) {
+    function($scope, $location, $http, $compile, gnSearchSettings) {
 
       gnSearchSettings.resultViewTpls = [{
         tplUrl: '../../catalog/components/search/resultsview/' +
@@ -109,13 +110,45 @@
       $scope.fieldConfig = null;
       $scope.changes = [];
 
+      // Map of xpath / extent
+      $scope.xmlExtents = {};
+
+      $scope.setStep = function(step) {
+        $scope.selectedStep = step;
+      };
+      $scope.$watchCollection('xmlExtents', function (newValue, oldValue) {
+        angular.forEach($scope.xmlExtents, function (value, xpath) {
+          $scope.putChange({
+            name: 'extent',
+            xpath: xpath
+          }, {
+            target: {
+              value: value
+            }
+          })
+        });
+      });
+
+      $scope.$watch('selectedStep', function (newValue, oldValue) {
+        if (newValue === 2) {
+          // Initialize map size when tab is rendered.
+          var map = $('div.gn-drawmap-panel').data('map');
+          if (!angular.isArray(
+              map.getSize()) || map.getSize()[0] == 0) {
+            setTimeout(function () {
+              map.updateSize();
+            });
+          }
+        }
+      });
+
       /**
        * Add field with only one value allowed.
        */
       $scope.putChange = function (field, $event) {
         var index = $scope.changes.length;
 
-        if ($event.target.value === '') {
+        if ($event && $event.target && $event.target.value === '') {
           $scope.removeChange(field);
         } else {
           for (var j = 0; j < $scope.changes.length; j++) {

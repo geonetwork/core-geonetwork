@@ -22,14 +22,40 @@
              hleftRef: '@',
              hrightRef: '@',
              dcRef: '@',
+             extentXml: '=',
              lang: '=',
              location: '@'
            },
            link: function(scope, element, attrs) {
              scope.drawing = false;
-             var mapRef = scope.htopRef || scope.dcRef;
+             var mapRef = scope.htopRef || scope.dcRef || '';
              scope.mapId = 'map-drawbbox-' +
              mapRef.substring(1, mapRef.length);
+
+             var extentTpl = {
+               'iso19139': '<gmd:extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"><gmd:EX_Extent><gmd:geographicElement>' +
+               '<gmd:EX_GeographicBoundingBox>' +
+               '<gmd:westBoundLongitude><gco:Decimal>{{west}}</gco:Decimal></gmd:westBoundLongitude>' +
+               '<gmd:eastBoundLongitude><gco:Decimal>{{east}}</gco:Decimal></gmd:eastBoundLongitude>' +
+               '<gmd:southBoundLatitude><gco:Decimal>{{south}}</gco:Decimal></gmd:southBoundLatitude>' +
+               '<gmd:northBoundLatitude><gco:Decimal>{{north}}</gco:Decimal></gmd:northBoundLatitude>' +
+               '</gmd:EX_GeographicBoundingBox></gmd:geographicElement>' +
+               '</gmd:EX_Extent></gmd:extent>',
+               'iso19115-3': ''
+             };
+             var xmlExtentFn = function (coords, location) {
+               if (angular.isArray(coords) &&
+                 coords.length === 4 &&
+                 !isNaN(coords[0]) &&
+                 !isNaN(coords[1]) &&
+                 !isNaN(coords[2]) &&
+                 !isNaN(coords[3])) {
+                 scope.extentXml = extentTpl.iso19139.replace('{{west}}', coords[0])
+                   .replace('{{south}}', coords[1])
+                   .replace('{{east}}', coords[2])
+                   .replace('{{north}}', coords[3]);
+               }
+             };
 
              /**
               * set dublin-core coverage output
@@ -40,6 +66,7 @@
                  scope.extent.md,
                  scope.location);
                }
+               xmlExtentFn(scope.extent.md, scope.location);
              };
 
              /**
@@ -128,6 +155,7 @@
                  zoom: 2
                })
              });
+             element.data('map', map)
 
              //Uses configuration from database
              if (gnMap.getMapConfig().context) {
