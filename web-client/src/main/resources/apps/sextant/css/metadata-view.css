@@ -514,6 +514,15 @@ div.help ul li {
 .gn-metadata-view h3 .closed i {
     transform: rotate(90deg);
 }
+
+.gn-metadata-view h4.view-header {
+    font-size: 140%;
+    margin: 6px 0px 2px;
+}
+/* Hide select predefined regions */
+#gn-tab-spatialCoverage h4.view-header {
+    display: none;
+}
 .gn-metadata-view dl {
     margin-bottom: 0;
 }
