@@ -472,7 +472,8 @@ div.help ul li {
 }
 .gn-metadata-view h1 {
     margin-bottom: 20px;
-    display: none;
+    color: #1b75bc;
+    /*display: none;*/
 }
 .gn-metadata-view h3 {
     /*color: #3071a9;*/
