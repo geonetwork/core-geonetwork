@@ -58,7 +58,7 @@
     "description": "Description",
     "directory": "Folder path",
     "directoryEntries": "Entries",
-    "drawRectangle": "Draw rectangle",
+    "drawRectangle": "Draw region",
     "error": "Error",
     "errors": "Error(s)",
     "serviceDetachedToCurrentRecord": "Service detached to current record",
