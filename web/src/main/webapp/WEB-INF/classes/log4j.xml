@@ -119,7 +119,7 @@
     <logger name="geonetwork.wro4j">
         <level value="WARN" />
     </logger>
-     <logger name="geonetwork.httpproxy">
+    <logger name="geonetwork.httpproxy">
         <level value="WARN" />
     </logger>
 
