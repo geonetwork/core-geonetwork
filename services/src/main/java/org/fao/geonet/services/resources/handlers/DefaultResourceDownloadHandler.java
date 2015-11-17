@@ -155,6 +155,7 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
                                           final String downloadDate) {
         final MetadataFileUploadRepository uploadRepository = context.getBean(MetadataFileUploadRepository.class);
         final MetadataFileDownloadRepository repo = context.getBean(MetadataFileDownloadRepository.class);
+        final String userName = context.getUserSession().getUsername();
 
         threadPool.runTask(new Runnable() {
             @Override
@@ -183,7 +184,7 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
                     metadataFileDownload.setRequesterOrg(requesterOrg);
                     metadataFileDownload.setRequesterComments(requesterComments);
                     metadataFileDownload.setDownloadDate(downloadDate);
-                    metadataFileDownload.setUserName(context.getUserSession().getUsername());
+                    metadataFileDownload.setUserName(userName);
                     metadataFileDownload.setFileUploadId(metadataFileUpload.getId());
 
                     repo.save(metadataFileDownload);
