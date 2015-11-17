@@ -91,6 +91,11 @@
     <logger name="geonetwork.data.directory" additivity="false">
         <level value="WARN" />
     </logger>
+    <logger name="geonetwork.httpproxy">
+        <level value="WARN" />
+    </logger>
+
+
 
     <!--  Jeeves module and submodule logger configuration -->
     <logger name="jeeves" additivity="false">
