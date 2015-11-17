@@ -374,7 +374,7 @@ public class GeoServerRest {
 				"application/zip", false);
 
 		if (createStyle) {
-			createStyle(ds);
+			createStyle(ws, ds);
 		}
 
 		return status == 201;
@@ -395,7 +395,7 @@ public class GeoServerRest {
 				"text/plain", false);
 
 		if (createStyle) {
-			createStyle(ds);
+			createStyle(ws, ds);
 		}
 
 		return status == 201;
@@ -488,7 +488,7 @@ public class GeoServerRest {
 	 * @param layer
 	 * @return
 	 */
-	public int createStyle(String layer) {
+	public int createStyle(String ws, String layer) {
 		try {
 			int status = sendREST(GeoServerRest.METHOD_GET, "/layers/" + layer
 					+ ".xml", null, null, null, true);
@@ -498,6 +498,7 @@ public class GeoServerRest {
 			String styleName = layerProperties.getChild("defaultStyle")
 					.getChild("name").getText();
 
+			/* get the default style (polygon, line, point) from the global styles */
 			status = sendREST(GeoServerRest.METHOD_GET, "/styles/" + styleName
 					+ ".sld", null, null, null, true);
             checkResponseCode(status);
@@ -506,18 +507,18 @@ public class GeoServerRest {
 
 			String body = "<style><name>" + layer + "_style</name><filename>"
 					+ layer + ".sld</filename></style>";
-			status = sendREST(GeoServerRest.METHOD_POST, "/styles", body, null,
+			status = sendREST(GeoServerRest.METHOD_POST, "/workspaces/" + ws + "/styles", body, null,
 					"text/xml", true);
             checkResponseCode(status);
 
-			status = sendREST(GeoServerRest.METHOD_PUT, "/styles/" + layer
+			status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws + "/styles/" + layer
 					+ "_style", currentStyle, null,
 					"application/vnd.ogc.sld+xml", true);
             checkResponseCode(status);
 
 			body = "<layer><defaultStyle><name>"
 					+ layer
-					+ "_style</name></defaultStyle><enabled>true</enabled></layer>";
+					+ "_style</name><workspace>" + ws + "</workspace></defaultStyle><enabled>true</enabled></layer>";
 
 			// Add the enable flag due to GeoServer bug
 			// http://jira.codehaus.org/browse/GEOS-3964
@@ -528,7 +529,7 @@ public class GeoServerRest {
 		} catch (Exception e) {
 			if(Log.isDebugEnabled(LOGGER_NAME))
 				Log.debug(LOGGER_NAME, "Failed to create style for layer: "
-					+ layer + ", error is: " + e.getMessage());
+					+ layer + " in workspace " + ws + ", error is: " + e.getMessage());
 		}
 
 		return status;
@@ -627,7 +628,7 @@ public class GeoServerRest {
 		checkResponseCode(status);
 
 		if (createStyle) {
-			createStyle(ft);
+			createStyle(ws, ft);
 		}
 
 		return 201 == status;
