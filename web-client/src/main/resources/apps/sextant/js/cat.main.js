@@ -148,9 +148,9 @@ cat.app = function() {
 
         // Add view parameter for MedSea which is based on iso19115-3 plugin
         var recordStandard = record && record.get('standardName');
-        if (recordStandard === 'ISO 19115-3 - MedSea Targeted Product') {
+        if (recordStandard === 'ISO 19115-3 - Emodnet Targeted Product') {
           style = 'xsl-view&view=medsea-targeted-product';
-        } else if (recordStandard === 'ISO 19115-3 - MedSea Checkpoint') {
+        } else if (recordStandard === 'ISO 19115-3 - Emodnet Checkpoint') {
           style = 'xsl-view&view=medsea';
         }
         var win = new cat.view.ViewWindow({

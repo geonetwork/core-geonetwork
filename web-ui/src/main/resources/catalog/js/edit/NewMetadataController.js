@@ -175,7 +175,7 @@
       $scope.createNewMetadata = function(isPublic) {
         var useExtEditor = false;
         if ($scope.activeTpl['geonet:info'].schema !== 'iso19115-3' &&
-            $scope.activeTpl.standardName.indexOf('MedSea Checkpoint') === -1) {
+            $scope.activeTpl.standardName.indexOf('Emodnet Checkpoint') === -1) {
           useExtEditor = true;
         }
         

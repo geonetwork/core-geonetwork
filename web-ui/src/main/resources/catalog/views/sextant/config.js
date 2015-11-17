@@ -217,9 +217,9 @@
             url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
           } else if(md.getSchema() == 'iso19115-3') {
             var view =
-              md.standardName === 'ISO 19115-3 - MedSea Checkpoint' ? 'medsea' :
+              md.standardName === 'ISO 19115-3 - Emodnet Checkpoint' ? 'medsea' :
                 (md.standardName ===
-                  'ISO 19115-3 - MedSea Targeted Product' ?
+                  'ISO 19115-3 - Emodnet Targeted Product' ?
                   'medsea-targeted-product' : 'default'
                 );
             url = 'md.format.xml?xsl=xsl-view&view=' + view +

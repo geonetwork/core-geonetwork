@@ -40,12 +40,12 @@
       Open custom tab for MedSea records
       -->
       <a class="btn btn-link"
-         data-ng-if="md.standardName.indexOf('MedSea Checkpoint') >= 0"
+         data-ng-if="md.standardName.indexOf('Emodnet Checkpoint') >= 0"
          ng-href="#/metadata/{{md['geonet:info'].id}}/tab/characteristics">
         <i class="fa fa-pencil"></i>
       </a>
       <a class="btn btn-link"
-         data-ng-if="md.standardName.indexOf('MedSea Targeted') >= 0"
+         data-ng-if="md.standardName.indexOf('Emodnet Targeted') >= 0"
          ng-href="#/metadata/{{md['geonet:info'].id}}/tab/medsea-what">
         <i class="fa fa-pencil"></i>
       </a>
@@ -54,7 +54,7 @@
       TODO: And EMODNET - should be more modular
       -->
       <a class="btn btn-link"
-         data-ng-if="md['geonet:info'].schema == 'iso19115-3' && md.standardName.indexOf('ISO 19115-3 - MedSea') === -1"
+         data-ng-if="md['geonet:info'].schema == 'iso19115-3' && md.standardName.indexOf('ISO 19115-3 - Emodnet') === -1"
          ng-href="#/metadata/{{md['geonet:info'].id}}">
         <i class="fa fa-pencil"></i>
       </a>
