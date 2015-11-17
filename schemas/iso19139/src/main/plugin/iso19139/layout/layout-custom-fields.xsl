@@ -11,7 +11,6 @@
   xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="#all">
 
   <xsl:include href="layout-custom-fields-keywords.xsl"/>
-  <xsl:include href="layout-custom-fields-medsea.xsl"/>
   <xsl:include href="layout-custom-fields-emodnet.xsl"/>
 
   <!-- Readonly elements -->
