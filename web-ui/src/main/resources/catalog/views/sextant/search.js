@@ -577,7 +577,7 @@
           && !user.isReviewerOrMore());
 
 
-      scope.links = md.getLinksByType('LINK', 'DOWNLOAD');
+      scope.links = md.getLinksByType('LINK');
       scope.downloads = [];
       scope.layers = [];
 
@@ -588,8 +588,8 @@
         // get all layers and downloads for this transferOptions
         var layers = md.getLinksByType(i+1, 'OGC:WMTS',
             'OGC:WMS', 'OGC:OWS-C');
-        var downloads = md.getLinksByType(i+1, '#FILE',
-            '#COPYFILE', '#DB', '#WFS', 'WCS');
+        var downloads = md.getLinksByType(i+1, '#FILE', '#DB', '#COPYFILE',
+           '#WWW:DOWNLOAD-1.0-link--download', '#WFS', 'WCS');
 
         if(downloads.length > 0) {
           // If only one layer, we get only one download (we bind them later)
