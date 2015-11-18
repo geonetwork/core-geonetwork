@@ -36,6 +36,7 @@ public class MapServer {
     private String _password;
     private String _namespaceprefix;
     private String _namespace;
+    private char _pushstyleinworkspace = Constants.YN_FALSE;
 
     /**
      * Get the id of the mapserver.
@@ -265,6 +266,28 @@ public class MapServer {
     public MapServer setNamespace(String _namespace) {
         this._namespace = _namespace;
         return this;
+    }
+
+    /**
+     * Check whether the sld style should be pushed in the same workspace
+     * as the layer and datastore or in the global styles/ dir
+     */
+
+    @Column(name="pushstyleinworkspace", nullable = false, length = 1)
+    protected char getPushStyleInWorkspace_JpaWorkaround() {
+        return _pushstyleinworkspace;
+    }
+
+    protected void setPushStyleInWorkspace_JpaWorkaround(char pushStyleInWorkspace) {
+        _pushstyleinworkspace = pushStyleInWorkspace;
+    }
+    @Transient
+    public boolean pushStyleInWorkspace() {
+        return Constants.toBoolean_fromYNChar(getPushStyleInWorkspace_JpaWorkaround());
+    }
+
+    public void setPushStyleInWorkspace(boolean pushStyleInWorkspace) {
+        setPushStyleInWorkspace_JpaWorkaround(Constants.toYN_EnabledChar(pushStyleInWorkspace));
     }
 
     @Override
