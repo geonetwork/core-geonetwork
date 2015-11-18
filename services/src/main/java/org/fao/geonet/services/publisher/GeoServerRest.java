@@ -510,18 +510,23 @@ public class GeoServerRest {
 
 			String body = "<style><name>" + layer + "_style</name><filename>"
 					+ layer + ".sld</filename></style>";
-			status = sendREST(GeoServerRest.METHOD_POST, "/workspaces/" + ws + "/styles", body, null,
+			String url = "/styles";
+			if (pushStyleInWorkspace)
+				url = "/workspaces/" + ws + "/styles";
+			status = sendREST(GeoServerRest.METHOD_POST, url, body, null,
 					"text/xml", true);
             checkResponseCode(status);
-
-			status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws + "/styles/" + layer
+			status = sendREST(GeoServerRest.METHOD_PUT, url + "/" + layer
 					+ "_style", currentStyle, null,
 					"application/vnd.ogc.sld+xml", true);
             checkResponseCode(status);
 
 			body = "<layer><defaultStyle><name>"
 					+ layer
-					+ "_style</name><workspace>" + ws + "</workspace></defaultStyle><enabled>true</enabled></layer>";
+					+ "_style</name>";
+			if (pushStyleInWorkspace)
+				body += "<workspace>" + ws + "</workspace>";
+			body += "</defaultStyle><enabled>true</enabled></layer>";
 
 			// Add the enable flag due to GeoServer bug
 			// http://jira.codehaus.org/browse/GEOS-3964
