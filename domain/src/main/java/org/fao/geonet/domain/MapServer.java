@@ -278,16 +278,17 @@ public class MapServer {
         return _pushstyleinworkspace;
     }
 
-    protected void setPushStyleInWorkspace_JpaWorkaround(char pushStyleInWorkspace) {
-        _pushstyleinworkspace = pushStyleInWorkspace;
+    protected void setPushStyleInWorkspace_JpaWorkaround(char _pushStyleInWorkspace) {
+        this._pushstyleinworkspace = _pushStyleInWorkspace;
     }
     @Transient
     public boolean pushStyleInWorkspace() {
         return Constants.toBoolean_fromYNChar(getPushStyleInWorkspace_JpaWorkaround());
     }
 
-    public void setPushStyleInWorkspace(boolean pushStyleInWorkspace) {
-        setPushStyleInWorkspace_JpaWorkaround(Constants.toYN_EnabledChar(pushStyleInWorkspace));
+    public MapServer setPushStyleInWorkspace(boolean _pushStyleInWorkspace) {
+        setPushStyleInWorkspace_JpaWorkaround(Constants.toYN_EnabledChar(_pushStyleInWorkspace));
+        return this;
     }
 
     @Override
