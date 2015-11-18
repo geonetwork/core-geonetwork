@@ -94,8 +94,8 @@ If the attribute is empty or not defined, a default value could be defined. The 
 
     # Map user information to LDAP attributes and default values
     # ldapUserContextMapper.mapping[name]=ldap_attribute,default_value
-    ldapUserContextMapper.mapping[name]=cn,
-    ldapUserContextMapper.mapping[surname]=givenName,
+    ldapUserContextMapper.mapping[name]=givenName,
+    ldapUserContextMapper.mapping[surname]=sn,
     ldapUserContextMapper.mapping[mail]=mail,data@myorganization.org
     ldapUserContextMapper.mapping[organisation]=,myorganization
     ldapUserContextMapper.mapping[kind]=,
