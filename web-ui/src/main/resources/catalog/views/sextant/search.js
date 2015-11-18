@@ -578,19 +578,31 @@
 
 
       scope.links = md.getLinksByType('LINK', 'DOWNLOAD');
+      scope.downloads = [];
+      scope.layers = [];
 
       var transferOpts = md.getLinksByType('OGC:WMS').length != 1;
-      if(transferOpts) {
-        scope.downloads = md.getLinksByType('#FILE',
-            '#COPYFILE', '#DB', '#WFS', 'WCS');
-        scope.layers = md.getLinksByType('OGC:WMTS',
+
+      angular.forEach(md.linksTree, function(transferOptions, i) {
+
+        // get all layers and downloads for this transferOptions
+        var layers = md.getLinksByType(i+1, 'OGC:WMTS',
             'OGC:WMS', 'OGC:OWS-C');
-      } else {
-        scope.downloads = md.getGroupedLinksByTypes('#FILE',
+        var downloads = md.getLinksByType(i+1, '#FILE',
             '#COPYFILE', '#DB', '#WFS', 'WCS');
-        scope.layers = md.getGroupedLinksByTypes('OGC:WMTS',
-            'OGC:WMS', 'OGC:OWS-C');
-      }
+
+        if(downloads.length > 0) {
+          // If only one layer, we get only one download (we bind them later)
+          // We take the first one cause there is a priority on the types
+          if(layers.length == 1) {
+            scope.downloads.push(downloads[0]);
+          }
+          else {
+            scope.downloads = scope.downloads.concat(downloads);
+          }
+        }
+        scope.layers = scope.layers.concat(layers);
+      });
     }
   }]);
 

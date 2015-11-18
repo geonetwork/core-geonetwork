@@ -599,6 +599,20 @@
           record[field] = [record[field]];
         }
       });
+
+      // Create a structure that reflects the transferOption/onlinesrc tree
+      var links = [];
+      angular.forEach(this.link, function(link) {
+        var linkInfo = formatLink(link);
+        var idx = linkInfo.group -1;
+        if(!links[idx]) {
+          links[idx] = [linkInfo];
+        }
+        else if (angular.isArray(links[idx])){
+          links[idx].push(linkInfo);
+        }
+      });
+      this.linksTree = links;
     };
 
     function formatLink(sLink) {
@@ -655,6 +669,18 @@
           }
         }
       },
+      /**
+       * Get all links of the metadata of the given types.
+       * The types are strings in arguments.
+       * You can give the exact matching with # ('#OG:WMS') or just find an
+       * occurence for the match ('OGC').
+       * You can passe several types to find ('OGC','WFS', '#getCapabilities')
+       *
+       * If the first argument is a number, you do the search within the link
+       * group (search only onlinesrc in the given transferOptions).
+       *
+       * @returns {*} an Array of links
+       */
       getLinksByType: function() {
         var ret = [];
 
@@ -688,28 +714,6 @@
         });
         this.linksCache[key] = ret;
         return ret;
-      },
-      getGroupedLinksByTypes: function() {
-        var types = Array.prototype.splice.call(arguments, 0);
-        var groupLink = {}, res = [];
-        for (var i = 0; i < types.length; i++) {
-          var type = types[i];
-          angular.forEach(this.link, function(link) {
-            var linkInfo = formatLink(link);
-            var test = type.substr(0, 1) == '#' ?
-                linkInfo.protocol == type.substr(1, type.length - 1) :
-                linkInfo.protocol.indexOf(type) >= 0;
-            if (test &&
-                (angular.isUndefined(groupLink[linkInfo.group]))) {
-              groupLink[linkInfo.group] = linkInfo;
-            }
-          });
-        }
-
-        angular.forEach(groupLink, function(g) {
-          res.push(g);
-        });
-        return res;
       },
       getThumbnails: function() {
         if (angular.isArray(this.image)) {
