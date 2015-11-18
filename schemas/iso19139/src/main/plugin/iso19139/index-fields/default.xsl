@@ -247,9 +247,9 @@
 				</xsl:for-each>
 			</xsl:for-each>
 
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-			<xsl:for-each select="//gmd:MD_Keywords">
+      <xsl:for-each select="//gmd:MD_Keywords">
         <!-- Index all keywords as text, multilingual text or anchor -->
         <xsl:variable name="listOfKeywords"
                       select="gmd:keyword/gco:CharacterString|
@@ -257,8 +257,6 @@
                     gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString"/>
         <xsl:for-each
             select="$listOfKeywords">
-          <Field name="keyword" string="{string(.)}" store="true" index="true"/>
-
 
           <!-- Add Sextant theme -->
           <xsl:variable name="sextantThemeKey">
@@ -272,28 +270,29 @@
 
           <!-- If INSPIRE is enabled, check if the keyword is one of the 34 themes
           and index annex, theme and theme in english. -->
-                    <xsl:if test="$inspire='true'">
-                        <xsl:if test="string-length(.) &gt; 0">
-                         
-                          <xsl:variable name="inspireannex">
-                            <xsl:call-template name="determineInspireAnnex">
-                              <xsl:with-param name="keyword" select="string(.)"/>
-                              <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
-                            </xsl:call-template>
-                          </xsl:variable>
 
-                          <xsl:variable name="inspireThemeAcronym">
-                            <xsl:call-template name="getInspireThemeAcronym">
-                              <xsl:with-param name="keyword" select="string(.)"/>
-                            </xsl:call-template>
-                          </xsl:variable>
+          <xsl:variable name="inspireannex">
+            <xsl:call-template name="determineInspireAnnex">
+              <xsl:with-param name="keyword" select="string(.)"/>
+              <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
+            </xsl:call-template>
+          </xsl:variable>
 
-                          <!-- Add the inspire field if it's one of the 34 themes -->
-                          <xsl:if test="normalize-space($inspireannex)!=''">
-                            <Field name="inspiretheme" string="{string(.)}" store="true" index="true"/>
-                            <Field name="inspirethemewithac"
-                                   string="{concat($inspireThemeAcronym, '|', string(.))}"
-                                   store="true" index="true"/>
+          <xsl:if test="$inspire='true'">
+            <xsl:if test="string-length(.) &gt; 0">
+
+              <xsl:variable name="inspireThemeAcronym">
+                <xsl:call-template name="getInspireThemeAcronym">
+                  <xsl:with-param name="keyword" select="string(.)"/>
+                </xsl:call-template>
+              </xsl:variable>
+
+              <!-- Add the inspire field if it's one of the 34 themes -->
+              <xsl:if test="normalize-space($inspireannex)!=''">
+                <Field name="inspiretheme" string="{string(.)}" store="true" index="true"/>
+                <Field name="inspirethemewithac"
+                       string="{concat($inspireThemeAcronym, '|', string(.))}"
+                       store="true" index="true"/>
                 <xsl:variable name="englishInspireTheme">
                   <xsl:call-template name="translateInspireThemeToEnglish">
                     <xsl:with-param name="keyword" select="string(.)"/>
@@ -313,6 +312,10 @@
                 <Field name="inspirecat" string="true" store="false" index="true"/>
               </xsl:if>
             </xsl:if>
+          </xsl:if>
+
+          <xsl:if test="string-length(.) &gt; 0 and not(normalize-space($sextantThemeKey)) and not(normalize-space($inspireannex))">
+            <Field name="keyword" string="{string(.)}" store="true" index="true"/>
           </xsl:if>
         </xsl:for-each>
 
