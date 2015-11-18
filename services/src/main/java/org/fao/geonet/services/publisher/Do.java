@@ -150,7 +150,8 @@ public class Do implements Service {
                     .setUsername(Util.getParam(params, "username", ""))
                     .setPassword(Util.getParam(params, "password", ""))
                     .setNamespace(Util.getParam(params, "namespace", ""))
-                    .setNamespacePrefix(Util.getParam(params, "namespaceprefix", ""));
+                    .setNamespacePrefix(Util.getParam(params, "namespaceprefix", ""))
+                    .setPushStyleInWorkspace(Util.getParam(params, "pushstyleinworkspace", false));
             context.getBean(MapServerRepository.class).save(m);
             return new Element(action.toString())
                         .setText("ok")
@@ -172,7 +173,8 @@ public class Do implements Service {
                     .setWcsurl(Util.getParam(params, "wcsurl", ""))
                     .setStylerurl(Util.getParam(params, "stylerurl", ""))
                     .setNamespace(Util.getParam(params, "namespace", ""))
-                    .setNamespacePrefix(Util.getParam(params, "namespaceprefix", ""));
+                    .setNamespacePrefix(Util.getParam(params, "namespaceprefix", ""))
+                    .setPushStyleInWorkspace(Util.getParam(params, "pushstyleinworkspace", false));
                 repo.save(m);
             }
             return new Element(action.toString()).setText("ok");
@@ -201,7 +203,7 @@ public class Do implements Service {
             final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
             GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
                     g.getUsername(), g.getUserpassword(),
-                    g.getNamespacePrefix(), baseUrl);
+                    g.getNamespacePrefix(), baseUrl, m.pushStyleInWorkspace());
     
     		String file = Util.getParam(params, "file");
     		String access = Util.getParam(params, "access");
@@ -261,6 +263,10 @@ public class Do implements Service {
                 node.addContent(new Element("wfsUrl").setText(m.getWfsurl()));
                 node.addContent(new Element("wcsUrl").setText(m.getWcsurl()));
                 node.addContent(new Element("stylerUrl").setText(m.getStylerurl()));
+                if (m.pushStyleInWorkspace())
+                    node.addContent(new Element("pushStyleInWorkspace").setText("true"));
+                else
+                    node.addContent(new Element("pushStyleInWorkspace").setText("false"));
                 geoserverConfig.addContent(node);
             }
         }
