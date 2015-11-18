@@ -15,6 +15,7 @@ import org.fao.geonet.services.openwis.util.Request.SearchCriterias;
 import org.fao.geonet.services.openwis.util.Response;
 import org.openwis.blacklist.client.BlacklistClient;
 import org.openwis.blacklist.client.BlacklistInfo;
+import org.openwis.blacklist.client.BlacklistInfoResult;
 import org.openwis.blacklist.client.BlacklistStatus;
 import org.openwis.blacklist.client.SetUserBlacklistedResponse;
 import org.openwis.blacklist.client.SortDirection;
@@ -68,19 +69,23 @@ public class Service {
         Integer maxResults = request.getLength();
 
         List<BlacklistInfo> list = null;
-
-        if (startWith == null || startWith.trim().isEmpty()) {
-            list = client.retrieveUsersBlackListInfoByUser(firstResult,
-                    maxResults, sort);
-        } else {
-            list = client.retrieveUsersBlackListInfoByUser(firstResult,
-                    maxResults, sort, startWith);
-        }
-
         Response response = new Response();
         response.setDraw(request.getDraw());
-        // response.setRecordsTotal(client.getTotal());
-        // response.setRecordsFiltered(client.getTotalCurrentQuery(startWith));
+
+        BlacklistInfoResult resTotal = client.retrieveUsersBlackListInfoByUser(
+                firstResult, maxResults, sort);
+        response.setRecordsTotal((long) resTotal.getCount());
+
+        if (startWith == null || startWith.trim().isEmpty()) {
+            list = resTotal.getList();
+            response.setRecordsFiltered((long) resTotal.getCount());
+        } else {
+            BlacklistInfoResult resFiltered = client
+                    .retrieveUsersBlackListInfoByUser(firstResult, maxResults,
+                            sort, startWith);
+            list = resFiltered.getList();
+            response.setRecordsFiltered((long) resFiltered.getCount());
+        }
 
         for (BlacklistInfo bli : list) {
             Map<String, String> element = new HashMap<String, String>();

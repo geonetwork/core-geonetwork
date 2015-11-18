@@ -23,7 +23,7 @@ public class BlacklistClient {
      * @param sort
      * @return A paginated list of users black listed.
      */
-    public List<BlacklistInfo> retrieveUsersBlackListInfoByUser(int firstResult,
+    public BlacklistInfoResult retrieveUsersBlackListInfoByUser(int firstResult,
             int maxResults, SortDirection sort, String startWith) {
         ObjectFactory objFact = new ObjectFactory();
 
@@ -40,7 +40,7 @@ public class BlacklistClient {
                         objFact.createGetUsersBlackListInfoByUser(request));
         GetUsersBlackListInfoByUserResponse responseType = response.getValue();
 
-        return responseType.getReturn().getList();
+        return responseType.getReturn();
     }
     
     /**
@@ -51,7 +51,7 @@ public class BlacklistClient {
      * @param sort
      * @return A paginated list of users black listed.
      */
-    public List<BlacklistInfo> retrieveUsersBlackListInfoByUser(int firstResult,
+    public BlacklistInfoResult retrieveUsersBlackListInfoByUser(int firstResult,
             int maxResults, SortDirection sort) {
         ObjectFactory objFact = new ObjectFactory();
 
@@ -67,7 +67,7 @@ public class BlacklistClient {
                         objFact.createGetUsersBlackListInfo(request));
         GetUsersBlackListInfoResponse responseType = response.getValue();
 
-        return responseType.getReturn().getList();
+        return responseType.getReturn();
     }
 
     /**
