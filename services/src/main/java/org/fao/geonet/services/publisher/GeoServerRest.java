@@ -76,6 +76,7 @@ public class GeoServerRest {
 	private String baseCatalogueUrl;
 	private String defaultWorkspace;
 	private String response;
+	private boolean pushStyleInWorkspace;
 	private int status;
 
 	private GeonetHttpRequestFactory factory;
@@ -89,14 +90,16 @@ public class GeoServerRest {
 	 * @param password
 	 * @param defaultns
 	 * @param baseCatalogueUrl
+	 * @param pushStyleInWorkspace
 	 *            TODO
 	 */
 	public GeoServerRest(GeonetHttpRequestFactory factory, String url, String username, String password,
-			String defaultns, String baseCatalogueUrl) {
+			String defaultns, String baseCatalogueUrl, boolean pushStyleInWorkspace) {
         this.restUrl = url;
         this.username = username;
         this.password = password;
         this.baseCatalogueUrl = baseCatalogueUrl;
+        this.pushStyleInWorkspace = pushStyleInWorkspace;
         this.factory = factory;
         Log.createLogger(LOGGER_NAME);
         this.defaultWorkspace = defaultns;
