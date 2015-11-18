@@ -55,7 +55,8 @@
           'username': '',
           'password': '',
           'namespaceUrl': '',
-          'namespacePrefix': ''
+          'namespacePrefix': '',
+          'pushStyleInWorkspace': ''
         };
       };
       $scope.saveMapServer = function(formId) {
