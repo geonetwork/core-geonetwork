@@ -46,7 +46,7 @@ public class DbDescTranslator implements Translator {
 
     private static final long serialVersionUID = 1L;
 
-    private ConfigurableApplicationContext _applicationContext;
+    private transient ConfigurableApplicationContext _applicationContext;
     private final String _langCode;
     private Class<? extends JpaRepository> _repositoryClass;
     private final String _methodName;
