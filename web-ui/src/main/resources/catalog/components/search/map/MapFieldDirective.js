@@ -37,15 +37,6 @@
                   };
 
                   /**
-                   * When the geomtry is updated, set this value in
-                   * scope.currentExtent and remove relation param if
-                   * geometry is null.
-                   */
-                  scope.$watch(scope.gnDrawBboxBtn, function(v) {
-                    scope.currentExtent = scope.$eval(scope.gnDrawBboxBtn);
-                  });
-
-                  /**
                    * Set active relation (intersect, within, etc..). Run search
                    * when changed.
                    */
@@ -121,6 +112,18 @@
               if (coords) {
                 updateField(new ol.geom.Polygon(coords));
               }
+
+              // update the bbox when the geometry field change
+              scope.$watch(scope.gnDrawBboxBtn, function(wkt) {
+                if(wkt) {
+                  var g = new ol.format.WKT().readGeometry(wkt).transform(
+                      'EPSG:4326',
+                      scope.map.getView().getProjection().getCode()
+                  );
+                  feature.setGeometry(g);
+                }
+              });
+
               scope.getButtonTitle = function() {
                 if (scope.interaction.active) {
                   return $translate('clickToRemoveSpatialFilter');
