@@ -172,8 +172,11 @@ public class FeatureIndexer {
                     Object attributeValue = feature.getAttribute(attributeName);
                     if (attributeValue != null) {
                         if (attributeType.equals("geometry")) {
-                            if (!feature.getBounds().getCoordinateReferenceSystem().equals(wgs84)) {
+                            if (!CRS.equalsIgnoreMetadata(
+                                    feature.getBounds().getCoordinateReferenceSystem(),
+                                    wgs84)) {
                                 // Geometry is not in WGS84
+                                // TODO: reproject feature ?
                             } else if (wgs84bbox.contains(feature.getBounds())) {
                                 document.addField("geom", attributeValue);
                             } else {
