@@ -12,6 +12,11 @@
     <artifactId>core</artifactId>
     <name>GeoNetwork core</name>
 
+    <properties>
+        <geotools.version>15-SNAPSHOT-Vampouille</geotools.version>
+        <rootProjectDir>${basedir}/..</rootProjectDir>
+    </properties>
+
     <dependencies>
         <!-- rewrite url servletfilter -->
         <dependency>
@@ -143,48 +148,79 @@
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-api</artifactId>
+            <version>${geotools.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}\src\lib\gt-api-15-SNAPSHOT-Vampouille.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-xml</artifactId>
+            <version>${geotools.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}\src\lib\gt-xml-15-SNAPSHOT-Vampouille.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.geotools.xsd</groupId>
             <artifactId>gt-xsd-gml3</artifactId>
+            <version>${geotools.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}\src\lib\gt-xsd-gml3-15-SNAPSHOT-Vampouille.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-cql</artifactId>
+            <version>${geotools.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}\src\lib\gt-cql-15-SNAPSHOT-Vampouille.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-shapefile</artifactId>
+            <version>${geotools.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}\src\lib\gt-shapefile-15-SNAPSHOT-Vampouille.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.geotools.xsd</groupId>
             <artifactId>gt-xsd-filter</artifactId>
+            <version>${geotools.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}\src\lib\gt-xsd-filter-15-SNAPSHOT-Vampouille.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-epsg-extension</artifactId>
+            <version>${geotools.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}\src\lib\gt-epsg-extension-15-SNAPSHOT-Vampouille.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-referencing</artifactId>
+            <version>${geotools.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}\src\lib\gt-referencing-15-SNAPSHOT-Vampouille.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-epsg-hsql</artifactId>
+            <version>${geotools.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}\src\lib\gt-epsg-hsql-15-SNAPSHOT-Vampouille.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-wms</artifactId>
             <version>${geotools.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}\src\lib\gt-wms-15-SNAPSHOT-Vampouille.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-brewer</artifactId>
             <version>${geotools.version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}\src\lib\gt-brewer-15-SNAPSHOT-Vampouille.jar</systemPath>
         </dependency>
 
 
@@ -509,8 +545,4 @@
             </build>
         </profile>
     </profiles>
-    <properties>
-        <rootProjectDir>${basedir}/..</rootProjectDir>
-    </properties>
-
 </project>
