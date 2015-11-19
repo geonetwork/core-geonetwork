@@ -709,7 +709,7 @@
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-wms</artifactId>
-            <version>${geotools.version}</version>
+            <version>15-SNAPSHOT-Vampouille</version>
         </dependency>
       <dependency>
         <groupId>org.geotools.jdbc</groupId>
@@ -1111,7 +1111,7 @@
       </releases>
       <id>core-maven-repo</id>
       <name>GeoNetwork remote repository</name>
-      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
+      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/gt-wms-sld</url>
     </repository>
     
     <repository>

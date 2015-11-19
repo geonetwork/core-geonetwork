@@ -179,7 +179,7 @@
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-wms</artifactId>
-            <version>${geotools.version}</version>
+            <version>15-SNAPSHOT-Vampouille</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
