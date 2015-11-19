@@ -1,6 +1,6 @@
 {
   "fields": [{
-    "name": "PNT_PROF",
+    "name": "PNT_PROF_d",
     "type": "double",
     "fq" : {
       "facet.interval": "PNT_PROF_d",

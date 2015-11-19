@@ -366,7 +366,13 @@
     geoserverNodes: 'geoserver.publisher?_content_type=json&',
     suggest: 'suggest',
     facetConfig: 'search/facet/config',
-    selectionLayers: 'selection.layers'
+    selectionLayers: 'selection.layers',
+
+    // wfs indexing
+    generateSLD: 'generateSLD',
+    solrproxy: 'solrproxy',
+    wfsIndexConfig: 'wfs.harvest.config'
+
   });
 
   /**
