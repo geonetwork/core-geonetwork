@@ -64,8 +64,10 @@
                 return link.title['#text'] || link.title;
               };
               scope.indexWFSFeatures = function (link, md) {
-                $http.get('wfs.harvest?url=' + link.url +
-                  '&typename=' + link.name).success(function(data) {
+                $http.get('wfs.harvest?' +
+                  'uuid=' + encodeURIComponent(md['geonet:info'].uuid) +
+                  '&url=' + encodeURIComponent(link.url) +
+                  '&typename=' + encodeURIComponent(link.name)).success(function(data) {
                   console.log(data);
                 }).error(function(response) {
                   console.log(response);

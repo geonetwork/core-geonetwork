@@ -42,10 +42,9 @@ public class HarvestRunner {
     /**
      * Index a featureType from a wfs service URL and a typename
      *
-     * @param uiLang lang
      * @param wfsUrl wfs service url
      * @param featureType feature type name
-     * @param webRequest
+     * @param uuid  The metadata uuid (optional)
      * @return
      * @throws Exception
      */
@@ -54,7 +53,7 @@ public class HarvestRunner {
     public JSONObject indexWfs(
             @RequestParam("url") String wfsUrl,
             @RequestParam("typename") String featureType,
-            @RequestParam(value = "uuid", required = false) String uuid) throws Exception {
+            @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid) throws Exception {
 
         JSONObject result = new JSONObject();
         result.put("success", true);
