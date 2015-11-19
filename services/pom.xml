@@ -29,7 +29,12 @@
 			<artifactId>csw-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+        <dependency>
+            <groupId>org.geonetwork-opensource</groupId>
+            <artifactId>domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
 		
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -89,6 +94,18 @@
           <groupId>com.sun.xml.bind</groupId>
           <artifactId>jaxb-impl</artifactId>
       </dependency>
+      <dependency>
+          <groupId>org.geotools</groupId>
+          <artifactId>gt-wms</artifactId>
+          <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.geotools</groupId>
+          <artifactId>gt-brewer</artifactId>
+          <version>${geotools.version}</version>
+       </dependency>
+
+
 	</dependencies>
     <build>
         <plugins>
