@@ -1,6 +1,7 @@
 package org.fao.geonet.services.sld;
 
 import org.fao.geonet.domain.TextFile;
+import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.repository.TextFileRepository;
 import org.geonetwork.map.wms.SLDUtil;
 import org.geotools.styling.SLDTransformer;
@@ -98,7 +99,7 @@ public class Generate {
 
 
     @RequestMapping(value = "/{lang}/generateSLD", method= RequestMethod.POST)
-    public @ResponseBody String handleFileUpload(@PathVariable("lang") String lang,
+    public @ResponseBody OkResponse handleFileUpload(@PathVariable("lang") String lang,
                                                  @RequestParam("filters") String filters,
                                                  @RequestParam("serverURL") String serverURL,
                                                  @RequestParam("layers") String layers,
@@ -124,10 +125,12 @@ public class Generate {
             String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                     + pathPrefix + "/" + lang + "/" + "getSLD/" + sld.getId() + ".xml";
 
-            return url;
-
+            OkResponse ok = new OkResponse();
+            ok.setValue(url);
+            return ok;
         } catch (Exception e) {
-            return e.getMessage();
+            //return e.getMessage();
+            return null;
         }
     }
 
