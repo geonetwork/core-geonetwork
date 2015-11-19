@@ -219,7 +219,7 @@
             var view =
               md.standardName === 'ISO 19115-3 - Emodnet Checkpoint' ? 'medsea' :
                 (md.standardName ===
-                  'ISO 19115-3 - Emodnet Targeted Product' ?
+                  'ISO 19115-3 - Emodnet Checkpoint - Targeted Product' ?
                   'medsea-targeted-product' : 'default'
                 );
             url = 'md.format.xml?xsl=xsl-view&view=' + view +
