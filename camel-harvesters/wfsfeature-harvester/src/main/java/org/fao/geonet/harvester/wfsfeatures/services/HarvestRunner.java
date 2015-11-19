@@ -91,13 +91,16 @@ public class HarvestRunner {
         final String id = dataManager.getMetadataId(uuid);
         Element xml = dataManager.getMetadata(id);
 
+        // TODO: This is ISO19139 specific
+        // Use Lucene field instead ?
         final List<Element> wfsLinkages =
                 Lists.newArrayList((Iterable<? extends Element>) Xml.selectNodes(xml,
-                        "*//gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'WFS']", NAMESPACES));
+                        "*//gmd:CI_OnlineResource[contains(" +
+                                "gmd:protocol/gco:CharacterString, 'WFS')]",
+                        NAMESPACES));
 
         JSONArray a = new JSONArray();
         for (Element element : wfsLinkages) {
-
             Element linkageElt = (Element)Xml.selectSingle(element, "gmd:linkage/gmd:URL", NAMESPACES);
             Element ftElt = (Element)Xml.selectSingle(element, "gmd:name/gco:CharacterString", NAMESPACES);
 

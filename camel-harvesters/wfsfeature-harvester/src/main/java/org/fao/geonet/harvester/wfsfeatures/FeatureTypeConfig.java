@@ -79,7 +79,7 @@ public class FeatureTypeConfig {
             }
             String toto = null;
         } catch (IOException e) {
-            // TODO: log errors
+            // TODO: log errors and probably stop the process if we can't connect to the service
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
