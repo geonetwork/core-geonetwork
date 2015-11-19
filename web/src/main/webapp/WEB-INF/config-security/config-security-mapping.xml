@@ -483,11 +483,12 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 
                 <!--WFS SOLR INDEXING TEMP-->
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/wfs.harvest!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/wfs.harvest.config!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/solrproxy!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/solrfacets!?.*" access="permitAll"/>
 
                 <!-- SLD helpers -->
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/generateSLD" access="permitAll"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/generateSLD!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/getSLD/.*" access="permitAll"/>
 
                 <sec:intercept-url pattern="/.*" access="denyAll"/>
