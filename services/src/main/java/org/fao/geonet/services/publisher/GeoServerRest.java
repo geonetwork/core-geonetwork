@@ -364,27 +364,18 @@ public class GeoServerRest {
 	 *            Name of the datastore
 	 * @param f
 	 *            Zip {@link java.io.File} to upload containing a shapefile
-	 * @param createStyle
-	 *            True to create a default style @see
-	 *            {@link #createStyle(String)}
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	public boolean createDatastore(String ws, String ds, Path f,
-			boolean createStyle) throws IOException {
+	public boolean createDatastore(String ws, String ds, Path f) throws IOException {
 		int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
 				+ "/datastores/" + ds + "/file.shp", null, f,
 				"application/zip", false);
 
-		if (createStyle) {
-			createStyle(ws, ds);
-		}
-
 		return status == 201;
 	}
 
-	public boolean createDatastore(String ws, String ds, String file,
-			boolean createStyle) throws IOException {
+	public boolean createDatastore(String ws, String ds, String file) throws IOException {
 		String type = "";
 		String extension = file.substring(file.lastIndexOf('.'), file.length());
 		if (file.startsWith("http://")) {
@@ -397,10 +388,6 @@ public class GeoServerRest {
 				+ "/datastores/" + ds + "/" + type + extension, file, null,
 				"text/plain", false);
 
-		if (createStyle) {
-			createStyle(ws, ds);
-		}
-
 		return status == 201;
 	}
 
@@ -409,18 +396,17 @@ public class GeoServerRest {
 	 *
 	 * @param ds
 	 * @param f
-	 * @param createStyle
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	public boolean createDatastore(String ds, Path f, boolean createStyle)
+	public boolean createDatastore(String ds, Path f)
 			throws IOException {
-		return createDatastore(getDefaultWorkspace(), ds, f, createStyle);
+		return createDatastore(getDefaultWorkspace(), ds, f);
 	}
 
-	public boolean createDatastore(String ds, String file, boolean createStyle)
+	public boolean createDatastore(String ds, String file)
 			throws IOException {
-		return createDatastore(getDefaultWorkspace(), ds, file, createStyle);
+		return createDatastore(getDefaultWorkspace(), ds, file);
 	}
 
 	/**
@@ -617,14 +603,14 @@ public class GeoServerRest {
 		return 201 == status;
 	}
 
-	public boolean createFeatureType(String ds, String ft, boolean createStyle,
+	public boolean createFeatureType(String ds, String ft,
 			String metadataUuid, String metadataTitle, String metadataAbstract) throws IOException {
-		return createFeatureType(getDefaultWorkspace(), ds, ft, createStyle,
+		return createFeatureType(getDefaultWorkspace(), ds, ft,
 				metadataUuid, metadataTitle, metadataAbstract);
 	}
 
 	public boolean createFeatureType(String ws, String ds, String ft,
-			boolean createStyle, String metadataUuid, String metadataTitle, String metadataAbstract)
+			String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
 		String xml = "<featureType><name>" + ft + "</name><title>" + ft
 				+ "</title>" + "</featureType>";
@@ -677,10 +663,6 @@ public class GeoServerRest {
 				"text/xml", false);
 
 		checkResponseCode(status);
-
-		if (createStyle) {
-			createStyle(ws, ft);
-		}
 
 		return 201 == status;
 	}
