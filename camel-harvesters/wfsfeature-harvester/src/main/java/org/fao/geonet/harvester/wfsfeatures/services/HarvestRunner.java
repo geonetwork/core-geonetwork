@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.harvester.wfsfeatures.HarvesterRouteBuilder;
 import org.fao.geonet.harvester.wfsfeatures.event.WfsIndexingEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.utils.Xml;
@@ -51,14 +52,13 @@ public class HarvestRunner {
     @RequestMapping(value = "/{uiLang}/wfs.harvest")
     @ResponseBody
     public JSONObject indexWfs(
-            @PathVariable String uiLang,
             @RequestParam("url") String wfsUrl,
             @RequestParam("typename") String featureType,
-            NativeWebRequest webRequest) throws Exception {
+            @RequestParam(value = "uuid", required = false) String uuid) throws Exception {
 
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("indexedFeatures", sendMessage(null, wfsUrl, featureType));
+        result.put("indexedFeatures", sendMessage(uuid, wfsUrl, featureType));
 
         return result;
     }
@@ -114,7 +114,7 @@ public class HarvestRunner {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         WfsIndexingEvent event = new WfsIndexingEvent(appContext, uuid, wfsUrl, featureType);
         // TODO: Messages should be node specific eg. srv channel ?
-        jmsMessager.sendMessage("harvest-wfs-features", event);
+        jmsMessager.sendMessage(HarvesterRouteBuilder.MESSAGE_HARVEST_WFS_FEATURES, event);
 
         JSONObject j = new JSONObject();
         j.put("url", wfsUrl);

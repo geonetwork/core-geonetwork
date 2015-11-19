@@ -8,6 +8,8 @@ import org.apache.camel.builder.RouteBuilder;
  */
 public class HarvesterRouteBuilder extends RouteBuilder {
     private static final String LOGGER_NAME = "harvester.wfsfeature";
+    public static final String MESSAGE_HARVEST_WFS_FEATURES = "harvest-wfs-features";
+    public static final String MESSAGE_DELETE_WFS_FEATURES = "delete-wfs-features";
 
     @Override
     public void configure() throws Exception {
@@ -29,7 +31,7 @@ public class HarvesterRouteBuilder extends RouteBuilder {
          * types and the WFSDatastore.
          * This bean will be pass to next Route.
          */
-        from("activemq:queue:harvest-wfs-features")
+        from("activemq:queue:" + MESSAGE_HARVEST_WFS_FEATURES)
                 .log(LoggingLevel.DEBUG, LOGGER_NAME, "### WFS harvest feature message received.")
                 .setProperty("mduuid", simple("${body.uuid}"))
                 .setProperty("wfsUrl", simple("${body.wfsUrl}"))
@@ -38,7 +40,7 @@ public class HarvesterRouteBuilder extends RouteBuilder {
                 .to("direct:delete-wfs-featuretype-features")
                 .to("direct:index-wfs");
 
-        from("activemq:queue:delete-wfs-features")
+        from("activemq:queue:" + MESSAGE_DELETE_WFS_FEATURES)
                 .log(LoggingLevel.DEBUG, LOGGER_NAME, "### WFS delete features message received.")
                 .setProperty("wfsUrl", simple("${body.wfsUrl}"))
                 .setProperty("featureType", simple("${body.featureType}"))
