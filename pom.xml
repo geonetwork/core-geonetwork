@@ -1213,7 +1213,7 @@
 
   <properties>
     <jetty.version>8.1.9.v20130131</jetty.version>
-    <geotools.version>14</geotools.version>
+    <geotools.version>14.0</geotools.version>
     <lucene.version>4.9.0</lucene.version>
     <solr.version>5.3.1</solr.version>
     <solr.port>8984</solr.port>
