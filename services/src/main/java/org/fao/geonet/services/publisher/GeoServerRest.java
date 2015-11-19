@@ -692,7 +692,7 @@ public class GeoServerRest {
         if(Log.isDebugEnabled(LOGGER_NAME)) {
             Log.debug(LOGGER_NAME, "url:" + url);
             Log.debug(LOGGER_NAME, "method:" + method);
-            Log.debug(LOGGER_NAME, "postData:" + postData);
+            if (postData != null) Log.debug(LOGGER_NAME, "postData:" + postData);
         }
 
 		HttpRequestBase m;
