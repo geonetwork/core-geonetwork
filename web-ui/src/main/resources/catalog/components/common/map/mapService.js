@@ -1355,6 +1355,8 @@
            */
           feedLayerMd: function(layer) {
             var defer = $q.defer();
+            var $this = this;
+
             defer.resolve(layer);
 
             if (layer.get('metadataUrl')) {
@@ -1365,14 +1367,51 @@
                 _content_type: 'json'
               }).then(function(data) {
                 if (data.metadata.length == 1) {
-                  layer.set('md', new Metadata(data.metadata[0]));
+                  var md = new Metadata(data.metadata[0]);
+
+                  var mdLayers = md.getLinksByType('OGC:WMTS',
+                      'OGC:WMS', 'OGC:OWS-C');
+
+                  layer.set('md', md);
+
+                  // TODO: the url is not the same in capabilities and metadata
+                  angular.forEach(mdLayers, function(link) {
+                    if(layer.get('url').indexOf(link.url) >= 0
+                        && link.name == layer.getSource().getParams().LAYERS) {
+                      this.feedLayerWithDownloads(layer, link.group);
+                      return;
+                    }
+                  }, $this);
                 }
                 return layer;
               });
             }
             return defer.promise;
-          }
+          },
 
+          /**
+           * Sextant specific
+           * Bind the download and process to the layer if we can.
+           *
+           * @param layer
+           * @param linkGroup
+           */
+          feedLayerWithDownloads: function(layer, linkGroup) {
+            var md = layer.get('md')
+
+            // We can bind layer and download/process
+            if (md.getLinksByType(linkGroup, 'OGC:WMTS',
+                'OGC:WMS', 'OGC:OWS-C').length == 1) {
+
+              var downloads = md && md.getLinksByType(linkGroup,
+                  'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
+                  'WFS', 'WCS', 'COPYFILE');
+              layer.set('downloads', downloads);
+
+              var process = md && md.getLinksByType(linkGroup, 'OGC:WPS');
+              layer.set('processes', process);
+            }
+          }
         };
       }];
   });
