@@ -245,7 +245,7 @@ cat.app = function() {
 
           // Open Angular metadata editor for MedSea records.
           if (recordStandard &&
-            recordStandard.indexOf('MedSea') !== -1
+            recordStandard.indexOf('Emodnet Checkpoint') !== -1
           ) {
             var url = 'catalog.edit#/';
             if (create) {
