@@ -218,8 +218,6 @@ public class FeatureIndexer {
         if (StringUtils.isEmpty(wfsUrl)) {
             throw new IllegalArgumentException("Empty WFS server URL is not allowed.");
         }
-        wfsUrl = wfsUrl != null ? wfsUrl.replaceFirst("^(http://|https://)", "") : "";
-
         if (StringUtils.isEmpty(featureTypeName)) {
             throw new IllegalArgumentException("Empty WFS type name is not allowed.");
         }
