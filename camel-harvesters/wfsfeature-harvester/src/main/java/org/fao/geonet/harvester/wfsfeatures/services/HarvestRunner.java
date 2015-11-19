@@ -3,19 +3,15 @@ package org.fao.geonet.harvester.wfsfeatures.services;
 import com.google.common.collect.Lists;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.harvester.wfsfeatures.event.WfsIndexingEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.utils.Xml;
-import org.geotools.gml3.v3_2.gco.GCO;
-import org.geotools.gml3.v3_2.gmd.GMD;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import javax.jms.*;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,10 +32,8 @@ import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 @Controller
 public class HarvestRunner {
 
-    @Autowired
     private ApplicationContext appContext;
 
-    @Autowired
     private DataManager dataManager;
 
     @Autowired
@@ -94,6 +85,8 @@ public class HarvestRunner {
             @PathVariable String uiLang,
             @PathVariable String uuid,
             NativeWebRequest webRequest) throws Exception {
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        DataManager dataManager = appContext.getBean(DataManager.class);
 
         final String id = dataManager.getMetadataId(uuid);
         Element xml = dataManager.getMetadata(id);
@@ -121,6 +114,7 @@ public class HarvestRunner {
     private JSONObject sendMessage(final String uuid, final String wfsUrl, final String featureType) {
 
         WfsIndexingEvent event = new WfsIndexingEvent(appContext, uuid, wfsUrl, featureType);
+        // TODO: Messages should be node specific eg. srv channel ?
         jmsMessager.sendMessage("harvest-wfs-features", event);
 
         JSONObject j = new JSONObject();
