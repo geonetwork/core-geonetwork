@@ -485,13 +485,37 @@ public class GeoServerRest {
 	}
 
 	/**
+	 * Create a default style in the default workspace for the layer named
+	 * {layer}_style copied from the default style set by GeoServer
+	 * (eg. polygon.sld for polygon).
+	 *
+	 * @param layer
+	 * @return
+	 */
+	public boolean createStyle(String layer) {
+		return createStyle(getDefaultWorkspace(), layer, "");
+	}
+
+	/**
 	 * Create a default style for the layer named {layer}_style copied from the
 	 * default style set by GeoServer (eg. polygon.sld for polygon).
 	 *
 	 * @param layer
 	 * @return
 	 */
-	public int createStyle(String ws, String layer) {
+	public boolean createStyle(String ws, String layer) {
+		return createStyle(ws, layer, "");
+	}
+
+	/**
+	 * Create a style for the layer named {layer}_style from the provided sld
+	 * content, if not empty. If it fails, fallback to default style set by
+	 * GeoServer (eg. polygon.sld for polygon).
+	 *
+	 * @param layer
+	 * @param sld body content
+	 */
+	public boolean createStyle(String ws, String layer, String sldbody) {
 		try {
 			int status = sendREST(GeoServerRest.METHOD_GET, "/layers/" + layer
 					+ ".xml", null, null, null, true);
@@ -516,9 +540,28 @@ public class GeoServerRest {
 			status = sendREST(GeoServerRest.METHOD_POST, url, body, null,
 					"text/xml", true);
             checkResponseCode(status);
-			status = sendREST(GeoServerRest.METHOD_PUT, url + "/" + layer
-					+ "_style", currentStyle, null,
-					"application/vnd.ogc.sld+xml", true);
+			if (!sldbody.isEmpty()) {
+				if(Log.isDebugEnabled(Geonet.GEOPUBLISH))
+					Log.debug(Geonet.GEOPUBLISH, "GeoFile contains an sld, trying to use it");
+				status = sendREST(GeoServerRest.METHOD_PUT, url + "/" + layer
+						+ "_style", sldbody, null,
+						"application/vnd.ogc.sld+xml", true);
+
+				/**
+				 * check that the sld was validated by geoserver
+				 * previous call always return 200 even when sld is invalid
+				 */
+				status = sendREST(GeoServerRest.METHOD_GET, url + "/" + layer
+						+ "_style.sld", null, null, null, true);
+
+				if (status != 200)
+					Log.warning(Geonet.GEOPUBLISH,"The sld file was probably not valid, falling back to default");
+			}
+			if (sldbody.isEmpty() || (!sldbody.isEmpty() && status != 200)) {
+				status = sendREST(GeoServerRest.METHOD_PUT, url + "/" + layer
+						+ "_style", currentStyle, null,
+						"application/vnd.ogc.sld+xml", true);
+			}
             checkResponseCode(status);
 
 			body = "<layer><defaultStyle><name>"
@@ -540,7 +583,7 @@ public class GeoServerRest {
 					+ layer + " in workspace " + ws + ", error is: " + e.getMessage());
 		}
 
-		return status;
+		return status == 200;
 	}
 
 	private void checkResponseCode(int status2) {
