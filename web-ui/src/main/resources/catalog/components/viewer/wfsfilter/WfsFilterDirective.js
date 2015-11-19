@@ -11,7 +11,7 @@
    * @description
    */
   module.directive('gnWfsFilterFacets', [
-      '$http',
+    '$http',
 
     function($http) {
       return {
@@ -26,7 +26,9 @@
         },
         link: function(scope, element, attrs) {
 
-          var url = 'solrfacets/' + scope.uuid + '?url=' + encodeURIComponent(scope.wfsUrl) + '&typename=' + scope.featureTypeName;
+          var url = 'solrfacets/' + scope.uuid + '?' +
+              'url=' + encodeURIComponent(scope.wfsUrl) +
+              '&typename=' + scope.featureTypeName;
 
           var fields = [];
 
@@ -42,9 +44,9 @@
            * Then build facets configuration structure for the ui.
            */
           $http.get(url).success(function(data) {
-            for(var kind in data.facet_counts) {
+            for (var kind in data.facet_counts) {
               var facetType = getFacetType(kind);
-              for(var fieldProp in data.facet_counts[kind]) {
+              for (var fieldProp in data.facet_counts[kind]) {
                 var field = data.facet_counts[kind][fieldProp];
                 var facetField = {
                   name: fieldProp,
@@ -52,29 +54,30 @@
                   type: facetType
                 };
 
-                if(kind == 'facet_ranges') {
+                if (kind == 'facet_ranges') {
                   var counts = field.counts;
-                  for (var i = 0; i < counts.length; i+=2) {
-                    if(counts[i+1] > 0) {
+                  for (var i = 0; i < counts.length; i += 2) {
+                    if (counts[i + 1] > 0) {
                       var label = '';
-                      if(i >= counts.length-2) {
+                      if (i >= counts.length - 2) {
                         label = '> ' + counts[i];
                       }
                       else {
-                        label = counts[i] + ',' + counts[i+2];
+                        label = counts[i] + ',' + counts[i + 2];
                       }
-                      facetField.values[label] = counts[i+1];
+                      facetField.values[label] = counts[i + 1];
                     }
                   }
                   fields.push(facetField);
                 }
-                else if(kind == 'facet_fields' && field.length > 0) {
-                  for (var i = 0; i<  field.length; i+=2) {
-                    facetField.values[field[i]] = field[i+1];
+                else if (kind == 'facet_fields' && field.length > 0) {
+                  for (var i = 0; i < field.length; i += 2) {
+                    facetField.values[field[i]] = field[i + 1];
                   }
                   fields.push(facetField);
                 }
-                else if(kind == 'facet_intervals' && Object.keys(field).length > 0) {
+                else if (kind == 'facet_intervals' &&
+                    Object.keys(field).length > 0) {
                   facetField.values = field;
                   fields.push(facetField);
                 }
@@ -84,16 +87,16 @@
 
           var getFacetType = function(solrPropName) {
             var type = '';
-            if(solrPropName == 'facet_ranges') {
+            if (solrPropName == 'facet_ranges') {
               type = 'range';
             }
-            else if(solrPropName == 'facet_intervals') {
+            else if (solrPropName == 'facet_intervals') {
               type = 'interval';
             }
-            else if(solrPropName == 'facet_fields') {
+            else if (solrPropName == 'facet_fields') {
               type = 'field';
             }
-            else if(solrPropName == 'facet_dates') {
+            else if (solrPropName == 'facet_dates') {
               type = 'date';
             }
             return type;
@@ -101,17 +104,17 @@
 
           var buildSldFilter = function(key, type) {
             var res;
-            if(type == 'interval' || type == 'range') {
+            if (type == 'interval' || type == 'range') {
               res = {
                 filter_type: 'PropertyIsBetween',
                 params: key.match(/\d+(?:[.]\d+)*/g)
-              }
+              };
             }
-            else if(type == 'field' ) {
+            else if (type == 'field') {
               res = {
                 filter_type: 'PropertyIsEqualTo',
                 params: [key]
-              }
+              };
             }
 
             return res;
@@ -122,13 +125,13 @@
             var output = scope.output;
             for (var i = 0; i < output.length; i++) {
               var o = output[i];
-              if(o.name == fieldName && o.key == facetKey) {
+              if (o.name == fieldName && o.key == facetKey) {
                 toRemove = i;
                 break;
               }
             }
-            if(toRemove > -1) {
-              output.splice(toRemove,1);
+            if (toRemove > -1) {
+              output.splice(toRemove, 1);
             }
             else {
               output.push({
@@ -148,12 +151,12 @@
               var field;
               for (var i = 0; i < output.filters.length; i++) {
                 var o = output.filters[i];
-                if(o.field_name == f.name) {
+                if (o.field_name == f.name) {
                   field = o;
                   break;
                 }
               }
-              if(!field) {
+              if (!field) {
                 field = {
                   field_name: f.name,
                   filter: []
@@ -163,7 +166,7 @@
               field.filter.push(buildSldFilter(f.key, f.type));
             });
             console.log(output);
-          }
+          };
         }
       };
     }]);
