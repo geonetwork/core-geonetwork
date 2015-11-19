@@ -13,19 +13,19 @@
 			</strong>
 		</div>
 		<div class="col-xs-7">
-      <!-- WMS & WFS contains layer name in title -->
+			<!-- WMS & WFS contains layer name in title -->
 			<h4 data-ng-if="mainType !== 'WMS' &&
 											mainType !== 'WCS' &&
+											mainType !== 'WFS' &&
 											mainType !== 'LINKDOWNLOAD' &&
-											mainType !== 'LINK' &&
-											r.protocol !== 'OGC:WFS' ">
+											mainType !== 'LINK'">
 				{{getTitle(r)}}
 			</h4>
 			<!-- Display description if available -->
 			<h4 data-ng-if="(mainType === 'WMS' ||
 			                 mainType === 'WCS' ||
-											 mainType.indexOf('LINK') === 0 ||
-											 r.protocol === 'OGC:WFS') &&
+			                 mainType === 'WFS' ||
+											 mainType.indexOf('LINK') === 0) &&
 											 r['abstract'] && r['abstract'].length > 0">
         {{(r['abstract'] || r.defaultAbstract) | striptags | characters:150}}
 			</h4>
@@ -41,7 +41,7 @@
 					wmsLinkDetails</span>
 			</p>
 			<p class="text-muted"
-				 data-ng-if="r.protocol === 'WFS'">
+				 data-ng-if="mainType === 'WFS'">
 				<span data-translate=""
 							data-translate-values="{url:'{{r.url}}', layer:'{{r.name}}'}">
 					wfsLinkDetails</span>
