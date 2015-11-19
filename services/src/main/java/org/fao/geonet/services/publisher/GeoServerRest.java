@@ -139,7 +139,7 @@ public class GeoServerRest {
 	 */
 	public boolean getLayer(String layer) throws IOException {
 		int status = sendREST(GeoServerRest.METHOD_GET, "/layers/" + layer
-				+ ".xml", null, null, null, true);
+				+ ".xml?quietOnNotFound=true", null, null, null, true);
 		return status == 200;
 	}
 
@@ -504,7 +504,7 @@ public class GeoServerRest {
 	public boolean createStyle(String ws, String layer, String sldbody) {
 		try {
 			int status = sendREST(GeoServerRest.METHOD_GET, "/layers/" + layer
-					+ ".xml", null, null, null, true);
+					+ ".xml?quietOnNotFound=true", null, null, null, true);
 
 			checkResponseCode(status);
 			Element layerProperties = Xml.loadString(getResponse(), false);
@@ -513,7 +513,7 @@ public class GeoServerRest {
 
 			/* get the default style (polygon, line, point) from the global styles */
 			status = sendREST(GeoServerRest.METHOD_GET, "/styles/" + styleName
-					+ ".sld", null, null, null, true);
+					+ ".sld?quietOnNotFound=true", null, null, null, true);
             checkResponseCode(status);
 
 			String currentStyle = getResponse();
@@ -538,7 +538,7 @@ public class GeoServerRest {
 				 * previous call always return 200 even when sld is invalid
 				 */
 				status = sendREST(GeoServerRest.METHOD_GET, url + "/" + layer
-						+ "_style.sld", null, null, null, true);
+						+ "_style.sld?quietOnNotFound=true", null, null, null, true);
 
 				if (status != 200)
 					Log.warning(Geonet.GEOPUBLISH,"The sld file was probably not valid, falling back to default");
