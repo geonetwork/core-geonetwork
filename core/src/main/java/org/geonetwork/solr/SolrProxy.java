@@ -1,7 +1,8 @@
-package org.fao.geonet.harvester.wfsfeatures.services;
+package org.geonetwork.solr;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -9,6 +10,7 @@ import org.jdom.Namespace;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,8 +41,7 @@ import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 
 @Controller
 public class SolrProxy {
-
-    @Autowired
+    // TODO: Should probably not depend on that
     private DataManager dataManager;
 
     public static final String[] _validContentTypes = {
@@ -49,15 +50,27 @@ public class SolrProxy {
 
     private static final ArrayList<Namespace> NAMESPACES = Lists.newArrayList(GMD, GCO);
 
-    private static final String SOLR_URL = "http://localhost:8984/solr/srv-catalog";
+    private String solrServerUrl;
 
+    public String getSolrServerUrl() {
+        return solrServerUrl;
+    }
+
+    public SolrProxy setSolrServerUrl(String solrServerUrl) {
+        this.solrServerUrl = solrServerUrl;
+        return this;
+    }
+
+    private String solrCollection;
 
     @RequestMapping(value = "/{uiLang}/solrproxy/{query}")
     @ResponseBody
     public void handleGETRequest(@PathVariable("query") String selectUrl, HttpServletRequest request, HttpServletResponse response) {
         //String solrUrl = System.getProperty("solr.server");
 
-        handleRequest(request, response, SOLR_URL +"/" + selectUrl + "?" + request.getQueryString());
+        handleRequest(request, response,
+                        solrServerUrl + "/" + solrCollection +
+                            "/" + selectUrl + "?" + request.getQueryString());
     }
 
     /**
@@ -67,7 +80,7 @@ public class SolrProxy {
      * The JSON applicationProfile is parsed, and we build a SOLR request on top of it
      * to retrieve all facets values (fields, ranges, intervals, dates) that will be
      * exploited from the UI to build the facet panel.
-     *
+     * <p>
      * ex:
      * http://localhost:8080/geonetwork/srv/eng/solrfacets/26f848cc-2a3b-4623-a395-61048d2f5e91?url=http%3A%2F%2Fvisi-sextant.ifremer.fr%2Fcgi-bin%2Fsextant%2Fwfs%2Fbgmb&typename=SISMER_mesures
      *
@@ -88,12 +101,15 @@ public class SolrProxy {
             @RequestParam("typename") String featureType,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        DataManager dataManager = appContext.getBean(DataManager.class);
         final String id = dataManager.getMetadataId(uuid);
         Element xml = dataManager.getMetadata(id);
 
+        // TODO: This should move elsewhere and is schema specific
         final Element applicationProfile =
                 (Element) Xml.selectSingle(xml,
-                        "*//gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'WFS' " +
+                        "*//gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, 'WFS') " +
                                 "and gmd:name/gco:CharacterString = '" + featureType + "' " +
                                 "and gmd:linkage/gmd:URL = '" + linkage + "']/gmd:applicationProfile/gco:CharacterString", NAMESPACES
                 );
@@ -106,29 +122,27 @@ public class SolrProxy {
 
             params.add("facet=true");
 
-            for (int i = 0 ; i<fields.length(); i++) {
+            for (int i = 0; i < fields.length(); i++) {
                 JSONObject field = fields.getJSONObject(i);
                 String fieldName = field.getString("name") + "_d";
                 String prefix = "f." + fieldName;
                 params.add("facet.field=" + fieldName);
-                if(field.has("fq")) {
+                if (field.has("fq")) {
                     JSONObject facets = field.getJSONObject("fq");
 
                     Iterator<?> keys = facets.keys();
-                    while( keys.hasNext() ) {
-                        String key = (String)keys.next();
+                    while (keys.hasNext()) {
+                        String key = (String) keys.next();
                         JSONArray a = facets.optJSONArray(key);
-                        if(a != null) {
+                        if (a != null) {
                             for (int j = 0; j < a.length(); j++) {
                                 params.add("f." + fieldName + "." + key + "=" + a.get(j));
                             }
-                        }
-                        else {
+                        } else {
                             String value = facets.optString(key);
-                            if(key.equals("facet.interval") || key.equals("facet.range")) {
+                            if (key.equals("facet.interval") || key.equals("facet.range")) {
                                 params.add(key + "=" + value);
-                            }
-                            else {
+                            } else {
                                 params.add("f." + fieldName + "." + key + "=" + value);
                             }
                         }
@@ -137,7 +151,7 @@ public class SolrProxy {
             }
             String solrFacets = StringUtils.join(params, "&");
             String solrQuery = "q=featureTypeId:*" + featureType;
-            String solrUrl = SOLR_URL + "/select?wt=json&indent=true&rows=0&" + solrQuery + "&" + solrFacets;
+            String solrUrl = solrServerUrl + "/" + solrCollection + "/select?wt=json&indent=true&rows=0&" + solrQuery + "&" + solrFacets;
             handleRequest(request, response, solrUrl);
         }
         //return "No configuration";
@@ -223,24 +237,22 @@ public class SolrProxy {
             } else {
                 // copy everything except Content-Type header
                 // because we need to concatenate the charset later
-                copyHeadersFromConnectionToResponse(response, connectionWithFinalHost, new String[] {"Content-Type"});
+                copyHeadersFromConnectionToResponse(response, connectionWithFinalHost, new String[]{"Content-Type"});
             }
 
             InputStream streamFromServer = null;
             OutputStream streamToClient = null;
-            if(contentEncoding == null || isCharsetKnown) {
+            if (contentEncoding == null || isCharsetKnown) {
                 // A simple stream can do the job for data that is not in content encoded
                 // but also for data content encoded with a known charset
                 streamFromServer = connectionWithFinalHost.getInputStream();
                 streamToClient = response.getOutputStream();
-            }
-            else if ("gzip".equalsIgnoreCase(contentEncoding) && !isCharsetKnown) {
+            } else if ("gzip".equalsIgnoreCase(contentEncoding) && !isCharsetKnown) {
                 // the charset is unknown and the data are compressed in gzip
                 // we add the gzip wrapper to be able to read/write the stream content
                 streamFromServer = new GZIPInputStream(connectionWithFinalHost.getInputStream());
                 streamToClient = new GZIPOutputStream(response.getOutputStream());
-            }
-            else if("deflate".equalsIgnoreCase(contentEncoding) && !isCharsetKnown) {
+            } else if ("deflate".equalsIgnoreCase(contentEncoding) && !isCharsetKnown) {
                 // same but with deflate
                 streamFromServer = new DeflaterInputStream(connectionWithFinalHost.getInputStream());
                 streamToClient = new DeflaterOutputStream(response.getOutputStream());
@@ -256,18 +268,18 @@ public class SolrProxy {
 
                 if (first && !isCharsetKnown) {
                     // charset is unknown try to find it in the file content
-                    for(int i=0; i < len; i++) {
+                    for (int i = 0; i < len; i++) {
                         s += (char) buf[i]; // get the beginning of the file as ASCII
                     }
 
                     // s has to be long enough to contain the encoding
-                    if(s.length() > 200) {
+                    if (s.length() > 200) {
                         String charset = getCharset(s); // extract charset
 
                         if (charset == null) {
                             // the charset cannot be found, IE users must be warned
                             // that the request cannot be fulfilled, nothing good would happen otherwise
-                            if(request.getHeader("User-Agent").toLowerCase().contains("msie")) {
+                            if (request.getHeader("User-Agent").toLowerCase().contains("msie")) {
                                 response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE,
                                         "Charset of the response is unknown");
                                 streamFromServer.close();
@@ -292,8 +304,7 @@ public class SolrProxy {
             streamFromServer.close();
             connectionWithFinalHost.disconnect();
             streamToClient.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // connection problem with the host 
             e.printStackTrace();
         }
@@ -301,6 +312,7 @@ public class SolrProxy {
 
     /**
      * Extract the encoding from a string which is the header node of an xml file
+     *
      * @param header String that should contain the encoding attribute and its value
      * @return the charset. null if not found
      */
@@ -327,17 +339,18 @@ public class SolrProxy {
     /**
      * Gets the encoding of the content sent by the remote host: extracts the
      * content-encoding header
+     *
      * @param headerFields headers of the HttpURLConnection
      * @return null if not exists otherwise name of the encoding (gzip, deflate...)
      */
     private String getContentEncoding(Map<String, List<String>> headerFields) {
-        for (Iterator<String> i = headerFields.keySet().iterator() ; i.hasNext() ; ) {
+        for (Iterator<String> i = headerFields.keySet().iterator(); i.hasNext(); ) {
             String headerName = i.next();
-            if(headerName != null) {
-                if("Content-Encoding".equalsIgnoreCase(headerName)) {
+            if (headerName != null) {
+                if ("Content-Encoding".equalsIgnoreCase(headerName)) {
                     List<String> valuesList = headerFields.get(headerName);
                     StringBuilder sBuilder = new StringBuilder();
-                    for(String value : valuesList) {
+                    for (String value : valuesList) {
                         sBuilder.append(value);
                     }
 
@@ -350,28 +363,29 @@ public class SolrProxy {
 
     /**
      * Copy headers from the connection to the response
-     * @param response to copy headers in
-     * @param uc contains headers to copy
+     *
+     * @param response   to copy headers in
+     * @param uc         contains headers to copy
      * @param ignoreList list of headers that mustn't be copied
      */
     private void copyHeadersFromConnectionToResponse(HttpServletResponse response, HttpURLConnection uc, String... ignoreList) {
-        Map<String, List<String>> map =  uc.getHeaderFields();
-        for (Iterator<String> i = map.keySet().iterator() ; i.hasNext() ; ) {
+        Map<String, List<String>> map = uc.getHeaderFields();
+        for (Iterator<String> i = map.keySet().iterator(); i.hasNext(); ) {
 
             String headerName = i.next();
 
-            if(! isInIgnoreList(headerName, ignoreList)) {
+            if (!isInIgnoreList(headerName, ignoreList)) {
 
                 // concatenate all values from the header
                 List<String> valuesList = map.get(headerName);
                 StringBuilder sBuilder = new StringBuilder();
-                for(String value : valuesList) {
+                for (String value : valuesList) {
                     sBuilder.append(value);
                 }
 
                 // add header to HttpServletResponse object
                 if (headerName != null) {
-                    if("Transfer-Encoding".equalsIgnoreCase(headerName) && "chunked".equalsIgnoreCase(sBuilder.toString())) {
+                    if ("Transfer-Encoding".equalsIgnoreCase(headerName) && "chunked".equalsIgnoreCase(sBuilder.toString())) {
                         // do not write this header because Tomcat already assembled the chunks itself
                         continue;
                     }
@@ -383,6 +397,7 @@ public class SolrProxy {
 
     /**
      * Helper function to detect if a specific header is in a given ignore list
+     *
      * @param headerName
      * @param ignoreList
      * @return true: in, false: not in
@@ -400,13 +415,14 @@ public class SolrProxy {
     /**
      * Copy client's headers in the request to send to the final host
      * Trick the host by hiding the proxy indirection and keep useful headers information
+     *
      * @param request
-     * @param uc Contains now headers from client request except Host
+     * @param uc      Contains now headers from client request except Host
      */
     protected void copyHeadersToConnection(HttpServletRequest request, HttpURLConnection uc) {
 
-        for (Enumeration enumHeader=request.getHeaderNames(); enumHeader.hasMoreElements();) {
-            String headerName = (String)enumHeader.nextElement();
+        for (Enumeration enumHeader = request.getHeaderNames(); enumHeader.hasMoreElements(); ) {
+            String headerName = (String) enumHeader.nextElement();
             String headerValue = request.getHeader(headerName);
 
             // copy every header except host
@@ -418,6 +434,7 @@ public class SolrProxy {
 
     /**
      * Check if the content type is accepted by the proxy
+     *
      * @param contentType
      * @return true: valid; false: not valid
      */
@@ -431,5 +448,13 @@ public class SolrProxy {
             }
         }
         return false;
+    }
+
+    public String getSolrCollection() {
+        return solrCollection;
+    }
+
+    public void setSolrCollection(String solrCollection) {
+        this.solrCollection = solrCollection;
     }
 }

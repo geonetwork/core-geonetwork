@@ -1,4 +1,4 @@
-package org.fao.geonet.harvester.wfsfeatures.services;
+package org.geonetwork.messaging;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.context.ApplicationEvent;
@@ -19,7 +19,7 @@ public class JMSMessager {
         this.jmsUrl = jmsUrl;
     }
 
-    void sendMessage(String queue, ApplicationEvent event) {
+    public void sendMessage(String queue, ApplicationEvent event) {
         try {
             // Create a ConnectionFactory
             ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(this.jmsUrl);
@@ -47,8 +47,8 @@ public class JMSMessager {
             // Clean up
             session.close();
             connection.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
+            // TODO : dedicated logger needed
             System.out.println("Caught: " + e);
             e.printStackTrace();
         }

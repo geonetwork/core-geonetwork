@@ -1168,6 +1168,7 @@
     <module>inspire-atom</module>
     <module>solr</module>
     <module>camel-harvesters</module>
+    <module>messaging</module>
   </modules>
 
   <profiles>
@@ -1215,11 +1216,15 @@
     <jetty.version>8.1.9.v20130131</jetty.version>
     <geotools.version>14.0</geotools.version>
     <lucene.version>4.9.0</lucene.version>
+
     <solr.version>5.3.1</solr.version>
     <solr.port>8984</solr.port>
     <solr.url>http://localhost:${solr.port}/solr</solr.url>
     <solr.collection>srv-catalog</solr.collection>
+
     <jms.url>tcp://localhost:61616</jms.url>
+    <activemq.version>5.6.0</activemq.version>
+
     <spring.version>3.2.5.RELEASE</spring.version>
     <spring.security.version>3.1.4.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
@@ -1231,5 +1236,9 @@
     <npm.version>1.3.23</npm.version>
     <print-lib.version>2.1.1</print-lib.version>
     <flying-saucer>9.0.7</flying-saucer>
+    <camel.version>2.14.0</camel.version>
+    <log4j.version>1.2.17</log4j.version>
+    <slf4j.version>1.7.7</slf4j.version>
+    <xbean.version>3.18</xbean.version>
   </properties>
 </project>

@@ -7,6 +7,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.harvester.wfsfeatures.event.WfsIndexingEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.utils.Xml;
+import org.geonetwork.messaging.JMSMessager;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,6 @@ import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 
 @Controller
 public class HarvestRunner {
-
-    private ApplicationContext appContext;
-
-    private DataManager dataManager;
-
     @Autowired
     private JMSMessager jmsMessager;
 
@@ -115,7 +111,7 @@ public class HarvestRunner {
     }
 
     private JSONObject sendMessage(final String uuid, final String wfsUrl, final String featureType) {
-
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         WfsIndexingEvent event = new WfsIndexingEvent(appContext, uuid, wfsUrl, featureType);
         // TODO: Messages should be node specific eg. srv channel ?
         jmsMessager.sendMessage("harvest-wfs-features", event);

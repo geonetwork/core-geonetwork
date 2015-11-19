@@ -32,6 +32,7 @@ public class FeatureTypeBean {
 
         FeatureTypeConfig config = new FeatureTypeConfig(uuid, wfsUrl, featureType);
         if (connect) {
+            // TODO : Exception on error
             config.connectToWfsService();
         }
         exchange.setProperty("featureTypeConfig", config);

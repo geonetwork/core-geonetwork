@@ -16,10 +16,10 @@ public class HarvesterRouteBuilder extends RouteBuilder {
          */
         from("timer://start?repeatCount=1").autoStartup(false)
                 .log(LoggingLevel.DEBUG, LOGGER_NAME, "Harvesting ${body.url} one time.")
-//                .setProperty("wfsUrl", simple("http://geoservices.brgm.fr/risques"))
-//                .setProperty("featureType", simple("BASIAS_LOCALISE"))
-                .setProperty("wfsUrl", simple("http://sdi.georchestra.org/geoserver/geor/wfs"))
-                .setProperty("featureType", simple("menhirs"))
+                .setProperty("wfsUrl", simple("http://geoservices.brgm.fr/risques"))
+                .setProperty("featureType", simple("BASIAS_LOCALISE"))
+//                .setProperty("wfsUrl", simple("http://sdi.georchestra.org/geoserver/geor/wfs"))
+//                .setProperty("featureType", simple("menhirs"))
                 .bean(FeatureTypeBean.class, "initialize(*, true)")
                 .to("direct:index-wfs");
 
