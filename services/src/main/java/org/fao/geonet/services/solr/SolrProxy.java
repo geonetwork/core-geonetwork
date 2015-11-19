@@ -1,4 +1,4 @@
-package org.geonetwork.solr;
+package org.fao.geonet.services.solr;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
@@ -9,7 +9,6 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,7 +68,7 @@ public class SolrProxy {
         //String solrUrl = System.getProperty("solr.server");
 
         handleRequest(request, response,
-                        solrServerUrl + "/" + solrCollection +
+                        "http://localhost:8984/solr"+ "/" + "srv-catalog" +
                             "/" + selectUrl + "?" + request.getQueryString());
     }
 

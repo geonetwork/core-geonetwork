@@ -109,6 +109,16 @@ public class HarvestRunner {
         return result;
     }
 
+    @RequestMapping(value = "/{uiLang}/wfs.harvest.config")
+    @ResponseBody
+    public String getConfig(
+            @RequestParam("url") String wfsUrl,
+            @RequestParam("typename") String featureType,
+            @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid) throws Exception {
+
+        return getApplicationProfile(uuid,wfsUrl, featureType);
+    }
+
     private JSONObject sendMessage(final String uuid, final String wfsUrl, final String featureType) {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         WfsIndexingEvent event = new WfsIndexingEvent(appContext, uuid, wfsUrl, featureType);
@@ -121,4 +131,38 @@ public class HarvestRunner {
 
         return j;
     }
+
+    /**
+     * Get the application profile content from the online resource.
+     * The application profile contains the solr faceting configuration.
+     *
+     * @param uuid of the metadata
+     * @param wfsUrl of the feature
+     * @param featureType of the feature
+     * @return applicationProfile if exists
+     * @throws Exception
+     */
+    private String getApplicationProfile(final String uuid, final String wfsUrl,
+                                         final String featureType) throws Exception {
+
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        DataManager dataManager = appContext.getBean(DataManager.class);
+
+        if (dataManager != null) {
+            final String id = dataManager.getMetadataId(uuid);
+            Element xml = dataManager.getMetadata(id);
+
+            final Element applicationProfile =
+                    (Element) Xml.selectSingle(xml,
+                            "*//gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'WFS' " +
+                                    "and gmd:name/gco:CharacterString = '" + featureType + "' " +
+                                    "and gmd:linkage/gmd:URL = '" + wfsUrl + "']/gmd:applicationProfile/gco:CharacterString", NAMESPACES);
+
+            if (applicationProfile != null) {
+                return applicationProfile.getText();
+            }
+        }
+        return null;
+    }
+
 }
