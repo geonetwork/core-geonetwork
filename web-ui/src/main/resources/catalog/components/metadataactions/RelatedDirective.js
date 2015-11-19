@@ -30,7 +30,8 @@
               template: '@',
               types: '@',
               title: '@',
-              list: '@'
+              list: '@',
+              user: '='
             },
             link: function(scope, element, attrs, controller) {
               scope.updateRelations = function() {
@@ -63,11 +64,17 @@
                 return link.title['#text'] || link.title;
               };
               scope.indexWFSFeatures = function (link, md) {
-                $http.get('wfs.harvest/' + md['geonet:info'].uuid).success(function(data) {
+                $http.get('wfs.harvest?url=' + link.url +
+                  '&typename=' + link.name).success(function(data) {
                   console.log(data);
                 }).error(function(response) {
                   console.log(response);
                 });
+                //$http.get('wfs.harvest/' + md['geonet:info'].uuid).success(function(data) {
+                //  console.log(data);
+                //}).error(function(response) {
+                //  console.log(response);
+                //});
               };
               scope.hasAction = function(mainType) {
                 // Do not display add to map action when map
