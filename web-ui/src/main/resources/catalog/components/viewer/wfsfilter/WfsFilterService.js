@@ -133,6 +133,7 @@
           }
           if(!field) {
             field = {
+              // TODO : remove the field type suffix
               field_name: f.name.substr(0,f.name.length-2),
               filter: []
             };
@@ -152,7 +153,7 @@
       this.getWfsIndexFields = function(featureTypeName, wfsUrl) {
         var url = buildSolrUrl({
           rows: 1,
-          q: 'featureTypeId:*' + featureTypeName,
+          q: 'featureTypeId:*' + featureTypeName.replace(':', '\\:'),
           wt: 'json'
         });
 
@@ -191,19 +192,20 @@
       this.getSolrRequestFromFields = function(fields, featureTypeName, wfsUrl) {
         var url = buildSolrUrl({
           rows: 0,
-          q: 'featureTypeId:*' + featureTypeName,
+          q: 'featureTypeId:*' + featureTypeName.replace(':', '\\:'),
           wt: 'json',
           facet: 'true',
           "facet.mincount" : 1
         });
 
         // don't build facet on useless fields
+        // * manager field eg. id
+        // * common field irrelevant for facet like the_geom
+        var listOfFieldsToExclude = ['geom', 'the_geom', 'ms_geometry',
+          'id', '_version_', 'featuretypeid', 'doctype'];
         angular.forEach(fields, function(f) {
           var fname = f.toLowerCase();
-          if(fname.indexOf('the_geom') == -1 &&
-              fname.indexOf('msgeometry') ==  -1 &&
-              fname.indexOf('featuretypeid') == -1 &&
-              fname != 'id') {
+          if($.inArray(fname, listOfFieldsToExclude) === -1) {
             url += '&facet.field=' + f;
           }
         });
@@ -224,7 +226,7 @@
 
         var url = buildSolrUrl({
           rows: 0,
-          q: 'featureTypeId:*' + featureTypeName,
+          q: 'featureTypeId:*' + featureTypeName.replace(':', '\\:'),
           wt: 'json',
           facet: 'true',
           "facet.mincount" : 1
@@ -267,7 +269,7 @@
 
         var params = {
           filters: JSON.stringify(rulesObj),
-          serverURL: wfsUrl.replace('/wfs', '/wms'),
+          serverURL: wfsUrl.replace('/wfs', '/wms'), // TODO: this may be wrong
           layers: featureTypeName
         };
 

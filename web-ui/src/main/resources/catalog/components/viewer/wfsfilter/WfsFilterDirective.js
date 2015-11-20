@@ -23,10 +23,10 @@
           featureTypeName: '@',
           uuid: '@',
           wfsUrl: '@',
-          layer: '=wfsLayer'
+          layer: '='
         },
         link: function(scope, element, attrs) {
-
+          scope.contentCollapsed = true;
           /**
            * Create SOLR request to get facets values
            * Check if the feature has an applicationDefinition, else get the
@@ -103,12 +103,18 @@
            */
           scope.filter = function() {
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
-            wfsFilterService.getSldUrl(sldConfig, scope.wfsUrl,
-                scope.featureTypeName).success(function(data) {
-                  scope.layer.getSource().updateParams({
-                    SLD: data.value
-                  });
-            });
+            if (sldConfig.filters.length > 0) {
+              wfsFilterService.getSldUrl(sldConfig, scope.wfsUrl,
+                  scope.featureTypeName).success(function(data) {
+                    scope.layer.getSource().updateParams({
+                      SLD: data.value
+                    });
+              });
+            } else {
+              scope.layer.getSource().updateParams({
+                SLD: null
+              });
+            }
           };
         }
       };
