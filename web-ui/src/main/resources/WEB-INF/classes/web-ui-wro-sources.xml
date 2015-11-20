@@ -6,9 +6,7 @@
       <jsSource webappPath="/catalog/components/" />
       <cssSource webappPath="/catalog/views/" />
       <cssSource webappPath="/catalog/style/" />
-      <cssSource webappPath="/catalog/lib/bootstrap/dist" />
       <cssSource webappPath="/catalog/lib/bootstrap-table/dist" />
-      <cssSource webappPath="/catalog/lib/style/font-awesome/css" />
   </require>
   <declarative name="libcesium" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/ol3cesium/Cesium/Cesium.js"/>
@@ -38,7 +36,7 @@
     <jsSource webappPath="/catalog/lib/angular.ext/colorpicker/angularjs-color-picker.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
 
-    <jsSource webappPath="/catalog/lib/bootstrap/dist/js/bootstrap.min.js"/>
+    <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/ngeo/ngeo.js"/>
     <jsSource webappPath="/catalog/lib/d3.v3.min.js"/>
