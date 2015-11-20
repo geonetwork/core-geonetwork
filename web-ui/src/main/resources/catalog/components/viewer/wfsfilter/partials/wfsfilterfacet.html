@@ -1,0 +1,19 @@
+<form name="wfsFilterForm">
+  <div class="gn-facet" data-ng-repeat="field in fields">
+    <h5 gn-collapse="{{contentCollapsed}}" >
+      <span class="fa fa-arrow-circle-o-right" ng-class="{'fa-rotate-90': !collapsed}"></span>
+      {{field.name}}
+    </h5>
+    <div class="list-group" ng-class="{'collapse': contentCollapsed}">
+
+      <div class="checkbox list-group-item" data-ng-repeat="(key, value) in field.values" data-ng-class="">
+        <label>
+          <input data-ng-click="onCheckboxClick(field.name, key, field.type)" type="checkbox">
+          <span class="gn-facet-label">{{key}}</span>&nbsp;
+          <span class="count">({{value}})</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-success" data-ng-click="filter()"><i class="fa fa-filter"></i>&nbsp;<span translate="">filter</span></button>
+</form>

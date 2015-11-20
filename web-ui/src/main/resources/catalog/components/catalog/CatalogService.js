@@ -64,10 +64,10 @@
          */
         validate: function(id) {
           var url = gnUrlUtils.append('md.validate@json',
-            gnUrlUtils.toKeyValue({
-              id: id
-            })
-          );
+              gnUrlUtils.toKeyValue({
+                id: id
+              })
+              );
           return $http.get(url);
         },
 
@@ -370,7 +370,13 @@
     geoserverNodes: 'geoserver.publisher?_content_type=json&',
     suggest: 'suggest',
     facetConfig: 'search/facet/config',
-    selectionLayers: 'selection.layers'
+    selectionLayers: 'selection.layers',
+
+    // wfs indexing
+    generateSLD: 'generateSLD',
+    solrproxy: 'solrproxy',
+    wfsIndexConfig: 'wfs.harvest.config'
+
   });
 
   /**

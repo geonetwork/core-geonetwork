@@ -562,7 +562,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-email</artifactId>
-        <version>1.1</version>
+        <version>1.4</version>
       </dependency>
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
@@ -753,6 +753,11 @@
         <artifactId>gt-wfs</artifactId>
         <version>${geotools.version}</version>
       </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-wms</artifactId>
+            <version>15-SNAPSHOT-Vampouille</version>
+        </dependency>
       <dependency>
         <groupId>org.geotools.jdbc</groupId>
         <artifactId>gt-jdbc-postgis</artifactId>
@@ -1158,7 +1163,7 @@
       </releases>
       <id>core-maven-repo</id>
       <name>GeoNetwork remote repository</name>
-      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
+      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/gt-wms-sld</url>
     </repository>
     <repository>
       <id>mvnrepository.com</id>
@@ -1182,6 +1187,16 @@
       <id>oss.sonatype.org-github-releases</id>
       <url>https://oss.sonatype.org/content/repositories/github-releases</url>
     </pluginRepository>
+    <pluginRepository>
+      <id>sonatype-public-repository</id>
+      <url>https://oss.sonatype.org/content/groups/public</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
   </pluginRepositories>
 
   <!-- =========================================================== -->
@@ -1202,6 +1217,9 @@
     <module>services</module>
     <module>wro4j</module>
     <module>inspire-atom</module>
+    <module>solr</module>
+    <module>camel-harvesters</module>
+    <module>messaging</module>
   </modules>
   
   <profiles>
@@ -1247,8 +1265,17 @@
 
   <properties>
     <jetty.version>8.1.9.v20130131</jetty.version>
-    <geotools.version>8.6</geotools.version>
+    <geotools.version>14.0</geotools.version>
     <lucene.version>4.9.0</lucene.version>
+
+    <solr.version>5.3.1</solr.version>
+    <solr.port>8984</solr.port>
+    <solr.url>http://localhost:${solr.port}/solr</solr.url>
+    <solr.collection>srv-catalog</solr.collection>
+
+    <jms.url>tcp://localhost:61616</jms.url>
+    <activemq.version>5.6.0</activemq.version>
+
     <spring.version>3.2.5.RELEASE</spring.version>
     <spring.security.version>3.1.4.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
@@ -1260,5 +1287,9 @@
     <npm.version>1.3.23</npm.version>
     <print-lib.version>2.1.1</print-lib.version>
     <flying-saucer>9.0.7</flying-saucer>
+    <camel.version>2.14.0</camel.version>
+    <log4j.version>1.2.17</log4j.version>
+    <slf4j.version>1.7.7</slf4j.version>
+    <xbean.version>3.18</xbean.version>
   </properties>
 </project>

@@ -10,6 +10,61 @@
 
   module.value('gfiTemplateURL', gfiTemplateURL);
 
+  module.directive('gnVectorFeatureToolTip', [function() {
+    return {
+      restrict: 'A',
+      scope: {
+        map: '=gnVectorFeatureToolTip'
+      },
+      link: function(scope, element, attrs) {
+        $('body').append('<div id="feature-info" data-content=""' +
+            'style="position: absolute; z-index: 100;"/>');
+        var info = $('#feature-info');
+        info.popover({
+          animation: false,
+          trigger: 'manual',
+          placement: 'top',
+          html: true,
+          title: 'Feature info'
+        });
+
+        var displayFeatureInfo = function(pixel) {
+          info.css({
+            left: pixel[0] + 'px',
+            top: (pixel[1] + 45) + 'px'
+          });
+          var feature = scope.map.forEachFeatureAtPixel(pixel,
+              function(feature, layer) {
+                return feature;
+              });
+          if (feature) {
+            var props = feature.getProperties();
+            var tooltipContent = '<ul>';
+            $.each(props, function(key, values) {
+              if (typeof values !== 'object') {
+                tooltipContent += '<li>' + key + ': ' + values + '</li>';
+              }
+            });
+            tooltipContent += '</ul>';
+            info.popover('hide');
+            info.data('bs.popover').options.content = tooltipContent;
+            info.popover('show');
+          } else {
+            info.popover('hide');
+          }
+        };
+
+        scope.map.on('pointermove', function(evt) {
+          if (evt.dragging) {
+            //info.hide();
+            info.popover('hide');
+            return;
+          }
+          displayFeatureInfo(scope.map.getEventPixel(evt.originalEvent));
+        });
+      }
+    };
+  }]);
   /**
    * @ngdoc directive
    * @name gn_viewer.directive:gnGfi

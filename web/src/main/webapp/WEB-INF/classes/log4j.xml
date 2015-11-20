@@ -223,6 +223,11 @@
         <appender-ref ref="fileAppender" />
     </logger>
 
+    <logger name="org.apache.camel" additivity="true">
+        <level value="WARN"/>
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
 
     <!-- Turn off logging except when explicitly declared below -->
     <root>

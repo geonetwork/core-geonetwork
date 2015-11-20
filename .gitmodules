@@ -14,3 +14,6 @@
 [submodule "schemas/iso19115-3"]
 	path = schemas/iso19115-3
 	url = https://github.com/camptocamp/iso19115-3.git
+[submodule "web-ui/src/main/resources/catalog/lib/bootstrap-table"]
+	path = web-ui/src/main/resources/catalog/lib/bootstrap-table
+	url = https://github.com/wenzhixin/bootstrap-table.git

@@ -46,6 +46,24 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_baselayerswitcher');
   goog.require('gn_draw');
   goog.require('gn_graticule');
@@ -62,6 +80,7 @@
   goog.require('gn_terrainswitcher_directive');
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
+  goog.require('gn_wfsfilter');
   goog.require('gn_wmsimport');
 
   /**
@@ -89,7 +108,8 @@
     'gn_module',
     'gn_graticule',
     'gn_searchlayerformap_directive',
-    'gn_terrainswitcher_directive'
+    'gn_terrainswitcher_directive',
+    'gn_wfsfilter'
   ]);
 
   module.controller('gnViewerController', [
