@@ -68,5 +68,16 @@
       {{member.get('label')}}
     </label>
 
+    <br/>
+    <button class="btn btn-primary"
+            data-ng-show-todo="user.isEditorOrMore()"
+            data-ng-click="indexWFSFeatures(member.getSource().getUrls()[0].replace('wms', 'wfs'), member.getSource().getParams().LAYERS)"
+            data-translate="">indexWFSFeatures</button>
+
+    <div data-gn-wfs-filter-facets=""
+         data-layer="layer"
+         data-wfs-url="{{member.getSource().getUrls()[0].replace('wms', 'wfs')}}"
+         data-feature-type-name="{{member.getSource().getParams().LAYERS}}"></div>
+
   </div>
 </li>

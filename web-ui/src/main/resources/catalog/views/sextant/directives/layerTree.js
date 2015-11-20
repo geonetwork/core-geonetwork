@@ -199,8 +199,8 @@
     }]);
 
   module.directive('sxtLayertreeElt', [
-    '$compile', 'gnMap', 'gnMdView',
-    function($compile, gnMap, gnMdView) {
+    '$compile', '$http', 'gnMap', 'gnMdView',
+    function($compile, $http, gnMap, gnMdView) {
       return {
         restrict: 'E',
         replace: true,
@@ -229,6 +229,23 @@
             return angular.isDefined(scope.member.nodes);
           };
 
+          scope.indexWFSFeatures = function(url, type) {
+            $http.get('wfs.harvest?' +
+                'uuid=' + '' +
+                '&url=' + encodeURIComponent(url) +
+                '&typename=' + encodeURIComponent(type))
+              .success(function(data) {
+                console.log(data);
+              }).error(function(response) {
+              console.log(response);
+            });
+            //$http.get('wfs.harvest/' + md['geonet:info'].uuid)
+            // .success(function(data) {
+            //  console.log(data);
+            //}).error(function(response) {
+            //  console.log(response);
+            //});
+          };
           scope.mapService = gnMap;
 
           scope.setNCWMS = controller.setNCWMS;
