@@ -31,7 +31,7 @@
 
       var parseKvpParams = function(str) {
         var escaper = function(match, p1) {
-          return '=' + gnUrlUtils.encodeUriQuery(p1);
+          return '=' + gnUrlUtils.encodeUriQuery(p1, true);
         };
         str = str.replace(/=\[([^&]*)\]/gi, escaper);
 
