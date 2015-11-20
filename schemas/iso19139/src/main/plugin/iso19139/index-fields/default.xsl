@@ -273,17 +273,18 @@
                       <Field name="sextantTheme" string="{normalize-space($sextantThemeKey)}" store="true" index="true"/>
                     </xsl:if>
 
+
+                    <xsl:variable name="inspireannex">
+                        <xsl:call-template name="determineInspireAnnex">
+                            <xsl:with-param name="keyword" select="$keyword"/>
+                            <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
+                        </xsl:call-template>
+                    </xsl:variable>
+
                     <!-- If INSPIRE is enabled, check if the keyword is one of the 34 themes
                          and index annex, theme and theme in english. -->
                     <xsl:if test="$inspire='true'">
                         <xsl:if test="string-length(.) &gt; 0">
-
-                            <xsl:variable name="inspireannex">
-                                <xsl:call-template name="determineInspireAnnex">
-                                    <xsl:with-param name="keyword" select="$keyword"/>
-                                    <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
-                                </xsl:call-template>
-                            </xsl:variable>
 
                             <xsl:variable name="inspireThemeAcronym">
                                 <xsl:call-template name="getInspireThemeAcronym">
