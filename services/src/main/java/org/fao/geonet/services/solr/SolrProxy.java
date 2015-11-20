@@ -37,7 +37,6 @@ import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 /**
  * Created by fgravin on 11/4/15.
  */
-
 @Controller
 public class SolrProxy {
     // TODO: Should probably not depend on that
@@ -62,13 +61,21 @@ public class SolrProxy {
 
     private String solrCollection;
 
+    public String getSolrCollection() {
+        return solrCollection;
+    }
+
+    public void setSolrCollection(String solrCollection) {
+        this.solrCollection = solrCollection;
+    }
+
     @RequestMapping(value = "/{uiLang}/solrproxy/{query}")
     @ResponseBody
     public void handleGETRequest(@PathVariable("query") String selectUrl, HttpServletRequest request, HttpServletResponse response) {
         //String solrUrl = System.getProperty("solr.server");
 
         handleRequest(request, response,
-                        "http://localhost:8984/solr"+ "/" + "srv-catalog" +
+                        solrServerUrl + "/" + solrCollection +
                             "/" + selectUrl + "?" + request.getQueryString());
     }
 
@@ -447,13 +454,5 @@ public class SolrProxy {
             }
         }
         return false;
-    }
-
-    public String getSolrCollection() {
-        return solrCollection;
-    }
-
-    public void setSolrCollection(String solrCollection) {
-        this.solrCollection = solrCollection;
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -116,7 +117,7 @@ public class HarvestRunner {
             @RequestParam("typename") String featureType,
             @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid) throws Exception {
 
-        return getApplicationProfile(uuid,wfsUrl, featureType);
+        return getApplicationProfile(uuid, wfsUrl, featureType);
     }
 
     private JSONObject sendMessage(final String uuid, final String wfsUrl, final String featureType) {
@@ -148,7 +149,7 @@ public class HarvestRunner {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataManager = appContext.getBean(DataManager.class);
 
-        if (dataManager != null) {
+        if (!StringUtils.isEmpty(uuid) && dataManager != null) {
             final String id = dataManager.getMetadataId(uuid);
             Element xml = dataManager.getMetadata(id);
 
