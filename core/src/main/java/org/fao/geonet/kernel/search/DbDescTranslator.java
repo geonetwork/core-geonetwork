@@ -24,10 +24,12 @@
 package org.fao.geonet.kernel.search;
 
 import com.google.common.base.Optional;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Localized;
 import org.fao.geonet.utils.Log;
 import org.jdom.JDOMException;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -44,7 +46,7 @@ public class DbDescTranslator implements Translator {
 
     private static final long serialVersionUID = 1L;
 
-    private final transient ConfigurableApplicationContext _applicationContext;
+    private ConfigurableApplicationContext _applicationContext;
     private final String _langCode;
     private Class<? extends JpaRepository> _repositoryClass;
     private final String _methodName;
@@ -69,9 +71,14 @@ public class DbDescTranslator implements Translator {
 
     public String translate(final String key) {
         try {
+            Localized entity = null;
+
+            if (this._applicationContext == null) {
+                _applicationContext = ApplicationContextHolder.get();
+            }
+
             final TranslatorCache cache = this._applicationContext.getBean(TranslatorCache.class);
             Optional<Localized> entityOptional = cache.get(key);
-            Localized entity;
             if (entityOptional != null) {
                 if (entityOptional.isPresent()) {
                     entity = entityOptional.get();
@@ -142,7 +149,7 @@ public class DbDescTranslator implements Translator {
                 if (entity == null) {
                     try {
                         entity = (Localized) method.invoke(repository, key);
-                   } catch (java.lang.IllegalArgumentException e) {
+                    } catch (java.lang.IllegalArgumentException e) {
                         // Call to the method with wrong argument type.
                     }
                 }
