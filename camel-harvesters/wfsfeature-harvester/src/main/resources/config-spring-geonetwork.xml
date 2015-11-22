@@ -21,8 +21,18 @@
     <property name="solrCommitWithinMs" value="10000"/>
   </bean>
 
-  <cm:camelContext>
+
+  <cm:camelContext id="harvest-wfs"
+                   useMDCLogging="true">
     <cm:jmxAgent id="agent" disabled="false"/>
+
     <cm:routeBuilder ref="wfsfeatureHarvesterRouteBuilder"/>
+
+    <cm:threadPoolProfile id="harvest-wfs-thread-pool"
+                          defaultProfile="true"
+                          poolSize="3"
+                          maxPoolSize="9"
+                          maxQueueSize="1000"
+                          rejectedPolicy="CallerRuns"/>
   </cm:camelContext>
 </beans>
