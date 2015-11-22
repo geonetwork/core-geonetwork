@@ -182,12 +182,12 @@
                            urlParams += key + '=' + p + '&';
                          });
                          snippets.push(gnEditorXMLService.
-                                  buildXMLForXlink(scope.elementName,
+                                  buildXMLForXlink(scope.schema, scope.elementName,
                                       url +
                                       '?' + urlParams));
                        } else {
                          snippets.push(gnEditorXMLService.
-                                  buildXML(scope.elementName, xml));
+                                  buildXML(scope.schema, scope.elementName, xml));
                        }
                        checkState();
                      });
