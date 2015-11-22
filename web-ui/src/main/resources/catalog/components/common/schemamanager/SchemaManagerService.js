@@ -61,70 +61,71 @@
           */
          var infoCache = $cacheFactory('infoCache');
 
-				 var extractNamespaces = function (data) {
-				 		var result = {};
-				 		var len = data['schemas'].length;
-						for (var i = 0;i < len;i++) {
-							var sc = data['schemas'][i];
-							var name = sc['name'];
-							var nss  = sc['namespaces'];
-							var modNs = {};
-							if (typeof nss == 'string') {
-								var nssArray = nss.split(' ');
-								for (var j = 0;j < nssArray.length;j++) {
-									var nsPair = nssArray[j].split('=');
-									var prefix = nsPair[0].substring(6);
-									var namespaceUri = nsPair[1].substring(1,nsPair[1].length-1);
-									modNs[prefix] = namespaceUri;
-								}
-							}
-							result[name] = modNs;
-						}
-						return result;
-				 };
+         var extractNamespaces = function(data) {
+           var result = {};
+           var len = data['schemas'].length;
+            for (var i = 0; i < len; i++) {
+              var sc = data['schemas'][i];
+              var name = sc['name'];
+              var nss = sc['namespaces'];
+              var modNs = {};
+              if (typeof nss == 'string') {
+                var nssArray = nss.split(' ');
+                for (var j = 0; j < nssArray.length; j++) {
+                  var nsPair = nssArray[j].split('=');
+                  var prefix = nsPair[0].substring(6);
+                  var namespaceUri = nsPair[1].
+                 substring(1, nsPair[1].length - 1);
+                  modNs[prefix] = namespaceUri;
+                }
+              }
+              result[name] = modNs;
+            }
+            return result;
+         };
 
          return {
-				 	/**
-				  	* Find namespace uri for prefix in namespaces, optionally restricted
-						* to schema specified. Schema namespaces are assumed to have 
-						* been loaded into the cache via getNamespaces when metadata
-						* record was edited.
-						*/
-			 	 	 findNamespaceUri: function(prefix, schema) {
-             	var namespaces = infoCache.get('schemas');
-				 			var nsUri = ''; // return empty string by default (what else?)
-				 			if (schema != undefined) {
-								nsUri = namespaces[schema][prefix];
-							} else {
-								for (var sc in namespaces) {
-									nsUri = namespaces[sc][prefix];
-									if (nsUri != undefined) break;
-								}
-							}
-							return nsUri;
-				 	 },
+           /**
+            * Find namespace uri for prefix in namespaces, optionally restricted
+            * to schema specified. Schema namespaces are assumed to have
+            * been loaded into the cache via getNamespaces when metadata
+            * record was edited.
+            */
+           findNamespaceUri: function(prefix, schema) {
+             var namespaces = infoCache.get('schemas');
+             var nsUri = ''; // return empty string by default (what else?)
+             if (schema != undefined) {
+                nsUri = namespaces[schema][prefix];
+              } else {
+                for (var sc in namespaces) {
+                  nsUri = namespaces[sc][prefix];
+                  if (nsUri != undefined) break;
+                }
+              }
+              return nsUri;
+            },
 
-					/**
-					  * Load schema namespaces into infoCache. This should be done
-						* when a metadata record was edited.
-						*/
+           /**
+            * Load schema namespaces into infoCache. This should be done
+            * when a metadata record was edited.
+            */
            getNamespaces: function() {
              var defer = $q.defer();
              var fromCache = infoCache.get('schemas');
              if (fromCache) {
                defer.resolve(fromCache);
              } else {
-						 	 var url = gnUrlUtils.append('info?_content_type=json',
-							 		gnUrlUtils.toKeyValue({
-								    type: 'schemas'
-               		})
-								);
-							 $http.get(url, { cache: false }).
-               	success(function(data) {
-								 var nss = extractNamespaces(data);
+                var url = gnUrlUtils.append('info?_content_type=json',
+                   gnUrlUtils.toKeyValue({
+                 type: 'schemas'
+                   })
+               );
+               $http.get(url, { cache: false }).
+               success(function(data) {
+                 var nss = extractNamespaces(data);
                  infoCache.put('schemas', nss);
                  defer.resolve(nss);
-               	});
+               });
              }
              return defer.promise;
            },
@@ -144,7 +145,8 @@
                  return requestBody;
                };
 
-               $http.post('md.element.info?_content_type=json', getPostRequestBody(), {
+               $http.post('md.element.info?_content_type=json',
+               getPostRequestBody(), {
                  headers: {'Content-type': 'application/xml'}
                }).
                success(function(data) {

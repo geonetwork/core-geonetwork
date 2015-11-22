@@ -169,8 +169,8 @@
      * merged with the params from facets state.
      * Update the paginationInfo object with the total
      * count of metadata found. Note that this search
-		 * is for subtemplates with _root element provided as function
-		 * param and wildcard char appended
+     * is for subtemplates with _root element provided as function
+     * param and wildcard char appended
      */
     this.triggerWildSubtemplateSearch = function(element) {
 
@@ -184,15 +184,15 @@
             gnFacetService.getParamsFromFacets($scope.currentFacets));
       }
 
-			// Add wildcard char to search, limit to subtemplates and the _root
-			// element of the subtemplate we want
-			if (params.any) params.any = params.any+'*';
-			else params.any = '*';
+      // Add wildcard char to search, limit to subtemplates and the _root
+      // element of the subtemplate we want
+      if (params.any) params.any = params.any + '*';
+      else params.any = '*';
 
-			params._isTemplate = 's';
-			params._root = element;
-			params.from = "1";
-			params.to = "20";
+      params._isTemplate = 's';
+      params._root = element;
+      params.from = '1';
+      params.to = '20';
 
       gnSearchManagerService.gnSearch(params).then(
           function(data) {
@@ -207,7 +207,7 @@
                   $scope.searchResults.count /
                       $scope.paginationInfo.hitsPerPage, 0);
             }
-       });
+          });
     };
 
     /**
@@ -299,7 +299,7 @@
     });
 
     $scope.triggerSearch = this.triggerSearch;
-		$scope.triggerWildSubtemplateSearch = this.triggerWildSubtemplateSearch;
+    $scope.triggerWildSubtemplateSearch = this.triggerWildSubtemplateSearch;
   };
 
   searchFormController['$inject'] = [

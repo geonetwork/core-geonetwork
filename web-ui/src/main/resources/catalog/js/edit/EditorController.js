@@ -71,7 +71,7 @@
   /**
    * Metadata editor controller
    */
-  module.controller('GnEditorController', [ '$q',
+  module.controller('GnEditorController', ['$q',
     '$scope', '$routeParams', '$http', '$rootScope',
     '$translate', '$compile', '$timeout', '$location',
     'gnEditor', 'gnSearchManagerService', 'gnSchemaManagerService',
@@ -114,9 +114,9 @@
       };
       // Controller initialization
       var init = function() {
-				var promises = [];
-				promises.push(gnSchemaManagerService.getNamespaces());
-				promises.push(gnConfigService.load());
+        var promises = [];
+        promises.push(gnSchemaManagerService.getNamespaces());
+        promises.push(gnConfigService.load());
         $q.all(promises).then(function(c) {
           // Config loaded
           if ($routeParams.id) {

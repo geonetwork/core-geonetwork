@@ -153,7 +153,8 @@
                    scope.xmlSnippet = '<' + tag +
                    ' xmlns:' +
                         namespace + '="' +
-                        gnSchemaManagerService.findNamespaceUri(namespace, gnCurrentEdit.schema) + '"' +
+                        gnSchemaManagerService.findNamespaceUri(namespace,
+                   gnCurrentEdit.schema) + '"' +
                    attribute + '>' +
                    scope.dateTime + '</' + tag + '>';
                  } else {

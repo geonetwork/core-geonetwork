@@ -107,7 +107,8 @@
             * extraAttributeMap is other attributes to add to the element.
             * For example xlink:title
            */
-           buildXMLForXlink: function(schema, elementName, xlink, extraAttributeMap) {
+           buildXMLForXlink: function(schema, elementName,
+                                      xlink, extraAttributeMap) {
              var nsDeclaration = getNamespacesForElement(schema, elementName);
 
              // Escape & in XLink url
@@ -116,7 +117,8 @@
              var tokens = [
                '<', elementName,
                ' ', nsDeclaration,
-               ' xmlns:xlink="', gnSchemaManagerService.findNamespaceUri("xlink"), '"',
+               ' xmlns:xlink="',
+               gnSchemaManagerService.findNamespaceUri('xlink'), '"',
                ' xlink:href="',
                xlink, '"'];
 

@@ -7,8 +7,10 @@
    *  Create a widget to handle 3 states checkbox
    */
   module.directive('gnCheckboxWithNilreason',
-      ['$http', '$rootScope', '$filter', 'gnSchemaManagerService', 'gnCurrentEdit',
-       function($http, $rootScope, $filter, gnSchemaManagerService, gnCurrentEdit) {
+      ['$http', '$rootScope', '$filter',
+        'gnSchemaManagerService', 'gnCurrentEdit',
+       function($http, $rootScope, $filter,
+                gnSchemaManagerService, gnCurrentEdit) {
 
          return {
            restrict: 'A',
@@ -46,10 +48,12 @@
                scope.xmlSnippet = '<' + scope.tagName +
                ' xmlns:' +
                elementNs + '="' +
-               gnSchemaManagerService.findNamespaceUri(elementNs, gnCurrentEdit.schema) + '"' +
+               gnSchemaManagerService.findNamespaceUri(elementNs,
+               gnCurrentEdit.schema) + '"' +
                ' xmlns:' +
                booleanElementNs + '="' +
-               gnSchemaManagerService.findNamespaceUri(booleanElementNs, gnCurrentEdit.schema) + '"' +
+               gnSchemaManagerService.findNamespaceUri(booleanElementNs,
+               gnCurrentEdit.schema) + '"' +
                attribute + '><' + booleanElement + '>' +
                (isNil ? '' : scope.status) +
                '</' + booleanElement + '></' + scope.tagName + '>';
