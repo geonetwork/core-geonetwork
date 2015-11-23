@@ -148,9 +148,9 @@ cat.app = function() {
 
         // Add view parameter for MedSea which is based on iso19115-3 plugin
         var recordStandard = record && record.get('standardName');
-        if (recordStandard === 'ISO 19115-3 - Emodnet Checkpoint - Targeted Product') {
+        if (recordStandard.indexOf('Targeted Product') !== -1) {
           style = 'xsl-view&view=medsea-targeted-product';
-        } else if (recordStandard === 'ISO 19115-3 - Emodnet Checkpoint') {
+        } else if (recordStandard.indexOf('Emodnet Checkpoint') !== -1) {
           style = 'xsl-view&view=medsea';
         }
         var win = new cat.view.ViewWindow({
@@ -245,6 +245,17 @@ cat.app = function() {
 
           // Open Angular metadata editor for MedSea records.
           if (recordStandard &&
+              recordStandard.indexOf('Targeted Product') !== -1) {
+            var url = 'catalog.edit#/';
+            if (create) {
+                url += 'create/from/' + metadataId +
+                  '/in/' + group + '/tab/medsea-what';
+            } else {
+                url += 'metadata/' + metadataId + '/tab/medsea-what';
+            }
+            window.open(
+              catalogue.services.rootUrl + url)
+          } else if (recordStandard &&
             recordStandard.indexOf('Emodnet Checkpoint') !== -1
           ) {
             var url = 'catalog.edit#/';
