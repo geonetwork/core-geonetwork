@@ -29,6 +29,8 @@
     "chooseASet": "1. Choose a set of records",
     "defineEdits": "2. Define edits",
     "confirmAndSave": "3. Apply changes",
+    "changesToApply": "Changes to apply:",
+    "resetChanges": "Reset changes",
     "createSetFromSearch": "Search and select records or ",
     "chooseAnExistingSet": "choose a predefined set",
     "chooseASetOfRecordHelp": "Select one or more records before defining which elements to edit.",

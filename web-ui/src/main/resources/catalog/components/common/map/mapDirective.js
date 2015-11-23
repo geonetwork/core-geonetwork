@@ -33,15 +33,22 @@
              mapRef.substring(1, mapRef.length);
 
              var extentTpl = {
-               'iso19139': '<gmd:extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"><gmd:EX_Extent><gmd:geographicElement>' +
+               'iso19139': '<gmd:EX_Extent ' +
+               'xmlns:gmd="http://www.isotc211.org/2005/gmd" ' +
+               'xmlns:gco="http://www.isotc211.org/2005/gco">' +
+               '<gmd:geographicElement>' +
                '<gmd:EX_GeographicBoundingBox>' +
-               '<gmd:westBoundLongitude><gco:Decimal>{{west}}</gco:Decimal></gmd:westBoundLongitude>' +
-               '<gmd:eastBoundLongitude><gco:Decimal>{{east}}</gco:Decimal></gmd:eastBoundLongitude>' +
-               '<gmd:southBoundLatitude><gco:Decimal>{{south}}</gco:Decimal></gmd:southBoundLatitude>' +
-               '<gmd:northBoundLatitude><gco:Decimal>{{north}}</gco:Decimal></gmd:northBoundLatitude>' +
+               '<gmd:westBoundLongitude><gco:Decimal>{{west}}</gco:Decimal>' +
+               '</gmd:westBoundLongitude>' +
+               '<gmd:eastBoundLongitude><gco:Decimal>{{east}}</gco:Decimal>' +
+               '</gmd:eastBoundLongitude>' +
+               '<gmd:southBoundLatitude><gco:Decimal>{{south}}</gco:Decimal>' +
+               '</gmd:southBoundLatitude>' +
+               '<gmd:northBoundLatitude><gco:Decimal>{{north}}</gco:Decimal>' +
+               '</gmd:northBoundLatitude>' +
                '</gmd:EX_GeographicBoundingBox></gmd:geographicElement>' +
-               '</gmd:EX_Extent></gmd:extent>',
-               'iso19115-3': ''
+               '</gmd:EX_Extent>',
+               'iso19115-3': 'TODO'
              };
              var xmlExtentFn = function (coords, location) {
                if (angular.isArray(coords) &&
@@ -49,7 +56,11 @@
                  !isNaN(coords[0]) &&
                  !isNaN(coords[1]) &&
                  !isNaN(coords[2]) &&
-                 !isNaN(coords[3])) {
+                 !isNaN(coords[3]) &&
+                 angular.isNumber(coords[0]) &&
+                 angular.isNumber(coords[1]) &&
+                 angular.isNumber(coords[2]) &&
+                 angular.isNumber(coords[3])) {
                  scope.extentXml = extentTpl.iso19139.replace('{{west}}', coords[0])
                    .replace('{{south}}', coords[1])
                    .replace('{{east}}', coords[2])

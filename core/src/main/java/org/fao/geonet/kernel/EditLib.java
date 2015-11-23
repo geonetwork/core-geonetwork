@@ -44,11 +44,7 @@ import org.fao.geonet.utils.Xml;
 import org.jaxen.JaxenException;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.jdom.JDOMXPath;
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
+import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 
 import java.io.IOException;
@@ -462,7 +458,7 @@ public class EditLib {
 
     /**
      * This does exactly the same thing as
-     * {@link #addElementOrFragmentFromXpath(org.jdom.Element, org.fao.geonet.kernel.schema.MetadataSchema, String, AddElemValue, boolean)}
+     * {@link #addElementOrFragmentFromXpath(Element, MetadataSchema, String, AddElemValue, boolean)}
      * except that it is done multiple times, once for each element in the map
      *
      * @param metadataRecord the record to update
@@ -509,11 +505,14 @@ public class EditLib {
     public static interface SpecialUpdateTags {
         String REPLACE = "gn_replace";
         String ADD = "gn_add";
+        String DELETE = "gn_delete";
+        String DELETE_ALL = "gn_delete_all";
     }
 
 
     /**
-     * Update a metadata record for the xpath/value provided. The xpath (in accordance with JDOM x-path) does not start
+     * Update a metadata record for the xpath/value provided. The xpath
+     * (in accordance with JDOM x-path) does not start
      * with the root element for example:
      * <p/>
      * <code><pre>
@@ -567,6 +566,9 @@ public class EditLib {
      *         element selected from the metadata.
      *     </li>
      *     <li>
+     *         If the xml's root element == '{@value org.fao.geonet.kernel.EditLib.SpecialUpdateTags#DELETE}' (a magic tag) then all elements matching the XPath are deleted.
+     *     </li>
+     *     <li>
      *         If the xml's root element != the name (and namespace) of the element selected from the metadata then the xml will replace
      *         the children of the element selected from the metadata.
      *     </li>
@@ -581,10 +583,13 @@ public class EditLib {
      * @return true if the metadata was modified
      */
     public boolean addElementOrFragmentFromXpath(Element metadataRecord, MetadataSchema metadataSchema,
-                                              String xpathProperty, AddElemValue value, boolean createXpathNodeIfNotExist) {
+                                                 String xpathProperty, AddElemValue value, boolean createXpathNodeIfNotExist) {
 
         try {
-            if (value.isXml() && xpathProperty.matches(".*@[^/\\]]+")) {
+            final boolean isValueXml = value.isXml();
+            final boolean isValueAdd = isValueXml &&
+                            value.getNodeValue().getName().equals(SpecialUpdateTags.ADD);
+            if (isValueXml && xpathProperty.matches(".*@[^/\\]]+")) {
                 throw new AssertionError("Cannot set Xml on an attribute.  Xpath:'"+xpathProperty+"' value: '"+value+"'");
             }
             if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
@@ -597,23 +602,45 @@ public class EditLib {
                 Log.debug(Geonet.EDITORADDELEMENT, "XPath found in metadata: " + (propNode != null));
             }
 
-
-            // If a property is not found in metadata, create it...
-            if (propNode != null) {
-                // Update element content with node
-                if (propNode instanceof Element && value.isXml()) {
-                    doAddFragmentFromXpath(metadataSchema, value.getNodeValue(), (Element) propNode);
-                } else if (propNode instanceof Element && !value.isXml()) {
-                    // Update element text with value
-                    ((Element) propNode).setText(value.getStringValue());
-                } else if (propNode instanceof Attribute && !value.isXml()) {
-                    ((Attribute) propNode).setValue(value.getStringValue());
+            // If a property is found,
+            // - handle deletion
+            // - Update text node or attributes
+            if (propNode != null && !isValueAdd) {
+                // And if magic tag is delete
+                if (isValueXml &&
+                        value.getNodeValue().getName().startsWith(SpecialUpdateTags.DELETE)) {
+                    if (propNode instanceof Element) {
+                        Element parent = ((Element) propNode).getParentElement();
+                        Element matchingNode = ((Element) propNode);
+                        // Remove only matching node
+                        if (value.getNodeValue().getName().equals(SpecialUpdateTags.DELETE)) {
+                            parent.removeContent(parent.indexOf(matchingNode));
+                        } else if (value.getNodeValue().getName().equals(SpecialUpdateTags.DELETE_ALL)){
+                            // Remove all children with matching node name
+                            parent.removeChildren(matchingNode.getName(), matchingNode.getNamespace());
+                        }
+                    } else if (propNode instanceof Attribute) {
+                        Element parent = ((Element) propNode).getParentElement();
+                        parent.removeAttribute(((Attribute) propNode).getName());
+                    } else {
+                        return false;
+                    }
                 } else {
-                    return false;
+                    // Update element content with node
+                    if (propNode instanceof Element && isValueXml) {
+                        doAddFragmentFromXpath(metadataSchema, value.getNodeValue(), (Element) propNode);
+                    } else if (propNode instanceof Element && !isValueXml) {
+                        // Update element text with value
+                        ((Element) propNode).setText(value.getStringValue());
+                    } else if (propNode instanceof Attribute && !isValueXml) {
+                        ((Attribute) propNode).setValue(value.getStringValue());
+                    } else {
+                        return false;
+                    }
                 }
-                
                 return true;
             } else {
+                // If a property is not found in metadata, create it...
                 if (createXpathNodeIfNotExist) {
                     int indexOfRequiredPortion = -1;
                     // Extract the XPath for the element to match. For:
@@ -658,33 +685,65 @@ public class EditLib {
     /**
      * Performs the updating of the element selected from the metadata by the xpath.
      */
-    private void doAddFragmentFromXpath(MetadataSchema metadataSchema, Element newValue, Element propEl) throws Exception {
+    private void doAddFragmentFromXpath(MetadataSchema metadataSchema,
+                                        Element newValue, Element propEl) throws Exception {
 
-        if (newValue.getName().equals(SpecialUpdateTags.REPLACE) || newValue.getName().equals(SpecialUpdateTags.ADD)) {
+        // Delete a node
+        // <gn_delete/>
+        if (newValue.getName().equals(SpecialUpdateTags.DELETE)) {
+            Element parentElement = propEl.getParentElement();
+            if (parentElement != null) {
+                parentElement.removeContent(
+                        parentElement.indexOf(propEl)
+                );
+            }
+        // <gn_replace|add>
+        //   <gmd:contact>
+        //     <gmd:CI_ResponsibleParty
+        } else if (newValue.getName().equals(SpecialUpdateTags.REPLACE) ||
+                   newValue.getName().equals(SpecialUpdateTags.ADD)) {
+
             final boolean isReplace = newValue.getName().equals(SpecialUpdateTags.REPLACE);
             if (isReplace) {
                 propEl.removeContent();
             }
 
             @SuppressWarnings("unchecked")
-            List<Element> children = Lists.newArrayList(newValue.getChildren());
-            for (Element child : children) {
-                if (Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
-                    Log.debug(Geonet.EDITORADDELEMENT, " > add " + Xml.getString(child));
-                }
-                child.detach();
-                if (isReplace) {
-                    propEl.addContent(child);
-                } else {
-                    final Element newElement = addElement(metadataSchema, propEl, child.getQualifiedName());
-                    if (newElement.getParent() != null) {
-                        propEl.setContent(propEl.indexOf(newElement), child);
-                    } else if (child.getParentElement() == null) {
+            List<Object> children = Lists.newArrayList(newValue.getContent());
+            for (Object o : children) {
+                if (o instanceof Element) {
+                    Element child = (Element) o;
+                    if (Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
+                        Log.debug(Geonet.EDITORADDELEMENT, " > add " + Xml.getString(child));
+                    }
+
+                    child.detach();
+
+//                    final boolean childIsSameAsInsertionPoint =
+//                            child.getName().equals(propEl.getName()) &&
+//                            child.getNamespace().equals(propEl.getNamespace());
+//                    if (childIsSameAsInsertionPoint) {
+//                        child = child.getContent(0);
+//                    }
+                    if (isReplace) {
                         propEl.addContent(child);
-            }
+                    } else {
+                        // Add an element of same type in the target node
+                        final Element newElement = addElement(metadataSchema, propEl, child.getQualifiedName());
+                        if (newElement.getParent() != null) {
+                            propEl.setContent(propEl.indexOf(newElement), child);
+                        } else if (child.getParentElement() == null) {
+                            propEl.addContent(child);
+                        }
+                    }
+                } else if (o instanceof Text) {
+                    propEl.setText(((Text) o).getText());
                 }
             }
-        } else  if (newValue.getName().equals(propEl.getName()) && newValue.getNamespace().equals(propEl.getNamespace())) {
+        } else  if (newValue.getName().equals(propEl.getName()) &&
+                    newValue.getNamespace().equals(propEl.getNamespace())) {
+            // If the target element has the same name as the element to add
+            // Replace the target element by the new one
             int idx = propEl.getParentElement().indexOf(propEl);
             propEl.getParentElement().setContent(idx, newValue);
         } else {
@@ -692,6 +751,17 @@ public class EditLib {
         }
     }
 
+    /**
+     * Walk the XPath and create whatever missing parent element
+     * until the end of the XPath is matched.
+     *
+     * @param metadataRecord
+     * @param metadataSchema
+     * @param xpathProperty
+     * @param value The node or value to add to the XPath matched element.
+     * @return
+     * @throws Exception
+     */
     private boolean createAndAddFromXPath(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty, AddElemValue value) throws Exception {
         if (xpathProperty.startsWith("/")) {
             xpathProperty = xpathProperty.substring(1);
@@ -811,7 +881,6 @@ public class EditLib {
 
         // The current node is an existing node or newly created one
         // Insert the XML value
-        // TODO: deal with attribute ?
         if (value.isXml()) {
             // If current node match the node name to insert
             // Insert the new node in its parent

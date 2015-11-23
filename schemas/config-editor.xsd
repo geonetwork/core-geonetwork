@@ -1330,6 +1330,17 @@ An XML snippet with replacement for each key defined in that field.
                   </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="template" type="xs:string" minOccurs="0" maxOccurs="1">
+                      <xs:annotation>
+                        <xs:documentation>
+                          <![CDATA[
+                        Define an XML template to use for the value to insert.
+                        ]]>
+                        </xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                  </xs:sequence>
                   <xs:attribute name="name" type="xs:string" use="required">
                     <xs:annotation>
                       <xs:documentation>
@@ -1345,6 +1356,16 @@ An XML snippet with replacement for each key defined in that field.
                       <xs:documentation>
                         <![CDATA[
                         XPath of the element to edit.
+                        ]]>
+                      </xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="indexField" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation>
+                        <![CDATA[
+                        Lucene index field name (as defined in dumpfields).
+                        The field will be used to preview current record values.
                         ]]>
                       </xs:documentation>
                     </xs:annotation>
@@ -1367,6 +1388,22 @@ An XML snippet with replacement for each key defined in that field.
                         ]]>
                       </xs:documentation>
                     </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="insertMode">
+                    <xs:annotation>
+                      <xs:documentation>
+                        <![CDATA[
+                        Define if the field should be insert or replace.
+                        Do not set this property for mandatory field (eg. title).
+                        ]]>
+                      </xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:enumeration value="gn_add"/>
+                        <xs:enumeration value="gn_replace"/>
+                      </xs:restriction>
+                    </xs:simpleType>
                   </xs:attribute>
                   <xs:attribute name="codelist" type="xs:string">
                     <xs:annotation>

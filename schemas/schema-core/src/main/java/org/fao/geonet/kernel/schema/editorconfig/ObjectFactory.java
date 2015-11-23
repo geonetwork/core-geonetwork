@@ -42,19 +42,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link BatchEditing }
-     * 
-     */
-    public BatchEditing createBatchEditing() {
-        return new BatchEditing();
-    }
-
-    /**
      * Create an instance of {@link ThesaurusList }
      * 
      */
     public ThesaurusList createThesaurusList() {
         return new ThesaurusList();
+    }
+
+    /**
+     * Create an instance of {@link BatchEditing }
+     * 
+     */
+    public BatchEditing createBatchEditing() {
+        return new BatchEditing();
     }
 
     /**
@@ -114,11 +114,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Text }
+     * Create an instance of {@link Editor }
      * 
      */
-    public Text createText() {
-        return new Text();
+    public Editor createEditor() {
+        return new Editor();
+    }
+
+    /**
+     * Create an instance of {@link Fields }
+     * 
+     */
+    public Fields createFields() {
+        return new Fields();
     }
 
     /**
@@ -130,11 +138,51 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ThesaurusList.Thesaurus }
+     * Create an instance of {@link FieldsWithFieldset }
      * 
      */
-    public ThesaurusList.Thesaurus createThesaurusListThesaurus() {
-        return new ThesaurusList.Thesaurus();
+    public FieldsWithFieldset createFieldsWithFieldset() {
+        return new FieldsWithFieldset();
+    }
+
+    /**
+     * Create an instance of {@link MultilingualFields }
+     * 
+     */
+    public MultilingualFields createMultilingualFields() {
+        return new MultilingualFields();
+    }
+
+    /**
+     * Create an instance of {@link Expanded }
+     * 
+     */
+    public Expanded createExpanded() {
+        return new Expanded();
+    }
+
+    /**
+     * Create an instance of {@link Exclude }
+     * 
+     */
+    public Exclude createExclude() {
+        return new Exclude();
+    }
+
+    /**
+     * Create an instance of {@link Views }
+     * 
+     */
+    public Views createViews() {
+        return new Views();
+    }
+
+    /**
+     * Create an instance of {@link View }
+     * 
+     */
+    public View createView() {
+        return new View();
     }
 
     /**
@@ -170,27 +218,19 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Text }
+     * 
+     */
+    public Text createText() {
+        return new Text();
+    }
+
+    /**
      * Create an instance of {@link Fieldset }
      * 
      */
     public Fieldset createFieldset() {
         return new Fieldset();
-    }
-
-    /**
-     * Create an instance of {@link Exclude }
-     * 
-     */
-    public Exclude createExclude() {
-        return new Exclude();
-    }
-
-    /**
-     * Create an instance of {@link Expanded }
-     * 
-     */
-    public Expanded createExpanded() {
-        return new Expanded();
     }
 
     /**
@@ -202,51 +242,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Editor }
+     * Create an instance of {@link ThesaurusList.Thesaurus }
      * 
      */
-    public Editor createEditor() {
-        return new Editor();
-    }
-
-    /**
-     * Create an instance of {@link Fields }
-     * 
-     */
-    public Fields createFields() {
-        return new Fields();
-    }
-
-    /**
-     * Create an instance of {@link FieldsWithFieldset }
-     * 
-     */
-    public FieldsWithFieldset createFieldsWithFieldset() {
-        return new FieldsWithFieldset();
-    }
-
-    /**
-     * Create an instance of {@link MultilingualFields }
-     * 
-     */
-    public MultilingualFields createMultilingualFields() {
-        return new MultilingualFields();
-    }
-
-    /**
-     * Create an instance of {@link Views }
-     * 
-     */
-    public Views createViews() {
-        return new Views();
-    }
-
-    /**
-     * Create an instance of {@link View }
-     * 
-     */
-    public View createView() {
-        return new View();
+    public ThesaurusList.Thesaurus createThesaurusListThesaurus() {
+        return new ThesaurusList.Thesaurus();
     }
 
     /**

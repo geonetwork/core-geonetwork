@@ -27,9 +27,6 @@ import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
-import net.sf.json.JSON;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Metadata;
@@ -39,7 +36,6 @@ import org.fao.geonet.kernel.schema.editorconfig.BatchEditing;
 import org.fao.geonet.kernel.schema.editorconfig.Editor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -59,7 +55,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -90,7 +85,7 @@ public class BatchEdits implements ApplicationContextAware { // extends NotInRea
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/{lang}/md.edits.batch.config", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/{lang}/md.edit.batch.config", produces = {MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
     Map<String, BatchEditing> getConfiguration(
@@ -191,7 +186,7 @@ public class BatchEdits implements ApplicationContextAware { // extends NotInRea
          * @return
          * @throws Exception
          */
-    @RequestMapping(value = "/{lang}/md.edits.batch", produces = {
+    @RequestMapping(value = "/{lang}/md.edit.batch", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
@@ -297,7 +292,8 @@ public class BatchEdits implements ApplicationContextAware { // extends NotInRea
                             metadataSchema,
                             batchEditParameter.getXpath(),
                             propertyValue,
-                            createXpathNodeIfNotExists);
+                            createXpathNodeIfNotExists
+                    );
                 }
                 if (metadataChanged) {
                     boolean validate = false;

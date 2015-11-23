@@ -53,7 +53,11 @@
               // An optional transformation applies to the subtemplate
               // This may be used when using an ISO19139 contact directory
               // in an ISO19115-3 records.
-              transformation: '@'
+              transformation: '@',
+              // If not using the directive in an editor context, set
+              // the schema id to properly retrieve the codelists.
+              schema: '@',
+              selectEntryCb: '='
             },
             templateUrl: '../../catalog/components/edit/' +
                 'directoryentryselector/partials/' +
@@ -107,15 +111,15 @@
                   scope.snippetRef = gnEditor.
                       buildXMLFieldName(scope.elementRef, scope.elementName);
 
-
+                  scope.attrs = iAttrs;
                   scope.add = function() {
                     return gnEditor.add(gnCurrentEdit.id,
                         scope.elementRef, scope.elementName,
                         scope.domId, 'before').then(function() {
-                     if (scope.templateAddAction) {
-                       gnEditor.save(gnCurrentEdit.id, true);
-                     }
-                   });
+                      if (scope.templateAddAction) {
+                        gnEditor.save(gnCurrentEdit.id, true);
+                      }
+                    });
                   };
 
                   // <request><codelist schema="iso19139"
@@ -129,7 +133,7 @@
                     scope.snippet = '';
                     var snippets = [];
 
-                    var checkState = function() {
+                    var checkState = function(c) {
                       if (snippets.length === entry.length) {
                         scope.snippet = snippets.join(separator);
 
@@ -138,11 +142,16 @@
                         // searchFormController
                         //                   scope.searchResults.records = null;
                         //                   scope.searchResults.count = null;
-
-                        $timeout(function() {
-                          // Save the metadata and refresh the form
-                          gnEditor.save(gnCurrentEdit.id, true);
-                        });
+                        // Only if editing.
+                        if (gnCurrentEdit.id) {
+                          $timeout(function() {
+                            // Save the metadata and refresh the form
+                            gnEditor.save(gnCurrentEdit.id, true);
+                          });
+                        }
+                        if (angular.isFunction(scope.selectEntryCb)) {
+                          scope.selectEntryCb(scope, c, role);
+                        }
                       }
                     };
 
@@ -189,16 +198,17 @@
                          snippets.push(gnEditorXMLService.
                                   buildXML(scope.elementName, xml));
                        }
-                       checkState();
+                       checkState(c);
                      });
                     });
 
                     return false;
                   };
 
+                  var schemaId = gnCurrentEdit.schema || scope.schema;
                   gnSchemaManagerService
-                      .getCodelist(gnCurrentEdit.schema + '|' +
-                          gnElementsMap['roleCode'][gnCurrentEdit.schema])
+                      .getCodelist(schemaId+ '|' +
+                          gnElementsMap['roleCode'][schemaId])
                       .then(function(data) {
                         scope.roles = data[0].entry;
                       });

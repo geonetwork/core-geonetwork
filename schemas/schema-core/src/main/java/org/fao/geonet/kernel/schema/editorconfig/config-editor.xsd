@@ -88,7 +88,7 @@ and XSL template. This approach is used for keywords in ISO19139 for example
 
 
         ]]>
-      </xs:documentation>
+        </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -189,7 +189,7 @@ In multilingual mode, define which mode the widget should have. If expanded, the
 language is displayed below each other. If not, then a button for each language allows to 
 switch from one language to another.
         ]]>
-      </xs:documentation>
+        </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -274,7 +274,7 @@ To create a new view, use the following:
           </view>
 
         ]]>
-      </xs:documentation>
+        </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -473,7 +473,7 @@ section which is not used often by the end-user. More than one tab could be grou
 
   <xs:element name="flatModeExceptions">
     <xs:annotation>
-      <xs:documentation><![CDATA[
+    <xs:documentation><![CDATA[
 Configuring complex element display
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -650,7 +650,7 @@ A section is a group of fields.
       <xs:documentation>Local name to match if the element does not exist.</xs:documentation>
     </xs:annotation>
   </xs:attribute>
-
+  
   <xs:attribute name="in" type="xs:string">
     <xs:annotation>
       <xs:documentation>XPath of the geonet:child element with the or name to look for. Usually points to the parent of last element of the XPath attribute.</xs:documentation>
@@ -669,7 +669,7 @@ A section is a group of fields.
       <xs:attribute name="name" use="required" type="xs:string"/>
     </xs:complexType>
   </xs:element>
-
+  
   <xs:element name="field">
     <xs:annotation>
       <xs:documentation><![CDATA[
@@ -833,8 +833,8 @@ displayed based on the XML template snippet field configuration. Default is fals
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-
-
+  
+  
   <xs:element name="template">
     <xs:annotation>
       <xs:documentation><![CDATA[
@@ -898,7 +898,7 @@ eg. The gmd:MD_Identifier may contain a gmd:authority node which needs to be pre
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-
+  
 
   <xs:element name="text">
     <xs:annotation>
@@ -1330,6 +1330,17 @@ An XML snippet with replacement for each key defined in that field.
                   </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="template" type="xs:string" minOccurs="0" maxOccurs="1">
+                      <xs:annotation>
+                        <xs:documentation>
+                          <![CDATA[
+                        Define an XML template to use for the value to insert.
+                        ]]>
+                        </xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                  </xs:sequence>
                   <xs:attribute name="name" type="xs:string" use="required">
                     <xs:annotation>
                       <xs:documentation>
@@ -1345,6 +1356,16 @@ An XML snippet with replacement for each key defined in that field.
                       <xs:documentation>
                         <![CDATA[
                         XPath of the element to edit.
+                        ]]>
+                      </xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="indexField" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation>
+                        <![CDATA[
+                        Lucene index field name (as defined in dumpfields).
+                        The field will be used to preview current record values.
                         ]]>
                       </xs:documentation>
                     </xs:annotation>
@@ -1367,6 +1388,22 @@ An XML snippet with replacement for each key defined in that field.
                         ]]>
                       </xs:documentation>
                     </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="insertMode">
+                    <xs:annotation>
+                      <xs:documentation>
+                        <![CDATA[
+                        Define if the field should be insert or replace.
+                        Do not set this property for mandatory field (eg. title).
+                        ]]>
+                      </xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:enumeration value="gn_add"/>
+                        <xs:enumeration value="gn_replace"/>
+                      </xs:restriction>
+                    </xs:simpleType>
                   </xs:attribute>
                   <xs:attribute name="codelist" type="xs:string">
                     <xs:annotation>

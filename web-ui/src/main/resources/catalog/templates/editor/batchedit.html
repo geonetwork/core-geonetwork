@@ -231,7 +231,7 @@
                    data-ng-init="field.value = ''">
                 <label class="col-sm-2 control-label">{{field.name | translate}}</label>
                 <div class="col-sm-8">
-                  <div class="input-group">
+                  <div class="input-group" style="width:100%">
                     <input type="text"
                            data-ng-if="field.use === null"
                            data-ng-blur="putChange(field, $event)"
@@ -250,6 +250,7 @@
                            data-schema-info-combo="codelist"
                            data-gn-schema-info="{{field.codelist}}"
                            data-selected-info="field.value"
+                           data-ng-blur="putChange(field, $event)"
                            lang="lang"/>
                     <div data-ng-if="field.use === 'data-gn-draw-bbox'">
                       <div class=""
@@ -258,7 +259,31 @@
                            lang="lang">
                       </div>
                       <input id="bboxField"
+                             class="hidden"
                              data-ng-model="xmlExtents[field.xpath]"/>
+                    </div>
+                    <div data-ng-if="field.use === 'data-gn-directory-entry-selector'">
+                      <div class=""
+                           data-gn-directory-entry-selector=""
+                           data-template-add-action="false"
+                           data-template-type="contact"
+                           data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
+                           data-element-name="{{field.xpath.substring(field.xpath.lastIndexOf('/') + 1, p.length)}}"
+                           data-schema="iso19139"
+                           data-select-entry-cb="addContactCb"
+                           data-field="{{field}}"
+                           lang="lang">
+                      </div>
+                      <ul class="list-group">
+                        <li class="list-group-item"
+                            data-ng-repeat="contacts in xmlContacts[field.name].values">
+                          {{contacts.title}}
+                          <button class="btn btn-link text-alert pull-right"
+                                  data-ng-click="removeContact(field, contacts.xml)">
+                            <i class="fa fa-times"></i>
+                          </button>
+                        </li>
+                      </ul>
                     </div>
                     <input type="text"
                            class="form-control"
@@ -276,7 +301,7 @@
                         data-ng-if="field.removable"
                         data-ng-click="markFieldAsDeleted(field)"
                         title="{{'removeField' | translate}}">
-                    <i class="fa fa-times text-alert"></i>&nbsp;
+                    <i class="fa fa-times text-danger"></i>&nbsp;
                   </span>
                   </div>
                 </div>
@@ -285,11 +310,14 @@
             <fieldset>
               <legend data-translate>advancedBatchEditMode</legend>
 
+              {{changes}}
             </fieldset>
+
+            <button type="reset" class="btn btn-default">
+              <i class="fa fa-eraser"></i>&nbsp;
+              <span data-translate="">resetChanges</span>
+            </button>
           </form>
-          {{fieldConfig}}
-          <hr/>
-          {{changes}}
         </div>
       </div>
     </div>
@@ -324,6 +352,7 @@
 
 
         <button class="btn btn-default"
+                data-ng-disabled="changes.length < 1"
                 data-gn-click-and-spin="applyChanges()">
           <i class="fa fa-save"/>
           <span data-translate="">save</span>

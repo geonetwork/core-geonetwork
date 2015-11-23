@@ -1,6 +1,7 @@
 package org.fao.geonet.services.metadata;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.kernel.XpathUpdateModes;
 
 /**
  * Created by francois on 22/10/15.
@@ -33,8 +34,8 @@ public class BatchEditParameter {
     private String xpath;
     private String searchValue;
     private String replaceValue;
-
-    public BatchEditParameter(String xpath, String searchPath, String replaceValue) {
+    public BatchEditParameter(String xpath, String searchPath,
+                              String replaceValue) {
         this.xpath = xpath;
         this.searchValue = searchPath;
         this.replaceValue = replaceValue;

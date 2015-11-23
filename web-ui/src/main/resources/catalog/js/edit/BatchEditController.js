@@ -96,7 +96,9 @@
     '$http',
     '$compile',
     'gnSearchSettings',
-    function($scope, $location, $http, $compile, gnSearchSettings) {
+    'gnCurrentEdit',
+    function($scope, $location, $http, $compile,
+             gnSearchSettings, gnCurrentEdit) {
 
       gnSearchSettings.resultViewTpls = [{
         tplUrl: '../../catalog/components/search/resultsview/' +
@@ -109,10 +111,13 @@
       $scope.selectedStep1Tab = 1;
       $scope.fieldConfig = null;
       $scope.changes = [];
+      gnCurrentEdit = {
+        schema: 'iso19139'
+      };
 
       // Map of xpath / extent
       $scope.xmlExtents = {};
-
+      $scope.xmlContacts = {};
       $scope.setStep = function(step) {
         $scope.selectedStep = step;
       };
@@ -125,9 +130,39 @@
             target: {
               value: value
             }
-          })
+          });
         });
       });
+
+      $scope.addContactCb = function (scope, record, role) {
+        var field = angular.fromJson(scope.attrs['field']);
+        if (!$scope.xmlContacts[field.name]) {
+          $scope.xmlContacts[field.name] = {
+            field: field,
+            values: []
+          };
+        };
+        $scope.xmlContacts[field.name].values.push({
+          title: record.title + (role ? ' - ' + role : ''),
+          xml: scope.snippet
+        });
+
+        $scope.addChange(field, {
+          target: {
+            value: scope.snippet
+          }
+        });
+      };
+
+      $scope.removeContact = function (field, contact) {
+        $scope.removeChange(field, contact.xml);
+        for (var j = 0; j < $scope.xmlContacts[field.name].values.length; j++) {
+          if($scope.xmlContacts[field.name].values[j].xml === contact) {
+            $scope.xmlContacts[field.name].values.splice(j, 1);
+            return;
+          }
+        }
+      };
 
       $scope.$watch('selectedStep', function (newValue, oldValue) {
         if (newValue === 2) {
@@ -181,8 +216,10 @@
       var insertChange = function (field, value, index) {
         $scope.changes[index] = {
           field: field.name,
+          insertMode: field.insertMode,
           xpath: field.xpath,
-          value: value
+          value: field.template ? field.template.replace('{{value}}', value) :
+            value
         };
       };
 
@@ -211,7 +248,7 @@
       function init() {
         $http({
           method: 'GET',
-          url: 'md.edits.batch.config'
+          url: 'md.edit.batch.config'
         }).success(function (data) {
           $scope.fieldConfig = data.iso19139;
         }).error(function(response) {
@@ -219,6 +256,9 @@
         });
       }
 
+      $scope.clearChanges = function() {
+        // TODO
+      };
       $scope.markFieldAsDeleted = function(field) {
         // TODO
       };
@@ -227,16 +267,32 @@
         angular.forEach($scope.changes, function(field) {
           // TODO: How to drop a field value ?
           if (field.value != null) {
-            params['xpath_' + i] = field.xpath;
+            // TODO: check isXml
+            var value = field.value, xpath = field.xpath;
+            //if (field.value.indexOf("<") === 0) {
+            //  xpath = xpath.substring(0, xpath.lastIndexOf('/'));
+            //}
+            if (field.insertMode != null) {
+              value = '<' + field.insertMode + '>' +
+                      field.value +
+                      '</' + field.insertMode + '>';
+            } else {
+              value = value;
+            }
+              // Adjust insertion point which should be the patent
+              // element in add mode eg. gmd:contact
+
+            //}
+            params['xpath_' + i] = xpath;
             params['search_' + i] = '';
-            params['replace_' + i] = field.value;
+            params['replace_' + i] = value;
             i++;
           }
         });
 
         $http({
           method: 'POST',
-          url: 'md.edits.batch?_content_type=json',
+          url: 'md.edit.batch?_content_type=json',
           data: $.param(params),
           headers: {'Content-Type':
                 'application/x-www-form-urlencoded'}

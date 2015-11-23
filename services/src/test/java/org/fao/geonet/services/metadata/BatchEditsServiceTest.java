@@ -1,9 +1,7 @@
 package org.fao.geonet.services.metadata;
 
-import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
@@ -19,7 +17,6 @@ import org.springframework.util.MultiValueMap;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
@@ -93,12 +90,14 @@ public class BatchEditsServiceTest extends AbstractCoreIntegrationTest {
                 "gmd:identificationInfo/gmd:MD_DataIdentification/" +
                         "gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString",
                 "",
-                "## UPDATED TITLE ##"));
+                "## UPDATED TITLE ##"
+        ));
         listOfupdates.add(new BatchEditParameter(
                 "gmd:identificationInfo/gmd:MD_DataIdentification/" +
                         "gmd:abstract/gco:CharacterString",
                 "",
-                "## UPDATED ABSTRACT ##"));
+                "## UPDATED ABSTRACT ##"
+        ));
 
         int i = 0;
         for (BatchEditParameter p : listOfupdates) {
