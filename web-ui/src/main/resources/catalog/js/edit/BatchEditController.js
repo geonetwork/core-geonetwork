@@ -213,13 +213,14 @@
           }
         }
       };
-      var insertChange = function (field, value, index) {
+      var insertChange = function (field, value, index, mode) {
         $scope.changes[index] = {
           field: field.name,
-          insertMode: field.insertMode,
+          insertMode: mode || field.insertMode,
           xpath: field.xpath,
-          value: field.template ? field.template.replace('{{value}}', value) :
-            value
+          value: field.template && value !== '' ?
+                  field.template.replace('{{value}}', value) :
+                  value
         };
       };
 
@@ -261,19 +262,21 @@
         $scope.xmlExtents = {};
         $scope.xmlContacts = {};
       };
+
       $scope.markFieldAsDeleted = function(field) {
-        // TODO
+        field.isDeleted = !field.isDeleted;
+        field.value = '';
+        $scope.removeChange(field);
+        if (field.isDeleted) {
+          insertChange(field, '', $scope.changes.length, 'gn_delete_all');
+        }
       };
+
       $scope.applyChanges = function() {
         var params = {}, i = 0;
         angular.forEach($scope.changes, function(field) {
-          // TODO: How to drop a field value ?
           if (field.value != null) {
-            // TODO: check isXml
             var value = field.value, xpath = field.xpath;
-            //if (field.value.indexOf("<") === 0) {
-            //  xpath = xpath.substring(0, xpath.lastIndexOf('/'));
-            //}
             if (field.insertMode != null) {
               value = '<' + field.insertMode + '>' +
                       field.value +
@@ -281,12 +284,9 @@
             } else {
               value = value;
             }
-              // Adjust insertion point which should be the patent
-              // element in add mode eg. gmd:contact
 
-            //}
             params['xpath_' + i] = xpath;
-            params['search_' + i] = '';
+            params['search_' + i] = ''; // TODO: unused
             params['replace_' + i] = value;
             i++;
           }
