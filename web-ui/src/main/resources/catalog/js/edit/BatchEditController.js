@@ -256,8 +256,10 @@
         });
       }
 
-      $scope.clearChanges = function() {
-        // TODO
+      $scope.resetChanges = function() {
+        $scope.changes = [];
+        $scope.xmlExtents = {};
+        $scope.xmlContacts = {};
       };
       $scope.markFieldAsDeleted = function(field) {
         // TODO
