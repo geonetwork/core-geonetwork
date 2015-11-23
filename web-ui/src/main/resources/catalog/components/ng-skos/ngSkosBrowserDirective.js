@@ -67,8 +67,9 @@
            restrict: 'E',
            replace: true,
            scope: {
-             concept: '=concept',
-             addConcept: '=addConcept'
+             concept: '=',
+             language: '=',
+             addConcept: '='
            },
            templateUrl: '../../catalog/components/ng-skos/' +
            'templates/skos-browser.html',

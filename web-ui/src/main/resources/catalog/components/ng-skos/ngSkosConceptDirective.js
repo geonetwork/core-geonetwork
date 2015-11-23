@@ -65,20 +65,23 @@
            restrict: 'AE',
            scope: {
              concept: '=skosConcept',
-             language: '=language',
+             language: '=',
              navigateConcept: '=skosNavigateConcept',
-             addConcept: '=skosAddConcept',
+             addConceptToList: '=skosAddConcept',
              topConcept: '=skosTopConcept'
            },
            templateUrl: '../../catalog/components/ng-skos/' +
            'templates/skos-concept.html',
            link: function link(scope, element, attr) {
-             $compile(element.contents())(scope); // pick up skos label
-             // directive with compiler
-
+              scope.mainLanguage = scope.language.split(',')[0];
              scope.isEmptyObject = function(object) {
                 var keys = Object.keys;
                 return !(keys && keys.length);
+             };
+             scope.addConcept = function(c) {
+               var label = c.prefLabel[scope.mainLanguage] ||
+                           c.prefLabel[Object.keys(c.prefLabel)[0]];
+               scope.addConceptToList(c.uri, label);
              };
              scope.$watch('concept', function(concept) {
                 angular.forEach([

@@ -1,25 +1,25 @@
 <div class="skos-concept">
     <div class="top top-alt">
-			<div class="row vcentre">
-				<div class="col-sm-7">
-					<b>
-        	<span ng-if="prefLabel" skos-label="concept" lang="{{language}}"></span>
-					</b>
-				</div>
-				<div ng-if="concept.previous" class="col-sm-3"> 
-					<button class="btn-small btn-default dropdown-toggle" type="button" id="previous" data-toggle="dropdown">Previous <span class="caret"></span></button>
-					<ul class="dropdown-menu" role="menu" aria-labelledby="previous">
-        		<li role="presentation" ng-repeat="c in concept.previous">
-							<div class="skos-concept-relation-previous dropdown">
-            		<span role="menuitem" tabindex="-1" skos-label="c" ng-click="navigateConcept(c, true)" lang="{{language}}"></span>
-							</div>
-        		</li>
-					</ul>
-				</div>
-				<div ng-if="concept.previous" class="col-sm-2 skos-concept-relation">
-					<i class="fa fa-refresh pull-right" ng-click="topConcept(concept.thesaurus)"/></i>
-				</div>
-			</div>
+      <div class="row vcentre">
+        <div class="col-sm-7">
+          <b>
+          <span ng-if="prefLabel" skos-label="concept" lang="{{language}}"></span>
+          </b>
+        </div>
+        <div ng-if="concept.previous" class="col-sm-3"> 
+          <button class="btn-small btn-default dropdown-toggle" type="button" id="previous" data-toggle="dropdown"><span data-translate="">previousKeywords</span><span class="caret"></span></button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="previous">
+            <li role="presentation" ng-repeat="c in concept.previous">
+              <div class="skos-concept-relation-previous dropdown">
+                <span role="menuitem" tabindex="-1" skos-label="c" ng-click="navigateConcept(c, true)" lang="{{language}}"></span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div ng-if="concept.previous" class="col-sm-2 skos-concept-relation">
+          <i class="fa fa-refresh pull-right" ng-click="topConcept(concept.thesaurus)"/></i>
+        </div>
+      </div>
     </div>
     <!-- TODO: use language, too -->
     <div ng-if="altLabel.length" class="skos-concept-altlabel">
@@ -34,29 +34,32 @@
         <div ng-if="broader.length">
             <ul ng-repeat="c in broader">
                 <li>
-									<div class="skos-concept-relation">
+                  <div class="skos-concept-relation">
                     <i class="fa fa-long-arrow-up" ng-click="navigateConcept(c)"></i>
-										<span skos-label="c" lang="{{language}}" ng-click="addConcept(c)" title="{{c.notation[0]}}"></span>
-									</div>
+                    <span skos-label="c" lang="{{mainLanguage}}"
+                          ng-click="addConcept(c)" title="{{c.notation[0]}}"></span>
+                  </div>
                 </li>
             </ul>
         </div>
         <div ng-if="narrower.length">
             <ul ng-repeat="c in narrower">
                 <li>
-									<div class="skos-concept-relation">
-										<i class="fa fa-long-arrow-down" ng-click="navigateConcept(c)"></i>
-										<span skos-label="c" lang="{{language}}" ng-click="addConcept(c.uri, c.prefLabel.en)" title="{{c.notation[0]}}"></span>
-									</div>
+                  <div class="skos-concept-relation">
+                    <i class="fa fa-long-arrow-down" ng-click="navigateConcept(c)"></i>
+                    <span skos-label="c" lang="{{mainLanguage}}"
+                          ng-click="addConcept(c)" title="{{c.notation[0]}}"></span>
+                  </div>
                 </li>
             </ul>
         </div>
         <div ng-if="related.length">
             <ul ng-repeat="c in related">
                 <li>
-									<div class="skos-concept-relation">
-										<i class="fa fa-long-arrow-right" ng-click="navigateConcept(c)"></i>
-                    <span skos-label="c" lang="{{language}}" ng-click="addConcept(c)" title="{{c.notation[0]}}"></span>
+                  <div class="skos-concept-relation">
+                    <i class="fa fa-long-arrow-right" ng-click="navigateConcept(c)"></i>
+                    <span skos-label="c" lang="{{mainLanguage}}"
+                          ng-click="addConcept(c)" title="{{c.notation[0]}}"></span>
                 </li>
             </ul>
         </div>

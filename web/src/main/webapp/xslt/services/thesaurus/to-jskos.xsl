@@ -10,16 +10,19 @@
 			<null></null>
 		</xsl:param>
 
+		<xsl:variable name="iso3code" select="//descKeys/keyword[1]/defaultLang"/>
 		<keyword>
 			<xsl:variable name="contents">
 				<xsl:copy-of select="uri"/>
 				<prefLabel>
-					<en>
-						<xsl:value-of select="value[@language='eng' or @lang='EN']/text()"/>
-					</en>
-					<eng>
-						<xsl:value-of select="value[@language='eng' or @lang='EN']/text()"/>
-					</eng>
+					<xsl:for-each select="value">
+						<xsl:element name="{$iso3code}">
+							<xsl:value-of select="text()"/>
+						</xsl:element>
+						<xsl:element name="{lower-case(substring(@lang|@language, 1, 2))}">
+							<xsl:value-of select="text()"/>
+						</xsl:element>
+					</xsl:for-each>
 				</prefLabel>
 				<thesaurus>
 					<xsl:value-of select="//request/thesaurus"/>
