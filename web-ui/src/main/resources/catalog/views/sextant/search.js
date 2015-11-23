@@ -233,27 +233,11 @@
 
       ///////////////////////////////////////////////////////////////////
 
-      var feedLayerWithDownloads = function(layer, linkGroup) {
-        var md = layer.get('md');
-        var transferOpts = md.getLinksByType(linkGroup, 'OGC:WMS').length != 1;
-
-        // Tells if onlinesrc are spread in different transferOptions
-        if(!transferOpts) {
-          var downloads = md && md.getLinksByType(linkGroup,
-              'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
-              'WFS', 'WCS', 'COPYFILE');
-          layer.set('downloads', downloads);
-
-          var process = md && md.getLinksByType(linkGroup, 'OGC:WPS');
-          layer.set('processes', process);
-        }
-      };
-
       $scope.$on('layerAddedFromContext', function(e,l) {
         var md = l.get('md');
         if(md) {
           var linkGroup = md.getLinkGroup(l);
-          feedLayerWithDownloads(l,linkGroup);
+          gnMap.feedLayerWithDownloads(l,linkGroup);
         }
       });
 
@@ -304,7 +288,7 @@
           var loadLayerPromise = gnMap.addWmsFromScratch($scope.searchObj.viewerMap,
               link.url, link.name, undefined, md).then(function(layer) {
                 layer.set('group', group);
-                feedLayerWithDownloads(layer, link.group);
+                gnMap.feedLayerWithDownloads(layer, link.group);
                 if(waitingLayers) waitingLayers.push(layer);
               });
           if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
