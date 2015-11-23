@@ -102,6 +102,7 @@
            * that will be send to generateSLD service.
            */
           scope.filter = function() {
+            var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             if (sldConfig.filters.length > 0) {
               wfsFilterService.getSldUrl(sldConfig, scope.wfsUrl,
@@ -109,12 +110,16 @@
                     scope.layer.getSource().updateParams({
                       SLD: data.value
                     });
-              });
+              }).finally(function() {
+                    defer.resolve();
+                  });
             } else {
               scope.layer.getSource().updateParams({
                 SLD: null
               });
+              defer.resolve();
             }
+            return defer.promise;
           };
         }
       };
