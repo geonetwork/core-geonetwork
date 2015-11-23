@@ -70,13 +70,13 @@ public class GetTopConcept implements Service {
 			
 				KeywordBean topConcept = new KeywordBean(the.getIsoLanguageMapper());
 				topConcept.setThesaurusInfo(the);
-				topConcept.setValue("Top Concept(s)", langForThesaurus);
+				topConcept.setValue("topConcepts", langForThesaurus);
 				topConcept.setUriCode(sThesaurusName);
         Element root = KeywordsSearcher.toRawElement(new Element("descKeys"), topConcept);
 
 				Element keywordType = new Element("narrower");
 				for (KeywordBean kbr : searcher.getResults()) {
-					keywordType.addContent(kbr.toElement(context.getLanguage()));
+					keywordType.addContent(kbr.toElement("eng", context.getLanguage()));
 				}
 				root.addContent(keywordType);
         
