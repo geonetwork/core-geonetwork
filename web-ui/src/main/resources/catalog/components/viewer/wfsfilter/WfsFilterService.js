@@ -216,31 +216,31 @@
       this.getSolrRequestFromApplicationProfile =
           function(config,featureTypeName, wfsUrl) {
 
-        var url = buildSolrUrl({
-          rows: 0,
-          q: 'featureTypeId:*' + featureTypeName.replace(':', '\\:'),
-          wt: 'json',
-          facet: 'true',
-          "facet.mincount" : 1
-        });
+            var url = buildSolrUrl({
+              rows: 0,
+              q: 'featureTypeId:*' + featureTypeName.replace(':', '\\:'),
+              wt: 'json',
+              facet: 'true',
+              "facet.mincount" : 1
+            });
 
-        angular.forEach(config.fields, function(field) {
-          var p = '&facet.field=' + field.name;
-          angular.forEach(field.fq, function(v, k) {
-            if(angular.isString(v)) {
-              p += '&' + k + '=' + v;
-            }
-            else if(angular.isArray(v)) {
-              angular.forEach(v, function(range) {
-                p += '&f.' + field.name + '.' + k + '=' + range;
+            angular.forEach(config.fields, function(field) {
+              var p = '&facet.field=' + field.name;
+              angular.forEach(field.fq, function(v, k) {
+                if(angular.isString(v)) {
+                  p += '&' + k + '=' + v;
+                }
+                else if(angular.isArray(v)) {
+                  angular.forEach(v, function(range) {
+                    p += '&f.' + field.name + '.' + k + '=' + range;
+                  });
+                }
               });
-            }
-          });
-          url += p;
-        });
+              url += p;
+            });
 
-        return url;
-      };
+            return url;
+          };
 
       /**
        * Call solr request to get info about facet to build.
@@ -254,7 +254,6 @@
         return $http.get(url).then(function(solrResponse) {
           return createFacetConfigFromSolr(solrResponse.data);
         });
-
       };
 
       this.getSldUrl = function(rulesObj, wfsUrl, featureTypeName) {
