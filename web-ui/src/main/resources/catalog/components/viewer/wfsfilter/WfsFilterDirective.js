@@ -64,7 +64,7 @@
           });
 
           // output structure to send to filter service
-          scope.output = [];
+          scope.output = {};
 
           /**
            * Update the state of the facet search.
@@ -76,24 +76,24 @@
            * @param type facet type
            */
           scope.onCheckboxClick = function(fieldName, facetKey, type) {
-            var toRemove = -1;
             var output = scope.output;
-            for (var i = 0; i < output.length; i++) {
-              var o = output[i];
-              if(o.name == fieldName && o.key == facetKey) {
-                toRemove = i;
-                break;
+            if(output[fieldName]) {
+              if(output[fieldName].values[facetKey]) {
+                delete output[fieldName].values[facetKey];
+                if(Object.keys(output[fieldName].values).length == 0) {
+                  delete output[fieldName];
+                }
+              }
+              else {
+                output[fieldName].values[facetKey] = true;
               }
             }
-            if(toRemove > -1) {
-              output.splice(toRemove,1);
-            }
             else {
-              output.push({
-                name: fieldName,
-                key: facetKey,
-                type: type
-              });
+              output[fieldName] = {
+                type: type,
+                values: {}
+              }
+              output[fieldName].values[facetKey] = true;
             }
           };
 

@@ -122,24 +122,16 @@
           filters: []
         };
 
-        angular.forEach(facetState, function(f) {
-          var field;
-          for (var i = 0; i < sldConfig.filters.length; i++) {
-            var o = sldConfig.filters[i];
-            if(o.field_name == f.name) {
-              field = o;
-              break;
-            }
-          }
-          if(!field) {
-            field = {
-              // TODO : remove the field type suffix
-              field_name: f.name.substr(0,f.name.length-2),
-              filter: []
-            };
-            sldConfig.filters.push(field);
-          }
-          field.filter.push(buildSldFilter(f.key, f.type));
+        angular.forEach(facetState, function(attrValue, attrName) {
+          var field = {
+            // TODO : remove the field type suffix
+            field_name: attrName.substr(0,attrName.length-2),
+            filter: []
+          };
+          angular.forEach(attrValue.values, function(v, k) {
+            field.filter.push(buildSldFilter(k, attrValue.type));
+          });
+          sldConfig.filters.push(field);
         });
         return sldConfig;
       };
