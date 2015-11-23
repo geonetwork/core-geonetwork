@@ -1,7 +1,6 @@
 package org.fao.geonet.services.metadata;
 
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.kernel.XpathUpdateModes;
 
 /**
  * Created by francois on 22/10/15.
