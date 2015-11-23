@@ -63,8 +63,6 @@
       ['$compile', 'gnThesaurusService',
        function($compile, gnThesaurusService) {
 
-         var previous = [];
-
          return {
            restrict: 'E',
            replace: true,
@@ -75,17 +73,14 @@
            templateUrl: '../../catalog/components/ng-skos/' +
            'templates/skos-browser.html',
            link: function link(scope, element, attr) {
-
-             $compile(element.contents())(scope); // pick up skos concept
-             // directive with compiler
-
+             scope.previous = [];
              angular.forEach(['URI', 'Notation', 'Label'], function(value) {
                 var lookup = gnThesaurusService['lookup' + value];
                 if (lookup) {
                  scope['select' + value] = function(thes, query) {
                    lookup(thes, query).then(
                    function(response) {
-                     if (previous) response.previous = previous;
+                     if (scope.previous) response.previous = scope.previous;
                      angular.copy(response, scope.concept);
                    }
                    );
@@ -95,7 +90,7 @@
 
              // Select concept for navigation, push previous concept onto stack
              scope.selectConcept = function(concept, previousConcept) {
-                if (!previousConcept) previous.unshift(concept);
+                if (!previousConcept) scope.previous.unshift(concept);
                 if (scope.selectURI && concept.uri) {
                  scope.selectURI(concept.thesaurus, concept.uri);
                 } else if (scope.selectNotation && concept.notation &&
