@@ -4,12 +4,13 @@
       <span class="fa fa-arrow-circle-o-right" ng-class="{'fa-rotate-90': !collapsed, 'gn-field-empty': !output[field.name]}"></span>
       {{field.name}}
     </h5>
-    <div class="list-group" ng-class="{'collapse': contentCollapsed}">
+    <div class="list-group" ng-class="{'collapse': contentCollapsed}" sxt-custom-scroll>
       <div class="checkbox list-group-item" data-ng-repeat="(key, value) in field.values"
            data-ng-click="onCheckboxClick(field.name, key, field.type)" data-ng-class="{'selected': output[field.name].values[key]}">
         <i class="fa" data-ng-class="output[field.name].values[key] ? 'fa-check-square' : 'fa-square-o'"></i>{{key}}&nbsp;({{value}})
       </div>
     </div>
   </div>
-  <button class="btn btn-success" data-ng-click="filter()"><i class="fa fa-filter"></i>&nbsp;<span translate="">filter</span></button>
+  <button class="btn btn-success" data-gn-click-and-spin="filter()"><i class="fa fa-filter"></i>&nbsp;<span translate="">filter</span></button>
+
 </form>
