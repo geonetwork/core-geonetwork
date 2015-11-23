@@ -121,6 +121,10 @@
             }
             return defer.promise;
           };
+
+          scope.indexWFSFeatures = function() {
+            return wfsFilterService.indexWFSFeatures(scope.wfsUrl, scope.featureTypeName);
+          }
         }
       };
     }]);

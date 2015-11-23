@@ -150,6 +150,7 @@
         });
 
         return $http.get(url).then(function(response) {
+          // TODO: check here is the layer is not indexed
           var fields = Object.keys(response.data.response.docs[0]);
           return fields;
         });
@@ -269,6 +270,25 @@
           data: $.param(params),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
+      };
+
+      /**
+       * Run the indexation of the feature
+       *
+       * @param {string} wfs service url
+       * @param {string} featuretype name
+       * @returns {httpPromise} when indexing is done
+       */
+      this.indexWFSFeatures = function(url, type) {
+        return $http.get('wfs.harvest?' +
+            'uuid=' + '' +
+            '&url=' + encodeURIComponent(url) +
+            '&typename=' + encodeURIComponent(type))
+            .success(function (data) {
+              console.log(data);
+            }).error(function (response) {
+              console.log(response);
+            });
       };
     }]);
 })();
