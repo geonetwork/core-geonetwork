@@ -31,6 +31,24 @@
             element.append(el);
           };
 
+          /**
+           * $compile the wfsFilter directive to build the facet form
+           */
+          this.setWFSFilter = function(layer) {
+            $scope.loadTool('wfsfilter');
+
+            var scope = $scope.$new();
+            scope.layer = layer;
+            var url = layer.getSource().getUrls()[0].replace('wms', 'wfs');
+            var featureTypeName = layer.getSource().getParams().LAYERS;
+
+            var el = angular.element('<div data-gn-wfs-filter-facets="" data-layer="layer" data-wfs-url="'+url+'" data-feature-type-name="'+featureTypeName+'"></div>');
+            $compile(el)(scope);
+            var element = $('.sxt-wfsfilter-panel');
+            element.empty();
+            element.append(el);
+          },
+
           this.setNCWMS = function(layer) {
             $scope.active.NCWMS = layer;
             $scope.loadTool('ncwms');
@@ -265,6 +283,8 @@
             }
             scope.process =  scope.member.get('processes');
 
+            scope.wfsfilter = true;
+
           }
 
           scope.addToPanier = function(download) {
@@ -277,6 +297,10 @@
 
           scope.showWPS = function(process) {
             controller.setWPS(process, scope.member);
+          };
+
+          scope.showWFSFilter = function() {
+            controller.setWFSFilter(scope.member);
           };
        }
       };

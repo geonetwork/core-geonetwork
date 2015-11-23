@@ -200,6 +200,9 @@
         },
         wps: {
           active: false
+        },
+        wfsfilter: {
+          active: false
         }
       };
 

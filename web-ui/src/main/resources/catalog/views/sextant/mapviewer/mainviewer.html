@@ -73,6 +73,12 @@
               <span translate>process</span>
             </button>
           </div>
+          <div class="btn-group sxt-layer-tabs sxt-ncwms-tabs" ng-show="layerTabs.wfsfilter.active">
+            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('wfsfilter')" ng-class="{'active': layerTabs.wfsfilter.active}">
+              <span class="btn btn-default btn-xs pull-right">&times;</span>
+              <span translate>filter</span>
+            </button>
+          </div>
           <button class="btn btn-default btn-xs" sxt-layer-tools-toggle=".main-tools">
             <i class="fa fa-plus"></i>
           </button>
@@ -135,6 +141,16 @@
               </tab-heading>
               <div class="wps-container" sxt-custom-scroll>
                 <div class="sxt-wps-panel"></div>
+              </div>
+            </tab>
+
+            <tab active="layerTabs.wfsfilter.active">
+              <tab-heading>
+                <i class="fa fa-cog"></i>
+                <span translate>filter</span>
+              </tab-heading>
+              <div class="wps-container" sxt-custom-scroll>
+                <div class="sxt-wfsfilter-panel"></div>
               </div>
             </tab>
 

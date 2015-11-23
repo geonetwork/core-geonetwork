@@ -128,7 +128,8 @@
                * @returns {boolean}
                */
               scope.isSeparatedTool = function() {
-                return activeTab == 'ncwms' || activeTab == 'wps';
+                return activeTab == 'ncwms' || activeTab == 'wps' ||
+                    activeTab == 'wfsfilter';
               }
 
             },
