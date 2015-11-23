@@ -142,7 +142,7 @@
         <artifactId>camel-maven-plugin</artifactId>
         <version>${camel.version}</version>
         <configuration>
-          <applicationContextUri>config-spring-geonetwork.xml</applicationContextUri>
+          <applicationContextUri>config-spring-geonetwork-jms.xml</applicationContextUri>
         </configuration>
       </plugin>
     </plugins>

@@ -1,5 +1,29 @@
+/*
+ * Copyright (C) 2001-2015 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.harvester.wfsfeatures;
 
+import org.apache.log4j.Logger;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.data.wfs.WFSDataStoreFactory;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -14,6 +38,7 @@ import java.util.Map;
  * Created by fgravin on 11/5/15.
  */
 public class FeatureTypeConfig {
+    Logger logger = Logger.getLogger(HarvesterRouteBuilder.LOGGER_NAME);
 
     // TODO: move to config
     public static final int wfsTimeOut = 60000;
@@ -29,15 +54,19 @@ public class FeatureTypeConfig {
     public String getFeatureType() {
         return featureType;
     }
+
     public String getWfsUrl() {
         return wfsUrl;
     }
+
     public String getUuid() {
         return uuid;
     }
+
     public Map<String, String> getFields() {
         return fields;
     }
+
     public WFSDataStore getWfsDatastore() {
         return wfsDatastore;
     }
@@ -52,7 +81,7 @@ public class FeatureTypeConfig {
      * Create a WFSDatastore for this featuretype and retrieve
      * all schema infos (attributes names and types).
      */
-    public void connectToWfsService() {
+    public void connectToWfsService() throws Exception {
         WFSDataStoreFactory factory = new WFSDataStoreFactory();
         Map m = new HashMap();
 
@@ -62,6 +91,7 @@ public class FeatureTypeConfig {
 
         try {
             String getCapUrl = OwsUtils.getGetCapabilitiesUrl(wfsUrl);
+            logger.info(String.format("Connecting using GetCatapbilities URL '%s'.", getCapUrl));
 
             m.put(WFSDataStoreFactory.URL.key, getCapUrl);
             m.put(WFSDataStoreFactory.TIMEOUT.key, wfsTimeOut);
@@ -71,18 +101,23 @@ public class FeatureTypeConfig {
 
             wfsDatastore = factory.createDataStore(m);
 
+            logger.info(String.format("Reading feature type '%s' schema structure.", featureType));
             SimpleFeatureType sft = wfsDatastore.getSchema(featureType);
             List<AttributeDescriptor> attributesDesc = sft.getAttributeDescriptors();
 
-            for(AttributeDescriptor desc : attributesDesc) {
+            for (AttributeDescriptor desc : attributesDesc) {
                 fields.put(desc.getName().getLocalPart(), OwsUtils.getTypeFromFeatureType(desc));
             }
-            String toto = null;
+
+            logger.info(String.format("Successfully analyzed %d attributes in schema.", fields.size()));
         } catch (IOException e) {
-            // TODO: log errors and probably stop the process if we can't connect to the service
-            e.printStackTrace();
+            String errorMsg = String.format("Failed to create datastore from service using URL '%s'. Error is %s.", wfsUrl, e.getMessage());
+            logger.error(errorMsg);
+            throw e;
         } catch (Exception e) {
-            e.printStackTrace();
+            String errorMsg = String.format("Failed to GetCatapbilities from service using URL '%s'. Error is %s.", wfsUrl, e.getMessage());
+            logger.error(errorMsg);
+            throw e;
         }
     }
 }

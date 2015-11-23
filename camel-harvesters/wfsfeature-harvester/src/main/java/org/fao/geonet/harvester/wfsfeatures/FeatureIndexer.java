@@ -1,7 +1,31 @@
+/*
+ * Copyright (C) 2001-2015 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.harvester.wfsfeatures;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.camel.Exchange;
+import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -9,7 +33,6 @@ import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.StringUtils;
 import org.geotools.data.FeatureSource;
-import org.geotools.data.Query;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
@@ -37,6 +60,7 @@ public class FeatureIndexer {
      */
     private static Map<String, String> XSDTYPES_TO_SOLRFIELDSUFFIX;
 
+    Logger logger = Logger.getLogger(HarvesterRouteBuilder.LOGGER_NAME);
     // TODO: Move attributeType / solr dynamic index field suffix to config
     // maybe make a bean taking care of this which could also do more
     // complex mapping like based on feature type column name defined suffix
@@ -96,20 +120,29 @@ public class FeatureIndexer {
         FeatureTypeConfig ftConfig = (FeatureTypeConfig) exchange.getProperty("featureTypeConfig");
         String wfsUrl = ftConfig.getWfsUrl();
         String featureTypeName = ftConfig.getFeatureType();
-
-        wfsUrl = checkParameters(wfsUrl, featureTypeName);
+        logger.info(String.format(
+                "Deleting features previously index from service '%s' and feature type '%s' in '%s'",
+                ftConfig.getWfsUrl(), ftConfig.getFeatureType(), solrCollectionUrl));
 
         solr = new HttpSolrClient(solrCollectionUrl);
         try {
-            solr.deleteByQuery(String.format(
+            UpdateResponse response = solr.deleteByQuery(String.format(
                     "+featureTypeId:\"%s#%s\"", wfsUrl, featureTypeName)
             );
             solr.commit();
+            logger.info(String.format(
+                    "  Features deleted in %sms.",
+                    response.getElapsedTime()));
         } catch (SolrServerException e) {
-            // TODO: Log errors
             e.printStackTrace();
+            logger.error(String.format(
+                    "Error connecting to Solr server at '%s'. Error is %s.",
+                    solrCollectionUrl, e.getMessage()));
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error(String.format(
+                    "Error connecting to Solr server at '%s'. Error is %s.",
+                    solrCollectionUrl, e.getMessage()));
         }
     }
 
@@ -118,18 +151,16 @@ public class FeatureIndexer {
      *
      * @param exchange
      */
-    public void featureToIndexDocument(Exchange exchange) {
-
+    public void featureToIndexDocument(Exchange exchange) throws Exception {
         FeatureTypeConfig ftConfig = (FeatureTypeConfig) exchange.getProperty("featureTypeConfig");
         String wfsUrl = ftConfig.getWfsUrl();
         String featureTypeName = ftConfig.getFeatureType();
-
-        // TODO: Define better exception handling.
-        wfsUrl = checkParameters(wfsUrl, featureTypeName);
+        logger.info(String.format(
+                "Indexing WFS features from service '%s' and feature type '%s'",
+                ftConfig.getWfsUrl(), ftConfig.getFeatureType()));
 
         WFSDataStore wfs = ftConfig.getWfsDatastore();
         Map<String, String> fields = ftConfig.getFields();
-
 
         solr = new HttpSolrClient(solrCollectionUrl);
 
@@ -155,12 +186,12 @@ public class FeatureIndexer {
             FeatureCollection<SimpleFeatureType, SimpleFeature> featuresCollection = source.getFeatures();
 
             final FeatureIterator<SimpleFeature> features = featuresCollection.features();
-            int numInBatch = 0, nbOfFeature = 0;
+            int numInBatch = 0, nbOfFeatures = 0;
             Collection<SolrInputDocument> docCollection = new ArrayList<SolrInputDocument>();
 
             while (features.hasNext()) {
                 SimpleFeature feature = features.next();
-
+                nbOfFeatures ++;
                 SolrInputDocument document = new SolrInputDocument();
 
                 document.addField("id", feature.getID());
@@ -194,33 +225,34 @@ public class FeatureIndexer {
                     UpdateResponse response = solr.add(docCollection, solrCommitWithinMs);
                     docCollection.clear();
                     numInBatch = 0;
-                    // TODO : better log
-                    System.out.println(" Commit.");
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format(
+                                "  %d features indexed (commit within %dms).",
+                                nbOfFeatures, solrCommitWithinMs));
+                    }
                 }
-                System.out.print(".");
             }
             if (docCollection.size() > 0) {
                 UpdateResponse response = solr.add(docCollection, solrCommitWithinMs);
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                            "  %d features indexed (commit within %dms).",
+                            nbOfFeatures, solrCommitWithinMs));
+                }
             }
+            logger.info(String.format("Total number of features indexed is %d.", nbOfFeatures));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw e;
         } catch (SolrServerException e) {
-            e.printStackTrace();
-            // TODO: Log
+            logger.error(e.getMessage());
+            throw e;
         } catch (NoSuchAuthorityCodeException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw e;
         } catch (FactoryException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw e;
         }
-    }
-
-    private String checkParameters(String wfsUrl, String featureTypeName) {
-        if (StringUtils.isEmpty(wfsUrl)) {
-            throw new IllegalArgumentException("Empty WFS server URL is not allowed.");
-        }
-        if (StringUtils.isEmpty(featureTypeName)) {
-            throw new IllegalArgumentException("Empty WFS type name is not allowed.");
-        }
-        return wfsUrl;
     }
 }

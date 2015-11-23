@@ -7,22 +7,40 @@
            value="System.out"/>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern"
-             value="%d [%-15.15t] %-5p %-30.30c{1} - %10.10X{camel.exchangeId}#%-24.24X{camel.routeId} - %m%n"/>
+             value="%d{ddMMyyyy HH:mm:ss} %-10.10X{camel.exchangeId}/%-30.30X{camel.routeId} - %m%n"/>
     </layout>
   </appender>
 
+  <appender name="file"
+            class="org.apache.log4j.RollingFileAppender">
+    <param name="Threshold"
+           value="ALL" />
+    <param name="File"
+           value="logs/geonetwork-harvest-wfs.log" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern"
+             value="%d{ddMMyyyy HH:mm:ss} %-10.10X{camel.exchangeId}/%-30.30X{camel.routeId} - %m%n"/>
+    </layout>
+  </appender>
+
+
   <logger name="org.apache.camel" additivity="true">
+    <level value="WARN"/>
+  </logger>
+  <logger name="geonetwork.camel-harvester" additivity="true">
     <level value="DEBUG"/>
   </logger>
   <logger name="org.springframework" additivity="true">
     <level value="WARN"/>
   </logger>
-  <logger name="harvester.wfsfeature">
+  <logger name="harvest.wfs.features">
     <level value="DEBUG"/>
   </logger>
 
+
   <root>
     <level value="OFF"/>
-    <appender-ref ref="console" />
+    <appender-ref ref="console"/>
+    <appender-ref ref="file"/>
   </root>
 </log4j:configuration>

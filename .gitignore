@@ -83,3 +83,4 @@ transifex/transifex-format/
 datadir_*
 solr/solr-*
 web/src/main/webapp/WEB-INF/data/harvester_*
+camel-harvesters/wfsfeature-harvester/logs

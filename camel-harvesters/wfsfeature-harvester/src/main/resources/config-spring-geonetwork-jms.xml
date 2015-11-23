@@ -22,40 +22,31 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:amq="http://activemq.apache.org/schema/core"
-       xmlns:cm="http://camel.apache.org/schema/spring"
-       xsi:schemaLocation="
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:amq="http://activemq.apache.org/schema/core"
+        xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://camel.apache.org/schema/spring
-        http://camel.apache.org/schema/spring/camel-spring.xsd
         http://activemq.apache.org/schema/core
         http://activemq.apache.org/schema/core/activemq-core.xsd">
 
-  <bean id="wfsfeatureHarvesterRouteBuilder"
-        class="org.fao.geonet.harvester.wfsfeatures.HarvesterRouteBuilder"/>
+  <import resource="config-spring-geonetwork.xml"/>
 
-  <bean id="featureIndexer"
-        class="org.fao.geonet.harvester.wfsfeatures.FeatureIndexer">
-    <property name="solrCollectionUrl" value="${solr.url}/${solr.collection}"/>
-    <property name="featureCommitInterval" value="500"/>
-    <property name="solrCommitWithinMs" value="10000"/>
+  <!--  Embedded ActiveMQ Broker -->
+  <amq:broker useJmx="false" persistent="false">
+    <amq:transportConnectors>
+      <amq:transportConnector uri="${jms.url}" />
+    </amq:transportConnectors>
+  </amq:broker>
+
+  <bean id="activemq"
+        class="org.apache.activemq.camel.component.ActiveMQComponent">
+    <property name="connectionFactory">
+      <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="${jms.url}"/>
+      </bean>
+    </property>
   </bean>
-
-
-  <cm:camelContext id="harvest-wfs"
-                   useMDCLogging="true">
-    <cm:jmxAgent id="agent" disabled="false"/>
-
-    <cm:routeBuilder ref="wfsfeatureHarvesterRouteBuilder"/>
-
-    <cm:threadPoolProfile id="harvest-wfs-thread-pool"
-                          defaultProfile="true"
-                          poolSize="3"
-                          maxPoolSize="9"
-                          maxQueueSize="1000"
-                          rejectedPolicy="CallerRuns"/>
-  </cm:camelContext>
 </beans>
