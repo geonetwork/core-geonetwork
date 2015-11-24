@@ -96,216 +96,260 @@
     '$http',
     '$compile',
     'gnSearchSettings',
-    'gnCurrentEdit',
-    function($scope, $location, $http, $compile,
-             gnSearchSettings, gnCurrentEdit) {
+    'gnCurrentEdit'
+  ,
+  function($scope, $location, $http, $compile,
+           gnSearchSettings, gnCurrentEdit) {
 
-      gnSearchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/components/search/resultsview/' +
-            'partials/viewtemplates/titlewithselection.html',
-        tooltip: 'List',
-        icon: 'fa-list'
-      }];
+    gnSearchSettings.resultViewTpls = [{
+      tplUrl: '../../catalog/components/search/resultsview/' +
+      'partials/viewtemplates/titlewithselection.html',
+      tooltip: 'List',
+      icon: 'fa-list'
+    }];
 
-      $scope.selectedStep = 1;
-      $scope.selectedStep1Tab = 1;
-      $scope.fieldConfig = null;
-      $scope.changes = [];
-      gnCurrentEdit = {
-        schema: 'iso19139'
+    $scope.selectedStep = 1;
+    $scope.selectedStep1Tab = 1;
+    $scope.fieldConfig = null;
+    $scope.changes = [];
+    // Map of xpath / extent
+    $scope.xmlExtents = {};
+    $scope.xmlContacts = {};
+    var xpathCounter = 0;
+    $scope.insertModes = ['gn_add', 'gn_replace', 'gn_delete', 'gn_delete_all'];
+    $scope.currentXpath = {};
+    $scope.defaultCurrentXpath = {
+      field: '',
+      xpath: '',
+      value: '',
+      insertMode: 'gn_add'
+    };
+    $scope.currentXpath = angular.copy($scope.defaultCurrentXpath, {});
+
+    gnCurrentEdit = {
+      schema: 'iso19139'
+    };
+
+    $scope.setStep = function(step) {
+      $scope.selectedStep = step;
+    };
+
+    $scope.$watchCollection('xmlExtents', function (newValue, oldValue) {
+      angular.forEach($scope.xmlExtents, function (value, xpath) {
+        $scope.putChange({
+          name: 'extent',
+          xpath: xpath
+        }, {
+          target: {
+            value: value
+          }
+        });
+      });
+    });
+
+    $scope.addContactCb = function (scope, record, role) {
+      var field = angular.fromJson(scope.attrs['field']);
+      if (!$scope.xmlContacts[field.name]) {
+        $scope.xmlContacts[field.name] = {
+          field: field,
+          values: []
+        };
       };
+      $scope.xmlContacts[field.name].values.push({
+        title: record.title + (role ? ' - ' + role : ''),
+        xml: scope.snippet
+      });
 
-      // Map of xpath / extent
+      $scope.addChange(field, {
+        target: {
+          value: scope.snippet
+        }
+      });
+    };
+
+    $scope.removeContact = function (field, contact) {
+      $scope.removeChange(field.xpath, contact.xml);
+      for (var j = 0; j < $scope.xmlContacts[field.name].values.length; j++) {
+        if($scope.xmlContacts[field.name].values[j].xml === contact) {
+          $scope.xmlContacts[field.name].values.splice(j, 1);
+          return;
+        }
+      }
+    };
+
+    $scope.$watch('selectedStep', function (newValue, oldValue) {
+      if (newValue === 2) {
+        // Initialize map size when tab is rendered.
+        var map = $('div.gn-drawmap-panel').data('map');
+        if (!angular.isArray(
+            map.getSize()) || map.getSize()[0] == 0) {
+          setTimeout(function () {
+            map.updateSize();
+          });
+        }
+      }
+    });
+
+    /**
+     * Add field with only one value allowed.
+     */
+    $scope.putChange = function (field, $event) {
+      var index = $scope.changes.length;
+
+      if ($event && $event.target && $event.target.value === '') {
+        $scope.removeChange(field.xpath);
+      } else {
+        for (var j = 0; j < $scope.changes.length; j++) {
+          if($scope.changes[j].xpath === field.xpath) {
+            index = j;
+            break;
+          }
+        }
+        insertChange(field.name, field.xpath, field.template,
+          $event.target.value, index);
+      }
+    };
+    /**
+     * Add field with multiple value allowed.
+     */
+    $scope.addChange = function (field, $event) {
+      insertChange(field.name, field.xpath, field.template,
+        $event.target.value, $scope.changes.length);
+    };
+    /**
+     * Remove field. If value is undefined, remove all changes for that field.
+     */
+    $scope.removeChange = function (xpath, value) {
+      for (var j = 0; j < $scope.changes.length; j++) {
+        if($scope.changes[j].xpath === xpath &&
+          (value === undefined || $scope.changes[j].value === value)) {
+          $scope.changes.splice(j, 1);
+          return;
+        }
+      }
+    };
+    var insertChange = function (field, xpath, template, value,
+                                 index, insertMode, isXpath) {
+      $scope.changes[index] = {
+        field: field,
+        insertMode: insertMode || field.insertMode,
+        xpath: xpath,
+        value: template && value !== '' ?
+          template.replace('{{value}}', value) :
+          value,
+        isXpath: isXpath || false
+      };
+    };
+
+    gnSearchSettings.resultTemplate =
+      gnSearchSettings.resultViewTpls[0].tplUrl;
+
+    $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = 'manager';
+
+    gnSearchSettings.sortbyValues = [{
+      sortBy: 'relevance',
+      sortOrder: ''
+    }, {
+      sortBy: 'changeDate',
+      sortOrder: ''
+    }, {
+      sortBy: 'title',
+      sortOrder: 'reverse'
+    }];
+
+    gnSearchSettings.hitsperpageValues = [20, 50, 100];
+
+    gnSearchSettings.paginationInfo = {
+      hitsPerPage: gnSearchSettings.hitsperpageValues[1]
+    };
+
+    function init() {
+      $http({
+        method: 'GET',
+        url: 'md.edit.batch.config'
+      }).success(function (data) {
+        $scope.fieldConfig = data.iso19139;
+      }).error(function(response) {
+        console.log(response);
+      });
+    }
+
+    $scope.resetChanges = function() {
+      $scope.changes = [];
       $scope.xmlExtents = {};
       $scope.xmlContacts = {};
-      $scope.setStep = function(step) {
-        $scope.selectedStep = step;
-      };
-      $scope.$watchCollection('xmlExtents', function (newValue, oldValue) {
-        angular.forEach($scope.xmlExtents, function (value, xpath) {
-          $scope.putChange({
-            name: 'extent',
-            xpath: xpath
-          }, {
-            target: {
-              value: value
-            }
-          });
-        });
-      });
+    };
 
-      $scope.addContactCb = function (scope, record, role) {
-        var field = angular.fromJson(scope.attrs['field']);
-        if (!$scope.xmlContacts[field.name]) {
-          $scope.xmlContacts[field.name] = {
-            field: field,
-            values: []
-          };
-        };
-        $scope.xmlContacts[field.name].values.push({
-          title: record.title + (role ? ' - ' + role : ''),
-          xml: scope.snippet
-        });
-
-        $scope.addChange(field, {
-          target: {
-            value: scope.snippet
-          }
-        });
-      };
-
-      $scope.removeContact = function (field, contact) {
-        $scope.removeChange(field, contact.xml);
-        for (var j = 0; j < $scope.xmlContacts[field.name].values.length; j++) {
-          if($scope.xmlContacts[field.name].values[j].xml === contact) {
-            $scope.xmlContacts[field.name].values.splice(j, 1);
-            return;
-          }
-        }
-      };
-
-      $scope.$watch('selectedStep', function (newValue, oldValue) {
-        if (newValue === 2) {
-          // Initialize map size when tab is rendered.
-          var map = $('div.gn-drawmap-panel').data('map');
-          if (!angular.isArray(
-              map.getSize()) || map.getSize()[0] == 0) {
-            setTimeout(function () {
-              map.updateSize();
-            });
-          }
-        }
-      });
-
-      /**
-       * Add field with only one value allowed.
-       */
-      $scope.putChange = function (field, $event) {
-        var index = $scope.changes.length;
-
-        if ($event && $event.target && $event.target.value === '') {
-          $scope.removeChange(field);
-        } else {
-          for (var j = 0; j < $scope.changes.length; j++) {
-            if($scope.changes[j].xpath === field.xpath) {
-              index = j;
-              break;
-            }
-          }
-          insertChange(field, $event.target.value, index);
-        }
-      };
-      /**
-       * Add field with multiple value allowed.
-       */
-      $scope.addChange = function (field, $event) {
-        insertChange(field, $event.target.value, $scope.changes.length);
-      };
-      /**
-       * Remove field. If value is undefined, remove all changes for that field.
-       */
-      $scope.removeChange = function (field, value) {
-        for (var j = 0; j < $scope.changes.length; j++) {
-          if($scope.changes[j].xpath === field.xpath &&
-            (value === undefined || $scope.changes[j].value === value)) {
-            $scope.changes.splice(j, 1);
-            return;
-          }
-        }
-      };
-      var insertChange = function (field, value, index, mode) {
-        $scope.changes[index] = {
-          field: field.name,
-          insertMode: mode || field.insertMode,
-          xpath: field.xpath,
-          value: field.template && value !== '' ?
-                  field.template.replace('{{value}}', value) :
-                  value
-        };
-      };
-
-      gnSearchSettings.resultTemplate =
-          gnSearchSettings.resultViewTpls[0].tplUrl;
-
-      $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = 'manager';
-
-      gnSearchSettings.sortbyValues = [{
-        sortBy: 'relevance',
-        sortOrder: ''
-      }, {
-        sortBy: 'changeDate',
-        sortOrder: ''
-      }, {
-        sortBy: 'title',
-        sortOrder: 'reverse'
-      }];
-
-      gnSearchSettings.hitsperpageValues = [20, 50, 100];
-
-      gnSearchSettings.paginationInfo = {
-        hitsPerPage: gnSearchSettings.hitsperpageValues[1]
-      };
-
-      function init() {
-        $http({
-          method: 'GET',
-          url: 'md.edit.batch.config'
-        }).success(function (data) {
-          $scope.fieldConfig = data.iso19139;
-        }).error(function(response) {
-          console.log(response);
-        });
+    $scope.addOrUpdateXpathChange = function () {
+      var c = $scope.currentXpath;
+      xpathCounter ++;
+      if (c.field == '') {
+        c.field = 'XPath_' + xpathCounter;
       }
 
-      $scope.resetChanges = function() {
-        $scope.changes = [];
-        $scope.xmlExtents = {};
-        $scope.xmlContacts = {};
-      };
+      insertChange(c.field, c.xpath, '', c.value,
+                  $scope.changes.length, c.insertMode, true);
 
-      $scope.markFieldAsDeleted = function(field) {
-        field.isDeleted = !field.isDeleted;
-        field.value = '';
-        $scope.removeChange(field);
-        if (field.isDeleted) {
-          insertChange(field, '', $scope.changes.length, 'gn_delete_all');
-        }
-      };
+      $scope.currentXpath = angular.copy($scope.defaultCurrentXpath, {});
+    };
+    $scope.removeXpathChange = function (c) {
+      $scope.removeChange(c.xpath, c.value);
+      xpathCounter --;
+    };
+    $scope.editXpathChange = function (c) {
+      $scope.removeChange(c.xpath, c.value);
+      $scope.currentXpath = c;
+    };
 
-      $scope.applyChanges = function() {
-        var params = {}, i = 0;
-        angular.forEach($scope.changes, function(field) {
-          if (field.value != null) {
-            var value = field.value, xpath = field.xpath;
-            if (field.insertMode != null) {
-              value = '<' + field.insertMode + '>' +
-                      field.value +
-                      '</' + field.insertMode + '>';
-            } else {
-              value = value;
-            }
+    $scope.isXpath = function (value) {
+      return value.isXpath || false;
+    };
 
-            params['xpath_' + i] = xpath;
-            params['search_' + i] = ''; // TODO: unused
-            params['replace_' + i] = value;
-            i++;
+    $scope.markFieldAsDeleted = function(field, mode) {
+      field.isDeleted = !field.isDeleted;
+      field.value = '';
+      $scope.removeChange(field);
+      if (field.isDeleted) {
+        insertChange(field.name, field.xpath, field.template,
+          '', $scope.changes.length,
+          mode || 'gn_delete_all');
+      }
+    };
+
+    $scope.applyChanges = function() {
+      var params = {}, i = 0;
+      angular.forEach($scope.changes, function(field) {
+        if (field.value != null) {
+          var value = field.value, xpath = field.xpath;
+          if (field.insertMode != null) {
+            value = '<' + field.insertMode + '>' +
+              field.value +
+              '</' + field.insertMode + '>';
+          } else {
+            value = value;
           }
-        });
 
-        $http({
-          method: 'POST',
-          url: 'md.edit.batch?_content_type=json',
-          data: $.param(params),
-          headers: {'Content-Type':
-                'application/x-www-form-urlencoded'}
-        }).success(function(data) {
-          console.log(data);
-        }).error(function(response) {
-          console.log(response);
-        });
-      };
+          params['xpath_' + i] = xpath;
+          params['search_' + i] = ''; // TODO: unused
+          params['replace_' + i] = value;
+          i++;
+        }
+      });
 
-     init();
-    }
-  ]);
-})();
+      $http({
+        method: 'POST',
+        url: 'md.edit.batch?_content_type=json',
+        data: $.param(params),
+        headers: {'Content-Type':
+          'application/x-www-form-urlencoded'}
+      }).success(function(data) {
+        console.log(data);
+      }).error(function(response) {
+        console.log(response);
+      });
+    };
+
+    init();
+  }
+]);
+}());

@@ -454,7 +454,6 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
-
           element.on('click', function(e) {
             /**
              * Toggle collapse-expand fieldsets
@@ -477,6 +476,9 @@
               }
             });
           });
+          if (attrs['gnSlideToggle'] == 'true') {
+            element.click();
+          }
         }
       };
     }]);
