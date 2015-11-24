@@ -791,7 +791,7 @@
         if (angular.isUndefined(this.standardName)) {
           return false;
         } else {
-          return this.standardName.indexOf('MedSea') >= 0 ||
+          return this.standardName.indexOf('Emodnet Checkpoint') >= 0 ||
             (this['geonet:info'].schema === 'iso19139' &&
             this.standardName.indexOf('EMODNET - HYDRO') >= 0);
         }
