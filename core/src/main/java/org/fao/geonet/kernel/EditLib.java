@@ -587,8 +587,8 @@ public class EditLib {
 
         try {
             final boolean isValueXml = value.isXml();
-            final boolean isValueAdd = isValueXml &&
-                            value.getNodeValue().getName().equals(SpecialUpdateTags.ADD);
+            final boolean isDeleteMode = value.getNodeValue() != null &&
+                                         value.getNodeValue().getName().startsWith(SpecialUpdateTags.DELETE);
             if (isValueXml && xpathProperty.matches(".*@[^/\\]]+")) {
                 throw new AssertionError("Cannot set Xml on an attribute.  Xpath:'"+xpathProperty+"' value: '"+value+"'");
             }
@@ -605,19 +605,24 @@ public class EditLib {
             // If a property is found,
             // - handle deletion
             // - Update text node or attributes
-            if (propNode != null && !isValueAdd) {
+            if (propNode != null) {
                 // And if magic tag is delete
-                if (isValueXml &&
-                        value.getNodeValue().getName().startsWith(SpecialUpdateTags.DELETE)) {
+                if (isDeleteMode) {
                     if (propNode instanceof Element) {
                         Element parent = ((Element) propNode).getParentElement();
-                        Element matchingNode = ((Element) propNode);
-                        // Remove only matching node
-                        if (value.getNodeValue().getName().equals(SpecialUpdateTags.DELETE)) {
-                            parent.removeContent(parent.indexOf(matchingNode));
-                        } else if (value.getNodeValue().getName().equals(SpecialUpdateTags.DELETE_ALL)){
-                            // Remove all children with matching node name
-                            parent.removeChildren(matchingNode.getName(), matchingNode.getNamespace());
+                        if (parent != null) {
+                            Element matchingNode = ((Element) propNode);
+                            // Remove only matching node
+                            if (value.getNodeValue().getName().equals(SpecialUpdateTags.DELETE)) {
+                                parent.removeContent(parent.indexOf(matchingNode));
+                            } else if (value.getNodeValue().getName().equals(SpecialUpdateTags.DELETE_ALL)) {
+                                // Remove all children with matching node name
+                                parent.removeChildren(matchingNode.getName(), matchingNode.getNamespace());
+                            }
+                        } else {
+                            // If no parent, we probably matched the
+                            // root element. This is not allowed.
+                            return false;
                         }
                     } else if (propNode instanceof Attribute) {
                         Element parent = ((Element) propNode).getParentElement();
@@ -628,6 +633,10 @@ public class EditLib {
                 } else {
                     // Update element content with node
                     if (propNode instanceof Element && isValueXml) {
+                        // We need to know where to insert the element
+                        // So do add fragment, will create an empty element of the
+                        // node to insert class and substitute the created one by
+                        // the XML snippet provided
                         doAddFragmentFromXpath(metadataSchema, value.getNodeValue(), (Element) propNode);
                     } else if (propNode instanceof Element && !isValueXml) {
                         // Update element text with value
@@ -779,21 +788,21 @@ public class EditLib {
             result = Pair.read(metadataRecord, SLASH_STRING_JOINER.join(xpathParts));
         }
         final Element elementToAttachTo = result.one();
-        final Element clonedMetadata = (Element) elementToAttachTo.clone();
+        final Element cloneOfElementToAttachTo = (Element) elementToAttachTo.clone();
 
         // Creating the element at the xpath location
         // Walk the XPath from the start until the end or the start of a filter
         // expression.
         // Collect element namespace prefix and name, check element exist and
         // create them according to schema definition.
-        final XPathParser xpathParser = new XPathParser(new StringReader(clonedMetadata.getQualifiedName()+"/"+result.two()));
+        final XPathParser xpathParser = new XPathParser(new StringReader(cloneOfElementToAttachTo.getQualifiedName()+"/"+result.two()));
 
         // Start from the root of the metadata document
         Token currentToken = xpathParser.getNextToken();
         Token previousToken = currentToken;
 
         int depth = 0;
-        Element currentNode = clonedMetadata;
+        Element currentNode = cloneOfElementToAttachTo;
         boolean existingElement = true;
         boolean isAttribute = false;
         String currentElementName = "";
@@ -905,7 +914,11 @@ public class EditLib {
 
         // update worked so now we can update original element...
         elementToAttachTo.removeContent();
-        List<Content> toAdd = Lists.newArrayList(clonedMetadata.getContent());
+        List<Content> toAdd = Lists.newArrayList(cloneOfElementToAttachTo.getContent());
+        List<Attribute> attributeToAdd = Lists.newArrayList(cloneOfElementToAttachTo.getAttributes());
+        for (Attribute a : attributeToAdd) {
+            elementToAttachTo.setAttribute(a.detach());
+        }
         for (Content content : toAdd) {
             elementToAttachTo.addContent(content.detach());
         }
