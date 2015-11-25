@@ -10,21 +10,23 @@
 						value="{{option.id}}" data-translate="">{{option.name}}</option>
 
 				</select>
+				
+                <button type="button" class="btn btn-primary" data-ng-click="csv()">
+                    <i class="fa fa-cloud-download"></i> <span data-translate="">CSV</span>
+                </button>
 				<table data-datatable data-dt-options="dtOptions"
 					data-dt-instance="dtInstance" data-dt-columns="dtColumns"
 					class="row-border hover">
 					<thead>
 						<tr>
-							<th
-								data-ng-repeat="elem in dtColumns">{{elem.mData}}</th>
+							<th data-ng-repeat="elem in dtColumns">{{elem.mData}}</th>
 						</tr>
 					</thead>
 					<tbody>
 					</tbody>
 					<tfoot>
 						<tr>
-							<th
-								data-ng-repeat="elem in dtColumns">{{elem.mData}}</th>
+							<th data-ng-repeat="elem in dtColumns">{{elem.mData}}</th>
 						</tr>
 					</tfoot>
 				</table>

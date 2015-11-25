@@ -76,6 +76,18 @@
                     DTColumnBuilder.newColumn('source').withOption('name',
                         'source')
                 ];
+                
+                $scope.csv = function() {
+                  
+                  var url =  $scope.url + 'openwis.monitoring.csv?monitorType=' + $scope.options[$scope.monitorType].name;
+                  var data = $scope.dtInstance.dataTable._fnAjaxParameters();
+                  
+                  $.each(data, function(i, el) {
+                    url += "&" + el.name + "=" + encodeURIComponent(el.value); 
+                  });
+ 
+                  window.location = url;
+                }
 
 
                 $scope.updateData = function() {
