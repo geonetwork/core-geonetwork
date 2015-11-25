@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:noNamespaceSchemaLocation="../../config-editor.xsd">
+  xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd">
 
   <!-- Form field type configuration. Default is text. -->
   <fields>
@@ -42,4 +42,9 @@
       <tab id="xml" default="true"/>
     </view>
   </views>
+  <batchEditing>
+    <section name="identification">
+      <field name="title" xpath="dc:title"></field>
+    </section>
+  </batchEditing>
 </editor>

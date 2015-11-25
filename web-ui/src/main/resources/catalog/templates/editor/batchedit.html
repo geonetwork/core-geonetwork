@@ -150,99 +150,105 @@
         <div class="row">
           <div class="col-md-12">
             <form class="form-horizontal">
-              <fieldset data-ng-repeat="section in fieldConfig.section">
-                <legend data-gn-slide-toggle="">{{section.name | translate}}</legend>
-                <div class="form-group"
-                     data-ng-repeat="field in section.field"
-                     data-ng-init="field.value = ''">
-                  <label class="col-sm-2 control-label"
-                         data-ng-class="{'text-danger': field.isDeleted}">{{field.name | translate}}</label>
-                  <div class="col-sm-8">
-                    <div class="input-group" style="width:100%">
-                      <input type="text"
-                             data-ng-if="field.use === null"
-                             data-ng-blur="putChange(field, $event)"
-                             data-ng-disabled="field.isDeleted"
-                             class="form-control"/>
-                      <textarea
-                             data-ng-if="field.use === 'textarea'"
-                             data-ng-blur="putChange(field, $event)"
-                             data-ng-disabled="field.isDeleted"
-                             class="form-control"/>
-                      <input type="text"
-                             class="form-control"
-                             data-ng-if="field.use === 'data-gn-language-picker'"
-                             data-ng-disabled="field.isDeleted"
-                             data-gn-language-picker=""
-                             data-ng-blur="putChange(field, $event)"/>
-                      <div class="form-control"
-                             data-ng-if="field.use === 'data-gn-codelist-picker'"
-                             data-ng-disabled="field.isDeleted"
-                             data-schema-info-combo="codelist"
-                             data-gn-schema-info="{{field.codelist}}"
-                             data-selected-info="field.value"
-                             data-ng-blur="putChange(field, $event)"
-                             lang="lang"/>
-                      <div data-ng-if="field.use === 'data-gn-draw-bbox'">
-                        <div class=""
-                             data-gn-draw-bbox=""
-                             data-ng-disabled="field.isDeleted"
-                             data-extent-xml="xmlExtents[field.xpath]"
-                             lang="lang">
+              <fieldset data-ng-repeat="(key, standard) in fieldConfig"
+                data-ng-if="standard.section && hasRecordsInStandard(key)">
+                <legend data-gn-slide-toggle="">{{key | translate}}</legend>
+
+                <fieldset data-ng-repeat="section in standard.section">
+                  <legend data-gn-slide-toggle="">{{section.name | translate}}</legend>
+                  <div class="form-group"
+                       data-ng-repeat="field in section.field"
+                       data-ng-init="field.value = ''">
+                    <label class="col-sm-2 control-label"
+                           data-ng-class="{'text-danger': field.isDeleted}">{{field.name | translate}}</label>
+                    <div class="col-sm-8">
+                      <div class="input-group" style="width:100%">
+                        <input type="text"
+                               data-ng-if="field.use === null"
+                               data-ng-blur="putChange(field, $event)"
+                               data-ng-disabled="field.isDeleted"
+                               class="form-control"/>
+                        <textarea
+                               data-ng-if="field.use === 'textarea'"
+                               data-ng-blur="putChange(field, $event)"
+                               data-ng-disabled="field.isDeleted"
+                               class="form-control"/>
+                        <input type="text"
+                               class="form-control"
+                               data-ng-if="field.use === 'data-gn-language-picker'"
+                               data-ng-disabled="field.isDeleted"
+                               data-gn-language-picker=""
+                               data-ng-blur="putChange(field, $event)"/>
+                        <div class="form-control"
+                               data-ng-if="field.use === 'data-gn-codelist-picker'"
+                               data-ng-disabled="field.isDeleted"
+                               data-schema-info-combo="codelist"
+                               data-gn-schema-info="{{field.codelist}}"
+                               data-selected-info="field.value"
+                               data-ng-blur="putChange(field, $event)"
+                               lang="lang"/>
+                        <div data-ng-if="field.use === 'data-gn-draw-bbox'">
+                          <div class=""
+                               data-gn-draw-bbox=""
+                               data-ng-disabled="field.isDeleted"
+                               data-extent-xml="xmlExtents[field.xpath]"
+                               lang="lang">
+                          </div>
+                          <input id="bboxField"
+                                 class="hidden"
+                                 data-ng-model="xmlExtents[field.xpath]"/>
                         </div>
-                        <input id="bboxField"
-                               class="hidden"
-                               data-ng-model="xmlExtents[field.xpath]"/>
-                      </div>
-                      <div data-ng-if="field.use === 'data-gn-directory-entry-selector'">
-                        <div class=""
-                             data-ng-disabled="field.isDeleted"
-                             data-gn-directory-entry-selector=""
-                             data-template-add-action="false"
-                             data-template-type="contact"
-                             data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
-                             data-element-name="{{field.xpath.substring(field.xpath.lastIndexOf('/') + 1, p.length)}}"
-                             data-schema="iso19139"
-                             data-select-entry-cb="addContactCb"
-                             data-field="{{field}}"
-                             lang="lang">
+                        <div data-ng-if="field.use === 'data-gn-directory-entry-selector'">
+                          <div class=""
+                               data-ng-disabled="field.isDeleted"
+                               data-gn-directory-entry-selector=""
+                               data-template-add-action="false"
+                               data-template-type="contact"
+                               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
+                               data-element-name="{{field.xpath.substring(field.xpath.lastIndexOf('/') + 1, p.length)}}"
+                               data-schema="iso19139"
+                               data-select-entry-cb="addContactCb"
+                               data-field="{{field}}"
+                               lang="lang">
+                          </div>
+                          <ul class="list-group">
+                            <li class="list-group-item"
+                                data-ng-repeat="contacts in xmlContacts[field.name].values">
+                              {{contacts.title}}
+                              <button class="btn btn-link text-alert pull-right"
+                                      data-ng-click="removeContact(field, contacts.xml)">
+                                <i class="fa fa-times"></i>
+                              </button>
+                            </li>
+                          </ul>
                         </div>
-                        <ul class="list-group">
-                          <li class="list-group-item"
-                              data-ng-repeat="contacts in xmlContacts[field.name].values">
-                            {{contacts.title}}
-                            <button class="btn btn-link text-alert pull-right"
-                                    data-ng-click="removeContact(field, contacts.xml)">
-                              <i class="fa fa-times"></i>
-                            </button>
-                          </li>
-                        </ul>
+                        <input type="text"
+                               class="form-control"
+                               data-ng-if="field.use === 'data-gn-metadata-picker'"
+                               data-ng-disabled="field.isDeleted"
+                               data-gn-metadata-picker=""
+                               data-display-field="defaultTitle"
+                               data-value-field="uuid"
+                               data-ng-blur="putChange(field, $event)"/>
+                        <input type="text"
+                               class="form-control"
+                               data-ng-if="field.use === 'data-gn-contact-picker'"
+                               data-ng-disabled="field.isDeleted"
+                               data-ng-blur="addChange(field, $event)"/>
+                        <span class="btn btn-default input-group-addon"
+                              data-toggle="button"
+                              data-ng-if="field.removable"
+                              data-ng-class="{'btn-danger': field.isDeleted}"
+                              data-ng-click="markFieldAsDeleted(field)"
+                              title="{{(field.isDeleted ? 'fieldIsRemoved' : 'removeField') | translate}}">
+                          <i class="fa fa-times text-danger"></i>&nbsp;
+                        </span>
                       </div>
-                      <input type="text"
-                             class="form-control"
-                             data-ng-if="field.use === 'data-gn-metadata-picker'"
-                             data-ng-disabled="field.isDeleted"
-                             data-gn-metadata-picker=""
-                             data-display-field="defaultTitle"
-                             data-value-field="uuid"
-                             data-ng-blur="putChange(field, $event)"/>
-                      <input type="text"
-                             class="form-control"
-                             data-ng-if="field.use === 'data-gn-contact-picker'"
-                             data-ng-disabled="field.isDeleted"
-                             data-ng-blur="addChange(field, $event)"/>
-                      <span class="btn btn-default input-group-addon"
-                            data-toggle="button"
-                            data-ng-if="field.removable"
-                            data-ng-class="{'btn-danger': field.isDeleted}"
-                            data-ng-click="markFieldAsDeleted(field)"
-                            title="{{(field.isDeleted ? 'fieldIsRemoved' : 'removeField') | translate}}">
-                        <i class="fa fa-times text-danger"></i>&nbsp;
-                      </span>
                     </div>
                   </div>
-                </div>
+                </fieldset>
               </fieldset>
+
               <fieldset>
                 <legend data-gn-slide-toggle="true"
                         data-translate>advancedBatchEditMode</legend>
@@ -339,6 +345,7 @@
               </button>
             </form>
           </div>
+        </div>
       </div>
     </div>
 

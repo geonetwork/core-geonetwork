@@ -96,7 +96,16 @@
             });
           }
         });
-
+      $scope.hasRecordsInStandard = function(standard) {
+        var isFound = false;
+        $.each($scope.selectedStandards, function (idx, facet) {
+          if (facet['@value'] == standard) {
+            isFound = true;
+            return false;
+          }
+        });
+        return isFound;
+      };
 
       // Get current selection which returns the list of uuids.
       // Then search those records.
@@ -339,7 +348,6 @@
     };
 
 
-
     $scope.applyChanges = function() {
       var params = {}, i = 0;
       angular.forEach($scope.changes, function(field) {
@@ -360,6 +368,8 @@
         }
       });
 
+      // TODO: Apply changes to a mix of records is maybe not the best
+      // XPath will be applied whatever the standard is.
       $http({
         method: 'POST',
         url: 'md.edit.batch?_content_type=json',
@@ -381,7 +391,7 @@
         method: 'GET',
         url: 'md.edit.batch.config'
       }).success(function (data) {
-        $scope.fieldConfig = data.iso19139;
+        $scope.fieldConfig = data;
       }).error(function(response) {
         console.log(response);
       });
