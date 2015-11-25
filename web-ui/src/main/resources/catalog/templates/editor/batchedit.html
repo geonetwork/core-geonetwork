@@ -149,7 +149,7 @@
 
         <div class="row">
           <div class="col-md-12">
-            <form class="form-horizontal">
+            <form class="form-horizontal" id="gn-batch-changes">
               <fieldset data-ng-repeat="(key, standard) in fieldConfig"
                 data-ng-if="standard.section && hasRecordsInStandard(key)">
                 <legend data-gn-slide-toggle="">{{key | translate}}</legend>
@@ -183,6 +183,8 @@
                                data-ng-if="field.use === 'data-gn-codelist-picker'"
                                data-ng-disabled="field.isDeleted"
                                data-schema-info-combo="codelist"
+                               data-schema="{{key}}"
+                               data-allow-blank="true"
                                data-gn-schema-info="{{field.codelist}}"
                                data-selected-info="field.value"
                                data-ng-blur="putChange(field, $event)"
@@ -191,6 +193,7 @@
                           <div class=""
                                data-gn-draw-bbox=""
                                data-ng-disabled="field.isDeleted"
+                               data-schema="{{key}}"
                                data-extent-xml="xmlExtents[field.xpath]"
                                lang="lang">
                           </div>
@@ -359,8 +362,8 @@
           <div class="col-sm-6">
             <h4 data-translate="">changesToApply</h4>
             <ul>
-              <li data-ng-repeat="change in changes">
-                {{change.field | translate}}: {{change.value}}
+              <li data-ng-repeat="change in changes" title="{{change.value}}">
+                {{change.field | translate}}: {{change.value | limitTo:40}}
               </li>
             </ul>
           </div>

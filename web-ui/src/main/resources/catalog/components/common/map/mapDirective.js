@@ -24,6 +24,7 @@
              dcRef: '@',
              extentXml: '=',
              lang: '=',
+             schema: '@',
              location: '@'
            },
            link: function(scope, element, attrs) {
@@ -48,7 +49,21 @@
                '</gmd:northBoundLatitude>' +
                '</gmd:EX_GeographicBoundingBox></gmd:geographicElement>' +
                '</gmd:EX_Extent>',
-               'iso19115-3': 'TODO'
+               'iso19115-3': '<gex:EX_Extent ' +
+               'xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0" ' +
+               'xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">' +
+               '<gex:geographicElement>' +
+               '<gex:EX_GeographicBoundingBox>' +
+               '<gex:westBoundLongitude><gco:Decimal>{{west}}</gco:Decimal>' +
+               '</gex:westBoundLongitude>' +
+               '<gex:eastBoundLongitude><gco:Decimal>{{east}}</gco:Decimal>' +
+               '</gex:eastBoundLongitude>' +
+               '<gex:southBoundLatitude><gco:Decimal>{{south}}</gco:Decimal>' +
+               '</gex:southBoundLatitude>' +
+               '<gex:northBoundLatitude><gco:Decimal>{{north}}</gco:Decimal>' +
+               '</gex:northBoundLatitude>' +
+               '</gex:EX_GeographicBoundingBox></gex:geographicElement>' +
+               '</gex:EX_Extent>'
              };
              var xmlExtentFn = function (coords, location) {
                if (angular.isArray(coords) &&
@@ -61,7 +76,8 @@
                  angular.isNumber(coords[1]) &&
                  angular.isNumber(coords[2]) &&
                  angular.isNumber(coords[3])) {
-                 scope.extentXml = extentTpl.iso19139.replace('{{west}}', coords[0])
+                 scope.extentXml = extentTpl[scope.schema || 'iso19139']
+                   .replace('{{west}}', coords[0])
                    .replace('{{south}}', coords[1])
                    .replace('{{east}}', coords[2])
                    .replace('{{north}}', coords[3]);

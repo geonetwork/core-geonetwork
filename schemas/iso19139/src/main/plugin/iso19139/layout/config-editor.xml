@@ -274,7 +274,7 @@
             xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
             /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
             del="../..">
-            <template> 
+            <template>
               <values>
                 <key label="url" xpath="gmd:URL" tooltip="gmd:linkage"/>
               </values>
@@ -1238,8 +1238,8 @@
           <field xpath="/gmd:MD_Metadata/gmd:featureAttribute"/>
         </section>
       </tab>
-      
-      <!-- Elements that should not use the "flat" mode --> 
+
+      <!-- Elements that should not use the "flat" mode -->
       <flatModeExceptions>
         <for name="gmd:descriptiveKeywords" />
         <for name="gmd:keyword"/>
@@ -1391,18 +1391,17 @@
              removable="true">
         <template><![CDATA[<gmd:LanguageCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
       </field>
-
-      <!-- Insert or replace status
+      <!-- Insert a new topic category
            Warning: Duplicates may be inserted.
            -->
-      <field name="resourceStatus"
+      <field name="topicCats"
              xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
-                      gmd:status"
+                      gmd:topicCategory"
              use="data-gn-codelist-picker"
-             codelist="gmd:MD_ProgressCode"
-             indexField="cl_status"
-             insertMode="gn_replace">
-        <template><![CDATA[<gmd:MD_ProgressCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
+             codelist="gmd:MD_TopicCategoryCode"
+             indexField="topicCat"
+             insertMode="gn_add">
+        <template><![CDATA[<gmd:MD_TopicCategoryCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
       </field>
 
       <!-- Insert, or replace if existing, the parent identifier.

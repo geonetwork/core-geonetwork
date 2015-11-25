@@ -1401,6 +1401,7 @@ An XML snippet with replacement for each key defined in that field.
                     <xs:simpleType>
                       <xs:restriction base="xs:string">
                         <xs:enumeration value="gn_add"/>
+                        <xs:enumeration value="gn_create"/>
                         <xs:enumeration value="gn_replace"/>
                       </xs:restriction>
                     </xs:simpleType>

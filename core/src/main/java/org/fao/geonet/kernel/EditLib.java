@@ -503,9 +503,25 @@ public class EditLib {
      * Special tags for updating metadata element by xpath.
      */
     public static interface SpecialUpdateTags {
+        /**
+         * Replace the content of the target
+         */
         String REPLACE = "gn_replace";
+        /**
+         * Add to the target
+         */
         String ADD = "gn_add";
+        /**
+         * Create the target element and add
+         */
+        String CREATE = "gn_create";
+        /**
+         * Delete the target
+         */
         String DELETE = "gn_delete";
+        /**
+         * Delete all element having same name as the target
+         */
         String DELETE_ALL = "gn_delete_all";
     }
 
@@ -589,8 +605,11 @@ public class EditLib {
             final boolean isValueXml = value.isXml();
             final boolean isDeleteMode = value.getNodeValue() != null &&
                                          value.getNodeValue().getName().startsWith(SpecialUpdateTags.DELETE);
+            final boolean isCreateMode = value.getNodeValue() != null &&
+                    value.getNodeValue().getName().equals(SpecialUpdateTags.CREATE);
             if (isValueXml && xpathProperty.matches(".*@[^/\\]]+")) {
-                throw new AssertionError("Cannot set Xml on an attribute.  Xpath:'"+xpathProperty+"' value: '"+value+"'");
+                throw new AssertionError("Cannot set Xml on an attribute.  Xpath:'" +
+                        xpathProperty + "' value: '" + Xml.getString(value.getNodeValue()) + "'");
             }
             if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
                 Log.debug(Geonet.EDITORADDELEMENT, "Inserting at location " + xpathProperty + " the snippet or value " + value);
@@ -605,8 +624,10 @@ public class EditLib {
             // If a property is found,
             // - handle deletion
             // - Update text node or attributes
-            if (propNode != null) {
+            if (propNode != null && !isCreateMode) {
                 // And if magic tag is delete
+                // Delete a node
+                // <gn_delete/>
                 if (isDeleteMode) {
                     if (propNode instanceof Element) {
                         Element parent = ((Element) propNode).getParentElement();
@@ -632,6 +653,9 @@ public class EditLib {
                     }
                 } else {
                     // Update element content with node
+                    // <gn_replace|add>
+                    //   <gmd:contact>
+                    //     <gmd:CI_ResponsibleParty
                     if (propNode instanceof Element && isValueXml) {
                         // We need to know where to insert the element
                         // So do add fragment, will create an empty element of the
@@ -697,20 +721,9 @@ public class EditLib {
     private void doAddFragmentFromXpath(MetadataSchema metadataSchema,
                                         Element newValue, Element propEl) throws Exception {
 
-        // Delete a node
-        // <gn_delete/>
-        if (newValue.getName().equals(SpecialUpdateTags.DELETE)) {
-            Element parentElement = propEl.getParentElement();
-            if (parentElement != null) {
-                parentElement.removeContent(
-                        parentElement.indexOf(propEl)
-                );
-            }
-        // <gn_replace|add>
-        //   <gmd:contact>
-        //     <gmd:CI_ResponsibleParty
-        } else if (newValue.getName().equals(SpecialUpdateTags.REPLACE) ||
-                   newValue.getName().equals(SpecialUpdateTags.ADD)) {
+        if (newValue.getName().equals(SpecialUpdateTags.REPLACE) ||
+                   newValue.getName().equals(SpecialUpdateTags.ADD) ||
+                   newValue.getName().equals(SpecialUpdateTags.CREATE)) {
 
             final boolean isReplace = newValue.getName().equals(SpecialUpdateTags.REPLACE);
             if (isReplace) {

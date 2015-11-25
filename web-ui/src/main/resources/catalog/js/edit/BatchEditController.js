@@ -144,13 +144,19 @@
     $scope.$watch('selectedStep', function (newValue) {
       if (newValue === 2) {
         // Initialize map size when tab is rendered.
-        var map = $('div.gn-drawmap-panel').data('map');
-        if (!angular.isArray(
-            map.getSize()) || map.getSize()[0] == 0) {
-          setTimeout(function () {
-            map.updateSize();
-          });
+        var map = $('div.gn-drawmap-panel');
+        if (map == undefined) {
+          return;
         }
+        map.each(function (idx, div) {
+          var map = $(div).data('map')
+          if (!angular.isArray(
+              map.getSize()) || map.getSize()[0] == 0) {
+            setTimeout(function () {
+              map.updateSize();
+            });
+          }
+        })
       }
     });
 
@@ -214,7 +220,7 @@
     // Add field with multiple value allowed.
     $scope.addChange = function (field, $event) {
       insertChange(field.name, field.xpath, field.template,
-        $event.target.value, $scope.changes.length);
+        $event.target.value, $scope.changes.length, field.insertMode);
     };
 
     // Add field with only one value allowed.
@@ -231,7 +237,7 @@
           }
         }
         insertChange(field.name, field.xpath, field.template,
-          $event.target.value, index);
+          $event.target.value, index, field.insertMode);
       }
     };
 
@@ -250,6 +256,12 @@
       $scope.changes = [];
       $scope.xmlExtents = {};
       $scope.xmlContacts = {};
+      $('#gn-batch-changes input, ' +
+        '#gn-batch-changes textarea, ' +
+        '#gn-batch-changes select').
+      each(function (idx, e) {
+        $(e).val('');
+      });
     };
 
     $scope.markFieldAsDeleted = function(field, mode) {
@@ -270,7 +282,8 @@
       angular.forEach($scope.xmlExtents, function (value, xpath) {
         $scope.putChange({
           name: 'extent',
-          xpath: xpath
+          xpath: xpath,
+          insertMode: 'gn_create' // TODO: Should come from config
         }, {
           target: {
             value: value

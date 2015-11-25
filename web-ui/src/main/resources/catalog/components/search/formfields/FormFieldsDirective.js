@@ -543,7 +543,8 @@
 
 
               var init = function() {
-                var schema = gnCurrentEdit.schema || 'iso19139';
+                var schema = attrs['schema'] ||
+                              gnCurrentEdit.schema || 'iso19139';
                 var element = (gnElementsMap[attrs['gnSchemaInfo']] &&
                     gnElementsMap[attrs['gnSchemaInfo']][schema]) ||
                     attrs['gnSchemaInfo'];
