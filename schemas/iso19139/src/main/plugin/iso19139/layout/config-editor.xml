@@ -1362,7 +1362,7 @@
       <!-- Insert a new topic category
       Warning: Duplicates may be inserted.
       -->
-      <field name="topicCategory"
+      <field name="topicCats"
              xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
                       gmd:topicCategory"
              use="data-gn-codelist-picker"
@@ -1383,7 +1383,7 @@
       <!-- Insert a new resource language
       Warning: Duplicates may be inserted.
       -->
-      <field name="resourceLanguage"
+      <field name="language"
              xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
                       gmd:language"
              use="data-gn-language-picker"
@@ -1392,11 +1392,24 @@
         <template><![CDATA[<gmd:LanguageCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
       </field>
 
+      <!-- Insert or replace status
+           Warning: Duplicates may be inserted.
+           -->
+      <field name="resourceStatus"
+             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+                      gmd:status"
+             use="data-gn-codelist-picker"
+             codelist="gmd:MD_ProgressCode"
+             indexField="cl_status"
+             insertMode="gn_replace">
+        <template><![CDATA[<gmd:MD_ProgressCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
+      </field>
+
       <!-- Insert, or replace if existing, the parent identifier.
       Warning: Duplicates may be inserted.
       -->
-      <field xpath="gmd:parentIdentifier"
-             name="parentIdentifier"
+      <field name="parentIdentifier"
+             xpath="gmd:parentIdentifier"
              use="data-gn-metadata-picker"
              insertMode="gn_replace"
              removable="true">
@@ -1404,11 +1417,11 @@
       </field>
     </section>
 
-    <section name="constraint">
+    <section name="resourceConstraints">
       <!-- Insert a new access contraints
             Warning: Duplicates may be inserted.
       -->
-      <field name="accessConstraints"
+      <field name="legalConstraints"
              xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
                       gmd:resourceConstraints/gmd:MD_LegalConstraints/
                         gmd:accessConstraints"

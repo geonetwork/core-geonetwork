@@ -66,48 +66,6 @@
            data-translate="">chooseASetOfRecordHelp</p>
 
         <div class="row">
-          <div class="col-md-12">
-            <label class="radio-inline">
-              <input type="radio"
-                     name="optionsRadios" value="1"
-                     data-ng-model="selectedStep1Tab"/>
-              <span data-translate="">createSetFromSearch</span>
-            </label>
-            <label class="radio-inline">
-              <input type="radio"
-                     name="optionsRadios" value="2"
-                     data-ng-model="selectedStep1Tab"/>
-              <span data-translate="">chooseAnExistingSet</span>
-            </label>
-          </div>
-        </div>
-        <br/>
-        <div class="row"
-             data-ng-class="{'hidden' : selectedStep1Tab != 2}">
-          <div class="col-md-4">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <span data-translate="" class="ng-scope">availableSet</span>
-              </div>
-
-              <div class="panel-body">
-                <input class="form-control ng-pristine ng-valid ng-touched" data-ng-show="$parent.harvesters.length > 1" data-ng-model="harvesterSearch.$" data-ng-change="firstPage()" autofocus="" placeholder="Filter">
-
-                <div class="list-group">
-                  <a href="#" class="list-group-item">All my records</a>
-                  <a href="#" class="list-group-item">All datasets</a>
-                  <a href="#" class="list-group-item">All services</a>
-                  <a href="#" class="list-group-item">All records for project EDMO</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-8">
-
-          </div>
-        </div>
-        <div class="row"
-             data-ng-class="{'hidden' : selectedStep1Tab != 1}">
           <div class="col-sm-12">
             <form class="form-horizontal"
                   role="form">
@@ -222,8 +180,12 @@
     <div class="panel panel-default"
          data-ng-class="{'hidden' : selectedStep !== 2}">
       <div class="panel-body">
-          <div class="row">
-            <div class="col-md-12">
+
+        <p class="alert alert-info"
+           data-translate="">defineEditsHelp</p>
+
+        <div class="row">
+          <div class="col-md-12">
             <form class="form-horizontal">
               <fieldset data-ng-repeat="section in fieldConfig.section">
                 <legend data-gn-slide-toggle="">{{section.name | translate}}</legend>
@@ -414,7 +376,6 @@
               </button>
             </form>
           </div>
-        </div>
       </div>
     </div>
 

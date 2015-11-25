@@ -109,7 +109,6 @@
     }];
 
     $scope.selectedStep = 1;
-    $scope.selectedStep1Tab = 1;
     $scope.fieldConfig = null;
     $scope.changes = [];
     // Map of xpath / extent
