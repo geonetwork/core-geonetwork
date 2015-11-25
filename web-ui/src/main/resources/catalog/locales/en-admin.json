@@ -313,6 +313,7 @@
     "virtualCswUpdateError": "Oops, error creating the virtual CSW",
     "description": "Description",
     "details": "Details",
+    "disabled": "Disabled",
     "dublin-core": "Dublin Core",
     "dublin-core-acr": "DC",
     "dublin-core-help": "The Dublin Core metadata standard",
