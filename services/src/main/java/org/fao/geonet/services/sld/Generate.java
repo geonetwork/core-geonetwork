@@ -98,7 +98,7 @@ public class Generate {
     }
 
 
-    @RequestMapping(value = "/{lang}/generateSLD", method= RequestMethod.POST)
+    @RequestMapping(value = "/{lang}/generateSLD", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public @ResponseBody String handleFileUpload(@PathVariable("lang") String lang,
                                                  @RequestParam("filters") String filters,
                                                  @RequestParam("serverURL") String serverURL,
@@ -125,7 +125,9 @@ public class Generate {
             String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                     + pathPrefix + "/" + lang + "/" + "getSLD/" + sld.getId() + ".xml";
 
-            return url;
+            JSONObject res = new JSONObject();
+            res.put("value", url);
+            return res.toString();
         } catch (Exception e) {
            return e.getMessage();
         }
