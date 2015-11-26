@@ -99,7 +99,7 @@ public class Generate {
 
 
     @RequestMapping(value = "/{lang}/generateSLD", method= RequestMethod.POST)
-    public @ResponseBody OkResponse handleFileUpload(@PathVariable("lang") String lang,
+    public @ResponseBody String handleFileUpload(@PathVariable("lang") String lang,
                                                  @RequestParam("filters") String filters,
                                                  @RequestParam("serverURL") String serverURL,
                                                  @RequestParam("layers") String layers,
@@ -125,12 +125,9 @@ public class Generate {
             String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                     + pathPrefix + "/" + lang + "/" + "getSLD/" + sld.getId() + ".xml";
 
-            OkResponse ok = new OkResponse();
-            ok.setValue(url);
-            return ok;
+            return url;
         } catch (Exception e) {
-            //return e.getMessage();
-            return null;
+           return e.getMessage();
         }
     }
 
