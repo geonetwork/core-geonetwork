@@ -201,7 +201,10 @@ public class SLDUtil {
         for(int i=0;i<filters.length();i++)
             res.add(SLDUtil.generateFilter(filters.getJSONObject(i)));
 
-        return ff2.and(res);
+        if(res.size() > 1)
+            return ff2.and(res);
+        else
+            return res.get(0);
 
     }
 
@@ -217,7 +220,10 @@ public class SLDUtil {
         for(int i=0;i<filters.length();i++)
             res.add(SLDUtil.generateFilter2(fieldName, filters.getJSONObject(i)));
 
-        return ff2.or(res);
+        if(res.size() > 1)
+            return ff2.or(res);
+        else
+            return  res.get(0);
     }
 
     private static Filter generateFilter2(String fieldName, JSONObject jsonObject) throws JSONException {
