@@ -741,14 +741,15 @@ public class EditLib {
 
                     child.detach();
 
-//                    final boolean childIsSameAsInsertionPoint =
-//                            child.getName().equals(propEl.getName()) &&
-//                            child.getNamespace().equals(propEl.getNamespace());
-//                    if (childIsSameAsInsertionPoint) {
-//                        child = child.getContent(0);
-//                    }
+                    final boolean childHasSameTypeAsTarget =
+                            child.getName().equals(propEl.getName()) &&
+                            child.getNamespace().equals(propEl.getNamespace());
                     if (isReplace) {
                         propEl.addContent(child);
+                    } else if (childHasSameTypeAsTarget) {
+                        Element parent = propEl.getParentElement();
+                        int index = parent.indexOf(propEl);
+                        parent.addContent(index, child);
                     } else {
                         // Add an element of same type in the target node
                         final Element newElement = addElement(metadataSchema, propEl, child.getQualifiedName());
