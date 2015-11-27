@@ -153,6 +153,20 @@
   <element name="dct:accrualPeriodicity">
     <label>Méthode / Fréquence de mise à jour</label>
     <description>The frequency with which items are added to a collection.</description>
+    <helper>
+      <option value="continual">Continue</option>
+      <option value="daily">Journalière</option>
+      <option value="weekly">Hebdomadaire</option>
+      <option value="fortnightly">Bi-mensuelle</option>
+      <option value="monthly">Mensuelle</option>
+      <option value="quarterly">Trimestrielle</option>
+      <option value="biannually">Bi-annuelle</option>
+      <option value="annually">Annuelle</option>
+      <option value="asNeeded">Lorsque nécessaire</option>
+      <option value="irregular">Irrégulière</option>
+      <option value="notPlanned">Non planifiée</option>
+      <option value="unknown">Inconnue</option>
+    </helper>
   </element>
 
   <element name="dct:accrualPolicy">
