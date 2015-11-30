@@ -16,7 +16,7 @@
             data-ng-repeat="u in pageItems()"
             data-ng-class="u.value.id === userSelected.id ? 'active' : ''" data-ng-click="selectUser(u)">
             <img class="img-circle" ng-src="http://gravatar.com/avatar/{{u.value.email | md5}}?s=18"/>
-            {{u.value.name}} {{u.value.surname}} ({{u.value.profile | translate}})
+            <span class='badge' data-ng-show="u.value.enabled === false" data-translate="">disabled</span> {{u.value.name}} {{u.value.surname}} ({{u.value.profile | translate}})
           </a>
           <span data-gn-pagination-list=""
                 data-items="users | filter:userSearch | orderBy:'name'"
@@ -72,6 +72,15 @@
               value="{{userSelected.id}}"/>
             <input type="hidden" name="operation" data-ng-model="userOperation"
               value="{{userOperation}}"/>
+
+
+            <div class="form-group" data-ng-hide="user.id == userSelected.id">
+              <label class="control-label col-sm-3" data-translate="">enable</label>
+              <div class="col-sm-9">
+                <input type="checkbox" class=form-control" data-ng-model="userIsEnabled" />
+              </div>
+            </div>
+
             <div data-ng-class="gnUserEdit.username.$error.required ? 'has-error' : ''" class="form-group">
               <label class="control-label col-sm-3" data-translate="">username</label>
               <div class="col-sm-9">

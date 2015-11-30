@@ -47,7 +47,7 @@ using:
 The following tools are required to be installed to setup a development environment for GeoNetwork:
 
 * **Java** - Developing with GeoNetwork requires Java Development Kit (JDK) 1.7 or greater.
-* **Maven** - GeoNetwork uses [Maven](http://maven.apache.org/) to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).
+* **Maven** 3.1.0+ - GeoNetwork uses [Maven](http://maven.apache.org/) to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).
 * **Git** - GeoNetwork source code is stored and versioned in [a Git repository on Github](https://github.com/geonetwork/core-geonetwork). Depending on your operating system a variety of git clients are avalaible. Check in http://git-scm.com/downloads/guis for some alternatives.  Good documentation can be found on the git website: http://git-scm.com/documentation and on the Github website https://help.github.com/.
 * **Ant** - GeoNetwork uses [Ant](http://ant.apache.org/) to build the installer.  Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the ant command in your path (on Windows systems, you have to open a shell to check).
 * **Sphinx** - To create the GeoNetwork documentation in a nice format [Sphinx](http://sphinx.pocoo.org/)  is used.

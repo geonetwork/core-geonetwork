@@ -62,9 +62,9 @@
           };
 
           scope.cantStatus = function(status) {
-            return ((status == 5 || status == 2 || status == 3)
-                && !user.isReviewerOrMore());
-          }
+            return ((status == 5 || status == 2 || status == 3) &&
+                !user.isReviewerOrMore());
+          };
 
           init();
         }
@@ -99,21 +99,21 @@
           scope.lang = scope.$parent.lang;
           scope.categories = null;
           scope.ids = [];
-          
+
           scope.updateCategoriesAllowed = function() {
             $http.get('admin.group.get?id=' + scope.groupOwner + '&' +
                 '_content_type=json', {cache: true}).
                 success(function(data) {
-                    scope.enableallowedcategories = 
+                  scope.enableallowedcategories =
                       (data[0].enableallowedcategories == 'true');
-                    scope.allowedcategories = [];
-                    angular.forEach(data[0].allowedcategories, function(c) {
-                      scope.allowedcategories.push(c.id);
-                    });
+                  scope.allowedcategories = [];
+                  angular.forEach(data[0].allowedcategories, function(c) {
+                    scope.allowedcategories.push(c.id);
                   });
-                };
+                });
+          };
           scope.updateCategoriesAllowed();
-          
+
           scope.$watch('groupOwner', function(newvalue, oldvalue) {
             scope.updateCategoriesAllowed();
           });

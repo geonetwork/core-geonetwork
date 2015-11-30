@@ -22,6 +22,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import java.util.Map;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.LabelNotFoundException;
 import org.fao.geonet.exceptions.TermNotFoundException;
@@ -34,23 +35,65 @@ public class TermUriTranslator implements Translator {
 
     private static final long serialVersionUID = 1L;
 
-    private transient Thesaurus thesaurus;
+    private transient Thesaurus thesaurus = null;
+    private final transient ThesaurusFinder finder;
 
-    private String langCode;
+    private final String conceptSchemeUri;
+    private final String langCode;
+
+    private boolean firstWarning = true; // used to display verbose info only once
 
     public TermUriTranslator(ThesaurusFinder finder, String langCode, String conceptSchemeUri) {
-        this.thesaurus = finder.getThesaurusByConceptScheme(conceptSchemeUri);
+        this.finder = finder;
         this.langCode = langCode;
+        this.conceptSchemeUri = conceptSchemeUri;
+        setThesaurus();
+    }
+
+    private void setThesaurus() {
+        this.thesaurus = finder.getThesaurusByConceptScheme(conceptSchemeUri);
+        if (thesaurus == null) {
+            Log.warning(Geonet.THESAURUS, "No thesaurus found for concept scheme " + conceptSchemeUri + " (lang=" + langCode + ")");
+            if (Log.isDebugEnabled(Geonet.THESAURUS) && firstWarning) {
+                firstWarning = false;
+
+                StringBuilder sb = new StringBuilder();
+                sb.append("Available thesauri: [");
+                for (Map.Entry<String, Thesaurus> entrySet : finder.getThesauriMap().entrySet()) {
+                    sb.append("{");
+                    sb.append(entrySet.getKey()).append(" -> ").append(entrySet.getValue().getConceptSchemes());
+                    sb.append("}");
+                }
+                sb.append("]");
+                Log.debug(Geonet.THESAURUS, sb.toString());
+            }
+        }
     }
 
     @Override
     public String translate(String key) {
         KeywordBean keyword;
 
+        if (thesaurus == null) {
+            // try to retrieve a theasurus (it may not have been loaded yet)
+            setThesaurus();
+        }
+
+        if (thesaurus == null) {
+            // a warning has already been logged by setThesaurus
+            if (Log.isTraceEnabled(Geonet.THESAURUS)) {
+                Log.trace(Geonet.THESAURUS, "Thesaurus not available [uri:" + conceptSchemeUri + ", lang:" + langCode + ", " + key + "]");
+            }
+            return key;
+        }
+
         try {
             keyword = thesaurus.getKeyword(key, langCode);
         } catch (TermNotFoundException e) {
             Log.error(Geonet.THESAURUS, "Term not found: " + key);
+            return key;
+        } catch (NullPointerException e) {
+            Log.error(Geonet.THESAURUS, "NPE searching term: " + key);
             return key;
         }
 

@@ -1249,7 +1249,6 @@
         <for name="gmd:distributor"/>
         <for name="gmd:contact"/>
         <for name="gmd:processor"/>
-        <for name="gmd:citedResponsibleParty"/>
         <for name="gmd:topicCategory"/>
       </flatModeExceptions>
 
