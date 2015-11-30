@@ -237,7 +237,11 @@ public class Update {
         }
 
         if (email != null) {
-            user.getEmailAddresses().add(email);
+            String[] emails = email.indexOf("|") >= 0  ? email.split("|") : new String[]{email};
+            for (String mail : emails) {
+                user.getEmailAddresses().clear();
+                user.getEmailAddresses().add(mail);
+            }
         }
 
         // -- For adding new user
