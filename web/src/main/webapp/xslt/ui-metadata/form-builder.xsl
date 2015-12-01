@@ -1223,7 +1223,7 @@
 
     <div class="row form-group gn-field gn-extra-field">
       <div class="col-xs-10 col-xs-offset-2">
-        <a class="btn btn-primary gn-associated-resource-btn"
+        <a class="btn gn-associated-resource-btn"
            data-ng-click="gnOnlinesrc.onOpenPopup('{$type}')">
           <i class="fa gn-icon-{$type}"></i>&#160;
           <span data-translate="">
