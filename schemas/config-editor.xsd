@@ -1069,7 +1069,11 @@ with the metadata identifier.
   <xs:attribute name="use">
     <xs:annotation>
       <xs:documentation><![CDATA[
-The form field type to use (one of the HTML5 type) or an AngularJS directive to use. This list is defined as an open enumeration.
+The form field type to use (one of the HTML5 type) or an AngularJS directive to use.
+This list is defined as an open enumeration. For directive, the value will be set in a simple
+text input by default. If the directive needs to deal with cariage return character, the
+directive name MUST contains "-textarea" in order to set the value in a textarea
+instead of the text input.
         ]]> </xs:documentation>
     </xs:annotation>
     <xs:simpleType>

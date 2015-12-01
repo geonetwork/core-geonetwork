@@ -871,13 +871,18 @@
       <xsl:otherwise>
         
         <xsl:variable name="isDirective" select="starts-with($type, 'data-')"/>
-        
-        <xsl:variable name="input">
-          <input class="form-control {if ($lang) then 'hidden' else ''}" 
-            id="gn-field-{$editInfo/@ref}" 
-            name="_{$name}" 
-            value="{normalize-space($valueToEdit)}">
-            <!-- If type is a directive -->
+        <!-- Some directives needs to support values having cariage return in the 
+        value. In that case a textarea field should be used with the value in it. -->
+        <xsl:variable name="isTextareaDirective" select="$isDirective and contains($type, '-textarea')"/>
+
+        <xsl:variable name="textareaOrInput">
+          <xsl:element name="{if ($isTextareaDirective) then 'textarea' else 'input'}">
+            <xsl:attribute name="class"
+                           select="concat('form-control ', if ($lang) then 'hidden' else '')"/>
+            <xsl:attribute name="id"
+                           select="concat('gn-field-', $editInfo/@ref)"/>
+            <xsl:attribute name="name"
+                           select="concat('_', $name)"/>
             <xsl:if test="$isDirective">
               <xsl:attribute name="{$type}"/>
             </xsl:if>
@@ -896,19 +901,28 @@
             <xsl:if test="$lang">
               <xsl:attribute name="lang" select="$lang"/>
             </xsl:if>
-            <xsl:if test="$type != ''">
-              <xsl:attribute name="type" select="if ($isDirective) then 'text' else $type"/>
-            </xsl:if>
             <xsl:if test="$hidden or $hasHelper">
-              <!-- hide the form field if helper is available, the 
-              value is set by the directive which provide customized 
+              <!-- hide the form field if helper is available, the
+              value is set by the directive which provide customized
               forms -->
               <xsl:attribute name="class" select="'hidden'"/>
             </xsl:if>
-          </input>
+            <xsl:choose>
+              <xsl:when test="$isTextareaDirective">
+                <xsl:value-of select="$valueToEdit"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:if test="$type != ''">
+                  <xsl:attribute name="type" select="if ($isDirective) then 'text' else $type"/>
+                </xsl:if>
+                <xsl:attribute name="value"
+                               select="normalize-space($valueToEdit)"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:element>
         </xsl:variable>
 
-        <xsl:copy-of select="$input"/>
+        <xsl:copy-of select="$textareaOrInput"/>
 
       </xsl:otherwise>
     </xsl:choose>
