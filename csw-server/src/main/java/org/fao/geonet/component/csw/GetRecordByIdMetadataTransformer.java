@@ -34,5 +34,5 @@ public interface GetRecordByIdMetadataTransformer extends GeonetworkExtension {
      */
     @Nonnull
     public Optional<Element> apply(@Nonnull ServiceContext context, @Nonnull Element metadata,
-                                   @Nonnull OutputSchema outputSchema) throws CatalogException;
+                                   @Nonnull String outputSchema) throws CatalogException;
 }

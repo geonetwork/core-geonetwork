@@ -658,8 +658,7 @@
                 }
               }
 
-              var vectorFormat = new ol.format.GML(
-                  {srsName_: getCapLayer.defaultSRS});
+              var vectorFormat = new ol.format.WFS();
 
               if (getCapLayer.outputFormats) {
                 $.each(getCapLayer.outputFormats.format,
@@ -674,7 +673,7 @@
 
               //TODO different strategy depending on the format
 
-              var vectorSource = new ol.source.ServerVector({
+              var vectorSource = new ol.source.Vector({
                 format: vectorFormat,
                 loader: function(extent, resolution, projection) {
                   if (this.loadingLayer) {
@@ -691,6 +690,7 @@
                         service: 'WFS',
                         request: 'GetFeature',
                         version: '1.1.0',
+                        srsName: map.getView().getProjection().getCode(),
                         bbox: extent.join(','),
                         typename: getCapLayer.name.prefix + ':' +
                                    getCapLayer.name.localPart})));
@@ -699,8 +699,9 @@
                     url: proxyUrl
                   })
                     .done(function(response) {
-                        vectorSource.addFeatures(vectorSource.
-                            readFeatures(response.firstElementChild));
+                        // TODO: Check WFS exception
+                        vectorSource.addFeatures(vectorFormat.
+                            readFeatures(response));
 
                         var extent = ol.extent.createEmpty();
                         var features = vectorSource.getFeatures();
@@ -726,7 +727,9 @@
               var extent = null;
 
               //Add spatial extent
-              if (layer.wgs84BoundingBox && layer.wgs84BoundingBox[0]) {
+              if (layer.wgs84BoundingBox && layer.wgs84BoundingBox[0] &&
+                  layer.wgs84BoundingBox[0].lowerCorner &&
+                  layer.wgs84BoundingBox[0].upperCorner) {
                 extent = ol.extent.boundingExtent(
                     [layer.wgs84BoundingBox[0].lowerCorner,
                      layer.wgs84BoundingBox[0].upperCorner]);

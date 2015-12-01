@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
-<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2" resultType="results" outputSchema="csw:IsoRecord">
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                service="CSW" version="2.0.2"
+                resultType="results"
+                outputSchema="http://www.isotc211.org/2005/gmd">
     <csw:Query typeNames="gmd:MD_Metadata">
 				<!-- xpaths must start with / (ie. they are measured from the root
 				     element) and can only contain '/', '[]', and ::node -->

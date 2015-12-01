@@ -190,8 +190,7 @@ public abstract class CatalogRequest {
 	protected void fill(String param, Iterable<?> iter, String prefix)
 	{
 		Iterator<?> i = iter.iterator();
-
-		if (!i.hasNext())
+        if (!i.hasNext())
 			return;
 
 		StringBuffer sb = new StringBuffer();
@@ -202,7 +201,7 @@ public abstract class CatalogRequest {
 			sb.append(i.next());
 
 			if (i.hasNext())
-				sb.append(',');
+				sb.append( ",");
 		}
 
 		addParam(param, sb.toString());
@@ -291,30 +290,28 @@ public abstract class CatalogRequest {
 		el.setAttribute(name, sb.toString());
 	}
 
-    	//---------------------------------------------------------------------------
 
-	protected void setAttribComma(Element el, String name, Iterable<?> iter, String prefix)
-	{
-		Iterator<?> i = iter.iterator();
+    protected void setAttribSpaceSeparated(Element el, String name, Iterable<?> iter, String prefix) {
+        Iterator<?> i = iter.iterator();
 
-		if (!i.hasNext())
-			return;
+        if (!i.hasNext())
+            return;
 
-		StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
 
-		while(i.hasNext())
-		{
+        while(i.hasNext())
+        {
             Object value =  i.next();
 
             sb.append(prefix);
             sb.append(value.toString());
 
-			if (i.hasNext())
-				sb.append(',');
-		}
+            if (i.hasNext())
+                sb.append(" ");
+        }
 
-		el.setAttribute(name, sb.toString());
-	}
+        el.setAttribute(name, sb.toString());
+    }
 	//--------------------------------------------------------------------------
 	//--- Parameters facilities (POST)
 	//---------------------------------------------------------------------------

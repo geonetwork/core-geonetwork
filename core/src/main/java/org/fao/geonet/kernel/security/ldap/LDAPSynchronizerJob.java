@@ -27,11 +27,13 @@ import com.google.common.collect.Collections2;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -239,7 +241,13 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
             Group group = groupRepo.findByName(groupName);
 
             if (group == null) {
-                group = groupRepo.save(new Group().setName(groupName));
+                group = new Group().setName(groupName);
+                LanguageRepository langRepository = this.applicationContext.getBean(LanguageRepository.class);
+                java.util.List<Language> allLanguages = langRepository.findAll();
+                for (Language l : allLanguages) {
+                    group.getLabelTranslations().put(l.getId(), groupName);
+                }
+                groupRepo.save(group);
             } else {
                 // Update something ?
                 // Group description is only defined in catalog, not in LDAP for the time

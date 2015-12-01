@@ -493,7 +493,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
         ElementSetName setName = ElementSetName.BRIEF;
 
         Pair<Element, Element> results = _searchController.search(context, 1, 100, ResultType.RESULTS,
-                OutputSchema.OGC_CORE, setName, filterExpr, filterVersion, null, null, null, 0, null, null);
+                OutputSchema.DEFAULT.toString(), setName, filterExpr, filterVersion, null, null, null, 0, null, null);
 
         @SuppressWarnings("unchecked")
         List<Element> children = results.two().getChildren();

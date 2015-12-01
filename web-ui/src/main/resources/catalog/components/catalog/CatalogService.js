@@ -64,10 +64,10 @@
          */
         validate: function(id) {
           var url = gnUrlUtils.append('md.validate@json',
-            gnUrlUtils.toKeyValue({
-              id: id
-            })
-          );
+              gnUrlUtils.toKeyValue({
+                id: id
+              })
+              );
           return $http.get(url);
         },
 

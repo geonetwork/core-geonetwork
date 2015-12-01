@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Created by francois on 6/16/14.
  */
-public abstract class SchemaPlugin {
+public abstract class SchemaPlugin implements CSWPlugin {
     public static final String LOGGER_NAME = "geonetwork.schema-plugin";
     private static ImmutableSet<Namespace> allNamespaces = null;
     public final String identifier;

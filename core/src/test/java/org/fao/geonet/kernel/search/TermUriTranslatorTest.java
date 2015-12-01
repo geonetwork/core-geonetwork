@@ -46,6 +46,24 @@ public class TermUriTranslatorTest {
         assertEquals("http://www.my.com/test#unknown_term", label);
     }
 
+    @Test
+    public void testDelayedFinder() throws Exception {
+        NullableThesaurusFinder finder = new NullableThesaurusFinder();
+        Translator translator = new TermUriTranslator(finder, "eng", "http://www.my.com/test");
+
+        // thesaurus not yet set
+        String label = translator.translate("http://www.my.com/test#ocean_temperature");
+        assertEquals("http://www.my.com/test#ocean_temperature", label);
+
+        Path thesaurusFile = new ClassPathResource("TermUriTranslatorTest.rdf", this.getClass()).getFile().toPath();
+        Thesaurus thesaurus = loadThesaurusFile(isoLangMapper, thesaurusFile);
+        finder.setThesaurus(thesaurus);
+
+        // try again the translation
+        label = translator.translate("http://www.my.com/test#ocean_temperature");
+        assertEquals("ocean temperature", label);
+    }
+
     private ThesaurusFinder createThesaurusFinderFor(IsoLanguagesMapper isoLangMapper, String fileName) throws IOException, ConfigurationException {
         //TODO: Load from in memory data directory?
         Path thesaurusFile = new ClassPathResource(fileName, this.getClass()).getFile().toPath();
