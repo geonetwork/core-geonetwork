@@ -68,3 +68,4 @@ target/
 web/src/main/webapp/WEB-INF/data/data/upload/
 transifex/transifex-format/
 datadir_*
+web/src/main/webapp/WEB-INF/data/harvester_*
