@@ -10,19 +10,24 @@ import java.util.Set;
  */
 public abstract class SchemaPlugin implements CSWPlugin {
     public static final String LOGGER_NAME = "geonetwork.schema-plugin";
-    private static ImmutableSet<Namespace> allNamespaces = null;
+
     public final String identifier;
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
 
     protected SchemaPlugin(String identifier) {
         this.identifier = identifier;
     }
 
 
-    public String getIdentifier() {
-        return identifier;
-    }
-
+    private static ImmutableSet<Namespace> allNamespaces;
     public Set<Namespace> getNamespaces() {
-        return ImmutableSet.copyOf(allNamespaces);
+        return this.allNamespaces;
+    }
+    public void setAllNamespaces(ImmutableSet<Namespace> allNamespaces) {
+        this.allNamespaces = allNamespaces;
     }
 }

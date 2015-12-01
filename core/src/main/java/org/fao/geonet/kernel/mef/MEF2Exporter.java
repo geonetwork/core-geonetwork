@@ -44,6 +44,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.NoFilterFilter;
@@ -57,10 +58,7 @@ import org.jdom.Element;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 import static org.fao.geonet.Constants.CHARSET;
@@ -252,11 +250,8 @@ class MEF2Exporter {
         final Path metadataXmlDir = metadataRootDir.resolve(MD_DIR);
         Files.createDirectories(metadataXmlDir);
 
-        Collection<ExportFormat> formats = context.getApplicationContext().getBeansOfType(ExportFormat.class).values();
-        for (ExportFormat exportFormat : formats) {
-            for (Pair<String, String> output : exportFormat.getFormats(context, record)) {
-                Files.write(metadataXmlDir.resolve(output.one()), output.two().getBytes(CHARSET));
-            }
+        for (Pair<String, String> output : ExportFormat.getFormats(context, record)) {
+            Files.write(metadataXmlDir.resolve(output.one()), output.two().getBytes(CHARSET));
         }
 
 		// --- save native metadata
