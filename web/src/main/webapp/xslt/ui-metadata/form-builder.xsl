@@ -1201,4 +1201,25 @@
     </div>
   </xsl:template>
 
+
+  <!-- Render associated resource action -->
+  <xsl:template name="render-associated-resource-button">
+    <xsl:param name="type"/>
+    <xsl:param name="label"/>
+
+    <div class="row form-group gn-field gn-extra-field">
+      <div class="col-xs-10 col-xs-offset-2">
+        <a class="btn btn-primary gn-associated-resource-btn"
+           data-ng-click="gnOnlinesrc.onOpenPopup('{$type}')">
+          <i class="fa gn-icon-{$type}"></i>&#160;
+          <span data-translate="">
+            <xsl:choose>
+              <xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
+              <xsl:otherwise><xsl:value-of select="$type"/></xsl:otherwise>
+            </xsl:choose>
+          </span>
+        </a>
+      </div>
+    </div>
+  </xsl:template>
 </xsl:stylesheet>

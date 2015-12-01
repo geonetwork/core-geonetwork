@@ -238,7 +238,13 @@
          * @param {string} type of the directive that calls it.
          */
         onOpenPopup: function(type, additionalParams) {
-          openCb[type](additionalParams);
+          var fn = openCb[type];
+          if (angular.isFunction(fn)) {
+            openCb[type](additionalParams);
+          } else {
+            console.warn('No callback functions available for \'' + type +
+                '\'. Check the type value.');
+          }
         },
 
         /**

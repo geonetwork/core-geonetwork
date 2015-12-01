@@ -62,15 +62,26 @@
             <xsl:with-param name="in" select="concat('/../', @if)"/>
           </saxon:call-template>
         </xsl:when>
-        <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+        <xsl:otherwise><xsl:value-of select="true()"/></xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    
     <xsl:if test="$match = true()">
-      <xsl:call-template name="render-batch-process-button">
-        <xsl:with-param name="process-name" select="@process"/>
-        <xsl:with-param name="process-params" select="@params"/>
-      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="@type = 'process' and @process">
+          <xsl:call-template name="render-batch-process-button">
+            <xsl:with-param name="process-name" select="@process"/>
+            <xsl:with-param name="process-params" select="@params"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:when test="@type = 'associatedResource'">
+          <xsl:variable name="labelKey" select="@name"/>
+          <xsl:variable name="label" select="$strings/*[name() = $labelKey]"/>
+          <xsl:call-template name="render-associated-resource-button">
+            <xsl:with-param name="type" select="@process"/>
+            <xsl:with-param name="label" select="if ($label != '') then $label else $labelKey"/>
+          </xsl:call-template>
+        </xsl:when>
+      </xsl:choose>
     </xsl:if>
   </xsl:template>
 

@@ -75,12 +75,12 @@
     '$scope', '$routeParams', '$http', '$rootScope',
     '$translate', '$compile', '$timeout', '$location',
     'gnEditor', 'gnSearchManagerService',
-    'gnConfigService', 'gnUtilityService',
+    'gnConfigService', 'gnUtilityService', 'gnOnlinesrc',
     'gnCurrentEdit', 'gnConfig', 'gnMetadataActions', 'Metadata',
     function($scope, $routeParams, $http, $rootScope, 
         $translate, $compile, $timeout, $location,
         gnEditor, gnSearchManagerService,
-        gnConfigService, gnUtilityService,
+        gnConfigService, gnUtilityService, gnOnlinesrc,
         gnCurrentEdit, gnConfig, gnMetadataActions, Metadata) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
@@ -90,6 +90,7 @@
       $scope.gnConfig = gnConfig;
       $scope.gnSchemaConfig = {};
       $scope.unsupportedSchema = false;
+      $scope.gnOnlinesrc = gnOnlinesrc;
 
       /**
        * Animation duration for slide up/down

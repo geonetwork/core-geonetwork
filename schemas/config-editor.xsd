@@ -1020,12 +1020,14 @@ with ``add-resource-id`` identifier:
           <xs:restriction base="xs:string">
             <xs:enumeration value="batch"/>
             <xs:enumeration value="add"/>
+            <xs:enumeration value="associatedResource"/>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
       <xs:attribute name="process" type="xs:string">
         <xs:annotation>
-          <xs:documentation>The process identifier (eg. add-resource-id).</xs:documentation>
+          <xs:documentation>The process identifier (eg. add-resource-id) or the associated resource type to open
+            (eg. onlinesrc, fcats, parent, source, sibling, service, dataset, thumbnail) See onlinesrc directive.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="forceLabel" type="xs:boolean">

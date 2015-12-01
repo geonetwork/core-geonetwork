@@ -13,9 +13,8 @@
       <ul class="dropdown-menu pull-right" role="menu">
         <li data-ng-show="isCategoryEnable('thumbnail')">
           <a href=""
-             data-toggle="modal"
-             data-target="#addthumbnail-popup">
-            <i class="fa fa-picture-o"></i>
+             data-ng-click="onlinesrcService.onOpenPopup('thumbnail')">
+            <i class="fa gn-icon-thumbnail"></i>
             <i class="icon-external-link"></i>&nbsp;
             <span data-translate="">addThumbnail</span>
           </a>
@@ -23,7 +22,7 @@
         <li data-ng-show="isCategoryEnable('onlinesrc')">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('onlinesrc')">
-            <i class="fa fa-link"></i>
+            <i class="fa gn-icon-onlinesrc"></i>
             <i class="icon-external-link"></i>&nbsp;
             <span data-translate="">addOnlinesrc</span>
           </a>
@@ -33,7 +32,7 @@
         <li data-ng-show="isCategoryEnable('parent')">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('parent')">
-          <i class="fa fa-sitemap"></i>
+          <i class="fa gn-icon-parent"></i>
           <i class="icon-external-link"></i>&nbsp;
           <span data-translate="">linkToParent</span>
           </a>
@@ -41,7 +40,7 @@
         <li data-ng-show="isCategoryEnable('service') && !gnCurrentEdit.isService">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('service')">
-            <i class="fa fa-cloud"></i>
+            <i class="fa gn-icon-service"></i>
             <i class="icon-external-link"></i>&nbsp;
             <span data-translate="">linkToService</span>
           </a>
@@ -49,7 +48,7 @@
         <li data-ng-show="isCategoryEnable('dataset') && gnCurrentEdit.isService">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('dataset')">
-            <i class="fa fa-files-o"></i>
+            <i class="fa gn-icon-dataset"></i>
             <i class="icon-external-link"></i>&nbsp;
             <span data-translate="">linkToDataset</span>
           </a>
@@ -57,7 +56,7 @@
         <li data-ng-show="isCategoryEnable('source')">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('source')">
-            <i class="fa fa-sitemap fa-rotate-180"></i>
+            <i class="fa gn-icon-source"></i>
             <i class="icon-external-link"></i>&nbsp;
             <span data-translate="">linkToSource</span>
           </a>
@@ -65,7 +64,7 @@
         <li data-ng-show="isCategoryEnable('fcats')">
           <a href=""
             data-ng-click="onlinesrcService.onOpenPopup('fcats')">
-            <i class="fa fa-table"></i>
+            <i class="fa gn-icon-fcats"></i>
             <i class="icon-external-link"></i>&nbsp;
             <span data-translate="">linkToFeatureCatalog</span>
           </a>
@@ -73,7 +72,7 @@
         <li data-ng-show="isCategoryEnable('sibling')">
           <a href=""
             data-ng-click="onlinesrcService.onOpenPopup('sibling')">
-            <i class="fa fa-sign-out"></i>
+            <i class="fa gn-icon-sibling"></i>
             <i class="icon-external-link"></i>&nbsp;
             <span data-translate="">linkToSibling</span>
           </a>
