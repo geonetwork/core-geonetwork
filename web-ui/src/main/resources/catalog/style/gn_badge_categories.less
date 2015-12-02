@@ -1,0 +1,56 @@
+// Color variables
+@color0: #054667; // Appears 2 times
+
+
+.badge-result {
+	border-radius: 50% 50% 50% 50% !important;
+	float:left;
+	height:60px;
+	line-height: 75px;
+	text-align: center;
+	vertical-align: bottom;
+	width:60px;
+}
+.badge-result-type {
+	background: #FC5353;
+}
+.badge-result-topic {
+	background: #428BCA;
+}
+.badge-result-inspire {
+	background: white;
+}
+.badge-icon {
+	min-width: 65px;
+	a {
+		color: white;
+		cursor: pointer;
+	}
+}
+.badge-text {
+	height: 100%;
+	line-height: 100%;
+	margin-top: 10px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	a {
+		color: @color0;
+		cursor: pointer;
+		line-height: normal;
+		.badge {
+			margin-left: 5px;
+		}
+		&:hover {
+			color: @color0;
+			cursor: pointer;
+			text-decoration: none;
+		}
+	}
+}
+#chips-card {
+	padding-bottom: 10px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 5px;
+}
