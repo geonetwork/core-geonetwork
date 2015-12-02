@@ -123,14 +123,15 @@ ul.ancestors li {
     font-style:italic;
 }
 /* 'skos-concept' relations display*/
-.skos-concept-relation i:hover {
-    background-color:#ddd;
+.skos-concept-relation .fa-hover:hover {
+    background-color:#ff9900;
     border-radius:3px;
     color:#2a6496;
 }
-.skos-concept-relation i{
+.skos-concept-relation .fa-hover {
     text-decoration:none;
     cursor:pointer;
+    margin-right:10px;
 }
 .skos-concept-relation span{
 		margin: 0 0 0 1em;

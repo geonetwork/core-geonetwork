@@ -107,6 +107,7 @@
                gnThesaurusService.getTopConcept(thesaurus).then(
                function(c) {
                  angular.copy(c, scope.concept);
+                 scope.previous = []; // reset the list of previous concepts
                });
              };
 
