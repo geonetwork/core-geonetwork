@@ -652,7 +652,27 @@ A section is a group of fields.
   
   <xs:attribute name="in" type="xs:string">
     <xs:annotation>
-      <xs:documentation>XPath of the geonet:child element with the or name to look for. Usually points to the parent of last element of the XPath attribute.</xs:documentation>
+      <xs:documentation><![CDATA[
+XPath of the geonet:child element with the or name to look for. Usually points to the parent of last element of the XPath attribute.
+
+eg.
+
+.. code-block:: xml
+
+    <action type="add"
+            or="spatialResolution"
+            in="/mdb:MD_Metadata/mdb:identificationInfo/*"
+
+Match the following element in the metadocument:
+
+.. code-block:: xml
+
+  <mdb:identificationInfo>
+    <mri:MD_DataIdentification>
+      ..
+      <geonet:child name="spatialResolution" prefix="mri" namespace="http://standards.iso.org/iso/19115/-3/mri/1.0" uuid="child_mri:spatialResolution_9b2ca159-0924-4ae8-bf16-13fe557f3c51" min="0" max="10000" action="replace"/>
+
+]]></xs:documentation>
     </xs:annotation>
   </xs:attribute>
 
@@ -752,7 +772,26 @@ only in some situation (eg. only for service metadata records). eg.
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
             gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"
             if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
-            
+
+
+Warning: If building a custom view for the editing mode, in some cases, an extra element is
+added to the metadocument. In this case, the XPath used in the if attribute should be
+a bit flexible and take those elements in account. This happens when the XSD define a choice
+element:
+
+.. code-block:: xml
+
+    <mri:spatialResolution xmlns:gn="http://www.fao.org/geonetwork">
+      <mri:MD_Resolution>
+        <mri:MD_Resolution_TypeCHOICE_ELEMENT0>
+          <mri:equivalentScale>
+
+In that case, use // or descendant operator for more flexible XPath. eg.
+
+.. code-block:: xml
+
+    if="count(mdb:MD_Metadata/mdb:identificationInfo/*/mri:spatialResolution//*/mri:distance) = 0"
+
 ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
