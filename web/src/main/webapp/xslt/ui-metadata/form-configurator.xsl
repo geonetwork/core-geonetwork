@@ -182,7 +182,7 @@
             <xsl:choose>
               <xsl:when test="count($nodes/*) = 1">
                 <xsl:variable name="originalNode"
-                              select="gn-fn-metadata:getOriginalNode($metadata, $nodes)"/>
+                              select="gn-fn-metadata:getOriginalNode($metadata, $nodes/node())"/>
                 <saxon:call-template name="{concat('dispatch-', $schema)}">
                   <xsl:with-param name="base" select="$originalNode"/>
                   <xsl:with-param name="overrideLabel"
@@ -497,11 +497,19 @@
       </xsl:choose>
     </xsl:variable>
 
+    <!--<xsl:message>## Add action</xsl:message>
+    <xsl:message><xsl:copy-of select="."/></xsl:message>
+    <xsl:message>Is displayed: <xsl:copy-of select="$isDisplayed"/> because no if provided or if attribute XPath '<xsl:value-of select="@if"/>' expression found a match.</xsl:message>
+    <xsl:message> = Display action <xsl:value-of select="$nonExistingChildParent/* and $isDisplayed = 'true'"/></xsl:message>
+    -->
+
     <xsl:if test="$nonExistingChildParent/* and $isDisplayed = 'true'">
       <!-- The element does not exist in current record. 
           Add an action to add an element. -->
       <xsl:variable name="name" select="@name"/>
       <xsl:variable name="childName" select="@or"/>
+      <xsl:variable name="btnLabel" select="@btnLabel"/>
+      <xsl:variable name="btnLabelTranslation" select="$strings/*[name() = $btnLabel]"/>
 
       <xsl:call-template name="render-element-template-field">
         <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
@@ -517,6 +525,8 @@
         <xsl:with-param name="qname" select="concat($nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, ':', @or)"/>
         <xsl:with-param name="isFirst" select="@forceLabel or count($elementOfSameKind/*) = 0"/>
         <xsl:with-param name="isAddAction" select="true()"/>
+        <xsl:with-param name="btnLabel" select="if ($btnLabelTranslation != '') then $btnLabelTranslation else $btnLabel"/>
+        <xsl:with-param name="btnClass" select="@btnClass"/>
       </xsl:call-template>
     </xsl:if>
     
