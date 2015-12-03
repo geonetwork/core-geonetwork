@@ -503,9 +503,9 @@
    * the gnCurrentEdit object or 'iso19139' if not defined.
    */
   .directive('schemaInfoCombo', ['$http', 'gnSchemaManagerService',
-        'gnCurrentEdit', 'gnElementsMap',
+        'gnCurrentEdit',
         function($http, gnSchemaManagerService,
-                 gnCurrentEdit, gnElementsMap) {
+                 gnCurrentEdit) {
           return {
             restrict: 'A',
             replace: true,
@@ -544,8 +544,8 @@
 
               var init = function() {
                 var schema = gnCurrentEdit.schema || 'iso19139';
-                var element = (gnElementsMap[attrs['gnSchemaInfo']] &&
-                    gnElementsMap[attrs['gnSchemaInfo']][schema]) ||
+                var element = (gnSchemaManagerService.getElementName(attrs['gnSchemaInfo']) &&
+                    gnSchemaManagerService.getElementName(attrs['gnSchemaInfo'],schema)) ||
                     attrs['gnSchemaInfo'];
                 var config = schema + '|' + element + '|||';
 

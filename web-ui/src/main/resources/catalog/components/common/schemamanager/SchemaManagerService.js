@@ -3,49 +3,6 @@
 
   var module = angular.module('gn_schema_manager_service', []);
 
-  /**
-   * Map of elements used when retrieving codelist
-   * according to the metadata schema.
-   */
-  module.value('gnElementsMap', {
-    protocol: {
-      'iso19139': 'gmd:protocol',
-      'iso19139.anzlic': 'gmd:protocol',
-      'iso19139.mcp': 'gmd:protocol',
-      'iso19139.mcp-1.4': 'gmd:protocol',
-      'iso19139.mcp-2.0': 'gmd:protocol',
-      'iso19115-2': 'gmd:protocol',
-      'iso19115-3': 'cit:protocol'
-    },
-    roleCode: {
-      'iso19139': 'gmd:CI_RoleCode',
-      'iso19139.anzlic': 'gmd:CI_RoleCode',
-      'iso19139.mcp': 'gmd:CI_RoleCode',
-      'iso19139.mcp-1.4': 'gmd:CI_RoleCode',
-      'iso19139.mcp-2.0': 'gmd:CI_RoleCode',
-      'iso19115-2': 'gmd:CI_RoleCode',
-      'iso19115-3': 'cit:CI_RoleCode'
-    },
-    associationType: {
-      'iso19139': 'gmd:DS_AssociationTypeCode',
-      'iso19139.anzlic': 'gmd:DS_AssociationTypeCode',
-      'iso19139.mcp': 'gmd:DS_AssociationTypeCode',
-      'iso19139.mcp-1.4': 'gmd:DS_AssociationTypeCode',
-      'iso19139.mcp-2.0': 'gmd:DS_AssociationTypeCode',
-      'iso19115-2': 'gmd:DS_AssociationTypeCode',
-      'iso19115-3': 'mri:DS_AssociationTypeCode'
-    },
-    initiativeType: {
-      'iso19139': 'gmd:DS_InitiativeTypeCode',
-      'iso19139.anzlic': 'gmd:DS_InitiativeTypeCode',
-      'iso19139.mcp': 'gmd:DS_InitiativeTypeCode',
-      'iso19139.mcp-1.4': 'gmd:DS_InitiativeTypeCode',
-      'iso19139.mcp-2.0': 'gmd:DS_InitiativeTypeCode',
-      'iso19115-2': 'gmd:DS_InitiativeTypeCode',
-      'iso19115-3': 'mri:DS_InitiativeTypeCode'
-    }
-  });
-
   module.factory('gnSchemaManagerService',
       ['$q', '$http', '$cacheFactory', 'gnUrlUtils',
        function($q, $http, $cacheFactory, gnUrlUtils) {
@@ -60,6 +17,29 @@
           * this could be improved ?
           */
          var infoCache = $cacheFactory('infoCache');
+
+         /**
+          * Map of elements used when retrieving codelist
+          * according to the metadata schema.
+          */
+         var gnElementsMap = {
+           protocol: {
+             'iso19139': 'gmd:protocol',
+             'iso19115-3': 'cit:protocol'
+           },
+           roleCode: {
+             'iso19139': 'gmd:CI_RoleCode',
+             'iso19115-3': 'cit:CI_RoleCode'
+           },
+           associationType: {
+             'iso19139': 'gmd:DS_AssociationTypeCode',
+             'iso19115-3': 'mri:DS_AssociationTypeCode'
+           },
+           initiativeType: {
+             'iso19139': 'gmd:DS_InitiativeTypeCode',
+             'iso19115-3': 'mri:DS_InitiativeTypeCode'
+           }
+         };
 
          var extractNamespaces = function(data) {
            var result = {};
@@ -204,7 +184,27 @@
                }
              }
              return defer.promise;
-           }
+           },
+					 /**
+						* Retrieve element name from genericName for schema dependent fields.
+						*/
+           getElementName: function(genericName, schema) {
+							if (!schema) {  // just check and see whether we have the generic name in our map
+								return gnElementsMap[genericName];
+							} else {
+								if (gnElementsMap[genericName]) {
+									if ((schema.indexOf('iso19139') == 0) || (schema.indexOf('iso19115-2') == 0)) { 
+										return gnElementsMap[genericName]['iso19139'];
+									} else if (schema.indexOf('iso19115-3') == 0) {
+										return gnElementsMap[genericName]['iso19115-3'];
+									} else {
+										return gnElementsMap[genericName][schema];
+								  }
+							  } else {
+									return undefined;
+								}
+						 }
+					 }
          };
        }]);
 })();

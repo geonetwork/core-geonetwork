@@ -19,11 +19,11 @@
       ['$rootScope', '$timeout', '$q', '$http',
         'gnEditor', 'gnSchemaManagerService',
         'gnEditorXMLService', 'gnHttp', 'gnConfig',
-        'gnCurrentEdit', 'gnConfigService', 'gnElementsMap',
+        'gnCurrentEdit', 'gnConfigService',
         function($rootScope, $timeout, $q, $http, 
             gnEditor, gnSchemaManagerService, 
             gnEditorXMLService, gnHttp, gnConfig, 
-            gnCurrentEdit, gnConfigService, gnElementsMap) {
+            gnCurrentEdit, gnConfigService) {
 
          return {
            restrict: 'A',
