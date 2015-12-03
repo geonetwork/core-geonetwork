@@ -14568,6 +14568,16 @@ yx-axis
   background: #eee;
   border-right: 1px solid #aaa;
 }
+.gn [sxt-main-viewer] [gn-gfi] .sxt-gfi-results,
+.g [sxt-main-viewer] [gn-gfi] .sxt-gfi-results {
+  max-height: 20em;
+  overflow-y: auto;
+  padding-top: 1em;
+}
+.gn [sxt-main-viewer] [gn-gfi] .sxt-gfi-results .mCustomScrollBox,
+.g [sxt-main-viewer] [gn-gfi] .sxt-gfi-results .mCustomScrollBox {
+  height: calc(99%);
+}
 .gn [sxt-main-viewer] footer,
 .g [sxt-main-viewer] footer {
   position: absolute;
