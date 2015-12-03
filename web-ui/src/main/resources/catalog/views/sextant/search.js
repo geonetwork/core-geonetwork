@@ -590,4 +590,23 @@
     }
   }]);
 
+
+  // fix angularjs bug fixed in v1.5.0-beta.1 : some html special char are
+  // interpreted: &param => %B6m
+  module.directive('sxtFixLinks', [ '$filter', '$sce',
+    function($filter, $sce) {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          scope.text = scope.result.get(scope.attr) || '';
+          if (scope.text.indexOf('http') < 0) {
+            return;
+          }
+          var link = $filter('linky')(scope.text.replace(/&#182;/, '&para'));
+          scope.text = $sce.trustAsHtml(link);
+        }
+      }
+    }
+  ]);
+
 })();
