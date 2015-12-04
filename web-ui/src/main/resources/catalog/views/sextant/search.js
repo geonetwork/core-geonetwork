@@ -606,9 +606,9 @@
           if (scope.text.indexOf('http') < 0) {
             return;
           }
-          var link = $filter('linky')(scope.text.replace(/&#182;/, '&para'));
-          link = link.replace(/>(.)*</,' target="_blank">' + icon + '<');
-          scope.text = $sce.trustAsHtml(link);
+          var link = $filter('linky')(scope.text);
+          link = link.replace(/>(.)*</,' target="_blank">' + icon + '<')
+          scope.text = $sce.trustAsHtml(link.replace(/&#182;/, '&para'));
         }
       }
     }
