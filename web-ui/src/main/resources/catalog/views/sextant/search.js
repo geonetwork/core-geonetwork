@@ -595,6 +595,10 @@
   // interpreted: &param => %B6m
   module.directive('sxtFixLinks', [ '$filter', '$sce',
     function($filter, $sce) {
+      var icon = '<span class="fa-stack fa-lg">' +
+        '<i class="fa fa-square fa-stack-2x"></i>' +
+        '<i class="fa fa-link fa-stack-1x fa-inverse"></i>' +
+      '</span>';
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -603,6 +607,7 @@
             return;
           }
           var link = $filter('linky')(scope.text.replace(/&#182;/, '&para'));
+          link = link.replace(/>(.)*</,' target="_blank">' + icon + '<');
           scope.text = $sce.trustAsHtml(link);
         }
       }
