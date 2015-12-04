@@ -24,7 +24,7 @@
         </tr>
         <tr ng-repeat="result in group">
           <td ng-repeat="attr in keys(result.getProperties()) | attributes">
-            <span sxt-fix-links ng-bind-html="text" title="{{text}}"></span>
+            <span sxt-fix-links ng-bind-html="text" title="{{result.get(attr)}}"></span>
           </td>
         </tr>
       </table>
