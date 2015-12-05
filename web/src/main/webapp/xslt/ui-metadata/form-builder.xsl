@@ -16,6 +16,8 @@
 
   <xsl:import href="form-configurator.xsl"/>
 
+  <xsl:import href="menu-fn.xsl"/>
+
   <xsl:import href="menu-builder.xsl"/>
 
   <!-- 
@@ -375,7 +377,7 @@
          data-gn-field-highlight="">
 
       <label class="col-sm-2 control-label">
-        <xsl:value-of select="$name"/>
+        <xsl:value-of select="$name"/>&#160;
       </label>
       <div class="col-sm-9">
         <!-- Create an empty input to contain the data-gn-field-tooltip
@@ -638,7 +640,7 @@
           data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
           <xsl:if test="normalize-space($label) != ''">
                   <xsl:value-of select="$label"/>
-          </xsl:if>
+          </xsl:if>&#160;
         </label>
         <div class="col-sm-9">
 

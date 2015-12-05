@@ -354,40 +354,8 @@ Hide those controls in a view to make it easier with less controls for the end-u
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="displayIfRecord">
-        <xs:annotation>
-          <xs:documentation><![CDATA[
-XPath expression returning boolean value which will be evaluated against the metadata record. if true the view will be displayed.
-eg. Display custom-view if metadata standard name contains Medsea: 
-
-.. code-block:: xml
-    
-    <view name="custom-view" 
-          displayIfRecord="contains(gmd:MD_Metadata/
-                                      gmd:metadataStandardName/gco:CharacterString, 
-                                    'MedSea')"
-    
-]]></xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="displayIfServiceInfo">
-        <xs:annotation>
-          <xs:documentation><![CDATA[
-XPath expression returning boolean value which will be evaluate against the service 
-information tree (Jeeves /root/gui element). if true the view will be displayed.
-
-eg. Display custom view if user is Administrator: 
-            
-.. code-block:: xml
-            
-    <view name="custom-view" 
-          displayIfServiceInfo="count(session[profile = 'Administrator']) = 1"
-            
-displayIfRecord and displayIfServiceInfo could be combined. An AND operator is used. Both condition MUST returned true for the view to be displayed.
-            
-]]></xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
+      <xs:attribute ref="displayIfRecord"/>
+      <xs:attribute ref="displayIfServiceInfo"/>
       <xs:attribute name="hideTimeInCalendar" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation><![CDATA[
@@ -459,6 +427,8 @@ The tab key used in URL parameter to activate that tab. The key is also use for 
         </xs:annotation>
       </xs:attribute>
       <xs:attribute ref="mode"/>
+      <xs:attribute ref="displayIfRecord"/>
+      <xs:attribute ref="displayIfServiceInfo"/>
       <xs:attribute name="toggle" fixed="true" type="xs:boolean">
         <xs:annotation>
           <xs:documentation><![CDATA[
@@ -652,78 +622,10 @@ A section is a group of fields.
   
   <xs:attribute name="in" type="xs:string">
     <xs:annotation>
-      <xs:documentation><![CDATA[
-XPath of the geonet:child element with the or name to look for. Usually points to the parent of last element of the XPath attribute.
-
-eg.
-
-.. code-block:: xml
-
-    <action type="add"
-            or="spatialResolution"
-            in="/mdb:MD_Metadata/mdb:identificationInfo/*"
-
-Match the following element in the metadocument:
-
-.. code-block:: xml
-
-  <mdb:identificationInfo>
-    <mri:MD_DataIdentification>
-      ..
-      <geonet:child name="spatialResolution" prefix="mri" namespace="http://standards.iso.org/iso/19115/-3/mri/1.0" uuid="child_mri:spatialResolution_9b2ca159-0924-4ae8-bf16-13fe557f3c51" min="0" max="10000" action="replace"/>
-
-]]></xs:documentation>
+      <xs:documentation>XPath of the geonet:child element with the or name to look for. Usually points to the parent of last element of the XPath attribute.</xs:documentation>
     </xs:annotation>
   </xs:attribute>
 
-  <xs:attribute name="if">
-    <xs:annotation>
-      <xs:documentation><![CDATA[
-An optional xpath expression to evaluate to define if the element should be displayed
-only in some situation (eg. only for service metadata records). eg.
-
-.. code-block:: xml
-
-          <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
-            gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
-
-
-Warning: If building a custom view for the editing mode, in some cases, an extra element is
-added to the metadocument. In this case, the XPath used in the if attribute should be
-a bit flexible and take those elements in account. This happens when the XSD define a choice
-element:
-
-.. code-block:: xml
-
-    <mri:spatialResolution xmlns:gn="http://www.fao.org/geonetwork">
-      <mri:MD_Resolution>
-        <mri:MD_Resolution_TypeCHOICE_ELEMENT0>
-          <mri:equivalentScale>
-
-In that case, use // or descendant operator for more flexible XPath. eg.
-
-.. code-block:: xml
-
-    if="count(mdb:MD_Metadata/mdb:identificationInfo/*/mri:spatialResolution//*/mri:distance) = 0"
-
-
-Other example:
-
-.. code-block:: xml
-
-    count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
-    gmd:identifier[ends-with(gmd:MD_Identifier/gmd:code/gco:CharacterString,
-    //gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString)]) = 0
-
-
-will only displayed the action control if the resource identifier does not end
-with the metadata identifier.
-
-]]></xs:documentation>
-    </xs:annotation>
-  </xs:attribute>
 
   <xs:element name="fieldset">
     <xs:annotation>
@@ -808,7 +710,22 @@ Activate the "flat" mode at the tab level to make the form display only existing
       <xs:sequence>
         <xs:element minOccurs="0" maxOccurs="1" ref="template"/>
       </xs:sequence>
-      <xs:attribute ref="if"/>
+      <xs:attribute name="if">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+An optional xpath expression to evaluate to define if the element should be displayed 
+only in some situation (eg. only for service metadata records). eg.
+                     
+.. code-block:: xml
+
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
+            gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
+            
+]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="name" type="xs:string">
         <xs:annotation>
           <xs:documentation>A field name to override the default name.</xs:documentation>
@@ -865,7 +782,9 @@ the remove control should remove the parent element gmd:onLine.
                 /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
       del="../..">
       <template>
-      
+
+Del attribute is not used when not in template mode.
+
             ]]>
           </xs:documentation>
         </xs:annotation>
@@ -994,7 +913,6 @@ The fragment is defined in localization file strings.xml:
           <xs:documentation>The tag name of the element to insert in the localization file.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute ref="if"/>
     </xs:complexType>
   </xs:element>
 
@@ -1097,22 +1015,62 @@ kind. Label with always be displayed.
       <xs:attribute ref="or"/>
       <xs:attribute ref="in"/>
       <xs:attribute ref="addDirective"/>
-      <xs:attribute ref="if"/>
-      </xs:attribute>
-      <xs:attribute name="btnLabel" type="xs:string">
+      <xs:attribute name="if" type="xs:string">
         <xs:annotation>
-          <xs:documentation>Optional label to be addded to the button.</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="btnClass" type="xs:string">
-        <xs:annotation>
-          <xs:documentation>Optional CSS class to be added to the button.</xs:documentation>
+          <xs:documentation>
+            <![CDATA[
+An XPath expression to evaluate. If true, the control is displayed. eg.
+
+
+.. code-block:: xml
+
+    count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
+    gmd:identifier[ends-with(gmd:MD_Identifier/gmd:code/gco:CharacterString,
+    //gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString)]) = 0
+
+
+will only displayed the action control if the resource identifier does not end
+with the metadata identifier.
+          ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>
   </xs:element>
 
+  <xs:attribute name="displayIfRecord">
+    <xs:annotation>
+      <xs:documentation><![CDATA[
+XPath expression returning boolean value which will be evaluated against the metadata record. if true the view will be displayed.
+eg. Display custom-view if metadata standard name contains Medsea:
 
+.. code-block:: xml
+
+    <view name="custom-view"
+          displayIfRecord="contains(gmd:MD_Metadata/
+                                      gmd:metadataStandardName/gco:CharacterString,
+                                    'MedSea')"
+
+]]></xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="displayIfServiceInfo">
+    <xs:annotation>
+      <xs:documentation><![CDATA[
+XPath expression returning boolean value which will be evaluate against the service
+information tree (Jeeves /root/gui element). if true the view will be displayed.
+
+eg. Display custom view if user is Administrator:
+
+.. code-block:: xml
+
+    <view name="custom-view"
+          displayIfServiceInfo="count(session[profile = 'Administrator']) = 1"
+
+displayIfRecord and displayIfServiceInfo could be combined. An AND operator is used. Both condition MUST returned true for the view to be displayed.
+
+]]></xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
   <xs:attribute name="use">
     <xs:annotation>
       <xs:documentation><![CDATA[
