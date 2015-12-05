@@ -93,7 +93,10 @@ public class CswPublicationDispatcher extends NotInReadOnlyModeService {
             operation = params.getName();
         }
 
-        if(!operation.equals("Harvest") && !operation.equals("Transaction")) {
+        if (operation == null) {
+            Element info  = new Element("info").setText("Request parameter is not defined.");
+            response.addContent(info);
+        } else if(!operation.equals("Harvest") && !operation.equals("Transaction")) {
             Element info  = new Element("info").setText("Not a CSW Publication operation: " + operation + ". Did you mean to use the CSW Discovery service? Use service name /csw");
 			response.addContent(info);
         }
