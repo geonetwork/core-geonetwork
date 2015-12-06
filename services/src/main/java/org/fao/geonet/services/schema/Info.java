@@ -182,10 +182,20 @@ public class Info implements Service {
         if (result == null) {
         	result = checkEntries(scm, schema, entries, parent, name, isoType, false);
         }
+
+        // if we're in a schema that supports profiles (eg. iso19139, iso19115-2 or iso19115-3), then check the base schema
         if (result == null) {
             if (schema.contains("iso19139") && !(schema.equals("iso19139"))) {
-                result = getHelp(scm, elem, fileName, "iso19139", name, parent, xpath, isoType,
-                        context);
+                result = getHelp(scm, elem, fileName, "iso19139", name, parent, xpath, isoType, context);
+            } else if (schema.contains("iso19115-2") && !(schema.equals("iso19115-2"))) {
+                if (scm.existsSchema("iso19115-2")) {
+                  result = getHelp(scm, elem, fileName, "iso19115-2", name, parent, xpath, isoType, context);
+                }
+                if (result == null) {  // last try, check iso19139
+                	result = getHelp(scm, elem, fileName, "iso19139", name, parent, xpath, isoType, context);
+                }
+            } else if (schema.contains("iso19115-3") && !(schema.equals("iso19115-3"))) {
+                result = getHelp(scm, elem, fileName, "iso19115-3", name, parent, xpath, isoType, context);
             } else {
                 return buildError(elem, NOT_FOUND);
             }
@@ -203,6 +213,7 @@ public class Info implements Service {
         for (Object o : entries.getChildren()) {
             Element currElem = (Element) o;
             String currName = currElem.getAttributeValue("name");
+            String aliasName = currElem.getAttributeValue("alias");
             String currContext = currElem.getAttributeValue("context");
 
             currName = findNamespace(currName, scm, schema);
@@ -217,7 +228,9 @@ public class Info implements Service {
             }
 
             if(!currName.equals(name)) {
-            	continue;
+              if (aliasName == null || !aliasName.equals(name)) {
+            		 continue;
+              }
             }
             
         	if (currContext != null && (context != null || isoType != null)) {

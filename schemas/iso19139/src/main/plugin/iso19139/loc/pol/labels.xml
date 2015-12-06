@@ -1482,7 +1482,7 @@
 		<description>identyfikacja i sposób komunikowania się z osobą(ami) 
 		i organizacją(ami) związaną z etapem procesu </description>
 	</element>
-	<element name="gmd:protocol" id="398.0">
+	<element name="gmd:protocol" id="398.0" alias="protocol">
 		<label>Protokół</label>
 		<description>użyty protokół połączenia</description>
 	</element>

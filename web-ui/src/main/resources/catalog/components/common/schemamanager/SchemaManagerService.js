@@ -18,29 +18,6 @@
           */
          var infoCache = $cacheFactory('infoCache');
 
-         /**
-          * Map of elements used when retrieving codelist
-          * according to the metadata schema.
-          */
-         var gnElementsMap = {
-           protocol: {
-             'iso19139': 'gmd:protocol',
-             'iso19115-3': 'cit:protocol'
-           },
-           roleCode: {
-             'iso19139': 'gmd:CI_RoleCode',
-             'iso19115-3': 'cit:CI_RoleCode'
-           },
-           associationType: {
-             'iso19139': 'gmd:DS_AssociationTypeCode',
-             'iso19115-3': 'mri:DS_AssociationTypeCode'
-           },
-           initiativeType: {
-             'iso19139': 'gmd:DS_InitiativeTypeCode',
-             'iso19115-3': 'mri:DS_InitiativeTypeCode'
-           }
-         };
-
          var extractNamespaces = function(data) {
            var result = {};
            var len = data['schemas'].length;
@@ -184,27 +161,7 @@
                }
              }
              return defer.promise;
-           },
-					 /**
-						* Retrieve element name from genericName for schema dependent fields.
-						*/
-           getElementName: function(genericName, schema) {
-							if (!schema) {  // just check and see whether we have the generic name in our map
-								return gnElementsMap[genericName];
-							} else {
-								if (gnElementsMap[genericName]) {
-									if ((schema.indexOf('iso19139') == 0) || (schema.indexOf('iso19115-2') == 0)) { 
-										return gnElementsMap[genericName]['iso19139'];
-									} else if (schema.indexOf('iso19115-3') == 0) {
-										return gnElementsMap[genericName]['iso19115-3'];
-									} else {
-										return gnElementsMap[genericName][schema];
-								  }
-							  } else {
-									return undefined;
-								}
-						 }
-					 }
+           }
          };
        }]);
 })();

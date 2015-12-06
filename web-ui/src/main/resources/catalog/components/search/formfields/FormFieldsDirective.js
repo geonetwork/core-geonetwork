@@ -544,10 +544,7 @@
 
               var init = function() {
                 var schema = gnCurrentEdit.schema || 'iso19139';
-                var element = (gnSchemaManagerService.getElementName(attrs['gnSchemaInfo']) &&
-                    gnSchemaManagerService.getElementName(attrs['gnSchemaInfo'],schema)) ||
-                    attrs['gnSchemaInfo'];
-                var config = schema + '|' + element + '|||';
+                var config = schema + '|' + attrs['gnSchemaInfo'] + '|||';
 
                 scope.type = attrs['schemaInfoCombo'];
                 if (scope.type == 'codelist') {
