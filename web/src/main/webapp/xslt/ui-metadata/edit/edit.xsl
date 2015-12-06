@@ -98,6 +98,8 @@
         </xsl:call-template>
       </xsl:if>
 
+      <div data-gn-toggle=""/>
+
       <xsl:choose>
         <xsl:when test="$service != 'md.element.add' and $tabConfig/section">
           <xsl:apply-templates mode="form-builder" select="$tabConfig/section">
