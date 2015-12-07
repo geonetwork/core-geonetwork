@@ -54,6 +54,37 @@
           }]
         };
 
+        /**
+         * @description
+         * Check if the layer is in the map to avoid adding duplicated ones.
+         *
+         * @param {ol.Map} map obj
+         * @param {string} name of the layer
+         * @param {string} url of the service
+         */
+        var isLayerInMap = function(map, name, url) {
+          if (gnWmsQueue.isPending(url, name)) {
+            return true;
+          }
+          for (var i = 0; i < map.getLayers().getLength(); i++) {
+            var l = map.getLayers().item(i);
+            var source = l.getSource();
+            if (source instanceof ol.source.WMTS &&
+                l.get('url') == url) {
+              if (l.get('name') == name) {
+                return true;
+              }
+            }
+            else if (source instanceof ol.source.TileWMS) {
+              if (source.getParams().LAYERS == name &&
+                  l.get('url').split('?')[0] == url.split('?')[0]) {
+                return true;
+              }
+            }
+          }
+          return false;
+        };
+
         return {
 
           /**
@@ -906,7 +937,8 @@
                 olL = $this.createOlWMSFromCap(map, capL);
 
                 var finishCreation = function() {
-                  if (!createOnly) {
+                  if ( (!createOnly) &&
+                      (!isLayerInMap(map, olL.getSource().getParams().LAYERS, olL.getSource().getUrls()[0])) ) {
                     map.addLayer(olL);
                   }
                   gnWmsQueue.removeFromQueue(url, name);
@@ -1318,28 +1350,7 @@
            * @param {string} name of the layer
            * @param {string} url of the service
            */
-          isLayerInMap: function(map, name, url) {
-            if (gnWmsQueue.isPending(url, name)) {
-              return true;
-            }
-            for (var i = 0; i < map.getLayers().getLength(); i++) {
-              var l = map.getLayers().item(i);
-              var source = l.getSource();
-              if (source instanceof ol.source.WMTS &&
-                  l.get('url') == url) {
-                if (l.get('name') == name) {
-                  return true;
-                }
-              }
-              else if (source instanceof ol.source.TileWMS) {
-                if (source.getParams().LAYERS == name &&
-                    l.get('url').split('?')[0] == url.split('?')[0]) {
-                  return true;
-                }
-              }
-            }
-            return false;
-          },
+          isLayerInMap: isLayerInMap,
 
           /**
            * @ngdoc method
