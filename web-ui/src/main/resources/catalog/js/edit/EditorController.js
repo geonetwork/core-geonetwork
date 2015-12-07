@@ -71,15 +71,15 @@
   /**
    * Metadata editor controller
    */
-  module.controller('GnEditorController', [
+  module.controller('GnEditorController', ['$q',
     '$scope', '$routeParams', '$http', '$rootScope',
     '$translate', '$compile', '$timeout', '$location',
-    'gnEditor', 'gnSearchManagerService',
+    'gnEditor', 'gnSearchManagerService', 'gnSchemaManagerService',
     'gnConfigService', 'gnUtilityService', 'gnOnlinesrc',
     'gnCurrentEdit', 'gnConfig', 'gnMetadataActions', 'Metadata',
-    function($scope, $routeParams, $http, $rootScope, 
+    function($q, $scope, $routeParams, $http, $rootScope, 
         $translate, $compile, $timeout, $location,
-        gnEditor, gnSearchManagerService,
+        gnEditor, gnSearchManagerService, gnSchemaManagerService,
         gnConfigService, gnUtilityService, gnOnlinesrc,
         gnCurrentEdit, gnConfig, gnMetadataActions, Metadata) {
       $scope.savedStatus = null;
@@ -114,7 +114,10 @@
       };
       // Controller initialization
       var init = function() {
-        gnConfigService.load().then(function(c) {
+        var promises = [];
+        promises.push(gnSchemaManagerService.getNamespaces());
+        promises.push(gnConfigService.load());
+        $q.all(promises).then(function(c) {
           // Config loaded
           if ($routeParams.id) {
             // Check requested metadata exists

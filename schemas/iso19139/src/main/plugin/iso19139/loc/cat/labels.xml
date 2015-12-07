@@ -1717,7 +1717,7 @@
 		<description>Identificació de les persones i organitzacions associades
 			al procés de producció i els mecanismes de comunicació entre ells</description>
 	</element>
-	<element name="gmd:protocol" id="398.0">
+	<element name="gmd:protocol" id="398.0" alias="protocol">
 		<label>Protocol</label>
 		<description>Protocol de connexió a utilitzar</description>
 		<helper>

@@ -48,16 +48,16 @@
     }});
 
   module.factory('gnEditorXMLService',
-      ['gnNamespaces',
+      ['gnSchemaManagerService',
        'gnXmlTemplates',
        function(
-       gnNamespaces, gnXmlTemplates) {
-         var getNamespacesForElement = function(elementName) {
-           var ns = elementName.split(':');
+       gnSchemaManagerService, gnXmlTemplates) {
+         var getNamespacesForElement = function(schema, elementName) {
            var nsDeclaration = [];
+           var ns = elementName.split(':');
            if (ns.length === 2) {
              nsDeclaration = ['xmlns:', ns[0], "='",
-               gnNamespaces[ns[0]], "'"];
+               gnSchemaManagerService.findNamespaceUri(ns[0], schema), "'"];
            }
            return nsDeclaration.join('');
          };
@@ -83,16 +83,16 @@
            * snippet provided.
            *
            * The element namespace should be defined
-           * in the list of gnNamespaces.
+           * in the list of namespaces returned by getNamespacesForElement.
            */
-           buildXML: function(elementName, snippet) {
+           buildXML: function(schema, elementName, snippet) {
              if (snippet.match(/^<\?xml/g)) {
                var xmlDeclaration =
                '<?xml version="1.0" encoding="UTF-8"?>';
                snippet = snippet.replace(xmlDeclaration, '');
              }
 
-             var nsDeclaration = getNamespacesForElement(elementName);
+             var nsDeclaration = getNamespacesForElement(schema, elementName);
 
              var tokens = [
                '<', elementName,
@@ -107,8 +107,9 @@
             * extraAttributeMap is other attributes to add to the element.
             * For example xlink:title
            */
-           buildXMLForXlink: function(elementName, xlink, extraAttributeMap) {
-             var nsDeclaration = getNamespacesForElement(elementName);
+           buildXMLForXlink: function(schema, elementName,
+                                      xlink, extraAttributeMap) {
+             var nsDeclaration = getNamespacesForElement(schema, elementName);
 
              // Escape & in XLink url
              xlink = xlink.replace(/&/g, '&amp;');
@@ -116,7 +117,8 @@
              var tokens = [
                '<', elementName,
                ' ', nsDeclaration,
-               ' xmlns:xlink="', gnNamespaces.xlink, '"',
+               ' xmlns:xlink="',
+               gnSchemaManagerService.findNamespaceUri('xlink'), '"',
                ' xlink:href="',
                xlink, '"'];
 

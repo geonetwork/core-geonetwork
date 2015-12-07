@@ -14,9 +14,9 @@
    */
   module.directive('gnDatePicker',
       ['$http', '$rootScope', '$filter', '$timeout',
-        'gnNamespaces', 'gnCurrentEdit',
+       'gnSchemaManagerService', 'gnCurrentEdit',
        function($http, $rootScope, $filter, $timeout,
-                gnNamespaces, gnCurrentEdit) {
+                gnSchemaManagerService, gnCurrentEdit) {
 
          return {
            restrict: 'A',
@@ -41,16 +41,7 @@
              scope.dateTypeSupported = Modernizr.inputtypes.date;
              scope.isValidDate = true;
              scope.hideTime = scope.hideTime == 'true';
-             var namespaces = {
-               iso19139: {
-                 gco: gnNamespaces.gco,
-                 gml: gnNamespaces.gml
-               },
-               'iso19115-3': {
-                 gco: gnNamespaces.gco3,
-                 gml: gnNamespaces.gml32
-               }
-             }, datePattern = new RegExp('^\\d{4}$|' +
+             var datePattern = new RegExp('^\\d{4}$|' +
              '^\\d{4}-\\d{2}$|' +
              '^\\d{4}-\\d{2}-\\d{2}$|' +
              '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$');
@@ -162,7 +153,8 @@
                    scope.xmlSnippet = '<' + tag +
                    ' xmlns:' +
                         namespace + '="' +
-                        namespaces[gnCurrentEdit.schema][namespace] + '"' +
+                        gnSchemaManagerService.findNamespaceUri(namespace,
+                   gnCurrentEdit.schema) + '"' +
                    attribute + '>' +
                    scope.dateTime + '</' + tag + '>';
                  } else {
