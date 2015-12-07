@@ -25,7 +25,6 @@ package org.fao.geonet.guiservices;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.*;
-import org.fao.geonet.domain.responses.KVPResponse;
 import org.fao.geonet.repository.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
