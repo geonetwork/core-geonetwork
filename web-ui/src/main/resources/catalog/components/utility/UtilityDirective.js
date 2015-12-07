@@ -735,6 +735,24 @@
     };
   }]);
 
+  module.directive('gnCollapsible', ['$parse', function($parse) {
+    return {
+      restrict: 'A',
+      scope: false,
+      link: function(scope, element, attrs) {
+        var getter = $parse(attrs['gnCollapsible']);
+        var setter = getter.assign;
+
+        element.on('click', function(e) {
+          scope.$apply(function() {
+            var collapsed = getter(scope);
+            setter(scope, !collapsed);
+          });
+        });
+      }
+    };
+  }]);
+
 
   /**
    * Directive which create the href attribute
