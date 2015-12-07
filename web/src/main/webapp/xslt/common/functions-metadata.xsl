@@ -18,7 +18,7 @@
     <xsl:param name="metadata" as="node()"/>
     <xsl:param name="evaluatedNode" as="node()"/>
 
-    <xsl:variable name="nodeRef" select="$evaluatedNode/*/gn:element/@ref"/>
+    <xsl:variable name="nodeRef" select="$evaluatedNode/gn:element/@ref"/>
     <xsl:variable name="node" select="$metadata//*[gn:element/@ref = $nodeRef]"/>
 
     <!--<xsl:message>#getOriginalNode ==================</xsl:message>
@@ -55,7 +55,7 @@
     Add try/catch block to log out when a label id duplicated
     in loc files. XSLv3 could be useful for that.
     -->
-    <!--<xsl:message>#<xsl:value-of select="$name"/></xsl:message>
+    <!--xsl:message>#<xsl:value-of select="$name"/></xsl:message>
     <xsl:message>#<xsl:value-of select="$xpath"/></xsl:message>
     <xsl:message>#<xsl:value-of select="$parent"/></xsl:message>-->
     
