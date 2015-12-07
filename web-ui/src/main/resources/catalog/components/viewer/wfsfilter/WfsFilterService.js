@@ -257,6 +257,46 @@
         });
       };
 
+      /**
+       * Update solr url depending on the current facet ui selection state.
+       * Each time a facet is selected, we trigger a new search on the index
+       * to build the facet ui again with updated occurencies.
+       *
+       * Will build the solr Q query like:
+       *  +(LABEL_s:"Abyssal" LABEL_s:Infralittoral)
+       *  +featureTypeId:*IFR_AAMP_ZONES_BIO_ATL_P
+       *
+       * @param {string} url of the base solr url
+       * @param {object} facetState strcture representing ui selection
+       * @returns {string} the updated url
+       */
+      this.updateSolrUrl = function(url, facetState) {
+        var fieldsQ = [];
+
+        angular.forEach(facetState, function(field, fieldName) {
+          var valuesQ = [];
+          for (var p in field.values) {
+            valuesQ.push(fieldName + ':"' + p + '"');
+          }
+          if(valuesQ.length) {
+            fieldsQ.push('+(' + valuesQ.join(' ') + ')');
+          }
+        });
+        if(fieldsQ.length) {
+          url = url.replace('&q=', '&q=' +
+              encodeURIComponent(fieldsQ.join(' ') + ' +'));
+        }
+        return url;
+      };
+
+      /**
+       * Call generateSLD service to create the SLD and get an url to reach it.
+       *
+       * @param {Object} rulesObj strcture of the SLD rules to apply
+       * @param {string} wfsUrl url of the WFS service
+       * @param {string} featureTypeName of the featuretype
+       * @returns {HttpPromise} promise
+       */
       this.getSldUrl = function(rulesObj, wfsUrl, featureTypeName) {
 
         var params = {

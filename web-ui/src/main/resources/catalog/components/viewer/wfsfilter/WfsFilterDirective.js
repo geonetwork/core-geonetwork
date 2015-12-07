@@ -26,7 +26,9 @@
           layer: '='
         },
         link: function(scope, element, attrs) {
-          scope.contentCollapsed = true;
+
+          var solrUrl;
+
           /**
            * Create SOLR request to get facets values
            * Check if the feature has an applicationDefinition, else get the
@@ -56,8 +58,12 @@
             defer.promise.then(function(url) {
                   wfsFilterService.getFacetsConfigFromSolr(url).
                       then(function(facetConfig) {
+                        solrUrl = url;
                         // Describe facets configuration to build the ui
                         scope.fields = facetConfig;
+                        angular.forEach(scope.fields, function(f) {
+                          f.collapsed = true;
+                        });
                       });
                 }
             );
@@ -95,13 +101,32 @@
               }
               output[fieldName].values[facetKey] = true;
             }
+
+            // Update the facet UI
+            var collapsedFields = [];
+            angular.forEach(scope.fields, function(f) {
+              if(f.collapsed) {
+                collapsedFields.push(f.name);
+              }
+            });
+
+            var url = wfsFilterService.updateSolrUrl(solrUrl, output);
+            wfsFilterService.getFacetsConfigFromSolr(url).
+                then(function(facetConfig) {
+                  scope.fields = facetConfig;
+                  angular.forEach(scope.fields, function(f) {
+                    if(collapsedFields.indexOf(f.name) >= 0) {
+                      f.collapsed = true;
+                    }
+                  });
+                });
           };
 
           /**
            * On filter click, build from the UI the SLD rules config object
            * that will be send to generateSLD service.
            */
-          scope.filter = function() {
+          scope.filterWMS = function() {
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             if (sldConfig.filters.length > 0) {
