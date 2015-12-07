@@ -14508,6 +14508,10 @@ yx-axis
   width: auto;
   overflow: visible;
 }
+.gn [sxt-main-viewer] [gn-gfi] .results .fa-stack,
+.g [sxt-main-viewer] [gn-gfi] .results .fa-stack {
+  font-size: 12px;
+}
 .gn [sxt-main-viewer] [gn-gfi] .results .panel-heading,
 .g [sxt-main-viewer] [gn-gfi] .results .panel-heading {
   position: absolute;
@@ -19035,6 +19039,16 @@ yx-axis
 .gn [gn-metadata-display] .overview .gn-metadata-display,
 .g [gn-metadata-display] .overview .gn-metadata-display {
   margin: 2em 0 0 -2em;
+}
+.gn [gn-metadata-display] .overview .gn-metadata-display dt,
+.g [gn-metadata-display] .overview .gn-metadata-display dt,
+.gn [gn-metadata-display] .overview .gn-metadata-display dd,
+.g [gn-metadata-display] .overview .gn-metadata-display dd {
+  padding-top: .5em;
+}
+.gn [gn-metadata-display] .overview .gn-metadata-display dd ul,
+.g [gn-metadata-display] .overview .gn-metadata-display dd ul {
+  padding-top: 0;
 }
 .gn [gn-metadata-display] > .panel-default,
 .g [gn-metadata-display] > .panel-default {
