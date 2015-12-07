@@ -1933,7 +1933,7 @@
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:protocol">
+	<element name="gmd:protocol" alias="protocol">
 		<label>Protocolo</label>
 		<description>Protocolo de conexão a ser usados</description>
 		<helper>

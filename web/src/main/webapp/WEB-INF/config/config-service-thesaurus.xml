@@ -93,6 +93,38 @@
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
     
+	 	
+    <service name="thesaurus.topconcept" type="xml">
+      <documentation><![CDATA[
+        Return top concept from a thesaurus.
+        
+        Parameters are:
+        * thesaurus: Name of the thesaurus to return top concept from.
+        ]]>
+      </documentation>
+      <class name=".services.thesaurus.GetTopConcept"/>
+      <output sheet="../xslt/services/thesaurus/to-jskos.xsl">
+        <call name="thesaurus" class=".services.thesaurus.GetList" />
+      </output>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+    
+    <service name="thesaurus.concept" type="xml">
+      <documentation><![CDATA[
+        Return one keyword with narrower, broader and equal links as a single
+				concept.
+        
+        Parameters are:
+        * id: Concept identifier (eg. http://www.eionet.europa.eu/gemet/concept/5510)
+        * thesaurus: Thesaurus identifier (eg. external.theme.gemet)
+        ]]>
+      </documentation>
+      <class name=".services.thesaurus.GetKeywordByIdAsConcept"/>
+      <output sheet="../xslt/services/thesaurus/to-jskos.xsl">
+        <call name="thesaurus" class=".services.thesaurus.GetList" />
+      </output>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
     
     <service name="thesaurus.keyword" type="xml">
       <documentation><![CDATA[

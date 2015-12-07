@@ -23,6 +23,8 @@
     "_groupPublished": "Published in that group",
     "_indexingError": "Indexing error",
     "_source": "Catalog",
+    "previousKeywords": "Previous",
+    "topConcepts": "Top Concept(s)",
     "add": "Add",
     "address": "Address",
     "gnToggle": "Show/hide sections",
