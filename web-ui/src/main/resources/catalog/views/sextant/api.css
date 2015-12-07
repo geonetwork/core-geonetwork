@@ -14511,6 +14511,8 @@ yx-axis
 .gn [sxt-main-viewer] [gn-gfi] .results .fa-stack,
 .g [sxt-main-viewer] [gn-gfi] .results .fa-stack {
   font-size: 12px;
+  position: absolute;
+  top: 0;
 }
 .gn [sxt-main-viewer] [gn-gfi] .results .panel-heading,
 .g [sxt-main-viewer] [gn-gfi] .results .panel-heading {
@@ -14571,6 +14573,10 @@ yx-axis
   font-weight: bold;
   background: #eee;
   border-right: 1px solid #aaa;
+}
+.gn [sxt-main-viewer] [gn-gfi] .results table td,
+.g [sxt-main-viewer] [gn-gfi] .results table td {
+  position: relative;
 }
 .gn [sxt-main-viewer] [gn-gfi] .sxt-gfi-results,
 .g [sxt-main-viewer] [gn-gfi] .sxt-gfi-results {
