@@ -12,6 +12,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 import static org.fao.geonet.services.metadata.format.FormatterWidth._100;
@@ -72,8 +73,8 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
     }
 
     @Override
-    protected File getTestMetadataFile() {
-        final String mdFile = FullViewFormatterTest.class.getResource("/dublincore/example.xml").getFile();
-        return new File(mdFile);
+    protected File getTestMetadataFile() throws Exception {
+        final URL mdFile = FullViewFormatterTest.class.getResource("/dublincore/example.xml");
+        return new File(mdFile.toURI());
     }
 }

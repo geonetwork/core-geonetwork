@@ -52,6 +52,7 @@ web/images/
 idea/
 web/src/main/webapp/WEB-INF/data/0*
 jcs_caching/
+web-ui/transifex-src
 web-ui/src/main/resources/catalog/lib/gn*.min.js
 web-ui/src/main/resources/catalog/style/gn*.css
 web-ui/src/main/resources/catalog/style/gn.css
@@ -68,3 +69,4 @@ target/
 web/src/main/webapp/WEB-INF/data/data/upload/
 transifex/transifex-format/
 datadir_*
+web/src/main/webapp/WEB-INF/data/harvester_*

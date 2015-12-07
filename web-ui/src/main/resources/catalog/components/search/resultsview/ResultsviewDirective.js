@@ -159,7 +159,7 @@
    * As we cannot use nested ng-repeat on a getLinksByType()
    * function, we have to load them once into the scope on rendering.
    */
-  module.directive('gnFixMdlinks', [ 'gnSearchSettings',
+  module.directive('gnFixMdlinks', ['gnSearchSettings',
     function(gnSearchSettings) {
 
       return {
@@ -167,7 +167,7 @@
         scope: false,
         link: function(scope) {
           var obj = gnSearchSettings.linkTypes;
-          for(var p in obj) {
+          for (var p in obj) {
             scope[p] = scope.md.getLinksByType.apply(scope.md, obj[p]);
           }
         }

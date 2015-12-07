@@ -13,8 +13,10 @@
    *  yet widely supported.
    */
   module.directive('gnDatePicker',
-      ['$http', '$rootScope', '$filter', 'gnNamespaces', 'gnCurrentEdit',
-       function($http, $rootScope, $filter, gnNamespaces, gnCurrentEdit) {
+      ['$http', '$rootScope', '$filter', '$timeout',
+        'gnNamespaces', 'gnCurrentEdit',
+       function($http, $rootScope, $filter, $timeout,
+                gnNamespaces, gnCurrentEdit) {
 
          return {
            restrict: 'A',
@@ -152,6 +154,11 @@
                      attribute = ' indeterminatePosition="' +
                      scope.indeterminatePosition + '"';
                    }
+
+                   if (scope.dateTime == null) {
+                     scope.dateTime = '';
+                   }
+
                    scope.xmlSnippet = '<' + tag +
                    ' xmlns:' +
                         namespace + '="' +
@@ -173,10 +180,15 @@
              scope.$watch('indeterminatePosition', resetDateIfNeeded);
              scope.$watch('xmlSnippet', function() {
                if (scope.id) {
-                 $(scope.id).val(scope.xmlSnippet);
-                 $(scope.id).change();
+                 // This is required on init to have the optionnaly
+                 // templateFieldDirective initialized first so
+                 // that the template is properly computed.
+                 $timeout(function() {
+                   $(scope.id).val(scope.xmlSnippet).change();
+                 });
                }
              });
+
 
              buildDate();
            }

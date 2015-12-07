@@ -41,6 +41,7 @@ import org.fao.geonet.domain.CustomElementSet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
@@ -62,13 +63,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * See OGC 07-006 and OGC 07-045.
@@ -95,6 +90,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     @Autowired
     private FieldMapper _fieldMapper;
 
+    @Autowired
+    private SchemaManager _schemaManager;
     @Autowired
 	public GetRecords(ApplicationContext context) {
     	_searchController = new SearchController(context);
@@ -159,7 +156,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         ResultType resultType = ResultType.parse(request.getAttributeValue("resultType"));
 
         // either Record or IsoRecord
-        OutputSchema outSchema = OutputSchema.parse(request.getAttributeValue("outputSchema"));
+        String outSchema = OutputSchema.parse(request.getAttributeValue("outputSchema"), _schemaManager);
 
         // GeoNetwork-specific parameter defining how to deal with ElementNames. See documentation in
         // SearchController.applyElementNames() about these strategies.
@@ -552,19 +549,21 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             if(StringUtils.isEmpty(typeNamesValue)) {
                 return cswPrefix + ":Record";
             }
-            // not empty: scan comma-separated string
+            // not empty: scan space-separated string
             @SuppressWarnings("resource")
-            Scanner commaSeparator = new Scanner(typeNamesValue);
-            commaSeparator.useDelimiter(",");
+            Scanner spaceScanner = new Scanner(typeNamesValue);
+            spaceScanner.useDelimiter(" ");
             String result = cswPrefix + ":Record";
-            while(commaSeparator.hasNext()) {
-                String typeName = commaSeparator.next();
+            while(spaceScanner.hasNext()) {
+                String typeName = spaceScanner.next();
                 typeName = typeName.trim();
                 if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
                     Log.debug(Geonet.CSW_SEARCH, "checking typename in query:" + typeName);
                 }
-                if(!(typeName.equals(cswPrefix + ":Record") || typeName.equals(gmdPrefix + ":MD_Metadata"))) {
-                throw new InvalidParameterValueEx("typeNames", "invalid value");
+
+                if(!_schemaManager.getListOfTypeNames().contains(typeName)) {
+                throw new InvalidParameterValueEx("typeNames",
+                        String.format("'%s' typename is not valid. Supported values are: %s", typeName, _schemaManager.getListOfTypeNames()));
             }
                 if(typeName.equals(gmdPrefix + ":MD_Metadata")) {
                     return typeName;
@@ -576,10 +575,10 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         else {
             if(isStrict) {
                 //Mandatory check if strict.
-                throw new MissingParameterValueEx("typeNames", "Attribute 'typeNames' is missing. Choose typeNames=\"gmd:MD_Metadata\",  typeNames=\"csw:Record\" or typeNames=\"csw:Record,gmd:MD_Metadata\" to Query Element. Default is csw:Record according to OGC 07-045.");
-            }
-            else
-            {
+                throw new MissingParameterValueEx("typeNames",
+                        String.format("Attribute 'typeNames' is missing. Supported values are: %s. Default is csw:Record according to OGC 07-045.",
+                                _schemaManager.getListOfTypeNames()));
+            } else {
                 //Return default value according to OGC 07-045.
                 return cswPrefix + ":Record";
             }

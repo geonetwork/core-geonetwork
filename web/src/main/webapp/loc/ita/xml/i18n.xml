@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18n>
+  <viewInGE>Apri in Google Earth</viewInGE>
+  <warning>Attenzione!</warning>
+  <addA>Aggiungi</addA>
+  <nojs>Javascript non è attivo. Attiva JavaScript oppure <a
+    href="catalog.search.nojs">clicca qui</a> per effettuare una ricerca in modalità minimale.</nojs>
+  <selectView>Scegli una vista</selectView>
+  <moreTabs>Altre informazioni</moreTabs>
+  <nodeChangeWarning>Avviso di cambio nodo</nodeChangeWarning>
+  <nodeChangeInfo>Attenzione: Non si è più nello stesso nodo iniziale.</nodeChangeInfo>
+  <nodeChangeBack>Se si vuole tornare al nodo iniziale, cliccare:</nodeChangeBack>
+  <nodeChangeForward>Se ci si vuole scollegare e tornare sulla pagina precedente, cliccare:</nodeChangeForward>
+  <serviceNotAllowedTitle>Servizio non disponibile</serviceNotAllowedTitle>
+  <serviceNotAllowed>Il servizio {1} non esiste, oppure non si hanno i permessi per accedervi.</serviceNotAllowed>
+  <linkToHome><span>Torna alla <a href="../..">pagina di ricerca</a>.</span></linkToHome>
+</i18n>

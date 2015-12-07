@@ -18,9 +18,9 @@
    */
   module.controller('GnHarvestSettingsController', [
     '$scope', '$http', '$translate', '$injector', '$rootScope',
-    'gnSearchManagerService', 'gnUtilityService',
+    'gnSearchManagerService', 'gnUtilityService', '$timeout',
     function($scope, $http, $translate, $injector, $rootScope,
-             gnSearchManagerService, gnUtilityService) {
+             gnSearchManagerService, gnUtilityService, $timeout) {
 
       $scope.searchObj = {
         params: {
@@ -59,6 +59,15 @@
                 gnUtilityService.parseBoolean($scope.harvesterSelected);
               }
               $scope.isLoadingOneHarvester = false;
+              if ($scope.harvesterSelected.searches[0].from) {
+                $scope.harvesterSelected.searches[0].from =
+                   new Date($scope.harvesterSelected.searches[0].from);
+              }
+
+              if ($scope.harvesterSelected.searches[0].until) {
+                $scope.harvesterSelected.searches[0].until =
+                   new Date($scope.harvesterSelected.searches[0].until);
+              }
             }).error(function(data) {
               // TODO
               $scope.isLoadingOneHarvester = false;
@@ -399,6 +408,7 @@
       $scope.oaipmhPrefix = null;
       $scope.oaipmhInfo = null;
       $scope.oaipmhGet = function() {
+        $scope.oaipmhInfoRequested = false;
         $scope.oaipmhInfo = null;
         var body = '<request><type url="' +
             $scope.harvesterSelected.site.url +
@@ -420,7 +430,11 @@
       $scope.$watch('harvesterSelected.site.url', function() {
         if ($scope.harvesterSelected &&
             $scope.harvesterSelected['@type'] === 'oaipmh') {
-          $scope.oaipmhGet();
+          //If the url is long, it hangs the server
+          if (!$scope.oaipmhInfoRequested) {
+            $scope.oaipmhInfoRequested = true;
+            $timeout($scope.oaipmhGet, 2000);
+          }
         }
       });
 

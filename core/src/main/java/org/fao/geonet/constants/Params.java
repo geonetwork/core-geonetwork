@@ -158,7 +158,9 @@ public final class Params {
     public static final String ACTION = "action";
     public static final String START_EDITING_SESSION = "starteditingsession";
 
-    /**
+	public static final String ENABLED = "enabled";
+
+	/**
      * TODO javadoc.
      */
 	public static final class Access {

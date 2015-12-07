@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:noNamespaceSchemaLocation="../../config-editor.xsd"
+  xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:gco="http://www.isotc211.org/2005/gco"
   xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -1249,7 +1249,6 @@
         <for name="gmd:distributor"/>
         <for name="gmd:contact"/>
         <for name="gmd:processor"/>
-        <for name="gmd:citedResponsibleParty"/>
         <for name="gmd:topicCategory"/>
       </flatModeExceptions>
 

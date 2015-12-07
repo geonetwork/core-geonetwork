@@ -11,12 +11,16 @@
 @import "gn_doc.less";
 @import "gn_icons.less";
 
-@ellipsis-height: 124px;
 @import "ellipsis.less";
 
 @fa-version: '4.3.0';
 @fa-font-path: '../catalog/lib/style/font-awesome/fonts';
 
+
+div[gn-transfer-ownership] * .list-group {
+  max-height: 45em;
+  overflow-y: auto;
+}
 
 .gn-pager {
   .pager {
@@ -523,17 +527,24 @@ i.fa-times.delete:hover {
 // Language specific layout
 html[lang=eng] {
   .gn-scale,
-  [data-facet=denominators] span.gn-facet-label {
-    :before {
+  [data-facet=denominators] span.gn-facet-label,
+  .gn-facet-denominators span.gn-facet-label {
+    &:before {
       content: "1/";
     }
   }
 }
 html[lang=fre] {
   .gn-scale,
-  [data-facet=denominators] span.gn-facet-label {
-    :before {
+  [data-facet=denominators] span.gn-facet-label,
+  .gn-facet-denominators span.gn-facet-label {
+    &:before {
       content: "1:";
     }
   }
+}
+
+.checkbox.disabled label, .radio.disabled label, fieldset[disabled] .checkbox label, fieldset[disabled] .radio label {
+  cursor: not-allowed;
+  color: #d3d3d3;
 }

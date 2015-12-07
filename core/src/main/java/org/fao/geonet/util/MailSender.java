@@ -74,7 +74,10 @@ public class MailSender extends Thread
         }
         _mail.addTo(to);
         _mail.setSubject(subject);
-        _mail.setMsg(message);
+		if ((message == null) || (message.length() == 0)){
+            throw new EmailException("Invalid message supplied");
+        }
+        _mail.setContent(message,"text/plain; charset=UTF-8");
     }
 
     /**

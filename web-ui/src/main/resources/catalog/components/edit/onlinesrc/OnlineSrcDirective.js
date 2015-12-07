@@ -233,6 +233,11 @@
                 }
               };
 
+              gnOnlinesrc.register('thumbnail', function() {
+                init();
+                $(scope.popupid).modal('show');
+              });
+
               // TODO: should be in gnEditor ?
               var getVersion = function() {
                 scope.metadataId = gnCurrentEdit.id;
@@ -327,9 +332,6 @@
                   });
                 }
               };
-
-              scope.$watch('mode', init);
-
             }
           };
         }])
@@ -362,7 +364,10 @@
         'gnOwsCapabilities',
         'gnEditor',
         'gnCurrentEdit',
-        function(gnOnlinesrc, gnOwsCapabilities, gnEditor, gnCurrentEdit) {
+        '$rootScope',
+        '$translate',
+        function(gnOnlinesrc, gnOwsCapabilities, gnEditor,
+                 gnCurrentEdit, $rootScope, $translate) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -411,6 +416,7 @@
 
               // the form parms that will be submited
               scope.params = {};
+              scope.params.selectedLayers = [];
 
               // Tells if we need to display layer grid and send
               // layers to the submit
@@ -419,11 +425,15 @@
               scope.onlinesrcService = gnOnlinesrc;
 
               var resetForm = function() {
+
+                scope.layers = [];
                 if (scope.params) {
                   scope.params.desc = scope.isMdMultilingual ? {} : '';
                   scope.params.url = '';
                   scope.params.name = scope.isMdMultilingual ? {} : '';
                   scope.params.protocol = '';
+                  scope.params.selectedLayers = [];
+                  scope.params.layers = [];
                 }
                 scope.clear(scope.queue);
               };
@@ -491,6 +501,20 @@
                 scope.onlinesrcService.reload = true;
               };
 
+              function handleError(reportError, error) {
+                if (reportError && error != undefined) {
+                  var errorMsg = !isNaN(parseFloat(error)) && isFinite(error) ?
+                      $translate('linkToServiceWithoutURLError') +
+                      ': ' +
+                      error :
+                      $translate(error);
+                  $rootScope.$broadcast('StatusUpdated', {
+                    title: $translate('error'),
+                    timeout: 0,
+                    msg: errorMsg,
+                    type: 'danger'});
+                }
+              }
               /**
                * loadWMSCapabilities
                *
@@ -498,18 +522,20 @@
                * Update params.layers scope value, that will be also
                * passed to the layers grid directive.
                */
-              scope.loadWMSCapabilities = function() {
+              scope.loadWMSCapabilities = function(reportError) {
                 if (scope.isWMSProtocol) {
                   gnOwsCapabilities.getWMSCapabilities(scope.params.url)
-                  .then(function(capabilities) {
+                        .then(function(capabilities) {
                         scope.layers = [];
                         angular.forEach(capabilities.layers, function(l) {
                           if (angular.isDefined(l.Name)) {
                             scope.layers.push(l);
                           }
                         });
+                      }).catch (function(error) {
+                        handleError(reportError, error);
                       });
-                }
+                    }
               };
 
               /**
@@ -712,7 +738,7 @@
    * </ul>
    * The directive contains a search form allowing one local selection.
    *
-   * On submit, the metadata is saved, the thumbnail is added,
+   * On submit, the metadata is saved, the link is added,
    * then the form and online resource list are refreshed.
    */
   .directive('gnLinkToMetadata', [
@@ -749,7 +775,6 @@
                         _schema: 'iso19110'
                       };
                       scope.btn = {
-                        icon: 'fa-table',
                         label: $translate('linkToFeatureCatalog')
                       };
                     }
@@ -758,7 +783,6 @@
                         hitsPerPage: 10
                       };
                       scope.btn = {
-                        icon: 'fa-sitemap',
                         label: $translate('linkToParent')
                       };
                     }
@@ -767,7 +791,6 @@
                         hitsPerPage: 10
                       };
                       scope.btn = {
-                        icon: 'fa-sitemap fa-rotate-180',
                         label: $translate('linkToSource')
                       };
                     }
