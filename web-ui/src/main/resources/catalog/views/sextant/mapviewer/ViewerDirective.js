@@ -219,7 +219,7 @@
         var elem = $('[sxt-main-viewer]')[0];
         $(document).on(
           'mozfullscreenchange webkitfullscreenchange fullscreenchange',
-          function() { map.updateSize(); }
+          function() { setTimeout(map.updateSize.bind(map), 0) }
         );
         element.on('click', function() {
           if (!document.fullscreenElement && !document.mozFullScreenElement &&
