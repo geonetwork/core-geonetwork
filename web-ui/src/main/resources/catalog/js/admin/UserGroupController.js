@@ -300,12 +300,6 @@
         }
         $scope.userUpdated = true;
         if ($scope.userIsAdmin) {
-          // Unselect all groups option
-          for (var i = 0; i < $scope.profiles.length; i++) {
-            if ($scope.profiles[i] !== 'Administrator') {
-              $('#groups_' + $scope.profiles[i])[0].selectedIndex = -1;
-            }
-          }
           $scope.userSelected.profile = 'Administrator';
         } else {
           // Define the highest profile for user
