@@ -1,14 +1,5 @@
 package org.fao.geonet.wro4j;
 
-import com.google.common.base.Joiner;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import ro.isdc.wro.WroRuntimeException;
-import ro.isdc.wro.cache.CacheKey;
-import ro.isdc.wro.cache.CacheStrategy;
-import ro.isdc.wro.cache.CacheValue;
-import ro.isdc.wro.cache.impl.LruMemoryCacheStrategy;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.sql.Connection;
@@ -18,6 +9,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
+
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+
+import com.google.common.base.Joiner;
+
+import ro.isdc.wro.WroRuntimeException;
+import ro.isdc.wro.cache.CacheKey;
+import ro.isdc.wro.cache.CacheStrategy;
+import ro.isdc.wro.cache.CacheValue;
+import ro.isdc.wro.cache.impl.LruMemoryCacheStrategy;
 
 /**
  * Wro4j caching strategy that in addition to using an in-memory cache, also writes to disk so that the cache is maintained even after
@@ -30,6 +32,7 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
     public static final String DB_PROP_KEY = "cacheDB";
     private static final String TABLE = "cache";
     private static final String SQL_CLEAR = "DELETE FROM " + TABLE;
+    private static final String SQL_SHUTDOWN = "SHUTDOWN";
     private static final String GROUPNAME = "groupname";
     private static final String TYPE = "type";
     private static final String HASH = "hash";
@@ -42,7 +45,7 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
     private final String dbPathString;
     private CacheStrategy<CacheKey, CacheValue> defaultCache;
     private Connection dbConnection;
-    private boolean destroyed;
+    private boolean destroyed = false;
 
     public DiskbackedCache(int lruSize, String dbPathString) {
         this.defaultCache = new LruMemoryCacheStrategy<>(lruSize);
@@ -57,6 +60,9 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
         if (this.destroyed) {
             throw new WroRuntimeException("DiskbackedCache has already been destroyed/closed");
         }
+        // The db has already been initialized, no need to (try to) open it back
+        if (dbConnection != null)
+            return;
         String path = this.dbPathString;
         if (path == null) {
             if (ApplicationContextHolder.get() != null) {
@@ -74,7 +80,7 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
                 "CREATE TABLE IF NOT EXISTS " + TABLE + "(" + GROUPNAME + "  VARCHAR(128) NOT NULL, " + TYPE + " VARCHAR(3) NOT NULL, " +
                 HASH + " VARCHAR(256) NOT NULL, " + RAW_DATA + " CLOB NOT NULL, PRIMARY KEY (" + GROUPNAME + ", " + TYPE + "))"
         };
-        String init = ";INIT=" + Joiner.on("\\;").join(initSql) + ";DB_CLOSE_DELAY=-1";
+        String init = ";INIT=" + Joiner.on("\\;").join(initSql) + ";";
 
         try {
             this.dbConnection = DriverManager.getConnection("jdbc:h2:" + path + init, "wro4jcache", "");
@@ -139,6 +145,7 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
     public void destroy() {
         try {
             if (dbConnection != null) {
+                dbConnection.createStatement().execute(SQL_SHUTDOWN);
                 dbConnection.close();
             }
         } catch (SQLException e) {
