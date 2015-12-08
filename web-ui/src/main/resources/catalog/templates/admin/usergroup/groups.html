@@ -80,7 +80,9 @@
             <p class="help-block" data-translate="">groupDescriptionHelp</p>
 
             <label data-translate="">category</label>
-            <select name="category" data-ng-model="groupSelected.defaultcategory.id">
+            <select name="category"
+                    data-ng-model="groupSelected.defaultcategory.id"
+                    class="form-control">
                 <option value="none">&nbsp;</option>
                 <option value="{{category['@id']}}" data-ng-selected="category['@id']==groupSelected.defaultcategory.id"
                         data-ng-repeat="category in categories track by $index">
@@ -156,25 +158,27 @@
                 </div>
               </div>
               
-              <div>
-	              <label data-translate="">enableAllowedCategories</label>
-	              <input type="checkbox" 
-	                    name="enableAllowedCategories"
-	                    data-ng-model="groupSelected.enableallowedcategories"/>
+              <div class="checkbox">
+                <label>
+                  <span data-translate="">enableAllowedCategories</span>
+                  <input type="checkbox"
+                         name="enableAllowedCategories"
+                         data-ng-model="groupSelected.enableallowedcategories"/>
+                </label>
               </div>
               <div>
-	              <label data-translate="">allowedCategories</label>
-		            <select style="display: block;min-height: 200px;width: 100%;" 
-		               name="allowedCategories" multiple="multiple" 
-		               data-ng-disabled="!groupSelected.enableallowedcategories"
-		               data-ng-model="groupSelected.allowedcategoriessimp">
-		                <option value="{{category['@id']}}" 
-		                        data-ng-selected="category['@id']==groupSelected.defaultcategory.id || groupSelected.allowedcategoriessimp.indexOf(category['@id']) != -1"
-		                        data-ng-repeat="category in categories track by $index">
-		                        {{category.label[lang]}}</option>
-		            </select>
-		            <p class="help-block" data-translate="">allowedCategoriesDescriptionHelp</p>
-		            
+                <label data-translate="">allowedCategories</label>
+                <select class="form-control"
+                   name="allowedCategories" multiple="multiple" 
+                   data-ng-disabled="!groupSelected.enableallowedcategories"
+                   data-ng-model="groupSelected.allowedcategoriessimp">
+                    <option value="{{category['@id']}}" 
+                            data-ng-selected="category['@id']==groupSelected.defaultcategory.id || groupSelected.allowedcategoriessimp.indexOf(category['@id']) != -1"
+                            data-ng-repeat="category in categories track by $index">
+                            {{category.label[lang]}}</option>
+                </select>
+                <p class="help-block" data-translate="">allowedCategoriesDescriptionHelp</p>
+                
              </div>
           </fieldset>
         </form>
