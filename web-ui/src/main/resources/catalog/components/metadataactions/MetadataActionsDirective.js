@@ -103,15 +103,15 @@
           scope.updateCategoriesAllowed = function() {
             if (angular.isDefined(scope.groupOwner)) {
               $http.get('admin.group.get?id=' + scope.groupOwner + '&' +
-                '_content_type=json', {cache: true}).
-              success(function (data) {
-                scope.enableallowedcategories =
-                  (data[0].enableallowedcategories == 'true');
-                scope.allowedcategories = [];
-                angular.forEach(data[0].allowedcategories, function (c) {
-                  scope.allowedcategories.push(c.id);
-                });
-              });
+                  '_content_type=json', {cache: true}).
+                  success(function(data) {
+                    scope.enableallowedcategories =
+                        (data[0].enableallowedcategories == 'true');
+                    scope.allowedcategories = [];
+                    angular.forEach(data[0].allowedcategories, function(c) {
+                      scope.allowedcategories.push(c.id);
+                    });
+                  });
             }
           };
           scope.updateCategoriesAllowed();
