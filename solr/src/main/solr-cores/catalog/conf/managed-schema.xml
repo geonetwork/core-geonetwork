@@ -45,7 +45,7 @@
     that avoids logging every request
 -->
 
-<schema name="example-data-driven-schema" version="1.5">
+<schema name="geonetwork-solr-schema" version="1.5">
   <!-- attribute "name" is the name of this schema and is only used for display purposes.
        version="x.y" is Solr's version number for the schema syntax and 
        semantics.  It should not normally be changed by applications.
@@ -123,7 +123,7 @@
     * metadata
     -->
   <field name="docType" type="string" indexed="true" stored="true" required="true" multiValued="false" />
-  <field name="featureTypeId" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+  <field name="featureTypeId" type="string" indexed="true" stored="true" required="false" multiValued="false" />
 
     <!-- Feature indexing coming from WFS are using dynamic field name. -->
     <field name="geom"  type="location_rpt" indexed="true" stored="true" multiValued="true"/>
@@ -600,6 +600,7 @@
       http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4
     -->
     <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
+               spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
                geo="true" distErrPct="0.025" maxDistErr="0.001" distanceUnits="kilometers" />
 
     <!-- Money/currency field type. See http://wiki.apache.org/solr/MoneyFieldType

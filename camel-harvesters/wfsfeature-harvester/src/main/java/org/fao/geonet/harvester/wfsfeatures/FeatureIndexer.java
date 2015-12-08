@@ -23,6 +23,7 @@
 
 package org.fao.geonet.harvester.wfsfeatures;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
@@ -38,6 +39,8 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.metadata.extent.Extent;
@@ -48,9 +51,7 @@ import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 public class FeatureIndexer {
     private SolrClient solr;
@@ -59,6 +60,11 @@ public class FeatureIndexer {
      * Define for each attribute type the Solr field suffix.
      */
     private static Map<String, String> XSDTYPES_TO_SOLRFIELDSUFFIX;
+
+    /**
+     * A list of properties to be saved in the index
+     */
+    private static Map<String, String> harvesterReportFields = new HashMap<>();
 
     Logger logger = Logger.getLogger(HarvesterRouteBuilder.LOGGER_NAME);
     // TODO: Move attributeType / solr dynamic index field suffix to config
@@ -129,10 +135,16 @@ public class FeatureIndexer {
             UpdateResponse response = solr.deleteByQuery(String.format(
                     "+featureTypeId:\"%s#%s\"", wfsUrl, featureTypeName)
             );
-            solr.commit();
             logger.info(String.format(
                     "  Features deleted in %sms.",
                     response.getElapsedTime()));
+            response = solr.deleteByQuery(String.format(
+                    "+id:\"%s#%s\"", wfsUrl, featureTypeName)
+            );
+            logger.info(String.format(
+                    "  Report deleted in %sms.",
+                    response.getElapsedTime()));
+            solr.commit();
         } catch (SolrServerException e) {
             e.printStackTrace();
             logger.error(String.format(
@@ -143,6 +155,29 @@ public class FeatureIndexer {
             logger.error(String.format(
                     "Error connecting to Solr server at '%s'. Error is %s.",
                     solrCollectionUrl, e.getMessage()));
+        }
+    }
+
+    private void saveHarvesterReport() {
+        solr = new HttpSolrClient(solrCollectionUrl);
+        SolrInputDocument harvestingTaskDocument = new SolrInputDocument();
+        Iterator<String> fields = harvesterReportFields.keySet().iterator();
+        while (fields.hasNext()) {
+            String field = fields.next();
+            harvestingTaskDocument.addField(
+                    field,
+                    harvesterReportFields.get(field));
+        }
+        try {
+            UpdateResponse response = solr.add(harvestingTaskDocument);
+            logger.info(String.format(
+                    "Report saved in %sms.",
+                    response.getElapsedTime()));
+            solr.commit();
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -163,6 +198,20 @@ public class FeatureIndexer {
         Map<String, String> fields = ftConfig.getFields();
 
         solr = new HttpSolrClient(solrCollectionUrl);
+
+        harvesterReportFields.put("id", wfsUrl + "#" + featureTypeName);
+        harvesterReportFields.put("docType", "harvesterReport");
+
+        List<String> docColumns = new ArrayList<>(fields.size());
+        for (String attributeName : fields.keySet()) {
+            String attributeType = fields.get(attributeName);
+            String suffix = attributeType.equals("geometry") ?
+                                "" :
+                                XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType);
+            docColumns.add(attributeName + suffix);
+        }
+        harvesterReportFields.put("ftColumns_s", Joiner.on("|").join(fields.keySet()));
+        harvesterReportFields.put("docColumns_s", Joiner.on("|").join(docColumns));
 
         try {
             FeatureSource<SimpleFeatureType, SimpleFeature> source = wfs.getFeatureSource(featureTypeName);
@@ -214,7 +263,9 @@ public class FeatureIndexer {
                                 // Geometry is out of CRS extent
                             }
                         } else {
-                            document.addField(attributeName + XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType), attributeValue);
+                            document.addField(
+                                    attributeName + XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType),
+                                    attributeValue);
                         }
                     }
                 }
@@ -241,18 +292,31 @@ public class FeatureIndexer {
                 }
             }
             logger.info(String.format("Total number of features indexed is %d.", nbOfFeatures));
+            harvesterReportFields.put("status_s", "success");
+            harvesterReportFields.put("endDate_dt",
+                    ISODateTimeFormat.dateTime().print(new DateTime()));
         } catch (IOException e) {
+            harvesterReportFields.put("status_s", "error");
+            harvesterReportFields.put("error_s", e.getMessage());
             logger.error(e.getMessage());
             throw e;
         } catch (SolrServerException e) {
+            harvesterReportFields.put("status_s", "error");
+            harvesterReportFields.put("error_s", e.getMessage());
             logger.error(e.getMessage());
             throw e;
         } catch (NoSuchAuthorityCodeException e) {
+            harvesterReportFields.put("status_s", "error");
+            harvesterReportFields.put("error_s", e.getMessage());
             logger.error(e.getMessage());
             throw e;
         } catch (FactoryException e) {
+            harvesterReportFields.put("status_s", "error");
+            harvesterReportFields.put("error_s", e.getMessage());
             logger.error(e.getMessage());
             throw e;
+        } finally {
+            saveHarvesterReport();
         }
     }
 }
