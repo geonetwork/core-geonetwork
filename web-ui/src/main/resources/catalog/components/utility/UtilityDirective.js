@@ -277,16 +277,16 @@
       return {
         restrict: 'A',
         template: '<button title="{{\'gnToggle\' | translate}}">' +
-        '<i class="fa fa-fw fa-angle-double-left"/>&nbsp;' +
-        '</button>',
+            '<i class="fa fa-fw fa-angle-double-left"/>&nbsp;' +
+            '</button>',
         link: function linkFn(scope, element, attr) {
           var selector = attr['gnSectionToggle'] ||
-                'form > fieldset > legend[data-gn-slide-toggle]',
-            event = attr['event'] || 'click';
-          element.on('click', function () {
-            $(selector).each(function (idx, elem) {
+              'form > fieldset > legend[data-gn-slide-toggle]',
+              event = attr['event'] || 'click';
+          element.on('click', function() {
+            $(selector).each(function(idx, elem) {
               $(elem).trigger(event);
-            })
+            });
           });
         }
       };

@@ -26,7 +26,7 @@
 
         <button type="button" class="btn btn-primary btn-block" id="gn-btn-user-add"
           data-ng-click="addUser()"
-          data-ng-show="user.isAdministratorOrMore()">
+          data-ng-show="user.isUserAdminOrMore()">
           <i class="fa fa-plus"/>
           <span data-translate="">newUser</span>
         </button>
@@ -53,11 +53,13 @@
             >resetPassword</span></button>
           <button type="button" class="btn btn-primary pull-right"
             data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
+            data-ng-show="user.isUserAdminOrMore()"
             data-ng-click="saveUser('#gn-user-edit')" id="gn-btn-user-save">
             <i class="fa fa-save"></i> <span data-translate=""
             >saveUser</span></button>
           <button type="button" class="btn pull-right btn-danger"
             data-ng-disabled="searchResults.count > 0"
+            data-ng-show="user.isUserAdminOrMore()"
             data-ng-hide="userSelected.id == ''"
             data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
             <i class="fa fa-times"></i> <span data-translate=""

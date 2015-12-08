@@ -17,13 +17,13 @@
         if (value.indexOf('/') === 0) {
           return value.substring(1);
         } else {
-          return prefix + lang + '-' + value + suffix
+          return prefix + lang + '-' + value + suffix;
         }
       };
       var allPromises = [];
       angular.forEach(options.locales, function(value, index) {
         var langUrl = buildUrl(options.prefix, options.key,
-          value, options.suffix);
+            value, options.suffix);
 
         var deferredInst = $q.defer();
         allPromises.push(deferredInst.promise);

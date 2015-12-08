@@ -165,7 +165,9 @@ public class Update extends NotInReadOnlyModeService {
             final MetadataCategoryRepository catRepository, Group group) {
         
         if(enableAllowedCategories) {
-            group.getAllowedCategories().clear();
+            if (group.getAllowedCategories() != null) {
+                group.getAllowedCategories().clear();
+            }
             
             for(Integer i : allowedCategories) {
                 try{
