@@ -59,14 +59,14 @@
                 gnUtilityService.parseBoolean($scope.harvesterSelected);
               }
               $scope.isLoadingOneHarvester = false;
-              if($scope.harvesterSelected.searches[0].from) {
-                $scope.harvesterSelected.searches[0].from = 
-                  new Date($scope.harvesterSelected.searches[0].from);
+              if ($scope.harvesterSelected.searches[0].from) {
+                $scope.harvesterSelected.searches[0].from =
+                   new Date($scope.harvesterSelected.searches[0].from);
               }
 
-              if($scope.harvesterSelected.searches[0].until) {
-                $scope.harvesterSelected.searches[0].until = 
-                  new Date($scope.harvesterSelected.searches[0].until);
+              if ($scope.harvesterSelected.searches[0].until) {
+                $scope.harvesterSelected.searches[0].until =
+                   new Date($scope.harvesterSelected.searches[0].until);
               }
             }).error(function(data) {
               // TODO
@@ -431,7 +431,7 @@
         if ($scope.harvesterSelected &&
             $scope.harvesterSelected['@type'] === 'oaipmh') {
           //If the url is long, it hangs the server
-          if(!$scope.oaipmhInfoRequested) {
+          if (!$scope.oaipmhInfoRequested) {
             $scope.oaipmhInfoRequested = true;
             $timeout($scope.oaipmhGet, 2000);
           }

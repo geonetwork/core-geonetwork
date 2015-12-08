@@ -38,6 +38,8 @@ import org.jdom.Element;
 
 import java.nio.file.Path;
 
+import java.util.Set;
+
 //=============================================================================
 
 /**
@@ -155,7 +157,13 @@ public class Info implements Service {
             return buildError(elem, UNKNOWN_SCHEMA);
         }
 
-        return getHelp(scm, elem, fileName, schema, name, parent, xpath, isoType, servContext);
+        Element result = getHelp(scm, elem, fileName, schema, name, parent, xpath, isoType, servContext);
+        // if not found then return an error
+        if (result == null) {
+          return buildError(elem, NOT_FOUND);
+        } else {
+          return result;
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -182,15 +190,16 @@ public class Info implements Service {
         if (result == null) {
         	result = checkEntries(scm, schema, entries, parent, name, isoType, false);
         }
+
         if (result == null) {
-            if (schema.contains("iso19139") && !(schema.equals("iso19139"))) {
-                result = getHelp(scm, elem, fileName, "iso19139", name, parent, xpath, isoType,
-                        context);
-            } else {
-                return buildError(elem, NOT_FOUND);
+            // get schemas that this schema depends on and check whether the 
+						// help/label exists in those - stop at the first one found 
+            Set<String> dependentSchemas = scm.getDependencies(schema);
+            for (String baseSchema : dependentSchemas) {
+              result = getHelp(scm, elem, fileName, baseSchema, name, parent, xpath, isoType, context);
+              if (result != null) break;
             }
         }
-
         
         return result;
     }
@@ -203,6 +212,7 @@ public class Info implements Service {
         for (Object o : entries.getChildren()) {
             Element currElem = (Element) o;
             String currName = currElem.getAttributeValue("name");
+            String aliasName = currElem.getAttributeValue("alias");
             String currContext = currElem.getAttributeValue("context");
 
             currName = findNamespace(currName, scm, schema);
@@ -217,7 +227,9 @@ public class Info implements Service {
             }
 
             if(!currName.equals(name)) {
-            	continue;
+              if (aliasName == null || !aliasName.equals(name)) {
+            		 continue;
+              }
             }
             
         	if (currContext != null && (context != null || isoType != null)) {

@@ -2319,7 +2319,7 @@
 			Locator)</description>
 	</element>
 	<element name="gmd:protocol" context="gmd:CI_OnlineResource"
-		id="398">
+		id="398" alias="protocol">
 		<label>Protokoll</label>
 		<help />
 		<condition />

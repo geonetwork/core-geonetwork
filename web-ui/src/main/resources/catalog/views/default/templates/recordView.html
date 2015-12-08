@@ -110,7 +110,6 @@
         </div>
 
         <h2 data-translate="">aboutThisResource</h2>
-
         <table class="table table-striped">
           <tbody>
           <tr data-ng-if="mdView.current.record.inspirethemewithac.length > 0 ||
@@ -134,7 +133,7 @@
                   <span class="fa gn-icon-{{cat}}" title="{{cat | translate}}"></span>
                 </a>
 
-                <a data-ng-repeat="t in mdView.current.record.topicCat"
+                <a data-ng-repeat="t in mdView.current.record.topicCat track by $index"
                    data-ng-href="#/search?topicCat={{t}}">
                   <i class="fa" title="{{t | translate}}">
                     <span class="fa gn-icon-{{t}}"></span>
@@ -304,7 +303,7 @@
             <tr data-ng-if="mdView.current.record.format">
               <th data-translate="">format</th>
               <td>
-                <span data-ng-repeat="f in mdView.current.record.format" class="badge">{{f}}</span>
+                <span data-ng-repeat="f in mdView.current.record.format track by $index" class="badge">{{f}}</span>
               </td>
             </tr>
             <tr data-ng-if="mdView.current.record.lineage">

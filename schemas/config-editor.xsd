@@ -354,40 +354,8 @@ Hide those controls in a view to make it easier with less controls for the end-u
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="displayIfRecord">
-        <xs:annotation>
-          <xs:documentation><![CDATA[
-XPath expression returning boolean value which will be evaluated against the metadata record. if true the view will be displayed.
-eg. Display custom-view if metadata standard name contains Medsea: 
-
-.. code-block:: xml
-    
-    <view name="custom-view" 
-          displayIfRecord="contains(gmd:MD_Metadata/
-                                      gmd:metadataStandardName/gco:CharacterString, 
-                                    'MedSea')"
-    
-]]></xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="displayIfServiceInfo">
-        <xs:annotation>
-          <xs:documentation><![CDATA[
-XPath expression returning boolean value which will be evaluate against the service 
-information tree (Jeeves /root/gui element). if true the view will be displayed.
-
-eg. Display custom view if user is Administrator: 
-            
-.. code-block:: xml
-            
-    <view name="custom-view" 
-          displayIfServiceInfo="count(session[profile = 'Administrator']) = 1"
-            
-displayIfRecord and displayIfServiceInfo could be combined. An AND operator is used. Both condition MUST returned true for the view to be displayed.
-            
-]]></xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
+      <xs:attribute ref="displayIfRecord"/>
+      <xs:attribute ref="displayIfServiceInfo"/>
       <xs:attribute name="hideTimeInCalendar" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation><![CDATA[
@@ -459,6 +427,8 @@ The tab key used in URL parameter to activate that tab. The key is also use for 
         </xs:annotation>
       </xs:attribute>
       <xs:attribute ref="mode"/>
+      <xs:attribute ref="displayIfRecord"/>
+      <xs:attribute ref="displayIfServiceInfo"/>
       <xs:attribute name="toggle" fixed="true" type="xs:boolean">
         <xs:annotation>
           <xs:documentation><![CDATA[
@@ -812,7 +782,9 @@ the remove control should remove the parent element gmd:onLine.
                 /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
       del="../..">
       <template>
-      
+
+Del attribute is not used when not in template mode.
+
             ]]>
           </xs:documentation>
         </xs:annotation>
@@ -1020,12 +992,14 @@ with ``add-resource-id`` identifier:
           <xs:restriction base="xs:string">
             <xs:enumeration value="batch"/>
             <xs:enumeration value="add"/>
+            <xs:enumeration value="associatedResource"/>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
       <xs:attribute name="process" type="xs:string">
         <xs:annotation>
-          <xs:documentation>The process identifier (eg. add-resource-id).</xs:documentation>
+          <xs:documentation>The process identifier (eg. add-resource-id) or the associated resource type to open
+            (eg. onlinesrc, fcats, parent, source, sibling, service, dataset, thumbnail) See onlinesrc directive.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="forceLabel" type="xs:boolean">
@@ -1063,11 +1037,48 @@ with the metadata identifier.
     </xs:complexType>
   </xs:element>
 
+  <xs:attribute name="displayIfRecord">
+    <xs:annotation>
+      <xs:documentation><![CDATA[
+XPath expression returning boolean value which will be evaluated against the metadata record. if true the view will be displayed.
+eg. Display custom-view if metadata standard name contains Medsea:
 
+.. code-block:: xml
+
+    <view name="custom-view"
+          displayIfRecord="contains(gmd:MD_Metadata/
+                                      gmd:metadataStandardName/gco:CharacterString,
+                                    'MedSea')"
+
+]]></xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="displayIfServiceInfo">
+    <xs:annotation>
+      <xs:documentation><![CDATA[
+XPath expression returning boolean value which will be evaluate against the service
+information tree (Jeeves /root/gui element). if true the view will be displayed.
+
+eg. Display custom view if user is Administrator:
+
+.. code-block:: xml
+
+    <view name="custom-view"
+          displayIfServiceInfo="count(session[profile = 'Administrator']) = 1"
+
+displayIfRecord and displayIfServiceInfo could be combined. An AND operator is used. Both condition MUST returned true for the view to be displayed.
+
+]]></xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
   <xs:attribute name="use">
     <xs:annotation>
       <xs:documentation><![CDATA[
-The form field type to use (one of the HTML5 type) or an AngularJS directive to use. This list is defined as an open enumeration.
+The form field type to use (one of the HTML5 type) or an AngularJS directive to use.
+This list is defined as an open enumeration. For directive, the value will be set in a simple
+text input by default. If the directive needs to deal with cariage return character, the
+directive name MUST contains "-textarea" in order to set the value in a textarea
+instead of the text input.
         ]]> </xs:documentation>
     </xs:annotation>
     <xs:simpleType>
