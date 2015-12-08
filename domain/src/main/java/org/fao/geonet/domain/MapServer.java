@@ -273,7 +273,7 @@ public class MapServer {
      * as the layer and datastore or in the global styles/ dir
      */
 
-    @Column(name="pushstyleinworkspace", nullable = false, length = 1)
+    @Column(name="pushstyleinworkspace", length = 1)
     protected char getPushStyleInWorkspace_JpaWorkaround() {
         return _pushstyleinworkspace;
     }
