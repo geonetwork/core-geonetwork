@@ -194,7 +194,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                 String changeDate = new ISODate(fileDate.getTime(), false).getDateAndTime();
 
                                 log.debug(" File date is: " + fileDate.toString() + " / record date is: " + modified);
-                                if (recordDate.before(fileDate)) {
+                                if (resetMilliseconds(recordDate).before(resetMilliseconds(fileDate))) {
                                     log.debug("  Db record is older than file. Updating record with id: " + id);
                                     harvester.updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner);
                                     result.updatedMetadata++;
@@ -229,6 +229,15 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         }
         return FileVisitResult.CONTINUE;
     }
+
+    /** Reset the milliseconds of a date */
+	private Date resetMilliseconds(Date recordDate) {
+		GregorianCalendar recordDateCal = new GregorianCalendar();
+		recordDateCal.setTime(recordDate);
+		recordDateCal.set(Calendar.MILLISECOND, 0);
+		Date recordDate0Mill = recordDateCal.getTime();
+		return recordDate0Mill;
+	}
 
     public HarvestResult getResult() {
         return result;
