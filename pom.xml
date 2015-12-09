@@ -1093,7 +1093,7 @@
       </snapshots>
       <id>k-int</id>
       <name>Developer k-int repository</name>
-      <url>http://developer.k-int.com/maven2/</url>
+      <url>http://maven.k-int.com/content/repositories/releases/</url>
     </repository>
 
     
