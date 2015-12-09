@@ -138,7 +138,7 @@ public class HarvestRunner {
     public String getConfig(
             @RequestParam("url") String wfsUrl,
             @RequestParam("typename") String featureType,
-            @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid) throws Exception {
+            @RequestParam(value = "uuid") String uuid) throws Exception {
 
         return getApplicationProfile(uuid, wfsUrl, featureType);
     }
