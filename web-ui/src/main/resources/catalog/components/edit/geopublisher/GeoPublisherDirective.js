@@ -70,10 +70,12 @@
                 // TODO : Zoom to all extent if more than one defined
                 if (angular.isArray(gnCurrentEdit.extent) &&
                     gnCurrentEdit.extent.length > 0) {
-                  map.getView().fit(
-                      gnMap.reprojExtent(gnCurrentEdit.extent[0],
-                      'EPSG:4326', gnMap.getMapConfig().projection),
-                      map.getSize());
+                  var mdExtent = gnMap.reprojExtent(gnCurrentEdit.extent[0],
+                      'EPSG:4326', gnMap.getMapConfig().projection);
+                  // check that the extent is valid, see #1308
+                  if (mdExtent.filter(isFinite).length == 4) {
+                    map.getView().fit(mdExtent, map.getSize());
+                  }
                 }
 
                 /**
