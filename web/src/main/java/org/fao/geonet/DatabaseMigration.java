@@ -12,6 +12,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.ByteArrayOutputStream;
@@ -59,7 +60,7 @@ public class DatabaseMigration implements BeanPostProcessor {
 
     @Override
     public final Object postProcessAfterInitialization(final Object bean, final String beanName) {
-        if (bean instanceof DataSource) {
+        if (bean instanceof JpaTransactionManager) {
             try {
                 String version;
                 String subVersion;
@@ -84,7 +85,7 @@ public class DatabaseMigration implements BeanPostProcessor {
                 ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
 
                 path = pathFinder.getAppPath();
-                migrateDatabase(servletContext, path, (DataSource) bean, version, subVersion);
+                migrateDatabase(servletContext, path, ((JpaTransactionManager) bean).getDataSource(), version, subVersion);
             } catch (Throwable e) {
                 throw new RuntimeException(e);
             }
