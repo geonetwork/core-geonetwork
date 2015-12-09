@@ -99,6 +99,16 @@
                 } else {
                   u.enableallowedcategories = false;
                 }
+                //FIXME this should be already on the previous list
+                if(u.defaultcategory) {
+                  $http.get('admin.group.get?_content_type=json&id=' + u.id).
+                    success(function(data) {
+                      if(data && data[0] && data[0].defaultcategory 
+                          &&data[0].defaultcategory[0]) {
+                        u.defaultcategory = data[0].defaultcategory[0];
+                      }
+                    });
+                }
               });
               $scope.isLoadingGroups = false;
             }).error(function(data) {

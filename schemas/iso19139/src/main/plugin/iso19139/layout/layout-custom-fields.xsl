@@ -29,42 +29,6 @@
 
   </xsl:template>
 
-  <!-- Match enumeration
-  
-  eg. <gmd:topicCategory xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xmlns:gml="http://www.opengis.net/gml"
-                   xmlns:gts="http://www.isotc211.org/2005/gts"
-                   xmlns:gco="http://www.isotc211.org/2005/gco"
-                   xmlns:geonet="http://www.fao.org/geonetwork"
-                   geonet:addedObj="true"><gmd:MD_TopicCategoryCode><geonet:element ref="312" parent="311"
-                      uuid="gmd:MD_TopicCategoryCode_ddf9f4dc-daac-49fc-b61f-53f1c13f1f3c"
-                      min="1"
-                      max="1"><geonet:text value="farming"/><geonet:text value="biota"/>
-  -->
-  <xsl:template mode="mode-iso19139" priority="100" match="gmd:topicCategory">
-
-    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
-
-    <xsl:call-template name="render-element">
-      <xsl:with-param name="label"
-        select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
-      <xsl:with-param name="value" select="gmd:*/text()"/>
-      <xsl:with-param name="name" select="*/gn:element/@ref"/>
-      <!-- should only match on child -->
-      <xsl:with-param name="cls" select="local-name()"/>
-      <xsl:with-param name="xpath" select="$xpath"/>
-      <xsl:with-param name="type" select="gn-fn-iso19139:getCodeListType(name())"/>
-      <xsl:with-param name="editInfo" select="*/gn:element"/>
-      <xsl:with-param name="listOfValues"
-        select="gn-fn-metadata:getCodeListValues($schema, name(gmd:*), $codelists)"/>
-    </xsl:call-template>
-
-  </xsl:template>
-
-
-
   <!-- Duration
       
        xsd:duration elements use the following format:
