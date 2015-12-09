@@ -42,7 +42,7 @@
             var url = layer.getSource().getUrls()[0].replace('wms', 'wfs');
             var featureTypeName = layer.getSource().getParams().LAYERS;
 
-            var el = angular.element('<div data-gn-wfs-filter-facets="" data-layer="layer" data-wfs-url="'+url+'" data-feature-type-name="'+featureTypeName+'"></div>');
+            var el = angular.element('<div data-gn-wfs-filter-facets="" data-uuid="'+ layer.get('md').getUuid() +'" data-layer="layer" data-wfs-url="'+url+'" data-feature-type-name="'+featureTypeName+'"></div>');
             $compile(el)(scope);
             var element = $('.sxt-wfsfilter-panel');
             element.empty();

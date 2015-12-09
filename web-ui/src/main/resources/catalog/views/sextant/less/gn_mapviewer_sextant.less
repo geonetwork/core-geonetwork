@@ -632,27 +632,6 @@
       box-shadow: none;
       padding: 0;
     }
-    .sxt-layertree-filter {
-      &:before {
-        font-family: FontAwesome;
-        content: "\f0b0";
-        float: right;
-        margin: 0.5em 0.4em 0 0;
-        font-size: 16px;
-        color: #d3d3d3;
-      }
-      .clear {
-        right: 2em;
-      }
-    }
-
-    .layerfilter {
-      border: none;
-      border-bottom: 1px solid #4BA2D9;
-      border-radius: 0;
-      box-shadow: none;
-      width: 90%;
-    }
     ul.sxt-layertree-node, ul.sxt-layertree-node > li {
       list-style-type: none;
       padding-left: 10px;
@@ -831,6 +810,29 @@
       }
     }
   }
+  .sxt-layertree-filter {
+    &:before {
+      font-family: FontAwesome;
+      content: "\f0b0";
+      float: right;
+      margin: 0.5em 0.4em 0 0;
+      font-size: 16px;
+      color: #d3d3d3;
+    }
+    .clear {
+      right: 2em;
+    }
+  }
+
+  .layerfilter {
+    border: none;
+    border-bottom: 1px solid #4BA2D9;
+    border-radius: 0;
+    box-shadow: none;
+    width: 90%;
+  }
+
 }
+
 
 @import 'gn_popover.less';
