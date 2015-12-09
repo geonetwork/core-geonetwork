@@ -147,6 +147,7 @@
     <name>gml:verticalCS</name>
     <name>gml:verticalDatum</name>
     <name>gmd:identifier</name>
+    <name>gmd:topicCategory</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
