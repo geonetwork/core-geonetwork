@@ -12,5 +12,10 @@
     }
   }, {
     "name": "EQU_CATEGORIE"
+  }, {
+    "name": "GRIDCODE"
+  }, {
+    "name": "LABEL",
+    "label" : {"fr": "monLabel", "en": "myLabel"}
   }]
 }
