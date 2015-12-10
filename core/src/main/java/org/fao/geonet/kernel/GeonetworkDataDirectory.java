@@ -593,6 +593,15 @@ public class GeonetworkDataDirectory {
     public Path getUploadDir() {
         return uploadDir;
     }
+
+    /**
+     * Set directory for caching where uploaded files go.
+     *
+     */
+    public void setUploadDir(Path uploadDir) {
+        this.uploadDir = uploadDir;
+    }
+
     /**
      * Set directory for caching html data.
      */
