@@ -10,7 +10,7 @@
     </h5>
   </div>
 
-  <div ng-repeat="(key, group) in results | groupBy: 'layer'">
+  <div ng-repeat="(key, group) in results | groupBy: 'layer'" class="sxt-gfi-results" sxt-custom-scroll>
 
     <h5 class="sxt-layer">{{key}}</h5>
 
@@ -24,8 +24,7 @@
         </tr>
         <tr ng-repeat="result in group">
           <td ng-repeat="attr in keys(result.getProperties()) | attributes">
-            <!-- <b>{{attr | lowercase}}</b>: -->
-            <span ng-bind-html="result.getProperties()[attr] | linky:'_blank'" title="{{result.getProperties()[attr]}}"></span>
+            <span sxt-fix-links ng-bind-html="text" title="{{result.get(attr)}}"></span>
           </td>
         </tr>
       </table>

@@ -248,6 +248,11 @@
       border-radius: 0;
       width: auto;
       overflow: visible;
+      .fa-stack {
+        font-size: 12px;
+        position: absolute;
+        top: 0;
+      }
       .panel-heading {
         position: absolute;
         box-shadow: inset @sxt-shadow;
@@ -299,6 +304,17 @@
           background: #eee;
           border-right: 1px solid #aaa;
         }
+        td {
+          position: relative;
+        }
+      }
+    }
+    .sxt-gfi-results {
+      max-height: 20em;
+      overflow-y: auto;
+      padding-top: 1em;
+      .mCustomScrollBox {
+        height: calc(100% - 1em);
       }
     }
   }

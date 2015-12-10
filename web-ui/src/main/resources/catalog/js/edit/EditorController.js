@@ -180,10 +180,10 @@
                 // like standardName and would like to open the editor
                 // in custom view based on the standard.
                 var firstTabDispatcher = function(md) {
-                  if (md.standardName && md.standardName.match(/emodnet checkpoint/i)) {
-                    return 'characteristics';
-                  } else if (md.standardName && md.standardName.match(/emodnet targeted/i)) {
+                  if (md.standardName && md.standardName.match(/targeted product/i)) {
                     return 'medsea-what';
+                  } else if (md.standardName && md.standardName.match(/emodnet checkpoint/i)) {
+                    return 'characteristics';
                   } else if (md.standardName && md.standardName.match(/emodnet - hydrography/i)) {
                     return 'emodnetHydrography-what';
                   }

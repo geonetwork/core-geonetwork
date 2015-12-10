@@ -14508,6 +14508,12 @@ yx-axis
   width: auto;
   overflow: visible;
 }
+.gn [sxt-main-viewer] [gn-gfi] .results .fa-stack,
+.g [sxt-main-viewer] [gn-gfi] .results .fa-stack {
+  font-size: 12px;
+  position: absolute;
+  top: 0;
+}
 .gn [sxt-main-viewer] [gn-gfi] .results .panel-heading,
 .g [sxt-main-viewer] [gn-gfi] .results .panel-heading {
   position: absolute;
@@ -14567,6 +14573,20 @@ yx-axis
   font-weight: bold;
   background: #eee;
   border-right: 1px solid #aaa;
+}
+.gn [sxt-main-viewer] [gn-gfi] .results table td,
+.g [sxt-main-viewer] [gn-gfi] .results table td {
+  position: relative;
+}
+.gn [sxt-main-viewer] [gn-gfi] .sxt-gfi-results,
+.g [sxt-main-viewer] [gn-gfi] .sxt-gfi-results {
+  max-height: 20em;
+  overflow-y: auto;
+  padding-top: 1em;
+}
+.gn [sxt-main-viewer] [gn-gfi] .sxt-gfi-results .mCustomScrollBox,
+.g [sxt-main-viewer] [gn-gfi] .sxt-gfi-results .mCustomScrollBox {
+  height: calc(99%);
 }
 .gn [sxt-main-viewer] footer,
 .g [sxt-main-viewer] footer {
@@ -19025,6 +19045,16 @@ yx-axis
 .gn [gn-metadata-display] .overview .gn-metadata-display,
 .g [gn-metadata-display] .overview .gn-metadata-display {
   margin: 2em 0 0 -2em;
+}
+.gn [gn-metadata-display] .overview .gn-metadata-display dt,
+.g [gn-metadata-display] .overview .gn-metadata-display dt,
+.gn [gn-metadata-display] .overview .gn-metadata-display dd,
+.g [gn-metadata-display] .overview .gn-metadata-display dd {
+  padding-top: .5em;
+}
+.gn [gn-metadata-display] .overview .gn-metadata-display dd ul,
+.g [gn-metadata-display] .overview .gn-metadata-display dd ul {
+  padding-top: 0;
 }
 .gn [gn-metadata-display] > .panel-default,
 .g [gn-metadata-display] > .panel-default {
