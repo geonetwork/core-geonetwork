@@ -44,33 +44,33 @@
           wfsFilterService.getWfsIndexFields(
               ftName, wfsUrl).then(function(docFields) {
 
-                indexedFields = docFields;
-                wfsFilterService.getApplicationProfile(uuid,
-                    ftName, wfsUrl).success(function(data) {
+            indexedFields = docFields;
+            wfsFilterService.getApplicationProfile(uuid,
+                ftName, wfsUrl).success(function(data) {
 
-                      var url;
-                      data = null;
-                      if(data) {
-                        url = wfsFilterService.getSolrRequestFromApplicationProfile(
-                            data, ftName, wfsUrl, docFields);
-                      }
-                      else {
-                        url = wfsFilterService.getSolrRequestFromFields(
-                            docFields, ftName, wfsUrl);
-                      }
+              var url;
+              data = null;
+              if (data) {
+                url = wfsFilterService.getSolrRequestFromApplicationProfile(
+                    data, ftName, wfsUrl, docFields);
+              }
+              else {
+                url = wfsFilterService.getSolrRequestFromFields(
+                    docFields, ftName, wfsUrl);
+              }
 
-                      wfsFilterService.getFacetsConfigFromSolr(url, docFields).
-                          then(function(facetsInfo) {
-                            solrUrl = url;
-                            // Describe facets configuration to build the ui
-                            scope.fields = facetsInfo.facetConfig;
-                            scope.count = facetsInfo.count;
-                            angular.forEach(scope.fields, function(f) {
-                              f.collapsed = true;
-                            });
-                          });
+              wfsFilterService.getFacetsConfigFromSolr(url, docFields).
+                  then(function(facetsInfo) {
+                    solrUrl = url;
+                    // Describe facets configuration to build the ui
+                    scope.fields = facetsInfo.facetConfig;
+                    scope.count = facetsInfo.count;
+                    angular.forEach(scope.fields, function(f) {
+                      f.collapsed = true;
                     });
-              });
+                  });
+            });
+          });
 
 
           // output structure to send to filter service
@@ -81,16 +81,16 @@
            * The `scope.output` structure represent the state of the facet
            * checkboxes form.
            *
-           * @param fieldName index field name
-           * @param facetKey facet key for this field
-           * @param type facet type
+           * @param {string} fieldName index field name
+           * @param {string} facetKey facet key for this field
+           * @param {string} type facet type
            */
           scope.onCheckboxClick = function(fieldName, facetKey, type) {
             var output = scope.output;
-            if(output[fieldName]) {
-              if(output[fieldName].values[facetKey]) {
+            if (output[fieldName]) {
+              if (output[fieldName].values[facetKey]) {
                 delete output[fieldName].values[facetKey];
-                if(Object.keys(output[fieldName].values).length == 0) {
+                if (Object.keys(output[fieldName].values).length == 0) {
                   delete output[fieldName];
                 }
               }
@@ -102,14 +102,14 @@
               output[fieldName] = {
                 type: type,
                 values: {}
-              }
+              };
               output[fieldName].values[facetKey] = true;
             }
 
             // Update the facet UI
             var collapsedFields = [];
             angular.forEach(scope.fields, function(f) {
-              if(f.collapsed) {
+              if (f.collapsed) {
                 collapsedFields.push(f.name);
               }
             });
@@ -120,7 +120,7 @@
                   scope.fields = facetsInfo.facetConfig;
                   scope.count = facetsInfo.count;
                   angular.forEach(scope.fields, function(f) {
-                    if(collapsedFields.indexOf(f.name) >= 0) {
+                    if (collapsedFields.indexOf(f.name) >= 0) {
                       f.collapsed = true;
                     }
                   });
@@ -137,12 +137,12 @@
             if (sldConfig.filters.length > 0) {
               wfsFilterService.getSldUrl(sldConfig, wfsUrl,
                   ftName).success(function(data) {
-                    scope.layer.getSource().updateParams({
-                      SLD: data.value
-                    });
-                  }).finally(function() {
-                    defer.resolve();
-                  });
+                scope.layer.getSource().updateParams({
+                  SLD: data.value
+                });
+              }).finally (function() {
+                defer.resolve();
+              });
             } else {
               scope.layer.getSource().updateParams({
                 SLD: null

@@ -20,16 +20,16 @@
 
       var getFacetType = function(solrPropName) {
         var type = '';
-        if(solrPropName == 'facet_ranges') {
+        if (solrPropName == 'facet_ranges') {
           type = 'range';
         }
-        else if(solrPropName == 'facet_intervals') {
+        else if (solrPropName == 'facet_intervals') {
           type = 'interval';
         }
-        else if(solrPropName == 'facet_fields') {
+        else if (solrPropName == 'facet_fields') {
           type = 'field';
         }
-        else if(solrPropName == 'facet_dates') {
+        else if (solrPropName == 'facet_dates') {
           type = 'date';
         }
         return type;
@@ -40,14 +40,14 @@
        * Solr reponse contains all values for facets fields, and help to build
        * the facet ui.
        *
-       * @param solrData response from solr request
-       * @returns {Array} All definition for each field
+       * @param {object} solrData response from solr request
+       * @return {Array} All definition for each field
        */
       var createFacetConfigFromSolr = function(solrData, docFields) {
         var fields = [];
-        for(var kind in solrData.facet_counts) {
+        for (var kind in solrData.facet_counts) {
           var facetType = getFacetType(kind);
-          for(var fieldProp in solrData.facet_counts[kind]) {
+          for (var fieldProp in solrData.facet_counts[kind]) {
             var field = solrData.facet_counts[kind][fieldProp];
             var fNameObj = getIdxNameObj(fieldProp, docFields);
             var facetField = {
@@ -57,32 +57,33 @@
               type: facetType
             };
 
-            if(kind == 'facet_ranges') {
+            if (kind == 'facet_ranges') {
               var counts = field.counts;
-              for (var i = 0; i < counts.length; i+=2) {
-                if(counts[i+1] > 0) {
+              for (var i = 0; i < counts.length; i += 2) {
+                if (counts[i + 1] > 0) {
                   var label = '';
-                  if(i >= counts.length-2) {
+                  if (i >= counts.length - 2) {
                     label = '> ' + counts[i];
                   }
                   else {
-                    label = counts[i] + ',' + counts[i+2];
+                    label = counts[i] + ',' + counts[i + 2];
                   }
-                  facetField.values[label] = counts[i+1];
+                  facetField.values[label] = counts[i + 1];
                 }
               }
               fields.push(facetField);
             }
-            else if(kind == 'facet_fields' && field.length > 0) {
-              for (var i = 0; i<  field.length; i+=2) {
+            else if (kind == 'facet_fields' && field.length > 0) {
+              for (var i = 0; i < field.length; i += 2) {
                 facetField.values.push({
-                    value: field[i],
-                    count: field[i+1]
+                  value: field[i],
+                  count: field[i + 1]
                 });
               }
               fields.push(facetField);
             }
-            else if(kind == 'facet_intervals' && Object.keys(field).length > 0) {
+            else if (kind == 'facet_intervals' &&
+                Object.keys(field).length > 0) {
               facetField.values = field;
               fields.push(facetField);
             }
@@ -100,11 +101,11 @@
        *
        * @param {string} name
        * @param {object} idxFields
-       * @returns {*}
+       * @return {*}
        */
       var getIdxNameObj = function(name, idxFields) {
-        for(var i = 0; i < idxFields.length; i++) {
-          if(idxFields[i].attrName == name ||
+        for (var i = 0; i < idxFields.length; i++) {
+          if (idxFields[i].attrName == name ||
               idxFields[i].idxName == name) {
             return idxFields[i];
           }
@@ -116,22 +117,22 @@
        * gathered to create the full SLD filter config to send to the
        * generateSLD service.
        *
-       * @param key index key of the field
-       * @param type of the facet field (range, field etc..)
+       * @param {string} key index key of the field
+       * @param {string} type of the facet field (range, field etc..)
        */
       var buildSldFilter = function(key, type) {
         var res;
-        if(type == 'interval' || type == 'range') {
+        if (type == 'interval' || type == 'range') {
           res = {
             filter_type: 'PropertyIsBetween',
             params: key.match(/\d+(?:[.]\d+)*/g)
-          }
+          };
         }
-        else if(type == 'field' ) {
+        else if (type == 'field') {
           res = {
             filter_type: 'PropertyIsEqualTo',
             params: [key]
-          }
+          };
         }
         return res;
       };
@@ -139,8 +140,8 @@
 
       /**
        * Create the generateSLD service config from the facet ui state.
-       * @param {Object} facetState represents the choices from the facet ui
-       * @returns the sld config object
+       * @param {object} facetState represents the choices from the facet ui
+       * @return {object} the sld config object
        */
       this.createSLDConfig = function(facetState) {
         var sldConfig = {
@@ -150,7 +151,7 @@
         angular.forEach(facetState, function(attrValue, attrName) {
           var field = {
             // TODO : remove the field type suffix
-            field_name: attrName.substr(0,attrName.length-2),
+            field_name: attrName.substr(0, attrName.length - 2),
             filter: []
           };
           angular.forEach(attrValue.values, function(v, k) {
@@ -167,7 +168,7 @@
        *
        * @param {string} featureTypeName featuretype name
        * @param {string} wfsUrl url of the wfs service
-       * @returns {httpPromise} return array of field names
+       * @return {httpPromise} return array of field names
        */
       this.getWfsIndexFields = function(featureTypeName, wfsUrl) {
         var url = buildSolrUrl({
@@ -182,7 +183,7 @@
             var ftF = response.data.response.docs[0].ftColumns_s.split('|');
             var docF = response.data.response.docs[0].docColumns_s.split('|');
 
-            for(var i=0; i<docF.length;i++) {
+            for (var i = 0; i < docF.length; i++) {
               indexInfos.push({
                 attrName: ftF[i],
                 idxName: docF[i]
@@ -190,8 +191,8 @@
             }
           }
           catch (e) {
-            console.warn('The feature type ' + wfsUrl + '#' +  featureTypeName +
-            'has not been indexed.');
+            console.warn('The feature type ' + wfsUrl + '#' + featureTypeName +
+                'has not been indexed.');
           }
           return indexInfos;
         });
@@ -221,7 +222,7 @@
        * @param {Array} fields array of the field names
        * @param {string} ftName featuretype name
        * @param {string} wfsUrl url of the wfs service
-       * @returns {string} solr url
+       * @return {string} solr url
        */
       this.getSolrRequestFromFields = function(fields, ftName, wfsUrl) {
         var url = buildSolrUrl({
@@ -230,7 +231,7 @@
               ftName.replace(':', '\\:') + '"',
           wt: 'json',
           facet: 'true',
-          "facet.mincount" : 1
+          'facet.mincount' : 1
         });
 
         // don't build facet on useless fields
@@ -241,7 +242,7 @@
         angular.forEach(fields, function(field) {
           var f = field.idxName;
           var fname = f.toLowerCase();
-          if($.inArray(fname, listOfFieldsToExclude) === -1) {
+          if ($.inArray(fname, listOfFieldsToExclude) === -1) {
             url += '&facet.field=' + f;
           }
         });
@@ -259,40 +260,40 @@
        * @param {array} idxFields info about doc fields
        */
       this.getSolrRequestFromApplicationProfile =
-          function(config,ftName, wfsUrl, idxFields) {
+          function(config, ftName, wfsUrl, idxFields) {
 
-            var url = buildSolrUrl({
-              rows: 0,
-              q: 'featureTypeId:"' + wfsUrl + '#' +
-                  ftName.replace(':', '\\:') + '"',
-              wt: 'json',
-              facet: 'true',
-              "facet.mincount" : 1
-            });
+        var url = buildSolrUrl({
+          rows: 0,
+          q: 'featureTypeId:"' + wfsUrl + '#' +
+              ftName.replace(':', '\\:') + '"',
+          wt: 'json',
+          facet: 'true',
+          'facet.mincount' : 1
+        });
 
-            angular.forEach(config.fields, function(field) {
-              var fNameObj = getIdxNameObj(field.name, idxFields);
-              if(field.label) {
-                fNameObj.label = field.label[gnGlobalSettings.lang];
-              }
-              var docName = fNameObj.idxName;
-              var p = '&facet.field=' + docName;
+        angular.forEach(config.fields, function(field) {
+          var fNameObj = getIdxNameObj(field.name, idxFields);
+          if (field.label) {
+            fNameObj.label = field.label[gnGlobalSettings.lang];
+          }
+          var docName = fNameObj.idxName;
+          var p = '&facet.field=' + docName;
 
-              angular.forEach(field.fq, function(v, k) {
-                if(angular.isString(v)) {
-                  p += '&' + k + '=' + v;
-                }
-                else if(angular.isArray(v)) {
-                  angular.forEach(v, function(range) {
-                    p += '&f.' + docName + '.' + k + '=' + range;
-                  });
-                }
+          angular.forEach(field.fq, function(v, k) {
+            if (angular.isString(v)) {
+              p += '&' + k + '=' + v;
+            }
+            else if (angular.isArray(v)) {
+              angular.forEach(v, function(range) {
+                p += '&f.' + docName + '.' + k + '=' + range;
               });
-              url += p;
-            });
+            }
+          });
+          url += p;
+        });
 
-            return url;
-          };
+        return url;
+      };
 
       /**
        * Call solr request to get info about facet to build.
@@ -300,13 +301,14 @@
        *
        * @param {string} url of the solr request
        * @param {array} docFields info of indexed fields.
-       * @returns {httpPromise} return facet ui config
+       * @return {httpPromise} return facet ui config
        */
       this.getFacetsConfigFromSolr = function(url, docFields) {
 
         return $http.get(url).then(function(solrResponse) {
           return {
-            facetConfig: createFacetConfigFromSolr(solrResponse.data, docFields),
+            facetConfig: createFacetConfigFromSolr(solrResponse.data,
+                docFields),
             count: solrResponse.data.response.numFound
           };
         });
@@ -323,7 +325,7 @@
        *
        * @param {string} url of the base solr url
        * @param {object} facetState strcture representing ui selection
-       * @returns {string} the updated url
+       * @return {string} the updated url
        */
       this.updateSolrUrl = function(url, facetState) {
         var fieldsQ = [];
@@ -333,11 +335,11 @@
           for (var p in field.values) {
             valuesQ.push(fieldName + ':"' + p + '"');
           }
-          if(valuesQ.length) {
+          if (valuesQ.length) {
             fieldsQ.push('+(' + valuesQ.join(' ') + ')');
           }
         });
-        if(fieldsQ.length) {
+        if (fieldsQ.length) {
           url = url.replace('&q=', '&q=' +
               encodeURIComponent(fieldsQ.join(' ') + ' +'));
         }
@@ -350,7 +352,7 @@
        * @param {Object} rulesObj strcture of the SLD rules to apply
        * @param {string} wfsUrl url of the WFS service
        * @param {string} featureTypeName of the featuretype
-       * @returns {HttpPromise} promise
+       * @return {HttpPromise} promise
        */
       this.getSldUrl = function(rulesObj, wfsUrl, featureTypeName) {
 
@@ -372,16 +374,16 @@
        *
        * @param {string} wfs service url
        * @param {string} featuretype name
-       * @returns {httpPromise} when indexing is done
+       * @return {httpPromise} when indexing is done
        */
       this.indexWFSFeatures = function(url, type) {
         return $http.get('wfs.harvest?' +
             'uuid=' + '' +
             '&url=' + encodeURIComponent(url) +
             '&typename=' + encodeURIComponent(type))
-            .success(function (data) {
+            .success(function(data) {
               console.log(data);
-            }).error(function (response) {
+            }).error(function(response) {
               console.log(response);
             });
       };
