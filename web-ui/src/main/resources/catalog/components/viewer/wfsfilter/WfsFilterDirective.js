@@ -135,7 +135,7 @@
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             if (sldConfig.filters.length > 0) {
-              wfsFilterService.getSldUrl(sldConfig, wfsUrl,
+              wfsFilterService.getSldUrl(sldConfig, scope.layer.get('url'),
                   ftName).success(function(data) {
                 scope.layer.getSource().updateParams({
                   SLD: data.value
@@ -157,7 +157,6 @@
                 ftName);
           };
 
-
           scope.filterFacetsFn = function(facet) {
             return scope.searchInput.indexOf(facet) >= 0;
           };
@@ -166,14 +165,6 @@
             scope.searchInput = '';
           };
           scope.clearInput();
-
-          /**
-           * Call on input value change, will only display the facet that match
-           * with the search input
-           */
-          scope.searchInFacets = function() {
-
-          };
         }
       };
     }]);
