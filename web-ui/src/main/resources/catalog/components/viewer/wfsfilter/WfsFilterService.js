@@ -350,15 +350,15 @@
        * Call generateSLD service to create the SLD and get an url to reach it.
        *
        * @param {Object} rulesObj strcture of the SLD rules to apply
-       * @param {string} wfsUrl url of the WFS service
+       * @param {string} wmsUrl url of the WMS service
        * @param {string} featureTypeName of the featuretype
        * @return {HttpPromise} promise
        */
-      this.getSldUrl = function(rulesObj, wfsUrl, featureTypeName) {
+      this.getSldUrl = function(rulesObj, wmsUrl, featureTypeName) {
 
         var params = {
           filters: JSON.stringify(rulesObj),
-          serverURL: wfsUrl.replace('/wfs', '/wms'), // TODO: this may be wrong
+          serverURL: wmsUrl,
           layers: featureTypeName
         };
 
