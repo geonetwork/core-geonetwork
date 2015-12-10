@@ -1400,7 +1400,7 @@
            * @param linkGroup
            */
           feedLayerWithDownloads: function(layer, linkGroup) {
-            var md = layer.get('md')
+            var md = layer.get('md');
 
             // We can bind layer and download/process
             if (md.getLinksByType(linkGroup, 'OGC:WMTS',
@@ -1410,6 +1410,9 @@
                   'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
                   'WFS', 'WCS', 'COPYFILE');
               layer.set('downloads', downloads);
+
+              var wfs = md && md.getLinksByType(linkGroup, '#WFS');
+              layer.set('wfs', wfs);
 
               var process = md && md.getLinksByType(linkGroup, 'OGC:WPS');
               layer.set('processes', process);
