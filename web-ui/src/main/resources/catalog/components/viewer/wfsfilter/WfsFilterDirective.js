@@ -11,7 +11,7 @@
    * @description
    */
   module.directive('gnWfsFilterFacets', [
-      '$http', 'wfsFilterService', '$q',
+    '$http', 'wfsFilterService', '$q',
 
     function($http, wfsFilterService, $q) {
       return {
@@ -26,7 +26,13 @@
           layer: '='
         },
         link: function(scope, element, attrs) {
-          scope.contentCollapsed = true;
+
+          var solrUrl;
+          var uuid = scope.uuid;
+          var ftName = scope.featureTypeName;
+          var wfsUrl = scope.wfsUrl;
+          var indexedFields;
+
           /**
            * Create SOLR request to get facets values
            * Check if the feature has an applicationDefinition, else get the
@@ -35,33 +41,37 @@
            * This config is stored in `scope.fields` and is used to build
            * the facet UI.
            */
-          wfsFilterService.getApplicationProfile(scope.uuid,
-              scope.featureTypeName, scope.wfsUrl).success(function(data) {
+          wfsFilterService.getWfsIndexFields(
+              ftName, wfsUrl).then(function(docFields) {
 
-            var url;
-            var defer = $q.defer();
-            if(data) {
-              url = wfsFilterService.getSolrRequestFromApplicationProfile(
-                  data, scope.featureTypeName, scope.wfsUrl);
-              defer.resolve(url);
-            }
-            else {
-              wfsFilterService.getWfsIndexFields(
-                  scope.featureTypeName, scope.wfsUrl).then(function(fields) {
-                    url = wfsFilterService.getSolrRequestFromFields(
-                        fields, scope.featureTypeName, scope.wfsUrl);
-                    defer.resolve(url);
-                  });
-            }
-            defer.promise.then(function(url) {
-                  wfsFilterService.getFacetsConfigFromSolr(url).
-                      then(function(facetConfig) {
-                        // Describe facets configuration to build the ui
-                        scope.fields = facetConfig;
-                      });
-                }
-            );
-          });
+                indexedFields = docFields;
+                wfsFilterService.getApplicationProfile(uuid,
+                    ftName, wfsUrl).success(function(data) {
+
+                      var url;
+                      data = null;
+                      if(data) {
+                        url = wfsFilterService.getSolrRequestFromApplicationProfile(
+                            data, ftName, wfsUrl, docFields);
+                      }
+                      else {
+                        url = wfsFilterService.getSolrRequestFromFields(
+                            docFields, ftName, wfsUrl);
+                      }
+
+                      wfsFilterService.getFacetsConfigFromSolr(url, docFields).
+                          then(function(facetsInfo) {
+                            solrUrl = url;
+                            // Describe facets configuration to build the ui
+                            scope.fields = facetsInfo.facetConfig;
+                            scope.count = facetsInfo.count;
+                            angular.forEach(scope.fields, function(f) {
+                              f.collapsed = true;
+                            });
+                          });
+                    });
+              });
+
 
           // output structure to send to filter service
           scope.output = {};
@@ -95,22 +105,42 @@
               }
               output[fieldName].values[facetKey] = true;
             }
+
+            // Update the facet UI
+            var collapsedFields = [];
+            angular.forEach(scope.fields, function(f) {
+              if(f.collapsed) {
+                collapsedFields.push(f.name);
+              }
+            });
+
+            var url = wfsFilterService.updateSolrUrl(solrUrl, output);
+            wfsFilterService.getFacetsConfigFromSolr(url, indexedFields).
+                then(function(facetsInfo) {
+                  scope.fields = facetsInfo.facetConfig;
+                  scope.count = facetsInfo.count;
+                  angular.forEach(scope.fields, function(f) {
+                    if(collapsedFields.indexOf(f.name) >= 0) {
+                      f.collapsed = true;
+                    }
+                  });
+                });
           };
 
           /**
            * On filter click, build from the UI the SLD rules config object
            * that will be send to generateSLD service.
            */
-          scope.filter = function() {
+          scope.filterWMS = function() {
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             if (sldConfig.filters.length > 0) {
-              wfsFilterService.getSldUrl(sldConfig, scope.wfsUrl,
-                  scope.featureTypeName).success(function(data) {
+              wfsFilterService.getSldUrl(sldConfig, wfsUrl,
+                  ftName).success(function(data) {
                     scope.layer.getSource().updateParams({
                       SLD: data.value
                     });
-              }).finally(function() {
+                  }).finally(function() {
                     defer.resolve();
                   });
             } else {
@@ -123,8 +153,27 @@
           };
 
           scope.indexWFSFeatures = function() {
-            return wfsFilterService.indexWFSFeatures(scope.wfsUrl, scope.featureTypeName);
-          }
+            return wfsFilterService.indexWFSFeatures(wfsUrl,
+                ftName);
+          };
+
+
+          scope.filterFacetsFn = function(facet) {
+            return scope.searchInput.indexOf(facet) >= 0;
+          };
+
+          scope.clearInput = function() {
+            scope.searchInput = '';
+          };
+          scope.clearInput();
+
+          /**
+           * Call on input value change, will only display the facet that match
+           * with the search input
+           */
+          scope.searchInFacets = function() {
+
+          };
         }
       };
     }]);
