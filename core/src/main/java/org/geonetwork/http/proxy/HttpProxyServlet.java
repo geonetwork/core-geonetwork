@@ -201,6 +201,8 @@ public class HttpProxyServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpGet httpGet = null;
 
+        Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (1/4) Start of doGet() method");
+
         try {
             String url = RequestUtil.getParameter(request, PARAM_URL, defaultProxyUrl);
             String host = url.split("/")[2];
@@ -213,6 +215,7 @@ public class HttpProxyServlet extends HttpServlet {
                 returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "This proxy does not allow you to access that location.");
                 return;
             }
+            Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (2/4) Host seems to be allowed");
 
             if (url.startsWith("http://") || url.startsWith("https://")) {
                 ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext
@@ -222,6 +225,8 @@ public class HttpProxyServlet extends HttpServlet {
 
                 final HttpClientBuilder clientBuilder = applicationContext.getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
 
+                Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (3/4) Start of http call");
+
                 // Added support for proxy
                 Lib.net.setupProxy(sm, clientBuilder, new URL(url).getHost());
 
@@ -230,6 +235,8 @@ public class HttpProxyServlet extends HttpServlet {
                 httpGet = new HttpGet(uri);
 
                 final HttpResponse httpResponse = client.execute(httpGet);
+
+                Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (4/4) End of http call");
 
                 if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                     Header contentType = httpResponse.getLastHeader(HEADER_CONTENT_TYPE);
@@ -247,20 +254,17 @@ public class HttpProxyServlet extends HttpServlet {
                     for (String cType : contentTypesReturned)
                         cTypeBuilder.append(cType + ", ");
 
-                    Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (1/5) Content type From client response : " + contentType + " parsed :" + cTypeBuilder);
 
                     // Sets response contentType and encoding
                     response.setContentType(getResponseContentType(contentTypesReturned));
-                    Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (2/5) Output encoding : " + response.getCharacterEncoding());
 
                     String responseBody = IOUtils.toString(httpResponse.getEntity().getContent(), response.getCharacterEncoding()).trim();
-                    Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (3/5) Response converted to " + response.getCharacterEncoding());
                     PrintWriter out = response.getWriter();
                     out.print(responseBody);
-                    Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (4/5) Response printed to PrintWriter");
+
                     out.flush();
                     out.close();
-                    Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (5/5) Response sent to client");
+						
                 } else {
                     returnExceptionMessage(response,
                            httpResponse.getStatusLine().getStatusCode(),
@@ -271,6 +275,7 @@ public class HttpProxyServlet extends HttpServlet {
                 httpGet.releaseConnection();
 
             } else {
+                Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (3-4/4) Error : protocol not supported");
                 returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "only HTTP(S) protocol supported");
             }
         } 
