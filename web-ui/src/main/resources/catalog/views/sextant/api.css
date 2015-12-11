@@ -15270,6 +15270,11 @@ yx-axis
   vertical-align: middle;
   height: 19em;
 }
+.gn .popover.popover-dropdown .popover-content ul,
+.g .popover.popover-dropdown .popover-content ul {
+  margin: 0;
+  font-size: 1em;
+}
 .gn .popover.popover-dropdown .popover-content li,
 .g .popover.popover-dropdown .popover-content li {
   font-size: 12px;
@@ -19525,6 +19530,10 @@ yx-axis
   display: table-cell;
   vertical-align: middle;
   height: 19em;
+}
+.popover.popover-dropdown .popover-content ul {
+  margin: 0;
+  font-size: 1em;
 }
 .popover.popover-dropdown .popover-content li {
   font-size: 12px;
