@@ -23,17 +23,20 @@
 
 package org.fao.geonet.domain;
 
-import org.jdom.Element;
-import org.springframework.beans.BeanWrapperImpl;
-
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.annotation.Nonnull;
 import javax.persistence.Embeddable;
+
+import org.jdom.Element;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.InvalidPropertyException;
 
 /**
  * Contains common methods of all entities in Geonetwork.
@@ -81,37 +84,51 @@ public class GeonetEntity {
 
     private static Element asXml(Object obj, IdentityHashMap<Object, Void> alreadyEncoded, Set<String> exclude) {
         alreadyEncoded.put(obj, null);
-        Element record = new Element(RECORD_EL_NAME);
-        BeanWrapperImpl wrapper = new BeanWrapperImpl(obj);
+        Element record = new Element(RECORD_EL_NAME);     
 
-        for (PropertyDescriptor desc : wrapper.getPropertyDescriptors()) {
-            try {
-                if (desc.getReadMethod() != null && desc.getReadMethod().getDeclaringClass() == obj.getClass() &&
-                    !exclude.contains(desc.getName())) {
-                    final String descName = desc.getName();
-                    if (descName.equalsIgnoreCase("labelTranslations")) {
-                        Element labelEl = new Element(LABEL_EL_NAME);
-
-                        @SuppressWarnings("unchecked")
-                        Map<String, String> labels = (Map<String, String>) desc.getReadMethod().invoke(obj);
-
-                        if (labels != null) {
-                            for (Map.Entry<String, String> entry : labels.entrySet()) {
-                                labelEl.addContent(new Element(entry.getKey().toLowerCase()).setText(entry.getValue()));
+        BeanWrapperImpl wrapper = new BeanWrapperImpl(obj); 
+        Class<? extends Object> objclass = obj.getClass();
+        while(objclass != null) {
+            for(Method method : objclass.getDeclaredMethods()) { 
+                try {
+                    if(method.getName().startsWith("get") 
+                            && method.getGenericParameterTypes().length == 0) {
+                        if (method.getDeclaringClass() == objclass 
+                                && !exclude.contains(method.getName())) {
+                            final String descName = method.getName().substring(3);
+                            if (descName.equalsIgnoreCase("LabelTranslations")) {
+                                Element labelEl = new Element(LABEL_EL_NAME);
+        
+                                @SuppressWarnings("unchecked")
+                                Map<String, String> labels = (Map<String, String>) method.invoke(obj);
+        
+                                if (labels != null) {
+                                    for (Map.Entry<String, String> entry : labels.entrySet()) {
+                                        labelEl.addContent(new Element(entry.getKey().toLowerCase()).setText(entry.getValue()));
+                                    }
+                                }
+        
+                                record.addContent(labelEl);
+                            } else if (!(descName.endsWith("AsInt") || descName.endsWith("AsBool"))){
+                                final Object rawData = method.invoke(obj);
+                                if (rawData != null) {
+                                    final Element element = propertyToElement(alreadyEncoded, descName, rawData, exclude);
+                                    record.addContent(element);
+                                }
                             }
                         }
-
-                        record.addContent(labelEl);
-                    } else {
-                        final Object rawData = desc.getReadMethod().invoke(obj);
-                        if (rawData != null) {
-                            final Element element = propertyToElement(alreadyEncoded, descName, rawData, exclude);
-                            record.addContent(element);
-                        }
                     }
+                } catch (InvalidPropertyException e) {
+                    //just ignore it and get to the following property
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            }
+            objclass = objclass.getSuperclass();
+            if(objclass != null 
+                    && (objclass.equals(GeonetEntity.class) || objclass.equals(Object.class))) {
+                objclass = null;
             }
         }
         return record;
