@@ -14224,6 +14224,10 @@ yx-axis
 .g [sxt-main-viewer] .sxt-panel-button {
   text-align: center;
 }
+.gn [sxt-main-viewer] .ol-viewport,
+.g [sxt-main-viewer] .ol-viewport {
+  background: #dbe8ff;
+}
 .gn [sxt-main-viewer] .main-tools,
 .g [sxt-main-viewer] .main-tools {
   right: auto;
@@ -14512,7 +14516,7 @@ yx-axis
 .g [sxt-main-viewer] [gn-gfi] .results .fa-stack {
   font-size: 12px;
   position: absolute;
-  top: 0;
+  top: 1px;
 }
 .gn [sxt-main-viewer] [gn-gfi] .results .panel-heading,
 .g [sxt-main-viewer] [gn-gfi] .results .panel-heading {
