@@ -19410,6 +19410,10 @@ yx-axis
   background-color: transparent;
   color: black;
 }
+.gn p img,
+.g p img {
+  float: none;
+}
 @media (min-width: 1680px) {
   .gn .sxt-main-tabs .btn-group.sxt-panel-button,
   .g .sxt-main-tabs .btn-group.sxt-panel-button {
