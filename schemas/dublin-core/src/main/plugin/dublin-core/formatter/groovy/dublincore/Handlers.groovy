@@ -12,6 +12,7 @@ public class Handlers {
     common.Handlers commonHandlers
     public String rootEl
     def excludedEls = []
+    def urlElts = ['dc:relation']
 
     public Handlers(handlers, f, env) {
         this(handlers, f, env, "simpledc")
@@ -100,7 +101,12 @@ public class Handlers {
                 multiples.append(handlers.fileResult("html/list-entry.html", [label: f.nodeLabel(entry.key, null), listItems: entry.value]))
             } else {
                 def el = entry.value.iterator().next()
-                singles.append(handlers.fileResult("html/text-el.html", [label: f.nodeLabel(el), text: el.text()]))
+                if(!urlElts.contains(el.name()))
+                    singles.append(handlers.fileResult("html/text-el.html", [label: f.nodeLabel(el), text: el.text()]))
+                else
+                    singles.append(handlers.fileResult("html/url-el.html", ["label": f.nodeLabel(el), "href" : el.text(), "text" :
+                            el.text().length() > 50 ? (el.text().substring(0, 50) + "...") : el.text()]))
+
             }
         }
 
