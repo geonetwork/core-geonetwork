@@ -192,7 +192,7 @@ class Harvester extends BaseAligner
         // Try to load capabilities document
 		this.capabilitiesUrl = getBaseUrl(params.url) +
         		"SERVICE=" + params.ogctype.substring(0,3) +
-        		"&VERSION=" + params.ogctype.substring(3) +
+        		"&ACCEPTVERSIONS=" + params.ogctype.substring(3) +
         		"&REQUEST=" + GETCAPABILITIES
         		;
 
