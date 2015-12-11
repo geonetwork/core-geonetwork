@@ -316,5 +316,6 @@
   "wpsExecute": "Execute",
   "wpsExecuteFailed": "Execute failed",
   "wpsErrorCodeReturned": "The serveur returned status code",
-  "time" : "Time"
+  "time" : "Time",
+  "featureCount": "Features count"
 }

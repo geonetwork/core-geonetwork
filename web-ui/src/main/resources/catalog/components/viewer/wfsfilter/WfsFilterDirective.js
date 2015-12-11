@@ -58,23 +58,12 @@
                 url = wfsFilterService.getSolrRequestFromFields(
                     docFields, ftName, wfsUrl);
               }
+              solrUrl = url;
 
-              wfsFilterService.getFacetsConfigFromSolr(url, docFields).
-                  then(function(facetsInfo) {
-                    solrUrl = url;
-                    // Describe facets configuration to build the ui
-                    scope.fields = facetsInfo.facetConfig;
-                    scope.count = facetsInfo.count;
-                    angular.forEach(scope.fields, function(f) {
-                      f.collapsed = true;
-                    });
-                  });
+              // Init the facets
+              scope.resetFacets();
             });
           });
-
-
-          // output structure to send to filter service
-          scope.output = {};
 
           /**
            * Update the state of the facet search.
@@ -123,6 +112,27 @@
                     if (collapsedFields.indexOf(f.name) >= 0) {
                       f.collapsed = true;
                     }
+                  });
+                });
+          };
+
+          /**
+           * reset and init the facet structure.
+           * call the solr service to get info on all facet fields and bind it
+           * to the output structure to generate the ui.
+           */
+          scope.resetFacets = function() {
+
+            // output structure to send to filter service
+            scope.output = {};
+
+            // load all facet and fill ui structure for the list
+            wfsFilterService.getFacetsConfigFromSolr(solrUrl, indexedFields).
+                then(function(facetsInfo) {
+                  scope.fields = facetsInfo.facetConfig;
+                  scope.count = facetsInfo.count;
+                  angular.forEach(scope.fields, function(f) {
+                    f.collapsed = true;
                   });
                 });
           };

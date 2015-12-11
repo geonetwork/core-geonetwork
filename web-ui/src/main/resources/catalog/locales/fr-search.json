@@ -308,5 +308,6 @@
     "wpsExecute": "Éxécuter",
     "wpsExecuteFailed": "Erreur lors du traitement",
     "time" : "Temps",
-    "wpsErrorCodeReturned": "Le serveur a retourné le code "
+    "wpsErrorCodeReturned": "Le serveur a retourné le code ",
+    "featureCount": "Nombre d'objets"
 }
