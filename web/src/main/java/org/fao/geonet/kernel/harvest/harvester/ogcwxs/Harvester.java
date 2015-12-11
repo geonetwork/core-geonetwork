@@ -65,6 +65,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 //=============================================================================
@@ -520,7 +521,17 @@ class Harvester extends BaseAligner
 			reg.name 	= layer.getChild ("name", wcs).getValue ();
 		} else if (params.ogctype.substring(0,3).equals("SOS")) {
 			Namespace gml = Namespace.getNamespace("http://www.opengis.net/gml");
-			reg.name 	= layer.getChild ("name", gml).getValue ();
+                        if(layer.getChild ("name", gml) != null) {
+                            reg.name 	= layer.getChild ("name", gml).getValue ();
+                        }
+                        else if(layer.getAttribute("id", gml) != null) {
+                            reg.name    = layer.getAttribute("id", gml).getValue();
+                        }
+                        else {
+                            log.warning("Could not derive layer name from " + layer);
+                            String generatedName = layer.getName() + "_" + UUID.randomUUID().toString();
+                            reg.name    = Sha1Encoder.encodeString(generatedName);
+                        }
 		}
 		
 		log.info ("  - Loading layer: " + reg.name);
