@@ -16,29 +16,23 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.apache.lucene.document.Document;
-import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
+import org.fao.geonet.entitylistener.MetadataDraftEntityListenerManager;
 
 /**
- * @See {@link IMetadata}
- * @author Jesse
+ * This is a normal {@link Metadata} but on its draft version.
+ *
+ * @author María Arias de Reyna
  */
 @Entity
-@Table(name = Metadata.TABLENAME)
+@Table(name = MetadataDraft.TABLENAME)
 @Access(AccessType.PROPERTY)
-@EntityListeners(MetadataEntityListenerManager.class)
-public class Metadata extends IMetadata {
-    public static final String TABLENAME = "Metadata";
+@EntityListeners(MetadataDraftEntityListenerManager.class)
+public class MetadataDraft extends IMetadata {
+    public static final String TABLENAME = "MetadataDraft";
 
-    public Metadata() {
-        super();
+    public MetadataDraft() {
     }
-    
-    public static Metadata createFromLuceneIndexDocument(Document doc) {
-        Metadata metadata = new Metadata();
-        transform(doc, metadata);
-        return metadata;
-    }
-    
+
     private Set<MetadataCategory> _metadataCategories = new HashSet<MetadataCategory>();
     
     /**
@@ -49,7 +43,7 @@ public class Metadata extends IMetadata {
      */
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH},
             fetch = FetchType.EAGER)
-    @JoinTable(name = METADATA_CATEG_JOIN_TABLE_NAME,
+    @JoinTable(name = METADATA_CATEG_JOIN_TABLE_NAME + "Draft",
             joinColumns = @JoinColumn(name = "metadataId"),
             inverseJoinColumns = @JoinColumn(name =
             METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
@@ -65,5 +59,11 @@ public class Metadata extends IMetadata {
      */
     protected void setCategories(@Nonnull Set<MetadataCategory> categories) {
         this._metadataCategories = categories;
+    }
+    
+    public static MetadataDraft createFromLuceneIndexDocument(Document doc) {
+        MetadataDraft metadata = new MetadataDraft();
+        transform(doc, metadata);
+        return metadata;
     }
 }

@@ -27,21 +27,39 @@
 
 package org.fao.geonet.kernel;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
-import jeeves.xlink.Processor;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.ApplicationContextHolder;
@@ -91,6 +109,7 @@ import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.IndexingList;
@@ -143,37 +162,21 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Root;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
 
-import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
+import jeeves.xlink.Processor;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
@@ -189,6 +192,9 @@ public class DataManager implements ApplicationEventPublisherAware {
     @Autowired
     private ApplicationContext _applicationContext;
 
+    @Autowired
+    private IMetadataManager metadataManager;
+    
     // initialize in init method
     private ServiceContext servContext;
     private EditLib editLib;
@@ -835,21 +841,15 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     /**
-     * TODO javadoc.
+     * Use {@link IMetadataManager} directly
      *
      * @param id
      * @return
      * @throws Exception
      */
+    @Deprecated
     public String getMetadataSchema(String id) throws Exception {
-        Metadata md = getMetadataRepository().findOne(id);
-
-        if (md == null) {
-            throw new IllegalArgumentException("Metadata not found for id : " +id);
-        } else {
-            // get metadata
-            return md.getDataInfo().getSchemaId();
-        }
+        return metadataManager.getMetadataSchema(id);
     }
 
     /**
@@ -864,90 +864,44 @@ public class DataManager implements ApplicationEventPublisherAware {
             getSvnManager().createMetadataDir(id, context, md);
         }
     }
-
+    
+    @Deprecated
     /**
-     * Start an editing session. This will record the original metadata record
-     * in the session under the {@link org.fao.geonet.constants.Geonet.Session#METADATA_BEFORE_ANY_CHANGES} + id
-     * session property.
      * 
-     * The record contains geonet:info element.
-     * 
-     * Note: Only the metadata record is stored in session. If the editing
-     * session upload new documents or thumbnails, those documents will not
-     * be cancelled. This needs improvements.
-     * 
+     * Use {@link IMetadataManager} directly
      * @param context
      * @param id
      * @throws Exception
      */
-    public void startEditingSession(ServiceContext context, String id)
-        throws Exception {
-      if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-        Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
-      }
-      
-      boolean keepXlinkAttributes = true;
-      boolean forEditing = false;
-      boolean withValidationErrors = false;
-      Element metadataBeforeAnyChanges = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
-      context.getUserSession().setProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id, metadataBeforeAnyChanges);
+    public void startEditingSession(ServiceContext context,
+        String id) throws Exception {
+        metadataManager.startEditingSession(context, id);
     }
 
     /**
      * Rollback to the record in the state it was when the editing session started
      * (See {@link #startEditingSession(ServiceContext, String)}).
      * 
+     * Use {@link IMetadataManager} directly
      * @param context
      * @param id
      * @throws Exception
      */
+    @Deprecated
     public void cancelEditingSession(ServiceContext context,
         String id) throws Exception {
-        UserSession session = context.getUserSession();
-        Element metadataBeforeAnyChanges = (Element) session.getProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
-        
-        if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-              Log.debug(Geonet.EDITOR_SESSION, 
-                  "Editing session end. Cancel changes. Restore record " + id + 
-                  ". Replace by original record which was: ");
-        }
-        
-        if (metadataBeforeAnyChanges != null) {
-            if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-              Log.debug(Geonet.EDITOR_SESSION, " > restoring record: ");
-              Log.debug(Geonet.EDITOR_SESSION, Xml.getString(metadataBeforeAnyChanges));
-            }
-            Element info = metadataBeforeAnyChanges.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-            boolean validate = false;
-            boolean ufo = false;
-                boolean index = true;
-                metadataBeforeAnyChanges.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-                updateMetadata(context, id, metadataBeforeAnyChanges, 
-                    validate, ufo, index, 
-                    context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), false);
-                endEditingSession(id, session);
-        } else {
-            if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-              Log.debug(Geonet.EDITOR_SESSION, 
-                  " > nothing to cancel for record " + id + 
-                  ". Original record was null. Use starteditingsession to.");
-            }
-        }
+        metadataManager.cancelEditingSession(context, id);
     }
-
     /**
      * Remove the original record stored in session.
-     * 
+     * Use {@link IMetadataManager} directly
      * @param id
      * @param session
      */
+    @Deprecated
     public void endEditingSession(String id, UserSession session) {
-        if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-          Log.debug(Geonet.EDITOR_SESSION, "Editing session end.");
-        }
-        session.removeProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
+        metadataManager.endEditingSession(id, session);
     }
-
     /**
      *
      * @param md
@@ -1496,6 +1450,8 @@ public class DataManager implements ApplicationEventPublisherAware {
     /**
      * Creates a new metadata duplicating an existing template creating a random uuid.
      *
+     * Use {@link IMetadataManager} directly
+     * 
      * @param context
      * @param templateId
      * @param groupOwner
@@ -1507,17 +1463,19 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public String createMetadata(ServiceContext context, String templateId, String groupOwner,
                                  String source, int owner,
                                  String parentUuid, String isTemplate, boolean fullRightsForGroup) throws Exception {
 
-        return createMetadata(context, templateId, groupOwner, source,
+        return metadataManager.createMetadata(context, templateId, groupOwner, source,
                 owner, parentUuid, isTemplate, fullRightsForGroup, UUID.randomUUID().toString());
     }
-
     /**
      * Creates a new metadata duplicating an existing template with an specified uuid.
      *
+     * Use {@link IMetadataManager} directly
+     * 
      * @param context
      * @param templateId
      * @param groupOwner
@@ -1529,58 +1487,19 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public String createMetadata(ServiceContext context, String templateId, String groupOwner,
                                  String source, int owner,
                                  String parentUuid, String isTemplate, boolean fullRightsForGroup, String uuid) throws Exception {
-        Metadata templateMetadata = getMetadataRepository().findOne(templateId);
-        if (templateMetadata == null) {
-            throw new IllegalArgumentException("Template id not found : " + templateId);
-        }
-
-        String schema = templateMetadata.getDataInfo().getSchemaId();
-        String data   = templateMetadata.getData();
-        Element xml = Xml.loadString(data, false);
-        if (templateMetadata.getDataInfo().getType() == MetadataType.METADATA) {
-            xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
-        }
-        final Metadata newMetadata = new Metadata().setUuid(uuid);
-        newMetadata.getDataInfo()
-                .setChangeDate(new ISODate())
-                .setCreateDate(new ISODate())
-                .setSchemaId(schema)
-                .setType(MetadataType.lookup(isTemplate));
-        newMetadata.getSourceInfo()
-                .setGroupOwner(Integer.valueOf(groupOwner))
-                .setOwner(owner)
-                .setSourceId(source);
-        
-        //If there is a default category for the group, use it:
-        Group group = getApplicationContext()
-                .getBean(GroupRepository.class)
-                .findOne(Integer.valueOf(groupOwner));
-        if(group.getDefaultCategory() != null) {
-            newMetadata.getCategories().add(group.getDefaultCategory());
-        }
-        Collection<MetadataCategory> filteredCategories = Collections2.filter(templateMetadata.getCategories(),
-                new Predicate<MetadataCategory>() {
-                    @Override
-                    public boolean apply(@Nullable MetadataCategory input) {
-                        return input != null;
-                    }
-                });
-
-        newMetadata.getCategories().addAll(filteredCategories);
-
-        int finalId = insertMetadata(context, newMetadata, xml, false, true, true, UpdateDatestamp.YES,
-                fullRightsForGroup, true).getId();
-
-        return String.valueOf(finalId);
+        return metadataManager.createMetadata(context, templateId, groupOwner, source, owner, parentUuid, 
+                isTemplate, fullRightsForGroup, uuid);
     }
-
+    
     /**
      * Inserts a metadata into the database, optionally indexing it, and optionally applying automatic changes to it (update-fixed-info).
      *
-     *
+     * Use {@link IMetadataManager} directly
+     * 
      *
      * @param context the context describing the user and service
      * @param schema XSD this metadata conforms to
@@ -1599,94 +1518,37 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @return id, as a string
      * @throws Exception hmm
      */
+    @Deprecated
     public String insertMetadata(ServiceContext context, String schema, Element metadataXml, String uuid, int owner, String groupOwner, String source,
                                  String metadataType, String docType, String category, String createDate, String changeDate, boolean ufo, boolean index) throws Exception {
-
-        boolean notifyChange = true;
-
-        if (source == null) {
-            source = getSettingManager().getSiteId();
-        }
-
-        if(StringUtils.isBlank(metadataType)) {
-            metadataType = MetadataType.METADATA.codeString;
-        }
-        final Metadata newMetadata = new Metadata().setUuid(uuid);
-        final ISODate isoChangeDate = changeDate != null ? new ISODate(changeDate) : new ISODate();
-        final ISODate isoCreateDate = createDate != null ? new ISODate(createDate) : new ISODate();
-        newMetadata.getDataInfo()
-                .setChangeDate(isoChangeDate)
-                .setCreateDate(isoCreateDate)
-                .setSchemaId(schema)
-                .setDoctype(docType)
-                .setRoot(metadataXml.getQualifiedName())
-                .setType(MetadataType.lookup(metadataType));
-        newMetadata.getSourceInfo()
-                .setOwner(owner)
-                .setSourceId(source);
-        if (groupOwner != null) {
-            newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner));
-        }
-        if (category != null) {
-            MetadataCategory metadataCategory = getApplicationContext().getBean(MetadataCategoryRepository.class).findOneByName(category);
-            if (metadataCategory == null) {
-                throw new IllegalArgumentException("No category found with name: "+category);
-            }
-            newMetadata.getCategories().add(metadataCategory);
-        } else if(groupOwner != null) {
-            //If the group has a default category, use it
-            Group group = getApplicationContext()
-                    .getBean(GroupRepository.class)
-                    .findOne(Integer.valueOf(groupOwner));
-            if(group.getDefaultCategory() != null) {
-                newMetadata.getCategories().add(group.getDefaultCategory());
-            }
-        }
-
-        boolean fullRightsForGroup = false;
-
-        int finalId = insertMetadata(context, newMetadata, metadataXml, notifyChange, index, ufo, UpdateDatestamp.NO,
-                fullRightsForGroup, false).getId();
-
-        return String.valueOf(finalId);
+    
+        return metadataManager.insertMetadata(context, schema, metadataXml, uuid, 
+                owner, groupOwner, source, metadataType, docType, category, createDate, changeDate, ufo, index);
     }
-
+/**
+ *  Use {@link IMetadataManager} directly
+     * 
+ * @param context
+ * @param newMetadata
+ * @param metadataXml
+ * @param notifyChange
+ * @param index
+ * @param updateFixedInfo
+ * @param updateDatestamp
+ * @param fullRightsForGroup
+ * @param forceRefreshReaders
+ * @return
+ * @throws Exception
+ */
+    @Deprecated
     public Metadata insertMetadata(ServiceContext context, Metadata newMetadata, Element metadataXml, boolean notifyChange,
-                                    boolean index, boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
-                                    boolean fullRightsForGroup, boolean forceRefreshReaders) throws Exception {
-        final String schema = newMetadata.getDataInfo().getSchemaId();
+            boolean index, boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
+            boolean fullRightsForGroup, boolean forceRefreshReaders) throws Exception {
 
-        //--- force namespace prefix for iso19139 metadata
-        setNamespacePrefixUsingSchemas(schema, metadataXml);
-
-
-        if (updateFixedInfo && newMetadata.getDataInfo().getType() == MetadataType.METADATA) {
-            String parentUuid = null;
-            metadataXml = updateFixedInfo(schema, Optional.<Integer>absent(), newMetadata.getUuid(), metadataXml, parentUuid, updateDatestamp, context);
-        }
-
-        //--- store metadata
-        final Metadata savedMetadata = getXmlSerializer().insert(newMetadata, metadataXml, context);
-
-        final String stringId = String.valueOf(savedMetadata.getId());
-        String groupId = null;
-        final Integer groupIdI = newMetadata.getSourceInfo().getGroupOwner();
-        if (groupIdI != null) {
-            groupId = String.valueOf(groupIdI);
-        }
-        copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
-
-        if (index) {
-            indexMetadata(stringId, forceRefreshReaders);
-        }
-
-        if (notifyChange) {
-            // Notifies the metadata change to metatada notifier service
-            notifyMetadataChange(metadataXml, stringId);
-        }
-        return savedMetadata;
+        return metadataManager.insertMetadata(context, newMetadata, metadataXml,
+                notifyChange, index, updateFixedInfo, updateDatestamp,
+                fullRightsForGroup, forceRefreshReaders);
     }
-
     //--------------------------------------------------------------------------
     //---
     //--- Metadata Get API
@@ -1724,6 +1586,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * Retrieves a metadata (in xml) given its id; adds editing information if requested and validation errors if
      * requested.
      *
+     *  Use {@link IMetadataManager} directly
      * @param srvContext
      * @param id
      * @param forEditing        Add extra element to build metadocument {@link EditLib#expandElements(String, Element)}
@@ -1732,39 +1595,11 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @return
      * @throws Exception
      */
-    public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
-        boolean doXLinks = getXmlSerializer().resolveXLinks();
-        Element metadataXml = getXmlSerializer().selectNoXLinkResolver(id, false);
-        if (metadataXml == null) return null;
-
-        String version = null;
-
-        if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
-            if (doXLinks) Processor.processXLink(metadataXml, srvContext);
-            String schema = getMetadataSchema(id);
-
-            if (withEditorValidationErrors) {
-                version = doValidate(srvContext.getUserSession(), schema, id, metadataXml, srvContext.getLanguage(), forEditing).two();
-            } else {
-                editLib.expandElements(schema, metadataXml);
-                version = editLib.getVersionForEditing(schema, id, metadataXml);
-            }
-        } else {
-            if (doXLinks) {
-                if (keepXlinkAttributes) {
-                    Processor.processXLink(metadataXml, srvContext);
-                } else {
-                    Processor.detachXLink(metadataXml, srvContext);
-                }
-            }
-        }
-
-        metadataXml.addNamespaceDeclaration(Edit.NAMESPACE);
-        Element info = buildInfoElem(srvContext, id, version);
-        metadataXml.addContent(info);
-
-        metadataXml.detach();
-        return metadataXml;
+    @Deprecated
+    public Element getMetadata(ServiceContext srvContext, String id, 
+            boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
+        return metadataManager.getMetadata(srvContext, id, forEditing, 
+                withEditorValidationErrors, keepXlinkAttributes);
     }
 
     /**
@@ -1837,72 +1672,27 @@ public class DataManager implements ApplicationEventPublisherAware {
             }
         });
     }
-
-    /**
-     * Updates a metadata record. Deletes validation report currently in session (if any). If user asks for validation
-     * the validation report will be (re-)created then.
-     *
-     * @param context
-     * @param metadataId
-     * @param validate
-     * @param lang
-     * @param changeDate
-     * @param updateDateStamp
-     *
-     * @return metadata if the that was updated
-     * @throws Exception
-     */
-    public synchronized Metadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
-                                               final boolean validate, final boolean ufo, final boolean index, final String lang,
-                                               final String changeDate, final boolean updateDateStamp) throws Exception {
-        Element metadataXml = md;
-
-        // when invoked from harvesters, session is null?
-        UserSession session = context.getUserSession();
-        if(session != null) {
-            session.removeProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
-        }
-        String schema = getMetadataSchema(metadataId);
-        if(ufo) {
-            String parentUuid = null;
-            Integer intId = Integer.valueOf(metadataId);
-            metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
-        }
-
-        //--- force namespace prefix for iso19139 metadata
-        setNamespacePrefixUsingSchemas(schema, metadataXml);
-
-        // Notifies the metadata change to metatada notifier service
-        final Metadata metadata = getMetadataRepository().findOne(metadataId);
-
-        String uuid = null;
-        if (getSchemaManager().getSchema(schema).isReadwriteUUID()
-                && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
-            uuid = extractUUID(schema, metadataXml);
-        }
-
-        //--- write metadata to dbms
-        getXmlSerializer().update(metadataId, metadataXml, changeDate, updateDateStamp, uuid, context);
-        if (metadata.getDataInfo().getType() == MetadataType.METADATA) {
-            // Notifies the metadata change to metatada notifier service
-            notifyMetadataChange(metadataXml, metadataId);
-        }
-
-        try {
-            //--- do the validation last - it throws exceptions
-            if (session != null && validate) {
-                doValidate(session, schema,metadataId,metadataXml,lang, false);
-            }
-        } finally {
-            if(index) {
-                //--- update search criteria
-                indexMetadata(metadataId, true);
-            }
-        }
-        // Return an up to date metadata record
-        return getMetadataRepository().findOne(metadataId);
+    /** Updates a metadata record. Deletes validation report currently in session (if any). If user asks for validation
+    * the validation report will be (re-)created then.
+    * Use {@link IMetadataManager} directly
+     * 
+    * @param context
+    * @param metadataId
+    * @param validate
+    * @param lang
+    * @param changeDate
+    * @param updateDateStamp
+    *
+    * @return metadata if the that was updated
+    * @throws Exception
+    */
+    @Deprecated
+   public synchronized Metadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
+                                              final boolean validate, final boolean ufo, final boolean index, final String lang,
+                                              final String changeDate, final boolean updateDateStamp) throws Exception {
+        return metadataManager.updateMetadata(context, metadataId, md, validate, ufo, index,
+                lang, changeDate, updateDateStamp);
     }
-
     /**
      * Validates an xml document, using autodetectschema to determine how.
      *
@@ -2932,6 +2722,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     /**
      * Update metadata record (not template) using update-fixed-info.xsl
      *
+     * Use {@link IMetadataManager} directly
      *
      * @param schema
      * @param metadataId
@@ -2942,6 +2733,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public Element updateFixedInfo(String schema, Optional<Integer> metadataId, String uuid, Element md, String parentUuid, UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
         boolean autoFixing = getSettingManager().getValueAsBool("system/autofixing/enable", true);
         if(autoFixing) {
@@ -3111,122 +2903,6 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     /**
-     * TODO : buildInfoElem contains similar portion of code with indexMetadata
-     * @param context
-     * @param id
-     * @param version
-     * @return
-     * @throws Exception
-     */
-    private Element buildInfoElem(ServiceContext context, String id, String version) throws Exception {
-        Metadata metadata = getMetadataRepository().findOne(id);
-        final MetadataDataInfo dataInfo = metadata.getDataInfo();
-        String schema = dataInfo.getSchemaId();
-        String createDate = dataInfo.getCreateDate().getDateAndTime();
-        String changeDate = dataInfo.getChangeDate().getDateAndTime();
-        String source = metadata.getSourceInfo().getSourceId();
-        String isTemplate = dataInfo.getType().codeString;
-        String title = dataInfo.getTitle();
-        String uuid = metadata.getUuid();
-        String isHarvested = "" + Constants.toYN_EnabledChar(metadata.getHarvestInfo().isHarvested());
-        String harvestUuid = metadata.getHarvestInfo().getUuid();
-        String popularity = "" + dataInfo.getPopularity();
-        String rating = "" + dataInfo.getRating();
-        String owner = "" + metadata.getSourceInfo().getOwner();
-        String displayOrder = "" + dataInfo.getDisplayOrder();
-
-        Element info = new Element(Edit.RootChild.INFO, Edit.NAMESPACE);
-
-        addElement(info, Edit.Info.Elem.ID, id);
-        addElement(info, Edit.Info.Elem.SCHEMA, schema);
-        addElement(info, Edit.Info.Elem.CREATE_DATE, createDate);
-        addElement(info, Edit.Info.Elem.CHANGE_DATE, changeDate);
-        addElement(info, Edit.Info.Elem.IS_TEMPLATE, isTemplate);
-        addElement(info, Edit.Info.Elem.TITLE, title);
-        addElement(info, Edit.Info.Elem.SOURCE, source);
-        addElement(info, Edit.Info.Elem.UUID, uuid);
-        addElement(info, Edit.Info.Elem.IS_HARVESTED, isHarvested);
-        addElement(info, Edit.Info.Elem.POPULARITY, popularity);
-        addElement(info, Edit.Info.Elem.RATING, rating);
-        addElement(info, Edit.Info.Elem.DISPLAY_ORDER, displayOrder);
-
-        if (metadata.getHarvestInfo().isHarvested()) {
-            HarvestInfoProvider infoProvider = getApplicationContext().getBean(HarvestInfoProvider.class);
-            if (infoProvider != null) {
-                info.addContent(infoProvider.getHarvestInfo(harvestUuid, id, uuid));
-            }
-        }
-        if (version != null) {
-            addElement(info, Edit.Info.Elem.VERSION, version);
-        }
-
-        Map<String, Element> map = Maps.newHashMap();
-        map.put(id, info);
-        buildPrivilegesMetadataInfo(context, map);
-
-        // add owner name
-        User user = getApplicationContext().getBean(UserRepository.class).findOne(owner);
-        if (user != null) {
-            String ownerName = user.getName();
-            addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
-        }
-
-
-        for (MetadataCategory category : metadata.getCategories()) {
-            addElement(info, Edit.Info.Elem.CATEGORY, category.getName());
-        }
-
-        // add subtemplates
-        /* -- don't add as we need to investigate indexing for the fields
-		   -- in the metadata table used here
-		List subList = getSubtemplates(dbms, schema);
-		if (subList != null) {
-			Element subs = new Element(Edit.Info.Elem.SUBTEMPLATES);
-			subs.addContent(subList);
-			info.addContent(subs);
-		}
-		*/
-
-
-        // Add validity information
-        List<MetadataValidation> validationInfo = getMetadataValidationRepository().findAllById_MetadataId(Integer.parseInt(id));
-        if (validationInfo == null || validationInfo.size() == 0) {
-            addElement(info, Edit.Info.Elem.VALID, "-1");
-        } else {
-            String isValid = "1";
-            for (Object elem : validationInfo) {
-                MetadataValidation vi = (MetadataValidation) elem;
-                String type = vi.getId().getValidationType();
-                if (!vi.isValid()) {
-                    isValid = "0";
-                }
-
-                String ratio = "xsd".equals(type) ? "" : vi.getNumFailures() + "/" + vi.getNumTests();
-
-                info.addContent(new Element(Edit.Info.Elem.VALID + "_details").
-                        addContent(new Element("type").setText(type)).
-                        addContent(new Element("status").setText(vi.isValid() ? "1" : "0").
-                        addContent(new Element("ratio").setText(ratio)))
-                );
-            }
-            addElement(info, Edit.Info.Elem.VALID, isValid);
-        }
-
-        // add baseUrl of this site (from settings)
-        String protocol = getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL);
-        String host = getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
-        String port = getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
-        if (port.equals("80")) {
-            port = "";
-        } else {
-            port = ":"+port;
-        }
-        addElement(info, Edit.Info.Elem.BASEURL, protocol + "://" + host + port + baseURL);
-        addElement(info, Edit.Info.Elem.LOCSERV, "/srv/en");
-        return info;
-    }
-
-    /**
      * Add privileges information about metadata record
      * which depends on context and usually could not be stored in db 
      * or Lucene index because depending on the current user
@@ -3368,7 +3044,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @param md
      * @throws Exception
      */
-    private void setNamespacePrefixUsingSchemas(String schema, Element md) throws Exception {
+    public void setNamespacePrefixUsingSchemas(String schema, Element md) throws Exception {
         //--- if the metadata has no namespace or already has a namespace prefix
         //--- then we must skip this phase
         Namespace ns = md.getNamespace();

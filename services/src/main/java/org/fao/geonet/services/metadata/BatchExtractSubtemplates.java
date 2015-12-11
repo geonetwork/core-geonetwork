@@ -292,7 +292,8 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 						int user = context.getUserSession().getUserIdAsInt();
                         final String siteId = gc.getBean(SettingManager.class).getSiteId();
 
-                        Metadata metadataObj = new Metadata().setUuid(uuid);
+                        Metadata metadataObj = new Metadata();
+                        metadataObj.setUuid(uuid);
                         metadataObj.getDataInfo().
                                 setSchemaId(mdInfo.getSchemaId()).
                                 setRoot(elem.getQualifiedName()).
