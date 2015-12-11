@@ -288,6 +288,10 @@ yx-axis
 .g .gn-facet ul li {
   font-size: 12px;
 }
+.gn img,
+.g img {
+  padding: 0;
+}
 @font-face {
   font-family: 'FontAwesome';
   src: url('../catalog/lib/style/font-awesome/fonts/fontawesome-webfont.eot?v=4.1.0');
