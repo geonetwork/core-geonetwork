@@ -307,5 +307,7 @@
   "wpsDescribeProcessFailed": "DescribeProcess failed",
   "wpsExecute": "Execute",
   "wpsExecuteFailed": "Execute failed",
-  "wpsErrorCodeReturned": "The serveur returned status code"
+  "wpsErrorCodeReturned": "The serveur returned status code",
+  "time" : "Time",
+  "featureCount": "Features count"
 }
