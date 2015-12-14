@@ -25,12 +25,8 @@
                 <td class="col-md-10">
                     <div id="{{'' | lastUUID}}">
                         <div fmt-repeat="link in link.links">
-                            <a onclick="gnFormatter.loadAssociated(event, 'div#associated-{{- | generateUUID}}', '{{link.metadataId}}');"
-                               title="{{link.tip}}" class="{{link.cls}} associated-link-a"
-                               target="{{'' | lastUUID}}">{{link.text | escapeXmlContent}}</a>
-                            <a href="{{link.href}}" target="_blank" title="{{link.href}}" class="{{link.cls}}">
-                                <i class="fa fa-external-link"></i>
-                            </a>
+                            <a href="#/metadata/{{link.metadataId}}"
+                               title="{{link.tip}}" class="{{link.cls}} associated-link-a">{{link.text | escapeXmlContent}}</a>
 
                             <div id="{{'' | lastUUID}}" style="display: none;" class="associated-link-row">
                                 <img class="logo" src="{{link.logo}}" fmt-if="link.logo"/>
