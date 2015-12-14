@@ -213,5 +213,17 @@ public interface IMetadataManager {
             String uuid, Element md, String parentUuid,
             UpdateDatestamp updateDatestamp, ServiceContext context)
                     throws Exception;
+    
+
+    /**
+     * Extract UUID from the metadata record using the schema
+     * XSL for UUID extraction)
+     *
+     * @param schema
+     * @param md
+     * @return
+     * @throws Exception
+     */
+    public String extractUUID(String schema, Element md) throws Exception;
 
 }

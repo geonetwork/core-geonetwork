@@ -400,7 +400,7 @@ public class DefaultMetadataManager implements IMetadataManager {
         if (updateFixedInfo && newMetadata.getDataInfo()
                 .getType() == MetadataType.METADATA) {
             String parentUuid = null;
-            metadataXml = dm.updateFixedInfo(schema,
+            metadataXml = updateFixedInfo(schema,
                     Optional.<Integer> absent(), newMetadata.getUuid(),
                     metadataXml, parentUuid, updateDatestamp, context);
         }
@@ -477,7 +477,7 @@ public class DefaultMetadataManager implements IMetadataManager {
         String uuid = null;
         if (schemaManager.getSchema(schema).isReadwriteUUID() && metadata
                 .getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
-            uuid = dm.extractUUID(schema, metadataXml);
+            uuid = extractUUID(schema, metadataXml);
         }
 
         // --- write metadata to dbms
@@ -928,4 +928,27 @@ public class DefaultMetadataManager implements IMetadataManager {
         }
         return operationsPerMetadata;
     }
+    
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#extractUUID(java.lang.String, org.jdom.Element)
+     * @param schema
+     * @param md
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public String extractUUID(String schema, Element md) throws Exception {
+        Path styleSheet = dm.getSchemaDir(schema).resolve(Geonet.File.EXTRACT_UUID);
+        String uuid       = Xml.transform(md, styleSheet).getText().trim();
+
+        if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            Log.debug(Geonet.DATA_MANAGER, "Extracted UUID '"+ uuid +"' for schema '"+ schema +"'");
+
+        //--- needed to detach md from the document
+        md.detach();
+
+        return uuid;
+    }
+
 }
