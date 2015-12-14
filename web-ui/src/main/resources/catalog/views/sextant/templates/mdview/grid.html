@@ -30,8 +30,8 @@
         <div class="gn-md-details" title="{{(md.abstract || md.defaultAbstract) | striptags}}">
 
             <!-- Thumbnail -->
-            <div class="gn-md-thumbnail" ng-class="{'gn-md-emptythumbnail': !md.getThumbnails().small }">
-              <img gn-img-modal="md" class="gn-img-thumbnail" data-ng-src="{{md.getThumbnails().small}}" data-ng-if="md.getThumbnails().small"/>
+            <div class="gn-md-thumbnail" ng-class="{'gn-md-emptythumbnail': !md.getThumbnails().small && !md.getThumbnails().big}">
+              <img gn-img-modal="md" class="gn-img-thumbnail" data-ng-src="{{md.getThumbnails().small || md.getThumbnails().big}}" data-ng-if="md.getThumbnails().small || md.getThumbnails().big"/>
             </div>
 
             <div class="text-justify md-abstract ellipsis">
