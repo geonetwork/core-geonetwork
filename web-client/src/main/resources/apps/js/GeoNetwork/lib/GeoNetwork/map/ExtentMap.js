@@ -668,10 +668,10 @@ GeoNetwork.map.ExtentMap = function(){
                                 watchRadios(this.watchedBbox, this.eltRef);
 
                                 // Update validation
-                                $(wsen[0]).onkeyup();
-                                $(wsen[1]).onkeyup();
-                                $(wsen[2]).onkeyup();
-                                $(wsen[3]).onkeyup();
+                                $("_" + wsen[0]).onkeyup();
+                                $("_" + wsen[1]).onkeyup();
+                                $("_" + wsen[2]).onkeyup();
+                                $("_" + wsen[3]).onkeyup();
 
 
                             }.bind({
