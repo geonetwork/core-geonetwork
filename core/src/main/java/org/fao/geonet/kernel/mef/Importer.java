@@ -340,7 +340,7 @@ public class Importer {
 
                 if (validate) {
                     // Validate xsd and schematron
-                    DataManager.validateMetadata(schema, metadata, context);
+                    dm.validateMetadata(schema, metadata, context);
                 }
 
                 String uuidAction = Util.getParam(params, Params.UUID_ACTION,

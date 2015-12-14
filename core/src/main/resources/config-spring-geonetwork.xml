@@ -95,5 +95,8 @@
     <bean id="MetadataNotifierTask" class="org.fao.geonet.notifier.MetadataNotifierTask" lazy-init="true" scope="prototype"/>
     <bean id="MetadataNotifierClient" class="org.fao.geonet.notifier.MetadataNotifierClient" lazy-init="true" scope="prototype"/>
     
-    <bean class="org.fao.geonet.kernel.metadata.DefaultMetadataManager" lazy-init="false"/>
+    <!-- Draft or not drafted version -->
+    <bean class="org.fao.geonet.kernel.metadata.DefaultMetadataIndexer"/>
+    <bean class="org.fao.geonet.kernel.metadata.DefaultMetadataManager"/>
+    <bean class="org.fao.geonet.kernel.metadata.DefaultMetadataValidator"/>
 </beans>

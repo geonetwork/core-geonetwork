@@ -96,6 +96,4 @@
   <bean id="formatterCachePublishListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCachePublishListener" />
   <bean id="formatterCacheDeletionListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCacheDeletionListener" />
   
-  <!-- Draft or not drafted version -->
-  <bean class="org.fao.geonet.kernel.core.metadata.draft.MetadataActions"/>
 </beans>

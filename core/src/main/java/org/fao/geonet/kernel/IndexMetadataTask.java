@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
 /**
  * A runnable for indexing multiple metadata in a separate thread.
  */
-final class IndexMetadataTask implements Runnable {
+public final class IndexMetadataTask implements Runnable {
 
     private final ServiceContext _context;
     private final List<?> _metadataIds;
@@ -59,7 +59,7 @@ final class IndexMetadataTask implements Runnable {
      * @param batchIndex
      * @param transactionStatus if non-null, wait for the transaction to complete before indexing
      */
-    IndexMetadataTask(@Nonnull ServiceContext context, @Nonnull List<?> metadataIds, Set<IndexMetadataTask> batchIndex,
+    public IndexMetadataTask(@Nonnull ServiceContext context, @Nonnull List<?> metadataIds, Set<IndexMetadataTask> batchIndex,
                       @Nullable TransactionStatus transactionStatus, @Nonnull AtomicInteger indexed) {
         this.indexed = indexed;
         this._transactionStatus = transactionStatus;
