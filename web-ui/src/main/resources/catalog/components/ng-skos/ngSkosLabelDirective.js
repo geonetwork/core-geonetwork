@@ -64,7 +64,7 @@
       },
       template: '{{concept.prefLabel[language] ? ' +
           '(concept.prefLabel[language] == "topConcepts" ? ' +
-            '(concept.prefLabel[language] | translate) : ' +
+          '(concept.prefLabel[language] | translate) : ' +
               'concept.prefLabel[language])' +
               ' : "???"}}',
       link: function(scope, element, attrs) {

@@ -96,11 +96,11 @@
                                      Object.keys(c.ancestor.prefLabel)[0]];
                c.help = {
                  broader: label + ' ' + $translate('conceptBroader') +
-                  ' ' + labelAncestor,
+                 ' ' + labelAncestor,
                  narrower: label + ' ' + $translate('conceptNarrower') +
-                  ' ' + labelAncestor,
+                 ' ' + labelAncestor,
                  related: label + ' ' + $translate('conceptRelated') +
-                  ' ' + labelAncestor
+                 ' ' + labelAncestor
                };
              };
              scope.$watch('concept', function(concept) {

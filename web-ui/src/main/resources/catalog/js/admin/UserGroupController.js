@@ -100,14 +100,14 @@
                   u.enableallowedcategories = false;
                 }
                 //FIXME this should be already on the previous list
-                if(u.defaultcategory) {
+                if (u.defaultcategory) {
                   $http.get('admin.group.get?_content_type=json&id=' + u.id).
-                    success(function(data) {
-                      if(data && data[0] && data[0].defaultcategory 
-                          &&data[0].defaultcategory[0]) {
-                        u.defaultcategory = data[0].defaultcategory[0];
-                      }
-                    });
+                      success(function(data) {
+                        if (data && data[0] && data[0].defaultcategory &&
+                            data[0].defaultcategory[0]) {
+                          u.defaultcategory = data[0].defaultcategory[0];
+                        }
+                      });
                 }
               });
               $scope.isLoadingGroups = false;
@@ -319,7 +319,7 @@
               var groups = $('#groups_' + $scope.profiles[i])[0];
               // If one of the group is selected, main user profile is updated
               if (groups.selectedIndex > -1 &&
-                groups.options[groups.selectedIndex].value != '') {
+                  groups.options[groups.selectedIndex].value != '') {
                 newprofile = $scope.profiles[i];
               }
             }

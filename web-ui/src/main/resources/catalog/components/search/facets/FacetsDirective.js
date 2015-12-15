@@ -30,7 +30,8 @@
             if (scope.noCollapse) {
               return false;
             } else {
-              return !(scope.params && angular.isDefined(scope.params[facetKey]));
+              return !(scope.params &&
+                  angular.isDefined(scope.params[facetKey]));
             }
           };
 
