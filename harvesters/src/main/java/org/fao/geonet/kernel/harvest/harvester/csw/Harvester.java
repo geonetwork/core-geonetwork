@@ -347,10 +347,22 @@ class Harvester implements IHarvester<HarvestResult>
         request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
         request.setConstraint(constraint);
         request.setMethod(method);
-        for (String typeName : oper.getTypeNamesList()) {
-            request.addTypeName(TypeName.getTypeName(typeName));
+
+        // Adapt the typename parameter to the outputschema used
+        if (this.params.outputSchema != null && !this.params.outputSchema.isEmpty()) {
+            if ("http://www.isotc211.org/2005/gmd".equals(this.params.outputSchema)) {
+                request.addTypeName(TypeName.getTypeName("gmd:MD_Metadata"));
+            } else if ("http://www.opengis.net/cat/csw/2.0.2".equals(this.params.outputSchema)) {
+                request.addTypeName(TypeName.getTypeName("csw:Record"));
+            } else {
+                request.addTypeName(TypeName.getTypeName("csw:Record"));
+            }
+        } else {
+            for (String typeName : oper.getTypeNamesList()) {
+                request.addTypeName(TypeName.getTypeName(typeName));
+            }
         }
-        request.setOutputFormat(oper.getPreferredOutputFormat());
+		request.setOutputFormat(oper.getPreferredOutputFormat());
     }
 
     /**
@@ -561,6 +573,9 @@ class Harvester implements IHarvester<HarvestResult>
 		{
             errors.add(new HarvestError(e, log));
 			log.warning("Raised exception when searching : "+ e);
+			log.warning("Url: " + request.getHost());
+			log.warning("Method: " + request.getMethod());
+			log.warning("Sent request " + request.getSentData());
 			throw new OperationAbortedEx("Raised exception when searching: " + e.getMessage(), e);
 		}
 	}
