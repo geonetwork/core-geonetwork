@@ -305,8 +305,12 @@ class Harvester implements IHarvester<HarvestResult>
                 log.warning("Declared number of returned records (" + returnedCount + ") does not match actual record count (" + foundCnt + ")");
             }
 
+
             // As indicated in CSW: A value of 0 means all records have been returned.
-            if (nextRecord == 0) {
+            // And in case the CSW does not advertised the correct nextRecord
+            // check that we do not try to go over the last page.
+            if (nextRecord == 0 ||
+                start + GETRECORDS_REQUEST_MAXRECORDS > matchedCount) {
                 break;
             }
 
