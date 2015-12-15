@@ -315,7 +315,7 @@ class Harvester implements IHarvester<HarvestResult>
             }
 
             // Start position of next record.
-            start = nextRecord;
+            start = start + GETRECORDS_REQUEST_MAXRECORDS;
         }
 
         log.info("Records added to result list : " + records.size());
