@@ -5,11 +5,9 @@ package org.fao.geonet.kernel.metadata;
 
 import java.util.List;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -25,6 +23,15 @@ import jeeves.server.context.ServiceContext;
  * 
  */
 public interface IMetadataValidator {
+    
+    /**
+     *FIXME
+     * To remove when Spring autowiring works right
+     * @param context
+     */
+    public void init(ServiceContext context);
+    
+    
     /**
      * Use this validate method for XML documents with dtd.
      *

@@ -19,6 +19,8 @@ import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import jeeves.server.context.ServiceContext;
+
 /**
  * trunk-core
  * 
@@ -27,10 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 
  */
 public class DefaultMetadataSchemaUtils implements IMetadataSchemaUtils {
-    
+
     @Autowired
     private MetadataRepository mdRepository;
-    
+
     private SchemaManager schemaManager;
 
     /**
@@ -40,6 +42,15 @@ public class DefaultMetadataSchemaUtils implements IMetadataSchemaUtils {
     @Autowired
     public void setSchemaManager(SchemaManager schemaManager) {
         this.schemaManager = schemaManager;
+    }
+
+    /**
+     * @param context
+     */
+    @Override
+    public void init(ServiceContext context) {
+        this.mdRepository = context.getBean(MetadataRepository.class);
+        this.setSchemaManager(context.getBean(SchemaManager.class));
     }
 
     /**

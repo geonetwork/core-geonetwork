@@ -154,7 +154,27 @@ public class DefaultMetadataManager implements IMetadataManager {
     private OperationAllowedRepository operationAllowedRepository;
 
     private EditLib editLib;
-    
+
+    /**
+     * @param context
+     */
+    @Override
+    public void init(ServiceContext context) {
+        this.metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
+        this.metadataUtils = context.getBean(IMetadataUtils.class);
+        this.metadataIndexer = context.getBean(IMetadataIndexer.class);
+        this.metadataOperations = context.getBean(IMetadataOperations.class);
+        this.mdRepository = context.getBean(MetadataRepository.class);
+        this.groupRepository = context.getBean(GroupRepository.class);
+        this.mdRatingByIpRepository = context.getBean(MetadataRatingByIpRepository.class);
+        this.mdStatusRepository = context.getBean(MetadataStatusRepository.class);
+        this.mdFileUploadRepository = context.getBean(MetadataFileUploadRepository.class);
+        this.userRepository = context.getBean(UserRepository.class);
+        this.mdCatRepository = context.getBean(MetadataCategoryRepository.class);
+        this.mdValidationRepository = context.getBean(MetadataValidationRepository.class);
+        this.operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        this.setSchemaManager(context.getBean(SchemaManager.class));
+    }
     /**
      * @see org.fao.geonet.kernel.metadata.IMetadataManager#getEditLib()
      * @return

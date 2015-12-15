@@ -16,6 +16,13 @@ import jeeves.server.context.ServiceContext;
  * 
  */
 public interface IMetadataStatus {
+    
+    /**
+     *FIXME
+     * To remove when Spring autowiring works right
+     * @param context
+     */
+    public void init(ServiceContext context);
 
     /**
      * Return all status records for the metadata id - current status is the

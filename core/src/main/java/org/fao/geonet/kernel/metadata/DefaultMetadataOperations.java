@@ -42,6 +42,15 @@ public class DefaultMetadataOperations implements IMetadataOperations {
     @Autowired
     private OperationAllowedRepository operationAllowedRepository;
 
+    /**
+     * @param context
+     */
+    @Override
+    public void init(ServiceContext context) {
+        this.operationAllowedRepository = context
+                .getBean(OperationAllowedRepository.class);
+    }
+
     @Override
     public void setOperation(ServiceContext context, String mdId, String grpId,
             ReservedOperation op) throws Exception {
