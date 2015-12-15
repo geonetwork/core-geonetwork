@@ -194,10 +194,11 @@
                   scope.isPublished = false;
                 }
                 else if (angular.isObject(data.layer)) {
-                  gnMap.addWmsFromScratch(map, gsNode.wmsUrl, data.layer.name, false).
-                    then(function(layer) {
-                      gnMap.zoomLayerToExtent(layer, map);
-                    });
+                  gnMap.addWmsFromScratch(map,
+                      gsNode.wmsUrl, data.layer.name, false).
+                      then(function(layer) {
+                        gnMap.zoomLayerToExtent(layer, map);
+                      });
                   scope.isPublished = true;
                   if (action == 'check') {
                     scope.statusCode = $translate('datasetFound');
