@@ -23,29 +23,34 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.AddElemValue;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.Log;
+import org.jdom.Attribute;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.Text;
+import org.jdom.filter.ElementFilter;
+import org.jdom.filter.Filter;
+
+import java.util.LinkedHashMap;
 import com.google.common.base.Optional;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.kernel.AddElemValue;
-import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.lib.Lib;
-import org.jdom.*;
-import org.jdom.filter.ElementFilter;
-import org.jdom.filter.Filter;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * // --------------------------------------------------------------------------
@@ -114,7 +119,7 @@ public class AjaxEditUtils extends EditUtils {
 
         String schema = dataManager.getMetadataSchema(id);
         MetadataSchema metadataSchema = dataManager.getSchema(schema);
-        EditLib editLib = dataManager.getEditLib();
+        EditLib editLib = context.getBean(IMetadataManager.class).getEditLib();
 
         // --- check if the metadata has been modified from last time
         if (currVersion != null && !editLib.getVersion(id).equals(currVersion)) {
@@ -298,7 +303,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element md = getMetadataFromSession(session, id);
 
 		//--- ref is parent element so find it
-		EditLib editLib = dataManager.getEditLib();
+		EditLib editLib = context.getBean(IMetadataManager.class).getEditLib();
         Element el = editLib.findElement(md, ref);
 		if (el == null)
 			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
@@ -405,7 +410,7 @@ public class AjaxEditUtils extends EditUtils {
 		md.removeChild(Edit.RootChild.INFO,Edit.NAMESPACE);
 
 		//--- get element to remove
-        EditLib editLib = dataManager.getEditLib();
+        EditLib editLib = context.getBean(IMetadataManager.class).getEditLib();
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
@@ -493,7 +498,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element md = getMetadataFromSession(session, id);
 
 		//--- get element to remove
-        EditLib editLib = dataManager.getEditLib();
+        EditLib editLib = context.getBean(IMetadataManager.class).getEditLib();
 		Element el = editLib.findElement(md, elementId);
 
 		if (el != null) {
@@ -541,7 +546,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element md = getMetadataFromSession(session, id);
 
 		//--- get element to swap
-        EditLib editLib = dataManager.getEditLib();
+        EditLib editLib = context.getBean(IMetadataManager.class).getEditLib();
 		Element elSwap = editLib.findElement(md, ref);
 
 		if (elSwap == null)
@@ -590,7 +595,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element md = (Element)realMd.clone();
 
 		//--- remove editing info
-        EditLib editLib = dataManager.getEditLib();
+        EditLib editLib = context.getBean(IMetadataManager.class).getEditLib();
 		editLib.removeEditingInfo(md);
 		editLib.contractElements(md);
         String parentUuid = null;
@@ -622,7 +627,7 @@ public class AjaxEditUtils extends EditUtils {
 			return false;
 
 		String schema = dataManager.getMetadataSchema(id);
-        EditLib editLib = dataManager.getEditLib();
+        EditLib editLib = context.getBean(IMetadataManager.class).getEditLib();
 		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
 
@@ -680,7 +685,7 @@ public class AjaxEditUtils extends EditUtils {
 			return false;
 
 		String schema = dataManager.getMetadataSchema(id);
-        EditLib editLib = dataManager.getEditLib();
+        EditLib editLib = context.getBean(IMetadataManager.class).getEditLib();
 		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
 

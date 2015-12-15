@@ -6,6 +6,7 @@ package org.fao.geonet.kernel.metadata;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -17,11 +18,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Group;
@@ -41,15 +45,16 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.IndexMetadataTask;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
@@ -57,6 +62,7 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -65,9 +71,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -101,9 +111,6 @@ public class DefaultMetadataIndexer
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private MetadataCategoryRepository mdCatRepository;
 
     @Autowired
     private MetadataValidationRepository mdValidationRepository;
@@ -616,6 +623,67 @@ public class DefaultMetadataIndexer
         // TODO
         ServiceContext context = ServiceContext.get();
         return context;
+    }
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataIndexer#rescheduleOptimizer(java.util.Calendar,
+     *      int)
+     * @param beginAt
+     * @param interval
+     * @throws Exception
+     */
+    @Override
+    public void rescheduleOptimizer(Calendar beginAt, int interval)
+            throws Exception {
+        searchManager.rescheduleOptimizer(beginAt, interval);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Override
+    public void disableOptimizer() throws Exception {
+        searchManager.disableOptimizer();
+    }
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataIndexer#batchDeleteMetadataAndUpdateIndex(org.springframework.data.jpa.domain.Specification)
+     * @param specification
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public int batchDeleteMetadataAndUpdateIndex(
+            Specification<Metadata> specification) throws Exception {
+        final List<Integer> idsOfMetadataToDelete = mdRepository
+                .findAllIdsBy(specification);
+
+        for (Integer id : idsOfMetadataToDelete) {
+            // --- remove metadata directory for each record
+            final Path metadataDataDir = ApplicationContextHolder.get()
+                    .getBean(GeonetworkDataDirectory.class)
+                    .getMetadataDataDir();
+            Path pb = Lib.resource.getMetadataDir(metadataDataDir, id + "");
+            IO.deleteFileOrDirectory(pb);
+        }
+
+        // Remove records from the index
+        searchManager.delete("_id", Lists.transform(idsOfMetadataToDelete,
+                new Function<Integer, String>() {
+                    @Nullable
+                    @Override
+                    public String apply(@Nonnull Integer input) {
+                        return input.toString();
+                    }
+                }));
+
+        // Remove records from the database
+        mdRepository.deleteAll(specification);
+
+        return idsOfMetadataToDelete.size();
     }
 
 }

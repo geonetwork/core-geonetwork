@@ -27,6 +27,19 @@ import jeeves.server.context.ServiceContext;
 public interface IMetadataManager {
 
     /**
+     * Init Data manager and refresh index if needed. Can also be called after
+     * GeoNetwork startup in order to rebuild the lucene index
+     * 
+     * Don't forget to synchronize on the implementation!
+     *
+     * @param context
+     * @param force
+     *            Force reindexing all from scratch
+     *
+     **/
+    public void init(ServiceContext context, Boolean force) throws Exception;
+
+    /**
      * Start an editing session. This will record the original metadata record
      * in the session under the
      * {@link org.fao.geonet.constants.Geonet.Session#METADATA_BEFORE_ANY_CHANGES}
@@ -184,15 +197,6 @@ public interface IMetadataManager {
             boolean keepXlinkAttributes) throws Exception;
 
     /**
-     * TODO javadoc.
-     *
-     * @param id
-     * @return
-     * @throws Exception
-     */
-    public String getMetadataSchema(String id) throws Exception;
-
-    /**
      * Update metadata record (not template) using update-fixed-info.xsl
      *
      *
@@ -213,11 +217,10 @@ public interface IMetadataManager {
             String uuid, Element md, String parentUuid,
             UpdateDatestamp updateDatestamp, ServiceContext context)
                     throws Exception;
-    
 
     /**
-     * Extract UUID from the metadata record using the schema
-     * XSL for UUID extraction)
+     * Extract UUID from the metadata record using the schema XSL for UUID
+     * extraction)
      *
      * @param schema
      * @param md
@@ -226,4 +229,105 @@ public interface IMetadataManager {
      */
     public String extractUUID(String schema, Element md) throws Exception;
 
+    /**
+     * Retrieves a metadata (in xml) given its id with no geonet:info.
+     * 
+     * @param srvContext
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public Element getMetadataNoInfo(ServiceContext srvContext, String id)
+            throws Exception;
+
+    /**
+     * Retrieves a metadata (in xml) given its id. Use this method when you must
+     * retrieve a metadata in the same transaction.
+     * 
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public Element getMetadata(String id) throws Exception;
+
+    /**
+     * Retrieves a metadata element given it's ref.
+     *
+     * @param md
+     * @param ref
+     * @return
+     */
+    public Element getElementByRef(Element md, String ref);
+
+    /**
+     * Returns true if the metadata exists in the database.
+     * 
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public boolean existsMetadata(int id) throws Exception;
+
+    /**
+     * Returns true if the metadata uuid exists in the database.
+     * 
+     * @param uuid
+     * @return
+     * @throws Exception
+     */
+    public boolean existsMetadataUuid(String uuid) throws Exception;
+
+    /**
+     * For update of owner info.
+     * 
+     * Do not forget to synchronize when implement this!
+     *
+     * @param id
+     * @param owner
+     * @param groupOwner
+     * @throws Exception
+     */
+    public void updateMetadataOwner(final int id, final String owner,
+            final String groupOwner) throws Exception;
+
+    /**
+     * Removes a metadata.
+     * 
+     * Do not forget to synchronize when implement this!
+     *
+     * @param context
+     * @param metadataId
+     * @throws Exception
+     */
+    public void deleteMetadata(ServiceContext context, String metadataId)
+            throws Exception;
+
+    /**
+     * 
+     * Do not forget to synchronize when implement this!
+     * 
+     * @param context
+     * @param metadataId
+     * @throws Exception
+     */
+    public void deleteMetadataGroup(ServiceContext context, String metadataId)
+            throws Exception;
+
+    /**
+     * Removes all operations stored for a metadata.
+     * 
+     * @param metadataId
+     * @param skipAllIntranet
+     * @throws Exception
+     */
+    public void deleteMetadataOper(ServiceContext context, String metadataId,
+            boolean skipAllIntranet) throws Exception;
+
+    public void setNamespacePrefixUsingSchemas(String schema, Element md)
+            throws Exception;
+
+    /**
+     * @return
+     */
+    public EditLib getEditLib();
 }
