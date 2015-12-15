@@ -20,6 +20,13 @@ import jeeves.server.context.ServiceContext;
  * 
  */
 public interface IMetadataIndexer {
+    
+    /**
+     *FIXME
+     * To remove when Spring autowiring works right
+     * @param context
+     */
+    public void init(ServiceContext context);
     /**
      * Search for all records having XLinks (ie. indexed with _hasxlinks flag),
      * clear the cache and reindex all records found.

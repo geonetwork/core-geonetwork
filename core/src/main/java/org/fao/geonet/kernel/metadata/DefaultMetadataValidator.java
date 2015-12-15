@@ -63,6 +63,18 @@ public class DefaultMetadataValidator implements IMetadataValidator {
     private EditLib editLib;
 
     /**
+     * @see org.fao.geonet.kernel.metadata.IMetadataValidator#init(jeeves.server.context.ServiceContext)
+     * @param context
+     */
+    @Override
+    public void init(ServiceContext context) {
+        this.schematronValidator = context.getBean(SchematronValidator.class);
+        this.metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
+        this.validationRepository = context.getBean(MetadataValidationRepository.class);
+        this.setSchemaManager(context.getBean(SchemaManager.class));
+    }
+
+    /**
      * @param schemaManager
      *            the schemaManager to set
      */

@@ -47,6 +47,18 @@ public class DefaultMetadataStatus implements IMetadataStatus {
     private GroupRepository groupRepository;
 
     /**
+     * @param context
+     */
+    @Override
+    public void init(ServiceContext context) {
+        this.metadataIndexer = context.getBean(IMetadataIndexer.class);
+        this.statusRepository = context.getBean(MetadataStatusRepository.class);
+        this.statusValueRepository = context
+                .getBean(StatusValueRepository.class);
+        this.groupRepository = context.getBean(GroupRepository.class);
+    }
+
+    /**
      * 
      * @see org.fao.geonet.kernel.metadata.IMetadataStatus#getStatus(int)
      * @param metadataId

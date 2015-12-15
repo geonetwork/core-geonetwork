@@ -43,8 +43,6 @@ import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.IndexMetadataTask;
 import org.fao.geonet.kernel.SchemaManager;
@@ -67,7 +65,6 @@ import org.fao.geonet.utils.Log;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.domain.Sort;
@@ -101,13 +98,10 @@ public class DefaultMetadataIndexer
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    private DataManager dm;
+    private IMetadataUtils metadataUtils;
 
     @PersistenceContext
     private EntityManager _entityManager;
-
-    @Autowired
-    private ApplicationContext _applicationContext;
 
     @Autowired
     private UserRepository userRepository;
@@ -135,7 +129,26 @@ public class DefaultMetadataIndexer
     @Autowired
     private SearchManager searchManager;
 
-    private EditLib editLib;
+    /**
+     * @param context
+     */
+    @Override
+    public void init(ServiceContext context) {
+        this.metadataUtils = context.getBean(IMetadataUtils.class);
+        this.userRepository = context.getBean(UserRepository.class);
+        this.mdValidationRepository = context
+                .getBean(MetadataValidationRepository.class);
+        this.mdRepository = context.getBean(MetadataRepository.class);
+        this.mdStatusRepository = context
+                .getBean(MetadataStatusRepository.class);
+        this.groupRepository = context.getBean(GroupRepository.class);
+        this.searchManager = context.getBean(SearchManager.class);
+        this.operationAllowedRepository = context
+                .getBean(OperationAllowedRepository.class);
+        this.inspireAtomFeedRepository = context
+                .getBean(InspireAtomFeedRepository.class);
+        this.setSchemaManager(context.getBean(SchemaManager.class));
+    }
 
     /**
      * @param schemaManager
@@ -144,7 +157,6 @@ public class DefaultMetadataIndexer
     @Autowired
     public void setSchemaManager(SchemaManager schemaManager) {
         this.schemaManager = schemaManager;
-        this.editLib = new EditLib(this.schemaManager);
     }
 
     @Override
@@ -203,7 +215,7 @@ public class DefaultMetadataIndexer
             for (Iterator<String> iter = sm.getSelection("metadata")
                     .iterator(); iter.hasNext();) {
                 String uuid = (String) iter.next();
-                String id = dm.getMetadataId(uuid);
+                String id = metadataUtils.getMetadataId(uuid);
                 if (id != null) {
                     listOfIdsToIndex.add(id);
                 }
@@ -353,9 +365,10 @@ public class DefaultMetadataIndexer
             int id$ = Integer.parseInt(metadataId);
 
             // get metadata, extracting and indexing any xlinks
-            Element md = _applicationContext.getBean(XmlSerializer.class)
+            Element md = ApplicationContextHolder.get()
+                    .getBean(XmlSerializer.class)
                     .selectNoXLinkResolver(metadataId, true);
-            if (_applicationContext.getBean(XmlSerializer.class)
+            if (ApplicationContextHolder.get().getBean(XmlSerializer.class)
                     .resolveXLinks()) {
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
@@ -476,7 +489,7 @@ public class DefaultMetadataIndexer
                     moreFields.add(SearchManager.makeField(
                             Geonet.IndexFieldNames.GROUP_OWNER,
                             String.valueOf(groupOwner), true, true));
-                    final boolean preferGroup = _applicationContext
+                    final boolean preferGroup = ApplicationContextHolder.get()
                             .getBean(SettingManager.class).getValueAsBool(
                                     SettingManager.SYSTEM_PREFER_GROUP_LOGO,
                                     true);

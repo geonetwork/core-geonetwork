@@ -18,6 +18,13 @@ import jeeves.server.context.ServiceContext;
  */
 public interface IMetadataCategory {
 
+    
+    /**
+     *FIXME
+     * To remove when Spring autowiring works right
+     * @param context
+     */
+    public void init(ServiceContext context);
     /**
      * Adds a category to a metadata. Metadata is not reindexed.
      *

@@ -34,6 +34,16 @@ public class DefaultMetadataCategory implements IMetadataCategory {
     private MetadataCategoryRepository categoryRepository;
 
     /**
+     * @param context
+     */
+    @Override
+    public void init(ServiceContext context) {
+        this.categoryRepository = context
+                .getBean(MetadataCategoryRepository.class);
+        this.mdRepository = context.getBean(MetadataRepository.class);
+    }
+
+    /**
      * @see org.fao.geonet.kernel.metadata.IMetadataCategory#setCategory(jeeves.server.context.ServiceContext,
      *      java.lang.String, java.lang.String)
      * @param context

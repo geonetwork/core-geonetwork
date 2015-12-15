@@ -19,6 +19,13 @@ import jeeves.server.context.ServiceContext;
  * 
  */
 public interface IMetadataOperations {
+    
+    /**
+     *FIXME
+     * To remove when Spring autowiring works right
+     * @param context
+     */
+    public void init(ServiceContext context);
 
     /**
      * Adds a permission to a group. Metadata is not reindexed.

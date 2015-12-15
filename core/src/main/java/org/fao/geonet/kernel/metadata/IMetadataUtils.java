@@ -26,6 +26,13 @@ import jeeves.server.context.ServiceContext;
  * 
  */
 public interface IMetadataUtils {
+    
+    /**
+     *FIXME
+     * To remove when Spring autowiring works right
+     * @param context
+     */
+    public void init(ServiceContext context);
     /**
      * Extract UUID from the metadata record using the schema XSL for UUID
      * extraction)

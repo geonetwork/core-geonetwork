@@ -25,6 +25,15 @@ import jeeves.server.context.ServiceContext;
  * 
  */
 public interface IMetadataManager {
+    
+
+    
+    /**
+     *FIXME
+     * To remove when Spring autowiring works right
+     * @param context
+     */
+    public void init(ServiceContext context);
 
     /**
      * Init Data manager and refresh index if needed. Can also be called after

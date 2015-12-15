@@ -128,6 +128,25 @@ public class DataManager {
 
     @Deprecated
     public void init(ServiceContext context, Boolean force) throws Exception {
+        //FIXME remove all the inits when autowiring works fine
+        
+        this.metadataManager = context.getBean(IMetadataManager.class);
+        this.metadataManager.init(context);
+        this.metadataUtils = context.getBean(IMetadataUtils.class);
+        this.metadataUtils.init(context);
+        this.metadataIndexer = context.getBean(IMetadataIndexer.class);
+        this.metadataIndexer.init(context);
+        this.metadataValidator = context.getBean(IMetadataValidator.class);
+        this.metadataValidator.init(context);
+        this.metadataOperations = context.getBean(IMetadataOperations.class);
+        this.metadataOperations.init(context);
+        this.metadataStatus = context.getBean(IMetadataStatus.class);
+        this.metadataStatus.init(context);
+        this.metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
+        this.metadataSchemaUtils.init(context);
+        this.metadataCategory = context.getBean(IMetadataCategory.class);
+        this.metadataCategory.init(context);
+        
         metadataManager.init(context, force);
     }
 

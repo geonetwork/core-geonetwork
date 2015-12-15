@@ -14,6 +14,8 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.jdom.Element;
 
+import jeeves.server.context.ServiceContext;
+
 /**
  * Addon to {@link DataManager} to handle schema metadata actions
  * 
@@ -22,6 +24,13 @@ import org.jdom.Element;
  * 
  */
 public interface IMetadataSchemaUtils {
+    
+    /**
+     *FIXME
+     * To remove when Spring autowiring works right
+     * @param context
+     */
+    public void init(ServiceContext context);
     /**
      * Checks autodetect elements in installed schemas to determine whether the
      * metadata record belongs to that schema. Use this method when you want the
