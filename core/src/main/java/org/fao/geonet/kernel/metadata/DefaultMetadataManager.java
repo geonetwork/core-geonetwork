@@ -3,9 +3,11 @@
  */
 package org.fao.geonet.kernel.metadata;
 
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,11 +16,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Group;
@@ -26,36 +32,57 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.MetadataDataInfo_;
+import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.domain.MetadataFileUpload_;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.HarvestInfoProvider;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataFileUploadRepository;
+import org.fao.geonet.repository.MetadataRatingByIpRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -80,9 +107,22 @@ import jeeves.xlink.Processor;
  * 
  */
 public class DefaultMetadataManager implements IMetadataManager {
+    private static final int METADATA_BATCH_PAGE_SIZE = 100000;
 
     @Autowired
-    private DataManager dm;
+    private IMetadataSchemaUtils metadataSchemaUtils;
+
+    @Autowired
+    private IMetadataUtils metadataUtils;
+
+    @Autowired
+    private IMetadataValidator metadataValidator;
+
+    @Autowired
+    private IMetadataIndexer metadataIndexer;
+
+    @Autowired
+    private IMetadataOperations metadataOperations;
 
     @Autowired
     private MetadataRepository mdRepository;
@@ -91,6 +131,15 @@ public class DefaultMetadataManager implements IMetadataManager {
 
     @Autowired
     private GroupRepository groupRepository;
+
+    @Autowired
+    private MetadataRatingByIpRepository mdRatingByIpRepository;
+
+    @Autowired
+    private MetadataStatusRepository mdStatusRepository;
+
+    @Autowired
+    private MetadataFileUploadRepository mdFileUploadRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -105,6 +154,15 @@ public class DefaultMetadataManager implements IMetadataManager {
     private OperationAllowedRepository operationAllowedRepository;
 
     private EditLib editLib;
+    
+    /**
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#getEditLib()
+     * @return
+     */
+    @Override
+    public EditLib getEditLib() {
+        return editLib;
+    }
 
     /**
      * @param schemaManager
@@ -395,14 +453,14 @@ public class DefaultMetadataManager implements IMetadataManager {
         final String schema = newMetadata.getDataInfo().getSchemaId();
 
         // --- force namespace prefix for iso19139 metadata
-        dm.setNamespacePrefixUsingSchemas(schema, metadataXml);
+        setNamespacePrefixUsingSchemas(schema, metadataXml);
 
         if (updateFixedInfo && newMetadata.getDataInfo()
                 .getType() == MetadataType.METADATA) {
             String parentUuid = null;
-            metadataXml = updateFixedInfo(schema,
-                    Optional.<Integer> absent(), newMetadata.getUuid(),
-                    metadataXml, parentUuid, updateDatestamp, context);
+            metadataXml = updateFixedInfo(schema, Optional.<Integer> absent(),
+                    newMetadata.getUuid(), metadataXml, parentUuid,
+                    updateDatestamp, context);
         }
 
         // --- store metadata
@@ -415,16 +473,16 @@ public class DefaultMetadataManager implements IMetadataManager {
         if (groupIdI != null) {
             groupId = String.valueOf(groupIdI);
         }
-        dm.copyDefaultPrivForGroup(context, stringId, groupId,
+        metadataOperations.copyDefaultPrivForGroup(context, stringId, groupId,
                 fullRightsForGroup);
 
         if (index) {
-            dm.indexMetadata(stringId, forceRefreshReaders);
+            metadataIndexer.indexMetadata(stringId, forceRefreshReaders);
         }
 
         if (notifyChange) {
             // Notifies the metadata change to metatada notifier service
-            dm.notifyMetadataChange(metadataXml, stringId);
+            metadataUtils.notifyMetadataChange(metadataXml, stringId);
         }
         return savedMetadata;
     }
@@ -458,7 +516,7 @@ public class DefaultMetadataManager implements IMetadataManager {
             session.removeProperty(
                     Geonet.Session.VALIDATION_REPORT + metadataId);
         }
-        String schema = getMetadataSchema(metadataId);
+        String schema = metadataSchemaUtils.getMetadataSchema(metadataId);
         if (ufo) {
             String parentUuid = null;
             Integer intId = Integer.valueOf(metadataId);
@@ -469,7 +527,7 @@ public class DefaultMetadataManager implements IMetadataManager {
         }
 
         // --- force namespace prefix for iso19139 metadata
-        dm.setNamespacePrefixUsingSchemas(schema, metadataXml);
+        setNamespacePrefixUsingSchemas(schema, metadataXml);
 
         // Notifies the metadata change to metatada notifier service
         final Metadata metadata = mdRepository.findOne(metadataId);
@@ -485,19 +543,19 @@ public class DefaultMetadataManager implements IMetadataManager {
                 changeDate, updateDateStamp, uuid, context);
         if (metadata.getDataInfo().getType() == MetadataType.METADATA) {
             // Notifies the metadata change to metatada notifier service
-            dm.notifyMetadataChange(metadataXml, metadataId);
+            metadataUtils.notifyMetadataChange(metadataXml, metadataId);
         }
 
         try {
             // --- do the validation last - it throws exceptions
             if (session != null && validate) {
-                dm.doValidate(session, schema, metadataId, metadataXml, lang,
-                        false);
+                metadataValidator.doValidate(session, schema, metadataId,
+                        metadataXml, lang, false);
             }
         } finally {
             if (index) {
                 // --- update search criteria
-                dm.indexMetadata(metadataId, true);
+                metadataIndexer.indexMetadata(metadataId, true);
             }
         }
         return mdRepository.findOne(metadataId);
@@ -532,12 +590,12 @@ public class DefaultMetadataManager implements IMetadataManager {
                           // editor
             if (doXLinks)
                 Processor.processXLink(metadataXml, srvContext);
-            String schema = getMetadataSchema(id);
+            String schema = metadataSchemaUtils.getMetadataSchema(id);
 
             if (withEditorValidationErrors) {
-                version = dm.doValidate(srvContext.getUserSession(), schema, id,
-                        metadataXml, srvContext.getLanguage(), forEditing)
-                        .two();
+                version = metadataValidator.doValidate(
+                        srvContext.getUserSession(), schema, id, metadataXml,
+                        srvContext.getLanguage(), forEditing).two();
             } else {
                 editLib.expandElements(schema, metadataXml);
                 version = editLib.getVersionForEditing(schema, id, metadataXml);
@@ -558,26 +616,6 @@ public class DefaultMetadataManager implements IMetadataManager {
 
         metadataXml.detach();
         return metadataXml;
-    }
-
-    /**
-     * 
-     * @see org.fao.geonet.kernel.metadata.IMetadataManager#getMetadataSchema(java.lang.String)
-     * @param id
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public String getMetadataSchema(String id) throws Exception {
-        Metadata md = mdRepository.findOne(id);
-
-        if (md == null) {
-            throw new IllegalArgumentException(
-                    "Metadata not found for id : " + id);
-        } else {
-            // get metadata
-            return md.getDataInfo().getSchemaId();
-        }
     }
 
     /**
@@ -676,7 +714,7 @@ public class DefaultMetadataManager implements IMetadataManager {
 
             result.addContent(env);
             // apply update-fixed-info.xsl
-            Path styleSheet = dm.getSchemaDir(schema)
+            Path styleSheet = metadataSchemaUtils.getSchemaDir(schema)
                     .resolve(Geonet.File.UPDATE_FIXED_INFO);
             result = Xml.transform(result, styleSheet);
             return result;
@@ -928,10 +966,11 @@ public class DefaultMetadataManager implements IMetadataManager {
         }
         return operationsPerMetadata;
     }
-    
+
     /**
      * 
-     * @see org.fao.geonet.kernel.metadata.IMetadataManager#extractUUID(java.lang.String, org.jdom.Element)
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#extractUUID(java.lang.String,
+     *      org.jdom.Element)
      * @param schema
      * @param md
      * @return
@@ -939,16 +978,391 @@ public class DefaultMetadataManager implements IMetadataManager {
      */
     @Override
     public String extractUUID(String schema, Element md) throws Exception {
-        Path styleSheet = dm.getSchemaDir(schema).resolve(Geonet.File.EXTRACT_UUID);
-        String uuid       = Xml.transform(md, styleSheet).getText().trim();
+        Path styleSheet = metadataSchemaUtils.getSchemaDir(schema)
+                .resolve(Geonet.File.EXTRACT_UUID);
+        String uuid = Xml.transform(md, styleSheet).getText().trim();
 
-        if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted UUID '"+ uuid +"' for schema '"+ schema +"'");
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            Log.debug(Geonet.DATA_MANAGER, "Extracted UUID '" + uuid
+                    + "' for schema '" + schema + "'");
 
-        //--- needed to detach md from the document
+        // --- needed to detach md from the document
         md.detach();
 
         return uuid;
     }
 
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#getMetadataNoInfo(jeeves.server.context.ServiceContext,
+     *      java.lang.String)
+     * @param srvContext
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Element getMetadataNoInfo(ServiceContext srvContext, String id)
+            throws Exception {
+        Element md = getMetadata(srvContext, id, false, false, false);
+        md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        return md;
+    }
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#getMetadata(java.lang.String)
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Element getMetadata(String id) throws Exception {
+        Element md = ApplicationContextHolder.get().getBean(XmlSerializer.class)
+                .selectNoXLinkResolver(id, false);
+        if (md == null)
+            return null;
+        md.detach();
+        return md;
+    }
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#getElementByRef(org.jdom.Element,
+     *      java.lang.String)
+     * @param md
+     * @param ref
+     * @return
+     */
+    @Override
+    public Element getElementByRef(Element md, String ref) {
+        return editLib.findElement(md, ref);
+    }
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#existsMetadata(int)
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean existsMetadata(int id) throws Exception {
+        return mdRepository.exists(id);
+    }
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#existsMetadataUuid(java.lang.String)
+     * @param uuid
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean existsMetadataUuid(String uuid) throws Exception {
+        return !mdRepository.findAllIdsBy(hasMetadataUuid(uuid)).isEmpty();
+    }
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#updateMetadataOwner(int,
+     *      java.lang.String, java.lang.String)
+     * @param id
+     * @param owner
+     * @param groupOwner
+     * @throws Exception
+     */
+    @Override
+    public synchronized void updateMetadataOwner(final int id,
+            final String owner, final String groupOwner) throws Exception {
+        mdRepository.update(id, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                entity.getSourceInfo()
+                        .setGroupOwner(Integer.valueOf(groupOwner));
+                entity.getSourceInfo().setOwner(Integer.valueOf(owner));
+            }
+        });
+    }
+
+    private void deleteMetadataFromDB(ServiceContext context, String id)
+            throws Exception {
+        // --- remove operations
+        deleteMetadataOper(context, id, false);
+
+        int intId = Integer.parseInt(id);
+        mdRatingByIpRepository.deleteAllById_MetadataId(intId);
+        mdValidationRepository.deleteAllById_MetadataId(intId);
+        mdStatusRepository.deleteAllById_MetadataId(intId);
+
+        // Logical delete for metadata file uploads
+        PathSpec<MetadataFileUpload, String> deletedDatePathSpec = new PathSpec<MetadataFileUpload, String>() {
+            @Override
+            public javax.persistence.criteria.Path<String> getPath(
+                    Root<MetadataFileUpload> root) {
+                return root.get(MetadataFileUpload_.deletedDate);
+            }
+        };
+        mdFileUploadRepository.createBatchUpdateQuery(deletedDatePathSpec,
+                new ISODate().toString(),
+                MetadataFileUploadSpecs.isNotDeletedForMetadata(intId));
+
+        // --- remove metadata
+        context.getBean(XmlSerializer.class).delete(id, context);
+    }
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#deleteMetadata(jeeves.server.context.ServiceContext,
+     *      java.lang.String)
+     * @param context
+     * @param metadataId
+     * @throws Exception
+     */
+    @Override
+    public synchronized void deleteMetadata(ServiceContext context,
+            String metadataId) throws Exception {
+        String uuid = metadataUtils.getMetadataUuid(metadataId);
+        Metadata findOne = mdRepository.findOne(metadataId);
+        if (findOne != null) {
+            boolean isMetadata = findOne.getDataInfo()
+                    .getType() == MetadataType.METADATA;
+
+            deleteMetadataFromDB(context, metadataId);
+
+            // Notifies the metadata change to metatada notifier service
+            if (isMetadata) {
+                context.getBean(MetadataNotifierManager.class)
+                        .deleteMetadata(metadataId, uuid, context);
+            }
+        }
+
+        // --- update search criteria
+
+        context.getBean(SearchManager.class).delete("_id", metadataId + "");
+        // _entityManager.flush();
+        // _entityManager.clear();
+    }
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#deleteMetadataGroup(jeeves.server.context.ServiceContext,
+     *      java.lang.String)
+     * @param context
+     * @param metadataId
+     * @throws Exception
+     */
+    @Override
+    public synchronized void deleteMetadataGroup(ServiceContext context,
+            String metadataId) throws Exception {
+        deleteMetadataFromDB(context, metadataId);
+        // --- update search criteria
+
+        context.getBean(SearchManager.class).deleteGroup("_id",
+                metadataId + "");
+    }
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#deleteMetadataOper(jeeves.server.context.ServiceContext,
+     *      java.lang.String, boolean)
+     * @param context
+     * @param metadataId
+     * @param skipAllIntranet
+     * @throws Exception
+     */
+    @Override
+    public void deleteMetadataOper(ServiceContext context, String metadataId,
+            boolean skipAllIntranet) throws Exception {
+        OperationAllowedRepository operationAllowedRepository = context
+                .getBean(OperationAllowedRepository.class);
+
+        if (skipAllIntranet) {
+            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(
+                    Integer.parseInt(metadataId),
+                    ReservedGroup.intranet.getId());
+        } else {
+            operationAllowedRepository.deleteAllByIdAttribute(
+                    OperationAllowedId_.metadataId,
+                    Integer.parseInt(metadataId));
+        }
+    }
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#init(jeeves.server.context.ServiceContext,
+     *      java.lang.Boolean)
+     * @param context
+     * @param force
+     * @throws Exception
+     */
+    @Override
+    public synchronized void init(ServiceContext context, Boolean force)
+            throws Exception {
+
+        // TODO check that all "autowired" fields are filled
+
+        editLib = new EditLib(schemaManager);
+
+        if (context.getUserSession() == null) {
+            UserSession session = new UserSession();
+            context.setUserSession(session);
+            session.loginAs(new User().setUsername("admin").setId(-1)
+                    .setProfile(Profile.Administrator));
+        }
+        // get lastchangedate of all metadata in index
+        Map<String, String> docs = context.getBean(SearchManager.class)
+                .getDocsChangeDate();
+
+        // set up results HashMap for post processing of records to be indexed
+        ArrayList<String> toIndex = new ArrayList<String>();
+
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            Log.debug(Geonet.DATA_MANAGER, "INDEX CONTENT:");
+
+        Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo,
+                MetadataDataInfo_.changeDate);
+        int currentPage = 0;
+        Page<Pair<Integer, ISODate>> results = mdRepository
+                .findAllIdsAndChangeDates(new PageRequest(currentPage,
+                        METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
+
+        // index all metadata in DBMS if needed
+        while (results.getNumberOfElements() > 0) {
+            for (Pair<Integer, ISODate> result : results) {
+
+                // get metadata
+                String id = String.valueOf(result.one());
+
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                    Log.debug(Geonet.DATA_MANAGER, "- record (" + id + ")");
+                }
+
+                String idxLastChange = docs.get(id);
+
+                // if metadata is not indexed index it
+                if (idxLastChange == null) {
+                    Log.debug(Geonet.DATA_MANAGER, "-  will be indexed");
+                    toIndex.add(id);
+
+                    // else, if indexed version is not the latest index it
+                } else {
+                    docs.remove(id);
+
+                    String lastChange = result.two().toString();
+
+                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                        Log.debug(Geonet.DATA_MANAGER,
+                                "- lastChange: " + lastChange);
+                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                        Log.debug(Geonet.DATA_MANAGER,
+                                "- idxLastChange: " + idxLastChange);
+
+                    // date in index contains 't', date in DBMS contains 'T'
+                    if (force || !idxLastChange.equalsIgnoreCase(lastChange)) {
+                        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                            Log.debug(Geonet.DATA_MANAGER,
+                                    "-  will be indexed");
+                        toIndex.add(id);
+                    }
+                }
+            }
+
+            currentPage++;
+            results = mdRepository.findAllIdsAndChangeDates(
+                    new PageRequest(currentPage, METADATA_BATCH_PAGE_SIZE,
+                            sortByMetadataChangeDate));
+        }
+
+        // if anything to index then schedule it to be done after servlet is
+        // up so that any links to local fragments are resolvable
+        if (toIndex.size() > 0) {
+            metadataIndexer.batchIndexInThreadPool(context, toIndex);
+        }
+
+        if (docs.size() > 0) { // anything left?
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                Log.debug(Geonet.DATA_MANAGER,
+                        "INDEX HAS RECORDS THAT ARE NOT IN DB:");
+            }
+        }
+
+        // remove from index metadata not in DBMS
+        for (String id : docs.keySet()) {
+            context.getBean(SearchManager.class).delete("_id", id);
+
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                Log.debug(Geonet.DATA_MANAGER,
+                        "- removed record (" + id + ") from index");
+            }
+        }
+    }
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#setNamespacePrefixUsingSchemas(java.lang.String,
+     *      org.jdom.Element)
+     * @param schema
+     * @param md
+     * @throws Exception
+     */
+    @Override
+    public void setNamespacePrefixUsingSchemas(String schema, Element md)
+            throws Exception {
+        // --- if the metadata has no namespace or already has a namespace
+        // prefix
+        // --- then we must skip this phase
+        Namespace ns = md.getNamespace();
+        if (ns == Namespace.NO_NAMESPACE)
+            return;
+
+        MetadataSchema mds = schemaManager.getSchema(schema);
+
+        // --- get the namespaces and add prefixes to any that are
+        // --- default (ie. prefix is '') if namespace match one of the schema
+        ArrayList<Namespace> nsList = new ArrayList<Namespace>();
+        nsList.add(ns);
+        @SuppressWarnings("unchecked")
+        List<Namespace> additionalNamespaces = md.getAdditionalNamespaces();
+        nsList.addAll(additionalNamespaces);
+        for (Object aNsList : nsList) {
+            Namespace aNs = (Namespace) aNsList;
+            if (aNs.getPrefix().equals("")) { // found default namespace
+                String prefix = mds.getPrefix(aNs.getURI());
+                if (prefix == null) {
+                    Log.warning(Geonet.DATA_MANAGER,
+                            "Metadata record contains a default namespace "
+                                    + aNs.getURI()
+                                    + " (with no prefix) which does not match any "
+                                    + schema + " schema's namespaces.");
+                }
+                ns = Namespace.getNamespace(prefix, aNs.getURI());
+                setNamespacePrefix(md, ns);
+                if (!md.getNamespace().equals(ns)) {
+                    md.removeNamespaceDeclaration(aNs);
+                    md.addNamespaceDeclaration(ns);
+                }
+            }
+        }
+    }
+
+    private void setNamespacePrefix(final Element md, final Namespace ns) {
+        if (md.getNamespaceURI().equals(ns.getURI())) {
+            md.setNamespace(ns);
+        }
+
+        Attribute xsiType = md.getAttribute("type", Namespaces.XSI);
+        if (xsiType != null) {
+            String xsiTypeValue = xsiType.getValue();
+
+            if (StringUtils.isNotEmpty(xsiTypeValue)
+                    && !xsiTypeValue.contains(":")) {
+                xsiType.setValue(ns.getPrefix() + ":" + xsiType.getValue());
+            }
+        }
+
+        for (Object o : md.getChildren()) {
+            setNamespacePrefix((Element) o, ns);
+        }
+    }
 }

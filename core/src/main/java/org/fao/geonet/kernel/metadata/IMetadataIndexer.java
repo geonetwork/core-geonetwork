@@ -3,9 +3,12 @@
  */
 package org.fao.geonet.kernel.metadata;
 
+import java.util.Calendar;
 import java.util.List;
 
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.DataManager;
+import org.springframework.data.jpa.domain.Specification;
 
 import jeeves.server.context.ServiceContext;
 
@@ -65,4 +68,21 @@ public interface IMetadataIndexer {
      */
     public void indexMetadata(final String metadataId,
             boolean forceRefreshReaders) throws Exception;
+
+    /**
+     *
+     * @param beginAt
+     * @param interval
+     * @throws Exception
+     */
+    public void rescheduleOptimizer(Calendar beginAt, int interval)
+            throws Exception;
+
+    /**
+     * @throws Exception
+     */
+    void disableOptimizer() throws Exception;
+
+    public int batchDeleteMetadataAndUpdateIndex(
+            Specification<Metadata> specification) throws Exception;
 }

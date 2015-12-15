@@ -1,16 +1,17 @@
 package org.fao.geonet.services.region.metadata;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import jeeves.server.context.ServiceContext;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -24,11 +25,13 @@ import org.geotools.xml.Parser;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
+import jeeves.server.context.ServiceContext;
 
 public class MetadataRegionSearchRequest extends Request {
 
@@ -143,7 +146,7 @@ public class MetadataRegionSearchRequest extends Request {
 
     Region parseRegion(Id mdId, Element extentObj) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        gc.getBean(DataManager.class).getEditLib().removeEditingInfo(extentObj);
+        gc.getBean(IMetadataManager.class).getEditLib().removeEditingInfo(extentObj);
 
         String id = null;
         Geometry geometry = null;
