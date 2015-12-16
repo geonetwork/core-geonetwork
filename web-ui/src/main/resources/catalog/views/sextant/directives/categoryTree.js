@@ -18,6 +18,13 @@
       }
     }
   };
+  var sortNodeFn = function(a, b) {
+    var aName = a.name || a.get('label');
+    var bName = b.name || b.get('label');
+    if (aName < bName) return -1 ;
+    if (aName > bName) return 1;
+    return 0;
+  };
   var createNode = function(node, g, index, t) {
     var group = g[index];
     if (group) {
@@ -29,6 +36,7 @@
         };
         if (!node.nodes) node.nodes = [];
         node.nodes.push(newNode);
+        node.nodes.sort(sortNodeFn);
       }
       createNode(newNode, g, index + 1, t);
     } else {
