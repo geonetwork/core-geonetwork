@@ -158,6 +158,9 @@
 
                 }
                 else {
+                  if (groups[0] != '/') {
+                    groups = '/' + groups;
+                  }
                   var g = groups.split(sep);
                   createNode(l, scope.layerTree, g, 1);
                 }

@@ -288,6 +288,10 @@ yx-axis
 .g .gn-facet ul li {
   font-size: 12px;
 }
+.gn img,
+.g img {
+  padding: 0;
+}
 @font-face {
   font-family: 'FontAwesome';
   src: url('../catalog/lib/style/font-awesome/fonts/fontawesome-webfont.eot?v=4.1.0');
@@ -14224,6 +14228,10 @@ yx-axis
 .g [sxt-main-viewer] .sxt-panel-button {
   text-align: center;
 }
+.gn [sxt-main-viewer] .ol-viewport,
+.g [sxt-main-viewer] .ol-viewport {
+  background: #dbe8ff;
+}
 .gn [sxt-main-viewer] .main-tools,
 .g [sxt-main-viewer] .main-tools {
   right: auto;
@@ -14512,7 +14520,7 @@ yx-axis
 .g [sxt-main-viewer] [gn-gfi] .results .fa-stack {
   font-size: 12px;
   position: absolute;
-  top: 0;
+  top: 1px;
 }
 .gn [sxt-main-viewer] [gn-gfi] .results .panel-heading,
 .g [sxt-main-viewer] [gn-gfi] .results .panel-heading {
@@ -15265,6 +15273,11 @@ yx-axis
   display: table-cell;
   vertical-align: middle;
   height: 19em;
+}
+.gn .popover.popover-dropdown .popover-content ul,
+.g .popover.popover-dropdown .popover-content ul {
+  margin: 0;
+  font-size: 1em;
 }
 .gn .popover.popover-dropdown .popover-content li,
 .g .popover.popover-dropdown .popover-content li {
@@ -17930,7 +17943,7 @@ yx-axis
   .g [search-results] {
     height: calc(100% -  2.8em);
     overflow: auto;
-    padding-bottom: 10em;
+    padding-bottom: 14em;
   }
   .gn .gn-searchform,
   .g .gn-searchform {
@@ -18241,6 +18254,10 @@ yx-axis
   margin-left: -5em;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
   border-radius: 2px;
+}
+.gn .sxt-left-panel .sxt-reset-btn[disabled],
+.g .sxt-left-panel .sxt-reset-btn[disabled] {
+  background: #81BEE4;
 }
 .gn .sxt-center-panel div.panel-default,
 .g .sxt-center-panel div.panel-default {
@@ -18794,6 +18811,11 @@ yx-axis
 .g ul.gn-resultview li.gn-grid div.gn-md-links button {
   width: 46px;
   margin: 0 3px 0 0;
+}
+.gn ul.gn-resultview li.gn-grid div.gn-md-links .dropdown-menu,
+.g ul.gn-resultview li.gn-grid div.gn-md-links .dropdown-menu {
+  max-height: 14em;
+  overflow-y: auto;
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-relations,
 .g ul.gn-resultview li.gn-grid .gn-md-relations {
@@ -19406,6 +19428,10 @@ yx-axis
   background-color: transparent;
   color: black;
 }
+.gn p img,
+.g p img {
+  float: none;
+}
 @media (min-width: 1680px) {
   .gn .sxt-main-tabs .btn-group.sxt-panel-button,
   .g .sxt-main-tabs .btn-group.sxt-panel-button {
@@ -19517,6 +19543,10 @@ yx-axis
   display: table-cell;
   vertical-align: middle;
   height: 19em;
+}
+.popover.popover-dropdown .popover-content ul {
+  margin: 0;
+  font-size: 1em;
 }
 .popover.popover-dropdown .popover-content li {
   font-size: 12px;
