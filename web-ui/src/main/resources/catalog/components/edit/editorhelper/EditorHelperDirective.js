@@ -57,14 +57,11 @@
           if (!$.isArray(scope.config.option)) {
             scope.config.option = [scope.config.option];
           }
-          if (angular.isArray(scope.config)) {
-            scope.config.option = scope.config;
-          }
 
           // Check if current value is one of the suggestion
           var isInList = false;
           angular.forEach(scope.config.option, function(opt) {
-            if (opt !== undefined && opt['@value'] === initialValue) {
+            if (opt['@value'] === initialValue) {
               isInList = true;
             }
           });

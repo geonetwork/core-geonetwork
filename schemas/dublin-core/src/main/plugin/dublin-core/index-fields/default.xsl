@@ -19,11 +19,7 @@
 	<!-- ========================================================================================= -->
 	
 	<xsl:template match="/">
-
-    <xsl:variable name="langCode"
-                  select="if (normalize-space(dc:language) != '')
-                          then string(dc:language) else 'eng'"/>
-
+		<xsl:variable name="langCode" select="string(dc:language)"/>
 		<Document locale="{$langCode}">
 
 			<!-- locale information -->	
@@ -161,22 +157,7 @@
       <xsl:for-each select="/simpledc/dc:creator">
 			  <Field name="responsibleParty" string="{concat('creator', '|metadata|', ., '|')}" store="true" index="false"/>
       </xsl:for-each>
-
-      <xsl:choose>
-        <xsl:when test="/simpledc/dct:accrualPeriodicity">
-          <xsl:for-each select="/simpledc/dct:accrualPeriodicity">
-            <Field name="updateFrequency" string="{string(.)}" store="true" index="true"/>
-            <Field name="cl_maintenanceAndUpdateFrequency_text"
-                   string="{java:getCodelistTranslation('gmd:MD_MaintenanceFrequencyCode',
-                                                 string(.),
-                                                 string($langCode))}"
-                   store="true" index="true"/>
-          </xsl:for-each>
-        </xsl:when>
-        <xsl:otherwise>
-          <Field name="updateFrequency" string="other" store="true" index="true"/>
-        </xsl:otherwise>
-      </xsl:choose>
+			
 		</Document>
 	</xsl:template>
 	

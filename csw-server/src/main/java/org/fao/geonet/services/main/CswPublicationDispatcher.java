@@ -36,6 +36,7 @@ import org.jdom.Element;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Accepts CSW Publication operations.
@@ -77,7 +78,14 @@ public class CswPublicationDispatcher extends NotInReadOnlyModeService {
         String operation;
         // KVP encoding
         if(params.getName().equals("request")) {
-            operation = params.getChildText("request");
+            Map<String, String> hm = CatalogDispatcher.extractParams(params);
+            operation = hm.get("request");
+            if (operation == null) {
+                    Element info = new Element("info")
+                                    .setText("No 'request' parameter found");
+                    response.addContent(info);
+                    return response;
+            }
         }
         // SOAP encoding
         else if(params.getName().equals("Envelope")) {

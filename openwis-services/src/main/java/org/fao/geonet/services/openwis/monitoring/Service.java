@@ -3,15 +3,11 @@
  */
 package org.fao.geonet.services.openwis.monitoring;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.fao.geonet.services.openwis.util.Request;
@@ -59,36 +55,6 @@ public class Service {
     private String[] keys = { "date", "size", "dissToolNbFiles", "userId",
             "dissToolSize", "id", "nbFiles", "source", "nbMetadata",
             "totalSize" };
-
-    @RequestMapping(value = { "/{lang}/openwis.monitoring.csv" })
-    public void csv(@RequestParam String monitorType,
-            @ModelAttribute Request request, HttpServletRequest httpRequest,
-            HttpServletResponse response) throws IOException {
-        response.setContentType("text/csv; charset=utf-8");
-        PrintWriter writer = response.getWriter();
-
-        Response res = get(monitorType, request, httpRequest);
-
-        if (!res.getData().isEmpty()) {
-            for (Entry<String, String> entry : res.getData().get(0)
-                    .entrySet()) {
-                writer.print(entry.getKey());
-                writer.print(",");
-            }
-            writer.print('\n');
-
-            for (Map<String, String> row : res.getData()) {
-                for (Entry<String, String> entry : row.entrySet()) {
-                    writer.print(entry.getValue());
-                    writer.print(",");
-                }
-                writer.print('\n');
-            }
-        }
-        
-        writer.flush();
-        writer.close();
-    }
 
     @RequestMapping(value = { "/{lang}/openwis.monitoring.get" }, produces = {
             MediaType.APPLICATION_JSON_VALUE })

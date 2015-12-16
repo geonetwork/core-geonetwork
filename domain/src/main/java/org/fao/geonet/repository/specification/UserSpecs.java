@@ -91,17 +91,6 @@ public final class UserSpecs {
         };
     }
 
-    public static Specification<User> hasEnabled(final Boolean enabled) {
-        return new Specification<User>() {
-            @Override
-            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Boolean> enabledAttributePath = root.get(User_.enabled);
-                Predicate enabledEqualPredicate = cb.equal(enabledAttributePath, enabled);
-                return enabledEqualPredicate;
-            }
-        };
-    }
-
     public static Specification<User> loginDateBetweenAndByGroups(final ISODate loginDateFrom,
                                                                   final ISODate loginDateTo,
                                                                   final Collection<Integer> groups) {

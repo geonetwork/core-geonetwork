@@ -103,9 +103,8 @@
 
     <xsl:variable name="thesaurusConfig"
                   as="element()?"
-                  select="if ($thesaurusList/thesaurus[@key=substring-after($thesaurusIdentifier/*/text(), 'geonetwork.thesaurus.')])
-                          then $thesaurusList/thesaurus[@key=substring-after($thesaurusIdentifier/*/text(), 'geonetwork.thesaurus.')]
-                          else $listOfThesaurus/thesaurus[title=$thesaurusTitle]"/>
+                  select="($listOfThesaurus/thesaurus[title=$thesaurusTitle]|
+                  $listOfThesaurus/thesaurus[key=substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')])[1]"/>
 
     <xsl:choose>
       <xsl:when test="$thesaurusConfig">
