@@ -17943,7 +17943,7 @@ yx-axis
   .g [search-results] {
     height: calc(100% -  2.8em);
     overflow: auto;
-    padding-bottom: 10em;
+    padding-bottom: 14em;
   }
   .gn .gn-searchform,
   .g .gn-searchform {
@@ -18811,6 +18811,11 @@ yx-axis
 .g ul.gn-resultview li.gn-grid div.gn-md-links button {
   width: 46px;
   margin: 0 3px 0 0;
+}
+.gn ul.gn-resultview li.gn-grid div.gn-md-links .dropdown-menu,
+.g ul.gn-resultview li.gn-grid div.gn-md-links .dropdown-menu {
+  max-height: 14em;
+  overflow-y: auto;
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-relations,
 .g ul.gn-resultview li.gn-grid .gn-md-relations {
