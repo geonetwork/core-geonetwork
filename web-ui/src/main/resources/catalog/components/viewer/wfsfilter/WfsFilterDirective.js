@@ -32,6 +32,7 @@
           var ftName = scope.featureTypeName;
           var wfsUrl = scope.wfsUrl;
           var indexedFields;
+          scope.user = scope.$parent.user;
 
           /**
            * Create SOLR request to get facets values

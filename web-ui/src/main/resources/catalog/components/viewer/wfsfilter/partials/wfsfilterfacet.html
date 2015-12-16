@@ -1,10 +1,9 @@
 <form name="wfsFilterForm">
 
   <!--Facet count-->
-  <div class="count"><span translate="">featureCount</span>&nbsp;:&nbsp;{{count}}</div>
+  <div class="count"><span translate="">featureCount</span>&nbsp;:&nbsp;{{::count}}</div>
 
-  <!--Reset button-->
-  <div class="btn-link" data-ng-click="resetFacets()" translate="">reset</div>
+  <div class="btn-link" data-ng-show="user.isAdministrator()" data-ng-click="indexWFSFeatures()" translate="">indexWFSFeatures</div>
 
   <!--search input-->
   <div class="sxt-layertree-filter">
@@ -26,10 +25,9 @@
       </div>
     </div>
   </div>
-  <button class="btn btn-success" data-gn-click-and-spin="filterWMS()"><i class="fa fa-filter"></i>&nbsp;<span translate="">filter</span></button>
 
-  <button class="btn btn-primary"
-          data-ng-show-todo="user.isEditorOrMore()"
-          data-gn-click-and-spin="indexWFSFeatures()"
-          data-translate="">indexWFSFeatures</button>
+  <!--Reset button-->
+  <button class="btn btn-success" data-gn-click-and-spin="filterWMS()"><i class="fa fa-filter"></i>&nbsp;<span translate="">filter</span></button>
+  <button class="btn btn-success" data-gn-click-and-spin="resetFacets()"><i class="fa fa-close"></i>&nbsp;<span translate="">reset</span></button>
+
 </form>
