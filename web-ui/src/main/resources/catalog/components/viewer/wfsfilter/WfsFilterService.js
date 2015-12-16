@@ -325,9 +325,10 @@
        *
        * @param {string} url of the base solr url
        * @param {object} facetState strcture representing ui selection
+       * @param {string} filter the any filter from input
        * @return {string} the updated url
        */
-      this.updateSolrUrl = function(url, facetState) {
+      this.updateSolrUrl = function(url, facetState, filter) {
         var fieldsQ = [];
 
         angular.forEach(facetState, function(field, fieldName) {
@@ -339,6 +340,11 @@
             fieldsQ.push('+(' + valuesQ.join(' ') + ')');
           }
         });
+        if(filter) {
+          filter.split(' ').forEach(function(v) {
+            fieldsQ.push('+*' + v + '*');
+          });
+        }
         if (fieldsQ.length) {
           url = url.replace('&q=', '&q=' +
               encodeURIComponent(fieldsQ.join(' ') + ' +'));

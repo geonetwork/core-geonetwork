@@ -95,22 +95,35 @@
               };
               output[fieldName].values[facetKey] = true;
             }
+            scope.filterFacets();
+          };
+
+          /**
+           * Send a new filtered request to solr to update the facet ui
+           * structure.
+           * This method is called each time the user check or uncheck a box
+           * from the ui, or when he updates the filter input.
+           */
+          scope.filterFacets = function() {
 
             // Update the facet UI
-            var collapsedFields = [];
+            var collapsedFields;
             angular.forEach(scope.fields, function(f) {
+              collapsedFields= [];
               if (f.collapsed) {
                 collapsedFields.push(f.name);
               }
             });
 
-            var url = wfsFilterService.updateSolrUrl(solrUrl, output);
+            var url = wfsFilterService.updateSolrUrl(solrUrl, scope.output,
+            scope.searchInput);
             wfsFilterService.getFacetsConfigFromSolr(url, indexedFields).
                 then(function(facetsInfo) {
                   scope.fields = facetsInfo.facetConfig;
                   scope.count = facetsInfo.count;
                   angular.forEach(scope.fields, function(f) {
-                    if (collapsedFields.indexOf(f.name) >= 0) {
+                    if (!collapsedFields ||
+                        collapsedFields.indexOf(f.name) >= 0) {
                       f.collapsed = true;
                     }
                   });
@@ -168,14 +181,12 @@
                 ftName);
           };
 
-          scope.filterFacetsFn = function(facet) {
-            return scope.searchInput.indexOf(facet) >= 0;
-          };
 
           scope.clearInput = function() {
             scope.searchInput = '';
+            scope.filterFacets();
           };
-          scope.clearInput();
+          scope.searchInput = '';
         }
       };
     }]);
