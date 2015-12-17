@@ -50,7 +50,6 @@
                 ftName, wfsUrl).success(function(data) {
 
               var url;
-              data = null;
               if (data) {
                 url = wfsFilterService.getSolrRequestFromApplicationProfile(
                     data, ftName, wfsUrl, docFields);

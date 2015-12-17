@@ -41,6 +41,7 @@
        * the facet ui.
        *
        * @param {object} solrData response from solr request
+       * @param {array} docFields info from index
        * @return {Array} All definition for each field
        */
       var createFacetConfigFromSolr = function(solrData, docFields) {
