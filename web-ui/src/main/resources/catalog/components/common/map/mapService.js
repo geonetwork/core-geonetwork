@@ -37,10 +37,11 @@
       'Metadata',
       'gnWfsService',
       'gnGlobalSettings',
+      'gnViewerSettings',
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log, 
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
-          gnGlobalSettings) {
+          gnGlobalSettings, viewerSettings) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -460,13 +461,21 @@
 
             var options = layerOptions || {};
 
-            var source = new ol.source.TileWMS({
-              params: layerParams,
-              url: options.url,
-              gutter: 15
-            });
+            var source, olLayer;
+            if (viewerSettings.singleTileWMS) {
+              source = new ol.source.ImageWMS({
+                params: layerParams,
+                url: options.url
+              });
+            } else {
+              source = new ol.source.TileWMS({
+                params: layerParams,
+                url: options.url,
+                gutter: 15
+              });
+            }
 
-            var olLayer = new ol.layer.Tile({
+            var layerOptions = {
               url: options.url,
               type: 'WMS',
               opacity: options.opacity,
@@ -482,7 +491,12 @@
               minResolution: options.minResolution,
               maxResolution: options.maxResolution,
               cextent: options.extent
-            });
+            };
+            if (viewerSettings.singleTileWMS) {
+              olLayer = new ol.layer.Image(layerOptions);
+            } else {
+              olLayer = new ol.layer.Tile(layerOptions);
+            }
 
             if (options.metadata) {
               olLayer.set('metadataUrl', options.metadata);
@@ -492,11 +506,12 @@
               if (uuid) {
                 olLayer.set('metadataUuid', uuid);
               }
-            }
+            };
             ngeoDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 
-            var unregisterEventKey = olLayer.getSource().on('tileloaderror',
+            var unregisterEventKey = olLayer.getSource().on(
+                (viewerSettings.singleTileWMS) ? 'imageloaderror' : 'tileloaderror',
                 function(tileEvent, target) {
                   var msg = $translate('layerTileLoadError', {
                     url: tileEvent.tile && tileEvent.tile.getKey ?
@@ -937,8 +952,10 @@
                 olL = $this.createOlWMSFromCap(map, capL);
 
                 var finishCreation = function() {
+                  var url = (viewerSettings.singleTileWMS) ?
+                      olL.getSource().getUrl() : olL.getSource().getUrls()[0];
                   if ( (!createOnly) &&
-                      (!isLayerInMap(map, olL.getSource().getParams().LAYERS, olL.getSource().getUrls()[0])) ) {
+                      (!isLayerInMap(map, olL.getSource().getParams().LAYERS, url)) ) {
                     map.addLayer(olL);
                   }
                   gnWmsQueue.removeFromQueue(url, name);
