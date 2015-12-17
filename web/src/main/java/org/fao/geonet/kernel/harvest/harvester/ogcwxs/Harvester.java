@@ -91,8 +91,8 @@ import java.util.UUID;
  * 	<li>ISO19139 for data's metadata</li>
  * </ul>
  * 
- *  Note : Layer stands for "Layer" for WMS, "FeatureType" for WFS
- *  and "Coverage" for WCS.
+ *  Note : Layer stands for "Layer" for WMS, "FeatureType" for WFS,
+ *  "Coverage" for WCS, and "ObservationOffering" for SOS.
  *  
  * <pre>  
  * <nodes>
@@ -242,7 +242,7 @@ class Harvester extends BaseAligner
 	
 	
 
-	/** 
+    /**
      * Add metadata to the node for a WxS service
      *  
 	 *  1.Use GetCapabilities Document
