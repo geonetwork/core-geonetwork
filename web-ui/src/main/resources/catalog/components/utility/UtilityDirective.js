@@ -855,7 +855,7 @@
         element.bind('click', function() {
           var md = scope.$eval(attr['gnImgModal']);
           var imgs = md.getThumbnails();
-          var img = imgs.big || imgs.small;
+          var img =  imgs.big || imgs.small || md.thumbnail;
 
           if (img) {
             var modalElt = angular.element(

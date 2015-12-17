@@ -16,22 +16,22 @@
         <div class="row gn-md-title">
 
           <!--Icon for types - usually only one-->
-          <span class="fa" data-ng-class="md.icon.cls"
-                title="{{md.icon.title | translate}}"></span>
+          <span class="fa" data-ng-class="::md.icon.cls"
+                title="{{::md.icon.title | translate}}"></span>
 
-          <h4 title="{{md.title || md.defaultTitle}}">
-            <a  href="md.viewer#/sxt_view/{{md.getUuid()}}" gn-metadata-open="md">
-              {{(md.title || md.defaultTitle) | characters : 70}}</a>
+          <h4 title="{{::md.title || md.defaultTitle}}">
+            <a  href="md.viewer#/sxt_view/{{::md.getUuid()}}" gn-metadata-open="::md">
+              {{::(md.title || md.defaultTitle) | characters : 70}}</a>
           </h4>
 
         </div>
 
 
-        <div class="gn-md-details" title="{{(md.abstract || md.defaultAbstract) | striptags}}">
+        <div class="gn-md-details" title="{{::(md.abstract || md.defaultAbstract) | striptags}}">
 
             <!-- Thumbnail -->
-            <div class="gn-md-thumbnail" ng-class="{'gn-md-emptythumbnail': !md.getThumbnails().small && !md.getThumbnails().big}">
-              <img gn-img-modal="md" class="gn-img-thumbnail" data-ng-src="{{md.getThumbnails().small || md.getThumbnails().big}}" data-ng-if="md.getThumbnails().small || md.getThumbnails().big"/>
+            <div class="gn-md-thumbnail" ng-class="::{'gn-md-emptythumbnail': !md.thumbnail}">
+              <img gn-img-modal="md" class="gn-img-thumbnail" data-ng-src="{{::md.thumbnail}}" data-ng-if="::md.thumbnail"/>
             </div>
 
             <div class="text-justify md-abstract ellipsis">
@@ -40,7 +40,7 @@
               </div>
             </div>
 
-            <p data-ng-if="md.getCredits()" class="gn-md-source" title="{{::md.getCredits()}}">
+            <p data-ng-if="::md.getCredits()" class="gn-md-source" title="{{::md.getCredits()}}">
               <!--<h5 data-translate="">contacts</h5>-->
               Source: {{::md.getCredits() | characters : 50}}
             </p>
@@ -51,15 +51,15 @@
       <div class="sx-md-footer">
         <div class="btn-group pull-left md-admin">
           <!--admin button-->
-          <div class="btn-group md-actions" ng-if="user.canEditRecord(md)">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'toAdmin' | translate}}">
+          <div class="btn-group md-actions" ng-if="::user.canEditRecord(md)">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{::'toAdmin' | translate}}">
               <span class="fa fa-gear"></span>
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
               <!-- Open Ext or Angular editor based on standard name -->
-              <li data-ng-if="::md.isUsingAngularEditor()"><a ng-href="{{gnUrl}}catalog.edit#/metadata/{{md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i><span translate>edit</span></a></li>
-              <li data-ng-if="::!md.isUsingAngularEditor()"><a ng-href="{{gnUrl}}../../apps/sextant/?edit={{md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i><span translate>edit</span></a></li>
+              <li data-ng-if="::md.isUsingAngularEditor()"><a ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i><span translate>edit</span></a></li>
+              <li data-ng-if="::!md.isUsingAngularEditor()"><a ng-href="{{::gnUrl}}../../apps/sextant/?edit={{::md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i><span translate>edit</span></a></li>
 
               <li data-ng-if="::(user.profile != 'Editor')"><a ng-click="mdService.deleteMd(md)"><i class="fa fa-trash-o"></i><span translate>delete</span></a></li>
               <li data-ng-if="::(user.profile == 'Editor')" class="disabled"><a href=""><i class="fa fa-trash-o"></i><span translate>delete</span></a></li>
@@ -79,7 +79,7 @@
         </div>
 
         <sxt-links-btn></sxt-links-btn>
-        <div class="gn-md-relations" ng-if="md.type == 'series'">
+        <div class="gn-md-relations" ng-if="::md.type == 'series'">
           <div gn-related="::md" types="parent|children"
                template="../../catalog/views/sextant/templates/related.html"></div>
          </div>
