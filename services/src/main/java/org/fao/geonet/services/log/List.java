@@ -1,11 +1,13 @@
 package org.fao.geonet.services.log;
 
-import jeeves.server.ServiceConfig;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.services.log.ListLogFilesResponse.LogFileResponse;
-import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
@@ -14,11 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import jeeves.server.ServiceConfig;
 
 /**
  * Retrieves all log4j file in folder
@@ -51,7 +49,20 @@ public class List {
         java.util.List<LogFileResponse> logFileList = new ArrayList<LogFileResponse>();
         final GeonetworkDataDirectory dataDirectory =
                 ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
-        String classesFolder = dataDirectory.getWebappDir() + "/WEB-INF/classes";
+
+        String classesFolder = null;
+        // If a logPlaceHolder directory (String) bean is defined, use it
+        // instead of the default WEB-INF/classes
+        try {
+            Object logov = ApplicationContextHolder.get().getBean("logPlaceHolder");
+            classesFolder = logov.toString();
+        } catch (Throwable e) {
+            // falling back onto the default behaviour
+        }
+
+        if (classesFolder == null) {
+            classesFolder = dataDirectory.getWebappDir() + "/WEB-INF/classes";
+        }
         File folder = new File(classesFolder);
 
         if (folder != null && folder.isDirectory()) {
@@ -63,7 +74,6 @@ public class List {
                 matcher = pattern.matcher(fileName);
                 if (matcher.matches()) {
                     String key = matcher.group(2);
-                    
                     if (StringUtils.isEmpty(key))
                         key = "prod";
                     logFileList.add(new LogFileResponse(key.toUpperCase(), fileName));

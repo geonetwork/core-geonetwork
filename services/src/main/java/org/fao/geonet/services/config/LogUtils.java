@@ -1,13 +1,10 @@
 package org.fao.geonet.services.config;
 
+import java.io.File;
 import java.net.URL;
-
-import jeeves.server.context.ServiceContext;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -30,6 +27,17 @@ public class LogUtils {
         SettingRepository repository =
                 ApplicationContextHolder.get().getBean(SettingRepository.class);
         Setting setting = repository.findOne(SettingManager.SYSTEM_SERVER_LOG);
+
+        // if logPlaceHolder is defined, use it instead of the resources
+        // defined in the classpath
+        try {
+            Object logov = ApplicationContextHolder.get().getBean("logPlaceHolder");
+            File logFile = new File(logov.toString(), setting != null ? setting.getValue() : DEFAULT_LOG_FILE);
+            DOMConfigurator.configure(logFile.toURI().toURL());
+            return;
+        } catch (Throwable e) {
+            // ignore, and continue with the old behaviour
+        }
 
         // get log config from db settings
         String log4jProp = setting != null ? setting.getValue() : DEFAULT_LOG_FILE;
