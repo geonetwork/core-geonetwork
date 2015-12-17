@@ -39,6 +39,8 @@
       viewerSettings.defaultContext = '../../catalog/views/sextant/data/' +
           'defaultContext.xml';
 
+      viewerSettings.singleTileWMS = true;
+
       /** *************************************
        * Define OWS services url for Import WMS
        */
