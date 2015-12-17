@@ -565,13 +565,11 @@
       scope.downloads = [];
       scope.layers = [];
 
-      var transferOpts = md.getLinksByType('OGC:WMS').length != 1;
-
       angular.forEach(md.linksTree, function(transferOptions, i) {
 
         // get all layers and downloads for this transferOptions
-        var layers = md.getLinksByType(i+1, 'OGC:WMTS',
-            'OGC:WMS', 'OGC:OWS-C');
+        var layers = md.getLinksByType(i+1, '#OGC:WMTS',
+            '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map', '#OGC:OWS-C');
         var downloads = md.getLinksByType(i+1, '#FILE', '#DB', '#COPYFILE',
            '#WWW:DOWNLOAD-1.0-link--download', '#WFS', 'WCS');
 

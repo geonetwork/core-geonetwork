@@ -1380,8 +1380,8 @@
                 if (data.metadata.length == 1) {
                   var md = new Metadata(data.metadata[0]);
 
-                  var mdLayers = md.getLinksByType('OGC:WMTS',
-                      'OGC:WMS', 'OGC:OWS-C');
+                  var mdLayers = md.getLinksByType('#OGC:WMTS',
+                      '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map');
 
                   layer.set('md', md);
 
@@ -1411,8 +1411,8 @@
             var md = layer.get('md')
 
             // We can bind layer and download/process
-            if (md.getLinksByType(linkGroup, 'OGC:WMTS',
-                'OGC:WMS', 'OGC:OWS-C').length == 1) {
+            if (md.getLinksByType(linkGroup, '#OGC:WMTS',
+                '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map').length == 1) {
 
               var downloads = md && md.getLinksByType(linkGroup,
                   'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
