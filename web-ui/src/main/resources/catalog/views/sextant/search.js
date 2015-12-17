@@ -555,6 +555,11 @@
         md.icon = {cls: 'fa-globe', title: 'service'}
       }
 
+      var thumbs = md.getThumbnails();
+      md.thumbnail = thumbs && (thumbs.small || thumbs.big || (
+          thumbs.list.length && thumbs.list[0].url
+          ));
+
       var status = md.mdStatus;
       var user = scope.user;
       scope.cantStatus = ((status == 4 || status == 2 || status == 3)
