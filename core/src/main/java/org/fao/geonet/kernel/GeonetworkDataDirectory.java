@@ -265,35 +265,35 @@ public class GeonetworkDataDirectory {
                                         + systemDataDir);
 
         // Set subfolder data directory
-        luceneDir = setDir(jeevesServlet, webappName, handlerConfig, ".lucene" + KEY_SUFFIX,
+        luceneDir = setDir(jeevesServlet, webappName, handlerConfig, luceneDir, ".lucene" + KEY_SUFFIX,
                 Geonet.Config.LUCENE_DIR, "index");
-        spatialIndexPath = setDir(jeevesServlet, "", handlerConfig, "spatial" + KEY_SUFFIX,
+        spatialIndexPath = setDir(jeevesServlet, "", handlerConfig, spatialIndexPath, "spatial" + KEY_SUFFIX,
                 null, "spatialindex");
 
-        configDir = setDir(jeevesServlet, webappName, handlerConfig, ".config" + KEY_SUFFIX,
+        configDir = setDir(jeevesServlet, webappName, handlerConfig, configDir, ".config" + KEY_SUFFIX,
                 Geonet.Config.CONFIG_DIR, "config");
-        thesauriDir = setDir(jeevesServlet, webappName, handlerConfig,
+        thesauriDir = setDir(jeevesServlet, webappName, handlerConfig, thesauriDir,
                 ".codeList" + KEY_SUFFIX, Geonet.Config.CODELIST_DIR, "config", "codelist"
         );
-        schemaPluginsDir = setDir(jeevesServlet, webappName, handlerConfig, ".schema" + KEY_SUFFIX,
+        schemaPluginsDir = setDir(jeevesServlet, webappName, handlerConfig, schemaPluginsDir, ".schema" + KEY_SUFFIX,
                 Geonet.Config.SCHEMAPLUGINS_DIR, "config", "schema_plugins"
         );
-        metadataDataDir = setDir(jeevesServlet, webappName, handlerConfig, ".data" + KEY_SUFFIX,
+        metadataDataDir = setDir(jeevesServlet, webappName, handlerConfig, metadataDataDir, ".data" + KEY_SUFFIX,
                 Geonet.Config.DATA_DIR, "data", "metadata_data"
         );
-        metadataRevisionDir = setDir(jeevesServlet, webappName, handlerConfig, ".svn" + KEY_SUFFIX,
+        metadataRevisionDir = setDir(jeevesServlet, webappName, handlerConfig, metadataRevisionDir, ".svn" + KEY_SUFFIX,
                 Geonet.Config.SUBVERSION_PATH, "data", "metadata_subversion"
         );
-        resourcesDir = setDir(jeevesServlet, webappName, handlerConfig,
+        resourcesDir = setDir(jeevesServlet, webappName, handlerConfig, resourcesDir,
                 ".resources" + KEY_SUFFIX, Geonet.Config.RESOURCES_DIR, "data", "resources"
         );
-        uploadDir = setDir(jeevesServlet, webappName, handlerConfig,
+        uploadDir = setDir(jeevesServlet, webappName, handlerConfig, uploadDir,
                 ".upload" + KEY_SUFFIX, Geonet.Config.UPLOAD_DIR, "data", "upload"
         );
-		formatterDir = setDir(jeevesServlet, webappName, handlerConfig,
+		formatterDir = setDir(jeevesServlet, webappName, handlerConfig, formatterDir,
                 ".formatter" + KEY_SUFFIX, Geonet.Config.FORMATTER_PATH, "data", "formatter");
 
-        htmlCacheDir = setDir(jeevesServlet, webappName, handlerConfig,
+        htmlCacheDir = setDir(jeevesServlet, webappName, handlerConfig, htmlCacheDir,
                 ".htmlcache" + KEY_SUFFIX, Geonet.Config.HTMLCACHE_DIR, handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache"
         );
 
@@ -402,9 +402,16 @@ public class GeonetworkDataDirectory {
      * @param handlerKey       @return
      * @param firstPathSeg    */
     private Path setDir(JeevesServlet jeevesServlet, String webappName,
-                        ServiceConfig handlerConfig, String key, String handlerKey, String firstPathSeg, String... otherSegments) {
+                        ServiceConfig handlerConfig, Path dir, String key, String handlerKey, String firstPathSeg, String... otherSegments) {
         String envKey = webappName + key;
-        Path dir = lookupProperty(jeevesServlet, handlerConfig, envKey);
+        if (dir != null) {
+            if (Log.isDebugEnabled(Geonet.DATA_DIRECTORY)) {
+                Log.debug(Geonet.DATA_DIRECTORY, "path for " + envKey + " set to " + dir.toString()
+                                                 + " via bean properties, not looking up");
+            }
+        } else {
+            dir = lookupProperty(jeevesServlet, handlerConfig, envKey);
+        }
         if (dir == null) {
             dir = this.systemDataDir.resolve(firstPathSeg);
             for (String otherSegment : otherSegments) {
@@ -586,6 +593,15 @@ public class GeonetworkDataDirectory {
     public Path getUploadDir() {
         return uploadDir;
     }
+
+    /**
+     * Set directory for caching where uploaded files go.
+     *
+     */
+    public void setUploadDir(Path uploadDir) {
+        this.uploadDir = uploadDir;
+    }
+
     /**
      * Set directory for caching html data.
      */
