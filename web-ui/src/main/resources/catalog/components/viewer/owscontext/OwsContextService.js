@@ -269,9 +269,9 @@
           if (source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
             url = source.getUrl();
-          } else if (source instanceof ol.source.TileWMS) {
+          } else if (source instanceof ol.source.TileWMS || source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
-            url = source.getUrls()[0];
+            url = layer.get('url');
           } else if (source instanceof ol.source.WMTS) {
             name = '{type=wmts,name=' + layer.get('name') + '}';
             url = layer.get('urlCap');

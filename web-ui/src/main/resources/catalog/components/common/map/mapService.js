@@ -76,7 +76,7 @@
                 return true;
               }
             }
-            else if (source instanceof ol.source.TileWMS) {
+            else if (source instanceof ol.source.TileWMS || source instanceof ol.source.ImageWMS) {
               if (source.getParams().LAYERS == name &&
                   l.get('url').split('?')[0] == url.split('?')[0]) {
                 return true;
@@ -952,10 +952,8 @@
                 olL = $this.createOlWMSFromCap(map, capL);
 
                 var finishCreation = function() {
-                  var url = (viewerSettings.singleTileWMS) ?
-                      olL.getSource().getUrl() : olL.getSource().getUrls()[0];
                   if ( (!createOnly) &&
-                      (!isLayerInMap(map, olL.getSource().getParams().LAYERS, url)) ) {
+                      (!isLayerInMap(map, olL.getSource().getParams().LAYERS, olL.get('url'))) ) {
                     map.addLayer(olL);
                   }
                   gnWmsQueue.removeFromQueue(url, name);
