@@ -5,6 +5,7 @@ package org.fao.geonet.kernel.metadata;
 
 import java.io.IOException;
 
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
@@ -156,7 +157,7 @@ public interface IMetadataManager {
      * @return
      * @throws Exception
      */
-    public Metadata insertMetadata(ServiceContext context, Metadata newMetadata,
+    public IMetadata insertMetadata(ServiceContext context, IMetadata newMetadata,
             Element metadataXml, boolean notifyChange, boolean index,
             boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
             boolean fullRightsForGroup, boolean forceRefreshReaders)
@@ -179,7 +180,7 @@ public interface IMetadataManager {
      * @return
      * @throws Exception
      */
-    public Metadata updateMetadata(final ServiceContext context,
+    public IMetadata updateMetadata(final ServiceContext context,
             final String metadataId, final Element md, final boolean validate,
             final boolean ufo, final boolean index, final String lang,
             final String changeDate, final boolean updateDateStamp)

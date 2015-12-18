@@ -478,7 +478,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 setUri(uri);
 
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = (Metadata) dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 

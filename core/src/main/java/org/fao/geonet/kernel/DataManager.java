@@ -41,6 +41,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet.Namespaces;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -95,7 +96,6 @@ import jeeves.server.context.ServiceContext;
 // {XSDValidationErrorEx.class, NoSchemaMatchesException.class})
 public class DataManager {
 
-
     @Autowired
     private IMetadataManager metadataManager;
 
@@ -128,8 +128,8 @@ public class DataManager {
 
     @Deprecated
     public void init(ServiceContext context, Boolean force) throws Exception {
-        //FIXME remove all the inits when autowiring works fine
-        
+        // FIXME remove all the inits when autowiring works fine
+
         this.metadataManager = context.getBean(IMetadataManager.class);
         this.metadataManager.init(context);
         this.metadataUtils = context.getBean(IMetadataUtils.class);
@@ -146,7 +146,7 @@ public class DataManager {
         this.metadataSchemaUtils.init(context);
         this.metadataCategory = context.getBean(IMetadataCategory.class);
         this.metadataCategory.init(context);
-        
+
         metadataManager.init(context, force);
     }
 
@@ -438,11 +438,11 @@ public class DataManager {
     }
 
     @Deprecated
-    public Metadata insertMetadata(ServiceContext context, Metadata newMetadata,
-            Element metadataXml, boolean notifyChange, boolean index,
-            boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
-            boolean fullRightsForGroup, boolean forceRefreshReaders)
-                    throws Exception {
+    public IMetadata insertMetadata(ServiceContext context,
+            IMetadata newMetadata, Element metadataXml, boolean notifyChange,
+            boolean index, boolean updateFixedInfo,
+            UpdateDatestamp updateDatestamp, boolean fullRightsForGroup,
+            boolean forceRefreshReaders) throws Exception {
 
         return metadataManager.insertMetadata(context, newMetadata, metadataXml,
                 notifyChange, index, updateFixedInfo, updateDatestamp,
@@ -506,7 +506,7 @@ public class DataManager {
     }
 
     @Deprecated
-    public synchronized Metadata updateMetadata(final ServiceContext context,
+    public synchronized IMetadata updateMetadata(final ServiceContext context,
             final String metadataId, final Element md, final boolean validate,
             final boolean ufo, final boolean index, final String lang,
             final String changeDate, final boolean updateDateStamp)

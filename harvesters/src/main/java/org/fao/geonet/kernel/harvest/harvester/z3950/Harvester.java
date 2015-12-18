@@ -21,12 +21,20 @@
 
 package org.fao.geonet.kernel.harvest.harvester.z3950;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
@@ -52,14 +60,8 @@ import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -348,7 +350,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
                             }
                         }
 
-                        Metadata metadata = new Metadata();
+                        IMetadata metadata = new Metadata();
                         metadata.setUuid(uuid);
                         metadata.getDataInfo().
                                 setSchemaId(schema).
@@ -363,7 +365,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
                                 setUuid(params.getUuid()).
                                 setUri(params.getName());
 
-                        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+                        addCategories((Metadata) metadata, params.getCategories(), localCateg, context, log, null, false);
                         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
                         id = String.valueOf(metadata.getId());

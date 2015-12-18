@@ -399,7 +399,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
          if(!dataMan.existsMetadataUuid(uuid)) {
              result.addedMetadata++;
-             metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+             metadata = (Metadata) dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
          } else {
              result.updatedMetadata++;
              String id = dataMan.getMetadataId(uuid);
@@ -739,9 +739,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 }
                 metadata.getCategories().add(metadataCategory);
             }
+
             if(!dataMan.existsMetadataUuid(reg.uuid)) {
                 result.addedMetadata++;
-                metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+                metadata = (Metadata) dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
             } else {
                 result.updatedMetadata++;
                 String id = dataMan.getMetadataId(reg.uuid);
