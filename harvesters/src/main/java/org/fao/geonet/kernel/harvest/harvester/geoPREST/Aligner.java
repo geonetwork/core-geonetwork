@@ -191,7 +191,7 @@ public class Aligner extends BaseAligner
 
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = (Metadata) dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -239,7 +239,7 @@ public class Aligner extends BaseAligner
 				boolean ufo = false;
 				boolean index = false;
 				String language = context.getLanguage();
-                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
+                final Metadata metadata = (Metadata) dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                 repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));

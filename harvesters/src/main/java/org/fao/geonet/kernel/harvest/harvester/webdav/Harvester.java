@@ -270,7 +270,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 setUri(rf.getPath());
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = (Metadata) dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
@@ -385,7 +385,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 }
             }
 
-            final Metadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
+            final Metadata metadata = (Metadata) dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
                     date, false);
 
             //--- the administrator could change privileges and categories using the

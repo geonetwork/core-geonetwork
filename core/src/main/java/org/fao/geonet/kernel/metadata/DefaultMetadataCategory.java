@@ -28,10 +28,10 @@ import jeeves.server.context.ServiceContext;
 public class DefaultMetadataCategory implements IMetadataCategory {
 
     @Autowired
-    private MetadataRepository mdRepository;
+    protected MetadataRepository mdRepository;
 
     @Autowired
-    private MetadataCategoryRepository categoryRepository;
+    protected MetadataCategoryRepository categoryRepository;
 
     /**
      * @param context

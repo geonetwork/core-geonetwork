@@ -90,12 +90,12 @@ import jeeves.xlink.Processor;
 public class DefaultMetadataIndexer
         implements IMetadataIndexer, ApplicationEventPublisherAware {
 
-    Set<String> waitForIndexing = new HashSet<String>();
-    Set<String> indexing = new HashSet<String>();
+    protected Set<String> waitForIndexing = new HashSet<String>();
+    protected Set<String> indexing = new HashSet<String>();
     Set<IndexMetadataTask> batchIndex = new ConcurrentHashSet<IndexMetadataTask>();
-    Lock indexLock = new ReentrantLock();
+    protected Lock indexLock = new ReentrantLock();
 
-    private ApplicationEventPublisher applicationEventPublisher;
+    protected ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
     private IMetadataUtils metadataUtils;
@@ -104,30 +104,30 @@ public class DefaultMetadataIndexer
     private EntityManager _entityManager;
 
     @Autowired
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
 
     @Autowired
-    private MetadataValidationRepository mdValidationRepository;
+    protected MetadataValidationRepository mdValidationRepository;
 
     @Autowired
-    private MetadataRepository mdRepository;
+    protected MetadataRepository mdRepository;
 
     @Autowired
-    private MetadataStatusRepository mdStatusRepository;
+    protected MetadataStatusRepository mdStatusRepository;
 
-    private SchemaManager schemaManager;
-
-    @Autowired
-    private GroupRepository groupRepository;
+    protected SchemaManager schemaManager;
 
     @Autowired
-    private OperationAllowedRepository operationAllowedRepository;
+    protected GroupRepository groupRepository;
 
     @Autowired
-    private InspireAtomFeedRepository inspireAtomFeedRepository;
+    protected OperationAllowedRepository operationAllowedRepository;
 
     @Autowired
-    private SearchManager searchManager;
+    protected InspireAtomFeedRepository inspireAtomFeedRepository;
+
+    @Autowired
+    protected SearchManager searchManager;
 
     /**
      * @param context

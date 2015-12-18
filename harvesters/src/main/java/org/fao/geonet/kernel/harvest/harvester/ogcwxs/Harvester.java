@@ -362,7 +362,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
          addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+         metadata = (Metadata) dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
          String id = String.valueOf(metadata.getId());
 
@@ -677,7 +677,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 }
                 metadata.getCategories().add(metadataCategory);
             }
-            metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+            metadata = (Metadata) dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
             reg.id = String.valueOf(metadata.getId());
 

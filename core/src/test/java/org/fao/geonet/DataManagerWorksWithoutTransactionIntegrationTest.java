@@ -1,7 +1,11 @@
 package org.fao.geonet;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
+import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -11,10 +15,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
-import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Test that the aspect defined work correctly.
@@ -47,10 +49,10 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                         Element newMd = new Element("MD_Metadata", GMD).addContent(new Element("fileIdentifier",
                                 GMD).addContent(new Element("CharacterString", GCO)));
 
-                        Metadata updateMd = _dataManager.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
+                        IMetadata updateMd = _dataManager.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
                                 new ISODate().getDateAndTime(), false);
                         assertNotNull(updateMd);
-                        final boolean hasNext = updateMd.getCategories().iterator().hasNext();
+                        final boolean hasNext = ((Metadata) updateMd).getCategories().iterator().hasNext();
                         assertTrue(hasNext);
                     }
                 });

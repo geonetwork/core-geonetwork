@@ -256,7 +256,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             changeDate = new ISODate().toString();
         }
 
-        final Metadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
+        final Metadata metadata = (Metadata) dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
                 true);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
@@ -313,7 +313,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = (Metadata) dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 

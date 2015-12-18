@@ -27,11 +27,19 @@ import org.jdom.output.XMLOutputter;
 import com.vividsolutions.jts.util.Assert;
 
 /**
- * An entity representing a metadata object in the database. The xml, groups and operations are lazily loaded so accessing then will
- * need to
- * be done in a thread that has a bound EntityManager. Also they can trigger database access if they have not been cached and therefore
- * can
- * cause slowdowns so they should only be accessed in need.
+ * An entity representing a metadata object in the database. 
+ * The xml, groups and operations are lazily loaded so 
+ * accessing then will need to be done in a thread that has a bound 
+ * EntityManager. 
+ * 
+ * Also they can trigger database access if they have not 
+ * been cached and therefore can cause slowdowns so they should 
+ * only be accessed in need.
+ *
+ * All classes/tables implemented will share by default the same
+ * sequence for the ID. So you can have different kinds of metadata
+ * (like original and draft versioning) and the id will be unique
+ * on all the tables at the same time.
  *
  * @author María Arias de Reyna
  */

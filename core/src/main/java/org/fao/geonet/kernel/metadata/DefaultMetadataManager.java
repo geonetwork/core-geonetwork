@@ -28,6 +28,7 @@ import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -110,7 +111,7 @@ public class DefaultMetadataManager implements IMetadataManager {
     private static final int METADATA_BATCH_PAGE_SIZE = 100000;
 
     @Autowired
-    private IMetadataSchemaUtils metadataSchemaUtils;
+    protected IMetadataSchemaUtils metadataSchemaUtils;
 
     @Autowired
     private IMetadataUtils metadataUtils;
@@ -125,12 +126,12 @@ public class DefaultMetadataManager implements IMetadataManager {
     private IMetadataOperations metadataOperations;
 
     @Autowired
-    private MetadataRepository mdRepository;
+    protected MetadataRepository mdRepository;
 
-    private SchemaManager schemaManager;
+    protected SchemaManager schemaManager;
 
     @Autowired
-    private GroupRepository groupRepository;
+    protected GroupRepository groupRepository;
 
     @Autowired
     private MetadataRatingByIpRepository mdRatingByIpRepository;
@@ -142,13 +143,13 @@ public class DefaultMetadataManager implements IMetadataManager {
     private MetadataFileUploadRepository mdFileUploadRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
 
     @Autowired
     private MetadataCategoryRepository mdCatRepository;
 
     @Autowired
-    private MetadataValidationRepository mdValidationRepository;
+    protected MetadataValidationRepository mdValidationRepository;
 
     @Autowired
     private OperationAllowedRepository operationAllowedRepository;
@@ -464,7 +465,7 @@ public class DefaultMetadataManager implements IMetadataManager {
      * @throws Exception
      */
     @Override
-    public Metadata insertMetadata(ServiceContext context, Metadata newMetadata,
+    public IMetadata insertMetadata(ServiceContext context, IMetadata newMetadata,
             Element metadataXml, boolean notifyChange, boolean index,
             boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
             boolean fullRightsForGroup, boolean forceRefreshReaders)
@@ -484,7 +485,7 @@ public class DefaultMetadataManager implements IMetadataManager {
         }
 
         // --- store metadata
-        final Metadata savedMetadata = context.getBean(XmlSerializer.class)
+        final IMetadata savedMetadata = context.getBean(XmlSerializer.class)
                 .insert(newMetadata, metadataXml, context);
 
         final String stringId = String.valueOf(savedMetadata.getId());
@@ -524,7 +525,7 @@ public class DefaultMetadataManager implements IMetadataManager {
      * @throws Exception
      */
     @Override
-    public Metadata updateMetadata(ServiceContext context, String metadataId,
+    public IMetadata updateMetadata(ServiceContext context, String metadataId,
             Element md, boolean validate, boolean ufo, boolean index,
             String lang, String changeDate, boolean updateDateStamp)
                     throws Exception {
@@ -756,7 +757,7 @@ public class DefaultMetadataManager implements IMetadataManager {
      * @return
      * @throws Exception
      */
-    private Element buildInfoElem(ServiceContext context, String id,
+    protected Element buildInfoElem(ServiceContext context, String id,
             String version) throws Exception {
         Metadata metadata = mdRepository.findOne(id);
         final MetadataDataInfo dataInfo = metadata.getDataInfo();
@@ -876,7 +877,7 @@ public class DefaultMetadataManager implements IMetadataManager {
      * @param name
      * @param value
      */
-    private static void addElement(Element root, String name, Object value) {
+    protected static void addElement(Element root, String name, Object value) {
         root.addContent(new Element(name)
                 .setText(value == null ? "" : value.toString()));
     }
@@ -893,7 +894,7 @@ public class DefaultMetadataManager implements IMetadataManager {
      * @throws Exception
      */
     @VisibleForTesting
-    void buildPrivilegesMetadataInfo(ServiceContext context,
+    protected void buildPrivilegesMetadataInfo(ServiceContext context,
             Map<String, Element> mdIdToInfoMap) throws Exception {
         Collection<Integer> metadataIds = Collections2.transform(
                 mdIdToInfoMap.keySet(), new Function<String, Integer>() {
@@ -972,7 +973,7 @@ public class DefaultMetadataManager implements IMetadataManager {
         }
     }
 
-    private SetMultimap<Integer, ReservedOperation> loadOperationsAllowed(
+    protected SetMultimap<Integer, ReservedOperation> loadOperationsAllowed(
             ServiceContext context,
             Specification<OperationAllowed> operationAllowedSpec) {
         List<OperationAllowed> operationsAllowed = operationAllowedRepository

@@ -23,19 +23,26 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.xlink.XLink;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -55,15 +62,11 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.Text;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.XLink;
 
 /**
  * Extracts subtemplates from a set of selected metadata records.
@@ -292,7 +295,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 						int user = context.getUserSession().getUserIdAsInt();
                         final String siteId = gc.getBean(SettingManager.class).getSiteId();
 
-                        Metadata metadataObj = new Metadata();
+                        IMetadata metadataObj = new Metadata();
                         metadataObj.setUuid(uuid);
                         metadataObj.getDataInfo().
                                 setSchemaId(mdInfo.getSchemaId()).
@@ -307,7 +310,12 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
                             final MetadataCategoryRepository repository = context.getBean(MetadataCategoryRepository.class);
                             final MetadataCategory mdCat = repository.findOneByNameIgnoreCase(category);
                             if (mdCat != null) {
-                                metadataObj.getCategories().add(mdCat);
+                                if(metadataObj instanceof Metadata) {
+                                    ((Metadata) metadataObj).getCategories().add(mdCat);
+                                }
+                                else {
+                                    ((MetadataDraft) metadataObj).getCategories().add(mdCat);
+                                }
                             }
                         }
 
