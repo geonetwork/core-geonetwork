@@ -385,14 +385,14 @@
       searchSettings.configWho = searchSettings.configWho || '';
       if(searchSettings.configWho) {
         angular.extend(searchSettings.hiddenParams, {
-          orgName: searchSettings.configWho.replace(/,/, ' or ')
+          orgName: searchSettings.configWho.replace(/,/g, ' or ')
         })
       }
 
       searchSettings.configWhat = searchSettings.configWhat || '';
       if(searchSettings.configWhat) {
         angular.extend(searchSettings.hiddenParams, {
-          _groupPublished: searchSettings.configWhat.replace(/,/, ' or ')
+          _groupPublished: searchSettings.configWhat.replace(/,/g, ' or ')
         })
       }
 
