@@ -157,12 +157,14 @@
               }
 
 
-              var dataType = scope.element.md.spatialRepresentationType_text ==
-                  'Vecteur' ? 'vector' : 'raster';
+              var dataType = scope.element.md.spatialRepresentationType;
+              dataType = dataType == 'grid' ? 'raster' : dataType;
 
               // To pass the extent into an object for scope issues
               scope.prop = {};
-              scope.formats = scope.settings.formats[dataType];
+              scope.formats = dataType ? scope.settings.formats[dataType] :
+                  scope.settings.formats['vector'].concat(
+                      scope.settings.formats['raster']);
 
               scope.form = {
                 id: scope.element.md.getUuid(),
@@ -173,9 +175,7 @@
                   linkage: scope.element.link.url
                 },
                 output: {
-                  format: angular.isArray(scope.element.md.format) ?
-                      scope.element.md.format[0] :
-                      scope.formats[0].value,
+                  format: scope.formats[0].value,
                   epsg: inputCrs,
                   name: scope.element.link.name
                 }
