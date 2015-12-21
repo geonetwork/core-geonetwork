@@ -1236,7 +1236,6 @@
         <module>web-client</module>
         <module>web</module>
         <module>e2e-tests</module>
-        <module>geoserver</module>
       </modules>
     </profile>
     <!-- Python and Latex are required to build the documentation. -->
