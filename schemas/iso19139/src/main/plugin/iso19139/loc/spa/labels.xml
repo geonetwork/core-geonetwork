@@ -1904,7 +1904,7 @@
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:protocol">
+	<element name="gmd:protocol" alias="protocol">
 		<label>Protocolo</label>
 		<description>Protocolo de conexión utilizado</description>
 		<helper>

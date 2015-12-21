@@ -2272,7 +2272,7 @@
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:protocol" id="398.0" context="gmd:CI_OnlineResource">
+	<element name="gmd:protocol" id="398.0" context="gmd:CI_OnlineResource" alias="protocol">
 		<label>Verkko-osoitteen protokolla</label>
 		<description>Protokolla, jota verkkosivulla käytetään. Jos linkki on
 			ladattavaan tiedostoon, valitse FTP. Jos linkki on palveluun, valitse

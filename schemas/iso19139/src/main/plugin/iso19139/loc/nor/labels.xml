@@ -1752,7 +1752,7 @@
 			person(s) and
 			organization(s) associated with the process step</description>
 	</element>
-	<element name="gmd:protocol" id="398.0">
+	<element name="gmd:protocol" id="398.0" alias="protocol">
 		<label>Protokoll</label>
 		<description>Protokoll som skal benyttes ved direktekobling</description>
 		<helper>

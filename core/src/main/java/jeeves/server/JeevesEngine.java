@@ -27,16 +27,27 @@
 
 package jeeves.server;
 
-import jeeves.component.ProfileManager;
-import jeeves.constants.ConfigFile;
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.ApplicationHandler;
-import jeeves.monitor.MonitorManager;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.server.sources.ServiceRequest;
-import jeeves.server.sources.http.JeevesServlet;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.PreDestroy;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.xml.transform.TransformerConfigurationException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.fao.geonet.ApplicationContextHolder;
@@ -55,25 +66,16 @@ import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.concurrent.TimeUnit;
-import javax.annotation.PreDestroy;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.xml.transform.TransformerConfigurationException;
+import jeeves.component.ProfileManager;
+import jeeves.constants.ConfigFile;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.ApplicationHandler;
+import jeeves.monitor.MonitorManager;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import jeeves.server.overrides.ConfigurationOverrides;
+import jeeves.server.sources.ServiceRequest;
+import jeeves.server.sources.http.JeevesServlet;
 
 //=============================================================================
 
@@ -88,7 +90,7 @@ public class JeevesEngine {
 	private String _startupErrorSrv;
 	private String _defaultLang;
     private boolean _debugFlag;
-	
+
 	/* true if the 'general' part has been loaded */
 	private boolean _generalLoaded;
 
@@ -379,7 +381,7 @@ public class JeevesEngine {
 
 		_defaultSrv = Util.getParam(defaults, ConfigFile.Default.Child.SERVICE);
 
-		// -- Don't break behaviour before gn 2.7 - if the startupErrorService 
+		// -- Don't break behaviour before gn 2.7 - if the startupErrorService
 		// -- doesn't exist then ignore this parameter
 		_startupErrorSrv = Util.getParam(defaults, ConfigFile.Default.Child.STARTUPERRORSERVICE, "");
 		_defaultLang = Util.getParam(defaults, ConfigFile.Default.Child.LANGUAGE);
@@ -506,7 +508,7 @@ public class JeevesEngine {
 					.getAttributeValue(ConfigFile.Service.Attr.NAME);
 
 			info("   Adding service : " + name);
-			
+
 			try {
 				serviceManager.addService(pack, service, this._appPath);
 			} catch (Exception e) {
@@ -526,15 +528,22 @@ public class JeevesEngine {
 	//---
 	//---------------------------------------------------------------------------
     @PreDestroy
-	public void destroy()
-	{
-		try
-		{
+	public void destroy() {
+		try {
 			info("=== Stopping system ========================================");
 
 			info("Shutting down monitor manager...");
-			ApplicationContextHolder.get().getBean(MonitorManager.class).shutdown();
-
+			ApplicationContext app = ApplicationContextHolder.get();
+			if (app != null) {
+				MonitorManager m = app.getBean(MonitorManager.class);
+				if (m != null) {
+					m.shutdown();
+				} else {
+					error("Unable to get MonitorManager bean (already destroyed ?)");
+				}
+			} else {
+				error("Unable to get a hook on the ApplicationContext.");
+			}
 			info("Stopping handlers...");
 			stopHandlers();
 
@@ -616,18 +625,18 @@ public class JeevesEngine {
 	}
 
 	public ProfileManager getProfileManager() { return getServiceManager().getProfileManager(); }
-	
+
     /**
      * Create or reload Jeeves services from a configuration stored in the Services table
      * of the DBMS resource.
-     * 
+     *
      * @param serviceIdentifierToLoad -1 for all or the service identifier
      */
     public void loadConfigDB(ApplicationContext context, int serviceIdentifierToLoad) {
         try {
             Element eltServices = new Element("services");
             eltServices.setAttribute("package", "org.fao.geonet");
-            
+
             java.util.List<Service> serviceList = null;
             ServiceRepository serviceRepo = context.getBean(ServiceRepository.class);
             if (serviceIdentifierToLoad == -1) {

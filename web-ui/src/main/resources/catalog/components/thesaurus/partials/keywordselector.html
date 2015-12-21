@@ -62,6 +62,12 @@
       <div data-gn-multiselect="selected" data-choices="results"
            data-label-prop="getLabel" data-sort-fn="sortKeyword"></div>
     </div>
+
+		<div class="row" ng-show="concept">
+      <div class="col-sm-9 col-md-offset-2">
+        <skos-browser class="tmpl-border" concept="concept" add-concept="addThesaurusConcept" language="langs"></skos-browser>
+      </div>
+    </div>
     
     <!-- The thesaurus snippet to insert once received -->
     <div>

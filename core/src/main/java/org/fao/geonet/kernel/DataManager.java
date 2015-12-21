@@ -2628,7 +2628,21 @@ public class DataManager implements ApplicationEventPublisherAware {
      */
     public void unsetOperation(ServiceContext context, int mdId, int groupId, int operId) throws Exception {
         checkOperationPermission(context, groupId, context.getBean(UserGroupRepository.class));
+        forceUnsetOperation(context, mdId, groupId, operId);
+    }
 
+    /**
+     * Unset operation without checking if user privileges allows the operation.
+     * This may be useful when a user is an editor and internal operations needs
+     * to update privilages for reserved group. eg. {@link org.fao.geonet.kernel.metadata.DefaultStatusActions}
+     *
+     * @param context
+     * @param mdId
+     * @param groupId
+     * @param operId
+     * @throws Exception
+     */
+    public void forceUnsetOperation(ServiceContext context, int mdId, int groupId, int operId) throws Exception {
         OperationAllowedId id = new OperationAllowedId().setGroupId(groupId).setMetadataId(mdId).setOperationId(operId);
         final OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         if (repository.exists(id)) {

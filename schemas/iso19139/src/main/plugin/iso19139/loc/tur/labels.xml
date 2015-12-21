@@ -1602,7 +1602,7 @@
         <description>Identification of, and means of communication with, person(s) and
             organization(s) associated with the process step</description>
     </element>
-    <element name="gmd:protocol" id="398.0">
+    <element name="gmd:protocol" id="398.0" alias="protocol">
         <label>Protocol</label>
         <description>Connection protocol to be used</description>
     </element>

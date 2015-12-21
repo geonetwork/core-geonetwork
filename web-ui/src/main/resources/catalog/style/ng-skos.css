@@ -1,0 +1,210 @@
+/* Basic CSS for ng-skos default templates */
+/* in order of their occurrence in the demo */
+
+.tmpl-border {
+    background-color:#FFFFFF;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding:5px 5px 5px 5px;
+    /*margin:5px 0px 10px 0px;*/
+    display:inline-block;
+}
+
+.tmpl-border hr {
+     margin-top: 2px;
+     margin-bottom: 2px;
+}
+
+/* label styles */
+/* styles for identifiers */
+
+/*  icon-style for notations*/
+.notation{
+    background-color:#CCC;
+    border-radius:3px;
+    padding-left:3px;
+    padding-right:3px;
+    color:black;
+    cursor:default;
+    text-decoration:none;
+}
+/*  icon-style for concept-schemes */
+.classification{
+    background-color:#E6E681;
+    border-radius:3px;
+    padding-left:3px;
+    padding-right:3px;
+}
+/*  icon-style for databases */
+.dbase{
+    background-color:#B6D3FC;
+    border-radius:3px;
+    padding-left:3px;
+    padding-right:3px;
+}
+/*  uri-link style*/
+.uri{
+    padding-left:20px;
+}
+.uri:hover{
+    text-decoration:none;
+}
+/* SKOS-concept */
+
+/* ancestor styles */
+
+/* 'skos-concept-thesaurus' template styles  */
+/*  template also uses: .notation, .uri */
+
+ul.ancestors{
+    padding-left:0px;
+}
+ul.ancestors li {
+    display:inline;
+    cursor:pointer;
+    margin-bottom:10px;
+}
+.ancestor span{
+    padding-right:3px;
+}
+.ancestor:before {
+    font-size:small;
+    color:#999;
+    content: " > ";
+    font-weight:bold;
+}
+.ancestors li:after{
+    content: " > ";
+    font-weight:bold;
+    font-size:small;
+}
+.skos-concept-thesaurus ul{
+    margin:3px;
+    list-style-type:none;
+    padding-left:0px;
+}
+.skos-concept-thesaurus li:hover {
+    background-color:lightgrey;
+    border-radius:3px;
+    cursor:pointer;
+}
+.skos-concept-thesaurus-relation li{
+    text-decoration:underline;
+    padding:1px 3px 1px 3px;
+    display:inline-block;
+}
+.top-classic{
+    margin-bottom:10px;
+    margin-top:10px;
+    border:1px solid #ddd;
+    padding:0px 3px 0px 3px;
+    border-radius:3px;
+    background-color:#eee;
+    display:inline-block;
+}
+/* 'skos-concept' template styles */
+/*  template also uses: .notation, .uri */
+.skos-concept-connected{
+    max-height:200px;
+    overflow:auto;
+    background-color:#FFF;
+    padding:3px;
+    min-width:250px;
+}
+.skos-concept{
+    /*padding:10px 15px;*/
+    /*margin-bottom:8px;*/
+}
+
+.skos-concept ul{
+    list-style-type:none;
+    margin-bottom:2px;
+    padding-left:0px;
+}
+.skos-concept li{
+    /*display:inline-block;*/
+}
+/* 'skos-concept' altLabel display*/
+.skos-concept-altlabel{
+    margin:4px 0px 5px 6px;
+    font-style:italic;
+}
+/* 'skos-concept' relations display*/
+.skos-concept-relation .fa-hover:hover {
+    background-color:#ff9900;
+    border-radius:3px;
+    color:#2a6496;
+}
+.skos-concept-relation .fa-hover {
+    text-decoration:none;
+    cursor:pointer;
+    margin-right:10px;
+}
+.skos-concept-relation span{
+		margin: 0 0 0 1em;
+		cursor:pointer;
+    color:#428bca;
+}
+.skos-concept-relation span:hover {
+    background-color:#ddd;
+    border-radius:3px;
+    color:#2a6496;
+}
+.skos-concept-relation-previous span{
+		cursor:pointer;
+    color:#428bca;
+}
+.skos-concept-relation-previous span:hover {
+    background-color:#ddd;
+    border-radius:3px;
+    color:#2a6496;
+}
+/* styles for header, containing notation, prefLabel and uri-link */
+.top-alt{
+    margin-bottom:10px;
+}
+/* SKOS-search*/
+
+/* SKOS-tree */
+/*  template also uses: .notation*/
+.skos-tree{
+    margin-left:-20px;
+}
+.skos-tree ul{
+    list-style-type:none;
+
+}
+.skos-tree li{
+    padding-right:8px;
+}
+/* style for a single node */
+.set{
+    display:inline-table;
+    border-radius:3px;
+    padding-right:3px;
+    margin-right:10px;
+}
+.set:hover{
+    background-color:#eee;
+}
+/* style for the label of a node*/
+.nlabel{
+    color:#803A22;
+    font-weight:bold;
+    cursor:pointer;
+    padding-left:3px;
+}
+.simple-list{
+    list-style-type:none;
+    padding:0px;
+}
+.notification{
+    color:red;
+}
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: #EEE;
+}
+.vcentre {
+    display: flex;
+		align-items: center;
+}

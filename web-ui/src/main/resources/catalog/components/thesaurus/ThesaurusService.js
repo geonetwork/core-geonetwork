@@ -7,6 +7,7 @@
     function Keyword(k) {
       this.props = $.extend(true, {}, k);
       this.label = this.getLabel();
+      this.tagClass = 'label label-info gn-line-height';
     };
     Keyword.prototype = {
       getId: function() {
@@ -80,6 +81,64 @@
                 });
               }
               return listOfKeywords;
+            };
+
+            // Get Top Concept from thesaurus
+            var getTopConcept = function(thesaurus) {
+              var defer = $q.defer();
+              var url = gnUrlUtils.append(
+                  'thesaurus.topconcept?_content_type=json',
+                  gnUrlUtils.toKeyValue({
+                    thesaurus: thesaurus
+                  })
+                  );
+              $http.get(url, { cache: true }).
+                  success(function(data, status) {
+                    if (data.narrower) {
+                      defer.resolve(data);
+                    } else {
+                      // not a top concept
+                      defer.reject();
+                    }
+                  }).
+                  error(function(data, status) {
+                    //                TODO handle error
+                    defer.reject();
+                  });
+              return defer.promise;
+            };
+
+            // Drive JSKOS API with these functions
+            function getConcept(thesaurus, keywordUris) {
+              var defer = $q.defer();
+              var url = gnUrlUtils.append(
+                  'thesaurus.concept?_content_type=json',
+                  gnUrlUtils.toKeyValue({
+                    thesaurus: thesaurus,
+                    id: keywordUris instanceof Array ?
+                        keywordUris.join(',') : keywordUris || ''
+                  })
+                  );
+              $http.get(url, { cache: true }).
+                  success(function(data, status) {
+                    defer.resolve(data);
+                  }).
+                  error(function(data, status) {
+                    //                TODO handle error
+                    //                defer.reject(error);
+                  });
+              return defer.promise;
+            };
+
+            // expected to promise one JSKOS concept
+            // [concept](http://gbv.github.io/jskos/jskos.html#concepts)
+            var lookupURI = function(thesaurus, keywordUri) {
+              var deferred = $q.defer();
+              // first get concept, then get links to other concepts
+              getConcept(thesaurus, keywordUri).then(function(c) {
+                deferred.resolve(c);
+              });
+              return deferred.promise;
             };
 
             return {
@@ -156,7 +215,7 @@
                */
               getAll: function(schema) {
                 var defer = $q.defer();
-                $http.get('thesaurus@json?' +
+                $http.get('thesaurus?_content_type=json&' +
                     'element=gmd:descriptiveKeywords&schema=' +
                     (schema || 'iso19139'), { cache: true }).
                     success(function(data, status) {
@@ -192,7 +251,14 @@
                       //                defer.reject(error);
                     });
                 return defer.promise;
-              }
+              },
+
+              // ConceptScheme API for JSKOS
+              lookupURI: lookupURI,
+              lookupNotation: null,
+              lookupLabel: null,
+              getTopConcept: getTopConcept,
+              suggest: null
             };
           }];
       });

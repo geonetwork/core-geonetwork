@@ -138,4 +138,23 @@ public class UserSpecsTest extends AbstractSpringDataTest {
                 user1.getUsername()}))).size());
 
     }
+
+    @Test
+    public void testUserHasEnabled() throws Exception {
+        User user1 = _userRepo.save(newUser(_inc));
+        final User user2 = newUser(_inc);
+        _userRepo.save(user2);
+        final User user3 = newUser(_inc);
+        user3.setEnabled(false);
+        _userRepo.save(user3);
+
+        final Specification<User> spec = hasEnabled(true);
+
+        final List<User> enabled = _userRepo.findAll(hasEnabled(true));
+        assertEquals(2, enabled.size());
+
+        final List<User> notEnabled = _userRepo.findAll(hasEnabled(false));
+        assertEquals(1, notEnabled.size());
+        assertEquals(user3.getId(), notEnabled.get(0).getId());
+    }
 }

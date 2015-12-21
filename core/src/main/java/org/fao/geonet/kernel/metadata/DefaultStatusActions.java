@@ -202,10 +202,10 @@ public class DefaultStatusActions implements StatusActions {
     *
     * @param mdId The metadata id to unset privileges on
     */
-  public void unsetAllOperations(int mdId) throws Exception {
-      String allGroup = "1";
+  private void unsetAllOperations(int mdId) throws Exception {
+      int allGroup = 1;
       for (ReservedOperation op : ReservedOperation.values()) {
-          dm.unsetOperation(context, mdId+"", allGroup, op);
+          dm.forceUnsetOperation(context, mdId, allGroup, op.getId());
       }
   }
 

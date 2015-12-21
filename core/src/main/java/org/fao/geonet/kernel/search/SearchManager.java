@@ -22,14 +22,36 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
-import com.vividsolutions.jts.util.Assert;
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.constants.Geonet.IndexFieldNames.DATABASE_CHANGE_DATE;
+
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.annotation.PreDestroy;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -44,7 +66,6 @@ import org.apache.lucene.document.FloatField;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.facet.FacetField;
-import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.apache.lucene.index.AtomicReader;
 import org.apache.lucene.index.AtomicReaderContext;
@@ -105,34 +126,15 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.capability.FilterCapabilities;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.Vector;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import javax.annotation.PreDestroy;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
+import com.vividsolutions.jts.util.Assert;
 
-import static org.fao.geonet.constants.Geonet.IndexFieldNames.DATABASE_CHANGE_DATE;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Indexes metadata using Lucene.
@@ -164,7 +166,7 @@ public class SearchManager {
      */
     private static Map<String, Analyzer> analyzerMap = new HashMap<String, Analyzer>();
     private static Map<String, Analyzer> searchAnalyzerMap = new HashMap<String, Analyzer>();
-    
+
 	private static DocumentBoosting _documentBoostClass;
 	private String _luceneTermsToExclude;
 	private boolean _logSpatialObject;
@@ -211,7 +213,7 @@ public class SearchManager {
 		analyzers.put(LuceneIndexField.PARENTUUID, new GeoNetworkAnalyzer());
 		analyzers.put(LuceneIndexField.OPERATESON, new GeoNetworkAnalyzer());
 		analyzers.put(LuceneIndexField.SUBJECT, new KeywordAnalyzer());
-		
+
 		pfaw = new PerFieldAnalyzerWrapper(geoNetworkAnalyzer, analyzers );
         return pfaw;
 	}
@@ -228,19 +230,19 @@ public class SearchManager {
 	}
     /**
      * Retrieve per field analyzer according to language and for searching or indexing time.
-     * 
+     *
      * @param language Language for the analyzer.
      * @param forSearching true to return searching time analyzer, false for indexing time analayzer.
-     * @return 
+     * @return
      */
     public static PerFieldAnalyzerWrapper getAnalyzer(String language, boolean forSearching) {
         if(Log.isDebugEnabled(Geonet.LUCENE)) {
             Log.debug(Geonet.LUCENE, "Get analyzer for searching: " + forSearching + " and language: " + language);
         }
-        
+
         Map<String, Analyzer> map = forSearching ? searchAnalyzerMap : analyzerMap;
-        
-        PerFieldAnalyzerWrapper analyzer = (PerFieldAnalyzerWrapper)map.get(language); 
+
+        PerFieldAnalyzerWrapper analyzer = (PerFieldAnalyzerWrapper)map.get(language);
         if(analyzer != null) {
             return analyzer;
         } else {
@@ -396,7 +398,7 @@ public class SearchManager {
                 if (Log.isDebugEnabled(Geonet.LUCENE)) {
                     Log.debug(Geonet.LUCENE, "Loading stopwords and creating per field anlayzer ...");
                 }
-                
+
                 // One per field analyzer is created for each stopword list available using GNA as default analyzer
                 // Configuration can't define different analyzer per language.
                 // TODO : http://trac.osgeo.org/geonetwork/ticket/900
@@ -433,7 +435,7 @@ public class SearchManager {
                     }
                 }
             }
-            
+
             // Configure default per field analyzer
             _analyzer = configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, luceneConfig.getFieldSpecificAnalyzers(),
                 null, null, null);
@@ -445,13 +447,13 @@ public class SearchManager {
 
 	/**
 	 * Create, configure and optionnaly register in a list a per field analyzer wrapper.
-	 * 
+	 *
 	 * @param defaultAnalyzerClass The default analyzer to use
 	 * @param fieldAnalyzers	The list of extra analyzer per field
 	 * @param referenceMap	A map where to reference the per field analyzer
 	 * @param referenceKey	The reference key
 	 * @param stopwordsForLanguage	The stopwords to use (only for GNA)
-	 * 
+	 *
 	 * @return The per field analyzer wrapper
 	 */
 	private PerFieldAnalyzerWrapper configurePerFieldAnalyzerWrapper(
@@ -464,9 +466,9 @@ public class SearchManager {
             Log.debug(Geonet.SEARCH_ENGINE, " Default analyzer class: " + defaultAnalyzerClass);
         }
 		Analyzer defaultAnalyzer = createAnalyzerFromLuceneConfig(defaultAnalyzerClass, null, stopwordsForLanguage);
-		
+
 		Map<String, Analyzer> extraFieldAnalyzers = new HashMap<String, Analyzer>();
-		
+
 		// now handle the exceptions for each field to the default analyzer as
 		// defined in lucene config
 		for (Entry<String, String> e : fieldAnalyzers.entrySet()) {
@@ -480,13 +482,13 @@ public class SearchManager {
 		}
 
 		PerFieldAnalyzerWrapper pfa = new PerFieldAnalyzerWrapper( defaultAnalyzer, extraFieldAnalyzers);
-		
+
 
 		// Register to a reference map if needed
 		if (referenceMap != null) {
 			referenceMap.put(referenceKey, pfa);
 		}
-		
+
 		return pfa;
 	}
 
@@ -551,12 +553,19 @@ public class SearchManager {
     @PreDestroy
     public void end() throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        LuceneIndexLanguageTracker tracker = applicationContext.getBean(LuceneIndexLanguageTracker.class);
-
+        if (applicationContext != null) {
+            LuceneIndexLanguageTracker tracker = applicationContext.getBean(LuceneIndexLanguageTracker.class);
+            if (tracker != null) {
+                tracker.close(TimeUnit.MINUTES.toMillis(1), true);
+            } else {
+                Log.error(Geonet.SEARCH_ENGINE, "Unable to get a hook on the LuceneIndexLanguageTracker bean (already destroyed ?");
+            }
+        } else {
+            Log.error(Geonet.SEARCH_ENGINE, "Unable to get a hook on the application context (already destroyed ?).");
+        }
         endZ3950();
         _spatial.end();
         _luceneOptimizerManager.cancel();
-        tracker.close(TimeUnit.MINUTES.toMillis(1), true);
     }
 
     /**
@@ -680,7 +689,7 @@ public class SearchManager {
 	public String getLuceneTermsToExclude() {
 		return _luceneTermsToExclude;
 	}
-	
+
 	// indexing methods
 
     /**
@@ -713,7 +722,7 @@ public class SearchManager {
 
         // Update spatial index first and if error occurs, record it to Lucene index
         indexGeometry(schemaDir, metadata, id, moreFields);
-        
+
         // Update Lucene index
         List<IndexInformation> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, metadataType, root);
         tracker.deleteDocuments(new Term(Geonet.IndexFieldNames.ID, id));
@@ -759,10 +768,10 @@ public class SearchManager {
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
             Log.debug(Geonet.INDEX_ENGINE,"Deleting document ");
         tracker.deleteDocuments(new Term(fld, txt));
-		
+
 		_spatial.writer().delete(txt);
 	}
-	
+
     /**
      * TODO javadoc.
      *  @param schemaDir
@@ -837,7 +846,7 @@ public class SearchManager {
         LuceneConfig luceneConfig = applicationContext.getBean(LuceneConfig.class);
 
         Map<String, Field> multilingualSortFields = new HashMap<String, Field>();
-        
+
         for (Element doc : documentElements) {
             String locale = getLocaleFromIndexDoc(doc);
 
@@ -888,7 +897,7 @@ public class SearchManager {
 
     /**
     * Creates a new XML field for the Lucene index.
-    * 
+    *
     * @param name
     * @param value
     * @param store
@@ -967,7 +976,7 @@ public class SearchManager {
 		tracker.deleteDocuments(new Term(fld, txt));
 		_spatial.writer().delete(txt);
 	}
-	
+
     /**
      *  deletes a list of documents.
      *
@@ -995,7 +1004,7 @@ public class SearchManager {
      */
 	public Set<Integer> getDocsWithXLinks() throws Exception {
         IndexAndTaxonomy indexAndTaxonomy= getNewIndexReader(null);
-        
+
 		try {
 		    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 
@@ -1004,8 +1013,8 @@ public class SearchManager {
 				// Commented this out for lucene 4.0 and NRT indexing.  It shouldn't be needed I would guess but leave it here
 				// for a bit longer:  Commented out since: Dec 10 2012
 				// FIXME: strange lucene hack: sometimes it tries to load a deleted document
-				// if (reader.isDeleted(i)) continue; 
-				
+				// if (reader.isDeleted(i)) continue;
+
 				DocumentStoredFieldVisitor idXLinkSelector = new DocumentStoredFieldVisitor(Geonet.IndexFieldNames.ID, "_hasxlinks");
 				reader.document(i, idXLinkSelector);
 				Document doc = idXLinkSelector.getDocument();
@@ -1065,7 +1074,7 @@ public class SearchManager {
 				// for a bit longer:  Commented out since: Dec 10 2012
 				// FIXME: strange lucene hack: sometimes it tries to load a deleted document
 				// if (reader.isDeleted(i)) continue;
-				
+
 				DocumentStoredFieldVisitor idChangeDateSelector = new DocumentStoredFieldVisitor(Geonet.IndexFieldNames.ID, "_changeDate");
                 reader.document(i, idChangeDateSelector);
                 Document doc = idChangeDateSelector.getDocument();
@@ -1140,7 +1149,7 @@ public class SearchManager {
         final PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(language, true);
         String analyzedSearchValue = LuceneSearcher.analyzeText(fieldName, searchValueWithoutWildcard, analyzer);
         boolean startsWithOnly = !searchValue.startsWith("*") && searchValue.endsWith("*");
-        
+
         try {
             GeonetworkMultiReader multiReader = indexAndTaxonomy.indexReader;
             for (AtomicReaderContext atomicReaderContext : multiReader.getContext().leaves()) {
@@ -1197,11 +1206,11 @@ public class SearchManager {
 		public int getFrequency() {
 			return this.frequency;
 		}
-		
+
         public void setFrequency(int frequency) {
             this.frequency = frequency;
         }
-        
+
 		public int compareTo(Object o) {
 			if (o instanceof TermFrequency) {
 				TermFrequency oFreq = (TermFrequency) o;
@@ -1469,8 +1478,8 @@ public class SearchManager {
 	{
 		Document doc = new Document();
 		Collection<CategoryPath> categories = new HashSet<CategoryPath>();
-    	
-		
+
+
 		for (Field field : multilingualSortFields) {
             doc.add(field);
         }
@@ -1565,11 +1574,11 @@ public class SearchManager {
                 }
             }
         }
-        
+
         if(!hasLocaleField) {
            doc.add(new Field(Geonet.LUCENE_LOCALE_KEY,Geonet.DEFAULT_LANGUAGE, storeNotTokenizedFieldType));
         }
-        
+
         return new IndexInformation(language, doc, categories);
     }
 
@@ -1602,20 +1611,20 @@ public class SearchManager {
 
 	/**
 	 * Creates Lucene numeric field.
-	 * 
+	 *
 	 * @param name	The field name
 	 * @param string	The value to be indexed. It is parsed to its numeric type. If exception occurs
-	 * field is not added to the index. 
+	 * field is not added to the index.
 	 * @param fieldType
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private Field addNumericField(String name, String string, FieldType fieldType) throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         LuceneConfig luceneConfig = applicationContext.getBean(LuceneConfig.class);
 
         LuceneConfigNumericField fieldConfig = luceneConfig.getNumericField(name);
-		
+
 		Field field;
 		// TODO : reuse the numeric field for better performance
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
@@ -1693,11 +1702,11 @@ public class SearchManager {
          * TODO javadoc.
          *
          * @param dataStore
-         * @param maxWritesInTransaction - Number of features to write 
+         * @param maxWritesInTransaction - Number of features to write
 				 * to before commit - set 1 and the transaction will be
-				 * autocommit which results in faster loading for some (all?) 
-				 * configurations and does not keep a long running transaction 
-				 * open. 
+				 * autocommit which results in faster loading for some (all?)
+				 * configurations and does not keep a long running transaction
+				 * open.
          * @throws Exception
          */
         public Spatial(DataStore dataStore, int maxWritesInTransaction) throws Exception {

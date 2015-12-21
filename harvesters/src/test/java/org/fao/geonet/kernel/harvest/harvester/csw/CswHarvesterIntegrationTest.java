@@ -88,7 +88,7 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
                 }
 
                 final boolean isGetRecords = "GetRecords".equalsIgnoreCase(request);
-                final boolean correctTypeNames = typeNames.contains("gmd:MD_Metadata") && typeNames.contains("csw:Record");
+                final boolean correctTypeNames = typeNames.contains("gmd:MD_Metadata") || typeNames.contains("csw:Record");
                 final boolean isSummary = elementSetName.equals("summary");
                 return isGetRecords && correctTypeNames && isSummary && noQueryFilter;
             }

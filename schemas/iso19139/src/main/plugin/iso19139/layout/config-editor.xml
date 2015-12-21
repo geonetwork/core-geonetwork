@@ -153,6 +153,7 @@
     <name>gml:verticalCS</name>
     <name>gml:verticalDatum</name>
     <name>gmd:identifier</name>
+    <name>gmd:topicCategory</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
@@ -326,6 +327,7 @@
                     <gn:copy select="gmd:authority"/>
                     <gmd:code>
                       <gco:CharacterString>{{code}}</gco:CharacterString>
+                      <gn:copy select="gmd:PT_FreeText"/>
                     </gmd:code>
                   </gmd:MD_Identifier>
                 </gmd:identifier>
@@ -347,6 +349,7 @@
                   <gmd:MD_Identifier>
                     <gmd:code>
                       <gco:CharacterString>{{code}}</gco:CharacterString>
+                      <gn:copy select="gmd:PT_FreeText"/>
                     </gmd:code>
                   </gmd:MD_Identifier>
                 </gmd:identifier>
@@ -394,6 +397,7 @@
                   <gmd:MD_Format>
                     <gmd:name>
                       <gco:CharacterString>{{format}}</gco:CharacterString>
+                      <gn:copy select="gmd:PT_FreeText"/>
                     </gmd:name>
                     <gmd:version>
                       <gco:CharacterString>{{format_version}}</gco:CharacterString>
@@ -820,6 +824,7 @@
                       <gmd:CI_Citation>
                         <gmd:title>
                           <gco:CharacterString>{{conformity_title}}</gco:CharacterString>
+                          <gn:copy select="gmd:PT_FreeText"/>
                         </gmd:title>
                         <gn:copy select="gmd:alternateTitle"/>
                         <gmd:date>
@@ -848,6 +853,7 @@
                     </gmd:specification>
                     <gmd:explanation>
                       <gco:CharacterString>{{explanation}}</gco:CharacterString>
+                      <gn:copy select="gmd:PT_FreeText"/>
                     </gmd:explanation>
                     {{pass}}
                   </gmd:DQ_ConformanceResult>
@@ -1033,6 +1039,7 @@
                     <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                      <gn:copy select="gmd:PT_FreeText"/>
                     </gmd:organisationName>
                     <gn:copy select="gmd:positionName"/>
                     <gmd:contactInfo>
@@ -1047,6 +1054,7 @@
                             <gn:copy select="gmd:country"/>
                             <gmd:electronicMailAddress>
                               <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                              <gn:copy select="gmd:PT_FreeText"/>
                             </gmd:electronicMailAddress>
                           </gmd:CI_Address>
                         </gmd:address>
@@ -1100,6 +1108,7 @@
                     <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                      <gn:copy select="gmd:PT_FreeText"/>
                     </gmd:organisationName>
                     <gn:copy select="gmd:positionName"/>
                     <gmd:contactInfo>
@@ -1114,6 +1123,7 @@
                             <gn:copy select="gmd:country"/>
                             <gmd:electronicMailAddress>
                               <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                              <gn:copy select="gmd:PT_FreeText"/>
                             </gmd:electronicMailAddress>
                           </gmd:CI_Address>
                         </gmd:address>
@@ -1169,6 +1179,7 @@
                     <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                      <gn:copy select="gmd:PT_FreeText"/>
                     </gmd:organisationName>
                     <gn:copy select="gmd:positionName"/>
                     <gmd:contactInfo>
@@ -1183,6 +1194,7 @@
                             <gn:copy select="gmd:country"/>
                             <gmd:electronicMailAddress>
                               <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                              <gn:copy select="gmd:PT_FreeText"/>
                             </gmd:electronicMailAddress>
                           </gmd:CI_Address>
                         </gmd:address>
@@ -1255,7 +1267,6 @@
         <for name="gmd:distributor"/>
         <for name="gmd:contact"/>
         <for name="gmd:processor"/>
-        <for name="gmd:citedResponsibleParty"/>
         <for name="gmd:topicCategory"/>
       </flatModeExceptions>
 

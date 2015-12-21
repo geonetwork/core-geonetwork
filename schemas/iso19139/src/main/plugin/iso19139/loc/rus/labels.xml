@@ -2039,7 +2039,7 @@
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:protocol">
+	<element name="gmd:protocol" alias="protocol">
 		<label>Используемый протокол связи</label>
 		<description>Используемый протокол связи</description>
 		<helper>

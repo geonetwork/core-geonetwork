@@ -1,42 +1,40 @@
-
 <ul class="row gn-info-list">
-
-	<li
-   	  data-ng-repeat="md in searchResults.records"
+  <li
+      data-ng-repeat="md in searchResults.records"
       data-ng-click="openRecord($index, md, searchResults.records)"
       data-ng-mouseenter="showMore(true)"
       data-ng-mouseleave="showMore(false)"
-      id="gn-info-list{{md.getUuid()}}">
-	  <div>
-      <div class="gn-md-thumbnail">
-        <img class="gn-img-thumbnail"
-             data-ng-src="{{md.getThumbnails().list[0].url}}"
-             data-ng-if="md.getThumbnails().list[0].url"/>
+      id="gn-info-list-mw-{{md.getUuid()}}">
+    <section class="quickresultcard">
+      <div class="flip">
+        <div class="front">       
+          <div class="top"> 
+            <div class="gn-md-thumbnail">
+              <img class="gn-img-thumbnail"
+                 data-ng-src="{{md.getThumbnails().list[0].url}}"
+                 data-ng-if="md.getThumbnails().list[0].url"/>
+            </div>              
+          </div>
+          <div class="rigth">
+            <div class="header-card">
+              <div class="title">{{md.title || md.defaultTitle}}</div>
+              <div class="introduction">
+                <span data-ng-repeat="t in md.type">{{t | translate}}
+                <span data-ng-if="!$last">, </span>
+                </span>
+              </div>
+            </div>  
+            <div class="content-card">                    
+              <div class="abstract">
+                {{md.abstract}}
+              </div>
+            </div>
+            <div class="footer-card"> 
+            </div>
+          </div>             
+        </div>
+        <div class="back"></div>
       </div>
-      <div class="gn-md-title">
-        <a >
-          {{md.title || md.defaultTitle}}
-        </a>
-        <br/>
-		<div class="pull-right">
-		<a data-ng-href="#/search?_cat={{md.type}}"  title="{{md.type | translate}}">
-          <i class="fa gn-icon gn-icon-{{md.type}}"></i>
-        </a>
-        <a data-ng-repeat="t in ::md.inspirethemewithac track by $index"
-           data-ng-href="#/search?inspiretheme={{t.split('|')[1]}}">
-          <i class="fa" title="{{t | translate}}">
-            <span class="fa iti-{{t.split('|')[0]}}"></span>
-          </i>
-        </a>
-        <a data-ng-repeat="cat in ::md.category"
-           data-ng-href="#/search?_cat={{cat}}"  title="{{cat | translate}}">
-          <i class="fa gn-icon gn-icon-{{cat}}"></i>
-        </a>
-		</div>
-      </div>
-	  </div>
-	  <div class="hidden thumbnail">
-        {{md.abstract}}
-      </div>
-	</li>
+    </section>
+  </li>
 </ul>

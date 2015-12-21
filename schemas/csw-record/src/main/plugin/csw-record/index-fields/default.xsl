@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
 	 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	 xmlns:dc = "http://purl.org/dc/elements/1.1/"
 	 xmlns:dct="http://purl.org/dc/terms/"
@@ -21,9 +21,15 @@
 	<!-- ========================================================================================= -->
 	
 	<xsl:template match="/">
-		<Document>
-	
-			<!-- This index for "coverage" requires significant expansion to 
+    <xsl:variable name="langCode"
+                  select="if (normalize-space(dc:language) != '')
+                          then string(dc:language) else 'eng'"/>
+
+    <Document locale="{$langCode}">
+      <Field name="_locale" string="{$langCode}" store="true" index="true"/>
+      <Field name="_docLocale" string="{$langCode}" store="true" index="true"/>
+      <Field name="_defaultTitle" string="{string(/csw:Record/dc:title)}" store="true" index="true"/>
+			<!-- This index for "coverage" requires significant expansion to
 				 work well for spatial searches. It now only works for very 
 				 strictly formatted content -->
 			<xsl:variable name="coverage" select="/csw:Record/ows:BoundingBox"/>

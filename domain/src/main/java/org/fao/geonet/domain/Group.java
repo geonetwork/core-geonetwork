@@ -294,8 +294,7 @@ public class Group extends Localized {
      * 
      * @return
      */
-    @ManyToOne(cascade = { CascadeType.DETACH,
-            CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public MetadataCategory getDefaultCategory() {
         return defaultCategory;
     }
