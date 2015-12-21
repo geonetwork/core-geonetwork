@@ -199,7 +199,7 @@
           var styles = (params.STYLES !== undefined) ?
               params.STYLES.split(',') :
               new Array(layers.length).join(',').split(',');
-          var url = layer instanceof ol.source.ImageWMS ?
+          var url = layer.getSource() instanceof ol.source.ImageWMS ?
               layer.getSource().getUrl() :
               layer.getSource().getUrls()[0];
           angular.extend(enc, {
