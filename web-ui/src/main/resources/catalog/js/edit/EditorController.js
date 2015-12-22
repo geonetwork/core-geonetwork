@@ -255,15 +255,20 @@
        * elements eg. tooltip ?
        */
       $scope.onFormLoad = function() {
-        gnEditor.onFormLoad();
-        $scope.isMinor = gnCurrentEdit.isMinor;
-        $scope.$watch('tocIndex', function(newValue, oldValue) {
-          if (angular.isDefined($scope.tocIndex) && $scope.tocIndex !== null) {
-            $timeout(function() {
-              $scope.switchToTab(gnCurrentEdit.tab);
-            });
-          }
-        });
+        //Check if for some reason (draft?), we should be redirected to another metadata
+        if($("*[id*='gn-editor']")[0].id.value != this.metadataNotFoundId) {
+          window.location.hash = "#/metadata/" + $("*[id*='gn-editor']")[0].id.value;
+        } else {
+          gnEditor.onFormLoad();
+          $scope.isMinor = gnCurrentEdit.isMinor;
+          $scope.$watch('tocIndex', function(newValue, oldValue) {
+            if (angular.isDefined($scope.tocIndex) && $scope.tocIndex !== null) {
+              $timeout(function() {
+                $scope.switchToTab(gnCurrentEdit.tab);
+              });
+            }
+          }); 
+        }
       };
 
       $scope.startVersioning = function() {
