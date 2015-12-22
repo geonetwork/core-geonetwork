@@ -149,7 +149,7 @@
                 fast: 'index',
                 _content_type: 'json'
               }).then(function(data) {
-                if (data.metadata.length == 1) {
+                if (data.metadata.length >= 1) {
                   data.metadata[0] = new Metadata(data.metadata[0]);
                   that.feedMd(0, undefined, data.metadata);
                 }
