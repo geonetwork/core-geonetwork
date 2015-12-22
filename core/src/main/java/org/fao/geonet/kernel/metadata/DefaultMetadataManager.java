@@ -167,15 +167,22 @@ public class DefaultMetadataManager implements IMetadataManager {
         this.metadataOperations = context.getBean(IMetadataOperations.class);
         this.mdRepository = context.getBean(MetadataRepository.class);
         this.groupRepository = context.getBean(GroupRepository.class);
-        this.mdRatingByIpRepository = context.getBean(MetadataRatingByIpRepository.class);
-        this.mdStatusRepository = context.getBean(MetadataStatusRepository.class);
-        this.mdFileUploadRepository = context.getBean(MetadataFileUploadRepository.class);
+        this.mdRatingByIpRepository = context
+                .getBean(MetadataRatingByIpRepository.class);
+        this.mdStatusRepository = context
+                .getBean(MetadataStatusRepository.class);
+        this.mdFileUploadRepository = context
+                .getBean(MetadataFileUploadRepository.class);
         this.userRepository = context.getBean(UserRepository.class);
-        this.mdCatRepository = context.getBean(MetadataCategoryRepository.class);
-        this.mdValidationRepository = context.getBean(MetadataValidationRepository.class);
-        this.operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        this.mdCatRepository = context
+                .getBean(MetadataCategoryRepository.class);
+        this.mdValidationRepository = context
+                .getBean(MetadataValidationRepository.class);
+        this.operationAllowedRepository = context
+                .getBean(OperationAllowedRepository.class);
         this.setSchemaManager(context.getBean(SchemaManager.class));
     }
+
     /**
      * @see org.fao.geonet.kernel.metadata.IMetadataManager#getEditLib()
      * @return
@@ -203,7 +210,7 @@ public class DefaultMetadataManager implements IMetadataManager {
      * @param id
      * @throws Exception
      */
-    public void startEditingSession(ServiceContext context, String id)
+    public String startEditingSession(ServiceContext context, String id)
             throws Exception {
         if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
             Log.debug(Geonet.EDITOR_SESSION,
@@ -218,6 +225,8 @@ public class DefaultMetadataManager implements IMetadataManager {
         context.getUserSession().setProperty(
                 Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id,
                 metadataBeforeAnyChanges);
+
+        return id;
     }
 
     /**
@@ -465,11 +474,11 @@ public class DefaultMetadataManager implements IMetadataManager {
      * @throws Exception
      */
     @Override
-    public IMetadata insertMetadata(ServiceContext context, IMetadata newMetadata,
-            Element metadataXml, boolean notifyChange, boolean index,
-            boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
-            boolean fullRightsForGroup, boolean forceRefreshReaders)
-                    throws Exception {
+    public IMetadata insertMetadata(ServiceContext context,
+            IMetadata newMetadata, Element metadataXml, boolean notifyChange,
+            boolean index, boolean updateFixedInfo,
+            UpdateDatestamp updateDatestamp, boolean fullRightsForGroup,
+            boolean forceRefreshReaders) throws Exception {
 
         final String schema = newMetadata.getDataInfo().getSchemaId();
 
@@ -551,7 +560,8 @@ public class DefaultMetadataManager implements IMetadataManager {
         setNamespacePrefixUsingSchemas(schema, metadataXml);
 
         // Notifies the metadata change to metatada notifier service
-        final Metadata metadata = mdRepository.findOne(metadataId);
+        final IMetadata metadata = getMetadataObject(
+                Integer.valueOf(metadataId));
 
         String uuid = null;
         if (schemaManager.getSchema(schema).isReadwriteUUID() && metadata
@@ -1384,6 +1394,21 @@ public class DefaultMetadataManager implements IMetadataManager {
 
         for (Object o : md.getChildren()) {
             setNamespacePrefix((Element) o, ns);
+        }
+    }
+
+    /**
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#getMetadataObject(java.lang.String)
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public IMetadata getMetadataObject(Integer id) throws Exception {
+        if (existsMetadata(id)) {
+            return mdRepository.findOne(id);
+        } else {
+            return null;
         }
     }
 }

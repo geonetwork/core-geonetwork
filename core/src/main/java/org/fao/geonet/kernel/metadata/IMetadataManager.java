@@ -65,7 +65,7 @@ public interface IMetadataManager {
      * @param id
      * @throws Exception
      */
-    public void startEditingSession(ServiceContext context, String id)
+    public String startEditingSession(ServiceContext context, String id)
             throws Exception;
 
     /**
@@ -259,6 +259,16 @@ public interface IMetadataManager {
      * @throws Exception
      */
     public Element getMetadata(String id) throws Exception;
+    
+    /**
+     * Retrieves a metadata given its id. Use this method when you must
+     * retrieve a metadata in the same transaction.
+     * 
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public IMetadata getMetadataObject(Integer id) throws Exception;
 
     /**
      * Retrieves a metadata element given it's ref.
