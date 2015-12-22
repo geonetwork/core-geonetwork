@@ -23,27 +23,27 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
-import java.nio.file.Path;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
   /**
  * Removes a metadata from the system.
@@ -60,7 +60,6 @@ public class Delete extends BackupFileService {
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getBean(DataManager.class);
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 
         boolean backupFile = Util.getParam(params, Params.BACKUP_FILE, true);
@@ -73,9 +72,9 @@ public class Delete extends BackupFileService {
 		//-----------------------------------------------------------------------
 		//--- check access
 
-        Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+        IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
 
-		if (metadata == null)
+		if (!metadataManager.existsMetadata(Integer.valueOf(id)))
 			throw new IllegalArgumentException("Metadata with identifier " + id + " not found.");
 
 		if (!accessMan.canEdit(context, id))
@@ -84,8 +83,11 @@ public class Delete extends BackupFileService {
 		//-----------------------------------------------------------------------
 		//--- backup metadata in 'removed' folder
 
-		if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && backupFile)
-			backupFile(context, id, metadata.getUuid(), MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false));
+		IMetadata metadata = metadataManager.getMetadataObject(Integer.valueOf(id));
+		if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && backupFile) {
+			backupFile(context, id, metadata.getUuid(), MEFLib.doExport(context, metadata.getUuid(), 
+			        "full", false, true, false));
+		}
 
 		//-----------------------------------------------------------------------
 		//--- remove the metadata directory including the public and private directories.
@@ -94,7 +96,7 @@ public class Delete extends BackupFileService {
 		//-----------------------------------------------------------------------
 		//--- delete metadata and return status
 
-		dataMan.deleteMetadata(context, id);
+		metadataManager.deleteMetadata(context, id);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));

@@ -129,8 +129,10 @@ public class DefaultMetadataUtils implements IMetadataUtils {
         this.metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
         this.metadataManager = context.getBean(IMetadataManager.class);
         this.mdRepository = context.getBean(MetadataRepository.class);
-        this.mdStatusRepository = context.getBean(MetadataStatusRepository.class);
-        this.ratingByIpRepository = context.getBean(MetadataRatingByIpRepository.class);
+        this.mdStatusRepository = context
+                .getBean(MetadataStatusRepository.class);
+        this.ratingByIpRepository = context
+                .getBean(MetadataRatingByIpRepository.class);
         this.searchManager = context.getBean(SearchManager.class);
         this.svnManager = context.getBean(SvnManager.class);
         this.dataDirectory = context.getBean(GeonetworkDataDirectory.class);
@@ -321,9 +323,11 @@ public class DefaultMetadataUtils implements IMetadataUtils {
     }
 
     /**
-     * TODO javadoc.
-     *
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataUtils#setTemplateExt(int,
+     *      org.fao.geonet.domain.MetadataType)
      * @param id
+     * @param metadataType
      * @throws Exception
      */
     @Override

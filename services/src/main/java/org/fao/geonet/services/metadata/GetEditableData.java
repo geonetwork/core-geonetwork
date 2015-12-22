@@ -23,19 +23,20 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
-import java.nio.file.Path;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -80,8 +81,8 @@ public class GetEditableData implements Service
         boolean starteditingsession = Util.getParam(params, Params.START_EDITING_SESSION, "no").equals("yes");
         if (starteditingsession) {
           GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-          DataManager   dm = gc.getBean(DataManager.class);
-          dm.startEditingSession(context, id);
+          IMetadataManager   dm = gc.getBean(IMetadataManager.class);
+          id = dm.startEditingSession(context, id);
         }
 
 		Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, id, true, showValidationErrors);

@@ -7,8 +7,12 @@ import static org.fao.geonet.repository.specification.MetadataDraftSpecs.hasMeta
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
+import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataHarvestInfo;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.metadata.DefaultMetadataUtils;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.Updater;
@@ -97,11 +101,11 @@ public class DraftMetadataUtils extends DefaultMetadataUtils {
     @Override
     public void setHarvestedExt(final int id, final String harvestUuid,
             final Optional<String> harvestUri) throws Exception {
-        super.setHarvestedExt(id, harvestUuid, harvestUri);
-
-        // Again, this should not be here, because you shouldn't edit harvested
-        // metadata. But let's keep it here in case someone wants to mess
-        // around.
+        try {
+            super.setHarvestedExt(id, harvestUuid, harvestUri);
+        } catch (Throwable t) {
+            // skip, it is a draft
+        }
 
         mdRepository.update(id, new Updater<MetadataDraft>() {
             @Override
@@ -110,6 +114,22 @@ public class DraftMetadataUtils extends DefaultMetadataUtils {
                 harvestInfo.setUuid(harvestUuid);
                 harvestInfo.setHarvested(harvestUuid != null);
                 harvestInfo.setUri(harvestUri.orNull());
+            }
+        });
+    }
+
+    @Override
+    public void setTemplateExt(final int id, final MetadataType metadataType) {
+        try {
+            super.setTemplateExt(id, metadataType);
+        } catch (Throwable t) {
+            // skip, it is a draft
+        }
+        mdRepository.update(id, new Updater<MetadataDraft>() {
+            @Override
+            public void apply(@Nonnull MetadataDraft metadata) {
+                final MetadataDataInfo dataInfo = metadata.getDataInfo();
+                dataInfo.setType(metadataType);
             }
         });
     }

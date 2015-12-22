@@ -125,46 +125,59 @@ public class DraftMetadataManager extends DefaultMetadataManager {
      * @throws Exception
      */
     @Override
-    public void startEditingSession(ServiceContext context, String id)
+    public String startEditingSession(ServiceContext context, String id)
             throws Exception {
         Metadata md = mdRepository.findOne(Integer.valueOf(id));
 
-        boolean isPublished = loadOperationsAllowed(context,
-                where(OperationAllowedSpecs.hasMetadataId(id)).and(
-                        OperationAllowedSpecs.isPublic(ReservedOperation.view)))
-                                .keySet().contains(Integer.valueOf(id));
+        if (md != null) {
+            boolean isPublished = loadOperationsAllowed(context,
+                    where(OperationAllowedSpecs.hasMetadataId(id))
+                            .and(OperationAllowedSpecs
+                                    .isPublic(ReservedOperation.view))).keySet()
+                                            .contains(Integer.valueOf(id));
 
-        // We need to create a draft to avoid modifying the published metadata
-        if (isPublished) {
-            boolean fullRightsForGroup = true;
-            // Get parent record from this record
-            String parentUuid = "";
-            String schemaIdentifier = metadataSchemaUtils.getMetadataSchema(id);
-            SchemaPlugin instance = SchemaManager
-                    .getSchemaPlugin(schemaIdentifier);
-            AssociatedResourcesSchemaPlugin schemaPlugin = null;
-            if (instance instanceof AssociatedResourcesSchemaPlugin) {
-                schemaPlugin = (AssociatedResourcesSchemaPlugin) instance;
-            }
-            if (schemaPlugin != null) {
-                Set<String> listOfUUIDs = schemaPlugin
-                        .getAssociatedParentUUIDs(md.getXmlData(false));
-                if (listOfUUIDs.size() > 0) {
-                    // FIXME more than one parent? Is it even possible?
-                    parentUuid = listOfUUIDs.iterator().next();
+            // We need to create a draft to avoid modifying the published
+            // metadata
+            if (isPublished
+                    && mdDraftRepository.findOneByUuid(md.getUuid()) == null) {
+
+                boolean fullRightsForGroup = true;
+                // Get parent record from this record
+                String parentUuid = "";
+                String schemaIdentifier = metadataSchemaUtils
+                        .getMetadataSchema(id);
+                SchemaPlugin instance = SchemaManager
+                        .getSchemaPlugin(schemaIdentifier);
+                AssociatedResourcesSchemaPlugin schemaPlugin = null;
+                if (instance instanceof AssociatedResourcesSchemaPlugin) {
+                    schemaPlugin = (AssociatedResourcesSchemaPlugin) instance;
                 }
+                if (schemaPlugin != null) {
+                    Set<String> listOfUUIDs = schemaPlugin
+                            .getAssociatedParentUUIDs(md.getXmlData(false));
+                    if (listOfUUIDs.size() > 0) {
+                        // FIXME more than one parent? Is it even possible?
+                        parentUuid = listOfUUIDs.iterator().next();
+                    }
+                }
+
+                String groupOwner = md.getSourceInfo().getGroupOwner()
+                        .toString();
+                String source = md.getSourceInfo().getSourceId().toString();
+                Integer owner = md.getSourceInfo().getOwner();
+
+                id = createDraft(context, id, groupOwner, source, owner,
+                        parentUuid, md.getDataInfo().getType().codeString,
+                        fullRightsForGroup, md.getUuid());
+            } else if (isPublished
+                    && mdDraftRepository.findOneByUuid(md.getUuid()) != null) {
+                // We already have a draft created
+                id = Integer.toString(
+                        mdDraftRepository.findOneByUuid(md.getUuid()).getId());
             }
-
-            String groupOwner = md.getSourceInfo().getGroupOwner().toString();
-            String source = md.getSourceInfo().getSourceId().toString();
-            Integer owner = md.getSourceInfo().getOwner();
-
-            id = createDraft(context, id, groupOwner, source, owner, parentUuid,
-                    md.getDataInfo().getType().codeString, fullRightsForGroup,
-                    md.getUuid());
         }
 
-        super.startEditingSession(context, id);
+        return super.startEditingSession(context, id);
     }
 
     private String createDraft(ServiceContext context, String templateId,
@@ -381,12 +394,12 @@ public class DraftMetadataManager extends DefaultMetadataManager {
             });
         }
     }
-    
+
     @Override
     protected Element buildInfoElem(ServiceContext context, String id,
             String version) throws Exception {
         IMetadata metadata = mdRepository.findOne(id);
-        if(metadata == null) {
+        if (metadata == null) {
             metadata = mdDraftRepository.findOne(id);
         }
         final MetadataDataInfo dataInfo = metadata.getDataInfo();
@@ -443,12 +456,14 @@ public class DraftMetadataManager extends DefaultMetadataManager {
             addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
         }
 
-        if(metadata instanceof Metadata) {
-            for (MetadataCategory category : ((Metadata)metadata).getCategories()) {
+        if (metadata instanceof Metadata) {
+            for (MetadataCategory category : ((Metadata) metadata)
+                    .getCategories()) {
                 addElement(info, Edit.Info.Elem.CATEGORY, category.getName());
             }
         } else {
-            for (MetadataCategory category : ((MetadataDraft)metadata).getCategories()) {
+            for (MetadataCategory category : ((MetadataDraft) metadata)
+                    .getCategories()) {
                 addElement(info, Edit.Info.Elem.CATEGORY, category.getName());
             }
         }
@@ -506,4 +521,18 @@ public class DraftMetadataManager extends DefaultMetadataManager {
         return info;
     }
 
+    /**
+     * @see org.fao.geonet.kernel.metadata.DefaultMetadataManager#getMetadataObject(java.lang.Integer)
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public IMetadata getMetadataObject(Integer id) throws Exception {
+        IMetadata md = super.getMetadataObject(id);
+        if (md == null && existsMetadata(id)) {
+            md = mdDraftRepository.findOne(id);
+        }
+        return md;
+    }
 }
