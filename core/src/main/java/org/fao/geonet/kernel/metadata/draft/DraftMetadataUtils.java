@@ -104,18 +104,17 @@ public class DraftMetadataUtils extends DefaultMetadataUtils {
         try {
             super.setHarvestedExt(id, harvestUuid, harvestUri);
         } catch (Throwable t) {
-            // skip, it is a draft
+            mdRepository.update(id, new Updater<MetadataDraft>() {
+                @Override
+                public void apply(MetadataDraft metadata) {
+                    MetadataHarvestInfo harvestInfo = metadata.getHarvestInfo();
+                    harvestInfo.setUuid(harvestUuid);
+                    harvestInfo.setHarvested(harvestUuid != null);
+                    harvestInfo.setUri(harvestUri.orNull());
+                }
+            });
         }
 
-        mdRepository.update(id, new Updater<MetadataDraft>() {
-            @Override
-            public void apply(MetadataDraft metadata) {
-                MetadataHarvestInfo harvestInfo = metadata.getHarvestInfo();
-                harvestInfo.setUuid(harvestUuid);
-                harvestInfo.setHarvested(harvestUuid != null);
-                harvestInfo.setUri(harvestUri.orNull());
-            }
-        });
     }
 
     @Override
@@ -123,15 +122,15 @@ public class DraftMetadataUtils extends DefaultMetadataUtils {
         try {
             super.setTemplateExt(id, metadataType);
         } catch (Throwable t) {
-            // skip, it is a draft
+            mdRepository.update(id, new Updater<MetadataDraft>() {
+                @Override
+                public void apply(@Nonnull MetadataDraft metadata) {
+                    final MetadataDataInfo dataInfo = metadata.getDataInfo();
+                    dataInfo.setType(metadataType);
+                }
+            });
         }
-        mdRepository.update(id, new Updater<MetadataDraft>() {
-            @Override
-            public void apply(@Nonnull MetadataDraft metadata) {
-                final MetadataDataInfo dataInfo = metadata.getDataInfo();
-                dataInfo.setType(metadataType);
-            }
-        });
+
     }
 
     /**

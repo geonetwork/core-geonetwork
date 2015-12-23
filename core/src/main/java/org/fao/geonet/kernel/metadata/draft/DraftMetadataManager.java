@@ -6,6 +6,7 @@ package org.fao.geonet.kernel.metadata.draft;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +25,12 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.HarvestInfoProvider;
@@ -36,9 +40,11 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.metadata.DefaultMetadataManager;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataDraftRepository;
+import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.specification.MetadataDraftSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -46,6 +52,9 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -76,6 +85,34 @@ public class DraftMetadataManager extends DefaultMetadataManager {
     }
 
     /**
+     * @see org.fao.geonet.kernel.metadata.DefaultMetadataManager#index(java.lang.Boolean,
+     *      java.util.Map, java.util.ArrayList)
+     * @param force
+     * @param docs
+     * @param toIndex
+     */
+    @Override
+    protected void index(Boolean force, Map<String, String> docs,
+            ArrayList<String> toIndex) {
+        super.index(force, docs, toIndex);
+
+        Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo,
+                MetadataDataInfo_.changeDate);
+        int currentPage = 0;
+        Page<Pair<Integer, ISODate>> results = mdDraftRepository
+                .findAllIdsAndChangeDates(new PageRequest(currentPage,
+                        METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
+
+        // index all metadata in DBMS if needed
+        while (results.getNumberOfElements() > 0) {
+            currentPage = index(force, docs, toIndex, currentPage, results);
+            results = mdDraftRepository.findAllIdsAndChangeDates(
+                    new PageRequest(currentPage, METADATA_BATCH_PAGE_SIZE,
+                            sortByMetadataChangeDate));
+        }
+    }
+
+    /**
      * @see org.fao.geonet.kernel.metadata.DefaultMetadataManager#deleteMetadata(jeeves.server.context.ServiceContext,
      *      java.lang.String)
      * @param context
@@ -86,11 +123,20 @@ public class DraftMetadataManager extends DefaultMetadataManager {
     public synchronized void deleteMetadata(ServiceContext context,
             String metadataId) throws Exception {
         Metadata md = mdRepository.findOne(metadataId);
-        MetadataDraft mdD = mdDraftRepository.findOneByUuid(md.getUuid());
-        if (mdD != null) {
-            super.deleteMetadata(context, Integer.toString(mdD.getId()));
+        if (md != null) {
+            MetadataDraft mdD = mdDraftRepository.findOneByUuid(md.getUuid());
+            if (mdD != null) {
+                super.deleteMetadata(context, Integer.toString(mdD.getId()));
+            }
+            super.deleteMetadata(context, metadataId);
+        } else {
+            // We are removing a draft
+            IMetadata findOne = mdDraftRepository.findOne(metadataId);
+            if (findOne != null) {
+                deleteMetadataFromDB(context, metadataId);
+            }
+            context.getBean(SearchManager.class).delete("_id", metadataId + "");
         }
-        super.deleteMetadata(context, metadataId);
     }
 
     /**
@@ -532,6 +578,21 @@ public class DraftMetadataManager extends DefaultMetadataManager {
         IMetadata md = super.getMetadataObject(id);
         if (md == null && existsMetadata(id)) {
             md = mdDraftRepository.findOne(id);
+        }
+        return md;
+    }
+    
+    /**
+     * @see org.fao.geonet.kernel.metadata.DefaultMetadataManager#getMetadataObject(java.lang.String)
+     * @param uuid
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public IMetadata getMetadataObject(String uuid) throws Exception {
+        IMetadata md = super.getMetadataObject(uuid);
+        if(md == null) {
+            md = mdDraftRepository.findOneByUuid(uuid);
         }
         return md;
     }
