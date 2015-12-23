@@ -387,6 +387,7 @@
 
                 // Save the feature style
                 clone.set('_style', getStyleObjFromFeature(feature));
+                clone.set('name', feature.get('name'));
                 features.push(clone);
               });
 
