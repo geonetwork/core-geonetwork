@@ -23,27 +23,10 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.IOUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.ZipUtil;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.exceptions.BadInputEx;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.OperationRepository;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Document;
-import org.jdom.Element;
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
+import static org.fao.geonet.kernel.mef.MEFConstants.FS;
+import static org.fao.geonet.kernel.mef.MEFConstants.VERSION;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -63,12 +46,39 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import javax.annotation.Nonnull;
 
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
-import static org.fao.geonet.kernel.mef.MEFConstants.FS;
-import static org.fao.geonet.kernel.mef.MEFConstants.VERSION;
+import org.apache.commons.io.IOUtils;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.ZipUtil;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Document;
+import org.jdom.Element;
+
+import jeeves.server.context.ServiceContext;
 
 
 /**
@@ -221,10 +231,11 @@ public class MEFLib {
 	 *  AND the record to be exported (includes Xlink resolution
 	 *  and filters depending on user session).
 	 */
-	static Pair<Metadata, String> retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
+	static Pair<IMetadata, String> retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
 			throws Exception {
 
-        final Metadata metadata = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
+        final IMetadata metadata = context.getBean(IMetadataManager.class)
+                .getMetadataObject(uuid);
 
 		if (metadata == null) {
 			throw new MetadataNotFoundEx("uuid=" + uuid);
@@ -332,7 +343,7 @@ public class MEFLib {
 	 * @return
 	 * @throws Exception
 	 */
-	static String buildInfoFile(ServiceContext context, Metadata md,
+	static String buildInfoFile(ServiceContext context, IMetadata md,
 			Format format, Path pubDir, Path priDir, boolean skipUUID)
 			throws Exception {
 		Element info = new Element("info");
@@ -359,7 +370,7 @@ public class MEFLib {
 	 * @param context
 	 * @return
 	 */
-	static Element buildInfoGeneral(Metadata md, Format format,
+	static Element buildInfoGeneral(IMetadata md, Format format,
 			boolean skipUUID, ServiceContext context) {
 		String id = String.valueOf(md.getId());
 		String uuid = md.getUuid();
@@ -401,12 +412,17 @@ public class MEFLib {
 	 * @return
 	 * @throws SQLException
 	 */
-	static Element buildInfoCategories(Metadata md)
+	static Element buildInfoCategories(IMetadata md)
 			throws SQLException {
 		Element categ = new Element("categories");
 
-
-        for (MetadataCategory category : md.getCategories()) {
+		Set<MetadataCategory> categories = null;
+		if(md instanceof Metadata) {
+		    categories = ((Metadata)md).getCategories();
+		} else {
+		    categories = ((MetadataDraft)md).getCategories();
+		}
+        for (MetadataCategory category : categories) {
             String name = category.getName();
 
             Element cat = new Element("category");
@@ -426,7 +442,7 @@ public class MEFLib {
 	 * @return
 	 * @throws Exception
 	 */
-	static Element buildInfoPrivileges(ServiceContext context, Metadata md)
+	static Element buildInfoPrivileges(ServiceContext context, IMetadata md)
 			throws Exception {
 
 		int iId = md.getId();

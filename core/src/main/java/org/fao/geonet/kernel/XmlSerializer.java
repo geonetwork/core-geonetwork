@@ -329,13 +329,15 @@ public abstract class XmlSerializer {
 		// TODO: Ultimately we want to remove any xlinks in this document
 		// that aren't already in use from the xlink cache. For now we
 		// rely on the admin clearing cache and reindexing regularly
-        try{
+        if(_metadataRepository.exists(Integer.valueOf(id))) {
             _metadataRepository.delete(Integer.valueOf(id));
-        }catch(org.springframework.dao.EmptyResultDataAccessException e) {
+        } else {
             MetadataDraftRepository _metadataDraftRepository = 
                     ApplicationContextHolder.get().getBean(MetadataDraftRepository.class);
             _metadataDraftRepository.delete(Integer.valueOf(id));
         }
+        
+        
 
 //        Assert.isTrue(!_metadataRepository.exists(Integer.valueOf(id)), "Metadata should have been deleted");
 

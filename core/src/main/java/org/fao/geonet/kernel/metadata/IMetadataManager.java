@@ -259,7 +259,7 @@ public interface IMetadataManager {
      * @throws Exception
      */
     public Element getMetadata(String id) throws Exception;
-    
+
     /**
      * Retrieves a metadata given its id. Use this method when you must
      * retrieve a metadata in the same transaction.
@@ -269,6 +269,16 @@ public interface IMetadataManager {
      * @throws Exception
      */
     public IMetadata getMetadataObject(Integer id) throws Exception;
+    
+    /**
+     * Retrieves a metadata given its uuid. Use this method when you must
+     * retrieve a metadata in the same transaction.
+     * 
+     * @param uuid
+     * @return
+     * @throws Exception
+     */
+    public IMetadata getMetadataObject(String uuid) throws Exception;
 
     /**
      * Retrieves a metadata element given it's ref.

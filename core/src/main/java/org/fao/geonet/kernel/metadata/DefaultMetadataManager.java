@@ -108,7 +108,7 @@ import jeeves.xlink.Processor;
  * 
  */
 public class DefaultMetadataManager implements IMetadataManager {
-    private static final int METADATA_BATCH_PAGE_SIZE = 100000;
+    protected static final int METADATA_BATCH_PAGE_SIZE = 100000;
 
     @Autowired
     protected IMetadataSchemaUtils metadataSchemaUtils;
@@ -1116,7 +1116,7 @@ public class DefaultMetadataManager implements IMetadataManager {
         });
     }
 
-    private void deleteMetadataFromDB(ServiceContext context, String id)
+    protected void deleteMetadataFromDB(ServiceContext context, String id)
             throws Exception {
         // --- remove operations
         deleteMetadataOper(context, id, false);
@@ -1248,62 +1248,7 @@ public class DefaultMetadataManager implements IMetadataManager {
         // set up results HashMap for post processing of records to be indexed
         ArrayList<String> toIndex = new ArrayList<String>();
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "INDEX CONTENT:");
-
-        Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo,
-                MetadataDataInfo_.changeDate);
-        int currentPage = 0;
-        Page<Pair<Integer, ISODate>> results = mdRepository
-                .findAllIdsAndChangeDates(new PageRequest(currentPage,
-                        METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
-
-        // index all metadata in DBMS if needed
-        while (results.getNumberOfElements() > 0) {
-            for (Pair<Integer, ISODate> result : results) {
-
-                // get metadata
-                String id = String.valueOf(result.one());
-
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, "- record (" + id + ")");
-                }
-
-                String idxLastChange = docs.get(id);
-
-                // if metadata is not indexed index it
-                if (idxLastChange == null) {
-                    Log.debug(Geonet.DATA_MANAGER, "-  will be indexed");
-                    toIndex.add(id);
-
-                    // else, if indexed version is not the latest index it
-                } else {
-                    docs.remove(id);
-
-                    String lastChange = result.two().toString();
-
-                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                        Log.debug(Geonet.DATA_MANAGER,
-                                "- lastChange: " + lastChange);
-                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                        Log.debug(Geonet.DATA_MANAGER,
-                                "- idxLastChange: " + idxLastChange);
-
-                    // date in index contains 't', date in DBMS contains 'T'
-                    if (force || !idxLastChange.equalsIgnoreCase(lastChange)) {
-                        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                            Log.debug(Geonet.DATA_MANAGER,
-                                    "-  will be indexed");
-                        toIndex.add(id);
-                    }
-                }
-            }
-
-            currentPage++;
-            results = mdRepository.findAllIdsAndChangeDates(
-                    new PageRequest(currentPage, METADATA_BATCH_PAGE_SIZE,
-                            sortByMetadataChangeDate));
-        }
+        index(force, docs, toIndex);
 
         // if anything to index then schedule it to be done after servlet is
         // up so that any links to local fragments are resolvable
@@ -1327,6 +1272,73 @@ public class DefaultMetadataManager implements IMetadataManager {
                         "- removed record (" + id + ") from index");
             }
         }
+    }
+
+    protected void index(Boolean force, Map<String, String> docs,
+            ArrayList<String> toIndex) {
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            Log.debug(Geonet.DATA_MANAGER, "INDEX CONTENT:");
+
+        Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo,
+                MetadataDataInfo_.changeDate);
+        int currentPage = 0;
+        Page<Pair<Integer, ISODate>> results = mdRepository
+                .findAllIdsAndChangeDates(new PageRequest(currentPage,
+                        METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
+
+        // index all metadata in DBMS if needed
+        while (results.getNumberOfElements() > 0) {
+            currentPage = index(force, docs, toIndex, currentPage, results);
+            results = mdRepository.findAllIdsAndChangeDates(
+                    new PageRequest(currentPage, METADATA_BATCH_PAGE_SIZE,
+                            sortByMetadataChangeDate));
+        }
+    }
+
+    protected int index(Boolean force, Map<String, String> docs,
+            ArrayList<String> toIndex, int currentPage,
+            Page<Pair<Integer, ISODate>> results) {
+        for (Pair<Integer, ISODate> result : results) {
+
+            // get metadata
+            String id = String.valueOf(result.one());
+
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                Log.debug(Geonet.DATA_MANAGER, "- record (" + id + ")");
+            }
+
+            String idxLastChange = docs.get(id);
+
+            // if metadata is not indexed index it
+            if (idxLastChange == null) {
+                Log.debug(Geonet.DATA_MANAGER, "-  will be indexed");
+                toIndex.add(id);
+
+                // else, if indexed version is not the latest index it
+            } else {
+                docs.remove(id);
+
+                String lastChange = result.two().toString();
+
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                    Log.debug(Geonet.DATA_MANAGER,
+                            "- lastChange: " + lastChange);
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                    Log.debug(Geonet.DATA_MANAGER,
+                            "- idxLastChange: " + idxLastChange);
+
+                // date in index contains 't', date in DBMS contains 'T'
+                if (force || !idxLastChange.equalsIgnoreCase(lastChange)) {
+                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                        Log.debug(Geonet.DATA_MANAGER,
+                                "-  will be indexed");
+                    toIndex.add(id);
+                }
+            }
+        }
+
+        currentPage++;
+        return currentPage;
     }
 
     /**
@@ -1410,5 +1422,16 @@ public class DefaultMetadataManager implements IMetadataManager {
         } else {
             return null;
         }
+    }
+
+    /**
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#getMetadataObject(java.lang.String)
+     * @param uuid
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public IMetadata getMetadataObject(String uuid) throws Exception {
+        return mdRepository.findOneByUuid(uuid);
     }
 }
