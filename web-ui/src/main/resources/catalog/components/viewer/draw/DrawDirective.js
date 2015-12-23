@@ -190,7 +190,7 @@
                 fill: new ol.style.Fill({
                   color: styleCfg.text.fill.color
                 }),
-                stroke: styleCfg.text.stroke.width > 0 ?
+                stroke: (styleCfg.text.stroke && (styleCfg.text.stroke.width > 0)) ?
                     new ol.style.Stroke({
                       color: styleCfg.text.stroke.color,
                       width: styleCfg.text.stroke.width
@@ -233,16 +233,18 @@
               styleObj.text = {
                 text: st.getText().getText(),
                 font: st.getText().getFont(),
-                stroke: {
-                  color: st.getText().getStroke().getColor(),
-                  width: st.getText().getStroke().getWidth()
-                },
                 fill: {
                   color: st.getText().getFill().getColor()
                 },
                 width: parseInt(new RegExp('([0-9]{1,3})(?=px)').
                     exec(st.getText().getFont())[0])
               };
+              if (st.getText().getStroke()) {
+                styleObj.stroke = {
+                  color: st.getText().getStroke().getColor(),
+                  width: st.getText().getStroke().getWidth()
+                };
+              }
             }
             else if (feature.getGeometry().getType() == 'Point') {
               styleObj.image = {
