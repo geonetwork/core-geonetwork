@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:noNamespaceSchemaLocation="../../config-editor.xsd">
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:dct="http://purl.org/dc/terms/"
+        xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd">
 
   <!-- Form field type configuration. Default is text. -->
   <fields>
@@ -8,7 +10,6 @@
     <for name="dc:source" use="textarea"/>
     <for name="dc:rights" use="textarea"/>
 
-    <for name="dct:modified" use="date"/>
     <for name="dct:created" use="date"/>
     <for name="dct:dateSubmitted" use="date"/>
     <for name="dct:dateAccepted" use="date"/>
@@ -32,6 +33,34 @@
       <flatModeExceptions>
         <for name="dc:subject" />
       </flatModeExceptions>
+    </view>
+    <view name="grandlyon">
+      <tab id="gl-main" default="true" mode="flat">
+        <section name="glidentification">
+          <field xpath="/simpledc//dc:title"/>
+          <field xpath="/simpledc//dc:description"/>
+          <field xpath="/simpledc//dc:type"/>
+          <field xpath="/simpledc//dct:dateSubmitted"/>
+          <field xpath="/simpledc//dct:accrualPeriodicity"/>
+        </section>
+        <section name="glcategory">
+          <text ref="glcategory-help"/>
+          <field xpath="/simpledc//dc:subject"/>
+        </section>
+        <section xpath="/simpledc//dc:coverage"/>
+        <section xpath="/simpledc//dc:publisher"/>
+        <section name="dc:rights">
+          <field xpath="/simpledc//dc:rights"/>
+          <field xpath="/simpledc//dct:accessRights"/>
+        </section>
+        <section xpath="/simpledc//dc:source"/>
+        <section name="dc:format">
+          <section xpath="/simpledc//dc:format"/>
+        </section>
+        <section name="metadata">
+          <field xpath="/simpledc//dc:creator"/>
+        </section>
+      </tab>
     </view>
     <view name="advanced">
       <tab id="advanced" default="true">

@@ -10,7 +10,7 @@
   </element>
 
   <element name="dc:creator">
-    <label>Créateur</label>
+    <label>Contact pour la métadonnée</label>
     <description>Nom de la personne, de l'organisation ou du service à l'origine de la rédaction du
       document.</description>
     <example/>
@@ -30,7 +30,7 @@
   </element>
 
   <element name="dc:publisher">
-    <label>Editeur</label>
+    <label>Contact pour la ressource</label>
     <description>Nom de la personne, de l'organisation ou du service à l'origine de la publication
       du document.</description>
     <example/>
@@ -198,7 +198,7 @@
   </element>
 
   <element name="dct:dateSubmitted">
-    <label>Date de mise à disposition</label>
+    <label>Date de publication</label>
     <description>Date de mise à disposition de la resource.</description>
   </element>
   <element name="dct:isPartOf">
