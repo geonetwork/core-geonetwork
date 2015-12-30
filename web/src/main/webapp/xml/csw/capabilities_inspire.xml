@@ -76,6 +76,7 @@
             <ows:Parameter name="schemaLanguage">
                 <ows:Value>http://www.w3.org/TR/xmlschema-1/</ows:Value>
             </ows:Parameter>
+            <ows:Parameter name="outputSchema"/>
             <ows:Constraint name="PostEncoding">
                 <ows:Value>XML</ows:Value>
                 <ows:Value>SOAP</ows:Value>
@@ -105,14 +106,8 @@
             <ows:Parameter name="outputFormat">
                 <ows:Value>application/xml</ows:Value>
             </ows:Parameter>
-            <ows:Parameter name="outputSchema">
-                <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
-                <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
-            </ows:Parameter>
-            <ows:Parameter name="typeNames">
-                <ows:Value>csw:Record</ows:Value>
-                <ows:Value>gmd:MD_Metadata</ows:Value>
-            </ows:Parameter>
+            <ows:Parameter name="outputSchema"/>
+            <ows:Parameter name="typeNames"/>
             <ows:Parameter name="CONSTRAINTLANGUAGE">
                 <ows:Value>FILTER</ows:Value>
                 <ows:Value>CQL_TEXT</ows:Value>
@@ -129,10 +124,7 @@
                     <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
                 </ows:HTTP>
             </ows:DCP>
-            <ows:Parameter name="outputSchema">
-                <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
-                <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
-            </ows:Parameter>
+            <ows:Parameter name="outputSchema"/>
             <ows:Parameter name="outputFormat">
                 <ows:Value>application/xml</ows:Value>
             </ows:Parameter>
@@ -154,16 +146,16 @@
         <ows:Operation name="Transaction">
             <ows:DCP>
                 <ows:HTTP>
-                    <ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT-publication" />
-                    <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT-publication"  />
+                    <ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication" />
+                    <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication"  />
                 </ows:HTTP>
             </ows:DCP>
         </ows:Operation>
         <ows:Operation name="Harvest">
             <ows:DCP>
                 <ows:HTTP>
-                    <ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT-publication" />
-                    <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT-publication"  />
+                    <ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication" />
+                    <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication"  />
                 </ows:HTTP>
             </ows:DCP>
             <ows:Parameter name="ResourceType">

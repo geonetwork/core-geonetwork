@@ -31,7 +31,7 @@ fi
 # When running from the app
 GNLIB=../lib/
 WEB_FILE=../web.xml
-WEB_FILE_OUT=../web.xml
+WEB_FILE_OUT=../web-temp.xml
 
 function showUsage 
 {

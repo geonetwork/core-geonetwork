@@ -19,12 +19,12 @@
       ['$rootScope', '$timeout', '$q', '$http',
         'gnEditor', 'gnSchemaManagerService',
         'gnEditorXMLService', 'gnHttp', 'gnConfig',
-        'gnCurrentEdit', 'gnConfigService', 'gnElementsMap',
+        'gnCurrentEdit', 'gnConfigService',
         'gnGlobalSettings',
         function($rootScope, $timeout, $q, $http,
                  gnEditor, gnSchemaManagerService,
                  gnEditorXMLService, gnHttp, gnConfig,
-                 gnCurrentEdit, gnConfigService, gnElementsMap,
+                 gnCurrentEdit, gnConfigService,
                  gnGlobalSettings) {
 
           return {
@@ -191,12 +191,14 @@
                            urlParams += key + '=' + p + '&';
                          });
                          snippets.push(gnEditorXMLService.
-                                  buildXMLForXlink(scope.elementName,
+                                  buildXMLForXlink(scope.schema,
+                         scope.elementName,
                                       url +
                                       '?' + urlParams));
                        } else {
                          snippets.push(gnEditorXMLService.
-                                  buildXML(scope.elementName, xml));
+                                  buildXML(scope.schema,
+                         scope.elementName, xml));
                        }
                        checkState(c);
                      });
@@ -207,8 +209,7 @@
 
                   var schemaId = gnCurrentEdit.schema || scope.schema;
                   gnSchemaManagerService
-                      .getCodelist(schemaId+ '|' +
-                          gnElementsMap['roleCode'][schemaId])
+                     .getCodelist(gnCurrentEdit.schema + '|' + 'roleCode')
                       .then(function(data) {
                         scope.roles = data[0].entry;
                       });

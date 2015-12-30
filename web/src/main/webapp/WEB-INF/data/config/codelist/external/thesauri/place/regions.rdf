@@ -13,6 +13,10 @@
     <dc:description>Generated from NaturalEarth datasets and SeaVox.</dc:description>
     <dcterms:issued>2015-07-17 12:00:00</dcterms:issued>
     <dcterms:modified>2015-07-17 12:00:00</dcterms:modified>
+    <skos:hasTopConcept rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent"/>
+    <skos:hasTopConcept rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
+    <skos:hasTopConcept rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/Dependency"/>
+    <skos:hasTopConcept rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/#SeaVoXGazetteer"/>
   </skos:ConceptScheme>
 
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Continent">
@@ -28,7 +32,7 @@
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/Dependency">
     <skos:prefLabel xml:lang="en">Dependency</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">Dépendances</skos:prefLabel>
-    <skos:inScheme rdf:resource="http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
+    <skos:inScheme rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/#SeaVoXGazetteer"/>
   </skos:Concept>
 
 

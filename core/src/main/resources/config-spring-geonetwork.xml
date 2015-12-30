@@ -17,7 +17,6 @@
     <bean id="AccessManager" class="org.fao.geonet.kernel.AccessManager" lazy-init="true" />
     <bean id="DataManager" class="org.fao.geonet.kernel.DataManager" lazy-init="true" />
     <bean id="GeonetworkDataDirectory" class="org.fao.geonet.kernel.GeonetworkDataDirectory" lazy-init="true" />
-    <bean id="Iso19139ExportFormat" class="org.fao.geonet.kernel.mef.Iso19139ExportFormat" lazy-init="true"/>
 
     <bean id="luceneConfig" class="org.fao.geonet.kernel.search.LuceneConfig" lazy-init="true">
         <constructor-arg ref="facets"/>

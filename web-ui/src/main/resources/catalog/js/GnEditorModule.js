@@ -29,7 +29,8 @@
   ]);
 
   // Define the translation files to load
-  module.constant('$LOCALES', ['core', 'search', 'editor']);
+  module.constant('$LOCALES', ['core', 'search', 'editor',
+    '/translation/db?type=StatusValue']);
 
   module.constant('gnViewerSettings', {});
 

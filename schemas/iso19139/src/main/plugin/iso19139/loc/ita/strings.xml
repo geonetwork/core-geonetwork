@@ -73,6 +73,7 @@
   <role>Ruolo</role>
   <encoding>Codifica</encoding>
   <inspireTheme>Temi INSPIRE</inspireTheme>
+  <inspireThemeURI>Temi INSPIRE</inspireThemeURI>
   <format>Formato</format>
   <format_version>Versione</format_version>
   <lineage>Lineage</lineage>

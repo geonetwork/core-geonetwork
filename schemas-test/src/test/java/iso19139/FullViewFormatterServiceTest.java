@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -39,8 +40,8 @@ public class FullViewFormatterServiceTest extends AbstractFullViewFormatterTest 
     }
 
     @Override
-    protected File getTestMetadataFile() {
-        final String mdFile = FullViewFormatterServiceTest.class.getResource("/iso19139/example-service.xml").getFile();
-        return new File(mdFile);
+    protected File getTestMetadataFile() throws Exception {
+        final URL mdFile = FullViewFormatterServiceTest.class.getResource("/iso19139/example-service.xml");
+        return new File(mdFile.toURI());
     }
 }

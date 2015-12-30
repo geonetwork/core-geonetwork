@@ -404,7 +404,7 @@
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="type" select="gn-fn-iso19139:getCodeListType(name())"/>
       <xsl:with-param name="name" select="gn:element/@ref"/>
-      <xsl:with-param name="editInfo" select="*/gn:element"/>
+      <xsl:with-param name="editInfo" select="../gn:element"/>
       <xsl:with-param name="listOfValues"
         select="gn-fn-metadata:getCodeListValues($schema, name(), $codelists, .)"/>
     </xsl:call-template>

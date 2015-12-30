@@ -18,7 +18,7 @@
     <xsl:param name="metadata" as="node()"/>
     <xsl:param name="evaluatedNode" as="node()"/>
 
-    <xsl:variable name="nodeRef" select="$evaluatedNode/*/gn:element/@ref"/>
+    <xsl:variable name="nodeRef" select="$evaluatedNode/gn:element/@ref"/>
     <xsl:variable name="node" select="$metadata//*[gn:element/@ref = $nodeRef]"/>
 
     <!--<xsl:message>#getOriginalNode ==================</xsl:message>
@@ -55,10 +55,13 @@
     Add try/catch block to log out when a label id duplicated
     in loc files. XSLv3 could be useful for that.
     -->
-    <!--<xsl:message>#<xsl:value-of select="$name"/></xsl:message>
-    <xsl:message>#<xsl:value-of select="$xpath"/></xsl:message>
-    <xsl:message>#<xsl:value-of select="$parent"/></xsl:message>-->
-    
+    <!--
+    <xsl:message>#gn-fn-metadata:getLabel</xsl:message>
+    <xsl:message>#Element name: <xsl:value-of select="$name"/></xsl:message>
+    <xsl:message>#XPath: <xsl:value-of select="$xpath"/></xsl:message>
+    <xsl:message>#Parent: <xsl:value-of select="$parent"/></xsl:message>
+    -->
+
     <xsl:variable name="escapedName">
       <xsl:choose>
         <xsl:when test="matches($name, '.*CHOICE_ELEMENT.*')">
@@ -133,7 +136,7 @@
     <xsl:param name="codelists" as="node()"/>
     <xsl:copy-of select="gn-fn-metadata:getCodeListValues($schema, $name, $codelists, false())"/>
   </xsl:function>
-  
+
   <xsl:function name="gn-fn-metadata:getCodeListValues" as="node()">
     <xsl:param name="schema" as="xs:string"/>
     <xsl:param name="name" as="xs:string"/>
@@ -142,8 +145,15 @@
 
     <xsl:variable name="codelists" select="$codelists/codelist[@name=$name]"
       exclude-result-prefixes="#all"/>
-    
-    <!-- Conditional helpers which may define an xpath expression to evaluate 
+
+    <!--
+    <xsl:message>#gn-fn-metadata:getCodeListValues</xsl:message>
+    <xsl:message>#Schema: <xsl:value-of select="$schema"/> </xsl:message>
+    <xsl:message>#Element name: <xsl:value-of select="$name"/> </xsl:message>
+    <xsl:message>#Codelist found: <xsl:copy-of select="$codelists"/> </xsl:message>
+    -->
+
+    <!-- Conditional helpers which may define an xpath expression to evaluate
         if the xpath match. Check all codelists if one define an expression.
         If the expression return a node, this codelist will be returned. -->
     <xsl:variable name="conditionalCodelist">

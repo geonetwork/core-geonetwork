@@ -69,6 +69,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,8 @@ public class SchemaManager {
     private static final Namespace GEONET_SCHEMA_NS = Namespace.getNamespace(GEONET_SCHEMA_URI);
 
     private Map<String, Schema> hmSchemas = new HashMap<String, Schema>();
+    private Map<String, Namespace> hmSchemasTypenames = new HashMap<String, Namespace>();
+
 	private String[] fnames = {"labels.xml", "codelists.xml", "strings.xml"};
     private Path schemaPluginsDir;
     private Path schemaPluginsCat;
@@ -244,6 +247,32 @@ public class SchemaManager {
 		}
 	}
 
+  /**
+   * Return the list of dependent schemas
+   *
+   * @param name the metadata schema we want the list of dependencies for
+   * @return
+   */
+  public Set<String> getDependencies(String name) {
+
+    Set<String> dependencies = new HashSet<String>();
+
+    beforeRead();
+    try {
+      Schema schema = hmSchemas.get(name);
+      if (schema != null) { // if it is null then that is a config error
+        List<Element> dependsList = schema.getDependElements();
+        for (Element depends : dependsList) {
+          String depSchemaName = depends.getText();
+          dependencies.add(depSchemaName);
+        }
+      }
+      return dependencies;
+    } finally {
+      afterRead();
+    }
+  }
+
     public static SchemaPlugin getSchemaPlugin(String schemaIdentifier) {
         String schemaBeanIdentifier = schemaIdentifier + "SchemaPlugin";
         SchemaPlugin schemaPlugin = null;
@@ -290,7 +319,7 @@ public class SchemaManager {
             if (schema == null)
                 throw new IllegalArgumentException("Schema not registered : " + name);
 
-            return Pair.read(schema.getId(),schema.getVersion());
+            return Pair.read(schema.getId(), schema.getVersion());
         } finally {
             afterRead();
         }
@@ -943,6 +972,10 @@ public class SchemaManager {
         mds.setName(path.getFileName().toString());
         mds.setSchemaDir(path);
         mds.loadSchematronRules(basePath);
+
+        if (mds.getSchemaPlugin() != null && mds.getSchemaPlugin().getCswTypeNames() != null) {
+            hmSchemasTypenames.putAll(mds.getSchemaPlugin().getCswTypeNames());
+        }
 
         // -- add cached xml files (schema codelists and label files)
         // -- as Jeeves XmlFile objects (they need not exist)
@@ -1831,4 +1864,46 @@ public class SchemaManager {
 	}
 
 
+    /**
+     * Return the list of typenames declared in all schema plugins.
+     *
+     * @return
+     */
+    public Map<String, Namespace> getHmSchemasTypenames() {
+        return hmSchemasTypenames;
+    }
+
+    /**
+     * Return the list of namespace URI of all typenames declared
+     * in all schema plugins.
+     *
+     * @return
+     */
+    public List<String> getListOfOutputSchemaURI() {
+        Iterator<String> iterator = hmSchemasTypenames.keySet().iterator();
+        List<String> listOfSchemaURI = new ArrayList<>();
+        while (iterator.hasNext()) {
+            String typeLocalName = iterator.next();
+            Namespace ns = hmSchemasTypenames.get(typeLocalName);
+            listOfSchemaURI.add(ns.getURI());
+        }
+        return listOfSchemaURI;
+    }
+
+    /**
+     * Return the list of typenames (with prefix) declared in all
+     * schema plugin.
+     *
+     * @return
+     */
+    public List<String> getListOfTypeNames() {
+        Iterator<String> iterator = hmSchemasTypenames.keySet().iterator();
+        List<String> listOfTypenames = new ArrayList<>();
+        while (iterator.hasNext()) {
+            String typeName = iterator.next();
+            Namespace ns = hmSchemasTypenames.get(typeName);
+            listOfTypenames.add(typeName);
+        }
+        return listOfTypenames;
+    }
 }

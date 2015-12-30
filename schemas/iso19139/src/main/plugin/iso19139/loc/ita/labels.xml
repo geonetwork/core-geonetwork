@@ -1758,7 +1758,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 		<label>Processore</label>
 		<description>Identificazione di, e mezzi di comunicazione con, persona e l'ente associata alla fase del processo</description>
 	</element>
-	<element name="gmd:protocol" id="398.0">
+	<element name="gmd:protocol" id="398.0" alias="protocol">
 		<label>Protocollo</label>
 		<description>Protocollo di connessione utilizzato</description>
 		<helper>

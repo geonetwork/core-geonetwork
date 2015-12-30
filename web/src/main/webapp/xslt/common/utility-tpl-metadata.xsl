@@ -69,11 +69,11 @@
   <xsl:template mode="gn-merge" match="gn:copy" priority="2" exclude-result-prefixes="#all">
     <xsl:param name="node-to-merge"/>
     
-    <xsl:variable name="nodeNames" select="@select"/>
-    <!-- FIXME: Descendant could probably select more than 
-    what is expected. -->
-    <xsl:apply-templates mode="gn-element-cleaner" 
-      select="$node-to-merge/descendant-or-self::node()[name() = $nodeNames]"/>
+    <xsl:variable name="nodeName" select="@select"/>
+    <xsl:variable name="parentName" select="name(..)"/>
+    <!-- FIXME: if a target node as same node name and parent node name, extra element may be duplicated. -->
+    <xsl:apply-templates mode="gn-element-cleaner"
+      select="$node-to-merge/descendant-or-self::node()[name() = $nodeName and name(..) = $parentName]"/>
   </xsl:template>
 
 

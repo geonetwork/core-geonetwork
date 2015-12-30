@@ -1,5 +1,6 @@
 package org.fao.geonet.schema.iso19110;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
@@ -13,9 +14,7 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by francois on 6/15/14.
@@ -27,12 +26,18 @@ public class ISO19110SchemaPlugin
     public static final String IDENTIFIER = "iso19110";
 
     private static ImmutableSet<Namespace> allNamespaces;
+    private static Map<String, Namespace> allTypenames;
 
     static {
         allNamespaces = ImmutableSet.<Namespace>builder()
                 .add(ISO19110Namespaces.GFC)
                 .add(ISO19139Namespaces.GCO)
                 .add(ISO19139Namespaces.GMD)
+                .build();
+
+        allTypenames = ImmutableMap.<String, Namespace>builder()
+                .put("csw:Record", Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2"))
+                .put("gfc:FC_FeatureCatalogue", ISO19110Namespaces.GFC)
                 .build();
     }
 
@@ -48,5 +53,10 @@ public class ISO19110SchemaPlugin
     @Override
     public Element createBasicTypeCharacterString() {
         return new Element("CharacterString", ISO19139Namespaces.GCO);
+    }
+
+    @Override
+    public Map<String, Namespace> getCswTypeNames() {
+        return allTypenames;
     }
 }

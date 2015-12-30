@@ -69,6 +69,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -305,7 +306,27 @@ public class Thesaurus {
 			Log.error(Geonet.THESAURUS_MAN, "Error retrieving concept scheme for " + thesaurusFile + ". Error is: " + e.getMessage());
 			throw new RuntimeException(e);
 		}
-	}
+    }
+
+    public List<String> getConceptSchemes() {
+
+        String query = "SELECT conceptScheme"
+                + " FROM {conceptScheme} rdf:type {skos:ConceptScheme}"
+                + " USING NAMESPACE skos = <http://www.w3.org/2004/02/skos/core#>";
+
+        try {
+            List<String> ret = new ArrayList<>();
+            QueryResultsTable table = performRequest(query);
+            for (int i = 0; i < table.getRowCount(); i++) {
+                Value value = table.getValue(i, 0);
+                ret.add(value.toString());
+            }
+            return ret;
+        } catch (Exception e) {
+            Log.error(Geonet.THESAURUS_MAN, "Error retrieving concept schemes for " + thesaurusFile + ". Error is: " + e.getMessage());
+            return Collections.EMPTY_LIST;
+        }
+    }
 
 	/**
 	 * 
@@ -916,6 +937,32 @@ public class Thesaurus {
             }
 
             return keywords.get(0);
+        }
+
+        /**
+         * Gets top concepts/keywords from the thesaurus
+         * 
+         * @return keywords
+         */
+        public List<KeywordBean> getTopConcepts(String... languages) {
+            List<KeywordBean> keywords;
+
+            try {
+                Query<KeywordBean> query = QueryBuilder
+                    .keywordQueryBuilder(getIsoLanguageMapper(), languages)
+                    .select(Selectors.TOPCONCEPTS, true)
+                    .build();
+
+                keywords = query.execute(this);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            if (keywords.isEmpty()) {
+                throw new TermNotFoundException("No top concepts/keywords in file "+thesaurusFile);
+            }
+
+            return keywords;
         }
 
         private String getTermNotFoundMessage(String searchValue) {
