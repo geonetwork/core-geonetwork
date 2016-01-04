@@ -545,9 +545,11 @@
            *
            * @param {ol.map} map to add the layer
            * @param {Object} getCapLayer object to convert
+           * @param {string} url of the wms service (we want this one instead
+           *  of the one from the capabilities to be sure its persistent)
            * @return {ol.Layer} the created layer
            */
-          createOlWMSFromCap: function(map, getCapLayer) {
+          createOlWMSFromCap: function(map, getCapLayer, url) {
 
             var legend, attribution, attributionUrl, metadata, errors = [];
             if (getCapLayer) {
@@ -579,10 +581,10 @@
               // TODO: parse better legend & attribution
               if (angular.isArray(getCapLayer.Style) &&
                   getCapLayer.Style.length > 0) {
-                var url = getCapLayer.Style[getCapLayer.Style.length - 1]
+                var legendUrl = getCapLayer.Style[getCapLayer.Style.length - 1]
                   .LegendURL[0];
-                if (url) {
-                  legend = url.OnlineResource;
+                if (legendUrl) {
+                  legend = legendUrl.OnlineResource;
                 }
               }
               if (angular.isDefined(getCapLayer.Attribution)) {
@@ -602,7 +604,7 @@
               var layer = this.createOlWMS(map, {
                 LAYERS: getCapLayer.Name
               }, {
-                url: getCapLayer.url,
+                url: url,
                 label: getCapLayer.Title,
                 attribution: attribution,
                 attributionUrl: attributionUrl,
@@ -916,69 +918,70 @@
             var defer = $q.defer();
             var $this = this;
 
-            gnWmsQueue.add(url, name);
-            gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
-              var capL = gnOwsCapabilities.getLayerInfoFromCap(
-                  name, capObj, md && md.getUuid()),
-                  olL;
-              if (!capL) {
-                // If layer not found in the GetCapabilities
-                // Try to add the layer from the metadata
-                // information only. A tile error loading
-                // may be reported after the layer is added
-                // to the map and will give more details.
+            if(!isLayerInMap(map, name, url)) {
+              gnWmsQueue.add(url, name);
+              gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
+                var capL = gnOwsCapabilities.getLayerInfoFromCap(
+                        name, capObj, md && md.getUuid()),
+                    olL;
+                if (!capL) {
+                  // If layer not found in the GetCapabilities
+                  // Try to add the layer from the metadata
+                  // information only. A tile error loading
+                  // may be reported after the layer is added
+                  // to the map and will give more details.
+                  var o = {
+                    url: url,
+                    name: name,
+                    msg: 'layerNotInCap'
+                  }, errors = [];
+                  olL = $this.addWmsToMap(map, o);
+
+                  if (!angular.isArray(olL.get('errors'))) {
+                    olL.set('errors', []);
+                  }
+                  var errormsg = $translate('layerNotfoundInCapability', {
+                    layer: name,
+                    url: url
+                  });
+                  errors.push(errormsg);
+                  console.warn(errormsg);
+
+                  olL.get('errors').push(errors);
+
+                  gnWmsQueue.error(o);
+                  defer.reject(o);
+                } else {
+                  olL = $this.createOlWMSFromCap(map, capL, url);
+
+                  var finishCreation = function() {
+                    if ( !createOnly) {
+                      map.addLayer(olL);
+                    }
+                    gnWmsQueue.removeFromQueue(url, name);
+                    defer.resolve(olL);
+                  };
+
+                  // attach the md object to the layer
+                  if (md) {
+                    olL.set('md', md);
+                    finishCreation();
+                  }
+                  else {
+                    $this.feedLayerMd(olL).finally (finishCreation);
+                  }
+                }
+
+              }, function() {
                 var o = {
                   url: url,
                   name: name,
-                  msg: 'layerNotInCap'
-                }, errors = [];
-                olL = $this.addWmsToMap(map, o);
-
-                if (!angular.isArray(olL.get('errors'))) {
-                  olL.set('errors', []);
-                }
-                var errormsg = $translate('layerNotfoundInCapability', {
-                  layer: name,
-                  url: url
-                });
-                errors.push(errormsg);
-                console.warn(errormsg);
-
-                olL.get('errors').push(errors);
-
+                  msg: 'getCapFailure'
+                };
                 gnWmsQueue.error(o);
                 defer.reject(o);
-              } else {
-                olL = $this.createOlWMSFromCap(map, capL);
-
-                var finishCreation = function() {
-                  if ( (!createOnly) &&
-                      (!isLayerInMap(map, olL.getSource().getParams().LAYERS, olL.get('url'))) ) {
-                    map.addLayer(olL);
-                  }
-                  gnWmsQueue.removeFromQueue(url, name);
-                  defer.resolve(olL);
-                };
-
-                // attach the md object to the layer
-                if (md) {
-                  olL.set('md', md);
-                  finishCreation();
-                }
-                else {
-                  $this.feedLayerMd(olL).finally (finishCreation);
-                }
-              }
-
-            }, function() {
-              var o = {
-                url: url,
-                name: name,
-                msg: 'getCapFailure'
-              };
-              gnWmsQueue.error(o);
-              defer.reject(o);
-            });
+              });
+            }
             return defer.promise;
           },
 
