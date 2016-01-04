@@ -46,24 +46,30 @@
           wfsFilterService.getWfsIndexFields(
               ftName, wfsUrl).then(function(docFields) {
 
-            indexedFields = docFields;
-            wfsFilterService.getApplicationProfile(uuid,
-                ftName, wfsUrl).success(function(data) {
+            if(!docFields) {
+              console.warn('The feature type ' + wfsUrl + '#' + ftName +
+                  'has not been indexed.');
+            }
+            else {
+              indexedFields = docFields;
+              wfsFilterService.getApplicationProfile(uuid,
+                  ftName, wfsUrl).success(function(data) {
 
-              var url;
-              if (data) {
-                url = wfsFilterService.getSolrRequestFromApplicationProfile(
-                    data, ftName, wfsUrl, docFields);
-              }
-              else {
-                url = wfsFilterService.getSolrRequestFromFields(
-                    docFields, ftName, wfsUrl);
-              }
-              solrUrl = url;
+                    var url;
+                    if (data) {
+                      url = wfsFilterService.getSolrRequestFromApplicationProfile(
+                          data, ftName, wfsUrl, docFields);
+                    }
+                    else {
+                      url = wfsFilterService.getSolrRequestFromFields(
+                          docFields, ftName, wfsUrl);
+                    }
+                    solrUrl = url;
 
-              // Init the facets
-              scope.resetFacets();
-            });
+                    // Init the facets
+                    scope.resetFacets();
+                  });
+            }
           });
 
           /**

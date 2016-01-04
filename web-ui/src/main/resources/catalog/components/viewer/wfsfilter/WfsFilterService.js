@@ -192,8 +192,7 @@
             }
           }
           catch (e) {
-            console.warn('The feature type ' + wfsUrl + '#' + featureTypeName +
-                'has not been indexed.');
+            return;
           }
           return indexInfos;
         });
@@ -387,12 +386,7 @@
         return $http.get('wfs.harvest?' +
             'uuid=' + '' +
             '&url=' + encodeURIComponent(url) +
-            '&typename=' + encodeURIComponent(type))
-            .success(function(data) {
-              console.log(data);
-            }).error(function(response) {
-              console.log(response);
-            });
+            '&typename=' + encodeURIComponent(type));
       };
     }]);
 })();
