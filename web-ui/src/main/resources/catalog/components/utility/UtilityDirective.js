@@ -259,6 +259,42 @@
 
   /**
    * @ngdoc directive
+   * @name gn_utility.directive:gnClickToggle
+   * @function
+   *
+   * @description
+   * Trigger an event (default is click) of all element matching
+   * the gnSectionToggle selector. By default, all elements
+   * matching form > fieldset > legend[data-gn-slide-toggle]
+   * ie. first level legend are clicked.
+   *
+   * This is usefull to quickly collapse all section in the editor.
+   *
+   * Add the event attribute to define a custom event.
+   */
+  module.directive('gnToggle', [
+    function() {
+      return {
+        restrict: 'A',
+        template: '<button title="{{\'gnToggle\' | translate}}">' +
+            '<i class="fa fa-fw fa-angle-double-left"/>&nbsp;' +
+            '</button>',
+        link: function linkFn(scope, element, attr) {
+          var selector = attr['gnSectionToggle'] ||
+              'form > fieldset > legend[data-gn-slide-toggle]',
+              event = attr['event'] || 'click';
+          element.on('click', function() {
+            $(selector).each(function(idx, elem) {
+              $(elem).trigger(event);
+            });
+          });
+        }
+      };
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
    * @name gn_utility.directive:gnDirectoryEntryPicker
    * @function
    *

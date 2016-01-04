@@ -69,6 +69,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -245,6 +246,32 @@ public class SchemaManager {
 			afterRead();
 		}
 	}
+
+  /**
+   * Return the list of dependent schemas
+   *
+   * @param name the metadata schema we want the list of dependencies for
+   * @return
+   */
+  public Set<String> getDependencies(String name) {
+
+    Set<String> dependencies = new HashSet<String>();
+
+    beforeRead();
+    try {
+      Schema schema = hmSchemas.get(name);
+      if (schema != null) { // if it is null then that is a config error
+        List<Element> dependsList = schema.getDependElements();
+        for (Element depends : dependsList) {
+          String depSchemaName = depends.getText();
+          dependencies.add(depSchemaName);
+        }
+      }
+      return dependencies;
+    } finally {
+      afterRead();
+    }
+  }
 
     public static SchemaPlugin getSchemaPlugin(String schemaIdentifier) {
         String schemaBeanIdentifier = schemaIdentifier + "SchemaPlugin";

@@ -96,9 +96,19 @@ public class KeywordsSearcher {
         return result;
     }
 
-	   public void search(KeywordSearchParams params) throws Exception {
+		public void searchTopConcepts(String sThesaurusName, String... languages) throws Exception {
+
+	    _results.clear();
+      Thesaurus thesaurus = _thesaurusFinder.getThesaurusByName(sThesaurusName);
+	    for (KeywordBean keywordBean : thesaurus.getTopConcepts(languages)) {
+       	_results.add(keywordBean);
+			}
+		}
+														  
+	  public void search(KeywordSearchParams params) throws Exception {
 	       this._results = params.search(_thesaurusFinder);
-	   }
+	  }
+
     /**
      * TODO javadoc.
      *

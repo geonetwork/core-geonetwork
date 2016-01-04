@@ -143,6 +143,20 @@
 	<element name="dct:accrualPeriodicity">
 		<label>Accrual Periodicity</label>
 		<description>The frequency with which items are added to a collection.</description>
+		<helper>
+			<option value="continual">Continual</option>
+			<option value="daily">Daily</option>
+			<option value="weekly">Weekly</option>
+			<option value="fortnightly">Fortnightly</option>
+			<option value="monthly">Monthly</option>
+			<option value="quarterly">Quarterly</option>
+			<option value="biannually">Biannually</option>
+			<option value="annually">Annually</option>
+			<option value="asNeeded">As needed</option>
+			<option value="irregular">Irregular</option>
+			<option value="notPlanned">Not planned</option>
+			<option value="unknown">Unknown</option>
+		</helper>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dct:accrualPolicy">

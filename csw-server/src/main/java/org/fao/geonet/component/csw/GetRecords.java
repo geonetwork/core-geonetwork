@@ -549,13 +549,13 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             if(StringUtils.isEmpty(typeNamesValue)) {
                 return cswPrefix + ":Record";
             }
-            // not empty: scan comma-separated string
+            // not empty: scan space-separated string
             @SuppressWarnings("resource")
-            Scanner commaSeparator = new Scanner(typeNamesValue);
-            commaSeparator.useDelimiter(",");
+            Scanner spaceScanner = new Scanner(typeNamesValue);
+            spaceScanner.useDelimiter(" ");
             String result = cswPrefix + ":Record";
-            while(commaSeparator.hasNext()) {
-                String typeName = commaSeparator.next();
+            while(spaceScanner.hasNext()) {
+                String typeName = spaceScanner.next();
                 typeName = typeName.trim();
                 if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
                     Log.debug(Geonet.CSW_SEARCH, "checking typename in query:" + typeName);

@@ -102,7 +102,6 @@
               element[0].innerHTML = '';
             }
           };
-
           var init = function() {
             // Initialize all values
             angular.forEach(values, function(value, key) {
@@ -142,7 +141,6 @@
               generateSnippet();
             }
           };
-
           $timeout(function() {
             init();
           });

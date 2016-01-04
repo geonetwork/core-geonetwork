@@ -150,7 +150,8 @@ public class Do implements Service {
                     .setUsername(Util.getParam(params, "username", ""))
                     .setPassword(Util.getParam(params, "password", ""))
                     .setNamespace(Util.getParam(params, "namespace", ""))
-                    .setNamespacePrefix(Util.getParam(params, "namespaceprefix", ""));
+                    .setNamespacePrefix(Util.getParam(params, "namespaceprefix", ""))
+                    .setPushStyleInWorkspace(Util.getParam(params, "pushstyleinworkspace", false));
             context.getBean(MapServerRepository.class).save(m);
             return new Element(action.toString())
                         .setText("ok")
@@ -172,7 +173,8 @@ public class Do implements Service {
                     .setWcsurl(Util.getParam(params, "wcsurl", ""))
                     .setStylerurl(Util.getParam(params, "stylerurl", ""))
                     .setNamespace(Util.getParam(params, "namespace", ""))
-                    .setNamespacePrefix(Util.getParam(params, "namespaceprefix", ""));
+                    .setNamespacePrefix(Util.getParam(params, "namespaceprefix", ""))
+                    .setPushStyleInWorkspace(Util.getParam(params, "pushstyleinworkspace", false));
                 repo.save(m);
             }
             return new Element(action.toString()).setText("ok");
@@ -201,7 +203,7 @@ public class Do implements Service {
             final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
             GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
                     g.getUsername(), g.getUserpassword(),
-                    g.getNamespacePrefix(), baseUrl);
+                    g.getNamespacePrefix(), baseUrl, m.pushStyleInWorkspace());
     
     		String file = Util.getParam(params, "file");
     		String access = Util.getParam(params, "access");
@@ -261,6 +263,10 @@ public class Do implements Service {
                 node.addContent(new Element("wfsUrl").setText(m.getWfsurl()));
                 node.addContent(new Element("wcsUrl").setText(m.getWcsurl()));
                 node.addContent(new Element("stylerUrl").setText(m.getStylerurl()));
+                if (m.pushStyleInWorkspace())
+                    node.addContent(new Element("pushStyleInWorkspace").setText("true"));
+                else
+                    node.addContent(new Element("pushStyleInWorkspace").setText("false"));
                 geoserverConfig.addContent(node);
             }
         }
@@ -305,8 +311,10 @@ public class Do implements Service {
 				// TODO : check datastore already exist
 				if (!g.createDatabaseDatastore(db, host, port, db, user, password, dbType, ns))
 					report.append("Datastore: ").append(g.getStatus());
-				if (!g.createFeatureType(db, table, true, metadataUuid, metadataTitle, metadataAbstract))
+				if (!g.createFeatureType(db, table, metadataUuid, metadataTitle, metadataAbstract))
 					report.append("Feature type: ").append(g.getStatus());
+				if (!g.createStyle(db, table))
+					report.append("Style: ").append(g.getStatus());
 //				Publication of Datastore and feature type may failed if already exist
 //				if (report.length() > 0) {
 //					setErrorCode(report.toString());
@@ -368,7 +376,7 @@ public class Do implements Service {
 			try {
 				vectorLayers = gf.getVectorLayers(true);
 				if (vectorLayers.size() > 0) {
-					if (publishVector(f, gs, action, metadataUuid, metadataTitle, metadataAbstract)) {
+					if (publishVector(f, gf, gs, action, metadataUuid, metadataTitle, metadataAbstract)) {
 						return report(SUCCESS, VECTOR, getReport());
 					} else {
 						return report(EXCEPTION, VECTOR, getErrorCode());
@@ -426,17 +434,21 @@ public class Do implements Service {
 		return report;
 	}
 
-	private boolean publishVector(Path f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
+	private boolean publishVector(Path f, GeoFile gf, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
 
 		String ds = f.getFileName().toString();
 		String dsName = ds.substring(0, ds.lastIndexOf("."));
 		try {
 			if (action.equals(ACTION.CREATE)) {
-				g.createDatastore(dsName, f, true);
-				g.createFeatureType(dsName, dsName, false, metadataUuid, metadataTitle, metadataAbstract);
+				g.createDatastore(dsName, f);
+				if (gf.containsSld())
+					g.createStyle(g.getDefaultWorkspace(), dsName, gf.getSld());
+				else
+					g.createStyle(g.getDefaultWorkspace(), dsName);
+				g.createFeatureType(dsName, dsName, metadataUuid, metadataTitle, metadataAbstract);
 			} else if (action.equals(ACTION.UPDATE)) {
-				g.createDatastore(dsName, f, false);
-				g.createFeatureType(dsName, dsName, false, metadataUuid, metadataTitle, metadataAbstract);
+				g.createDatastore(dsName, f);
+				g.createFeatureType(dsName, dsName, metadataUuid, metadataTitle, metadataAbstract);
 			} else if (action.equals(ACTION.DELETE)) {
 				String report = "";
 				if (!g.deleteLayer(dsName))
@@ -476,13 +488,14 @@ public class Do implements Service {
                 if (isRaster) {
                 	g.createCoverage(dsName, file, metadataUuid, metadataTitle, metadataAbstract);
                 } else {
-                    g.createDatastore(dsName, file, true);
+                    g.createDatastore(dsName, file);
+                    g.createStyle(dsName);
                 }
             } else if (action.equals(ACTION.UPDATE)) {
                 if (isRaster) {
                 	g.createCoverage(dsName, file, metadataUuid, metadataTitle, metadataAbstract);
                 } else {
-                    g.createDatastore(dsName, file, false);
+                    g.createDatastore(dsName, file);
                 }
             } else if (action.equals(ACTION.DELETE)) {
                 String report = "";

@@ -66,6 +66,7 @@
       // Indicate if an update is going on
       $scope.userOperation = 'editinfo';
       $scope.userIsAdmin = null;
+      $scope.userIsEnabled = null;
       // On going changes for user ...
       $scope.userUpdated = false;
       $scope.passwordCheck = '';
@@ -97,6 +98,16 @@
                   });
                 } else {
                   u.enableallowedcategories = false;
+                }
+                //FIXME this should be already on the previous list
+                if (u.defaultcategory) {
+                  $http.get('admin.group.get?_content_type=json&id=' + u.id).
+                      success(function(data) {
+                        if (data && data[0] && data[0].defaultcategory &&
+                            data[0].defaultcategory[0]) {
+                          u.defaultcategory = data[0].defaultcategory[0];
+                        }
+                      });
                 }
               });
               $scope.isLoadingGroups = false;
@@ -164,10 +175,12 @@
           country: '',
           email: '',
           organisation: '',
-          groups: []
+          groups: [],
+          enabled: true
         };
         $scope.userGroups = null;
         $scope.userIsAdmin = false;
+        $scope.userIsEnabled = true;
         $timeout(function() {
           $scope.setUserProfile();
           $('#username').focus();
@@ -193,14 +206,17 @@
       $scope.selectUser = function(u) {
         $scope.userOperation = 'editinfo';
         $scope.userIsAdmin = false;
+        $scope.userIsEnabled = true;
         $scope.userSelected = null;
         $scope.userGroups = null;
 
         $http.get('admin.user?_content_type=json&id=' + u.value.id)
-          .success(function(data) {
+            .success(function(data) {
               $scope.userSelected = data;
               $scope.userIsAdmin =
                   (data.profile === 'Administrator');
+
+              $scope.userIsEnabled = (data.enabled === 'true');
 
               // Load user group and then select user
               $http.get('admin.usergroups.list?_content_type=json&id=' +
@@ -247,7 +263,7 @@
         };
 
         $http.post('admin.user.resetpassword', null, {params: params})
-              .success(function(data) {
+            .success(function(data) {
               $scope.resetPassword1 = null;
               $scope.resetPassword2 = null;
               $('#passwordResetModal').modal('hide');
@@ -294,12 +310,6 @@
         }
         $scope.userUpdated = true;
         if ($scope.userIsAdmin) {
-          // Unselect all groups option
-          for (var i = 0; i < $scope.profiles.length; i++) {
-            if ($scope.profiles[i] !== 'Administrator') {
-              $('#groups_' + $scope.profiles[i])[0].selectedIndex = -1;
-            }
-          }
           $scope.userSelected.profile = 'Administrator';
         } else {
           // Define the highest profile for user
@@ -315,15 +325,14 @@
             }
           }
           $scope.userSelected.profile = newprofile;
-
-          // If user is reviewer in one group, he is also editor for that group
-          var editorGroups = $('#groups_Editor')[0];
-          var reviewerGroups = $('#groups_Reviewer')[0];
-          if (reviewerGroups.selectedIndex > -1) {
-            for (var j = 0; j < reviewerGroups.options.length; j++) {
-              if (reviewerGroups.options[j].selected) {
-                editorGroups.options[j].selected = true;
-              }
+        }
+        // If user is reviewer in one group, he is also editor for that group
+        var editorGroups = $('#groups_Editor')[0];
+        var reviewerGroups = $('#groups_Reviewer')[0];
+        if (reviewerGroups.selectedIndex > -1) {
+          for (var j = 0; j < reviewerGroups.options.length; j++) {
+            if (reviewerGroups.options[j].selected) {
+              editorGroups.options[j].selected = true;
             }
           }
         }
@@ -338,8 +347,9 @@
        * Save a user.
        */
       $scope.saveUser = function(formId) {
-        $http.get('admin.user.update?' + $(formId).serialize())
-        .success(function(data) {
+        $http.get('admin.user.update?' + $(formId).serialize() +
+                '&enabled=' + $scope.userIsEnabled)
+            .success(function(data) {
               $scope.unselectUser();
               loadUsers();
               $rootScope.$broadcast('StatusUpdated', {
@@ -347,7 +357,7 @@
                 timeout: 2,
                 type: 'success'});
             })
-        .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('userUpdateError'),
                 error: data,
@@ -362,11 +372,11 @@
       $scope.deleteUser = function(formId) {
         $http.get('admin.user.remove?id=' +
                 $scope.userSelected.id)
-        .success(function(data) {
+            .success(function(data) {
               $scope.unselectUser();
               loadUsers();
             })
-        .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('userDeleteError'),
                 error: data,
@@ -440,19 +450,19 @@
               '&copyLogo=' + $scope.groupSelected.logoFromHarvest : '';
           $http.get('admin.group.update?' + $(formId).serialize() +
               deleteLogo + addLogo)
-          .success(uploadImportMdDone)
-          .error(uploadImportMdError);
+              .success(uploadImportMdDone)
+              .error(uploadImportMdError);
         }
       };
 
       $scope.deleteGroup = function(formId) {
         $http.get('admin.group.remove?id=' +
                 $scope.groupSelected.id)
-        .success(function(data) {
+            .success(function(data) {
               $scope.unselectGroup();
               loadGroups();
             })
-        .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('groupDeleteError'),
                 error: data,
@@ -495,3 +505,4 @@
     }]);
 
 })();
+

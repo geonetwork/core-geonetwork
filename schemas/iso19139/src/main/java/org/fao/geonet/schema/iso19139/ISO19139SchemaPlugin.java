@@ -2,10 +2,7 @@ package org.fao.geonet.schema.iso19139;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import org.fao.geonet.kernel.schema.AssociatedResource;
-import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
-import org.fao.geonet.kernel.schema.ISOPlugin;
-import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
+import org.fao.geonet.kernel.schema.*;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -26,11 +23,13 @@ public class ISO19139SchemaPlugin
         implements
                 AssociatedResourcesSchemaPlugin,
                 MultilingualSchemaPlugin,
+                ExportablePlugin,
                 ISOPlugin {
     public static final String IDENTIFIER = "iso19139";
 
     private static ImmutableSet<Namespace> allNamespaces;
     private static Map<String, Namespace> allTypenames;
+    private static Map<String, String> allExportFormats;
     static {
         allNamespaces = ImmutableSet.<Namespace>builder()
                 .add(ISO19139Namespaces.GCO)
@@ -41,11 +40,19 @@ public class ISO19139SchemaPlugin
                 .put("csw:Record", Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2"))
                 .put("gmd:MD_Metadata", ISO19139Namespaces.GMD)
                 .build();
+
+        allExportFormats = ImmutableMap.<String, String>builder()
+                // This is more for all basic iso19139 profiles using this bean as default
+                // The conversion is not available in regular iso19139 plugin.
+                // This is for backward compatibility.
+                .put("convert/to19139.xsl", "metadata-iso19139.xml")
+                .build();
     }
 
     public ISO19139SchemaPlugin() {
         super(IDENTIFIER);
     }
+
 
     /**
      * Return sibling relation defined in aggregationInfo.
@@ -206,5 +213,10 @@ public class ISO19139SchemaPlugin
     @Override
     public Map<String, Namespace> getCswTypeNames() {
         return allTypenames;
+    }
+
+    @Override
+    public Map<String, String> getExportFormats() {
+        return allExportFormats;
     }
 }

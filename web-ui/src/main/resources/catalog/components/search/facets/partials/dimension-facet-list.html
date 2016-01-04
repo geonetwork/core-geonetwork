@@ -1,6 +1,6 @@
 <div class="gn-facet-list">
   <div data-ng-repeat="f in dimension"
-       class="gn-facet"
+       class="gn-facet gn-facet-{{f['@label']}}"
        data-ng-show="f.category">
     <a class="gn-facet-collapseall"
        data-ng-if="$index === 0"

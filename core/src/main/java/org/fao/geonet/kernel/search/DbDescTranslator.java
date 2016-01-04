@@ -46,7 +46,7 @@ public class DbDescTranslator implements Translator {
 
     private static final long serialVersionUID = 1L;
 
-    private transient ConfigurableApplicationContext _applicationContext;
+    private ConfigurableApplicationContext _applicationContext;
     private final String _langCode;
     private Class<? extends JpaRepository> _repositoryClass;
     private final String _methodName;
@@ -149,7 +149,7 @@ public class DbDescTranslator implements Translator {
                 if (entity == null) {
                     try {
                         entity = (Localized) method.invoke(repository, key);
-                   } catch (java.lang.IllegalArgumentException e) {
+                    } catch (java.lang.IllegalArgumentException e) {
                         // Call to the method with wrong argument type.
                     }
                 }

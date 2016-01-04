@@ -22,16 +22,27 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchResult;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Language;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroupId_;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -49,19 +60,8 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.SearchResult;
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 
 public class LDAPSynchronizerJob extends QuartzJobBean {
 
@@ -85,9 +85,9 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
 
 
             if (applicationContext == null) {
-                Log.error(
-                        Geonet.LDAP,
-                        "  Application context is null. Be sure to configure SchedulerFactoryBean job factory property with AutowiringSpringBeanJobFactory.");
+                Log.error(Geonet.LDAP,
+                        "  Application context is null. Be sure to configure SchedulerFactoryBean "
+                        + "job factory property with AutowiringSpringBeanJobFactory.");
             }
 
             ApplicationContextHolder.set(applicationContext);
@@ -96,11 +96,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
 
 
         } catch (Exception e) {
-            Log.error(
-                    Geonet.LDAP,
-                    "Unexpected error while synchronizing LDAP user in database",
-                    e);
-            e.printStackTrace();
+            Log.error(Geonet.LDAP, "Unexpected error while synchronizing LDAP user in database", e);
         }
 
         if (Log.isDebugEnabled(Geonet.LDAP)) {
@@ -113,8 +109,8 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
         final JobDataMap jdm = jobExecContext.getJobDetail().getJobDataMap();
         contextSource = (DefaultSpringSecurityContextSource) jdm.get("contextSource");
 
-        final String ldapUserSearchFilter = (String) jdm.get("ldapUserSearchFilter");
-        final String ldapUserSearchBase = (String) jdm.get("ldapUserSearchBase");
+        final String ldapUserSearchFilter    = (String) jdm.get("ldapUserSearchFilter");
+        final String ldapUserSearchBase      = (String) jdm.get("ldapUserSearchBase");
         final String ldapUserSearchAttribute = (String) jdm.get("ldapUserSearchAttribute");
 
         final DirContext dc = contextSource.getReadOnlyContext();
@@ -124,28 +120,21 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                     ldapUserSearchAttribute, dc);
 
             // And optionaly groups
-            String createNonExistingLdapGroup = (String) jdm
-                    .get("createNonExistingLdapGroup");
+            String createNonExistingLdapGroup = (String) jdm.get("createNonExistingLdapGroup");
 
             if ("true".equals(createNonExistingLdapGroup)) {
-                String ldapGroupSearchFilter = (String) jdm
-                        .get("ldapGroupSearchFilter");
-                String ldapGroupSearchBase = (String) jdm
-                        .get("ldapGroupSearchBase");
-                String ldapGroupSearchAttribute = (String) jdm
-                        .get("ldapGroupSearchAttribute");
-                String ldapGroupSearchPattern = (String) jdm
-                        .get("ldapGroupSearchPattern");
+                String ldapGroupSearchFilter    = (String) jdm.get("ldapGroupSearchFilter");
+                String ldapGroupSearchBase      = (String) jdm.get("ldapGroupSearchBase");
+                String ldapGroupSearchAttribute = (String) jdm.get("ldapGroupSearchAttribute");
+                String ldapGroupSearchPattern   = (String) jdm.get("ldapGroupSearchPattern");
 
                 synchronizeGroup(applicationContext, ldapGroupSearchFilter,
                         ldapGroupSearchBase, ldapGroupSearchAttribute,
                         ldapGroupSearchPattern, dc);
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | NamingException e) {
             throw new RuntimeException(e);
-        } catch (NamingException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } finally {
             try {
                 dc.close();
@@ -161,21 +150,26 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                                  DirContext dc) throws NamingException, SQLException {
         // Do something for LDAP users ? Currently user is updated on log
         // in only.
-        NamingEnumeration<?> userList = dc.search(ldapUserSearchBase,
-                ldapUserSearchFilter, null);
-
-        // Build a list of LDAP users
+        NamingEnumeration<?> userList = null;
         Set<String> usernames = new HashSet<String>();
-        while (userList.hasMore()) {
-            SearchResult sr = (SearchResult) userList.next();
-            final String username = sr.getAttributes().get(ldapUserSearchAttribute)
-                    .get().toString();
-            usernames.add(username);
+        try {
+            userList = dc.search(ldapUserSearchBase, ldapUserSearchFilter, null);
+            // Build a list of LDAP users
+
+            while (userList.hasMore()) {
+                SearchResult sr = (SearchResult) userList.next();
+                final String username = sr.getAttributes().get(ldapUserSearchAttribute).get().toString();
+                usernames.add(username);
+            }
+        } finally {
+            if (userList != null) {
+                userList.close();
+            }
         }
 
         // Remove LDAP user available in db and not in LDAP if not linked to
         // metadata
-        final UserRepository userRepository = applicationContext.getBean(UserRepository.class);
+        final UserRepository userRepository           = applicationContext.getBean(UserRepository.class);
         final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
         final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
         final Specifications<User> spec = Specifications.where(
@@ -213,45 +207,51 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                                   String ldapGroupSearchBase, String ldapGroupSearchAttribute,
                                   String ldapGroupSearchPattern, DirContext dc) throws  NamingException, SQLException {
 
-        NamingEnumeration<?> groupList = dc.search(ldapGroupSearchBase,
-                ldapGroupSearchFilter, null);
-        Pattern ldapGroupSearchPatternCompiled = null;
-        if (ldapGroupSearchPattern != null && !"".equals(ldapGroupSearchPattern)) {
-            ldapGroupSearchPatternCompiled = Pattern.compile(ldapGroupSearchPattern);
-        }
+        NamingEnumeration<?> groupList = null;
+        try {
+            groupList = dc.search(ldapGroupSearchBase, ldapGroupSearchFilter, null);
+            Pattern ldapGroupSearchPatternCompiled = null;
+            if (ldapGroupSearchPattern != null && !"".equals(ldapGroupSearchPattern)) {
+                ldapGroupSearchPatternCompiled = Pattern.compile(ldapGroupSearchPattern);
+            }
+            while (groupList.hasMore()) {
+                SearchResult sr = (SearchResult) groupList.next();
 
-        while (groupList.hasMore()) {
-            SearchResult sr = (SearchResult) groupList.next();
+                // TODO : should we retrieve LDAP group id and do an update of
+                // group
+                // name
+                // This will require to store in local db the remote id
+                String groupName = (String) sr.getAttributes().get(ldapGroupSearchAttribute).get();
 
-            // TODO : should we retrieve LDAP group id and do an update of group
-            // name
-            // This will require to store in local db the remote id
-            String groupName = (String) sr.getAttributes()
-                    .get(ldapGroupSearchAttribute).get();
+                if (ldapGroupSearchPatternCompiled != null && !"".equals(ldapGroupSearchPattern)) {
+                    Matcher m = ldapGroupSearchPatternCompiled.matcher(groupName);
+                    boolean b = m.matches();
+                    if (b) {
+                        groupName = m.group(1);
+                    }
+                }
 
-            if (ldapGroupSearchPatternCompiled != null && !"".equals(ldapGroupSearchPattern)) {
-                Matcher m = ldapGroupSearchPatternCompiled.matcher(groupName);
-                boolean b = m.matches();
-                if (b) {
-                    groupName = m.group(1);
+                GroupRepository groupRepo = this.applicationContext.getBean(GroupRepository.class);
+                Group group = groupRepo.findByName(groupName);
+
+                if (group == null) {
+                    group = new Group().setName(groupName);
+                    LanguageRepository langRepository = this.applicationContext.getBean(LanguageRepository.class);
+                    java.util.List<Language> allLanguages = langRepository.findAll();
+                    for (Language l : allLanguages) {
+                        group.getLabelTranslations().put(l.getId(), groupName);
+                    }
+                    groupRepo.save(group);
+                } else {
+                    // Update something ?
+                    // Group description is only defined in catalog, not in LDAP
+                    // for the time
+                    // being
                 }
             }
-
-            GroupRepository groupRepo = this.applicationContext.getBean(GroupRepository.class);
-            Group group = groupRepo.findByName(groupName);
-
-            if (group == null) {
-                group = new Group().setName(groupName);
-                LanguageRepository langRepository = this.applicationContext.getBean(LanguageRepository.class);
-                java.util.List<Language> allLanguages = langRepository.findAll();
-                for (Language l : allLanguages) {
-                    group.getLabelTranslations().put(l.getId(), groupName);
-                }
-                groupRepo.save(group);
-            } else {
-                // Update something ?
-                // Group description is only defined in catalog, not in LDAP for the time
-                // being
+        } finally {
+            if (groupList != null) {
+                groupList.close();
             }
         }
     }

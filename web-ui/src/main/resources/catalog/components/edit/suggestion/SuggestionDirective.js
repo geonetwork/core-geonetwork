@@ -9,8 +9,10 @@
    */
   angular.module('gn_suggestion_directive', [])
     .directive('gnSuggestionList',
-      ['gnSuggestion', 'gnCurrentEdit', '$rootScope', '$translate',
-       function(gnSuggestion, gnCurrentEdit, $rootScope, $translate) {
+      ['gnSuggestion', 'gnCurrentEdit', '$rootScope',
+        '$translate', '$interpolate',
+       function(gnSuggestion, gnCurrentEdit, $rootScope,
+                $translate, $interpolate) {
          return {
            restrict: 'A',
            templateUrl: '../../catalog/components/edit/suggestion/' +
@@ -30,6 +32,10 @@
                  scope.loading = false;
                  if (data && !angular.isString(data)) {
                    scope.suggestions = data;
+                   angular.forEach(scope.suggestions, function(sugg) {
+                     var value = sugg.name['#text'] || sugg.name;
+                     sugg.name = $interpolate(value)(scope.$parent);
+                   });
                  }
                  else {
                    scope.suggestions = [];
@@ -61,8 +67,8 @@
            }
          };
        }])
-    .directive('gnRunSuggestion', ['gnSuggestion',
-        function(gnSuggestion) {
+    .directive('gnRunSuggestion', ['gnSuggestion', '$interpolate',
+        function(gnSuggestion, $interpolate) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/suggestion/' +
@@ -83,7 +89,12 @@
                 scope.currentSuggestion = gnSuggestion.getCurrent();
                 var p = scope.currentSuggestion.params;
                 for (key in p) {
-                  scope.params[key] = p[key].defaultValue;
+                  if (p[key].type == 'expression') {
+                    scope.params[key] =
+                        $interpolate(p[key].defaultValue)(scope);
+                  } else {
+                    scope.params[key] = p[key].defaultValue;
+                  }
                 }
               };
 

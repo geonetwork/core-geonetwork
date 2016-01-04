@@ -11,10 +11,11 @@
    * @description
    */
   module.directive('sxtMainViewer', [
+    '$window',
     'gnMap',
     'gnSearchLocation',
     'gnConfig',
-    function(gnMap, gnSearchLocation, gnConfig) {
+    function($window, gnMap, gnSearchLocation, gnConfig) {
       return {
         restrict: 'A',
         replace: true,
@@ -33,6 +34,11 @@
 
               /** print definition */
               scope.activeTools = {};
+
+              var map = scope.map;
+              $($window).on('resize',
+                function() { setTimeout(map.updateSize.bind(map), 100) }
+              );
 
               var firstRun = true;
               scope.handleTabParsing = function() {

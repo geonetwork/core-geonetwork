@@ -166,7 +166,7 @@
 
 
   <!-- Readonly elements -->
-  <xsl:template mode="mode-dublin-core" priority="200" match="dc:identifier">
+  <xsl:template mode="mode-dublin-core" priority="200" match="dc:identifier|dct:modified">
     
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="gn-fn-metadata:getLabel($schema, name(), $labels)/label"/>

@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.time.DateUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -22,9 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -194,7 +193,9 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                 String changeDate = new ISODate(fileDate.getTime(), false).getDateAndTime();
 
                                 log.debug(" File date is: " + fileDate.toString() + " / record date is: " + modified);
-                                if (recordDate.before(fileDate)) {
+
+                                if (DateUtils.truncate(recordDate, Calendar.SECOND)
+                                        .before(DateUtils.truncate(fileDate, Calendar.SECOND))) {
                                     log.debug("  Db record is older than file. Updating record with id: " + id);
                                     harvester.updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner);
                                     result.updatedMetadata++;
@@ -229,7 +230,6 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         }
         return FileVisitResult.CONTINUE;
     }
-
     public HarvestResult getResult() {
         return result;
     }
