@@ -3,13 +3,13 @@
   <!--Facet count-->
   <div class="count"><span translate="">featureCount</span>&nbsp;:&nbsp;{{::count}}</div>
 
-  <div class="btn-link" data-ng-show="user.isAdministrator()" data-ng-click="indexWFSFeatures()" translate="">indexWFSFeatures</div>
+  <div class="btn-link" data-ng-show="user.canEditRecord(md)" data-ng-click="indexWFSFeatures()" translate="">indexWFSFeatures</div>
 
   <!--search input-->
   <div class="sxt-layertree-filter">
-    <span class="fa fa-times-circle clear" ng-click="clearInput()" ng-hide="searchInput==''" title="{{'clear'|translate}}"></span>
+    <span class="fa fa-times-circle clear" ng-click="clearInput()" ng-hide="searchInput==''" title="{{::'clear'|translate}}"></span>
     <input type="text" ng-model="searchInput" data-ng-change="filterFacets()" ng-model-options="{ debounce: 400 }"
-           class="layerfilter form-control input-sm" placeholder="{{'filter'|translate}}">
+           class="layerfilter form-control input-sm" placeholder="{{::'filter'|translate}}">
   </div>
 
   <!--Facet fields-->
