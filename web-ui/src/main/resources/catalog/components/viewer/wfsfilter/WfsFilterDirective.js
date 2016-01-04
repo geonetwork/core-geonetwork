@@ -21,18 +21,19 @@
             'partials/wfsfilterfacet.html',
         scope: {
           featureTypeName: '@',
-          uuid: '@',
           wfsUrl: '@',
           layer: '='
         },
         link: function(scope, element, attrs) {
 
+          scope.md = scope.layer.get('md');
+          scope.user = scope.$parent.user;
+
           var solrUrl;
-          var uuid = scope.uuid;
+          var uuid = scope.md.getUuid();
           var ftName = scope.featureTypeName;
           var wfsUrl = scope.wfsUrl;
           var indexedFields;
-          scope.user = scope.$parent.user;
 
           /**
            * Create SOLR request to get facets values
