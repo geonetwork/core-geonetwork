@@ -123,12 +123,14 @@
               else {
                 promises.push(this.createLayer(layer, map, i).then(
                     function(olLayer) {
-                      bgLayers.push({
-                        layer: olLayer,
-                        idx: olLayer.get('bgIdx')
-                      });
-                      olLayer.displayInLayerManager = false;
-                      olLayer.background = true;
+                      if(olLayer) {
+                        bgLayers.push({
+                          layer: olLayer,
+                          idx: olLayer.get('bgIdx')
+                        });
+                        olLayer.displayInLayerManager = false;
+                        olLayer.background = true;
+                      }
                     }));
               }
             } else {
@@ -380,16 +382,18 @@
 
           return gnMap.addWmsFromScratch(map, res.href, layer.name, createOnly).
               then(function(olL) {
-                olL.set('group', layer.group);
-                olL.set('groupcombo', layer.groupcombo);
-                olL.setOpacity(layer.opacity);
-                olL.setVisible(!layer.hidden);
-                if (layer.title) {
-                  olL.set('title', layer.title);
-                  olL.set('label', layer.title);
+                if(olL) {
+                  olL.set('group', layer.group);
+                  olL.set('groupcombo', layer.groupcombo);
+                  olL.setOpacity(layer.opacity);
+                  olL.setVisible(!layer.hidden);
+                  if (layer.title) {
+                    olL.set('title', layer.title);
+                    olL.set('label', layer.title);
+                  }
+                  $rootScope.$broadcast('layerAddedFromContext', olL);
+                  return olL;
                 }
-                $rootScope.$broadcast('layerAddedFromContext', olL);
-                return olL;
               });
         }
       };
