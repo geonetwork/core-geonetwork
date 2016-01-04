@@ -77,9 +77,9 @@
 
   module.config(['$LOCALES', 'gnGlobalSettings',
     function($LOCALES, gnGlobalSettings) {
-    $LOCALES.push('sextant');
+      $LOCALES.push('sextant');
 
-  }]);
+    }]);
 
   module.controller('gnsSextant', [
     '$scope',
@@ -104,9 +104,9 @@
     'gnGlobalSettings',
     function($scope, $location, $window, suggestService,
              $http, gnSearchSettings,
-        gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
-        $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
-        $translate, $q, gnUrlUtils, gnGlobalSettings) {
+             gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
+             $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
+             $translate, $q, gnUrlUtils, gnGlobalSettings) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -194,9 +194,9 @@
       // Manage sextantTheme thesaurus translation
       gnThesaurusService.getKeywords(undefined, 'local.theme.sextant-theme',
           200, 1).then(function(data) {
-        sxtGlobals.sextantTheme = data;
-        $scope.$broadcast('sextantThemeLoaded');
-      });
+            sxtGlobals.sextantTheme = data;
+            $scope.$broadcast('sextantThemeLoaded');
+          });
 
       ///////////////////////////////////////////////////////////////////
       ///////////////////////////////////////////////////////////////////
@@ -211,25 +211,25 @@
       };
 
       /** Manage metadata view */
-/*
-      $scope.mdView = mdView;
-      gnMdView.initMdView();
+      /*
+       $scope.mdView = mdView;
+       gnMdView.initMdView();
 
-      $scope.openRecord = function(index, md, records) {
-        gnMdView.feedMd(index, md, records);
-      };
+       $scope.openRecord = function(index, md, records) {
+       gnMdView.feedMd(index, md, records);
+       };
 
-      $scope.closeRecord = function() {
-        gnMdView.removeLocationUuid();
-      };
-      $scope.nextRecord = function() {
-        // TODO: When last record of page reached, go to next page...
-        $scope.openRecord(mdView.current.index + 1);
-      };
-      $scope.previousRecord = function() {
-        $scope.openRecord(mdView.current.index - 1);
-      };
-*/
+       $scope.closeRecord = function() {
+       gnMdView.removeLocationUuid();
+       };
+       $scope.nextRecord = function() {
+       // TODO: When last record of page reached, go to next page...
+       $scope.openRecord(mdView.current.index + 1);
+       };
+       $scope.previousRecord = function() {
+       $scope.openRecord(mdView.current.index - 1);
+       };
+       */
 
       ///////////////////////////////////////////////////////////////////
 
@@ -269,36 +269,34 @@
             window.open(url, '_blank');
             return;
           }
-          if(gnMap.isLayerInMap($scope.searchObj.viewerMap,
-              link.name, link.url)) {
-            return;
-          }
-
-          var group, theme = md.sextantTheme;
-          if(angular.isArray(sxtGlobals.sextantTheme)) {
-            for (var i = 0; i < sxtGlobals.sextantTheme.length; i++) {
-              var t = sxtGlobals.sextantTheme[i];
-              if (t.props.uri == theme) {
-                group = t.label;
-                break;
-              }
-            }
-          }
 
           var loadLayerPromise = gnMap.addWmsFromScratch($scope.searchObj.viewerMap,
               link.url, link.name, undefined, md).then(function(layer) {
-                layer.set('group', group);
-                gnMap.feedLayerWithDownloads(layer, link.group);
-                if(waitingLayers) waitingLayers.push(layer);
-              });
-          if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
+                if(layer) {
+                  var group, theme = md.sextantTheme;
+                  if(angular.isArray(sxtGlobals.sextantTheme)) {
+                    for (var i = 0; i < sxtGlobals.sextantTheme.length; i++) {
+                      var t = sxtGlobals.sextantTheme[i];
+                      if (t.props.uri == theme) {
+                        group = t.label;
+                        break;
+                      }
+                    }
+                  }
+                  layer.set('group', group);
+                  gnMap.feedLayerWithDownloads(layer, link.group);
+                  if(waitingLayers) waitingLayers.push(layer);
+                  if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
 
-          if(gnSearchLocation.isMdView()) {
-            angular.element($('[gn-metadata-display]')).scope().dismiss();
-            $location.path('/map');
-          }
-          $scope.addLayerPopover('map');
-          $scope.mainTabs.map.titleInfo += 1;
+                  if(gnSearchLocation.isMdView()) {
+                    angular.element($('[gn-metadata-display]')).scope().dismiss();
+                    $location.path('/map');
+                  }
+                  $scope.addLayerPopover('map');
+                  $scope.mainTabs.map.titleInfo += 1;
+                }
+              });
+
 
         },
         addAllMdLayersToMap: function (layers, md) {
@@ -338,12 +336,14 @@
                   gnViewerSettings.layerName, true).
 
                   then(function(layer) {
-                    layer.set('group', gnViewerSettings.layerGroup);
-                    viewerMap.addLayer(layer);
-                    if(waitingLayers) waitingLayers.push(layer);
-                    $scope.addLayerPopover('map');
-                    if (!$scope.mainTabs.map.active) {
-                      $scope.mainTabs.map.titleInfo += 1;
+                    if(layer) {
+                      layer.set('group', gnViewerSettings.layerGroup);
+                      viewerMap.addLayer(layer);
+                      if(waitingLayers) waitingLayers.push(layer);
+                      $scope.addLayerPopover('map');
+                      if (!$scope.mainTabs.map.active) {
+                        $scope.mainTabs.map.titleInfo += 1;
+                      }
                     }
                   });
           if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
@@ -490,7 +490,7 @@
               fa.toggleClass('fa-plus');
               fa.toggleClass('fa-minus');
               target.toggleClass('sxt-maximize-layer-tools',
-                element.hasClass('active'));
+                  element.hasClass('active'));
             });
           });
         }
@@ -498,34 +498,34 @@
     }]);
 
   module.directive('sxtCustomScroll', [ function() {
-      return {
-        restrict: 'A',
-        link: {
-          post: function(scope, element, attrs) {
-            var axis = attrs['axis'] || 'y';
+    return {
+      restrict: 'A',
+      link: {
+        post: function(scope, element, attrs) {
+          var axis = attrs['axis'] || 'y';
 
-            element.mCustomScrollbar({
-              theme: 'dark-3',
-              axis: axis,
-              advanced:{
-                updateOnContentResize: true,
-                updateOnImageLoad: true
-              },
-              // alwaysShowScrollbar: 2,
-              scrollButtons: {
-                enable: true
-              },
-              callbacks: {
-                onScrollStart: function() {
-                  element.trigger('scroll');
-                }
+          element.mCustomScrollbar({
+            theme: 'dark-3',
+            axis: axis,
+            advanced:{
+              updateOnContentResize: true,
+              updateOnImageLoad: true
+            },
+            // alwaysShowScrollbar: 2,
+            scrollButtons: {
+              enable: true
+            },
+            callbacks: {
+              onScrollStart: function() {
+                element.trigger('scroll');
               }
-            });
+            }
+          });
 
-          }
         }
-      };
-    }]);
+      }
+    };
+  }]);
 
 
   module.service('sxtService', [ function() {
@@ -576,7 +576,7 @@
         var layers = md.getLinksByType(i+1, '#OGC:WMTS',
             '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map', '#OGC:OWS-C');
         var downloads = md.getLinksByType(i+1, '#FILE', '#DB', '#COPYFILE',
-           '#WWW:DOWNLOAD-1.0-link--download', '#WFS', 'WCS');
+            '#WWW:DOWNLOAD-1.0-link--download', '#WFS', 'WCS');
 
         if(downloads.length > 0) {
           // If only one layer, we get only one download (we bind them later)
@@ -599,9 +599,9 @@
   module.directive('sxtFixLinks', [ '$filter', '$sce',
     function($filter, $sce) {
       var icon = '<span class="fa-stack fa-lg">' +
-        '<i class="fa fa-square fa-stack-2x"></i>' +
-        '<i class="fa fa-link fa-stack-1x fa-inverse"></i>' +
-      '</span>';
+          '<i class="fa fa-square fa-stack-2x"></i>' +
+          '<i class="fa fa-link fa-stack-1x fa-inverse"></i>' +
+          '</span>';
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
