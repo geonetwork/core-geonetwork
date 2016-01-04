@@ -437,6 +437,7 @@ GeoNetwork.Lang.en = {
     'relatedchildren': 'Children',
     'relatedfcats': 'Related feature catalogue',
     'relatedhasfeaturecat': 'Datasets',
+    'relatedonlinesrc': 'Online resources',
     'relatedsources': 'Source datasets',
     'add-thumbnail': 'Add thumbnail',
     'add-onlinesrc': 'Add online resource',

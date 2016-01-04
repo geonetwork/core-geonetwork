@@ -415,6 +415,11 @@ div.help ul li {
     background-attachment: fixed !important;
     padding: 10px;
 }
+.gn-metadata-view table.related td.thumbnail,
+.gn-metadata-view table.related td.thumbnail + td,
+#gn-tab-characteristics div h5.view-header {
+    display:none;
+}
 .gn-metadata-view dl dt, .gn-metadata-view dl dd {
     /*line-height: 2.428571;*/
     min-height: 20px;

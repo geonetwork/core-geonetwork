@@ -16,7 +16,7 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 		this.tooltips = [];
 		this.catalogue.extentMap.initMapDiv();
 		this.registerTooltip();
-        this.getLinkedData();
+    this.getLinkedData();
 	},
 	
 	getPermaLink : function() {
@@ -82,6 +82,7 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 						
 						var task = new Ext.util.DelayedTask(function(){
 							this.mask.hide();
+              this.getLinkedData();
 						}, this);
 						
 						task.delay(100);
