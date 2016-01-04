@@ -126,10 +126,12 @@
                 <i class="fa fa-anchor fa-fw"></i>
                 <span translate>ncwms</span>
               </tab-heading>
-              <div ng-repeat="layer in map.getLayers().getArray() | filter:isNcwms" sxt-custom-scroll class="ncwms-root">
-                <div ng-show="active.NCWMS == layer && layer.visible" class="panel panel-default panel-ncwms-container" ng-if="layer.ncInfo">
-                  <div class="panel-heading">{{layer.get('label')}}</div>
-                  <div gn-ncwms-transect="" map="map" layer="layer"></div>
+              <div class="ncwms-root" sxt-custom-scroll>
+                <div ng-repeat="layer in map.getLayers().getArray()" class="ncwms-item">
+                  <div ng-show="active.NCWMS == layer && layer.visible" class="panel panel-default panel-ncwms-container" ng-if="layer.ncInfo">
+                    <div class="panel-heading">{{layer.get('label')}}</div>
+                    <div gn-ncwms-transect="" map="map" layer="layer"></div>
+                  </div>
                 </div>
               </div>
             </tab>
