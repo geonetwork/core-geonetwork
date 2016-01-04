@@ -95,7 +95,10 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
      *  Get related metadata records for current metadata using xml.relation service.
      */
     getLinkedData : function() {
-        var store = new GeoNetwork.data.MetadataRelationStore(this.catalogue.services.mdRelation + '?type=' + this.relationTypes + '&fast=false&uuid=' + escape(this.metadataUuid)	, null, true),
+        var types = this.metadataSchema == 'iso19115-3' ?
+          this.relationTypes + '|online' :
+          this.relationTypes;
+        var store = new GeoNetwork.data.MetadataRelationStore(this.catalogue.services.mdRelation + '?type=' + types + '&fast=false&uuid=' + escape(this.metadataUuid)	, null, true),
             view = this;
         store.load();
         store.on('load', function(){

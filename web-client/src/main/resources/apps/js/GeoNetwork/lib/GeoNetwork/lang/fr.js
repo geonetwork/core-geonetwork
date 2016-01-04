@@ -499,6 +499,7 @@ GeoNetwork.Lang.fr = {
     'relatedsource': 'Données sources',
     'relatedhassource': 'Utilisé par',
     'relatedparent': 'Métadonnée parent',
+    'relatedonlinesrc': 'Resources en ligne',
     'relatedsibling': 'Ressources associées',
     'relatedassociated': 'Ressources associées',
     'relateddatasets': 'Métadonnées associées',

@@ -271,10 +271,12 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
 
 GeoNetwork.Templates.Relation = {
         // TODO : subType should be translated
-        SHORT: ['<li class="{type}">',
+        SHORT: ['<tpl if="type==\'onlinesrc\'"><li class="{type}">',
+                '<a href="{id}" title="{abstract}">{title}</a></li></tpl>',
+                '<tpl if="type!=\'onlinesrc\'"><li class="{type}">',
                 '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a>',
                 '<tpl if="subType!=\'\'"><span class="badge relation-type">{subType}</span></tpl>',
-                 '</li>']
+                 '</li></tpl>']
 };
 
 GeoNetwork.Templates.KEYWORD_ITEM = new Ext.XTemplate(
