@@ -269,7 +269,8 @@
           if (source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
             url = source.getUrl();
-          } else if (source instanceof ol.source.TileWMS || source instanceof ol.source.ImageWMS) {
+          } else if (source instanceof ol.source.TileWMS ||
+              source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
             url = layer.get('url');
           } else if (source instanceof ol.source.WMTS) {

@@ -101,7 +101,7 @@
         link: function(scope, element, attrs) {
           var defaults;
 
-          if(scope.defaults) {
+          if (scope.defaults) {
             defaults = parseKvpParams(scope.defaults);
           }
 
@@ -120,8 +120,9 @@
                       function(input) {
                         var value;
                         var defaultValue;
-                        if(defaults) {
-                          var datainput = defaults.datainputs[input.identifier.value];
+                        if (defaults) {
+                          var datainput =
+                            defaults.datainputs[input.identifier.value];
                           if (datainput != undefined) {
                             defaultValue = datainput.value;
                           }
@@ -166,7 +167,8 @@
                       function(output) {
                         output.asReference = true;
 
-                        var outputDefault = defaults && defaults.responsedocument[output.identifier.value]
+                        var outputDefault = defaults &&
+                          defaults.responsedocument[output.identifier.value];
                         if (outputDefault) {
                           output.value = true;
                           var defaultAsReference =
@@ -185,13 +187,15 @@
 
                   scope.responseDocument = {
                     lineage: toBool(defaults && defaults.lineage, false),
-                    storeExecuteResponse: toBool(defaults && defaults.storeexecuteresponse, false),
+                    storeExecuteResponse: toBool(defaults &&
+                      defaults.storeexecuteresponse, false),
                     status: toBool(defaults && defaults.status, false)
                   };
                   scope.optionsVisible = true;
                 }
                 setTimeout(function() {
-                  element.parents('[sxt-custom-scroll]').mCustomScrollbar('update');
+                  element.parents('[sxt-custom-scroll]').
+                    mCustomScrollbar('update');
                 }, 0);
               },
               function(response) {

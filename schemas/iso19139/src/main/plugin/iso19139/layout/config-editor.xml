@@ -237,6 +237,217 @@
 
   <!-- View configuration -->
   <views>
+    <view name="sextant"
+          upAndDownControlHidden="true"
+          displayIfRecord="contains(
+                            gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString,
+                            'ISO 19115:2003/19139 - SEXTANT')">
+      <thesaurusList>
+        <!--<thesaurus key="external.theme.inspire-theme" maxtags="1"/>-->
+      </thesaurusList>
+      <tab id="sextant" mode="flat" default="true">
+        <section name="sextantmetadataInfoTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:language"/>
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
+          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
+          <field xpath="/gmd:MD_Metadata/gmd:contact"
+                 or="contact"
+                 in="/gmd:MD_Metadata"/>
+        </section>
+        <section name="sextantrespOrgaTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"
+                 or="pointOfContact"
+                 in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
+        </section>
+        <section name="sextantidentificationTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:language"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:characterSet"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType"/>
+        </section>
+        <section name="sextanttempRefTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date"
+                 or="date"
+                 in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*"/>
+
+          <field name="temporalRangeSection"
+                 templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement">
+            <template>
+              <values>
+                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                <key label="beginPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent">
+                  <directiveAttributes data-tag-name="gml:beginPosition"/>
+                </key>
+                <key label="endPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent"
+                >
+                  <directiveAttributes
+                          data-tag-name="gml:endPosition"
+                          data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                </key>
+              </values>
+              <snippet>
+                <gmd:temporalElement>
+                  <gmd:EX_TemporalExtent>
+                    <gmd:extent>
+                      <gml:TimePeriod gml:id="">
+                        {{beginPosition}}
+                        {{endPosition}}
+                      </gml:TimePeriod>
+                    </gmd:extent>
+                  </gmd:EX_TemporalExtent>
+                </gmd:temporalElement>
+              </snippet>
+            </template>
+          </field>
+        </section>
+
+        <section name="sextantlimitationsTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
+        </section>
+
+        <section name="sextantkeywordTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:topicCategory"
+                 or="topicCategory"
+                 in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords"
+                 or="descriptiveKeywords"
+                 in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
+        </section>
+
+        <section name="sextantgeoLocationTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement"
+                 or="geographicElement"
+                 in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator"
+                 or="spatialResolution"
+                 in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
+          <field xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"
+                 or="referenceSystemInfo"
+                 in="/gmd:MD_Metadata"/>
+        </section>
+
+        <section name="sextantqualityTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement"/>
+          <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo"/>
+        </section>
+
+        <section name="sextantconformityTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report[
+                              .//gmd:specification/*/gmd:title/gco:CharacterString[contains(text(), '1089/2010')]
+                              ]" />
+
+          <action type="add"
+                  btnLabel="isINSPIREConform"
+                  btnClass="fa fa-thumbs-o-up text-success"
+                  or="report"
+                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality"
+                  if="count(gmd:MD_Metadata/gmd:dataQualityInfo//gmd:DQ_DomainConsistency[
+                              .//gmd:specification/*/gmd:title/gco:CharacterString[contains(text(), '1089/2010')]
+                              ]) = 0">
+            <template>
+              <snippet>
+                <gmd:report>
+                  <gmd:DQ_DomainConsistency>
+                    <gmd:result>
+                      <gmd:DQ_ConformanceResult>
+                        <gmd:specification>
+                          <gmd:CI_Citation>
+                            <gmd:title>
+                              <gco:CharacterString>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</gco:CharacterString>
+                            </gmd:title>
+                            <gmd:date>
+                              <gmd:CI_Date>
+                                <gmd:date>
+                                  <gco:Date>2010-11-23</gco:Date>
+                                </gmd:date>
+                                <gmd:dateType>
+                                  <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                                       codeListValue="publication"/>
+                                </gmd:dateType>
+                              </gmd:CI_Date>
+                            </gmd:date>
+                          </gmd:CI_Citation>
+                        </gmd:specification>
+                        <gmd:explanation>
+                          <gco:CharacterString>Conforme à la spécification Inspire</gco:CharacterString>
+                        </gmd:explanation>
+                        <gmd:pass>
+                          <gco:Boolean>true</gco:Boolean>
+                        </gmd:pass>
+                      </gmd:DQ_ConformanceResult>
+                    </gmd:result>
+                  </gmd:DQ_DomainConsistency>
+                </gmd:report>
+              </snippet>
+            </template>
+          </action>
+
+          <action type="add"
+                  btnLabel="isNotINSPIREConform"
+                  btnClass="fa fa-thumbs-o-down text-danger"
+                  or="report"
+                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality"
+                  if="count(gmd:MD_Metadata/gmd:dataQualityInfo//gmd:DQ_DomainConsistency[
+                              .//gmd:specification/*/gmd:title/gco:CharacterString[contains(text(), '1089/2010')]
+                              ]) = 0">
+            <template>
+              <snippet>
+
+                <gmd:report>
+                  <gmd:DQ_DomainConsistency>
+                    <gmd:result>
+                      <gmd:DQ_ConformanceResult>
+                        <gmd:specification>
+                          <gmd:CI_Citation>
+                            <gmd:title>
+                              <gco:CharacterString>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</gco:CharacterString>
+                            </gmd:title>
+                            <gmd:date>
+                              <gmd:CI_Date>
+                                <gmd:date>
+                                  <gco:Date>2010-11-23</gco:Date>
+                                </gmd:date>
+                                <gmd:dateType>
+                                  <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                                       codeListValue="publication"/>
+                                </gmd:dateType>
+                              </gmd:CI_Date>
+                            </gmd:date>
+                          </gmd:CI_Citation>
+                        </gmd:specification>
+                        <gmd:explanation>
+                          <gco:CharacterString>Non conforme à la spécification Inspire</gco:CharacterString>
+                        </gmd:explanation>
+                        <gmd:pass>
+                          <gco:Boolean>false</gco:Boolean>
+                        </gmd:pass>
+                      </gmd:DQ_ConformanceResult>
+                    </gmd:result>
+                  </gmd:DQ_DomainConsistency>
+                </gmd:report>
+              </snippet>
+            </template>
+          </action>
+        </section>
+      </tab>
+
+      <flatModeExceptions>
+        <for name="gmd:keyword"/>
+      </flatModeExceptions>
+    </view>
     <!--Turn off INSPIRE view by default -->
     <view name="inspire" upAndDownControlHidden="true" disabled="true">
       <tab id="inspire" default="true" mode="flat">

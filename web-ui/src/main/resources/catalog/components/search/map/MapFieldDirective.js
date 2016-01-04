@@ -115,11 +115,11 @@
 
               // update the bbox when the geometry field change
               scope.$watch(scope.gnDrawBboxBtn, function(wkt) {
-                if(wkt) {
+                if (wkt) {
                   var g = new ol.format.WKT().readGeometry(wkt).transform(
                       'EPSG:4326',
                       scope.map.getView().getProjection().getCode()
-                  );
+                      );
                   feature.setGeometry(g);
                 }
               });

@@ -184,12 +184,19 @@
                 // like standardName and would like to open the editor
                 // in custom view based on the standard.
                 var firstTabDispatcher = function(md) {
-                  if (md.standardName && md.standardName.match(/targeted product/i)) {
+                  if (md.standardName &&
+                      md.standardName.match(/targeted product/i)) {
                     return 'medsea-what';
-                  } else if (md.standardName && md.standardName.match(/emodnet checkpoint/i)) {
+                  } else if (md.standardName &&
+                      md.standardName.match(/emodnet checkpoint/i)) {
                     return 'characteristics';
-                  } else if (md.standardName && md.standardName.match(/emodnet - hydrography/i)) {
+                  } else if (md.standardName &&
+                      md.standardName.match(/emodnet - hydrography/i)) {
                     return 'emodnetHydrography-what';
+                  } else if (md.standardName &&
+                      md.standardName.
+                      match(/iso 19115:2003\/19139 - sextant/i)) {
+                    return 'sextant';
                   }
                   return defaultTab;
                 };

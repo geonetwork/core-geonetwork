@@ -226,7 +226,7 @@
       this.load = function(uuid, selector, scope) {
         $rootScope.$broadcast('mdLoadingStart');
         var newscope;
-        if(scope) {
+        if (scope) {
           newscope = scope.$new();
         } else {
           newscope = angular.element($('#sxt-controller')).scope().$new();

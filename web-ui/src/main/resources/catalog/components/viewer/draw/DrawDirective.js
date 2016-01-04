@@ -190,7 +190,8 @@
                 fill: new ol.style.Fill({
                   color: styleCfg.text.fill.color
                 }),
-                stroke: (styleCfg.text.stroke && (styleCfg.text.stroke.width > 0)) ?
+                stroke: (styleCfg.text.stroke &&
+                    (styleCfg.text.stroke.width > 0)) ?
                     new ol.style.Stroke({
                       color: styleCfg.text.stroke.color,
                       width: styleCfg.text.stroke.width

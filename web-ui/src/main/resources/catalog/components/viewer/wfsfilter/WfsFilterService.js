@@ -341,7 +341,7 @@
             fieldsQ.push('+(' + valuesQ.join(' ') + ')');
           }
         });
-        if(filter) {
+        if (filter) {
           filter.split(' ').forEach(function(v) {
             fieldsQ.push('+*' + v + '*');
           });

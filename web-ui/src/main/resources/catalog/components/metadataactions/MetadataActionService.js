@@ -345,8 +345,8 @@
        */
       this.getPermalink = function(md, prefix) {
 
-        var url = ( (prefix) ? prefix : $location.absUrl().split('#')[0] )
-            + '#/metadata/' + md.getUuid();
+        var url = ((prefix) ? prefix : $location.absUrl().split('#')[0]) +
+            '#/metadata/' + md.getUuid();
         gnPopup.createModal({
           title: 'permalink',
           content: '<div gn-permalink-input="' + url + '"></div>'

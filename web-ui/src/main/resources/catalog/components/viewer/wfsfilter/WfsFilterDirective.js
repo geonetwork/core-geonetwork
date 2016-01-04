@@ -108,14 +108,14 @@
             // Update the facet UI
             var collapsedFields;
             angular.forEach(scope.fields, function(f) {
-              collapsedFields= [];
+              collapsedFields = [];
               if (f.collapsed) {
                 collapsedFields.push(f.name);
               }
             });
 
             var url = wfsFilterService.updateSolrUrl(solrUrl, scope.output,
-            scope.searchInput);
+                scope.searchInput);
             wfsFilterService.getFacetsConfigFromSolr(url, indexedFields).
                 then(function(facetsInfo) {
                   scope.fields = facetsInfo.facetConfig;

@@ -276,7 +276,20 @@ cat.app = function() {
               url += 'create/from/' + metadataId +
                 '/in/' + group;
             } else {
-              url += 'metadata/' + metadataId;
+              url += 'metadata/' + metadataId + '/tab/emodnetHydrography-what';
+            }
+            window.open(
+              catalogue.services.rootUrl + url)
+          } else if (recordStandard &&
+            recordSchema === 'iso19139' &&
+            recordStandard.indexOf('ISO 19115:2003/19139 - SEXTANT') !== -1
+          ) {
+            var url = 'catalog.edit#/';
+            if (create) {
+              url += 'create/from/' + metadataId +
+                '/in/' + group;
+            } else {
+              url += 'metadata/' + metadataId + '/tab/sextant';
             }
             window.open(
               catalogue.services.rootUrl + url)

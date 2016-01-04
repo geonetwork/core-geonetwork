@@ -92,6 +92,34 @@
             });
           }
 
+          scope.buildEditorUrl = function(md) {
+            if (angular.isUndefined(md.standardName)) {
+              return '';
+            }
+            var baseUrl = '#/metadata/' + md['geonet:info'].id;
+            if (md['geonet:info'].schema == 'iso19115-3') {
+              if (md.standardName.
+                  indexOf('Emodnet Checkpoint') >= 0) {
+                return baseUrl + '/tab/characteristics';
+              } else if (md.standardName.
+                  indexOf('Targeted Product') >= 0) {
+                return baseUrl + '/tab/medsea-what';
+              }
+              return baseUrl;
+            } else if (md['geonet:info'].schema == 'iso19139') {
+              if (md.standardName.
+                  indexOf('ISO 19115:2003/19139 - SEXTANT') >= 0) {
+                return baseUrl + '/tab/sextant';
+              } else if (md.standardName.
+                  indexOf('EMODNET - HYDROGRAPHY') >= 0) {
+                return baseUrl + '/tab/emodnetHydrography';
+              }
+              return baseUrl;
+            } else {
+              return '../../apps/sextant/?edit=' + md['geonet:info'].id;
+            }
+          };
+
           scope.$watchCollection('searchResults.records', function(rec) {
 
             //scroll to top

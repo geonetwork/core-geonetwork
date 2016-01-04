@@ -76,7 +76,8 @@
                 return true;
               }
             }
-            else if (source instanceof ol.source.TileWMS || source instanceof ol.source.ImageWMS) {
+            else if (source instanceof ol.source.TileWMS ||
+                source instanceof ol.source.ImageWMS) {
               if (source.getParams().LAYERS == name &&
                   l.get('url').split('?')[0] == url.split('?')[0]) {
                 return true;
@@ -506,12 +507,13 @@
               if (uuid) {
                 olLayer.set('metadataUuid', uuid);
               }
-            };
+            }
             ngeoDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 
             var unregisterEventKey = olLayer.getSource().on(
-                (viewerSettings.singleTileWMS) ? 'imageloaderror' : 'tileloaderror',
+                (viewerSettings.singleTileWMS) ?
+                'imageloaderror' : 'tileloaderror',
                 function(tileEvent, target) {
                   var msg = $translate('layerTileLoadError', {
                     url: tileEvent.tile && tileEvent.tile.getKey ?
@@ -955,8 +957,10 @@
                 olL = $this.createOlWMSFromCap(map, capL);
 
                 var finishCreation = function() {
-                  if ( (!createOnly) &&
-                      (!isLayerInMap(map, olL.getSource().getParams().LAYERS, olL.get('url'))) ) {
+                  if ((!createOnly) &&
+                      (!isLayerInMap(map,
+                      olL.getSource().getParams().LAYERS,
+                      olL.get('url')))) {
                     map.addLayer(olL);
                   }
                   gnWmsQueue.removeFromQueue(url, name);
@@ -1405,8 +1409,8 @@
 
                   // TODO: the url is not the same in capabilities and metadata
                   angular.forEach(mdLayers, function(link) {
-                    if(layer.get('url').indexOf(link.url) >= 0
-                        && link.name == layer.getSource().getParams().LAYERS) {
+                    if (layer.get('url').indexOf(link.url) >= 0 &&
+                        link.name == layer.getSource().getParams().LAYERS) {
                       this.feedLayerWithDownloads(layer, link.group);
                       return;
                     }
@@ -1422,8 +1426,8 @@
            * Sextant specific
            * Bind the download and process to the layer if we can.
            *
-           * @param layer
-           * @param linkGroup
+           * @param {ol.Layer} layer
+           * @param {string} linkGroup
            */
           feedLayerWithDownloads: function(layer, linkGroup) {
             var md = layer.get('md');

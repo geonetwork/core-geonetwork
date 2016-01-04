@@ -77,9 +77,9 @@
            * @methodOf gnMetadataManager
            *
            * @description
-           * Create a copy of a metadata. The copy will belong to the same group
-           * of the original metadata and will be of the same type (isTemplate,
-           * isChild, fullPrivileges).
+           * Create a copy of a metadata. The copy will belong to the
+           * same group of the original metadata and will be of the
+           * same type (isTemplate, isChild, fullPrivileges).
            *
            * @param {string} id Internal id of the metadata to be copied.
            * @param {string} groupId Internal id of the group of the metadata
@@ -610,11 +610,11 @@
       var links = [];
       angular.forEach(this.link, function(link) {
         var linkInfo = formatLink(link);
-        var idx = linkInfo.group -1;
-        if(!links[idx]) {
+        var idx = linkInfo.group - 1;
+        if (!links[idx]) {
           links[idx] = [linkInfo];
         }
-        else if (angular.isArray(links[idx])){
+        else if (angular.isArray(links[idx])) {
           links[idx].push(linkInfo);
         }
       });
@@ -685,7 +685,7 @@
        * If the first argument is a number, you do the search within the link
        * group (search only onlinesrc in the given transferOptions).
        *
-       * @returns {*} an Array of links
+       * @return {*} an Array of links
        */
       getLinksByType: function() {
         var ret = [];
@@ -799,8 +799,10 @@
           return false;
         } else {
           return this.standardName.indexOf('Emodnet Checkpoint') >= 0 ||
-            (this['geonet:info'].schema === 'iso19139' &&
-            this.standardName.indexOf('EMODNET - HYDRO') >= 0);
+              (this['geonet:info'].schema === 'iso19139' &&
+              (this.standardName.indexOf('EMODNET - HYDRO') >= 0 ||
+              this.standardName.
+              indexOf('ISO 19115:2003/19139 - SEXTANT') >= 0));
         }
       },
       getBoxAsPolygon: function(i) {

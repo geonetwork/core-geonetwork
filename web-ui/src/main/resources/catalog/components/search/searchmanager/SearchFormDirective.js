@@ -98,21 +98,22 @@
       function searchFn() {
         $scope.searching++;
         $scope.searchObj.params = angular.extend({},
-          $scope.searchObj.defaultParams || defaultParams,
-          $scope.searchObj.params,
-          defaultParams);
+            $scope.searchObj.defaultParams || defaultParams,
+            $scope.searchObj.params,
+            defaultParams);
 
         // Set default pagination if not set
         if ((!keepPagination &&
-          !$scope.searchObj.permalink) ||
-          (angular.isUndefined($scope.searchObj.params.from) ||
-          angular.isUndefined($scope.searchObj.params.to))) {
+            !$scope.searchObj.permalink) ||
+            (angular.isUndefined($scope.searchObj.params.from) ||
+            angular.isUndefined($scope.searchObj.params.to))) {
           self.resetPagination();
         }
 
         // Set default sortBy
         if (angular.isUndefined($scope.searchObj.params.sortBy)) {
-          angular.extend($scope.searchObj.params, $scope.searchObj.sortbyDefault);
+          angular.extend($scope.searchObj.params,
+              $scope.searchObj.sortbyDefault);
         }
 
         // Don't add facet extra params to $scope.params but
@@ -121,7 +122,7 @@
 
         if ($scope.currentFacets.length > 0) {
           angular.extend(params,
-            gnFacetService.getParamsFromFacets($scope.currentFacets));
+              gnFacetService.getParamsFromFacets($scope.currentFacets));
         }
 
         var finalParams = angular.copy(params);
@@ -133,44 +134,46 @@
           }
         }
         gnSearchManagerService.gnSearch(finalParams).then(
-          function(data) {
-            $scope.searching--;
-            $scope.searchResults.records = [];
-            for (var i = 0; i < data.metadata.length; i++) {
-              $scope.searchResults.records.push(new Metadata(data.metadata[i]));
-            }
-            $scope.searchResults.count = data.count;
-            $scope.searchResults.facet = data.facet;
-            $scope.searchResults.dimension = data.dimension;
-
-            // compute page number for pagination
-            if ($scope.searchResults.records.length > 0 &&
-              $scope.hasPagination) {
-
-              var paging = $scope.paginationInfo;
-
-              // Means the `from` and `to` params come from permalink
-              if ((paging.currentPage - 1) *
-                paging.hitsPerPage + 1 != params.from) {
-                paging.currentPage = (params.from - 1) / paging.hitsPerPage + 1;
+            function(data) {
+              $scope.searching--;
+              $scope.searchResults.records = [];
+              for (var i = 0; i < data.metadata.length; i++) {
+                $scope.searchResults.records.
+                    push(new Metadata(data.metadata[i]));
               }
+              $scope.searchResults.count = data.count;
+              $scope.searchResults.facet = data.facet;
+              $scope.searchResults.dimension = data.dimension;
 
-              paging.resultsCount = $scope.searchResults.count;
-              paging.to = Math.min(
-                data.count,
-                paging.currentPage * paging.hitsPerPage
-              );
-              paging.pages = Math.ceil(
-                $scope.searchResults.count /
-                paging.hitsPerPage, 0
-              );
-              paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
-            }
-          });
+              // compute page number for pagination
+              if ($scope.searchResults.records.length > 0 &&
+                  $scope.hasPagination) {
+
+                var paging = $scope.paginationInfo;
+
+                // Means the `from` and `to` params come from permalink
+                if ((paging.currentPage - 1) *
+                    paging.hitsPerPage + 1 != params.from) {
+                  paging.currentPage =
+                      (params.from - 1) / paging.hitsPerPage + 1;
+                }
+
+                paging.resultsCount = $scope.searchResults.count;
+                paging.to = Math.min(
+                    data.count,
+                    paging.currentPage * paging.hitsPerPage
+                    );
+                paging.pages = Math.ceil(
+                    $scope.searchResults.count /
+                    paging.hitsPerPage, 0
+                    );
+                paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
+              }
+            });
       };
-      
+
       if ($scope.userLoginPromise && $scope.userLoginPromise.finally) {
-      $scope.userLoginPromise.finally(searchFn);
+        $scope.userLoginPromise.finally(searchFn);
       } else {
         searchFn();
       }

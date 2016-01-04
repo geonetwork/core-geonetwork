@@ -218,10 +218,12 @@
                   try {
 
                     var iframe = document.getElementById('casLoginFrame');
-                    innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    innerDoc = iframe.contentDocument ||
+                        iframe.contentWindow.document;
 
                     // Test if the CAS login form is in the iframe
-                    if (innerDoc.forms.length == 1 && innerDoc.forms[0].id == 'fm1') {
+                    if (innerDoc.forms.length == 1 &&
+                        innerDoc.forms[0].id == 'fm1') {
                       clearInterval(intervalID);
                       loginEvent = false;
                     }
@@ -235,7 +237,8 @@
 
                     // If we find bad credentials, we reload the iframe
                     var badCred = innerDoc.getElementsByTagName('h1');
-                    if (badCred && badCred.length == 1 && badCred[0].innerHTML.indexOf('HTTP Status 401') >= 0) {
+                    if (badCred && badCred.length == 1 &&
+                        badCred[0].innerHTML.indexOf('HTTP Status 401') >= 0) {
                       innerDoc.location.reload(true);
                       clearInterval(intervalID);
                     }

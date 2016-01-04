@@ -232,4 +232,19 @@
   <emodnetShortName>Short name of dataset (SDN Local Product-ID)</emodnetShortName>
   <emodnetName>Dataset name</emodnetName>
   <emodnetMetadataAuthor>Collating Centre = Metadata author</emodnetMetadataAuthor>
+
+
+  <!-- Sextant -->
+  <sextant>Sextant</sextant>
+  <sextantmetadataInfoTitle>Informations sur la métadonnée</sextantmetadataInfoTitle>
+  <sextantidentificationTitle>Identification des données</sextantidentificationTitle>
+  <sextantkeywordTitle>Thématique et mots clés</sextantkeywordTitle>
+  <sextantgeoLocationTitle>Localisation géographique</sextantgeoLocationTitle>
+  <sextanttempRefTitle>Référence temporelle</sextanttempRefTitle>
+  <sextantqualityTitle>Qualité des données</sextantqualityTitle>
+  <sextantconformityTitle>Conformité à la directive Inspire</sextantconformityTitle>
+  <sextantlimitationsTitle>Contraintes d'accès et d'utilisation des données</sextantlimitationsTitle>
+  <sextantrespOrgaTitle>Contacts sur la donnée</sextantrespOrgaTitle>
+  <isINSPIREConform>Indiquer que la ressource est conforme à INSPIRE</isINSPIREConform>
+  <isNotINSPIREConform>ou ne l'est pas</isNotINSPIREConform>
 </strings>
