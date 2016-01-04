@@ -31,6 +31,7 @@ import org.opengis.feature.type.AttributeDescriptor;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class FeatureTypeConfig {
     private String featureType;
 
     private WFSDataStore wfsDatastore = null;
-    private Map<String, String> fields = new HashMap<String, String>();
+    private Map<String, String> fields = new LinkedHashMap<String, String>();
 
     public String getFeatureType() {
         return featureType;
