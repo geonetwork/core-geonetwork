@@ -113,9 +113,8 @@
           scope.filterFacets = function() {
 
             // Update the facet UI
-            var collapsedFields;
+            var collapsedFields = [];
             angular.forEach(scope.fields, function(f) {
-              collapsedFields = [];
               if (f.collapsed) {
                 collapsedFields.push(f.name);
               }
@@ -155,6 +154,10 @@
                     f.collapsed = true;
                   });
                 });
+
+            scope.layer.getSource().updateParams({
+              SLD: undefined
+            });
           };
 
           /**
