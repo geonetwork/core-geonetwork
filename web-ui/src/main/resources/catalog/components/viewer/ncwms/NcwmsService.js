@@ -189,8 +189,7 @@
             p.ELEVATION = elevation;
           }
         }
-        return gnUrlUtils.append(layer.getSource().getUrls(),
-            gnUrlUtils.toKeyValue(p));
+        return gnUrlUtils.append(layer.get('url'), gnUrlUtils.toKeyValue(p));
 
       };
 
@@ -211,8 +210,7 @@
           item: 'layerDetails',
           layerName: layer.getSource().getParams().LAYERS
         };
-        return gnUrlUtils.append(layer.getSource().getUrls(),
-            gnUrlUtils.toKeyValue(p));
+        return gnUrlUtils.append(layer.get('url'), gnUrlUtils.toKeyValue(p));
       };
 
       /**
@@ -245,8 +243,7 @@
           p.ELEVATION = elevation;
         }
 
-        var url = gnUrlUtils.append(layer.getSource().getUrls(),
-                  gnUrlUtils.toKeyValue(p));
+        var url = gnUrlUtils.append(layer.get('url'), gnUrlUtils.toKeyValue(p));
 
         var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
         return $http.get(proxyUrl);
