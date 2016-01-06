@@ -13,13 +13,13 @@
   </div>
 
   <!--Facet fields-->
-  <div class="gn-facet" data-ng-repeat="field in fields">
+  <div class="gn-facet" data-ng-repeat="field in fields" data-ng-show="(field.values | filter:searchInput).length > 0">
     <h5 gn-collapsible="field.collapsed" >
       <span class="fa fa-arrow-circle-right" ng-class="{'fa-rotate-90': !field.collapsed, 'gn-field-empty': !output[field.name]}"></span>
       {{field.label}}
     </h5>
     <div class="list-group" ng-class="{'collapse': field.collapsed}" sxt-custom-scroll>
-      <div class="checkbox list-group-item" data-ng-repeat="facet in field.values"
+      <div class="checkbox list-group-item" data-ng-repeat="facet in field.values | filter:searchInput"
            data-ng-click="onCheckboxClick(field.name, facet.value, field.type)" data-ng-class="{'selected': output[field.name].values[facet.value]}">
         <i class="fa" data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square' : 'fa-square-o'"></i>{{::facet.value}}&nbsp;({{::facet.count}})
       </div>
