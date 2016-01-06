@@ -101,7 +101,7 @@
         link: function(scope, element, attrs) {
           var defaults;
 
-          if (scope.defaults) {
+          if(scope.defaults) {
             defaults = parseKvpParams(scope.defaults);
           }
 
@@ -120,9 +120,10 @@
                       function(input) {
                         var value;
                         var defaultValue;
-                        if (defaults) {
+
+                        if(defaults) {
                           var datainput =
-                            defaults.datainputs[input.identifier.value];
+                              defaults.datainputs[input.identifier.value];
                           if (datainput != undefined) {
                             defaultValue = datainput.value;
                           }
@@ -168,7 +169,7 @@
                         output.asReference = true;
 
                         var outputDefault = defaults &&
-                          defaults.responsedocument[output.identifier.value];
+                            defaults.responsedocument[output.identifier.value];
                         if (outputDefault) {
                           output.value = true;
                           var defaultAsReference =
@@ -188,7 +189,7 @@
                   scope.responseDocument = {
                     lineage: toBool(defaults && defaults.lineage, false),
                     storeExecuteResponse: toBool(defaults &&
-                      defaults.storeexecuteresponse, false),
+                        defaults.storeexecuteresponse, false),
                     status: toBool(defaults && defaults.status, false)
                   };
                   scope.optionsVisible = true;
