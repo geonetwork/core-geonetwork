@@ -101,9 +101,7 @@ public class DraftMetadataUtils extends DefaultMetadataUtils {
     @Override
     public void setHarvestedExt(final int id, final String harvestUuid,
             final Optional<String> harvestUri) throws Exception {
-        try {
-            super.setHarvestedExt(id, harvestUuid, harvestUri);
-        } catch (Throwable t) {
+        if (mdRepository.exists(id)) {
             mdRepository.update(id, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(MetadataDraft metadata) {
@@ -113,15 +111,15 @@ public class DraftMetadataUtils extends DefaultMetadataUtils {
                     harvestInfo.setUri(harvestUri.orNull());
                 }
             });
+        } else {
+            super.setHarvestedExt(id, harvestUuid, harvestUri);
         }
-
     }
 
     @Override
-    public void setTemplateExt(final int id, final MetadataType metadataType) {
-        try {
-            super.setTemplateExt(id, metadataType);
-        } catch (Throwable t) {
+    public void setTemplateExt(final int id, final MetadataType metadataType)
+            throws Exception {
+        if (mdRepository.exists(id)) {
             mdRepository.update(id, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(@Nonnull MetadataDraft metadata) {
@@ -129,6 +127,8 @@ public class DraftMetadataUtils extends DefaultMetadataUtils {
                     dataInfo.setType(metadataType);
                 }
             });
+        } else {
+            super.setTemplateExt(id, metadataType);
         }
 
     }
@@ -143,13 +143,17 @@ public class DraftMetadataUtils extends DefaultMetadataUtils {
     @Override
     public void updateDisplayOrder(String id, final String displayOrder)
             throws Exception {
-        super.updateDisplayOrder(id, displayOrder);
-        mdRepository.update(Integer.valueOf(id), new Updater<MetadataDraft>() {
-            @Override
-            public void apply(MetadataDraft entity) {
-                entity.getDataInfo()
-                        .setDisplayOrder(Integer.parseInt(displayOrder));
-            }
-        });
+        if (mdRepository.exists(Integer.valueOf(id))) {
+            mdRepository.update(Integer.valueOf(id),
+                    new Updater<MetadataDraft>() {
+                        @Override
+                        public void apply(MetadataDraft entity) {
+                            entity.getDataInfo().setDisplayOrder(
+                                    Integer.parseInt(displayOrder));
+                        }
+                    });
+        } else {
+            super.updateDisplayOrder(id, displayOrder);
+        }
     }
 }
