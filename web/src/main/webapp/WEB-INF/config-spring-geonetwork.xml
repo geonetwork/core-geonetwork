@@ -166,4 +166,23 @@
     <constructor-arg name="langCode" value="eng"/>
   </bean>
   -->
+  
+  <!-- Draft workspace/workflow -->    
+  <bean class="org.fao.geonet.kernel.metadata.draft.DraftMetadataIndexer" 
+        lazy-init="false"
+       primary="true"/>
+    <bean class="org.fao.geonet.kernel.metadata.draft.DraftMetadataManager" 
+        lazy-init="false"
+       primary="true"/>
+    <bean class="org.fao.geonet.kernel.metadata.draft.DraftMetadataUtils"  
+        lazy-init="false"
+       primary="true"/>
+    <bean class="org.fao.geonet.kernel.metadata.draft.DraftMetadataSchemaUtils" 
+       lazy-init="false"
+       primary="true"/>
+    <bean class="org.fao.geonet.kernel.metadata.draft.DraftMetadataCategory"  
+       lazy-init="false"
+       primary="true"
+       />
+  
 </beans>
