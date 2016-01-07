@@ -273,7 +273,7 @@ public abstract class XmlSerializer {
 
         MetadataRepository _metadataRepository = 
                 ApplicationContextHolder.get().getBean(MetadataRepository.class);
-
+        
         int metadataId = Integer.valueOf(id);
         Metadata md = _metadataRepository.findOne(metadataId);
 
