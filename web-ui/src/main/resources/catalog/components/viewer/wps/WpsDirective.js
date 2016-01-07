@@ -108,6 +108,11 @@
           scope.describeState = 'sended';
           scope.executeState = '';
 
+          scope.selectedOutput = {
+            identifier: '',
+            mimeType: ''
+          };
+
           gnWpsService.describeProcess(scope.uri, scope.processId)
           .then(
               function(response) {
@@ -120,8 +125,10 @@
                       function(input) {
                         var value;
                         var defaultValue;
+
                         if(defaults) {
-                          var datainput = defaults.datainputs[input.identifier.value];
+                          var datainput =
+                              defaults.datainputs[input.identifier.value];
                           if (datainput != undefined) {
                             defaultValue = datainput.value;
                           }
@@ -163,10 +170,11 @@
 
                   angular.forEach(
                     scope.processDescription.processOutputs.output,
-                      function(output) {
+                      function(output, idx) {
                         output.asReference = true;
 
-                        var outputDefault = defaults && defaults.responsedocument[output.identifier.value]
+                        var outputDefault = defaults &&
+                            defaults.responsedocument[output.identifier.value];
                         if (outputDefault) {
                           output.value = true;
                           var defaultAsReference =
@@ -174,6 +182,12 @@
                           if (defaultAsReference !== undefined) {
                             output.asReference = toBool(defaultAsReference);
                           }
+                          scope.selectedOutput.identifier =
+                              output.identifier.value;
+                        }
+                        else if (idx == 0) {
+                          scope.selectedOutput.identifier =
+                              output.identifier.value;
                         }
                       }
                   );
@@ -185,7 +199,8 @@
 
                   scope.responseDocument = {
                     lineage: toBool(defaults && defaults.lineage, false),
-                    storeExecuteResponse: toBool(defaults && defaults.storeexecuteresponse, false),
+                    storeExecuteResponse: toBool(defaults &&
+                        defaults.storeexecuteresponse, false),
                     status: toBool(defaults && defaults.status, false)
                   };
                   scope.optionsVisible = true;
@@ -238,9 +253,11 @@
             var outputs = [];
             angular.forEach(scope.processDescription.processOutputs.output,
                 function(output) {
-                  if (output.value == true) {
+                  if (output.identifier.value ==
+                      scope.selectedOutput.identifier) {
                     outputs.push({
                       asReference: output.asReference,
+                      mimeType: output.mimeType,
                       identifier: {
                         value: output.identifier.value
                       }
@@ -275,9 +292,14 @@
                       updateStatus(response.statusLocation);
                     }, 1000, true);
                   }
-                  if (response.status.ProcessSucceeded != undefined ||
-                      response.status.ProcessFailed != undefined) {
+                  if (response.status.processSucceeded != undefined ||
+                      response.status.processFailed != undefined) {
                     scope.executeState = 'finished';
+
+                    if(response.status.processSucceeded) {
+                      var layers = gnWpsService.extractWmsLayerFromResponse(
+                          response, scope.map);
+                    }
                   }
                 }
               }
@@ -318,6 +340,36 @@
             }
           };
 
+          // Guess the mimeType associated with the selected output.
+          scope.$watch('selectedOutput.identifier', function(v) {
+            if(v) {
+              try {
+                scope.selectedOutput.mimeType = '';
+                var os = scope.describeResponse.
+                    processDescription[0].processOutputs.output;
+
+                for(var i = 0; i< os.length;i++) {
+                  var o = os[i];
+                  if(v == o.identifier.value) {
+                    for(var j = 0; j< o.complexOutput.supported.format.length;j++) {
+                      var f = o.complexOutput.supported.format[j];
+                      if(f.mimeType == gnWpsService.WMS_MIMETYPE) {
+                        o.mimeType = f.mimeType;
+                        break;
+                      }
+                    }
+                    if(!o.mimeType) {
+                      o.mimeType = o.complexOutput._default.format.mimeType;
+                    }
+                    break;
+                  }
+                }
+              }
+              catch (e) {
+                // can't auto find mimetype
+              }
+            }
+          });
         }
       };
     }
