@@ -31,7 +31,7 @@
 
       var parseKvpParams = function(str) {
         var escaper = function(match, p1) {
-          return '=' + gnUrlUtils.encodeUriQuery(p1);
+          return '=' + gnUrlUtils.encodeUriQuery(p1, true);
         };
         str = str.replace(/=\[([^&]*)\]/gi, escaper);
 
@@ -99,10 +99,19 @@
         },
 
         link: function(scope, element, attrs) {
-          var defaults = parseKvpParams(scope.defaults);
+          var defaults;
+
+          if(scope.defaults) {
+            defaults = parseKvpParams(scope.defaults);
+          }
 
           scope.describeState = 'sended';
           scope.executeState = '';
+
+          scope.selectedOutput = {
+            identifier: '',
+            mimeType: ''
+          };
 
           gnWpsService.describeProcess(scope.uri, scope.processId)
           .then(
@@ -116,10 +125,13 @@
                       function(input) {
                         var value;
                         var defaultValue;
-                        var datainput =
-                          defaults.datainputs[input.identifier.value];
-                        if (datainput != undefined) {
-                          defaultValue = datainput.value;
+
+                        if(defaults) {
+                          var datainput =
+                              defaults.datainputs[input.identifier.value];
+                          if (datainput != undefined) {
+                            defaultValue = datainput.value;
+                          }
                         }
 
                         if (input.literalData != undefined) {
@@ -158,11 +170,11 @@
 
                   angular.forEach(
                     scope.processDescription.processOutputs.output,
-                      function(output) {
+                      function(output, idx) {
                         output.asReference = true;
 
-                        var outputDefault =
-                          defaults.responsedocument[output.identifier.value];
+                        var outputDefault = defaults &&
+                            defaults.responsedocument[output.identifier.value];
                         if (outputDefault) {
                           output.value = true;
                           var defaultAsReference =
@@ -170,6 +182,12 @@
                           if (defaultAsReference !== undefined) {
                             output.asReference = toBool(defaultAsReference);
                           }
+                          scope.selectedOutput.identifier =
+                              output.identifier.value;
+                        }
+                        else if (idx == 0) {
+                          scope.selectedOutput.identifier =
+                              output.identifier.value;
                         }
                       }
                   );
@@ -180,10 +198,10 @@
                   scope.outputsVisible = true;
 
                   scope.responseDocument = {
-                    lineage: toBool(defaults.lineage, false),
-                    storeExecuteResponse:
-                      toBool(defaults.storeexecuteresponse, false),
-                    status: toBool(defaults.status, false)
+                    lineage: toBool(defaults && defaults.lineage, false),
+                    storeExecuteResponse: toBool(defaults &&
+                        defaults.storeexecuteresponse, false),
+                    status: toBool(defaults && defaults.status, false)
                   };
                   scope.optionsVisible = true;
                 }
@@ -232,9 +250,11 @@
             var outputs = [];
             angular.forEach(scope.processDescription.processOutputs.output,
                 function(output) {
-                  if (output.value == true) {
+                  if (output.identifier.value ==
+                      scope.selectedOutput.identifier) {
                     outputs.push({
                       asReference: output.asReference,
+                      mimeType: output.mimeType,
                       identifier: {
                         value: output.identifier.value
                       }
@@ -269,9 +289,14 @@
                       updateStatus(response.statusLocation);
                     }, 1000, true);
                   }
-                  if (response.status.ProcessSucceeded != undefined ||
-                      response.status.ProcessFailed != undefined) {
+                  if (response.status.processSucceeded != undefined ||
+                      response.status.processFailed != undefined) {
                     scope.executeState = 'finished';
+
+                    if(response.status.processSucceeded) {
+                      var layers = gnWpsService.extractWmsLayerFromResponse(
+                          response, scope.map);
+                    }
                   }
                 }
               }
@@ -312,6 +337,36 @@
             }
           };
 
+          // Guess the mimeType associated with the selected output.
+          scope.$watch('selectedOutput.identifier', function(v) {
+            if(v) {
+              try {
+                scope.selectedOutput.mimeType = '';
+                var os = scope.describeResponse.
+                    processDescription[0].processOutputs.output;
+
+                for(var i = 0; i< os.length;i++) {
+                  var o = os[i];
+                  if(v == o.identifier.value) {
+                    for(var j = 0; j< o.complexOutput.supported.format.length;j++) {
+                      var f = o.complexOutput.supported.format[j];
+                      if(f.mimeType == gnWpsService.WMS_MIMETYPE) {
+                        o.mimeType = f.mimeType;
+                        break;
+                      }
+                    }
+                    if(!o.mimeType) {
+                      o.mimeType = o.complexOutput._default.format.mimeType;
+                    }
+                    break;
+                  }
+                }
+              }
+              catch (e) {
+                // can't auto find mimetype
+              }
+            }
+          });
         }
       };
     }
