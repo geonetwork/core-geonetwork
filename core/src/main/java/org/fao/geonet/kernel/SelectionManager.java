@@ -49,7 +49,8 @@ public class SelectionManager {
 
 	private Hashtable<String, Set<String>> selections = null;
 
-	public static final String SELECTION_METADATA = "metadata";
+    public static final String SELECTION_METADATA = "metadata";
+    public static final String SELECTION_METADATA_DRAFT = "draft";
 
 	// used to limit select all if get system setting maxrecords fails or contains value we can't parse
 	public static final int DEFAULT_MAXHITS = 1000;
@@ -63,9 +64,13 @@ public class SelectionManager {
 	private SelectionManager() {
 		selections = new Hashtable<String, Set<String>>(0);
 
-		Set<String> MDSelection = Collections
-				.synchronizedSet(new HashSet<String>(0));
-		selections.put(SELECTION_METADATA, MDSelection);
+        Set<String> MDSelection = Collections
+                .synchronizedSet(new HashSet<String>(0));
+        selections.put(SELECTION_METADATA, MDSelection);
+
+        Set<String> MDSelectionDraft = Collections
+                .synchronizedSet(new HashSet<String>(0));
+        selections.put(SELECTION_METADATA_DRAFT, MDSelectionDraft);
 	}
 
 	/**
@@ -87,7 +92,8 @@ public class SelectionManager {
 		@SuppressWarnings("unchecked")
         List<Element> elList = result.getChildren();
 
-		Set<String> selection = manager.getSelection(SELECTION_METADATA);
+        Set<String> selection = manager.getSelection(SELECTION_METADATA);
+        Set<String> selectionDraft = manager.getSelection(SELECTION_METADATA_DRAFT);
 
         for (Element element : elList) {
             if (element.getName().equals(Geonet.Elem.SUMMARY)) {
@@ -96,13 +102,25 @@ public class SelectionManager {
             Element info = element.getChild(Edit.RootChild.INFO,
                     Edit.NAMESPACE);
             String uuid = info.getChildText(Edit.Info.Elem.UUID);
-            if (selection.contains(uuid)) {
-                info.addContent(new Element(Edit.Info.Elem.SELECTED)
-                        .setText("true"));
-            }
-            else {
-                info.addContent(new Element(Edit.Info.Elem.SELECTED)
-                        .setText("false"));
+            if(element.getChildren("draft").isEmpty()) {
+                if (selection.contains(uuid)) {
+                    info.addContent(new Element(Edit.Info.Elem.SELECTED)
+                            .setText("true"));
+                }
+                else {
+                    info.addContent(new Element(Edit.Info.Elem.SELECTED)
+                            .setText("false"));
+                }
+            } else {
+                if (selectionDraft.contains(uuid)) {
+                    info.addContent(new Element(Edit.Info.Elem.SELECTED)
+                            .setText("true"));
+                }
+                else {
+                    info.addContent(new Element(Edit.Info.Elem.SELECTED)
+                            .setText("false"));
+                }
+                
             }
         }
 		result.setAttribute(Edit.Info.Elem.SELECTED, Integer

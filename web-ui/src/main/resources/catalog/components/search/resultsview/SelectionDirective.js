@@ -150,10 +150,19 @@
   module.directive('gnSelectionMd', ['gnSearchManagerService',
     function(gnSearchManagerService) {
 
-      return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
 
+        scope.change = function() {
+          gnHttp.callService('mdSelect', {
+            selected: element[0].checked ? 'add' : 'remove',
+            id: scope.md.getUuid(),
+            type: scope.md.draft? 'draft' : 'metadata'
+          }).success(function(res) {
+            scope.searchResults.selectedCount = parseInt(res[0], 10);
+          });
+        };
           scope.change = function() {
             var method = element[0].checked ? 'select' : 'unselect';
             gnSearchManagerService[method](scope.md.getUuid()).
