@@ -140,7 +140,8 @@
         scope.change = function() {
           gnHttp.callService('mdSelect', {
             selected: element[0].checked ? 'add' : 'remove',
-            id: scope.md.getUuid()
+            id: scope.md.getUuid(),
+            type: scope.md.draft? 'draft' : 'metadata'
           }).success(function(res) {
             scope.searchResults.selectedCount = parseInt(res[0], 10);
           });
