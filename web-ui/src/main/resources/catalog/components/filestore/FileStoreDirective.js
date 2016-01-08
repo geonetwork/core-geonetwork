@@ -80,11 +80,11 @@
               };
 
               var uploadResourceSuccess = function(data) {
-                $rootScope.$broadcast('gnfilestoreUploadDone');
+                $rootScope.$broadcast('gnFileStoreUploadDone');
                 scope.clear(scope.queue);
               };
 
-              scope.$on('gnfilestoreUploadDone', scope.loadMetadataResources);
+              scope.$on('gnFileStoreUploadDone', scope.loadMetadataResources);
 
               var uploadResourceFailed = function(e, data) {
                 $rootScope.$broadcast('StatusUpdated', {
