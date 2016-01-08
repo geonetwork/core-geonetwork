@@ -25,11 +25,12 @@
     'gnEditor',
     'gnCurrentEdit',
     '$q',
+    '$http',
     '$rootScope',
     '$translate',
     'Metadata',
     function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit,
-             $q, $rootScope, $translate, Metadata) {
+             $q, $http, $rootScope, $translate, Metadata) {
 
       var reload = false;
       var openCb = {};
@@ -283,6 +284,7 @@
             closePopup(popupid);
           });
         },
+
 
         /**
          * @ngdoc method

@@ -11,24 +11,16 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu pull-right" role="menu">
-        <li data-ng-show="isCategoryEnable('thumbnail')">
-          <a href=""
-             data-ng-click="onlinesrcService.onOpenPopup('thumbnail')">
-            <i class="fa gn-icon-thumbnail"></i>
-            <i class="icon-external-link"></i>&nbsp;
-            <span data-translate="">addThumbnail</span>
-          </a>
-        </li>
-        <li data-ng-show="isCategoryEnable('onlinesrc')">
+        <li data-ng-show="isCategoryEnable('thumbnail') || isCategoryEnable('onlinesrc')">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('onlinesrc')">
             <i class="fa gn-icon-onlinesrc"></i>
             <i class="icon-external-link"></i>&nbsp;
-            <span data-translate="">addOnlinesrc</span>
+            <span data-translate="">addDocument</span>
           </a>
         </li>
-        <li class="divider"
-            data-ng-show="isCategoryEnable('thumbnail') || isCategoryEnable('onlinesrc')"></li>
+        <li class="dropdown-header"
+            data-translate>linkMetadata</li>
         <li data-ng-show="isCategoryEnable('parent')">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('parent')">
@@ -85,11 +77,16 @@
       
       <!-- ******* Display Thumbnails ******* -->
       <ul class="list-inline">
-        <li data-ng-repeat="thumb in relations.thumbnail"><img
-          class="thumb-small" data-ng-src="{{thumb.id}}" />
+        <li class="gn-list-thumb thumbnail"
+            data-ng-repeat="thumb in relations.thumbnail">
+          <a data-ng-href="{{thumb.id}}" target="_blank">
+            <img class="thumb-small"
+                 data-ng-src="{{thumb.id}}" />
+          </a>
           <a href="" class="onlinesrc-remove"
             data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
-            data-ng-click="onlinesrcService.removeThumbnail(thumb)">
+            data-ng-click="onlinesrcService.removeThumbnail(thumb)"
+            title="{{'removeThumbnail' | translate}}">
             <i class="btn fa fa-times text-danger"></i>
           </a> 
         </li>

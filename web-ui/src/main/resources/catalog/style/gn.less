@@ -258,14 +258,33 @@ div.gn-scroll-spy {
   max-width: none;
   max-height: none;
   display: none;
-}
-.onlinesrc-popup .modal-content {
-  width: 750px;
+  .modal-content {
+    width: 90vw;
+  }
+  .modal-dialog {
+    margin: 10px 5vw;
+
+    .list-group-item {
+      word-wrap: break-word;
+    }
+  }
 }
 img.thumb-small {
-max-width: 80px;
-max-height: 80px;
-min-height: 40px;
+  max-width: 100%;
+  max-height: 80px;
+  min-height: 40px;
+}
+.gn-list-thumb {
+  position: relative;
+  margin: 2px;
+  width: 32%;
+  height: 92px;
+  a.onlinesrc-remove {
+    position: absolute;
+    z-index: 99;
+    top: 0px;
+    right: 0px;
+  }
 }
 .gn-layers-grid-container {
 overflow:auto;

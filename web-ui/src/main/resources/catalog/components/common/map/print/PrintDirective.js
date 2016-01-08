@@ -722,7 +722,7 @@
         if (newVal === 'thumbnailMaker') {
           activate();
         } else {
-          //        deactivate();
+          deactivate();
         }
       });
     }]);
