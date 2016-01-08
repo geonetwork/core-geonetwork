@@ -320,6 +320,10 @@ public class DraftMetadataIndexer extends DefaultMetadataIndexer {
                         true, false));
                 moreFields.add(SearchManager.makeField(
                         Geonet.IndexFieldNames.EXTRA, extra, false, true));
+                
+                //Mark as draft
+                moreFields.add(SearchManager.makeField(
+                        Geonet.IndexFieldNames.DRAFT, "y", true, true));
 
                 // If the metadata has an atom document, index related
                 // information
