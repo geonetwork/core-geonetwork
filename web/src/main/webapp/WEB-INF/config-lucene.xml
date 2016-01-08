@@ -156,6 +156,7 @@
       <field name="standardName" tagName="standardName"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
       <field name="attributeTable" tagName="attributeTable"/>
+      <field name="draft" tagName="draft"/>
     </dumpFields>
   </search>
 
@@ -311,6 +312,7 @@
     <Field name="specificationTitle"/>
     <Field name="levelName"/>
     <Field name="subject"/>
+    <Field name="draft"/>
   </tokenized>
 
   <!-- All Lucene numeric fields.

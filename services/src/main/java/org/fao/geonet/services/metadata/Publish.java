@@ -5,6 +5,7 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasM
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -177,25 +178,37 @@ public class Publish {
             UserSession userSession, final String commaSeparatedIds) {
         final IMetadataUtils dataManager = appContext
                 .getBean(IMetadataUtils.class);
+        
+        final MetadataDraftRepository mdDraftRepository = appContext
+                .getBean(MetadataDraftRepository.class);
 
         if (commaSeparatedIds == null) {
             if (userSession != null) {
                 SelectionManager sm = SelectionManager.getManager(userSession);
-                final Iterator<String> selectionIter = sm
-                        .getSelection(SelectionManager.SELECTION_METADATA)
-                        .iterator();
-                return Iterators.transform(selectionIter,
-                        new Function<String, String>() {
-                            @Nullable
-                            @Override
-                            public String apply(String uuid) {
-                                try {
-                                    return dataManager.getMetadataId(uuid);
-                                } catch (Exception e) {
-                                    return null;
-                                }
-                            }
-                        });
+                
+                Set<String> unifiedSet = new HashSet<String>();
+                for(String uuid : sm.getSelection(SelectionManager.SELECTION_METADATA)) {
+                    if(uuid != null) {
+                        try{ 
+                            unifiedSet.add(dataManager.getMetadataId(uuid));
+                        } catch (Throwable t) {
+                            //skip
+                        }
+                    }
+                }
+
+                for(String uuid : sm.getSelection(SelectionManager.SELECTION_METADATA_DRAFT)) {
+                    if(uuid != null) {
+                        try{ 
+                            unifiedSet.add(Integer.toString(mdDraftRepository.
+                                    findOneByUuid(uuid).getId()));
+                        } catch (Throwable t) {
+                            //skip
+                        }
+                    }
+                }
+                 
+                return unifiedSet.iterator();
             } else {
                 return Iterators.emptyIterator();
             }
@@ -291,17 +304,24 @@ public class Publish {
                 MetadataDraftRepository mdDraftRepository = serviceContext
                         .getBean(MetadataDraftRepository.class);
                 if (mdDraftRepository.exists(mdId)) {
-                    // Remove the already published metadata to replace it
-                    MetadataDraft mdDraft = mdDraftRepository.findOne(mdId);
-                    MetadataRepository mdRepository = serviceContext
-                            .getBean(MetadataRepository.class);
-                    Metadata md = mdRepository.findOneByUuid(mdDraft.getUuid());
-
                     IMetadataManager manager = serviceContext
                             .getBean(IMetadataManager.class);
+                    
+                    MetadataDraft draft = mdDraftRepository.findOne(mdId);
+                    MetadataRepository mdRepository = serviceContext
+                            .getBean(MetadataRepository.class);
+                    Metadata md = mdRepository.findOneByUuid(draft.getUuid());
+
+                    // Copy the draft content to the published metadata
+                    manager.updateMetadata(serviceContext,
+                            Integer.toString(md.getId()), draft.getXmlData(false),
+                            false, false, true, "", draft.getDataInfo()
+                                    .getChangeDate().getDateAndTime(),
+                            false);
+                    
+                    // Remove the draft
                     manager.deleteMetadata(serviceContext,
-                            Integer.toString(md.getId()));
-                    // TODO should we maintain the ID of the metadata too?
+                            Integer.toString(draft.getId()));
                 }
                 toIndex.add(mdId);
                 report.incPublished();
