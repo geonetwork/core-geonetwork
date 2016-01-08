@@ -25,7 +25,24 @@
 
   <bean id="resourceRemoveHandler" class="org.fao.geonet.services.resources.handlers.DefaultResourceRemoveHandler" />
 
-  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <property name="maxUploadSize" value="100000000"/>
+  </bean>
+
+  <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+    <property name="customEditors">
+      <map>
+        <entry key="org.fao.geonet.services.metadata.resources.ResourceType"
+               value="org.fao.geonet.services.metadata.resources.ResourceTypeConverter"/>
+        <entry key="org.fao.geonet.services.metadata.resources.Sort"
+               value="org.fao.geonet.services.metadata.resources.SortConverter"/>
+      </map>
+    </property>
+  </bean>
+  <bean id="resourceStore"
+        class="org.fao.geonet.services.metadata.resources.FilesystemStore"/>
+  <bean id="resourcesService"
+        class="org.fao.geonet.services.metadata.resources.ResourcesService"/>
 
   <bean id="formatterCache" lazy-init="true" class="org.fao.geonet.services.metadata.format.cache.FormatterCache">
     <constructor-arg index="0" ref="fsStore" />
