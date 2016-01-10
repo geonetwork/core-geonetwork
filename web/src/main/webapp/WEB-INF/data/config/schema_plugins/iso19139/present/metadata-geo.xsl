@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:java="java:org.fao.geonet.util.XslUtil" 
+<xsl:stylesheet version="1.0" xmlns:java="java:org.fao.geonet.util.GmlWktConverter" 
     xmlns:math="http://exslt.org/math" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd" 
     xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gco="http://www.isotc211.org/2005/gco" 
     xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv" 
     xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" 
     xmlns:geonet="http://www.fao.org/geonetwork" xmlns:exslt="http://exslt.org/common" 
+    xmlns:saxon="http://saxon.sf.net/"
+    extension-element-prefixes="saxon"
     exclude-result-prefixes="gmd gco gml gts srv gmx xlink exslt geonet java math">
+    
+	<xsl:output name="serialisation-output-format" method="xml" omit-xml-declaration="yes"/>
 
     <xsl:template mode="iso19139" match="gmd:EX_BoundingPolygon" priority="20">
         <xsl:param name="schema"/>
@@ -50,16 +54,13 @@
                     <xsl:value-of select="string($geometry)"/>
                 </textarea>
                 <td class="padded" style="width:100%;">
-                    <xsl:variable name="ts" select="string(@ts)"/>
-                    <xsl:variable name="cs" select="string(@cs)"/>
-                    <xsl:variable name="wktCoords">
-                        <xsl:apply-templates mode="gml" select="*"/>
-                    </xsl:variable>
-                    <xsl:variable name="geom">POLYGON(<xsl:value-of select="java:replace(string($wktCoords), '\),$', ')')"/>)</xsl:variable>
+                    <xsl:variable name="wkt">
+                        <xsl:apply-templates mode="wkt" select="gml:*"/>
+                    </xsl:variable>  
                     <xsl:call-template name="showMap">
                         <xsl:with-param name="edit" select="$edit"/>
                         <xsl:with-param name="mode" select="'polygon'" />
-                        <xsl:with-param name="coords" select="$geom"/>
+                        <xsl:with-param name="coords" select="$wkt"/>
                         <xsl:with-param name="targetPolygon" select="$targetId"/>
                         <xsl:with-param name="eltRef" select="$targetId"/>
                     </xsl:call-template>
@@ -68,10 +69,32 @@
         </xsl:apply-templates>
     </xsl:template>
 
-    <xsl:template mode="gml" match="gml:coordinates"><xsl:variable name="ts" select="string(@ts)"/><xsl:variable name="cs" select="string(@cs)"/>(<xsl:value-of select="java:takeUntil(java:toWktCoords(string(.),$ts,$cs), ';\Z')"/>),</xsl:template>
-    <xsl:template mode="gml" match="gml:posList">(<xsl:value-of select="java:takeUntil(java:posListToWktCoords(string(.), string(@dimension)), ';\Z')"/>),</xsl:template>
-    <xsl:template mode="gml" match="text()"/>
-    
+    <!-- Return WKT for GML node  -->
+    <xsl:template mode="wkt" match="*">
+        <xsl:variable name="gml-node">
+            <xsl:apply-templates select="." mode="strip-geonet"/>
+        </xsl:variable>
+        <xsl:variable name="gml" select="saxon:serialize($gml-node, 'serialisation-output-format')"/>
+        <xsl:value-of select="java:gmlToWkt($gml)"/>
+    </xsl:template>
+
+    <!-- Remove all elements added for editing -->
+    <xsl:template mode="strip-geonet" match="geonet:*"/>
+
+    <xsl:template mode="strip-geonet" match="*[
+         contains(local-name(), 'CHOICE_ELEMENT') 
+         or contains(local-name(), 'GROUP_ELEMENT') 
+         or contains(local-name(), 'SEQUENCE_ELEMENT')
+    ]">
+        <xsl:apply-templates mode="strip-geonet" select="@*|node()"/>
+    </xsl:template>
+
+    <xsl:template mode="strip-geonet" match="@*|node()">
+        <xsl:copy>
+            <xsl:apply-templates mode="strip-geonet" select="@*|node()"/>
+         </xsl:copy>
+    </xsl:template>
+
     <!-- Compute global bbox of current metadata record -->
     <xsl:template name="iso19139-global-bbox">
         <xsl:param name="separator" select="','"/>
