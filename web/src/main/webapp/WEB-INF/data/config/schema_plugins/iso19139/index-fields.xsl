@@ -309,16 +309,16 @@
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<xsl:for-each select="gmd:resourceConstraints">
-				<xsl:for-each select="//gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue">
+				<xsl:for-each select="*/gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue">
 					<Field name="accessConstr" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
-				<xsl:for-each select="//gmd:otherConstraints/gco:CharacterString">
+				<xsl:for-each select="*/gmd:otherConstraints/gco:CharacterString">
 					<Field name="otherConstr" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
-				<xsl:for-each select="//gmd:classification/gmd:MD_ClassificationCode/@codeListValue">
+				<xsl:for-each select="*/gmd:classification/gmd:MD_ClassificationCode/@codeListValue">
 					<Field name="classif" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
-				<xsl:for-each select="//gmd:useLimitation/gco:CharacterString">
+				<xsl:for-each select="*/gmd:useLimitation/gco:CharacterString">
 					<Field name="conditionApplyingToAccessAndUse" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 			</xsl:for-each>
