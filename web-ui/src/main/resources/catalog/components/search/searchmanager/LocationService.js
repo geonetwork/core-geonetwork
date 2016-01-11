@@ -13,6 +13,7 @@
       this.SEARCH = '/search';
       this.MAP = '/map';
       this.METADATA = '/metadata/';
+      this.DRAFT = '/draft/';
       this.HOME = '/home';
 
       var state = {};
@@ -36,7 +37,12 @@
 
       this.isMdView = function(path) {
         var p = path || $location.path();
-        return p.indexOf(this.METADATA) == 0;
+        return p.indexOf(this.METADATA) == 0
+      };
+
+      this.isDraftView = function(path) {
+        var p = path || $location.path();
+        return p.indexOf(this.DRAFT) == 0;
       };
 
       this.isMap = function() {
@@ -53,7 +59,11 @@
       };
 
       this.setUuid = function(uuid) {
-        $location.path(this.METADATA + uuid);
+        if(this.isMdView()) {
+          $location.path(this.METADATA + uuid);
+        } else if (this.isDraftView()) {
+          $location.path(this.DRAFT + uuid);
+        }
         this.removeParams();
       };
 
@@ -61,6 +71,9 @@
         if (this.isMdView()) {
           var url = $location.path();
           return url.substring(this.METADATA.length, url.length);
+        }else if (this.isDraftView()) {
+          var url = $location.path();
+          return url.substring(this.DRAFT.length, url.length);
         }
       };
 
@@ -125,6 +138,9 @@
         if (state.old.path != that.SEARCH &&
             state.current.path == that.SEARCH) {
           if (that.isMdView(state.old.path)) {
+            $rootScope.$broadcast('locationBackToSearchFromMdview');
+          }
+          if (that.isDraftView(state.old.path)) {
             $rootScope.$broadcast('locationBackToSearchFromMdview');
           }
           $rootScope.$broadcast('locationBackToSearch');
