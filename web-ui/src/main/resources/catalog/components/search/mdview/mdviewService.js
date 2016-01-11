@@ -45,13 +45,15 @@
     'gnSearchSettings',
     'gnUrlUtils',
     'gnUtilityService',
+    '$location',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
-             gnUrlUtils, gnUtilityService) {
+             gnUrlUtils, gnUtilityService, $location) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
-        if (!gnSearchLocation.isMdView()) {
+        if (!gnSearchLocation.isMdView()
+            && !gnSearchLocation.isDraftView() ) {
           gnMdViewObj.from = gnSearchLocation.path();
         }
       };
@@ -149,9 +151,30 @@
                 fast: 'index',
                 _content_type: 'json'
               }).then(function(data) {
-                if (data.metadata.length >= 1) {
-                  data.metadata[0] = new Metadata(data.metadata[0]);
-                  that.feedMd(0, undefined, data.metadata);
+                  var j = -1;
+                  if (data.metadata.length >= 1) {
+                    // take the first non-draft copy
+                    var i = 0;
+                    angular.forEach(data.metadata, function(md) {
+                      data.metadata[i] = new Metadata(data.metadata[i]);
+
+                      if ($location.url().startsWith("/draft")) {
+                        if (data.metadata[i].draft) {
+                          j = i;
+                        }
+                      } else {
+                        if (!data.metadata[i].draft) {
+                          j = i;
+                        }
+                      }
+                      
+                      i++;
+                    });
+
+                    if (j < 0) {
+                      j = 0;
+                    }
+                    that.feedMd(j, undefined, data.metadata);
                 }
               });
             }
