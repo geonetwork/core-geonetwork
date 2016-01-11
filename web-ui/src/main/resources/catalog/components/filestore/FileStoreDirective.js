@@ -114,7 +114,7 @@
                   scope.queue = [];
                   scope.filestoreUploadOptions = {
                     autoUpload: scope.autoUpload,
-                    url: '../api/metadata/' + scope.uuid +
+                    url: '../api/0.1/metadata/' + scope.uuid +
                         '/resources?share=' + defaultStatus,
                     dropZone: $('#' + scope.id),
                     singleUpload: false,

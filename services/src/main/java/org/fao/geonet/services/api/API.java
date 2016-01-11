@@ -23,30 +23,12 @@
  * ==============================================================================
  */
 
-(function() {
-  goog.provide('gn_filestore_service');
+package org.fao.geonet.services.api;
 
-  var module = angular.module('gn_filestore_service', []);
-
-  module.factory('gnFileStoreService',
-      ['$http',
-       function($http) {
-         return {
-           get: function(metadataUuid, filter) {
-             return $http.get('../api/0.1/metadata/' +
-                                  metadataUuid + '/resources', {
-               params: {
-                 filter: filter
-               }
-             });
-           },
-           updateStatus: function(resource) {
-             return $http.patch(resource.url + '?share=' +
-             (resource.type == 'private' ? 'public' : 'private'));
-           },
-           delete: function(resource) {
-             return $http.delete(resource.url);
-           }
-         };
-       }]);
-})();
+/**
+ * Created by francois on 08/01/16.
+ */
+public class API {
+    public static final String VERSION_0_1 = "0.1";
+    public static final String CONTACT_EMAIL = "geonetwork@osgeo.org";
+}

@@ -23,13 +23,13 @@
 
 package org.fao.geonet.services.thumbnail;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.api.API;
 import org.fao.geonet.services.metadata.resources.Resource;
 import org.fao.geonet.services.metadata.resources.ResourceType;
 import org.fao.geonet.services.metadata.resources.Store;
@@ -45,8 +45,9 @@ import java.nio.file.Path;
 @EnableWebMvc
 @Controller
 @Service
-@Api(value = "metadata/resources",
-     tags= "metadata/resources")
+@Api(value = "metadata/resources/actions",
+     tags= "metadata/resources/actions",
+     description = "Generate resource to be added to the metadata file store")
 public class Generate {
     public Generate() {
     }
@@ -74,23 +75,40 @@ public class Generate {
         }
     }
 
-    @RequestMapping(value = "/api/metadata/{metadataUuid}/resources/actions/save-thumbnail",
+
+    @ApiOperation(value = "Create an image using the mapprint module and " +
+                          "add it to the datastore",
+                  notes = "Notes",
+                  response = Resource.class,
+                  nickname = "getAllMetadataResources")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 200, message = "Successful retrieval of user detail", response = User.class),
+//            @ApiResponse(code = 404, message = "User with given username does not exist"),
+//            @ApiResponse(code = 500, message = "Internal server error")}
+//    )
+    @RequestMapping(value = "/api/" + API.VERSION_0_1 +
+                                "metadata/{metadataUuid}/resources/actions/save-thumbnail",
                     method = RequestMethod.PUT)
     @ResponseBody
     public Resource saveThumbnail(
             @ApiParam(value = "The metadata UUID",
-                    example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-            @PathVariable String metadataUuid,
-            @RequestParam() String jsonConfig,
-            @RequestParam(required = false, defaultValue = "0") String rotation
+                      required = true,
+                      examples = @Example(value = {
+                              @ExampleProperty(
+                                      mediaType = "string",
+                                      value = "43d7c186-2187-4bcd-8843-41e575a5ef56")
+                      })
+            )
+            @PathVariable
+            String metadataUuid,
+            @ApiParam(value = "The mapprint module JSON configuration",
+                    required = true)
+            @RequestParam()
+            String jsonConfig,
+            @ApiParam(value = "The rotation angle of the map")
+            @RequestParam(required = false, defaultValue = "0") int rotationAngle
             )
             throws Exception {
-        Integer rotationAngle = null;
-        try {
-            rotationAngle = Integer.valueOf(rotation);
-        } catch (NumberFormatException e) {
-        }
-
         ServiceContext context = ServiceContext.get();
         DataManager dataMan = appContext.getBean(DataManager.class);
 

@@ -29,6 +29,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.services.api.API;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -57,14 +58,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
+/**
+ * Service to handle metadata resources
+ */
 @EnableWebMvc
 @Controller
 @Service
-@RequestMapping(value = "/api/metadata/{metadataUuid}/resources")
+@RequestMapping(value = "/api/" + API.VERSION_0_1 +
+                            "/metadata/{metadataUuid}/resources")
 @Api(value = "metadata/resources",
      tags= "metadata/resources",
-     description = "Manage metadata datastore (ie. all uploaded document).")
+     description = "Manage files added to a metadata file store (ie. all uploaded document)")
 public class ResourcesService {
     public ResourcesService() {
     }
@@ -112,17 +116,20 @@ public class ResourcesService {
                   nickname = "getAllMetadataResources")
     @RequestMapping(method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiParam(name = "body", value = "The list of resources")
     @ResponseBody
-    public List<Resource> getResources(@ApiParam(value = "The metadata UUID",
+    public List<Resource> getAllResources(
+                                       @ApiParam(value = "The metadata UUID",
+                                                 required = true,
                                                  example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
                                        @PathVariable
                                        String metadataUuid,
                                        @ApiParam(value = "Sort by",
                                                  example = "type")
-                                       @RequestParam(required = false, defaultValue = "name")
+                                       @RequestParam(required = false,
+                                                     defaultValue = "name")
                                        Sort sort,
-                                       @RequestParam(required = false, defaultValue = "*.*")
+                                       @RequestParam(required = false,
+                                                     defaultValue = "*.*")
                                        String filter) throws Exception {
         return store.getResources(metadataUuid, sort, filter);
     }
@@ -130,13 +137,15 @@ public class ResourcesService {
 
 
     @ApiOperation(value = "Delete all uploaded resources " +
-                          "available in the datastore for this metadata.",
+                          "available in the datastore for this metadata",
                   nickname = "deleteAllMetadataResources")
     @RequestMapping(method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public boolean delResources(@ApiParam(value = "The metadata UUID",
+                                          required = true,
                                           example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
+                                @PathVariable
                                 String metadataUuid) throws Exception {
         try {
             store.delResource(metadataUuid);
@@ -148,14 +157,25 @@ public class ResourcesService {
 
 
 
-
+    @ApiOperation(value = "Put a new resource for this metadata",
+                  nickname = "putResourceFromFile")
     @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public List<Resource> putResource(
-                                @PathVariable String metadataUuid,
-                                @RequestParam(required = false, defaultValue = "public") ResourceType share,
-                                @RequestParam("file") List<MultipartFile> files)
+                                @ApiParam(value = "The metadata UUID",
+                                          required = true,
+                                          example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
+                                @PathVariable
+                                String metadataUuid,
+                                @ApiParam(value = "The sharing policy",
+                                          example = "public")
+                                @RequestParam(required = false,
+                                              defaultValue = "public")
+                                ResourceType share,
+                                @ApiParam(value = "The file to upload")
+                                @RequestParam("file")
+                                List<MultipartFile> files)
             throws Exception {
         List<Resource> resources = new ArrayList<>();
         for(MultipartFile file : files) {
@@ -170,35 +190,54 @@ public class ResourcesService {
         return resources;
     }
 
+    @ApiOperation(value = "Put a new resource from a URL for this metadata",
+                  nickname = "putResourcesFromURL")
     @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public List<Resource> putResourceFromURL(
-            @PathVariable String metadataUuid,
-            @RequestParam(required = false, defaultValue = "public") ResourceType share,
-            @RequestParam("url") List<String> urls)
+                            @ApiParam(value = "The metadata UUID",
+                                      required = true,
+                                      example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
+                            @PathVariable
+                            String metadataUuid,
+                            @ApiParam(value = "The sharing policy",
+                                      example = "public")
+                            @RequestParam(required = false,
+                                          defaultValue = "public")
+                            ResourceType share,
+                            @ApiParam(value = "The URL to load in the store")
+                            @RequestParam("url")
+                            List<URL> urls)
             throws Exception {
         List<Resource> resources = new ArrayList<>();
-        for(String url : urls) {
-            if (!StringUtils.isEmpty(url)) {
-                try {
-                    resources.add(store.putResource(metadataUuid, new URL(url), share));
-                } catch (Exception e) {
-                    throw e;
-                }
+        for(URL url : urls) {
+            try {
+                resources.add(store.putResource(metadataUuid, url, share));
+            } catch (Exception e) {
+                throw e;
             }
         }
         return resources;
     }
 
 
-
+    @ApiOperation(value = "Get a resource",
+                  nickname = "getResource")
     @RequestMapping(value = "/{resourceId:.+}",
                     method = RequestMethod.GET)
     @ResponseBody
-    public HttpEntity<byte[]> getResource(@PathVariable String metadataUuid,
-                                          @PathVariable String resourceId
-    ) throws Exception {
+    public HttpEntity<byte[]> getResource(
+                                @ApiParam(value = "The metadata UUID",
+                                          required = true,
+                                          example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
+                                @PathVariable
+                                String metadataUuid,
+                                @ApiParam(value = "The resource identifier (ie. filename)",
+                                          required = true)
+                                @PathVariable
+                                String resourceId
+        ) throws Exception {
         Path file = store.getResource(metadataUuid, resourceId);
 
         // TODO: Check user privileges
@@ -216,15 +255,26 @@ public class ResourcesService {
 
 
 
-
+    @ApiOperation(value = "Change the resource sharing policy",
+                  nickname = "patchResourceSharingPolicy")
     @RequestMapping(value = "/{resourceId:.+}",
                     method = RequestMethod.PATCH)
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
-    public Resource patchResource(@PathVariable String metadataUuid,
-                                  @PathVariable String resourceId,
+    public Resource patchResource(@ApiParam(value = "The metadata UUID",
+                                            required = true,
+                                            example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
+                                  @PathVariable
+                                  String metadataUuid,
+                                  @ApiParam(value = "The resource identifier (ie. filename)",
+                                            required = true)
+                                  @PathVariable
+                                  String resourceId,
+                                  @ApiParam(value = "The sharing policy",
+                                            required = true,
+                                            example = "public")
                                   @RequestParam(required = true)
-                                               ResourceType share) throws Exception {
+                                  ResourceType share) throws Exception {
         try {
             return store.patchResourceStatus(metadataUuid, resourceId, share);
         } catch (Exception e) {
@@ -234,14 +284,21 @@ public class ResourcesService {
 
 
 
-
+    @ApiOperation(value = "Delete a resource",
+                  nickname = "deleteResource")
     @RequestMapping(value = "/{resourceId:.+}",
                     method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
-    public boolean delResource(
-                             @PathVariable String metadataUuid,
-                             @PathVariable String resourceId) throws Exception {
+    public boolean delResource(@ApiParam(value = "The metadata UUID",
+                                         required = true,
+                                         example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
+                               @PathVariable
+                               String metadataUuid,
+                               @ApiParam(value = "The resource identifier (ie. filename)",
+                                         required = true)
+                               @PathVariable
+                               String resourceId) throws Exception {
         try {
             // TODO: handle overwrite
             store.delResource(metadataUuid, resourceId);

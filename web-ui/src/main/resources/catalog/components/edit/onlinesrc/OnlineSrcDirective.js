@@ -248,7 +248,7 @@
               };
 
               scope.generateThumbnail = function() {
-                return $http.put('../api/metadata/' + scope.gnCurrentEdit.uuid +
+                return $http.put('../api/0.1/metadata/' + scope.gnCurrentEdit.uuid +
                     '/resources/actions/save-thumbnail', null, {params: {
                       jsonConfig: angular.fromJson(scope.jsonSpec)
                     }}).then(function() {
