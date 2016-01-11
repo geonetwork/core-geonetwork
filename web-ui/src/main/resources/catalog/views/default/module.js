@@ -177,6 +177,28 @@
         $scope.openRecord(mdView.current.index - 1);
       };
 
+      $scope.showDraft = function(uuid) {
+        var i = 0;
+        angular.forEach(mdView.records, function(md) {
+          if(md.getUuid() == uuid
+              && md.draft) {
+            $scope.openRecord(i);
+          }
+          i++;
+        });
+      };
+      
+      $scope.showPublished = function(uuid) {
+        var i = 0;
+        angular.forEach(mdView.records, function(md) {
+          if(md.getUuid() == uuid
+              && !md.draft) {
+            $scope.openRecord(i);
+          }
+          i++;
+        });
+      };
+
       $scope.infoTabs = {
         lastRecords: {
           title: 'lastRecords',
