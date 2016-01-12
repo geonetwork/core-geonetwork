@@ -87,7 +87,7 @@ public class ResourceActionsApi {
 //            @ApiResponse(code = 500, message = "Internal server error")}
 //    )
     @RequestMapping(value = "/api/" + API.VERSION_0_1 +
-                                "metadata/{metadataUuid}/resources/actions/save-thumbnail",
+                                "/metadata/{metadataUuid}/resources/actions/save-thumbnail",
                     method = RequestMethod.PUT)
     @ResponseBody
     public MetadataResource saveThumbnail(
