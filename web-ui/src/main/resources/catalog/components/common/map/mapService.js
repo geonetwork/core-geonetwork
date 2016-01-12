@@ -86,6 +86,11 @@
           return false;
         };
 
+        var getImageSourceRatio = function(map, maxWidth) {
+          var ratio = maxWidth / map.getSize()[0];
+          return Math.min(1.5, Math.max(1, ratio));
+        };
+
         return {
 
           /**
@@ -465,7 +470,8 @@
             if (viewerSettings.singleTileWMS) {
               source = new ol.source.ImageWMS({
                 params: layerParams,
-                url: options.url
+                url: options.url,
+                ratio: getImageSourceRatio(map, 2048)
               });
             } else {
               source = new ol.source.TileWMS({
@@ -506,20 +512,24 @@
               if (uuid) {
                 olLayer.set('metadataUuid', uuid);
               }
-            };
+            }
             ngeoDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 
             var unregisterEventKey = olLayer.getSource().on(
                 (viewerSettings.singleTileWMS) ? 'imageloaderror' : 'tileloaderror',
                 function(tileEvent, target) {
+                  var url = tileEvent.tile && tileEvent.tile.getKey ?
+                      tileEvent.tile.getKey() : '- no tile URL found-';
+
+                  var layer = tileEvent.currentTarget &&
+                  tileEvent.currentTarget.getParams ?
+                      tileEvent.currentTarget.getParams().LAYERS :
+                      layerParams.LAYERS;
+
                   var msg = $translate('layerTileLoadError', {
-                    url: tileEvent.tile && tileEvent.tile.getKey ?
-                        tileEvent.tile.getKey() : '- no tile URL found-',
-                    layer: tileEvent.currentTarget &&
-                        tileEvent.currentTarget.getParams ?
-                        tileEvent.currentTarget.getParams().LAYERS :
-                        layerParams.LAYERS
+                    url: url,
+                    layer: layer
                   });
                   console.warn(msg);
                   $rootScope.$broadcast('StatusUpdated', {
@@ -528,6 +538,12 @@
                     type: 'danger'});
                   olLayer.get('errors').push(msg);
                   olLayer.getSource().unByKey(unregisterEventKey);
+
+                  gnWmsQueue.error({
+                    url: url,
+                    name: layer,
+                    msg: msg
+                  });
                 });
             return olLayer;
           },
