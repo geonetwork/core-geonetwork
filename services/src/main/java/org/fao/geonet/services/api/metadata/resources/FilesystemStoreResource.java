@@ -23,8 +23,46 @@
  * ==============================================================================
  */
 
-package org.fao.geonet.services.metadata.resources;
+package org.fao.geonet.services.api.metadata.resources;
 
-public enum Sort {
-    type, name
+
+import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.fao.geonet.domain.MetadataResource;
+
+/**
+ * Created by francois on 31/12/15.
+ */
+public class FilesystemStoreResource implements MetadataResource {
+    private String filename;
+    private String url;
+    private MetadataResourceVisibility metadataResourceVisibility;
+    private double size = -1;
+    @Override
+    public String getId() {
+        return filename;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public String getType() {
+        return metadataResourceVisibility.toString();
+    }
+
+    @Override
+    public double getSize() {
+        return size;
+    }
+    public FilesystemStoreResource(String id,
+                                   String baseUrl,
+                                   MetadataResourceVisibility metadataResourceVisibility,
+                                   double size) {
+        this.filename = id;
+        this.url = baseUrl + id;
+        this.metadataResourceVisibility = metadataResourceVisibility;
+        this.size = Double.isNaN(size) ? -1 : size;
+    }
 }

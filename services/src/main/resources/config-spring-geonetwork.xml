@@ -32,17 +32,21 @@
   <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
     <property name="customEditors">
       <map>
-        <entry key="org.fao.geonet.services.metadata.resources.ResourceType"
-               value="org.fao.geonet.services.metadata.resources.ResourceTypeConverter"/>
-        <entry key="org.fao.geonet.services.metadata.resources.Sort"
-               value="org.fao.geonet.services.metadata.resources.SortConverter"/>
+        <entry key="org.fao.geonet.domain.MetadataResourceVisibility"
+               value="org.fao.geonet.domain.MetadataResourceVisibilityConverter"/>
+        <entry key="org.fao.geonet.services.api.metadata.resources.Sort"
+               value="org.fao.geonet.services.api.metadata.resources.SortConverter"/>
       </map>
     </property>
   </bean>
+  <bean id="filesystemStore"
+        class="org.fao.geonet.services.api.metadata.resources.FilesystemStore"/>
   <bean id="resourceStore"
-        class="org.fao.geonet.services.metadata.resources.FilesystemStore"/>
-  <bean id="resourcesService"
-        class="org.fao.geonet.services.metadata.resources.ResourcesService"/>
+        class="org.fao.geonet.services.api.metadata.resources.ResourceLoggerStore">
+    <constructor-arg index="0" ref="filesystemStore"/>
+  </bean>
+  <!--<bean id="resourcesApi"
+        class="org.fao.geonet.services.api.metadata.resources.ResourcesApi"/>-->
 
   <bean id="formatterCache" lazy-init="true" class="org.fao.geonet.services.metadata.format.cache.FormatterCache">
     <constructor-arg index="0" ref="fsStore" />

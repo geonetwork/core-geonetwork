@@ -41,7 +41,7 @@
              });
            },
            updateStatus: function(resource) {
-             return $http.patch(resource.url + '?share=' +
+             return $http.patch(resource.url + '?visibility=' +
              (resource.type == 'private' ? 'public' : 'private'));
            },
            delete: function(resource) {

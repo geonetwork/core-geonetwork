@@ -23,18 +23,31 @@
  * ==============================================================================
  */
 
-package org.fao.geonet.services.metadata.resources;
+package org.fao.geonet.services.api.metadata.resources;
 
-import org.apache.commons.lang.WordUtils;
+import org.fao.geonet.DatabaseMigrationTask;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 
-import java.beans.PropertyEditorSupport;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
- * Created by francois on 31/12/15.
+ * Created by francois on 12/01/16.
  */
-public class ResourceTypeConverter extends PropertyEditorSupport {
+public class MetadataResourceDatabaseMigration implements DatabaseMigrationTask {
     @Override
-    public void setAsText(final String text) throws IllegalArgumentException {
-        setValue(ResourceType.parse(text.trim()));
+    public void update(Connection connection) throws SQLException {
+        Log.debug(Geonet.DB, "MetadataResourceDatabaseMigration");
+
+        try (Statement statement = connection.createStatement()) {
+            // TODO: Replace all links in existing metadata records
+        } catch (Exception e) {
+            Log.debug(Geonet.DB, "  Exception while migrating resources. " +
+                    "Error is: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

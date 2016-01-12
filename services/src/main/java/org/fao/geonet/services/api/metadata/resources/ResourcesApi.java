@@ -23,12 +23,15 @@
  * ==============================================================================
  */
 
-package org.fao.geonet.services.metadata.resources;
+package org.fao.geonet.services.api.metadata.resources;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
 import org.fao.geonet.services.api.API;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
@@ -39,7 +42,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.WebDataBinder;
@@ -59,20 +61,25 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Service to handle metadata resources
+ * Metadata resource related operations.
+ *
+ * Load the store with id 'resourceStore'.
  */
 @EnableWebMvc
 @Controller
 @Service
-@RequestMapping(value = "/api/" + API.VERSION_0_1 +
-                            "/metadata/{metadataUuid}/resources")
+@RequestMapping(value = {
+        "/api/metadata/{metadataUuid}/resources",
+        "/api/" + API.VERSION_0_1 +
+                "/metadata/{metadataUuid}/resources"
+})
 @Api(value = "metadata/resources",
      tags= "metadata/resources",
-     description = "Manage files added to a metadata file store (ie. all uploaded document)")
-public class ResourcesService {
-    public ResourcesService() {
+     description = "Metadata resource related operations")
+public class ResourcesApi {
+    public ResourcesApi() {
     }
-    public ResourcesService(Store store) {
+    public ResourcesApi(Store store) {
         this.store = store;
     }
 
@@ -100,24 +107,23 @@ public class ResourcesService {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(ResourceType.class, new ResourceTypeConverter());
+        binder.registerCustomEditor(MetadataResourceVisibility.class, new MetadataResourceVisibilityConverter());
         binder.registerCustomEditor(Sort.class, new SortConverter());
     }
 
 
-    public List<Resource> getResources() {
+    public List<MetadataResource> getResources() {
         return null;
     }
 
 
 
-    @ApiOperation(value = "Get the list of uploaded resources " +
-                          "available in the datastore for this metadata",
+    @ApiOperation(value = "List all metadata resources",
                   nickname = "getAllMetadataResources")
     @RequestMapping(method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Resource> getAllResources(
+    public List<MetadataResource> getAllResources(
                                        @ApiParam(value = "The metadata UUID",
                                                  required = true,
                                                  example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
@@ -136,8 +142,7 @@ public class ResourcesService {
 
 
 
-    @ApiOperation(value = "Delete all uploaded resources " +
-                          "available in the datastore for this metadata",
+    @ApiOperation(value = "Delete all uploaded metadata resources",
                   nickname = "deleteAllMetadataResources")
     @RequestMapping(method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('Editor')")
@@ -157,12 +162,12 @@ public class ResourcesService {
 
 
 
-    @ApiOperation(value = "Put a new resource for this metadata",
+    @ApiOperation(value = "Create a new resource for a given metadata",
                   nickname = "putResourceFromFile")
     @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
-    public List<Resource> putResource(
+    public List<MetadataResource> putResource(
                                 @ApiParam(value = "The metadata UUID",
                                           required = true,
                                           example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
@@ -172,16 +177,16 @@ public class ResourcesService {
                                           example = "public")
                                 @RequestParam(required = false,
                                               defaultValue = "public")
-                                ResourceType share,
+                                MetadataResourceVisibility visibility,
                                 @ApiParam(value = "The file to upload")
                                 @RequestParam("file")
                                 List<MultipartFile> files)
             throws Exception {
-        List<Resource> resources = new ArrayList<>();
+        List<MetadataResource> resources = new ArrayList<>();
         for(MultipartFile file : files) {
             if (!file.isEmpty()) {
                 try {
-                    resources.add(store.putResource(metadataUuid, file, share));
+                    resources.add(store.putResource(metadataUuid, file, visibility));
                 } catch (Exception e) {
                     throw e;
                 }
@@ -190,12 +195,12 @@ public class ResourcesService {
         return resources;
     }
 
-    @ApiOperation(value = "Put a new resource from a URL for this metadata",
+    @ApiOperation(value = "Create a new resource from a URL for a given metadata",
                   nickname = "putResourcesFromURL")
     @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
-    public List<Resource> putResourceFromURL(
+    public List<MetadataResource> putResourceFromURL(
                             @ApiParam(value = "The metadata UUID",
                                       required = true,
                                       example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
@@ -205,15 +210,15 @@ public class ResourcesService {
                                       example = "public")
                             @RequestParam(required = false,
                                           defaultValue = "public")
-                            ResourceType share,
+                            MetadataResourceVisibility visibility,
                             @ApiParam(value = "The URL to load in the store")
                             @RequestParam("url")
                             List<URL> urls)
             throws Exception {
-        List<Resource> resources = new ArrayList<>();
+        List<MetadataResource> resources = new ArrayList<>();
         for(URL url : urls) {
             try {
-                resources.add(store.putResource(metadataUuid, url, share));
+                resources.add(store.putResource(metadataUuid, url, visibility));
             } catch (Exception e) {
                 throw e;
             }
@@ -222,7 +227,7 @@ public class ResourcesService {
     }
 
 
-    @ApiOperation(value = "Get a resource",
+    @ApiOperation(value = "Get a metadata resource",
                   nickname = "getResource")
     @RequestMapping(value = "/{resourceId:.+}",
                     method = RequestMethod.GET)
@@ -255,13 +260,13 @@ public class ResourcesService {
 
 
 
-    @ApiOperation(value = "Change the resource sharing policy",
-                  nickname = "patchResourceSharingPolicy")
+    @ApiOperation(value = "Update the metadata resource visibility",
+                  nickname = "patchMetadataResourceVisibility")
     @RequestMapping(value = "/{resourceId:.+}",
                     method = RequestMethod.PATCH)
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
-    public Resource patchResource(@ApiParam(value = "The metadata UUID",
+    public MetadataResource patchResource(@ApiParam(value = "The metadata UUID",
                                             required = true,
                                             example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
                                   @PathVariable
@@ -270,13 +275,13 @@ public class ResourcesService {
                                             required = true)
                                   @PathVariable
                                   String resourceId,
-                                  @ApiParam(value = "The sharing policy",
+                                  @ApiParam(value = "The visibility",
                                             required = true,
                                             example = "public")
                                   @RequestParam(required = true)
-                                  ResourceType share) throws Exception {
+                                  MetadataResourceVisibility visibility) throws Exception {
         try {
-            return store.patchResourceStatus(metadataUuid, resourceId, share);
+            return store.patchResourceStatus(metadataUuid, resourceId, visibility);
         } catch (Exception e) {
             throw e;
         }
@@ -284,8 +289,8 @@ public class ResourcesService {
 
 
 
-    @ApiOperation(value = "Delete a resource",
-                  nickname = "deleteResource")
+    @ApiOperation(value = "Delete a metadata resource",
+                  nickname = "deleteMetadataResource")
     @RequestMapping(value = "/{resourceId:.+}",
                     method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('Editor')")
@@ -350,9 +355,7 @@ public class ResourcesService {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-//            Exception.class,
             MaxUploadSizeExceededException.class,
-//            RuntimeException.class,
             FileNotFoundException.class})
     public Object fileNotFoundHandler(final Exception exception) {
         exception.printStackTrace();
@@ -374,7 +377,10 @@ public class ResourcesService {
     }
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UnsatisfiedServletRequestParameterException.class)
+    @ExceptionHandler({
+            UnsatisfiedServletRequestParameterException.class,
+            IllegalArgumentException.class
+    })
     public Object unsatisfiedParameterHandler(final Exception exception) {
         return  new HashMap() {{
             put("result", "failed");

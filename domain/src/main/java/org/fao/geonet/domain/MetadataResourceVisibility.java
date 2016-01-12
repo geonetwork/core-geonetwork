@@ -23,23 +23,35 @@
  * ==============================================================================
  */
 
-package org.fao.geonet.services.metadata.resources;
+package org.fao.geonet.domain;
+
+import javax.persistence.Convert;
+import java.util.Comparator;
 
 /**
- * Created by francois on 31/12/15.
+ * Metadata resource visibility.
  */
-public enum ResourceType {
-    PUBLIC("public"), PRIVATE("private");
+@Convert(converter = MetadataResourceVisibilityConverter.class)
+public enum MetadataResourceVisibility {
+    /**
+     * Accessible by all
+     */
+    PUBLIC("public"),
+    /**
+     * Accessible to user with download privilege
+     */
+    PRIVATE("private");
 
     String value;
-    ResourceType(String value) {
+
+    MetadataResourceVisibility(String value) {
         this.value = value;
     }
 
-    public static ResourceType parse(String value) {
-      for (ResourceType resourceType : ResourceType.values()) {
-          if (resourceType.toString().equals(value)) {
-              return resourceType;
+    public static MetadataResourceVisibility parse(String value) {
+      for (MetadataResourceVisibility metadataResourceVisibility : MetadataResourceVisibility.values()) {
+          if (metadataResourceVisibility.toString().equals(value)) {
+              return metadataResourceVisibility;
           }
       }
       return null;
@@ -48,4 +60,12 @@ public enum ResourceType {
     public String toString() {
         return this.value;
     }
+
+    public static final Comparator<MetadataResource> sortByFileName =
+            new Comparator<MetadataResource>() {
+                public int compare(MetadataResource o1, MetadataResource o2) {
+                    return o1.getId().compareTo(
+                            o2.getId());
+                }
+            };
 }

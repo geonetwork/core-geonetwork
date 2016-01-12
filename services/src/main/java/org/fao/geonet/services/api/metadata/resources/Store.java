@@ -23,8 +23,10 @@
  * ==============================================================================
  */
 
-package org.fao.geonet.services.metadata.resources;
+package org.fao.geonet.services.api.metadata.resources;
 
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
@@ -46,18 +48,18 @@ public interface Store {
      * @return A list of resources
      * @throws Exception
      */
-    List<Resource> getResources(String metadataUuid, Sort sort, String filter) throws Exception;
+    List<MetadataResource> getResources(String metadataUuid, Sort sort, String filter) throws Exception;
 
     /**
      * Retrieve all resources for a metadata having a specific sharing policy
      *
      * @param metadataUuid The metadata UUID
-     * @param resourceType The type of sharing policy {@link ResourceType}
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      * @param filter       a {@link java.nio.file.Files#newDirectoryStream() GLOB expression} to filter resources eg. *.{png|jpg}
      * @return A list of resources
      * @throws Exception
      */
-    List<Resource> getResources(String metadataUuid, ResourceType resourceType, String filter) throws Exception;
+    List<MetadataResource> getResources(String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String filter) throws Exception;
 
     /**
      * Retrieve a metadata resource path.
@@ -74,44 +76,44 @@ public interface Store {
      *
      * @param metadataUuid The metadata UUID
      * @param file  The resource file
-     * @param resourceType The type of sharing policy {@link ResourceType}
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      * @return  The resource description
      * @throws Exception
      */
-    Resource putResource(String metadataUuid, MultipartFile file, ResourceType resourceType) throws Exception;
+    MetadataResource putResource(String metadataUuid, MultipartFile file, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
 
     /**
      * Add a new resource from a local file path.
      *
      * @param metadataUuid The metadata UUID
      * @param filePath  The resource local filepath
-     * @param resourceType The type of sharing policy {@link ResourceType}
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      * @return  The resource description
      * @throws Exception
      */
-    Resource putResource(String metadataUuid, Path filePath, ResourceType resourceType) throws Exception;
+    MetadataResource putResource(String metadataUuid, Path filePath, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
 
     /**
      * Add a new resource from a URL.
      *
      * @param metadataUuid The metadata UUID
      * @param fileUrl  The resource file URL
-     * @param resourceType The type of sharing policy {@link ResourceType}
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      * @return  The resource description
      * @throws Exception
      */
-    Resource putResource(String metadataUuid, URL fileUrl, ResourceType resourceType) throws Exception;
+    MetadataResource putResource(String metadataUuid, URL fileUrl, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
 
     /**
      * Change the resource sharing policy
      *
      * @param metadataUuid The metadata UUID
      * @param resourceId    The resource identifier
-     * @param resourceType The type of sharing policy {@link ResourceType}
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      * @return
      * @throws Exception
      */
-    Resource patchResourceStatus(String metadataUuid, String resourceId, ResourceType resourceType) throws Exception;
+    MetadataResource patchResourceStatus(String metadataUuid, String resourceId, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
 
 
     /**

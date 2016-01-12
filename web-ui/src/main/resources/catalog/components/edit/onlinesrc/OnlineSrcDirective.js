@@ -48,12 +48,8 @@
    *    here is watching this
    *    value to refresh when it is required.</li>
    *  <li> When the metadata is saved, the
-   *  gnCurrentEdit.saving flag is set
-   *    to true and we refresh the data. It doesn't
-   *    append when the onlinesrcService
-   *    wants to save the metadata (the saving flag
-   *    is kept as false) to avoid
-   *    undesired refresh.</li>
+   *  gnCurrentEdit.version is updated and the list
+   *  of resources is reloaded.</li>
    * </ul>
    *
    */
@@ -102,9 +98,10 @@
                 }
               });
 
-              // When saving is done, refresh validation report
-              scope.$watch('gnCurrentEdit.saving', function(newValue) {
-                if (newValue === false) {
+              // When saving is done, refresh related resources
+              scope.$watch('gnCurrentEdit.version',
+                function(newValue, oldValue) {
+                if (parseInt(newValue || 0) > parseInt(oldValue || 0)) {
                   loadRelations();
                 }
               });

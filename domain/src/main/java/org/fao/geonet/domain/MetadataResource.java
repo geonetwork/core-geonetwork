@@ -23,16 +23,21 @@
  * ==============================================================================
  */
 
-package org.fao.geonet.services.metadata.resources;
+package org.fao.geonet.domain;
 
-import java.beans.PropertyEditorSupport;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by francois on 31/12/15.
  */
-public class SortConverter extends PropertyEditorSupport {
-    @Override
-    public void setAsText(final String text) throws IllegalArgumentException {
-        setValue(Sort.valueOf(text.trim()));
-    }
+@XmlRootElement(name = "resource")
+@XmlAccessorType(XmlAccessType.FIELD)
+public interface MetadataResource {
+    String getId();
+    String getUrl();
+    String getType();
+    double getSize();
 }
