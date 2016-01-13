@@ -17,6 +17,7 @@ public class SetSequenceValueToMaxOfMetadataAndStats implements DatabaseMigratio
         try (Statement statement = connection.createStatement()) {
             final String numberOfMetadataSQL = "SELECT max(id) as NB FROM Metadata";
             final String numberOfParamsSQL = "SELECT max(id) as NB FROM Params";
+            final String numberOfRequestsSQL = "SELECT max(id) as NB FROM Requests";
 
             ResultSet metadataResultSet = statement.executeQuery(numberOfMetadataSQL);
             int numberOfMetadata = 0;
@@ -41,8 +42,18 @@ public class SetSequenceValueToMaxOfMetadataAndStats implements DatabaseMigratio
                 paramsResultSet.close();
             }
 
+            int numberOfRequests = 0;
+            ResultSet requestsResultSet = statement.executeQuery(numberOfRequestsSQL);
             try {
-                int newSequenceValue = Math.max(numberOfMetadata, numberOfParams) + 1;
+                if (requestsResultSet.next()) {
+                    numberOfRequests = requestsResultSet.getInt(1);
+                }
+                Log.debug(Geonet.DB, "  Number of requests (statistics): " + numberOfRequests);
+            } finally {
+                requestsResultSet.close();
+            }
+            try {
+                int newSequenceValue = Math.max(numberOfMetadata, Math.max(numberOfParams, numberOfRequests)) + 1;
                 Log.debug(Geonet.DB, "  Set sequence to value: " + newSequenceValue);
                 final String updateSequenceSQL = "ALTER SEQUENCE HIBERNATE_SEQUENCE " +
                         "RESTART WITH " + newSequenceValue;
