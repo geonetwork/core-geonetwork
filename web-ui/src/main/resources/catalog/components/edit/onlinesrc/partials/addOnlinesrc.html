@@ -2,6 +2,7 @@
   <div class="row">
     <div class="col-md-6">
       <form id="gn-upload-onlinesrc"
+            name="gnAddLink"
             class="form-horizontal"
             role="form"
             method="POST">
@@ -33,15 +34,18 @@
           </div>
 
           <!-- URL text field -->
-          <div class="form-group">
+          <div class="form-group"
+               data-ng-class="gnAddLink.url.$valid ? '' : 'has-error'">
             <label for="onlinesrcUrl"
                    class="col-sm-2 control-label"
                    data-translate="">url</label>
             <div class="col-sm-10">
               <input data-ng-model="params.url"
-                     data-ng-model-options="{debounce:500}"
-                     class=""
-                     type="text"
+                     data-ng-model-options="{debounce: 500}"
+                     required=""
+                     name="url"
+                     class="form-control"
+                     type="url"
                      data-ng-blur="loadWMSCapabilities()"
                      id="onlinesrcUrl"
                      placeholder="http://">
@@ -188,6 +192,7 @@
 
   <div class="">
     <button type="button"
+            data-ng-disabled="!gnAddLink.$valid"
             class="btn navbar-btn btn-success"
             data-gn-click-and-spin="addOnlinesrc()">
       <i class="fa gn-icon-onlinesrc" />
