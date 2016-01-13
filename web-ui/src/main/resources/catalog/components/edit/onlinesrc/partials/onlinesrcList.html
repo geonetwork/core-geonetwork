@@ -79,7 +79,9 @@
       <ul class="list-inline">
         <li class="gn-list-thumb thumbnail"
             data-ng-repeat="thumb in relations.thumbnail">
-          <a data-ng-href="{{thumb.id}}" target="_blank">
+          <a data-ng-href="{{thumb.id}}"
+             target="_blank"
+             title="{{thumb.title}}">
             <img class="thumb-small"
                  data-ng-src="{{thumb.id}}" />
           </a>
