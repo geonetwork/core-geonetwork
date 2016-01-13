@@ -7,15 +7,17 @@
             method="POST">
         <div class="onlinesrc-container">
 
-          <label class="radio-inline"
-                 data-ng-repeat="c in config">
-            <input type="radio"
-                   name="linkType"
-                   data-ng-model="params.linkType"
-                   data-ng-value="c">
-            <i class="{{c.icon}}"/>&nbsp;
-            {{c.label | translate}}
-          </label>
+          <div data-ng-show="config.length > 1">
+            <label class="radio-inline"
+                   data-ng-repeat="c in config">
+              <input type="radio"
+                     name="linkType"
+                     data-ng-model="params.linkType"
+                     data-ng-value="c">
+              <i class="{{c.icon}}"/>&nbsp;
+              {{c.label | translate}}
+            </label>
+          </div>
 
           <!-- Protocol Combo -->
           <div class="form-group"
@@ -101,7 +103,7 @@
 
           <!-- Description Text area -->
           <div class="form-group"
-               data-ng-hide="params.linkType.fields.description">
+               data-ng-show="params.linkType.fields.description">
             <label for="onlinesrcDescr"
                    class="col-sm-2 control-label"
                    data-translate="">Description</label>

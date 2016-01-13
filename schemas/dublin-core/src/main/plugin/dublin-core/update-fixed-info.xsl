@@ -38,39 +38,4 @@
       </dc:identifier>
     </simpledc>
   </xsl:template>
-
-  <!-- ================================================================= -->
-
-  <xsl:template match="dct:references">
-    <xsl:copy>
-      <xsl:variable name="value" select="normalize-space(.)"/>
-
-      <xsl:choose>
-        <!-- convention: use upload@ prefix in dct:references to identify an uploaded file from metadata editor
-                         dct:refereces stores then the URL to download the uploaded file.
-        -->
-        <xsl:when test="starts-with($value, 'upload@')">
-          <xsl:variable name="valueFixed" select="replace($value,'upload@', '')"/>
-          <xsl:choose>
-            <xsl:when test="/root/env/system/downloadservice/simple='true'">
-              <xsl:value-of select="concat(/root/env/siteURL,'resources.get?uuid=',/root/env/uuid,'&amp;fname=',$valueFixed,'&amp;access=private')"/>
-            </xsl:when>
-            <xsl:when test="/root/env/system/downloadservice/withdisclaimer='true'">
-              <xsl:value-of select="concat(/root/env/siteURL,'file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',$valueFixed,'&amp;access=private')"/>
-            </xsl:when>
-            <xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
-              <xsl:value-of select="."/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:when>
-        <!-- if not an uploaded file, keep the value -->
-        <xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
-          <xsl:value-of select="."/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- ================================================================= -->
-
 </xsl:stylesheet>

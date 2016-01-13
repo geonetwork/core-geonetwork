@@ -156,9 +156,11 @@
               var schemaConfig = {
                 'dublin-core': [{
                   id: 'onlinesrc',
+                  label: 'addOnlinesrc',
+                  icon: 'fa gn-icon-onlinesrc',
                   fn: gnOnlinesrc.addOnlinesrc,
                   fields: {
-                    'url': true
+                    'url': 'url'
                   }
                 }
                 ],

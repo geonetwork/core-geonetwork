@@ -17,15 +17,7 @@ Stylesheet used to update metadata adding a reference to a parent record.
           select="dc:*|dct:*"/>
 
       <dct:references>
-        <xsl:choose>
-          <xsl:when test="not(starts-with($url, 'http'))">
-            upload@<xsl:value-of select="$name"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="$url"/>
-          </xsl:otherwise>
-        </xsl:choose>
-
+          <xsl:value-of select="$url"/>
       </dct:references>
     </xsl:copy>
   </xsl:template>
