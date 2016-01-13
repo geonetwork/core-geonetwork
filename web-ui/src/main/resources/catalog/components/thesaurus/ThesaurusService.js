@@ -31,6 +31,9 @@
       },
       getTitle: function() {
         return this.props.title;
+      },
+      get: function() {
+        return this.props;
       }
     };
 

@@ -501,10 +501,12 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 
             Element elActivated= new Element("activated");
+
+            // By default thesaurus are enabled (if nothing defined in db)
             char activated = Constants.YN_TRUE;
             final ThesaurusActivationRepository activationRepository = context.getBean(ThesaurusActivationRepository.class);
             final ThesaurusActivation activation = activationRepository.findOne(currentTh.getKey());
-            if (activation == null || !activation.isActivated()) {
+            if (activation != null && !activation.isActivated()) {
                 activated = Constants.YN_FALSE;
             }
             elActivated.setText(""+activated);
