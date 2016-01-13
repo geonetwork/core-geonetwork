@@ -99,6 +99,16 @@
                 } else {
                   u.enableallowedcategories = false;
                 }
+                //FIXME this should be already on the previous list
+                if (u.defaultcategory) {
+                  $http.get('admin.group.get?_content_type=json&id=' + u.id).
+                      success(function(data) {
+                        if (data && data[0] && data[0].defaultcategory &&
+                            data[0].defaultcategory[0]) {
+                          u.defaultcategory = data[0].defaultcategory[0];
+                        }
+                      });
+                }
               });
               $scope.isLoadingGroups = false;
             }).error(function(data) {
@@ -300,12 +310,6 @@
         }
         $scope.userUpdated = true;
         if ($scope.userIsAdmin) {
-          // Unselect all groups option
-          for (var i = 0; i < $scope.profiles.length; i++) {
-            if ($scope.profiles[i] !== 'Administrator') {
-              $('#groups_' + $scope.profiles[i])[0].selectedIndex = -1;
-            }
-          }
           $scope.userSelected.profile = 'Administrator';
         } else {
           // Define the highest profile for user
@@ -321,15 +325,14 @@
             }
           }
           $scope.userSelected.profile = newprofile;
-
-          // If user is reviewer in one group, he is also editor for that group
-          var editorGroups = $('#groups_Editor')[0];
-          var reviewerGroups = $('#groups_Reviewer')[0];
-          if (reviewerGroups.selectedIndex > -1) {
-            for (var j = 0; j < reviewerGroups.options.length; j++) {
-              if (reviewerGroups.options[j].selected) {
-                editorGroups.options[j].selected = true;
-              }
+        }
+        // If user is reviewer in one group, he is also editor for that group
+        var editorGroups = $('#groups_Editor')[0];
+        var reviewerGroups = $('#groups_Reviewer')[0];
+        if (reviewerGroups.selectedIndex > -1) {
+          for (var j = 0; j < reviewerGroups.options.length; j++) {
+            if (reviewerGroups.options[j].selected) {
+              editorGroups.options[j].selected = true;
             }
           }
         }
@@ -502,3 +505,4 @@
     }]);
 
 })();
+

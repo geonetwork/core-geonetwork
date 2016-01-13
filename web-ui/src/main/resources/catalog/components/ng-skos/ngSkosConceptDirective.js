@@ -83,13 +83,25 @@
                            c.prefLabel[Object.keys(c.prefLabel)[0]];
                scope.addConceptToList(c.uri, label);
              };
-             scope.addConceptNavigationHelp = function(c, key) {
+
+
+             scope.initConceptNavigationHelp = function(c) {
+               if (c.help) {
+                 return;
+               }
                var label = c.prefLabel[scope.mainLanguage] ||
                            c.prefLabel[Object.keys(c.prefLabel)[0]],
                    labelAncestor = c.ancestor.prefLabel[scope.mainLanguage] ||
                                    c.ancestor.prefLabel[
                                      Object.keys(c.ancestor.prefLabel)[0]];
-               return label + $translate(key) + labelAncestor;
+               c.help = {
+                 broader: label + ' ' + $translate('conceptBroader') +
+                 ' ' + labelAncestor,
+                 narrower: label + ' ' + $translate('conceptNarrower') +
+                 ' ' + labelAncestor,
+                 related: label + ' ' + $translate('conceptRelated') +
+                 ' ' + labelAncestor
+               };
              };
              scope.$watch('concept', function(concept) {
                 angular.forEach([
@@ -99,8 +111,7 @@
                ],
                function(field) {
                  scope[field] = concept ? concept[field] : null;
-               }
-                );
+               });
              },true);
            }
          };

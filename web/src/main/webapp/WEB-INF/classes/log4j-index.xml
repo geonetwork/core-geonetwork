@@ -37,6 +37,9 @@
     <logger name="geonetwork.editor" additivity="false">
         <level value="WARN" />
     </logger>
+    <logger name="geonetwork.databasemigration">
+        <level value="WARN" />
+    </logger>
     <logger name="geonetwork.schemamanager" additivity="false">
         <level value="WARN" />
     </logger>

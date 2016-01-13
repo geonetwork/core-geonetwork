@@ -1,0 +1,286 @@
+================================================================================
+===
+=== GeoNetwork 3.0.3: List of changes
+===
+================================================================================
+- Fix CSW tests.
+- Harvester / CSW / Infinite loop #1355.
+- JSLint.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- JSLint.
+- Update from transifex.
+- Harvester / CSW / If outputSchema defined, set the appropriate typename. If not set, fallback to previous mechanism. Some CSW server does not well support multiple comma separated typenames.
+- Improve csw:Record support.
+- Merge pull request #1346 from landryb/fix/1308
+- Fix 2.10.4 > 3.x migration due to wrong package name. Fix 3.0.2 > 3.0.3 migration is made first by hibernate, then by the SQL.
+- fix db migration #1342 - add 2 steps for db migration before or after hibernate.
+- Advanced Groovy View / Relation not displayed #1348
+- Avoid bad layout in facet list on long words.
+- Editor / Skos browser / Improve layout - related to #1336.
+- Directory manager / Facet on group does not work #1353.
+- formatter: add some translation in json loc files
+- formatter: put link for dc:relation
+- dc formatter: remove extra window.open text
+- Use gnMap functions to add the layer to the map and properly zoom to it
+- Check that the md extent is valid before calling fit() (#1308)
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Trigger SQL migration when JpaTransactionMan is initialized. Hibernate should migrate first the schema.
+- Fixes #1338
+- Rationalize templates for enumerations, ensure correct editInfo is used and treat topicCategory consistently as field in editor
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- #1173 Update URL of k-int repo for marc4j
+- #1203 Metadata detail page in english display the keywords in all the languages
+- Related to #1297 - If admin can be reviewer in a group, enable also editor role like other users.
+- Fix facet search when not encoded in URL.
+- Merge branch 'landryb-fix/1297' into 3.0.x
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Updates from transifex.
+- Merge branch 'fix/1297' of https://github.com/landryb/core-geonetwork into landryb-fix/1297
+- Merge pull request #1343 from landryb/fix/1342
+- Workflow / When status change to DRAFT and current user is editor, record should be unpublished with no error #1270.
+- Record view / Display properly when there is only one keyword.
+- INSPIRE view is not available in the editor after enabling INSPIRE and the INSPIRE view in the settings #1031.
+- Editor / Custom view (eg. INSPIRE) / multilingual elements lost when a template mode is used #1262
+- Disable option for user AFA editor can't edit its own information - related to #1258.
+- Fix db migration by ensuring field exists before setting its value (#1342)
+- Contribute button for RegisteredUsers #1256.
+- User administrator can't create users #1320.
+- LocalFsHarvesterFileVisitor / Compare date without ms #1275.
+- Merge pull request #1339 from landryb/feature/geopublish-style-in-workspace-3.0.x
+- Merge pull request #1340 from pmauduit/redeploy-improvements
+- Merge pull request #1341 from pmauduit/ldap-sync-improvements
+- Allow a global administrator to have other roles in groups (#1297)
+- LDAP sync job - closing search contexts
+- Fixing h2 management for wro4j
+- Fixing lucene idx releasing locks across redeploys
+- Add a 'pushstyleinworkspace' flag to MapServer table
+- Add quietOnNotFound=true when checking for layer/style presence
+- Don't log postData if it's null
+- Stop passing around a createStyle boolean, directly call g.createStyle() where appropriate
+- If an sld body is available in a geofile, try to publish it into the remote server
+- Add the ability to check if the GeoFile contains an sld file
+- Publish the style in the workspace or global style area depending on pushStyleInWorkspace
+- Add pushStyleInWorkspace boolean member to GeoServerRest object
+- Properly set/get pushstyleinworkspace when setting/getting MapServer object
+- Fix input name, styling, and use data-ng-checked to properly initialize checkbox for pushStyleInWorkspace
+- add french translation for pushStyleInWorkspace
+- Use more common assignment style, and return MapServer object in setter for chaining
+- Add a 'pushstyleinworkspace' boolean to MapServer object.
+- Publish the style in the same workspace used for the datastore & layer
+- JSLint.
+- xml2json render library should escape quotes #1331 - At least, don't call the admin.group.get service when no group is defined.
+- Group Admin / Allowed category NPE #1337
+- Group Admin / Allowed category NPE #1337.
+- Display properly multiple resource type.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Merge pull request #1182 from fxprunayre/improvement/dbtranslation-service
+- Merge pull request #1330 from SPW-DIG/improvement/homepagecard
+- Merge pull request #1336 from anzmest/3.0.x
+- Organize import.
+- Merge remote-tracking branch 'origin/3.0.x' into improvement/dbtranslation-service
+- Some useful debug.
+- Get dependent schemas and process for codelists/labels/help if the given schema doesn't have what we want
+- Editor / Date type field label does not take into account context element.
+- Editor / It does not make sense to display section toggle for XML view - related to #1335.
+- ISO19139 / Allow editor configuration to override thesaurus name - backported from ISO19115-3.
+- Add script to retrieve translations from transifex.
+- Remove AU stuff
+- Editor / Custom view does not render multiple match #1328 - missing file.
+- Include aliases to support generic name requests for helpers and codelists
+- Replace hard coding with profile support
+- Add help tips to skos concept browser Add a click box to make a concept current - not correct to use the relationship
+- ngSkos directive / Add basic support for language
+- GetTopConcept label will be translated on client side. Tentative to add default language labels.
+- Do not mix previous concept between directive. Move the previous var to the scope.
+- JSLint. Fix and format some JS issues.
+- Thesaurus Regions / Add top concepts.
+- Include skos-thesaurus browser: as per proposal Remove namespace hardcoding (gnNamespaces), replace with namespaces requested from server - see SchemaManagerService - adjust XML to suit
+- Editor / Add toggle button to easily collapse first level section #1335.
+- Transaction operation with Virtual CSW ? #1307. Redirect to main csw end point for harvest and publication. Avoid NPE on no Request parameter.
+- Editor / Add support for conditional tabs #1333 Editor / Add support for conditional text element #1332
+- Editor configuration / Improve XSD.
+- Update from transifex.
+- Remove comment, reindentation
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Record view / Avoid error on duplicated format or topicCat.
+- Fix contact display.
+- Editor / Add the capability to label a + button in custom views #1329 Editor / Custom view does not render multiple match #1328
+- Editor config / Some more dock on some specific cases.
+- Add @import boostrap less variables
+- Checked facets in the search view provided by a selected topic, theme or type from homepage
+- Change badge color for ressource types
+- Improve badge
+- Improve infolist MTD card
+- Fix selector for :before in less
+- Editor / Fix date initialization when used in a template field.
+- Facet / Denominator / Fix missing prefix - issue introduced by facet hierarchy.
+- Editor / Make action button easier to customize using less - Related to #1322.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Fix Wro4j compilation issue.
+- Export format should be pluggable by profile #1327.
+- Fix javascript error when a md has no responsibleParty
+- Add harvester logs in .gitignore
+- Oracle does not accept NULL password (eg. for an LDAP user) #1326
+- Config editor / Directive dealing with cariage return value fails #1325.
+- JSLint.
+- Editor configuration / Add the capability to create button for associated resource in the form #1322.
+- JSLint.
+- Bug fixed: All values that started with "on" were modified on the settings!
+- user service: the email is correctly updated several emails could be passed from ui page using delimiter '|'
+- Fixing problem with dates on OAIPMH harvester due to html5 date input type
+- Merge pull request #1315 from josegar74/issue-1314
+- ISO19139 / Properly retrieve overriden thesaurus config.
+- ISO19139 / citedResponsiblParty is not really used. Do not make it an exception in flat mode.
+- Dublin Core / Add ISO19139 codelist for accrualPeriodicity.
+- Open link in search results like in record view.
+- ISO19139 / Label for scale denominator.
+- Region picker / Do not display choice if only one available.
+- Dublin core / Index maintenance and update frequency.
+- #1314 Allow to enable/disable users
+- CSW / Typenames check is invalid #1311.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Facet translations from DB fields not returned #1309.
+- Fix helper list for template mode.
+- Revert "Changes to 3.x.x - why is this not in trunk?"
+- Changes to 3.x.x - why is this not in trunk?
+- Initialize group labels when importing a group from LDAP (#1294)
+- Fix ldap attributes mapping (1293)
+- Check if current opAllowed is a notify operation, continue otherwise (#1299)
+- Get username from userSession before updating metadataFileDownload from a task (#1298)
+- OGC WxS Harvester / Properly set protocol for WFS service.
+- Display category icons even if no cat or topiccat are set. It may happen that only INSPIRE theme are set.
+- OGC WxS Harvester / Layer keywords have higher priorities if set. If not, use service keywords.
+- Merge pull request #1291 from juanluisrp/patch-2
+- JSLint.
+- JSLint.
+- Add WFS layer to the map fails #1292. Add feature info tooltip.
+- Fix WRO4J JS error introduced in https://github.com/geonetwork/core-geonetwork/commit/5b34ab7cc362db7b24bf43c3336b973b147aed55.
+- Merge pull request #1260 from juanluisrp/fix-showa-typo
+- Merge pull request #1208 from Cicuta33/patch-2
+- Merge pull request #1204 from Delawen/add_bootstrap-table
+- Update commons-email to v1.4
+- MEF Import fail when groupOwner is null #1290.
+- Merge pull request #1280 from fxprunayre/improvement/csw-pluggable-outputschema
+- Update README.md
+- Merge pull request #1287 from mlefort/patch-1
+- Update fronted-maven-plugin version to 0.0.23
+- #1286: lazy setting the thesaurus into TermUriTranslator
+- Merge pull request #1285 from geosolutions-it/30x_1283_fix_inspire_themes_facets
+- #1283 Group INSPIRE themes facets in multilang catalogs
+- Properly update web.xml
+- Display 3.0.x branch build status.
+- Update README.md
+- Merge pull request #1207 from Delawen/categories_per_group
+- Merge remote-tracking branch 'trunk/3.0.x' into categories_per_group
+- Merge pull request #1206 from Delawen/3.0.x
+- Schema plugin schemas should be published when loaded. Drop useless fra.xsd.
+- CSW / Support pluggable outputSchema - Move XSL transformation.
+- CSW / Support pluggable outputSchema
+- CSW examples / Fix some errors in POST request. Use namespace for outputSchema. Better formatting.
+- Merge pull request #1279 from fxprunayre/improvement/csw
+- CSW / ISO19115 metadata are not supported anymore.
+- More meaningfull log message. Add default namespaces corresponding to typeNames.
+- CSW / HTTP-POST / Set namespaces for all typenames #1163 - typeName in POST is space separated.
+- Merge remote-tracking branch 'origin/3.0.x' into improvement/csw
+- Merge pull request #1278 from juanluisrp/update-font-awesome-to-4-4-0
+- Update Font Awesome to v4.4.0
+- Avoid to duplicate element when using a template mode. This was happening when same node name was used in different child elements eg. contactInfo in ISO19115-3 Responsibility.
+- CSW / HTTP-GET / Do not set constraint if none defined #1162.
+- Merge pull request #1277 from Vampouille/mail_utf8
+- Set Emails encoding to UTF-8
+- #1272 Fix some other file paths in tests (schemas-test/, wro4j/)
+- Remove TODO which is done.
+- Revert "Add missing settings added in https://github.com/geonetwork/core-geonetwork/commit/2d31412ec1356beee073394733f1537f14fee643"
+- Add missing settings added in https://github.com/geonetwork/core-geonetwork/commit/2d31412ec1356beee073394733f1537f14fee643
+- Harvester / CSW / Add warning and info message once CSW server URL is set and errors may be returned.
+- #1272 Fix file path in test
+- Fix layout of transfert ownership popup when too many users in the catalog.
+- RSS / Add all thumbnails and remove duplicated guid (which is invalid).
+- Add missing migration statement for UUID structure.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Metadata identifier list not available for editors when creating a record #1269.
+- ui: editor cant set status to 2,3,5
+- #27094 - Disable not allowed status in status panel
+- ui: fix getLinks* methods if only one link link prop added as array type prop list
+- Do not lose previous extent on load
+- #1267 Make CSW harvester aware of returned metainfo
+- Help not found in metadata creation #1263.
+- Some profiles need access to XSL utilities.
+- Merge pull request #1188 from fxprunayre/improvement/validate-a-set-of-records
+- Merge remote-tracking branch 'origin/3.0.x' into improvement/validate-a-set-of-records
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Display organisation logo in search results #1266.
+- #1257 don't display NewUser button for non-admins
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- JSLint.
+- Update dutch strings.xml for iso19139 schema with additional translations
+- Display organisation logo in search results #1266.
+- Updates from transifex.
+- Update strings.xml
+- Create i18n.xml
+- Fix data-ng-showa typo
+- ui : don't use cache for getLinkByType if group is given
+- Fix virtual csw editor there was an error when changing group with combo and then saving
+- Security bug fixing http://sourceforge.net/p/geonetwork/mailman/message/34534187/
+- #1255 Add missing files for ITA localization.
+- Merge pull request #1253 from geosolutions-it/1244_enabled_test_web_module
+- Merge pull request #1251 from geosolutions-it/1216_remove_hardcoded_character
+- Merge pull request #1252 from geosolutions-it/1250_fix_test_win
+- Close #1244 reactivated web module tests
+- close #1250 resolveRessourcesWithEnvVariable test fails on win
+- close #1216 remove hardcoded chars in KeywordSort
+- Remove import of gn.less, that breaks the UI and add @Ignore to Wro4jJsCssCompilationTest.testCssCompilation that is failing for now if the import is removed
+- Merge pull request #1214 from geosolutions-it/1213_fix_core-gn_tests
+- close #1213 core-gn tests fail
+- Merge pull request #1190 from josegar74/feature-custom-metadata-identifiers
+- Placeholder fix proposed by Juan
+- Hide categories not allowed on editor (if any)
+- Save a list of categories associated to a group to filter the list of categories offered per group
+- Adding default category to group. If defined, all metadata created on that group will be assigned the default category
+- Adding bootstrap-table to basic UI https://github.com/wenzhixin/bootstrap-table
+- Merge pull request #1177 from geosolutions-it/1176_enable_tests
+- ui: remove dependcy of gnMap in catController
+- Merge pull request #1195 from arnaud-morvan/wps-response-document
+- ui: revert back the execution of importProj4js to load projections from settings
+- Parse gnWpsProcessForm defaults as KVP params
+- Initialize gnBboxInput extent value
+- Handle ResponseDocument options
+- [wps] handle input.literalData.allowedValues
+- [wps] Apply scope after dragboxInteraction boxend event
+- Print improvements
+- [geonetwork] Rplace deprecated FeatureOverlay
+- ui: fix due to ol3 fitExtent removal
+- [geonetwork] Fixes FeatureOverlay removal glitches in NCWMS
+- #1189 Metadata Identifier Templates. Jslint fixes, update property name in MetadataIdentifierTemplate to be clear and move metadata identifier templats to Metadata&Templates in the admin menu
+- Fixed inarray check in if statement when creating new metadata.
+- Change how json files are loaded on server so that it works on windows.
+- Report an error if wms capabilities url is invalid or response is invalid.
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into 3.0.x
+- Merge pull request #1186 from pmauduit/overrides-env-variables
+- Fix XSD path.
+- Schema / Add more doc in the XSD which is converted to create the RST page for the documentation.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Add Czech translation #1192.
+- Rename report.
+- #1189 Metadata Identifier Templates
+- env variables in overrides - fixing runtime issues
+- Resolving environment variables in overrides
+- Merge pull request #1183 from josegar74/feature-oai-maxrecords
+- Improve parsing of misleading attribute in menu-builder.
+- Fixed import error message on IE
+- Batch validation #1172
+- Allow to configure the max. records to return in OAI responses
+- i18n / Avoid duplication of configuration for translations #1180.
+- fileupload ui : add option for single upload only
+- Display schematron report in order following the display priority in the schematron table
+- #1176 Enable tests
+- fix md.viewer service view
+- Shib.login deprecated in 3.0.3. #1156
+- Merge pull request #1169 from fxprunayre/cleaning/remove-old-shibboleth-login
+- Merge pull request #1175 from juanluisrp/fix-1174-release-connections
+- Remove redundant null check
+- Release resources in the web notifications mechanism
+- Add migration script for 3.0.3.
+- Update version to 3.0.3-SNAPSHOT
+- Deprecate shib.user.login ? #1156
+- Configurable limit on OAI-PMH metadata response

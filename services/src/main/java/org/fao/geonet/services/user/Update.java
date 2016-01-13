@@ -148,13 +148,10 @@ public class Update {
                     User adminUser = adminEnabledList.get(0);
                     if (adminUser.getId() == Integer.parseInt(id)) {
                         throw new IllegalArgumentException(
-                                "Trying to disable all adminstrator users is not allowed");
+                                "Trying to disable all administrator users is not allowed");
                     }
                 }
-
             }
-
-            groups.clear();
         }
 
 

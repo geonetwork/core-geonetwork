@@ -8,5 +8,6 @@
   "parent": "Parent",
   "testString": "Cette chaine de caractères est là pour un test, ne pas la supprimer",
   "xml": "XML",
-  "uncategorizedKeywords": "Non classé"
+  "uncategorizedKeywords": "Non classé",
+  "related-link": "Relations"
 }

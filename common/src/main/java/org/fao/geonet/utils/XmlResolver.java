@@ -1,12 +1,5 @@
 package org.fao.geonet.utils;
 
-import org.apache.jcs.access.exception.CacheException;
-import org.apache.xerces.dom.DOMInputImpl;
-import org.apache.xerces.util.XMLCatalogResolver;
-import org.fao.geonet.JeevesJCS;
-import org.jdom.Element;
-import org.w3c.dom.ls.LSInput;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +7,16 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import org.apache.jcs.access.exception.CacheException;
+import org.apache.xerces.dom.DOMInputImpl;
+import org.apache.xerces.util.XMLCatalogResolver;
+import org.fao.geonet.JeevesJCS;
+import org.jdom.Element;
+import org.w3c.dom.ls.LSInput;
 
 /* Resolves system and public ids as well as URIs using oasis catalog
    as per XMLCatalogResolver, but goes further and retrieves any
@@ -67,11 +68,16 @@ public class XmlResolver extends XMLCatalogResolver {
         if (Log.isDebugEnabled(Log.XML_RESOLVER))
             Log.debug(Log.XML_RESOLVER, "Jeeves XmlResolver: Before resolution: Type: " + type + " NamespaceURI :" + namespaceURI + " " +
                                         "PublicId :" + publicId + " SystemId :" + systemId + " BaseURI:" + baseURI);
-
-        LSInput result = tryToResolveOnFs(publicId, systemId, baseURI);
-        if (result != null) {
-            return result;
-        }
+        LSInput result = null;
+        
+        try{
+            result = tryToResolveOnFs(publicId, systemId, baseURI);
+            if (result != null) {
+                return result;
+            }
+        }catch(FileSystemNotFoundException e) {
+            //Do nothing, just continue
+        }  
 
         result = super.resolveResource(type, namespaceURI, publicId, systemId, baseURI);
 

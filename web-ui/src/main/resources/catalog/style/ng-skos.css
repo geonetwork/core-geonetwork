@@ -2,10 +2,17 @@
 /* in order of their occurrence in the demo */
 
 .tmpl-border {
-    border: 1px solid #999;
-    padding:10px 20px 5px 20px;
-    margin:5px 0px 10px 0px;
+    background-color:#FFFFFF;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding:5px 5px 5px 5px;
+    /*margin:5px 0px 10px 0px;*/
     display:inline-block;
+}
+
+.tmpl-border hr {
+     margin-top: 2px;
+     margin-bottom: 2px;
 }
 
 /* label styles */
@@ -105,17 +112,17 @@ ul.ancestors li {
     min-width:250px;
 }
 .skos-concept{
-    padding:10px 15px;
-    margin-bottom:8px;
+    /*padding:10px 15px;*/
+    /*margin-bottom:8px;*/
 }
 
 .skos-concept ul{
     list-style-type:none;
-    margin-bottom:5px;
+    margin-bottom:2px;
     padding-left:0px;
 }
 .skos-concept li{
-    display:inline-block;
+    /*display:inline-block;*/
 }
 /* 'skos-concept' altLabel display*/
 .skos-concept-altlabel{

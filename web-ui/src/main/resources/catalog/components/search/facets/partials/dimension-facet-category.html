@@ -11,7 +11,7 @@
       <input type="checkbox"
              data-ng-checked="isInFilter(c)"
              data-ng-click="filter(c, $event)"/>&nbsp;
-      <span class="gn-facet-label">{{(c['@label'] || c['@value']) | characters:30}}</span>&nbsp;
+      <span class="gn-facet-label">{{(c['@label'] || c['@value']) | characters:20}}</span>&nbsp;
       <span class="gn-facet-count">({{c['@count']}})</span>
     </label>
    <div data-gn-facet-dimension-category="c.category"

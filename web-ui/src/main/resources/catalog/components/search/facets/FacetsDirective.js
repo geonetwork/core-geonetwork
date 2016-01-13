@@ -18,7 +18,8 @@
           facet: '@',
           indexKey: '@',
           params: '=',
-          currentFacets: '='
+          currentFacets: '=',
+          noCollapse: '@'
         },
         link: function(scope, element, attrs, controller) {
 
@@ -26,7 +27,12 @@
 
           // Facet is collapsed if not in current search criteria
           function isFacetsCollapse(facetKey) {
-            return !(scope.params && angular.isDefined(scope.params[facetKey]));
+            if (scope.noCollapse) {
+              return false;
+            } else {
+              return !(scope.params &&
+                  angular.isDefined(scope.params[facetKey]));
+            }
           };
 
           scope.collapsed = isFacetsCollapse(scope.indexKey);
