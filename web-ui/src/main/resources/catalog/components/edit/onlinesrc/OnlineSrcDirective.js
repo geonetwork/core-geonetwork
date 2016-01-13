@@ -145,7 +145,6 @@
         function(gnOnlinesrc, gnOwsCapabilities, gnEditor,
                  gnCurrentEdit, gnMap,
                  $rootScope, $translate, $timeout, $http) {
-
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -162,8 +161,7 @@
                   fields: {
                     'url': 'url'
                   }
-                }
-                ],
+                }],
                 'iso19139': [{
                   id: 'thumbnail',
                   label: 'addThumbnail',
@@ -185,8 +183,29 @@
                     'name': 'name',
                     'desc': 'desc'
                   }
-                }
-                ]
+                }],
+                'iso19115-3': [{
+                  id: 'thumbnail',
+                  label: 'addThumbnail',
+                  icon: 'fa gn-icon-thumbnail',
+                  fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
+                  fn: gnOnlinesrc.addThumbnailByURL,
+                  fields: {
+                    'url': 'thumbnail_url',
+                    'desc': 'thumbnail_desc'
+                  }
+                },{
+                  id: 'onlinesrc',
+                  label: 'addOnlinesrc',
+                  icon: 'fa gn-icon-onlinesrc',
+                  fn: gnOnlinesrc.addOnlinesrc,
+                  fields: {
+                    'url': 'url',
+                    'protocol': 'protocol',
+                    'name': 'name',
+                    'desc': 'desc'
+                  }
+                }]
               };
               scope.config = null;
               scope.linkType = null;
@@ -284,6 +303,10 @@
                 scope.metadataId = gnCurrentEdit.id;
                 scope.schema = gnCurrentEdit.schema;
                 scope.config = schemaConfig[scope.schema];
+                if (scope.config === undefined &&
+                    scope.schema.indexOf('iso19139') === 0) {
+                  scope.config = schemaConfig['iso19139'];
+                }
                 scope.params.linkType = scope.config[0];
 
                 if (angular.isUndefined(scope.isMdMultilingual) &&
@@ -311,18 +334,17 @@
                     scope.isMdMultilingual = false;
                   }
                 }
+
                 initThumbnailMaker();
-
+                resetForm();
                 $(scope.popupid).modal('show');
-
               });
 
-              // mode can be 'url' or 'upload'
+              // mode can be 'url' or 'thumbnailMaker' to init thumbnail panel
               scope.mode = 'url';
 
               // the form parms that will be submited
               scope.params = {};
-              scope.params.selectedLayers = [];
 
               // Tells if we need to display layer grid and send
               // layers to the submit
@@ -337,35 +359,42 @@
               var resetForm = function() {
                 scope.layers = [];
                 if (scope.params) {
-                  scope.params.desc = scope.isMdMultilingual ? {} : '';
                   scope.params.url = '';
-                  scope.params.name = scope.isMdMultilingual ? {} : '';
                   scope.params.protocol = '';
+                  scope.params.name = scope.isMdMultilingual ? {} : '';
+                  scope.params.desc = scope.isMdMultilingual ? {} : '';
                   scope.params.selectedLayers = [];
                   scope.params.layers = [];
                 }
               };
 
+              function buildObjectParameter(param) {
+                if (angular.isObject(param)) {
+                  var name = [];
+                  for (var p in param) {
+                    name.push(p + '#' + param[p]);
+                  }
+                  return name.join('|');
+                }
+                return param;
+              }
+              function setParameterValue(param, value) {
+                if (scope.isMdMultilingual) {
+                  $.each(scope.mdLangs, function(key, v){
+                    param[v] = value;
+                  });
+                } else {
+                  param = value;
+                }
+              }
               /**
                *  Add online resource
                *  If it is an upload, then we submit the form with right content
                *  If it is an URL, we just call a $http.get
                */
               scope.addOnlinesrc = function() {
-                if (angular.isObject(scope.params.name)) {
-                  var name = [];
-                  for (var p in scope.params.name) {
-                    name.push(p + '#' + scope.params.name[p]);
-                  }
-                  scope.params.name = name.join('|');
-                }
-                if (angular.isObject(scope.params.desc)) {
-                  var desc = [];
-                  for (var p in scope.params.desc) {
-                    desc.push(p + '#' + scope.params.desc[p]);
-                  }
-                  scope.params.desc = desc.join('|');
-                }
+                scope.params.name = buildObjectParameter(scope.params.name);
+                scope.params.desc = buildObjectParameter(scope.params.desc);
 
 
                 var processParams = {};
@@ -456,11 +485,11 @@
               scope.$watch('resource', function() {
                 if (scope.resource && scope.resource.url) {
                   scope.params.url = '';
-                  scope.params.name = '';
+                  setParameterValue(scope.params.name, '');
                   $timeout(function() {
                     scope.params.url = scope.resource.url;
-                    scope.params.name =
-                        scope.resource.id.split('/').splice(2).join('/');
+                    setParameterValue(scope.params.name,
+                      scope.resource.id.split('/').splice(2).join('/'));
                   }, 100);
                 }
               });
