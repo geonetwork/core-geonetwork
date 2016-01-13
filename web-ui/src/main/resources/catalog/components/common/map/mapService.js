@@ -928,7 +928,7 @@
             var $this = this;
 
             return gnOwsCapabilities.getWMSCapabilities(url).
-                then(function (capObj) {
+                then(function(capObj) {
 
                   var createdLayers = [];
 
@@ -936,7 +936,7 @@
                   for (var i = 0, len = layers.length; i < len; i++) {
                     var capL = layers[i];
                     var olL = $this.createOlWMSFromCap(map, capL);
-                    if(!createOnly) {
+                    if (!createOnly) {
                       map.addLayer(olL);
                     }
                     createdLayers.push(olL);
