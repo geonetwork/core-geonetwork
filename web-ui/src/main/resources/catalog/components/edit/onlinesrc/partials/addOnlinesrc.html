@@ -19,7 +19,12 @@
               {{c.label | translate}}
             </label>
           </div>
-
+          <br/>
+          <div class="alert alert-info"
+               data-ng-show="params.linkType.labelHelp">
+            {{params.linkType.labelHelp | translate}}
+          </div>
+          <br/>
           <!-- Protocol Combo -->
           <div class="form-group"
                data-ng-show="params.linkType.fields.protocol">

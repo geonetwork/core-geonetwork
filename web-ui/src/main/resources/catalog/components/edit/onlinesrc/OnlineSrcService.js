@@ -284,6 +284,12 @@
             closePopup(popupid);
           });
         },
+        addFcatReference: function(params, popupid) {
+          return runProcess(this,
+            setParams('fcats-file-add', params)).then(function() {
+            closePopup(popupid);
+          });
+        },
 
 
         /**

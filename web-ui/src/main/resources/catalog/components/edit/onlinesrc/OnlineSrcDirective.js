@@ -205,6 +205,16 @@
                     'name': 'name',
                     'desc': 'desc'
                   }
+                },{
+                  id: 'featurecatref',
+                  label: 'addFeatureCatalogRef',
+                  labelHelp: 'addFeatureCatalogRef-help',
+                  icon: 'fa fa-table',
+                  fn: gnOnlinesrc.addFcatReference,
+                  fields: {
+                    'url': 'url',
+                    'name': 'name'
+                  }
                 }]
               };
               scope.config = null;
