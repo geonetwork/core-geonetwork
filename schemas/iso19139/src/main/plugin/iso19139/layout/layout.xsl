@@ -301,8 +301,8 @@
       <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
       <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
       <xsl:with-param name="name" select="''"/>
-      <xsl:with-param name="editInfo" select="*/gn:element"/>
-      <xsl:with-param name="parentEditInfo" select="gn:element"/>
+      <xsl:with-param name="editInfo" select="../gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="../gn:element"/>
       <xsl:with-param name="isDisabled" select="true()"/>
     </xsl:call-template>
   </xsl:template>
