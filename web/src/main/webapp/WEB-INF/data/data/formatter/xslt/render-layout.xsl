@@ -20,13 +20,6 @@
   <xsl:template match="/">
     <div class="container gn-metadata-view">
 
-      <xsl:if test="$css = 'sextant'">
-        <link rel="stylesheet" type="text/css" href="../../apps/js/ext/resources/css/ext-all.css"/>
-        <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/gndefault.css"/>
-        <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/gnmetadatadefault.css"/>
-        <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/metadata-view.css"/>
-      </xsl:if>
-
       <article id="gn-metadata-view-{$metadataId}">
         <header>
           <h1><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>
