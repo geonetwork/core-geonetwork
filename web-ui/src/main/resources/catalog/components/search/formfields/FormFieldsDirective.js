@@ -605,7 +605,7 @@
           };
         }])
 
-      /**
+  /**
    * @ngdoc directive
    * @name gn_formfields.directive:gnRecordtypesCombo
    * @restrict A
