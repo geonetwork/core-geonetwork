@@ -130,7 +130,7 @@
                       olLayer.background = true;
                     }));
               }
-            } else {
+            } else if (layer.server) {
               var server = layer.server[0];
               if (server.service == 'urn:ogc:serviceType:WMS') {
                 self.createLayer(layer, map);

@@ -498,11 +498,9 @@
            * @param {Object} getCapLayer object to convert
            * @return {ol.Layer} the created layer
            */
-          createOlWMSFromCap: function(map, getCapLayer) {
-
-            var legend, attribution, metadata, errors = [];
+          createOlWMSFromCap: function(map, getCapLayer, url) {
+            var legend, attribution, attributionUrl, metadata, errors = [];
             if (getCapLayer) {
-              var layer = getCapLayer;
 
               var isLayerAvailableInMapProjection = false;
               // OL3 only parse CRS from WMS 1.3 (and not SRS in WMS 1.1.x)
@@ -510,72 +508,90 @@
               // https://github.com/openlayers/ol3/blob/master/src/
               // ol/format/wmscapabilitiesformat.js
               /*
-              if (layer.CRS) {
-                var mapProjection = map.getView().getProjection().getCode();
-                for (var i = 0; i < layer.CRS.length; i++) {
-                  if (layer.CRS[i] === mapProjection) {
-                    isLayerAvailableInMapProjection = true;
-                    break;
-                  }
-                }
-              } else {
-                errors.push($translate('layerCRSNotFound'));
-                console.warn($translate('layerCRSNotFound'));
-              }
-              if (!isLayerAvailableInMapProjection) {
-                errors.push($translate('layerNotAvailableInMapProj'));
-                console.warn($translate('layerNotAvailableInMapProj'));
-              }
-              */
+               if (layer.CRS) {
+               var mapProjection = map.getView().getProjection().getCode();
+               for (var i = 0; i < layer.CRS.length; i++) {
+               if (layer.CRS[i] === mapProjection) {
+               isLayerAvailableInMapProjection = true;
+               break;
+               }
+               }
+               } else {
+               errors.push($translate('layerCRSNotFound'));
+               console.warn($translate('layerCRSNotFound'));
+               }
+               if (!isLayerAvailableInMapProjection) {
+               errors.push($translate('layerNotAvailableInMapProj'));
+               console.warn($translate('layerNotAvailableInMapProj'));
+               }
+               */
 
               // TODO: parse better legend & attribution
-              if (angular.isArray(layer.Style) && layer.Style.length > 0) {
-                var url = layer.Style[layer.Style.length - 1]
+              if (angular.isArray(getCapLayer.Style) &&
+                getCapLayer.Style.length > 0) {
+                var legendUrl = getCapLayer.Style[getCapLayer.Style.length - 1]
                   .LegendURL[0];
-                if (url) {
-                  legend = url.OnlineResource;
+                if (legendUrl) {
+                  legend = legendUrl.OnlineResource;
                 }
               }
-              if (angular.isDefined(layer.Attribution)) {
-                if (angular.isArray(layer.Attribution)) {
+              if (angular.isDefined(getCapLayer.Attribution)) {
+                if (angular.isArray(getCapLayer.Attribution)) {
 
                 } else {
-                  attribution = layer.Attribution.Title;
-                }
-              }
-              if (angular.isArray(layer.MetadataURL)) {
-                metadata = layer.MetadataURL[0].OnlineResource;
-              }
-              var isNcwms = false;
-              if (angular.isArray(layer.Dimension)) {
-                for (var i = 0; i < layer.Dimension.length; i++) {
-                  if (layer.Dimension[i].name == 'elevation') {
-                    isNcwms = true;
-                    break;
+                  attribution = getCapLayer.Attribution.Title;
+                  if (getCapLayer.Attribution.OnlineResource) {
+                    attributionUrl = getCapLayer.Attribution.OnlineResource;
                   }
                 }
+              }
+              if (angular.isArray(getCapLayer.MetadataURL)) {
+                metadata = getCapLayer.MetadataURL[0].OnlineResource;
               }
 
               var layer = this.createOlWMS(map, {
-                LAYERS: layer.Name
+                LAYERS: getCapLayer.Name
               }, {
-                url: layer.url,
-                label: layer.Title,
+                url: url || getCapLayer.url,
+                label: getCapLayer.Title,
                 attribution: attribution,
+                attributionUrl: attributionUrl,
                 legend: legend,
-                group: layer.group,
+                group: getCapLayer.group,
                 metadata: metadata,
-                isNcwms: isNcwms,
-                extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer),
+                extent: gnOwsCapabilities.getLayerExtentFromGetCap(map,
+                  getCapLayer),
                 minResolution: this.getResolutionFromScale(
-                    map.getView().getProjection(), layer.MinScaleDenominator),
+                  map.getView().getProjection(),
+                  getCapLayer.MinScaleDenominator),
                 maxResolution: this.getResolutionFromScale(
-                    map.getView().getProjection(), layer.MaxScaleDenominator)
+                  map.getView().getProjection(),
+                  getCapLayer.MaxScaleDenominator)
               });
+
+              if (angular.isArray(getCapLayer.Dimension)) {
+                for (var i = 0; i < getCapLayer.Dimension.length; i++) {
+                  if (getCapLayer.Dimension[i].name == 'elevation') {
+                    layer.set('elevation',
+                      getCapLayer.Dimension[i].values.split(','));
+                  }
+                  if (getCapLayer.Dimension[i].name == 'time') {
+                    layer.set('time',
+                      getCapLayer.Dimension[i].values.split(','));
+                  }
+                }
+              }
+              if (angular.isArray(getCapLayer.Style) &&
+                getCapLayer.Style.length > 1) {
+                layer.set('style', getCapLayer.Style);
+              }
+
+              layer.set('advanced', !!(layer.get('elevation') ||
+              layer.get('time') || layer.get('style')));
+
               layer.set('errors', errors);
               return layer;
             }
-
           },
 
 
@@ -885,22 +901,28 @@
                 gnWmsQueue.error(o);
                 defer.reject(o);
               } else {
-                if (createOnly) {
-                  olL = $this.createOlWMTSFromCap(map, capL);
-                } else {
-                  olL = $this.addWmsToMapFromCap(map, capL);
-                }
+                //if (createOnly) {
+                //  olL = $this.createOlWMTSFromCap(map, capL, url);
+                  olL = $this.createOlWMSFromCap(map, capL, url);
+                //} else {
+                //  olL = $this.addWmsToMapFromCap(map, capL);
+                //}
+
+                var finishCreation = function() {
+                  if ( !createOnly) {
+                    map.addLayer(olL);
+                  }
+                  gnWmsQueue.removeFromQueue(url, name);
+                  defer.resolve(olL);
+                };
 
                 // attach the md object to the layer
                 if (md) {
                   olL.set('md', md);
+                  finishCreation();
+                } else {
+                  $this.feedLayerMd(olL).finally (finishCreation);
                 }
-                else {
-                  $this.feedLayerMd(olL);
-                }
-
-                gnWmsQueue.removeFromQueue(url, name);
-                defer.resolve(olL);
               }
 
             }, function() {

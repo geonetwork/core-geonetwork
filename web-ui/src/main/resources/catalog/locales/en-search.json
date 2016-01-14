@@ -38,6 +38,10 @@
   "wcsLinkDetails": "This dataset is published in the download service (WCS) available at <a href='{{url}}'>{{url}}</a> with layer name <strong>{{layer}}</strong>.",
   "databaseLayerDetails": "This dataset is published in the database <strong>{{url}}</strong> in table <strong>{{layer}}</strong>.",
   "fileLayerDetails": "{{name}}. This dataset is available in the local network <strong>{{url}}</strong>.",
+  "wfsNotAvailable": "<a href='{{url}}' target='_blank'>WFS</a> not available.",
+  "filterUsingWfs": "Filter",
+  "filterLayerUsingWfs": "Check if a WFS service is available and use it to filter layer content.",
+  "wfsFeatureNotIndexed": "The feature type {{wfsUrl}}#{{featureTypeName}} has not been indexed.",
   "addToMap": "Add to map",
   "addToMaponlinesrc": "Add to map",
   "mapLinkonlinesrc": "Load map",
@@ -309,5 +313,5 @@
   "wpsExecuteFailed": "Execute failed",
   "wpsErrorCodeReturned": "The serveur returned status code",
   "time" : "Time",
-  "featureCount": "Features count"
+  "features": "feature(s)"
 }

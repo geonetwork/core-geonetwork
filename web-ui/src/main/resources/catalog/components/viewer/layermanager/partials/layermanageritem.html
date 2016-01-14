@@ -25,10 +25,13 @@
        <span class="fa fa-warning text-danger"></span>
      </button>
    </label>
+
    <div data-gn-wfs-filter-facets=""
         data-layer="layer"
+        data-boot-mode="ondemand"
         data-wfs-url="{{layer.getSource().getUrls()[0].replace('wms', 'wfs')}}"
         data-feature-type-name="{{layer.getSource().getParams().LAYERS}}"></div>
+
    <div class="details">
      <button class="metadata" ng-if="layer.get('metadataUrl')" data-ng-click="showMetadata(layer.get('metadataUrl'), layer.get('label'))" title="{{'layerMetadata'|translate}}">
        <span class="fa fa-file"></span>
