@@ -37,15 +37,15 @@ import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
@@ -72,16 +72,17 @@ public class HarvestRunner {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/{uiLang}/wfs.harvest")
+    @RequestMapping(value = "/{uiLang}/wfs.harvest",
+                    produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.PUT)
     @ResponseBody
     public JSONObject indexWfs(
-            @RequestParam("url") String wfsUrl,
-            @RequestParam("typename") String featureType,
-            @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid) throws Exception {
+            @RequestBody IndexConfigurationParameter config) throws Exception {
 
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("indexedFeatures", sendMessage(uuid, wfsUrl, featureType));
+        result.put("indexedFeatures",
+                sendMessage("", config.getUrl(), config.getTypeName()));
 
         return result;
     }
@@ -189,4 +190,16 @@ public class HarvestRunner {
         return null;
     }
 
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({
+            Exception.class})
+    public Object exceptionHandler(final Exception exception) {
+            exception.printStackTrace();
+            return  new HashMap() {{
+                    put("result", "failed");
+                    put("type", "file_not_found");
+                    put("message", exception.getClass() + " " + exception.getMessage());
+                }};
+        }
 }
