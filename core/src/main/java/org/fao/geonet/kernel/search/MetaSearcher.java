@@ -85,7 +85,7 @@ public abstract class MetaSearcher implements Closeable
 
 		int count = getSize();
 		
-		if(!(_from > count && _to > count)) {
+		if(_from > count) {
 		    //The search is out of scope
 		    _from = count + 1;
 		    _to = count;
