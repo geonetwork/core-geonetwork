@@ -311,6 +311,39 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(2, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
     }
 
+
+    @Test
+    public void testReplaceAllMathFromXpath_SpecialReplaceTag() throws Exception {
+
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+
+        String code1 = "code1";
+        String code2 = "code2";
+        String code3 = "code3";
+        final Element metadataElement = new Element("MD_Metadata", GMD).addContent(Arrays.asList(
+                createReferenceSystemInfo(code1),
+                createReferenceSystemInfo(code2),
+                createReferenceSystemInfo(code3)
+        ));
+
+        String newValue1 = "newValue1";
+
+        Element newRefSystemsCode = new Element(EditLib.SpecialUpdateTags.REPLACE).setText(newValue1);
+        final String xpathToUpdate = "*//gmd:code/gco:CharacterString";
+
+        final String refSysElemName = "gmd:referenceSystemInfo";
+        new EditLib(_schemaManager).addElementOrFragmentFromXpath(
+                metadataElement, schema, xpathToUpdate,
+                new AddElemValue(newRefSystemsCode), true);
+
+        final String xpath = "/gmd:ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString";
+        assertEqualsText(newValue1, metadataElement, refSysElemName + "[1]" + xpath, GMD, GCO);
+        assertEqualsText(newValue1, metadataElement, refSysElemName + "[2]" + xpath, GMD, GCO);
+        assertEqualsText(newValue1, metadataElement, refSysElemName + "[3]" + xpath, GMD, GCO);
+        assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+    }
+
+
     @Test
     public void testReplaceFragmentFromXpath_SpecialDeleteTag() throws Exception {
 
@@ -343,8 +376,7 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema,
                 refSysElemName, new AddElemValue(newRefSystems), true);
 
-        assertEquals(1, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
-        assertEqualsText(code3, metadataElement, refSysElemName + "[1]" + xpath, GMD, GCO);
+        assertEquals(0, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
     }
 
     @Test
@@ -362,7 +394,7 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         ));
         assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
 
-        Element newRefSystems = new Element(EditLib.SpecialUpdateTags.DELETE_ALL);
+        Element newRefSystems = new Element(EditLib.SpecialUpdateTags.DELETE);
         final String refSysElemName = "gmd:referenceSystemInfo";
         // Delete all nodes of this type
         new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema,

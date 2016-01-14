@@ -201,7 +201,7 @@
     $scope.fieldConfig = null;  // Configuration per standard
     $scope.changes = [];  // List of changes
     // TODO: Add a mode gn_update_only_if_match ?
-    $scope.insertModes = ['gn_add', 'gn_replace', 'gn_delete', 'gn_delete_all'];
+    $scope.insertModes = ['gn_add', 'gn_replace', 'gn_delete'];
 
     // Add a change to the list
     var insertChange = function (field, xpath, template, value,
@@ -271,7 +271,7 @@
       if (field.isDeleted) {
         insertChange(field.name, field.xpath, field.template,
           '', $scope.changes.length,
-          mode || 'gn_delete_all');
+          mode || 'gn_delete');
       }
     };
 

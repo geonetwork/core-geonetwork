@@ -362,8 +362,11 @@
           <div class="col-sm-6">
             <h4 data-translate="">changesToApply</h4>
             <ul>
-              <li data-ng-repeat="change in changes" title="{{change.value}}">
-                {{change.field | translate}}: {{change.value | limitTo:40}}
+              <li data-ng-repeat="change in changes"
+                  title="{{change.value}}"
+                  data-ng-class="">
+                {{change.field | translate}} ({{change.insertMode | translate}}):
+                {{change.value | limitTo:40}}
               </li>
             </ul>
           </div>
