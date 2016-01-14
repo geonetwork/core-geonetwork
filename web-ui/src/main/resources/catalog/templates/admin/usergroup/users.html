@@ -16,7 +16,7 @@
             data-ng-repeat="u in pageItems()"
             data-ng-class="u.value.id === userSelected.id ? 'active' : ''" data-ng-click="selectUser(u)">
             <img class="img-circle" ng-src="http://gravatar.com/avatar/{{u.value.email | md5}}?s=18"/>
-            {{u.value.name}} {{u.value.surname}} ({{u.value.profile | translate}})
+            <span class='badge' data-ng-show="u.value.enabled === false" data-translate="">disabled</span> {{u.value.name}} {{u.value.surname}} ({{u.value.profile | translate}})
           </a>
           <span data-gn-pagination-list=""
                 data-items="users | filter:userSearch | orderBy:'name'"
@@ -26,7 +26,7 @@
 
         <button type="button" class="btn btn-primary btn-block" id="gn-btn-user-add"
           data-ng-click="addUser()"
-          data-ng-show="user.isAdministratorOrMore()">
+          data-ng-show="user.isUserAdminOrMore()">
           <i class="fa fa-plus"/>
           <span data-translate="">newUser</span>
         </button>
@@ -53,11 +53,13 @@
             >resetPassword</span></button>
           <button type="button" class="btn btn-primary pull-right"
             data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
+            data-ng-show="user.isUserAdminOrMore()"
             data-ng-click="saveUser('#gn-user-edit')" id="gn-btn-user-save">
             <i class="fa fa-save"></i> <span data-translate=""
             >saveUser</span></button>
           <button type="button" class="btn pull-right btn-danger"
             data-ng-disabled="searchResults.count > 0"
+            data-ng-show="user.isUserAdminOrMore()"
             data-ng-hide="userSelected.id == ''"
             data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
             <i class="fa fa-times"></i> <span data-translate=""
@@ -72,6 +74,15 @@
               value="{{userSelected.id}}"/>
             <input type="hidden" name="operation" data-ng-model="userOperation"
               value="{{userOperation}}"/>
+
+
+            <div class="form-group" data-ng-hide="user.id == userSelected.id">
+              <label class="control-label col-sm-3" data-translate="">enable</label>
+              <div class="col-sm-9">
+                <input type="checkbox" class=form-control" data-ng-model="userIsEnabled" />
+              </div>
+            </div>
+
             <div data-ng-class="gnUserEdit.username.$error.required ? 'has-error' : ''" class="form-group">
               <label class="control-label col-sm-3" data-translate="">username</label>
               <div class="col-sm-9">
@@ -208,7 +219,7 @@
                 <span data-translate="">isAdministrator</span>
               </label>
 
-              <div data-ng-hide="userSelected.profile == 'Administrator'">
+              <div>
 
                 <h3 data-translate="">RegisteredUser</h3>
                 <select multiple="multiple" id="groups_RegisteredUser" name="groups_RegisteredUser"

@@ -159,7 +159,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:CI_RoleCode">
+	<codelist name="gmd:CI_RoleCode" alias="roleCode">
 		<entry>
 			<code>resourceProvider</code>
 			<label>поставщик ресурса</label>
@@ -258,7 +258,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:DS_AssociationTypeCode">
+	<codelist name="gmd:DS_AssociationTypeCode" alias="associationType">
 		<entry>
 			<code>crossReference</code>
 			<label>перекрёстная ссылка</label>
@@ -293,7 +293,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:DS_InitiativeTypeCode">
+	<codelist name="gmd:DS_InitiativeTypeCode" alias="initiativeType">
 		<entry>
 			<code>campaign</code>
 			<label>campaign</label>

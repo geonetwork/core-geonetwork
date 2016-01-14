@@ -578,7 +578,7 @@
   module.factory('Metadata', function() {
     function Metadata(k) {
       $.extend(true, this, k);
-      var listOfArrayFields = ['topicCat', 'category',
+      var listOfArrayFields = ['topicCat', 'category', 'keyword',
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
@@ -696,7 +696,8 @@
        * @return {{metadata: Array, resource: Array}}
        */
       getAllContacts: function() {
-        if (angular.isUndefined(this.allContacts)) {
+        if (angular.isUndefined(this.allContacts) &&
+            angular.isDefined(this.responsibleParty)) {
           this.allContacts = {metadata: [], resource: []};
           for (var i = 0; i < this.responsibleParty.length; i++) {
             var s = this.responsibleParty[i].split('|');

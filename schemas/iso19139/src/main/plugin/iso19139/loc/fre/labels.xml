@@ -1585,7 +1585,7 @@ date de mise en ligne du service, en tant que date de publication.
 
     </element>
     <element name="gmd:denominator" id="57.0">
-        <label>Dénominateur</label>
+        <label>Dénominateur de l'échelle</label>
         <description>Le dénominateur de l'échelle (le chiffre en dessous de la barre de fraction)</description>
         <help>La valeur se trouvant sous la barre de fraction. Il s'agit ici de l'échelle : dans le cas d'une carte à l'échelle du 1:25000, seul le terme "25000" est entré. Cette valeur peut également représenter une indication de précision dans le cas d'un jeu de données vectorielles. Exemple : des limites saisies à une échelle de 1:25'000 et présentant ce niveau de précision.</help>
         <condition>Il faut saisir ou une échelle ou une distance</condition>
@@ -3080,7 +3080,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
         <condition/>
 
     </element>
-    <element name="gmd:protocol" id="398.0">
+    <element name="gmd:protocol" id="398.0" alias="protocol">
         <label>Protocole</label>
         <description>Protocole de la connexion à utiliser</description>
         <help>Protocole de connexion utilisé, par exemple FTP.</help>

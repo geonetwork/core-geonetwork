@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,7 +21,9 @@ public class FilterCapitalize implements TextContentFilter {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < arr.length; i++) {
-            sb.append(Character.toUpperCase(arr[i].charAt(0))).append(arr[i].substring(1)).append(" ");
+            if (StringUtils.isNotEmpty(arr[i])) {
+                sb.append(Character.toUpperCase(arr[i].charAt(0))).append(arr[i].substring(1)).append(" ");
+            }
         }
 
         return sb.toString().trim();

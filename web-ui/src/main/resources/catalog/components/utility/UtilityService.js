@@ -89,7 +89,8 @@
       $(':checkbox:not(:checked)', form).each(function() {
         uc.push(encodeURIComponent(this.name) + '=false');
       });
-      return form.serialize().replace(/=on/g, '=true') +
+      return form.serialize().replace(/=on&/g, '=true&').
+          replace(/=on$/, '=true') +
           (uc.length ? '&' + uc.join('&').replace(/%20/g, '+') : '');
     };
 

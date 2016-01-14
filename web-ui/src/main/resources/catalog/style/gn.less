@@ -527,16 +527,18 @@ i.fa-times.delete:hover {
 // Language specific layout
 html[lang=eng] {
   .gn-scale,
-  [data-facet=denominators] span.gn-facet-label {
-    :before {
+  [data-facet=denominators] span.gn-facet-label,
+  .gn-facet-denominators span.gn-facet-label {
+    &:before {
       content: "1/";
     }
   }
 }
 html[lang=fre] {
   .gn-scale,
-  [data-facet=denominators] span.gn-facet-label {
-    :before {
+  [data-facet=denominators] span.gn-facet-label,
+  .gn-facet-denominators span.gn-facet-label {
+    &:before {
       content: "1:";
     }
   }

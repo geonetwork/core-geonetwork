@@ -12,10 +12,18 @@
 
   module.factory('localeLoader', ['$http', '$q', function($http, $q) {
     return function(options) {
+
+      function buildUrl(prefix, lang, value, suffix) {
+        if (value.indexOf('/') === 0) {
+          return value.substring(1);
+        } else {
+          return prefix + lang + '-' + value + suffix;
+        }
+      };
       var allPromises = [];
       angular.forEach(options.locales, function(value, index) {
-        var langUrl = options.prefix +
-            options.key + '-' + value + options.suffix;
+        var langUrl = buildUrl(options.prefix, options.key,
+            value, options.suffix);
 
         var deferredInst = $q.defer();
         allPromises.push(deferredInst.promise);
@@ -29,8 +37,7 @@
           // Load english locale file if not available
           $http({
             method: 'GET',
-            url: options.prefix +
-                'en-' + value + options.suffix
+            url: buildUrl(options.prefix, 'en', value, options.suffix)
           }).success(function(data) {
             deferredInst.resolve(data);
           }).error(function() {

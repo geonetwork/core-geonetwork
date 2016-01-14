@@ -19,12 +19,11 @@
        '$translate',
        '$compile',
        'gnUrlUtils',
-       'gnNamespaces',
        'gnXmlTemplates',
        'gnHttp',
        'gnCurrentEdit',
        function($q, $http, $translate, $compile,
-               gnUrlUtils, gnNamespaces, gnXmlTemplates,
+               gnUrlUtils, gnXmlTemplates,
                gnHttp, gnCurrentEdit) {
 
          /**

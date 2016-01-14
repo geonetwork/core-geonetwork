@@ -24,13 +24,14 @@
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+
 import jeeves.server.context.ServiceContext;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
@@ -71,11 +72,15 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
@@ -195,8 +200,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         
 		// Clean all before harvest : Remove/Add mechanism
         // If harvest failed (ie. if node unreachable), metadata will be removed, and
-        // the node will not be referenced in the catalogue until next harvesting.
-        // TODO : define a rule for UUID in order to be able to do an update operation ? 
+        // the node will not be referenced in the catalogue until next harvesting. 
         UUIDMapper localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
 
@@ -221,38 +225,55 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         }
 
         xml = req.execute();
-
-		//-----------------------------------------------------------------------
-		//--- remove old metadata
-		for (String uuid : localUuids.getUUIDs()) {
+		
+        // Convert from GetCapabilities to ISO19119
+        List<String> uuids = addMetadata (xml);
+        dataMan.flush();
+        
+        List<String> ids = Lists.transform(uuids, new Function<String, String>() {
+            @Nullable
+            @Override
+            public String apply(@Nonnull String uuid) {
+                try {
+                    return dataMan.getMetadataId(uuid);
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        });
+        
+        dataMan.batchIndexInThreadPool(context, ids);
+        
+        result.totalMetadata = result.addedMetadata + result.layer + result.updatedMetadata;
+    
+      //-----------------------------------------------------------------------
+        //--- remove old metadata
+        for (String uuid : localUuids.getUUIDs()) {
             if (cancelMonitor.get()) {
                 return this.result;
             }
-
-            String id = localUuids.getID (uuid);
-
-            if(log.isDebugEnabled()) log.debug ("  - Removing old metadata before update with id: " + id);
-
-            //--- remove the metadata directory including the public and private directories.
-            IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id));
-
-            // Remove metadata
-            dataMan.deleteMetadata(context, id);
-			
-			result.locallyRemoved ++;
-		}
+            
+            //If it was not on the uuids added:
+            if(!uuids.contains(uuid)) {
+                String id = localUuids.getID (uuid);
+    
+                if(log.isDebugEnabled()) log.debug ("  - Removing old metadata before update with id: " + id);
+    
+                //--- remove the metadata directory including the public and private directories.
+                IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id));
+    
+                // Remove metadata
+                dataMan.deleteMetadata(context, id);
+                
+                result.locallyRemoved ++;
+            }
+        }
 
 
         if (result.locallyRemoved > 0) {
             dataMan.flush();
         }
-		
-        // Convert from GetCapabilities to ISO19119
-        addMetadata (xml);
-        dataMan.flush();
-
-        result.totalMetadata = result.addedMetadata + result.layer;
-    
+        
 		return result;
 	}
 	
@@ -271,11 +292,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
      * @param capa      GetCapabilities document
      *                   
      */
-	 private void addMetadata (Element capa) throws Exception
+	 private List<String> addMetadata (Element capa) throws Exception
 	 {
-		if (capa == null)
-			return;
-
+		if (capa == null) {
+			return Collections.<String>emptyList();
+		}
+		
+		List<String> uuids = new LinkedList<String>();
+		
 		//--- Loading categories and groups
 		localCateg 	= new CategoryMapper (context);
 		localGroups = new GroupMapper (context);
@@ -330,8 +354,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			
 				for (Element layer : layers) {
 					WxSLayerRegistry s = addLayerMetadata (layer, capa);
-					if (s != null)
+					if (s != null) {
+					    uuids.add(s.uuid);
 						layersRegistry.add(s);
+					}
 				}       
 				
 				// Update ISO19119 for data/service links creation (ie. operatesOn element)
@@ -361,16 +387,21 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
          addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
-
+         if(!dataMan.existsMetadataUuid(uuid)) {
+             result.addedMetadata++;
+             metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+         } else {
+             result.updatedMetadata++;
+             String id = dataMan.getMetadataId(uuid);
+             metadata.setId(Integer.valueOf(id));
+             dataMan.updateMetadata(context, id, md, false, false, false, 
+                     context.getLanguage(), dataMan.extractDateModified(schema, md), false);
+         }
+         
          String id = String.valueOf(metadata.getId());
+         uuids.add(uuid);
 
          addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-
-         dataMan.flush();
-
-         dataMan.indexMetadata(id, true);
-         result.addedMetadata++;
 		
 		// Add Thumbnails only after metadata insertion to avoid concurrent transaction
 		// and loaded thumbnails could eventually failed anyway.
@@ -379,6 +410,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 loadThumbnail (layer);
             }
         }
+		
+		return uuids;
 	}
 	
 	
@@ -675,8 +708,17 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 }
                 metadata.getCategories().add(metadataCategory);
             }
-            metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
-
+            if(!dataMan.existsMetadataUuid(reg.uuid)) {
+                result.addedMetadata++;
+                metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+            } else {
+                result.updatedMetadata++;
+                String id = dataMan.getMetadataId(reg.uuid);
+                metadata.setId(Integer.valueOf(id));
+                dataMan.updateMetadata(context, id, xml, false, false, false, 
+                        context.getLanguage(), dataMan.extractDateModified(schema, xml), false);
+            }
+           
             reg.id = String.valueOf(metadata.getId());
 
             if(log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
@@ -685,10 +727,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
-
-            dataMan.flush();
-
-            dataMan.indexMetadata(reg.id, true);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)

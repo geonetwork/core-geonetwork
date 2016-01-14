@@ -18,9 +18,9 @@
    */
   module.controller('GnHarvestSettingsController', [
     '$scope', '$http', '$translate', '$injector', '$rootScope',
-    'gnSearchManagerService', 'gnUtilityService',
+    'gnSearchManagerService', 'gnUtilityService', '$timeout',
     function($scope, $http, $translate, $injector, $rootScope,
-             gnSearchManagerService, gnUtilityService) {
+             gnSearchManagerService, gnUtilityService, $timeout) {
 
       $scope.searchObj = {
         params: {
@@ -59,6 +59,15 @@
                 gnUtilityService.parseBoolean($scope.harvesterSelected);
               }
               $scope.isLoadingOneHarvester = false;
+              if ($scope.harvesterSelected.searches[0].from) {
+                $scope.harvesterSelected.searches[0].from =
+                   new Date($scope.harvesterSelected.searches[0].from);
+              }
+
+              if ($scope.harvesterSelected.searches[0].until) {
+                $scope.harvesterSelected.searches[0].until =
+                   new Date($scope.harvesterSelected.searches[0].until);
+              }
             }).error(function(data) {
               // TODO
               $scope.isLoadingOneHarvester = false;
@@ -399,6 +408,7 @@
       $scope.oaipmhPrefix = null;
       $scope.oaipmhInfo = null;
       $scope.oaipmhGet = function() {
+        $scope.oaipmhInfoRequested = false;
         $scope.oaipmhInfo = null;
         var body = '<request><type url="' +
             $scope.harvesterSelected.site.url +
@@ -420,7 +430,11 @@
       $scope.$watch('harvesterSelected.site.url', function() {
         if ($scope.harvesterSelected &&
             $scope.harvesterSelected['@type'] === 'oaipmh') {
-          $scope.oaipmhGet();
+          //If the url is long, it hangs the server
+          if (!$scope.oaipmhInfoRequested) {
+            $scope.oaipmhInfoRequested = true;
+            $timeout($scope.oaipmhGet, 2000);
+          }
         }
       });
 
@@ -438,8 +452,6 @@
        */
       $scope.cswGetCapabilities = function() {
         $scope.cswCriteriaInfo = null;
-        $scope.cswCapabilitiesUrl = null;
-        $scope.errorRetrievingCswCapabilities = false;
 
         if ($scope.harvesterSelected &&
             $scope.harvesterSelected.site &&
@@ -455,7 +467,6 @@
             url += (url.indexOf('?') === -1 ? '?' : '&') +
                 'SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2';
           }
-          $scope.cswCapabilitiesUrl = url;
 
           $http.get($scope.proxyUrl +
               encodeURIComponent(url))
@@ -512,8 +523,7 @@
                 }
 
               }).error(function(data) {
-                $scope.cswCriteria = [];
-                $scope.errorRetrievingCswCapabilities = true;
+                // TODO
               });
         }
       };

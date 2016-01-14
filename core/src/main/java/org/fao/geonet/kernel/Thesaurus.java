@@ -939,6 +939,32 @@ public class Thesaurus {
             return keywords.get(0);
         }
 
+        /**
+         * Gets top concepts/keywords from the thesaurus
+         * 
+         * @return keywords
+         */
+        public List<KeywordBean> getTopConcepts(String... languages) {
+            List<KeywordBean> keywords;
+
+            try {
+                Query<KeywordBean> query = QueryBuilder
+                    .keywordQueryBuilder(getIsoLanguageMapper(), languages)
+                    .select(Selectors.TOPCONCEPTS, true)
+                    .build();
+
+                keywords = query.execute(this);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            if (keywords.isEmpty()) {
+                throw new TermNotFoundException("No top concepts/keywords in file "+thesaurusFile);
+            }
+
+            return keywords;
+        }
+
         private String getTermNotFoundMessage(String searchValue) {
             return "Could not find "+searchValue+" in file "+thesaurusFile;
         }

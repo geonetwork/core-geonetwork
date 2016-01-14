@@ -233,6 +233,11 @@
                 }
               };
 
+              gnOnlinesrc.register('thumbnail', function() {
+                init();
+                $(scope.popupid).modal('show');
+              });
+
               // TODO: should be in gnEditor ?
               var getVersion = function() {
                 scope.metadataId = gnCurrentEdit.id;
@@ -327,9 +332,6 @@
                   });
                 }
               };
-
-              scope.$watch('mode', init);
-
             }
           };
         }])
@@ -736,7 +738,7 @@
    * </ul>
    * The directive contains a search form allowing one local selection.
    *
-   * On submit, the metadata is saved, the thumbnail is added,
+   * On submit, the metadata is saved, the link is added,
    * then the form and online resource list are refreshed.
    */
   .directive('gnLinkToMetadata', [
@@ -773,7 +775,6 @@
                         _schema: 'iso19110'
                       };
                       scope.btn = {
-                        icon: 'fa-table',
                         label: $translate('linkToFeatureCatalog')
                       };
                     }
@@ -782,7 +783,6 @@
                         hitsPerPage: 10
                       };
                       scope.btn = {
-                        icon: 'fa-sitemap',
                         label: $translate('linkToParent')
                       };
                     }
@@ -791,7 +791,6 @@
                         hitsPerPage: 10
                       };
                       scope.btn = {
-                        icon: 'fa-sitemap fa-rotate-180',
                         label: $translate('linkToSource')
                       };
                     }

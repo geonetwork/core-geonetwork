@@ -1,0 +1,195 @@
+// Color variables
+@import "../lib/style/bootstrap/less/variables.less";
+@cardtext: @gray-dark;
+@cardbackground: @gray-light;
+
+// Width variables 
+@width3: 100%; 
+
+// Height variables 
+@height4: 100%; 
+
+.quickresultcard {
+
+  border-radius: 4px;
+  border: 1px solid #dddddd;
+  cursor: pointer;
+  height: 150px;
+  .flip {
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+  }
+  .front {
+    -moz-transform: scale(1, 1);
+    -moz-transition: all 0.6s ease;
+    -ms-transform: scale(1, 1);
+    -o-transition: all 0.6s ease;
+    -webkit-transform: scale(1, 1);
+    -webkit-transition: all 0.6s ease;
+    border-radius: 4px;
+    height: 149px;
+    position: absolute;
+    transform: scale(1, 1);
+    transition: all 0.6s ease;
+    width: 32%;
+    z-index: 11;
+    .top {
+      background: @cardbackground;
+      float:left;
+      height: @height4;
+      width: 30%;
+      &:after {
+        -moz-transform: translateX(-50%) rotate(45deg);
+        -ms-transform: translateX(-50%) rotate(45deg);
+        -webkit-transform: translateX(-50%) rotate(45deg);
+        background: inherit;
+        bottom: 40%;
+        content: '';
+        height: 2.5em;
+        left: 30%;
+        pointer-events: none;
+        position: absolute;
+        transform: translateX(-50%) rotate(45deg);
+        width: 2.5em;
+        z-index: 10;
+      }
+    }
+    .rigth {
+      -moz-transform: translateY(0);
+      -ms-transform: translateY(0);
+      -webkit-transform: translateY(0);
+      height: @height4;
+      transform: translateY(0);
+      width: auto;
+      z-index: 8;
+    }
+    .header-card {
+      -moz-transform: translateY(0);
+      -ms-transform: translateY(0);
+      -webkit-transform: translateY(0);
+      margin-left: 2%;
+      margin-right: 4%;
+      margin-top: 10%;
+      transform: translateY(0);
+    }
+    .title {
+      color: @cardtext;
+      font-size: 120%;
+      text-align: center;
+      &:after {
+        background: @cardtext;
+        content: '';
+        display: block;
+        height: 1px;
+        left: 40%;
+        position: absolute;
+        right: 40%;
+        width: 20%;
+      }
+    }
+    .introduction {
+      color: @cardtext;
+      font-family: 'Old Standard TT', serif;
+      font-style: italic;
+      text-align: center;
+    }
+    .content-card {
+
+      font-weight: 300;
+      height:10%;
+      margin-left: 5%;
+      visibility: hidden;
+      span {
+        color: #2D3244;
+        display: inline-block;
+        font-size: 1.7em;
+        width: 1.3em;
+      }
+      a {
+        bottom: .24em;
+        position: relative;
+      }
+    }
+    .footer-card {
+      margin-left: 5%;
+      margin-right: 2%;
+      text-align: right;
+    }
+  }
+  .back {
+    backface-visibility: hidden;
+    position: absolute;
+    width: @width3;
+  }
+}
+.front .top, .front .top:after, .front .header-card, .front .content-card, .gn-md-thumbnail img  {
+  -moz-transition: all 0.7s ease-in-out;
+  -o-transition: all 0.7s ease-in-out;
+  -webkit-transition: all 0.7s ease-in-out;
+  transition: all 0.7s ease-in-out;
+}
+.flip {
+  &:hover {
+    .front {
+      .top {
+        width: 8%;
+        &:after {
+          bottom: 40%;
+          height: 1.5em;
+          left:8%;
+          width: 1.5em;
+        }
+      }
+      .header-card {
+        -moz-transform: translateY(0%);
+        -ms-transform: translateY(0%);
+        -webkit-transform: translateY(0%);
+        margin: 1%;
+        transform: translateY(0%);
+      }
+      .content-card {
+        color: @cardtext;
+        height:auto;
+        margin-bottom: 1%;
+        margin-top: 0%;
+        margin-top: 1%;
+        padding-right: 3%;
+        padding-top: 0%;
+        visibility:visible;
+      }
+      .footer-card {
+        visibility: hidden;
+      }
+      .gn-md-thumbnail {
+        height: 0%;
+        left: 0%;
+        margin: 0;
+        position: absolute;
+        top: 0%;
+        width: 5%;
+        z-index: 100;
+        img {
+          max-height: 0%;
+          max-width: 0%;
+        }
+      }
+    }
+  }
+}
+.front {
+  .gn-md-thumbnail {
+    height: 70%;
+    left: 4%;
+    margin: 0;
+    position: absolute;
+    top: 10%;
+    width: 22%;
+    z-index: 100;
+    img {
+      max-height: @height4;
+      max-width: @width3;
+    }
+  }
+}
