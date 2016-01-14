@@ -114,9 +114,9 @@
    */
   module.controller('GnAdminController', [
     '$scope', '$http', '$q', '$rootScope', '$route', '$routeParams',
-    'gnUtilityService',
+    'gnUtilityService', '$location',
     function($scope, $http, $q, $rootScope, $route, $routeParams,
-        gnUtilityService) {
+        gnUtilityService,$location) {
       /**
        * Define admin console menu for each type of user
        */
@@ -196,6 +196,14 @@
       $scope.getMenu = function() {
         return $scope.menu[$scope.user.profile];
       };
+      
+      /**
+       * Active element in the admin menu list
+       */
+      $scope.isActive = function(route) {
+        return route.slice(1) === $location.path().slice(1).split('/')[0];
+      };
+
     }]);
 
 })();
