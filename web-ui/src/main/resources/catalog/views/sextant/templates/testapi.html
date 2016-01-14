@@ -1,122 +1,83 @@
 <!DOCTYPE html>
 <html xml:lang="en-EN" xmlns="http://www.w3.org/1999/xhtml" lang="en-EN">
-<head>
-  <title>Sextant</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta http-equiv="Content-language" content="en-EN"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <head>
+    <title>Sextant API</title>
+    <link href="http://sextant.ifremer.fr/geonetwork/static/api.css" rel="stylesheet" media="screen">
+  </head>
 
-  <link href="/ifremer/new/css/styles.css" rel="stylesheet"/>
-  <link href="/ifremer/new/css/theme.css" rel="stylesheet"/>
-  <link href="/ifremer/new/css/themesextant.css" rel="stylesheet"/>
+  <body>
+    <div ng-app="gn_search_sextant" ng-controller="GnCatController" class="gn sxt-max-md" sxt-size="auto" ng-include="'../../catalog/views/sextant/templates/index.html'"></div>
 
-  <!-- Sextant -->
-  <link href="http://localhost:8080/geonetwork/static/api.css" rel="stylesheet" media="screen">
+    <script type="text/javascript">
 
-  <style>
-    #wrapper {
-      margin-bottom: 0;
-    }
-  </style>
-</head>
-<body>
-<div class="container-fluid">
-  <div id="wrapper" style="min-height: 100%">
-    <header class="navbar navbar-static-top withmargin">
-      <div class="container">
-        <div class="navbar-header">
-          <h1 class="navbar-brand">
-            <a href="index.htm">SEXTANT</a><span class="hidden-xs">Infrastructure de donn&eacute;es g&eacute;ographiques marines et littorales</span>
-          </h1>
-        </div>
-
-        <div class="container right hidden-xs hidden-sm">
-          <a href="" ><img src="/ifremer/new/images/projets/ifremer.png" alt="[]" /></a>
-        </div>
-      </div>
-    </header>
-
-    <div class="container">
-      <h1>Test API Sextant6 </h1>
-    </div>
-
-    <div ng-app="gn_search_sextant"
-         ng-controller="GnCatController"
-         class="gn sxt-max-md"
-         sxt-size="auto"
-         ng-include="'../../catalog/views/sextant/templates/index.html'">
-    </div>
-  </div>
-</div>
-</body>
-
-<script type="text/javascript">
-
-  var sxtSettings = {
-    langDetector: {
-      lang: 'fre'
-    },
-    configWhat: 'AMBIO',
-    tabOverflow : {
-      search: true,
-      panier: true,
-      map: false
-    },
-    defaultContext: '../data/defaultContext.xml',
-    //viewerUrl: 'http://oceanbrowser.net/emodnet/',
-    layerFilter: true,
-    olView: {
-      extent: [-377935.51545759046, 5411955.532673891, 942896.3333102552,
-        6456391.087162538],
-      maxResolution: 2445.98490512564
-    },
-    servicesUrl: {
-      wms: [{
-        name: 'Ifremer - Biologie',
-        url: 'ttp://www.ifremer.fr/services/wms/biologie?'
-      }],
-      wmts: [{
-        name: 'Ifremer - maps.ngdc.noaa.gov',
-        url: 'http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
-      }]
-    },
-    localisations: [{
-      name: 'United States',
-      extent: [-13884991, 2870341, -7455066, 6338219]
-    }, {
-      name: 'France',
-      extent: [-817059, 4675034, 1719426, 7050085]
-    },{
-      name: 'Brest',
-      extent: [-510281, 6164880, -490464, 6183435]
-    }],
-
-    panier: {
-      projs: [{
-        value: '4326',
-        label: 'Geographique - Datum WGS84'
-      }],
-      formats: {
-        vector:[{
-          value: 'ESRI Shapefile',
-          label: 'ESRI Shapefile'
+      var sxtSettings = {
+        langDetector: {
+          fromHtmlTag: true,
+          regexp: '^\/([a-z]+)\/',
+          lang: 'fre'
+        },
+        configWhat: 'AMBIO',
+        tabOverflow : {
+          search: true,
+          panier: true,
+          map: false
+        },
+        defaultContext: '../data/defaultContext.xml',
+        viewerUrl: 'http://oceanbrowser.net/emodnet/',
+        layerFilter: true,
+        olView: {
+          extent: [-377935.51545759046, 5411955.532673891, 942896.3333102552,
+            6456391.087162538],
+          maxResolution: 2445.98490512564
+        },
+        servicesUrl: {
+          wms: [{
+            name: 'Ifremer - Biologie',
+            url: 'ttp://www.ifremer.fr/services/wms/biologie?'
+          }],
+          wmts: [{
+            name: 'Ifremer - maps.ngdc.noaa.gov',
+            url: 'http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
+          }]
+        },
+        localisations: [{
+          name: 'United States',
+          extent: [-13884991, 2870341, -7455066, 6338219]
         }, {
-          value: 'GeoJSON',
-          label: 'GeoJSON'
+          name: 'France',
+          extent: [-817059, 4675034, 1719426, 7050085]
+        },{
+          name: 'Brest',
+          extent: [-510281, 6164880, -490464, 6183435]
         }],
-        raster:[{
-          value: 'GeoTiff',
-          label: 'GeoTiff'
-        }]
-      }
-    }
-  };
 
-</script>
+        panier: {
+          projs: [{
+            value: '4326',
+            label: 'Geographique - Datum WGS84'
+          }],
+          formats: {
+            vector:[{
+              value: 'ESRI Shapefile',
+              label: 'ESRI Shapefile'
+            }, {
+              value: 'GeoJSON',
+              label: 'GeoJSON'
+            }],
+            raster:[{
+              value: 'GeoTiff',
+              label: 'GeoTiff'
+            }]
+          }
+        }
+      };
 
-<script>var geonet={provide:function(s){},require:function(s){}}</script>
-<script src="http://localhost:8080/geonetwork/static/lib.js"></script>
-<script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js"></script>
+    </script>
+
+    <script src="http://sextant.ifremer.fr/geonetwork/static/lib.js"></script>
+    <script src="http://sextant.ifremer.fr/geonetwork/static/gn_search_sextant.js"></script>
+
+  </body>
+
 
 </html>
