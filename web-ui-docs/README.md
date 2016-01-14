@@ -18,4 +18,8 @@ mvn clean install
 The documentation is generated in target/docs folder and could be published on the website.
 
 Another option is to use grunt directly from the command line.
-Run `grunt --gruntfile config.js` and open http://localhost:8000/docs in your Browser.
+For that, you need to edit the `config.js` file and uncomment the line
+
+    grunt.registerTask('default', [ 'clean', 'ngdocs', 'connect' ]);
+
+Then run `grunt --gruntfile config.js` and open http://localhost:8000/docs in your Browser.

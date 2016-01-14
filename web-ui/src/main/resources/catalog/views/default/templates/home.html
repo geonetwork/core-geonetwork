@@ -66,18 +66,18 @@
               </a>
             </div>
         </span>
-        <span id="chips-card" data-ng-repeat="(key, facet) in searchInfo.facet['inspireThemesWithAc'] track by $index"
+        <span id="chips-card" data-ng-repeat="(key, facet) in searchInfo.facet['inspireThemesURI'] track by $index"
           class="col-xs-6 col-sm-6 col-lg-4" data-ng-show="browse === 'inspire'">
             <div class="badge-icon col-xs-3">
-              <a data-ng-href="#/search?facet.q=inspiretheme%2F{{facet['@name'].split('|')[1]}}">
+              <a title="{{facet['@label']}}" data-ng-href="#/search?facet.q=inspireThemeURI%2F{{facet['@name'] | encodeURIComponent | encodeURIComponent}}">
                 <span class="badge-result badge-result-inspire" >
-                   <i class="fa fa-3x gn-icon iti-{{facet['@name'].split('|')[0]}}"></i>
+                   <i class="fa fa-3x gn-icon iti-{{facet['@name'].slice(facet['@name'].lastIndexOf('/')+1)}}"></i>
                 </span>
               </a>
             </div>
             <div class="badge-text col-xs-9">
-              <a title="{{facet['@label']}}" data-ng-href="#/search?facet.q=inspiretheme%2F{{facet['@name'].split('|')[1]}}">
-                <span class="gn-icon-label">{{facet['@name'].split('|')[1]}}</span><br>
+              <a title="{{facet['@label']}}" data-ng-href="#/search?facet.q=inspireThemeURI%2F{{facet['@name'] | encodeURIComponent | encodeURIComponent}}">
+                <span class="gn-icon-label">{{facet['@label']}}</span><br>
                 <span class="badge">{{facet['@count']}}</span>
               </a>
             </div>

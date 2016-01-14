@@ -13,7 +13,16 @@
   <xsl:include href="../../common/base-variables.xsl"/>
   <xsl:include href="../../common/profiles-loader-tpl-rdf.xsl"/>
   
-  <xsl:variable name="port" select="$env/system/server/port"/>
+  <xsl:variable name="port">
+    <xsl:choose>
+        <xsl:when test="$env/system/server/protocol = 'https'">
+            <xsl:value-of select="$env/system/server/securePort"/>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:value-of select="$env/system/server/port"/>
+        </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
   <xsl:variable name="url" select="concat($env/system/server/protocol, '://', 
     $env/system/server/host, 
     if ($port='80') then '' else concat(':', $port),

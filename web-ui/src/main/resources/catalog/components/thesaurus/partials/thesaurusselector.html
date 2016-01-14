@@ -16,6 +16,7 @@
       </button>
       <ul class="dropdown-menu">
         <li data-ng-repeat="t in thesaurus | orderBy:'props.title'"
+            data-ng-show="t.get().activated == 'y'"
             data-ng-class="t.getKey() == thesaurusKey ? 'disabled' : ''">
           <a href=""
              data-ng-click="addThesaurus(t.getKey())">

@@ -30,7 +30,7 @@ public class HarvestResult {
     public int unchangedMetadata;
     public int unknownSchema;	        // = md with unknown schema (should be 0 if no layer loaded using md url)
     public int unretrievable;	        // = http connection failed
-    public int updatedMetadata;
+    public int updatedMetadata = 0;
     public int uuidSkipped;
     public int thumbnails;		        // = number of thumbnail generated
     public int thumbnailsFailed;        // = number of thumbnail creation which failed

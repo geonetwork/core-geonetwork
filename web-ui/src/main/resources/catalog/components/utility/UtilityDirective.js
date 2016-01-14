@@ -906,6 +906,9 @@
       }
     }
   });
+  module.filter('encodeURIComponent', function() {
+    return window.encodeURIComponent;
+  });
   module.directive('gnJsonText', function() {
     return {
       restrict: 'A',

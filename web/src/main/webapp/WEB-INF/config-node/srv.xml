@@ -21,4 +21,5 @@
  	<!--<import resource="../config-db/db2.xml"/> -->
  	<!--<import resource="../config-db/postgres.xml"/>-->
  	<!--<import resource="../config-db/sqlserver.xml"/> -->
+	<!--<import resource="../config-db/postgres-postgis.xml"/> -->
 </beans>
