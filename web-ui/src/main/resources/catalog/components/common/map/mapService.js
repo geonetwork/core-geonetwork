@@ -599,8 +599,8 @@
               // TODO: parse better legend & attribution
               if (angular.isArray(getCapLayer.Style) &&
                   getCapLayer.Style.length > 0) {
-                var legendUrl = getCapLayer.Style[getCapLayer.Style.length - 1]
-                  .LegendURL[0];
+                  var legendUrl = (getCapLayer.Style[getCapLayer.Style.length - 1].LegendURL) ?
+                  getCapLayer.Style[getCapLayer.Style.length - 1].LegendURL[0] : undefined;
                 if (legendUrl) {
                   legend = legendUrl.OnlineResource;
                 }
