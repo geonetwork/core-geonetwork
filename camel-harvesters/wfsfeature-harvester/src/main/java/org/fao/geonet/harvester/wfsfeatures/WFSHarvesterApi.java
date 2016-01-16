@@ -21,21 +21,21 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.harvester.wfsfeatures.services;
+package org.fao.geonet.harvester.wfsfeatures;
 
 import com.google.common.collect.Lists;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.harvester.wfsfeatures.HarvesterRouteBuilder;
-import org.fao.geonet.harvester.wfsfeatures.event.WfsIndexingEvent;
+import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
+import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
+import org.fao.geonet.harvester.wfsfeatures.event.WFSHarvesterEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.utils.Xml;
 import org.geonetwork.messaging.JMSMessager;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -56,7 +56,7 @@ import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
  */
 
 @Controller
-public class HarvestRunner {
+public class WFSHarvesterApi {
     @Autowired
     private JMSMessager jmsMessager;
 
@@ -66,23 +66,18 @@ public class HarvestRunner {
     /**
      * Index a featureType from a wfs service URL and a typename
      *
-     * @param wfsUrl wfs service url
-     * @param featureType feature type name
-     * @param uuid  The metadata uuid (optional)
-     * @return
-     * @throws Exception
      */
     @RequestMapping(value = "/{uiLang}/wfs.harvest",
                     produces = MediaType.APPLICATION_JSON_VALUE,
                     method = RequestMethod.PUT)
     @ResponseBody
     public JSONObject indexWfs(
-            @RequestBody IndexConfigurationParameter config) throws Exception {
+            @RequestBody WFSHarvesterParameter config) throws Exception {
 
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("indexedFeatures",
-                sendMessage("", config.getUrl(), config.getTypeName()));
+                sendMessage(config));
 
         return result;
     }
@@ -101,6 +96,7 @@ public class HarvestRunner {
      */
     @RequestMapping(value = "/{uiLang}/wfs.harvest/{uuid}")
     @ResponseBody
+    @Deprecated
     public JSONObject indexWfs(
             @PathVariable String uiLang,
             @PathVariable String uuid,
@@ -124,7 +120,7 @@ public class HarvestRunner {
             Element linkageElt = (Element)Xml.selectSingle(element, "gmd:linkage/gmd:URL", NAMESPACES);
             Element ftElt = (Element)Xml.selectSingle(element, "gmd:name/gco:CharacterString", NAMESPACES);
 
-            a.add(sendMessage(uuid, linkageElt.getText(), ftElt.getText()));
+//            a.add(sendMessage(uuid, linkageElt.getText(), ftElt.getText()));
         }
 
         JSONObject result = new JSONObject();
@@ -144,15 +140,15 @@ public class HarvestRunner {
         return getApplicationProfile(uuid, wfsUrl, featureType);
     }
 
-    private JSONObject sendMessage(final String uuid, final String wfsUrl, final String featureType) {
+    private JSONObject sendMessage(WFSHarvesterParameter parameters) {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        WfsIndexingEvent event = new WfsIndexingEvent(appContext, uuid, wfsUrl, featureType);
+        WFSHarvesterEvent event = new WFSHarvesterEvent(appContext, parameters);
         // TODO: Messages should be node specific eg. srv channel ?
-        jmsMessager.sendMessage(HarvesterRouteBuilder.MESSAGE_HARVEST_WFS_FEATURES, event);
+        jmsMessager.sendMessage(WFSHarvesterRouteBuilder.MESSAGE_HARVEST_WFS_FEATURES, event);
 
         JSONObject j = new JSONObject();
-        j.put("url", wfsUrl);
-        j.put("featureType", featureType);
+        j.put("url", parameters.getUrl());
+        j.put("featureType", parameters.getTypeName());
 
         return j;
     }

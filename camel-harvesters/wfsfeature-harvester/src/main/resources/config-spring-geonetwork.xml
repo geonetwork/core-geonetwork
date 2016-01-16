@@ -34,11 +34,13 @@
         http://activemq.apache.org/schema/core
         http://activemq.apache.org/schema/core/activemq-core.xsd">
 
-  <bean id="wfsfeatureHarvesterRouteBuilder"
-        class="org.fao.geonet.harvester.wfsfeatures.HarvesterRouteBuilder"/>
+  <bean id="wfsfeaturesHarvesterRouteBuilder"
+        class="org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder">
+    <property name="startsFromXMLConfigurationFile" value="false"/>
+  </bean>
 
-  <bean id="featureIndexer"
-        class="org.fao.geonet.harvester.wfsfeatures.FeatureIndexer">
+  <bean id="solrWFSFeatureIndexer"
+        class="org.fao.geonet.harvester.wfsfeatures.worker.SolrWFSFeatureIndexer">
     <property name="solrCollectionUrl" value="${solr.url}/${solr.collection}"/>
     <property name="featureCommitInterval" value="500"/>
     <property name="solrCommitWithinMs" value="10000"/>
@@ -49,7 +51,7 @@
                    useMDCLogging="true">
     <cm:jmxAgent id="agent" disabled="false"/>
 
-    <cm:routeBuilder ref="wfsfeatureHarvesterRouteBuilder"/>
+    <cm:routeBuilder ref="wfsfeaturesHarvesterRouteBuilder"/>
 
     <cm:threadPoolProfile id="harvest-wfs-thread-pool"
                           defaultProfile="true"

@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.harvester.wfsfeatures;
+package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import org.apache.http.client.utils.URIBuilder;
 import org.opengis.feature.type.AttributeDescriptor;
@@ -34,22 +34,22 @@ import java.util.Date;
 
 public class OwsUtils {
 
-    public String getDescribeFeatureTypeUrl(final String wfsUrl, final String featureType) throws Exception {
+    public String getDescribeFeatureTypeUrl(final String wfsUrl, final String featureType, final String version) throws Exception {
         URIBuilder builder = new URIBuilder(wfsUrl);
         builder.addParameter("request", "DescribeFeatureType");
         builder.addParameter("service", "WFS");
-        builder.addParameter("version", "1.0.0");
+        builder.addParameter("version", version);
         builder.addParameter("TYPENAME", featureType);
 
         String url = builder.build().toURL().toString();
         return url;
     }
 
-    public static String getGetCapabilitiesUrl(final String wfsUrl) throws Exception {
+    public static String getGetCapabilitiesUrl(final String wfsUrl, final String version) throws Exception {
         URIBuilder builder = new URIBuilder(wfsUrl);
-        builder.addParameter("request", "getCapabilities");
+        builder.addParameter("request", "GetCapabilities");
         builder.addParameter("service", "WFS");
-        builder.addParameter("version", "1.0.0");
+        builder.addParameter("version", version);
 
         String url = builder.build().toURL().toString();
         return url;

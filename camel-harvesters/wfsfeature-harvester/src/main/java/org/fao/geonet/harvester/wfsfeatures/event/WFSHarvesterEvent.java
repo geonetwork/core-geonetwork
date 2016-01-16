@@ -26,35 +26,34 @@ package org.fao.geonet.harvester.wfsfeatures.event;
 /**
  * Created by fgravin on 10/29/15.
  */
+
+import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
+
 import org.springframework.context.ApplicationEvent;
 
-public class WfsIndexingEvent extends ApplicationEvent{
+public class WFSHarvesterEvent extends ApplicationEvent{
 
-    final String featureType;
-    final String wfsUrl;
-    final String uuid;
 
-    public String getFeatureType() {
-        return featureType;
+    private WFSHarvesterParameter parameters;
+
+    public WFSHarvesterEvent setParameters(WFSHarvesterParameter parameters) {
+        this.parameters = parameters;
+        return this;
     }
 
-    public String getWfsUrl() {
-        return wfsUrl;
+    public WFSHarvesterParameter getParameters() {
+        return parameters;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
-
-    public WfsIndexingEvent(Object source, final String uuid, final String wfsUrl, final String featureType ) {
+    public WFSHarvesterEvent(Object source, WFSHarvesterParameter parameters) {
         super(source);
-        this.featureType = featureType;
-        this.uuid = uuid;
-        this.wfsUrl = wfsUrl;
-        System.out.println("Created a Custom event with url = " + this.featureType);
+        this.parameters = parameters;
     }
 
     @Override
     public String toString() {
-        return this.featureType;
-    }}
+        StringBuffer sb = new StringBuffer(this.getClass().getSimpleName());
+        sb.append("\n").append(parameters.toString());
+        return sb.toString();
+    }
+}

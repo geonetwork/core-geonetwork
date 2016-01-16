@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.harvester.wfsfeatures;
+package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
@@ -32,7 +32,6 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.StringUtils;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.feature.FeatureCollection;
@@ -53,7 +52,8 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import java.io.IOException;
 import java.util.*;
 
-public class FeatureIndexer {
+public class SolrWFSFeatureIndexer {
+    public static final String MULTIVALUED_SUFFIX = "s";
     private SolrClient solr;
 
     /**
@@ -64,9 +64,9 @@ public class FeatureIndexer {
     /**
      * A list of properties to be saved in the index
      */
-    private static Map<String, String> harvesterReportFields = new HashMap<>();
+    private static Map<String, Object> harvesterReportFields = new HashMap<>();
 
-    Logger logger = Logger.getLogger(HarvesterRouteBuilder.LOGGER_NAME);
+    Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     // TODO: Move attributeType / solr dynamic index field suffix to config
     // maybe make a bean taking care of this which could also do more
     // complex mapping like based on feature type column name defined suffix
@@ -99,7 +99,7 @@ public class FeatureIndexer {
         return solrCommitWithinMs;
     }
 
-    public FeatureIndexer setSolrCommitWithinMs(int solrCommitWithinMs) {
+    public SolrWFSFeatureIndexer setSolrCommitWithinMs(int solrCommitWithinMs) {
         this.solrCommitWithinMs = solrCommitWithinMs;
         return this;
     }
@@ -123,23 +123,23 @@ public class FeatureIndexer {
      * @param exchange
      */
     public void deleteFeatures(Exchange exchange) {
-        FeatureTypeConfig ftConfig = (FeatureTypeConfig) exchange.getProperty("featureTypeConfig");
-        String wfsUrl = ftConfig.getWfsUrl();
-        String featureTypeName = ftConfig.getFeatureType();
+        final String url = (String) exchange.getProperty("url");
+        final String typeName = (String) exchange.getProperty("typeName");
+
         logger.info(String.format(
                 "Deleting features previously index from service '%s' and feature type '%s' in '%s'",
-                ftConfig.getWfsUrl(), ftConfig.getFeatureType(), solrCollectionUrl));
+                url, typeName, solrCollectionUrl));
 
         solr = new HttpSolrClient(solrCollectionUrl);
         try {
             UpdateResponse response = solr.deleteByQuery(String.format(
-                    "+featureTypeId:\"%s#%s\"", wfsUrl, featureTypeName)
+                    "+featureTypeId:\"%s#%s\"", url, typeName)
             );
             logger.info(String.format(
                     "  Features deleted in %sms.",
                     response.getElapsedTime()));
             response = solr.deleteByQuery(String.format(
-                    "+id:\"%s#%s\"", wfsUrl, featureTypeName)
+                    "+id:\"%s#%s\"", url, typeName)
             );
             logger.info(String.format(
                     "  Report deleted in %sms.",
@@ -181,25 +181,27 @@ public class FeatureIndexer {
         }
     }
 
+
     /**
      * Index all features found in a WFS server
      *
      * @param exchange
      */
-    public void featureToIndexDocument(Exchange exchange) throws Exception {
-        FeatureTypeConfig ftConfig = (FeatureTypeConfig) exchange.getProperty("featureTypeConfig");
-        String wfsUrl = ftConfig.getWfsUrl();
-        String featureTypeName = ftConfig.getFeatureType();
+    public void indexFeatures(Exchange exchange) throws Exception {
+        WFSHarvesterExchangeState state = (WFSHarvesterExchangeState) exchange.getProperty("featureTypeConfig");
+
+        final String url = state.getUrl();
+        final String typeName = state.getTypeName();
         logger.info(String.format(
                 "Indexing WFS features from service '%s' and feature type '%s'",
-                ftConfig.getWfsUrl(), ftConfig.getFeatureType()));
+                url, typeName));
 
-        WFSDataStore wfs = ftConfig.getWfsDatastore();
-        Map<String, String> fields = ftConfig.getFields();
+        WFSDataStore wfs = state.getWfsDatastore();
+        Map<String, String> fields = state.getFields();
 
         solr = new HttpSolrClient(solrCollectionUrl);
 
-        harvesterReportFields.put("id", wfsUrl + "#" + featureTypeName);
+        harvesterReportFields.put("id", url + "#" + typeName);
         harvesterReportFields.put("docType", "harvesterReport");
 
         List<String> docColumns = new ArrayList<>(fields.size());
@@ -214,7 +216,7 @@ public class FeatureIndexer {
         harvesterReportFields.put("docColumns_s", Joiner.on("|").join(docColumns));
 
         try {
-            FeatureSource<SimpleFeatureType, SimpleFeature> source = wfs.getFeatureSource(featureTypeName);
+            FeatureSource<SimpleFeatureType, SimpleFeature> source = wfs.getFeatureSource(typeName);
             CoordinateReferenceSystem wgs84 = CRS.decode("EPSG:4326");
             Extent crsExtent = wgs84.getDomainOfValidity();
             ReferencedEnvelope wgs84bbox = null;
@@ -235,6 +237,8 @@ public class FeatureIndexer {
             FeatureCollection<SimpleFeatureType, SimpleFeature> featuresCollection = source.getFeatures();
 
             final FeatureIterator<SimpleFeature> features = featuresCollection.features();
+            final Map<String, String> tokenizedFields = state.getTokenize();
+            final boolean hasTokenizedFields = tokenizedFields != null;
             int numInBatch = 0, nbOfFeatures = 0;
             Collection<SolrInputDocument> docCollection = new ArrayList<SolrInputDocument>();
 
@@ -245,11 +249,14 @@ public class FeatureIndexer {
 
                 document.addField("id", feature.getID());
                 document.addField("docType", "feature");
-                document.addField("featureTypeId", wfsUrl + "#" + featureTypeName);
+                document.addField("featureTypeId", url + "#" + typeName);
 
                 for (String attributeName : fields.keySet()) {
                     String attributeType = fields.get(attributeName);
                     Object attributeValue = feature.getAttribute(attributeName);
+
+                    // TODO : tokenize
+                    // state.getTokenize();
                     if (attributeValue != null) {
                         if (attributeType.equals("geometry")) {
                             if (!CRS.equalsIgnoreMetadata(
@@ -263,9 +270,26 @@ public class FeatureIndexer {
                                 // Geometry is out of CRS extent
                             }
                         } else {
-                            document.addField(
-                                    attributeName + XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType),
-                                    attributeValue);
+                            // Check if field has to be tokenized
+                            String separator = null;
+                            if (hasTokenizedFields) {
+                                separator = tokenizedFields.get(attributeName);
+                            }
+                            boolean isTokenized = separator != null;
+                            if (isTokenized){
+                                StringTokenizer tokenizer =
+                                        new StringTokenizer((String) attributeValue, separator);
+                                while (tokenizer.hasMoreElements()) {
+                                    String token = tokenizer.nextToken();
+                                    document.addField(
+                                        attributeName + XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType) + MULTIVALUED_SUFFIX,
+                                        token);
+                                }
+                            } else {
+                                document.addField(
+                                        attributeName + XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType),
+                                        attributeValue);
+                            }
                         }
                     }
                 }
@@ -293,6 +317,7 @@ public class FeatureIndexer {
             }
             logger.info(String.format("Total number of features indexed is %d.", nbOfFeatures));
             harvesterReportFields.put("status_s", "success");
+            harvesterReportFields.put("totalRecords_i", nbOfFeatures);
             harvesterReportFields.put("endDate_dt",
                     ISODateTimeFormat.dateTime().print(new DateTime()));
         } catch (IOException e) {

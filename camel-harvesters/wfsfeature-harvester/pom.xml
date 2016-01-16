@@ -5,7 +5,7 @@
   <parent>
     <artifactId>camel-harvesters</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.0.3-SNAPSHOT</version>
+    <version>3.1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -13,6 +13,14 @@
   <name>WFS features harvester</name>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.index</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

@@ -21,29 +21,33 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.harvester.wfsfeatures;
+package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.builder.xml.XPathBuilder;
+import org.apache.camel.model.dataformat.JaxbDataFormat;
+import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.w3c.dom.Document;
+
+import javax.xml.bind.JAXBContext;
 
 /**
  * Created by francois on 28/10/15.
  */
-public class HarvesterRouteBuilder extends RouteBuilder {
+public class WFSHarvesterRouteBuilder extends RouteBuilder {
     public static final String LOGGER_NAME = "harvest.wfs.features";
     public static final String MESSAGE_HARVEST_WFS_FEATURES = "harvest-wfs-features";
     public static final String MESSAGE_DELETE_WFS_FEATURES = "delete-wfs-features";
 
-    private static boolean isStartingFromXMLConfigurationFile = false;
+    private boolean startsFromXMLConfigurationFile = false;
 
-    public static boolean isStartingFromXMLConfigurationFile() {
-        return isStartingFromXMLConfigurationFile;
+    public boolean isStartsFromXMLConfigurationFile() {
+        return startsFromXMLConfigurationFile;
     }
 
-    public static void setIsStartingFromXMLConfigurationFile(boolean isStartingFromXMLConfigurationFile) {
-        HarvesterRouteBuilder.isStartingFromXMLConfigurationFile = isStartingFromXMLConfigurationFile;
+    public void setIsStartingFromXMLConfigurationFile(boolean isStartingFromXMLConfigurationFile) {
+        this.startsFromXMLConfigurationFile = isStartingFromXMLConfigurationFile;
     }
 
 
@@ -51,8 +55,13 @@ public class HarvesterRouteBuilder extends RouteBuilder {
     public void configure() throws Exception {
         onException(Exception.class)
                 .handled(true)
-                .log(LoggingLevel.ERROR, LOGGER_NAME, "Exception occured: ${exception.message}")
-                .log(LoggingLevel.ERROR, LOGGER_NAME, "Harvesting task terminated due to previous exception (Exchange ${exchangeId}).");
+                .log(LoggingLevel.ERROR, LOGGER_NAME,
+                        "Exception occured: ${exception.message}")
+                .log(LoggingLevel.ERROR, LOGGER_NAME,
+                        "Harvesting task terminated due to previous exception (Exchange ${exchangeId}).");
+        final JAXBContext jaxbContext = JAXBContext.newInstance(WFSHarvesterParameter.class);
+        JaxbDataFormat jaxb = new JaxbDataFormat(false);
+        jaxb.setContextPath(WFSHarvesterParameter.class.getPackage().getName());
 
         /**
          * Start the indexing from the XML configuration file.
@@ -61,21 +70,23 @@ public class HarvesterRouteBuilder extends RouteBuilder {
         XPathBuilder xPathWfsConfigBuilder = new XPathBuilder("//wfs");
         from("file:src/test/resources/?fileName=wfs.xml&noop=true")
                 .id("harvest-wfs-start-from-file")
-                .autoStartup(isStartingFromXMLConfigurationFile)
+                .autoStartup(startsFromXMLConfigurationFile)
                 .log(LoggingLevel.INFO, LOGGER_NAME, "Harvest features from XML configuration file.")
                 .convertBodyTo(Document.class)
                 .log(LoggingLevel.DEBUG, LOGGER_NAME, "Content is: ${body}")
                 .split(xPathWfsConfigBuilder)
                     .parallelProcessing()
+                    // Will not stop on exception if one of the splitted task fails
                     .executorServiceRef("harvest-wfs-thread-pool")
-                    // Will not stop on exception if on of the splitted task fails
-                        .setProperty("wfsUrl", xpath("wfs/@url", String.class))
-                        .setProperty("featureType", xpath("wfs/@featureType", String.class))
-                        .log(LoggingLevel.INFO, LOGGER_NAME, "#${property.CamelSplitIndex}. Harvesting ${property.wfsUrl} - start (Exchange ${exchangeId}).")
+                        .unmarshal(jaxb)
+                        .setProperty("configuration", simple("${body}"))
+//                        .setProperty("url", xpath("wfs/@url", String.class))
+//                        .setProperty("typeName", xpath("wfs/@typeName", String.class))
+                        .log(LoggingLevel.INFO, LOGGER_NAME, "#${property.CamelSplitIndex}. Harvesting ${property.configuration.url} - start (Exchange ${exchangeId}).")
                         .bean(FeatureTypeBean.class, "initialize(*, true)")
                         .to("direct:delete-wfs-featuretype-features")
                         .to("direct:index-wfs")
-                        .log(LoggingLevel.INFO, LOGGER_NAME, "#${property.CamelSplitIndex}. Harvesting ${property.wfsUrl} - end (Exchange ${exchangeId}).")
+                        .log(LoggingLevel.INFO, LOGGER_NAME, "#${property.CamelSplitIndex}. Harvesting ${property.configuration.url} - end (Exchange ${exchangeId}).")
                 .end()
                 .log(LoggingLevel.DEBUG, LOGGER_NAME, "All WFS harvested.");
 
@@ -88,9 +99,8 @@ public class HarvesterRouteBuilder extends RouteBuilder {
         from("activemq:queue:" + MESSAGE_HARVEST_WFS_FEATURES)
                 .id("harvest-wfs-start-from-message")
                 .log(LoggingLevel.INFO, LOGGER_NAME, "Harvest features message received.")
-                .setProperty("mduuid", simple("${body.uuid}"))
-                .setProperty("wfsUrl", simple("${body.wfsUrl}"))
-                .setProperty("featureType", simple("${body.featureType}"))
+                .log(LoggingLevel.INFO, LOGGER_NAME, "${body}")
+                .setProperty("configuration", simple("${body.parameters}"))
                 .bean(FeatureTypeBean.class, "initialize(*, true)")
                 .to("direct:delete-wfs-featuretype-features")
                 .to("direct:index-wfs");
@@ -98,22 +108,21 @@ public class HarvesterRouteBuilder extends RouteBuilder {
         from("activemq:queue:" + MESSAGE_DELETE_WFS_FEATURES)
                 .id("harvest-wfs-delete-features-from-message")
                 .log(LoggingLevel.INFO, LOGGER_NAME, "Delete features message received.")
-                .setProperty("wfsUrl", simple("${body.wfsUrl}"))
-                .setProperty("featureType", simple("${body.featureType}"))
-                .bean(FeatureTypeBean.class, "initialize(*, false)")
+                .setProperty("url", simple("${body.parameters.url}"))
+                .setProperty("typeName", simple("${body.parameters.typeName}"))
                 .to("direct:delete-wfs-featuretype-features");
 
         from("direct:delete-wfs-featuretype-features")
                 .id("harvest-wfs-delete-features")
-                .log(LoggingLevel.INFO, "Removing features ...")
-                .beanRef("featureIndexer", "deleteFeatures")
-                .log(LoggingLevel.INFO, "Features removed.");
+                .log(LoggingLevel.INFO, "Removing features from ${property.url}#${property.typeName} ...")
+                .beanRef("solrWFSFeatureIndexer", "deleteFeatures")
+                .log(LoggingLevel.INFO, "All features from ${property.url}#${property.typeName} removed.");
 
         from("direct:index-wfs")
                 .id("harvest-wfs-features")
-                .log(LoggingLevel.INFO, "Indexing features ...")
-                .beanRef("featureIndexer", "featureToIndexDocument")
-                .log(LoggingLevel.INFO, "Features indexed.");
+                .log(LoggingLevel.INFO, "Indexing features from ${property.url}#${property.typeName} ...")
+                .beanRef("solrWFSFeatureIndexer", "indexFeatures")
+                .log(LoggingLevel.INFO, "All features from ${property.url}#${property.typeName} indexed.");
     }
 }
 
