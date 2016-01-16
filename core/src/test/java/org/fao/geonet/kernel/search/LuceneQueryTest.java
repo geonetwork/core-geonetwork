@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,7 +23,6 @@ import org.fao.geonet.kernel.search.facet.Facets;
 import org.fao.geonet.kernel.search.facet.SummaryType;
 import org.fao.geonet.kernel.search.facet.SummaryTypes;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Xml;
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
@@ -126,7 +124,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(category:yyy inspiretheme:xxx title:xxx any:yyy) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(inspiretheme:xxx title:xxx category:yyy any:yyy) +_isTemplate:n", query.toString());
     }
 
     /**
@@ -197,7 +195,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx inspiretheme:xxx any:xxx) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(inspiretheme:xxx title:xxx any:xxx) +_isTemplate:n", query.toString());
     }
 
 
@@ -220,7 +218,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx title:zzz inspiretheme:xxx zzz (+any:xxx +any:zzz)) +_isTemplate:n",
+        assertEquals("unexpected Lucene query", "+(inspiretheme:xxx zzz title:xxx title:zzz (+any:xxx +any:zzz)) +_isTemplate:n",
                 query.toString());
     }
 
@@ -265,8 +263,8 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx title:zzz inspiretheme:xxx inspiretheme:zzz any:xxx any:zzz) " +
-                                                "+_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(inspiretheme:xxx inspiretheme:zzz title:xxx title:zzz "
+        		+ "any:xxx any:zzz) +_isTemplate:n", query.toString());
     }
 
     /**
@@ -288,7 +286,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx _uuid:xxx) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(_uuid:xxx title:xxx) +_isTemplate:n", query.toString());
     }
 
     /**
@@ -310,7 +308,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx title:yyy _uuid:xxx _uuid:yyy) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(_uuid:xxx _uuid:yyy title:xxx title:yyy) +_isTemplate:n", query.toString());
     }
 
     @Test
@@ -988,7 +986,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(+topicCat:environment* +topicCat:boundaries +topicCat:biota*) +_isTemplate:n",
+        assertEquals("unexpected Lucene query", "+(+topicCat:environment* +topicCat:biota* +topicCat:boundaries) +_isTemplate:n",
                 query.toString());
     }
 
@@ -1356,7 +1354,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(+inspiretheme:Hydrography* +inspiretheme:\"Cadastral parcels\") +_isTemplate:n",
+        assertEquals("unexpected Lucene query", "+(+inspiretheme:\"Cadastral parcels\" +inspiretheme:Hydrography*) +_isTemplate:n",
                 query.toString());
     }
 
@@ -1727,7 +1725,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:nou moe _op2:nou moe _op0:hatsjekidee _op2:hatsjekidee) +_isTemplate:n",
+        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe) +_isTemplate:n",
                 query.toString());
     }
 
@@ -1753,7 +1751,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:nou moe _op2:nou moe _op0:hatsjekidee _op2:hatsjekidee) +_isTemplate:n",
+        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe) +_isTemplate:n",
                 query.toString());
     }
 
@@ -1779,7 +1777,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:nou moe _op2:nou moe _op0:hatsjekidee _op2:hatsjekidee _owner:yeah!) " +
+        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe _owner:yeah!) " +
                                                 "+_isTemplate:n", query.toString());
     }
 
@@ -1805,7 +1803,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:nou moe _op2:nou moe _op0:hatsjekidee _op2:hatsjekidee _dummy:0) " +
+        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe _dummy:0) " +
                                                 "+_isTemplate:n", query.toString());
     }
 
@@ -2077,8 +2075,8 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:1 _op2:1 _op0:0 _op2:0) +westBL:[-180.0 TO 180.0] +eastBL:[-180.0 TO 180.0] " +
-                                                "+northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0] +title:hoi +_isTemplate:n",
+        assertEquals("unexpected Lucene query", "+(_op0:0 _op2:0 _op0:1 _op2:1) +westBL:[-180.0 TO 180.0] +eastBL:[-180.0 TO 180.0] "
+        		+ "+northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0] +title:hoi +_isTemplate:n",
                 query.toString());
     }
 
