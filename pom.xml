@@ -274,7 +274,7 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <version>2.18.1</version>
             <configuration>
-                <argLine>-Dfile.encoding=UTF-8  -Xmx2048M</argLine>
+                <argLine>-Dfile.encoding=UTF-8 -Xmx512M</argLine>
                 <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
                 <runOrder>alphabetical</runOrder>
                 <redirectTestOutputToFile>true</redirectTestOutputToFile>
