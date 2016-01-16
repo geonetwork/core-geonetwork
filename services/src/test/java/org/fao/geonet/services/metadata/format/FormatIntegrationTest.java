@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
@@ -268,10 +269,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         MockHttpServletRequest request = new MockHttpServletRequest(context, "GET", "http://localhost:8080/geonetwork/srv/eng/md.formatter");
         request.setPathInfo("/eng/md.formatter");
 
-        WebApplicationContext webAppContext = new GenericWebApplicationContext((DefaultListableBeanFactory) _applicationContext.getBeanFactory());
-
         final String applicationContextAttributeKey = "srv";
-        request.getServletContext().setAttribute(applicationContextAttributeKey, webAppContext);
+        request.getServletContext().setAttribute(applicationContextAttributeKey, _applicationContext);
         ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
 
         RequestContextHolder.setRequestAttributes(requestAttributes);
