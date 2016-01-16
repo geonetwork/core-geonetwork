@@ -1,6 +1,15 @@
 package org.fao.geonet.kernel.search;
 
-import jeeves.server.ServiceConfig;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
@@ -15,6 +24,7 @@ import org.fao.geonet.kernel.search.facet.Facets;
 import org.fao.geonet.kernel.search.facet.SummaryType;
 import org.fao.geonet.kernel.search.facet.SummaryTypes;
 import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
@@ -24,14 +34,7 @@ import org.mockito.Mockito;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import jeeves.server.ServiceConfig;
 
 /**
  * Unit test for building Lucene queries.
@@ -330,9 +333,10 @@ public class LuceneQueryTest {
 
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
+     * @throws InterruptedException 
      */
     @Test
-    public void testSingleORSingleValueWithALL() {
+    public void testSingleORSingleValueWithALL() throws InterruptedException {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
         Element request = factory.element("request");
@@ -347,7 +351,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx any:xxx) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(any:xxx title:xxx) +_isTemplate:n", query.toString());
     }
 
 

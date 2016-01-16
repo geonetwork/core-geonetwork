@@ -28,6 +28,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -70,7 +71,7 @@ public class LuceneQueryInput extends UserQueryInput {
         @SuppressWarnings("unchecked")
         List<Element> groupsE = (List<Element>)jdom.getChildren(SearchParameter.GROUP);
         if(groupsE != null) {
-            Set<String> groups = new HashSet<String>();
+            Set<String> groups = new LinkedHashSet<String>();
             for(Element groupE : groupsE) {
                 groups.add(groupE.getText());
             }
@@ -78,7 +79,7 @@ public class LuceneQueryInput extends UserQueryInput {
         }
         @SuppressWarnings("unchecked")
         List<Element> groupOwnersE = (List<Element>)jdom.getChildren(SearchParameter.GROUPOWNER);
-        Set<String> groupOwners = new HashSet<String>();
+        Set<String> groupOwners = new LinkedHashSet<String>();
         for(Element groupOwnerE : groupOwnersE) {
             groupOwners.add(groupOwnerE.getText());
         }

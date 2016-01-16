@@ -49,6 +49,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -131,7 +132,7 @@ public class LuceneConfig {
 		
 	}
 
-	private Set<String> tokenizedFields = new HashSet<String>();
+	private Set<String> tokenizedFields = new LinkedHashSet<String>();
 	private Map<String, LuceneConfigNumericField> numericFields = new HashMap<String, LuceneConfigNumericField>();
 	private Map<String, String> dumpFields = new HashMap<String, String>();
 
