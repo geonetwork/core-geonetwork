@@ -23,14 +23,13 @@
 
 package org.fao.geonet.kernel.search;
 
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.jdom.Element;
-
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.jdom.Element;
 
 /**
  * Input to {@link LuceneQueryBuilder}, consisting of user-provided parameters plus system-provided parameters.
@@ -133,7 +132,7 @@ public class LuceneQueryInput extends UserQueryInput {
 
     public void setGroups(Set<String> groups) {
         if(this.groups == null) {
-            this.groups = new HashSet<String>();
+            this.groups = new LinkedHashSet<String>();
         }
         this.groups = groups;
     }
@@ -176,7 +175,7 @@ public class LuceneQueryInput extends UserQueryInput {
 
     public void setGroupOwners(Set<String> groupOwners) {
         if(this.groupOwners == null) {
-            this.groupOwners = new HashSet<String>();
+            this.groupOwners = new LinkedHashSet<String>();
         }
         this.groupOwners = groupOwners;
     }

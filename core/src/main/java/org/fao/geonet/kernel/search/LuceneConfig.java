@@ -23,7 +23,19 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.server.overrides.ConfigurationOverrides;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
+
 import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.NumericUtils;
@@ -42,18 +54,7 @@ import org.jdom.JDOMException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.servlet.ServletContext;
+import jeeves.server.overrides.ConfigurationOverrides;
 
 /**
  * Lucene configuration class load Lucene XML configuration file.
@@ -68,7 +69,7 @@ public class LuceneConfig {
 	private static final int DOC_BOOST_CLASS = 3;
 
 	private Path configurationFile;
-	private HashSet<String> fuzzyMatching;
+	private LinkedHashSet<String> fuzzyMatching;
 
 	/**
 	 * Lucene numeric field configuration
@@ -170,7 +171,7 @@ public class LuceneConfig {
 	private double nrtManagerReopenThreadMinStaleSec = 0.1f;
 	
 	private Version LUCENE_VERSION = Geonet.LUCENE_VERSION;
-	private Set<String> multilingualSortFields = new HashSet<String>();
+	private Set<String> multilingualSortFields = new LinkedHashSet<String>();
 
     private Facets facets;
     private SummaryTypes summaryTypes;
@@ -295,7 +296,7 @@ public class LuceneConfig {
 
 			// Tokenized fields
 			elem = luceneConfig.getChild("tokenized");
-			tokenizedFields = new HashSet<String>();
+			tokenizedFields = new LinkedHashSet<String>();
 			if (elem != null) {
 				for (Object o : elem.getChildren()) {
 					if (o instanceof Element) {
@@ -314,7 +315,7 @@ public class LuceneConfig {
 			// similarity fields
 			elem = luceneConfig.getChild("fuzzyMatching");
 			if (elem != null && "true".equalsIgnoreCase(elem.getAttributeValue("enabled"))) {
-				fuzzyMatching = new HashSet<String>();
+				fuzzyMatching = new LinkedHashSet<String>();
 				for (Object o : elem.getChildren()) {
 					if (o instanceof Element) {
 						String name = ((Element) o).getAttributeValue("name");
