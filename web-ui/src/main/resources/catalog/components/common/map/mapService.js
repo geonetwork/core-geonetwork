@@ -528,7 +528,7 @@
 
               // TODO: parse better legend & attribution
               if (angular.isArray(getCapLayer.Style) &&
-                getCapLayer.Style.length > 0) {
+                  getCapLayer.Style.length > 0) {
                 var legendUrl = getCapLayer.Style[getCapLayer.Style.length - 1]
                   .LegendURL[0];
                 if (legendUrl) {
@@ -560,34 +560,34 @@
                 group: getCapLayer.group,
                 metadata: metadata,
                 extent: gnOwsCapabilities.getLayerExtentFromGetCap(map,
-                  getCapLayer),
+                    getCapLayer),
                 minResolution: this.getResolutionFromScale(
-                  map.getView().getProjection(),
-                  getCapLayer.MinScaleDenominator),
+                    map.getView().getProjection(),
+                    getCapLayer.MinScaleDenominator),
                 maxResolution: this.getResolutionFromScale(
-                  map.getView().getProjection(),
-                  getCapLayer.MaxScaleDenominator)
+                    map.getView().getProjection(),
+                    getCapLayer.MaxScaleDenominator)
               });
 
               if (angular.isArray(getCapLayer.Dimension)) {
                 for (var i = 0; i < getCapLayer.Dimension.length; i++) {
                   if (getCapLayer.Dimension[i].name == 'elevation') {
                     layer.set('elevation',
-                      getCapLayer.Dimension[i].values.split(','));
+                        getCapLayer.Dimension[i].values.split(','));
                   }
                   if (getCapLayer.Dimension[i].name == 'time') {
                     layer.set('time',
-                      getCapLayer.Dimension[i].values.split(','));
+                        getCapLayer.Dimension[i].values.split(','));
                   }
                 }
               }
               if (angular.isArray(getCapLayer.Style) &&
-                getCapLayer.Style.length > 1) {
+                  getCapLayer.Style.length > 1) {
                 layer.set('style', getCapLayer.Style);
               }
 
               layer.set('advanced', !!(layer.get('elevation') ||
-              layer.get('time') || layer.get('style')));
+                  layer.get('time') || layer.get('style')));
 
               layer.set('errors', errors);
               return layer;
@@ -903,13 +903,13 @@
               } else {
                 //if (createOnly) {
                 //  olL = $this.createOlWMTSFromCap(map, capL, url);
-                  olL = $this.createOlWMSFromCap(map, capL, url);
+                olL = $this.createOlWMSFromCap(map, capL, url);
                 //} else {
                 //  olL = $this.addWmsToMapFromCap(map, capL);
                 //}
 
                 var finishCreation = function() {
-                  if ( !createOnly) {
+                  if (!createOnly) {
                     map.addLayer(olL);
                   }
                   gnWmsQueue.removeFromQueue(url, name);
@@ -950,7 +950,7 @@
             var $this = this;
 
             return gnOwsCapabilities.getWMSCapabilities(url).
-                then(function (capObj) {
+                then(function(capObj) {
 
                   var createdLayers = [];
 
@@ -958,7 +958,7 @@
                   for (var i = 0, len = layers.length; i < len; i++) {
                     var capL = layers[i];
                     var olL = $this.createOlWMSFromCap(map, capL);
-                    if(!createOnly) {
+                    if (!createOnly) {
                       map.addLayer(olL);
                     }
                     createdLayers.push(olL);

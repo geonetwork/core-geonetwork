@@ -754,16 +754,19 @@
     };
   }]);
 
-  module.directive('gnCollapse', ['$compile', function($compile) {
+
+  module.directive('gnCollapsible', ['$parse', function($parse) {
     return {
       restrict: 'A',
-      scope: true,
+      scope: false,
       link: function(scope, element, attrs) {
-        var next = element.next();
+        var getter = $parse(attrs['gnCollapsible']);
+        var setter = getter.assign;
+
         element.on('click', function(e) {
           scope.$apply(function() {
-            scope.collapsed = !scope.collapsed;
-            next.slideToggle();
+            var collapsed = getter(scope);
+            setter(scope, !collapsed);
           });
         });
       }

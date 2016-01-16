@@ -61,16 +61,17 @@
           /**
            * Check if the WFS url provided return a response.
            */
-          scope.checkWFSUrl = function () {
+          scope.checkWFSUrl = function() {
             scope.initialized = true;
-            return $http.get('../../proxy?url=' + encodeURIComponent(scope.wfsUrl))
-              .then(function (data) {
-              scope.isWfsAvailable = true;
-                scope.checkFeatureTypeInSolr();
-            }, function(response) {
-              scope.isWfsAvailable = false;
-              scope.status = response;
-            });
+            return $http.get('../../proxy?url=' +
+                encodeURIComponent(scope.wfsUrl))
+              .then(function(data) {
+                  scope.isWfsAvailable = true;
+                  scope.checkFeatureTypeInSolr();
+                }, function(response) {
+                  scope.isWfsAvailable = false;
+                  scope.status = response;
+                });
           };
 
 
@@ -82,11 +83,12 @@
            * This config is stored in `scope.fields` and is used to build
            * the facet UI.
            */
-          scope.checkFeatureTypeInSolr = function () {
+          scope.checkFeatureTypeInSolr = function() {
             wfsFilterService.getWfsIndexFields(
                 ftName, wfsUrl).then(function(docFields) {
               scope.initialized = true;
               scope.isFeaturesIndexed = true;
+              scope.status = null;
 
               indexedFields = docFields;
               wfsFilterService.getApplicationProfile(uuid,
@@ -105,10 +107,10 @@
                 // Init the facets
                 scope.resetFacets();
               });
-            }, function (error) {
+            }, function(error) {
               scope.status = error;
             });
-          }
+          };
           /**
            * Update the state of the facet search.
            * The `scope.output` structure represent the state of the facet
@@ -152,14 +154,14 @@
             // Update the facet UI
             var collapsedFields;
             angular.forEach(scope.fields, function(f) {
-              collapsedFields= [];
+              collapsedFields = [];
               if (f.collapsed) {
                 collapsedFields.push(f.name);
               }
             });
 
             var url = wfsFilterService.updateSolrUrl(solrUrl, scope.output,
-            scope.searchInput);
+                scope.searchInput);
             wfsFilterService.getFacetsConfigFromSolr(url, indexedFields).
                 then(function(facetsInfo) {
                   scope.fields = facetsInfo.facetConfig;
@@ -196,7 +198,7 @@
             scope.resetSLDFilters();
           };
 
-          scope.resetSLDFilters = function () {
+          scope.resetSLDFilters = function() {
             scope.layer.getSource().updateParams({
               SLD: null
             });
@@ -228,12 +230,10 @@
           };
 
           scope.indexWFSFeatures = function() {
-            // TODO: Only for testing
-            //scope.indexingConfig = {"GRIDCODE": ",", "PARCELLE": "/"};
             return wfsFilterService.indexWFSFeatures(
-                    wfsUrl,
-                    ftName,
-                    scope.indexingConfig);
+                wfsUrl,
+                ftName,
+                scope.indexingConfig);
           };
 
 

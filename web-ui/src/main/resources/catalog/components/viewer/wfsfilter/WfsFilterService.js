@@ -347,7 +347,7 @@
             fieldsQ.push('+(' + valuesQ.join(' ') + ')');
           }
         });
-        if(filter) {
+        if (filter) {
           filter.split(' ').forEach(function(v) {
             fieldsQ.push('+*' + v + '*');
           });
@@ -391,10 +391,10 @@
        */
       this.indexWFSFeatures = function(url, type, idxConfig) {
         return $http.put('wfs.harvest', {
-            url: url,
-            typeName: type,
-            tokenize: idxConfig
-          }
+          url: url,
+          typeName: type,
+          tokenize: idxConfig
+        }
         ).then(function(data) {
           console.log(data);
         }, function(response) {

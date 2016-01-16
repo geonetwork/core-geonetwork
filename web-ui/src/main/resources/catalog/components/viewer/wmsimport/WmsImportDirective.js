@@ -57,12 +57,12 @@
         link: function(scope, element, attrs) {
           scope.loading = false;
           scope.format = attrs['gnWmsImport'] != '' ?
-            attrs['gnWmsImport'] : 'all';
+              attrs['gnWmsImport'] : 'all';
           scope.serviceDesc = null;
           scope.servicesList = gnViewerSettings.servicesUrl[scope.format];
           scope.catServicesList = [];
 
-          function addLinks (md, type) {
+          function addLinks(md, type) {
             angular.forEach(md.getLinksByType(type), function(link) {
               if (link.url) {
                 scope.catServicesList.push({
