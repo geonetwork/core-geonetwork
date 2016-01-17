@@ -2,6 +2,6 @@ sudo: false
 language: java
 jdk:
   - openjdk7
-  - openjdk8
+  - oraclejdk8
 before_install:
   - export MAVEN_OPTS="-Xmx512M -XX:MaxPermSize=256M"
