@@ -45,6 +45,7 @@ public class Wro4jJsCssCompilationTest {
         dataDirectory.setSchemaPluginsDir(webDir.resolve("WEB-INF/data/config/schema_plugins"));
         dataDirectory.setFormatterDir(webDir.resolve("WEB-INF/data/data/formatter"));
         GenericXmlApplicationContext applicationContext = new GenericXmlApplicationContext();
+        applicationContext.refresh();
         applicationContext.getBeanFactory().registerSingleton("geonetworkDataDirectory", dataDirectory);
         ApplicationContextHolder.set(applicationContext);
 
