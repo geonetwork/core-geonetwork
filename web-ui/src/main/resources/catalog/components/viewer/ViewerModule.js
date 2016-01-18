@@ -77,6 +77,7 @@
   goog.require('gn_popup');
   goog.require('gn_print');
   goog.require('gn_searchlayerformap_directive');
+  goog.require('gn_solr');
   goog.require('gn_terrainswitcher_directive');
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
@@ -109,7 +110,8 @@
     'gn_graticule',
     'gn_searchlayerformap_directive',
     'gn_terrainswitcher_directive',
-    'gn_wfsfilter'
+    'gn_wfsfilter',
+    'gn_solr'
   ]);
 
   module.controller('gnViewerController', [

@@ -11,10 +11,14 @@
        class="alert alert-warning"
        data-translate=""
        data-translate-values="{'url': '{{wfsUrl}}'}">
+    <button type="button" class="close"
+            data-ng-click="initialized = false"><i class="fa fa-times"/></button>
     wfsNotAvailable
   </div>
   <div data-ng-show="status"
        class="alert alert-warning">
+    <button type="button" class="close"
+            data-ng-click="status = null"><i class="fa fa-times"/></button>
     {{status}}
   </div>
 
@@ -33,7 +37,7 @@
 
   <div data-ng-show="initialized && isFeaturesIndexed">
     <!--Facet count-->
-    <div class="count">
+    <div class="count" data-ng-show="displayCount">
       {{::count}}&nbsp;<span translate="">features</span>
     </div>
 
@@ -44,6 +48,7 @@
             data-ng-hide="searchInput==''"
             title="{{'clear' | translate}}"></span>
       <input type="text"
+             data-gn-focus-on="initialized && isFeaturesIndexed"
              data-ng-model="searchInput"
              data-ng-change="filterFacets()"
              data-ng-model-options="{ debounce: 400 }"

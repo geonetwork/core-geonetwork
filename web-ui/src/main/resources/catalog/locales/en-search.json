@@ -313,5 +313,6 @@
   "wpsExecuteFailed": "Execute failed",
   "wpsErrorCodeReturned": "The serveur returned status code",
   "time" : "Time",
-  "features": "feature(s)"
+  "features": "feature(s)",
+  "downloadLayer": "Download data"
 }

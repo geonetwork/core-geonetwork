@@ -508,6 +508,20 @@
       };
     }]);
 
+  module.directive('gnFocusOn', function($timeout) {
+    return {
+      restrict: 'A',
+      link: function($scope, $element, $attr) {
+        $scope.$watch($attr.gnFocusOn, function(_focusVal) {
+          $timeout(function() {
+            _focusVal ? $element.focus() :
+                $element.blur();
+          });
+        });
+      }
+    };
+  });
+
   /**
    * Use to initialize bootstrap datepicker
    */

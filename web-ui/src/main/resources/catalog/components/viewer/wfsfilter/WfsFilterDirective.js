@@ -23,38 +23,51 @@
           featureTypeName: '@',
           wfsUrl: '@',
           bootMode: '@',
+          displayCount: '@',
           layer: '='
         },
         link: function(scope, element, attrs) {
-
-          scope.md = scope.layer.get('md');
           var solrUrl;
-          var uuid = scope.md && scope.md.getUuid();
+          var uuid = null;
           var ftName = scope.featureTypeName;
-          var wfsUrl = scope.wfsUrl;
           var indexedFields;
           scope.user = $rootScope.user;
-          scope.initialized = false;
-          scope.isWfsAvailable = false;
-          scope.isFeaturesIndexed = false;
-          scope.status = null;
-          scope.indexingConfig = null;
 
-          init();
+          scope.$watch('layer', function(newValue, oldValue) {
+            if (newValue != null && newValue !== oldValue) {
+              init();
+            }
+          });
 
           function init() {
-            if (scope.bootMode == 'ondemand') {
-              // User click to check
-            } else if (scope.bootMode == 'wfs') {
-              // First check WFS is responding
-              // then Solr
-              scope.checkWFSUrl();
-            } else if (scope.bootMode == 'solr') {
-              // Check if feature type is in Solr
-              scope.checkFeatureTypeInSolr();
-            } else {
-              // default: Solr mode
-              scope.checkFeatureTypeInSolr();
+            scope.fields = [];
+            scope.initialized = false;
+            scope.isWfsAvailable = false;
+            scope.isFeaturesIndexed = false;
+            scope.status = null;
+            scope.indexingConfig = null;
+            scope.md = scope.layer.get('md');
+            uuid = scope.md && scope.md.getUuid();
+            // TODO: Improve check
+            if (scope.layer.getSource().getParams) {
+              // TODO: Assume WFS is available as same URL or
+              // by substituting wms by wfs.
+              scope.wfsUrl = scope.layer.getSource().getUrls()[0].
+                  replace(/wms/i, 'wfs');
+              ftName = scope.layer.getSource().getParams().LAYERS;
+              if (scope.bootMode == 'ondemand') {
+                // User click to check
+              } else if (scope.bootMode == 'wfs') {
+                // First check WFS is responding
+                // then Solr
+                scope.checkWFSUrl();
+              } else if (scope.bootMode == 'solr') {
+                // Check if feature type is in Solr
+                scope.checkFeatureTypeInSolr();
+              } else {
+                // default: Solr mode
+                scope.checkFeatureTypeInSolr();
+              }
             }
           };
 
@@ -85,23 +98,24 @@
            */
           scope.checkFeatureTypeInSolr = function() {
             wfsFilterService.getWfsIndexFields(
-                ftName, wfsUrl).then(function(docFields) {
+                ftName, scope.wfsUrl).then(function(docFields) {
               scope.initialized = true;
               scope.isFeaturesIndexed = true;
+              scope.isWfsAvailable = true;
               scope.status = null;
 
               indexedFields = docFields;
               wfsFilterService.getApplicationProfile(uuid,
-                  ftName, wfsUrl).success(function(data) {
+                  ftName, scope.wfsUrl).success(function(data) {
 
                 var url;
                 if (data) {
                   url = wfsFilterService.getSolrRequestFromApplicationProfile(
-                      data, ftName, wfsUrl, docFields);
+                      data, ftName, scope.wfsUrl, docFields);
                   scope.indexingConfig = data.index;
                 } else {
                   url = wfsFilterService.getSolrRequestFromFields(
-                      docFields, ftName, wfsUrl);
+                      docFields, ftName, scope.wfsUrl);
                 }
                 solrUrl = url;
                 // Init the facets
@@ -160,12 +174,16 @@
               }
             });
 
-            var url = wfsFilterService.updateSolrUrl(solrUrl, scope.output,
-                scope.searchInput);
-            wfsFilterService.getFacetsConfigFromSolr(url, indexedFields).
+            scope.layer.set('solrQ', wfsFilterService.updateSolrUrl(
+                solrUrl,
+                scope.output,
+                scope.searchInput));
+            wfsFilterService.getFacetsConfigFromSolr(
+                scope.layer.get('solrQ'), indexedFields).
                 then(function(facetsInfo) {
                   scope.fields = facetsInfo.facetConfig;
                   scope.count = facetsInfo.count;
+                  scope.layer.set('featureCount', scope.count);
                   angular.forEach(scope.fields, function(f) {
                     if (!collapsedFields ||
                         collapsedFields.indexOf(f.name) >= 0) {
@@ -190,6 +208,7 @@
                 then(function(facetsInfo) {
                   scope.fields = facetsInfo.facetConfig;
                   scope.count = facetsInfo.count;
+                  scope.layer.set('featureCount', scope.count);
                   angular.forEach(scope.fields, function(f) {
                     f.collapsed = true;
                   });
@@ -231,7 +250,7 @@
 
           scope.indexWFSFeatures = function() {
             return wfsFilterService.indexWFSFeatures(
-                wfsUrl,
+                scope.wfsUrl,
                 ftName,
                 scope.indexingConfig);
           };
