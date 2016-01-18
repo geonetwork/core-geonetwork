@@ -12,12 +12,6 @@
 
     <context:component-scan base-package="org.fao.geonet" />
 
-		<bean id="solrProxy"
-					class="org.fao.geonet.services.solr.SolrProxy">
-			<property name="solrServerUrl" value="${solr.url}"/>
-			<property name="solrCollection" value="${solr.collection}"/>
-		</bean>
-
     <bean id="configPath" class="java.lang.String">
         <constructor-arg index="0" value="/WEB-INF/" />
     </bean>

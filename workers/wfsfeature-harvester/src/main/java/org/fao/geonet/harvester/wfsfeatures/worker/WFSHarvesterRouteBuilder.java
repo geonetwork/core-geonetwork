@@ -46,7 +46,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
         return startsFromXMLConfigurationFile;
     }
 
-    public void setIsStartingFromXMLConfigurationFile(boolean isStartingFromXMLConfigurationFile) {
+    public void setStartsFromXMLConfigurationFile(boolean isStartingFromXMLConfigurationFile) {
         this.startsFromXMLConfigurationFile = isStartingFromXMLConfigurationFile;
     }
 

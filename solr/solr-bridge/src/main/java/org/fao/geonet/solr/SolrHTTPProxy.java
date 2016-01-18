@@ -1,14 +1,16 @@
-package org.fao.geonet.services.solr;
+package org.fao.geonet.solr;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,43 +33,20 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
-
 /**
+ * TODO: Add multinode support at some point
  * Created by fgravin on 11/4/15.
  */
 @Controller
-public class SolrProxy {
-    // TODO: Should probably not depend on that
-    private DataManager dataManager;
-
+public class SolrHTTPProxy {
     public static final String[] _validContentTypes = {
             "application/json", "text/plain"
     };
 
-    private static final ArrayList<Namespace> NAMESPACES = Lists.newArrayList(GMD, GCO);
+    private static final ArrayList<Namespace> NAMESPACES = Lists.newArrayList(ISO19139Namespaces.GMD, ISO19139Namespaces.GCO);
 
-    private String solrServerUrl;
-
-    public String getSolrServerUrl() {
-        return solrServerUrl;
-    }
-
-    public SolrProxy setSolrServerUrl(String solrServerUrl) {
-        this.solrServerUrl = solrServerUrl;
-        return this;
-    }
-
-    private String solrCollection;
-
-    public String getSolrCollection() {
-        return solrCollection;
-    }
-
-    public void setSolrCollection(String solrCollection) {
-        this.solrCollection = solrCollection;
-    }
+    @Autowired
+    private SolrConfig config;
 
     @RequestMapping(value = "/{uiLang}/solrproxy/{query}")
     @ResponseBody
@@ -75,8 +54,9 @@ public class SolrProxy {
         //String solrUrl = System.getProperty("solr.server");
 
         handleRequest(request, response,
-                        solrServerUrl + "/" + solrCollection +
-                            "/" + selectUrl + "?" + request.getQueryString());
+                        config.getSolrServerUrl() + "/" +
+                            config.getSolrServerCore() + "/" +
+                                selectUrl + "?" + request.getQueryString());
     }
 
     /**
@@ -108,6 +88,7 @@ public class SolrProxy {
             HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        // TODO: Should probably not depend on that
         DataManager dataManager = appContext.getBean(DataManager.class);
         final String id = dataManager.getMetadataId(uuid);
         Element xml = dataManager.getMetadata(id);
@@ -157,7 +138,9 @@ public class SolrProxy {
             }
             String solrFacets = StringUtils.join(params, "&");
             String solrQuery = "q=featureTypeId:*" + featureType;
-            String solrUrl = solrServerUrl + "/" + solrCollection + "/select?wt=json&indent=true&rows=0&" + solrQuery + "&" + solrFacets;
+            String solrUrl = config.getSolrServerUrl() + "/" +
+                    config.getSolrServerCore() +
+                        "/select?wt=json&indent=true&rows=0&" + solrQuery + "&" + solrFacets;
             handleRequest(request, response, solrUrl);
         }
         //return "No configuration";
@@ -448,7 +431,7 @@ public class SolrProxy {
 
         // focus only on type, not on the text encoding
         String type = contentType.split(";")[0];
-        for (String validTypeContent : SolrProxy._validContentTypes) {
+        for (String validTypeContent : SolrHTTPProxy._validContentTypes) {
             if (validTypeContent.equals(type)) {
                 return true;
             }

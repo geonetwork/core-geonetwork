@@ -1167,7 +1167,7 @@
     <module>wro4j</module>
     <module>inspire-atom</module>
     <module>solr</module>
-    <module>camel-harvesters</module>
+    <module>workers</module>
     <module>messaging</module>
   </modules>
 

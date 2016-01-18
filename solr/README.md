@@ -6,7 +6,7 @@ Download Solr from http://lucene.apache.org/solr/mirrors-solr-latest-redir.html
 and unzip the file.
 
 ```
-cd solr
+cd solr/solr-config
 wget http://apache.crihan.fr/dist/lucene/solr/5.3.1/solr-5.3.1.tgz
 tar xvfz solr-5.3.1.tgz
 ```
@@ -41,6 +41,7 @@ solr-5.3.1/bin/solr stop
 
 Running from the source code, use maven to download Solr and additional libraries.
 ```
+cd solr/solr-config
 mvn install -Psolr-download
 mvn install -Psolr-init
 mvn exec:exec -Dsolr-start
@@ -59,16 +60,6 @@ Access Solr admin page from http://localhost:8984/solr.
 
 TODO
 
-
-## WFS Feature Indexing
-
-Start the sample Camel application:
-
-```
-cd wfsfeature-harvester
-mvn camel:run
-```
-
 ## Deleting document
 
 ```
@@ -80,4 +71,8 @@ curl http://localhost:8984/solr/catalog/update \
     --data '<commit/>' \
     -H 'Content-type:text/xml; charset=utf-8'
 
+or
+
+cd solr/solr-config
+./solrdeletedoc.sh
 ```

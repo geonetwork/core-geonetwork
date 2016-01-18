@@ -49,6 +49,7 @@
             scope.md = scope.layer.get('md');
             uuid = scope.md && scope.md.getUuid();
             // TODO: Improve check
+            // TODO: Check Solr is up
             if (scope.layer.getSource().getParams) {
               // TODO: Assume WFS is available as same URL or
               // by substituting wms by wfs.
@@ -97,9 +98,9 @@
            * the facet UI.
            */
           scope.checkFeatureTypeInSolr = function() {
+            scope.initialized = true;
             wfsFilterService.getWfsIndexFields(
                 ftName, scope.wfsUrl).then(function(docFields) {
-              scope.initialized = true;
               scope.isFeaturesIndexed = true;
               scope.isWfsAvailable = true;
               scope.status = null;
