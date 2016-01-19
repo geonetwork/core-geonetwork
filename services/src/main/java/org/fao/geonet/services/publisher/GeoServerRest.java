@@ -675,12 +675,6 @@ public class GeoServerRest {
 				+ "/datastores/" + ds + "/featuretypes/" + ft, xml, null,
 				"text/xml", true);
 
-		// Create layer for feature type (require for MapServer REST API)
-		status = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + ft, null, null,
-				"text/xml", false);
-
-		checkResponseCode(status);
-
 		return 201 == status;
 	}
 
