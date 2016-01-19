@@ -571,9 +571,12 @@ public class GeoServerRest {
 				body += "<workspace>" + ws + "</workspace>";
 			body += "</defaultStyle><enabled>true</enabled></layer>";
 
+			url = "/layers/";
+			if (!ws.isEmpty())
+				url += ws + ":";
 			// Add the enable flag due to GeoServer bug
 			// http://jira.codehaus.org/browse/GEOS-3964
-			status = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + layer,
+			status = sendREST(GeoServerRest.METHOD_PUT, url + layer,
 					body, null, "text/xml", true);
             checkResponseCode(status);
 
