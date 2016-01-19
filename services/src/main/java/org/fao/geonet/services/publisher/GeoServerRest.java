@@ -138,7 +138,14 @@ public class GeoServerRest {
 	 * @throws java.io.IOException
 	 */
 	public boolean getLayer(String layer) throws IOException {
-		int status = sendREST(GeoServerRest.METHOD_GET, "/layers/" + layer
+		return getLayer(getDefaultWorkspace(), layer);
+	}
+
+	public boolean getLayer(String ws, String layer) throws IOException {
+		String url = "/layers/";
+		if (!ws.isEmpty())
+			url += ws + ":";
+		int status = sendREST(GeoServerRest.METHOD_GET, url + layer
 				+ ".xml?quietOnNotFound=true", null, null, null, true);
 		return status == 200;
 	}
@@ -159,7 +166,14 @@ public class GeoServerRest {
 	 * @throws java.io.IOException
 	 */
 	public boolean deleteLayer(String layer) throws IOException {
-		int status = sendREST(GeoServerRest.METHOD_DELETE, "/layers/" + layer,
+		return deleteLayer(getDefaultWorkspace(), layer);
+	}
+
+	public boolean deleteLayer(String ws, String layer) throws IOException {
+		String url = "/layers/";
+		if (!ws.isEmpty())
+			url += ws + ":";
+		int status = sendREST(GeoServerRest.METHOD_DELETE, url + layer,
 				null, null, null, true);
 		// TODO : add force to remove ft, ds
 		return status == 200;
