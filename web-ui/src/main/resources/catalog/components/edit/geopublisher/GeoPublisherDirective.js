@@ -220,6 +220,10 @@
                * a layer configuration if published.
                */
               scope.checkNode = function(nodeId) {
+                if (scope.isPublished) {
+                  map.getLayerGroup().getLayers().pop();
+                }
+                scope.isPublished = false;
                 var p = gnGeoPublisher.checkNode(nodeId, scope.name);
                 if (p) {
                   p.success(function(data) {
