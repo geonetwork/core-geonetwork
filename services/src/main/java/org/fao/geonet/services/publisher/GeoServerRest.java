@@ -547,13 +547,6 @@ public class GeoServerRest {
 						+ "_style", sldbody, null,
 						"application/vnd.ogc.sld+xml", true);
 
-				/**
-				 * check that the sld was validated by geoserver
-				 * previous call always return 200 even when sld is invalid
-				 */
-				status = sendREST(GeoServerRest.METHOD_GET, url + "/" + layer
-						+ "_style.sld?quietOnNotFound=true", null, null, null, true);
-
 				if (status != 200)
 					Log.warning(Geonet.GEOPUBLISH,"The sld file was probably not valid, falling back to default");
 			}
