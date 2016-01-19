@@ -3,7 +3,6 @@ package org.fao.geonet.kernel;
 import com.google.common.collect.Lists;
 import junit.framework.Assert;
 
-import org.eclipse.jetty.util.log.Log;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -656,8 +655,6 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
 
     @Test
     public void testMultiUpdate() throws JDOMException {
-    	for (String b : new String[] {Geonet.EDITORFILLELEMENT, Geonet.EDITOR, Geonet.EDITOREXPANDELEMENT, Geonet.EDITORADDELEMENT})
-    		Log.getLogger(b).setDebugEnabled(true);
         SchemaManager manager = _schemaManager;
         MetadataSchema schema = manager.getSchema("iso19139");
         final Element metadataElement = new Element("MD_Metadata", GMD);
@@ -684,8 +681,6 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
     @Test
     @Ignore
     public void testAddAttributeExistingElement() throws JDOMException {
-    	for (String b : new String[] {Geonet.EDITORFILLELEMENT, Geonet.EDITOR, Geonet.EDITOREXPANDELEMENT, Geonet.EDITORADDELEMENT})
-    		Log.getLogger(b).setDebugEnabled(true);
         SchemaManager manager = _schemaManager;
         MetadataSchema schema = manager.getSchema("iso19139");
         final Element metadataElement = new Element("MD_Metadata", GMD);
