@@ -595,6 +595,8 @@ public class GeoServerRest {
 	private void checkResponseCode(int status2) {
 	    if(status2 > 399) {
 	        Log.warning(Geonet.GEOPUBLISH, "Warning a bad response code to message was returned:"+status2);
+		if (!response.isEmpty())
+			Log.warning(Geonet.GEOPUBLISH, "Response content:"+response);
 	    }
     }
 
