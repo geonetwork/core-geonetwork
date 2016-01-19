@@ -93,7 +93,7 @@ public class ResourcesApi {
         this.store = store;
     }
 
-    ApplicationContext appContext = ApplicationContextHolder.get();
+    private final ApplicationContext appContext = ApplicationContextHolder.get();
 
     @SuppressWarnings("unchecked")
     @PostConstruct
@@ -152,11 +152,7 @@ public class ResourcesApi {
                                           example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
                                 @PathVariable
                                 String metadataUuid) throws Exception {
-        try {
-            store.delResource(metadataUuid);
-        } catch (Exception e) {
-            throw e;
-        }
+        store.delResource(metadataUuid);
         return true;
     }
 
@@ -185,11 +181,7 @@ public class ResourcesApi {
         List<MetadataResource> resources = new ArrayList<>();
         for(MultipartFile file : files) {
             if (!file.isEmpty()) {
-                try {
-                    resources.add(store.putResource(metadataUuid, file, visibility));
-                } catch (Exception e) {
-                    throw e;
-                }
+                resources.add(store.putResource(metadataUuid, file, visibility));
             }
         }
         return resources;
@@ -217,11 +209,7 @@ public class ResourcesApi {
             throws Exception {
         List<MetadataResource> resources = new ArrayList<>();
         for(URL url : urls) {
-            try {
-                resources.add(store.putResource(metadataUuid, url, visibility));
-            } catch (Exception e) {
-                throw e;
-            }
+            resources.add(store.putResource(metadataUuid, url, visibility));
         }
         return resources;
     }
@@ -280,11 +268,7 @@ public class ResourcesApi {
                                             example = "public")
                                   @RequestParam(required = true)
                                   MetadataResourceVisibility visibility) throws Exception {
-        try {
-            return store.patchResourceStatus(metadataUuid, resourceId, visibility);
-        } catch (Exception e) {
-            throw e;
-        }
+        return store.patchResourceStatus(metadataUuid, resourceId, visibility);
     }
 
 
@@ -304,12 +288,7 @@ public class ResourcesApi {
                                          required = true)
                                @PathVariable
                                String resourceId) throws Exception {
-        try {
-            // TODO: handle overwrite
-            store.delResource(metadataUuid, resourceId);
-        } catch (Exception e) {
-            throw e;
-        }
+        store.delResource(metadataUuid, resourceId);
         return true;
     }
 
@@ -352,6 +331,7 @@ public class ResourcesApi {
 
 
 
+    // TODO: i18n
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
@@ -359,7 +339,7 @@ public class ResourcesApi {
             FileNotFoundException.class})
     public Object fileNotFoundHandler(final Exception exception) {
         exception.printStackTrace();
-        return  new HashMap() {{
+        return  new HashMap<String, String>() {{
             put("result", "failed");
             put("type", "file_not_found");
             put("message", exception.getClass() + " " + exception.getMessage());
@@ -369,7 +349,7 @@ public class ResourcesApi {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public Object missingParameterHandler(final Exception exception) {
-        return  new HashMap() {{
+        return  new HashMap<String, String>() {{
             put("result", "failed");
             put("type", "required_parameter_missing");
             put("message", exception.getMessage());
@@ -382,7 +362,7 @@ public class ResourcesApi {
             IllegalArgumentException.class
     })
     public Object unsatisfiedParameterHandler(final Exception exception) {
-        return  new HashMap() {{
+        return  new HashMap<String, String>() {{
             put("result", "failed");
             put("type", "unsatisfied_request_parameter");
             put("message", exception.getMessage());

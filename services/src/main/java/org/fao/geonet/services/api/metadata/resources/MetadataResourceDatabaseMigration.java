@@ -35,11 +35,9 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.output.XMLOutputter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +126,7 @@ public class MetadataResourceDatabaseMigration implements DatabaseMigrationTask 
         }
 
         if (StringUtils.isNotEmpty(uuid)) {
-            final List<Element> links =
+            @SuppressWarnings("unchecked") final List<Element> links =
                     Lists.newArrayList((Iterable<? extends Element>)
                             Xml.selectNodes(xml, XPATH));
 

@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class ResourceLoggerStore implements Store {
 
-    Store decoratedStore;
+    private Store decoratedStore;
 
     @Autowired
     private ThreadPool threadPool;

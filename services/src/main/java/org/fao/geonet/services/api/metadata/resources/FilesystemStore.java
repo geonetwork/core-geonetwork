@@ -27,6 +27,7 @@ package org.fao.geonet.services.api.metadata.resources;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
@@ -124,7 +125,7 @@ public class FilesystemStore implements Store {
                         Files.size(path));
                 resourceList.add(resource);
             }
-        } catch (IOException ex) {
+        } catch (IOException ignored) {
         }
 
         Collections.sort(resourceList, MetadataResourceVisibility.sortByFileName);
@@ -162,7 +163,7 @@ public class FilesystemStore implements Store {
                         resourceFile = path;
                     }
                 }
-            } catch (IOException ex) {
+            } catch (IOException ignored) {
             }
         }
 
@@ -205,22 +206,7 @@ public class FilesystemStore implements Store {
     public MetadataResource putResource(String metadataUuid,
                                         MultipartFile file,
                                         MetadataResourceVisibility visibility) throws Exception {
-        ApplicationContext _appContext = ApplicationContextHolder.get();
-        String metadataId = _appContext.getBean(DataManager.class).getMetadataId(metadataUuid);
-        GeonetworkDataDirectory dataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
-        Path metadataDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);
-
-        Path folderPath = metadataDir.resolve(visibility.toString());
-        if (!Files.exists(folderPath)) {
-            folderPath.toFile().mkdirs();
-        }
-
-        Path filePath = folderPath.resolve(file.getOriginalFilename());
-        if (Files.exists(filePath)) {
-            throw new IOException(String.format(
-                    "A resource with name '%s' and status '%s' already exists for metadata '%s'.",
-                    file.getOriginalFilename(), visibility, metadataUuid));
-        }
+        Path filePath = getPath(metadataUuid, visibility, file.getOriginalFilename());
 
         BufferedOutputStream stream =
                 new BufferedOutputStream(
@@ -234,53 +220,51 @@ public class FilesystemStore implements Store {
 
     @Override
     public MetadataResource putResource(String metadataUuid, Path file, MetadataResourceVisibility visibility) throws Exception {
-        ApplicationContext _appContext = ApplicationContextHolder.get();
-        String metadataId = _appContext.getBean(DataManager.class).getMetadataId(metadataUuid);
-        GeonetworkDataDirectory dataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
-        Path metadataDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);
+        Path filePath = getPath(metadataUuid, visibility, file.getFileName().toString());
 
-        Path folderPath = metadataDir.resolve(visibility.toString());
-        if (!Files.exists(folderPath)) {
-            folderPath.toFile().mkdirs();
-        }
+        FileUtils.copyFile(file.toFile(), filePath.toFile());
 
-        Path filePath = folderPath.resolve(file.getFileName());
-        if (Files.exists(filePath)) {
-            throw new IOException(String.format(
-                    "A resource with name '%s' and status '%s' already exists for metadata '%s'.",
-                    file.getFileName(), visibility, metadataUuid));
-        }
-
-        try {
-            FileUtils.copyFile(file.toFile(), filePath.toFile());
-            return getResourceDescription(metadataUuid, visibility, filePath);
-        } catch (Exception e) {
-            throw e;
-        }
+        return getResourceDescription(metadataUuid, visibility, filePath);
     }
 
 
     @Override
     public MetadataResource putResource(String metadataUuid, URL fileUrl, MetadataResourceVisibility visibility) throws Exception {
+        String fileName = FilenameUtils.getName(fileUrl.getPath());
+        if (fileName.contains("?")) {
+            fileName = fileName.substring(0, fileName.indexOf("?"));
+        }
+
+        Path filePath = getPath(metadataUuid, visibility, fileName);
+
+        FileUtils.copyURLToFile(fileUrl, filePath.toFile());
+
+        return getResourceDescription(metadataUuid, visibility, filePath);
+    }
+
+    private Path getPath(String metadataUuid, MetadataResourceVisibility visibility, String fileName) throws Exception {
         ApplicationContext _appContext = ApplicationContextHolder.get();
-        String metadataId = _appContext.getBean(DataManager.class).getMetadataId(metadataUuid);
         GeonetworkDataDirectory dataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
+        String metadataId = _appContext.getBean(DataManager.class).getMetadataId(metadataUuid);
         Path metadataDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);
 
         Path folderPath = metadataDir.resolve(visibility.toString());
         if (!Files.exists(folderPath)) {
-            folderPath.toFile().mkdirs();
+            boolean folderCreated = folderPath.toFile().mkdirs();
+            if (!folderCreated) {
+                throw new IOException(String.format(
+                        "Can't create folder '%s' to store resource with name '%s' for metadata '%s'.",
+                        visibility, fileName, metadataUuid));
+            }
         }
-        String fileName = "todo.txt";
+
         Path filePath = folderPath.resolve(fileName);
         if (Files.exists(filePath)) {
             throw new IOException(String.format(
                     "A resource with name '%s' and status '%s' already exists for metadata '%s'.",
                     fileName, visibility, metadataUuid));
         }
-
-        FileUtils.copyURLToFile(fileUrl, filePath.toFile());
-        return getResourceDescription(metadataUuid, visibility, filePath);
+        return filePath;
     }
 
 

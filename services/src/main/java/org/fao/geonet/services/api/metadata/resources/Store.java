@@ -44,7 +44,7 @@ public interface Store {
      *
      * @param metadataUuid The metadata UUID
      * @param sort         Sort by resource name or sharing policy {@link Sort}
-     * @param filter       a {@link java.nio.file.Files#newDirectoryStream() GLOB expression} to filter resources eg. *.{png|jpg}
+     * @param filter       a {@link java.nio.file.Files#newDirectoryStream(Path)} GLOB expression} to filter resources eg. *.{png|jpg}
      * @return A list of resources
      * @throws Exception
      */
@@ -55,7 +55,7 @@ public interface Store {
      *
      * @param metadataUuid The metadata UUID
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
-     * @param filter       a {@link java.nio.file.Files#newDirectoryStream() GLOB expression} to filter resources eg. *.{png|jpg}
+     * @param filter       a {@link java.nio.file.Files#newDirectoryStream(Path) GLOB expression} to filter resources eg. *.{png|jpg}
      * @return A list of resources
      * @throws Exception
      */

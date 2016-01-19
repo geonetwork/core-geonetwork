@@ -66,7 +66,7 @@ public class ResourceActionsApi {
         this.store = store;
     }
 
-    ApplicationContext appContext = ApplicationContextHolder.get();
+    private final ApplicationContext appContext = ApplicationContextHolder.get();
 
     @SuppressWarnings("unchecked")
     @PostConstruct

@@ -30,12 +30,14 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResource;
 
 /**
+ * Metadata resource stored in the file system.
+ *
  * Created by francois on 31/12/15.
  */
 public class FilesystemStoreResource implements MetadataResource {
-    private String filename;
-    private String url;
-    private MetadataResourceVisibility metadataResourceVisibility;
+    private final String filename;
+    private final String url;
+    private final MetadataResourceVisibility metadataResourceVisibility;
     private double size = -1;
     @Override
     public String getId() {

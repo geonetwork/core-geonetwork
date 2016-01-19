@@ -28,6 +28,7 @@ package org.fao.geonet.services.api.metadata.resources;
 import java.beans.PropertyEditorSupport;
 
 /**
+ * Convert {@link Sort} enumeration from request parameter
  * Created by francois on 31/12/15.
  */
 public class SortConverter extends PropertyEditorSupport {
