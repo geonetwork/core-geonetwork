@@ -382,6 +382,7 @@ public class GeoServerRest {
 	 * @throws java.io.IOException
 	 */
 	public boolean createDatastore(String ws, String ds, Path f) throws IOException {
+		Log.debug(Geonet.GEOPUBLISH, "Creating datastore " + ds + " in workspace " + ws + " from path " + f.toString());
 		int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
 				+ "/datastores/" + ds + "/file.shp", null, f,
 				"application/zip", false);
@@ -398,6 +399,7 @@ public class GeoServerRest {
 			type = "external";
 		}
 
+		Log.debug(Geonet.GEOPUBLISH, "Creating datastore " + ds + " in workspace " + ws + " from file " + file);
 		int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
 				+ "/datastores/" + ds + "/" + type + extension, file, null,
 				"text/plain", false);
@@ -567,6 +569,7 @@ public class GeoServerRest {
 			}
             checkResponseCode(status);
 
+			Log.debug(Geonet.GEOPUBLISH, "Adding enable flag to layer");
 			body = "<layer><defaultStyle><name>"
 					+ layer
 					+ "_style</name>";
