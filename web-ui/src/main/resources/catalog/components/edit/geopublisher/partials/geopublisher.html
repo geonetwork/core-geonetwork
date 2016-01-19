@@ -87,7 +87,7 @@
               </div>
           </div>
           <button class="btn btn-link btn-xs" data-ng-click="openStyler(nodeId)"
-                  data-ng-class="hasStyler ? '' : 'hidden'">
+                  data-ng-class="hasStyler ? ((isPublished || !nodeId) ? '': 'disabled') : 'hidden'">
             <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">style</span>
           </button>
         </div>
