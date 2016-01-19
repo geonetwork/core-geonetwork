@@ -517,29 +517,30 @@ public class GeoServerRest {
 	 */
 	public boolean createStyle(String ws, String layer, String sldbody) {
 		try {
-			int status = sendREST(GeoServerRest.METHOD_GET, "/layers/" + layer
-					+ ".xml?quietOnNotFound=true", null, null, null, true);
+			String body, url;
+			int status;
 
+			/* first check if the style exists in geoserver */
+			url = "/styles/";
+			if (pushStyleInWorkspace)
+				url += ws + ":";
+			url += layer + "_style?quietOnNotFound=true";
+			Log.debug(Geonet.GEOPUBLISH, "Checking if a style named " + layer + "_style already exists in workspace " + ws);
+			status = sendREST(GeoServerRest.METHOD_GET, url, null, null, null, true);
 			checkResponseCode(status);
-			Element layerProperties = Xml.loadString(getResponse(), false);
-			String styleName = layerProperties.getChild("defaultStyle")
-					.getChild("name").getText();
 
-			/* get the default style (polygon, line, point) from the global styles */
-			status = sendREST(GeoServerRest.METHOD_GET, "/styles/" + styleName
-					+ ".sld?quietOnNotFound=true", null, null, null, true);
-            checkResponseCode(status);
-
-			String currentStyle = getResponse();
-
-			String body = "<style><name>" + layer + "_style</name><filename>"
-					+ layer + ".sld</filename></style>";
-			String url = "/styles";
+			body = "<style><name>" + layer + "_style</name><filename>"
+				+ layer + ".sld</filename></style>";
+			url = "/styles";
 			if (pushStyleInWorkspace)
 				url = "/workspaces/" + ws + "/styles";
-			status = sendREST(GeoServerRest.METHOD_POST, url, body, null,
+			/* only POST the xml style if it doesnt exist */
+			if (status != 200) {
+				Log.debug(Geonet.GEOPUBLISH, "Creating style " + layer + "_style for layer " + layer);
+				status = sendREST(GeoServerRest.METHOD_POST, url, body, null,
 					"text/xml", true);
-            checkResponseCode(status);
+				checkResponseCode(status);
+			}
 			if (!sldbody.isEmpty()) {
 				if(Log.isDebugEnabled(Geonet.GEOPUBLISH))
 					Log.debug(Geonet.GEOPUBLISH, "GeoFile contains an sld, trying to use it");
@@ -551,8 +552,17 @@ public class GeoServerRest {
 					Log.warning(Geonet.GEOPUBLISH,"The sld file was probably not valid, falling back to default");
 			}
 			if (sldbody.isEmpty() || (!sldbody.isEmpty() && status != 200)) {
+				Element layerProperties = Xml.loadString(getLayerInfo(layer), false);
+				String styleName = layerProperties.getChild("defaultStyle")
+					.getChild("name").getText();
+
+				Log.debug(Geonet.GEOPUBLISH, "Getting default style for " + styleName + " to apply to layer " + layer + " in workspace " + ws);
+				/* get the default style (polygon, line, point) from the global styles */
+				status = sendREST(GeoServerRest.METHOD_GET, "/styles/" + styleName
+					+ ".sld?quietOnNotFound=true", null, null, null, true);
+
 				status = sendREST(GeoServerRest.METHOD_PUT, url + "/" + layer
-						+ "_style", currentStyle, null,
+						+ "_style", getResponse(), null,
 						"application/vnd.ogc.sld+xml", true);
 			}
             checkResponseCode(status);
