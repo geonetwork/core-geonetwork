@@ -632,9 +632,15 @@ public class GeoServerRest {
 		String xml = "<featureType><name>" + ft + "</name><title>" + ft
 				+ "</title>" + "</featureType>";
 
-		status = sendREST(GeoServerRest.METHOD_POST, "/workspaces/" + ws
-				+ "/datastores/" + ds + "/featuretypes", xml, null, "text/xml",
-				true);
+		String url = "/workspaces/" + ws + "/datastores/" + ds + "/featuretypes";
+		Log.debug(Geonet.GEOPUBLISH, "Checking if a featuretype named " + ft + " already exists in workspace " + ws +", datastore " + ds);
+		status = sendREST(GeoServerRest.METHOD_GET, url + "/" + ft, null, null, null, true);
+		if (status != 200) {
+			Log.debug(Geonet.GEOPUBLISH, "Creating featuretype " + ft + " in workspace " + ws + " within datastore " + ds);
+			status = sendREST(GeoServerRest.METHOD_POST, url, xml, null, "text/xml",
+					true);
+			checkResponseCode(status);
+		}
 
 		xml = "<featureType><title>"
 				+ (metadataTitle != null ? metadataTitle : ft)
@@ -671,8 +677,7 @@ public class GeoServerRest {
 					+ "</metadataLink>"
 				+ "</metadataLinks>"
 			+ "</featureType>";
-		status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
-				+ "/datastores/" + ds + "/featuretypes/" + ft, xml, null,
+		status = sendREST(GeoServerRest.METHOD_PUT, url + "/" + ft, xml, null,
 				"text/xml", true);
 
 		return 201 == status;
