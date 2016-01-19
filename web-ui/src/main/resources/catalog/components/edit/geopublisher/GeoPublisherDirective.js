@@ -137,30 +137,6 @@
                     '?namespace=' + gsNode.namespacePrefix +
                     '&layer=' + scope.wmsLayerName);
               };
-              /**
-               * Dirty check if the node is a Mapserver REST API
-               * or a GeoServer REST API.
-               *
-               * @param {Object} gsNode
-               * @return {boolean}
-               */
-              var isMRA = function(gsNode) {
-                return gsNode.adminUrl &&
-                    gsNode.adminUrl.indexOf('/mra') !== -1;
-              };
-
-              /**
-               * Build WMS layername based on target map server.
-               *
-               * @param {Object} gsNode
-               */
-              var buildLayerName = function(gsNode) {
-                // Append prefix for GeoServer.
-                if (gsNode && !isMRA(gsNode)) {
-                  scope.wmsLayerName = gsNode.namespacePrefix +
-                      ':' + scope.wmsLayerName;
-                }
-              };
 
               /**
                * Add the layer of the node to the current
@@ -235,7 +211,6 @@
               scope.selectNode = function(nodeId) {
                 gsNode = getNodeById(nodeId);
                 scope.checkNode(nodeId);
-                buildLayerName(gsNode);
                 scope.hasStyler = !angular.isArray(gsNode.stylerUrl);
               };
 
@@ -315,7 +290,6 @@
                     .replace(/.*\//, '')
                     .replace(/.zip$|.tif$|.tiff$|.ecw$/, '');
                 }
-                buildLayerName(gsNode);
               };
             }
           };
