@@ -39,6 +39,12 @@
             gnSearchManagerService, gnConfigService, gnConfig,
             gnGlobalSettings, $location, gnUtilityService, gnSessionService) {
       $scope.version = '0.0.1';
+      //Update Links for social media
+      $scope.socialMediaLink=$location.absUrl();
+      $scope.$on('$locationChangeSuccess', function(event) {
+        $scope.socialMediaLink=$location.absUrl();
+        $scope.showSocialMediaLink = $scope.socialMediaLink.includes("/metadata/"); 
+      });      
       // TODO : add language
       var tokens = location.href.split('/');
       $scope.service = tokens[6].split('?')[0];
