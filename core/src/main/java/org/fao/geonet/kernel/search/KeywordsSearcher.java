@@ -23,7 +23,16 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.server.context.ServiceContext;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Nullable;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.TermNotFoundException;
@@ -36,14 +45,7 @@ import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.annotation.Nullable;
+import jeeves.server.context.ServiceContext;
 
 /**
  *
@@ -288,7 +290,7 @@ public class KeywordsSearcher {
 		@SuppressWarnings("unchecked")
         List<Element> listIdKeywordsSelected = params.getChildren("pIdKeyword");
 		
-		Set<String> ids = new HashSet<String>();
+		Set<String> ids = new LinkedHashSet<String>();
         for (Element el : listIdKeywordsSelected) {
             ids.add(el.getTextTrim());
         }

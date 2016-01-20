@@ -460,7 +460,7 @@ public class EditLib {
      * @return the number of updates.
      */
     public int addElementOrFragmentFromXpaths(Element metadataRecord,
-                                              Map<String, AddElemValue> xmlAndXpathInputs,
+                                              LinkedHashMap<String, AddElemValue> xmlAndXpathInputs,
                                               MetadataSchema metadataSchema,
                                               boolean createXpathNodeIfNotExist) {
 
@@ -476,7 +476,6 @@ public class EditLib {
                 numUpdated ++;
             }
         }
-
         return numUpdated;
     }
 

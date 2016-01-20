@@ -100,6 +100,7 @@ public class XmlTest {
 
     protected void doTestTransform() throws Exception {
         final GenericApplicationContext applicationContext = new GenericApplicationContext();
+        applicationContext.refresh();
         applicationContext.getBeanFactory().registerSingleton("systemInfo", SystemInfo.createForTesting(SystemInfo.STAGE_DEVELOPMENT));
         ApplicationContextHolder.set(applicationContext);
 

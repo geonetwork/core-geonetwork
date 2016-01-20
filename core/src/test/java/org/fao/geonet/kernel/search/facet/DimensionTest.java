@@ -32,6 +32,7 @@ public class DimensionTest {
     public void testDimensionSetLocalized() throws JDOMException {
         Dimension dimension = new Dimension("test", "index", "Test");
         final GenericApplicationContext applicationContext = new GenericApplicationContext();
+        applicationContext.refresh();
         applicationContext.getBeanFactory().registerSingleton("languages", Sets.newHashSet("eng", "fre", "ger"));
         dimension.setApplicationContext(applicationContext);
         dimension.setLocalized(true);
