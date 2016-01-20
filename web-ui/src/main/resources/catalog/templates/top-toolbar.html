@@ -87,7 +87,6 @@
       <li data-ng-show="authenticated">
         <a href="admin.console#/organization/users?userOrGroup={{user.username}}"
            title="{{'userDetails' | translate}}"
-           data-ng-disabled="!user.isUserAdminOrMore()"
            class="hidden-xs btn btn-link">
           <img class="img-circle"
                data-ng-src="http://gravatar.com/avatar/{{user.email | md5}}?s=18"/>
