@@ -22,7 +22,7 @@
           if (node) {
             return gnHttp.callService('geoserverNodes', {
               metadataId: gnCurrentEdit.id,
-              access: 'public',
+              access: 'private',
               action: 'GET',
               nodeId: node,
               file: fileName
@@ -38,7 +38,7 @@
               metadataUuid: gnCurrentEdit.uuid,
               metadataTitle: title,
               metadataAbstract: moreInfo,
-              access: 'public',
+              access: 'private',
               action: 'CREATE',
               nodeId: node,
               file: fileName
@@ -50,7 +50,7 @@
           if (node) {
             return gnHttp.callService('geoserverNodes', {
               metadataId: gnCurrentEdit.id,
-              access: 'public',
+              access: 'private',
               action: 'DELETE',
               nodeId: node,
               file: fileName
