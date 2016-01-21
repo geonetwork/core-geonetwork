@@ -255,13 +255,15 @@ public class FilesystemStore implements Store {
 
         Path folderPath = metadataDir.resolve(visibility.toString());
         if (!Files.exists(folderPath)) {
-            boolean folderCreated = folderPath.toFile().mkdirs();
-            if (!folderCreated) {
+            try {
+                Files.createDirectories(folderPath);
+            } catch (Exception e) {
                 throw new IOException(String.format(
                         "Can't create folder '%s' to store resource with name '%s' for metadata '%s'.",
                         visibility, fileName, metadataUuid));
             }
         }
+
 
         Path filePath = folderPath.resolve(fileName);
         if (Files.exists(filePath)) {
@@ -329,8 +331,18 @@ public class FilesystemStore implements Store {
 
             GeonetworkDataDirectory dataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
             Path metadataDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);
-            Path newFilePath = metadataDir
-                    .resolve(visibility.toString())
+            Path newFolderPath = metadataDir
+                    .resolve(visibility.toString());
+            if (!Files.exists(newFolderPath)) {
+                try {
+                    Files.createDirectories(newFolderPath);
+                } catch (Exception e) {
+                    throw new IOException(String.format(
+                            "Can't create folder '%s' to store resource with name '%s' for metadata '%s'.",
+                            visibility, resourceId, metadataUuid));
+                }
+            }
+            Path newFilePath = newFolderPath
                     .resolve(filePath.getFileName());
             Files.move(filePath, newFilePath);
             return getResourceDescription(metadataUuid, visibility, newFilePath);
