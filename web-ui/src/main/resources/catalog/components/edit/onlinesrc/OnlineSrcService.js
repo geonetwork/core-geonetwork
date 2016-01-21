@@ -267,10 +267,10 @@
         /**
          * @ngdoc method
          * @methodOf gn_onlinesrc.service:gnOnlinesrc
-         * @name gnOnlinesrc#addOnlinesrc
+         * @name gnOnlinesrc#add
          *
          * @description
-         * The `addOnlinesrc` method call a batch process to add a new online
+         * The `add` method call a batch process to add a new online
          * resource to the current metadata.
          * It prepares the parameters and call batch
          * request from the `gnBatchProcessing` service.
@@ -278,36 +278,9 @@
          * @param {string} params to send to the batch process
          * @param {string} popupid id of the popup to close after process.
          */
-        addOnlinesrc: function(params, popupid) {
+        add: function(params, popupid) {
           return runProcess(this,
-              setParams('onlinesrc-add', params)).then(function() {
-            closePopup(popupid);
-          });
-        },
-        addFcatReference: function(params, popupid) {
-          return runProcess(this,
-            setParams('fcats-file-add', params)).then(function() {
-            closePopup(popupid);
-          });
-        },
-
-
-        /**
-         * @ngdoc method
-         * @name gnOnlinesrc#addThumbnailByURL
-         * @methodOf gn_onlinesrc.service:gnOnlinesrc
-         *
-         * @description
-         * The `addThumbnailByURL` method call a batch
-         * process to add a thumbnail
-         * from an url to the current metadata.
-         *
-         * @param {string} params to send to the batch process
-         * @param {string} popupid id of the popup to close after process.
-         */
-        addThumbnailByURL: function(params, popupid) {
-          return runProcess(this,
-              setParams('thumbnail-add', params)).then(function() {
+            setParams(params.process, params)).then(function() {
             closePopup(popupid);
           });
         },
@@ -504,22 +477,12 @@
          * @param {Object} onlinesrc the online resource to remove
          */
         removeOnlinesrc: function(onlinesrc) {
-          var scope = this;
-
-          if (onlinesrc.protocol == 'WWW:DOWNLOAD-1.0-http--download') {
-            return runService('removeOnlinesrc', {
-              id: gnCurrentEdit.id,
-              url: onlinesrc.url,
-              name: onlinesrc.name
-            }, this);
-          } else {
-            return runProcess(this,
-                setParams('onlinesrc-remove', {
-                  id: gnCurrentEdit.id,
-                  url: onlinesrc.url,
-                  name: onlinesrc.name
-                }));
-          }
+          return runProcess(this,
+              setParams('onlinesrc-remove', {
+                id: gnCurrentEdit.id,
+                url: onlinesrc.url,
+                name: onlinesrc.name
+              }));
         },
 
         /**

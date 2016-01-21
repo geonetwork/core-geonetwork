@@ -415,12 +415,15 @@
             <span data-translate="">overview</span>
           </h4>
 
-          <p data-ng-repeat="img in mdView.current.record.overviews">
-          <img data-gn-img-modal="md"
-               class="gn-img-thumbnail img-thumbnail"
-               alt="{{img.label}}"
-               data-ng-src="{{img.url}}"/>
-          </p>
+          <div data-ng-repeat="img in mdView.current.record.overviews">
+            <img data-gn-img-modal="img"
+                 class="gn-img-thumbnail img-thumbnail"
+                 alt="{{img.label}}"
+                 data-ng-src="{{img.url}}"/>
+
+            <div class="gn-img-thumbnail-caption"
+                 data-ng-show="img.label">{{img.label}}</div>
+          </div>
         </section></br>
 
 

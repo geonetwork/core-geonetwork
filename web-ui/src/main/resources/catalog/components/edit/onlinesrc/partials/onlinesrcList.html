@@ -79,18 +79,17 @@
       <ul class="list-inline">
         <li class="gn-list-thumb thumbnail"
             data-ng-repeat="thumb in relations.thumbnail">
-          <a data-ng-href="{{thumb.id}}"
-             target="_blank"
-             title="{{thumb.title}}">
-            <img class="thumb-small"
-                 data-ng-src="{{thumb.id}}" />
-          </a>
+          <img class="thumb-small"
+               title="{{thumb.title.length > 0 ? thumb.title : ''}}"
+               data-gn-img-modal="thumb"
+               data-ng-src="{{thumb.id}}" />
+
           <a href="" class="onlinesrc-remove"
             data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
             data-ng-click="onlinesrcService.removeThumbnail(thumb)"
             title="{{'removeThumbnail' | translate}}">
             <i class="btn fa fa-times text-danger"></i>
-          </a> 
+          </a>
         </li>
       </ul>
 

@@ -67,9 +67,19 @@
                 );
               };
               scope.setResourceStatus = function(r) {
-                gnfilestoreService.updateStatus(r).success(
-                    scope.loadMetadataResources
-                );
+                gnfilestoreService.updateStatus(r).then(function () {
+                    scope.loadMetadataResources()
+                  }, function (data) {
+                    $rootScope.$broadcast('StatusUpdated', {
+                      title: $translate('resourceUploadError'),
+                      error: {
+                        message: (data.errorThrown || data.statusText) +
+                        (angular.isFunction(data.response) ?
+                          data.response().jqXHR.responseJSON.message : '')
+                      },
+                      timeout: 0,
+                      type: 'danger'});
+                  });
               };
               scope.deleteResource = function(r) {
                 gnfilestoreService.delete(r).success(

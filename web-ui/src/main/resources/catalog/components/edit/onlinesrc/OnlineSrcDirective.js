@@ -157,7 +157,7 @@
                   id: 'onlinesrc',
                   label: 'addOnlinesrc',
                   icon: 'fa gn-icon-onlinesrc',
-                  fn: gnOnlinesrc.addOnlinesrc,
+                  process: 'onlinesrc-add',
                   fields: {
                     'url': 'url'
                   }
@@ -167,7 +167,7 @@
                   label: 'addThumbnail',
                   icon: 'fa gn-icon-thumbnail',
                   fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
-                  fn: gnOnlinesrc.addThumbnailByURL,
+                  process: 'thumbnail-add',
                   fields: {
                     'url': 'thumbnail_url',
                     'desc': 'thumbnail_desc'
@@ -176,7 +176,7 @@
                   id: 'onlinesrc',
                   label: 'addOnlinesrc',
                   icon: 'fa gn-icon-onlinesrc',
-                  fn: gnOnlinesrc.addOnlinesrc,
+                  process: 'onlinesrc-add',
                   fields: {
                     'url': 'url',
                     'protocol': 'protocol',
@@ -189,7 +189,7 @@
                   label: 'addThumbnail',
                   icon: 'fa gn-icon-thumbnail',
                   fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
-                  fn: gnOnlinesrc.addThumbnailByURL,
+                  process: 'thumbnail-add',
                   fields: {
                     'url': 'thumbnail_url',
                     'desc': 'thumbnail_desc'
@@ -198,7 +198,7 @@
                   id: 'onlinesrc',
                   label: 'addOnlinesrc',
                   icon: 'fa gn-icon-onlinesrc',
-                  fn: gnOnlinesrc.addOnlinesrc,
+                  process: 'onlinesrc-add',
                   fields: {
                     'url': 'url',
                     'protocol': 'protocol',
@@ -210,7 +210,7 @@
                   label: 'addFeatureCatalogRef',
                   labelHelp: 'addFeatureCatalogRef-help',
                   icon: 'fa fa-table',
-                  fn: gnOnlinesrc.addFcatReference,
+                  process: 'fcats-file-add',
                   fields: {
                     'url': 'url',
                     'name': 'name'
@@ -417,8 +417,8 @@
                 if (scope.params.selectedLayers) {
                   processParams.selectedLayers = scope.params.selectedLayers;
                 }
-
-                return scope.params.linkType.fn(processParams, scope.popupid).
+                processParams.process = scope.params.linkType.process;
+                return scope.onlinesrcService.add(processParams, scope.popupid).
                     then(function() {
                       resetForm();
                     });
