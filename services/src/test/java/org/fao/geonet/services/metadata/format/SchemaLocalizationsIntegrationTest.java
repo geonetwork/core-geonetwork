@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.services.metadata.format.groovy.CurrentLanguageHolder;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.context.ApplicationContext;
 
 import static org.junit.Assert.assertTrue;
 
-public class SchemaLocalizationsIntegrationTest extends AbstractCoreIntegrationTest {
+public class SchemaLocalizationsIntegrationTest extends AbstractServiceIntegrationTest {
 
 
     @Autowired

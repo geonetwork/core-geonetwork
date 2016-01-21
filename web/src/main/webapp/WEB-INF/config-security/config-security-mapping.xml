@@ -4,7 +4,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/context
           http://www.springframework.org/schema/context/spring-context-3.0.xsd
           http://www.springframework.org/schema/security
-          http://www.springframework.org/schema/security/spring-security-3.1.xsd" xmlns:sec="http://www.springframework.org/schema/security" xmlns:ctx="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
+          http://www.springframework.org/schema/security/spring-security-3.2.xsd" xmlns:sec="http://www.springframework.org/schema/security" xmlns:ctx="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
     <bean class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor" id="filterSecurityInterceptor">
         <property name="authenticationManager" ref="authenticationManager"></property>
         <property name="accessDecisionManager" ref="accessDecisionManager"></property>

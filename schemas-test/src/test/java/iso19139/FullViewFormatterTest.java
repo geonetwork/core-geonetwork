@@ -16,8 +16,8 @@ public class FullViewFormatterTest extends AbstractFullViewFormatterTest {
     public void testDummy(){}
 
 
+    @Test
     @Ignore
-    @DirtiesContext
     public void testServiceMdFormatting() throws Exception {
         super.testPrintFormat();
     }

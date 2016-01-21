@@ -23,18 +23,19 @@
 
 package org.fao.geonet.kernel.search;
 
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
 
 /**
  * Search parameters that can be provided by a search client.
@@ -82,7 +83,7 @@ public class UserQueryInput {
 
     private String similarity;
     private String editable;
-    private static Map<String, String> searchParamToLuceneField = new HashMap<String, String>();
+    private static Map<String, String> searchParamToLuceneField = new LinkedHashMap<String, String>();
     static {
         // Populate map for search parameter to Lucene mapping
         searchParamToLuceneField.put(SearchParameter.SITEID, LuceneIndexField.SOURCE);
@@ -97,10 +98,10 @@ public class UserQueryInput {
         searchParamToLuceneField.put(SearchParameter.OP_DYNAMIC,  LuceneIndexField._OP5);
         searchParamToLuceneField.put(SearchParameter.OP_FEATURED, LuceneIndexField._OP6);
     }
-    private Map<String, Set<String>> searchCriteria = new HashMap<String, Set<String>>();
-    private Map<String, Set<String>> searchPrivilegeCriteria = new HashMap<String, Set<String>>();
-    private Map<String, String> searchOption = new HashMap<String, String>();
-    private Set<String> facetQueries = new HashSet<String>();
+    private Map<String, Set<String>> searchCriteria = new LinkedHashMap<String, Set<String>>();
+    private Map<String, Set<String>> searchPrivilegeCriteria = new LinkedHashMap<String, Set<String>>();
+    private Map<String, String> searchOption = new LinkedHashMap<String, String>();
+    private Set<String> facetQueries = new LinkedHashSet<String>();
 
     /**
      * Return all search criteria.
@@ -144,7 +145,7 @@ public class UserQueryInput {
      * @return
      */
     public Map<String, Set<String>> getTextCriteria() {
-        Map<String, Set<String>> textCriteria = new HashMap<String, Set<String>>();
+        Map<String, Set<String>> textCriteria = new LinkedHashMap<String, Set<String>>();
         for (String criteria : searchCriteria.keySet()) {
             if (!NO_TEXT_FIELDS.contains(criteria)) {
                 textCriteria.put(criteria, searchCriteria.get(criteria));
@@ -231,7 +232,7 @@ public class UserQueryInput {
 
         try {
             if (currentValues == null) {
-                HashSet<String> values = new HashSet<String>();
+                Set<String> values = new LinkedHashSet<String>();
                 values.add(URLDecoder.decode(nodeValue, "UTF-8"));
                 hash.put(nodeName, values);
             } else {

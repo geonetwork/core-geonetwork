@@ -2,7 +2,9 @@ package org.fao.geonet.kernel;
 
 import com.google.common.collect.Lists;
 import junit.framework.Assert;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.utils.Xml;
@@ -10,11 +12,13 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
@@ -650,17 +654,17 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
 
 
     @Test
-    public void multiUpdate() throws JDOMException {
+    public void testMultiUpdate() throws JDOMException {
         SchemaManager manager = _schemaManager;
         MetadataSchema schema = manager.getSchema("iso19139");
         final Element metadataElement = new Element("MD_Metadata", GMD);
-        HashMap<String, AddElemValue> updates = new HashMap<String, AddElemValue>();
+        LinkedHashMap<String, AddElemValue> updates = new LinkedHashMap<String, AddElemValue>();
         final String text = "text";
         final String att = "att";
         final String charStringXpath = "gmd:fileIdentifier/gco:CharacterString";
         final String attXPath = "gmd:fileIdentifier/@att";
-        updates.put(charStringXpath, new AddElemValue(text));
         updates.put(attXPath, new AddElemValue(att));
+        updates.put(charStringXpath, new AddElemValue(text));
 
         final int numUpdates = new EditLib(_schemaManager).addElementOrFragmentFromXpaths(metadataElement, updates, schema, true);
 
@@ -669,6 +673,35 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         assertEqualsText(text, metadataElement, charStringXpath, GMD, GCO);
         Assert.assertEquals(att, Xml.selectString(metadataElement, attXPath, Arrays.asList(GMD, GCO)));
     }
+    
+    /*
+     * BUG: This test exposes a bug in the EditLib. If the xpath points to an existing element,
+     * adding an attribute to the existing element does not work.
+     */
+    @Test
+    @Ignore
+    public void testAddAttributeExistingElement() throws JDOMException {
+        SchemaManager manager = _schemaManager;
+        MetadataSchema schema = manager.getSchema("iso19139");
+        final Element metadataElement = new Element("MD_Metadata", GMD);
+        LinkedHashMap<String, AddElemValue> updates = new LinkedHashMap<String, AddElemValue>();
+        final String text = "text";
+        final String att = "att";
+        final String charStringXpath = "gmd:fileIdentifier/gco:CharacterString";
+        final String attXPath = "gmd:fileIdentifier/@att";
+        updates.put(attXPath, new AddElemValue(att));
+        updates.put(charStringXpath, new AddElemValue(text));
+
+        EditLib el = new EditLib(_schemaManager);
+        boolean a1 = el.addElementOrFragmentFromXpath(metadataElement, schema, charStringXpath, new AddElemValue(text), true);
+        boolean a2 = el.addElementOrFragmentFromXpath(metadataElement, schema, attXPath, new AddElemValue(att), true);
+        
+        assertEquals(2, a1 && a2);
+
+        assertEqualsText(text, metadataElement, charStringXpath, GMD, GCO);
+        assertEquals(att, Xml.selectString(metadataElement, attXPath, Arrays.asList(GMD, GCO)));
+    }
+    
 
     @Test
     public void testAddElementFromXpath_Extent() throws Exception {
