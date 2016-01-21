@@ -876,14 +876,14 @@
           if (img) {
             var label = (img.label || img.title || '');
             var labelDiv =
-              '<div class="gn-img-background">' +
-              '  <div class="gn-img-thumbnail-caption">' + label + '</div>' +
-              '</div>';
+                '<div class="gn-img-background">' +
+                '  <div class="gn-img-thumbnail-caption">' + label + '</div>' +
+                '</div>';
             var modalElt = angular.element('' +
                 '<div class="modal fade in">' +
                 '<div class="modal-dialog gn-img-modal in">' +
-                '  <button type=button class="btn btn-link ' +
-                'gn-btn-modal-img"><i class="fa fa-times text-danger"/></button>' +
+                '  <button type=button class="btn btn-link gn-btn-modal-img">' +
+                '<i class="fa fa-times text-danger"/></button>' +
                 '  <img src="' + (img.url || img.id) + '"/>' +
                 (label != '' ? labelDiv : '') +
                 '</div>' +

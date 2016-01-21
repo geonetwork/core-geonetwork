@@ -390,7 +390,7 @@
               }
               function setParameterValue(param, value) {
                 if (scope.isMdMultilingual) {
-                  $.each(scope.mdLangs, function(key, v){
+                  $.each(scope.mdLangs, function(key, v) {
                     param[v] = value;
                   });
                 } else {
@@ -499,7 +499,7 @@
                   $timeout(function() {
                     scope.params.url = scope.resource.url;
                     setParameterValue(scope.params.name,
-                      scope.resource.id.split('/').splice(2).join('/'));
+                        scope.resource.id.split('/').splice(2).join('/'));
                   }, 100);
                 }
               });

@@ -280,7 +280,7 @@
          */
         add: function(params, popupid) {
           return runProcess(this,
-            setParams(params.process, params)).then(function() {
+              setParams(params.process, params)).then(function() {
             closePopup(popupid);
           });
         },

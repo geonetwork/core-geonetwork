@@ -20,6 +20,8 @@
     "addLinks": "Add links",
     "addOnlinesrc": "Add link",
     "addOnlinesrcTitle": "Link an online resource to the current metadata",
+    "addFeatureCatalogRef": "Add data model",
+    "addFeatureCatalogRef-help": "Data model (aka feature catalog) could be described directly in the metadata record using the content tab or by creating a link to a document (eg. pdf) from here.",
     "addThumbnail": "Add a thumbnail",
     "addThumbnailTitle": "Add an overview to the current metadata",
     "allChangesCanceled": "All changes cancelled.",
