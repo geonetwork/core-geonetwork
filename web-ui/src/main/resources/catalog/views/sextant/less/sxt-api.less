@@ -131,94 +131,11 @@
 }
 
 .gn [sxt-main-viewer] {
-  @tmp-max-height: 200px;
   #importLayer .panel-carousel {
     .mCSB_container { min-height: 100%; }
-    height: @tmp-max-height;
-    max-height: @tmp-max-height + @tmp-max-height;
-  }
-  .sxt-layers-tabset {
-    height: @tmp-max-height;
-  }
-  .layers .sxt-layertree {
-    min-height: @tmp-max-height;
-    max-height: calc(@tmp-max-height + @tmp-max-height);
-  }
-  .layers-tools-expanded .sxt-layertree {
-    height: @tmp-max-height;
-  }
-  .sxt-maximize-layer-tools {
-    .sxt-layers-tabset {
-      height: @tmp-max-height + @tmp-max-height;
-    }
   }
 }
 
-@media (max-height: 866px) {
-  .gn [sxt-main-viewer] {
-    @tmp-max-height: 150px;
-    #importLayer .panel-carousel {
-      max-height: @tmp-max-height + @tmp-max-height;
-    }
-    .sxt-layers-tabset {
-      height: @tmp-max-height;
-    }
-    .layers .sxt-layertree {
-      min-height: @tmp-max-height;
-      max-height: @tmp-max-height + @tmp-max-height;
-    }
-    .layers-tools-expanded .sxt-layertree {
-      height: @tmp-max-height;
-    }
-    .sxt-maximize-layer-tools .sxt-layers-tabset {
-      height: @tmp-max-height + @tmp-max-height;
-    }
-  }
-}
-
-@media (max-height: 766px) {
-  .gn [sxt-main-viewer] {
-    @tmp-max-height: 100px;
-    #importLayer .panel-carousel {
-      max-height: @tmp-max-height + @tmp-max-height;
-    }
-    .sxt-layers-tabset {
-      height: @tmp-max-height;
-    }
-    .layers .sxt-layertree {
-      min-height: @tmp-max-height;
-      max-height: @tmp-max-height + @tmp-max-height;
-    }
-    .layers-tools-expanded .sxt-layertree {
-      height: @tmp-max-height;
-    }
-    .sxt-maximize-layer-tools .sxt-layers-tabset {
-      height: @tmp-max-height + @tmp-max-height;
-    }
-  }
-}
-
-@media (max-height: 666px) {
-  .gn [sxt-main-viewer] {
-    @tmp-max-height: 50px;
-    #importLayer .panel-carousel {
-      max-height: @tmp-max-height + @tmp-max-height;
-    }
-    .sxt-layers-tabset {
-      height: @tmp-max-height;
-    }
-    .layers .sxt-layertree {
-      min-height: @tmp-max-height;
-      max-height: @tmp-max-height + @tmp-max-height;
-    }
-    .layers-tools-expanded .sxt-layertree {
-      height: @tmp-max-height;
-    }
-    .sxt-maximize-layer-tools .sxt-layers-tabset {
-      height: @tmp-max-height + @tmp-max-height;
-    }
-  }
-}
 
 @import 'gn_popover.less';
 

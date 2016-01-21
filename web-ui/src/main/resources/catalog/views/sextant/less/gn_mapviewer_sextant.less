@@ -3,8 +3,6 @@
 @sxt-orange: #F28033;
 @sxt-btn-size: 2.2em;
 
-@tmp-max-height: 350px;
-
 [sxt-main-viewer] {
 
   .sxt-search-btn {
@@ -49,7 +47,7 @@
       }
     }
     &.activeTool {
-      height: auto;
+      height: ~"calc(100% - 4em)";
       padding-bottom: 1em;
     }
   }
@@ -138,6 +136,7 @@
   }
 
   .panel-tools-container {
+    height: ~"calc(100% - 2em)";
     display: none;
     &.open {
       display: block;
@@ -145,6 +144,7 @@
   }
 
   .panel-tools {
+    height: 100%;
     position: static;
     right: auto;
     left: auto;
@@ -403,7 +403,7 @@
   }
 
   .sxt-layers-tabset {
-    height: @tmp-max-height;
+    height: 100%;
     overflow: hidden;
     display: none;
     clear: both;
@@ -501,9 +501,7 @@
   }
 
   .layers .sxt-layertree {
-    min-height: @tmp-max-height;
-    height: auto;
-    max-height: calc(@tmp-max-height + @tmp-max-height);
+    height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
     ul {
@@ -511,83 +509,33 @@
     }
   }
   .layers-tools-expanded .sxt-layertree {
-    height: @tmp-max-height;
-  }
-  #importLayer .panel-carousel {
-    .mCSB_container { min-height: 100%; }
-    height: @tmp-max-height;
-    max-height: @tmp-max-height + @tmp-max-height;
+    height: 100%;
   }
   .sxt-maximize-layer-tools {
     .sxt-layertree {
       display: none;
     }
     .sxt-layers-tabset {
-      height: @tmp-max-height + @tmp-max-height;
+      height: 200%;
+    }
+  }
+  #importLayer {
+    & > .panel-body {
+      height: 100%;
+    }
+    .panel-carousel {
+      .mCSB_container { min-height: 100%; }
+      height: 100%;
+      min-height: 100%;
+    }
+    .panel-carousel-window {
+      height: ~"calc(100% - 2em)";
+    }
+    .panel-carousel-container {
+      height: 100%;
     }
   }
 
-  @media (max-height: 866px) {
-    @tmp-max-height: 300px;
-    #importLayer .panel-carousel {
-      max-height: @tmp-max-height + @tmp-max-height;
-    }
-    .sxt-layers-tabset {
-      height: @tmp-max-height;
-    }
-    .layers .sxt-layertree {
-      min-height: @tmp-max-height;
-      max-height: @tmp-max-height + @tmp-max-height;
-    }
-    .layers-tools-expanded .sxt-layertree {
-      height: @tmp-max-height;
-    }
-    .sxt-maximize-layer-tools .sxt-layers-tabset {
-      height: @tmp-max-height + @tmp-max-height;
-    }
-  }
-
-  @media (max-height: 766px) {
-    @tmp-max-height: 250px;
-    #importLayer .panel-carousel {
-      height: @tmp-max-height;
-      max-height: @tmp-max-height + @tmp-max-height;
-    }
-    .sxt-layers-tabset {
-      height: @tmp-max-height;
-    }
-    .layers .sxt-layertree {
-      min-height: @tmp-max-height;
-      max-height: @tmp-max-height + @tmp-max-height;
-    }
-    .layers-tools-expanded .sxt-layertree {
-      height: @tmp-max-height;
-    }
-    .sxt-maximize-layer-tools .sxt-layers-tabset {
-      height: @tmp-max-height + @tmp-max-height;
-    }
-  }
-
-  @media (max-height: 666px) {
-    @tmp-max-height: 200px;
-    #importLayer .panel-carousel {
-      height: @tmp-max-height;
-      max-height: @tmp-max-height + @tmp-max-height;
-    }
-    .sxt-layers-tabset {
-      height: @tmp-max-height;
-    }
-    .layers .sxt-layertree {
-      min-height: @tmp-max-height;
-      max-height: @tmp-max-height + @tmp-max-height;
-    }
-    .layers-tools-expanded .sxt-layertree {
-      height: @tmp-max-height;
-    }
-    .sxt-maximize-layer-tools .sxt-layers-tabset {
-      height: @tmp-max-height + @tmp-max-height;
-    }
-  }
 
   .sxt-hidden {
     visibility: hidden;
@@ -859,6 +807,7 @@
     box-shadow: none;
     width: 90%;
   }
+
 
 }
 
