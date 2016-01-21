@@ -64,6 +64,7 @@ import java.util.List;
 public class FilesystemStore implements Store {
     public FilesystemStore() {
     }
+    public static final String DEFAULT_FILTER = "*.*";
 
     @Override
     public List<MetadataResource> getResources(String metadataUuid,
@@ -115,6 +116,9 @@ public class FilesystemStore implements Store {
         Path resourceTypeDir = metadataDir.resolve(visibility.toString());
 
         List<MetadataResource> resourceList = new ArrayList<>();
+        if (filter == null) {
+            filter = FilesystemStore.DEFAULT_FILTER;
+        }
         try (DirectoryStream<Path> directoryStream =
                      Files.newDirectoryStream(resourceTypeDir, filter)) {
             for (Path path : directoryStream) {
@@ -210,7 +214,8 @@ public class FilesystemStore implements Store {
 
         BufferedOutputStream stream =
                 new BufferedOutputStream(
-                        new FileOutputStream(filePath.toFile()));
+                        Files.newOutputStream(filePath)
+                );
         byte[] bytes = file.getBytes();
         stream.write(bytes);
         stream.close();
@@ -237,7 +242,7 @@ public class FilesystemStore implements Store {
 
         Path filePath = getPath(metadataUuid, visibility, fileName);
 
-        FileUtils.copyURLToFile(fileUrl, filePath.toFile());
+        Files.copy(fileUrl.openStream(), filePath);
 
         return getResourceDescription(metadataUuid, visibility, filePath);
     }
@@ -327,7 +332,7 @@ public class FilesystemStore implements Store {
             Path newFilePath = metadataDir
                     .resolve(visibility.toString())
                     .resolve(filePath.getFileName());
-            FileUtils.moveFile(filePath.toFile(), newFilePath.toFile());
+            Files.move(filePath, newFilePath);
             return getResourceDescription(metadataUuid, visibility, newFilePath);
         } else {
             throw new SecurityException(String.format(

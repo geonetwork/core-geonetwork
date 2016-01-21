@@ -66,7 +66,6 @@ import java.util.List;
  * Load the store with id 'resourceStore'.
  */
 @EnableWebMvc
-@Controller
 @Service
 @RequestMapping(value = {
         "/api/metadata/{metadataUuid}/resources",
@@ -135,7 +134,7 @@ public class ResourcesApi {
                                                      defaultValue = "name")
                                        Sort sort,
                                        @RequestParam(required = false,
-                                                     defaultValue = "*.*")
+                                                     defaultValue = FilesystemStore.DEFAULT_FILTER)
                                        String filter) throws Exception {
         return store.getResources(metadataUuid, sort, filter);
     }

@@ -67,4 +67,15 @@ public class FilesystemStoreResource implements MetadataResource {
         this.metadataResourceVisibility = metadataResourceVisibility;
         this.size = Double.isNaN(size) ? -1 : size;
     }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer(this.getClass().getSimpleName());
+        sb.append("\n");
+        sb.append("Id: ").append(filename).append("\n");
+        sb.append("URL: ").append(url).append("\n");
+        sb.append("Type: ").append(metadataResourceVisibility).append("\n");
+        sb.append("Size: ").append(size).append("\n");
+        return sb.toString();
+    }
 }
