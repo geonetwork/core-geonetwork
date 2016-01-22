@@ -117,13 +117,12 @@ public class ResourcesApi {
 
     @ApiOperation(value = "List all metadata resources",
                   nickname = "getAllMetadataResources")
-    @PreAuthorize("permitAll")
+//    @PreAuthorize("permitAll")
     @RequestMapping(method = RequestMethod.GET,
-                    produces = {
-                            MediaType.APPLICATION_JSON_VALUE
-                    })
+                    produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<List<MetadataResource>> getAllResources(
+    public List<MetadataResource> getAllResources(
                                        @ApiParam(value = "The metadata UUID",
                                                  required = true,
                                                  example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
@@ -138,28 +137,25 @@ public class ResourcesApi {
                                                      defaultValue = FilesystemStore.DEFAULT_FILTER)
                                        String filter)
             throws
-                ResourceNotFoundException,
                 Exception {
             List<MetadataResource> list = store.getResources(metadataUuid, sort, filter);
-            return new ResponseEntity<List<MetadataResource>>(list, HttpStatus.OK);
+            return list;
     }
 
 
 
     @ApiOperation(value = "Delete all uploaded metadata resources",
-                  nickname = "deleteAllMetadataResources",
-                  code = 200,
-                  authorizations = {@Authorization(value = "ba")})
-    @RequestMapping(method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('Editor')")
-    @ResponseBody
-    public boolean delResources(@ApiParam(value = "The metadata UUID",
+                  nickname = "deleteAllMetadataResources")
+    @RequestMapping(method = RequestMethod.DELETE,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PreAuthorize("hasRole('Editor')") // FIXME: Does not work - check is made by the Store
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void delResources(@ApiParam(value = "The metadata UUID",
                                           required = true,
                                           example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
                                 @PathVariable
                                 String metadataUuid) throws Exception {
         store.delResource(metadataUuid);
-        return true;
     }
 
 
@@ -167,9 +163,11 @@ public class ResourcesApi {
     @ApiOperation(value = "Create a new resource for a given metadata",
                   nickname = "putResourceFromFile")
     @PreAuthorize("hasRole('Editor')")
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
-    public List<MetadataResource> putResource(
+    public MetadataResource putResource(
                                 @ApiParam(value = "The metadata UUID",
                                           required = true,
                                           example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
@@ -182,23 +180,19 @@ public class ResourcesApi {
                                 MetadataResourceVisibility visibility,
                                 @ApiParam(value = "The file to upload")
                                 @RequestParam("file")
-                                List<MultipartFile> files)
+                                MultipartFile file)
             throws Exception {
-        List<MetadataResource> resources = new ArrayList<>();
-        for(MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                resources.add(store.putResource(metadataUuid, file, visibility));
-            }
-        }
-        return resources;
+        return store.putResource(metadataUuid, file, visibility);
     }
 
     @ApiOperation(value = "Create a new resource from a URL for a given metadata",
-                  nickname = "putResourcesFromURL")
-    @PreAuthorize("hasRole('Editor')")
+                  nickname = "putResourcesFromURL",
+                  produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PreAuthorize("hasRole('Editor')")
     @RequestMapping(method = RequestMethod.PUT)
+    @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
-    public List<MetadataResource> putResourceFromURL(
+    public MetadataResource putResourceFromURL(
                             @ApiParam(value = "The metadata UUID",
                                       required = true,
                                       example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
@@ -211,21 +205,18 @@ public class ResourcesApi {
                             MetadataResourceVisibility visibility,
                             @ApiParam(value = "The URL to load in the store")
                             @RequestParam("url")
-                            List<URL> urls)
+                            URL url)
             throws Exception {
-        List<MetadataResource> resources = new ArrayList<>();
-        for(URL url : urls) {
-            resources.add(store.putResource(metadataUuid, url, visibility));
-        }
-        return resources;
+        return store.putResource(metadataUuid, url, visibility);
     }
 
 
     @ApiOperation(value = "Get a metadata resource",
                   nickname = "getResource")
-    @PreAuthorize("permitAll")
+//    @PreAuthorize("permitAll")
     @RequestMapping(value = "/{resourceId:.+}",
                     method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public HttpEntity<byte[]> getResource(
                                 @ApiParam(value = "The metadata UUID",
@@ -257,9 +248,11 @@ public class ResourcesApi {
 
     @ApiOperation(value = "Update the metadata resource visibility",
                   nickname = "patchMetadataResourceVisibility")
-    @PreAuthorize("hasRole('Editor')")
+//    @PreAuthorize("hasRole('Editor')")
     @RequestMapping(value = "/{resourceId:.+}",
-                    method = RequestMethod.PATCH)
+                    method = RequestMethod.PATCH,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public MetadataResource patchResource(@ApiParam(value = "The metadata UUID",
                                             required = true,
@@ -282,11 +275,11 @@ public class ResourcesApi {
 
     @ApiOperation(value = "Delete a metadata resource",
                   nickname = "deleteMetadataResource")
-    @PreAuthorize("hasRole('Editor')")
+//    @PreAuthorize("hasRole('Editor')")
     @RequestMapping(value = "/{resourceId:.+}",
                     method = RequestMethod.DELETE)
-    @ResponseBody
-    public boolean delResource(@ApiParam(value = "The metadata UUID",
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void delResource(@ApiParam(value = "The metadata UUID",
                                          required = true,
                                          example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
                                @PathVariable
@@ -296,7 +289,6 @@ public class ResourcesApi {
                                @PathVariable
                                String resourceId) throws Exception {
         store.delResource(metadataUuid, resourceId);
-        return true;
     }
 
 

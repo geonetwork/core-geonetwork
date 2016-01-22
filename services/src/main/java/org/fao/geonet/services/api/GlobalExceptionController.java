@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.api;
 
+import org.fao.geonet.services.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.services.api.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -32,15 +33,30 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 
 import java.io.FileNotFoundException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.ResourceBundle;
 
 /**
- * Created by francois on 22/01/16.
  */
 @ControllerAdvice
 public class GlobalExceptionController {
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler({
+            SecurityException.class
+    })
+    public Object unauthorizedHandler(final Exception exception) {
+        exception.printStackTrace();
+        return new LinkedHashMap<String, String>() {{
+            put("code", "unauthorized");
+            put("message", exception.getClass().getSimpleName());
+            put("description", exception.getMessage());
+        }};
+    }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -49,56 +65,73 @@ public class GlobalExceptionController {
     })
     public Object maxFileExceededHandler(final Exception exception) {
         exception.printStackTrace();
-        return  new HashMap<String, String>() {{
-            put("result", "failed");
-            put("type", "max_file_exceeded");
-            put("message", exception.getClass() + " " + exception.getMessage());
+        return new LinkedHashMap<String, String>() {{
+            put("code", "max_file_exceeded");
+            put("message", exception.getClass().getSimpleName());
+            put("description", exception.getMessage());
         }};
     }
+
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
             FileNotFoundException.class})
     public Object fileNotFoundHandler(final Exception exception) {
         exception.printStackTrace();
-        return  new HashMap<String, String>() {{
-            put("result", "failed");
-            put("type", "file_not_found");
-            put("message", exception.getClass() + " " + exception.getMessage());
+        return new LinkedHashMap<String, String>() {{
+            put("code", "file_not_found");
+            put("message", exception.getClass().getSimpleName());
+            put("description", exception.getMessage());
         }};
     }
+
     @ResponseBody
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
     @ExceptionHandler({
             ResourceNotFoundException.class})
     public Object resourceNotFoundHandler(final Exception exception) {
-        return  new HashMap<String, String>() {{
-            put("result", "failed");
-            put("type", "resource_not_found");
-            put("message", exception.getClass() + " " + exception.getMessage());
+        return new LinkedHashMap<String, String>() {{
+            put("code", "resource_not_found");
+            put("message", exception.getClass().getSimpleName());
+            put("description", exception.getMessage());
         }};
     }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+    @ExceptionHandler({
+            ResourceAlreadyExistException.class})
+    public Object resourceAlreadyExistHandler(final Exception exception) {
+        return new LinkedHashMap<String, String>() {{
+            put("code", "resource_already_exist");
+            put("message", exception.getClass().getSimpleName());
+            put("description", exception.getMessage());
+        }};
+    }
+
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public Object missingParameterHandler(final Exception exception) {
-        return  new HashMap<String, String>() {{
-            put("result", "failed");
-            put("type", "required_parameter_missing");
-            put("message", exception.getMessage());
+        return new LinkedHashMap<String, String>() {{
+            put("code", "required_parameter_missing");
+            put("message", exception.getClass().getSimpleName());
+            put("description", exception.getMessage());
         }};
     }
+
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
             UnsatisfiedServletRequestParameterException.class,
-            IllegalArgumentException.class
+            IllegalArgumentException.class,
+            MultipartException.class
     })
     public Object unsatisfiedParameterHandler(final Exception exception) {
-        return  new HashMap<String, String>() {{
-            put("result", "failed");
-            put("type", "unsatisfied_request_parameter");
-            put("message", exception.getMessage());
+        return new LinkedHashMap<String, String>() {{
+            put("code", "unsatisfied_request_parameter");
+            put("message", exception.getClass().getSimpleName());
+            put("description", exception.getMessage());
         }};
     }
 }

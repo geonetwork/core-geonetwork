@@ -36,7 +36,9 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.services.api.exception.ResourceNotFoundException;
+import org.fao.geonet.utils.IO;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -73,12 +75,7 @@ public class FilesystemStore implements Store {
                                                String filter) throws Exception {
         List<MetadataResource> resourceList = new ArrayList<>();
         ApplicationContext _appContext = ApplicationContextHolder.get();
-        String metadataId = _appContext.getBean(DataManager.class)
-                .getMetadataId(metadataUuid);
-        if (metadataId == null) {
-            throw new ResourceNotFoundException(String.format(
-                    "Metadata with UUID '%s' does not exist.", metadataUuid));
-        }
+        String metadataId = getAndCheckMetadataId(metadataUuid);
         AccessManager accessManager = _appContext.getBean(AccessManager.class);
         boolean canEdit = accessManager.canEdit(ServiceContext.get(), metadataId);
 
@@ -101,14 +98,11 @@ public class FilesystemStore implements Store {
                                                MetadataResourceVisibility visibility,
                                                String filter) throws Exception {
         ApplicationContext _appContext = ApplicationContextHolder.get();
-        String metadataId = _appContext.getBean(DataManager.class)
-                .getMetadataId(metadataUuid);
+        String metadataId = getAndCheckMetadataId(metadataUuid);
         GeonetworkDataDirectory dataDirectory =
                 _appContext.getBean(GeonetworkDataDirectory.class);
         SettingManager settingManager = _appContext.getBean(SettingManager.class);
         AccessManager accessManager = _appContext.getBean(AccessManager.class);
-
-        Path metadataDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);
 
         boolean canEdit = accessManager.canEdit(ServiceContext.get(), metadataId);
         if (visibility == MetadataResourceVisibility.PRIVATE && !canEdit) {
@@ -117,7 +111,7 @@ public class FilesystemStore implements Store {
                     visibility, metadataUuid));
         }
 
-
+        Path metadataDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);
         Path resourceTypeDir = metadataDir.resolve(visibility.toString());
 
         List<MetadataResource> resourceList = new ArrayList<>();
@@ -157,7 +151,7 @@ public class FilesystemStore implements Store {
         ApplicationContext _appContext = ApplicationContextHolder.get();
         AccessManager accessManager = _appContext.getBean(AccessManager.class);
         GeonetworkDataDirectory dataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
-        String metadataId = _appContext.getBean(DataManager.class).getMetadataId(metadataUuid);
+        String metadataId = getAndCheckMetadataId(metadataUuid);
         Path metadataDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);
 
         Path resourceFile = null;
@@ -185,7 +179,7 @@ public class FilesystemStore implements Store {
             }
             return resourceFile;
         } else {
-            throw new FileNotFoundException(String.format(
+            throw new ResourceNotFoundException(String.format(
                     "Metadata resource '%s' not found for metadata '%s'",
                     resourceId, metadataUuid));
         }
@@ -215,6 +209,7 @@ public class FilesystemStore implements Store {
     public MetadataResource putResource(String metadataUuid,
                                         MultipartFile file,
                                         MetadataResourceVisibility visibility) throws Exception {
+        canEdit(metadataUuid);
         Path filePath = getPath(metadataUuid, visibility, file.getOriginalFilename());
 
         BufferedOutputStream stream =
@@ -230,6 +225,7 @@ public class FilesystemStore implements Store {
 
     @Override
     public MetadataResource putResource(String metadataUuid, Path file, MetadataResourceVisibility visibility) throws Exception {
+        canEdit(metadataUuid);
         Path filePath = getPath(metadataUuid, visibility, file.getFileName().toString());
 
         FileUtils.copyFile(file.toFile(), filePath.toFile());
@@ -240,6 +236,7 @@ public class FilesystemStore implements Store {
 
     @Override
     public MetadataResource putResource(String metadataUuid, URL fileUrl, MetadataResourceVisibility visibility) throws Exception {
+        canEdit(metadataUuid);
         String fileName = FilenameUtils.getName(fileUrl.getPath());
         if (fileName.contains("?")) {
             fileName = fileName.substring(0, fileName.indexOf("?"));
@@ -255,7 +252,7 @@ public class FilesystemStore implements Store {
     private Path getPath(String metadataUuid, MetadataResourceVisibility visibility, String fileName) throws Exception {
         ApplicationContext _appContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
-        String metadataId = _appContext.getBean(DataManager.class).getMetadataId(metadataUuid);
+        String metadataId = getAndCheckMetadataId(metadataUuid);
         Path metadataDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);
 
         Path folderPath = metadataDir.resolve(visibility.toString());
@@ -272,7 +269,7 @@ public class FilesystemStore implements Store {
 
         Path filePath = folderPath.resolve(fileName);
         if (Files.exists(filePath)) {
-            throw new IOException(String.format(
+            throw new ResourceAlreadyExistException(String.format(
                     "A resource with name '%s' and status '%s' already exists for metadata '%s'.",
                     fileName, visibility, metadataUuid));
         }
@@ -283,43 +280,34 @@ public class FilesystemStore implements Store {
     @Override
     public String delResource(String metadataUuid) throws Exception {
         ApplicationContext _appContext = ApplicationContextHolder.get();
-        String metadataId = _appContext.getBean(DataManager.class).getMetadataId(metadataUuid);
-        AccessManager accessManager = _appContext.getBean(AccessManager.class);
-        if (accessManager.canEdit(ServiceContext.get(), metadataId)) {
-            GeonetworkDataDirectory dataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
-            Path metadataDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);
-            boolean deleted = metadataDir.toFile().delete();
-            if (deleted) {
-                return String.format("Metadata '%s' directory removed.", metadataUuid);
-            } else {
-                return String.format("Unable to remove metadata '%s' directory.", metadataUuid);
-            }
-        } else {
-            throw new SecurityException(String.format(
-                    "Current user can't edit metadata '%s' and as such can't remove a resource.",
-                    metadataUuid));
+        String metadataId = getAndCheckMetadataId(metadataUuid);
+
+        canEdit(metadataUuid);
+
+        GeonetworkDataDirectory dataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
+        Path metadataDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);
+        try {
+            IO.deleteFileOrDirectory(metadataDir, true);
+            return String.format("Metadata '%s' directory removed.", metadataUuid);
+        } catch (Exception e) {
+            return String.format("Unable to remove metadata '%s' directory.", metadataUuid);
         }
     }
 
 
     @Override
     public String delResource(String metadataUuid, String resourceId) throws Exception {
-        ApplicationContext _appContext = ApplicationContextHolder.get();
-        AccessManager accessManager = _appContext.getBean(AccessManager.class);
-        String metadataId = _appContext.getBean(DataManager.class).getMetadataId(metadataUuid);
-        if (accessManager.canEdit(ServiceContext.get(), metadataId)) {
-            Path filePath = getResource(metadataUuid, resourceId);
+        String metadataId = getAndCheckMetadataId(metadataUuid);
 
-            try {
-                Files.deleteIfExists(filePath);
-                return String.format("MetadataResource '%s' removed.", resourceId);
-            } catch (IOException e) {
-                return String.format("Unable to remove resource '%s'.", resourceId);
-            }
-        } else {
-            throw new SecurityException(String.format(
-                    "Current user can't edit metadata '%s' and as such can't remove the resource '%s'.",
-                    metadataUuid, resourceId));
+        canEdit(metadataUuid);
+
+        Path filePath = getResource(metadataUuid, resourceId);
+
+        try {
+            Files.deleteIfExists(filePath);
+            return String.format("MetadataResource '%s' removed.", resourceId);
+        } catch (IOException e) {
+            return String.format("Unable to remove resource '%s'.", resourceId);
         }
     }
 
@@ -330,7 +318,8 @@ public class FilesystemStore implements Store {
                                                 MetadataResourceVisibility visibility) throws Exception {
         ApplicationContext _appContext = ApplicationContextHolder.get();
         AccessManager accessManager = _appContext.getBean(AccessManager.class);
-        String metadataId = _appContext.getBean(DataManager.class).getMetadataId(metadataUuid);
+        String metadataId = getAndCheckMetadataId(metadataUuid);
+
         if (accessManager.canEdit(ServiceContext.get(), metadataId)) {
             Path filePath = getResource(metadataUuid, resourceId);
 
@@ -355,6 +344,40 @@ public class FilesystemStore implements Store {
             throw new SecurityException(String.format(
                     "Current user can't edit metadata '%s' and as such can't change the resource status for '%s'.",
                     metadataUuid, resourceId));
+        }
+    }
+
+    /**
+     * TODO: To be improve
+     * @param metadataUuid
+     * @return
+     * @throws Exception
+     */
+    private String getAndCheckMetadataId(String metadataUuid) throws Exception {
+        ApplicationContext _appContext = ApplicationContextHolder.get();
+        String metadataId = _appContext.getBean(DataManager.class).getMetadataId(metadataUuid);
+        if (metadataId == null) {
+            throw new ResourceNotFoundException(String.format(
+                    "Metadata with UUID '%s' not found.", metadataUuid
+            ));
+        }
+        return metadataId;
+    }
+    private void canEdit(String metadataUuid) throws Exception {
+        canEdit(metadataUuid, null);
+    }
+    private void canEdit(String metadataUuid,
+                         MetadataResourceVisibility visibility) throws Exception {
+        ApplicationContext _appContext = ApplicationContextHolder.get();
+        String metadataId = getAndCheckMetadataId(metadataUuid);
+        AccessManager accessManager = _appContext.getBean(AccessManager.class);
+        boolean canEdit = accessManager.canEdit(ServiceContext.get(), metadataId);
+        if ((visibility == null && !canEdit) ||
+                (visibility == MetadataResourceVisibility.PRIVATE && !canEdit)) {
+            throw new SecurityException(String.format(
+                    "User does not have privileges to access '%s' resources for metadata '%s'.",
+                    visibility == null ? "any" : visibility,
+                    metadataUuid));
         }
     }
 }
