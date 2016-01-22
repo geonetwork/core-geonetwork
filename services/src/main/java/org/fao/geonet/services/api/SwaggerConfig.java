@@ -75,18 +75,11 @@ public class SwaggerConfig {
                 regex("/api/" + API.VERSION_0_1 + ".*")
                 );
     }
-    @RequestMapping(value = "/api/" + API.VERSION_0_1 + "/api/reload",
-            method = RequestMethod.GET)
-    @ResponseBody
-    public boolean reload() throws Exception {
-        loadApi();
-        return true;
-    }
 
-    private void loadApi() {
+    public void loadApi() {
         this.doc = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(new ApiInfo(
-                        "GeoNetwork Api Documentation",
+                        "GeoNetwork Api Documentation (beta)",
                         "Learn how to access the catalog using the GeoNetwork REST API.",
                         API.VERSION_0_1,
                         "urn:tos",
@@ -124,13 +117,12 @@ public class SwaggerConfig {
 //                                .required(true)
 //                                .build()))
         ;
-    };
+    }
+
     @Bean
     public Docket geonetworkApi() {
         // TODO: Add not id in pathMapping
         loadApi();
         return this.doc;
     }
-
-
 }
