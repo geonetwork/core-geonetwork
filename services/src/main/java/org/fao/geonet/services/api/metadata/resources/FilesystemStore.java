@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.api.exception.ResourceNotFoundException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -74,6 +75,10 @@ public class FilesystemStore implements Store {
         ApplicationContext _appContext = ApplicationContextHolder.get();
         String metadataId = _appContext.getBean(DataManager.class)
                 .getMetadataId(metadataUuid);
+        if (metadataId == null) {
+            throw new ResourceNotFoundException(String.format(
+                    "Metadata with UUID '%s' does not exist.", metadataUuid));
+        }
         AccessManager accessManager = _appContext.getBean(AccessManager.class);
         boolean canEdit = accessManager.canEdit(ServiceContext.get(), metadataId);
 

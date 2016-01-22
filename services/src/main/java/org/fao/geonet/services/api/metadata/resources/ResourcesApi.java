@@ -25,20 +25,18 @@
 
 package org.fao.geonet.services.api.metadata.resources;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
 import org.fao.geonet.services.api.API;
+import org.fao.geonet.services.api.exception.ResourceNotFoundException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -119,10 +117,13 @@ public class ResourcesApi {
 
     @ApiOperation(value = "List all metadata resources",
                   nickname = "getAllMetadataResources")
+    @PreAuthorize("permitAll")
     @RequestMapping(method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+                    produces = {
+                            MediaType.APPLICATION_JSON_VALUE
+                    })
     @ResponseBody
-    public List<MetadataResource> getAllResources(
+    public ResponseEntity<List<MetadataResource>> getAllResources(
                                        @ApiParam(value = "The metadata UUID",
                                                  required = true,
                                                  example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
@@ -135,14 +136,20 @@ public class ResourcesApi {
                                        Sort sort,
                                        @RequestParam(required = false,
                                                      defaultValue = FilesystemStore.DEFAULT_FILTER)
-                                       String filter) throws Exception {
-        return store.getResources(metadataUuid, sort, filter);
+                                       String filter)
+            throws
+                ResourceNotFoundException,
+                Exception {
+            List<MetadataResource> list = store.getResources(metadataUuid, sort, filter);
+            return new ResponseEntity<List<MetadataResource>>(list, HttpStatus.OK);
     }
 
 
 
     @ApiOperation(value = "Delete all uploaded metadata resources",
-                  nickname = "deleteAllMetadataResources")
+                  nickname = "deleteAllMetadataResources",
+                  code = 200,
+                  authorizations = {@Authorization(value = "ba")})
     @RequestMapping(method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
@@ -159,8 +166,8 @@ public class ResourcesApi {
 
     @ApiOperation(value = "Create a new resource for a given metadata",
                   nickname = "putResourceFromFile")
-    @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasRole('Editor')")
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public List<MetadataResource> putResource(
                                 @ApiParam(value = "The metadata UUID",
@@ -188,8 +195,8 @@ public class ResourcesApi {
 
     @ApiOperation(value = "Create a new resource from a URL for a given metadata",
                   nickname = "putResourcesFromURL")
-    @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("hasRole('Editor')")
+    @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     public List<MetadataResource> putResourceFromURL(
                             @ApiParam(value = "The metadata UUID",
@@ -216,6 +223,7 @@ public class ResourcesApi {
 
     @ApiOperation(value = "Get a metadata resource",
                   nickname = "getResource")
+    @PreAuthorize("permitAll")
     @RequestMapping(value = "/{resourceId:.+}",
                     method = RequestMethod.GET)
     @ResponseBody
@@ -249,9 +257,9 @@ public class ResourcesApi {
 
     @ApiOperation(value = "Update the metadata resource visibility",
                   nickname = "patchMetadataResourceVisibility")
+    @PreAuthorize("hasRole('Editor')")
     @RequestMapping(value = "/{resourceId:.+}",
                     method = RequestMethod.PATCH)
-    @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public MetadataResource patchResource(@ApiParam(value = "The metadata UUID",
                                             required = true,
@@ -274,9 +282,9 @@ public class ResourcesApi {
 
     @ApiOperation(value = "Delete a metadata resource",
                   nickname = "deleteMetadataResource")
+    @PreAuthorize("hasRole('Editor')")
     @RequestMapping(value = "/{resourceId:.+}",
                     method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public boolean delResource(@ApiParam(value = "The metadata UUID",
                                          required = true,
@@ -325,46 +333,5 @@ public class ResourcesApi {
             }
         }
         return contentType;
-    }
-
-
-
-
-    // TODO: i18n
-    @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({
-            MaxUploadSizeExceededException.class,
-            FileNotFoundException.class})
-    public Object fileNotFoundHandler(final Exception exception) {
-        exception.printStackTrace();
-        return  new HashMap<String, String>() {{
-            put("result", "failed");
-            put("type", "file_not_found");
-            put("message", exception.getClass() + " " + exception.getMessage());
-        }};
-    }
-    @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public Object missingParameterHandler(final Exception exception) {
-        return  new HashMap<String, String>() {{
-            put("result", "failed");
-            put("type", "required_parameter_missing");
-            put("message", exception.getMessage());
-        }};
-    }
-    @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({
-            UnsatisfiedServletRequestParameterException.class,
-            IllegalArgumentException.class
-    })
-    public Object unsatisfiedParameterHandler(final Exception exception) {
-        return  new HashMap<String, String>() {{
-            put("result", "failed");
-            put("type", "unsatisfied_request_parameter");
-            put("message", exception.getMessage());
-        }};
     }
 }

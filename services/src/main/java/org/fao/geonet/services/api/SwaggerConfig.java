@@ -27,15 +27,21 @@ package org.fao.geonet.services.api;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.base.Predicate;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.UserSecurity;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -43,6 +49,7 @@ import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.schema.WildcardType;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.BasicAuth;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -54,20 +61,30 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = {"org.fao.geonet.services.metadata.resources"})
+@Service
+@ComponentScan(basePackages = {"org.fao.geonet.services.api"})
 @EnableSwagger2 //Loads the spring beans required by the framework
 public class SwaggerConfig {
     @Autowired
     private TypeResolver typeResolver;
+
+    private Docket doc;
 
     private Predicate<String> paths() {
         return or(
                 regex("/api/" + API.VERSION_0_1 + ".*")
                 );
     }
-    @Bean
-    public Docket geonetworkApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
+    @RequestMapping(value = "/api/" + API.VERSION_0_1 + "/api/reload",
+            method = RequestMethod.GET)
+    @ResponseBody
+    public boolean reload() throws Exception {
+        loadApi();
+        return true;
+    }
+
+    private void loadApi() {
+        this.doc = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(new ApiInfo(
                         "GeoNetwork Api Documentation",
                         "Learn how to access the catalog using the GeoNetwork REST API.",
@@ -80,7 +97,7 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(paths())
                 .build()
-                .pathMapping("/")
+                .pathMapping("/srv/")
                 .directModelSubstitute(LocalDate.class, String.class)
                 .directModelSubstitute(UserSecurity.class, Object.class)
                 .genericModelSubstitutes(ResponseEntity.class)
@@ -89,15 +106,15 @@ public class SwaggerConfig {
                                 typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
                                 typeResolver.resolve(WildcardType.class)))
                 .useDefaultResponseMessages(false)
-                .globalResponseMessage(RequestMethod.GET,
-                        newArrayList(new ResponseMessageBuilder()
-                                .code(500)
-                                .message("500 message")
-                                .responseModel(new ModelRef("Error"))
-                                .build()))
-//                .securitySchemes(newArrayList(apiKey()))
+//                .globalResponseMessage(RequestMethod.GET,
+//                        newArrayList(new ResponseMessageBuilder()
+//                                .code(500)
+//                                .message("500 message")
+//                                .responseModel(new ModelRef("Error"))
+//                                .build()))
+                .securitySchemes(newArrayList(new BasicAuth("ba")))
 //                .securityContexts(newArrayList(securityContext()))
-                .enableUrlTemplating(true)
+//                .enableUrlTemplating(true)
 //                .globalOperationParameters(
 //                        newArrayList(new ParameterBuilder()
 //                                .name("_content_type")
@@ -106,7 +123,13 @@ public class SwaggerConfig {
 //                                .parameterType("query")
 //                                .required(true)
 //                                .build()))
-                ;
+        ;
+    };
+    @Bean
+    public Docket geonetworkApi() {
+        // TODO: Add not id in pathMapping
+        loadApi();
+        return this.doc;
     }
 
 
