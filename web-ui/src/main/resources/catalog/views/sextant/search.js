@@ -82,6 +82,7 @@
     }]);
 
   module.controller('gnsSextant', [
+    '$rootScope',
     '$scope',
     '$location',
     '$window',
@@ -102,7 +103,7 @@
     '$q',
     'gnUrlUtils',
     'gnGlobalSettings',
-    function($scope, $location, $window, suggestService,
+    function($rootScope, $scope, $location, $window, suggestService,
              $http, gnSearchSettings,
              gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
              $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
@@ -361,6 +362,15 @@
 
       gnMdView.initFormatter(gnSearchSettings.formatterTarget || '.gn');
       gnSearchLocation.initTabRouting($scope.mainTabs);
+      $rootScope.$on('$locationChangeSuccess', function(){
+        var tab = $location.path().match(/^\/([a-zA-Z0-9]*)($|\/.*)/)[1];
+        if (tab == 'search') {
+          $timeout(function() {
+            $scope.searchObj.searchMap.updateSize();
+          }, 0);
+        }
+      });
+
 
       $scope.gotoPanier = function() {
         $location.path('/panier');
