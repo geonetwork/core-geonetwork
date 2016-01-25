@@ -497,7 +497,7 @@
       };
     }]);
 
-  module.directive('sxtCustomScroll', [ function() {
+    module.directive('sxtCustomScroll', [ '$window', function($window) {
     return {
       restrict: 'A',
       link: {
@@ -520,6 +520,10 @@
                 element.trigger('scroll');
               }
             }
+          });
+
+          $($window).on('resize', function() {
+            element.mCustomScrollbar('update');
           });
 
         }

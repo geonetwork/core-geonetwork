@@ -12,10 +12,11 @@
    */
   module.directive('sxtMainViewer', [
     '$window',
+    '$timeout',
     'gnMap',
     'gnSearchLocation',
     'gnConfig',
-    function($window, gnMap, gnSearchLocation, gnConfig) {
+    function($window, $timeout, gnMap, gnSearchLocation, gnConfig) {
       return {
         restrict: 'A',
         replace: true,
@@ -116,6 +117,9 @@
                   scope.layerTabs[tab].active = true;
                   activeTab = tab;
                 }
+                $timeout(function() {
+                  $('.sxt-layertree').mCustomScrollbar('update');
+                }, 0);
               };
               scope.loadTool = function(tab) {
                 if(scope.isSeparatedTool()) {
