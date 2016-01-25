@@ -268,7 +268,7 @@
                 'popover-dropdown popover-dropdown-'+content.find('li').length : '' ;
             button.popover({
               animation: false,
-              container: '.gn',
+              container: '[sxt-main-viewer]',
               placement: attrs['placement'] || 'right',
               content: ' ',
               template: '<div class="popover ' + className + '">' +
