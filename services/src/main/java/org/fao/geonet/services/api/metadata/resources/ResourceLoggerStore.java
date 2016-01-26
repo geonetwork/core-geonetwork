@@ -186,7 +186,7 @@ public class ResourceLoggerStore implements Store {
                     metadataFileUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, resourceId);
 
                 } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
-                    Log.warning(Geonet.RESOURCES,
+                    Log.debug(Geonet.RESOURCES,
                             String.format("No references in FileNameNotDeleted repository for metadata '%s', resource id '%s'. Get request will not be saved.",
                                     metadataUuid, resourceId));
 
