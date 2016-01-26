@@ -78,7 +78,9 @@
 
       var refreshComp = function() {
         updatePrintRectanglePixels($scope.scale);
-        $scope.map.render();
+        if ($scope.map) {
+          $scope.map.render();
+        }
       };
 
       // Compose events
