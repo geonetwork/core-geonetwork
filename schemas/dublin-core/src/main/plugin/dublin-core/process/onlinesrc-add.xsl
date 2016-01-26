@@ -16,9 +16,11 @@ Stylesheet used to update metadata adding a reference to a parent record.
       <xsl:copy-of
           select="dc:*|dct:*"/>
 
-      <dct:references>
-          <xsl:value-of select="$url"/>
-      </dct:references>
+      <xsl:if test="not(dct:references[text() = $url])">
+        <dct:references>
+            <xsl:value-of select="$url"/>
+        </dct:references>
+      </xsl:if>
     </xsl:copy>
   </xsl:template>
 </xsl:stylesheet>
