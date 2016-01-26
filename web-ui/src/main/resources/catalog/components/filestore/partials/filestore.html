@@ -21,6 +21,13 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 <div data-ng-show="uuid">
+  <div class="alert alert-info"
+       data-ng-show="filter && metadataResources.length === 0"
+       data-translate=""
+       data-translate-values="{filter: '{{filter}}'}">
+    fileStoreNoFileMatching
+  </div>
+
   <table class="table gn-data-store">
     <tbody>
       <tr data-ng-repeat="r in metadataResources">

@@ -111,7 +111,7 @@
               <a data-ng-href="{{resource.url}}"
                  target="_blank">
                 <i class="fa fa-fw"
-                   data-ng-class="onlinesrcService.getIconByProtocol(resource.protocol)"/>
+                   data-ng-class="onlinesrcService.getIconByProtocol(resource)"/>
                 {{resource.title}}
               </a>
             </div>
@@ -142,7 +142,10 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description}}">
-          {{resource.title}}
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+              </a>
             </div>
             <div class="col-md-1">
               <a href="" class="onlinesrc-remove"
@@ -171,7 +174,10 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description}}">
-              {{resource.title}}
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+              </a>
             </div>
             <div class="col-md-1">
               <a href="" class="onlinesrc-remove"
@@ -200,7 +206,10 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description}}">
-              {{resource.title}}
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+              </a>
             </div>
             <div class="col-md-1">
               <a href="" class="onlinesrc-remove"
@@ -230,7 +239,10 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description}}">
-              {{resource.title}}
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+              </a>
             </div>
             <div class="col-md-1">
               <a href="" class="onlinesrc-remove"
@@ -259,7 +271,10 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description}}">
-              {{resource.title}}
+              <a target="_blank"
+                 data-ng-href="{{resource['@subtype'] ? resource.url : ('../metadata/' + resource['geonet:info'].uuid)}}">
+                {{resource.title}}
+              </a>
             </div>
             <div class="col-md-1">
               <a href="" class="onlinesrc-remove"
@@ -284,7 +299,10 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description}}">
-              {{resource.title}}
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+              </a>
             </div>
           </div>
         </li>
@@ -307,8 +325,11 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description}}">
-              {{resource.title}}
-            <span>{{'(' + resource.subType.toUpperCase() + ')'}}</span>
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+                <span>{{'(' + resource.subType.toUpperCase() + ')'}}</span>
+              </a>
             </div>
             <div class="col-md-1">
               <a href="" class="onlinesrc-remove"
@@ -333,7 +354,10 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description}}">
-              {{resource.title}}
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+              </a>
             </div>
           </div>
         </li>

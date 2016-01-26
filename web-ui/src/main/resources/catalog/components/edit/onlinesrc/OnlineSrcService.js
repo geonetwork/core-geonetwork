@@ -37,15 +37,24 @@
 
       /**
        * To match an icon to a protocol
+       * TODO: Should be the same as in related resource directive
        */
       var protocolIcons = [
+        ['dq', 'fa-certificate'],
+        ['portrayal', 'fa-paint-brush'],
+        ['FILE:', 'fa-database'],
+        ['OGC:OWS', 'fa-map'],
+        ['OGC:WMC', 'fa-map'],
+        ['OGC:WM', 'fa-map'],
+        ['OGC:WFS', 'fa-download'],
         ['OGC:', 'fa-globe'],
+        ['KML:', 'fa-globe'],
         ['ESRI', 'fa-globe'],
         ['WWW:LINK', 'fa-link'],
         ['DB:', 'fa-columns'],
         ['WWW:DOWNLOAD', 'fa-download']
       ];
-
+      var defaultIcon = 'fa-link';
       /**
      * Prepare batch process request parameters.
      *   - get parameters from onlinesrc form
@@ -330,11 +339,23 @@
          * @return {string} icon class
          */
         getIconByProtocol: function(p) {
-          for (i = 0; i < protocolIcons.length; ++i) {
-            if (p.indexOf(protocolIcons[i][0]) >= 0) {
-              return protocolIcons[i][1];
+          if (p['@subtype']) {
+            for (i = 0; i < protocolIcons.length; ++i) {
+              if (p['@subtype'].indexOf(protocolIcons[i][0]) >= 0 ||
+                  p['@subtype'].indexOf(protocolIcons[i][0]) >= 0) {
+                return protocolIcons[i][1];
+              }
             }
           }
+          if (p.protocol) {
+            for (i = 0; i < protocolIcons.length; ++i) {
+              if (p.protocol.indexOf(protocolIcons[i][0]) >= 0 ||
+                  p.protocol.indexOf(protocolIcons[i][0]) >= 0) {
+                return protocolIcons[i][1];
+              }
+            }
+          }
+          return defaultIcon;
         },
 
         /**
@@ -477,6 +498,7 @@
          * @param {Object} onlinesrc the online resource to remove
          */
         removeOnlinesrc: function(onlinesrc) {
+
           return runProcess(this,
               setParams('onlinesrc-remove', {
                 id: gnCurrentEdit.id,
@@ -570,7 +592,8 @@
         removeFeatureCatalog: function(onlinesrc) {
           var params = {
             uuid: gnCurrentEdit.uuid,
-            uuidref: onlinesrc['geonet:info'].uuid
+            uuidref: onlinesrc['@subtype'] ? onlinesrc.url :
+                onlinesrc['geonet:info'].uuid
           };
           runProcess(this,
               setParams('fcats-remove', params));

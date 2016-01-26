@@ -8,9 +8,9 @@
             method="POST">
         <div class="onlinesrc-container">
 
-          <div data-ng-show="config.length > 1">
+          <div data-ng-show="config.types.length > 1 && config.display == 'radio'">
             <label class="radio-inline"
-                   data-ng-repeat="c in config">
+                   data-ng-repeat="c in config.types">
               <input type="radio"
                      name="linkType"
                      data-ng-model="params.linkType"
@@ -19,20 +19,49 @@
               {{c.label | translate}}
             </label>
           </div>
+
+          <div class="form-group"
+               data-ng-show="config.types.length > 1 && config.display == 'select'">
+            <label class="col-sm-2 control-label">
+              <span data-translate="">onlineChooseDocType</span>
+            </label>
+            <div class="col-sm-10">
+              <select data-ng-options="option as (option.label | translate) group by (option.group  | translate) for option in config.types"
+                      data-ng-model="params.linkType"/>
+            </div>
+          </div>
+
           <br/>
           <div class="alert alert-info"
-               data-ng-show="params.linkType.labelHelp">
-            {{params.linkType.labelHelp | translate}}
+               data-ng-show="(params.linkType.label + '-help') != ((params.linkType.label + '-help') | translate)">
+            {{(params.linkType.label + '-help') | translate}}
           </div>
           <br/>
+          <!-- Function Combo -->
+          <div class="form-group"
+               data-ng-show="params.linkType.fields.function &&
+                             !params.linkType.fields.function.hidden">
+            <label class="col-sm-2 control-label">
+              <span data-translate="">onlineFunction</span>
+            </label>
+            <div class="col-sm-10">
+              <div data-schema-info-combo="codelist"
+                   data-init-on-load="true"
+                   data-selected-info="params.function"
+                   data-gn-schema-info="function" lang="lang"></div>
+            </div>
+          </div>
+
           <!-- Protocol Combo -->
           <div class="form-group"
-               data-ng-show="params.linkType.fields.protocol">
+               data-ng-show="params.linkType.fields.protocol &&
+                             !params.linkType.fields.protocol.hidden">
             <label class="col-sm-2 control-label">
               <span data-translate="">protocol</span>
             </label>
             <div class="col-sm-10">
               <div data-schema-info-combo="element"
+                   data-init-on-load="true"
                    data-selected-info="params.protocol"
                    data-gn-schema-info="protocol" lang="lang"></div>
             </div>
@@ -51,7 +80,7 @@
                      name="url"
                      class="form-control"
                      type="url"
-                     data-ng-blur="loadWMSCapabilities()"
+                     data-ng-blur="loadCurrentLink()"
                      id="onlinesrcUrl"
                      placeholder="http://">
             </div>
@@ -70,7 +99,8 @@
 
           <!-- Name text Field -->
           <div class="form-group"
-               data-ng-show="params.linkType.fields.name">
+               data-ng-show="params.linkType.fields.name &&
+                             !params.linkType.fields.name.hidden">
             <label for="onlinesrcName"
                    class="col-sm-2 control-label"
                    data-translate="">onlineResourceName</label>
@@ -98,7 +128,7 @@
           <!-- Refresh Grid Button -->
           <button type="button"
                   class="btn navbar-btn btn-warning"
-                  data-ng-click="loadWMSCapabilities(true)"
+                  data-ng-click="loadCurrentLink(true)"
                   data-ng-show="isWMSProtocol">
             <i class="fa fa-refresh" />
           </button>
@@ -113,7 +143,8 @@
 
           <!-- Description Text area -->
           <div class="form-group"
-               data-ng-show="params.linkType.fields.desc">
+               data-ng-show="params.linkType.fields.desc &&
+                             !params.linkType.fields.desc.hidden">
             <label for="onlinesrcDescr"
                    class="col-sm-2 control-label"
                    data-translate="">Description</label>
@@ -141,11 +172,29 @@
                         name="description" />
             </div>
           </div>
+
+
+          <!-- application profile text field -->
+          <div class="form-group"
+               data-ng-show="params.linkType.fields.applicationProfile &&
+                             !params.linkType.fields.applicationProfile.hidden">
+            <label for="applicationProfile"
+                   class="col-sm-2 control-label"
+                   data-translate="">applicationProfile</label>
+            <div class="col-sm-10">
+              <input data-ng-model="params.applicationProfile"
+                     name="applicationProfile"
+                     class="form-control"
+                     type="text"
+                     id="applicationProfile">
+            </div>
+          </div>
         </div>
       </form>
     </div>
     <div class="col-md-6">
-      <div class="panel panel-default">
+      <div class="panel panel-default"
+           data-ng-show="params.linkType.sources.filestore">
         <div class="panel-heading"
              data-translate>fileStore</div>
         <div class="panel-body">
@@ -157,7 +206,7 @@
 
 
       <div class="panel panel-default"
-           data-ng-show="params.linkType.id == 'thumbnail'">
+           data-ng-show="params.linkType.sources.thumbnailMaker">
         <div class="panel-heading"
              data-translate="">createAThumbnail</div>
         <div class="panel-body">
@@ -198,11 +247,27 @@
   <div class="">
     <button type="button"
             data-ng-disabled="!gnAddLink.$valid"
-            class="btn navbar-btn btn-success"
+            class="btn navbar-btn"
+            data-ng-class="gnAddLink.$valid && !isUrlOk ? 'btn-warning' : 'btn-success'"
             data-gn-click-and-spin="addOnlinesrc()">
       <i class="fa gn-icon-onlinesrc" />
       <i class="icon-external-link"></i>&nbsp;
-      <span data-translate="">addOnlinesrc</span>
+      <span data-ng-show="gnAddLink.$valid && isUrlOk"
+            data-translate="">addOnlinesrc</span>
+      <span data-ng-show="gnAddLink.$valid && !isUrlOk"
+            data-translate="">addLinkAnyway</span>
     </button>
+    <br/>
+    <div class="alert alert-warning"
+         data-ng-show="gnAddLink.$valid && !isUrlOk">
+      <span data-translate="">areYouSureToAddALinkWithError</span>
+      <a class="btn btn-link"
+         target="_blank"
+         data-ng-href="{{params.url}}"
+         data-ng-show="gnAddLink.$valid && !isUrlOk">
+        {{params.url}}
+      </a>
+    </div>
+
   </div>
 </div>

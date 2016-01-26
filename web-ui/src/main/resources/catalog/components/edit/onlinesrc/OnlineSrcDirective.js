@@ -152,70 +152,466 @@
             link: function(scope, element, attrs) {
               scope.popupid = attrs['gnPopupid'];
 
+              //{
+              //  // Optional / optGroup
+              //  group: 'onlineDiscover',
+              //  // Label
+              //    label: 'onlineDiscoverWMS',
+              //  // Optional / On select copy the label in desc field
+              //  copyLabel: 'desc',
+              //  // Optional / Icon
+              //  icon: 'fa gn-icon-onlinesrc',
+              //  // XSL process to run
+              //  process: 'onlinesrc-add',
+              //  // Optional / List of fields
+              //  // (URL only will be displayed if none)
+              //  fields: {
+              //  'url': {},
+              //  'protocol': {
+              //    // Fixed value
+              //    value: 'OGC:WMS',
+              //      // Hide field
+              //      hidden: true},
+              //  'name': {},
+              //  'desc': {
+              //    // Rename parameter for the XSL process
+              //    param: 'myParam'},
+              //  'function': {value: 'browsing', hidden: true}
+              //}
+              //}
+
               var schemaConfig = {
-                'dublin-core': [{
-                  id: 'onlinesrc',
-                  label: 'addOnlinesrc',
-                  icon: 'fa gn-icon-onlinesrc',
-                  process: 'onlinesrc-add',
-                  fields: {
-                    'url': 'url'
-                  }
-                }],
-                'iso19139': [{
-                  id: 'thumbnail',
-                  label: 'addThumbnail',
-                  icon: 'fa gn-icon-thumbnail',
-                  fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
-                  process: 'thumbnail-add',
-                  fields: {
-                    'url': 'thumbnail_url',
-                    'desc': 'thumbnail_desc'
-                  }
-                },{
-                  id: 'onlinesrc',
-                  label: 'addOnlinesrc',
-                  icon: 'fa gn-icon-onlinesrc',
-                  process: 'onlinesrc-add',
-                  fields: {
-                    'url': 'url',
-                    'protocol': 'protocol',
-                    'name': 'name',
-                    'desc': 'desc'
-                  }
-                }],
-                'iso19115-3': [{
-                  id: 'thumbnail',
-                  label: 'addThumbnail',
-                  icon: 'fa gn-icon-thumbnail',
-                  fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
-                  process: 'thumbnail-add',
-                  fields: {
-                    'url': 'thumbnail_url',
-                    'desc': 'thumbnail_desc'
-                  }
-                },{
-                  id: 'onlinesrc',
-                  label: 'addOnlinesrc',
-                  icon: 'fa gn-icon-onlinesrc',
-                  process: 'onlinesrc-add',
-                  fields: {
-                    'url': 'url',
-                    'protocol': 'protocol',
-                    'name': 'name',
-                    'desc': 'desc'
-                  }
-                },{
-                  id: 'featurecatref',
-                  label: 'addFeatureCatalogRef',
-                  labelHelp: 'addFeatureCatalogRef-help',
-                  icon: 'fa fa-table',
-                  process: 'fcats-file-add',
-                  fields: {
-                    'url': 'url',
-                    'name': 'name'
-                  }
-                }]
+                'dublin-core': {
+                  display: 'radio',
+                  types: [{
+                    label: 'addOnlinesrc',
+                    sources: {
+                      filestore: true,
+                      thumbnailMaker: true
+                    },
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {}
+                    }
+                  }]
+                },
+                'iso19139': {
+                  display: 'radio',
+                  types: [{
+                    label: 'addOnlinesrc',
+                    sources: {
+                      filestore: true
+                    },
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {},
+                      'name': {},
+                      'desc': {}
+                    }
+                  }, {
+                    label: 'addThumbnail',
+                    sources: {
+                      filestore: true,
+                      thumbnailMaker: true
+                    },
+                    icon: 'fa gn-icon-thumbnail',
+                    fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
+                    process: 'thumbnail-add',
+                    fields: {
+                      'url': {param: 'thumbnail_url'},
+                      'desc': {param: 'thumbnail_desc'}
+                    }
+                  }]
+                },
+                'iso19115-3': {
+                  display: 'select',
+                  types: [{
+                    group: 'onlineDiscover',
+                    label: 'onlineDiscoverThumbnail',
+                    sources: {
+                      filestore: true,
+                      thumbnailMaker: true
+                    },
+                    icon: 'fa gn-icon-thumbnail',
+                    fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
+                    process: 'thumbnail-add',
+                    fields: {
+                      'url': {},
+                      'desc': {}
+                    }
+                  },{
+                    group: 'onlineDiscover',
+                    label: 'onlineDiscoverInApp',
+                    copyLabel: 'name',
+                    sources: {
+                      //TODO metadata: {q: 'resourceType:application'},
+                    },
+                    icon: 'fa gn-icon-map',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {
+                        value: 'WWW:LINK-1.0-http--link', hidden: true
+                      },
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'browsing', hidden: true}
+                    }
+                  },{
+                    group: 'onlineDiscover',
+                    label: 'onlineDiscoverWMS',
+                    copyLabel: 'desc',
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {value: 'OGC:WMS', hidden: true},
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'browsing', hidden: true}
+                    }
+                  },{
+                    group: 'onlineDiscover',
+                    label: 'onlineDiscoverINSPIREView',
+                    copyLabel: 'desc',
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {value: 'OGC:WMS', hidden: true},
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'browsing', hidden: true},
+                      'applicationProfile': {
+                        value: 'inspire-view', hidden: true
+                      }
+                    }
+                  },{
+                    group: 'onlineDiscover',
+                    label: 'onlineDiscoverWMTS',
+                    copyLabel: 'desc',
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {value: 'OGC:WMTS', hidden: true},
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'browsing', hidden: true}
+                    }
+                  },{
+                    group: 'onlineDiscover',
+                    label: 'onlineDiscoverArcGIS',
+                    copyLabel: 'desc',
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {value: 'ESRI:REST', hidden: true},
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'browsing', hidden: true}
+                    }
+                  },{
+                    group: 'onlineDiscover',
+                    label: 'onlineDiscoverKML',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {
+                        value: 'WWW:LINK-1.0-http--link', hidden: true
+                      },
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'browsing', hidden: true},
+                      'applicationProfile': {
+                        value: 'application/vnd.google-earth.kml+xml',
+                        hidden: true
+                      }
+                    }
+                  },{
+                    group: 'onlineDiscover',
+                    label: 'onlineDiscoverMap',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    icon: 'fa gn-icon-map',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {
+                        value: 'WWW:LINK-1.0-http--link', hidden: true
+                      },
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'browsing', hidden: true},
+                      'applicationProfile': 'applicationProfile'
+                    }
+                  },{
+                    group: 'onlineDownload',
+                    label: 'onlineDownloadFile',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {
+                        value: 'WWW:LINK-1.0-http--link', hidden: true
+                      },
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'download', hidden: true}
+                    }
+                  },{
+                    group: 'onlineDownload',
+                    label: 'onlineDownloadKML',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {
+                        value: 'WWW:LINK-1.0-http--link', hidden: true
+                      },
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'download', hidden: true},
+                      'applicationProfile': {
+                        value: 'application/vnd.google-earth.kml+xml',
+                        hidden: true
+                      }
+                    }
+                  },{
+                    group: 'onlineDownload',
+                    label: 'onlineDownloadWWW',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {
+                        value: 'WWW:LINK-1.0-http--link', hidden: true},
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'download', hidden: true}
+                    }
+                  },{
+                    group: 'onlineDownload',
+                    label: 'onlineDownloadWFS',
+                    copyLabel: 'desc',
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {value: 'OGC:WFS', hidden: true},
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'download', hidden: true}
+                    }
+                  },{
+                    group: 'onlineDownload',
+                    label: 'onlineDownloadWCS',
+                    copyLabel: 'desc',
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {value: 'OGC:WCS', hidden: true},
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'download', hidden: true}
+                    }
+                  },{
+                    group: 'onlineDownload',
+                    label: 'onlineDownloadINSPIRE',
+                    copyLabel: 'desc',
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {value: 'OGC:WFS', hidden: true},
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'download', hidden: true},
+                      'applicationProfile': {
+                        value: 'inspire-download', hidden: true
+                      }
+                    }
+                  },{
+                    group: 'onlineUse',
+                    label: 'onlineUseFcats',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    icon: 'fa fa-table',
+                    process: 'fcats-file-add',
+                    fields: {
+                      'url': {},
+                      'name': {}
+                    }
+                  },{
+                    group: 'onlineUse',
+                    label: 'onlineUseDQReport',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    icon: 'fa fa-table',
+                    process: 'dq-report-add',
+                    fields: {
+                      'url': {},
+                      'name': {},
+                      'desc': {},
+                      'type': {param: 'type', value: 'qualityReport'}
+                    }
+                  },{
+                    group: 'onlineUse',
+                    label: 'onlineUseDQTOR',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    icon: 'fa fa-table',
+                    process: 'dq-report-add',
+                    fields: {
+                      'url': {},
+                      'name': {},
+                      'desc': {},
+                      'type': {param: 'type', value: 'qualitySpecification'}
+                    }
+                  },{
+                    group: 'onlineUse',
+                    label: 'onlineUseDQProdReport',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    icon: 'fa fa-table',
+                    process: 'dq-report-add',
+                    fields: {
+                      'url': {},
+                      'name': {},
+                      'desc': {},
+                      'type': {param: 'type', value: 'lineage'}
+                    }
+                  },{
+                    group: 'onlineUse',
+                    label: 'onlineUseLegendLYR',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    fileStoreFilter: '*.{lyr,LYR}',
+                    icon: 'fa fa-table',
+                    process: 'legend-add',
+                    fields: {
+                      'url': {},
+                      'name': {}
+                    }
+                  },{
+                    group: 'onlineUse',
+                    label: 'onlineUseStyleSLD',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    fileStoreFilter: '*.{sld,SLD}',
+                    icon: 'fa fa-table',
+                    process: 'legend-add',
+                    fields: {
+                      'url': {},
+                      'name': {}
+                    }
+                  },{
+                    group: 'onlineUse',
+                    label: 'onlineUseStyleQML',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    fileStoreFilter: '*.{qml,QML}',
+                    icon: 'fa fa-table',
+                    process: 'legend-add',
+                    fields: {
+                      'url': {},
+                      'name': {}
+                    }
+                    //},{
+                    //  group: 'onlineUse',
+                    //  label: 'onlineUseLimitation',
+                    //  copyLabel: 'name',
+                    //  sources: {
+                    //    templatestore: true,
+                    //    filestore: true
+                    //  },
+                    //  icon: 'fa fa-table',
+                    //  process: 'use-limitation-add',
+                    //  fields: {
+                    //  }
+                    //},{
+                    //  group: 'onlineUse',
+                    //  label: 'onlineAccessLimitation',
+                    //  copyLabel: 'name',
+                    //  sources: {
+                    //    templatestore: true,
+                    //    filestore: true
+                    //  },
+                    //  icon: 'fa fa-table',
+                    //  process: 'use-limitation-add',
+                    //  fields: {
+                    //  }
+                  },{
+                    group: 'onlineMore',
+                    label: 'onlineMoreWWW',
+                    copyLabel: 'name',
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {
+                        value: 'WWW:LINK-1.0-http--link', hidden: true
+                      },
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'information', hidden: true}
+                    }
+                  },{
+                    group: 'onlineMore',
+                    label: 'onlineMoreFile',
+                    copyLabel: 'name',
+                    sources: {
+                      filestore: true
+                    },
+                    icon: 'fa gn-icon-onlinesrc',
+                    process: 'onlinesrc-add',
+                    fields: {
+                      'url': {},
+                      'protocol': {
+                        value: 'WWW:LINK-1.0-http--link', hidden: true},
+                      'name': {},
+                      'desc': {},
+                      'function': {value: 'information', hidden: true}
+                    }
+                  }]}
               };
               scope.config = null;
               scope.linkType = null;
@@ -304,8 +700,6 @@
                   scope.loaded = true;
                 }
 
-                loadLayers();
-
                 scope.$watch('gnCurrentEdit.layerConfig', loadLayers);
               };
 
@@ -317,7 +711,7 @@
                     scope.schema.indexOf('iso19139') === 0) {
                   scope.config = schemaConfig['iso19139'];
                 }
-                scope.params.linkType = scope.config[0];
+                scope.params.linkType = scope.config.types[0];
 
                 if (angular.isUndefined(scope.isMdMultilingual) &&
                     gnCurrentEdit.mdOtherLanguages) {
@@ -361,7 +755,7 @@
               scope.isWMSProtocol = false;
 
               scope.onlinesrcService = gnOnlinesrc;
-
+              scope.isUrlOk = false;
               scope.setUrl = function(url) {
                 scope.params.url = url;
               };
@@ -371,6 +765,8 @@
                 if (scope.params) {
                   scope.params.url = '';
                   scope.params.protocol = '';
+                  scope.params.function = '';
+                  scope.params.applicationProfile = '';
                   scope.params.name = scope.isMdMultilingual ? {} : '';
                   scope.params.desc = scope.isMdMultilingual ? {} : '';
                   scope.params.selectedLayers = [];
@@ -410,7 +806,11 @@
                 var processParams = {};
                 angular.forEach(scope.params.linkType.fields,
                     function(value, key) {
-                      processParams[value] = scope.params[key];
+                      if (value.param) {
+                        processParams[value.param] = scope.params[key];
+                      } else {
+                        processParams[key] = scope.params[key];
+                      }
                     });
 
                 // Add list of layers for WMS
@@ -431,6 +831,7 @@
 
               function handleError(reportError, error) {
                 if (reportError && error != undefined) {
+                  scope.isUrlOk = false;
                   var errorMsg = !isNaN(parseFloat(error)) && isFinite(error) ?
                       $translate('linkToServiceWithoutURLError') +
                       ': ' +
@@ -444,17 +845,22 @@
                 }
               }
               /**
-               * loadWMSCapabilities
+               * loadCurrentLink
                *
                * Call WMS capabilities request with params.url.
                * Update params.layers scope value, that will be also
                * passed to the layers grid directive.
                */
-              scope.loadWMSCapabilities = function(reportError) {
+              scope.loadCurrentLink = function(reportError) {
+                if (angular.isUndefined(scope.params.url) ||
+                    scope.params.url == '') {
+                  return;
+                }
                 if (scope.isWMSProtocol) {
                   gnOwsCapabilities.getWMSCapabilities(scope.params.url)
                         .then(function(capabilities) {
                         scope.layers = [];
+                        scope.isUrlOk = true;
                         angular.forEach(capabilities.layers, function(l) {
                           if (angular.isDefined(l.Name)) {
                             scope.layers.push(l);
@@ -463,7 +869,21 @@
                       }).catch (function(error) {
                         handleError(reportError, error);
                       });
-                    }
+                } else {
+                  var useProxy =
+                      scope.params.url.indexOf(location.hostname) === -1;
+                  var url = useProxy ?
+                      '../../proxy?url=' +
+                      encodeURIComponent(scope.params.url) : scope.params.url;
+                  $http.get(url).
+                      then(function(response) {
+                        scope.isUrlOk = response.status === 200;
+                      },
+                      function(response) {
+                        // Proxy may return 500 when document is not proxyable
+                        scope.isUrlOk = response.status === 200;
+                      });
+                }
               };
 
               /**
@@ -475,7 +895,7 @@
                 if (!angular.isUndefined(scope.params.protocol)) {
                   scope.isWMSProtocol = (scope.params.protocol.
                       indexOf('OGC:WMS') >= 0);
-                  scope.loadWMSCapabilities();
+                  scope.loadCurrentLink();
                 }
               });
 
@@ -485,11 +905,30 @@
                */
               scope.$watch('params.url', function() {
                 if (!angular.isUndefined(scope.params.url)) {
-                  scope.loadWMSCapabilities();
+                  scope.loadCurrentLink();
                   scope.isImage = scope.params.url.match(/.*.(png|jpg|gif)$/i);
                 }
               });
+              scope.$watch('params.linkType', function(newValue, oldValue) {
+                if (newValue !== oldValue) {
+                  resetForm();
+                  if (angular.isDefined(newValue.fields)) {
+                    angular.forEach(newValue.fields, function(val, key) {
+                      if (angular.isDefined(val.value)) {
+                        scope.params[key] = val.value;
+                      }
+                    });
+                  }
+                  if (angular.isDefined(newValue.copyLabel)) {
+                    scope.params[newValue.copyLabel] =
+                        $translate(newValue.label);
+                  }
 
+                  if (newValue.sources && newValue.sources.thumbnailMaker) {
+                    loadLayers();
+                  }
+                }
+              });
 
               scope.resource = null;
               scope.$watch('resource', function() {
@@ -576,13 +1015,13 @@
                   scope.stateObj = {};
 
                   /**
-                   * loadWMSCapabilities
+                   * loadCurrentLink
                    *
                    * Call WMS capabilities on the service metadata URL.
                    * Update params.layers scope value, that will be also
                    * passed to the layers grid directive.
                    */
-                  scope.loadWMSCapabilities = function(url) {
+                  scope.loadCurrentLink = function(url) {
                     scope.alertMsg = null;
                     gnOwsCapabilities.getWMSCapabilities(url)
                         .then(function(capabilities) {
@@ -617,7 +1056,7 @@
                         scope.srcParams.uuidDS = gnCurrentEdit.uuid;
 
                         if (angular.isArray(links) && links.length == 1) {
-                          scope.loadWMSCapabilities(links[0].url);
+                          scope.loadCurrentLink(links[0].url);
                           scope.srcParams.url = links[0].url;
                         } else {
                           scope.srcParams.url = '';
@@ -633,7 +1072,7 @@
                         links = links.concat(
                             gnCurrentEdit.metadata.getLinksByType('wms'));
                         var serviceUrl = links[0].url;
-                        scope.loadWMSCapabilities(serviceUrl);
+                        scope.loadCurrentLink(serviceUrl);
                         scope.srcParams.url = serviceUrl;
                         scope.srcParams.uuidDS = md.getUuid();
                         scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
