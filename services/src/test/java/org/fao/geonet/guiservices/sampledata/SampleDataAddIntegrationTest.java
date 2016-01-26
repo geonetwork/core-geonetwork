@@ -50,7 +50,7 @@ public class SampleDataAddIntegrationTest extends AbstractServiceIntegrationTest
             final String schemaCount = response.getChildText(schema);
             final String responseText = Xml.getString(response);
             assertNotNull("No element: schema count: " + responseText, schemaCount);
-            assertTrue("expected schemaCount to be > 0: "+schema, Integer.parseInt(schemaCount) > 0);
+            assertTrue("expected schemaCount to be > 0: " + schema, Integer.parseInt(schemaCount) > 0);
         }
     }
 }

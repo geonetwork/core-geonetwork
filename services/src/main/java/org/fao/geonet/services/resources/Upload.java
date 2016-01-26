@@ -43,7 +43,7 @@ import java.nio.file.Path;
 /**
  * Handles the file upload when a record is in editing mode.
  */
-
+@Deprecated
 public class Upload implements Service {
 
     // ----------------------------------------------------------------------------

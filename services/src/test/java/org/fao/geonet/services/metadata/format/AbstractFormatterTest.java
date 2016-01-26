@@ -22,6 +22,7 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.services.metadata.format.cache.Key;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
 import org.fao.geonet.services.metadata.format.groovy.Handler;
@@ -46,7 +47,7 @@ import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 /**
  * @author Jesse on 10/23/2014.
  */
-public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest {
+public abstract class AbstractFormatterTest extends AbstractServiceIntegrationTest {
     protected static final String UUID = "80f1c261-1495-4e3b-bd22-f32a5f0ad643";
     @Autowired
     protected Format formatService;

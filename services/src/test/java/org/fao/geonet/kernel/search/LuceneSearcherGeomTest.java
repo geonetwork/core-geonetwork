@@ -15,6 +15,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Before;
@@ -31,7 +32,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 
-public class LuceneSearcherGeomTest extends AbstractCoreIntegrationTest {
+public class LuceneSearcherGeomTest extends AbstractServiceIntegrationTest {
     private ServiceContext serviceContext;
     private Element sampleMetadataXml;
     private int metadataId;

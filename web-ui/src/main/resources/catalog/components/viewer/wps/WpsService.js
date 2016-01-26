@@ -243,7 +243,7 @@
 
         try {
           var ref = response.processOutputs.output[0].reference;
-          if(ref.mimeType == this.WMS_MIMETYPE) {
+          if (ref.mimeType == this.WMS_MIMETYPE) {
             gnMap.addWmsAllLayersFromCap(map, ref.href, true).
                 then(function(layers) {
                   layers.map(function(l) {

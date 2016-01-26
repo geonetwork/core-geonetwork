@@ -872,23 +872,22 @@
       link: function(scope, element, attr, ngModel) {
 
         element.bind('click', function() {
-          var md = scope.$eval(attr['gnImgModal']);
-          var imgs = md.getThumbnails();
-          var img = imgs.big || imgs.small;
-
+          var img = scope.$eval(attr['gnImgModal']);
           if (img) {
+            var label = (img.label || img.title || '');
+            var labelDiv =
+                '<div class="gn-img-background">' +
+                '  <div class="gn-img-thumbnail-caption">' + label + '</div>' +
+                '</div>';
             var modalElt = angular.element('' +
                 '<div class="modal fade in">' +
-                '<div class="modal-dialog in">' +
-                '  <button type=button class="btn btn-default ' +
-                'gn-btn-modal-img">&times</button>' +
-                '    <img src="' + img + '">' +
+                '<div class="modal-dialog gn-img-modal in">' +
+                '  <button type=button class="btn btn-link gn-btn-modal-img">' +
+                '<i class="fa fa-times text-danger"/></button>' +
+                '  <img src="' + (img.url || img.id) + '"/>' +
+                (label != '' ? labelDiv : '') +
                 '</div>' +
                 '</div>');
-            modalElt.find('img').on('load', function() {
-              var w = this.clientWidth;
-              modalElt.find('.modal-dialog').css('width', w + 'px');
-            });
 
             $(document.body).append(modalElt);
             modalElt.modal();

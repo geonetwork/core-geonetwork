@@ -355,17 +355,27 @@ public class SettingManager {
      */
     public @Nonnull String getSiteURL(String language) {
         LanguageRepository languageRepository = ApplicationContextHolder.get().getBean(LanguageRepository.class);
-        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
-
         if(language == null) {
             language = languageRepository.findOneByDefaultLanguage().getId();
         }
+
+        return getNodeURL() + language + "/";
+    }
+
+    /**
+     * Return complete node URL
+     * eg. http://localhost:8080/geonetwork/srv/
+     *
+     * @return
+     */
+    public @Nonnull String getNodeURL() {
+        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
 
         String baseURL = pathFinder.getBaseUrl();
         String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
         String host    = getValue(Geonet.Settings.SERVER_HOST);
         String port    = getValue(Geonet.Settings.SERVER_PORT);
-        String locServ = baseURL +"/"+ nodeInfo.getId() +"/" + language + "/";
+        String locServ = baseURL +"/"+ nodeInfo.getId() +"/";
 
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
     }

@@ -344,8 +344,21 @@ form.gn-tab-inspire {
 }
 
 /* Onlinesrc styles */
+.gn-onlinesrc-panel {
+  .list-group-item {
+    padding-left: 4px;
+    padding-right: 4px;
+    .row > div {
+      padding-left: 1px;
+      padding-right: 1px;
+
+      .onlinesrc-remove {
+        padding: 0px;
+      }
+    }
+  }
+}
 .onlinesrc-container {
-  width: 680px;
   .list-group {
     max-height:50%;
     overflow: auto;
@@ -358,6 +371,15 @@ form.gn-tab-inspire {
     max-height: 50vh;
     li.active {
         background-color: #428bca;
+    }
+  }
+}
+
+table.gn-data-store {
+  td {
+    word-break: break-all;
+    .btn {
+      padding: 1px 1px;
     }
   }
 }

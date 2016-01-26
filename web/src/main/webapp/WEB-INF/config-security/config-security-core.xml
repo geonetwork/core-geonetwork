@@ -13,10 +13,13 @@
 
 	<alias name="filterChainProxy" alias="springSecurityFilterChain" />
 
-	<bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
+  <bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
 		<constructor-arg>
 			<list>
-				<sec:filter-chain pattern="/proxy**" filters="" />
+				<sec:filter-chain pattern="/srv/swagger-resources/**" filters="" />
+				<sec:filter-chain pattern="/srv/v2/**" filters="" />
+        <sec:filter-chain pattern="/api-doc/**" filters="" />
+        <sec:filter-chain pattern="/proxy**" filters="" />
         <sec:filter-chain pattern="/apps/**" filters="" />
 				<sec:filter-chain pattern="/static/**" filters="" />
 			    <sec:filter-chain pattern="/catalog/**" filters="" />

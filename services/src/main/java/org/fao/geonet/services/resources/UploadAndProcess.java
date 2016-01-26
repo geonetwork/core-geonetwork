@@ -56,6 +56,7 @@ import javax.servlet.http.HttpServletRequest;
  * Return a simple JSON response in case of success.
  */
 @Controller("resource.upload.and.link")
+@Deprecated
 public class UploadAndProcess {
     @Autowired
     private DataManager dm;

@@ -6,6 +6,7 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,7 +14,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
-public class BatchDeleteTest extends AbstractCoreIntegrationTest {
+public class BatchDeleteTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private MetadataRepository repository;
