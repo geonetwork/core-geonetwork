@@ -2,7 +2,14 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	<xsl:template match="/root">
-		<xsl:apply-templates select="descKeys/keyword"/>
+    <xsl:choose>
+      <xsl:when test="descKeys/keyword">
+        <xsl:apply-templates select="descKeys/keyword"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <keyword/>
+      </xsl:otherwise>
+    </xsl:choose>
 	</xsl:template>
 	
 	<xsl:template match="keyword">

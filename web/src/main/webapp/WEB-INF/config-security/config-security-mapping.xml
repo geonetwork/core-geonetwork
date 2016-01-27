@@ -4,7 +4,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/context
           http://www.springframework.org/schema/context/spring-context-3.0.xsd
           http://www.springframework.org/schema/security
-          http://www.springframework.org/schema/security/spring-security-3.1.xsd" xmlns:sec="http://www.springframework.org/schema/security" xmlns:ctx="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
+          http://www.springframework.org/schema/security/spring-security-3.2.xsd" xmlns:sec="http://www.springframework.org/schema/security" xmlns:ctx="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
     <bean class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor" id="filterSecurityInterceptor">
         <property name="authenticationManager" ref="authenticationManager"></property>
         <property name="accessDecisionManager" ref="accessDecisionManager"></property>
@@ -327,6 +327,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/md.insert!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/md.import!?.*" access="hasRole('Editor')"/>
 
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/api/.*" access="permitAll"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/md.rate!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/md.view!?(\?.*)?" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/md.edit!?.*" access="hasRole('Editor')"/>
@@ -458,6 +459,11 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/log/.+" access="hasRole('Administrator')"/>
 
                 <!-- Direct links -->
+                <sec:intercept-url pattern="/metadata/.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/resource/.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/organization/.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/thesaurus/.*" access="permitAll"></sec:intercept-url>
+
                 <sec:intercept-url pattern="/sitemap/.*" access="permitAll"></sec:intercept-url>
 
 

@@ -50,8 +50,7 @@
           downloads: md.getLinksByType('DOWNLOAD'),
           layers: md.getLinksByType('OGC', 'kml'),
           contacts: md.getContacts(),
-          overviews: md.getThumbnails() ? md.getThumbnails().list : undefined,
-          encodedUrl: encodeURIComponent(gnSearchLocation.absUrl())
+          overviews: md.getThumbnails() ? md.getThumbnails().list : undefined
         });
 
         gnMdViewObj.current.record = md;

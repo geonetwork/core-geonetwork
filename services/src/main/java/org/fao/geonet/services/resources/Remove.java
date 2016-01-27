@@ -43,6 +43,7 @@ import java.nio.file.Path;
 /**
  * Deletes an uploaded file from the database when a record is in editing mode.
  */
+@Deprecated
 public class Remove extends NotInReadOnlyModeService {
 	private Update  update = new Update();
 

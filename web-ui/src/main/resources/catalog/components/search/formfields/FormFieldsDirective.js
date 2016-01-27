@@ -541,6 +541,13 @@
                 // on top of the list.
               };
 
+              scope.gnCurrentEdit = gnCurrentEdit;
+              scope.$watch('gnCurrentEdit.schema',
+                  function(newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                      init();
+                    }
+                  });
 
               var init = function() {
                 var schema = gnCurrentEdit.schema || 'iso19139';

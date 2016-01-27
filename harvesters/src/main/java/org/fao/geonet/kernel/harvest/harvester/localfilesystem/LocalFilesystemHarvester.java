@@ -22,6 +22,7 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
+import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Logger;
@@ -128,15 +129,15 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 			}
 		}
 		result = visitor.getResult();
-		List<Integer> idsForHarvestingResult = visitor.getIdsForHarvestingResult();
+        log.debug(String.format("Scan directory is done. %d files analyzed.",
+                result.totalMetadata));
+        Set<Integer> idsForHarvestingResult = visitor.getListOfRecords();
 		Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
 
 		if (!params.nodelete) {
-			//
-			// delete locally existing metadata from the same source if they
-			// were
-			// not in this harvesting result
-			//
+            log.debug("Starting to delete locally existing metadata " +
+                    "from the same source if they " +
+                    " were not in this harvesting result...");
             List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
             for (Integer existingId : existingMetadata) {
 
@@ -151,8 +152,13 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 			}
 		}
 
-		// indexes the harvested MDs
-		dataMan.batchIndexInThreadPool(context, idsForHarvestingResult);
+        log.debug("Starting indexing in batch thread pool...");
+
+        List<Integer> listOfRecordsToIndex = Lists.newArrayList(visitor.getListOfRecordsToIndex());
+        log.debug(String.format(
+                        "Starting indexing in batch thread pool of %d updated records ...",
+                        listOfRecordsToIndex.size()));
+        dataMan.batchIndexInThreadPool(context, listOfRecordsToIndex);
 		
         log.debug("End of alignment for : " + params.getName());
 		return result;

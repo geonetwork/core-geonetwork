@@ -273,12 +273,12 @@
        * use it in the metadata editor.
        */
       $scope.enableThesaurus = function() {
-        $http.get('thesaurus.activate@json?' +
-                'ref=' + $scope.thesaurusSelected.key +
+        $http.get('thesaurus.enable?_content_type=json' +
+                '&ref=' + $scope.thesaurusSelected.key +
                 '&activated=' +
-                    ($scope.thesaurusSelectedActivated ? 'n' : 'y')
+                    ($scope.thesaurusSelected.activated == 'y' ? 'n' : 'y')
         ).success(function(data) {
-          // TODO
+          $scope.thesaurusSelected.activated = data.activated;
         });
       };
 

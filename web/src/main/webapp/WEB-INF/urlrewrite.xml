@@ -117,16 +117,14 @@
         <to type="permanent-redirect" last="true">%{context-path}/home</to>
     </rule>
     <rule>
-      <from>^/(?!home$)(?!monitor$)(?!\w*healthcheck$)([a-zA-Z0-9_\-]+)$</from>
+      <from>^/(?!home$)(?!monitor$)(?!\w*healthcheck$)(?!swagger-resources.*$)([a-zA-Z0-9_\-]+)$</from>
       <to type="permanent-redirect" last="true">%{context-path}/home?node=$1</to>
     </rule>
-
     <rule>
       <note>old formatter URL</note>
       <from>^(.*)/metadata.formatter.html(.*)</from>
       <to type="permanent-redirect" last="true">%{context-path}$1/md.format.html$2</to>
     </rule>
-
     <!-- Rules for RESTful urls for metadata retrieve -->
     <rule>
         <note>
@@ -266,6 +264,29 @@
         <from>^/opensearch/(.*)/download?(.*)$</from>
         <to type="forward">/srv/$1/atom.download</to>
     </rule>
+
+  <!-- Rules for direct links (for RDF at least) -->
+    <rule>
+        <note>
+            Retrieves xml format for a metadata. No language
+            Example URL: http://localhost:8080/geonetwork/metadata/da165110-88fd-11da-a88f-000d939bc5d8
+        </note>
+        <from>^/(metadata|resource)/(.*)$</from>
+        <to type="forward">/srv/eng/xml.metadata.get?uuid=$1</to>
+    </rule>
+
+    <rule>
+        <note>
+            Retrieves xml format for a thesaurus
+            Example URL: http://localhost:8080/geonetwork/thesaurus/external.theme.inspire-service-taxonomy
+        </note>
+        <from>^/thesaurus/(.*)$</from>
+        <to type="forward">/srv/eng/thesaurus.download?ref=$1</to>
+    </rule>
+
+    <!-- /Rules for direct links (for RDF at least) -->
+
+ 
 
     <!-- Sitemap URLs -->
     <rule>
