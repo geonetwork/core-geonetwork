@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.time.DateUtils;
 import org.fao.geonet.Logger;
@@ -46,7 +47,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
     private Path thisXslt;
     private final CategoryMapper localCateg;
     private final GroupMapper localGroups;
-    private final List<Integer> idsForHarvestingResult = Lists.newArrayList();
+    private final Set<Integer> listOfRecords = Sets.newHashSet();
+    private final Set<Integer> listOfRecordsToIndex = Sets.newHashSet();
     private long startTime;
 
     public LocalFsHarvesterFileVisitor(AtomicBoolean cancelMonitor, ServiceContext context, LocalFilesystemParams params, Logger log, LocalFilesystemHarvester harvester) throws Exception {
@@ -185,6 +187,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
                             log.debug("adding new metadata");
                             id = harvester.addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner, false);
+                            listOfRecordsToIndex.add(Integer.valueOf(id));
                             result.addedMetadata++;
                         } else {
                             // Check last modified date of the file with the record change date
@@ -210,6 +213,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                         .before(DateUtils.truncate(fileDate, Calendar.SECOND))) {
                                     log.debug("  Db record is older than file. Updating record with id: " + id);
                                     harvester.updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner);
+                                    listOfRecordsToIndex.add(Integer.valueOf(id));
                                     result.updatedMetadata++;
                                 } else {
                                     log.debug("  Db record is not older than last modified date of file. No need for update.");
@@ -230,10 +234,11 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                 }
 
                                 harvester.updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner);
+                                listOfRecordsToIndex.add(Integer.valueOf(id));
                                 result.updatedMetadata++;
                             }
                         }
-                        idsForHarvestingResult.add(Integer.valueOf(id));
+                        listOfRecords.add(Integer.valueOf(id));
                     }
                 }
             }
@@ -246,7 +251,11 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         return result;
     }
 
-    public List<Integer> getIdsForHarvestingResult() {
-        return idsForHarvestingResult;
+    public Set<Integer> getListOfRecords() {
+        return listOfRecords;
+    }
+
+    public Set<Integer> getListOfRecordsToIndex() {
+        return listOfRecordsToIndex;
     }
 }
