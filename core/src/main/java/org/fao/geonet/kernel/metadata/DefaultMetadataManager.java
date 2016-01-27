@@ -935,8 +935,7 @@ public class DefaultMetadataManager implements IMetadataManager {
                         .and(OperationAllowedSpecs
                                 .hasOperation(ReservedOperation.download)))
                                         .keySet();
-        final Map<Integer, MetadataSourceInfo> allSourceInfo = mdRepository
-                .findAllSourceInfo(MetadataSpecs.hasMetadataIdIn(metadataIds));
+        final Map<Integer, MetadataSourceInfo> allSourceInfo = getSourceInfos(metadataIds);
 
         for (Map.Entry<String, Element> entry : mdIdToInfoMap.entrySet()) {
             Element infoEl = entry.getValue();
@@ -981,6 +980,12 @@ public class DefaultMetadataManager implements IMetadataManager {
                         downloadableByGuest.contains(mdId));
             }
         }
+    }
+
+    protected Map<Integer, MetadataSourceInfo> getSourceInfos(
+            Collection<Integer> metadataIds) {
+        return mdRepository
+                .findAllSourceInfo(MetadataSpecs.hasMetadataIdIn(metadataIds));
     }
 
     protected SetMultimap<Integer, ReservedOperation> loadOperationsAllowed(
