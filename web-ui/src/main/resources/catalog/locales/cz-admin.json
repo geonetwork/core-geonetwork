@@ -246,6 +246,7 @@
     "createKeyword": "Přidat",
     "createReport": "Vytvořit zprávu",
     "createThesaurus": "Vytvořit",
+    "enableThesaurusHelp": "In multinode mode, use this option to enable or disable a thesaurus for this node.",
     "createThesaurusTitle": "Vytvořit tezaurus",
     "criteria": "Kritéria",
     "criteriaValue": "Hodnota",
