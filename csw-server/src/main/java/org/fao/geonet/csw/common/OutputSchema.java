@@ -4,7 +4,7 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 
 public enum OutputSchema
 {
-	OGC_CORE("Record"), ISO_PROFILE("IsoRecord"), OWN("own"), DCAT("dcat");
+	OGC_CORE("Record"), ISO_PROFILE("IsoRecord"), OWN("own"), DCAT("http://www.w3.org/ns/dcat#");
 
 	//------------------------------------------------------------------------
 
