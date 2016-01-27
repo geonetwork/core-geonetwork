@@ -110,7 +110,7 @@
         </xsl:element>
       </xsl:if>
       <xsl:apply-templates mode="render-view"
-                           select="field"/>
+                           select="section|field"/>
     </div>
   </xsl:template>
 
@@ -142,7 +142,6 @@
   </xsl:template>
 
 
-
   <xsl:template mode="render-view"
                 match="field[template]"
                 priority="2">
@@ -159,32 +158,49 @@
 
     <xsl:variable name="fieldXpath"
                   select="@xpath"/>
-    <xsl:for-each select="template/values/key">
-      <xsl:variable name="nodes">
-        <saxon:call-template name="{concat('evaluate-', $schema)}">
-          <xsl:with-param name="base" select="$base"/>
-          <xsl:with-param name="in"
-                          select="concat('/../', $fieldXpath, '/',
+    <xsl:variable name="fields" select="template/values/key"/>
+
+    <xsl:variable name="elements">
+      <saxon:call-template name="{concat('evaluate-', $schema)}">
+        <xsl:with-param name="base" select="$base"/>
+        <xsl:with-param name="in"
+                        select="concat('/../', $fieldXpath)"/>
+      </saxon:call-template>
+    </xsl:variable>
+
+    <!-- Loop on each element matching current field -->
+    <xsl:for-each select="$elements/*">
+      <xsl:variable name="element" select="."/>
+
+      <!-- Loop on each fields -->
+      <xsl:for-each select="$fields">
+        <xsl:variable name="nodes">
+          <saxon:call-template name="{concat('evaluate-', $schema)}">
+            <xsl:with-param name="base" select="$element"/>
+            <xsl:with-param name="in"
+                            select="concat('/./',
                            replace(@xpath, '/gco:CharacterString', ''))"/>
-        </saxon:call-template>
-      </xsl:variable>
+          </saxon:call-template>
+        </xsl:variable>
 
-      <xsl:variable name="fieldName">
-        <xsl:if test="@label">
-          <xsl:value-of select="gn-fn-render:get-schema-strings($schemaStrings, @label)"/>
-        </xsl:if>
-      </xsl:variable>
+        <xsl:variable name="fieldName">
+          <xsl:if test="@label">
+            <xsl:value-of select="gn-fn-render:get-schema-strings($schemaStrings, @label)"/>
+          </xsl:if>
+        </xsl:variable>
 
-      <xsl:for-each select="$nodes">
-        <xsl:apply-templates mode="render-field">
-          <xsl:with-param name="fieldName" select="$fieldName"/>
-        </xsl:apply-templates>
+        <xsl:for-each select="$nodes">
+          <xsl:apply-templates mode="render-field">
+            <xsl:with-param name="fieldName" select="$fieldName"/>
+          </xsl:apply-templates>
+        </xsl:for-each>
       </xsl:for-each>
     </xsl:for-each>
-  </xsl:template>
 
+  </xsl:template>
 
   <!-- Forgot all none matching elements -->
   <xsl:template mode="render-view" match="*|@*"/>
+  <xsl:template mode="render-field" match="*|@*|text()"/>
 
 </xsl:stylesheet>
