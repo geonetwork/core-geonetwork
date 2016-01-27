@@ -196,7 +196,7 @@
                   } else if (md.standardName &&
                       md.standardName.
                       match(/iso 19115:2003\/19139 - sextant/i)) {
-                    return 'sextant';
+                    return 'sextant-identification';
                   }
                   return defaultTab;
                 };
