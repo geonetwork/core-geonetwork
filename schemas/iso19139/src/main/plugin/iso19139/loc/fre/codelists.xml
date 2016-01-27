@@ -34,7 +34,7 @@
 -->
 	</codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:CI_OnLineFunctionCode">
+	<codelist name="gmd:CI_OnLineFunctionCode" alias="function">
 		<entry>
 			<code>download</code>
 			<label>Téléchargement</label>

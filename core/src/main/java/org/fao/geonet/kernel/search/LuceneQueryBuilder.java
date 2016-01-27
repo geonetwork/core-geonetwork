@@ -23,18 +23,25 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.google.common.base.Splitter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.utils.Log;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.facet.DrillDownQuery;
 import org.apache.lucene.facet.FacetsConfig;
-import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
@@ -49,21 +56,10 @@ import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.util.automaton.LevenshteinAutomata;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.utils.Log;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.StringTokenizer;
+import com.google.common.base.Splitter;
 
 /**
  * Class to create a Lucene query from a {@link LuceneQueryInput} representing a
@@ -165,7 +161,7 @@ public class LuceneQueryBuilder {
 
     private Query buildBaseQuery(LuceneQueryInput luceneQueryInput) {
         // Remember which range fields have been processed
-        Set<String> processedRangeFields = new HashSet<String>();
+        Set<String> processedRangeFields = new LinkedHashSet<String>();
 
         // top query to hold all sub-queries for each search parameter
          BooleanQuery query = new BooleanQuery();
@@ -185,7 +181,7 @@ public class LuceneQueryBuilder {
         // here such _OR_ fields are parsed, an OR searchCriteria map is created, and they're removed from vanilla
         // searchCriteria map.
         //
-        Map<String, Set<String>> searchCriteriaOR = new HashMap<String, Set<String>>();
+        Map<String, Set<String>> searchCriteriaOR = new LinkedHashMap<String, Set<String>>();
 
         for (Iterator<Entry<String, Set<String>>> i = searchCriteria.entrySet().iterator(); i.hasNext();) {
             Entry<String, Set<String>> entry = i.next();
@@ -225,13 +221,13 @@ public class LuceneQueryBuilder {
 
                         field = "any";
                         Set<String> values = searchCriteriaOR.get(field);
-                        if(values == null) values = new HashSet<String>();
+                        if(values == null) values = new LinkedHashSet<String>();
                         values.addAll(fieldValues);
                         searchCriteriaOR.put(field, values);
                     }
                     else {
                             Set<String> values = searchCriteriaOR.get(field);
-                            if(values == null) values = new HashSet<String>();
+                            if(values == null) values = new LinkedHashSet<String>();
                             values.addAll(fieldValues);
                             searchCriteriaOR.put(field, values);
                     }
@@ -301,7 +297,7 @@ public class LuceneQueryBuilder {
         }
 
         // Avoid search by field who control privileges
-        Set<String> fields = new HashSet<String>();
+        Set<String> fields = new LinkedHashSet<String>();
         for(String requestedField : searchCriteria.keySet()) {
             if(!(UserQueryInput.SECURITY_FIELDS.contains(requestedField) || SearchParameter.EDITABLE.equals(requestedField))) {
                 fields.add(requestedField);

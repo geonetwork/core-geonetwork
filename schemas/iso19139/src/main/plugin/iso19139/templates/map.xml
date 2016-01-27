@@ -212,15 +212,11 @@
 					<gmd:onLine>
 						<gmd:CI_OnlineResource>
 							<gmd:linkage>
-								<gmd:URL>http://localhost:8080/geonetwork/srv/en/resources.get?uuid=7a818ae0-fb7d-4676-85f8-3d483aa9571f&amp;fname=&amp;access=private</gmd:URL>
+								<gmd:URL/>
 							</gmd:linkage>
 							<gmd:protocol>
 								<gco:CharacterString>WWW:DOWNLOAD-1.0-http--download</gco:CharacterString>
 							</gmd:protocol>
-							<gmd:name>
-								<gmx:MimeFileType xmlns:gmx="http://www.isotc211.org/2005/gmx"
-									type=""/>
-							</gmd:name>
 							<gmd:description>
 								<gco:CharacterString>Map in PDF format</gco:CharacterString>
 							</gmd:description>

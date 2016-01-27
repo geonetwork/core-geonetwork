@@ -133,7 +133,7 @@ layouts:
       rotation: false
       pageSize: LEGAL
       landscape: true
-      backgroundPdf: '${configDir}/template-thumbnail.pdf'
+      backgroundPdf: '${configDir}/template-landscape.pdf'
       items:
         - !map
           spacingAfter: 0
@@ -192,3 +192,16 @@ layouts:
               classSpace: 5
               backgroundColor: white
               layerFontSize: 9
+  #===========================================================================
+  Thumbnail:
+    mainPage:
+      rotation: false
+      pageSize: 612 612
+      backgroundPdf: '${configDir}/template-thumbnail.pdf'
+      items:
+        - !map
+          spacingAfter: 0
+          width: 612
+          height: 612
+          absoluteX: 0
+          absoluteY: 612

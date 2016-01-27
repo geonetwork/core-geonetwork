@@ -48,6 +48,14 @@
 
   <xsl:template name="fill">
     <xsl:if test="$thumbnail_url != ''">
+
+      <xsl:variable name="useOnlyPTFreeText"
+                    select="count(//*[gmd:PT_FreeText and
+                                      not(gco:CharacterString)]) > 0" />
+      <xsl:variable name="separator" select="'\|'"/>
+      <xsl:variable name="mainLang"
+                    select="//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue" />
+
       <gmd:graphicOverview>
         <gmd:MD_BrowseGraphic>
           <gmd:fileName>
@@ -57,9 +65,44 @@
           </gmd:fileName>
           <xsl:if test="$thumbnail_desc!=''">
             <gmd:fileDescription>
-              <gco:CharacterString>
-                <xsl:value-of select="$thumbnail_desc"/>
-              </gco:CharacterString>
+
+              <xsl:choose>
+
+                <!--Multilingual-->
+                <xsl:when test="contains($thumbnail_desc, '|')">
+                  <xsl:for-each select="tokenize($thumbnail_desc, $separator)">
+                    <xsl:variable name="nameLang"
+                                  select="substring-before(., '#')"></xsl:variable>
+                    <xsl:variable name="nameValue"
+                                  select="substring-after(., '#')"></xsl:variable>
+
+                    <xsl:if test="$useOnlyPTFreeText = false() and $nameLang = $mainLang">
+                      <gco:CharacterString>
+                        <xsl:value-of select="$nameValue"/>
+                      </gco:CharacterString>
+                    </xsl:if>
+                  </xsl:for-each>
+
+                  <gmd:PT_FreeText>
+                    <xsl:for-each select="tokenize($thumbnail_desc, $separator)">
+                      <xsl:variable name="nameLang" select="substring-before(., '#')"></xsl:variable>
+                      <xsl:variable name="nameValue" select="substring-after(., '#')"></xsl:variable>
+
+                      <xsl:if test="$useOnlyPTFreeText = true() or
+                                    $nameLang != $mainLang">
+                        <gmd:textGroup>
+                          <gmd:LocalisedCharacterString locale="{concat('#', $nameLang)}"><xsl:value-of select="$nameValue" /></gmd:LocalisedCharacterString>
+                        </gmd:textGroup>
+                      </xsl:if>
+                    </xsl:for-each>
+                  </gmd:PT_FreeText>
+                </xsl:when>
+                <xsl:otherwise>
+                  <gco:CharacterString>
+                    <xsl:value-of select="$thumbnail_desc"/>
+                  </gco:CharacterString>
+                </xsl:otherwise>
+              </xsl:choose>
             </gmd:fileDescription>
           </xsl:if>
           <xsl:if test="$thumbnail_type!=''">

@@ -5,6 +5,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Jesse on 3/2/2015.
  */
-public class UpdateFixedInfoTest extends AbstractCoreIntegrationTest {
+public class UpdateFixedInfoTest extends AbstractServiceIntegrationTest {
     private static final List<Namespace> NAMESPACES = Arrays.asList(SRV, GCO, GMD);
     @Autowired
     private DataManager dataManager;

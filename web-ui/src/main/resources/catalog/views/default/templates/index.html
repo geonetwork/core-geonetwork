@@ -29,8 +29,8 @@
   <ul class="nav navbar-nav">
     <li><a href="http://geonetwork-opensource.org/">
       <i class="fa fa-fw"></i>
-      <span data-translate="">about</span>
-    </a></li>
+      <span data-translate="">about</span></a>
+    </li>
     <li class="hidden-sm"><a href="https://github.com/geonetwork/core-geonetwork">
       <i class="fa fa-github"></i>
       <span data-translate="">github</span></a></li>
@@ -38,6 +38,16 @@
       <a data-translate=""
          data-translate-values="{platform: '{{info.site.platform.name}}', version: '{{info.site.platform.version}}', subversion: '{{info.site.platform.subVersion}}'}">
         versionDetails</a>
+    </li>
+    <li class="socialmedia-text" ng-hide="showSocialMediaLink">
+      <span data-translate="">shareOn</span>
+    </li>
+    <li class="socialmedia" ng-hide="showSocialMediaLink">
+      <a href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}" target="_blank" title="Facebook"><i class="fa fa-facebook"></i></a>
+      <a href="https://twitter.com/share?url={{socialMediaLink | encodeURIComponent}}" target="_blank" title="Twitter"><i class="fa fa-twitter"></i></a>
+      <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={{socialMediaLink | encodeURIComponent}}" target="_blank" title="LinkedIn"><i class="fa fa-linkedin"></i></a>
+      <a href="https://plus.google.com/share?url={{socialMediaLink | encodeURIComponent}}" target="_blank" title="Google+"><i class="fa fa-google-plus"></i></a>
+      <a href="mailto:?subject={{info.site.name}}&amp;body={{socialMediaLink | encodeURIComponent}}" target="_blank" title="Email"><i class="fa fa-envelope-o"></i></a>
     </li>
     <li>
       <a href="rss.search?sortBy=changeDate&georss=simplepoint"

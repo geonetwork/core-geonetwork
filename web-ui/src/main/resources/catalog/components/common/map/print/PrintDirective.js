@@ -78,7 +78,9 @@
 
       var refreshComp = function() {
         updatePrintRectanglePixels($scope.scale);
-        $scope.map.render();
+        if ($scope.map) {
+          $scope.map.render();
+        }
       };
 
       // Compose events
@@ -722,7 +724,7 @@
         if (newVal === 'thumbnailMaker') {
           activate();
         } else {
-          //        deactivate();
+          deactivate();
         }
       });
     }]);

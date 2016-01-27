@@ -22,6 +22,7 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
+import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Logger;
@@ -130,7 +131,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 		result = visitor.getResult();
         log.debug(String.format("Scan directory is done. %d files analyzed.",
                 result.totalMetadata));
-        List<Integer> idsForHarvestingResult = visitor.getIdsForHarvestingResult();
+        Set<Integer> idsForHarvestingResult = visitor.getListOfRecords();
 		Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
 
 		if (!params.nodelete) {
@@ -153,7 +154,11 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         log.debug("Starting indexing in batch thread pool...");
 
-        dataMan.batchIndexInThreadPool(context, idsForHarvestingResult);
+        List<Integer> listOfRecordsToIndex = Lists.newArrayList(visitor.getListOfRecordsToIndex());
+        log.debug(String.format(
+                        "Starting indexing in batch thread pool of %d updated records ...",
+                        listOfRecordsToIndex.size()));
+        dataMan.batchIndexInThreadPool(context, listOfRecordsToIndex);
 		
         log.debug("End of alignment for : " + params.getName());
 		return result;

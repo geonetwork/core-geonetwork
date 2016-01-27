@@ -59,6 +59,7 @@ import javax.servlet.http.HttpServletRequest;
  * Sends the resource to the client
  */
 @Controller
+@Deprecated
 public class Download {
 
     @Autowired

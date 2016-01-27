@@ -1,7 +1,10 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.collect.Lists;
+import junit.framework.Assert;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.utils.Xml;
@@ -9,17 +12,18 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.fao.geonet.Assert.assertFalse;
 import static org.fao.geonet.Assert.assertTrue;
-import static org.fao.geonet.Assert.fail;
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 
@@ -111,7 +115,7 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, new AddElemValue(newValue),
                 true);
 
-        assertEquals(newValue, Xml.selectString(metadataElement, xpathProperty, Arrays.asList(GMD, GCO)));
+        Assert.assertEquals(newValue, Xml.selectString(metadataElement, xpathProperty, Arrays.asList(GMD, GCO)));
         assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).size());
         assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier", Arrays.asList(GMD, GCO)).size());
     }
@@ -311,6 +315,98 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(2, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
     }
 
+
+    @Test
+    public void testReplaceAllMathFromXpath_SpecialReplaceTag() throws Exception {
+
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+
+        String code1 = "code1";
+        String code2 = "code2";
+        String code3 = "code3";
+        final Element metadataElement = new Element("MD_Metadata", GMD).addContent(Arrays.asList(
+                createReferenceSystemInfo(code1),
+                createReferenceSystemInfo(code2),
+                createReferenceSystemInfo(code3)
+        ));
+
+        String newValue1 = "newValue1";
+
+        Element newRefSystemsCode = new Element(EditLib.SpecialUpdateTags.REPLACE).setText(newValue1);
+        final String xpathToUpdate = "*//gmd:code/gco:CharacterString";
+
+        final String refSysElemName = "gmd:referenceSystemInfo";
+        new EditLib(_schemaManager).addElementOrFragmentFromXpath(
+                metadataElement, schema, xpathToUpdate,
+                new AddElemValue(newRefSystemsCode), true);
+
+        final String xpath = "/gmd:ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString";
+        assertEqualsText(newValue1, metadataElement, refSysElemName + "[1]" + xpath, GMD, GCO);
+        assertEqualsText(newValue1, metadataElement, refSysElemName + "[2]" + xpath, GMD, GCO);
+        assertEqualsText(newValue1, metadataElement, refSysElemName + "[3]" + xpath, GMD, GCO);
+        assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+    }
+
+
+    @Test
+    public void testReplaceFragmentFromXpath_SpecialDeleteTag() throws Exception {
+
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+
+        String code1 = "code1";
+        String code2 = "code2";
+        String code3 = "code3";
+        final Element metadataElement = new Element("MD_Metadata", GMD).addContent(Arrays.asList(
+                createReferenceSystemInfo(code1),
+                createReferenceSystemInfo(code2),
+                createReferenceSystemInfo(code3)
+        ));
+        assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+
+        Element newRefSystems = new Element(EditLib.SpecialUpdateTags.DELETE);
+        final String refSysElemName = "gmd:referenceSystemInfo";
+        // Delete first node
+        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema,
+                    refSysElemName + "[1]", new AddElemValue(newRefSystems), true);
+
+        final String xpath = "/gmd:ReferenceSystem/gmd:referenceSystemIdentifier/" +
+                                "gmd:RS_Identifier/gmd:code/gco:CharacterString";
+
+        assertEquals(2, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+        assertEqualsText(code2, metadataElement, refSysElemName + "[1]" + xpath, GMD, GCO);
+        assertEqualsText(code3, metadataElement, refSysElemName + "[2]" + xpath, GMD, GCO);
+
+
+        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema,
+                refSysElemName, new AddElemValue(newRefSystems), true);
+
+        assertEquals(0, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+    }
+
+    @Test
+    public void testReplaceFragmentFromXpath_SpecialDeleteAllTag() throws Exception {
+
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+
+        String code1 = "code1";
+        String code2 = "code2";
+        String code3 = "code3";
+        final Element metadataElement = new Element("MD_Metadata", GMD).addContent(Arrays.asList(
+                createReferenceSystemInfo(code1),
+                createReferenceSystemInfo(code2),
+                createReferenceSystemInfo(code3)
+        ));
+        assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+
+        Element newRefSystems = new Element(EditLib.SpecialUpdateTags.DELETE);
+        final String refSysElemName = "gmd:referenceSystemInfo";
+        // Delete all nodes of this type
+        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema,
+                refSysElemName, new AddElemValue(newRefSystems), true);
+
+        assertEquals(0, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+    }
+
     @Test
     public void testReplaceFragmentFromXpath_SpecialAddTag() throws Exception {
 
@@ -468,7 +564,7 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, new AddElemValue(newValue),
                 true);
 
-        assertEquals(newValue, Xml.selectString(metadataElement, xpathProperty, Arrays.asList(GMD, GCO)));
+        Assert.assertEquals(newValue, Xml.selectString(metadataElement, xpathProperty, Arrays.asList(GMD, GCO)));
         assertEquals(1, Xml.selectNodes(metadataElement, "gmd:hierarchyLevel/gmd:MD_ScopeCode", Arrays.asList(GMD, GCO)).size());
         assertEquals(1, Xml.selectNodes(metadataElement, "gmd:hierarchyLevel", Arrays.asList(GMD, GCO)).size());
 
@@ -476,7 +572,7 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, new AddElemValue(newValue2),
                 true);
 
-        assertEquals(newValue2, Xml.selectString(metadataElement, xpathProperty, Arrays.asList(GMD, GCO)));
+        Assert.assertEquals(newValue2, Xml.selectString(metadataElement, xpathProperty, Arrays.asList(GMD, GCO)));
         assertEquals(1, Xml.selectNodes(metadataElement, "gmd:hierarchyLevel/gmd:MD_ScopeCode", Arrays.asList(GMD, GCO)).size());
         assertEquals(1, Xml.selectNodes(metadataElement, "gmd:hierarchyLevel", Arrays.asList(GMD, GCO)).size());
     }
@@ -535,7 +631,7 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         try {
             new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty,
                     new AddElemValue(newValue), true);
-            fail("expected error");
+            Assert.fail("expected error");
         } catch (AssertionError e) {
             // ignore.
         }
@@ -558,25 +654,54 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
 
 
     @Test
-    public void multiUpdate() throws JDOMException {
+    public void testMultiUpdate() throws JDOMException {
         SchemaManager manager = _schemaManager;
         MetadataSchema schema = manager.getSchema("iso19139");
         final Element metadataElement = new Element("MD_Metadata", GMD);
-        HashMap<String, AddElemValue> updates = new HashMap<String, AddElemValue>();
+        LinkedHashMap<String, AddElemValue> updates = new LinkedHashMap<String, AddElemValue>();
         final String text = "text";
         final String att = "att";
         final String charStringXpath = "gmd:fileIdentifier/gco:CharacterString";
         final String attXPath = "gmd:fileIdentifier/@att";
-        updates.put(charStringXpath, new AddElemValue(text));
         updates.put(attXPath, new AddElemValue(att));
+        updates.put(charStringXpath, new AddElemValue(text));
 
         final int numUpdates = new EditLib(_schemaManager).addElementOrFragmentFromXpaths(metadataElement, updates, schema, true);
 
         assertEquals(2, numUpdates);
 
         assertEqualsText(text, metadataElement, charStringXpath, GMD, GCO);
+        Assert.assertEquals(att, Xml.selectString(metadataElement, attXPath, Arrays.asList(GMD, GCO)));
+    }
+    
+    /*
+     * BUG: This test exposes a bug in the EditLib. If the xpath points to an existing element,
+     * adding an attribute to the existing element does not work.
+     */
+    @Test
+    @Ignore
+    public void testAddAttributeExistingElement() throws JDOMException {
+        SchemaManager manager = _schemaManager;
+        MetadataSchema schema = manager.getSchema("iso19139");
+        final Element metadataElement = new Element("MD_Metadata", GMD);
+        LinkedHashMap<String, AddElemValue> updates = new LinkedHashMap<String, AddElemValue>();
+        final String text = "text";
+        final String att = "att";
+        final String charStringXpath = "gmd:fileIdentifier/gco:CharacterString";
+        final String attXPath = "gmd:fileIdentifier/@att";
+        updates.put(attXPath, new AddElemValue(att));
+        updates.put(charStringXpath, new AddElemValue(text));
+
+        EditLib el = new EditLib(_schemaManager);
+        boolean a1 = el.addElementOrFragmentFromXpath(metadataElement, schema, charStringXpath, new AddElemValue(text), true);
+        boolean a2 = el.addElementOrFragmentFromXpath(metadataElement, schema, attXPath, new AddElemValue(att), true);
+        
+        assertEquals(2, a1 && a2);
+
+        assertEqualsText(text, metadataElement, charStringXpath, GMD, GCO);
         assertEquals(att, Xml.selectString(metadataElement, attXPath, Arrays.asList(GMD, GCO)));
     }
+    
 
     @Test
     public void testAddElementFromXpath_Extent() throws Exception {
@@ -620,7 +745,7 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         MetadataSchema schema = _schemaManager.getSchema("iso19139");
         final EditLib editLib = new EditLib(_schemaManager);
         final Pair<Element, String> longestMatch = editLib.findLongestMatch(element, schema, xpathParts);
-        assertEquals("gmd:MD_Distribution", longestMatch.one().getQualifiedName());
-        assertEquals("gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage", longestMatch.two());
+        Assert.assertEquals("gmd:MD_Distribution", longestMatch.one().getQualifiedName());
+        Assert.assertEquals("gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage", longestMatch.two());
     }
 }

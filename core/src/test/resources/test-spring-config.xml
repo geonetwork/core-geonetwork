@@ -7,7 +7,7 @@
 		http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/security
-        http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+        http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 	<bean id="testBeanFull" class="jeeves.server.overrides.ExampleBean">
         <property name="basicProp" value="basicPropOriginalValue" />

@@ -349,7 +349,8 @@
                   var o = os[i];
                   if (v == o.identifier.value) {
                     for (var j = 0;
-                         j < o.complexOutput.supported.format.length; j++) {
+                         j < o.complexOutput.supported.format.length;
+                         j++) {
                       var f = o.complexOutput.supported.format[j];
                       if (f.mimeType == gnWpsService.WMS_MIMETYPE) {
                         o.mimeType = f.mimeType;
