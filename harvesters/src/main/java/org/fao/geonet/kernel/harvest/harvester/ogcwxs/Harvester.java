@@ -319,9 +319,18 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		param.put("lang", params.lang);
 		param.put("topic", params.topic);
 		param.put("uuid", uuid);
-		
-		Element md = Xml.transform (capa, styleSheet, param);
-		
+
+		Element md = null;
+         try {
+             md = Xml.transform(capa, styleSheet, param);
+         } catch (IllegalStateException e) {
+             String message = String.format(
+                     "Failed to convert GetCapabilities '%s' to metadata record. Error is: '%s'. Service response is: %s.",
+                     this.capabilitiesUrl, e.getMessage(), Xml.getString(capa));
+             log.error(message);
+             throw new IllegalStateException(message, e);
+         }
+
 		String schema = dataMan.autodetectSchema (md, null); // ie. iso19139; 
 
 		if (schema == null) {
@@ -578,19 +587,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		//--- md5 the full capabilities URL + the layer, coverage or feature name
 		reg.uuid = Sha1Encoder.encodeString(this.capabilitiesUrl+"#"+reg.name); // the dataset identifier
 	
-		//--- Trying loading metadataUrl element
-		if (params.useLayerMd && !params.ogctype.substring(0,3).equals("WMS")) {
-			log.info("  - MetadataUrl harvester only supported for WMS layers.");
-		}
-		
-		if (params.useLayerMd && params.ogctype.substring(0,3).equals("WMS")) {
+		if (params.useLayerMd && (
+                params.ogctype.substring(0,3).equals("WMS") ||
+                params.ogctype.substring(0,3).equals("WFS") ||
+                params.ogctype.substring(0,3).equals("WCS"))) {
 			
 			Namespace xlink 	= Namespace.getNamespace ("http://www.w3.org/1999/xlink");
 			
 			// Get metadataUrl xlink:href
-			// TODO : add support for WCS & WFS metadataUrl element.
-
-
             // Check if add namespace prefix to Xpath queries.  If layer.getNamespace() is:
             //    * Namespace.NO_NAMESPACE, should not be added, otherwise exception is launched
             //    * Another namespace, should be added a namespace prefix to Xpath queries, otherwise doesn't find any result
@@ -598,68 +602,93 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             boolean addNsPrefix = !layer.getNamespace().equals(Namespace.NO_NAMESPACE);
             if (addNsPrefix) dummyNsPrefix = "x:";
 
-            XPath mdUrl 		= XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[@type='TC211' and " + dummyNsPrefix + "Format='text/xml']/" + dummyNsPrefix + "OnlineResource");
-            if (addNsPrefix) mdUrl.addNamespace("x", layer.getNamespace().getURI());
-            Element onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
-
-            // Check if metadataUrl in WMS 1.3.0 format
-            if (onLineSrc == null) {
-                mdUrl 		= XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[@type='ISO19115:2003' and " + dummyNsPrefix + "Format='text/xml']/" + dummyNsPrefix + "OnlineResource");
-                if (addNsPrefix) mdUrl.addNamespace("x", layer.getNamespace().getURI());
-                onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
+            Element onLineSrc = null;
+            XPath mdUrlXpath = null;
+            mdXml = null;
+            if (params.ogctype.startsWith("WFS1")) {
+                mdUrlXpath = XPath.newInstance(
+                        "./" + dummyNsPrefix + "MetadataURL[" +
+                                "@type='TC211' and (@format='XML' or @format='text/xml')" +
+                                "]");
+                if (addNsPrefix) {
+                    mdUrlXpath.addNamespace("x", layer.getNamespace().getURI());
+                }
+                onLineSrc = (Element) mdUrlXpath.selectSingleNode(layer);
+                if (onLineSrc != null) {
+                    mdXml = onLineSrc.getText();
+                }
+            } else {
+                mdUrlXpath = XPath.newInstance(
+                        "./" + dummyNsPrefix + "MetadataURL[" +
+                                "(@type='TC211' or @type='ISO19115:2003') and " +
+                                dummyNsPrefix + "Format='text/xml'" +
+                                "]/" + dummyNsPrefix + "OnlineResource");
+                if (addNsPrefix) {
+                    mdUrlXpath.addNamespace("x", layer.getNamespace().getURI());
+                }
+                onLineSrc = (Element) mdUrlXpath.selectSingleNode(layer);
+                if (onLineSrc != null) {
+                    org.jdom.Attribute href = onLineSrc.getAttribute("href", xlink);
+                    if (href != null) {
+                        mdXml = href.getValue ();
+                    }
+                }
             }
 
-			if (onLineSrc != null) {
-				org.jdom.Attribute href = onLineSrc.getAttribute ("href", xlink);
+            if (mdXml != null) {	// No metadataUrl attribute for that layer
+                try {
+                    xml = Xml.loadFile (new URL(mdXml));
 
-				if (href != null) {	// No metadataUrl attribute for that layer
-					mdXml = href.getValue ();
-					try {
-						xml = Xml.loadFile (new URL(mdXml));
+                    // If url is CSW GetRecordById remove envelope
+                    if (xml.getName().equals("GetRecordByIdResponse")) {
+                        xml = (Element) xml.getChildren().get(0);
+                    }
 
-                        // If url is CSW GetRecordById remove envelope
-                        if (xml.getName().equals("GetRecordByIdResponse")) {
-                            xml = (Element) xml.getChildren().get(0);
-                        }
+                    schema = dataMan.autodetectSchema (xml, null); // ie. iso19115 or 139 or DC
+                    // Extract uuid from loaded xml document
+                    // FIXME : uuid could be duplicate if metadata already exist in catalog
+                    reg.uuid = dataMan.extractUUID(schema, xml);
+                    exist = dataMan.existsMetadataUuid(reg.uuid);
 
-						schema = dataMan.autodetectSchema (xml, null); // ie. iso19115 or 139 or DC
-						// Extract uuid from loaded xml document
-						// FIXME : uuid could be duplicate if metadata already exist in catalog
-						reg.uuid = dataMan.extractUUID(schema, xml);
-						exist = dataMan.existsMetadataUuid(reg.uuid);
-						
-						if (exist) {
-							log.warning("    Metadata uuid already exist in the catalogue. Metadata will not be loaded.");
-							result.layerUuidExist ++;
-							// Return the layer info even if it exists in order
-							// to link to the service record.
-							return reg;
-						}
-						
-						if (schema == null) {
-							log.warning("    Failed to detect schema from metadataUrl file. Use GetCapabilities document instead for that layer.");
-							result.unknownSchema ++;
-							loaded = false;
-						} else { 
-							log.info("  - Load layer metadataUrl document ok: " + mdXml);
-							
-							loaded = true;
-							result.layerUsingMdUrl ++;
-						}
-					// TODO : catch other exception
-					}catch (Exception e) {
-						log.warning("  - Failed to load layer using metadataUrl attribute : " + e.getMessage());
-						loaded = false;
-					}
-				} else {
-					log.info("  - No metadataUrl attribute with format text/xml found for that layer");
-					loaded = false;
-				}
-			} else {
-				log.info("  - No OnlineResource found for that layer");
-				loaded = false;
-			}
-		}
+                    if (exist) {
+                        log.warning(String.format(
+                                "    Metadata uuid '%s' already exist in the catalogue. Metadata for layer '%s' will not be loaded.",
+                                reg.uuid, reg.name));
+                        result.layerUuidExist ++;
+                        // Return the layer info even if it exists in order
+                        // to link to the service record.
+                        return reg;
+                    }
+
+                    if (schema == null) {
+                        log.warning(String.format(
+                                "    Failed to detect schema from metadataUrl '%s' file.",
+                                mdXml));
+                        result.unknownSchema ++;
+                        loaded = false;
+                    } else {
+                        log.info(String.format(
+                                "  - MetadataUrl document '%s' for layer '%s' accepted.",
+                                mdXml, reg.name));
+
+                        loaded = true;
+                        result.layerUsingMdUrl ++;
+                    }
+                // TODO : catch other exception
+                }catch (Exception e) {
+                    log.warning(String.format(
+                            "  - Failed to load layer using metadataUrl attribute '%s'. Error is: ",
+                            mdXml, e.getMessage()
+                    ));
+                    loaded = false;
+                }
+            } else {
+                log.info(String.format("  - No metadataUrl attribute found for layer '%s'", reg.name));
+                loaded = false;
+            }
+		} else {
+            log.info("  - MetadataUrl harvester only supported for WMS, WFS and WCS layers.");
+        }
 		
 		
 		//--- using GetCapabilities document
@@ -754,7 +783,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			log.info("  - metadata loaded with uuid: " + reg.uuid + "/internal id: " + reg.id);
 				
 		} catch (Exception e) {
-			log.warning("  - Failed to load layer metadata : " + e.getMessage());
+			log.warning(String.format(
+                    "  - Failed to load metadata document for layer '%s'. Error is: '%s',",
+                    reg.name, e.getMessage()));
 			result.unretrievable ++;
 			return null;
 		}
