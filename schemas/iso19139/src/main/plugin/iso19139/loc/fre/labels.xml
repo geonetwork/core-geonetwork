@@ -2495,15 +2495,6 @@ période de temps couverte par le service.
     <description>URL ou indication semblable d'une adresse Internet pour un accès on-line , par exemple http://www.isotc211.org</description>
     <help>Lien Internet, par exemple www.cosig.ch.</help>
     <condition/>
-    <!--<helper displayIf="ancestor::node()[
-              name()='gmd:MD_Metadata' and
-              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
-      <option value="http://www.seadatanet.org/Metadata/EDMED-Datasets">http://www.seadatanet.org/Metadata/EDMED-Datasets</option>
-      <option value="http://www.seadatanet.org/Data-Access/Common-Data-Index-CDI">http://www.seadatanet.org/Data-Access/Common-Data-Index-CDI</option>
-      <option value="http://inspire-geoportal.ec.europa.eu/">http://inspire-geoportal.ec.europa.eu/</option>
-      <option value="http://www.myocean.eu/">http://www.myocean.eu/</option>
-      <option value="http ://www.mongoos.eu/">http ://www.mongoos.eu/</option>
-    </helper>-->
   </element>
   <element name="gmd:maintenanceAndUpdateFrequency" id="143.0">
     <label>Fréquence de mise à jour</label>
@@ -2688,15 +2679,6 @@ période de temps couverte par le service.
   <element name="gmd:name" context="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:name" id="400.0">
     <label>Nom</label>
     <description>Nom de la ressource en ligne</description>
-    <!--<helper displayIf="ancestor::node()[
-              name()='gmd:MD_Metadata' and
-              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
-      <option value="SDN EDMED">SDN EDMED</option>
-      <option value="SDN CDI">SDN CDI</option>
-      <option value="INSPIRE Geoportal/">INSPIRE Geoportal</option>
-      <option value="MyOcean">MyOcean</option>
-      <option value="Mongoos">Mongoos</option>
-    </helper>-->
   </element>
   <element name="gmd:name" id="404.0" context="gmd:CI_Series">
     <label>Nom</label>
@@ -2902,16 +2884,6 @@ période de temps couverte par le service.
     <help>Autres restrictions et conditions préalables de nature juridique concernant l'accès et l'utilisation de la ressource ou des métadonnées. Ce champ doit être complété dès lors que l'un des deux champs précédents (accessConstraints, useConstraints) porte la mention "Autres restrictions".</help>
     <condition>Condition</condition>
 
-    <!-- MedSea list of values -->
-    <helper displayIf="ancestor::node()[
-              name()='gmd:MD_Metadata' and
-              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]"
-            editorMode="radio">
-      <option value="Restricted">Restricted</option>
-      <option value="Accessible under moratorium">Accessible under moratorium</option>
-      <option value="Unrestricted">Unrestricted</option>
-      <option value="Not documented">Not documented</option>
-    </helper>
     <!--
       Only relevant for France
       <helper editorMode="radio_withdesc">
@@ -3944,17 +3916,6 @@ l’IGN (WPS)
             editorMode="radio">
       <option value="Public">Public</option>
       <option value="Confidential">Confidential</option>
-    </helper>
-    <helper displayIf="ancestor::node()[
-              name()='gmd:MD_Metadata' and
-              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]"
-            editorMode="radio">
-      <option value="No charge">No charge</option>
-      <option value="Distribution cost charge">Distribution cost charge</option>
-      <option value="Collection cost charge">Collection cost charge</option>
-      <option value="Commercial cost charge">Commercial cost charge</option>
-      <option value="Cost charge depends on intended use and category of users">Cost charge depends on intended use and category of users</option>
-      <option value="Not documented">Not documented</option>
     </helper>
     <helper>
       <option value="Aucune condition ne s’applique">Aucune condition ne s’applique</option>

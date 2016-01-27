@@ -230,7 +230,13 @@
   <emodnetMetadataAuthor>Collating Centre = Metadata author</emodnetMetadataAuthor>
 
   <!-- Sextant -->
-  <sextant>Sextant view</sextant>
+  <sextant>Sextant</sextant>
+  <sextant-identification>Identification</sextant-identification>
+  <sextant-contact>Contacts</sextant-contact>
+  <sextant-spatial>Spatial &amp; temporal ref.</sextant-spatial>
+  <sextant-usage>Usage</sextant-usage>
+  <sextant-quality>Quality</sextant-quality>
+  <sextant-metadata>Metadata</sextant-metadata>
   <sextantmetadataInfoTitle>Metadata information</sextantmetadataInfoTitle>
   <sextantidentificationTitle>Data identification</sextantidentificationTitle>
   <sextantkeywordTitle>INSPIRE theme and keywords</sextantkeywordTitle>

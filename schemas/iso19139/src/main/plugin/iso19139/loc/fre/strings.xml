@@ -236,6 +236,12 @@
 
   <!-- Sextant -->
   <sextant>Sextant</sextant>
+  <sextant-identification>Identification</sextant-identification>
+  <sextant-contact>Contacts</sextant-contact>
+  <sextant-spatial>Références spatiales &amp; tempo.</sextant-spatial>
+  <sextant-usage>Conditions d'utilisation</sextant-usage>
+  <sextant-quality>Qualité</sextant-quality>
+  <sextant-metadata>Infos sur la métadonnées</sextant-metadata>
   <sextantmetadataInfoTitle>Informations sur la métadonnée</sextantmetadataInfoTitle>
   <sextantidentificationTitle>Identification des données</sextantidentificationTitle>
   <sextantkeywordTitle>Thématique et mots clés</sextantkeywordTitle>
