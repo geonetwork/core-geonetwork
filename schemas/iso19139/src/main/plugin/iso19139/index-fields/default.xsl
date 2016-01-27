@@ -244,11 +244,10 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:for-each select="//gmd:MD_Keywords">
-                <!-- Index all keywords as text, multilingual text or anchor -->
+                <!-- Index all keywords as text or anchor -->
                 <xsl:variable name="listOfKeywords"
                                 select="gmd:keyword/gco:CharacterString|
-                                        gmd:keyword/gmx:Anchor|
-                                        gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString"/>
+                                        gmd:keyword/gmx:Anchor"/>
                 <xsl:for-each select="$listOfKeywords">
                     <xsl:variable name="keyword" select="string(.)"/>
 

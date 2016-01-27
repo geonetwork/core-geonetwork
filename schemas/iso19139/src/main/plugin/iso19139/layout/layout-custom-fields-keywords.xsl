@@ -25,6 +25,7 @@
     gmd:descriptiveKeywords">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -32,7 +33,9 @@
     <xsl:variable name="thesaurusTitle">
       <xsl:choose>
         <xsl:when test="normalize-space($thesaurusTitleEl/gco:CharacterString) != ''">
-          <xsl:value-of select="normalize-space($thesaurusTitleEl/gco:CharacterString)"/>
+          <xsl:value-of select="if ($overrideLabel != '')
+              then $overrideLabel
+              else normalize-space($thesaurusTitleEl/gco:CharacterString)"/>
         </xsl:when>
         <xsl:when test="normalize-space($thesaurusTitleEl/gmd:PT_FreeText/
                           gmd:textGroup/gmd:LocalisedCharacterString[

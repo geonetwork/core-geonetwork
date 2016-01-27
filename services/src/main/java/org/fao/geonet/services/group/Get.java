@@ -61,7 +61,13 @@ public class Get implements Service {
         }
 
 
-        return new Element(Jeeves.Elem.RESPONSE).addContent(group.asXml());
+        Element result = new Element(Jeeves.Elem.RESPONSE).addContent(group.asXml());
+        
+        if(group.getDefaultCategory() != null) {
+            result.getChild("record").getChild("defaultcategory").addContent(group.getDefaultCategory().asXml());
+        }
+        
+        return result;
 	}
 }
 

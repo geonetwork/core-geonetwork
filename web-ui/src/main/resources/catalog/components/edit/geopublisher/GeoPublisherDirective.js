@@ -70,10 +70,12 @@
                 // TODO : Zoom to all extent if more than one defined
                 if (angular.isArray(gnCurrentEdit.extent) &&
                     gnCurrentEdit.extent.length > 0) {
-                  map.getView().fit(
-                      gnMap.reprojExtent(gnCurrentEdit.extent[0],
-                      'EPSG:4326', gnMap.getMapConfig().projection),
-                      map.getSize());
+                  var mdExtent = gnMap.reprojExtent(gnCurrentEdit.extent[0],
+                      'EPSG:4326', gnMap.getMapConfig().projection);
+                  // check that the extent is valid, see #1308
+                  if (mdExtent.filter(isFinite).length == 4) {
+                    map.getView().fit(mdExtent, map.getSize());
+                  }
                 }
 
                 /**
@@ -135,30 +137,6 @@
                     '?namespace=' + gsNode.namespacePrefix +
                     '&layer=' + scope.wmsLayerName);
               };
-              /**
-               * Dirty check if the node is a Mapserver REST API
-               * or a GeoServer REST API.
-               *
-               * @param {Object} gsNode
-               * @return {boolean}
-               */
-              var isMRA = function(gsNode) {
-                return gsNode.adminUrl &&
-                    gsNode.adminUrl.indexOf('/mra') !== -1;
-              };
-
-              /**
-               * Build WMS layername based on target map server.
-               *
-               * @param {Object} gsNode
-               */
-              var buildLayerName = function(gsNode) {
-                // Append prefix for GeoServer.
-                if (gsNode && !isMRA(gsNode)) {
-                  scope.wmsLayerName = gsNode.namespacePrefix +
-                      ':' + scope.wmsLayerName;
-                }
-              };
 
               /**
                * Add the layer of the node to the current
@@ -192,7 +170,11 @@
                   scope.isPublished = false;
                 }
                 else if (angular.isObject(data.layer)) {
-                  addLayerToMap(data.layer);
+                  gnMap.addWmsFromScratch(map,
+                      gsNode.wmsUrl, data.layer.name, false).
+                      then(function(layer) {
+                        gnMap.zoomLayerToExtent(layer, map);
+                      });
                   scope.isPublished = true;
                   if (action == 'check') {
                     scope.statusCode = $translate('datasetFound');
@@ -229,7 +211,6 @@
               scope.selectNode = function(nodeId) {
                 gsNode = getNodeById(nodeId);
                 scope.checkNode(nodeId);
-                buildLayerName(gsNode);
                 scope.hasStyler = !angular.isArray(gsNode.stylerUrl);
               };
 
@@ -239,6 +220,10 @@
                * a layer configuration if published.
                */
               scope.checkNode = function(nodeId) {
+                if (scope.isPublished) {
+                  map.getLayerGroup().getLayers().pop();
+                }
+                scope.isPublished = false;
                 var p = gnGeoPublisher.checkNode(nodeId, scope.name);
                 if (p) {
                   p.success(function(data) {
@@ -309,7 +294,6 @@
                     .replace(/.*\//, '')
                     .replace(/.zip$|.tif$|.tiff$|.ecw$/, '');
                 }
-                buildLayerName(gsNode);
               };
             }
           };

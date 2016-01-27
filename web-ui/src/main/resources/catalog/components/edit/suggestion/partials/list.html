@@ -11,7 +11,7 @@
   <div class="panel-body" data-ng-show="suggestions.length !== 0">
     <div class="list-group">
       <a href="" class="list-group-item" data-ng-repeat="sugg in suggestions | orderBy:'name'"
-        data-ng-click="gnSuggestion.onSuggestionClick(sugg)"> {{sugg.name['#text'] || sugg.name}} </a>
+        data-ng-click="gnSuggestion.onSuggestionClick(sugg)"> {{sugg.name}} </a>
     </div>
 
   </div>

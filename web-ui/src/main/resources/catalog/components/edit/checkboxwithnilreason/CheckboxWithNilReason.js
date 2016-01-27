@@ -7,8 +7,10 @@
    *  Create a widget to handle 3 states checkbox
    */
   module.directive('gnCheckboxWithNilreason',
-      ['$http', '$rootScope', '$filter', 'gnNamespaces', 'gnCurrentEdit',
-       function($http, $rootScope, $filter, gnNamespaces, gnCurrentEdit) {
+      ['$http', '$rootScope', '$filter',
+        'gnSchemaManagerService', 'gnCurrentEdit',
+       function($http, $rootScope, $filter,
+                gnSchemaManagerService, gnCurrentEdit) {
 
          return {
            restrict: 'A',
@@ -36,16 +38,6 @@
              var booleanElement = 'gco:Boolean',
              booleanElementNs = booleanElement.split(':')[0],
              elementNs = scope.tagName.split(':')[0];
-             var namespaces = {
-               iso19139: {
-                 gco: gnNamespaces.gco,
-                 gmd: gnNamespaces.gmd
-               },
-               'iso19115-3': {
-                 gco: gnNamespaces.gco3,
-                 mdb: gnNamespaces.mdb
-               }
-             };
              function build() {
                var attribute = '', isNil = scope.status === 'unknown';
 
@@ -56,10 +48,12 @@
                scope.xmlSnippet = '<' + scope.tagName +
                ' xmlns:' +
                elementNs + '="' +
-               namespaces[gnCurrentEdit.schema][elementNs] + '"' +
+               gnSchemaManagerService.findNamespaceUri(elementNs,
+               gnCurrentEdit.schema) + '"' +
                ' xmlns:' +
                booleanElementNs + '="' +
-               namespaces[gnCurrentEdit.schema][booleanElementNs] + '"' +
+               gnSchemaManagerService.findNamespaceUri(booleanElementNs,
+               gnCurrentEdit.schema) + '"' +
                attribute + '><' + booleanElement + '>' +
                (isNil ? '' : scope.status) +
                '</' + booleanElement + '></' + scope.tagName + '>';

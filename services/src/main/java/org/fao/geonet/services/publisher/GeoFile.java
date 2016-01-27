@@ -24,7 +24,12 @@ package org.fao.geonet.services.publisher;
 
 import org.fao.geonet.ZipUtil;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.Closeable;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
@@ -35,6 +40,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.zip.ZipFile;
 
 /**
  * Instances of this class represent geographic files. A geographic file can be
@@ -47,6 +53,8 @@ import java.util.LinkedList;
 public class GeoFile implements Closeable {
 	private FileSystem zipFile = null;
 	private Path file = null;
+	private boolean _containsSld = false;
+	private String _sldBody;
 
 	/**
 	 * Constructs a <code>GeoFile</code> object from a <code>File</code> object.
@@ -108,11 +116,26 @@ public class GeoFile implements Closeable {
                                 layers.add(base);
                             }
                         }
+                        if (fileIsSld(fileName)) {
+                            _containsSld = true;
+                            _sldBody = fileName;
+                        }
                         return FileVisitResult.CONTINUE;
                     }
                 });
             }
+		if (_containsSld) {
+			ZipFile zf = new ZipFile(new File(this.file.toString()));
+			InputStream is = zf.getInputStream(zf.getEntry(_sldBody));
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String line;
+			_sldBody = "";
+			while ((line = br.readLine()) != null) { _sldBody += line; }
+			br.close();
+			is.close();
+			zf.close();
 		}
+                        }
 
 		return layers;
 	}
@@ -204,6 +227,11 @@ public class GeoFile implements Closeable {
 		return extension.equalsIgnoreCase("shp");
 	}
 
+	private Boolean fileIsSld(String fileName) {
+		String extension = getExtension(fileName);
+		return extension.equalsIgnoreCase("sld");
+	}
+
 	public static Boolean fileIsGeotif(String fileName) {
 		String extension = getExtension(fileName);
 		return extension.equalsIgnoreCase("tif")
@@ -219,6 +247,14 @@ public class GeoFile implements Closeable {
 
 	public static Boolean fileIsRASTER(String fileName) {
 		return fileIsGeotif(fileName) || fileIsECW(fileName);
+	}
+
+	public Boolean containsSld() {
+		return this._containsSld;
+	}
+
+	public String getSld() {
+		return this._sldBody;
 	}
 
     @Override

@@ -138,7 +138,7 @@
     <xsl:param name="labels" select="$labels" required="no"/>
 
     <xsl:variable name="labelConfig"
-                  select="gn-fn-metadata:getLabel($schema, name(), $labels)"/>
+                  select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', '')"/>
 
     <xsl:variable name="dateTypeElementRef"
                   select="../gn:element/@ref"/>

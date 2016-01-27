@@ -9,6 +9,10 @@ body {
   
 }
 
+.gn-line-height {
+       line-height: 1.8 !important;
+ }
+
 input[type=text], input[type=number], select {
   .form-control;
 }
@@ -67,6 +71,13 @@ input[type=text], input[type=number], select {
   margin-top: 45px;
 }
 
+
+#gn-directory-container {
+  .gn-facet-dropdown {
+    min-width: 300px;
+  }
+}
+
 .gn-editor-board {
   .table.gn-results-editor td {
     padding: 2px;
@@ -97,6 +108,15 @@ form.gn-editor {
     margin-bottom: 0px;
   }
 
+  div[data-gn-toggle] {
+    position: absolute;
+    left: -4px;
+    top: 2px;
+    button {
+      padding: 2px;
+    }
+  }
+
   /**
    * Add bottom line
    */
@@ -120,6 +140,9 @@ form.gn-editor {
     white-space: nowrap;
   }
 
+  .gn-associated-resource-btn {
+    .button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
+  }
 
   fieldset fieldset {
     padding-left: @editor-fieldset-padding-left;
@@ -388,5 +411,11 @@ form.gn-tab-inspire {
   }
   .no-data a {
     color: @gray-light;
+  }
+}
+
+form.gn-tab-xml {
+  div[data-gn-toggle] {
+    display:none;
   }
 }

@@ -76,6 +76,7 @@ public class GeoServerRest {
 	private String baseCatalogueUrl;
 	private String defaultWorkspace;
 	private String response;
+	private boolean pushStyleInWorkspace;
 	private int status;
 
 	private GeonetHttpRequestFactory factory;
@@ -89,14 +90,16 @@ public class GeoServerRest {
 	 * @param password
 	 * @param defaultns
 	 * @param baseCatalogueUrl
+	 * @param pushStyleInWorkspace
 	 *            TODO
 	 */
 	public GeoServerRest(GeonetHttpRequestFactory factory, String url, String username, String password,
-			String defaultns, String baseCatalogueUrl) {
+			String defaultns, String baseCatalogueUrl, boolean pushStyleInWorkspace) {
         this.restUrl = url;
         this.username = username;
         this.password = password;
         this.baseCatalogueUrl = baseCatalogueUrl;
+        this.pushStyleInWorkspace = pushStyleInWorkspace;
         this.factory = factory;
         Log.createLogger(LOGGER_NAME);
         this.defaultWorkspace = defaultns;
@@ -135,8 +138,15 @@ public class GeoServerRest {
 	 * @throws java.io.IOException
 	 */
 	public boolean getLayer(String layer) throws IOException {
-		int status = sendREST(GeoServerRest.METHOD_GET, "/layers/" + layer
-				+ ".xml", null, null, null, true);
+		return getLayer(getDefaultWorkspace(), layer);
+	}
+
+	public boolean getLayer(String ws, String layer) throws IOException {
+		String url = "/layers/";
+		if (!ws.isEmpty())
+			url += ws + ":";
+		int status = sendREST(GeoServerRest.METHOD_GET, url + layer
+				+ ".xml?quietOnNotFound=true", null, null, null, true);
 		return status == 200;
 	}
 
@@ -156,7 +166,14 @@ public class GeoServerRest {
 	 * @throws java.io.IOException
 	 */
 	public boolean deleteLayer(String layer) throws IOException {
-		int status = sendREST(GeoServerRest.METHOD_DELETE, "/layers/" + layer,
+		return deleteLayer(getDefaultWorkspace(), layer);
+	}
+
+	public boolean deleteLayer(String ws, String layer) throws IOException {
+		String url = "/layers/";
+		if (!ws.isEmpty())
+			url += ws + ":";
+		int status = sendREST(GeoServerRest.METHOD_DELETE, url + layer,
 				null, null, null, true);
 		// TODO : add force to remove ft, ds
 		return status == 200;
@@ -361,27 +378,19 @@ public class GeoServerRest {
 	 *            Name of the datastore
 	 * @param f
 	 *            Zip {@link java.io.File} to upload containing a shapefile
-	 * @param createStyle
-	 *            True to create a default style @see
-	 *            {@link #createStyle(String)}
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	public boolean createDatastore(String ws, String ds, Path f,
-			boolean createStyle) throws IOException {
+	public boolean createDatastore(String ws, String ds, Path f) throws IOException {
+		Log.debug(Geonet.GEOPUBLISH, "Creating datastore " + ds + " in workspace " + ws + " from path " + f.toString());
 		int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
 				+ "/datastores/" + ds + "/file.shp", null, f,
 				"application/zip", false);
 
-		if (createStyle) {
-			createStyle(ds);
-		}
-
 		return status == 201;
 	}
 
-	public boolean createDatastore(String ws, String ds, String file,
-			boolean createStyle) throws IOException {
+	public boolean createDatastore(String ws, String ds, String file) throws IOException {
 		String type = "";
 		String extension = file.substring(file.lastIndexOf('.'), file.length());
 		if (file.startsWith("http://")) {
@@ -390,13 +399,10 @@ public class GeoServerRest {
 			type = "external";
 		}
 
+		Log.debug(Geonet.GEOPUBLISH, "Creating datastore " + ds + " in workspace " + ws + " from file " + file);
 		int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
 				+ "/datastores/" + ds + "/" + type + extension, file, null,
 				"text/plain", false);
-
-		if (createStyle) {
-			createStyle(ds);
-		}
 
 		return status == 201;
 	}
@@ -406,18 +412,17 @@ public class GeoServerRest {
 	 *
 	 * @param ds
 	 * @param f
-	 * @param createStyle
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	public boolean createDatastore(String ds, Path f, boolean createStyle)
+	public boolean createDatastore(String ds, Path f)
 			throws IOException {
-		return createDatastore(getDefaultWorkspace(), ds, f, createStyle);
+		return createDatastore(getDefaultWorkspace(), ds, f);
 	}
 
-	public boolean createDatastore(String ds, String file, boolean createStyle)
+	public boolean createDatastore(String ds, String file)
 			throws IOException {
-		return createDatastore(getDefaultWorkspace(), ds, file, createStyle);
+		return createDatastore(getDefaultWorkspace(), ds, file);
 	}
 
 	/**
@@ -482,61 +487,119 @@ public class GeoServerRest {
 	}
 
 	/**
+	 * Create a default style in the default workspace for the layer named
+	 * {layer}_style copied from the default style set by GeoServer
+	 * (eg. polygon.sld for polygon).
+	 *
+	 * @param layer
+	 * @return
+	 */
+	public boolean createStyle(String layer) {
+		return createStyle(getDefaultWorkspace(), layer, "");
+	}
+
+	/**
 	 * Create a default style for the layer named {layer}_style copied from the
 	 * default style set by GeoServer (eg. polygon.sld for polygon).
 	 *
 	 * @param layer
 	 * @return
 	 */
-	public int createStyle(String layer) {
-		try {
-			int status = sendREST(GeoServerRest.METHOD_GET, "/layers/" + layer
-					+ ".xml", null, null, null, true);
+	public boolean createStyle(String ws, String layer) {
+		return createStyle(ws, layer, "");
+	}
 
+	/**
+	 * Create a style for the layer named {layer}_style from the provided sld
+	 * content, if not empty. If it fails, fallback to default style set by
+	 * GeoServer (eg. polygon.sld for polygon).
+	 *
+	 * @param layer
+	 * @param sld body content
+	 */
+	public boolean createStyle(String ws, String layer, String sldbody) {
+		try {
+			String body, url;
+			int status;
+
+			/* first check if the style exists in geoserver */
+			url = "/styles/";
+			if (pushStyleInWorkspace)
+				url += ws + ":";
+			url += layer + "_style?quietOnNotFound=true";
+			Log.debug(Geonet.GEOPUBLISH, "Checking if a style named " + layer + "_style already exists in workspace " + ws);
+			status = sendREST(GeoServerRest.METHOD_GET, url, null, null, null, true);
 			checkResponseCode(status);
-			Element layerProperties = Xml.loadString(getResponse(), false);
-			String styleName = layerProperties.getChild("defaultStyle")
+
+			body = "<style><name>" + layer + "_style</name><filename>"
+				+ layer + ".sld</filename></style>";
+			url = "/styles";
+			if (pushStyleInWorkspace)
+				url = "/workspaces/" + ws + "/styles";
+			/* only POST the xml style if it doesnt exist */
+			if (status != 200) {
+				Log.debug(Geonet.GEOPUBLISH, "Creating style " + layer + "_style for layer " + layer);
+				status = sendREST(GeoServerRest.METHOD_POST, url, body, null,
+					"text/xml", true);
+				checkResponseCode(status);
+			}
+			if (!sldbody.isEmpty()) {
+				if(Log.isDebugEnabled(Geonet.GEOPUBLISH))
+					Log.debug(Geonet.GEOPUBLISH, "GeoFile contains an sld, trying to use it");
+				status = sendREST(GeoServerRest.METHOD_PUT, url + "/" + layer
+						+ "_style", sldbody, null,
+						"application/vnd.ogc.sld+xml", true);
+
+				if (status != 200)
+					Log.warning(Geonet.GEOPUBLISH,"The sld file was probably not valid, falling back to default");
+			}
+			if (sldbody.isEmpty() || (!sldbody.isEmpty() && status != 200)) {
+				Element layerProperties = Xml.loadString(getLayerInfo(layer), false);
+				String styleName = layerProperties.getChild("defaultStyle")
 					.getChild("name").getText();
 
-			status = sendREST(GeoServerRest.METHOD_GET, "/styles/" + styleName
-					+ ".sld", null, null, null, true);
+				Log.debug(Geonet.GEOPUBLISH, "Getting default style for " + styleName + " to apply to layer " + layer + " in workspace " + ws);
+				/* get the default style (polygon, line, point) from the global styles */
+				status = sendREST(GeoServerRest.METHOD_GET, "/styles/" + styleName
+					+ ".sld?quietOnNotFound=true", null, null, null, true);
+
+				status = sendREST(GeoServerRest.METHOD_PUT, url + "/" + layer
+						+ "_style", getResponse(), null,
+						"application/vnd.ogc.sld+xml", true);
+			}
             checkResponseCode(status);
 
-			String currentStyle = getResponse();
-
-			String body = "<style><name>" + layer + "_style</name><filename>"
-					+ layer + ".sld</filename></style>";
-			status = sendREST(GeoServerRest.METHOD_POST, "/styles", body, null,
-					"text/xml", true);
-            checkResponseCode(status);
-
-			status = sendREST(GeoServerRest.METHOD_PUT, "/styles/" + layer
-					+ "_style", currentStyle, null,
-					"application/vnd.ogc.sld+xml", true);
-            checkResponseCode(status);
-
+			Log.debug(Geonet.GEOPUBLISH, "Adding enable flag to layer");
 			body = "<layer><defaultStyle><name>"
 					+ layer
-					+ "_style</name></defaultStyle><enabled>true</enabled></layer>";
+					+ "_style</name>";
+			if (pushStyleInWorkspace)
+				body += "<workspace>" + ws + "</workspace>";
+			body += "</defaultStyle><enabled>true</enabled></layer>";
 
+			url = "/layers/";
+			if (!ws.isEmpty())
+				url += ws + ":";
 			// Add the enable flag due to GeoServer bug
 			// http://jira.codehaus.org/browse/GEOS-3964
-			status = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + layer,
+			status = sendREST(GeoServerRest.METHOD_PUT, url + layer,
 					body, null, "text/xml", true);
             checkResponseCode(status);
 
 		} catch (Exception e) {
 			if(Log.isDebugEnabled(LOGGER_NAME))
 				Log.debug(LOGGER_NAME, "Failed to create style for layer: "
-					+ layer + ", error is: " + e.getMessage());
+					+ layer + " in workspace " + ws + ", error is: " + e.getMessage());
 		}
 
-		return status;
+		return status == 200;
 	}
 
 	private void checkResponseCode(int status2) {
 	    if(status2 > 399) {
 	        Log.warning(Geonet.GEOPUBLISH, "Warning a bad response code to message was returned:"+status2);
+		if (!response.isEmpty())
+			Log.warning(Geonet.GEOPUBLISH, "Response content:"+response);
 	    }
     }
 
@@ -565,21 +628,27 @@ public class GeoServerRest {
 		return 201 == status;
 	}
 
-	public boolean createFeatureType(String ds, String ft, boolean createStyle,
+	public boolean createFeatureType(String ds, String ft,
 			String metadataUuid, String metadataTitle, String metadataAbstract) throws IOException {
-		return createFeatureType(getDefaultWorkspace(), ds, ft, createStyle,
+		return createFeatureType(getDefaultWorkspace(), ds, ft,
 				metadataUuid, metadataTitle, metadataAbstract);
 	}
 
 	public boolean createFeatureType(String ws, String ds, String ft,
-			boolean createStyle, String metadataUuid, String metadataTitle, String metadataAbstract)
+			String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
 		String xml = "<featureType><name>" + ft + "</name><title>" + ft
 				+ "</title>" + "</featureType>";
 
-		status = sendREST(GeoServerRest.METHOD_POST, "/workspaces/" + ws
-				+ "/datastores/" + ds + "/featuretypes", xml, null, "text/xml",
-				true);
+		String url = "/workspaces/" + ws + "/datastores/" + ds + "/featuretypes";
+		Log.debug(Geonet.GEOPUBLISH, "Checking if a featuretype named " + ft + " already exists in workspace " + ws +", datastore " + ds);
+		status = sendREST(GeoServerRest.METHOD_GET, url + "/" + ft, null, null, null, true);
+		if (status != 200) {
+			Log.debug(Geonet.GEOPUBLISH, "Creating featuretype " + ft + " in workspace " + ws + " within datastore " + ds);
+			status = sendREST(GeoServerRest.METHOD_POST, url, xml, null, "text/xml",
+					true);
+			checkResponseCode(status);
+		}
 
 		xml = "<featureType><title>"
 				+ (metadataTitle != null ? metadataTitle : ft)
@@ -616,19 +685,8 @@ public class GeoServerRest {
 					+ "</metadataLink>"
 				+ "</metadataLinks>"
 			+ "</featureType>";
-		status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
-				+ "/datastores/" + ds + "/featuretypes/" + ft, xml, null,
+		status = sendREST(GeoServerRest.METHOD_PUT, url + "/" + ft, xml, null,
 				"text/xml", true);
-
-		// Create layer for feature type (require for MapServer REST API)
-		status = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + ft, null, null,
-				"text/xml", false);
-
-		checkResponseCode(status);
-
-		if (createStyle) {
-			createStyle(ft);
-		}
 
 		return 201 == status;
 	}
@@ -658,7 +716,7 @@ public class GeoServerRest {
         if(Log.isDebugEnabled(LOGGER_NAME)) {
             Log.debug(LOGGER_NAME, "url:" + url);
             Log.debug(LOGGER_NAME, "method:" + method);
-            Log.debug(LOGGER_NAME, "postData:" + postData);
+            if (postData != null) Log.debug(LOGGER_NAME, "postData:" + postData);
         }
 
 		HttpRequestBase m;

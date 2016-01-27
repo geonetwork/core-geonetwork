@@ -55,26 +55,32 @@
             </div>
 
             <!-- ResponseDocument -->
-            <div>
-              <div class="form-group">
-                <label><a role="button" ng-click="toggleOutputs()"><span class="caret"></span> Outputs</a></label>
-                <div class="form-inline" ng-class="{'collapse': true, 'in': outputsVisible}">
-                  <div class="form-group" ng-repeat="output in processDescription.processOutputs.output">
-                    <div class="checkbox">
-                      <label>
-                        <input type="checkbox" id="{{::output.identifier.value}}" ng-model="output.value"> {{::output.title.value}}
-                      </label>
-                    </div>
-                    <div class="checkbox">
-                      <label>
-                        <input type="checkbox" id="{{::output.identifier.value}}_asReference" ng-model="output.asReference"> asReference
-                      </label>
-                    </div>
-                  </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-default" data-ng-click="submit()" >
+                <span class="fa fa-gear" data-ng-class="{'fa-spin' : running}"></span>&nbsp;<span translate>wpsExecute</span>
+              </button>
+              <button type="submit" class="btn btn-default" data-ng-click="displayOutputOpts = !displayOutputOpts"
+                      data-ng-class="{active: displayOutputOpts}">
+                <span class="caret"></span>
+              </button>
+              <div class="form-group output-opts" data-ng-show="displayOutputOpts">
+
+                <div class="form-group" ng-repeat="output in ::processDescription.processOutputs.output">
+                  <input type="radio" value="{{::output.identifier.value}}"
+                         ng-model="selectedOutput.identifier">{{::output.title.value}}
+
+                  <ul ng-if="output.identifier.value == selectedOutput.identifier">
+                    <li data-ng-repeat="format in ::output.complexOutput.supported.format">
+                      <input type="radio" value="{{::format.mimeType}}"
+                             ng-model="output.mimeType">{{::format.mimeType}}
+                    </li>
+                  </ul>
                 </div>
               </div>
+            </div>
 
-              <div class="form-group">
+            <div>
+              <div class="form-group optional">
                 <label><a role="button" ng-click="toggleOptions()"><span class="caret"></span> Options</a></label>
                 <div ng-class="{'collapse': true, 'in': optionsVisible}">
                   <div class="checkbox">
@@ -97,12 +103,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div class="form-group">
-              <button type="submit" class="btn btn-default" data-ng-click="submit()" >
-                <span class="fa fa-gear"></span><span translate>wpsExecute</span>
-              </button>
             </div>
 
           </form>
@@ -173,7 +173,7 @@
               <div class="row" ng-repeat="output in executeResponse.processOutputs.output">
 
                 <div ng-if="::output.data.complexData">
-                  <h5 class="col-sm-6">{{::output.title.value}}</h4>
+                  <h4 class="col-sm-6">{{::output.title.value}}</h4>
                   <div class="col-sm-6">
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{{::output.identifier.value}}_modal-dialog">Display</button>
                   </div>
@@ -208,7 +208,7 @@
                 </div> <!-- ng-if="::output.data.complexData" -->
 
                 <div ng-if="::output.reference">
-                  <h5 class="col-sm-6">{{::output.title.value}}</h4>
+                  <h4 class="col-sm-6">{{::output.title.value}}</h4>
                   <div class="col-sm-6">
                     <a class="btn btn-default" target="_blank" href="{{::output.reference.href}}">Download</a>
                   </div>

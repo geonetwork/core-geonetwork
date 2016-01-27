@@ -3080,7 +3080,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
         <condition/>
 
     </element>
-    <element name="gmd:protocol" id="398.0">
+    <element name="gmd:protocol" id="398.0" alias="protocol">
         <label>Protocole</label>
         <description>Protocole de la connexion à utiliser</description>
         <help>Protocole de connexion utilisé, par exemple FTP.</help>

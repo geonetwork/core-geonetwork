@@ -154,7 +154,7 @@
 
                       var filteredElementInPath =
                           $.inArray(
-                              encodeURIComponent(category['@value']),
+                          encodeURIComponent(category['@value']),
                           dimensionFilter);
                       // Restrict the path to its parent
                       if (filteredElementInPath !== -1) {
@@ -162,7 +162,7 @@
                           dimension: scope.categoryKey,
                           value: dimensionFilter.
                               slice(1, filteredElementInPath).
-                                  join('/')
+                              join('/')
                         });
                       }
                     }
@@ -197,11 +197,11 @@
 
 
                 /**
-                 * Check that current category is already used
-                 * in current filter.
-                 * @param {Object} category
-                 * @return {boolean|*}
-                 */
+               * Check that current category is already used
+               * in current filter.
+               * @param {Object} category
+               * @return {boolean|*}
+               */
                 scope.isOnDrillDownPath = function(category) {
                   // Is selected if the category value is defined in the
                   // facet.q parameter (ie. combination of
@@ -209,9 +209,12 @@
                   category.isSelected =
                       angular.isUndefined(scope.params['facet.q']) ?
                       false :
-                      $.inArray(
+                      ($.inArray(
                       encodeURIComponent(category['@value']),
-                      scope.params['facet.q'].split(/&|\//)) !== -1;
+                      scope.params['facet.q'].split(/&|\//)) !== -1 ||
+                      $.inArray(
+                      category['@value'],
+                      scope.params['facet.q'].split(/&|\//)) !== -1);
                   return category.isSelected;
                 };
 
@@ -232,9 +235,12 @@
                     var dimensionFilter = dimensionList[i].split('/');
                     if (dimensionFilter[0] ==
                         scope.facetConfig.map[scope.categoryKey] &&
-                        $.inArray(
+                        ($.inArray(
                         encodeURIComponent(category['@value']),
-                        dimensionFilter) !== -1) {
+                        scope.params['facet.q'].split(/&|\//)) !== -1 ||
+                        $.inArray(
+                        category['@value'],
+                        scope.params['facet.q'].split(/&|\//)) !== -1)) {
                       return true;
                     }
                   }

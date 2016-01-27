@@ -44,7 +44,7 @@ public class UserSecurity extends GeonetEntity implements Serializable {
     public
     @Nonnull
     UserSecurity setPassword(@Nonnull char[] password) {
-        this._password = password.clone();
+        this._password = password == null ? new char[0] : password.clone();
         return this;
     }
 

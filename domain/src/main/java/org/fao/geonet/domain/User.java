@@ -39,6 +39,7 @@ public class User extends GeonetEntity implements UserDetails {
     private Profile _profile = Profile.RegisteredUser;
     private UserSecurity _security = new UserSecurity();
     private String _lastLoginDate;
+    private Boolean _isEnabled;
 
     /**
      * Get the userid.   This is a generated value and as such new instances should not have this set as it will simply be ignored
@@ -367,10 +368,17 @@ public class User extends GeonetEntity implements UserDetails {
         return true;
     }
 
-    @Override
-    @Transient
+    @Column
     public boolean isEnabled() {
-        return true;
+        if (_isEnabled == null) {
+            this._isEnabled = true;
+        }
+        return _isEnabled;
+    }
+
+    public User setEnabled(Boolean enabled) {
+        this._isEnabled = enabled;
+        return this;
     }
 
     /**
