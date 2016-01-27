@@ -27,7 +27,7 @@
 
       $scope.pageMenu = {
         folder: 'usergroup/',
-        defaultTab: 'groups',
+        defaultTab: 'users',
         tabs:
             [{
               type: 'groups',
