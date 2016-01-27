@@ -469,6 +469,9 @@ public class DefaultMetadataIndexer
                 moreFields.add(SearchManager.makeField("any", feed.getAtom(),
                         false, true));
             }
+            
+            moreFields.add(SearchManager.makeField(
+                    Geonet.IndexFieldNames.DRAFT, "N", true, true));
 
             if (owner != null) {
                 User user = userRepository

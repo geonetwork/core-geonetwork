@@ -298,7 +298,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 			TopDocs tdocs = performQuery(srvContext, getFrom()-1, getTo(), false); // get enough hits to show a page
 
 			int nrHits = getTo() - (getFrom()-1);
-			if (tdocs.scoreDocs.length >= nrHits) {
+			if (tdocs.scoreDocs.length >= nrHits || nrHits <= 0) {
                 Set<Integer> userGroups = null;
                 try (IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language.presentationLanguage, _versionToken);) {
                     _versionToken = indexAndTaxonomy.version;
@@ -723,6 +723,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             List<Element> requestedGroups = request.getChildren(SearchParameter.GROUP);
 
             Set<Integer> userGroups = srvContext.getBean(AccessManager.class).getUserGroups(srvContext.getUserSession(), srvContext.getIpAddress(), false);
+            Set<Integer> editableGroups = (srvContext.getUserSession().isAuthenticated() ?
+                    srvContext.getBean(AccessManager.class).getUserGroups(srvContext.getUserSession(), srvContext.getIpAddress(), true)
+                    : new HashSet<Integer>());
             UserSession userSession = srvContext.getUserSession();
             // unless you are logged in as Administrator, check if you are allowed to query the groups in the query
             if (userSession == null || userSession.getProfile() == null ||
@@ -745,8 +748,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 			// if 'restrict to' is set then don't add any other user/group info
 			if ((request.getChild(SearchParameter.GROUP) == null) ||
                 (StringUtils.isEmpty(request.getChild(SearchParameter.GROUP).getText().trim()))) {
-				for (Integer group : userGroups) {
-					request.addContent(new Element(SearchParameter.GROUP).addContent(""+group));
+                for (Integer group : userGroups) {
+                    request.addContent(new Element(SearchParameter.GROUP).addContent(""+group));
+                }               
+                for (Integer group : editableGroups) {
+                    request.addContent(new Element(SearchParameter.GROUPEDIT).addContent(""+group));
                 }
                 String owner = null;
                 if (userSession != null) {

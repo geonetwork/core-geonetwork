@@ -27,6 +27,7 @@ import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.Metadata_;
@@ -47,6 +48,7 @@ import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.specification.MetadataDraftSpecs;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -215,6 +217,8 @@ public class DraftMetadataManager extends DefaultMetadataManager {
                 id = createDraft(context, id, groupOwner, source, owner,
                         parentUuid, md.getDataInfo().getType().codeString,
                         fullRightsForGroup, md.getUuid());
+                this.updateMetadata(context, Integer.toString(md.getId()), md.getXmlData(false), false, true, true, 
+                        context.getLanguage(), md.getDataInfo().getChangeDate().toString(), false);
             } else if (isPublished
                     && mdDraftRepository.findOneByUuid(md.getUuid()) != null) {
                 // We already have a draft created
@@ -567,6 +571,17 @@ public class DraftMetadataManager extends DefaultMetadataManager {
         return info;
     }
 
+    protected Map<Integer, MetadataSourceInfo> getSourceInfos(
+            Collection<Integer> metadataIds) {
+        Map<Integer, MetadataSourceInfo> findAllSourceInfo = mdRepository
+                        .findAllSourceInfo(MetadataSpecs.hasMetadataIdIn(metadataIds));
+        findAllSourceInfo
+                .putAll(mdDraftRepository.findAllSourceInfo(
+                        MetadataDraftSpecs.hasMetadataIdIn(metadataIds)));
+
+        return findAllSourceInfo;
+    }
+
     /**
      * @see org.fao.geonet.kernel.metadata.DefaultMetadataManager#getMetadataObject(java.lang.Integer)
      * @param id
@@ -581,7 +596,7 @@ public class DraftMetadataManager extends DefaultMetadataManager {
         }
         return md;
     }
-    
+
     /**
      * @see org.fao.geonet.kernel.metadata.DefaultMetadataManager#getMetadataObject(java.lang.String)
      * @param uuid
@@ -591,7 +606,7 @@ public class DraftMetadataManager extends DefaultMetadataManager {
     @Override
     public IMetadata getMetadataObject(String uuid) throws Exception {
         IMetadata md = super.getMetadataObject(uuid);
-        if(md == null) {
+        if (md == null) {
             md = mdDraftRepository.findOneByUuid(uuid);
         }
         return md;

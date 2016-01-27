@@ -100,6 +100,8 @@
 
         <facet name="maintenanceAndUpdateFrequency" indexKey="cl_maintenanceAndUpdateFrequency"
                label="maintenanceAndUpdateFrequencies"/>
+               
+        <facet name="draft" indexKey="draft" label="draft"/>
       </facets>
 
       <summaryTypes>
@@ -126,6 +128,7 @@
           <item facet="gemetKeyword"
                 translator="term:http://geonetwork-opensource.org/gemet"/>
           -->
+          <item facet="draft"/>
       </summaryType>
 
       <summaryType name="manager" format="DIMENSION">
@@ -143,6 +146,8 @@
         <item facet="standard" max="15" sortBy="value"/>
         <item facet="isHarvested" max="2" sortBy="value" translator="apploc:"/>
         <item facet="metadataType" max="3" sortBy="value" translator="apploc:recordType-"/>
+        
+        <item facet="draft"/>
       </summaryType>
 
       <!-- (deprecated) old-style configuration supporting only
