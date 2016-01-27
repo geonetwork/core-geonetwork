@@ -246,6 +246,7 @@
     "createKeyword": "추가",
     "createReport": "보고서 생성",
     "createThesaurus": "생성",
+    "enableThesaurusHelp": "In multinode mode, use this option to enable or disable a thesaurus for this node.",
     "createThesaurusTitle": "동의어 사전 생성",
     "criteria": "기준",
     "criteriaValue": "값",
