@@ -1,0 +1,47 @@
+<div>
+  <ul class="nav nav-pills">
+    <li data-ng-repeat="layer in layers"
+        data-ng-if="layer.background != true"
+        data-ng-class="{active: layer == currentLayer}">
+      <a role="tab" data-ng-click="setLayer(layer)">
+        {{layer.get('label')}}
+        <span data-ng-show="layer.get('featureCount')">
+          ({{layer.get('featureCount')}}&nbsp;
+          {{'features' | translate}})
+        </span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content" data-ng-show="currentLayer">
+    <div role="tabpanel" class="tab-pane active" id="home">
+      <div class="btn-group gn-btn-data-download">
+        <button type="button"
+                class="btn btn-default"
+                title="downloadLayer">
+          <i class="fa fa-download"/>
+        </button>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="caret"></span>
+          <span class="sr-only"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-left">
+          <!-- TODO: Collect WFS output formats -->
+          <li><a href="#">in Shapefile</a></li>
+        </ul>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2">
+          <div data-gn-wfs-filter-facets=""
+               data-layer="currentLayer"
+               data-boot-mode="solr"></div>
+        </div>
+        <div class="col-md-10">
+          <div data-gn-data-table="currentLayer.get('solrQ')"
+               data-exclude-cols="excludeCols"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

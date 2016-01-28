@@ -9,7 +9,9 @@
     'gnUrlUtils',
     'gnGlobalSettings',
     '$http',
-    function(gnHttp, gnUrlUtils, gnGlobalSettings, $http) {
+    '$q',
+    '$translate',
+    function(gnHttp, gnUrlUtils, gnGlobalSettings, $http, $q, $translate) {
 
       var solrProxyUrl = gnHttp.getService('solrproxy');
 
@@ -178,7 +180,8 @@
           wt: 'json'
         });
 
-        return $http.get(url).then(function(response) {
+        var defer = $q.defer();
+        $http.get(url).then(function(response) {
           var indexInfos = [];
           try {
             var ftF = response.data.response.docs[0].ftColumns_s.split('|');
@@ -192,10 +195,15 @@
             }
           }
           catch (e) {
-            return;
+            var msg = $translate('wfsFeatureNotIndexed', {
+              wfsUrl: wfsUrl,
+              featureTypeName: featureTypeName
+            });
+            defer.reject(msg);
           }
-          return indexInfos;
+          defer.resolve(indexInfos);
         });
+        return defer.promise;
       };
 
       /**
@@ -382,11 +390,17 @@
        * @param {string} featuretype name
        * @return {httpPromise} when indexing is done
        */
-      this.indexWFSFeatures = function(url, type) {
-        return $http.get('wfs.harvest?' +
-            'uuid=' + '' +
-            '&url=' + encodeURIComponent(url) +
-            '&typename=' + encodeURIComponent(type));
+      this.indexWFSFeatures = function(url, type, idxConfig) {
+        return $http.put('wfs.harvest', {
+          url: url,
+          typeName: type,
+          tokenize: idxConfig
+        }
+        ).then(function(data) {
+          console.log(data);
+        }, function(response) {
+          console.log(response);
+        });
       };
     }]);
 })();

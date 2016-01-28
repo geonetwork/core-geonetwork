@@ -49,7 +49,7 @@
             </button>
             <!-- DROP DOWN CHECKBOX -->
             <div class="dropdown">
-                <button class="btn btn-link btn-xs" data-toggle="dropdown" data-ng-click="publish(nodeId)"
+                <button class="btn btn-link btn-xs" data-toggle="dropdown"
                   data-ng-class="{'disabled': (!isPublished || !nodeId)}">
                   <i class="fa fa-clipboard"></i>&nbsp;<span data-translate="">linkService</span>
                   <span class="caret"></span>
@@ -87,7 +87,7 @@
               </div>
           </div>
           <button class="btn btn-link btn-xs" data-ng-click="openStyler(nodeId)"
-                  data-ng-class="hasStyler ? '' : 'hidden'">
+                  data-ng-class="hasStyler ? ((isPublished || !nodeId) ? '': 'disabled') : 'hidden'">
             <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">style</span>
           </button>
         </div>

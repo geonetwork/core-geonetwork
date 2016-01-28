@@ -30,6 +30,9 @@
         controller: ['$scope', '$http', 'gnGetCoordinate',
           function($scope, $http, gnGetCoordinate) {
 
+            var parent = $scope.$parent;
+            var lang = parent.langs[parent.lang];
+
             $scope.modelOptions =
                 angular.copy(gnGlobalSettings.modelOptions);
 
@@ -78,7 +81,7 @@
               var url = 'http://api.geonames.org/searchJSON';
               $http.get(url, {
                 params: {
-                  lang: 'fr',
+                  lang: lang,
                   style: 'full',
                   type: 'json',
                   maxRows: 10,

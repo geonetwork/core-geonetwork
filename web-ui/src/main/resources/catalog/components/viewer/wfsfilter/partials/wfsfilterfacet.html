@@ -1,33 +1,105 @@
 <form name="wfsFilterForm">
+  <a class="btn btn-link btn-xs"
+     data-ng-hide="bootMode != 'ondemand' || initialized"
+     data-gn-click-and-spin="checkWFSUrl()"
+     title="{{'filterLayerUsingWfs' | translate}}">
+    <i class="fa fa-filter"></i>&nbsp;
+    <span data-translate="">filterUsingWfs</span>
+  </a>
 
-  <!--Facet count-->
-  <div class="count"><span translate="">featureCount</span>&nbsp;:&nbsp;{{::count}}</div>
-
-  <div class="btn-link" data-ng-show="user.canEditRecord(md)" data-ng-click="indexWFSFeatures()" translate="">indexWFSFeatures</div>
-
-  <!--search input-->
-  <div class="sxt-layertree-filter">
-    <span class="fa fa-times-circle clear" ng-click="clearInput()" ng-hide="searchInput==''" title="{{::'clear'|translate}}"></span>
-    <input type="text" ng-model="searchInput" data-ng-change="filterFacets()" ng-model-options="{ debounce: 400 }"
-           class="layerfilter form-control input-sm" placeholder="{{::'filter'|translate}}">
+  <div data-ng-show="initialized && !isWfsAvailable"
+       class="alert alert-warning"
+       data-translate=""
+       data-translate-values="{'url': '{{wfsUrl}}'}">
+    <button type="button" class="close"
+            data-ng-click="initialized = false"><i class="fa fa-times"/></button>
+    wfsNotAvailable
+  </div>
+  <div data-ng-show="status"
+       class="alert alert-warning">
+    <button type="button" class="close"
+            data-ng-click="status = null"><i class="fa fa-times"/></button>
+    {{status}}
   </div>
 
-  <!--Facet fields-->
-  <div class="gn-facet" data-ng-repeat="field in fields" data-ng-show="(field.values | filter:searchInput).length > 0">
-    <h5 gn-collapsible="field.collapsed" >
-      <span class="fa fa-arrow-circle-right" ng-class="{'fa-rotate-90': !field.collapsed, 'gn-field-empty': !output[field.name]}"></span>
-      {{field.label}}
-    </h5>
-    <div class="list-group" ng-class="{'collapse': field.collapsed}" sxt-custom-scroll>
-      <div class="checkbox list-group-item" data-ng-repeat="facet in field.values | filter:searchInput"
-           data-ng-click="onCheckboxClick(field.name, facet.value, field.type)" data-ng-class="{'selected': output[field.name].values[facet.value]}">
-        <i class="fa" data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square' : 'fa-square-o'"></i>{{::facet.value}}&nbsp;({{::facet.count}})
-      </div>
+  <div class="btn-group btn-group-xs gn-layer-btn"
+       data-ng-show="initialized && !isFeaturesIndexed && user.canEditRecord(md)">
+    <div class="btn btn-default"
+         data-ng-click="indexWFSFeatures()">
+      <i class="fa fa-cog"></i>&nbsp;
+      <span data-translate="">indexWFSFeatures</span>
+    </div>
+    <div class="btn btn-default"
+         data-ng-click="checkFeatureTypeInSolr()">
+      <i class="fa fa-refresh"/>
     </div>
   </div>
 
-  <!--Reset button-->
-  <button class="btn btn-success" data-gn-click-and-spin="filterWMS()"><i class="fa fa-filter"></i>&nbsp;<span translate="">filter</span></button>
-  <button class="btn btn-success" data-gn-click-and-spin="resetFacets()"><i class="fa fa-close"></i>&nbsp;<span translate="">reset</span></button>
+  <div data-ng-show="initialized && isFeaturesIndexed">
+    <!--Facet count-->
+    <div class="count" data-ng-show="displayCount">
+      {{::count}}&nbsp;<span translate="">features</span>
+    </div>
 
+    <!--search input-->
+    <div class="gn-layertree-filter">
+      <span class="fa fa-times-circle clear"
+            data-ng-click="clearInput()"
+            data-ng-hide="searchInput==''"
+            title="{{'clear' | translate}}"></span>
+      <input type="text"
+             data-gn-focus-on="initialized && isFeaturesIndexed"
+             data-ng-model="searchInput"
+             data-ng-change="filterFacets()"
+             data-ng-model-options="{ debounce: 400 }"
+             class="layerfilter form-control input-sm"
+             placeholder="{{'filter'|translate}}">
+    </div>
+
+    <!--Facet fields-->
+    <div class="gn-facet"
+         data-ng-repeat="field in fields">
+      <h5 gn-collapsible="field.collapsed">
+        <span class="fa fa-arrow-circle-right"
+              data-ng-class="{'fa-rotate-90': !field.collapsed, 'gn-field-empty': !output[field.name]}"></span>
+        {{field.label}}
+      </h5>
+      <div class="list-group"
+           data-ng-class="{'collapse': field.collapsed}">
+        <div class="checkbox list-group-item"
+             data-ng-repeat="facet in field.values"
+             data-ng-click="onCheckboxClick(field.name, facet.value, field.type)"
+             data-ng-class="{'selected': output[field.name].values[facet.value]}">
+          <i class="fa"
+             data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square' : 'fa-square-o'"></i>{{::facet.value}}&nbsp;({{::facet.count}})
+        </div>
+      </div>
+    </div>
+
+    <!--Reset button-->
+    <div class="btn-group btn-group-xs gn-layer-btn">
+      <button class="btn btn-default"
+              data-gn-click-and-spin="filterWMS()">
+        <i class="fa fa-filter"></i>&nbsp;
+        <span data-translate="">filter</span>
+      </button>
+      <button class="btn btn-default"
+              data-gn-click-and-spin="resetFacets()">
+        <i class="fa fa-close"></i>&nbsp;
+        <span data-translate="">reset</span>
+      </button>
+      <div class="btn btn-default"
+           data-ng-show="user.canEditRecord(md)"
+           data-ng-click="indexWFSFeatures()">
+        <i class="fa fa-cog"></i>&nbsp;
+        <span data-translate="">indexWFSFeatures</span>
+      </div>
+      <div class="btn btn-default"
+           data-ng-show="user.canEditRecord(md)"
+           data-ng-click="checkFeatureTypeInSolr()">
+        <i class="fa fa-refresh"/>
+      </div>
+      <!-- TODO: Add a drop features from index -->
+    </div>
+  </div>
 </form>

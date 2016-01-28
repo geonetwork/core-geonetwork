@@ -90,8 +90,8 @@ public abstract class XmlSerializer {
 		String xlR = _settingManager.getValue("system/xlinkResolver/enable");
 		if (xlR != null) {
 			boolean isEnabled = xlR.equals("true");
-			if (isEnabled) Log.info(Geonet.DATA_MANAGER,"XLink Resolver enabled.");
-			else Log.info(Geonet.DATA_MANAGER,"XLink Resolver disabled.");
+			if (isEnabled) Log.debug(Geonet.DATA_MANAGER,"XLink Resolver enabled.");
+			else Log.debug(Geonet.DATA_MANAGER,"XLink Resolver disabled.");
 			return isEnabled; 
 		} else {
 			Log.error(Geonet.DATA_MANAGER,"XLink resolver setting does not exist! XLink Resolver disabled.");

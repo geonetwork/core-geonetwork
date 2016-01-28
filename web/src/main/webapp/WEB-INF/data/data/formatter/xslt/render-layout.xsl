@@ -149,7 +149,6 @@
   </xsl:template>
 
 
-
   <xsl:template mode="render-view"
                 match="field[template]"
                 priority="2">
@@ -211,7 +210,6 @@
     </xsl:for-each>
 
   </xsl:template>
-
 
   <!-- Forgot all none matching elements -->
   <xsl:template mode="render-view" match="*|@*"/>

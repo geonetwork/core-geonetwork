@@ -89,6 +89,7 @@
         'Administrator'];
       $scope.info = {};
       $scope.user = {};
+      $rootScope.user = $scope.user;
       $scope.authenticated = false;
       $scope.initialized = false;
 

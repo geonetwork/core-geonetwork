@@ -531,7 +531,13 @@
     </dependency>
 
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>solr-bridge</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>wfsfeature-harvester</artifactId>
       <version>${project.version}</version>
     </dependency>

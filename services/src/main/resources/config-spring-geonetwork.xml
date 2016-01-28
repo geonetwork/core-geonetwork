@@ -68,11 +68,4 @@
   </bean>
   <bean id="formatterCachePublishListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCachePublishListener" />
   <bean id="formatterCacheDeletionListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCacheDeletionListener" />
-
-  <bean id="solrProxy"
-        class="org.fao.geonet.services.solr.SolrProxy">
-    <property name="solrServerUrl" value="${solr.url}"/>
-    <property name="solrCollection" value="${solr.collection}"/>
-  </bean>
-
 </beans>
