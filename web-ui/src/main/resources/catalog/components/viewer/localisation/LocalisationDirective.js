@@ -30,6 +30,9 @@
         controller: ['$scope', '$http', 'gnGetCoordinate',
           function($scope, $http, gnGetCoordinate) {
 
+            var parent = $scope.$parent;
+            var lang = parent.langs[parent.lang];
+
             $scope.modelOptions =
                 angular.copy(gnGlobalSettings.modelOptions);
 
@@ -78,7 +81,7 @@
               var url = 'http://api.geonames.org/searchJSON';
               $http.get(url, {
                 params: {
-                  lang: 'fr',
+                  lang: lang,
                   style: 'full',
                   type: 'json',
                   maxRows: 10,
@@ -149,6 +152,18 @@
               $(':focus').blur();
               scope.collapsed = true;
             });
+          });
+
+          $('body').on('click', function(e) {
+            if (!$.contains(element[0], e.target)) { return; }
+            if ((element.find('input')[0] != e.target) &&
+                ($(e.target).parents('.dropdown-menu')[0] !=
+                element.find('.dropdown-menu')[0])) {
+              scope.$apply(function() {
+                $(':focus').blur();
+                scope.collapsed = true;
+              });
+            }
           });
 
         }

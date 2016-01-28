@@ -37,10 +37,11 @@
       'Metadata',
       'gnWfsService',
       'gnGlobalSettings',
-      function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log, 
+      'gnViewerSettings',
+      function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
-          gnGlobalSettings) {
+          gnGlobalSettings, viewerSettings) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -52,6 +53,43 @@
             'code': 'EPSG:3857',
             'label': 'Google mercator (EPSG:3857)'
           }]
+        };
+
+        /**
+         * @description
+         * Check if the layer is in the map to avoid adding duplicated ones.
+         *
+         * @param {ol.Map} map obj
+         * @param {string} name of the layer
+         * @param {string} url of the service
+         */
+        var isLayerInMap = function(map, name, url) {
+          if (gnWmsQueue.isPending(url, name)) {
+            return true;
+          }
+          for (var i = 0; i < map.getLayers().getLength(); i++) {
+            var l = map.getLayers().item(i);
+            var source = l.getSource();
+            if (source instanceof ol.source.WMTS &&
+                l.get('url') == url) {
+              if (l.get('name') == name) {
+                return true;
+              }
+            }
+            else if (source instanceof ol.source.TileWMS ||
+                source instanceof ol.source.ImageWMS) {
+              if (source.getParams().LAYERS == name &&
+                  l.get('url').split('?')[0] == url.split('?')[0]) {
+                return true;
+              }
+            }
+          }
+          return false;
+        };
+
+        var getImageSourceRatio = function(map, maxWidth) {
+          var ratio = maxWidth / map.getSize()[0];
+          return Math.min(1.5, Math.max(1, ratio));
         };
 
         return {
@@ -429,12 +467,22 @@
 
             var options = layerOptions || {};
 
-            var source = new ol.source.TileWMS({
-              params: layerParams,
-              url: options.url
-            });
+            var source, olLayer;
+            if (viewerSettings.singleTileWMS) {
+              source = new ol.source.ImageWMS({
+                params: layerParams,
+                url: options.url,
+                ratio: getImageSourceRatio(map, 2048)
+              });
+            } else {
+              source = new ol.source.TileWMS({
+                params: layerParams,
+                url: options.url,
+                gutter: 15
+              });
+            }
 
-            var olLayer = new ol.layer.Tile({
+            var layerOptions = {
               url: options.url,
               type: 'WMS',
               opacity: options.opacity,
@@ -442,13 +490,20 @@
               source: source,
               legend: options.legend,
               attribution: options.attribution,
+              attributionUrl: options.attributionUrl,
               label: options.label,
               group: options.group,
               isNcwms: options.isNcwms,
+              advanced: options.advanced,
               minResolution: options.minResolution,
               maxResolution: options.maxResolution,
               cextent: options.extent
-            });
+            };
+            if (viewerSettings.singleTileWMS) {
+              olLayer = new ol.layer.Image(layerOptions);
+            } else {
+              olLayer = new ol.layer.Tile(layerOptions);
+            }
 
             if (options.metadata) {
               olLayer.set('metadataUrl', options.metadata);
@@ -462,15 +517,21 @@
             ngeoDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 
-            var unregisterEventKey = olLayer.getSource().on('tileloaderror',
+            var unregisterEventKey = olLayer.getSource().on(
+                (viewerSettings.singleTileWMS) ?
+                'imageloaderror' : 'tileloaderror',
                 function(tileEvent, target) {
+                  var url = tileEvent.tile && tileEvent.tile.getKey ?
+                      tileEvent.tile.getKey() : '- no tile URL found-';
+
+                  var layer = tileEvent.currentTarget &&
+                      tileEvent.currentTarget.getParams ?
+                      tileEvent.currentTarget.getParams().LAYERS :
+                      layerParams.LAYERS;
+
                   var msg = $translate('layerTileLoadError', {
-                    url: tileEvent.tile && tileEvent.tile.getKey ?
-                        tileEvent.tile.getKey() : '- no tile URL found-',
-                    layer: tileEvent.currentTarget &&
-                        tileEvent.currentTarget.getParams ?
-                        tileEvent.currentTarget.getParams().LAYERS :
-                        layerParams.LAYERS
+                    url: url,
+                    layer: layer
                   });
                   console.warn(msg);
                   $rootScope.$broadcast('StatusUpdated', {
@@ -479,6 +540,12 @@
                     type: 'danger'});
                   olLayer.get('errors').push(msg);
                   olLayer.getSource().unByKey(unregisterEventKey);
+
+                  gnWmsQueue.error({
+                    url: url,
+                    name: layer,
+                    msg: msg
+                  });
                 });
             return olLayer;
           },
@@ -496,9 +563,12 @@
            *
            * @param {ol.map} map to add the layer
            * @param {Object} getCapLayer object to convert
+           * @param {string} url of the wms service (we want this one instead
+           *  of the one from the capabilities to be sure its persistent)
            * @return {ol.Layer} the created layer
            */
           createOlWMSFromCap: function(map, getCapLayer, url) {
+
             var legend, attribution, attributionUrl, metadata, errors = [];
             if (getCapLayer) {
 
@@ -508,29 +578,31 @@
               // https://github.com/openlayers/ol3/blob/master/src/
               // ol/format/wmscapabilitiesformat.js
               /*
-               if (layer.CRS) {
-               var mapProjection = map.getView().getProjection().getCode();
-               for (var i = 0; i < layer.CRS.length; i++) {
-               if (layer.CRS[i] === mapProjection) {
-               isLayerAvailableInMapProjection = true;
-               break;
-               }
-               }
-               } else {
-               errors.push($translate('layerCRSNotFound'));
-               console.warn($translate('layerCRSNotFound'));
-               }
-               if (!isLayerAvailableInMapProjection) {
-               errors.push($translate('layerNotAvailableInMapProj'));
-               console.warn($translate('layerNotAvailableInMapProj'));
-               }
-               */
+              if (layer.CRS) {
+                var mapProjection = map.getView().getProjection().getCode();
+                for (var i = 0; i < layer.CRS.length; i++) {
+                  if (layer.CRS[i] === mapProjection) {
+                    isLayerAvailableInMapProjection = true;
+                    break;
+                  }
+                }
+              } else {
+                errors.push($translate('layerCRSNotFound'));
+                console.warn($translate('layerCRSNotFound'));
+              }
+              if (!isLayerAvailableInMapProjection) {
+                errors.push($translate('layerNotAvailableInMapProj'));
+                console.warn($translate('layerNotAvailableInMapProj'));
+              }
+              */
 
               // TODO: parse better legend & attribution
               if (angular.isArray(getCapLayer.Style) &&
                   getCapLayer.Style.length > 0) {
-                var legendUrl = getCapLayer.Style[getCapLayer.Style.length - 1]
-                  .LegendURL[0];
+                var legendUrl = (getCapLayer.Style[getCapLayer.
+                    Style.length - 1].LegendURL) ?
+                    getCapLayer.Style[getCapLayer.
+                        Style.length - 1].LegendURL[0] : undefined;
                 if (legendUrl) {
                   legend = legendUrl.OnlineResource;
                 }
@@ -592,6 +664,7 @@
               layer.set('errors', errors);
               return layer;
             }
+
           },
 
 
@@ -868,73 +941,101 @@
             var defer = $q.defer();
             var $this = this;
 
-            gnWmsQueue.add(url, name);
-            gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
-              var capL = gnOwsCapabilities.getLayerInfoFromCap(
-                  name, capObj, md && md.getUuid()),
-                  olL;
-              if (!capL) {
-                // If layer not found in the GetCapabilities
-                // Try to add the layer from the metadata
-                // information only. A tile error loading
-                // may be reported after the layer is added
-                // to the map and will give more details.
+            if (!isLayerInMap(map, name, url)) {
+              gnWmsQueue.add(url, name);
+              gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
+                var capL = gnOwsCapabilities.getLayerInfoFromCap(
+                    name, capObj, md && md.getUuid()),
+                    olL;
+                if (!capL) {
+                  // If layer not found in the GetCapabilities
+                  // Try to add the layer from the metadata
+                  // information only. A tile error loading
+                  // may be reported after the layer is added
+                  // to the map and will give more details.
+                  var o = {
+                    url: url,
+                    name: name,
+                    msg: 'layerNotInCap'
+                  }, errors = [];
+                  olL = $this.addWmsToMap(map, o);
+
+                  if (!angular.isArray(olL.get('errors'))) {
+                    olL.set('errors', []);
+                  }
+                  var errormsg = $translate('layerNotfoundInCapability', {
+                    layer: name,
+                    url: url
+                  });
+                  errors.push(errormsg);
+                  console.warn(errormsg);
+
+                  olL.get('errors').push(errors);
+
+                  gnWmsQueue.error(o);
+                  defer.reject(o);
+                } else {
+                  olL = $this.createOlWMSFromCap(map, capL, url);
+
+                  var finishCreation = function() {
+                    if (!createOnly) {
+                      map.addLayer(olL);
+                    }
+                    gnWmsQueue.removeFromQueue(url, name);
+                    defer.resolve(olL);
+                  };
+
+                  // attach the md object to the layer
+                  if (md) {
+                    olL.set('md', md);
+                    finishCreation();
+                  }
+                  else {
+                    $this.feedLayerMd(olL).finally (finishCreation);
+                  }
+                }
+
+              }, function() {
                 var o = {
                   url: url,
                   name: name,
-                  msg: 'layerNotInCap'
-                }, errors = [];
-                olL = $this.addWmsToMap(map, o);
-
-                if (!angular.isArray(olL.get('errors'))) {
-                  olL.set('errors', []);
-                }
-                var errormsg = $translate('layerNotfoundInCapability', {
-                  layer: name,
-                  url: url
-                });
-                errors.push(errormsg);
-                console.warn(errormsg);
-
-                olL.get('errors').push(errors);
-
+                  msg: 'getCapFailure'
+                };
                 gnWmsQueue.error(o);
                 defer.reject(o);
-              } else {
-                //if (createOnly) {
-                //  olL = $this.createOlWMTSFromCap(map, capL, url);
-                olL = $this.createOlWMSFromCap(map, capL, url);
-                //} else {
-                //  olL = $this.addWmsToMapFromCap(map, capL);
-                //}
-
-                var finishCreation = function() {
-                  if (!createOnly) {
-                    map.addLayer(olL);
-                  }
-                  gnWmsQueue.removeFromQueue(url, name);
-                  defer.resolve(olL);
-                };
-
-                // attach the md object to the layer
-                if (md) {
-                  olL.set('md', md);
-                  finishCreation();
-                } else {
-                  $this.feedLayerMd(olL).finally (finishCreation);
-                }
-              }
-
-            }, function() {
-              var o = {
-                url: url,
-                name: name,
-                msg: 'getCapFailure'
-              };
-              gnWmsQueue.error(o);
-              defer.reject(o);
-            });
+              });
+            }
             return defer.promise;
+          },
+
+          /**
+           * Call a WMS getCapabilities and create ol3 layers for all items.
+           * Add them to the map if `createOnly` is false;
+           *
+           * @param {ol.Map} map to add the layer
+           * @param {string} url of the service
+           * @param {string} name of the layer
+           * @param {boolean} createOnly or add it to the map
+           */
+          addWmsAllLayersFromCap: function(map, url, createOnly) {
+            var $this = this;
+
+            return gnOwsCapabilities.getWMSCapabilities(url).
+                then(function(capObj) {
+
+                  var createdLayers = [];
+
+                  var layers = capObj.layers || capObj.Layer;
+                  for (var i = 0, len = layers.length; i < len; i++) {
+                    var capL = layers[i];
+                    var olL = $this.createOlWMSFromCap(map, capL);
+                    if (!createOnly) {
+                      map.addLayer(olL);
+                    }
+                    createdLayers.push(olL);
+                  }
+                  return createdLayers;
+                });
           },
 
           /**
@@ -1350,28 +1451,7 @@
            * @param {string} name of the layer
            * @param {string} url of the service
            */
-          isLayerInMap: function(map, name, url) {
-            if (gnWmsQueue.isPending(url, name)) {
-              return true;
-            }
-            for (var i = 0; i < map.getLayers().getLength(); i++) {
-              var l = map.getLayers().item(i);
-              var source = l.getSource();
-              if (source instanceof ol.source.WMTS &&
-                  l.get('url') == url) {
-                if (l.get('name') == name) {
-                  return true;
-                }
-              }
-              else if (source instanceof ol.source.TileWMS) {
-                if (source.getParams().LAYERS == name &&
-                    l.get('url').split('?')[0] == url.split('?')[0]) {
-                  return true;
-                }
-              }
-            }
-            return false;
-          },
+          isLayerInMap: isLayerInMap,
 
           /**
            * @ngdoc method
@@ -1386,6 +1466,11 @@
            * @param {ol.Layer} layer to feed
            */
           feedLayerMd: function(layer) {
+            var defer = $q.defer();
+            var $this = this;
+
+            defer.resolve(layer);
+
             if (layer.get('metadataUrl')) {
 
               return gnSearchManagerService.gnSearch({
@@ -1399,6 +1484,7 @@
                 return layer;
               });
             }
+            return defer.promise;
           }
 
         };

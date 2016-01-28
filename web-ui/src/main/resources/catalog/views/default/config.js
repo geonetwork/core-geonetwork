@@ -28,6 +28,9 @@
           viewerSettings.servicesUrl =
             viewerSettings.mapConfig.listOfServices || {};
 
+          // WMS settings
+          viewerSettings.singleTileWMS = true;
+
           var bboxStyle = new ol.style.Style({
             stroke: new ol.style.Stroke({
               color: 'rgba(255,0,0,1)',
