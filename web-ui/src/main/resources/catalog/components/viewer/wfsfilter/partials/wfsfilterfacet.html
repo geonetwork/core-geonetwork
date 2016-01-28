@@ -1,31 +1,25 @@
 <form name="wfsFilterForm">
-  <a class="btn btn-link btn-xs"
-     data-ng-hide="bootMode != 'ondemand' || initialized"
-     data-gn-click-and-spin="checkWFSUrl()"
-     title="{{'filterLayerUsingWfs' | translate}}">
-    <i class="fa fa-filter"></i>&nbsp;
-    <span data-translate="">filterUsingWfs</span>
-  </a>
 
-  <div data-ng-show="initialized && !isWfsAvailable"
-       class="alert alert-warning"
-       data-translate=""
-       data-translate-values="{'url': '{{wfsUrl}}'}">
-    <button type="button" class="close"
-            data-ng-click="initialized = false"><i class="fa fa-times"/></button>
-    wfsNotAvailable
+  <!--WFS not available alert-->
+  <div data-ng-show="isWfsAvailable == false" class="alert alert-warning">
+    <button type="button" class="close"><i class="fa fa-times"/></button>
+    <span data-translate=""
+          data-translate-values="{'url': '{{wfsUrl}}'}">wfsNotAvailable</span>
   </div>
+
+  <!--WFS not indexed alert-->
   <div data-ng-show="status"
        class="alert alert-warning">
     <button type="button" class="close"
             data-ng-click="status = null"><i class="fa fa-times"/></button>
-    {{status}}
+    <span data-ng-bind-html="status"></span>
   </div>
 
   <div class="btn-group btn-group-xs gn-layer-btn"
-       data-ng-show="initialized && !isFeaturesIndexed && user.canEditRecord(md)">
+       data-ng-show="!isFeaturesIndexed && user.canEditRecord(md)">
     <div class="btn btn-default"
-         data-ng-click="indexWFSFeatures()">
+         data-ng-click="indexWFSFeatures()"
+         data-ng-disabled="!isWfsAvailable">
       <i class="fa fa-cog"></i>&nbsp;
       <span data-translate="">indexWFSFeatures</span>
     </div>
@@ -35,7 +29,7 @@
     </div>
   </div>
 
-  <div data-ng-show="initialized && isFeaturesIndexed">
+  <div data-ng-show="isFeaturesIndexed">
     <!--Facet count-->
     <div class="count" data-ng-show="displayCount">
       {{::count}}&nbsp;<span translate="">features</span>
@@ -48,7 +42,7 @@
             data-ng-hide="searchInput==''"
             title="{{'clear' | translate}}"></span>
       <input type="text"
-             data-gn-focus-on="initialized && isFeaturesIndexed"
+             data-gn-focus-on="isFeaturesIndexed"
              data-ng-model="searchInput"
              data-ng-change="filterFacets()"
              data-ng-model-options="{ debounce: 400 }"
@@ -67,7 +61,7 @@
       <div class="list-group"
            data-ng-class="{'collapse': field.collapsed}">
         <div class="checkbox list-group-item"
-             data-ng-repeat="facet in field.values"
+             data-ng-repeat="facet in field.values | filter:searchInput"
              data-ng-click="onCheckboxClick(field.name, facet.value, field.type)"
              data-ng-class="{'selected': output[field.name].values[facet.value]}">
           <i class="fa"

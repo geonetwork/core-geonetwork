@@ -22,69 +22,46 @@
         scope: {
           featureTypeName: '@',
           wfsUrl: '@',
-          bootMode: '@',
           displayCount: '@',
           layer: '='
         },
         link: function(scope, element, attrs) {
-          var solrUrl;
-          var uuid = null;
+
+          var solrUrl, uuid;
           var ftName = scope.featureTypeName;
           var indexedFields;
           scope.user = $rootScope.user;
 
-          scope.$watch('layer', function(newValue, oldValue) {
-            if (newValue != null && newValue !== oldValue) {
-              init();
-            }
-          });
-
           function init() {
             scope.fields = [];
-            scope.initialized = false;
-            scope.isWfsAvailable = false;
+            scope.isWfsAvailable = undefined;
             scope.isFeaturesIndexed = false;
             scope.status = null;
             scope.indexingConfig = null;
             scope.md = scope.layer.get('md');
             uuid = scope.md && scope.md.getUuid();
-            // TODO: Improve check
-            // TODO: Check Solr is up
-            if (scope.layer.getSource().getParams) {
-              // TODO: Assume WFS is available as same URL or
-              // by substituting wms by wfs.
-              scope.wfsUrl = scope.layer.getSource().getUrls()[0].
-                  replace(/wms/i, 'wfs');
-              ftName = scope.layer.getSource().getParams().LAYERS;
-              if (scope.bootMode == 'ondemand') {
-                // User click to check
-              } else if (scope.bootMode == 'wfs') {
-                // First check WFS is responding
-                // then Solr
-                scope.checkWFSUrl();
-              } else if (scope.bootMode == 'solr') {
-                // Check if feature type is in Solr
-                scope.checkFeatureTypeInSolr();
-              } else {
-                // default: Solr mode
-                scope.checkFeatureTypeInSolr();
-              }
-            }
+
+            scope.wfsUrl = scope.wfsUrl ||
+                scope.layer.get('url').replace(/wms/i, 'wfs');
+
+            ftName = scope.featureTypeName ||
+                scope.layer.getSource().getParams().LAYERS;
+
+            scope.checkWFSUrl();
+            scope.checkFeatureTypeInSolr();
+
           };
 
           /**
            * Check if the WFS url provided return a response.
            */
           scope.checkWFSUrl = function() {
-            scope.initialized = true;
             return $http.get('../../proxy?url=' +
                 encodeURIComponent(scope.wfsUrl))
-              .then(function(data) {
+              .then(function() {
                   scope.isWfsAvailable = true;
-                  scope.checkFeatureTypeInSolr();
-                }, function(response) {
+                }, function() {
                   scope.isWfsAvailable = false;
-                  scope.status = response;
                 });
           };
 
@@ -98,11 +75,9 @@
            * the facet UI.
            */
           scope.checkFeatureTypeInSolr = function() {
-            scope.initialized = true;
             wfsFilterService.getWfsIndexFields(
                 ftName, scope.wfsUrl).then(function(docFields) {
               scope.isFeaturesIndexed = true;
-              scope.isWfsAvailable = true;
               scope.status = null;
 
               indexedFields = docFields;
@@ -110,6 +85,7 @@
                   ftName, scope.wfsUrl).success(function(data) {
 
                 var url;
+                data = null;
                 if (data) {
                   url = wfsFilterService.getSolrRequestFromApplicationProfile(
                       data, ftName, scope.wfsUrl, docFields);
@@ -155,6 +131,7 @@
               };
               output[fieldName].values[facetKey] = true;
             }
+            scope.searchInput = '';
             scope.filterFacets();
           };
 
@@ -163,13 +140,14 @@
            * structure.
            * This method is called each time the user check or uncheck a box
            * from the ui, or when he updates the filter input.
+           * @param {boolean} fromInput the filter comes from input change
            */
-          scope.filterFacets = function() {
-
+          scope.filterFacets = function(fromInput) {
+            
             // Update the facet UI
-            var collapsedFields;
+            var collapsedFields = [];
             angular.forEach(scope.fields, function(f) {
-              collapsedFields = [];
+              collapsedFields;
               if (f.collapsed) {
                 collapsedFields.push(f.name);
               }
@@ -185,12 +163,14 @@
                   scope.fields = facetsInfo.facetConfig;
                   scope.count = facetsInfo.count;
                   scope.layer.set('featureCount', scope.count);
-                  angular.forEach(scope.fields, function(f) {
-                    if (!collapsedFields ||
-                        collapsedFields.indexOf(f.name) >= 0) {
-                      f.collapsed = true;
-                    }
-                  });
+                  if(fromInput) {
+                    angular.forEach(scope.fields, function(f) {
+                      if (!collapsedFields ||
+                          collapsedFields.indexOf(f.name) >= 0) {
+                        f.collapsed = true;
+                      }
+                    });
+                  }
                 });
           };
 
@@ -203,6 +183,8 @@
 
             // output structure to send to filter service
             scope.output = {};
+
+            scope.searchInput = '';
 
             // load all facet and fill ui structure for the list
             wfsFilterService.getFacetsConfigFromSolr(solrUrl, indexedFields).
@@ -261,7 +243,9 @@
             scope.searchInput = '';
             scope.filterFacets();
           };
+
           scope.searchInput = '';
+          init();
         }
       };
     }]);
