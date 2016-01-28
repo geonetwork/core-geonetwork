@@ -1,10 +1,12 @@
 package org.fao.geonet.solr;
 
 import com.google.common.collect.Lists;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
+import org.fao.geonet.services.api.API;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -12,11 +14,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +37,13 @@ import java.util.zip.GZIPOutputStream;
  * TODO: Add multinode support at some point
  * Created by fgravin on 11/4/15.
  */
+@RequestMapping(value = {
+        "/api/search",
+        "/api/" + API.VERSION_0_1 + "/search"
+})
+@Api(value = "search",
+        tags= "search",
+        description = "Catalog search operations")
 @Controller
 public class SolrHTTPProxy {
     public static final String[] _validContentTypes = {
@@ -48,103 +55,16 @@ public class SolrHTTPProxy {
     @Autowired
     private SolrConfig config;
 
-    @RequestMapping(value = "/{uiLang}/solrproxy/{query}")
+    @RequestMapping(value = "/query",
+                    method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public void handleGETRequest(@PathVariable("query") String selectUrl, HttpServletRequest request, HttpServletResponse response) {
-        //String solrUrl = System.getProperty("solr.server");
-
+    public void handleGETRequest(HttpServletRequest request, HttpServletResponse response) {
         handleRequest(request, response,
                         config.getSolrServerUrl() + "/" +
-                            config.getSolrServerCore() + "/" +
-                                selectUrl + "?" + request.getQueryString());
+                            config.getSolrServerCore() + "/select?" + request.getQueryString());
     }
 
-    /**
-     * Return facets config for WFS layer.
-     * The config is computed from applicationProfile tag in the online resource
-     * of the metadata (uuid) for the given featuretype.
-     * The JSON applicationProfile is parsed, and we build a SOLR request on top of it
-     * to retrieve all facets values (fields, ranges, intervals, dates) that will be
-     * exploited from the UI to build the facet panel.
-     * <p>
-     * ex:
-     * http://localhost:8080/geonetwork/srv/eng/solrfacets/26f848cc-2a3b-4623-a395-61048d2f5e91?url=http%3A%2F%2Fvisi-sextant.ifremer.fr%2Fcgi-bin%2Fsextant%2Fwfs%2Fbgmb&typename=SISMER_mesures
-     *
-     * @param uiLang
-     * @param uuid
-     * @param linkage
-     * @param featureType
-     * @param request
-     * @param response
-     * @throws Exception
-     */
-    @RequestMapping(value = "/{uiLang}/solrfacets/{uuid}")
-    @ResponseBody
-    public void buildFacetQuery(
-            @PathVariable("uiLang") String uiLang,
-            @PathVariable("uuid") String uuid,
-            @RequestParam("url") String linkage,
-            @RequestParam("typename") String featureType,
-            HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        // TODO: Should probably not depend on that
-        DataManager dataManager = appContext.getBean(DataManager.class);
-        final String id = dataManager.getMetadataId(uuid);
-        Element xml = dataManager.getMetadata(id);
-
-        // TODO: This should move elsewhere and is schema specific
-        final Element applicationProfile =
-                (Element) Xml.selectSingle(xml,
-                        "*//gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, 'WFS') " +
-                                "and gmd:name/gco:CharacterString = '" + featureType + "' " +
-                                "and gmd:linkage/gmd:URL = '" + linkage + "']/gmd:applicationProfile/gco:CharacterString", NAMESPACES
-                );
-
-        if (applicationProfile != null) {
-            JSONObject conf = new JSONObject(applicationProfile.getText());
-            JSONArray fields = conf.getJSONArray("fields");
-
-            List<String> params = new ArrayList<String>();
-
-            params.add("facet=true");
-
-            for (int i = 0; i < fields.length(); i++) {
-                JSONObject field = fields.getJSONObject(i);
-                String fieldName = field.getString("name") + "_d";
-                String prefix = "f." + fieldName;
-                params.add("facet.field=" + fieldName);
-                if (field.has("fq")) {
-                    JSONObject facets = field.getJSONObject("fq");
-
-                    Iterator<?> keys = facets.keys();
-                    while (keys.hasNext()) {
-                        String key = (String) keys.next();
-                        JSONArray a = facets.optJSONArray(key);
-                        if (a != null) {
-                            for (int j = 0; j < a.length(); j++) {
-                                params.add("f." + fieldName + "." + key + "=" + a.get(j));
-                            }
-                        } else {
-                            String value = facets.optString(key);
-                            if (key.equals("facet.interval") || key.equals("facet.range")) {
-                                params.add(key + "=" + value);
-                            } else {
-                                params.add("f." + fieldName + "." + key + "=" + value);
-                            }
-                        }
-                    }
-                }
-            }
-            String solrFacets = StringUtils.join(params, "&");
-            String solrQuery = "q=featureTypeId:*" + featureType;
-            String solrUrl = config.getSolrServerUrl() + "/" +
-                    config.getSolrServerCore() +
-                        "/select?wt=json&indent=true&rows=0&" + solrQuery + "&" + solrFacets;
-            handleRequest(request, response, solrUrl);
-        }
-        //return "No configuration";
-    }
 
     /**
      *
