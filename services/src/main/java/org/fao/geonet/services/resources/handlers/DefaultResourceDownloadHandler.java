@@ -167,8 +167,6 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
                     metadataFileUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, fname);
 
                 } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
-                    Log.warning(Geonet.RESOURCES, "Store file download request: No upload request for (metadataid, file): (" + metadataId + "," + fname + ")");
-
                     // No related upload is found
                     metadataFileUpload = null;
                 }
