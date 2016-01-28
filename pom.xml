@@ -647,11 +647,16 @@
         <artifactId>gt-wfs</artifactId>
         <version>${geotools.version}</version>
       </dependency>
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-wms</artifactId>
-            <version>15-SNAPSHOT-Vampouille</version>
-        </dependency>
+      <dependency>
+          <groupId>org.geotools</groupId>
+          <artifactId>gt-wms</artifactId>
+          <version>15-SNAPSHOT-Vampouille</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-main</artifactId>
+        <version>14-SNAPSHOT</version>
+      </dependency>
       <dependency>
         <groupId>org.geotools.jdbc</groupId>
         <artifactId>gt-jdbc-postgis</artifactId>
