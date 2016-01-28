@@ -414,6 +414,7 @@
       $scope.isFacetsCollapse = function(facetKey) {
         return !$scope.searchObj.params[facetKey];
       };
+      $scope.treeFacetCollapsed = $scope.isFacetsCollapse('sextantTheme');
 
       // Run search on bbox draw
       $scope.$watch('searchObj.params.geometry', function(v){
