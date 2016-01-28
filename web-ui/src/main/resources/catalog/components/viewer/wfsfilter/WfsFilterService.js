@@ -16,7 +16,7 @@
       var solrProxyUrl = gnHttp.getService('solrproxy');
 
       var buildSolrUrl = function(params) {
-        return gnUrlUtils.append(solrProxyUrl + '/select',
+        return gnUrlUtils.append(solrProxyUrl + '/query',
             gnUrlUtils.toKeyValue(params));
       };
 

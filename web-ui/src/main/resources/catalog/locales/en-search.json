@@ -320,5 +320,6 @@
   "wpsErrorCodeReturned": "The serveur returned status code",
   "time" : "Time",
   "features": "feature(s)",
-  "downloadLayer": "Download data"
+  "downloadLayer": "Download data",
+  "featureCount": "Feature count"
 }

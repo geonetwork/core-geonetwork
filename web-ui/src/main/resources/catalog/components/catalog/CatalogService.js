@@ -374,7 +374,7 @@
 
     // wfs indexing
     generateSLD: 'generateSLD',
-    solrproxy: 'solrproxy',
+    solrproxy: '../api/0.1/search',
     wfsIndexConfig: 'wfs.harvest.config'
 
   });

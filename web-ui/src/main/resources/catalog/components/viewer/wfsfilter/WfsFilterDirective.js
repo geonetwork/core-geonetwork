@@ -32,6 +32,8 @@
           var indexedFields;
           scope.user = $rootScope.user;
 
+          scope.showCount = angular.isDefined(attrs['showcount']);
+
           function init() {
             scope.fields = [];
             scope.isWfsAvailable = undefined;
@@ -191,7 +193,9 @@
                 then(function(facetsInfo) {
                   scope.fields = facetsInfo.facetConfig;
                   scope.count = facetsInfo.count;
+                  scope.countTotal = facetsInfo.count;
                   scope.layer.set('featureCount', scope.count);
+                  scope.layer.set('featureCountT', scope.countTotal);
                   angular.forEach(scope.fields, function(f) {
                     f.collapsed = true;
                   });
@@ -245,7 +249,17 @@
           };
 
           scope.searchInput = '';
-          init();
+
+          if(scope.layer) {
+            init();
+          }
+          else {
+            scope.$watch('layer', function(n,o) {
+              if(n && n != o) {
+                init();
+              }
+            });
+          }
         }
       };
     }]);
