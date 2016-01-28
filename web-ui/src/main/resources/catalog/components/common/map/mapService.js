@@ -338,7 +338,7 @@
            *
            * @param {Array} extent to transform
            */
-          getDcExtent: function(extent) {
+          getDcExtent: function(extent, location) {
             if (angular.isArray(extent)) {
               var dc = 'North ' + extent[3] + ', ' +
                   'South ' + extent[1] + ', ' +

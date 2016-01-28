@@ -246,6 +246,7 @@
     "createKeyword": "Add",
     "createReport": "Create report",
     "createThesaurus": "Create",
+    "enableThesaurusHelp": "In multinode mode, use this option to enable or disable a thesaurus for this node.",
     "createThesaurusTitle": "Create thesaurus",
     "criteria": "Criteria",
     "criteriaValue": "Value",

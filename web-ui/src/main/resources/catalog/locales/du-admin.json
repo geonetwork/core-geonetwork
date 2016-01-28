@@ -246,6 +246,7 @@
     "createKeyword": "Toevoegen",
     "createReport": "Maak rapport aan",
     "createThesaurus": "Aanmaken",
+    "enableThesaurusHelp": "In multinode mode, use this option to enable or disable a thesaurus for this node.",
     "createThesaurusTitle": "Woordenlijst aanmaken",
     "criteria": "Criteria",
     "criteriaValue": "Waarde",
