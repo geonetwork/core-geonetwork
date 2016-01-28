@@ -123,7 +123,7 @@
               else {
                 promises.push(this.createLayer(layer, map, i).then(
                     function(olLayer) {
-                      if(olLayer) {
+                      if (olLayer) {
                         bgLayers.push({
                           layer: olLayer,
                           idx: olLayer.get('bgIdx')
@@ -382,7 +382,7 @@
 
           return gnMap.addWmsFromScratch(map, res.href, layer.name, createOnly).
               then(function(olL) {
-                if(olL) {
+                if (olL) {
                   olL.set('group', layer.group);
                   olL.set('groupcombo', layer.groupcombo);
                   olL.setOpacity(layer.opacity);

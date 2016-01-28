@@ -525,7 +525,7 @@
                       tileEvent.tile.getKey() : '- no tile URL found-';
 
                   var layer = tileEvent.currentTarget &&
-                  tileEvent.currentTarget.getParams ?
+                      tileEvent.currentTarget.getParams ?
                       tileEvent.currentTarget.getParams().LAYERS :
                       layerParams.LAYERS;
 
@@ -599,8 +599,10 @@
               // TODO: parse better legend & attribution
               if (angular.isArray(getCapLayer.Style) &&
                   getCapLayer.Style.length > 0) {
-                  var legendUrl = (getCapLayer.Style[getCapLayer.Style.length - 1].LegendURL) ?
-                  getCapLayer.Style[getCapLayer.Style.length - 1].LegendURL[0] : undefined;
+                var legendUrl = (getCapLayer.Style[getCapLayer.
+                    Style.length - 1].LegendURL) ?
+                    getCapLayer.Style[getCapLayer.
+                        Style.length - 1].LegendURL[0] : undefined;
                 if (legendUrl) {
                   legend = legendUrl.OnlineResource;
                 }
@@ -939,11 +941,11 @@
             var defer = $q.defer();
             var $this = this;
 
-            if(!isLayerInMap(map, name, url)) {
+            if (!isLayerInMap(map, name, url)) {
               gnWmsQueue.add(url, name);
               gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
-                        name, capObj, md && md.getUuid()),
+                    name, capObj, md && md.getUuid()),
                     olL;
                 if (!capL) {
                   // If layer not found in the GetCapabilities
@@ -976,7 +978,7 @@
                   olL = $this.createOlWMSFromCap(map, capL, url);
 
                   var finishCreation = function() {
-                    if ( !createOnly) {
+                    if (!createOnly) {
                       map.addLayer(olL);
                     }
                     gnWmsQueue.removeFromQueue(url, name);
@@ -1019,7 +1021,7 @@
             var $this = this;
 
             return gnOwsCapabilities.getWMSCapabilities(url).
-                then(function (capObj) {
+                then(function(capObj) {
 
                   var createdLayers = [];
 
@@ -1027,7 +1029,7 @@
                   for (var i = 0, len = layers.length; i < len; i++) {
                     var capL = layers[i];
                     var olL = $this.createOlWMSFromCap(map, capL);
-                    if(!createOnly) {
+                    if (!createOnly) {
                       map.addLayer(olL);
                     }
                     createdLayers.push(olL);

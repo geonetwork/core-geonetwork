@@ -46,7 +46,7 @@
           wfsFilterService.getWfsIndexFields(
               ftName, wfsUrl).then(function(docFields) {
 
-            if(!docFields) {
+            if (!docFields) {
               console.warn('The feature type ' + wfsUrl + '#' + ftName +
                   'has not been indexed.');
             }
@@ -55,20 +55,20 @@
               wfsFilterService.getApplicationProfile(uuid,
                   ftName, wfsUrl).success(function(data) {
 
-                    var url;
-                    if (data) {
-                      url = wfsFilterService.getSolrRequestFromApplicationProfile(
-                          data, ftName, wfsUrl, docFields);
-                    }
-                    else {
-                      url = wfsFilterService.getSolrRequestFromFields(
-                          docFields, ftName, wfsUrl);
-                    }
-                    solrUrl = url;
+                var url;
+                if (data) {
+                  url = wfsFilterService.getSolrRequestFromApplicationProfile(
+                      data, ftName, wfsUrl, docFields);
+                }
+                else {
+                  url = wfsFilterService.getSolrRequestFromFields(
+                      docFields, ftName, wfsUrl);
+                }
+                solrUrl = url;
 
-                    // Init the facets
-                    scope.resetFacets();
-                  });
+                // Init the facets
+                scope.resetFacets();
+              });
             }
           });
 
