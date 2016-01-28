@@ -38,7 +38,7 @@
       'gnWfsService',
       'gnGlobalSettings',
       'gnViewerSettings',
-      function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log, 
+      function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
           gnGlobalSettings, viewerSettings) {
@@ -376,7 +376,7 @@
            *
            * @param {Array} extent to transform
            */
-          getDcExtent: function(extent) {
+          getDcExtent: function(extent, location) {
             if (angular.isArray(extent)) {
               var dc = 'North ' + extent[3] + ', ' +
                   'South ' + extent[1] + ', ' +
