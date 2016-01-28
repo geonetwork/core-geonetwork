@@ -18,9 +18,9 @@
    */
   module.controller('GnHarvestSettingsController', [
     '$scope', '$http', '$translate', '$injector', '$rootScope',
-    'gnSearchManagerService', 'gnUtilityService',
+    'gnSearchManagerService', 'gnUtilityService', '$timeout',
     function($scope, $http, $translate, $injector, $rootScope,
-             gnSearchManagerService, gnUtilityService) {
+             gnSearchManagerService, gnUtilityService, $timeout) {
 
       $scope.searchObj = {
         params: {
@@ -408,6 +408,7 @@
       $scope.oaipmhPrefix = null;
       $scope.oaipmhInfo = null;
       $scope.oaipmhGet = function() {
+        $scope.oaipmhInfoRequested = false;
         $scope.oaipmhInfo = null;
         var body = '<request><type url="' +
             $scope.harvesterSelected.site.url +
@@ -451,8 +452,6 @@
        */
       $scope.cswGetCapabilities = function() {
         $scope.cswCriteriaInfo = null;
-        $scope.cswCapabilitiesUrl = null;
-        $scope.errorRetrievingCswCapabilities = false;
 
         if ($scope.harvesterSelected &&
             $scope.harvesterSelected.site &&
@@ -468,7 +467,6 @@
             url += (url.indexOf('?') === -1 ? '?' : '&') +
                 'SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2';
           }
-          $scope.cswCapabilitiesUrl = url;
 
           $http.get($scope.proxyUrl +
               encodeURIComponent(url))
@@ -525,8 +523,7 @@
                 }
 
               }).error(function(data) {
-                $scope.cswCriteria = [];
-                $scope.errorRetrievingCswCapabilities = true;
+                // TODO
               });
         }
       };
