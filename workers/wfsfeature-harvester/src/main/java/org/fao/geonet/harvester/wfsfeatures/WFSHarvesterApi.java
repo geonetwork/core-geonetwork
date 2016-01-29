@@ -135,9 +135,10 @@ public class WFSHarvesterApi {
     public String getConfig(
             @RequestParam("url") String wfsUrl,
             @RequestParam("typename") String featureType,
+            @RequestParam(value = "protocol", defaultValue = "WFS") String protocol,
             @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid) throws Exception {
 
-        return getApplicationProfile(uuid, wfsUrl, featureType);
+        return getApplicationProfile(uuid, wfsUrl, featureType, protocol);
     }
 
     private JSONObject sendMessage(WFSHarvesterParameter parameters) {
@@ -164,7 +165,7 @@ public class WFSHarvesterApi {
      * @throws Exception
      */
     private String getApplicationProfile(final String uuid, final String wfsUrl,
-                                         final String featureType) throws Exception {
+                                         final String featureType, final String protocol) throws Exception {
 
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataManager = appContext.getBean(DataManager.class);
@@ -175,7 +176,7 @@ public class WFSHarvesterApi {
 
             final Element applicationProfile =
                     (Element) Xml.selectSingle(xml,
-                            "*//gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'WFS' " +
+                            "*//gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, " + protocol + ") " +
                                     "and gmd:name/gco:CharacterString = '" + featureType + "' " +
                                     "and gmd:linkage/gmd:URL = '" + wfsUrl + "']/gmd:applicationProfile/gco:CharacterString", NAMESPACES);
 
