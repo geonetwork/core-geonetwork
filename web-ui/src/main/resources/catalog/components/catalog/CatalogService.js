@@ -374,9 +374,7 @@
 
     // wfs indexing
     generateSLD: 'generateSLD',
-    solrproxy: '../api/0.1/search',
-    wfsIndexConfig: 'wfs.harvest.config'
-
+    solrproxy: '../api/0.1/search'
   });
 
   /**
@@ -444,7 +442,7 @@
            */
           callService: function(serviceKey, params, httpConfig) {
 
-            var url = gnHttpServices[serviceKey];
+            var url = gnHttpServices[serviceKey] || serviceKey;
             if (remote) {
               url = remote.proxy + encodeURIComponent(remote.gnUrl + url);
             }

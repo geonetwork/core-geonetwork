@@ -64,6 +64,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>services</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
     </dependency>

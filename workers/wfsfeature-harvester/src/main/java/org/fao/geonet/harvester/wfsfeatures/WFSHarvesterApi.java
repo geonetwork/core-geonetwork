@@ -24,6 +24,8 @@
 package org.fao.geonet.harvester.wfsfeatures;
 
 import com.google.common.collect.Lists;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.fao.geonet.ApplicationContextHolder;
@@ -31,6 +33,7 @@ import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
 import org.fao.geonet.harvester.wfsfeatures.event.WFSHarvesterEvent;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.api.API;
 import org.fao.geonet.utils.Xml;
 import org.geonetwork.messaging.JMSMessager;
 import org.jdom.Element;
@@ -54,90 +57,36 @@ import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 /**
  * Created by fgravin on 10/29/15.
  */
-
 @Controller
+@RequestMapping(value = {
+        "/api/workers/data/wfs/actions",
+        "/api/" + API.VERSION_0_1 + "/workers/data/wfs/actions"
+})
+@Api(value = "workers",
+        tags= "workers",
+        description = "Metadata resource related operations")
 public class WFSHarvesterApi {
     @Autowired
     private JMSMessager jmsMessager;
 
-    private static final ArrayList<Namespace> NAMESPACES = Lists.newArrayList(GMD, GCO);
-
-
-    /**
-     * Index a featureType from a wfs service URL and a typename
-     *
-     */
-    @RequestMapping(value = "/{uiLang}/wfs.harvest",
+    @ApiOperation(value = "Index a WFS feature type",
+            nickname = "getAllMetadataResources")
+    @RequestMapping(value = "start",
+                    consumes = MediaType.APPLICATION_JSON_VALUE,
                     produces = MediaType.APPLICATION_JSON_VALUE,
                     method = RequestMethod.PUT)
+    @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public JSONObject indexWfs(
             @RequestBody WFSHarvesterParameter config) throws Exception {
 
+        // TODO: Check user is authenticated ?
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("indexedFeatures",
                 sendMessage(config));
 
         return result;
-    }
-
-    /**
-     * Index all featureTypes that are contained in the metadata.
-     * Feature types are extracted from the online resources of the metedata.
-     * The protocol should be WFS, the typename is from gmd:name element, and
-     * the url from the gmd:linkage.
-     *
-     * @param uiLang lang
-     * @param uuid uuid of the metadata
-     * @param webRequest
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/{uiLang}/wfs.harvest/{uuid}")
-    @ResponseBody
-    @Deprecated
-    public JSONObject indexWfs(
-            @PathVariable String uiLang,
-            @PathVariable String uuid,
-            NativeWebRequest webRequest) throws Exception {
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        DataManager dataManager = appContext.getBean(DataManager.class);
-
-        final String id = dataManager.getMetadataId(uuid);
-        Element xml = dataManager.getMetadata(id);
-
-        // TODO: This is ISO19139 specific
-        // Use Lucene field instead ?
-        final List<Element> wfsLinkages =
-                Lists.newArrayList((Iterable<? extends Element>) Xml.selectNodes(xml,
-                        "*//gmd:CI_OnlineResource[contains(" +
-                                "gmd:protocol/gco:CharacterString, 'WFS')]",
-                        NAMESPACES));
-
-        JSONArray a = new JSONArray();
-        for (Element element : wfsLinkages) {
-            Element linkageElt = (Element)Xml.selectSingle(element, "gmd:linkage/gmd:URL", NAMESPACES);
-            Element ftElt = (Element)Xml.selectSingle(element, "gmd:name/gco:CharacterString", NAMESPACES);
-
-//            a.add(sendMessage(uuid, linkageElt.getText(), ftElt.getText()));
-        }
-
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("indexedFeatures", a);
-
-        return result;
-    }
-
-    @RequestMapping(value = "/{uiLang}/wfs.harvest.config")
-    @ResponseBody
-    public String getConfig(
-            @RequestParam("url") String wfsUrl,
-            @RequestParam("typename") String featureType,
-            @RequestParam(value = "uuid") String uuid) throws Exception {
-
-        return getApplicationProfile(uuid, wfsUrl, featureType);
     }
 
     private JSONObject sendMessage(WFSHarvesterParameter parameters) {
@@ -153,38 +102,6 @@ public class WFSHarvesterApi {
         return j;
     }
 
-    /**
-     * Get the application profile content from the online resource.
-     * The application profile contains the solr faceting configuration.
-     *
-     * @param uuid of the metadata
-     * @param wfsUrl of the feature
-     * @param featureType of the feature
-     * @return applicationProfile if exists
-     * @throws Exception
-     */
-    private String getApplicationProfile(final String uuid, final String wfsUrl,
-                                         final String featureType) throws Exception {
-
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        DataManager dataManager = appContext.getBean(DataManager.class);
-
-        if (!StringUtils.isEmpty(uuid) && dataManager != null) {
-            final String id = dataManager.getMetadataId(uuid);
-            Element xml = dataManager.getMetadata(id);
-
-            final Element applicationProfile =
-                    (Element) Xml.selectSingle(xml,
-                            "*//gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'WFS' " +
-                                    "and gmd:name/gco:CharacterString = '" + featureType + "' " +
-                                    "and gmd:linkage/gmd:URL = '" + wfsUrl + "']/gmd:applicationProfile/gco:CharacterString", NAMESPACES);
-
-            if (applicationProfile != null) {
-                return applicationProfile.getText();
-            }
-        }
-        return null;
-    }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -1,10 +1,11 @@
-<div>
+<div class="gn-data-view">
   <ul class="nav nav-pills">
     <li data-ng-repeat="layer in layers"
         data-ng-if="layer.background != true"
         data-ng-class="{active: layer == currentLayer}">
-      <a role="tab" data-ng-click="setLayer(layer)">
-        {{layer.get('label')}}
+      <a role="tab" data-ng-click="setLayer(layer)"
+         title="{{layer.get('label')}}">
+        {{layer.get('label') | limitTo:15}}
         <span data-ng-show="layer.get('featureCount')">
           ({{layer.get('featureCount')}}&nbsp;
           {{'features' | translate}})

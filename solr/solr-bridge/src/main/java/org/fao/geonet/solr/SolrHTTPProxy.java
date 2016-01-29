@@ -50,8 +50,6 @@ public class SolrHTTPProxy {
             "application/json", "text/plain"
     };
 
-    private static final ArrayList<Namespace> NAMESPACES = Lists.newArrayList(ISO19139Namespaces.GMD, ISO19139Namespaces.GCO);
-
     @Autowired
     private SolrConfig config;
 
@@ -59,7 +57,7 @@ public class SolrHTTPProxy {
                     method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public void handleGETRequest(HttpServletRequest request, HttpServletResponse response) {
+    public void handleGETRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         handleRequest(request, response,
                         config.getSolrServerUrl() + "/" +
                             config.getSolrServerCore() + "/select?" + request.getQueryString());
@@ -69,7 +67,7 @@ public class SolrHTTPProxy {
     /**
      *
      */
-    private void handleRequest(HttpServletRequest request, HttpServletResponse response, String sUrl) {
+    private void handleRequest(HttpServletRequest request, HttpServletResponse response, String sUrl) throws Exception {
         try {
 
             URL url = new URL(sUrl);
@@ -216,6 +214,12 @@ public class SolrHTTPProxy {
         } catch (IOException e) {
             // connection problem with the host 
             e.printStackTrace();
+
+            throw new Exception(
+                    String.format("Failed to request Solr at URL %s. " +
+                                    "Check Solr configuration.",
+                            sUrl),
+                    e);
         }
     }
 

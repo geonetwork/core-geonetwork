@@ -204,12 +204,21 @@ public class SolrWFSFeatureIndexer {
         harvesterReportFields.put("id", url + "#" + typeName);
         harvesterReportFields.put("docType", "harvesterReport");
 
+        final Map<String, String> tokenizedFields = state.getTokenize();
+        final boolean hasTokenizedFields = tokenizedFields != null;
+
         List<String> docColumns = new ArrayList<>(fields.size());
         for (String attributeName : fields.keySet()) {
             String attributeType = fields.get(attributeName);
+            String separator = null;
+            if (hasTokenizedFields) {
+                separator = tokenizedFields.get(attributeName);
+            }
+            boolean isTokenized = separator != null;
             String suffix = attributeType.equals("geometry") ?
                                 "" :
-                                XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType);
+                                XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType) +
+                                (isTokenized ? MULTIVALUED_SUFFIX : "");
             docColumns.add(attributeName + suffix);
         }
         harvesterReportFields.put("ftColumns_s", Joiner.on("|").join(fields.keySet()));
@@ -237,8 +246,6 @@ public class SolrWFSFeatureIndexer {
             FeatureCollection<SimpleFeatureType, SimpleFeature> featuresCollection = source.getFeatures();
 
             final FeatureIterator<SimpleFeature> features = featuresCollection.features();
-            final Map<String, String> tokenizedFields = state.getTokenize();
-            final boolean hasTokenizedFields = tokenizedFields != null;
             int numInBatch = 0, nbOfFeatures = 0;
             Collection<SolrInputDocument> docCollection = new ArrayList<SolrInputDocument>();
 
