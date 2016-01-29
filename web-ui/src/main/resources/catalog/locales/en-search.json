@@ -40,6 +40,7 @@
   "fileLayerDetails": "{{name}}. This dataset is available in the local network <strong>{{url}}</strong>.",
   "wfsNotAvailable": "<a href='{{url}}' target='_blank'>WFS</a> not available.",
   "wfsFeatureNotIndexed": "The feature type <em>{{wfsUrl}}#{{featureTypeName}}</em> has not been indexed.",
+  "indexNotRunning": "Index not available",
   "addToMap": "Add to map",
   "addToMaponlinesrc": "Add to map",
   "mapLinkonlinesrc": "Load map",

@@ -198,9 +198,15 @@
               wfsUrl: wfsUrl,
               featureTypeName: featureTypeName
             });
-            defer.reject(msg);
+            defer.reject({statusText: msg});
           }
           defer.resolve(indexInfos);
+        }, function(r) {
+          if (r.status === 404) {
+            defer.reject({statusText: $translate('indexNotRunning')});
+          } else {
+            defer.reject(r);
+          }
         });
         return defer.promise;
       };
@@ -214,12 +220,12 @@
        * @param {string} wfsUrl url of the wfs service
        */
       this.getApplicationProfile = function(uuid, ftName, wfsUrl, protocol) {
-        return gnHttp.callService('wfsIndexConfig', {
-          uuid: uuid,
-          url: wfsUrl,
-          typename: ftName,
-          protocol: protocol
-        });
+        return $http.get('../api/0.1/metadata/' + uuid +
+            '/query/onlinesrc-appprofile', {params: {
+              url: wfsUrl,
+              name: ftName,
+              protocol: protocol
+            }});
       };
 
       /**
@@ -391,7 +397,7 @@
        * @return {httpPromise} when indexing is done
        */
       this.indexWFSFeatures = function(url, type, idxConfig) {
-        return $http.put('wfs.harvest', {
+        return $http.put('../api/0.1/workers/data/wfs/actions/start', {
           url: url,
           typeName: type,
           tokenize: idxConfig

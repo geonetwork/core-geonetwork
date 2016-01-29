@@ -15,12 +15,21 @@
     <span data-ng-bind-html="status"></span>
   </div>
 
-  <div data-ng-show="isFeaturesIndexed">
-    <!--Facet count-->
-    <div class="count" data-ng-show="displayCount">
-      {{::count}}&nbsp;<span translate="">features</span>
-    </div>
+  <div class="btn-group"
+       data-ng-if="!isFeaturesIndexed && user.canEditRecord(md)">
+    <a class="btn btn-default btn-xs"
+       data-ng-click="indexWFSFeatures()">
+      <i class="fa fa-codiepie"></i>&nbsp;
+      <span data-translate="">indexWFSFeatures</span>
+    </a>
+    <a class="btn btn-default btn-xs"
+       title="{{'refresh' | translate}}"
+       data-ng-click="checkFeatureTypeInSolr()">
+      <i class="fa fa-refresh"></i>
+    </a>
+  </div>
 
+  <div data-ng-show="isFeaturesIndexed">
     <!--search input-->
     <div class="gn-layertree-filter">
       <span class="fa fa-times-circle clear"
@@ -34,6 +43,12 @@
              data-ng-model-options="{ debounce: 400 }"
              class="layerfilter form-control input-sm"
              placeholder="{{'filter'|translate}}">
+    </div>
+
+    <!--Facet count-->
+    <div data-ng-if="isFeaturesIndexed" class="count"
+         data-ng-if="showCount">
+      {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate="">features</span>
     </div>
 
     <!--Facet fields-->
@@ -55,38 +70,39 @@
         </div>
       </div>
     </div>
+    <!--admin buttons-->
+    <div class="btn-group dropup">
+      <button class="btn btn-default btn-xs"
+              data-gn-click-and-spin="filterWMS()">
+        <i class="fa fa-filter"></i>&nbsp;
+        <span data-translate="">filter</span>
+      </button>
+      <button type="button" class="btn btn-default btn-xs dropdown-toggle"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-cog"></i>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li data-ng-if="isFeaturesIndexed">
+          <a href="" data-gn-click-and-spin="resetFacets()">
+            <i class="fa fa-close"></i>&nbsp;
+            <span data-translate="">reset</span>
+          </a>
+        </li>
+        <li data-ng-show="user.canEditRecord(md)">
+          <a href="" data-ng-click="indexWFSFeatures()">
+            <i class="fa fa-codiepie"></i>&nbsp;
+            <span data-translate="">reindexWFSFeatures</span>
+          </a>
+        </li>
+        <li data-ng-show="user.canEditRecord(md)">
+          <a href="" data-ng-click="checkFeatureTypeInSolr()">
+            <i class="fa fa-refresh"></i>&nbsp;
+            <span data-translate="">refresh</span>
+          </a>
+        </li>
+        <!-- TODO: Add a drop features from index -->
+      </ul>
+    </div>
   </div>
-
-  <!--admin buttons-->
-  <div class="btn-group">
-    <button class="btn btn-default btn-xs" data-ng-if="isFeaturesIndexed"
-            data-gn-click-and-spin="filterWMS()">
-      <i class="fa fa-filter"></i>&nbsp;
-      <span data-translate="">filter</span>
-    </button>
-    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <i class="fa fa-cog"></i>
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-      <li data-ng-if="isFeaturesIndexed"><a href="" data-gn-click-and-spin="resetFacets()">
-        <i class="fa fa-close"></i>&nbsp;
-        <span data-translate="">reset</span></a>
-      </li>
-      <li data-ng-show="user.canEditRecord(md)"><a href="" data-ng-click="indexWFSFeatures()">
-        <i class="fa fa-codiepie"></i>&nbsp;
-        <span data-translate="">indexWFSFeatures</span></a>
-      </li>
-      <li data-ng-show="user.canEditRecord(md)"><a href="" data-ng-click="checkFeatureTypeInSolr()">
-        <i class="fa fa-refresh"></i>&nbsp;
-        <span data-translate="">refresh</span></a>
-      </li>
-      <!-- TODO: Add a drop features from index -->
-    </ul>
-  </div>
-
-  <!--Facet count-->
-  <div data-ng-if="isFeaturesIndexed" class="count" data-ng-if="showCount"><span translate="">featureCount</span>:&nbsp;{{count}}&nbsp;/&nbsp;{{countTotal}}</div>
-
-
 </form>

@@ -63,23 +63,6 @@
               scope.getTitle = function(link) {
                 return link.title['#text'] || link.title;
               };
-              scope.indexWFSFeatures = function(link, md) {
-                $http.get('wfs.harvest?' +
-                   'uuid=' + encodeURIComponent(md['geonet:info'].uuid) +
-                   '&url=' + encodeURIComponent(link.url) +
-                   '&typename=' + encodeURIComponent(link.name))
-                  .success(function(data) {
-                     console.log(data);
-                   }).error(function(response) {
-                     console.log(response);
-                   });
-                //$http.get('wfs.harvest/' + md['geonet:info'].uuid)
-                // .success(function(data) {
-                //  console.log(data);
-                //}).error(function(response) {
-                //  console.log(response);
-                //});
-              };
               scope.hasAction = function(mainType) {
                 // Do not display add to map action when map
                 // viewer is disabled.

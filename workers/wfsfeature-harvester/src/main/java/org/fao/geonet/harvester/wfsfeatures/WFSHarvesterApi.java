@@ -80,6 +80,7 @@ public class WFSHarvesterApi {
     public JSONObject indexWfs(
             @RequestBody WFSHarvesterParameter config) throws Exception {
 
+        // TODO: Check user is authenticated ?
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("indexedFeatures",
