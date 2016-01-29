@@ -22,68 +22,45 @@
         scope: {
           featureTypeName: '@',
           wfsUrl: '@',
-          bootMode: '@',
           displayCount: '@',
           layer: '='
         },
         link: function(scope, element, attrs) {
-          var solrUrl;
-          var uuid = null;
+
+          var solrUrl, uuid;
           var ftName = scope.featureTypeName;
-          var indexedFields;
           scope.user = $rootScope.user;
 
-          scope.$watch('layer', function(newValue, oldValue) {
-            if (newValue != null && newValue !== oldValue) {
-              init();
-            }
-          });
+          scope.showCount = angular.isDefined(attrs['showcount']);
 
           function init() {
             scope.fields = [];
-            scope.initialized = false;
-            scope.isWfsAvailable = false;
+            scope.isWfsAvailable = undefined;
             scope.isFeaturesIndexed = false;
             scope.status = null;
             scope.md = scope.layer.get('md');
             uuid = scope.md && scope.md.getUuid();
-            // TODO: Improve check
-            // TODO: Check Solr is up
-            if (scope.layer.getSource().getParams) {
-              // TODO: Assume WFS is available as same URL or
-              // by substituting wms by wfs.
-              scope.wfsUrl = scope.layer.get('url').
-                  replace(/wms/i, 'wfs');
-              ftName = scope.layer.getSource().getParams().LAYERS;
-              if (scope.bootMode == 'ondemand') {
-                // User click to check
-              } else if (scope.bootMode == 'wfs') {
-                // First check WFS is responding
-                // then Solr
-                scope.checkWFSUrl();
-              } else if (scope.bootMode == 'solr') {
-                // Check if feature type is in Solr
-                scope.checkFeatureTypeInSolr();
-              } else {
-                // default: Solr mode
-                scope.checkFeatureTypeInSolr();
-              }
-            }
+            scope.url = scope.wfsUrl ||
+                scope.layer.get('url').replace(/wms/i, 'wfs');
+
+            ftName = scope.featureTypeName ||
+                scope.layer.getSource().getParams().LAYERS;
+
+            scope.checkWFSUrl();
+            scope.checkFeatureTypeInSolr();
+
           };
 
           /**
            * Check if the WFS url provided return a response.
            */
           scope.checkWFSUrl = function() {
-            scope.initialized = true;
             return $http.get('../../proxy?url=' +
-                encodeURIComponent(scope.wfsUrl))
-              .then(function(data) {
+                encodeURIComponent(scope.url))
+              .then(function() {
                   scope.isWfsAvailable = true;
-                  scope.checkFeatureTypeInSolr();
-                }, function(response) {
+                }, function() {
                   scope.isWfsAvailable = false;
-                  scope.status = response;
                 });
           };
 
@@ -100,44 +77,46 @@
           scope.docFields = null;
           function loadAppProfile() {
             return wfsFilterService.getApplicationProfile(uuid,
-              ftName,
-              scope.wfsUrl ?
-                scope.wfsUrl : scope.layer.get('url'),
-              scope.wfsUrl ? 'WFS' : 'WMS').success(function(data) {
+                ftName,
+                scope.url,
+                // A WFS URL is in the metadata or we're guessing WFS has
+                // same URL as WMS
+                scope.wfsUrl ? 'WFS' : 'WMS').success(function(data) {
               scope.appProfile = data;
             });
           }
 
-          function loadFields(data, docFields) {
+          function loadFields() {
             var url;
-            if (scope.appProfile.fields != null) {
+            if (scope.appProfile && scope.appProfile.fields != null) {
               url = wfsFilterService.getSolrRequestFromApplicationProfile(
-                data, ftName, scope.wfsUrl, scope.docFields);
+                  scope.appProfile, ftName, scope.url, scope.docFields);
             } else {
               url = wfsFilterService.getSolrRequestFromFields(
-                scope.docFields, ftName, scope.wfsUrl);
+                  scope.docFields, ftName, scope.url);
             }
             solrUrl = url;
             // Init the facets
             scope.resetFacets();
           }
           scope.checkFeatureTypeInSolr = function() {
-            scope.initialized = true;
             wfsFilterService.getWfsIndexFields(
-                ftName, scope.wfsUrl).then(function(docFields) {
+                ftName, scope.url).then(function(docFields) {
               scope.isFeaturesIndexed = true;
-              scope.isWfsAvailable = true;
               scope.status = null;
               scope.docFields = docFields;
               if (scope.appProfile == null) {
-                loadAppProfile().then(function (data) {
-                  loadFields(data, scope.docFields);
+                loadAppProfile().then(function(data) {
+                  scope.appProfile = data;
+                  loadFields();
+                }, function() {
+                  loadFields();
                 });
               } else {
-                loadFields(scope.docFields);
+                loadFields();
               }
             }, function(error) {
-              scope.status = error;
+              scope.status = error.statusText;
             });
           };
           /**
@@ -169,6 +148,7 @@
               };
               output[fieldName].values[facetKey] = true;
             }
+            scope.searchInput = '';
             scope.filterFacets();
           };
 
@@ -177,13 +157,14 @@
            * structure.
            * This method is called each time the user check or uncheck a box
            * from the ui, or when he updates the filter input.
+           * @param {boolean} fromInput the filter comes from input change
            */
-          scope.filterFacets = function() {
+          scope.filterFacets = function(fromInput) {
 
             // Update the facet UI
-            var collapsedFields;
+            var collapsedFields = [];
             angular.forEach(scope.fields, function(f) {
-              collapsedFields = [];
+              collapsedFields;
               if (f.collapsed) {
                 collapsedFields.push(f.name);
               }
@@ -199,12 +180,14 @@
                   scope.fields = facetsInfo.facetConfig;
                   scope.count = facetsInfo.count;
                   scope.layer.set('featureCount', scope.count);
-                  angular.forEach(scope.fields, function(f) {
-                    if (!collapsedFields ||
-                        collapsedFields.indexOf(f.name) >= 0) {
-                      f.collapsed = true;
-                    }
-                  });
+                  if (fromInput) {
+                    angular.forEach(scope.fields, function(f) {
+                      if (!collapsedFields ||
+                          collapsedFields.indexOf(f.name) >= 0) {
+                        f.collapsed = true;
+                      }
+                    });
+                  }
                 });
           };
 
@@ -218,12 +201,16 @@
             // output structure to send to filter service
             scope.output = {};
 
+            scope.searchInput = '';
+
             // load all facet and fill ui structure for the list
             wfsFilterService.getFacetsConfigFromSolr(solrUrl, scope.docFields).
                 then(function(facetsInfo) {
                   scope.fields = facetsInfo.facetConfig;
                   scope.count = facetsInfo.count;
+                  scope.countTotal = facetsInfo.count;
                   scope.layer.set('featureCount', scope.count);
+                  scope.layer.set('featureCountT', scope.countTotal);
                   angular.forEach(scope.fields, function(f) {
                     f.collapsed = true;
                   });
@@ -265,17 +252,23 @@
 
           scope.indexWFSFeatures = function() {
             if (scope.appProfile == null) {
-              loadAppProfile().then(function () {
+              loadAppProfile().then(function() {
                 return wfsFilterService.indexWFSFeatures(
-                  scope.wfsUrl,
-                  ftName,
-                  scope.appProfile.tokenize)
+                    scope.url,
+                    ftName,
+                    scope.appProfile.tokenize);
+              }, function() {
+                return wfsFilterService.indexWFSFeatures(
+                    scope.url,
+                    ftName,
+                    null
+                );
               });
             } else {
               return wfsFilterService.indexWFSFeatures(
-                scope.wfsUrl,
-                ftName,
-                scope.appProfile && scope.appProfile.tokenize ?
+                  scope.url,
+                  ftName,
+                  scope.appProfile && scope.appProfile.tokenize ?
                   scope.appProfile.tokenize : null
               );
             }
@@ -286,7 +279,19 @@
             scope.searchInput = '';
             scope.filterFacets();
           };
+
           scope.searchInput = '';
+
+          if (scope.layer) {
+            init();
+          }
+          else {
+            scope.$watch('layer', function(n, o) {
+              if (n && n != o) {
+                init();
+              }
+            });
+          }
         }
       };
     }]);
