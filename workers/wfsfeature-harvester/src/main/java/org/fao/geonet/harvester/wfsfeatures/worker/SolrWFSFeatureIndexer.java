@@ -244,6 +244,7 @@ public class SolrWFSFeatureIndexer {
 
             // TODO : retrieve features in WGS 84
             FeatureCollection<SimpleFeatureType, SimpleFeature> featuresCollection = source.getFeatures();
+            boolean isWGS84 = CRS.lookupEpsgCode(source.getBounds().getCoordinateReferenceSystem(), false) == 4326;
 
             final FeatureIterator<SimpleFeature> features = featuresCollection.features();
             int numInBatch = 0, nbOfFeatures = 0;
@@ -266,15 +267,23 @@ public class SolrWFSFeatureIndexer {
                     // state.getTokenize();
                     if (attributeValue != null) {
                         if (attributeType.equals("geometry")) {
-                            if (!CRS.equalsIgnoreMetadata(
-                                    feature.getBounds().getCoordinateReferenceSystem(),
-                                    wgs84)) {
-                                // Geometry is not in WGS84
-                                // TODO: reproject feature ?
-                            } else if (wgs84bbox.contains(feature.getBounds())) {
-                                document.addField("geom", attributeValue);
-                            } else {
-                                // Geometry is out of CRS extent
+//                            !CRS.equalsIgnoreMetadata(
+//                                    feature.getBounds().getCoordinateReferenceSystem(),
+//                                    wgs84)
+                            try {
+//                                if (!isWGS84) {
+//                                    // Geometry is not in WGS84
+//                                    // TODO: reproject feature ?
+//                                } else if (wgs84bbox.contains(feature.getBounds())) {
+//                                    document.addField("geom", attributeValue);
+//                                } else {
+//                                    // Geometry is out of CRS extent
+//                                }
+                                if (isWGS84) {
+                                    document.addField("geom", attributeValue);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         } else {
                             // Check if field has to be tokenized
