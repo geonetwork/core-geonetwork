@@ -993,6 +993,10 @@ public class LuceneQueryBuilder {
         boolean editable = BooleanUtils.toBoolean(editable$);
         BooleanQuery groupsQuery = new BooleanQuery();
         boolean groupsQueryEmpty = true;
+        boolean noDraft = luceneQueryInput.getSearchCriteria().containsKey("draft") &&
+                            luceneQueryInput.getSearchCriteria().get("draft").contains("n");
+        
+        luceneQueryInput.getSearchCriteria().remove("draft");
         
         //Queries for drafts:
         BooleanQuery canEditQuery = new BooleanQuery(); 
@@ -1044,7 +1048,7 @@ public class LuceneQueryBuilder {
                         editableQuery.add(groupQuery, 
                                 LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
 
-                        if(editableGroups.contains(group)) {
+                        if(editableGroups.contains(group) && !noDraft) {
                             editableQuery.add(canEditQuery, 
                                     LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
                         } else {        
@@ -1088,8 +1092,13 @@ public class LuceneQueryBuilder {
             groupsQuery = tmp;
             
             //Add owner query
-            ownQuery.add(canEditQuery, 
-                  LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+            if(!noDraft) {
+                ownQuery.add(canEditQuery, 
+                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+            } else {
+                ownQuery.add(cannotEditQuery, 
+                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+            }
             
             groupsQuery.add(new BooleanClause(ownQuery, 
                     LuceneUtils.convertRequiredAndProhibitedToOccur(false, false)));
@@ -1106,8 +1115,13 @@ public class LuceneQueryBuilder {
             groupsQueryEmpty = false;
             
             BooleanQuery isAdmin = new BooleanQuery();
-            isAdmin.add(canEditQuery, 
+            if(!noDraft) {
+                isAdmin.add(canEditQuery, 
                     LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+            } else {
+                isAdmin.add(cannotEditQuery, 
+                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+            }
             isAdmin.add(adminClause);
             isAdmin.add(groupsQuery.clone(), LuceneUtils.convertRequiredAndProhibitedToOccur(false, true));
             
