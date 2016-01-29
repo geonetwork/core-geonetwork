@@ -213,11 +213,12 @@
        * @param {string} ftName featuretype name
        * @param {string} wfsUrl url of the wfs service
        */
-      this.getApplicationProfile = function(uuid, ftName, wfsUrl) {
+      this.getApplicationProfile = function(uuid, ftName, wfsUrl, protocol) {
         return gnHttp.callService('wfsIndexConfig', {
           uuid: uuid,
           url: wfsUrl,
-          typename: ftName
+          typename: ftName,
+          protocol: protocol
         });
       };
 
