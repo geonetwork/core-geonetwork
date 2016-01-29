@@ -86,6 +86,8 @@
           $location.path(this.METADATA + uuid);
         } else if (this.isDraftView()) {
           $location.path(this.DRAFT + uuid);
+        } else {
+          $location.path(this.METADATA + uuid);
         }
         this.removeParams();
       };
