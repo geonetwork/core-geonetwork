@@ -126,8 +126,7 @@
               }
 
               if (scope.appProfile == null) {
-                loadAppProfile().then(function(data) {
-                  scope.appProfile = data;
+                loadAppProfile().then(function() {
                   loadFields();
                 }, function() {
                   loadFields();
