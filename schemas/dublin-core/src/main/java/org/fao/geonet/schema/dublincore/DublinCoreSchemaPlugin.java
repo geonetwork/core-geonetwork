@@ -36,7 +36,7 @@ public class DublinCoreSchemaPlugin
     }
 
     public DublinCoreSchemaPlugin() {
-        super(IDENTIFIER);
+        super(IDENTIFIER, allNamespaces);
     }
 
 

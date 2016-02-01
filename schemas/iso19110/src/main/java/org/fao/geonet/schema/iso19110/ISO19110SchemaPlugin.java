@@ -43,7 +43,7 @@ public class ISO19110SchemaPlugin
     }
 
     public ISO19110SchemaPlugin() {
-        super(IDENTIFIER);
+        super(IDENTIFIER, allNamespaces);
     }
 
     @Override

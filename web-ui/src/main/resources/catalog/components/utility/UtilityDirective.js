@@ -512,11 +512,13 @@
     return {
       restrict: 'A',
       link: function($scope, $element, $attr) {
-        $scope.$watch($attr.gnFocusOn, function(_focusVal) {
-          $timeout(function() {
-            _focusVal ? $element.focus() :
-                $element.blur();
-          });
+        $scope.$watch($attr.gnFocusOn, function(o, n) {
+          if (o != n) {
+            $timeout(function() {
+              o ? $element.focus() :
+                  $element.blur();
+            });
+          }
         });
       }
     };

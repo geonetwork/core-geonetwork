@@ -99,15 +99,34 @@
             // Init the facets
             scope.resetFacets();
           }
+          function getDataModelLabel(fieldId) {
+            for (var j = 0; j < scope.md.attributeTable.length; j++) {
+              if (fieldId ==
+                  scope.md.attributeTable[j].name) {
+                return scope.md.attributeTable[j].definition;
+              }
+            }
+            return null;
+          }
           scope.checkFeatureTypeInSolr = function() {
             wfsFilterService.getWfsIndexFields(
                 ftName, scope.url).then(function(docFields) {
               scope.isFeaturesIndexed = true;
               scope.status = null;
               scope.docFields = docFields;
+
+              if (scope.md && scope.md.attributeTable) {
+                for (var i = 0; i < scope.docFields.length; i++) {
+                  var label = getDataModelLabel(scope.docFields[i].attrName);
+                  if (label) {
+                    // TODO: Multilingual
+                    scope.docFields[i].label = label;
+                  }
+                }
+              }
+
               if (scope.appProfile == null) {
-                loadAppProfile().then(function(data) {
-                  scope.appProfile = data;
+                loadAppProfile().then(function() {
                   loadFields();
                 }, function() {
                   loadFields();

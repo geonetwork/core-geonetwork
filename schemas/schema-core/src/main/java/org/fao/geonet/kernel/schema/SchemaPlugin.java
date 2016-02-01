@@ -3,7 +3,9 @@ package org.fao.geonet.kernel.schema;
 import com.google.common.collect.ImmutableSet;
 import org.jdom.Namespace;
 
-import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * Created by francois on 6/16/14.
@@ -11,23 +13,42 @@ import java.util.Set;
 public abstract class SchemaPlugin implements CSWPlugin {
     public static final String LOGGER_NAME = "geonetwork.schema-plugin";
 
+    protected SchemaPlugin(String identifier,
+                           ImmutableSet<Namespace> allNamespaces) {
+        this.identifier = identifier;
+        this.allNamespaces = allNamespaces;
+    }
+
     public final String identifier;
 
     public String getIdentifier() {
         return identifier;
     }
 
+    private List<SavedQuery> savedQueries = new ArrayList<>();
 
-    protected SchemaPlugin(String identifier) {
-        this.identifier = identifier;
+    public List<SavedQuery> getSavedQueries() {
+        return savedQueries;
     }
 
+    public void setSavedQueries(List<SavedQuery> savedQueries) {
+        this.savedQueries = savedQueries;
+    }
 
-    private static ImmutableSet<Namespace> allNamespaces;
+    public @Nullable SavedQuery getSavedQuery(@Nonnull String queryKey) {
+        Iterator<SavedQuery> iterator = this.getSavedQueries().iterator();
+        while (iterator.hasNext()) {
+            SavedQuery query = iterator.next();
+            if (queryKey.equals(query.getId())) {
+                return query;
+            }
+        }
+        return null;
+    }
+
+    private ImmutableSet<Namespace> allNamespaces;
+
     public Set<Namespace> getNamespaces() {
-        return this.allNamespaces;
-    }
-    public void setAllNamespaces(ImmutableSet<Namespace> allNamespaces) {
-        this.allNamespaces = allNamespaces;
+        return allNamespaces;
     }
 }

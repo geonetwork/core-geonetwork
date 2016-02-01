@@ -221,12 +221,12 @@
        * @param {string} wfsUrl url of the wfs service
        */
       this.getApplicationProfile = function(uuid, ftName, wfsUrl, protocol) {
-        return $http.get('../api/0.1/metadata/' + uuid +
-            '/query/onlinesrc-appprofile', {params: {
+        return $http.post('../api/0.1/metadata/' + uuid +
+            '/query/wfs-indexing-config', {
               url: wfsUrl,
               name: ftName,
               protocol: protocol
-            }});
+            });
       };
 
       /**

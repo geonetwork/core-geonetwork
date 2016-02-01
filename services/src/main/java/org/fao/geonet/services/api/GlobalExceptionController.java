@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.api;
 
+import org.fao.geonet.services.api.exception.NoResultsFoundException;
 import org.fao.geonet.services.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.services.api.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -75,11 +76,12 @@ public class GlobalExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
-            FileNotFoundException.class})
-    public Object fileNotFoundHandler(final Exception exception) {
+            FileNotFoundException.class,
+            NoResultsFoundException.class})
+    public Object NotFoundHandler(final Exception exception) {
         exception.printStackTrace();
         return new LinkedHashMap<String, String>() {{
-            put("code", "file_not_found");
+            put("code", "not_found");
             put("message", exception.getClass().getSimpleName());
             put("description", exception.getMessage());
         }};
