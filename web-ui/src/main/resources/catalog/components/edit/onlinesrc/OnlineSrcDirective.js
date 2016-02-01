@@ -135,6 +135,7 @@
   .directive('gnAddOnlinesrc', [
         'gnOnlinesrc',
         'gnOwsCapabilities',
+        'gnWfsService',
         'gnEditor',
         'gnCurrentEdit',
         'gnMap',
@@ -142,8 +143,8 @@
         '$translate',
         '$timeout',
         '$http',
-        function(gnOnlinesrc, gnOwsCapabilities, gnEditor,
-                 gnCurrentEdit, gnMap,
+        function(gnOnlinesrc, gnOwsCapabilities, gnWfsService,
+                 gnEditor, gnCurrentEdit, gnMap,
                  $rootScope, $translate, $timeout, $http) {
           return {
             restrict: 'A',
@@ -752,7 +753,7 @@
 
               // Tells if we need to display layer grid and send
               // layers to the submit
-              scope.isWMSProtocol = false;
+              scope.OGCProtocol = false;
 
               scope.onlinesrcService = gnOnlinesrc;
               scope.isUrlOk = false;
@@ -761,18 +762,25 @@
               };
 
               var resetForm = function() {
-                scope.layers = [];
                 if (scope.params) {
                   scope.params.url = '';
                   scope.params.protocol = '';
                   scope.params.function = '';
                   scope.params.applicationProfile = '';
+                  resetProtocol();
+                }
+              };
+              var resetProtocol = function() {
+                scope.layers = [];
+                scope.OGCProtocol = null;
+                if (scope.params) {
                   scope.params.name = scope.isMdMultilingual ? {} : '';
                   scope.params.desc = scope.isMdMultilingual ? {} : '';
                   scope.params.selectedLayers = [];
                   scope.params.layers = [];
                 }
               };
+
 
               function buildObjectParameter(param) {
                 if (angular.isObject(param)) {
@@ -829,21 +837,6 @@
                 scope.onlinesrcService.reload = true;
               };
 
-              function handleError(reportError, error) {
-                if (reportError && error != undefined) {
-                  scope.isUrlOk = false;
-                  var errorMsg = !isNaN(parseFloat(error)) && isFinite(error) ?
-                      $translate('linkToServiceWithoutURLError') +
-                      ': ' +
-                      error :
-                      $translate(error);
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('error'),
-                    timeout: 0,
-                    msg: errorMsg,
-                    type: 'danger'});
-                }
-              }
               /**
                * loadCurrentLink
                *
@@ -856,9 +849,12 @@
                     scope.params.url == '') {
                   return;
                 }
-                if (scope.isWMSProtocol) {
-                  gnOwsCapabilities.getWMSCapabilities(scope.params.url)
-                        .then(function(capabilities) {
+                if (scope.OGCProtocol) {
+                  scope.layers = [];
+                  if (scope.OGCProtocol == 'WMS') {
+                    return gnOwsCapabilities.getWMSCapabilities(
+                      scope.params.url)
+                      .then(function(capabilities) {
                         scope.layers = [];
                         scope.isUrlOk = true;
                         angular.forEach(capabilities.layers, function(l) {
@@ -867,15 +863,36 @@
                           }
                         });
                       }).catch (function(error) {
-                        handleError(reportError, error);
-                      });
+                        scope.isUrlOk = error === 200;
+                    });
+                  } else if (scope.OGCProtocol == 'WFS') {
+                    return gnWfsService.getCapabilities(
+                      scope.params.url)
+                      .then(function(capabilities) {
+                        scope.layers = [];
+                        scope.isUrlOk = true;
+                        angular.forEach(
+                          capabilities.featureTypeList.featureType,
+                          function(l) {
+                          if (angular.isDefined(l.name)) {
+                            scope.layers.push({
+                              Name: l.name.localPart,
+                              abstract: l._abstract,
+                              Title: l.title
+                            });
+                          }
+                        });
+                      }).catch (function(error) {
+                        scope.isUrlOk = error === 200;
+                    });
+                  }
                 } else {
                   var useProxy =
                       scope.params.url.indexOf(location.hostname) === -1;
                   var url = useProxy ?
                       '../../proxy?url=' +
                       encodeURIComponent(scope.params.url) : scope.params.url;
-                  $http.get(url).
+                  return $http.get(url).
                       then(function(response) {
                         scope.isUrlOk = response.status === 200;
                       },
@@ -888,13 +905,23 @@
 
               /**
                * On protocol combo Change.
-               * Update isWMSProtocol values to display or hide
+               * Update OGCProtocol values to display or hide
                * layer grid and call or not a getCapabilities.
                */
-              scope.$watch('params.protocol', function() {
-                if (!angular.isUndefined(scope.params.protocol)) {
-                  scope.isWMSProtocol = (scope.params.protocol.
-                      indexOf('OGC:WMS') >= 0);
+              scope.$watch('params.protocol', function(n, o) {
+                if (!angular.isUndefined(scope.params.protocol) && o != n) {
+                  resetProtocol();
+                  if (scope.params.protocol.indexOf('OGC:WMS') >= 0) {
+                    scope.OGCProtocol = 'WMS';
+                  } else if (scope.params.protocol.indexOf('OGC:WFS') >= 0) {
+                    scope.OGCProtocol = 'WFS';
+                  }
+                  if (scope.OGCProtocol != null) {
+                    // Reset parameter in case of multilingual metadata
+                    // Those parameters are object.
+                    scope.params.name = '';
+                    scope.params.desc = '';
+                  }
                   scope.loadCurrentLink();
                 }
               });
@@ -907,6 +934,21 @@
                 if (!angular.isUndefined(scope.params.url)) {
                   scope.loadCurrentLink();
                   scope.isImage = scope.params.url.match(/.*.(png|jpg|gif)$/i);
+                }
+              });
+              scope.$watchCollection('params.selectedLayers', function(n, o) {
+                if (o != n) {
+                  var names = [],
+                      descs = [];
+
+                  angular.forEach(scope.params.selectedLayers, function(layer) {
+                    names.push(layer.Name || layer.name);
+                    descs.push(layer.Title || layer.title);
+                  });
+                  angular.extend(scope.params, {
+                    name: names.join(','),
+                    desc: descs.join(',')
+                  });
                 }
               });
               scope.$watch('params.linkType', function(newValue, oldValue) {
@@ -1023,7 +1065,7 @@
                    */
                   scope.loadCurrentLink = function(url) {
                     scope.alertMsg = null;
-                    gnOwsCapabilities.getWMSCapabilities(url)
+                    return gnOwsCapabilities.getWMSCapabilities(url)
                         .then(function(capabilities) {
                           scope.layers = [];
                           scope.srcParams.selectedLayers = [];

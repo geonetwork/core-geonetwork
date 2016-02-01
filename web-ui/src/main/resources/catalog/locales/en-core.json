@@ -33,6 +33,7 @@
     "acceptCookie": "Accept",
     "rejectCookie": "Get me out of here",
     "adminConsole": "Admin console",
+    "loadCapabilitiesLayers": "Load service layers",
     "any": "Full text",
     "anyPlaceHolder": "Search ...",
     "VALID": "Valid",
