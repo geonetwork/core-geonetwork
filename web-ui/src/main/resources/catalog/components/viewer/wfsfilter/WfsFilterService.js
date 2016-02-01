@@ -221,7 +221,7 @@
        */
       this.getApplicationProfile = function(uuid, ftName, wfsUrl, protocol) {
         return $http.get('../api/0.1/metadata/' + uuid +
-            '/query/onlinesrc-appprofile', {params: {
+            '/query/wfs-indexing-config', {params: {
               url: wfsUrl,
               name: ftName,
               protocol: protocol
