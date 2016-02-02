@@ -255,5 +255,7 @@
     <suggest name="gmd:useLimitation"/>
   </field>
 
-
+  <field name="gmd:LI_ProcessStep">
+    <suggest name="gmd:rationale"/>
+  </field>
 </fields>

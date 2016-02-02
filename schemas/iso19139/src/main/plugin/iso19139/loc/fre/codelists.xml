@@ -1515,25 +1515,25 @@
 			<description>Donnée raster ou matricielle</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
+		<entry hideInEditMode="true">
 			<code>textTable</code>
 			<label>Tabulaire</label>
 			<description>Fichier texte ou table</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
+		<entry hideInEditMode="true">
 			<code>tin</code>
 			<label>TIN</label>
 			<description>Réseau de triangle irrégulier (Triangulated Irregular Network)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
+		<entry hideInEditMode="true">
 			<code>stereoModel</code>
 			<label>Modèle stéréoscopique</label>
 			<description>Vue tridimensionnelle formée par l'intersection des rayons homologues d'une paire d'images se recouvrant</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
+		<entry hideInEditMode="true">
 			<code>video</code>
 			<label>Vidéo</label>
 			<description>Enregistrement vidéo</description>

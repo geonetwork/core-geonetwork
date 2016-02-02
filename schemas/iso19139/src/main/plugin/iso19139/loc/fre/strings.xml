@@ -61,6 +61,7 @@
   <pointOfContact>Organisation responsable de la ressource</pointOfContact>
   <metadataPointOfContact>Point de contact des métadonnées</metadataPointOfContact>
   <organisationName>Nom de l'organisation</organisationName>
+  <individualName>Nom de la personne</individualName>
   <electronicMailAddress>Email de l'organisation</electronicMailAddress>
   <role>Rôle</role>
   <encoding>Encodage</encoding>

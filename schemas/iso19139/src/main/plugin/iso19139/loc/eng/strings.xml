@@ -67,6 +67,7 @@
   <pointOfContact>Contact for the resource</pointOfContact>
   <metadataPointOfContact>Contact for the metadata</metadataPointOfContact>
   <organisationName>Organisation name</organisationName>
+  <individualName>Individual name</individualName>
   <electronicMailAddress>Email</electronicMailAddress>
   <role>Role</role>
   <encoding>Encoding</encoding>

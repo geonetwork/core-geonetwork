@@ -4567,7 +4567,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     
   </element>
   <element name="gmd:languageCode">
-    <label>LanguageCode</label>
+    <label>Autre langue</label>
     <description>LanguageCode</description>
     <help/>
     <condition/>

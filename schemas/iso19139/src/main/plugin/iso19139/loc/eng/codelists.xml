@@ -1595,26 +1595,26 @@
 			<description>Grid data is used to represent geographic data</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
+		<entry hideInEditMode="true">
 			<code>textTable</code>
 			<label>Text, table</label>
 			<description>Textual or tabular data is used to represent geographic data</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
+		<entry hideInEditMode="true">
 			<code>tin</code>
 			<label>TIN</label>
 			<description>Triangulated irregular network</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
+		<entry hideInEditMode="true">
 			<code>stereoModel</code>
 			<label>Stereo model</label>
 			<description>Three-dimensional view formed by the intersecting homologous rays of an
 				overlapping pair of images</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
+		<entry hideInEditMode="true">
 			<code>video</code>
 			<label>Video</label>
 			<description>Scene from a video recording</description>
