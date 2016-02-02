@@ -156,7 +156,7 @@ attached it to the metadata for data.
                             <xsl:choose>
 
                               <!--Multilingual-->
-                              <xsl:when test="contains($name, '|')">
+                              <xsl:when test="contains($name, '#')">
                                 <xsl:for-each select="tokenize($name, $separator)">
                                   <xsl:variable name="nameLang" select="substring-before(., '#')"></xsl:variable>
                                   <xsl:variable name="nameValue" select="substring-after(., '#')"></xsl:variable>
@@ -193,7 +193,7 @@ attached it to the metadata for data.
                         <xsl:if test="$desc != ''">
                           <gmd:description>
                             <xsl:choose>
-                              <xsl:when test="contains($desc, '|')">
+                              <xsl:when test="contains($desc, '#')">
                                 <xsl:for-each select="tokenize($desc, $separator)">
                                   <xsl:variable name="descLang" select="substring-before(., '#')"></xsl:variable>
                                   <xsl:variable name="descValue" select="substring-after(., '#')"></xsl:variable>
