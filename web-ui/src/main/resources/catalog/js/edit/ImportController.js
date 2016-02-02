@@ -92,13 +92,13 @@
 
       $scope.uploadScope = angular.element('#md-import-file').scope();
       $scope.unsupportedFile = false;
-      $scope.$watchCollection('uploadScope.queue', function (n, o) {
+      $scope.$watchCollection('uploadScope.queue', function(n, o) {
         if (n != o && n.length == 1) {
           if (n[0].name.match(/.xml$/i) !== null) {
             $scope.file_type = 'single';
           } else if (
-            n[0].name.match(/.zip$/i) !== null ||
-            n[0].name.match(/.mef$/i) !== null) {
+              n[0].name.match(/.zip$/i) !== null ||
+              n[0].name.match(/.mef$/i) !== null) {
             $scope.file_type = 'mef';
           } else {
             $scope.unsupportedFile = true;

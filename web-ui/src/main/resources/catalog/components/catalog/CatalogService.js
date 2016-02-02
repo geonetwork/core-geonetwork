@@ -648,20 +648,24 @@
         }
         angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
-          types.forEach(function(type) {
-            if (type.substr(0, 1) == '#') {
-              if (linkInfo.protocol == type.substr(1, type.length - 1) &&
-                  (!groupId || groupId == linkInfo.group)) {
-                ret.push(linkInfo);
+          if (types.length > 0) {
+            types.forEach(function(type) {
+              if (type.substr(0, 1) == '#') {
+                if (linkInfo.protocol == type.substr(1, type.length - 1) &&
+                    (!groupId || groupId == linkInfo.group)) {
+                  ret.push(linkInfo);
+                }
               }
-            }
-            else {
-              if (linkInfo.protocol.indexOf(type) >= 0 &&
-                  (!groupId || groupId == linkInfo.group)) {
-                ret.push(linkInfo);
+              else {
+                if (linkInfo.protocol.indexOf(type) >= 0 &&
+                    (!groupId || groupId == linkInfo.group)) {
+                  ret.push(linkInfo);
+                }
               }
-            }
-          });
+            });
+          } else {
+            ret.push(linkInfo);
+          }
         });
         this.linksCache[key] = ret;
         return ret;

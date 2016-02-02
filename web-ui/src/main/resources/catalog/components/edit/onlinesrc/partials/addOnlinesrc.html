@@ -209,6 +209,52 @@
         </div>
       </div>
 
+      <div class="panel panel-default"
+           data-ng-show="params.linkType.sources.metadataStore.label">
+        <div class="panel-heading">
+          {{params.linkType.sources.metadataStore.label | translate}}
+        </div>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form"
+                data-ng-search-form="">
+            <div class="input-group">
+              <span class="input-group-addon">
+                <i class="fa fa-search" />
+              </span>
+              <input class="form-control"
+                     data-ng-change="triggerSearch()"
+                     type="text"
+                     data-ng-model="searchObj.params.any"
+                     data-ng-model-options="modelOptions"
+                     placeholder="{{'search' | translate}}"/>
+            </div>
+
+            <div data-gn-search-form-results
+                 data-gn-search-form-results-mode="title"
+                 data-gn-search-form-results-selection-mode="local simple"
+                 data-search-results="searchResults"
+                 data-select-records="stateObj.selectRecords"
+                 data-pagination-info="paginationInfo">
+            </div>
+
+            <div data-ng-show="metadataLinks.length > 0">
+              <h5>
+                <span data-translate=""
+                  data-translate-values="{count: '{{metadataLinks.length}}'}">serviceContainsManyUrl</span>
+                <strong>{{metadataTitle}}</strong>
+              </h5>
+              <ul class="list-group">
+                <li data-ng-repeat="l in metadataLinks"
+                    class="list-group-item">
+                  <a data-ng-click="params.url = l.url">{{l.url}}
+                    <span data-ng-show="l.protocol">({{l.protocol}})</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </form>
+        </div>
+      </div>
 
       <div class="panel panel-default"
            data-ng-show="params.linkType.sources.thumbnailMaker">

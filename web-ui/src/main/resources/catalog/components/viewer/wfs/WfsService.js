@@ -33,19 +33,19 @@
       }
       );
   var context110 = new Jsonix.Context(
-    [XLink_1_0, OWS_1_0_0,
-      Filter_1_1_0,
-      GML_3_1_1,
-      SMIL_2_0, SMIL_2_0_Language,
-      WFS_1_1_0],
-    {
-      namespacePrefixes: {
-        'http://www.w3.org/1999/xlink': 'xlink',
-        'http://www.opengis.net/ows/1.1': 'ows',
-        'http://www.opengis.net/wfs': 'wfs'
+      [XLink_1_0, OWS_1_0_0,
+       Filter_1_1_0,
+       GML_3_1_1,
+       SMIL_2_0, SMIL_2_0_Language,
+       WFS_1_1_0],
+      {
+        namespacePrefixes: {
+          'http://www.w3.org/1999/xlink': 'xlink',
+          'http://www.opengis.net/ows/1.1': 'ows',
+          'http://www.opengis.net/wfs': 'wfs'
+        }
       }
-    }
-  );
+      );
   var unmarshaller100 = context100.createUnmarshaller();
   var unmarshaller110 = context110.createUnmarshaller();
 
