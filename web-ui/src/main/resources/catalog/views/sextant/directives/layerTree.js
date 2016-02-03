@@ -134,7 +134,9 @@
             }
 
             // Remove active popovers
-            $('.popover-dropdown').remove();
+            $('[sxt-layertree] .dropdown-toggle').each(function(i, button) {
+              $(button).popover('hide');
+            });
 
             debounce++;
             $timeout(function() {
