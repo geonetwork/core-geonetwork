@@ -1410,8 +1410,7 @@
                 return new ol.layer.Tile({
                   preload: Infinity,
                   source: new ol.source.BingMaps({
-                    key: 'Ak-dzM4wZjSqTlzveKz5u0d4I' +
-                        'Q4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+                    key: viewerSettings.bingKey,
                     imagerySet: 'Aerial'
                   }),
                   title: 'Bing Aerial'
