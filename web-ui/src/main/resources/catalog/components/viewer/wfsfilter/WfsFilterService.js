@@ -123,7 +123,7 @@
        * @param {string} key index key of the field
        * @param {string} type of the facet field (range, field etc..)
        */
-      var buildSldFilter = function(key, type) {
+      var buildSldFilter = function(key, type, multiValued) {
         var res;
         if (type == 'interval' || type == 'range') {
           res = {
@@ -133,8 +133,8 @@
         }
         else if (type == 'field') {
           res = {
-            filter_type: 'PropertyIsEqualTo',
-            params: [key]
+            filter_type: multiValued ? 'PropertyIsLike' : 'PropertyIsEqualTo',
+            params: [multiValued ? '*' + key + '*' : key]
           };
         }
         return res;
@@ -152,13 +152,15 @@
         };
 
         angular.forEach(facetState, function(attrValue, attrName) {
+          var fieldInfo = attrName.match(/(.*)_([a-z]{1})?([a-z]{1})?$/);
           var field = {
             // TODO : remove the field type suffix
-            field_name: attrName.substr(0, attrName.length - 2),
+            field_name: fieldInfo[1],
             filter: []
           };
+          var multiValued = fieldInfo[3] != undefined;
           angular.forEach(attrValue.values, function(v, k) {
-            field.filter.push(buildSldFilter(k, attrValue.type));
+            field.filter.push(buildSldFilter(k, attrValue.type, multiValued));
           });
           sldConfig.filters.push(field);
         });
