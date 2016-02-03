@@ -126,7 +126,7 @@
 
           scope.setUrl = function(srv) {
             scope.url = angular.isObject(srv) ? srv.url : srv;
-            scope.type = angular.isObject(srv) ? srv.type : scope.format;
+            scope.type = angular.isObject(srv) && srv.type || scope.format;
             scope.serviceDesc = angular.isObject(srv) ? srv : null;
             scope.load();
           };
