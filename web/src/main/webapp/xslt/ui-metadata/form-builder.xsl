@@ -286,7 +286,7 @@
           <xsl:attribute name="data-gn-xpath" select="$xpath"/>
         </xsl:if>
 
-        <xsl:value-of select="$label"/>
+        <xsl:value-of select="$label"/>&#160;
 
         <xsl:if test="$editInfo and not($isDisabled)">
           <xsl:call-template name="render-boxed-element-control">
@@ -626,6 +626,8 @@
     <!-- Hide add element if child of an XLink section. -->
     <xsl:param name="isDisabled" select="ancestor::node()[@xlink:href]"/>
     <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
+    <!--<xsl:param name="btnLabel" required="no" as="xs:string?" select="''"/>-->
+    <xsl:param name="btnClass" required="no" as="xs:string?" select="''"/>
 
     <xsl:if test="not($isDisabled)">
       <xsl:variable name="id" select="generate-id()"/>
@@ -633,13 +635,13 @@
       <xsl:variable name="isRequired" select="$childEditInfo/@min = 1 and $childEditInfo/@max = 1"/>
 
       <!-- This element is replaced by the content received when clicking add -->
-      <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field"
+      <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field gn-add-field'} "
            id="gn-el-{$id}"
            data-gn-field-highlight="">
         <label class="col-sm-2 control-label"
           data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
           <xsl:if test="normalize-space($label) != ''">
-                  <xsl:value-of select="$label"/>
+            <xsl:value-of select="$label"/>
           </xsl:if>&#160;
         </label>
         <div class="col-sm-9">
@@ -662,7 +664,7 @@
                     <a class="btn btn-default"
                        title="{$i18n/addA} {$label/label}"
                        data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'replaceWith');">
-                      <i type="button" class="fa fa-plus gn-add"
+                      <i type="button" class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"
                       title="{$label/description}">
                       </i>
                     </a>
@@ -672,7 +674,7 @@
                   If many choices, make a dropdown button -->
             <xsl:when test="count($childEditInfo/gn:choose) > 1">
               <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle fa fa-plus gn-add"
+                <button type="button" class="btn btn-default dropdown-toggle {if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"
                         data-toggle="dropdown"
                         title="{$i18n/addA} {$label}">
                   <span/>
@@ -702,7 +704,7 @@
               <a class="btn btn-default"
                  title="{$i18n/addA} {$label}"
                  data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');">
-                <i class="fa fa-plus gn-add"/>
+                <i class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"/>
               </a>
             </xsl:otherwise>
           </xsl:choose>
@@ -717,7 +719,23 @@
                 <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
                 <xsl:choose>
                   <xsl:when test="$directive/directiveAttributes">
-                    <xsl:copy-of select="$directive/directiveAttributes/@*"/>
+                    <xsl:for-each select="$directive/directiveAttributes/@*">
+                      <xsl:choose>
+                        <xsl:when test="starts-with(., 'xpath::')">
+                          <xsl:variable name="xpath" select="substring-after(., 'xpath::')"/>
+                          <xsl:attribute name="{name(.)}">
+                            <saxon:call-template name="{concat('evaluate-', $schema)}">
+                              <xsl:with-param name="base" select="$metadata"/>
+                              <xsl:with-param name="in"
+                                              select="concat('/../', $xpath)"/>
+                            </saxon:call-template>
+                          </xsl:attribute>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:copy-of select="."/>
+                        </xsl:otherwise>
+                      </xsl:choose>
+                    </xsl:for-each>
                   </xsl:when>
                   <xsl:otherwise>
                     <xsl:copy-of
