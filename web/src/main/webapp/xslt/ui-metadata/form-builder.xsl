@@ -712,13 +712,19 @@
             <xsl:when test="$directive/@addDirective != ''">
               <div>
                 <xsl:attribute name="{$directive/@addDirective}"/>
-                <xsl:copy-of select="$directive/directiveAttributes/@*"/>
                 <xsl:attribute name="data-dom-id" select="$id"/>
                 <xsl:attribute name="data-element-name" select="$qualifiedName"/>
                 <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
-                <xsl:copy-of
-                        select="gn-fn-metadata:getFieldAddDirectiveAttributes($editorConfig,
+                <xsl:choose>
+                  <xsl:when test="$directive/directiveAttributes">
+                    <xsl:copy-of select="$directive/directiveAttributes/@*"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:copy-of
+                            select="gn-fn-metadata:getFieldAddDirectiveAttributes($editorConfig,
                                     $qualifiedName)"/>
+                  </xsl:otherwise>
+                </xsl:choose>
                 <xsl:copy-of select="$addActionDom"/>
               </div>
             </xsl:when>

@@ -74,15 +74,28 @@
                    class="col-sm-2 control-label"
                    data-translate="">url</label>
             <div class="col-sm-10">
-              <input data-ng-model="params.url"
-                     data-ng-model-options="{debounce: 500}"
-                     required=""
-                     name="url"
-                     class="form-control"
-                     type="url"
-                     data-ng-blur="loadCurrentLink()"
-                     id="onlinesrcUrl"
-                     placeholder="http://">
+              <div data-ng-class="{'input-group': OGCProtocol != null}">
+                <input data-ng-model="params.url"
+                       data-ng-model-options="{debounce: 500}"
+                       required=""
+                       name="url"
+                       class="form-control"
+                       type="url"
+                       data-ng-blur="loadCurrentLink()"
+                       id="onlinesrcUrl"
+                       placeholder="http://">
+                <span class="input-group-btn" data-ng-show="OGCProtocol != null">
+                  <!-- Refresh Grid Button -->
+                  <button type="button"
+                          class="btn btn-warning"
+                          title="{{'loadCapabilitiesLayers' | translate}}"
+                          data-gn-click-and-spin="loadCurrentLink(true)">
+                    <i class="fa fa-refresh" />
+                  </button>
+                </span>
+              </div>
+
+
             </div>
           </div>
 
@@ -97,6 +110,15 @@
             </div>
           </div>
 
+
+          <!-- Layers grid directive -->
+          <div data-gn-layers-grid
+               data-ng-show="OGCProtocol != null"
+               data-gn-selection-mode="multiple"
+               data-layers="layers"
+               data-selection="params.selectedLayers">
+          </div>
+
           <!-- Name text Field -->
           <div class="form-group"
                data-ng-show="params.linkType.fields.name &&
@@ -105,7 +127,7 @@
                    class="col-sm-2 control-label"
                    data-translate="">onlineResourceName</label>
             <div class="col-sm-10"
-                 data-ng-if="!isMdMultilingual">
+                 data-ng-if="!isMdMultilingual || (isMdMultilingual && OGCProtocol != null)">
               <input ng-model="params.name"
                      name="name"
                      type="text"
@@ -113,7 +135,7 @@
                      placeholder="Name">
             </div>
             <div class="col-sm-10"
-                 data-ng-if="isMdMultilingual"
+                 data-ng-if="isMdMultilingual && OGCProtocol == null"
                  data-gn-multilingual-field="{{mdOtherLanguages}}"
                  data-main-language="{{mdLang}}"
                  expanded="false">
@@ -124,23 +146,6 @@
             </div>
           </div>
 
-
-          <!-- Refresh Grid Button -->
-          <button type="button"
-                  class="btn navbar-btn btn-warning"
-                  data-ng-click="loadCurrentLink(true)"
-                  data-ng-show="isWMSProtocol">
-            <i class="fa fa-refresh" />
-          </button>
-
-          <!-- Layers grid directive -->
-          <div data-gn-layers-grid
-               data-ng-show="isWMSProtocol"
-               data-gn-selection-mode="multiple"
-               data-layers="layers"
-               data-selection="params.selectedLayers">
-          </div>
-
           <!-- Description Text area -->
           <div class="form-group"
                data-ng-show="params.linkType.fields.desc &&
@@ -149,7 +154,7 @@
                    class="col-sm-2 control-label"
                    data-translate="">Description</label>
             <div class="col-sm-10"
-                 data-ng-if="!isMdMultilingual">
+                 data-ng-if="!isMdMultilingual || (isMdMultilingual && OGCProtocol != null)">
               <textarea rows="3"
                         data-gn-autogrow=""
                         data-ng-model="params.desc"
@@ -159,7 +164,7 @@
                         name="description" />
             </div>
             <div class="col-sm-10"
-                 data-ng-if="isMdMultilingual"
+                 data-ng-if="isMdMultilingual && OGCProtocol == null"
                  gn-multilingual-field="{{mdOtherLanguages}}"
                  data-main-language="{{mdLang}}"
                  expanded="false">
@@ -204,6 +209,52 @@
         </div>
       </div>
 
+      <div class="panel panel-default"
+           data-ng-show="params.linkType.sources.metadataStore.label">
+        <div class="panel-heading">
+          {{params.linkType.sources.metadataStore.label | translate}}
+        </div>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form"
+                data-ng-search-form="">
+            <div class="input-group">
+              <span class="input-group-addon">
+                <i class="fa fa-search" />
+              </span>
+              <input class="form-control"
+                     data-ng-change="triggerSearch()"
+                     type="text"
+                     data-ng-model="searchObj.params.any"
+                     data-ng-model-options="modelOptions"
+                     placeholder="{{'search' | translate}}"/>
+            </div>
+
+            <div data-gn-search-form-results
+                 data-gn-search-form-results-mode="title"
+                 data-gn-search-form-results-selection-mode="local simple"
+                 data-search-results="searchResults"
+                 data-select-records="stateObj.selectRecords"
+                 data-pagination-info="paginationInfo">
+            </div>
+
+            <div data-ng-show="metadataLinks.length > 0">
+              <h5>
+                <span data-translate=""
+                  data-translate-values="{count: '{{metadataLinks.length}}'}">serviceContainsManyUrl</span>
+                <strong>{{metadataTitle}}</strong>
+              </h5>
+              <ul class="list-group">
+                <li data-ng-repeat="l in metadataLinks"
+                    class="list-group-item">
+                  <a data-ng-click="params.url = l.url">{{l.url}}
+                    <span data-ng-show="l.protocol">({{l.protocol}})</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </form>
+        </div>
+      </div>
 
       <div class="panel panel-default"
            data-ng-show="params.linkType.sources.thumbnailMaker">

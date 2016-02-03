@@ -6,14 +6,11 @@
   ]);
 
   module.provider('gnOwsCapabilities', function() {
-    this.$get = ['$http', 'gnUrlUtils', 'gnGlobalSettings', '$q',
-      function($http, gnUrlUtils, gnGlobalSettings, $q) {
+    this.$get = ['$http', '$q',
+      'gnUrlUtils', 'gnGlobalSettings',
+      function($http, $q, gnUrlUtils, gnGlobalSettings) {
 
         var displayFileContent = function(data) {
-          var layers = [];
-          var layerSelected = null; // the layer selected on user click
-          var layerHovered = null; // the layer when mouse is over it
-
           var parser = new ol.format.WMSCapabilities();
           var result = parser.read(data);
 
@@ -101,14 +98,14 @@
                 $http.get(proxyUrl, {
                   cache: true
                 })
-                  .success(function(data, status, headers, config) {
+                  .success(function(data) {
                       try {
                         defer.resolve(displayFileContent(data));
                       } catch (e) {
                         defer.reject('capabilitiesParseError');
                       }
                     })
-                  .error(function(data, status, headers, config) {
+                  .error(function(data, status) {
                       defer.reject(status);
                     });
               }
@@ -141,7 +138,6 @@
             }
             return defer.promise;
           },
-
 
           getLayerExtentFromGetCap: function(map, getCapLayer) {
             var extent = null;
