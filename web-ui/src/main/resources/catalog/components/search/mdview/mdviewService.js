@@ -129,30 +129,9 @@
                 fast: 'index',
                 _content_type: 'json'
               }).then(function(data) {
-                  var j = -1;
-                  if (data.metadata.length >= 1) {
-                    // take the first non-draft copy
-                    var i = 0;
-                    angular.forEach(data.metadata, function(md) {
-                      data.metadata[i] = new Metadata(data.metadata[i]);
-
-                      if ($location.url().startsWith("/draft")) {
-                        if (data.metadata[i].draft) {
-                          j = i;
-                        }
-                      } else {
-                        if (!data.metadata[i].draft) {
-                          j = i;
-                        }
-                      }
-                      
-                      i++;
-                    });
-
-                    if (j < 0) {
-                      j = 0;
-                    }
-                    that.feedMd(j, undefined, data.metadata);
+                if (data.metadata.length == 1) {
+                  data.metadata[0] = new Metadata(data.metadata[0]);
+                  that.feedMd(0, undefined, data.metadata);
                 }
               });
             }

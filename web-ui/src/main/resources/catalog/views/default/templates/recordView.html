@@ -68,7 +68,7 @@
     </a>
     
     <a class="btn btn-primary gn-md-edit-btn pull-right"
-       data-ng-show="mdView.current.record.draft"
+       data-ng-show="mdView.current.record.draft == 'Y'"
        data-ng-href="#/metadata/{{mdView.current.record.getUuid()}}"
        data-ng-click="showPublished(mdView.current.record.getUuid())"
        title="{{'see published' | translate}}">
@@ -76,7 +76,7 @@
     </a>
     
     <a class="btn btn-primary gn-md-edit-btn pull-right"
-       data-ng-show="!mdView.current.record.draft
+       data-ng-show="mdView.current.record.draft == 'E'
                         && user.canEditRecord(mdView.current.record)"
        data-ng-href="#/draft/{{mdView.current.record.getUuid()}}"
        data-ng-click="showDraft(mdView.current.record.getUuid())"
@@ -100,7 +100,7 @@
 
         </h1>
         <h2     class="text-warning"
-                data-ng-show="mdView.current.record.draft" 
+                data-ng-show="mdView.current.record.draft == 'Y'" 
                 data-translate="">Drafted version</h2>
 
         <div class="pull-right">
