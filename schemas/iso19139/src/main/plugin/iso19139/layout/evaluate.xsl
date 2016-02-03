@@ -26,7 +26,7 @@
     <xsl:message>search for <xsl:copy-of select="$in"></xsl:copy-of></xsl:message>-->
     <xsl:variable name="nodeOrAttribute" select="saxon:evaluate(concat('$p1', $in), $base)"/>
     <xsl:choose>
-      <xsl:when test="$nodeOrAttribute/*">
+      <xsl:when test="$nodeOrAttribute instance of element()">
         <xsl:copy-of select="$nodeOrAttribute"/>
       </xsl:when>
       <xsl:otherwise>
