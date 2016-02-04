@@ -390,9 +390,6 @@
           data: $.param(params),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
-        //return $http.post('../api/0.1/tools/ogc/sld',
-        //  $.param(params)
-        //);
       };
 
       /**

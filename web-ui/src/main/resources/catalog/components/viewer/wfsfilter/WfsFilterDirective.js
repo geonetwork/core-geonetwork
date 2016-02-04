@@ -253,10 +253,21 @@
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             if (sldConfig.filters.length > 0) {
               wfsFilterService.getSldUrl(sldConfig, scope.layer.get('url'),
-                  ftName).success(function(data) {
-                scope.layer.getSource().updateParams({
-                  SLD: data.value
-                });
+                  ftName).success(function(sldURL) {
+                // Do not activate it
+                // Usually return 414 Request-URI Too Large
+                var useSldBody = false;
+                if (useSldBody) {
+                  $http.get(sldURL).then(function (response) {
+                    scope.layer.getSource().updateParams({
+                      SLD_BODY: response.data
+                    });
+                  });
+                } else {
+                  scope.layer.getSource().updateParams({
+                    SLD: sldURL
+                  });
+                }
               }).finally (function() {
                 defer.resolve();
               });
