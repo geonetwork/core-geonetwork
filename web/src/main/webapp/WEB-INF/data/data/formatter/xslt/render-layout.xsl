@@ -183,6 +183,46 @@
     </xsl:for-each>
   </xsl:template>
 
+  <!-- Render metadata elements defined by XPath -->
+  <xsl:template mode="render-view" match="@xpath">
+    <xsl:param name="base" select="$metadata"/>
+
+    <!-- Matching nodes -->
+    <xsl:variable name="nodes">
+      <saxon:call-template name="{concat('evaluate-', $schema)}">
+        <xsl:with-param name="base" select="$base"/>
+        <xsl:with-param name="in" select="concat('/../', .)"/>
+      </saxon:call-template>
+    </xsl:variable>
+
+    <xsl:variable name="fieldName">
+      <xsl:if test="../@name">
+        <xsl:value-of select="gn-fn-render:get-schema-strings($schemaStrings, ../@name)"/>
+      </xsl:if>
+    </xsl:variable>
+
+    <!-- A field may be based on a template -->
+    <!--<xsl:variable name="subFields" select="../template/values/key"/>-->
+
+    <xsl:for-each select="$nodes">
+      <xsl:apply-templates mode="render-field">
+        <xsl:with-param name="fieldName" select="$fieldName"/>
+      </xsl:apply-templates>
+
+      <!--<xsl:choose>
+        <xsl:when test="$subFields">
+          <xsl:variable name="currentNode" select="."/>
+          <xsl:for-each select="$subFields">
+            <xsl:apply-templates mode="render-view" select="@xpath">
+              <xsl:with-param name="base" select="$currentNode"/>
+            </xsl:apply-templates>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>
+        </xsl:otherwise>
+      </xsl:choose>-->
+    </xsl:for-each>
+  </xsl:template>
 
   <!-- Forgot all none matching elements -->
   <xsl:template mode="render-view" match="*|@*"/>
