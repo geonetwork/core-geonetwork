@@ -88,6 +88,7 @@
             <p data-ng-repeat="c in md.getAllContacts().resource">
               <img data-ng-if="c.logo"
                    data-ng-src="{{::c.logo}}"
+                   class="gn-source-logo"
                    title="{{::c.name}} ({{::c.role}})"/>
               {{::c.name}}
             </p>
