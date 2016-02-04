@@ -52,7 +52,7 @@
              scope.snippet = null;
              scope.snippetRef = null;
              var restrictionList = scope.include ? (
-               scope.include.indexOf(',') !== -1 ?
+             scope.include.indexOf(',') !== -1 ?
                  scope.include.split(',') : [scope.include]) : [];
 
              var includeThesaurus = [];
@@ -78,11 +78,11 @@
                scope.thesaurus = [];
                angular.forEach(listOfThesaurus, function(thesaurus) {
                  if (excludeThesaurus.length > 0 &&
-                   $.inArray(thesaurus.getKey(), excludeThesaurus) !== -1) {
+                 $.inArray(thesaurus.getKey(), excludeThesaurus) !== -1) {
 
                  } else if (includeThesaurus.length == 0 || (
-                   includeThesaurus.length > 0 &&
-                   $.inArray(thesaurus.getKey(), includeThesaurus) !== -1)) {
+                 includeThesaurus.length > 0 &&
+                 $.inArray(thesaurus.getKey(), includeThesaurus) !== -1)) {
                    scope.thesaurus.push(thesaurus);
                  }
                });

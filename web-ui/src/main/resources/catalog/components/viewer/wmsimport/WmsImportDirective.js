@@ -166,12 +166,14 @@
             }
 
             var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
-            $http.get(proxyUrl).then(function(response){
+            $http.get(proxyUrl).then(function(response) {
               var kmlSource = new ol.source.Vector();
-              kmlSource.addFeatures(new ol.format.KML().readFeatures(response.data, {
-                featureProjection: $scope.map.getView().getProjection(),
-                dataProjection: 'EPSG:4326'
-              }));
+              kmlSource.addFeatures(
+                  new ol.format.KML().readFeatures(
+                  response.data, {
+                    featureProjection: $scope.map.getView().getProjection(),
+                    dataProjection: 'EPSG:4326'
+                  }));
               var vector = new ol.layer.Vector({
                 source: kmlSource,
                 getinfo: true,

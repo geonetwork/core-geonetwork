@@ -129,32 +129,36 @@
       this.exportCSV = function() {
         window.open(gnHttp.getService('csv'), windowName, windowOption);
       };
-      this.validateMd = function(md, searchParams) {
+      this.validateMd = function(md) {
         if (md) {
           return gnMetadataManager.validate(md.getId()).then(function() {
             $rootScope.$broadcast('mdSelectNone');
-            $rootScope.$broadcast('resetSearch', searchParams);
+            $rootScope.$broadcast('search');
           });
         }
         else {
           return callBatch('mdValidateBatch').then(function() {
             $rootScope.$broadcast('mdSelectNone');
-            $rootScope.$broadcast('resetSearch', searchParams);
+            $rootScope.$broadcast('search');
           });
         }
       };
 
-      this.deleteMd = function(md, searchParams) {
+      this.deleteMd = function(md) {
         if (md) {
           return gnMetadataManager.remove(md.getId()).then(function() {
             $rootScope.$broadcast('mdSelectNone');
-            $rootScope.$broadcast('resetSearch', searchParams);
+            // TODO: Here we may introduce a delay to not display the deleted
+            // record in results.
+            // https://github.com/geonetwork/core-geonetwork/issues/759
+            $rootScope.$broadcast('search');
           });
         }
         else {
           return callBatch('mdDeleteBatch').then(function() {
             $rootScope.$broadcast('mdSelectNone');
-            $rootScope.$broadcast('resetSearch', searchParams);
+            // TODO: Same here.
+            $rootScope.$broadcast('search');
           });
         }
       };
