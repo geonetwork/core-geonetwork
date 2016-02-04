@@ -469,6 +469,14 @@
         },
         link: function(scope, element, attrs) {
           if (scope.size == 'auto') {
+            var htmlS = document.documentElement.style;
+            var bodyS = document.body.style;
+            if (htmlS.height=='' && htmlS.height=='') {
+              htmlS.height = '100%';
+            }
+            if (bodyS.height=='' && bodyS.height=='') {
+              bodyS.minHeight = '100%';
+            }
             var fitHeight = function() {
               var height = $(document.body).height() - $(element).offset().top;
               if (attrs['sxtSizeDiff']) {
