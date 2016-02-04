@@ -355,6 +355,8 @@
         map: false
       };
 
+      viewerSettings.menuExpanded = true;
+
       if(typeof sxtSettings != 'undefined') {
         angular.extend(searchSettings, sxtSettings);
         angular.extend(gnPanierSettings, sxtSettings.panier);
@@ -371,7 +373,9 @@
         if(sxtSettings.defaultContext)  {
           viewerSettings.defaultContext = sxtSettings.defaultContext;
         }
-
+        if(sxtSettings.menuExpanded)  {
+          viewerSettings.menuExpanded = sxtSettings.menuExpanded;
+        }
         if(angular.isUndefined(searchSettings.tabOverflow.search)) {
           delete searchSettings.mainTabs.search;
         }

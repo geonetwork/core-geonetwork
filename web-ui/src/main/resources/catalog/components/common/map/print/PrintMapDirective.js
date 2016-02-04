@@ -144,6 +144,9 @@
     };
 
     var refreshComp = function() {
+      if (!$scope.config) {
+        return;
+      }
       updatePrintRectanglePixels($scope.config.scale);
       $scope.map.render();
     };

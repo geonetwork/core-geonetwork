@@ -16,7 +16,8 @@
     'gnMap',
     'gnSearchLocation',
     'gnConfig',
-    function($window, $timeout, gnMap, gnSearchLocation, gnConfig) {
+    'gnViewerSettings',
+    function($window, $timeout, gnMap, gnSearchLocation, gnConfig, gnViewerSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -35,6 +36,11 @@
 
               /** print definition */
               scope.activeTools = {};
+              if (gnViewerSettings.menuExpanded) {
+                $timeout(function() {
+                  $('[gi-btn][rel=#layers]').click();
+                });
+              }
 
               var map = scope.map;
               $($window).on('resize',
