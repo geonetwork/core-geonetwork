@@ -13,7 +13,6 @@
 
     <xsl:variable name="nameInStrings"
                   select="$strings/*[name() = $key]"/>
-<xsl:message><xsl:copy-of select="$strings"/>==</xsl:message>
     <xsl:value-of select="if ($nameInStrings != '')
                           then $nameInStrings
                           else $key"/>
