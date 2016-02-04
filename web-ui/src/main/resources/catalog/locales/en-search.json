@@ -5,7 +5,6 @@
   "title": "Title",
   "abstract": "Abstract",
   "topiccat": "Topic(s)",
-  "cantons": "Canton(s)",
   "contact": "Contact",
   "identifier": "Resource identifier",
   "drawAnExtentToFilter": "Draw an extent to apply spatial filter.",
