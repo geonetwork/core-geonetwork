@@ -380,15 +380,19 @@
 
         var params = {
           filters: JSON.stringify(rulesObj),
-          serverURL: wmsUrl,
+          url: wmsUrl,
           layers: featureTypeName
         };
 
-        return gnHttp.callService('generateSLD', undefined, {
+        return $http({
           method: 'POST',
+          url: '../api/0.1/tools/ogc/sld',
           data: $.param(params),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
+        //return $http.post('../api/0.1/tools/ogc/sld',
+        //  $.param(params)
+        //);
       };
 
       /**
