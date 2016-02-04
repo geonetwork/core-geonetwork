@@ -61,8 +61,8 @@
     <xsl:value-of select="$value/gco:CharacterString"/>
   </xsl:template>
 
-
-
+  <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata">
+  </xsl:template>
 
 
   <!-- Most of the elements are ... -->
