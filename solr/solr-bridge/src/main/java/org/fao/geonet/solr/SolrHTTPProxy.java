@@ -2,6 +2,7 @@ package org.fao.geonet.solr;
 
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.DataManager;
@@ -53,6 +54,8 @@ public class SolrHTTPProxy {
     @Autowired
     private SolrConfig config;
 
+    @ApiOperation(value = "Search",
+                  notes = "See https://cwiki.apache.org/confluence/display/solr/Common+Query+Parameters for parameters.")
     @RequestMapping(value = "/query",
                     method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
