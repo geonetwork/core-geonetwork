@@ -41,6 +41,7 @@
     <temporalResolution>Temporal resolution</temporalResolution>
     <temporalScale>Temporal scale</temporalScale>
     <missionType>Mission type</missionType>
+    <modelAssimilation>Model assimilation</modelAssimilation>
     <featureType>Feature type</featureType>
     <areaOfBenefit>Area of benefit</areaOfBenefit>
     <oceanVariables>Ocean variables</oceanVariables>

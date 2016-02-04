@@ -631,12 +631,33 @@
 						</xsl:with-param>
 					</xsl:apply-templates>
 				</xsl:for-each>
-				
-				<!--<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
-					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-				</xsl:apply-templates>-->
+
+        <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
+					[contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(), 'external.theme.myocean.model-assimilation')]/gmd:MD_Keywords">
+          <xsl:variable name="productTypeKeywords" select="."/>
+
+          <xsl:apply-templates mode="simpleElement" select=".">
+            <xsl:with-param name="schema"  select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+            <xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/modelAssimilation"/>
+            <xsl:with-param name="text">
+              <xsl:call-template name="snippet-editor">
+                <xsl:with-param name="elementRef" select="$productTypeKeywords/../geonet:element/@ref"/>
+                <xsl:with-param name="widgetMode" select="'multiplelist'"/>
+                <xsl:with-param name="thesaurusId" select="'external.theme.myocean.model-assimilation'"/>
+                <xsl:with-param name="listOfKeywords" select="replace(replace(string-join($productTypeKeywords/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
+                <xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
+                <xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
+              </xsl:call-template>
+            </xsl:with-param>
+          </xsl:apply-templates>
+        </xsl:for-each>
+
+        <!--<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
+          [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>-->
 				
 				
 				<!-- Force gmd:credit to be a number -->
