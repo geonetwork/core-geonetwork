@@ -1,6 +1,7 @@
 package org.fao.geonet.repository;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,13 +11,15 @@ import javax.persistence.criteria.Root;
 
 import org.fao.geonet.domain.MetadataLock;
 import org.fao.geonet.domain.MetadataLock_;
+import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.Setting_;
 import org.fao.geonet.domain.User;
 
 public class MetadataLockRepositoryImpl
         implements MetadataLockRepositoryCustom {
     @PersistenceContext
-    EntityManager _entityManager;
-
+    private EntityManager _entityManager;
+    
     /**
      * @see org.fao.geonet.repository.MetadataLockRepositoryCustom#lock(java.lang.String)
      * @param id
@@ -87,8 +90,7 @@ public class MetadataLockRepositoryImpl
     }
 
     private void removeOldLocks() {
-        Integer minutes = 5;
-        // FIXME move this to settings
+        Integer minutes = getSetting("metadata/lock");
 
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<MetadataLock> cquery = cb.createQuery(MetadataLock.class);
@@ -102,8 +104,30 @@ public class MetadataLockRepositoryImpl
         }
     }
     
+    /**
+     * @param string
+     * @return
+     */
+    private Integer getSetting(String string) {
+        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        CriteriaQuery<Setting> cquery = cb.createQuery(Setting.class);
+        Root<Setting> root = cquery.from(Setting.class);
+        
+        cquery.where(cb.equal(root.get(Setting_.name), string));
+        
+        List<Setting> settings = _entityManager.createQuery(cquery).getResultList();
+        if(settings.size() > 0) {
+            return Integer.valueOf(settings.get(0).getValue());
+        }   
+        
+        //Default: no lock
+        return -1;
+    }
+
     private User getUser(User user) {
         return _entityManager.find(User.class, user.getId());
     }
+    
+    
 
 }
