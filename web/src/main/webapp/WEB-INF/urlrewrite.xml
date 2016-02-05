@@ -186,6 +186,14 @@
     </rule>
     <rule>
       <note>
+        Redirects to hash with metadata (extjs-style permalinks)
+        Example URL: http://localhost:8080/geonetwork/apps/search/?uuid=da165110-88fd-11da-a88f-000d939bc5d8
+      </note>
+      <from>^/apps/search/\?.*uuid=(.*)</from>
+      <to type="permanent-redirect">%{context-path}/#/metadata/$1</to>
+    </rule>
+    <rule>
+      <note>
         Retrieves html format for a metadata (multinode mode).
         Example URL: http://localhost:8080/geonetwork/{{nodeid}}/metadata/da165110-88fd-11da-a88f-000d939bc5d8
         redirect to
