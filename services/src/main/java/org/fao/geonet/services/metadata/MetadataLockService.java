@@ -36,8 +36,8 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jeeves.server.ServiceConfig;
@@ -65,9 +65,9 @@ public class MetadataLockService {
     // ---
     // --------------------------------------------------------------------------
 
-    @RequestMapping(value = "/{lang}/metadata.lock", produces = {
+    @RequestMapping(value = "/{lang}/metadata/{id}/lock", produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody Boolean exec(@RequestParam Integer id)
+    public @ResponseBody Boolean exec(@PathVariable Integer id)
             throws Exception {
         final SecurityContext context = SecurityContextHolder.getContext();
         if (context == null || context.getAuthentication() == null) {
@@ -89,8 +89,12 @@ public class MetadataLockService {
         }
 
         String md = Integer.toString(id);
-        return accessMan.canEdit(ServiceContext.get(), md)
-                && mdLockRepo.isLocked(md, me);
+        if (!accessMan.canEdit(ServiceContext.get(), md)) {
+            throw new SecurityException();
+        }
+
+        return mdLockRepo.isLocked(md, me);
+
     }
 
     @Autowired
