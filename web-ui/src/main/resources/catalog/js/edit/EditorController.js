@@ -170,7 +170,7 @@
               
               $http({
                 method: 'GET',
-                url: 'metadata.lock?id=' + $routeParams.id
+                url: 'metadata/' + $routeParams.id + '/lock'
               }).then(function successCallback(response) {
                   $scope.metadataLocked = response.data;
                 }, function errorCallback(response) {
