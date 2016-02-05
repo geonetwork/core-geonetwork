@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.schema;
 
-import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -157,7 +156,7 @@ public class Info implements Service {
             return buildError(elem, UNKNOWN_SCHEMA);
         }
 
-        Element result = getHelp(scm, elem, fileName, schema, name, parent, xpath, isoType, servContext);
+        Element result = getHelp(scm, fileName, schema, name, parent, xpath, isoType, servContext);
         // if not found then return an error
         if (result == null) {
           return buildError(elem, NOT_FOUND);
@@ -168,8 +167,8 @@ public class Info implements Service {
 
     // --------------------------------------------------------------------------
 
-    public static Element getHelp(SchemaManager scm, Element elem, String fileName, String schema,
-            String name, String parent, String xpath, String isoType, ServiceContext context)
+    public static Element getHelp(SchemaManager scm, String fileName, String schema,
+                                  String name, String parent, String xpath, String isoType, ServiceContext context)
             throws Exception {
 
         XmlFile xf = scm.getSchemaInfo(schema).get(fileName);
@@ -196,7 +195,7 @@ public class Info implements Service {
 						// help/label exists in those - stop at the first one found 
             Set<String> dependentSchemas = scm.getDependencies(schema);
             for (String baseSchema : dependentSchemas) {
-              result = getHelp(scm, elem, fileName, baseSchema, name, parent, xpath, isoType, context);
+              result = getHelp(scm, fileName, baseSchema, name, parent, xpath, isoType, context);
               if (result != null) break;
             }
         }
