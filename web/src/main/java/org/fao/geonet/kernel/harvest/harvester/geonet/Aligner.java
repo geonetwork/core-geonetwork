@@ -305,7 +305,7 @@ public class Aligner
         // validate it here if requested
         if (params.validate) {
             if(!dataMan.validate(md))  {
-                log.info("Ignoring invalid metadata");
+                log.info("Ignoring invalid metadata uuid"+ri.uuid);
                 result.doesNotValidate++;
                 return null;
             }
@@ -581,7 +581,7 @@ public class Aligner
         // validate it here if requested
         if (params.validate) {
             if(!dataMan.validate(md))  {
-                log.info("Ignoring invalid metadata");
+                log.info("Ignoring invalid metadata uuid"+ri.uuid+" id "+id);
                 result.doesNotValidate++;
                 return;
             }
