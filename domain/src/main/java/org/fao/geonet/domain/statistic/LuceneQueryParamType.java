@@ -127,7 +127,7 @@ public enum LuceneQueryParamType {
                 if (rangeQuery.getLowerTerm() != null) {
                     param.setLowerText(rangeQuery.getLowerTerm().utf8ToString());
                 }
-                if (rangeQuery.getUpperTerm().utf8ToString() != null) {
+                if (rangeQuery.getUpperTerm() != null) {
                     param.setUpperText(rangeQuery.getUpperTerm().utf8ToString());
                 }
                 param.setTermField(rangeQuery.getField());
