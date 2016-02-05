@@ -167,6 +167,15 @@
             }).then(function(data) {
               $scope.metadataFound = data.count !== '0';
               $scope.metadataNotFoundId = $routeParams.id;
+              
+              $http({
+                method: 'GET',
+                url: 'metadata.lock?id=' + $routeParams.id
+              }).then(function successCallback(response) {
+                  $scope.metadataLocked = response.data;
+                }, function errorCallback(response) {
+                  $scope.metadataLocked = true;
+                });
 
               $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
               $scope.mdCategories = [];
@@ -296,7 +305,7 @@
           $scope.$watch('tocIndex', function(newValue, oldValue) {
             if (angular.isDefined($scope.tocIndex) && $scope.tocIndex !== null) {
               $timeout(function() {
-                $scope.switchToTab(gnCurrentEdit.tab);
+                $scope.switchToTab(gnCurrentEdit.tab);h
               });
             }
           }); 

@@ -1,7 +1,10 @@
 <div data-ng-hide="metadataFound">
-  <div class="alert alert-warning" 
+  <div data-ng-show="!metadataLocked" class="alert alert-warning" 
     data-translate="" 
     data-translate-values="{ id: '{{metadataNotFoundId}}'}">metadataNotFound</div>
+    
+  <div data-ng-show="metadataLocked" class="alert alert-warning" 
+    data-translate="" >metadataLocked</div>
 </div>
 
 <div data-ng-show="metadataFound">

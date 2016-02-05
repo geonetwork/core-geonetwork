@@ -209,16 +209,28 @@ public class DraftMetadataManager extends DefaultMetadataManager {
                     }
                 }
 
-                String groupOwner = md.getSourceInfo().getGroupOwner()
-                        .toString();
-                String source = md.getSourceInfo().getSourceId().toString();
-                Integer owner = md.getSourceInfo().getOwner();
+                String groupOwner = null;
+                String source = null;
+                Integer owner = 1;
+
+                if (md.getSourceInfo() != null) {
+                    if (md.getSourceInfo().getSourceId() != null) {
+                        source = md.getSourceInfo().getSourceId().toString();
+                    }
+                    if (md.getSourceInfo().getGroupOwner() != null) {
+                        groupOwner = md.getSourceInfo().getGroupOwner()
+                                .toString();
+                    }
+                    owner = md.getSourceInfo().getOwner();
+                }
 
                 id = createDraft(context, id, groupOwner, source, owner,
                         parentUuid, md.getDataInfo().getType().codeString,
                         fullRightsForGroup, md.getUuid());
-                this.updateMetadata(context, Integer.toString(md.getId()), md.getXmlData(false), false, true, true, 
-                        context.getLanguage(), md.getDataInfo().getChangeDate().toString(), false);
+                this.updateMetadata(context, Integer.toString(md.getId()),
+                        md.getXmlData(false), false, true, true,
+                        context.getLanguage(),
+                        md.getDataInfo().getChangeDate().toString(), false);
             } else if (isPublished
                     && mdDraftRepository.findOneByUuid(md.getUuid()) != null) {
                 // We already have a draft created
@@ -252,13 +264,21 @@ public class DraftMetadataManager extends DefaultMetadataManager {
         newMetadata.getDataInfo().setChangeDate(new ISODate())
                 .setCreateDate(new ISODate()).setSchemaId(schema)
                 .setType(MetadataType.lookup(isTemplate));
-        newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner))
-                .setOwner(owner).setSourceId(source);
+        if (groupOwner != null) {
+            newMetadata.getSourceInfo()
+                    .setGroupOwner(Integer.valueOf(groupOwner));
+        }
+        newMetadata.getSourceInfo().setOwner(owner);
 
+        if (source != null) {
+            newMetadata.getSourceInfo().setSourceId(source);
+        }
         // If there is a default category for the group, use it:
-        Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
-        if (group.getDefaultCategory() != null) {
-            newMetadata.getCategories().add(group.getDefaultCategory());
+        if (groupOwner != null) {
+            Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
+            if (group.getDefaultCategory() != null) {
+                newMetadata.getCategories().add(group.getDefaultCategory());
+            }
         }
         Collection<MetadataCategory> filteredCategories = Collections2.filter(
                 templateMetadata.getCategories(),
@@ -574,10 +594,9 @@ public class DraftMetadataManager extends DefaultMetadataManager {
     protected Map<Integer, MetadataSourceInfo> getSourceInfos(
             Collection<Integer> metadataIds) {
         Map<Integer, MetadataSourceInfo> findAllSourceInfo = mdRepository
-                        .findAllSourceInfo(MetadataSpecs.hasMetadataIdIn(metadataIds));
-        findAllSourceInfo
-                .putAll(mdDraftRepository.findAllSourceInfo(
-                        MetadataDraftSpecs.hasMetadataIdIn(metadataIds)));
+                .findAllSourceInfo(MetadataSpecs.hasMetadataIdIn(metadataIds));
+        findAllSourceInfo.putAll(mdDraftRepository.findAllSourceInfo(
+                MetadataDraftSpecs.hasMetadataIdIn(metadataIds)));
 
         return findAllSourceInfo;
     }

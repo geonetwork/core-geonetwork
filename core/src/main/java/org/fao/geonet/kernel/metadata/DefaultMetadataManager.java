@@ -48,6 +48,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.exceptions.MetadataLockedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.HarvestInfoProvider;
@@ -63,6 +64,7 @@ import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
+import org.fao.geonet.repository.MetadataLockRepository;
 import org.fao.geonet.repository.MetadataRatingByIpRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
@@ -128,6 +130,9 @@ public class DefaultMetadataManager implements IMetadataManager {
     @Autowired
     protected MetadataRepository mdRepository;
 
+    @Autowired
+    protected MetadataLockRepository mdLockRepository;
+
     protected SchemaManager schemaManager;
 
     @Autowired
@@ -180,6 +185,7 @@ public class DefaultMetadataManager implements IMetadataManager {
                 .getBean(MetadataValidationRepository.class);
         this.operationAllowedRepository = context
                 .getBean(OperationAllowedRepository.class);
+        this.mdLockRepository = context.getBean(MetadataLockRepository.class);
         this.setSchemaManager(context.getBean(SchemaManager.class));
     }
 
@@ -216,13 +222,22 @@ public class DefaultMetadataManager implements IMetadataManager {
             Log.debug(Geonet.EDITOR_SESSION,
                     "Editing session starts for record " + id);
         }
+        
+        UserSession userSession = context.getUserSession();
+        
+        synchronized (this) {
+            if(mdLockRepository.isLocked(id, userSession.getPrincipal())) {
+                throw new MetadataLockedException(id);            
+            }
+            mdLockRepository.lock(id, userSession.getPrincipal());            
+        }
 
         boolean keepXlinkAttributes = true;
         boolean forEditing = false;
         boolean withValidationErrors = false;
         Element metadataBeforeAnyChanges = getMetadata(context, id, forEditing,
                 withValidationErrors, keepXlinkAttributes);
-        context.getUserSession().setProperty(
+        userSession.setProperty(
                 Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id,
                 metadataBeforeAnyChanges);
 
@@ -273,6 +288,8 @@ public class DefaultMetadataManager implements IMetadataManager {
                                 + ". Original record was null. Use starteditingsession to.");
             }
         }
+        
+        mdLockRepository.unlock(id, session.getPrincipal());
 
     }
 
@@ -288,6 +305,8 @@ public class DefaultMetadataManager implements IMetadataManager {
             Log.debug(Geonet.EDITOR_SESSION, "Editing session end.");
         }
         session.removeProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
+        
+        mdLockRepository.unlock(id, session.getPrincipal());
     }
 
     /**
