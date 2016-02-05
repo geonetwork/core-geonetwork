@@ -22,27 +22,23 @@ package org.fao.geonet.services.api.tools.i18n;
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-import jeeves.server.context.ServiceContext;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.services.api.API;
-import org.fao.geonet.services.api.exception.ResourceNotFoundException;
-import org.fao.geonet.services.api.exception.SchemaNotFoundException;
-import org.fao.geonet.services.schema.Info;
-import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.*;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import io.swagger.annotations.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletRequest;
 import java.util.*;
