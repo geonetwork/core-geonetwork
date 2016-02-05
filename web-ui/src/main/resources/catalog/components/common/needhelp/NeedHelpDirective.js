@@ -22,8 +22,8 @@
    * display only an icon and no label.
    *
    */
-  module.directive('gnNeedHelp', ['$http', '$translate',
-    function($http, $translate) {
+  module.directive('gnNeedHelp', ['$rootScope', '$http', '$translate',
+    function($rootScope, $http, $translate) {
       // // add popup to document body
       // var modalObj = angular.element(
       //     '<div class="modal gn-doc">' +
@@ -41,33 +41,6 @@
       //     '</div>');
       // angular.element(window.document.body).append(modalObj);
 
-      // Help configuration TODO: move to an external file or db ?
-      var helpLinks = {
-        helpBaseUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
-        defaultLang: 'eng',
-        pages: {
-          editor: {
-            eng: 'eng/users/user-guide/describing-information/' +
-                'creating-metadata.html',
-            fre: 'fra/users/user-guide/describing-information/' +
-                'creating-metadata.html'
-          },
-          editor_sharing: {
-            eng: 'eng/users/user-guide/publishing/index.html',
-            fre: 'fra/users/user-guide/publishing/index.html'
-          },
-          editor_geopublisher: {
-            eng: 'eng/users/user-guide/workflow/geopublication.html',
-            fre: 'fra/users/user-guide/workflow/geopublication.html'
-          },
-          admin_settings: {
-            eng: 'eng/users/administrator-guide/configuring-the-catalog/' +
-                'system-configuration.html',
-            fre: 'fra/users/administrator-guide/configuring-the-catalog/' +
-                'system-configuration.html'
-          }
-        }
-      };
       return {
         restrict: 'A',
         replace: true,
@@ -80,11 +53,14 @@
           //     var modalBody = $(modalObj).find('.modal-body').get(0);
           scope.iconOnly = attrs.iconOnly === 'true';
 
+          var helpBaseUrl = 'http://geonetwork-opensource.org/manuals/trunk/';
+          var defaultLang = 'eng';
+
           var openPage = function(lang) {
-            var page = helpLinks.pages[attrs.gnNeedHelp] &&
-                helpLinks.pages[attrs.gnNeedHelp][lang];
+            var page = attrs.gnNeedHelp;
+            var lang = lang == 'fre' ? 'fra' : 'eng';
             if (page) {
-              var helpPageUrl = helpLinks.helpBaseUrl + page;
+              var helpPageUrl = helpBaseUrl + lang + '/users/' + page;
               window.open(helpPageUrl);
               return true;
             } else {
@@ -94,12 +70,10 @@
             }
           };
 
-          // Get lang from scope or parent scope
-          var lang = scope.lang || scope.$parent.lang;
-
+          var lang = $rootScope.lang;
           scope.showHelp = function() {
             if (!openPage(lang)) {
-              openPage(helpLinks.defaultLang);
+              openPage(defaultLang);
             }
 
             //       var helpPageUrl = docPath + attrs.gnNeedHelp + '.html';
