@@ -11,6 +11,8 @@
 
   <!-- Form field type configuration. Default is text. -->
   <fields>
+    <for name="gmd:anchor" use="text"/>
+
     <for name="gmd:abstract" use="textarea"/>
     <for name="gmd:checkPointDescription" use="textarea"/>
     <for name="gmd:credit" use="textarea"/>
@@ -132,7 +134,6 @@
     <name>gmd:projection</name>
     <name>gmd:ellipsoid</name>
     <name>gmd:attributes</name>
-    <name>gmd:verticalCRS</name>
     <name>gmd:geographicBox</name>
     <name>gmd:EX_TemporalExtent</name>
     <name>gmd:MD_Distributor</name>
@@ -232,7 +233,7 @@
   <!-- View configuration -->
   <views>
     <!--Turn off INSPIRE view by default -->
-    <view name="inspire" upAndDownControlHidden="true" disabled="true">
+    <view name="inspire" upAndDownControlHidden="true">
       <tab id="inspire" default="true" mode="flat">
         <section name="resource">
           <field
@@ -785,6 +786,7 @@
           <field name="conformity" templateModeOnly="true"
                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency/gmd:result"
+                 if="count(/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)=0"
                  del="../..">
             <template>
               <values>
@@ -859,6 +861,7 @@
 
           <action type="add" name="conformity" or="report"
                   forceLabel="true"
+                  if="count(/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)=0"
                   in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
             <template>
               <snippet>
@@ -1220,7 +1223,175 @@
           <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
         </section>
       </tab>
+
+      <tab id="inspire_sds" mode="flat" >
+          
+         <section name="inspire_sds_cc1">
+
+            <!-- 4.4.1 rec 1 : replace CharacterString with Anchor-->
+            <action type="process"
+                    process="sds-fix-category"
+                    forceLabel="true"
+                    if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString)>0"/>
+
+            <!-- 4.4.1 TG4 : ensure gmd:DQ_DataQuality for service exists -->
+            <action type="process"
+                  process="sds-add-dataquality"
+                  forceLabel="true"
+                  if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service'])=0"/>
+
+          <!-- 4.4.1 category -->
+          <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
+
+          <!-- 4.4.1 pass -->
+          <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass"/>
+
+          <action type="add"
+                  name="inspire_add_pass"
+                  forceLabel="true"
+                  or="pass" in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult">
+            <template>
+              <snippet>
+                  <gmd:pass> <gco:Boolean>true</gco:Boolean> </gmd:pass>
+              </snippet>
+            </template>
+          </action>
+
+
+          <!-- 4.4.2 Resource locator -->
+          <!-- 4.4.2 Function -->
+          <!-- *** accessPoint *** -->
+
+          <field name="sds-accesspoint"
+                 templateModeOnly="true"                 
+                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource/gmd:description/gmx:Anchor/text() = 'accessPoint']"
+
+                 del=".">
+              <template>
+                  <values>
+                      <key label="linkage" xpath="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+                  </values>
+                  <snippet>
+                      <gmd:onLine>
+                          <gmd:CI_OnlineResource>
+                              <gmd:linkage>
+                                  <gmd:URL>{{linkage}}</gmd:URL>
+                              </gmd:linkage>
+                              <gmd:description>
+                                  <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorFunction/accessPoint">accessPoint</gmx:Anchor>
+                              </gmd:description>
+                              <gmd:function>
+                                  <gmd:CI_OnLineFunctionCode
+                                      codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode"
+                                      codeListValue="information">
+                                  </gmd:CI_OnLineFunctionCode>
+                              </gmd:function>
+                          </gmd:CI_OnlineResource>
+                      </gmd:onLine>
+                  </snippet>
+              </template>
+          </field>
+
+          <action type="add"
+                  name="sds-add-accesspoint"
+                  forceLabel="true"
+                  or="onLine"
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+            <template>
+              <snippet>
+                      <gmd:onLine>
+                          <gmd:CI_OnlineResource>
+                              <gmd:linkage>
+                                  <gmd:URL>http://accesspoint.url</gmd:URL>
+                              </gmd:linkage>
+                              <gmd:description>
+                                  <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorFunction/accessPoint">accessPoint</gmx:Anchor>
+                              </gmd:description>
+                              <gmd:function>
+                                  <gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"></gmd:CI_OnLineFunctionCode>
+                              </gmd:function>
+                          </gmd:CI_OnlineResource>
+                      </gmd:onLine>
+              </snippet>
+            </template>
+          </action>
+
+          <!-- 4.4.2 Resource locator -->
+          <!-- 4.4.2 Function -->
+          <!-- *** endPoint *** -->
+
+          <field name="sds-endpoint"
+                 templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource/gmd:description/gmx:Anchor/text() = 'endPoint']"
+                 notDisplayedIfMissing="true"
+                 del=".">
+              <template>
+                  <values>
+                      <key label="linkage" xpath="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+                  </values>
+                  <snippet>
+                      <gmd:onLine>
+                          <gmd:CI_OnlineResource>
+                              <gmd:linkage>
+                                  <gmd:URL>{{linkage}}</gmd:URL>
+                              </gmd:linkage>
+                              <gmd:description>
+                                  <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorFunction/endPoint">endPoint</gmx:Anchor>
+                              </gmd:description>
+                              <gmd:function>
+                                  <gmd:CI_OnLineFunctionCode
+                                      codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode"
+                                      codeListValue="information">
+                                  </gmd:CI_OnLineFunctionCode>
+                              </gmd:function>
+                          </gmd:CI_OnlineResource>
+                      </gmd:onLine>
+                  </snippet>
+              </template>
+          </field>
+
+          <action type="add"
+                  name="sds-add-endpoint"
+                  forceLabel="true"
+                  or="onLine"
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+            <template>
+              <snippet>
+                      <gmd:onLine>
+                          <gmd:CI_OnlineResource>
+                              <gmd:linkage>
+                                  <gmd:URL>http://endpoint.url</gmd:URL>
+                              </gmd:linkage>
+                              <gmd:description>
+                                  <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorFunction/endPoint">endPoint</gmx:Anchor>
+                              </gmd:description>
+                              <gmd:function>
+                                  <gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"></gmd:CI_OnLineFunctionCode>
+                              </gmd:function>
+                          </gmd:CI_OnlineResource>
+                      </gmd:onLine>
+              </snippet>
+            </template>
+          </action>
+
+
+
+        </section>
+        <section name="inspire_sds_cc2">
+            <!-- todo -->
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract"
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
+        </section>
+        <section name="inspire_sds_cc3">
+            
+        </section>
+      </tab>
+
     </view>
+
     <view name="default">
       <tab id="default" default="true" mode="flat">
         <section xpath="/gmd:MD_Metadata/gmd:identificationInfo"/>
