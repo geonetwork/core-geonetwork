@@ -117,6 +117,7 @@
               <th data-translate="">inspireThemes</th>
               <td>
                 <div data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
+                     data-ng-click="search({'inspirethemewithac': cat})"
                      class="iti-box full {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
                      title="{{cat.split('|')[1]}}">
                   <div class="icon"><span class="iti-{{cat.split('|')[0]}}"></span></div>
@@ -128,17 +129,24 @@
                       mdView.current.record.topicCat.length > 0">
               <th data-translate="">listOfCategories</th>
               <td>
-                <a data-ng-repeat="cat in mdView.current.record.category"
-                   data-ng-href="#/search?_cat={{cat}}">
-                  <span class="fa gn-icon-{{cat}}" title="{{cat | translate}}"></span>
-                </a>
+                <div data-ng-repeat="cat in mdView.current.record.category"
+                     data-ng-click="search({'_cat': cat})"
+                     class="iti-box full gn-iti"
+                     title="{{('cat-' + cat) | translate}}">
+                  <div class="icon">
+                    <span class="fa gn-icon-{{cat}}"></span></div>
+                  <p class="label">{{('cat-' + cat) | translate}}</p>
+                </div>
 
-                <a data-ng-repeat="t in mdView.current.record.topicCat track by $index"
-                   data-ng-href="#/search?topicCat={{t}}">
-                  <i class="fa" title="{{t | translate}}">
-                    <span class="fa gn-icon-{{t}}"></span>
-                  </i>
-                </a>
+                <div data-ng-repeat="cat in mdView.current.record.topicCat track by $index"
+                     data-ng-click="search({'topicCat': cat})"
+                     class="iti-box full gn-iti"
+                     title="{{cat | translate}}">
+                  <div class="icon">
+                    <span class="fa gn-icon-{{cat}}"></span>
+                  </div>
+                  <p class="label">{{cat | translate}}</p>
+                </div>
               </td>
             </tr>
             <tr data-ng-if="mdView.current.record.keyword">

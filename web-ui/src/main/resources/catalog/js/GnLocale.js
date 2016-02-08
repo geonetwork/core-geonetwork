@@ -10,14 +10,15 @@
 
   module.constant('$LOCALES', ['core']);
 
-  module.factory('localeLoader', ['$http', '$q', function($http, $q) {
+  module.factory('localeLoader', ['$http', '$q',
+    function($http, $q) {
     return function(options) {
 
       function buildUrl(prefix, lang, value, suffix) {
         if (value.indexOf('/') === 0) {
           return value.substring(1);
         } else {
-          return prefix + lang + '-' + value + suffix;
+          return prefix + lang.substring(0, 2) + '-' + value + suffix;
         }
       };
       var allPromises = [];
@@ -30,7 +31,10 @@
 
         $http({
           method: 'GET',
-          url: langUrl
+          url: langUrl,
+          headers: {
+            'Accept-Language': options.key
+          }
         }).success(function(data) {
           deferredInst.resolve(data);
         }).error(function() {
@@ -63,9 +67,11 @@
         suffix: '.json'
       });
 
+      gnGlobalSettings.iso3lang =
+        location.href.split('/')[5] || 'eng';
       gnGlobalSettings.lang = gnGlobalSettings.locale.lang ||
-          location.href.split('/')[5].substring(0, 2) || 'en';
-      $translateProvider.preferredLanguage(gnGlobalSettings.lang);
+        gnGlobalSettings.iso3lang.substring(0, 2);
+      $translateProvider.preferredLanguage(gnGlobalSettings.iso3lang);
       moment.lang(gnGlobalSettings.lang);
     }]);
 

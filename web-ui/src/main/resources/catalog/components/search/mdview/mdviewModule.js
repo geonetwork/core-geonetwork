@@ -12,11 +12,11 @@
 
   module.controller('GnMdViewController', [
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
-    'gnMetadataActions', 'gnAlertService', '$translate',
+    'gnMetadataActions', 'gnAlertService', '$translate', '$location',
     'gnMdView', 'gnMdViewObj', 'gnMdFormatter',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
-             gnMetadataActions, gnAlertService, $translate, gnMdView,
-             gnMdViewObj, gnMdFormatter) {
+             gnMetadataActions, gnAlertService, $translate, $location,
+             gnMdView, gnMdViewObj, gnMdFormatter) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -24,6 +24,10 @@
       $scope.compileScope = $scope.$new();
       $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
 
+      $scope.search = function(params) {
+        $location.path('/search');
+        $location.search(params);
+      };
       $scope.deleteRecord = function(md) {
         return gnMetadataActions.deleteMd(md).then(function(data) {
           gnAlertService.addAlert({
