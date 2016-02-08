@@ -12,6 +12,21 @@
 
   <xsl:include href="layout-custom-fields-keywords.xsl"/>
 
+  <xsl:template mode="mode-iso19139" priority="2000" match="gmx:Anchor">
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label" select="gn-fn-metadata:getLabel($schema, name(), $labels)/label"/>
+      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+      <xsl:with-param name="type" select="'select'"/>
+      <xsl:with-param name="listOfValues" select="/root/gui/schemas/iso19139/codelists/codelist[@name='INSPIRE_category']"/>
+      <xsl:with-param name="name" select="''"/>
+      <xsl:with-param name="editInfo" select="*/gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="gn:element"/>
+      <xsl:with-param name="isDisabled" select="false()"/>
+    </xsl:call-template>
+  </xsl:template>
+
   <!-- Readonly elements -->
   <xsl:template mode="mode-iso19139" priority="2000" match="gmd:fileIdentifier|gmd:dateStamp">
 

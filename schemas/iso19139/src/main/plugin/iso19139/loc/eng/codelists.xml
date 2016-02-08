@@ -2045,7 +2045,23 @@
 			<label>Input/output</label>
 		</entry>
 	</codelist>
-
+	<codelist name="INSPIRE_category">
+			<entry>
+					<code>http://inspire.ec.europa.eu/metadata-codelist/Category/invocable</code>
+					<label>invocable</label>
+					<description>Invocable</description>
+			</entry>
+			<entry>
+					<code>http://inspire.ec.europa.eu/metadata-codelist/Category/interoperable</code>
+					<label>interoperable</label>
+					<description>Interoperable</description>
+			</entry>
+			<entry>
+					<code>http://inspire.ec.europa.eu/metadata-codelist/Category/harmonised</code>
+					<label>harmonised</label>
+					<description>Harmonised</description>
+			</entry>
+	</codelist>
   <codelist name="gco:nilReason">
     <entry>
       <code>missing</code>
