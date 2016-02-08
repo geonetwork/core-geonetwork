@@ -25,27 +25,23 @@ package org.fao.geonet.services.api.schema;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.repository.*;
 import org.fao.geonet.services.api.API;
 import org.fao.geonet.services.api.exception.ResourceNotFoundException;
-import org.fao.geonet.services.api.exception.SchemaNotFoundException;
 import org.fao.geonet.services.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.services.schema.Info;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
