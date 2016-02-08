@@ -12,14 +12,19 @@ import javax.persistence.criteria.Root;
 import org.fao.geonet.domain.MetadataLock;
 import org.fao.geonet.domain.MetadataLock_;
 import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.SettingDataType;
 import org.fao.geonet.domain.Setting_;
 import org.fao.geonet.domain.User;
 
 public class MetadataLockRepositoryImpl
         implements MetadataLockRepositoryCustom {
+    /**
+     * 
+     */
+    private static final String METADATA_LOCK = "metadata/lock";
     @PersistenceContext
     private EntityManager _entityManager;
-    
+
     /**
      * @see org.fao.geonet.repository.MetadataLockRepositoryCustom#lock(java.lang.String)
      * @param id
@@ -55,10 +60,9 @@ public class MetadataLockRepositoryImpl
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<MetadataLock> cquery = cb.createQuery(MetadataLock.class);
         Root<MetadataLock> root = cquery.from(MetadataLock.class);
-        cquery.where(
-                cb.equal(root.get(MetadataLock_.metadata), Integer.valueOf(id)));
-        cquery.where(
-                cb.notEqual(root.get(MetadataLock_.user), user));
+        cquery.where(cb.equal(root.get(MetadataLock_.metadata),
+                Integer.valueOf(id)));
+        cquery.where(cb.notEqual(root.get(MetadataLock_.user), user));
         return _entityManager.createQuery(cquery).getResultList().size() > 0;
     }
 
@@ -78,8 +82,8 @@ public class MetadataLockRepositoryImpl
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<MetadataLock> cquery = cb.createQuery(MetadataLock.class);
         Root<MetadataLock> root = cquery.from(MetadataLock.class);
-        cquery.where(
-                cb.equal(root.get(MetadataLock_.metadata), Integer.valueOf(id)));
+        cquery.where(cb.equal(root.get(MetadataLock_.metadata),
+                Integer.valueOf(id)));
         for (MetadataLock mdLock : _entityManager.createQuery(cquery)
                 .getResultList()) {
             _entityManager.remove(mdLock);
@@ -90,7 +94,7 @@ public class MetadataLockRepositoryImpl
     }
 
     private void removeOldLocks() {
-        Integer minutes = getSetting("metadata/lock");
+        Integer minutes = getSetting(METADATA_LOCK);
 
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<MetadataLock> cquery = cb.createQuery(MetadataLock.class);
@@ -103,7 +107,7 @@ public class MetadataLockRepositoryImpl
             _entityManager.remove(mdLock);
         }
     }
-    
+
     /**
      * @param string
      * @return
@@ -112,22 +116,32 @@ public class MetadataLockRepositoryImpl
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<Setting> cquery = cb.createQuery(Setting.class);
         Root<Setting> root = cquery.from(Setting.class);
-        
+
         cquery.where(cb.equal(root.get(Setting_.name), string));
-        
-        List<Setting> settings = _entityManager.createQuery(cquery).getResultList();
-        if(settings.size() > 0) {
+
+        List<Setting> settings = _entityManager.createQuery(cquery)
+                .getResultList();
+        if (settings.size() > 0) {
             return Integer.valueOf(settings.get(0).getValue());
-        }   
-        
-        //Default: no lock
+        }
+
+        // Default: no lock
+        if (string.equals(METADATA_LOCK)) {
+            // Some migration failed, let's add it manually
+            Setting s = new Setting();
+            s.setName(METADATA_LOCK);
+            s.setDataType(SettingDataType.INT);
+            s.setInternal(false);
+            s.setPosition(100003);
+            s.setValue("-1");
+            _entityManager.persist(s);
+            _entityManager.flush();
+        }
         return -1;
     }
 
     private User getUser(User user) {
         return _entityManager.find(User.class, user.getId());
     }
-    
-    
 
 }
