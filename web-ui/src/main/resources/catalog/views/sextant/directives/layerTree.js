@@ -18,7 +18,7 @@
           var $this = this;
 
           this.setWPS = function(process, layer) {
-            $scope.loadTool('wps');
+            $scope.loadTool('wps', layer);
 
             var scope = $scope.$new();
             scope.wpsUri = process.url;
@@ -35,7 +35,7 @@
            * $compile the wfsFilter directive to build the facet form
            */
           this.setWFSFilter = function(layer, wfsLink) {
-            $scope.loadTool('wfsfilter');
+            $scope.loadTool('wfsfilter', layer);
 
             var scope = $scope.$new();
             scope.layer = layer;
@@ -50,8 +50,7 @@
           },
 
           this.setNCWMS = function(layer) {
-            $scope.active.NCWMS = layer;
-            $scope.loadTool('ncwms');
+            $scope.loadTool('ncwms', layer);
           };
 
           this.comboGroups = {};

@@ -101,11 +101,16 @@
               });
               scope.map.addOverlay(overlay);
 
+              var separatedTools = ['ncwms', 'wps', 'wfsfilter'];
+
               scope.active = {
                 tool: false,
-                layersTools: false,
-                NCWMS: null
+                layersTools: false
               };
+              separatedTools.forEach(function(tool) {
+                scope.active[tool.toUpperCase()] = null;
+              });
+
               scope.locService = gnSearchLocation;
 
               var activeTab = null;
@@ -127,16 +132,14 @@
                   $('.sxt-layertree').mCustomScrollbar('update');
                 }, 0);
               };
-              scope.loadTool = function(tab) {
-                if(scope.isSeparatedTool()) {
+              
+              scope.loadTool = function(tab, layer) {
                   scope.layerTabs[tab].active = true;
                   scope.active.layersTools = true;
+                  scope.active[tab.toUpperCase()] = layer;
                   activeTab = tab;
-                }
-                else {
-                  scope.layerTabSelect(tab);
-                }
               };
+
 
               /**
                * Tells if a separated tool (everything but legend/sources/sort)
@@ -144,10 +147,22 @@
                * @returns {boolean}
                */
               scope.isSeparatedTool = function() {
-                return activeTab == 'ncwms' || activeTab == 'wps' ||
-                    activeTab == 'wfsfilter';
-              }
+                return separatedTools.indexOf(activeTab) >= 0;
+              };
 
+              scope.map.getLayers().on('remove', function(e) {
+                separatedTools.forEach(function(tool) {
+
+                  var toolUpper = tool.toUpperCase();
+                  if(scope.active[toolUpper] &&
+                      scope.active[toolUpper] == e.element) {
+                    scope.active[toolUpper] = null;
+                    scope.active.layersTools = false;
+                    scope.layerTabs[tool].active = false;
+                    activeTab = null;
+                  }
+                });
+              });
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
 
@@ -164,17 +179,6 @@
                 target: document.querySelector('footer')
               }));
 
-              scope.map.getLayers().on('remove', function(e) {
-                if(scope.active.NCWMS && scope.active.NCWMS == e.element) {
-                  scope.active.NCWMS = null;
-                  scope.active.layersTools = false;
-                  scope.layerTabs.ncwms.active = false;
-                }
-                if(scope.active.layersTools) {
-                  scope.active.layersTools = false;
-                  scope.layerTabs.wps.active = false;
-                }
-              });
 
               scope.isNcwms = function(layer) {
                 return layer.ncInfo;
