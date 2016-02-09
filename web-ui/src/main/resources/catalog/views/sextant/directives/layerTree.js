@@ -175,6 +175,10 @@
 
           scope.map.getLayers().on('change:length', buildTree);
 
+           scope.$on('owsContextReseted', function() {
+             gnWmsQueue.errors.length = 0;
+          });
+
           scope.failedLayers = gnWmsQueue.errors;
           scope.removeFailed = function(layer) {
             gnWmsQueue.removeFromError(layer);
