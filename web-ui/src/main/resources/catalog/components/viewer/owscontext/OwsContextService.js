@@ -144,7 +144,7 @@
 
         // if there's at least one valid bg layer in the context use them for
         // the application otherwise use the defaults from config
-        $q.all(promises).finally (function() {
+        $q.all(promises).then (function() {
           if (bgLayers.length > 0) {
             // make sure we remove any existing bglayer
             if (map.getLayers().getLength() > 0) {
@@ -375,7 +375,7 @@
                     olL.set('bgIdx', bgIdx);
                   }
                   return olL;
-                });
+                }).catch(function(){});
           }
         }
         else { // we suppose it's WMS
@@ -394,7 +394,7 @@
                   $rootScope.$broadcast('layerAddedFromContext', olL);
                   return olL;
                 }
-              });
+              }).catch(function(){});
         }
       };
     }
