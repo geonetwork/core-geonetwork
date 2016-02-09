@@ -126,7 +126,7 @@
 
           scope.setUrl = function(srv) {
             scope.url = angular.isObject(srv) ? srv.url : srv;
-            scope.type = angular.isObject(srv) && srv.type || scope.format;
+            type = angular.isObject(srv) && srv.type || type;
             scope.serviceDesc = angular.isObject(srv) ? srv : null;
             scope.load();
           };
@@ -134,7 +134,7 @@
           scope.load = function() {
             if (scope.url) {
               scope.loading = true;
-              gnOwsCapabilities['get' + scope.type.toUpperCase() +
+              gnOwsCapabilities['get' + type.toUpperCase() +
                   'Capabilities'](scope.url).then(function(capability) {
                 scope.loading = false;
                 scope.capability = capability;
