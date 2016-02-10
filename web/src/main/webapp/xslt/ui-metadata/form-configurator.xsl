@@ -520,25 +520,32 @@
     <xsl:message> = Display action <xsl:value-of select="$nonExistingChildParent/* and $isDisplayed = 'true'"/></xsl:message>
     -->
     <xsl:if test="$nonExistingChildParent/* and $isDisplayed = 'true'">
+      <xsl:variable name="btnOverrideName"
+                    select="@name"/>
+      <xsl:variable name="btnName"
+                    select="if ($btnOverrideName)
+                            then $strings/*[name() = $btnOverrideName]
+                            else ''"/>
       <xsl:variable name="childName" select="@or"/>
       <xsl:variable name="btnLabel" select="@btnLabel"/>
+      <xsl:variable name="btnClass" select="@btnClass"/>
       <xsl:variable name="btnLabelTranslation" select="$strings/*[name() = $btnLabel]"/>
       <xsl:variable name="directive" select="."/>
 
       <xsl:for-each select="$nonExistingChildParent/*/gn:child[@name = $childName]">
         <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
         <xsl:call-template name="render-element-to-add">
-          <xsl:with-param name="label" select="if ($btnLabelTranslation != '')
-                                               then $btnLabelTranslation
+          <xsl:with-param name="label" select="if ($btnName != '')
+                                               then $btnName
                                                else gn-fn-metadata:getLabel($schema, $name, $labels)/label"/>
           <xsl:with-param name="directive" select="$directive"/>
           <xsl:with-param name="childEditInfo" select="."/>
           <xsl:with-param name="parentEditInfo" select="../gn:element"/>
-          <xsl:with-param name="btnClass" select="@btnClass"/>
+          <xsl:with-param name="btnClass" select="$btnClass"/>
+          <xsl:with-param name="btnLabel" select="$btnLabelTranslation"/>
         </xsl:call-template>
       </xsl:for-each>
     </xsl:if>
-    
+
   </xsl:template>
-  
 </xsl:stylesheet>
