@@ -1,4 +1,9 @@
-doc-sources
-===========
+Documentation
+=============
 
-Documentation sources for geonetwork documentation
+This module contains:
+* Documentation in RST format
+* Change logs
+* Copyright template
+* Licenses for library
+* Utility folder with scripts to generate extra docs
