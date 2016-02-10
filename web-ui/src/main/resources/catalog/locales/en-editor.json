@@ -35,6 +35,8 @@
     "cancel": "Cancel",
     "cancelChangesFromNow": "Cancel all changes since the start of the editing session {{timeAgo}}.",
     "cancelling": "Cancelling ...",
+    "chooseZeroOrMoreLayer": "Optionally, choose one or more layers from the service to be added in the distribution:",
+    "chooseZeroOrMoreLayerFromService": "Choose the layer published in this service corresponding to the selected record:",
     "serviceContainsManyUrl": "Choose <strong>one</strong> URL in the <strong>{{count}}</strong> provided by ",
     "searchAservice": "Select a service from the catalog",
     "searchAnApplication": "Select an application from the catalog",

@@ -9,6 +9,10 @@
 
 
   <context:component-scan base-package="org.fao.geonet" />
+  <bean id="languageUtils" class="org.fao.geonet.services.api.tools.i18n.LanguageUtils">
+    <constructor-arg index="0" ref="languages"/>
+    <constructor-arg index="1" ref="defaultLanguage"/>
+  </bean>
 
   <bean id="RegionsDAO" class="org.fao.geonet.services.region.ThesaurusBasedRegionsDAO">
     <constructor-arg ref="languages" />

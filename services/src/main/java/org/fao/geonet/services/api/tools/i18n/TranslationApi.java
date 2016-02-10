@@ -1,4 +1,4 @@
-package org.fao.geonet.guiservices;
+package org.fao.geonet.services.api.tools.i18n;
 //==============================================================================
 //===	Copyright (C) 2001-2015 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
@@ -22,27 +22,47 @@ package org.fao.geonet.guiservices;
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-import jeeves.server.context.ServiceContext;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.*;
+import org.fao.geonet.services.api.API;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletRequest;
 import java.util.*;
 
 /**
  *
  */
+
+@RequestMapping(value = {
+        "/api/tools/i18n",
+        "/api/" + API.VERSION_0_1 +
+                "/tools/i18n"
+})
+@Api(value = "tools",
+        tags= "tools",
+        description = "Translation related operations")
 @Controller("translation")
-public class TranslationService implements ApplicationContextAware {
+public class TranslationApi implements ApplicationContextAware {
+
+    @Autowired
+    SchemaManager schemaManager;
+
+    @Autowired
+    LanguageUtils languageUtils;
 
     private ApplicationContext context;
 
@@ -56,29 +76,29 @@ public class TranslationService implements ApplicationContextAware {
     });
 
     /**
-     * Service returning translations stored in database description tables.
      *
-     * @param language The language to return translations in.
      * @param type  The type of object to return.
      * @return  A map of translations in JSON format.
      * @throws Exception
      */
-    @RequestMapping(value = "/{language}/translation/db",
+    @ApiOperation(value = "List translations for database description table",
+                  nickname = "getTranslations")
+    @RequestMapping(value = "/db",
+            method = RequestMethod.GET,
             produces = {
                     MediaType.APPLICATION_JSON_VALUE
             })
     @ResponseBody
     public Map<String, String> getTranslations(
-            @PathVariable String language,
-            @RequestParam(required = false) final List<String> type
+            @RequestParam(required = false) final List<String> type,
+            ServletRequest request
     ) throws Exception {
-        Map<String, String> response = new HashMap<String, String>();
-        final ServiceContext context = ServiceContext.get();
+        Map<String, String> response = new LinkedHashMap<String, String>();
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-
 
         validateParameters(type);
 
+        String language = languageUtils.parseAcceptLanguage(request.getLocales());
 
         if (type == null || type.contains("StatusValue")) {
             StatusValueRepository repository =
@@ -98,7 +118,7 @@ public class TranslationService implements ApplicationContextAware {
             Iterator<MetadataCategory> metadataCategoryIterator = metadataCategoryList.iterator();
             while (metadataCategoryIterator.hasNext()) {
                 MetadataCategory entity = metadataCategoryIterator.next();
-                response.put("cat-" + entity.getId() + "", entity.getLabel(language));
+                response.put("cat-" + entity.getName() + "", entity.getLabel(language));
             }
         }
 
@@ -158,6 +178,7 @@ public class TranslationService implements ApplicationContextAware {
         }
         return response;
     }
+
 
     private void validateParameters(List<String> type) {
         if (type != null) {
