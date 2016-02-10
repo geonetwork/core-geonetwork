@@ -255,7 +255,7 @@
 
           <xsl:choose>
             <xsl:when
-                    test="count($helpersMatchingCurrentRecord) > 0">
+                    test="count($helpersMatchingCurrentRecord/*) > 0">
               <xsl:copy-of select="$helpersMatchingCurrentRecord"/>
             </xsl:when>
             <xsl:otherwise>
