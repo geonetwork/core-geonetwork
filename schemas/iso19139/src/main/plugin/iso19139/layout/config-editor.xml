@@ -261,6 +261,21 @@
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code"/>
 
+          <action type="add" name="identifier" or="identifier"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier) = 0">
+            <template>
+              <snippet>
+                <gmd:identifier>
+                  <gmd:MD_Identifier>
+                    <gmd:code>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:code>
+                  </gmd:MD_Identifier>
+                </gmd:identifier>
+              </snippet>
+            </template>
+          </action>
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:language"/>
           <!--<field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:characterSet"/>-->
@@ -280,7 +295,8 @@
 
         <section name="sextantkeywordTitle">
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:topicCategory"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords"
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName]"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]"
                  or="descriptiveKeywords"
                  in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
         </section>
@@ -420,8 +436,12 @@
       <tab id="sextant-usage" mode="flat">
         <section name="sextantlimitationsTitle">
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"
+                 or="useLimitation"
+                 in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints"
+                 or="useConstraints"
+                 in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
         </section>
       </tab>
