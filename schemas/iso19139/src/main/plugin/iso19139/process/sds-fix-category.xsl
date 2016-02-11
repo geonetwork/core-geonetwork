@@ -19,7 +19,7 @@
     <!-- CC1 Rec 1 -->
     <xsl:template match="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title[gco:CharacterString]">
         <xsl:copy>
-            <gmx:Anchor xlink:href=" http://inspire.ec.europa.eu/metadata-codelist/Category/invocable">invocable</gmx:Anchor>
+            <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/Category/invocable">invocable</gmx:Anchor>
         </xsl:copy>
     </xsl:template>
 

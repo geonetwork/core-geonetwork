@@ -2047,9 +2047,9 @@
 	</codelist>
 	<codelist name="INSPIRE_category">
 			<entry>
-					<code>http://inspire.ec.europa.eu/metadata-codelist/Category/invocable</code>
-					<label>invocable</label>
-					<description>Invocable</description>
+					<code>http://inspire.ec.europa.eu/metadata-codelist/Category/harmonised</code>
+					<label>harmonised</label>
+					<description>Harmonised</description>
 			</entry>
 			<entry>
 					<code>http://inspire.ec.europa.eu/metadata-codelist/Category/interoperable</code>
@@ -2057,9 +2057,9 @@
 					<description>Interoperable</description>
 			</entry>
 			<entry>
-					<code>http://inspire.ec.europa.eu/metadata-codelist/Category/harmonised</code>
-					<label>harmonised</label>
-					<description>Harmonised</description>
+					<code>http://inspire.ec.europa.eu/metadata-codelist/Category/invocable</code>
+					<label>invocable</label>
+					<description>Invocable</description>
 			</entry>
 	</codelist>
   <codelist name="gco:nilReason">

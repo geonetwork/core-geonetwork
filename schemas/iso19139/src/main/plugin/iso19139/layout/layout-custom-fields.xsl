@@ -12,19 +12,44 @@
 
   <xsl:include href="layout-custom-fields-keywords.xsl"/>
 
-  <xsl:template mode="mode-iso19139" priority="2000" match="gmx:Anchor">
+  <xsl:template mode="mode-iso19139" priority="2000" match="gmd:dataQualityInfo/*/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor">
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="gn-fn-metadata:getLabel($schema, name(), $labels)/label"/>
-      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="value" select="@xlink:href"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
       <xsl:with-param name="type" select="'select'"/>
       <xsl:with-param name="listOfValues" select="/root/gui/schemas/iso19139/codelists/codelist[@name='INSPIRE_category']"/>
-      <xsl:with-param name="name" select="''"/>
+      <xsl:with-param name="name" select="concat(gn:element/@ref,'_xlinkCOLONhref')"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
       <xsl:with-param name="parentEditInfo" select="gn:element"/>
       <xsl:with-param name="isDisabled" select="false()"/>
     </xsl:call-template>
+    
+    <script>
+        $( document ).ready(function(){
+	        var id = <xsl:value-of select="gn:element/@ref" />;
+	        var gnselect = "_" + id + "_xlinkCOLONhref";
+	        var gnhidden = "#_" + id;
+	        if(!$(gnhidden).value){
+	            getHiddenFiekdContent(gnselect, gnhidden);
+			}
+	    	$("select[name=" + gnselect + "]").on('change', function() {
+	  			getHiddenFiekdContent(gnselect, gnhidden);
+			})
+		});
+		function getHiddenFiekdContent(gnselect, gnhidden){
+			var value = $("select[name=" + gnselect + "]").val();
+	        var lastindexof = value.lastIndexOf("/")+1;
+	  		$(gnhidden).val(value.substring(lastindexof));
+		}
+    </script>
+    
+    <input type="hidden">
+    	<xsl:attribute name="name" select="concat('_',gn:element/@ref)"/>
+    	<xsl:attribute name="id" select="concat('_',gn:element/@ref)"/>
+    </input>
+    
   </xsl:template>
 
   <!-- Readonly elements -->
