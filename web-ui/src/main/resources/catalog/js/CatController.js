@@ -3,9 +3,11 @@
 
   goog.require('gn_search_manager');
   goog.require('gn_session_service');
+  goog.require('gn_admin_menu');
+
 
   var module = angular.module('gn_cat_controller',
-      ['gn_search_manager', 'gn_session_service']);
+      ['gn_search_manager', 'gn_session_service','gn_admin_menu']);
 
 
   module.constant('gnGlobalSettings', {
@@ -34,11 +36,15 @@
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
-    'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
+    'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService', 'gnAdminMenu',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
-            gnGlobalSettings, $location, gnUtilityService, gnSessionService) {
+            gnGlobalSettings, $location, gnUtilityService, gnSessionService,gnAdminMenu) {
       $scope.version = '0.0.1';
+      //Display or not the admin menu
+      if ($location.absUrl().indexOf('admin')!=-1){
+          $scope.viewMenuAdmin=true;
+      }else{$scope.viewMenuAdmin=false}
       //Update Links for social media
       $scope.socialMediaLink = $location.absUrl();
       $scope.$on('$locationChangeSuccess', function(event) {
@@ -225,8 +231,7 @@
               });
         });
       };
-
-
+      $scope.adminMenu = gnAdminMenu.Administrator;
       $scope.$on('loadCatalogInfo', function(event, status) {
         $scope.loadCatalogInfo();
       });
