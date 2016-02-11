@@ -1241,7 +1241,7 @@
                           scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
                         } else {
                           scope.alertMsg =
-                            $translate('linkToServiceWithoutURLError');
+                              $translate('linkToServiceWithoutURLError');
                         }
                       }
                     }

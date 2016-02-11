@@ -21,6 +21,17 @@
       cursor: wait;
     }
   }
+  .popover-dropdown, [gn-popover-dropdown] {
+    .dropdown-menu {
+      max-height: 45vh;
+      overflow: auto;
+
+    }
+    .dropdown-toggle {
+      padding: 0;
+      border: none;
+    }
+  }
   .search-container {
     position: absolute;
     top: @viewport-padding;
