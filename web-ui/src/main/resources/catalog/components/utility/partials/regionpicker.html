@@ -9,7 +9,7 @@
     <ul class="dropdown-menu">
       <li data-ng-repeat="regionObj in gnRegionService.regionsList">
         <a href="" data-ng-click="setRegion(regionObj)">
-          <span data-translate="">{{regionObj.name}}</span>
+          {{regionObj.label}}
         </a>
       </li>
     </ul>

@@ -27,8 +27,9 @@
                             md.inspirethemewithac.length > 0 ? '' : 'invisible'">
           <span data-translate="">listOfCategories</span>
           <a data-ng-repeat="cat in ::md.category"
+             title="{{('cat-' + cat) | translate}}"
              data-ng-href="#/search?_cat={{cat}}">
-            <i class="fa" title="{{cat | translate}}">
+            <i class="fa">
                 <span class="fa gn-icon-{{cat}}"></span>
             </i>
           </a>
@@ -88,6 +89,7 @@
             <p data-ng-repeat="c in md.getAllContacts().resource">
               <img data-ng-if="c.logo"
                    data-ng-src="{{::c.logo}}"
+                   class="gn-source-logo"
                    title="{{::c.name}} ({{::c.role}})"/>
               {{::c.name}}
             </p>

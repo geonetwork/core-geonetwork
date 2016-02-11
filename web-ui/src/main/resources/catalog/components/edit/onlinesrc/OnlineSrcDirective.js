@@ -1205,9 +1205,10 @@
                         scope.stateObj.selectRecords.length > 0) {
                       var md = new Metadata(scope.stateObj.selectRecords[0]);
                       var links = [];
-
+                      scope.layers = [];
                       scope.srcParams.selectedLayers = [];
                       if (scope.mode == 'service') {
+                        // TODO: WFS ?
                         links = links.concat(md.getLinksByType('OGC:WMS'));
                         links = links.concat(md.getLinksByType('wms'));
                         scope.srcParams.uuidSrv = md.getUuid();
@@ -1225,15 +1226,23 @@
                       else {
                         // TODO: Check the appropriate WMS service
                         // or list URLs if many
+                        // TODO: If service URL is added, user need to reload
+                        // editor to get URL or current record.
                         links = links.concat(
                             gnCurrentEdit.metadata.getLinksByType('OGC:WMS'));
                         links = links.concat(
                             gnCurrentEdit.metadata.getLinksByType('wms'));
-                        var serviceUrl = links[0].url;
-                        scope.loadCurrentLink(serviceUrl);
-                        scope.srcParams.url = serviceUrl;
-                        scope.srcParams.uuidDS = md.getUuid();
-                        scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
+                        if (angular.isArray(links) && links.length == 1) {
+                          var serviceUrl = links[0].url;
+                          scope.loadCurrentLink(serviceUrl);
+                          scope.srcParams.url = serviceUrl;
+                          scope.srcParams.protocol = links[0].protocol || '';
+                          scope.srcParams.uuidDS = md.getUuid();
+                          scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
+                        } else {
+                          scope.alertMsg =
+                            $translate('linkToServiceWithoutURLError');
+                        }
                       }
                     }
                   });

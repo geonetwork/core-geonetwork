@@ -291,6 +291,10 @@
       $scope.controller.resetSearch(searchParams);
     });
 
+    $scope.$on('search', function() {
+      $scope.triggerSearch();
+    });
+
     $scope.$on('clearResults', function() {
       $scope.searchResults = {
         records: [],

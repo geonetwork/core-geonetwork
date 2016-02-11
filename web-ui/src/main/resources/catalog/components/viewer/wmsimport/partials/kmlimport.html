@@ -4,7 +4,7 @@
 
       <!--File URL-->
       <input class="form-control input-sm ng-pristine ng-valid" placeholder="{{'KMLfileURL'|translate}}" type="text"
-             data-ng-model="url" data-ng-change="kmlCtrl.addKml(url, map)">
+             data-ng-model="url" data-ng-model-options="{debounce: 500}" data-ng-change="kmlCtrl.addKml(url, map)">
 
      <p> {{'or'|translate}} </p>
 

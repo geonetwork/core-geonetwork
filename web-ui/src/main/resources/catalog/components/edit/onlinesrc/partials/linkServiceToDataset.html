@@ -27,7 +27,9 @@
       <p class="alert alert-warning"
          data-ng-show="alertMsg">{{alertMsg}}</p>
 
-      <div data-gn-layers-grid 
+      <h4 data-ng-show="mode == 'dataset' && layers.length > 0" data-translate="">chooseZeroOrMoreLayerFromService</h4>
+      <h4 data-ng-show="mode == 'service' && layers.length > 0" data-translate="">chooseZeroOrMoreLayer</h4>
+      <div data-gn-layers-grid
         data-gn-selection-mode="multiple"
         data-layers="layers"
         data-selection="srcParams.selectedLayers">
@@ -41,6 +43,9 @@
         <span data-translate="" data-ng-show="mode == 'service'">linkToService</span>
         <span data-translate="" data-ng-hide="mode == 'service'">linkToDataset</span>
       </button>
+
+      <div data-gn-need-help="user-guide/associating-resources/linking-dataset-or-service.html"
+           class="pull-right"></div>
     </div>
   </form>
 </div>
