@@ -23,6 +23,10 @@
       };
       var allPromises = [];
       angular.forEach(options.locales, function(value, index) {
+        // Hack for API - To be fixed
+        if (options.key == 'sextant') {
+          options.key = 'fre';
+        }
         var langUrl = buildUrl(options.prefix, options.key,
             value, options.suffix);
 
