@@ -103,8 +103,10 @@ public class MailUtil {
      * 
      * @param toAddress
      * @param subject
-     * @param htmlMessage
+     * @param message
      * @param settings
+     * @param replyTo
+     * @param replyToDesc
      * @throws EmailException
      */
     public static Boolean sendMail(List<String> toAddress, String subject,
@@ -133,7 +135,6 @@ public class MailUtil {
             e1.printStackTrace();
             return false;
         }
-        email.setSSL(true);
 
         // send to all mails extracted from settings
         for (String add : toAddress) {
@@ -148,54 +149,12 @@ public class MailUtil {
     }
 
     /**
-     * Send an html mail
-     * 
-     * @param toAddress
-     * @param hostName
-     * @param smtpPort
-     * @param mail
-     * @param username
-     * @param password
-     * @param subject
-     * @param htmlMessage
-     * @throws EmailException
-     */
-    public static Boolean sendHtmlMail(List<String> toAddress, String hostName,
-            Integer smtpPort, String from, String username, String password,
-            String subject, String htmlMessage) {
-        // Create data information to compose the mail
-        HtmlEmail email = new HtmlEmail();
-
-        configureBasics(hostName, smtpPort, from, username, password, email, false);
-
-        email.setSubject(subject);
-        try {
-            email.setHtmlMsg(htmlMessage);
-        } catch (EmailException e1) {
-            e1.printStackTrace();
-            return false;
-        }
-        email.setSSL(true);
-
-        // send to all mails extracted from settings
-        for (String add : toAddress) {
-            try {
-                email.addBcc(add);
-            } catch (EmailException e) {
-                return false;
-            }
-        }
-
-        return send(email);
-    }
-
-    /**
      * Send an html mail with atachments
      * 
      * @param toAddress
      * @param hostName
      * @param smtpPort
-     * @param mail
+     * @param from
      * @param username
      * @param password
      * @param subject
@@ -210,7 +169,7 @@ public class MailUtil {
         // Create data information to compose the mail
         HtmlEmail email = new HtmlEmail();
 
-        configureBasics(hostName, smtpPort, from, username, password, email, false);
+        configureBasics(hostName, smtpPort, from, username, password, email, false, false);
 
         for (EmailAttachment attach : attachment) {
             try {
@@ -270,11 +229,11 @@ public class MailUtil {
      * @param toAddress
      * @param hostName
      * @param smtpPort
-     * @param mail
+     * @param from
      * @param username
      * @param password
      * @param subject
-     * @param htmlMessage
+     * @param message
      * @throws EmailException
      */
     public static Boolean sendMail(List<String> toAddress, String hostName,
@@ -282,7 +241,7 @@ public class MailUtil {
             String subject, String message) {
 
         Email email = new SimpleEmail();
-        configureBasics(hostName, smtpPort, from, username, password, email, false);
+        configureBasics(hostName, smtpPort, from, username, password, email, false, false);
 
         email.setSubject(subject);
         try {
@@ -311,14 +270,15 @@ public class MailUtil {
      * 
      * @param hostName
      * @param smtpPort
-     * @param mail
+     * @param from
      * @param username
      * @param password
      * @param email
      * @param ssl 
+     * @param tls
      */
     private static void configureBasics(String hostName, Integer smtpPort,
-            String from, String username, String password, Email email, Boolean ssl) {
+            String from, String username, String password, Email email, Boolean ssl, Boolean tls) {
         if (hostName != null) {
             email.setHostName(hostName);
         } else {
@@ -335,9 +295,17 @@ public class MailUtil {
             email.setAuthenticator(new DefaultAuthenticator(username, password));
         }
         
-        if(ssl != null) {
-            email.setSSL(ssl);
+
+        if (tls != null) {
+            email.setStartTLSEnabled(tls);
+            email.setStartTLSRequired(tls);
         }
+
+        if(ssl != null) {
+            email.setSSLOnConnect(ssl);
+            if (ssl) email.setSslSmtpPort(smtpPort + "");
+        }
+        
         if (from != null && !from.isEmpty()) {
             try {
                 email.setFrom(from);
@@ -363,6 +331,8 @@ public class MailUtil {
                 .getValue("system/feedback/mailServer/password");
         Boolean ssl = settings
                 .getValueAsBool("system/feedback/mailServer/ssl");
+        Boolean tls = settings
+                .getValueAsBool("system/feedback/mailServer/tls");
 
         String hostName = settings.getValue("system/feedback/mailServer/host");
         Integer smtpPort = Integer.valueOf(settings
@@ -370,7 +340,7 @@ public class MailUtil {
 
         String from = settings.getValue("system/feedback/email");
 
-        configureBasics(hostName, smtpPort, from, username, password, email, ssl);
+        configureBasics(hostName, smtpPort, from, username, password, email, ssl, tls);
     }
 
     public static Boolean sendMail(String email, String subject,
@@ -380,32 +350,12 @@ public class MailUtil {
         return sendMail(to, subject, message, sm);
     }
 
-    public static Boolean sendHtmlMail(String email, String host, Integer port,
-            String from, String username, String password, String subject,
-            String content) {
-        List<String> to = new ArrayList<String>(1);
-        to.add(email);
-        return sendHtmlMail(to, host, port, from, username, password, subject,
-                content);
-
-    }
 
     public static Boolean sendMail(String to, String subject, String message,
             SettingManager sm, String replyTo, String replyToDescr) {
         List<String> to_ = new ArrayList<String>(1);
         to_.add(to);
         return sendMail(to_, subject, message, sm, replyTo, replyToDescr);
-    }
-
-    public static Boolean sendMail(String to, String hostName,
-            Integer smtpPort, String from, String username, String password,
-            String subject, String message) {
-
-        List<String> to_ = new ArrayList<String>(1);
-        to_.add(to);
-
-        return sendMail(to_, hostName, smtpPort, from, username, password,
-                subject, message);
     }
 
 }

@@ -62,15 +62,21 @@ public class MailSender extends Thread
      * @param message
      * @throws EmailException
      */
-    private void setUp(String server, int port, String username, String password, boolean useSSL, String from, String fromDescr, String to, String subject, String message) throws EmailException {
+    private void setUp(String server, int port, String username, String password, boolean useSSL, boolean useTLS,
+                       String from, String fromDescr, String to, String subject, String message) throws EmailException {
         _mail.setHostName(server);
         _mail.setSmtpPort(port);
         _mail.setFrom(from, fromDescr);
         if(!"".equals(username)) {
             _mail.setAuthentication(username, password);
         }
+        if(useTLS) {
+            _mail.setStartTLSEnabled(true);
+            _mail.setStartTLSRequired(true);
+        }
         if(useSSL) {
-            _mail.setSSL(useSSL);
+            _mail.setSSLOnConnect(useSSL);
+            _mail.setSslSmtpPort(port + "");
         }
         _mail.addTo(to);
         _mail.setSubject(subject);
@@ -96,11 +102,11 @@ public class MailSender extends Thread
      * @param subject
      * @param message
      */
-	public void send(String server, int port, String username, String password, boolean useSSL, 
+	public void send(String server, int port, String username, String password, boolean useSSL,boolean useTLS,
 	        String from, String fromDescr, String to, String toDescr, String subject, String message) {
 		_mail = new SimpleEmail();
 		try {
-            setUp(server, port, username, password, useSSL, from, fromDescr, to, subject, message);
+            setUp(server, port, username, password, useSSL, useTLS, from, fromDescr, to, subject, message);
             start();
 		}
 		catch(EmailException e) {
@@ -123,12 +129,12 @@ public class MailSender extends Thread
      * @param subject
      * @param message
      */
-	public void sendWithReplyTo(String server, int port, String username, String password, boolean useSSL, 
+	public void sendWithReplyTo(String server, int port, String username, String password, boolean useSSL, boolean useTLS,
 	        String from, String fromDescr, String to, String toDescr, 
 	        String replyTo, String replyToDesc, String subject, String message) {
 		_mail = new SimpleEmail();
 		try {
-            setUp(server, port, username, password, useSSL, from, fromDescr, to, subject, message);
+            setUp(server, port, username, password, useSSL, useTLS, from, fromDescr, to, subject, message);
             List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
 			addressColl.add(new InternetAddress(replyTo, replyToDesc));
 			_mail.setReplyTo(addressColl);

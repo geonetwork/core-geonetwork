@@ -740,6 +740,7 @@
     "system/feedback/mailServer/password": "Password",
     "system/feedback/mailServer/port": "SMTP port",
     "system/feedback/mailServer/ssl": "Use SSL",
+    "system/feedback/mailServer/tls": "Use TLS",
     "system/feedback/mailServer/username": "User name",
     "system/harvester": "Harvesters",
     "system/harvester/enableEditing": "Allow editing on harvested records",

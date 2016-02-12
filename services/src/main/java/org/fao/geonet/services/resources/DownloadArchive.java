@@ -388,6 +388,7 @@ public class DownloadArchive implements Service
 							        sm.getValue("system/feedback/mailServer/username"), 
 							        sm.getValue("system/feedback/mailServer/password"), 
 							        sm.getValueAsBool("system/feedback/mailServer/ssl"), 
+								sm.getValueAsBool("system/feedback/mailServer/tls"),
 							        from, fromDescr, email, null, subject, message);
 						} catch (Exception e) {
 							e.printStackTrace();
