@@ -91,11 +91,16 @@ public class MailApi {
                 "mail_config_test_subject"),
                 sm.getSiteName(),
                 to);
-        if (!MailUtil.sendMail(to, subject, "Empty message", sm, to, "")) {
+        try {
+            MailUtil.testSendMail(to, subject, "Empty message", sm, to, "");
             return new ResponseEntity<>(String.format(
-                    messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
+                    messages.getString("mail_config_test_success"), to), HttpStatus.CREATED);
+        } catch (Exception ex) {
+            String error = ex.getMessage();
+            if (ex.getCause() != null) error = error + ". " + ex.getCause().getMessage();
+            return new ResponseEntity<>(String.format(
+                    error), HttpStatus.PRECONDITION_FAILED);
         }
-        return new ResponseEntity<>(String.format(
-                messages.getString("mail_config_test_success"), to), HttpStatus.CREATED);
+
     }
 }

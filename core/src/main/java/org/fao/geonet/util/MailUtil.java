@@ -66,7 +66,7 @@ public class MailUtil {
      * 
      * @param toAddress
      * @param subject
-     * @param htmlMessage
+     * @param message
      * @param settings
      * @throws EmailException
      */
@@ -83,7 +83,6 @@ public class MailUtil {
             e1.printStackTrace();
             return false;
         }
-        email.setSSL(true);
 
         // send to all mails extracted from settings
         for (String add : toAddress) {
@@ -186,7 +185,6 @@ public class MailUtil {
             e1.printStackTrace();
             return false;
         }
-        email.setSSL(true);
 
         // send to all mails extracted from settings
         for (String add : toAddress) {
@@ -203,24 +201,34 @@ public class MailUtil {
 
     private static Boolean send(final Email email) {
         try {
-        	Thread t = new Thread() {
-        		@Override
-        		public void run() {
-        			super.run();
-                    try {
-						email.send();
-					} catch (EmailException e) {
-						e.printStackTrace();
-					}
-        		}
-        	};
-        	
-        	t.start();
-        } catch (Exception e) {
+            email.send();
+
+        } catch (EmailException e) {
             e.printStackTrace();
             return false;
         }
+
         return true;
+    }
+
+    private static void sendWithThread(final Email email) {
+        try {
+            Thread t = new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        email.send();
+                    } catch (EmailException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            t.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -250,7 +258,6 @@ public class MailUtil {
             e1.printStackTrace();
             return false;
         }
-        email.setSSL(true);
 
         // send to all mails extracted from settings
         for (String add : toAddress) {
@@ -358,4 +365,33 @@ public class MailUtil {
         return sendMail(to_, subject, message, sm, replyTo, replyToDescr);
     }
 
+    public static void testSendMail(String to, String subject, String message,
+                                   SettingManager sm, String replyTo, String replyToDescr) throws Exception {
+        List<String> to_ = new ArrayList<String>(1);
+        to_.add(to);
+        testSendMail(to_, subject, message, sm, replyTo, replyToDescr);
+    }
+
+    public static void testSendMail(List<String> toAddress, String subject,
+                                   String message, SettingManager settings, String replyTo,
+                                   String replyToDesc) throws Exception {
+        // Create data information to compose the mail
+        Email email = new SimpleEmail();
+        configureBasics(settings, email);
+
+        List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
+
+        addressColl.add(new InternetAddress(replyTo, replyToDesc));
+        email.setReplyTo(addressColl);
+
+        email.setSubject(subject);
+        email.setMsg(message);
+
+        // send to all mails extracted from settings
+        for (String add : toAddress) {
+            email.addBcc(add);
+        }
+
+        email.send();
+    }
 }
