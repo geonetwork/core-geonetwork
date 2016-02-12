@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -133,6 +134,23 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
         }
 
         return results;
+    }
+    
+    /**
+     * @see org.fao.geonet.repository.MetadataRepositoryCustom#findAllSimple(org.springframework.data.jpa.domain.Specification)
+     * @param spec
+     * @return
+     */
+    @Override
+    public List<SimpleMetadata> findAllSimple(String id) {
+       Query query =  _entityManager.createQuery(
+               "select new org.fao.geonet.repository.SimpleMetadata("
+               + "id, uuid, dataInfo.changeDate, dataInfo.type_JPAWorkaround) "
+                + "from Metadata where harvestInfo.uuid = '" + id + "'");
+       
+       //TODO paginate
+        
+        return query.getResultList();
     }
 
 }
