@@ -71,6 +71,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.util.StringUtils;
 
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -185,8 +186,17 @@ public class Info implements Service {
               for(Setting s : publicSettings) {
                 publicSettingsKey.add(s.getName());
               }
-              result.addContent(new Element("config").addContent(gc.getBean(SettingManager.class).getValues(
-                  publicSettingsKey.toArray(new String[0]))));
+              Element configElement = new Element("config");
+                Element settingsElement = gc.getBean(SettingManager.class).getValues(
+                        publicSettingsKey.toArray(new String[0]));
+
+                String mailServerHost = gc.getBean(SettingManager.class).getValue("system/feedback/mailServer/host");
+                Element mailServerElement = new Element("setting");
+                mailServerElement.setAttribute("name", "system/mail/enable");
+                mailServerElement.setAttribute("value", !StringUtils.isEmpty(mailServerHost) + "");
+                settingsElement.addContent(mailServerElement);
+                configElement.addContent(settingsElement);
+                result.addContent(configElement);
             } else if (type.equals(INSPIRE)) {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
 				            new String[]{

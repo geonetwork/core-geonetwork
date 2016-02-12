@@ -5,6 +5,8 @@ import org.fao.geonet.entitylistener.UserEntityListenerManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.keygen.KeyGenerators;
+import org.springframework.security.crypto.keygen.StringKeyGenerator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -463,6 +465,12 @@ public class User extends GeonetEntity implements UserDetails {
         if (_lastLoginDate != null ? !_lastLoginDate.equals(user._lastLoginDate) : user._lastLoginDate != null) return false;
 
         return true;
+    }
+
+
+    public static String getRandomPassword() {
+        StringKeyGenerator generator = KeyGenerators.string();
+        return generator.generateKey().substring(0, 8);
     }
 
     @Override

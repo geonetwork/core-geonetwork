@@ -30,13 +30,13 @@ public class LanguageUtils {
 //        }
 //    }
 
-    public String parseAcceptLanguage(final Enumeration<Locale> listOfLocales) {
+    public Locale parseAcceptLanguage(final Enumeration<Locale> listOfLocales) {
         while (listOfLocales.hasMoreElements()) {
             Locale l = listOfLocales.nextElement();
             if (iso3code.contains(l.getISO3Language())) {
-                return l.getISO3Language();
+                return l;
             }
         }
-        return defaultLanguage;
+        return Locale.forLanguageTag(defaultLanguage);
     }
 }
