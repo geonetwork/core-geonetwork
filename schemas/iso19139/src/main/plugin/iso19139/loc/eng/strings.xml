@@ -26,6 +26,11 @@
   <sds-add-dataquality>Add DataQuality element</sds-add-dataquality>
   <sds-add-dataqualityHelp>TG4: For each spatial data service, there shall be one and only one set of quality information (dataQualityInfo element) scoped to “service”.</sds-add-dataqualityHelp>
 
+  <sds-add-qualityofservice>Add Quality of Service</sds-add-qualityofservice>
+  <sds-add-qualityofserviceHelp>INSPIRE SDS requires three quality of service criteria to be reported in the metadata: Availability, Performance and Capacity.</sds-add-qualityofserviceHelp>
+  <qos_criteria>Criteria</qos_criteria>
+  <qos_uom>UOM</qos_uom>
+
   <sds-fix-category>Fix the Category element</sds-fix-category>
   <sds-fix-categoryHelp>(Rec1) Replace gco:CharacterString with gmx:Anchor in the description metadata element.</sds-fix-categoryHelp>
 
