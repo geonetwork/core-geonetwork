@@ -52,6 +52,7 @@ import java.util.Calendar;
 /**
  * Change users password given the correct change key generated for the user.
  */
+@Deprecated
 public class Change extends NotInReadOnlyModeService {
 
 	// --------------------------------------------------------------------------
