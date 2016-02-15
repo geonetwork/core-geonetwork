@@ -23,8 +23,14 @@
            * Performance
            * Capacity
     -->
-        <xsl:template match="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
-            <xsl:variable name="qualityofservice">
+    <xsl:template match="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']">
+
+        <xsl:copy>
+            <xsl:apply-templates select="gmd:scope"/>
+            <xsl:apply-templates select="gmd:report"/>
+
+            <xsl:if test="count(gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[@xlink:href='http://inspire.ec.europa.eu/metadata-codelist/Criteria/availability'])=0">
+                <xsl:message>Adding missing availablility QoS</xsl:message>
                 <gmd:report>
                     <gmd:DQ_ConceptualConsistency>
                         <gmd:nameOfMeasure>
@@ -47,6 +53,10 @@
                         </gmd:result>
                     </gmd:DQ_ConceptualConsistency>
                 </gmd:report>
+            </xsl:if>
+
+            <xsl:if test="count(gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[@xlink:href='http://inspire.ec.europa.eu/metadata-codelist/Criteria/performance'])=0">
+                <xsl:message>Adding missing performance QoS</xsl:message>
                 <gmd:report>
                     <gmd:DQ_ConceptualConsistency>
                         <gmd:nameOfMeasure>
@@ -69,6 +79,10 @@
                         </gmd:result>
                     </gmd:DQ_ConceptualConsistency>
                 </gmd:report>
+            </xsl:if>
+
+            <xsl:if test="count(gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[@xlink:href='http://inspire.ec.europa.eu/metadata-codelist/Criteria/capacity'])=0">
+                <xsl:message>Adding missing capacity QoS</xsl:message>
                 <gmd:report>
                     <gmd:DQ_ConceptualConsistency>
                         <gmd:nameOfMeasure>
@@ -91,31 +105,10 @@
                         </gmd:result>
                     </gmd:DQ_ConceptualConsistency>
                 </gmd:report>
-            </xsl:variable>
-            <xsl:variable name="report">
-                <gmd:report><gmd:DQ_ConceptualConsistency /></gmd:report>
-            </xsl:variable>
-            <!-- xsl:message>0) <xsl:value-of select="count(gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service')"/></xsl:message>
-            <xsl:message>1) <xsl:value-of select="count(/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='availability'])=0"/></xsl:message>
-            <xsl:message>2) <xsl:value-of select="count(/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='performance'])"/></xsl:message>
-            <xsl:message>3) <xsl:value-of select="count(/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='capacity'])"/></xsl:message -->
-            <xsl:choose>
-                <xsl:when test="count(gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service')=1 and
-                              count(/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='availability'])=0 and
-                              count(/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='performance'])=0 and
-                              count(/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='capacity'])=0">
-                    <xsl:copy>
-                        <xsl:copy-of select="@*|node()"/>
-                        <xsl:copy-of select="$qualityofservice" />
-                    </xsl:copy>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:copy>
-                        <xsl:copy-of select="@*|node()"/>
-                    </xsl:copy>
-                </xsl:otherwise>
-            </xsl:choose>
-            
+            </xsl:if>
+
+            <xsl:apply-templates select="gmd:lineage"/>
+        </xsl:copy>
     </xsl:template>
 
     <!-- Do a copy of every nodes and attributes -->
