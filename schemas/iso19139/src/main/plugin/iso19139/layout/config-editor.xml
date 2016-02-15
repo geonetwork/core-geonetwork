@@ -786,7 +786,7 @@
           <field name="conformity" templateModeOnly="true"
                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency/gmd:result"
-                 if="count(/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)=0"
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)=0"
                  del="../..">
             <template>
               <values>
@@ -861,7 +861,7 @@
 
           <action type="add" name="conformity" or="report"
                   forceLabel="true"
-                  if="count(/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)=0"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)=0"
                   in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
             <template>
               <snippet>
@@ -1241,7 +1241,8 @@
                   if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service'])=0"/>
 
           <!-- 4.4.1 category -->
-          <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
+          <field name="sds-category"
+              xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
 
           <!-- 4.4.1 pass -->
           <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass"/>
@@ -1374,10 +1375,11 @@
             </template>
           </action>
 
-
-
         </section>
+
+        <!-- CONFORMITY CLASS 2 -->
         <section name="inspire_sds_cc2">
+
             <!-- todo -->
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
@@ -1397,6 +1399,7 @@
           <field xpath="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency"/>
 
         </section>
+
         <section name="inspire_sds_cc3">
             
         </section>

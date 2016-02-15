@@ -22,6 +22,7 @@
   <inspire_sds_cc2>Conformance class 2: interoperable</inspire_sds_cc2>
   <inspire_sds_cc3>Conformance class 3: harmonized</inspire_sds_cc3>
 
+  <sds-category>Category</sds-category>
   <inspire_add_pass>Add pass element</inspire_add_pass>
   <sds-add-dataquality>Add DataQuality element</sds-add-dataquality>
   <sds-add-dataqualityHelp>TG4: For each spatial data service, there shall be one and only one set of quality information (dataQualityInfo element) scoped to “service”.</sds-add-dataqualityHelp>
