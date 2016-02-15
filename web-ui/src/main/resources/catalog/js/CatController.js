@@ -36,13 +36,15 @@
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
-    'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService', 'gnAdminMenu',
+    'gnGlobalSettings', '$location', 'gnUtilityService', 
+    'gnSessionService', 'gnAdminMenu',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
-            gnGlobalSettings, $location, gnUtilityService, gnSessionService,gnAdminMenu) {
+            gnGlobalSettings, $location, gnUtilityService, 
+            gnSessionService, gnAdminMenu) {
       $scope.version = '0.0.1';
       //Display or not the admin menu
-      if ($location.absUrl().indexOf('admin')!=-1){
+      if ($location.absUrl().indexOf('/admin.console')!=-1){
           $scope.viewMenuAdmin=true;
       }else{$scope.viewMenuAdmin=false}
       //Update Links for social media

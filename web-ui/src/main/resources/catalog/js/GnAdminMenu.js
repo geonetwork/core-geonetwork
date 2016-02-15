@@ -3,9 +3,7 @@
 
   var module = angular.module('gn_admin_menu',[]);
 
-  module.constant('$LOCALES', ['core', 'admin']);
-
-  module.factory('gnAdminMenu', ['$http', '$q', function($http, $q) {
+  module.factory('gnAdminMenu',  function() {
     var userAdminMenu = [
         {name: 'harvesters', route: '#harvest',
           classes: 'btn-primary', icon: 'fa-cloud-download'},
@@ -42,6 +40,6 @@
       };
 
     return menu
-  }]);
+  });
 
 })();
