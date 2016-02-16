@@ -1,2 +1,0 @@
-    - *Groups* - Groups can be selected from the scrolling list. When the ``Add`` button is pushed, a row of privileges will be created below the scrolling list for each group. Privileges can then be checked/unchecked for each group as required.
-    - *Remove* - To remove a row click on the ``Remove`` button on the right of the row. 

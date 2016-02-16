@@ -3,7 +3,7 @@
     <services package="org.fao.geonet">
         <documentation>User and group services</documentation>
         
-        <service name="create.account">
+        <service name="create.account" deprecated="true">
             <documentation><![CDATA[
                 Create a new user account.
                 ]]></documentation>
@@ -11,7 +11,7 @@
             <error sheet="../xslt/error/error-json.xsl"/>
         </service>
         
-        <service name="password.reminder">
+        <service name="password.reminder" deprecated="true">
             <documentation><![CDATA[
                 In case you forgot your password, send an email with a page to change user password.
                 
@@ -22,7 +22,7 @@
             <error sheet="../xslt/error/error-json.xsl"/>
         </service>
         
-        <service name="password.change">
+        <service name="password.change" deprecated="true">
             <class name=".services.password.Change" />
             <error sheet="../xslt/error/error-json.xsl"/>
         </service>

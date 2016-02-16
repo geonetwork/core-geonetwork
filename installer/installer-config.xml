@@ -38,9 +38,9 @@
 	</locale>
 
 	<resources>
-		<res id="HTMLLicencePanel.licence"     src="../docs/license.html"/>
-		<res id="HTMLLicencePanel.licence_fra" src="../docs/license_fra.html"/>
-		<res id="HTMLLicencePanel.licence_spa" src="../docs/license_spa.html"/>
+		<res id="HTMLLicencePanel.licence"     src="license.html"/>
+		<res id="HTMLLicencePanel.licence_fra" src="license_fra.html"/>
+		<res id="HTMLLicencePanel.licence_spa" src="license_spa.html"/>
 		<res id="HTMLInfoPanel.info"           src="../.props/readme.html"/>
 		<res id="HTMLInfoPanel.info_fra"       src="../.props/readme_fra.html"/>
 		<res id="HTMLInfoPanel.info_spa"       src="../.props/readme_spa.html"/>
