@@ -33,8 +33,9 @@
   <conformity_linkage>Tech spec URL </conformity_linkage>
   <sds-add-qualityofservice>Add Quality of Service</sds-add-qualityofservice>
   <sds-add-qualityofserviceHelp>INSPIRE SDS requires three quality of service criteria to be reported in the metadata: Availability, Performance and Capacity. This button will add the missing criteria.</sds-add-qualityofserviceHelp>
-  <qos_criteria>Criteria</qos_criteria>
   <qos_uom>UOM</qos_uom>
+  <qos_description>Description</qos_description>
+  <qos_value>Value</qos_value>
 
   <sds-fix-category>Fix the Category element</sds-fix-category>
   <sds-fix-categoryHelp>(Rec1) Replace gco:CharacterString with gmx:Anchor in the description metadata element.</sds-fix-categoryHelp>

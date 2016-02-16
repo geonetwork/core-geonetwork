@@ -12,41 +12,42 @@
 
   <xsl:include href="layout-custom-fields-keywords.xsl"/>
   
-<xsl:template mode="mode-iso19139" priority="2001" match="gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor">
-      <xsl:call-template name="render-as-textfield">
-        <xsl:with-param name="value" select="text()"/>
-        <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/qos_criteria"/>
-      </xsl:call-template>
-  </xsl:template>
-  
-  <xsl:template mode="mode-iso19139" priority="2001" match="gmd:DQ_ConceptualConsistency/gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit">
-    <xsl:if test="@xlink:href != ''">
-      <xsl:call-template name="render-as-textfield">
-        <xsl:with-param name="value" select="@xlink:href"/>
-        <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/qos_uom"/>
-      </xsl:call-template>
-    </xsl:if>
-  </xsl:template>
-  
-  
-  <xsl:template name="render-as-textfield">
-    <xsl:param name="value" />
-    <xsl:param name="label" />
-    
-    <xsl:call-template name="render-element">
-      <xsl:with-param name="label" select="$label"/>
-      <xsl:with-param name="value" select="$value"/>
-      <xsl:with-param name="cls" select="local-name()"/>
-      <xsl:with-param name="editInfo" select="*/gn:element"/>
-      <xsl:with-param name="parentEditInfo" select="gn:element"/>
-      <xsl:with-param name="isDisabled" select="true()"/>
+  <xsl:template mode="mode-iso19139" priority="2002" match="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency[/root/gui/currTab/text()='inspire_sds']">
+    <xsl:call-template name="render-boxed-element">
+      <xsl:with-param name="label" select="gmd:nameOfMeasure/gmx:Anchor/text()" />
+      <xsl:with-param name="editInfo" select="gn:element" />
+      <xsl:with-param name="subTreeSnippet">
+        <xsl:call-template name="render-element">
+          <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/qos_description" />
+          <xsl:with-param name="value" select="gmd:measureIdentification/gmd:MD_Identifier/gmd:code/gco:CharacterString/text()" />
+          <xsl:with-param name="name" select="gmd:measureIdentification/gmd:MD_Identifier/gmd:code/gco:CharacterString/gn:element/@ref" />
+          <xsl:with-param name="cls" select="local-name()" />
+          <xsl:with-param name="editInfo" select="gmd:measureIdentification/gmd:MD_Identifier/gmd:code/gco:CharacterString/gn:element" />
+        </xsl:call-template>
+        <xsl:if test="gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit/@xlink:href != ''">
+          <xsl:call-template name="render-element">
+            <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/qos_uom" />
+            <xsl:with-param name="value" select="gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit/@xlink:href" />
+            <xsl:with-param name="cls" select="local-name()" />
+            <xsl:with-param name="editInfo" select="gn:element" />
+            <xsl:with-param name="isDisabled" select="true()" />
+          </xsl:call-template>
+        </xsl:if>
+        <xsl:call-template name="render-element">
+          <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/qos_value" />
+          <xsl:with-param name="value" select="gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record/text()" />
+          <xsl:with-param name="name" select="gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record/gn:element/@ref" />
+          <xsl:with-param name="cls" select="local-name()" />
+          <xsl:with-param name="editInfo" select="gn:element" />
+        </xsl:call-template>
+      </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
 
   <!-- SDS tool: Render an anchor as select box populating it with a codelist -->
-  <xsl:template mode="mode-iso19139" priority="2000" match="gmd:dataQualityInfo/*/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor">
+  <xsl:template mode="mode-iso19139" priority="2000" match="gmd:dataQualityInfo/*/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor[/root/gui/currTab/text()='inspire_sds']">
     <xsl:call-template name="render-element">
-      <xsl:with-param name="label" select="gn-fn-metadata:getLabel($schema, name(), $labels)/label"/>
+      <xsl:with-param name="label" select="/root/gui/strings/category"/>
       <xsl:with-param name="value" select="@xlink:href"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
