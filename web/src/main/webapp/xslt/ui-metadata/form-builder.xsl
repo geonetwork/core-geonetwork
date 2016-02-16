@@ -834,11 +834,10 @@
 
               <div class="radio row">
                 <div class="col-xs-12">
-                  <label>
+                  <label title="{normalize-space(description)}">
                     <input type="radio"
                            name="_{$name}"
-                           value="{code}"
-                           title="{normalize-space(description)}">
+                           value="{code}">
                       <xsl:if test="$valueToEdit = code">
                         <xsl:attribute name="checked"/>
                       </xsl:if>
