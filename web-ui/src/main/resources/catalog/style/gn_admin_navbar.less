@@ -1,0 +1,66 @@
+.dashboardMenu-left {
+    position:   fixed;  
+    z-index: 2;
+    padding-left: 0px;
+    padding-right: 0px;
+    position: fixed;
+    button{
+        margin-bottom:5px;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 0px;
+        background-color: #CCCCCC;
+    }
+    li {
+        a {
+            display: block;
+            color: #000;
+            text-decoration: none;
+            p {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+        a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        a:hover:not(.active) {
+            background-color: #555;
+            color: white;
+        }
+    }
+}
+.dashboardMenu-lg {
+    width: 12%;
+    max-width: 170px;
+    }
+.menu {
+    display: none;
+}
+.dashboardMenu-lg:hover {
+    min-width: 115px;
+    .menu {
+        display : initial;
+        .li {
+            min-width: 115px;
+        }
+    }
+}
+.dashboardMenu-xs {
+    width: 40px;
+}
+.menu-xs {
+    display: none;
+}
+.dashboardMenu-xs:hover {
+    .menu-xs {
+        display : initial;
+    }
+}
+
+
+
