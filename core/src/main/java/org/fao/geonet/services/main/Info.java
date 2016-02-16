@@ -40,6 +40,7 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.Source_;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.User_;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -332,14 +333,15 @@ public class Info implements Service {
 		if (userSession.isAuthenticated()) {
 			data.setAttribute("authenticated","true");
             final String emailAddr = userSession.getEmailAddr();
+            User usr = userSession.getPrincipal();
             data.addContent(new Element(Geonet.Elem.PROFILE).setText(userSession.getProfile().name()))
 				.addContent(new Element(Geonet.Elem.USERNAME).setText(userSession.getUsername()))
 				.addContent(new Element(Geonet.Elem.ID).setText(userSession.getUserId()))
 				.addContent(new Element(Geonet.Elem.NAME).setText(userSession.getName()))
 				.addContent(new Element(Geonet.Elem.SURNAME).setText(userSession.getSurname()))
                 .addContent(new Element(Geonet.Elem.EMAIL).setText(emailAddr))
-                .addContent(new Element(Geonet.Elem.ORGANISATION).setText(userSession.getOrganisation()));
-
+                .addContent(new Element(Geonet.Elem.ORGANISATION).setText(userSession.getOrganisation()))
+                .addContent(new Element(Geonet.Elem.GENERIC).setText(usr != null ? Boolean.toString(usr.isGeneric()) : "false"));
             if (emailAddr != null) {
                 data.addContent(new Element(Geonet.Elem.HASH).setText(org.apache.commons.codec.digest.DigestUtils.md5Hex(emailAddr)));
             } else {
