@@ -265,6 +265,7 @@
           <xsl:variable name="name" select="@name"/>
           <xsl:variable name="del" select="@del"/>
           <xsl:variable name="template" select="template"/>
+          <xsl:variable name="forceLabel" select="@forceLabel"/>
           <xsl:for-each select="$nodes/*">
             <!-- Retrieve matching key values 
               Only text values are supported. Separator is #.
@@ -427,7 +428,7 @@
               <xsl:with-param name="template" select="$templateCombinedWithNode"/>
               <xsl:with-param name="keyValues" select="$keyValues"/>
               <xsl:with-param name="refToDelete" select="if ($refToDelete) then $refToDelete/gn:element else ''"/>
-              <xsl:with-param name="isFirst" select="position() = 1"/>
+              <xsl:with-param name="isFirst" select="$forceLabel or position() = 1"/>
             </xsl:call-template>
           </xsl:for-each>
           
