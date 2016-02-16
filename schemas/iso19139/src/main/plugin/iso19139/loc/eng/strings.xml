@@ -26,7 +26,11 @@
   <inspire_add_pass>Add pass element</inspire_add_pass>
   <sds-add-dataquality>Add DataQuality element</sds-add-dataquality>
   <sds-add-dataqualityHelp>TG4: For each spatial data service, there shall be one and only one set of quality information (dataQualityInfo element) scoped to “service”.</sds-add-dataqualityHelp>
-
+  <sds-add-tech-spec>Add a technical specification</sds-add-tech-spec>
+  <sds-add-tech-specHelp>TG8: The Specification metadata element shall at least refer to or contain one technical specification to which the invocable spatial data service fully conforms, providing all the necessary technical elements, to actually invoke the service and enable its usage.</sds-add-tech-specHelp>
+  <sds-tech-spec>Technical specification</sds-tech-spec>
+  <conformity_desc>Tech spec title</conformity_desc>
+  <conformity_linkage>Tech spec URL </conformity_linkage>
   <sds-add-qualityofservice>Add Quality of Service</sds-add-qualityofservice>
   <sds-add-qualityofserviceHelp>INSPIRE SDS requires three quality of service criteria to be reported in the metadata: Availability, Performance and Capacity. This button will add the missing criteria.</sds-add-qualityofserviceHelp>
   <qos_criteria>Criteria</qos_criteria>
