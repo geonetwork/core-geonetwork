@@ -1183,12 +1183,10 @@
         <module>e2e-tests</module>
       </modules>
     </profile>
-    <!-- Python and Latex are required to build the documentation. -->
     <profile>
       <id>with-doc</id>
       <modules>
-        <module>docs</module>
-        <module>web-ui-docs</module>
+        <module>docs/manuals</module>
       </modules>
     </profile>
     <profile>

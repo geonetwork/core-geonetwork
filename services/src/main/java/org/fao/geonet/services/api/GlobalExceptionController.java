@@ -24,6 +24,7 @@
 package org.fao.geonet.services.api;
 
 import org.fao.geonet.services.api.exception.NoResultsFoundException;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.services.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.services.api.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,7 @@ import org.springframework.web.multipart.MultipartException;
 
 import java.io.FileNotFoundException;
 import java.util.LinkedHashMap;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
@@ -90,6 +92,7 @@ public class GlobalExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
     @ExceptionHandler({
+            UserNotFoundEx.class,
             ResourceNotFoundException.class})
     public Object resourceNotFoundHandler(final Exception exception) {
         return new LinkedHashMap<String, String>() {{
@@ -132,6 +135,18 @@ public class GlobalExceptionController {
     public Object unsatisfiedParameterHandler(final Exception exception) {
         return new LinkedHashMap<String, String>() {{
             put("code", "unsatisfied_request_parameter");
+            put("message", exception.getClass().getSimpleName());
+            put("description", exception.getMessage());
+        }};
+    }
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({
+            MissingResourceException.class
+    })
+    public Object missingResourceHandler(final Exception exception) {
+        return new LinkedHashMap<String, String>() {{
+            put("code", "missing_resource_parameter");
             put("message", exception.getClass().getSimpleName());
             put("description", exception.getMessage());
         }};
