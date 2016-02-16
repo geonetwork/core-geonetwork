@@ -508,7 +508,7 @@
 							</xsl:with-param>
 							<xsl:with-param name="helpLink">
 								<xsl:call-template name="getHelpLink">
-									<xsl:with-param name="name"   select="name(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod)"/>
+									<xsl:with-param name="name"   select="name(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod[1])"/>
 									<xsl:with-param name="schema" select="$schema"/>
 								</xsl:call-template>
 							</xsl:with-param>
