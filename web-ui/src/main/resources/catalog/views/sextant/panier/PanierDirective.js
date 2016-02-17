@@ -49,14 +49,17 @@
 
           var unregisterUserWatch = scope.$watch('user', function(user) {
             if(user && user.surname) {
-              angular.extend(scope.formObj.user, {
-                lastname: user.surname,
-                firstname: user.name,
-                mail: angular.isArray(user.email) ?
-                    user.email[0] : user.email,
-                org: (angular.isArray(user.organisation) ?
-                    user.organisation[0] : user.organisation) || ''
-              });
+              scope.prefillUser = !(user.generic == 'true');
+              if(scope.prefillUser) {
+                angular.extend(scope.formObj.user, {
+                  lastname: user.surname,
+                  firstname: user.name,
+                  mail: angular.isArray(user.email) ?
+                      user.email[0] : user.email,
+                  org: (angular.isArray(user.organisation) ?
+                      user.organisation[0] : user.organisation) || ''
+                });
+              }
               unregisterUserWatch();
             }
           }, true);
