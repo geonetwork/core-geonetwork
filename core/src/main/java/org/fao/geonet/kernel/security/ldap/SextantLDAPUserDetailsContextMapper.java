@@ -181,8 +181,10 @@ public class SextantLDAPUserDetailsContextMapper extends
 				isSuperAdmin = true;
 				userDetails.setProfile(Profile.Administrator);
 			}
-			if (isSuperAdmin) {
-				break;
+			// SXT mantis issue #27843: if user is in listesiteweb generique,
+			// update the user
+			else if (p.toUpperCase().equals("GENERIQUE")) {
+				userDetails.getUser().setGeneric(true);
 			}
 		}
 

@@ -192,4 +192,16 @@ public class SextantLDAPUserDetailsContextMapperTest {
 		assertTrue(fakeUser.getProfile() == Profile.RegisteredUser);
 	}
 
+	@Test
+	public void testSextantLdapUserDetailsAsGeneric() {
+		LDAPUser fakeUser = new LDAPUser("unknown");
+		Map<String, ArrayList<String>> userInfo;
+		userInfo = getUserInfo("registereduser", "registered@sextant.org", "registereduser", "registereduser", "registereduser", "generique");
+		sxtldapMapper.setProfilesAndPrivileges(Profile.RegisteredUser,"sample", userInfo, fakeUser);
+		// The user is RegisteredUser
+		assertTrue(fakeUser.getProfile() == Profile.RegisteredUser);
+		// the user is "generic"
+		assertTrue("User expected to be generic", fakeUser.getUser().isGeneric());
+	}
+
 }

@@ -42,6 +42,8 @@ public class User extends GeonetEntity implements UserDetails {
     private UserSecurity _security = new UserSecurity();
     private String _lastLoginDate;
     private Boolean _isEnabled;
+    // SXT specific, see https://forge.ifremer.fr/mantis/view.php?id=27843
+    private Boolean isGeneric;
 
     /**
      * Get the userid.   This is a generated value and as such new instances should not have this set as it will simply be ignored
@@ -376,6 +378,15 @@ public class User extends GeonetEntity implements UserDetails {
             this._isEnabled = true;
         }
         return _isEnabled;
+    }
+    
+    @Column(name="isGeneric", columnDefinition="boolean default false")
+    public boolean isGeneric() {
+    	return isGeneric;
+    }
+    public User setGeneric(Boolean generic) {
+    	this.isGeneric = generic;
+    	return this;
     }
 
     public User setEnabled(Boolean enabled) {
