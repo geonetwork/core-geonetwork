@@ -5,15 +5,19 @@
   ]);
 
   module.service('wfsFilterService', [
+    'gnSolrRequestManager',
     'gnHttp',
     'gnUrlUtils',
     'gnGlobalSettings',
     '$http',
     '$q',
     '$translate',
-    function(gnHttp, gnUrlUtils, gnGlobalSettings, $http, $q, $translate) {
+    function(gnSolrRequestManager, gnHttp, gnUrlUtils, gnGlobalSettings,
+             $http, $q, $translate) {
 
       var solrProxyUrl = gnHttp.getService('solrproxy');
+
+      var solrObject = gnSolrRequestManager.register('WfsFilter', 'facets');
 
       var buildSolrUrl = function(params) {
         return gnUrlUtils.append(solrProxyUrl + '/query',
@@ -167,53 +171,6 @@
       };
 
       /**
-       * Get the indexed fields for the given feature. We get an array of both
-       * featureType names and indexed names with the suffix.
-       *
-       * @param {string} featureTypeName featuretype name
-       * @param {string} wfsUrl url of the wfs service
-       * @return {httpPromise} return array of field names
-       */
-      this.getWfsIndexFields = function(featureTypeName, wfsUrl) {
-        var url = buildSolrUrl({
-          rows: 1,
-          q: 'id:"' + wfsUrl + '#' + featureTypeName.replace(':', '\\:') + '"',
-          wt: 'json'
-        });
-
-        var defer = $q.defer();
-        $http.get(url).then(function(response) {
-          var indexInfos = [];
-          try {
-            var ftF = response.data.response.docs[0].ftColumns_s.split('|');
-            var docF = response.data.response.docs[0].docColumns_s.split('|');
-
-            for (var i = 0; i < docF.length; i++) {
-              indexInfos.push({
-                attrName: ftF[i],
-                idxName: docF[i]
-              });
-            }
-          }
-          catch (e) {
-            var msg = $translate('wfsFeatureNotIndexed', {
-              wfsUrl: wfsUrl,
-              featureTypeName: featureTypeName
-            });
-            defer.reject({statusText: msg});
-          }
-          defer.resolve(indexInfos);
-        }, function(r) {
-          if (r.status === 404) {
-            defer.reject({statusText: $translate('indexNotRunning')});
-          } else {
-            defer.reject(r);
-          }
-        });
-        return defer.promise;
-      };
-
-      /**
        * Get the applicationProfile content from the metadata of the given
        * online resource.
        *
@@ -228,41 +185,6 @@
               name: ftName,
               protocol: protocol
             });
-      };
-
-      /**
-       * Build the solr request that will be used for generating the facet ui.
-       * The request is build from features attributes index fields.
-       * This is the generic way used if the application profile is null
-       *
-       * @param {Array} fields array of the field names
-       * @param {string} ftName featuretype name
-       * @param {string} wfsUrl url of the wfs service
-       * @return {string} solr url
-       */
-      this.getSolrRequestFromFields = function(fields, ftName, wfsUrl) {
-        var url = buildSolrUrl({
-          rows: 0,
-          q: 'featureTypeId:"' + wfsUrl + '#' +
-              ftName.replace(':', '\\:') + '"',
-          wt: 'json',
-          facet: 'true',
-          'facet.mincount' : 1
-        });
-
-        // don't build facet on useless fields
-        // * manager field eg. id
-        // * common field irrelevant for facet like the_geom
-        var listOfFieldsToExclude = ['geom', 'the_geom', 'ms_geometry',
-          'msgeometry', 'id_s', '_version_', 'featuretypeid', 'doctype'];
-        angular.forEach(fields, function(field) {
-          var f = field.idxName;
-          var fname = f.toLowerCase();
-          if ($.inArray(fname, listOfFieldsToExclude) === -1) {
-            url += '&facet.field=' + f;
-          }
-        });
-        return url;
       };
 
       /**
@@ -319,7 +241,7 @@
        * @param {array} docFields info of indexed fields.
        * @return {httpPromise} return facet ui config
        */
-      this.getFacetsConfigFromSolr = function(url, docFields) {
+      this.getFacetsConfigFromSolr____ = function(url, docFields) {
 
         return $http.get(url).then(function(solrResponse) {
           return {
@@ -344,7 +266,7 @@
        * @param {string} filter the any filter from input
        * @return {string} the updated url
        */
-      this.updateSolrUrl = function(url, facetState, filter) {
+      this.updateSolrUrl___ = function(url, facetState, filter) {
         var fieldsQ = [];
 
         angular.forEach(facetState, function(field, fieldName) {
