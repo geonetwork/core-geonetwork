@@ -34,37 +34,38 @@
 
   if(typeof sxtSettings != 'undefined') {
     var catModule = angular.module('gn_cat_controller');
-    catModule.config(['gnGlobalSettings',
-      function(gnGlobalSettings) {
-        var lang,
+    catModule.config(['gnGlobalSettings', 'gnLangs',
+      function(gnGlobalSettings, gnLangs) {
+        var iso2lang,
+            iso3lang,
             lCfg = sxtSettings.langDetector;
 
         if(lCfg) {
           if(lCfg.fromHtmlTag) {
-            lang = $('html').attr('lang').substr(0,2);
+            iso2lang = $('html').attr('lang').substr(0,2);
           }
           else if(lCfg.regexp) {
             var res = new RegExp(lCfg.regexp).exec(location.pathname);
             if(angular.isArray(res)) {
-              lang = res[1];
+              iso2lang = res[1];
             }
           }
           else if (lCfg.lang) {
-            lang = lCfg.lang
+            iso2lang = lCfg.lang
           }
-          if(lang == 'fr') lang = 'fre';
-          else if(lang == 'en') lang = 'eng';
-          else lang = '';
+
+          iso3lang = gnLangs.getIso3Lang(iso2lang);
         }
-        lang = lang || 'eng';
+        iso3lang = iso3lang || 'eng';
+
         gnGlobalSettings.locale = {
-          lang: lang.substr(0,2)
+          iso3lang: iso3lang
         };
 
         // ${api.gn.url}
         if(sxtGnUrl) {
           gnGlobalSettings.gnUrl =
-              sxtGnUrl + lang + '/';
+              sxtGnUrl + iso3lang + '/';
         }
         else {
           console.error('The variable sxtGnUrl is not defined !');
