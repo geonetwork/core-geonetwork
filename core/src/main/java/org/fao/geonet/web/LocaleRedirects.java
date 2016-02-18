@@ -57,9 +57,9 @@ public class LocaleRedirects {
         SPECIAL_HEADERS = Collections.unmodifiableSet(headers);
     }
 
-    private String _homeRedirectUrl;
+    private String _homeRedirectUrl = "catalog.search";
 
-    private String _defaultLanguage;
+    private String _defaultLanguage = Geonet.DEFAULT_LANGUAGE;
 
     @RequestMapping(value = "/home")
     public ModelAndView home(final HttpServletRequest request,
@@ -188,38 +188,5 @@ public class LocaleRedirects {
         }
 
         return userLang;
-    }
-
-
-    @Autowired
-    private ApplicationContext _appContext;
-
-    @PostConstruct
-    public void init() throws BeansException {
-        final String configPath = _appContext.getBean("configPath", String.class);
-        final ServletContext servletContext = _appContext.getBean(ServletContext.class);
-        try {
-            final Element guiConfig = ConfigurationOverrides.DEFAULT.loadXmlFileAndUpdate(configPath + "config-gui.xml", servletContext);
-            final String xpath = "client/@url";
-            this._homeRedirectUrl = Xml.selectString(guiConfig, xpath);
-            if (_homeRedirectUrl == null) {
-                throw new FatalBeanException("No redirect URL was found in " + configPath + "config-gui.xml" + " at xpath: " + xpath);
-            }
-        } catch (Exception e) {
-            throw new FatalBeanException("Error loading guiConfig: " + configPath + "config-gui.xml", e);
-        }
-
-        try {
-            final Element config = ConfigurationOverrides.DEFAULT.loadXmlFileAndUpdate(configPath + "config.xml", servletContext);
-            final String xpath = "default/language";
-            this._defaultLanguage = Xml.selectString(config, xpath);
-            if (_defaultLanguage == null) {
-                _defaultLanguage = Geonet.DEFAULT_LANGUAGE;
-            }
-        } catch (Exception e) {
-            throw new FatalBeanException("Error loading config.xml: " + configPath + "config-gui.xml", e);
-        }
-
-
     }
 }

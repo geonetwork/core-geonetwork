@@ -142,7 +142,6 @@
 		<param name="thesauriDir" value="WEB-INF/gsthesauri" />
 		<param name="codeListDir" value="xml/codelist" />
 	    <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
-		<param name="guiConfig" value="WEB-INF/config-gui.xml" />
 		<param name="jzkitConfig" value="JZkitApplicationContext.xml" />
 	</appHandler>
 
