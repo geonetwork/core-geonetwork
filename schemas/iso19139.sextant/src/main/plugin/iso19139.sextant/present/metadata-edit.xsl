@@ -449,18 +449,16 @@
 				
 				<xsl:choose>
 					<xsl:when test="$edit=true()">
-						<xsl:call-template name="complexElementGui">
-							<xsl:with-param name="schema" select="$schema"/>
-							<xsl:with-param name="edit"   select="$edit"/>
-							<xsl:with-param name="title">
-								<xsl:value-of select="string(/root/gui/schemas/iso19139/labels/element[@name='gmd:EX_TemporalExtent']/label)"/>
-							</xsl:with-param>
-							<xsl:with-param name="content">
 
-                <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
-                                        gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/
-                                          gmd:extent/gml:TimePeriod">
+            <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod">
 
+              <xsl:call-template name="complexElementGui">
+                <xsl:with-param name="schema" select="$schema"/>
+                <xsl:with-param name="edit"   select="$edit"/>
+                <xsl:with-param name="title">
+                  <xsl:value-of select="string(/root/gui/schemas/iso19139/labels/element[@name='gmd:EX_TemporalExtent']/label)"/>
+                </xsl:with-param>
+                <xsl:with-param name="content">
 
                   <xsl:apply-templates mode="simpleElement"
                                        select="gml:*/gml:beginPosition">
@@ -503,31 +501,24 @@
                       </xsl:call-template>
                     </xsl:with-param>
                   </xsl:apply-templates>
-                </xsl:for-each>
-								
-							</xsl:with-param>
-							<xsl:with-param name="helpLink">
-								<xsl:call-template name="getHelpLink">
-									<xsl:with-param name="name"   select="name(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod[1])"/>
-									<xsl:with-param name="schema" select="$schema"/>
-								</xsl:call-template>
-							</xsl:with-param>
-							<xsl:with-param name="removeLink">
-								<xsl:variable name="id" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent[gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod]/geonet:element/@uuid"/>
-								<xsl:value-of select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete',$apos,',',gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent[gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod]/geonet:element/@ref,',',gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent[gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod]/geonet:element/@parent,',',$apos,$id,$apos,',',gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent[gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod]/geonet:element/@min,');')"/>
-								<xsl:if test="not(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent[gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod]/geonet:element/@del='true')">
-									<xsl:text>!OPTIONAL</xsl:text>
-								</xsl:if>
-							</xsl:with-param>
-							<xsl:with-param name="id" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent[gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod]/geonet:element/@uuid"/>
-							<xsl:with-param name="validationLink">
-								<xsl:variable name="ref" select="concat('#_',gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent[gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod]/geonet:element/@ref)"/>
-								<xsl:call-template name="validationLink">
-									<xsl:with-param name="ref" select="$ref"/>
-								</xsl:call-template>
-							</xsl:with-param>
-							
-						</xsl:call-template>
+                </xsl:with-param>
+                <xsl:with-param name="removeLink">
+                  <xsl:variable name="id" select="geonet:element/@uuid"/>
+                  <xsl:value-of select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete',$apos,',', geonet:element/@ref,',', geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
+                  <xsl:if test="not(geonet:element/@del='true')">
+                    <xsl:text>!OPTIONAL</xsl:text>
+                  </xsl:if>
+                </xsl:with-param>
+                <xsl:with-param name="id" select="geonet:element/@uuid"/>
+                <xsl:with-param name="validationLink">
+                  <xsl:variable name="ref" select="concat('#_', geonet:element/@ref)"/>
+                  <xsl:call-template name="validationLink">
+                    <xsl:with-param name="ref" select="$ref"/>
+                  </xsl:call-template>
+                </xsl:with-param>
+
+              </xsl:call-template>
+            </xsl:for-each>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="complexElementGui">
