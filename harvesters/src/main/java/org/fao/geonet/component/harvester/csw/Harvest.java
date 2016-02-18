@@ -853,6 +853,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                     settingManager.getValue("system/feedback/mailServer/username"), 
                     settingManager.getValue("system/feedback/mailServer/password"), 
                     settingManager.getValueAsBool("system/feedback/mailServer/ssl"), 
+                    settingManager.getValueAsBool("system/feedback/mailServer/tls"),
                     "noreply@geonetwork.org",
                     "GeoNetwork CSW Server", to, null, "Asynchronous CSW Harvest results delivery", harvestResponse);
         }
