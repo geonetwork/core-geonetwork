@@ -40,8 +40,18 @@ import java.util.Map;
 /**
  * Created by fgravin on 11/5/15.
  */
-public class WFSHarvesterExchangeState extends WFSHarvesterParameter {
+public class WFSHarvesterExchangeState {
     Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
+
+    private WFSHarvesterParameter parameters;
+
+    public WFSHarvesterParameter getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(WFSHarvesterParameter parameters) {
+        this.parameters = parameters;
+    }
 
     private Map<String, String> fields = new LinkedHashMap<String, String>();
 
@@ -64,23 +74,19 @@ public class WFSHarvesterExchangeState extends WFSHarvesterParameter {
     }
 
     WFSHarvesterExchangeState(WFSHarvesterParameter parameters) {
-        this.setUrl(parameters.getUrl());
-        this.setTypeName(parameters.getTypeName());
-        this.setMetadataUuid(parameters.getMetadataUuid());
-        this.setTokenize(parameters.getTokenize());
-
+        this.parameters = parameters;
         checkTaskParameters();
     }
 
 
     private void checkTaskParameters() {
         logger.info("Checking parameters ...");
-        if (StringUtils.isEmpty(getUrl())) {
+        if (StringUtils.isEmpty(parameters.getUrl())) {
             String errorMsg = "Empty WFS server URL is not allowed.";
             logger.error(errorMsg);
             throw new IllegalArgumentException(errorMsg);
         }
-        if (StringUtils.isEmpty(getTypeName())) {
+        if (StringUtils.isEmpty(parameters.getTypeName())) {
             String errorMsg = "Empty WFS type name is not allowed.";
             logger.error(errorMsg);
             throw new IllegalArgumentException(errorMsg);
@@ -102,23 +108,26 @@ public class WFSHarvesterExchangeState extends WFSHarvesterParameter {
 
         try {
             String getCapUrl = OwsUtils.getGetCapabilitiesUrl(
-                    getUrl(), getVersion());
+                    parameters.getUrl(), parameters.getVersion());
             logger.info(String.format(
                     "Connecting using GetCatapbilities URL '%s'.",
                     getCapUrl));
 
             m.put(WFSDataStoreFactory.URL.key, getCapUrl);
-            m.put(WFSDataStoreFactory.TIMEOUT.key, getTimeOut());
+            m.put(WFSDataStoreFactory.TIMEOUT.key, parameters.getTimeOut());
             m.put(WFSDataStoreFactory.TRY_GZIP, true);
-            m.put(WFSDataStoreFactory.MAXFEATURES.key, getMaxFeatures());
-            m.put(WFSDataStoreFactory.ENCODING, getEncoding());
+            m.put(WFSDataStoreFactory.ENCODING, parameters.getEncoding());
+            m.put(WFSDataStoreFactory.USEDEFAULTSRS, false);
+            if (parameters.getMaxFeatures() != -1) {
+                m.put(WFSDataStoreFactory.MAXFEATURES.key, parameters.getMaxFeatures());
+            }
 
             wfsDatastore = factory.createDataStore(m);
 
             logger.info(String.format(
                     "Reading feature type '%s' schema structure.",
-                    getTypeName()));
-            SimpleFeatureType sft = wfsDatastore.getSchema(getTypeName());
+                    parameters.getTypeName()));
+            SimpleFeatureType sft = wfsDatastore.getSchema(parameters.getTypeName());
             List<AttributeDescriptor> attributesDesc = sft.getAttributeDescriptors();
 
             for (AttributeDescriptor desc : attributesDesc) {
@@ -129,13 +138,13 @@ public class WFSHarvesterExchangeState extends WFSHarvesterParameter {
                     "Successfully analyzed %d attributes in schema.", fields.size()));
         } catch (IOException e) {
             String errorMsg = String.format(
-                    "Failed to create datastore from service using URL '%s'. Error is %s.", getUrl(), e.getMessage());
+                    "Failed to create datastore from service using URL '%s'. Error is %s.", parameters.getUrl(), e.getMessage());
             logger.error(errorMsg);
             throw e;
         } catch (Exception e) {
             String errorMsg = String.format(
                     "Failed to GetCatpabilities from service using URL '%s'. Error is %s.",
-                    getUrl(), e.getMessage());
+                    parameters.getUrl(), e.getMessage());
             logger.error(errorMsg);
             throw e;
         }

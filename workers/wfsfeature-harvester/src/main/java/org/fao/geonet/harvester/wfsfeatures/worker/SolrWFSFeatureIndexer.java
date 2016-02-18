@@ -33,6 +33,7 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.geotools.data.FeatureSource;
+import org.geotools.data.Query;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
@@ -42,6 +43,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.filter.Filter;
 import org.opengis.metadata.extent.Extent;
 import org.opengis.metadata.extent.GeographicBoundingBox;
 import org.opengis.metadata.extent.GeographicExtent;
@@ -190,8 +192,8 @@ public class SolrWFSFeatureIndexer {
     public void indexFeatures(Exchange exchange) throws Exception {
         WFSHarvesterExchangeState state = (WFSHarvesterExchangeState) exchange.getProperty("featureTypeConfig");
 
-        final String url = state.getUrl();
-        final String typeName = state.getTypeName();
+        final String url = state.getParameters().getUrl();
+        final String typeName = state.getParameters().getTypeName();
         logger.info(String.format(
                 "Indexing WFS features from service '%s' and feature type '%s'",
                 url, typeName));
@@ -204,7 +206,7 @@ public class SolrWFSFeatureIndexer {
         harvesterReportFields.put("id", url + "#" + typeName);
         harvesterReportFields.put("docType", "harvesterReport");
 
-        final Map<String, String> tokenizedFields = state.getTokenize();
+        final Map<String, String> tokenizedFields = state.getParameters().getTokenize();
         final boolean hasTokenizedFields = tokenizedFields != null;
 
         List<String> docColumns = new ArrayList<>(fields.size());
@@ -223,10 +225,14 @@ public class SolrWFSFeatureIndexer {
         }
         harvesterReportFields.put("ftColumns_s", Joiner.on("|").join(fields.keySet()));
         harvesterReportFields.put("docColumns_s", Joiner.on("|").join(docColumns));
+        if (state.getParameters().getMetadataUuid() != null) {
+            harvesterReportFields.put("parent", state.getParameters().getMetadataUuid());
+        }
+
+        CoordinateReferenceSystem wgs84 = CRS.decode("EPSG:4326");
 
         try {
             FeatureSource<SimpleFeatureType, SimpleFeature> source = wfs.getFeatureSource(typeName);
-            CoordinateReferenceSystem wgs84 = CRS.decode("EPSG:4326");
             Extent crsExtent = wgs84.getDomainOfValidity();
             ReferencedEnvelope wgs84bbox = null;
             for (GeographicExtent element : crsExtent.getGeographicElements()) {
@@ -237,13 +243,20 @@ public class SolrWFSFeatureIndexer {
                             bounds.getNorthBoundLatitude(),
                             bounds.getWestBoundLongitude(),
                             bounds.getEastBoundLongitude(),
-                            CRS.decode("EPSG:4326")
+                            wgs84
                     );
                 }
             }
 
-            // TODO : retrieve features in WGS 84
-            FeatureCollection<SimpleFeatureType, SimpleFeature> featuresCollection = source.getFeatures();
+
+            // TODO: GeoServer WFS 1.0.0 in some case return
+//            Feb 18, 2016 12:04:22 PM org.geotools.data.wfs.v1_0_0.NonStrictWFSStrategy createFeatureReaderGET
+//            WARNING: java.io.IOException: org.xml.sax.SAXException: cannot merge two target namespaces. http://www.openplans.org/topp http://www.openplans.org/spearfish
+            // Retrieve features in WGS 84
+            Query query = new Query();
+            query.setCoordinateSystem(wgs84);
+
+            FeatureCollection<SimpleFeatureType, SimpleFeature> featuresCollection = source.getFeatures(query);
             boolean isWGS84 = CRS.lookupEpsgCode(source.getBounds().getCoordinateReferenceSystem(), false) == 4326;
 
             final FeatureIterator<SimpleFeature> features = featuresCollection.features();
@@ -257,14 +270,16 @@ public class SolrWFSFeatureIndexer {
 
                 document.addField("id", feature.getID());
                 document.addField("docType", "feature");
+                document.addField("resourceType", "feature");
                 document.addField("featureTypeId", url + "#" + typeName);
+                if (state.getParameters().getMetadataUuid() != null) {
+                    document.addField("parent", state.getParameters().getMetadataUuid());
+                }
 
                 for (String attributeName : fields.keySet()) {
                     String attributeType = fields.get(attributeName);
                     Object attributeValue = feature.getAttribute(attributeName);
 
-                    // TODO : tokenize
-                    // state.getTokenize();
                     if (attributeValue != null) {
                         if (attributeType.equals("geometry")) {
 //                            !CRS.equalsIgnoreMetadata(

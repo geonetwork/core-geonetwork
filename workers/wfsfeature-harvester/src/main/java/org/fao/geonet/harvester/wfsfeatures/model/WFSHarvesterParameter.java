@@ -19,9 +19,11 @@ public class WFSHarvesterParameter implements Serializable {
 
     private int timeOut = 60000;
 
-    private int maxFeatures = 2000;
+    private int maxFeatures = -1;
 
     private String encoding = "UTF-8";
+
+    private String crs = "EPSG:4326";
 
     public WFSHarvesterParameter () {}
     public WFSHarvesterParameter (String url, String typeName, String metadataUuid) {
@@ -125,4 +127,12 @@ public class WFSHarvesterParameter implements Serializable {
     }
 
     private static final long serialVersionUID = 7526471155622776147L;
+
+    public String getCrs() {
+        return crs;
+    }
+
+    public void setCrs(String crs) {
+        this.crs = crs;
+    }
 }
