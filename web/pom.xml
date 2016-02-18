@@ -630,53 +630,12 @@
               </includes>
               <targetPath>WEB-INF/data/config/schema_plugins</targetPath>
             </resource>
-            <!--
-            Enable to use ExtJS UI
-            <resource>
-              <directory>${project.basedir}/../web-client/src/main/resources</directory>
-            </resource>-->
             <resource>
                   <directory>${project.basedir}/../web-ui/src/main/resources</directory>
             </resource>
             <resource>
               <directory>${build.webapp.resources}</directory>
             </resource>
-
-            <!-- Remove comment tag to include documentation in the build. 
-            Python and Latex are required to build the documentation. -->
-            
-            <!--
-            <resource>
-              <directory>${rootProjectDir}/docs/eng/users/build/html</directory>
-              <targetPath>docs/eng/users</targetPath>
-            </resource>
-            <resource>
-              <directory>${rootProjectDir}/docs/eng/users/build/latex</directory>
-              <targetPath>docs/eng/users</targetPath>
-               <includes>
-                <include>GeoNetworkUserManual.pdf</include>
-              </includes>
-            </resource>
-            <resource>
-            <directory>${rootProjectDir}/docs/eng/developer/build/html</directory>
-              <targetPath>docs/eng/developer</targetPath>
-            </resource>  
-            <resource>
-              <directory>${rootProjectDir}/docs</directory>
-              <targetPath>docs</targetPath>
-               <includes>
-                <include>changes.txt</include>
-                <include>license*.html</include>
-                <include>readme*.html</include>
-              </includes>
-            </resource>
-            <resource>
-              <directory>${rootProjectDir}/docs/eng/developer/build/latex</directory>
-              <targetPath>docs/eng/developer</targetPath>
-                <includes>
-                  <include>GeoNetworkDeveloperManual.pdf</include>
-                </includes>
-            </resource>-->
           </webResources>
             <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
             <packagingExcludes>
@@ -726,12 +685,6 @@
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-           <!--
-              Enable to use ExtJS UI
-              Add
-              ${rootProjectDir}/web-client/src/main/resources/
-              to resourcesAsCSV
-            -->
             <resourcesAsCSV>
               ${project.basedir}/src/main/webapp,
               ${rootProjectDir}/web-ui/src/main/resources/,
