@@ -62,7 +62,7 @@
   <metadataPointOfContact>Point de contact des métadonnées</metadataPointOfContact>
   <organisationName>Nom de l'organisation</organisationName>
   <individualName>Nom de la personne</individualName>
-  <electronicMailAddress>Email de l'organisation</electronicMailAddress>
+  <electronicMailAddress>Adresse email</electronicMailAddress>
   <role>Rôle</role>
   <encoding>Encodage</encoding>
   <serviceCategory>Catégorie de service</serviceCategory>
@@ -237,6 +237,11 @@
 
   <!-- Sextant -->
   <sextant>Sextant</sextant>
+  <sextant-title>Titre</sextant-title>
+  <sextant-abstract>Résumé</sextant-abstract>
+  <sextant-identifier>Identifiant</sextant-identifier>
+  <sextant-theme>Thème Sextant</sextant-theme>
+  <sextant-date-resource>Date de la donnée</sextant-date-resource>
   <sextant-identification>Identification</sextant-identification>
   <sextant-contact>Contacts</sextant-contact>
   <sextant-spatial>Références spatiales &amp; tempo.</sextant-spatial>

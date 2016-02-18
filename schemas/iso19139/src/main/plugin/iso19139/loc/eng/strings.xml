@@ -232,6 +232,11 @@
 
   <!-- Sextant -->
   <sextant>Sextant</sextant>
+  <sextant-title>Title</sextant-title>
+  <sextant-abstract>Abstract</sextant-abstract>
+  <sextant-identifier>Identifier</sextant-identifier>
+  <sextant-theme>Sextant Theme</sextant-theme>
+  <sextant-date-resource>Resource date</sextant-date-resource>
   <sextant-identification>Identification</sextant-identification>
   <sextant-contact>Contacts</sextant-contact>
   <sextant-spatial>Spatial &amp; temporal ref.</sextant-spatial>

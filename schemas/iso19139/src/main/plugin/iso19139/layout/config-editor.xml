@@ -257,11 +257,14 @@
       </thesaurusList>
       <tab id="sextant-identification" mode="flat" default="true">
         <section name="sextantidentificationTitle">
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"
+                 name="sextant-title"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"
+                 name="sextant-abstract"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code"
+                 name="sextant-identifier"/>
 
-          <action type="add" name="identifier" or="identifier"
+          <action type="add" name="sextant-identifier" or="identifier"
                   in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation"
                   if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier) = 0">
             <template>
@@ -282,7 +285,8 @@
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date"
                  or="date"
-                 in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*"/>
+                 in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*"
+                 name="sextant-date-resource"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator"
@@ -295,7 +299,10 @@
 
         <section name="sextantkeywordTitle">
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:topicCategory"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName]"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.local.theme.sextant-theme']"
+                 name="sextant-theme"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.external.theme.inspire-theme']"
+                 name="inspireTheme"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]"
                  or="descriptiveKeywords"
                  in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>

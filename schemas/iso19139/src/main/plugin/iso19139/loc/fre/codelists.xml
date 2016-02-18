@@ -1337,7 +1337,7 @@
             editorMode="radio"
             displayIf="ancestor::node()[
               name()='gmd:MD_Metadata' and
-              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
+              contains(gmd:metadataStandardName/gco:CharacterString, 'SEXTANT')]">
     <entry>
       <code>dataset</code>
       <label>Dataset</label>
@@ -1348,6 +1348,11 @@
       <code>series</code>
       <label>Series</label>
       <description>Information applies to the series</description>
+    </entry>
+    <entry>
+      <code>service</code>
+      <label>Service</label>
+      <description>Informations appliquées à un service Internet</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>

@@ -106,6 +106,7 @@
 		organisation name and email address as defined in metadata IR.
 		ie. less fields than in GeoNetwork default behaviour.-->
 	<field name="gmd:CI_ResponsibleParty">
+		<suggest name="gmd:individualName"/>
 		<suggest name="gmd:organisationName"/>
 		<suggest name="gmd:contactInfo"/>
 	</field>
