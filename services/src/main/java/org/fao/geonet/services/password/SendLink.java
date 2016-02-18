@@ -53,7 +53,7 @@ import java.util.Calendar;
 /**
  * Send change password link email
  */
-
+@Deprecated
 public class SendLink extends MailSendingService {
 
 	// --------------------------------------------------------------------------

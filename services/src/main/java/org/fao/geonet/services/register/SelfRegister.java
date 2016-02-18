@@ -58,6 +58,7 @@ import org.springframework.security.crypto.keygen.StringKeyGenerator;
 /**
  * Register user.
  */
+@Deprecated
 public class SelfRegister extends NotInReadOnlyModeService {
 
 	private static final String PROFILE_TEMPLATE = "profileTemplate";

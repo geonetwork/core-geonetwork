@@ -289,7 +289,7 @@
   "KMLfileURL":"URL of a KML file",
   "refineSearch" : "Refine Search",
   "backToList": "Back To List",
-  "privilegesBatchAlert": "The privileges will be updated for all selected records. The privilege form is empty and does not reflect the selected records current privileges!",
+  "privilegesBatchAlert": "The privileges will be updated for all editable records in the selection. The privilege form is empty and does not reflect the selected records current privileges! Privileges are reset and replaced by the new one.",
   "permalink" : "Permalink",
   "zoomto": "Zoom To",
   "recordNotFound": "The record with identifier <strong>{{uuid}}</strong> was not found or is not shared with you",
