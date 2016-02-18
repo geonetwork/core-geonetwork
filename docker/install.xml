@@ -3,7 +3,7 @@
 <com.izforge.izpack.panels.HelloPanel id="helloPanel"/>
 <com.izforge.izpack.panels.HTMLLicencePanel id="htmlLicensePanel"/>
 <com.izforge.izpack.panels.TargetPanel id="targetPanel">
-<installpath>/opt/geonetwork303</installpath>
+<installpath>/opt/geonetwork</installpath>
 </com.izforge.izpack.panels.TargetPanel>
 <com.izforge.izpack.panels.PacksPanel id="packsPanel">
 <pack index="0" name="Core" selected="true"/>

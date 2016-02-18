@@ -1,14 +1,14 @@
+#This Dockerfile is not working yet due to problems with the GeoNetwork installer itself.
+
 #to build this docker image run: docker build -t geonetwork-geonetwork -f DockerfileInstaller .
 #to run the image run: docker run geonetwork-geonetwork
 
-#FROM tomcat:8.0
+FROM java:8
 MAINTAINER Jeroen Ticheler<jeroen.ticheler@geocat.net>
 
 RUN  export DEBIAN_FRONTEND=noninteractive
 ENV  DEBIAN_FRONTEND noninteractive
 RUN  dpkg-divert --local --rename --add /sbin/initctl
-
-#ADD 71-apt-cacher-ng /etc/apt/apt.conf.d/71-apt-cacher-ng
 
 RUN apt-get -y update
 
@@ -20,16 +20,14 @@ RUN if [ ! -f geonetwork.jar ]; then \
 	wget -O geonetwork.jar http://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v3.0.3/geonetwork-install-3.0.3-0.jar/download; \
 	fi; 
 	
-RUN if [ ! install.xml ]; then \
-	wget -O install.xml https://raw.githubusercontent.com/geonetwork/core-geonetwork/develop/docker/install.xml; \
-	fi; 
+RUN	wget -O install.xml https://raw.githubusercontent.com/geonetwork/core-geonetwork/develop/docker/install.xml
 	
 RUN java -jar geonetwork.jar install.xml	
 
 WORKDIR /opt/geonetwork/bin
 
-#ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xms48m -Xss2M -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC"
-#ENV JAVA_HOME /usr/
+ENV GEOSERVER_DATA_DIR="/opt/geonetwork/web/geonetwork/data/geoserver_data"
 
-CMD /opt/geonetwork/bin/startup.sh"
+#CMD "/opt/geonetwork/bin/startup.sh"
+
 EXPOSE 8080
