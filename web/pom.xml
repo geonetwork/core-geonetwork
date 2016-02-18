@@ -900,7 +900,7 @@
 
     <!-- Sextant configuration profile -->
     <profile>
-      <id>ifr-visi1-sextant5</id>
+      <id>ifr-visi-sxt</id>
       <activation>
         <property>
           <name>env</name>
@@ -909,7 +909,7 @@
       </activation>
       <properties>
         <env>prod</env>
-        <server>ifr-visi1-sextant5</server>
+        <server>ifr-visi-sxt</server>
         <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
         <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
       </properties>

@@ -10,23 +10,20 @@
 
   module.constant('$LOCALES', ['core']);
 
-  module.factory('localeLoader', ['$http', '$q',
-    function($http, $q) {
+  module.factory('localeLoader', ['$http', '$q', 'gnLangs',
+    function($http, $q, gnLangs) {
     return function(options) {
 
       function buildUrl(prefix, lang, value, suffix) {
         if (value.indexOf('/') === 0) {
           return value.substring(1);
         } else {
-          return prefix + lang.substring(0, 2) + '-' + value + suffix;
+          return prefix + gnLangs.getIso2Lang(lang) + '-' + value + suffix;
         }
       };
       var allPromises = [];
       angular.forEach(options.locales, function(value, index) {
-        // Hack for API - To be fixed
-        if (options.key == 'sextant') {
-          options.key = 'fre';
-        }
+
         var langUrl = buildUrl(options.prefix, options.key,
             value, options.suffix);
 
@@ -64,17 +61,17 @@
 
   // TODO: could be improved instead of putting this in all main modules ?
   module.config(['$translateProvider', '$LOCALES', 'gnGlobalSettings',
-    function($translateProvider, $LOCALES, gnGlobalSettings) {
+    'gnLangs',
+    function($translateProvider, $LOCALES, gnGlobalSettings, gnLangs) {
       $translateProvider.useLoader('localeLoader', {
         locales: $LOCALES,
         prefix: (gnGlobalSettings.locale.path || '../../') + 'catalog/locales/',
         suffix: '.json'
       });
 
-      gnGlobalSettings.iso3lang =
-        location.href.split('/')[5] || 'eng';
-      gnGlobalSettings.lang = gnGlobalSettings.locale.lang ||
-        gnGlobalSettings.iso3lang.substring(0, 2);
+      gnGlobalSettings.iso3lang = gnGlobalSettings.locale.iso3lang ||
+          location.href.split('/')[5] || 'eng';
+      gnGlobalSettings.lang = gnLangs.getIso2Lang(gnGlobalSettings.iso3lang);
       $translateProvider.preferredLanguage(gnGlobalSettings.iso3lang);
       moment.lang(gnGlobalSettings.lang);
     }]);

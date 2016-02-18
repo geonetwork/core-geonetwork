@@ -126,37 +126,6 @@
         controls: []
       });
 
-      var projection = ol.proj.get('EPSG:3857');
-      var projectionExtent = projection.getExtent();
-      var size = ol.extent.getWidth(projectionExtent) / 256;
-      var resolutions = new Array(16);
-      var matrixIds = new Array(16);
-      for (var z = 0; z < 16; ++z) {
-        resolutions[z] = size / Math.pow(2, z);
-        matrixIds[z] = 'EPSG:3857:' + z;
-      }
-
-      // Sextant WMTS
-      /*var searchLayer = new ol.layer.Tile({
-        opacity: 0.7,
-        extent: projectionExtent,
-        title: 'Sextant',
-        source: new ol.source.WMTS({
-          url: 'http://sextant.ifremer.fr/' +
-              'geowebcache/service/wmts?',
-          layer: 'sextant',
-          matrixSet: 'EPSG:3857',
-          format: 'image/png',
-          projection: projection,
-          tileGrid: new ol.tilegrid.WMTS({
-            origin: ol.extent.getTopLeft(projectionExtent),
-            resolutions: resolutions,
-            matrixIds: matrixIds
-          }),
-          style: 'default'
-        })
-      });*/
-
       var searchMap = new ol.Map({
         layers: [
           new ol.layer.Tile({
@@ -169,6 +138,17 @@
           zoom: 0
         })
       });
+
+      //Fix change view contraints
+      //TODO: Wait for fix in ol3: https://github.com/openlayers/ol3/issues/4265
+      if(mapsConfig.extent) {
+        var view = viewerMap.getView();
+        view.on('change:center', function(e) {
+          if(!ol.extent.containsCoordinate(mapsConfig.extent, view.getCenter())) {
+            view.setCenter(view.constrainCenter(view.getCenter()));
+          }
+        });
+      }
 
       /** Main tabs configuration */
       searchSettings.mainTabs = {

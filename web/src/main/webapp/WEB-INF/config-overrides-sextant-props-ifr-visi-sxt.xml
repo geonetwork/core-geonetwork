@@ -1,5 +1,5 @@
 <overrides>
-	<properties>
+  <properties>
     <widget.url>../../apps/sextant/index_debug.html</widget.url>
     <widget.parameters>hl=fre</widget.parameters>
   </properties>
