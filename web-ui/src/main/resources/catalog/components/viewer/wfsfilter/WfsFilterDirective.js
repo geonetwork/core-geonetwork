@@ -258,7 +258,7 @@
                 // Usually return 414 Request-URI Too Large
                 var useSldBody = false;
                 if (useSldBody) {
-                  $http.get(sldURL).then(function (response) {
+                  $http.get(sldURL).then(function(response) {
                     scope.layer.getSource().updateParams({
                       SLD_BODY: response.data
                     });
@@ -286,12 +286,14 @@
                 return wfsFilterService.indexWFSFeatures(
                     scope.url,
                     ftName,
-                    scope.appProfile.tokenize);
+                    scope.appProfile.tokenize,
+                    uuid);
               }, function() {
                 return wfsFilterService.indexWFSFeatures(
                     scope.url,
                     ftName,
-                    null
+                    null,
+                    uuid
                 );
               });
             } else {
@@ -299,7 +301,8 @@
                   scope.url,
                   ftName,
                   scope.appProfile && scope.appProfile.tokenize ?
-                  scope.appProfile.tokenize : null
+                  scope.appProfile.tokenize : null,
+                  uuid
               );
             }
           };
