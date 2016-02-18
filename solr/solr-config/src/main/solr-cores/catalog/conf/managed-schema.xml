@@ -124,6 +124,10 @@
     -->
   <field name="docType" type="string" indexed="true" stored="true" required="true" multiValued="false" />
   <field name="featureTypeId" type="string" indexed="true" stored="true" required="false" multiValued="false" />
+  <!-- Type of resources: feature, dataset, services, maps, ... -->
+  <field name="resourceType" type="string" indexed="true" stored="true" required="false" multiValued="true" />
+  <!-- Parent document eg. a metadata record for a feature -->
+  <field name="parent" type="string" indexed="true" stored="true" required="false" multiValued="true" />
 
     <!-- Feature indexing coming from WFS are using dynamic field name. -->
     <field name="geom"  type="location_rpt" indexed="true" stored="true" multiValued="true"/>
