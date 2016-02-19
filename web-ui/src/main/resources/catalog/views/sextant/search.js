@@ -116,7 +116,7 @@
       $scope.layerTabs = gnSearchSettings.layerTabs;
       $scope.gnMetadataActions = gnMetadataActions;
 
-      var localStorage = $window.localStorage || {};
+      gnViewerSettings.storage = 'sessionStorage';
 
 
       $scope.gnUrl = gnGlobalSettings.gnUrl || '';
