@@ -161,28 +161,6 @@
   }
 }
 
-@media (max-width: @screen-sm-max) {
-  .gn-resultview {
-    clear: both;
-  }
-  #sxt-tabswitcher,
-  .sxt-searchform-content {
-    display: none;
-  }
-  .row .sxt-left-panel {
-    float: none;
-    width: 100%;
-    .sxt-reset-btn {
-      bottom: -2.6em;
-    }
-  }
-  .row .sxt-center-panel {
-    margin-top: 3em;
-    float: none;
-    width: 100%;
-  }
-}
-
 .fsxt {
   font-family: Sextant;
   font-size: 14px;
@@ -275,6 +253,48 @@
     font-size: 11px;
   }
 
+}
+
+@media (max-width: @screen-sm-max) {
+  .gn-resultview {
+    clear: both;
+  }
+  .sxt-main-tabs {
+    height: 6em;
+  }
+  [sxt-main-viewer] {
+    .main-tools,
+    .search-container {
+      top: 3.5em;
+    }
+  }
+  [sxt-panier].sxt-panier {
+    .sxt-main-tabs .sxt-download-btn {
+      top: 3.8em;
+    }
+  }
+  #sxt-tabswitcher {
+    display: block;
+    position: absolute;
+    top: -0.8em;
+    left: 50%;
+    margin-left: -12em;
+  }
+  .sxt-searchform-content {
+    display: none;
+  }
+  .row .sxt-left-panel {
+    float: none;
+    width: 100%;
+    .sxt-reset-btn {
+      bottom: -2.6em;
+    }
+  }
+  .row .sxt-center-panel {
+    margin-top: 3em;
+    float: none;
+    width: 100%;
+  }
 }
 
 .sxt-side-btn {
