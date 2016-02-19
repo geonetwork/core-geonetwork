@@ -33,7 +33,7 @@
          data-ng-if="user.canEditRecord(md) && user.isEditorOrMore()"
          data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
          title="{{'privileges' | translate}}">
-        <i class="fa text-muted"
+        <i class="fa text-muted" data-ng-style="{'color': (md.draft == 'Y'? 'orange' : '')}"
            data-ng-class="md.isPublished() ? 'fa-unlock' : 'fa-lock'"></i>
       </a>
     </td>
