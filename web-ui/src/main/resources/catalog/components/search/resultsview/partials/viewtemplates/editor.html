@@ -11,11 +11,11 @@
            title="{{('isTemplate' + md.isTemplate) | translate}} ({{('validStatus-' + md.valid) | translate}})"></i>
       </span>
       <a href=""
-         data-ng-show="md.isTemplate != 's' && !md.draft"
+         data-ng-show="md.isTemplate != 's' && md.draft != 'Y'"
            data-ng-href="catalog.search#/metadata/{{md.getUuid()}}"
            title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
       <a href=""
-         data-ng-show="md.isTemplate != 's' && md.draft"
+         data-ng-show="md.isTemplate != 's' && md.draft == 'Y'"
            data-ng-href="catalog.search#/draft/{{md.getUuid()}}"
            title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
       <span data-ng-show="md.isTemplate == 's'">{{md.title || md.defaultTitle}}</span>

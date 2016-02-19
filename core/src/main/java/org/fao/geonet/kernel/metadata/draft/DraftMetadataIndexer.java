@@ -253,6 +253,9 @@ public class DraftMetadataIndexer extends DefaultMetadataIndexer {
                 }
 
                 fullMd = mdDraftRepository.findOne(id$);
+                
+                if(fullMd == null)
+                    return;
 
                 final String schema = fullMd.getDataInfo().getSchemaId();
                 final String createDate = fullMd.getDataInfo().getCreateDate()

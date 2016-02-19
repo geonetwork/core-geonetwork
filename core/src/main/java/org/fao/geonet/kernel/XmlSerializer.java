@@ -139,6 +139,9 @@ public abstract class XmlSerializer {
 
 	        metadata = _metadataDraftRepository.findOne(id);
 		}
+		
+		if(metadata == null) 
+		    return null;
 
         return removeHiddenElements(isIndexingTask, metadata);
 	}

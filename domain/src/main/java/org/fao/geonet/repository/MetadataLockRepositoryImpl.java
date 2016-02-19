@@ -56,6 +56,7 @@ public class MetadataLockRepositoryImpl
      */
     @Override
     public boolean isLocked(String id, User user) {
+        _entityManager.flush();
         removeOldLocks();
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<MetadataLock> cquery = cb.createQuery(MetadataLock.class);

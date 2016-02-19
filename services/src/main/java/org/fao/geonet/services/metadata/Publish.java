@@ -335,16 +335,16 @@ public class Publish {
                             .getBean(MetadataRepository.class);
                     Metadata md = mdRepository.findOneByUuid(draft.getUuid());
 
+                    // Remove the draft
+                    manager.deleteMetadata(serviceContext,
+                            Integer.toString(draft.getId()));
+                    
                     // Copy the draft content to the published metadata
                     manager.updateMetadata(serviceContext,
                             Integer.toString(md.getId()), draft.getXmlData(false),
                             false, false, true, "", draft.getDataInfo()
                                     .getChangeDate().getDateAndTime(),
                             false);
-                    
-                    // Remove the draft
-                    manager.deleteMetadata(serviceContext,
-                            Integer.toString(draft.getId()));
                 }
                 toIndex.add(mdId);
                 report.incPublished();
