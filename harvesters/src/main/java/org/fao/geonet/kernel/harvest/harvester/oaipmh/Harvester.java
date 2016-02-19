@@ -349,6 +349,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
+        dataMan.flush();
+        
         dataMan.indexMetadata(id, Math.random() < 0.01);
 		result.addedMetadata++;
 	}
