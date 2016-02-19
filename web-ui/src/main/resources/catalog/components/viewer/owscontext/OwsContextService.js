@@ -325,13 +325,15 @@
        * @param {ol.Map} map object
        */
       this.saveToLocalStorage = function(map) {
+        var storage = gnViewerSettings.storage ?
+          window[gnViewerSettings.storage] : window.localStorage;
         if (map.getSize()[0] == 0 || map.getSize()[1] == 0) {
           // don't save a map which has not been rendered yet
           return;
         }
         var xml = this.writeContext(map);
         var xmlString = (new XMLSerializer()).serializeToString(xml);
-        window.localStorage.setItem('owsContext', xmlString);
+        storage.setItem('owsContext', xmlString);
       };
 
       /**
