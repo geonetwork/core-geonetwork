@@ -12,6 +12,17 @@
 
   <xsl:include href="layout-custom-fields-keywords.xsl"/>
   
+  <xsl:template mode="mode-iso19139" priority="2002" match="gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor[/root/gui/currTab/text()='inspire_sds']">
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label" select="''" />
+      <xsl:with-param name="value" select="@xlink:title" />
+      <xsl:with-param name="name" select="gn:element/@ref" />
+      <xsl:with-param name="cls" select="local-name()" />
+      <xsl:with-param name="editInfo" select="../../../gn:element" />
+      <xsl:with-param name="isDisabled" select="false()" />
+    </xsl:call-template>
+  </xsl:template>
+  
   <xsl:template mode="mode-iso19139" priority="2002" match="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency[/root/gui/currTab/text()='inspire_sds']">
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label" select="gmd:nameOfMeasure/gmx:Anchor/text()" />

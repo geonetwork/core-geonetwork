@@ -1478,6 +1478,34 @@
 
           <!-- CONFORMITY CLASS 2 -->
           <section name="inspire_sds_cc2">
+          
+          <section name="crsSelectionWindowTitle">
+              <field xpath="gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor"
+                  del="." />
+                <!-- The useXmlSnippet="true" attribute is a workaround to keep backward compatibility since often
+                     the data-gn-crs-selector directive is used specifying a snippet as below although the developer wanted
+                     to use the hardcoded snipped in EditorXMLService.js. We need a way to specify if we really want
+                     to use the snippet below. The attribute is used in the template render-element-template-field located in form-builder.xsl-->
+                <action type="add" name="rsIdentifier" addDirective="data-gn-crs-selector" useXmlSnippet="true"
+                  or="referenceSystemInfo" in="/gmd:MD_Metadata">
+                    <template>
+                      <snippet>
+                        <gmd:referenceSystemInfo>
+                            <gmd:MD_ReferenceSystem>
+                               <gmd:referenceSystemIdentifier>
+                                    <gmd:RS_Identifier>
+                                        <gmd:code>
+                                            <gmx:Anchor xlink:href='http://www.opengis.net/def/crs/EPSG/0/{{code}}'
+                                                        xlink:title='{{description}}'>{{code}}</gmx:Anchor>
+                                        </gmd:code>
+                                    </gmd:RS_Identifier>
+                                </gmd:referenceSystemIdentifier>
+                            </gmd:MD_ReferenceSystem>
+                        </gmd:referenceSystemInfo>
+                      </snippet>
+                    </template>
+                  </action>
+              </section>
 
               <!-- 4.5.2 Ensure gmd:DQ_ConceptualConsistency mandatory elements for quality of service exists -->
               <action type="process"
