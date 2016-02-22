@@ -23,20 +23,24 @@
 package org.fao.geonet.kernel.search;
 
 import java.util.Map;
+
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.LabelNotFoundException;
 import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusFinder;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.utils.Log;
+import org.springframework.context.ApplicationContext;
 
 public class TermUriTranslator implements Translator {
 
     private static final long serialVersionUID = 1L;
 
     private transient Thesaurus thesaurus = null;
-    private final transient ThesaurusFinder finder;
+    private transient ThesaurusFinder finder;
 
     private final String conceptSchemeUri;
     private final String langCode;
@@ -51,21 +55,28 @@ public class TermUriTranslator implements Translator {
     }
 
     private void setThesaurus() {
-        this.thesaurus = finder.getThesaurusByConceptScheme(conceptSchemeUri);
-        if (thesaurus == null) {
-            Log.warning(Geonet.THESAURUS, "No thesaurus found for concept scheme " + conceptSchemeUri + " (lang=" + langCode + ")");
-            if (Log.isDebugEnabled(Geonet.THESAURUS) && firstWarning) {
-                firstWarning = false;
+        if (finder == null) {
+            Log.error(Geonet.THESAURUS, "Finder null in TermUriTranslator for " + conceptSchemeUri + " (lang=" + langCode + ")");
+            ApplicationContext context = ApplicationContextHolder.get();
+            finder = context.getBean(ThesaurusManager.class);
+            Log.error(Geonet.THESAURUS, "Finder is now " + finder);
+        } else {
+            this.thesaurus = finder.getThesaurusByConceptScheme(conceptSchemeUri);
+            if (thesaurus == null) {
+                Log.warning(Geonet.THESAURUS, "No thesaurus found for concept scheme " + conceptSchemeUri + " (lang=" + langCode + ")");
+                if (Log.isDebugEnabled(Geonet.THESAURUS) && firstWarning) {
+                    firstWarning = false;
 
-                StringBuilder sb = new StringBuilder();
-                sb.append("Available thesauri: [");
-                for (Map.Entry<String, Thesaurus> entrySet : finder.getThesauriMap().entrySet()) {
-                    sb.append("{");
-                    sb.append(entrySet.getKey()).append(" -> ").append(entrySet.getValue().getConceptSchemes());
-                    sb.append("}");
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("Available thesauri: [");
+                    for (Map.Entry<String, Thesaurus> entrySet : finder.getThesauriMap().entrySet()) {
+                        sb.append("{");
+                        sb.append(entrySet.getKey()).append(" -> ").append(entrySet.getValue().getConceptSchemes());
+                        sb.append("}");
+                    }
+                    sb.append("]");
+                    Log.debug(Geonet.THESAURUS, sb.toString());
                 }
-                sb.append("]");
-                Log.debug(Geonet.THESAURUS, sb.toString());
             }
         }
     }
@@ -74,7 +85,7 @@ public class TermUriTranslator implements Translator {
     public String translate(String key) {
         KeywordBean keyword;
 
-        if (thesaurus == null) {
+        if (finder == null || thesaurus == null) {
             // try to retrieve a theasurus (it may not have been loaded yet)
             setThesaurus();
         }

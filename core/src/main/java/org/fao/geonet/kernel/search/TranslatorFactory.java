@@ -101,7 +101,12 @@ public class TranslatorFactory {
             translator = JeevesCacheManager.findInEternalCache(key, new Callable<Translator>() {
                 public Translator call() {
                     try {
-                        Translator termUriTranslator = new TermUriTranslator(context.getBean(ThesaurusManager.class), langCode, param);
+                        ThesaurusManager thesaurusManager = context.getBean(ThesaurusManager.class);
+                        if (thesaurusManager == null) {
+                            Log.error(Geonet.SEARCH_ENGINE,
+                                    "Trying to set a TermUriTranslator before ThesaurusManager initialization.");
+                        }
+                        Translator termUriTranslator = new TermUriTranslator(thesaurusManager, langCode, param);
                         return new TranslatorCachingWrapper(termUriTranslator);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
