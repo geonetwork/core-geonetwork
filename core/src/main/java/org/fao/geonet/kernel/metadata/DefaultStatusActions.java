@@ -62,7 +62,9 @@ import javax.annotation.Nullable;
 public class DefaultStatusActions implements StatusActions {
 
     private String host, port, username, password, from, fromDescr, replyTo, replyToDescr;
-    private boolean useSSL;    protected ServiceContext context;
+    private boolean useSSL;
+    private boolean useTLS;
+    protected ServiceContext context;
     protected String language;
     protected DataManager dm;
     protected String siteUrl;
@@ -101,6 +103,7 @@ public class DefaultStatusActions implements StatusActions {
         username = sm.getValue("system/feedback/mailServer/username");
         password = sm.getValue("system/feedback/mailServer/password");
         useSSL = sm.getValueAsBool("system/feedback/mailServer/ssl");
+        useTLS = sm.getValueAsBool("system/feedback/mailServer/tls");
         
         if (host == null || host.length() == 0) {
             context.error("Mail server host not configure");
@@ -350,7 +353,7 @@ public class DefaultStatusActions implements StatusActions {
             context.info("Would send email \nTo: " + sendTo + "\nSubject: " + subject + "\n Message:\n" + message);
         } else {
             MailSender sender = new MailSender(context);
-            sender.sendWithReplyTo(host, Integer.parseInt(port), username, password, useSSL, from, fromDescr,
+            sender.sendWithReplyTo(host, Integer.parseInt(port), username, password, useSSL, useTLS, from, fromDescr,
             		sendTo, null, replyTo, replyToDescr, subject, message);
         }
     }
