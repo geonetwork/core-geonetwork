@@ -3,6 +3,7 @@ UPDATE Mapservers set pushstyleinworkspace = 'n';
 
 UPDATE metadata SET schemaid = 'iso19139' WHERE schemaid = 'iso19139.sextant';
 
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/tls', 'false', 2, 644, 'y');
 
 -- TODO : resource link change cf. MetadataResourceDatabaseMigration
 
