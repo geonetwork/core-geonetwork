@@ -134,8 +134,6 @@
           return {
             pre: function preLink(scope, element, attrs, controller) {
 
-              var delimiter = ' or ';
-              var oldParams;
               var groups;
 
               scope.name = attrs.gnFacetMultiselect;
@@ -211,35 +209,33 @@
                * @return {*|boolean}
                */
               scope.isInSearch = function(value) {
-                return scope.searchObj.params[scope.facetConfig.key] &&
-                    scope.searchObj.params[scope.facetConfig.key]
-                      .split(delimiter)
-                      .indexOf(value) >= 0;
+
+                var p = scope.searchObj.params[scope.facetConfig.key];
+                if(angular.isString(p)) {
+                  p = [p];
+                }
+                return p && p.indexOf(value) >= 0;
               };
 
               //TODO improve performance here, maybe to complex $watchers
               // add subdirective to watch a boolean and make only one
               // watcher on searchObj.params
               scope.updateSearch = function(value, e) {
-                var search = scope.searchObj.params[scope.facetConfig.key];
-                if (angular.isUndefined(search)) {
-                  scope.searchObj.params[scope.facetConfig.key] = value;
+                var key = scope.facetConfig.key;
+                var search = scope.searchObj.params[key];
+
+                // null, undefined or ''
+                if(!search) {
+                  scope.searchObj.params[key] = [value];
                 }
                 else {
-                  if (search == '') {
-                    scope.searchObj.params[scope.facetConfig.key] = value;
-                  }
-                  else {
-                    var s = search.split(delimiter);
-                    var idx = s.indexOf(value);
+                  if(angular.isArray(search)) {
+                    var idx = search.indexOf(value);
                     if (idx < 0) {
-                      scope.searchObj.params[scope.facetConfig.key] +=
-                          delimiter + value;
+                      search.push(value);
                     }
                     else {
-                      s.splice(idx, 1);
-                      scope.searchObj.params[scope.facetConfig.key] =
-                          s.join(delimiter);
+                      search.splice(idx, 1);
                     }
                   }
                 }
