@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:ns4="http://www.opengis.net/gml#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/environmental-matrix">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<dc:title>Environmental matrix</dc:title>
+	<dc:description></dc:description>
+	<dcterms:issued>2014-08-11</dcterms:issued>
+	<dcterms:modified>2014-08-11</dcterms:modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/environmental-matrix##Air">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Air</skos:prefLabel>
+	<skos:scopeNote xml:lang="en">undefined</skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1a3u6hadqx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1a3u6hadqx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/environmental-matrix##BiotaBiology">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Biota - Biology</skos:prefLabel>
+	<skos:scopeNote xml:lang="en">undefined</skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1a3u6hiafx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1a3u6hiafx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/environmental-matrix##Freshwater">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Fresh water</skos:prefLabel>
+	<skos:scopeNote xml:lang="en">undefined</skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1a3u6hp4rx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1a3u6hp4rx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/environmental-matrix##Humanactivities">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Human activities</skos:prefLabel>
+	<skos:scopeNote xml:lang="en">undefined</skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1a3u6i0lsx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1a3u6i0lsx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/environmental-matrix##Ice">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Ice</skos:prefLabel>
+	<skos:scopeNote xml:lang="en">undefined</skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1a3u6i8hux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1a3u6i8hux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/environmental-matrix##Marinewater">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Marine water</skos:prefLabel>
+	<skos:scopeNote xml:lang="en">undefined</skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1a3u6ig0lx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1a3u6ig0lx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/environmental-matrix##SeabedRiverbed">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Seabed - Riverbed</skos:prefLabel>
+	<skos:scopeNote xml:lang="en">undefined</skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1a3u6imoex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1a3u6imoex1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

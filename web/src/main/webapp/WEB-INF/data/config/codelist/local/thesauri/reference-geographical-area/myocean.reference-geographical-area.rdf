@@ -35,10 +35,10 @@
         <skos:prefLabel xml:lang="fr">baltic-sea</skos:prefLabel>
         <skos:definition xml:lang="en">Baltic sea</skos:definition>
     </skos:Concept>
- <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#ibirian-biscay-irish-seas">
-        <skos:prefLabel xml:lang="en">ibirian-biscay-irish-seas</skos:prefLabel>
-        <skos:prefLabel xml:lang="fr">ibirian-biscay-irish-seas</skos:prefLabel>
-        <skos:definition xml:lang="en">Ibirian, Biscay and Irish seas</skos:definition>
+ <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#iberian-biscay-irish-seas">
+        <skos:prefLabel xml:lang="en">iberian-biscay-irish-seas</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">iberian-biscay-irish-seas</skos:prefLabel>
+        <skos:definition xml:lang="en">Iberian, Biscay and Irish seas</skos:definition>
     </skos:Concept>
  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#black-sea">
         <skos:prefLabel xml:lang="en">black-sea</skos:prefLabel>

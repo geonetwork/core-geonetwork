@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns="http://www.w3.org/2005/sparql-results#">
+  <skos:ConceptScheme rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/">
+    <dc:title>Categories_Engins</dc:title>
+    <dc:description />
+    <dcterms:issued>2015-02-19</dcterms:issued>
+    <dcterms:modified>2015-02-19</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/SR">
+    <skos:prefLabel xml:lang="en">Filets tournants</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Filets tournants</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/S">
+    <skos:prefLabel xml:lang="en">Sennes</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Sennes</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/T">
+    <skos:prefLabel xml:lang="en">Chaluts</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Chaluts</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/D">
+    <skos:prefLabel xml:lang="en">Dragues</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Dragues</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/LN">
+    <skos:prefLabel xml:lang="en">Filets soulevés</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Filets soulevés</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/F">
+    <skos:prefLabel xml:lang="en">Engins retombants</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Engins retombants</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/N">
+    <skos:prefLabel xml:lang="en">Filets maillants et filets emmelants</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Filets maillants et filets emmelants</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/TR">
+    <skos:prefLabel xml:lang="en">Pièges</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Pièges</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/L">
+    <skos:prefLabel xml:lang="en">Lignes et hameçons</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Lignes et hameçons</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/G">
+    <skos:prefLabel xml:lang="en">Engins de pêche par accrochage ou par blessure</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Engins de pêche par accrochage ou par blessure</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/H">
+    <skos:prefLabel xml:lang="en">Engins de récolte</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Engins de récolte</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/M">
+    <skos:prefLabel xml:lang="en">Divers</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Divers</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/R">
+    <skos:prefLabel xml:lang="en">Engins de pêche récréative</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Engins de pêche récréative</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/Categories_Engins/O">
+    <skos:prefLabel xml:lang="en">Engins inconnus ou non spécifiés</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Engins inconnus ou non spécifiés</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+</rdf:RDF>
+

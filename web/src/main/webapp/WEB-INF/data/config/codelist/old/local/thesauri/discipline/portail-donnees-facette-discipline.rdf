@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Portail données - Facette Discipline">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Portail données - Facette Discipline</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Activiteshumaines">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Activités humaines</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Activités humaines</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarb289x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarb289x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Energiesmarines">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Activités humaines – Energies marines</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Energies marines</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarlfrvx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarlfrvx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Economie">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Activités humaines – Economie</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Economie</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarmbukx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarmbukx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Biologie">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biologie</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Biologie</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarmtoex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarmtoex1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Algues">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biologie – Algues</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Algues</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarneeox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarneeox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#BacteriesVirus">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biologie – Bactéries et virus</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Bactéries et virus</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18saro51sx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18saro51sx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Phytoplancton">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biologie – Phytoplancton</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Phytoplancton</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18saron1jx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18saron1jx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Poissons">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biologie – Poissons</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Poissons</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarp4mtx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarp4mtx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Benthos">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biologie – Benthos</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Benthos</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarpqc4x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarpqc4x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Zooplancton">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biologie – Zooplancton</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Zooplancton</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarq95rx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarq95rx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Autresmesuresbiologiques">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biologie – Autres mesures biologiques</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Autres mesures biologiques</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarr7j3x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarr7j3x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Halieutique">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Halieutique</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Halieutique</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarrlbfx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarrlbfx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Flotille">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Halieutique – Flotille</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Flotille</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sars26px1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sars26px1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Effortdepeche">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Halieutique – Effort de pêche</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Effort de pêche</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarsi4ux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarsi4ux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Economiehalieutique">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Halieutique – Economie</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Economie halieutique</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sartgl3x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sartgl3x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Ressourceshalieutiques">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Halieutique – Ressources</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Ressources halieutiques</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18saru8sox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18saru8sox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Aquaculture">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Aquaculture</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Aquaculture</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18saruqlfx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18saruqlfx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Biogeochimie">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biogéochimie</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Biogéochimie</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarv75rx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarv75rx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Concentrationsdemetaux">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biogéochimie – Concentrations de métaux</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Concentrations de métaux</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sarvrtsx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sarvrtsx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Gazdissous">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biogéochimie – Gaz dissous</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Gaz dissous</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas0dq1x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas0dq1x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Traceursbiogeochimiques">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biogéochimie – Traceurs</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Traceurs biogéochimiques</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas1bi5x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas1bi5x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Hydrocarbures">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biogéochimie – Hydrocarbures</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Hydrocarbures</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas1rtkx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas1rtkx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Selsnutritifs">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biogéochimie – Sels nutritifs</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Sels nutritifs</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas2d11x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas2d11x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#PCBpolluantsorganiques">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biogéochimie – PCB et polluants organiques</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">PCB et polluants organiques</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas2viux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas2viux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Autresmesureschimiques">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biogéochimie – Autres mesures chimiques</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Autres mesures chimiques</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas3j5ix1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas3j5ix1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Pigments">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biogéochimie – Pigments (couleur de l'eau)</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Pigments (couleur de l'eau)</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas4g47x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas4g47x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Geophysique">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Géophysique</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Géophysique</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas4s8ox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas4s8ox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Gravimetrie">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Géophysique – Gravimétrie</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Gravimétrie</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas5e7px1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas5e7px1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Magnetisme">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Géophysique – Magnétisme</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Magnétisme</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas5t0tx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas5t0tx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Bathymetrie">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Géophysique – Bathymétrie</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Bathymétrie</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas6dgox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas6dgox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Sismique">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Géophysique – Sismique</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Sismique</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas6r2ox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas6r2ox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Imagerieacoustique">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Géophysique – Imagerie acoustique</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Imagerie acoustique</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas7d29x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas7d29x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Autresmesuresgeosciences">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Géophysique – Autres mesures de géosciences</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Autres mesures de géosciences</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas860rx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas860rx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Geologie">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Géologie</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Géologie</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas8stox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas8stox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Prelevements">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Géologie – Prélèvements</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Prélèvements</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sas9esqx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sas9esqx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Analysesechantillons">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Géologie – Analyses des échantillons</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Analyses des échantillons</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sasa5lix1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sasa5lix1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Sediments">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Géologie – Sédiments</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Sédiments</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sasant3x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sasant3x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Meteorologie">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Météorologie</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Météorologie</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sasb4adx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sasb4adx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Physique">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Physique</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Physique</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sasbfo6x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sasbfo6x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Courants">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Physique – Courants</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Courants</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sasbu2dx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sasbu2dx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Temperature">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Physique – Température</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Température</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sasd4o2x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sasd4o2x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Salinite">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Physique – Salinité</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Salinité</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sasdkc7x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sasdkc7x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Niveaudeleau">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Physique – Niveau de l'eau</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Niveau de l'eau</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sasea7gx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sasea7gx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Vagues">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Physique – Vagues</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Vagues</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sasemlax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sasemlax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Proprietesoptiques">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Physique – Propriétés optiques</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Propriétés optiques</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sasf8q8x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sasf8q8x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Glacesdemer">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Physique – Glaces de mer</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Glaces de mer</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sasfnuhx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sasfnuhx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/portail-donnees-facette-discipline#Autresmesuresphysiques">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Physique – Autres mesures physiques</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Autres mesures physiques</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node18sasgap7x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node18sasgap7x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:exslt="http://exslt.org/common"
+    xmlns:gemet="http://www.eionet.europa.eu/gemet/2004/06/gemet-schema.rdf#">
+    <skos:ConceptScheme rdf:about="http://purl.org/myocean/ontology/vocabulary/model-assimilation#">
+        <dc:title>Model assimilation</dc:title>
+        <dc:description></dc:description>
+        <dcterms:issued>2016-02-03</dcterms:issued>
+        <dcterms:modified>2016-02-03</dcterms:modified>
+    </skos:ConceptScheme>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/model-assimilation#sst">
+        <skos:prefLabel xml:lang="en">SST</skos:prefLabel>
+        <skos:definition xml:lang="en"></skos:definition>
+        <skos:prefLabel xml:lang="fr">SST</skos:prefLabel>
+        <skos:definition xml:lang="fr"></skos:definition>
+    </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/model-assimilation#sea-level">
+    <skos:prefLabel xml:lang="en">Sea Level</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Sea Level</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/model-assimilation#in-situ-ts-profiles">
+    <skos:prefLabel xml:lang="en">In-Situ TS Profiles</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">In-Situ TS Profiles</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/model-assimilation#sea-ice-concentration-thickness">
+    <skos:prefLabel xml:lang="en">Sea Ice Concentration and/or Thickness</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Sea Ice Concentration and/or Thickness</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/model-assimilation#satellite-chlorophyll">
+    <skos:prefLabel xml:lang="en">Satellite Chlorophyll</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Satellite Chlorophyll</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/model-assimilation#nutrients">
+    <skos:prefLabel xml:lang="en">Nutrients (O2 N P)</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Nutrients (O2 N P)</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/model-assimilation#none">
+    <skos:prefLabel xml:lang="en">None</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">None</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/model-assimilation#not-applicable">
+    <skos:prefLabel xml:lang="en">Not Applicable</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Not Applicable</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+</rdf:RDF>

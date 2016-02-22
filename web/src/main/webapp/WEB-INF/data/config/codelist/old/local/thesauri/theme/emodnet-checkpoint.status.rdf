@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <skos:ConceptScheme rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/validation">
+    <dc:title>Validation</dc:title>
+    <dc:description></dc:description>
+    <dcterms:issued>2015-01-29</dcterms:issued>
+    <dcterms:modified>2015-01-29</dcterms:modified>
+  </skos:ConceptScheme>
+
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/validation#draft">
+    <skos:prefLabel xml:lang="en">Draft</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Draft</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/validation#submitted">
+    <skos:prefLabel xml:lang="en">Submitted</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Submitted</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/validation#rejected">
+    <skos:prefLabel xml:lang="en">Rejected</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Rejected</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/validation#approved">
+    <skos:prefLabel xml:lang="en">Approved</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Approved</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+</rdf:RDF>
