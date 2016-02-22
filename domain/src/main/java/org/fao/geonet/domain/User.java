@@ -420,6 +420,9 @@ public class User extends GeonetEntity implements UserDetails {
             setProfile(otherUser.getProfile());
         }
 
+        // Sextant Mantis issue #27843
+        setGeneric(otherUser.isGeneric());
+
         if (mergeNullData || !otherUser.getEmailAddresses().isEmpty()) {
             _email.clear();
             _email.addAll(otherUser.getEmailAddresses());
