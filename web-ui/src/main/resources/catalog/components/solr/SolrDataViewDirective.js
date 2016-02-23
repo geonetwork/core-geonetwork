@@ -28,8 +28,8 @@
        }]);
 
   module.directive('gnDataTable',
-      ['$http', '$translate',
-       function($http, $translate) {
+      ['$http', '$translate', 'gnSolrRequestManager',
+       function($http, $translate,gnSolrRequestManager) {
 
          return {
            restrict: 'A',
@@ -44,49 +44,56 @@
              var pageList = [5, 10, 50, 100];
              var table = element.find('table');
              scope.url = null;
-             scope.$watch('q', function(newValue, oldValue) {
-               if (newValue !== oldValue) {
-                 if (scope.q === undefined) {
-                   table.bootstrapTable('destroy');
-                 } else {
-                   // TODO could be better to refreshOptions
-                   table.bootstrapTable('destroy');
-                   scope.url = scope.q.replace('rows=0', 'rows=1');
-                   $http.get(scope.url).then(function(response) {
-                     var columns = [];
-                     $.each(response.data.response.docs[0], function(key) {
-                       if ($.inArray(key, scope.excludeCols) === -1) {
-                         columns.push({
-                           field: key,
-                           // TODO: Add feature catalogue translator
-                           title: $translate(key)
-                         });
-                       }
+
+             var solrObject = gnSolrRequestManager.register(
+                 attrs['gnDataTableSolrType'],
+                 attrs['gnDataTableSolrName']);
+
+             scope.$watch(function() {
+               return solrObject.baseUrl;
+             }, function(solrUrl, oldValue) {
+               if (solrUrl) {
+                 var columns = [],
+                     fields = solrObject.filteredDocTypeFieldsInfo;
+
+                 fields.forEach(function (field) {
+                   if ($.inArray(field.idxName, scope.excludeCols) === -1) {
+                     columns.push({
+                       field: field.idxName,
+                       title: $translate(field.attrName)
                      });
-                     table.bootstrapTable({
-                       url: scope.url.replace('rows=1', ''),
-                       queryParams: function(p) {
-                         return {
-                           rows: p.limit,
-                           start: p.offset
-                         };
-                       },
-                       //data: scope.data.response.docs,
-                       responseHandler: function(res) {
-                         return {
-                           total: res.response.numFound,
-                           rows: res.response.docs
-                         };
-                       },
-                       columns: columns,
-                       pagination: true,
-                       sidePagination: 'server',
-                       totalRows: response.data.response.numFound,
-                       pageSize: pageList[0],
-                       pageList: pageList
-                     });
+                   }
+                 });
+
+                 solrObject.on('search', function(event) {
+                   table.bootstrapTable('destroy');
+                   table.bootstrapTable({
+                     url: solrUrl.replace('rows=0', ''),
+                     queryParams: function(p) {
+                       return {
+                         rows: p.limit,
+                         start: p.offset
+                       };
+                     },
+                     //data: scope.data.response.docs,
+                     responseHandler: function(res) {
+                       return {
+                         total: res.response.numFound,
+                         rows: res.response.docs
+                       };
+                     },
+                     columns: columns,
+                     pagination: true,
+                     sidePagination: 'server',
+                     totalRows: solrObject.totalCount,
+                     pageSize: pageList[0],
+                     pageList: pageList
                    });
-                 }
+                 });
+
+               }
+               else  {
+                table.bootstrapTable('destroy');
                }
              });
            }
