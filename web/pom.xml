@@ -473,6 +473,56 @@
   
   <build>
     <plugins>
+			
+            <plugin>
+                <groupId>ro.isdc.wro4j</groupId>
+                <artifactId>wro4j-maven-plugin</artifactId>
+                <version>${wro.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-cache</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <wroManagerFactory>org.fao.geonet.wro4j.GeonetworkMavenWrojManagerFactory</wroManagerFactory>
+                    <extraConfigFile>${basedir}/src/main/webResources/WEB-INF/wro-compiletime.properties</extraConfigFile>
+                    <cssDestinationFolder>${basedir}/target/geonetwork/static</cssDestinationFolder>
+                    <destinationFolder>${basedir}/target/geonetwork/static</destinationFolder>
+                    <jsDestinationFolder>${basedir}/target/geonetwork/static</jsDestinationFolder>
+                    <contextFolder>${basedir}/src/main/webapp/</contextFolder>
+                    <incrementalBuildEnabled>false</incrementalBuildEnabled>
+                    <parallelProcessing>true</parallelProcessing>
+										<ignoremissingresources>false</ignoremissingresources>
+                </configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>wro4j</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>web-ui</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>geonetwork-client</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.github.sommeri</groupId>
+                        <artifactId>less4j</artifactId>
+                        <version>1.8.4</version>
+                    </dependency>
+                </dependencies>
+
+            </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>

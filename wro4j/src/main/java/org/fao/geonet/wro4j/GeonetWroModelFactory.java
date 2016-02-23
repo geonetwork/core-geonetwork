@@ -131,7 +131,8 @@ public class GeonetWroModelFactory implements WroModelFactory {
         }
 
         if (currentFile == null) {
-            throw new AssertionError("Unable to find root geonetwork directory using '" + sourcesXmlFile + "' as a starting point");
+//            throw new AssertionError("Unable to find root geonetwork directory using '" + sourcesXmlFile + "' as a starting point");
+						currentFile = new File(System.getProperty("user.dir"));
         }
 
         return currentFile.getAbsolutePath() + "/";
@@ -427,8 +428,17 @@ public class GeonetWroModelFactory implements WroModelFactory {
             final int uriLength = 60;
             for (Group group : model.getGroups()) {
                 builder.append("Group " + group.getName() + " contains:\n");
+								List<Resource> resourcesModified = new ArrayList<Resource>();
                 for (Resource resource : group.getResources()) {
                     String uri = resource.getUri();
+										// exclude templates because the path to the template in the cache will be munged if building in maven
+										if (isMavenBuild()) {
+											if (uri.startsWith("template:")) { 
+												continue;
+											} else {
+												resourcesModified.add(resource);
+											}
+										}
                     int min = Math.max(0, uri.length() - uriLength);
                     int max = resource.getUri().length();
                     uri = uri.substring(min, max);
@@ -438,8 +448,10 @@ public class GeonetWroModelFactory implements WroModelFactory {
                     builder.append("\t" + uri + "\n");
                 }
                 builder.append("\n\n");
+								if (isMavenBuild()) group.setResources(resourcesModified);
             }
             Log.info(WRO4J_LOG, builder.toString());
+
         }
 
         if (!errors.isEmpty()) {
@@ -459,6 +471,11 @@ public class GeonetWroModelFactory implements WroModelFactory {
             Node cssSource = cssSources.item(i);
             final Set<String> notMinimized = parseSetOfNotMinimized((Element) cssSource);
             ResourceDesc desc = parseSource((Element) cssSource, defaultPathOnDisk);
+						if (desc == null) {
+							Element sourceEl = (Element)cssSource;
+							System.out.println("Skipping "+sourceEl.getAttribute(WEBAPP_ATT));
+							continue;
+						}
 
             final Iterable<File> css = desc.files("css", "less");
             for (File file : css) {
@@ -583,6 +600,11 @@ public class GeonetWroModelFactory implements WroModelFactory {
         for (int i = 0; i < jsSources.getLength(); i++) {
             Node jsSource = jsSources.item(i);
             ResourceDesc desc = parseSource((Element) jsSource, defaultPathOnDisk);
+						if (desc == null) { 
+							Element sourceEl = (Element)jsSource;
+							System.out.println("Skipping "+sourceEl.getAttribute(WEBAPP_ATT));
+							continue;
+						}
             Set<String> notMinimized = parseSetOfNotMinimized((Element) jsSource);
             for (File file : desc.files("js")) {
                 String path;
@@ -643,8 +665,11 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
         if (isMavenBuild()) {
             final File pathOnDisk = new File(desc.pathOnDisk);
-            if (pathOnDisk.isAbsolute() && pathOnDisk.exists()) {
-                desc.finalPath = new File(desc.pathOnDisk, desc.relativePath).getPath();
+						// work around paths that are resolved by servletContext eg. {{schemaPluginsDir}} - these can't be added in a maven build
+						if (desc.relativePath.startsWith("{{")) {  
+							return null;
+            } else if (pathOnDisk.isAbsolute() && pathOnDisk.exists()) {
+              desc.finalPath = new File(desc.pathOnDisk, desc.relativePath).getPath();
             } else {
                 final File relativePath = new File(desc.relativePath);
                 if (relativePath.isAbsolute() && relativePath.exists()) {
@@ -665,6 +690,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
             }
         }
 
+				System.out.println("Processing "+desc.finalPath);
 
         desc.root = new File(desc.finalPath);
 

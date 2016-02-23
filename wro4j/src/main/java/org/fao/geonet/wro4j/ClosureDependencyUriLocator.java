@@ -20,6 +20,7 @@ public class ClosureDependencyUriLocator implements UriLocator {
     public static final String URI_PREFIX = "closureDep://";
     public static final String URI_LOCATOR_ID = "closureDependencyURILocator";
     static final String PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE = "../../..";
+    static final String WEB_UI = "web-ui/src/main/resources/";
 
     static Resource createClosureDepResource(ClosureRequireDependencyManager.Node dep) {
         Resource resource = new Resource();
@@ -50,7 +51,10 @@ public class ClosureDependencyUriLocator implements UriLocator {
         for (String part : uri.split("@@")) {
             switch (state) {
                 case 0:
-                    final String path = part.substring(URI_PREFIX.length());
+                    String path = part.substring(URI_PREFIX.length());
+										if (path.indexOf(WEB_UI) != -1) {  // skip part of the path that will not be needed in the dependency
+											path = path.substring(path.indexOf(WEB_UI) + WEB_UI.length());
+										}
                     javascript.append(PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE);
                     if (!path.startsWith("/")) {
                         javascript.append("/");
@@ -70,6 +74,7 @@ public class ClosureDependencyUriLocator implements UriLocator {
         }
 
         javascript.append("]);\n");
+
 
         return new ByteArrayInputStream(javascript.toString().getBytes("UTF-8"));
     }
