@@ -1,51 +1,6 @@
 (function() {
   goog.provide('gn_viewer');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   goog.require('gn_baselayerswitcher');
   goog.require('gn_draw');
   goog.require('gn_graticule');
@@ -62,6 +17,7 @@
   goog.require('gn_terrainswitcher_directive');
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
+  goog.require('gn_wfs');
   goog.require('gn_wmsimport');
 
   /**
@@ -77,6 +33,7 @@
     'gn_viewer_service',
     'gn_viewer_directive',
     'gn_wmsimport',
+    'gn_wfs_directive',
     'gn_owscontext',
     'gn_layermanager',
     'gn_baselayerswitcher',
