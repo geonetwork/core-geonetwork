@@ -257,7 +257,6 @@ public class SolrWFSFeatureIndexer {
             query.setCoordinateSystem(wgs84);
 
             FeatureCollection<SimpleFeatureType, SimpleFeature> featuresCollection = source.getFeatures(query);
-            boolean isWGS84 = CRS.lookupEpsgCode(source.getBounds().getCoordinateReferenceSystem(), false) == 4326;
 
             final FeatureIterator<SimpleFeature> features = featuresCollection.features();
             int numInBatch = 0, nbOfFeatures = 0;
@@ -282,21 +281,8 @@ public class SolrWFSFeatureIndexer {
 
                     if (attributeValue != null) {
                         if (attributeType.equals("geometry")) {
-//                            !CRS.equalsIgnoreMetadata(
-//                                    feature.getBounds().getCoordinateReferenceSystem(),
-//                                    wgs84)
                             try {
-//                                if (!isWGS84) {
-//                                    // Geometry is not in WGS84
-//                                    // TODO: reproject feature ?
-//                                } else if (wgs84bbox.contains(feature.getBounds())) {
-//                                    document.addField("geom", attributeValue);
-//                                } else {
-//                                    // Geometry is out of CRS extent
-//                                }
-                                if (isWGS84) {
-                                    document.addField("geom", attributeValue);
-                                }
+                             document.addField("geom", attributeValue);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -357,16 +343,6 @@ public class SolrWFSFeatureIndexer {
             logger.error(e.getMessage());
             throw e;
         } catch (SolrServerException e) {
-            harvesterReportFields.put("status_s", "error");
-            harvesterReportFields.put("error_s", e.getMessage());
-            logger.error(e.getMessage());
-            throw e;
-        } catch (NoSuchAuthorityCodeException e) {
-            harvesterReportFields.put("status_s", "error");
-            harvesterReportFields.put("error_s", e.getMessage());
-            logger.error(e.getMessage());
-            throw e;
-        } catch (FactoryException e) {
             harvesterReportFields.put("status_s", "error");
             harvesterReportFields.put("error_s", e.getMessage());
             logger.error(e.getMessage());
