@@ -120,6 +120,10 @@
   </util:map>
 
 
+  <bean id="slashSplitClassifier"
+        class="org.fao.geonet.kernel.search.classifier.Split" lazy-init="true">
+    <constructor-arg name="regex" value="\s*?/\s*?"/>
+  </bean>
   <!--
   Example configuration for hierarchical facet based on
   the GeoNetwork region thesaurus or GEMET.
