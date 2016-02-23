@@ -81,6 +81,7 @@ public class SolrWFSFeatureIndexer {
                 .put("double", "_d")
                 .put("boolean", "_b")
                 .put("date", "_dt")
+                .put("dateTime", "_dt")
                 .build();
     }
 
