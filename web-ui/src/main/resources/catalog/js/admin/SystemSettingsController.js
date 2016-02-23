@@ -212,7 +212,7 @@
               title: response.data});
           }, function(response) {
             $rootScope.$broadcast('StatusUpdated', {
-              title: response.statusText,
+              title: response.data,
               timeout: 0,
               type: 'danger'});
           });

@@ -67,6 +67,7 @@
         <facet name="spatialRepresentationType" indexKey="cl_spatialRepresentationType"
             label="spatialRepresentationTypes"/>
         <facet name="orgName" indexKey="orgName" label="orgNames" localized="true"/>
+        <facet name="orgNameTree" indexKey="orgNameTree" label="orgNamesTree" classifier="slashSplitClassifier"/>
         <facet name="metadataPOC" indexKey="metadataPOC" label="metadataPOCs"/>
         <facet name="serviceType" indexKey="serviceType" label="serviceTypes"/>
         <facet name="type" indexKey="type" label="types"/>
@@ -169,6 +170,11 @@
         <summaryType name="subtemplates">
             <item facet="subTemplateType"/>
             <item facet="groupOwner" max="99" sortBy="value"
+                translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+        </summaryType>
+        <summaryType name="contact" format="DIMENSION">
+          <item facet="orgNameTree" max="99"/>
+          <item facet="groupOwner" max="99" sortBy="value"
                 translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
         </summaryType>
         <summaryType name="titles">

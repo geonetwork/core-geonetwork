@@ -277,7 +277,7 @@ div.gn-scroll-spy {
   }
 }
 
-.onlinesrc-popup {
+.onlinesrc-popup, .gn-modal-lg {
   max-width: none;
   max-height: none;
   display: none;
@@ -595,4 +595,18 @@ html[lang=fre] {
 .checkbox.disabled label, .radio.disabled label, fieldset[disabled] .checkbox label, fieldset[disabled] .radio label {
   cursor: not-allowed;
   color: #d3d3d3;
+}
+
+button, .btn, .btn:active, a {
+  &:focus {
+    outline: none;
+  }
+}
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 4px;
 }
