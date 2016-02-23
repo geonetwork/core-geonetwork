@@ -197,6 +197,7 @@
                 scope.layer.get('solrQ'), scope.docFields).
                 then(function(facetsInfo) {
                   scope.fields = facetsInfo.facetConfig;
+                  scope.heatmaps = facetsInfo.heatmaps;
                   scope.count = facetsInfo.count;
                   scope.layer.set('featureCount', scope.count);
                   if (fromInput) {
@@ -226,6 +227,7 @@
             wfsFilterService.getFacetsConfigFromSolr(solrUrl, scope.docFields).
                 then(function(facetsInfo) {
                   scope.fields = facetsInfo.facetConfig;
+                  scope.heatmaps = facetsInfo.heatmaps;
                   scope.count = facetsInfo.count;
                   scope.countTotal = facetsInfo.count;
                   scope.layer.set('featureCount', scope.count);
@@ -325,6 +327,85 @@
               }
             });
           }
+
+
+          scope.isHeatMapVisible = true;
+          var map = scope.$parent.map;
+          var heatmapLayer;
+          scope.$watch('isHeatMapVisible', function (n, o) {
+            if (n != o) {
+              heatmapLayer.setVisible(n);
+            }
+          });
+          function heatmapToLayer(heatmap, proj, options) {
+            var grid = {};
+            for (var i = 0; i < heatmap.length; i++) {
+              grid[heatmap[i]] = heatmap[i + 1];
+              i ++;
+            }
+            if (grid) {
+              var source = new ol.source.Vector();
+              // The initial outer level is in row order (top-down),
+              // then the inner arrays are the columns (left-right).
+              // The entire value is null if there is no matching data.
+              var rows = grid.counts_ints2D,
+                xcell = (grid.maxX - grid.minX) / grid.columns,
+                ycell = (grid.maxY - grid.minY) / grid.rows,
+                max = 0;
+              for (var i = 0; i < rows.length; i++) {
+                // If any array would be all zeros, a null is returned
+                // instead for efficiency reasons.
+                if (!angular.isArray(rows[i])) {
+                  continue;
+                }
+                for (var j = 0; j < rows[i].length; j++) {
+                  if (rows[i][j] == 0) {
+                    continue;
+                  }
+                  var point = new ol.geom.Point([
+                    grid.minX + xcell * j,
+                    grid.maxY - ycell * i]);
+                  var value = rows[i][j];
+                  var feature = new ol.Feature({
+                    geometry: point.transform(
+                      "EPSG:4326",
+                      proj),
+                    value: value
+                  });
+                  source.addFeature(feature);
+                  max = Math.max(max, value);
+                }
+              }
+              options = angular.extend({
+                source: source,
+                radius: 40,
+                blur: 50,
+                opacity: .8,
+                visible: scope.isHeatMapVisible,
+                weight: function (v) {
+                  return v.get('value') / max;
+                }
+              }, options || {})
+              return new ol.layer.Heatmap(options);
+            }
+            return null;
+          };
+          scope.$watch('heatmaps', function (n, o) {
+            if (n != o) {
+              // TODO: May contains multiple heatmaps
+              if (angular.isArray(n.geom)) {
+                if (heatmapLayer) {
+                  map.removeLayer(heatmapLayer);
+                }
+                heatmapLayer = heatmapToLayer(
+                   n.geom,
+                   map.getView().getProjection());
+                if (heatmapLayer) {
+                  map.addLayer(heatmapLayer);
+                }
+              }
+            }
+          });
         }
       };
     }]);

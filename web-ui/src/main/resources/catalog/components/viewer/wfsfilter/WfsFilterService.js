@@ -34,6 +34,9 @@
         else if (solrPropName == 'facet_dates') {
           type = 'date';
         }
+        else if (solrPropName == 'facet_heatmaps') {
+          type = 'heatmap';
+        }
         return type;
       };
 
@@ -262,6 +265,8 @@
             url += '&facet.field=' + f;
           }
         });
+        // TODO: Add grid level depending on map zoom ? and map extent
+        url += '&facet.heatmap=geom&facet.heatmap.geom=["-180 -90" TO "180 90"]&facet.heatmap.gridLevel=3';
         return url;
       };
 
@@ -325,6 +330,7 @@
           return {
             facetConfig: createFacetConfigFromSolr(solrResponse.data,
                 docFields),
+            heatmaps: solrResponse.data.facet_counts.facet_heatmaps,
             count: solrResponse.data.response.numFound
           };
         });
