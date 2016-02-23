@@ -58,7 +58,7 @@
             var fNameObj = getIdxNameObj(fieldProp, docFields);
             var facetField = {
               name: fieldProp,
-              label: fNameObj.label || fNameObj.attrName,
+              label: fNameObj.label || fNameObj.label,
               values: [],
               type: facetType
             };
@@ -111,7 +111,7 @@
        */
       var getIdxNameObj = function(name, idxFields) {
         for (var i = 0; i < idxFields.length; i++) {
-          if (idxFields[i].attrName == name ||
+          if (idxFields[i].label == name ||
               idxFields[i].idxName == name) {
             return idxFields[i];
           }

@@ -105,10 +105,7 @@
                   appProfile, ftName, scope.url,
                   solrObject.filteredDocTypeFieldsInfo);
             } else {
-              url = solrObject.getBaseRequest({
-                wfsUrl: scope.url,
-                featureTypeName: ftName
-              });
+              url = solrObject.baseUrl;
             }
             solrUrl = url;
             // Init the facets
@@ -136,7 +133,7 @@
 
               if (scope.md && scope.md.attributeTable) {
                 for (var i = 0; i < docFields.length; i++) {
-                  var label = getDataModelLabel(docFields[i].attrName);
+                  var label = getDataModelLabel(docFields[i].label);
                   if (label) {
                     // TODO: Multilingual
                     docFields[i].label = label;
@@ -187,9 +184,9 @@
            * structure.
            * This method is called each time the user check or uncheck a box
            * from the ui, or when he updates the filter input.
-           * @param {boolean} fromInput the filter comes from input change
+           * @param {boolean} formInput the filter comes from input change
            */
-          scope.filterFacets = function(fromInput) {
+          scope.filterFacets = function(formInput) {
 
             // Update the facet UI
             var collapsedFields = [];
@@ -201,11 +198,10 @@
             });
 
             solrObject.searchWithFacets(scope.output, scope.searchInput).
-                then(function(facetsInfo) {
-                  scope.fields = facetsInfo.facetConfig;
-                  scope.count = facetsInfo.count;
-                  scope.layer.set('featureCount', scope.count);
-                  if (fromInput) {
+                then(function(resp) {
+                  scope.fields = resp.facets;
+                  scope.count = resp.count;
+                  if (formInput) {
                     angular.forEach(scope.fields, function(f) {
                       if (!collapsedFields ||
                           collapsedFields.indexOf(f.name) >= 0) {
@@ -230,11 +226,9 @@
 
             // load all facet and fill ui structure for the list
             solrObject.searchWithFacets().
-                then(function(facetsInfo) {
-                  scope.fields = facetsInfo.facetConfig;
-                  scope.count = facetsInfo.count;
-                  scope.layer.set('featureCount', scope.count);
-                  scope.layer.set('featureCountT', scope.countTotal);
+                then(function(resp) {
+                  scope.fields = resp.facets;
+                  scope.count = resp.count;
                   angular.forEach(scope.fields, function(f) {
                     f.collapsed = true;
                   });

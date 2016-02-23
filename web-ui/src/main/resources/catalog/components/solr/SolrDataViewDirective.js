@@ -49,8 +49,8 @@
                  attrs['gnDataTableSolrType'],
                  attrs['gnDataTableSolrName']);
 
-             scope.$watchCollection(function() {
-               return solrObject.uri;
+             scope.$watch(function() {
+               return solrObject.baseUrl;
              }, function(solrUrl, oldValue) {
                if (solrUrl) {
                  var columns = [],
@@ -68,7 +68,7 @@
                  solrObject.on('search', function(event) {
                    table.bootstrapTable('destroy');
                    table.bootstrapTable({
-                     url: solrUrl.baseUrl.replace('rows=0', ''),
+                     url: solrUrl.replace('rows=0', ''),
                      queryParams: function(p) {
                        return {
                          rows: p.limit,
