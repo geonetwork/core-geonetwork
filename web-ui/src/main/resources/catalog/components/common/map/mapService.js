@@ -1483,6 +1483,12 @@
           feedLayerWithDownloads: function(layer, linkGroup) {
             var md = layer.get('md');
 
+            if(!linkGroup) {
+              console.warn('The layer has not been found in any group: ' +
+              layer.getSource().getParams().LAYERS);
+              return;
+            }
+
             // We can bind layer and download/process
             if (md.getLinksByType(linkGroup, '#OGC:WMTS',
                 '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map').length == 1) {
