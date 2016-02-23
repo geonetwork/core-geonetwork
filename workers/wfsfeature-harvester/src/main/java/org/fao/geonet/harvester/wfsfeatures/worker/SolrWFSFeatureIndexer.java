@@ -217,12 +217,15 @@ public class SolrWFSFeatureIndexer {
             if (hasTokenizedFields) {
                 separator = tokenizedFields.get(attributeName);
             }
-            boolean isTokenized = separator != null;
-            String suffix = attributeType.equals("geometry") ?
-                                "" :
-                                XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType) +
-                                (isTokenized ? MULTIVALUED_SUFFIX : "");
-            docColumns.add(attributeName + suffix);
+            if (attributeType.equals("geometry")) {
+                docColumns.add("geom");
+            } else {
+                boolean isTokenized = separator != null;
+                docColumns.add(attributeName +
+                               XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType) +
+                               (isTokenized ? MULTIVALUED_SUFFIX : "")
+                );
+            }
         }
         harvesterReportFields.put("ftColumns_s", Joiner.on("|").join(fields.keySet()));
         harvesterReportFields.put("docColumns_s", Joiner.on("|").join(docColumns));
