@@ -43,7 +43,7 @@ public class User extends GeonetEntity implements UserDetails {
     private String _lastLoginDate;
     private Boolean _isEnabled;
     // SXT specific, see https://forge.ifremer.fr/mantis/view.php?id=27843
-    private Boolean isGeneric;
+    private Boolean isGeneric = false;
 
     /**
      * Get the userid.   This is a generated value and as such new instances should not have this set as it will simply be ignored
