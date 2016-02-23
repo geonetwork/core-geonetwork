@@ -119,7 +119,7 @@
     return defer.promise;
   };
 
-  geonet.GnSolrRequest.prototype.searchWithFacets = function(params, any) {
+  geonet.GnSolrRequest.prototype.searchWithFacets = function(params, any, solrParams) {
 
     if(this.initialParams.stats['stats.field'].length > 0) {
 
@@ -127,12 +127,12 @@
           function(resp) {
             var statsP = this.createFacetSpecFromStats_(resp.solrData);
             return this.search(params, any, angular.extend(
-                {}, this.initialParams.facets, statsP)
+                {}, this.initialParams.facets, statsP, solrParams)
             );
           }.bind(this));
     }
     else {
-      return this.search(params, any, this.initialParams.facets);
+      return this.search(params, any, angular.extend({}, this.initialParams.facets, solrParams));
     }
   };
 
@@ -153,7 +153,7 @@
   geonet.GnSolrRequest.prototype.search = function(params, any, solrParams) {
 
     var url = this.getSearchUrl_(params, any);
-    url += this.parseKayValue_(params);
+    url += this.parseKeyValue_(solrParams);
 
     return this.$http.get(url).then(angular.bind(this,
         function(solrResponse) {
@@ -428,7 +428,7 @@
    * @returns {string} url param
    * @private
    */
-  geonet.GnSolrRequest.prototype.parseKayValue_ = function(params) {
+  geonet.GnSolrRequest.prototype.parseKeyValue_ = function(params) {
     var urlParams = '';
     angular.forEach(params, function(v, k) {
 

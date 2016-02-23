@@ -37,7 +37,6 @@
 
           // Get an instance of solr object
           var solrObject = gnSolrRequestManager.register('WfsFilter', 'facets');
-          //url += '&facet.heatmap=geom&facet.heatmap.geom=["-180 -90" TO "180 90"]&facet.heatmap.gridLevel=3';
 
           /**
            * Init the directive when the scope.layer has changed.
@@ -198,11 +197,16 @@
               }
             });
 
-            solrObject.searchWithFacets(scope.output, scope.searchInput).
+
+            solrObject.searchWithFacets(scope.output, scope.searchInput, {
+              'facet.heatmap': 'geom',
+              'facet.heatmap.geom': '["-180 -90" TO "180 90"]',
+              'facet.heatmap.gridLevel': 3
+            }).
                 then(function(resp) {
                   scope.fields = resp.facets;
                   scope.count = resp.count;
-                  scope.heatmaps = resp.facets.heatmaps;
+                  scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
                   if (formInput) {
                     angular.forEach(scope.fields, function(f) {
                       if (!collapsedFields ||
@@ -227,11 +231,15 @@
             scope.searchInput = '';
 
             // load all facet and fill ui structure for the list
-            solrObject.searchWithFacets().
+            solrObject.searchWithFacets(null, null, {
+              'facet.heatmap': 'geom',
+              'facet.heatmap.geom': '["-180 -90" TO "180 90"]',
+              'facet.heatmap.gridLevel': 3
+            }).
                 then(function(resp) {
                   scope.fields = resp.facets;
                   scope.count = resp.count;
-                  scope.heatmaps = resp.facets.heatmaps;
+                  scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
                   angular.forEach(scope.fields, function(f) {
                     f.collapsed = true;
                   });
