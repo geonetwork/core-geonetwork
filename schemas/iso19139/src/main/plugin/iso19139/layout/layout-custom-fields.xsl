@@ -85,6 +85,29 @@
     
   </xsl:template>
 
+  <!-- SDS: Render Constraints anchors -->
+
+  <xsl:template mode="mode-iso19139"
+                match="srv:SV_ServiceIdentification[/root/gui/currTab/text()='inspire_sds']/gmd:resourceConstraints[gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor]"
+                priority="2000">
+
+     <xsl:variable name="anchor" select="./gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor"/>
+     <xsl:variable name="accessCode" select="substring-after($anchor/@xlink:href, 'ConditionsApplyingToAccessAndUse/')"/>
+
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/sds-limitation"/>
+      <xsl:with-param name="value" select="/root/gui/schemas/iso19139/strings/sds/*[name()=$accessCode]"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+      <xsl:with-param name="name" select="concat(gn:element/@ref,'_xlinkCOLONhref')"/>
+      <xsl:with-param name="editInfo" select="*/gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="gn:element"/>
+      <xsl:with-param name="isDisabled" select="false()"/>
+      <xsl:with-param name="isReadOnly" select="true()"/>
+    </xsl:call-template>
+  </xsl:template>
+
+
   <!-- Readonly elements -->
   <xsl:template mode="mode-iso19139" priority="2000" match="gmd:fileIdentifier|gmd:dateStamp">
 
