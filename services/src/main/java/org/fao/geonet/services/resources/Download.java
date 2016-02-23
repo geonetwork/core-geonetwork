@@ -167,6 +167,7 @@ public class Download {
 							        sm.getValue("system/feedback/mailServer/username"), 
 							        sm.getValue("system/feedback/mailServer/password"), 
 							        sm.getValueAsBool("system/feedback/mailServer/ssl"), 
+								sm.getValueAsBool("system/feedback/mailServer/tls"),
 							        from, fromDescr, email, null, subject, message);
 						}
 						catch (Exception e)

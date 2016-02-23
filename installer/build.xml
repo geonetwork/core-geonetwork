@@ -149,13 +149,13 @@
     </replace>
 
     <!-- help file -->
-    <copy file="../docs/readme.html"
+    <copy file="readme.html"
           tofile="${propsdir}/readme.html"
           filtering="on" overwrite="yes"/>
-    <copy file="../docs/readme_fra.html"
+    <copy file="readme_fra.html"
           tofile="${propsdir}/readme_fra.html"
           filtering="on" overwrite="yes"/>
-    <copy file="../docs/readme_spa.html"
+    <copy file="readme_spa.html"
           tofile="${propsdir}/readme_spa.html"
           filtering="on" overwrite="yes"/>
 

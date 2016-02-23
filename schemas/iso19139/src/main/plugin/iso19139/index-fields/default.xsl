@@ -353,6 +353,7 @@
             <xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString|gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor">
 
                 <Field name="orgName" string="{string(.)}" store="true" index="true"/>
+                <Field name="orgNameTree" string="{string(.)}" store="true" index="true"/>
 
                 <xsl:variable name="role"    select="../../gmd:role/*/@codeListValue"/>
                 <xsl:variable name="roleTranslation" select="util:getCodelistTranslation('gmd:CI_RoleCode', string($role), string($isoLangId))"/>

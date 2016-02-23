@@ -20,6 +20,7 @@
       string="{if ($name != '') then concat($org, ' (', $name, ')') else $org}"
       store="true" index="true"/>
     <Field name="orgName" string="{$org}" store="true" index="true"/>
+    <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
 
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>

@@ -80,7 +80,7 @@
                        required=""
                        name="url"
                        class="form-control"
-                       type="url"
+                       type="text"
                        data-ng-blur="loadCurrentLink()"
                        id="onlinesrcUrl"
                        placeholder="http://">
@@ -297,7 +297,6 @@
 
   <div class="">
     <button type="button"
-            data-ng-disabled="!gnAddLink.$valid"
             class="btn navbar-btn"
             data-ng-class="gnAddLink.$valid && !isUrlOk ? 'btn-warning' : 'btn-success'"
             data-gn-click-and-spin="addOnlinesrc()">

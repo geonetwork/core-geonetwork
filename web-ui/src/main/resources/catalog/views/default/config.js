@@ -63,6 +63,9 @@
 
           };
 
+          // Object to store the current Map context
+          viewerSettings.storage = 'sessionStorage';
+
           /*******************************************************************
              * Define maps
              */

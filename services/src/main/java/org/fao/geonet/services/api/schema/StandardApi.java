@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletRequest;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -88,8 +89,8 @@ public class StandardApi implements ApplicationContextAware {
     ) throws Exception {
         Map<String, String> response = new LinkedHashMap<String, String>();
         final ServiceContext context = ServiceContext.get();
-        String language = languageUtils.parseAcceptLanguage(request.getLocales());
-        context.setLanguage(language);
+        Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
+        context.setLanguage(language.getISO3Language());
 
         String elementName = Info.findNamespace(codelist, schemaManager, schema);
         Element e = Info.getHelp(schemaManager, "codelists.xml",

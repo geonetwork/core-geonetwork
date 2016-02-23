@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -43,6 +44,7 @@ public class UserSecurity extends GeonetEntity implements Serializable {
      */
     public
     @Nonnull
+    @JsonIgnore
     UserSecurity setPassword(@Nonnull char[] password) {
         this._password = password == null ? new char[0] : password.clone();
         return this;
