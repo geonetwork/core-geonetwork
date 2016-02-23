@@ -200,7 +200,7 @@
               }
             });
 
-            solrObject.search(scope.output, scope.searchInput).
+            solrObject.searchWithFacets(scope.output, scope.searchInput).
                 then(function(facetsInfo) {
                   scope.fields = facetsInfo.facetConfig;
                   scope.count = facetsInfo.count;
@@ -229,7 +229,7 @@
             scope.searchInput = '';
 
             // load all facet and fill ui structure for the list
-            solrObject.search().
+            solrObject.searchWithFacets().
                 then(function(facetsInfo) {
                   scope.fields = facetsInfo.facetConfig;
                   scope.count = facetsInfo.count;

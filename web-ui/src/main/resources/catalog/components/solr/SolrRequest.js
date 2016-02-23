@@ -7,6 +7,8 @@
       search: 'search'
   };
 
+  var FACET_RANGE_COUNT = 5;
+
   geonet.GnSolrRequest = function(config, $injector) {
     this.$http = $injector.get('$http');
     this.$q = $injector.get('$q');
@@ -34,15 +36,20 @@
     this.filteredDocTypeFieldsInfo;
 
     /**
-     * @type {string}
-     * The solr base url, used for all search queries.
+     * @type {Object}
+     * The solr url request, as an object with `baseUrl`, `facets` and `stats`
+     * properties
      */
-    this.baseUrl;
+    this.uri;
 
-    this.events = [];
-
+    /**
+     * Event listener object, for each event key, contains an array of
+     * event option (params, callback).
+     * @type {Object}
+     */
     this.eventsListener = {};
 
+    // Initialize all events
     angular.forEach(solrRequestEvents, function(k) {
       this.eventsListener[k] = [];
     }.bind(this));
@@ -82,7 +89,7 @@
           indexInfos.push({
             attrName: customF[i],
             idxName: docF[i],
-            isRange: docF[i].endsWith('_i'),
+            isRange: docF[i] == 'PRL_CPRL_s', //docF[i].endsWith('_i'),
             isMultiple: docF[i].endsWith('_ss')
           });
         }
@@ -97,7 +104,7 @@
         }, this);
 
         this.totalCount = indexInfo.totalRecords_i;
-        this.baseUrl = this.getBaseRequest(options);
+        this.uri = this.getBaseRequest(options);
       }
       catch (e) {
         var msg = this.$translate('docTypeNotIndexed', {
@@ -116,22 +123,41 @@
     return defer.promise;
   };
 
+  geonet.GnSolrRequest.prototype.searchWithFacets = function(params, any) {
+    var needStats = false;
+    this.filteredDocTypeFieldsInfo.forEach(function(field) {
+      if(field.isRange) {
+        needStats = true;
+        return false;
+      }
+    });
 
+    if(needStats) {
+      console.log('range');
+
+      var url = this.getSearchUrl_(params, any) + this.uri.stats;
+
+      return this.$http.get(url).then(angular.bind(this,
+          function(solrResponse) {
+            var params = this.createFacetSpecFromStats_(solrResponse.data);
+      }));
+
+    }
+    else {
+      return this.search(params, any, {facets:true});
+    }
+  };
 
   /**
-   * Update solr url depending on the current facet ui selection state.
-   * Each time a facet is selected, we trigger a new search on the index
-   * to build the facet ui again with updated occurencies.
+   * Update the baseUrl with search params. Search params can be on any field,
+   * or for a specific field.
    *
-   * Will build the solr Q query like:
-   *  +(LABEL_s:"Abyssal" LABEL_s:Infralittoral)
-   *  +featureTypeId:*IFR_AAMP_ZONES_BIO_ATL_P
-   *
-   * @param {object} params Search params object
-   * @param {string} any Filter on any field
+   * @param params
+   * @param any {string} text search on any field
    * @return {string} the updated url
+   * @private
    */
-  geonet.GnSolrRequest.prototype.search = function(params, any) {
+  geonet.GnSolrRequest.prototype.getSearchUrl_ = function(params, any) {
 
     var fieldsQ = [];
     angular.forEach(params, function(field, fieldName) {
@@ -148,18 +174,45 @@
         fieldsQ.push('+*' + v + '*');
       });
     }
-    var url = this.baseUrl;
+    var url = this.uri.baseUrl;
     if (fieldsQ.length) {
       url = url.replace('&q=', '&q=' +
           encodeURIComponent(fieldsQ.join(' ') + ' +'));
     }
+    return url;
+  };
 
+  /**
+   * Update solr url depending on the current facet ui selection state.
+   * Each time a facet is selected, we trigger a new search on the index
+   * to build the facet ui again with updated occurencies.
+   *
+   * Will build the solr Q query like:
+   *  +(LABEL_s:"Abyssal" LABEL_s:Infralittoral)
+   *  +featureTypeId:*IFR_AAMP_ZONES_BIO_ATL_P
+   *
+   * @param {object} params Search params object
+   * @param {string} any Filter on any field
+   * @return {string} the updated url
+   */
+  geonet.GnSolrRequest.prototype.search = function(params, any, config_opt) {
+
+    var config = config_opt || {};
+    var url = this.getSearchUrl_(params, any);
+
+    if(config.facets) {
+      url += this.uri.facets;
+    }
+    if(config.stats) {
+      url += this.uri.stats;
+    }
 
     return this.$http.get(url).then(angular.bind(this,
         function(solrResponse) {
 
           this.count = solrResponse.data.response.numFound;
           this.sendEvent('search', {
+            sender: this,
             url: url,
             records: solrResponse.data.response.docs
           });
@@ -171,28 +224,37 @@
   };
 
   geonet.GnSolrRequest.prototype.getBaseRequest = function(options) {
-    var url = this.baseUrl || this.buildSolrUrl({
+    var facetParams = '',
+        statParams = '';
+
+    var url = this.buildSolrUrl({
       rows: 0,
       q: this.config.docIdField + ':"' + this.config.idDoc(options) + '"',
       wt: 'json'
     });
 
     if(this.config.facets) {
-      url += '&facet=true';
-      url += '&facet.mincount=1';
+      facetParams += '&facet=true';
+      facetParams += '&facet.mincount=1';
       this.filteredDocTypeFieldsInfo.forEach(function(field) {
-        url += '&facet.field=' + field.idxName;
+        facetParams += '&facet.field=' + field.idxName;
       });
     }
 
     if(this.config.stats) {
-      url += '&stats=true';
+      statParams += '&stats=true';
       this.filteredDocTypeFieldsInfo.forEach(function(field) {
-        url += '&stats.field=' + field.idxName;
+        if(field.isRange) {
+          statParams += '&stats.field=' + field.idxName;
+        }
       });
     }
 
-    return url;
+    return {
+      baseUrl: url,
+      facets: facetParams,
+      stats: statParams
+    }
   };
 
   /**
@@ -277,6 +339,22 @@
         }
       }
     }
+    return fields;
+  };
+
+  geonet.GnSolrRequest.prototype.createFacetSpecFromStats_ = function(solrData) {
+    var fields = [];
+    for (var fieldProp in solrData.stats.stats_fields) {
+      var field = solrData.stats.stats_fields[fieldProp];
+      fields.push({
+        "facet.range": fieldProp,
+        "facet.range.start": field.min,
+        "facet.range.end": field.max,
+        "facet.range.gap": (field.max-field.min) / FACET_RANGE_COUNT
+      });
+    }
+    console.log(fields);
+
     return fields;
   };
 
