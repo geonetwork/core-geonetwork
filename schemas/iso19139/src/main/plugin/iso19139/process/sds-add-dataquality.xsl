@@ -44,7 +44,7 @@
                                     <gmd:specification>
                                         <gmd:CI_Citation>
                                             <gmd:title>
-                                                <gmx:Anchor xlink:href=" http://inspire.ec.europa.eu/metadata-codelist/Category/invocable">invocable</gmx:Anchor>
+                                                <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/Category/invocable">invocable</gmx:Anchor>
                                             </gmd:title>
                                             <gmd:date>
                                                 <gmd:CI_Date>
