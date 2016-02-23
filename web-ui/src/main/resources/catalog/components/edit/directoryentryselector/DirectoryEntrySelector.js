@@ -217,12 +217,12 @@
                       class: 'gn-modal-lg'
                     }, scope, 'EntrySelected');
                   };
-                  var openModal = function(o, scope, eventName) {
-                    var popup = gnPopup.createModal(o, scope);
-                    $rootScope.$on(eventName,
-                   function(e, o) {
-                     popup.trigger('hidden.bs.modal');
-                   });
+                  var popup;
+                  var openModal = function(o, scope) {
+                    popup = gnPopup.createModal(o, scope);
+                  };
+                  scope.closeModal = function() {
+                    popup.trigger('hidden.bs.modal');
                   };
                 }
               };
@@ -275,7 +275,7 @@
                    scope.stateObj.selectRecords[0],
                    role,
                    usingXlink).then(function(r) {
-                     scope.$emit('EntrySelected', true);
+                     scope.closeModal();
                    });
                  };
                }

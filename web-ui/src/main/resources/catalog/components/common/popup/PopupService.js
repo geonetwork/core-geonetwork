@@ -93,7 +93,8 @@
             '  </div>' +
             '</div>');
 
-        var newScope = scope || $rootScope.$new();
+        var newScope = scope || $rootScope.$new(),
+            scopeProvided = angular.isDefined(scope);
         element = $compile(element)(newScope);
 
         $(document.body).append(element);
@@ -102,7 +103,9 @@
           element.modal('hide');
           $('body > .modal-backdrop').remove();
           element.remove();
-          newScope.$destroy();
+          if (!scopeProvided) {
+            newScope.$destroy();
+          }
         });
         return element;
       };
