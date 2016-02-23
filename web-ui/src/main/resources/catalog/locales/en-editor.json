@@ -31,6 +31,8 @@
     "assignToCategory": "Assign to category",
     "assignToGroup": "Assign to group",
     "associationType": "Association type",
+    "chooseContactRole": "or choose role",
+    "chooseEntry": "Search directory",
     "beforeUnloadEditor": "You may have unsaved changes since last save {{timeAgo}}.",
     "cancel": "Cancel",
     "cancelChangesFromNow": "Cancel all changes since the start of the editing session {{timeAgo}}.",
