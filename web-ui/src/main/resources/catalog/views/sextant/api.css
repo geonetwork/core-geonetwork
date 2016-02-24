@@ -19293,7 +19293,9 @@ yx-axis
 .gn .sxt-main-tabs .sxt-panel-button .btn.active,
 .g .sxt-main-tabs .sxt-panel-button .btn.active,
 .gn .sxt-main-tabs .sxt-panel-button .btn:hover,
-.g .sxt-main-tabs .sxt-panel-button .btn:hover {
+.g .sxt-main-tabs .sxt-panel-button .btn:hover,
+.gn .sxt-main-tabs .sxt-panel-button .btn.opened,
+.g .sxt-main-tabs .sxt-panel-button .btn.opened {
   color: #4ba2d9;
   background: white;
   box-shadow: none ;
@@ -19599,10 +19601,6 @@ yx-axis
 .g [data-ng-search-form] .sxt-categorytree ul ul {
   display: none;
   font-size: 11px;
-}
-.gn [data-ng-search-form] .sxt-categorytree ul,
-.g [data-ng-search-form] .sxt-categorytree ul {
-  padding-left: 30px;
 }
 .gn [data-ng-search-form] .sxt-categorytree ul li,
 .g [data-ng-search-form] .sxt-categorytree ul li {
