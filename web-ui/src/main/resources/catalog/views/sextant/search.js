@@ -331,24 +331,26 @@
       };
 
       // Manage layer url parameters
-      if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
-        var loadLayerPromise =
-            gnMap.addWmsFromScratch(viewerMap, gnViewerSettings.wmsUrl,
-                gnViewerSettings.layerName, true).
+      $timeout(function() {
+        if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
+          var loadLayerPromise =
+              gnMap.addWmsFromScratch(viewerMap, gnViewerSettings.wmsUrl,
+                  gnViewerSettings.layerName, true).
 
-                then(function(layer) {
-                  if(layer) {
-                    layer.set('group', gnViewerSettings.layerGroup);
-                    viewerMap.addLayer(layer);
-                    if(waitingLayers) waitingLayers.push(layer);
-                    $scope.addLayerPopover('map');
-                    if (!$scope.mainTabs.map.active) {
-                      $scope.mainTabs.map.titleInfo += 1;
+                  then(function(layer) {
+                    if(layer) {
+                      layer.set('group', gnViewerSettings.layerGroup);
+                      viewerMap.addLayer(layer);
+                      if(waitingLayers) waitingLayers.push(layer);
+                      $scope.addLayerPopover('map');
+                      if (!$scope.mainTabs.map.active) {
+                        $scope.mainTabs.map.titleInfo += 1;
+                      }
                     }
-                  }
-                });
-        if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
-      }
+                  });
+          if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
+        }
+      },0);
 
 
       // Manage tabs height for api
