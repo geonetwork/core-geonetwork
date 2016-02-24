@@ -89,7 +89,9 @@ public class SextantExtractor {
 			UserSession us = serviceContext.getUserSession();
 			boolean isAuthenticated = us.isAuthenticated();
 
-			if (isAuthenticated) {
+			//TODO; check if we can't just get info from user request
+			// all is done client side
+			if (isAuthenticated && !us.getPrincipal().isGeneric()) {
 				// Some infos in the XML should come from the LDAP
 				DefaultSpringSecurityContextSource contextSource = (DefaultSpringSecurityContextSource) ApplicationContextHolder
 						.get().getBean("contextSource");
