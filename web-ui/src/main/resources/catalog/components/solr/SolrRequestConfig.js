@@ -11,7 +11,7 @@
       docIdField: 'featureTypeId',
       idDoc: function(config) {
         return config.wfsUrl + '#' +
-            config.featureTypeName.replace(':', '\\:')
+            config.featureTypeName.replace(':', '\\:');
       },
       facets: true,
       stats: true,

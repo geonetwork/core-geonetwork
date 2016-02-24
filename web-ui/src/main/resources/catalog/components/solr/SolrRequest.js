@@ -4,7 +4,7 @@
   var module = angular.module('gn_solr_request', []);
 
   var solrRequestEvents = {
-      search: 'search'
+    search: 'search'
   };
 
   var FACET_RANGE_COUNT = 5;
@@ -34,7 +34,7 @@
      * @type {Array<Object}>
      * `this.docTypeFieldsInfo` filtered through `config.excludedFields`
      */
-    this.filteredDocTypeFieldsInfo;
+    this.filteredDocTypeFieldsInfo = [];
 
     this.baseUrl;
 
@@ -57,6 +57,16 @@
         this.urlUtils.toKeyValue(params));
   };
 
+
+  /**
+   * Initialize request parameters.
+   *
+   * @param {object} options
+   */
+  geonet.GnSolrRequest.prototype.init = function(options) {
+    this.initBaseRequest_(options);
+  };
+
   /**
    * Get the indexed fields for the given feature. We get an array of both
    * featureType names and indexed names with the suffix.
@@ -72,7 +82,6 @@
       q: this.config.docTypeIdField + ':"' + docTypeId + '"',
       wt: 'json'
     });
-
     var defer = this.$q.defer();
     this.$http.get(url).then(angular.bind(this, function(response) {
       var indexInfos = [];
@@ -119,9 +128,10 @@
     return defer.promise;
   };
 
-  geonet.GnSolrRequest.prototype.searchWithFacets = function(params, any, solrParams) {
+  geonet.GnSolrRequest.prototype.searchWithFacets =
+      function(params, any, solrParams) {
 
-    if(this.initialParams.stats['stats.field'].length > 0) {
+    if (this.initialParams.stats['stats.field'].length > 0) {
 
       return this.search(params, any, this.initialParams.stats).then(
           function(resp) {
@@ -132,7 +142,10 @@
           }.bind(this));
     }
     else {
-      return this.search(params, any, angular.extend({}, this.initialParams.facets, solrParams));
+      return this.search(
+          params,
+          any,
+          angular.extend({}, this.initialParams.facets, solrParams));
     }
   };
 
@@ -168,7 +181,7 @@
             sender: this
           }));
           return resp;
-    }));
+        }));
   };
 
   /**
@@ -187,17 +200,17 @@
     });
 
     var facetParams = {
-      "facet": true,
-      "facet.mincount": 1,
-      "facet.field": []
+      'facet': true,
+      'facet.mincount': 1,
+      'facet.field': []
     };
     var statParams = {
-      "stats": true,
-      "stats.field": []
+      'stats': true,
+      'stats.field': []
     };
 
     this.filteredDocTypeFieldsInfo.forEach(function(field) {
-      if(!field.isRange) {
+      if (!field.isRange) {
         facetParams['facet.field'].push(field.idxName);
       }
       else {
@@ -237,8 +250,8 @@
    *
    * 'q=+(CARPOOL_d:[28109.00 TO 429692.20}) +(STATE_NAME_s:"Alabama") + *Ala*
    *
-   * @param params
-   * @param any {string} text search on any field
+   * @param {*} params
+   * @param {string} any text search on any field
    * @return {string} the updated url
    * @private
    */
@@ -248,7 +261,7 @@
     angular.forEach(params, function(field, fieldName) {
       var valuesQ = [];
       for (var p in field.values) {
-        if(field.type == 'range') {
+        if (field.type == 'range') {
           valuesQ.push(fieldName +
               ':[' + p.replace(FACET_RANGE_DELIMITER, ' TO ') + '}');
         }
@@ -317,13 +330,17 @@
    * The return object is used for the UI to display all facet list.
    *
    * @param {Object} solrData  solr response object
-   * @returns {Array} Facet config
+   * @return {Array} Facet config
    * @private
    */
   geonet.GnSolrRequest.prototype.createFacetData_ = function(solrData) {
     var fields = [];
     for (var kind in solrData.facet_counts) {
       var facetType = this.getFacetType_(kind);
+      // TODO: format facet types eg heatmaps
+      if (facetType === '') {
+        continue;
+      }
       for (var fieldProp in solrData.facet_counts[kind]) {
         var field = solrData.facet_counts[kind][fieldProp];
         var fNameObj = this.getIdxNameObj_(fieldProp);
@@ -365,13 +382,13 @@
         }
 
         //TODO: manage intervals ?
-/*
+        /*
         else if (kind == 'facet_intervals' &&
             Object.keys(field).length > 0) {
           facetField.values = field;
           fields.push(facetField);
         }
-*/
+        */
       }
     }
     return fields;
@@ -393,13 +410,14 @@
    *    f.CARPOOL_d.facet.range.gap:401583.2
    * }
    *
-   * @param solrData {Object} object return from solr Request
-   * @returns {{[facet.range]: Array}}
+   * @param {Object} solrData object return from solr Request
+   * @return {{[facet.range]: Array}}
    * @private
    */
-  geonet.GnSolrRequest.prototype.createFacetSpecFromStats_ = function(solrData) {
+  geonet.GnSolrRequest.prototype.createFacetSpecFromStats_ =
+      function(solrData) {
     var fields = {
-      "facet.range": []
+      'facet.range': []
     };
     for (var fieldProp in solrData.stats.stats_fields) {
       var field = solrData.stats.stats_fields[fieldProp];
@@ -407,9 +425,8 @@
       fields['f.' + fieldProp + '.facet.range.start'] = field.min;
       fields['f.' + fieldProp + '.facet.range.end'] = field.max;
       fields['f.' + fieldProp + '.facet.range.gap'] =
-          (field.max-field.min) / FACET_RANGE_COUNT;
+          (field.max - field.min) / FACET_RANGE_COUNT;
     }
-    console.log(fields);
     return fields;
   };
 
@@ -425,15 +442,15 @@
    * => '&RANGE=10&PROF=2&PROF=3'
    *
    * @param {Object} params to extract
-   * @returns {string} url param
+   * @return {string} url param
    * @private
    */
   geonet.GnSolrRequest.prototype.parseKeyValue_ = function(params) {
     var urlParams = '';
     angular.forEach(params, function(v, k) {
 
-      if(angular.isArray(v)) {
-        v.forEach(function (f) {
+      if (angular.isArray(v)) {
+        v.forEach(function(f) {
           urlParams += '&' + k + '=' + f;
         });
       } else {

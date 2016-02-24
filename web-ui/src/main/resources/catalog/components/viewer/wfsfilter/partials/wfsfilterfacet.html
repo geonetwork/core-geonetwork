@@ -44,10 +44,9 @@
              data-ng-model-options="{ debounce: 400 }"
              class="layerfilter form-control input-sm"
              placeholder="{{'filter'|translate}}">
-      <label>
+      <label data-ng-if="map">
         <input type="checkbox"
-               name="isHeatMapVisible"
-               data-ng-model="isHeatMapVisible"/>
+               data-ng-model="heatmapLayer.visible"/>
         <span data-translate="">isHeatMapVisible</span>
       </label>
     </div>

@@ -29,7 +29,7 @@
 
   module.directive('gnDataTable',
       ['$http', '$translate', 'gnSolrRequestManager',
-       function($http, $translate,gnSolrRequestManager) {
+       function($http, $translate, gnSolrRequestManager) {
 
          return {
            restrict: 'A',
@@ -56,7 +56,7 @@
                  var columns = [],
                      fields = solrObject.filteredDocTypeFieldsInfo;
 
-                 fields.forEach(function (field) {
+                 fields.forEach(function(field) {
                    if ($.inArray(field.idxName, scope.excludeCols) === -1) {
                      columns.push({
                        field: field.idxName,
@@ -92,8 +92,8 @@
                  });
 
                }
-               else  {
-                table.bootstrapTable('destroy');
+               else {
+                 table.bootstrapTable('destroy');
                }
              });
            }

@@ -322,7 +322,7 @@
        */
       this.saveToLocalStorage = function(map) {
         var storage = gnViewerSettings.storage ?
-          window[gnViewerSettings.storage] : window.localStorage;
+            window[gnViewerSettings.storage] : window.localStorage;
         if (map.getSize()[0] == 0 || map.getSize()[1] == 0) {
           // don't save a map which has not been rendered yet
           return;

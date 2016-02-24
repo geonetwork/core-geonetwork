@@ -12,8 +12,9 @@
    */
   module.directive('gnWfsFilterFacets', [
     '$http', 'wfsFilterService', '$q', '$rootScope',
-    'gnSolrRequestManager',
-    function($http, wfsFilterService, $q, $rootScope, gnSolrRequestManager) {
+    'gnSolrRequestManager', 'gnSolrService',
+    function($http, wfsFilterService, $q, $rootScope,
+             gnSolrRequestManager, gnSolrService) {
       return {
         restrict: 'A',
         replace: true,
@@ -28,6 +29,7 @@
         link: function(scope, element, attrs) {
 
           var solrUrl, uuid, ftName;
+          scope.map = scope.$parent.map;
 
           // Only admin can index the features
           scope.user = $rootScope.user;
@@ -36,7 +38,10 @@
           scope.showCount = angular.isDefined(attrs['showcount']);
 
           // Get an instance of solr object
-          var solrObject = gnSolrRequestManager.register('WfsFilter', 'facets');
+          var solrObject =
+              gnSolrRequestManager.register('WfsFilter', 'facets');
+          var heatmapsRequest =
+              gnSolrRequestManager.register('WfsFilter', 'heatmaps');
 
           /**
            * Init the directive when the scope.layer has changed.
@@ -46,7 +51,7 @@
            */
           function init() {
             angular.extend(scope, {
-              fields : [],
+              fields: [],
               isWfsAvailable: undefined,
               isFeaturesIndexed: false,
               status: null,
@@ -93,10 +98,10 @@
               // A WFS URL is in the metadata or we're guessing WFS has
               // same URL as WMS
               scope.wfsUrl ? 'WFS' : 'WMS').then(
-                function(data) {
-                  appProfile = data;
-                  return data;
-          });
+              function(data) {
+                appProfile = data;
+                return data;
+              });
 
           function loadFields() {
             var url;
@@ -122,10 +127,12 @@
           }
 
           scope.checkFeatureTypeInSolr = function() {
-            solrObject.getDocTypeInfo({
+            var config = {
               wfsUrl: scope.url,
               featureTypeName: ftName
-            }).then(function() {
+            };
+            heatmapsRequest.init(config);
+            solrObject.getDocTypeInfo(config).then(function() {
               scope.isFeaturesIndexed = true;
               scope.status = null;
               var docFields = solrObject.filteredDocTypeFieldsInfo;
@@ -197,16 +204,10 @@
               }
             });
 
-
-            solrObject.searchWithFacets(scope.output, scope.searchInput, {
-              'facet.heatmap': 'geom',
-              'facet.heatmap.geom': '["-180 -90" TO "180 90"]',
-              'facet.heatmap.gridLevel': 3
-            }).
+            solrObject.searchWithFacets(scope.output, scope.searchInput).
                 then(function(resp) {
                   scope.fields = resp.facets;
                   scope.count = resp.count;
-                  scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
                   if (formInput) {
                     angular.forEach(scope.fields, function(f) {
                       if (!collapsedFields ||
@@ -215,8 +216,25 @@
                       }
                     });
                   }
+                  refreshHeatmap();
                 });
           };
+
+          function refreshHeatmap() {
+            if (scope.isFeaturesIndexed) {
+              heatmapsRequest.searchWithFacets(
+                  scope.output, scope.searchInput,
+                  gnSolrService.getHeatmapParams(scope.map)).
+                  then(function(resp) {
+                    scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
+                  });
+            }
+          }
+          // TODO: only if a map is provided
+          if (scope.map) {
+            scope.map.on('moveend', refreshHeatmap);
+          }
+
 
           /**
            * reset and init the facet structure.
@@ -230,19 +248,16 @@
 
             scope.searchInput = '';
 
+
             // load all facet and fill ui structure for the list
-            solrObject.searchWithFacets(null, null, {
-              'facet.heatmap': 'geom',
-              'facet.heatmap.geom': '["-180 -90" TO "180 90"]',
-              'facet.heatmap.gridLevel': 3
-            }).
+            solrObject.searchWithFacets(null, null).
                 then(function(resp) {
                   scope.fields = resp.facets;
                   scope.count = resp.count;
-                  scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
                   angular.forEach(scope.fields, function(f) {
                     f.collapsed = true;
                   });
+                  refreshHeatmap();
                 });
 
             scope.resetSLDFilters();
@@ -299,7 +314,7 @@
               wfsFilterService.indexWFSFeatures(
                   scope.url,
                   ftName,
-                  appProfile ? appProfile.tokenize: null,
+                  appProfile ? appProfile.tokenize : null,
                   uuid);
             });
           };
@@ -321,85 +336,46 @@
             scope.$watch('layer', function(n, o) {
               if (n && n != o) {
                 init();
+
+                if (scope.map) {
+                  source.clear();
+                  initHeatMap();
+                }
               }
             });
           }
 
+          scope.isHeatMapVisible = false;
+          scope.heatmapLayer = null;
+          var source = new ol.source.Vector();
+          function initHeatMap() {
+            scope.isHeatMapVisible = true;
+            scope.heatmapLayer = new ol.layer.Heatmap({
+              source: source,
+              radius: 40,
+              blur: 50,
+              opacity: .8,
+              visible: scope.isHeatMapVisible
+            });
+            scope.map.addLayer(scope.heatmapLayer);
+          }
 
-          scope.isHeatMapVisible = true;
-          var map = scope.$parent.map;
-          var heatmapLayer;
-          scope.$watch('isHeatMapVisible', function (n, o) {
-            if (n != o) {
-              heatmapLayer.setVisible(n);
-            }
-          });
-          function heatmapToLayer(heatmap, proj, options) {
-            var grid = {};
-            for (var i = 0; i < heatmap.length; i++) {
-              grid[heatmap[i]] = heatmap[i + 1];
-              i ++;
-            }
-            if (grid) {
-              var source = new ol.source.Vector();
-              // The initial outer level is in row order (top-down),
-              // then the inner arrays are the columns (left-right).
-              // The entire value is null if there is no matching data.
-              var rows = grid.counts_ints2D,
-                xcell = (grid.maxX - grid.minX) / grid.columns,
-                ycell = (grid.maxY - grid.minY) / grid.rows,
-                max = 0;
-              for (var i = 0; i < rows.length; i++) {
-                // If any array would be all zeros, a null is returned
-                // instead for efficiency reasons.
-                if (!angular.isArray(rows[i])) {
-                  continue;
-                }
-                for (var j = 0; j < rows[i].length; j++) {
-                  if (rows[i][j] == 0) {
-                    continue;
-                  }
-                  var point = new ol.geom.Point([
-                    grid.minX + xcell * j,
-                    grid.maxY - ycell * i]);
-                  var value = rows[i][j];
-                  var feature = new ol.Feature({
-                    geometry: point.transform(
-                      "EPSG:4326",
-                      proj),
-                    value: value
-                  });
-                  source.addFeature(feature);
-                  max = Math.max(max, value);
-                }
-              }
-              options = angular.extend({
-                source: source,
-                radius: 40,
-                blur: 50,
-                opacity: .8,
-                visible: scope.isHeatMapVisible,
-                weight: function (v) {
-                  return v.get('value') / max;
-                }
-              }, options || {})
-              return new ol.layer.Heatmap(options);
-            }
-            return null;
-          };
-          scope.$watch('heatmaps', function (n, o) {
+          //scope.$watch('isHeatMapVisible', function (n, o) {
+          //  if (n != o) {
+          //    heatmapLayer.setVisible(n);
+          //  }
+          //});
+          // Update heatmap layers from Solr response
+          scope.$watch('heatmaps', function(n, o) {
             if (n != o) {
               // TODO: May contains multiple heatmaps
               if (angular.isArray(n.geom)) {
-                if (heatmapLayer) {
-                  map.removeLayer(heatmapLayer);
-                }
-                heatmapLayer = heatmapToLayer(
-                   n.geom,
-                   map.getView().getProjection());
-                if (heatmapLayer) {
-                  map.addLayer(heatmapLayer);
-                }
+                source.clear();
+                source.addFeatures(
+                    gnSolrService.heatmapToFeatures(
+                    n.geom,
+                    scope.map.getView().getProjection())
+                );
               }
             }
           });
