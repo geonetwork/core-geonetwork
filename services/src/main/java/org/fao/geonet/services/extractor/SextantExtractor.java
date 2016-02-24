@@ -85,13 +85,12 @@ public class SextantExtractor {
 			out.write("<extract xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"extracteur.xsd\">"
 					.getBytes());
 			final ServiceContext serviceContext = ServiceContext.get();
+			UserSpec usr = jsonExtractionSpec.getUser();
 
 			UserSession us = serviceContext.getUserSession();
 			boolean isAuthenticated = us.isAuthenticated();
 
-			//TODO; check if we can't just get info from user request
-			// all is done client side
-			if (isAuthenticated && !us.getPrincipal().isGeneric()) {
+			if (isAuthenticated) {
 				// Some infos in the XML should come from the LDAP
 				DefaultSpringSecurityContextSource contextSource = (DefaultSpringSecurityContextSource) ApplicationContextHolder
 						.get().getBean("contextSource");
@@ -109,15 +108,26 @@ public class SextantExtractor {
 					uidNumberStr = uidNumber.get().toString();
 				}
 
+				String lastname, firstname, mail;
+				if (us.getPrincipal().isGeneric()) {
+					lastname = usr.getLastname();
+					firstname = usr.getFirstname();
+					mail = usr.getMail();
+				}
+				else {
+					lastname = us.getSurname();
+					firstname = us.getName();
+					mail = us.getEmailAddr();
+				}
+
 				out.write(String.format(
 						"<user lastname=\"%s\" firstname=\"%s\" mail=\"%s\" is_ifremer=\"%s\""
-								+ " uidNumber=\"%s\" login=\"%s\" org=\"%s\" usage=\"%s\" />", us.getSurname(),
-						us.getName(), us.getEmailAddr(), us.getEmailAddr().contains(IFREMER_PATTERN),
-						uidNumberStr, us.getUsername(), jsonExtractionSpec.getUser().getOrg(),
-						jsonExtractionSpec.getUser().getUsage()).getBytes());
+								+ " uidNumber=\"%s\" login=\"%s\" org=\"%s\" usage=\"%s\" />", lastname,
+						firstname, mail, mail.contains(IFREMER_PATTERN),
+						uidNumberStr, us.getUsername(), usr.getOrg(),
+						usr.getUsage()).getBytes());
 			} else {
 				// using data provided by the user
-				UserSpec usr = jsonExtractionSpec.getUser();
 				if (usr == null) {
 					throw new RuntimeException("User not logged in, and no information provided");
 				}
