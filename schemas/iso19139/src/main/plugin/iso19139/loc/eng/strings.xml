@@ -47,6 +47,19 @@
   <sds-endpoint>Endpoint URL</sds-endpoint>
   <sds-add-endpoint>Add Endpoint</sds-add-endpoint>
 
+  <sds-addNoConstraints>No Limitation</sds-addNoConstraints>
+  <sds-addNoConstraintsHelp>Add an element that documents that there are no limitation for this service.</sds-addNoConstraintsHelp>
+  <sds-addUnknownConstraints>Unknown Limitation</sds-addUnknownConstraints>
+  <sds-addConstraints>Customizable constraints</sds-addConstraints>
+
+  <sds>
+    <noConditionsApply>No conditions apply</noConditionsApply>
+    <conditionsUnknown>Conditions unknown</conditionsUnknown>
+  </sds>
+
+  <sds-limitation>Limitation</sds-limitation>
+
+
   <resource>Resource</resource>
   <xml>XML</xml>
   <metadata>Metadata</metadata>
@@ -110,6 +123,7 @@
   <spatialResolution>Spatial resolution (scale)</spatialResolution>
   <spatialDistance>Spatial resolution (distance)</spatialDistance>
   <accessConstraints>Access constraints</accessConstraints>
+  <useConstraints>Use constraints</useConstraints>
   <useLimitation>Use limitation</useLimitation>
   <add-resource-id>Compute resource identifier</add-resource-id>
   <add-resource-idHelp>Compose the resource identifier using the catalog URL and the metadata identifier (eg. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).</add-resource-idHelp>
