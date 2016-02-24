@@ -332,13 +332,11 @@
             scope.$watch('layer', function(n, o) {
               if (n === null) {
                 resetHeatMap();
-              }
-              if (n && n !== o) {
+              } else if (n !== o) {
                 init();
-
                 if (scope.map) {
                   resetHeatMap();
-                  initHeatMap();
+                  scope.map.on('moveend', refreshHeatmap);
                 }
               }
             });
@@ -346,8 +344,8 @@
 
           scope.isHeatMapVisible = false;
           scope.heatmapLayer = null;
-          var source = new ol.source.Vector();
-          function initHeatMap() {
+          if (scope.map) {
+            var source = new ol.source.Vector();
             scope.isHeatMapVisible = true;
             scope.heatmapLayer = new ol.layer.Heatmap({
               source: source,
@@ -357,8 +355,8 @@
               visible: scope.isHeatMapVisible
             });
             scope.map.addLayer(scope.heatmapLayer);
-            scope.map.on('moveend', refreshHeatmap);
           }
+
           function resetHeatMap() {
             source.clear();
             scope.map.un('moveend', refreshHeatmap);
@@ -369,6 +367,7 @@
               scope.heatmapLayer.setVisible(n);
             }
           });
+
           // Update heatmap layers from Solr response
           scope.$watch('heatmaps', function(n, o) {
             if (n != o) {
