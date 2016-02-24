@@ -23,6 +23,11 @@
              scope.setLayer = function(l) {
                scope.currentLayer = l;
              };
+             scope.map.getLayers().on('remove', function (e) {
+               if (e.element == scope.currentLayer) {
+                 scope.setLayer(null);
+               }
+             });
            }
          };
        }]);

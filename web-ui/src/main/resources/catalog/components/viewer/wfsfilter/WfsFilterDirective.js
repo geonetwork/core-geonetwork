@@ -230,10 +230,6 @@
                   });
             }
           }
-          // TODO: only if a map is provided
-          if (scope.map) {
-            scope.map.on('moveend', refreshHeatmap);
-          }
 
 
           /**
@@ -334,11 +330,14 @@
           }
           else {
             scope.$watch('layer', function(n, o) {
-              if (n && n != o) {
+              if (n === null) {
+                resetHeatMap();
+              }
+              if (n && n !== o) {
                 init();
 
                 if (scope.map) {
-                  source.clear();
+                  resetHeatMap();
                   initHeatMap();
                 }
               }
@@ -358,13 +357,18 @@
               visible: scope.isHeatMapVisible
             });
             scope.map.addLayer(scope.heatmapLayer);
+            scope.map.on('moveend', refreshHeatmap);
+          }
+          function resetHeatMap() {
+            source.clear();
+            scope.map.un('moveend', refreshHeatmap);
           }
 
-          //scope.$watch('isHeatMapVisible', function (n, o) {
-          //  if (n != o) {
-          //    heatmapLayer.setVisible(n);
-          //  }
-          //});
+          scope.$watch('isHeatMapVisible', function (n, o) {
+            if (n != o) {
+              scope.heatmapLayer.setVisible(n);
+            }
+          });
           // Update heatmap layers from Solr response
           scope.$watch('heatmaps', function(n, o) {
             if (n != o) {

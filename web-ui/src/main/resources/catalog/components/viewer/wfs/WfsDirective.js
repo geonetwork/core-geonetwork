@@ -59,7 +59,11 @@
                 });
           };
 
-          init();
+          scope.$watch('layer', function (n, o) {
+            if (n && n != o) {
+              init();
+            }
+          });
         }
       };
     }

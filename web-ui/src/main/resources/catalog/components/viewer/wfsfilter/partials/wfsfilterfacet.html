@@ -35,7 +35,6 @@
     <div class="gn-layertree-filter">
       <span class="fa fa-times-circle clear"
             data-ng-click="clearInput()"
-            data-ng-hide="searchInput==''"
             title="{{'clear' | translate}}"></span>
       <input type="text"
              data-gn-focus-on="isFeaturesIndexed"
@@ -43,11 +42,11 @@
              data-ng-change="filterFacets()"
              data-ng-model-options="{ debounce: 400 }"
              class="layerfilter form-control input-sm"
-             placeholder="{{'filter'|translate}}">
-      <label data-ng-if="map">
+             placeholder="{{'filter'|translate}}"/>
+      <label data-ng-show="map">
         <input type="checkbox"
-               data-ng-model="heatmapLayer.visible"/>
-        <span data-translate="">isHeatMapVisible</span>
+               data-ng-model="isHeatMapVisible"/>
+        <span data-translate="">displayHeatMap</span>
       </label>
     </div>
 
