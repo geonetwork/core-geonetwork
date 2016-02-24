@@ -340,6 +340,7 @@
                   then(function(layer) {
                     if(layer) {
                       layer.set('group', gnViewerSettings.layerGroup);
+                      layer.set('fromUrlParams', true);
                       viewerMap.addLayer(layer);
                       if(waitingLayers) waitingLayers.push(layer);
                       $scope.addLayerPopover('map');
