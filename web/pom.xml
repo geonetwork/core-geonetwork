@@ -473,56 +473,6 @@
   
   <build>
     <plugins>
-			
-            <plugin>
-                <groupId>ro.isdc.wro4j</groupId>
-                <artifactId>wro4j-maven-plugin</artifactId>
-                <version>${wro.version}</version>
-                <executions>
-                    <execution>
-                        <id>generate-cache</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <wroManagerFactory>org.fao.geonet.wro4j.GeonetworkMavenWrojManagerFactory</wroManagerFactory>
-                    <extraConfigFile>${basedir}/src/main/webResources/WEB-INF/wro-compiletime.properties</extraConfigFile>
-                    <cssDestinationFolder>${basedir}/target/geonetwork/static</cssDestinationFolder>
-                    <destinationFolder>${basedir}/target/geonetwork/static</destinationFolder>
-                    <jsDestinationFolder>${basedir}/target/geonetwork/static</jsDestinationFolder>
-                    <contextFolder>${basedir}/src/main/webapp/</contextFolder>
-                    <incrementalBuildEnabled>false</incrementalBuildEnabled>
-                    <parallelProcessing>true</parallelProcessing>
-										<ignoremissingresources>false</ignoremissingresources>
-                </configuration>
-
-                <dependencies>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>wro4j</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>web-ui</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>geonetwork-client</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.github.sommeri</groupId>
-                        <artifactId>less4j</artifactId>
-                        <version>1.8.4</version>
-                    </dependency>
-                </dependencies>
-
-            </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -700,7 +650,7 @@
               catalog/lib/style/font-awesome/scss/**
             </packagingExcludes>
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
-          <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
+          <webXml>${build.webapp.resources}/WEB-INF/${web.xml}</webXml>
           <attachClasses>true</attachClasses>
           <warName>geonetwork</warName>
           <webappDirectory>${project.build.directory}/geonetwork</webappDirectory>
@@ -734,7 +684,7 @@
           <webAppSourceDirectory>${project.build.directory}/geonetwork</webAppSourceDirectory>
           <webApp>
             <contextPath>/geonetwork</contextPath>
-            <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
+            <descriptor>${project.build.directory}/webapp/WEB-INF/${web.xml}</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
            <!--
               Enable to use ExtJS UI
@@ -828,6 +778,67 @@
         <env>inspire</env>
       </properties>
     </profile>
+    <profile>
+      <!-- Compile time wro4j build:
+      * Use wro4j to minify JS and LESS resources
+      * Generate them in webapp/static folder
+      * Turn off /static filter in web.xml
+      -->
+      <id>wro</id>
+      <properties>
+        <web.xml>web-no-wro4j.xml</web.xml>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>ro.isdc.wro4j</groupId>
+            <artifactId>wro4j-maven-plugin</artifactId>
+            <version>${wro.version}</version>
+            <executions>
+              <execution>
+                <id>generate-cache</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <wroManagerFactory>org.fao.geonet.wro4j.GeonetworkMavenWrojManagerFactory</wroManagerFactory>
+              <extraConfigFile>${basedir}/src/main/resources/wro-compiletime.properties</extraConfigFile>
+              <cssDestinationFolder>${basedir}/target/webapp/static</cssDestinationFolder>
+              <destinationFolder>${basedir}/target/webapp/static</destinationFolder>
+              <jsDestinationFolder>${basedir}/target/webapp/static</jsDestinationFolder>
+              <contextFolder>${basedir}/src/main/webapp/</contextFolder>
+              <incrementalBuildEnabled>false</incrementalBuildEnabled>
+              <parallelProcessing>true</parallelProcessing>
+            </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>wro4j</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>web-ui</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>geonetwork-client</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>com.github.sommeri</groupId>
+                <artifactId>less4j</artifactId>
+                <version>1.8.4</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <properties>
@@ -844,5 +855,6 @@
     <system.specific.overrides></system.specific.overrides>
     <rootProjectDir>${basedir}/..</rootProjectDir>
     <wro4jOutput>${project.build.directory}/wro4j-output/</wro4jOutput>
+    <web.xml>web-wro4j.xml</web.xml>
   </properties>
 </project>
