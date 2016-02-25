@@ -1,0 +1,31 @@
+<div class="btn-group"
+     data-ng-show="formats.length > 0">
+  <button type="button"
+          class="btn btn-link dropdown-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false">
+    <span data-translate="">downloadFeature</span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li class="dropdown-header"
+    data-translate="">downloadAllIn</li>
+    <li data-ng-repeat="f in formats">
+      <a data-gn-click-and-spin="download(f)">
+        {{f}}
+      </a>
+    </li>
+    <li data-ng-if="map"
+        role="separator" class="divider"></li>
+    <li class="dropdown-header"
+    data-ng-if="map"
+    data-translate="">downloadInCurrentMapExtent</li>
+    <li data-ng-if="map"
+        data-ng-repeat="f in formats">
+      <a data-gn-click-and-spin="download(f, true)">
+        {{f}}
+      </a>
+    </li>
+  </ul>
+</div>

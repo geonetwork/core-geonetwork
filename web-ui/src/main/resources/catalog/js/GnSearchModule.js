@@ -30,7 +30,8 @@
   module.config(['$LOCALES', function($LOCALES) {
     $LOCALES.push('search');
     $LOCALES.push('/../api/0.1/tools/i18n/db?type=MetadataCategory');
-    $LOCALES.push('/../api/0.1/standard/iso19139/codelists/gmd%3AMD_TopicCategoryCode');
+    $LOCALES.push('/../api/0.1/standard/iso19139/' +
+        'codelists/gmd%3AMD_TopicCategoryCode');
   }]);
 
 })();

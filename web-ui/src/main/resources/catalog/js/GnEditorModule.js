@@ -27,22 +27,12 @@
     'gn_mdactions_directive'
   ]);
 
-  // Define the translation files to load
-  module.constant('$LOCALES', ['core', 'search', 'editor',
-    '/../api/0.1/tools/i18n/db?type=StatusValue']);
-
   module.constant('gnViewerSettings', {});
 
-  module.config(['$translateProvider', '$LOCALES',
-                 function($translateProvider, $LOCALES) {
-      $translateProvider.useLoader('localeLoader', {
-        locales: $LOCALES,
-        prefix: '../../catalog/locales/',
-        suffix: '.json'
-      });
-
-      var lang = location.href.split('/')[5].substring(0, 2) || 'en';
-      $translateProvider.preferredLanguage(lang);
-      moment.lang(lang);
+  module.config(['$LOCALES',
+    function($LOCALES) {
+      $LOCALES.push('search');
+      $LOCALES.push('editor');
+      $LOCALES.push('/../api/0.1/tools/i18n/db?type=StatusValue');
     }]);
 })();

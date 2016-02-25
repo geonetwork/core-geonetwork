@@ -1,50 +1,91 @@
  <div>
-   <button class="btn btn-cog btn-cog-left"
-           ng-click="map.removeLayer(layer)"
-           title="{{'layerDelete'|translate}}">
-     <span class="fa fa-times"></span>
-   </button>
-   <button class="btn btn-cog" data-ng-click="showInfo(layer)" title="{{'layerInfo'|translate}}">
-     <span class="fa fa-cog"></span>
-   </button>
-   <button class="btn btn-cog" data-ng-click="zoomToExtent(layer, map)" title="{{'layerExtentZoom'|translate}}">
-     <span class="fa fa-arrows-alt"></span>
+   <button class="btn btn-cog" data-ng-click="showInfo(layer)" title="{{'legend'|translate}}">
+     <span class="fa fa-paint-brush"></span>
    </button>
    <span class="gn-layer-ordering">
-     <a href="" class="fa fa-arrow-up" ng-if="!$first" ng-click="moveLayer(layer, 1)" title="{{'layerMoveUp'|translate}}"></a>
-     <a href="" class="fa fa-arrow-down" ng-if="!$last" ng-click="moveLayer(layer, -1)"  title="{{'layerMoveDown'|translate}}"></a>
+     <a href="" class="fa fa-arrow-up" ng-if="!$first"
+        ng-click="moveLayer(layer, 1)"
+        title="{{'layerMoveUp'|translate}}"></a>
+     <a href="" class="fa fa-arrow-down" ng-if="!$last"
+        ng-click="moveLayer(layer, -1)"
+        title="{{'layerMoveDown'|translate}}"></a>
    </span>
+
+   <div gn-popover-dropdown="" gn-popover-dismiss=".layers">
+     <a role="button" tabindex="0" class="btn btn-cog btn-cog-left">
+       <span class="fa fa-cog"></span>
+     </a>
+     <ul style="display:none" class="list-group">
+       <li class="list-group-item">
+         <a href="" data-ng-click="zoomToExtent(layer, map)">
+           <span translate="">layerExtentZoom</span>
+         </a>
+       </li>
+
+
+       <li class="list-group-item"
+           data-ng-if="layer.get('md') || layer.get('metadataUrl')">
+         <a href="" data-ng-click="showMetadata()">
+         <span translate="">layerMetadata</span>
+       </a>
+       </li>
+
+       <li class="list-group-item" title="{{'opacity' | translate}}">
+         <input class="pull-right" type="range"
+                min="0" max="1" step="0.05"
+                ng-model="layer.opacity"/><br/>
+       </li>
+
+       <li class="list-group-item" data-ng-if="member.get('advanced')"><a href="" data-ng-click="setNCWMS(member)">
+         <span translate="">ncwms</span>
+       </a></li>
+
+       <!--<li class="list-group-item" data-ng-if="process && process.length == 1"><a href="" data-ng-click="showWPS(process[0])">
+         <span translate="">process</span>
+       </a></li>-->
+
+      <!-- <li class="list-group-item btn-group" ng-if="process && process.length > 1 ">
+         <div class="btn-link dropdown-toggle" data-toggle="dropdown">
+           <span translate="">process</span>&nbsp;
+           <span class="caret"></span>
+         </div>
+         <ul class="dropdown-menu" role="menu">
+           <li ng-repeat="p in process"><a href="" data-ng-click="showWPS(p)">{{p.desc || p.name}}</a></li>
+         </ul>
+       </li>
+
+       -->
+       <li class="list-group-item" data-gn-wfs-download="layer" data-map="map">
+       </li>
+
+       <li class="list-group-item">
+          <a href=""
+            data-ng-click="removeLayer(layer, map)">
+           <span translate="">layerDelete</span>
+          </a>
+       </li>
+
+       <li class="list-group-item list-group-item-warning"
+           data-ng-show="layer.get('errors').length > 0">
+
+         <p data-ng-repeat="e in layer.get('errors')"
+               data-ng-bind-html="e"></p>
+       </li>
+     </ul>
+   </div>
+
    <label data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''">
      <input type="checkbox" ng-model="layer.visible" title="{{'layerVisible'|translate}}" />
      {{layer.get('label')}}
-
-     <button class="btn btn-link"
-             data-ng-show="layer.get('errors').length > 0"
-             data-ng-click="layer.showErrors = !layer.showErrors"
-             title="{{'layerErrors'|translate}}">
-       <span class="fa fa-warning text-danger"></span>
-     </button>
    </label>
+
    <div class="details">
-     <button class="metadata" ng-if="layer.get('metadataUrl')" data-ng-click="showMetadata(layer.get('metadataUrl'), layer.get('label'))" title="{{'layerMetadata'|translate}}">
-       <span class="fa fa-file"></span>
-       {{'layerMetadata'|translate}}
-     </button>
-     <label>Transparence <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" /></label>
-     <h6 ng-if="layer.get('legend')" data-translate="">Legend</h6>
      <p ng-if="layer.get('legend')">
        <img ng-src="{{layer.get('legend')}}"/>
      </p>
      <h6 ng-if="layer.get('attribution')" data-translate="">Attribution</h6>
      <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>
+
      <div gn-ncwms-transect="" map="map" layer="layer" data-ng-if="layer.ncInfo"/>
-   </div>
-   <div data-ng-show="layer.showErrors"
-        class="alert alert-warning alert-dismissible"
-        role="alert">
-     <ul>
-       <li data-ng-repeat="e in layer.get('errors')"
-           data-ng-bind-html="e"></li>
-     </ul>
    </div>
 </div>

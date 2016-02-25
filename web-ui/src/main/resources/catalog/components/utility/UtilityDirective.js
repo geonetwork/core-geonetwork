@@ -902,4 +902,66 @@
       }
     };
   });
+
+  module.directive('gnPopoverDropdown', ['$timeout', function($timeout) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        // Container is one ul with class list-group
+        // Avoid to set style on embedded drop down menu
+        var content = element.find('ul.list-group').css('display', 'none');
+        var button = element.find('> .btn');
+
+        $timeout(function() {
+          var className = (attrs['fixedHeight'] != 'false') ?
+              'popover-dropdown popover-dropdown-' + content.find('li').length :
+              '';
+          button.popover({
+            animation: false,
+            container: '[gn-main-viewer]',
+            placement: attrs['placement'] || 'bottom',
+            content: ' ',
+            template:
+                '<div class="popover ' + className + '">' +
+                '  <div class="arrow"></div>' +
+                '  <h3 class="popover-title"></h3>' +
+                '  <div class="popover-content"></div>' +
+                '</div>'
+          });
+        }, 1);
+
+        button.on('shown.bs.popover', function() {
+          var $tip = button.data('bs.popover').$tip;
+          content.css('display', 'inline').appendTo(
+              $tip.find('.popover-content')
+          );
+        });
+        button.on('hidden.bs.popover', function() {
+          content.css('display', 'none').appendTo(element);
+        });
+
+        // can’t use dismiss boostrap option: incompatible with opacity slider
+        $('body').on('mousedown click', function(e) {
+          if ((button.data('bs.popover') && button.data('bs.popover').$tip) &&
+              (button[0] != e.target) &&
+              (!$.contains(button[0], e.target)) &&
+              (
+              $(e.target).parents('.popover')[0] !=
+              button.data('bs.popover').$tip[0])
+          ) {
+            $timeout(function() {
+              button.popover('hide');
+            }, 30);
+          }
+        });
+
+        if (attrs['gnPopoverDismiss']) {
+          $(attrs['gnPopoverDismiss']).on('scroll', function() {
+            button.popover('hide');
+          });
+        }
+
+      }
+    };
+  }]);
 })();
