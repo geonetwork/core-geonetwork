@@ -944,7 +944,7 @@
                                     or $englishKeyword='soil' or $englishKeyword='land use'
                                     or $englishKeyword='human health and safety' or $englishKeyword='utility and governmental services'
                                     or $englishKeyword='environmental monitoring facilities' or $englishKeyword='production and industrial facilities'
-                                    or $englishKeyword='agricultural and aquaculture facilities' or $englishKeyword='population distribution - demography'
+                                    or $englishKeyword='agricultural and aquaculture facilities' or $englishKeyword='population distribution — demography'
                                     or $englishKeyword='area management/restriction/regulation zones and reporting units'
                                     or $englishKeyword='natural risk zones' or $englishKeyword='atmospheric conditions'
                                     or $englishKeyword='meteorological geographical features' or $englishKeyword='oceanographic geographical features'

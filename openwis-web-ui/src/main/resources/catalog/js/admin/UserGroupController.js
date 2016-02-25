@@ -170,10 +170,12 @@
           country: '',
           email: '',
           organisation: '',
-          groups: []
+          groups: [],
+          enabled: true
         };
         $scope.userGroups = null;
         $scope.userIsAdmin = false;
+        $scope.userIsEnabled = true;
         $timeout(function() {
           $scope.setUserProfile();
           $('#username').focus();
@@ -207,6 +209,8 @@
               $scope.userSelected = data;
               $scope.userIsAdmin =
                   (data.profile === 'Administrator');
+
+              $scope.userIsEnabled = (data.enabled === 'true');
 
               // Load user group and then select user
               $http.get('admin.usergroups.list?_content_type=json&id=' +
@@ -344,7 +348,8 @@
        * Save a user.
        */
       $scope.saveUser = function(formId) {
-        $http.get('admin.user.update?' + $(formId).serialize())
+        $http.get('admin.user.update?' + $(formId).serialize()  +
+          '&enabled=' + $scope.userIsEnabled)
         .success(function(data) {
               $scope.unselectUser();
               loadUsers();
