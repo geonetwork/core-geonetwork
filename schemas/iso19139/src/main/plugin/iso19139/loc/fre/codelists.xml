@@ -1337,7 +1337,7 @@
             editorMode="radio"
             displayIf="ancestor::node()[
               name()='gmd:MD_Metadata' and
-              contains(gmd:metadataStandardName/gco:CharacterString, 'SEXTANT')]">
+              contains(gmd:metadataStandardName/gco:CharacterString, 'MEDSEA')]">
     <entry>
       <code>dataset</code>
       <label>Dataset</label>
