@@ -124,6 +124,10 @@
     -->
   <field name="docType" type="string" indexed="true" stored="true" required="true" multiValued="false" />
   <field name="featureTypeId" type="string" indexed="true" stored="true" required="false" multiValued="false" />
+  <!-- Type of resources: feature, dataset, services, maps, ... -->
+  <field name="resourceType" type="string" indexed="true" stored="true" required="false" multiValued="true" />
+  <!-- Parent document eg. a metadata record for a feature -->
+  <field name="parent" type="string" indexed="true" stored="true" required="false" multiValued="true" />
 
     <!-- Feature indexing coming from WFS are using dynamic field name. -->
     <field name="geom"  type="location_rpt" indexed="true" stored="true" multiValued="true"/>
@@ -601,7 +605,7 @@
     -->
     <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
                spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
-               geo="true" distErrPct="0.025" maxDistErr="0.001" distanceUnits="kilometers" />
+               geo="true" distErrPct="0.01" maxDistErr="0.001" distanceUnits="kilometers" />
 
     <!-- Money/currency field type. See http://wiki.apache.org/solr/MoneyFieldType
         Parameters:

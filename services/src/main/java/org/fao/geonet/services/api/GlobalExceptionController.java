@@ -23,8 +23,8 @@
 
 package org.fao.geonet.services.api;
 
-import org.fao.geonet.services.api.exception.NoResultsFoundException;
 import org.fao.geonet.exceptions.UserNotFoundEx;
+import org.fao.geonet.services.api.exception.NoResultsFoundException;
 import org.fao.geonet.services.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.services.api.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,6 @@ import org.springframework.web.multipart.MultipartException;
 import java.io.FileNotFoundException;
 import java.util.LinkedHashMap;
 import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 /**
  */

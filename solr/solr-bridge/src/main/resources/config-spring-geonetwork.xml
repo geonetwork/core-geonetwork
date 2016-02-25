@@ -11,6 +11,10 @@
     ">
   <context:component-scan base-package="org.fao.geonet.solr"/>
 
+  <context:property-placeholder location="WEB-INF/config-solr.properties"
+                                file-encoding="UTF-8"
+                                ignore-unresolvable="true" />
+
   <bean id="solrConfig"
         class="org.fao.geonet.solr.SolrConfig">
     <property name="solrServerUrl" value="${solr.url}"/>

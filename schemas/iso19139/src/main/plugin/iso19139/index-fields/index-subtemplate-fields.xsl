@@ -21,6 +21,7 @@
       store="true" index="true"/>
     <Field name="orgName" string="{$org}" store="true" index="true"/>
     <Field name="id" string="{@id}" store="true" index="true"/>
+    <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
 
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>

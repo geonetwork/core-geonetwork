@@ -117,6 +117,84 @@
           return defer.promise;
         }
       };
+      this.getTypeName = function(capabilities, typename) {
+        if (capabilities.featureTypeList) {
+          var tokens = typename.split(':'),
+              prefix = tokens.length === 1 ? null : tokens[0],
+              localPart = tokens.length === 1 ? typename : tokens[1];
+          for (var i = 0;
+               i < capabilities.featureTypeList.featureType.length;
+               i++) {
+            var name = capabilities.featureTypeList.
+                featureType[i].name;
+            if (
+                (name.localPart == localPart && prefix == null) ||
+                (name.localPart == localPart && name.prefix == prefix)
+            ) {
+              return capabilities.featureTypeList.featureType[i];
+            }
+          }
+        }
+      };
+
+      this.getOutputFormat = function(capabilities, operation) {
+        if (capabilities.operationsMetadata) {
+          for (var i = 0;
+               i < capabilities.operationsMetadata.operation.length; i++) {
+            var op = capabilities.operationsMetadata.operation[i];
+            if (op.name == operation || op.name == 'GetFeature') {
+              for (var j = 0; j < op.parameter.length; j++) {
+                var f = op.parameter[j];
+                if (f.name == 'outputFormat') {
+                  return f.value;
+                }
+              }
+            }
+          }
+        }
+        return [];
+      };
+      this.getProjection = function(capabilities, layers) {
+        if (capabilities.operationsMetadata) {
+          for (var i = 0;
+               i < capabilities.operationsMetadata.operation.length; i++) {
+            var op = capabilities.operationsMetadata.operation[i];
+            if (op.name == operation || op.name == 'GetFeature') {
+              for (var j = 0; j < op.parameter.length; j++) {
+                var f = op.parameter[j];
+                if (f.name == 'projection') {
+                  return f.value;
+                }
+              }
+            }
+          }
+        }
+        return [];
+      };
+
+
+      // TODO: Add maxFeatures, featureid
+      this.download = function(url, version, typename,
+                               format, extent, projection) {
+        if (url) {
+          var defaultVersion = '1.1.0';
+          var params = {
+            request: 'GetFeature',
+            service: 'WFS',
+            version: version || defaultVersion,
+            typeName: typename,
+            outputFormat: format
+          };
+          if (extent) {
+            params.bbox = extent;
+          }
+          if (projection) {
+            params.srsName = projection;
+          }
+          url = gnOwsCapabilities.mergeDefaultParams(url, params);
+          window.open(url);
+        }
+      };
     }
   ]);
 })();

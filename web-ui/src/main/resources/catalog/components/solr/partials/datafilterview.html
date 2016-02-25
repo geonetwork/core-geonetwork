@@ -16,20 +16,7 @@
 
   <div class="tab-content" data-ng-show="currentLayer">
     <div role="tabpanel" class="tab-pane active" id="home">
-      <div class="btn-group gn-btn-data-download">
-        <button type="button"
-                class="btn btn-default"
-                title="downloadLayer">
-          <i class="fa fa-download"/>
-        </button>
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="caret"></span>
-          <span class="sr-only"></span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-left">
-          <!-- TODO: Collect WFS output formats -->
-          <li><a href="#">in Shapefile</a></li>
-        </ul>
+      <div data-gn-wfs-download="currentLayer" data-map="map" class="pull-right">
       </div>
 
       <div class="row">
@@ -40,6 +27,8 @@
         </div>
         <div class="col-md-10">
           <div data-gn-data-table="currentLayer.get('solrQ')"
+               data-gn-data-table-solr-type="WfsFilter"
+               data-gn-data-table-solr-name="facets"
                data-exclude-cols="excludeCols"></div>
         </div>
       </div>

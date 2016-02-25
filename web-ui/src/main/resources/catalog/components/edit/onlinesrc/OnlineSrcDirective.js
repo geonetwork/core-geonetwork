@@ -978,17 +978,17 @@
                     }
                   } else if (scope.params.url.indexOf('http') === 0) {
                     var useProxy =
-                      scope.params.url.indexOf(location.hostname) === -1;
+                        scope.params.url.indexOf(location.hostname) === -1;
                     var url = useProxy ?
-                    '../../proxy?url=' +
-                    encodeURIComponent(scope.params.url) : scope.params.url;
+                        '../../proxy?url=' +
+                        encodeURIComponent(scope.params.url) : scope.params.url;
                     return $http.get(url).then(function(response) {
-                        scope.isUrlOk = response.status === 200;
-                      },
-                      function(response) {
-                        // Proxy may return 500 when document is not proxyable
-                        scope.isUrlOk = response.status === 200;
-                      });
+                      scope.isUrlOk = response.status === 200;
+                    },
+                    function(response) {
+                      // Proxy may return 500 when document is not proxyable
+                      scope.isUrlOk = response.status === 200;
+                    });
                   } else {
                     scope.isUrlOk = true;
                   }
@@ -1243,7 +1243,7 @@
                           scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
                         } else {
                           scope.alertMsg =
-                            $translate('linkToServiceWithoutURLError');
+                              $translate('linkToServiceWithoutURLError');
                         }
                       }
                     }

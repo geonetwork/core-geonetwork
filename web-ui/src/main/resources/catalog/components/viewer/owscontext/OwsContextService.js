@@ -149,7 +149,7 @@
 
         // if there's at least one valid bg layer in the context use them for
         // the application otherwise use the defaults from config
-        $q.all(promises).then (function() {
+        $q.all(promises).then(function() {
           if (bgLayers.length > 0) {
             // make sure we remove any existing bglayer
             if (map.getLayers().getLength() > 0) {
@@ -331,7 +331,7 @@
        */
       this.saveToLocalStorage = function(map) {
         var storage = gnViewerSettings.storage ?
-          window[gnViewerSettings.storage] : window.localStorage;
+            window[gnViewerSettings.storage] : window.localStorage;
         if (map.getSize()[0] == 0 || map.getSize()[1] == 0) {
           // don't save a map which has not been rendered yet
           return;
@@ -382,7 +382,7 @@
                     olL.set('bgIdx', bgIdx);
                   }
                   return olL;
-                }).catch(function(){});
+                }).catch (function() {});
           }
         }
         else { // we suppose it's WMS
@@ -401,7 +401,8 @@
                   $rootScope.$broadcast('layerAddedFromContext', olL);
                   return olL;
                 }
-              }).catch(function(){});
+                return olL;
+              }).catch (function() {});
         }
       };
     }

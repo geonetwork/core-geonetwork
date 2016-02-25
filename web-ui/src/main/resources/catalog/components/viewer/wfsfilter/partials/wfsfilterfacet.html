@@ -16,7 +16,8 @@
   </div>
 
   <div class="btn-group"
-       data-ng-if="!isFeaturesIndexed && user.canEditRecord(md)">
+       data-ng-if="!isFeaturesIndexed &&
+       (user.canEditRecord(md) || md.isHarvested == 'y')">
     <a class="btn btn-default btn-xs"
        data-ng-click="indexWFSFeatures()">
       <i class="fa fa-codiepie"></i>&nbsp;
@@ -34,7 +35,6 @@
     <div class="gn-layertree-filter">
       <span class="fa fa-times-circle clear"
             data-ng-click="clearInput()"
-            data-ng-hide="searchInput==''"
             title="{{'clear' | translate}}"></span>
       <input type="text"
              data-gn-focus-on="isFeaturesIndexed"
@@ -42,7 +42,12 @@
              data-ng-change="filterFacets()"
              data-ng-model-options="{ debounce: 400 }"
              class="layerfilter form-control input-sm"
-             placeholder="{{'filter'|translate}}">
+             placeholder="{{'filter'|translate}}"/>
+      <label data-ng-show="map">
+        <input type="checkbox"
+               data-ng-model="isHeatMapVisible"/>
+        <span data-translate="">displayHeatMap</span>
+      </label>
     </div>
 
     <!--Facet count-->
@@ -89,13 +94,13 @@
             <span data-translate="">reset</span>
           </a>
         </li>
-        <li data-ng-show="user.canEditRecord(md)">
+        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
           <a href="" data-ng-click="indexWFSFeatures()">
             <i class="fa fa-codiepie"></i>&nbsp;
             <span data-translate="">reindexWFSFeatures</span>
           </a>
         </li>
-        <li data-ng-show="user.canEditRecord(md)">
+        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
           <a href="" data-ng-click="checkFeatureTypeInSolr()">
             <i class="fa fa-refresh"></i>&nbsp;
             <span data-translate="">refresh</span>

@@ -36,8 +36,8 @@
       return this.langs[iso3lang];
     },
     getIso3Lang: function(iso2lang) {
-      for(p in this.langs) {
-        if(this.langs[p] == iso2lang) {
+      for (p in this.langs) {
+        if (this.langs[p] == iso2lang) {
           return p;
         }
       }
