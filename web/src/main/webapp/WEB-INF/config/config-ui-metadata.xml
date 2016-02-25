@@ -288,14 +288,6 @@
       <class name=".services.schema.Info" />
     </service>
 
-    <service name="md.thumbnail.remove">
-      <documentation><![CDATA[
-        Delete a thumbnail from the data diretory and detach 
-        it to the metadata record.
-        ]]></documentation>
-      <class name=".services.thumbnail.Unset"/>
-    </service>
-
     <service name="md.relations">
       <documentation>Return a list of all relation of the given metadata. Relations are mainly online resources
       like thumbnails, onlineresources etc ..</documentation>

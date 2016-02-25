@@ -16,11 +16,6 @@
       <class name=".services.metadata.GetSuggestion"/>
     </service>
 
-    <service name="metadata.thumbnail.unset.new">
-      <class name=".services.thumbnail.Unset"/>
-      <output sheet="admin-logo-add.xsl"/>
-    </service>
-
 
     <service name="edit">
       <class name=".services.metadata.GetEditableData">
