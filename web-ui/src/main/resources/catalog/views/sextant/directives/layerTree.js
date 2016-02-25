@@ -42,7 +42,7 @@
             var url = wfsLink.url;
             var featureTypeName = wfsLink.name;
 
-            var el = angular.element('<div data-gn-wfs-filter-facets="" data-layer="layer" data-wfs-url="'+url+'" data-feature-type-name="'+featureTypeName+'"></div>');
+            var el = angular.element('<div data-gn-wfs-filter-facets="" data-layer="layer" data-wfs-url="'+url+'" data-feature-type-name="'+featureTypeName+'"></div><div data-gn-data-table="layer.get(\'solrQ\')" data-gn-data-table-solr-type="WfsFilter" data-gn-data-table-solr-name="facets" data-exclude-cols="excludeCols"></div>');
             $compile(el)(scope);
             var element = $('.sxt-wfsfilter-panel');
             element.empty();
