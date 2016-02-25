@@ -205,17 +205,17 @@
             });
       };
 
-      $scope.testMailConfiguration = function () {
+      $scope.testMailConfiguration = function() {
         $http.get('../api/0.1/tools/mail/test')
           .then(function(response) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: response.data});
-          }, function(response) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: response.data,
-              timeout: 0,
-              type: 'danger'});
-          });
+              $rootScope.$broadcast('StatusUpdated', {
+                title: response.data});
+            }, function(response) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: response.data,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
       var buildUrl = function(settings) {
         var port = filterBySection(settings, 'system/server/port')[0]['#text'];

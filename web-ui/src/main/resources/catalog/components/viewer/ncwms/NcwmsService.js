@@ -68,9 +68,9 @@
 
         $http.get(proxyUrl)
                   .success(function(json) {
-                    if(angular.isObject(json)) {
-                      layer.ncInfo = json;
-                    }
+              if (angular.isObject(json)) {
+                layer.ncInfo = json;
+              }
             });
         return layer;
       };
