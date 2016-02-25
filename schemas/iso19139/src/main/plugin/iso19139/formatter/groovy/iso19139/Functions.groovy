@@ -55,6 +55,15 @@ public class Functions {
     def isoTextEl(node, text) {
         return commonHandlers.func.textEl(f.nodeLabel(node), text)
     }
+
+    /**
+     * A shortcut for: commonHandlers.func.wikiTextEl(node), text))
+     * @return
+     */
+    def isoWikiTextEl(node, text) {
+        return commonHandlers.func.wikiTextEl(f.nodeLabel(node), text)
+    }
+
     /**
      * A shortcut for: commonHandlers.func.textEl(node), text))
      * @return

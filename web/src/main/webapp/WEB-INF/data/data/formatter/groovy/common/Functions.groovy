@@ -27,6 +27,13 @@ public class Functions {
     }
 
     /**
+     * Same as textEl but doesn't escape the XML
+     */
+    def wikiTextEl(label, text) {
+        return handlers.fileResult("html/wikitext-el.html", ["label": label, "text" : text])
+    }
+
+    /**
      * Creates the default html for a label -> text pair.  This is the element for primitive/simple data.
      * This does not return a function it is returns the actual html and thus can be used within handlers/functions to
      * directly get the html
