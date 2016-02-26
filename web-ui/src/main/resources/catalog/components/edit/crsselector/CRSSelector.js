@@ -60,7 +60,7 @@
              scope.addCRS = function(crs) {
 
                var textarea = $.find("textarea[id="+scope.snippetRef+"]")[0];
-               var xmlSnippet = textarea ? textarea.innerText : undefined;
+               var xmlSnippet = textarea ? $(textarea).text() : undefined;
                scope.snippet = gnEditorXMLService.buildCRSXML(crs, gnCurrentEdit.schema, xmlSnippet);
                scope.crsResults = [];
 
