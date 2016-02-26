@@ -118,11 +118,13 @@
           });
 
           // load context from url or from storage
+          var storage = gnViewerSettings.storage ?
+              window[gnViewerSettings.storage] : window.localStorage;
           if (gnViewerSettings.owsContext) {
             gnOwsContextService.loadContextFromUrl(gnViewerSettings.owsContext,
                 scope.map, true);
-          } else if (window.localStorage.getItem('owsContext')) {
-            var c = window.localStorage.getItem('owsContext');
+          } else if (storage.getItem('owsContext')) {
+            var c = storage.getItem('owsContext');
             gnOwsContextService.loadContext(c, scope.map);
           } else if (gnViewerSettings.defaultContext) {
             gnOwsContextService.loadContextFromUrl(

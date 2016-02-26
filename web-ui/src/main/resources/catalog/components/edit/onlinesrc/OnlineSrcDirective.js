@@ -976,7 +976,7 @@
                             scope.isUrlOk = error === 200;
                           });
                     }
-                  } else {
+                  } else if (scope.params.url.indexOf('http') === 0) {
                     var useProxy =
                         scope.params.url.indexOf(location.hostname) === -1;
                     var url = useProxy ?
@@ -989,6 +989,8 @@
                       // Proxy may return 500 when document is not proxyable
                       scope.isUrlOk = response.status === 200;
                     });
+                  } else {
+                    scope.isUrlOk = true;
                   }
                 };
 
@@ -1241,7 +1243,7 @@
                           scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
                         } else {
                           scope.alertMsg =
-                            $translate('linkToServiceWithoutURLError');
+                              $translate('linkToServiceWithoutURLError');
                         }
                       }
                     }

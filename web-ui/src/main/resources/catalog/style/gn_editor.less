@@ -167,6 +167,8 @@ form.gn-editor {
     margin-top: 35px;
     width: inherit;
     z-index: 999;
+    max-height: 80vh;
+    overflow: auto;
 
     /**/
     .tt-suggestion:hover {
@@ -369,7 +371,7 @@ form.gn-tab-inspire {
     }
   }
 }
-.onlinesrc-container {
+.onlinesrc-container, [gn-directory-entry-list-selector] {
   .list-group {
     max-height:50%;
     overflow: auto;

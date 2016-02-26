@@ -1,0 +1,127 @@
+<div data-ng-search-form="">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="input-group gn-form-any">
+        <input type="text" class="form-control"
+               placeholder="{{('searchA' + templateType) | translate}}"
+               autofocus="autofocus"
+               data-ng-model="searchObj.params.any"
+               data-ng-model-options="modelOptions"
+               data-ng-change="triggerSearch()"/>
+
+        <div class="input-group-btn">
+          <button type="button"
+                  data-ng-click="triggerSearch()"
+                  class="btn btn-primary">
+            &nbsp;&nbsp;
+            <i class="fa fa-search"></i>
+            &nbsp;&nbsp;
+          </button>
+          <button type="button"
+                  data-ng-click="resetSearch(searchObj.defaultParams);"
+                  title="{{'ClearTitle' | translate}}"
+                  class="btn btn-link">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div data-ng-show="searchResults.records.length > 0"
+           data-gn-facet-dimension-list="searchResults.dimension"
+           data-params="searchObj.params"
+           data-facet-type="'contact'"
+           data-current-facets="currentFacets">
+      </div>
+    </div>
+    <div class="col-md-9">
+
+      <div data-gn-search-form-results
+           data-gn-search-form-results-mode="simple"
+           data-gn-search-form-results-selection-mode="local simple"
+           data-search-results="searchResults"
+           data-select-records="stateObj.selectRecords"
+           data-pagination-info="paginationInfo">
+      </div>
+    </div>
+    <!-- The contact to insert once received
+    <div data-ng-if="snippet">
+      <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
+    </div> -->
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="btn btn-default"
+           data-ng-hide="isContact"
+           data-gn-click-and-spin="addSelectedEntry()"
+           data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}">
+        <i class="fa fa-plus"></i>
+      </div>
+
+      <div class="btn btn-default"
+           data-ng-show="isContact && !hasDynamicVariable"
+           data-gn-click-and-spin="addSelectedEntry()"
+           data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}">
+        <i class="fa fa-plus"></i>
+      </div>
+
+      <div class="btn-group dropup"
+           data-ng-show="isContact && hasDynamicVariable"
+           title="{{'addContactAsText-help' | translate}}">
+        <button type="button"
+                class="btn btn-default"
+                data-gn-click-and-spin="addSelectedEntry(defaultRole.code)"
+                data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"
+                data-ng-if="defaultRole">
+          <i class="fa fa-plus"></i>&nbsp;
+          <span>{{defaultRole.label}}</span>
+        </button>
+        <button type="button"
+                class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}">
+          <span data-translate="">chooseContactRole</span>&nbsp;
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+          <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
+            <a href=""
+               data-gn-click-and-spin="addSelectedEntry(role.code)"
+               title="{{role.description}}">
+              {{role.label}}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled]"
+           title="{{'addContactAsLink-help' | translate}}"
+           class="btn-group dropup">
+        <button type="button"
+                class="btn btn-default"
+                data-gn-click-and-spin="addSelectedEntry(defaultRole.code)"
+                data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"
+                data-ng-if="defaultRole">
+          <i class="fa fa-link"></i>&nbsp;
+          <span>{{defaultRole.label}}</span>
+        </button>
+        <button type="button" class="btn btn-default dropdown-toggle"
+                data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"
+                data-toggle="dropdown">
+          <span data-translate="">chooseContactRole</span>&nbsp;
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+          <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
+            <a href=""
+               data-gn-click-and-spin="addSelectedEntry(role.code, true)"
+               data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"
+               title="{{role.description}}">
+              {{role.label}}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

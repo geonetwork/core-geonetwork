@@ -67,7 +67,7 @@
            emailAddresses: [''],
            organisation: '',
            profile: 'RegisteredUser',
-           addresses:[{
+           addresses: [{
              address: '',
              city: '',
              country: '',
@@ -79,9 +79,9 @@
            $scope.userInfo.emailAddresses[0] = $scope.userInfo.username;
            $http.put('../api/0.1/user/actions/register', $scope.userInfo)
           .success(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: data
-            });
+             $rootScope.$broadcast('StatusUpdated', {
+               title: data
+             });
            })
           .error(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
@@ -95,14 +95,14 @@
           */
          $scope.remindMyPassword = function() {
            $http.get('../api/0.1/user/' +
-                      $scope.usernameToRemind +
+           $scope.usernameToRemind +
                         '/actions/forgot-password')
             .success(function(data) {
              $scope.sendPassword = false;
-              $rootScope.$broadcast('StatusUpdated', {
-                title: data
-              });
-              $scope.usernameToRemind = null;
+             $rootScope.$broadcast('StatusUpdated', {
+               title: data
+             });
+             $scope.usernameToRemind = null;
            })
             .error(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
@@ -117,19 +117,19 @@
           */
          $scope.updatePassword = function() {
            $http.patch('../api/0.1/user/' + $scope.userToRemind, {
-               password: $scope.password,
-               changeKey: $scope.changeKey
+             password: $scope.password,
+             changeKey: $scope.changeKey
            })
             .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: data
-              });
+             $rootScope.$broadcast('StatusUpdated', {
+               title: data
+             });
            })
             .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: data,
-                timeout: 0,
-                type: 'danger'});
+             $rootScope.$broadcast('StatusUpdated', {
+               title: data,
+               timeout: 0,
+               type: 'danger'});
            });
          };
 

@@ -15,6 +15,7 @@ import org.jdom.Element;
 import org.junit.Test;
 import org.junit.internal.runners.statements.Fail;
 
+@Deprecated
 public class SelfRegisterTest extends AbstractServiceIntegrationTest {
 
 	final SelfRegister sfController = new SelfRegister();
@@ -78,17 +79,10 @@ public class SelfRegisterTest extends AbstractServiceIntegrationTest {
 		assertTrue(ret.getAttribute("username").getValue().equals("root@localhost"));
 				
 		// Checks that the user has the  expected requested profile
-
-		// TODO: I am not sure this is the expected behaviour: allowing people to create
-		// even temporary account as administrator, just noticing the admin catalogue
-		// might be a dangerous behaviour.
-
 		final UserRepository userRepository = svcCtx.getBean(UserRepository.class);
 		User newUsr = userRepository.findOneByEmail("root@localhost");
-        
-		assertTrue (newUsr.getProfile() == Profile.Administrator);
-		
-	}
 
-	
+        // The profil requested is sent by email
+		assertTrue (newUsr.getProfile() == Profile.RegisteredUser);
+	}
 }

@@ -24,6 +24,28 @@
     }
   });
 
+  module.constant('gnLangs', {
+    langs: {
+      'eng': 'en',
+      'dut': 'du',
+      'fre': 'fr',
+      'ger': 'ge',
+      'kor': 'ko',
+      'spa': 'es',
+      'cze': 'cz'
+    },
+    getIso2Lang: function(iso3lang) {
+      return this.langs[iso3lang];
+    },
+    getIso3Lang: function(iso2lang) {
+      for (p in this.langs) {
+        if (this.langs[p] == iso2lang) {
+          return p;
+        }
+      }
+    }
+  });
+
   /**
    * The catalogue controller takes care of
    * loading site information, check user login state
@@ -36,12 +58,12 @@
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
-    'gnGlobalSettings', '$location', 'gnUtilityService', 
-    'gnSessionService', 'gnAdminMenu',
+    'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
+    'gnLangs', 'gnAdminMenu',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
-            gnGlobalSettings, $location, gnUtilityService, 
-            gnSessionService, gnAdminMenu) {
+            gnGlobalSettings, $location, gnUtilityService, gnSessionService,
+            gnLangs, gnAdminMenu) {
       $scope.version = '0.0.1';
       //Display or not the admin menu
       if ($location.absUrl().indexOf('/admin.console')!=-1){
@@ -60,8 +82,7 @@
       $scope.lang = tokens[5];
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
-      $scope.langs = {'eng': 'en', 'dut': 'du', 'fre': 'fr',
-        'ger': 'ge', 'kor': 'ko', 'spa': 'es', 'cze': 'cz'};
+      $scope.langs = gnLangs.langs;
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
