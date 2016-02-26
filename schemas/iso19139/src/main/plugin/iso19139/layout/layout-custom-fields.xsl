@@ -25,16 +25,16 @@
   
   <xsl:template mode="mode-iso19139" priority="2002" match="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency[/root/gui/currTab/text()='inspire_sds']">
     <xsl:call-template name="render-boxed-element">
-      <xsl:with-param name="label" select="gmd:nameOfMeasure/gmx:Anchor/text()" />
+      <xsl:with-param name="label" select="concat(/root/gui/schemas/iso19139/strings/qos_measure, gmd:nameOfMeasure/gmx:Anchor/text())" />
       <xsl:with-param name="editInfo" select="gn:element" />
       <xsl:with-param name="subTreeSnippet">
-        <xsl:call-template name="render-element">
+<!--        <xsl:call-template name="render-element">
           <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/qos_description" />
           <xsl:with-param name="value" select="gmd:measureIdentification/gmd:MD_Identifier/gmd:code/gco:CharacterString/text()" />
           <xsl:with-param name="name" select="gmd:measureIdentification/gmd:MD_Identifier/gmd:code/gco:CharacterString/gn:element/@ref" />
           <xsl:with-param name="cls" select="local-name()" />
           <xsl:with-param name="editInfo" select="gmd:measureIdentification/gmd:MD_Identifier/gmd:code/gco:CharacterString/gn:element" />
-        </xsl:call-template>
+        </xsl:call-template>-->
         <xsl:if test="gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit/@xlink:href != ''">
           <xsl:call-template name="render-element">
             <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/qos_uom" />
