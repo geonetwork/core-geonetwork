@@ -1412,7 +1412,7 @@
              codelist="gmd:MD_TopicCategoryCode"
              indexField="topicCat"
              insertMode="gn_create">
-        <template><![CDATA[<gmd:MD_TopicCategoryCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
+        <template><![CDATA[<gmd:MD_TopicCategoryCode xmlns:gmd='http://www.isotc211.org/2005/gmd'>{{value}}</gmd:MD_TopicCategoryCode>]]></template>
       </field>
 
       <!-- Insert, or replace if existing, the parent identifier.
