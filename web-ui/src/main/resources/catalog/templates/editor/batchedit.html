@@ -365,7 +365,10 @@
               <li data-ng-repeat="change in changes"
                   title="{{change.value}}"
                   data-ng-class="">
-                {{change.field | translate}} ({{change.insertMode | translate}}):
+                {{change.field | translate}}
+                <span data-ng-show="change.insertMode">
+                  ({{change.insertMode | translate}})
+                </span>:
                 {{change.value | limitTo:40}}
               </li>
             </ul>

@@ -383,7 +383,7 @@
 
       // TODO: Apply changes to a mix of records is maybe not the best
       // XPath will be applied whatever the standard is.
-      $http({
+      return $http({
         method: 'POST',
         url: 'md.edit.batch?_content_type=json',
         data: $.param(params),

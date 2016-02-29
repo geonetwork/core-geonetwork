@@ -206,6 +206,9 @@
           content: '<div gn-share="" gn-share-batch="true"></div>'
         }, scope, 'PrivilegesUpdated');
       };
+      this.openBatchEditing = function(scope) {
+        $location.path('/batchedit');
+      };
       this.openCategoriesBatchPanel = function(scope) {
         openModal({
           title: 'categories',
