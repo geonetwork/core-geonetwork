@@ -736,8 +736,9 @@ public class EditLib {
      * Performs the updating of the element selected from the metadata by the xpath.
      */
     private void doAddFragmentFromXpath(MetadataSchema metadataSchema,
-                                        Element newValue, Element propEl) throws Exception {
+                                        Element fragment, Element propEl) throws Exception {
 
+        Element newValue = (Element) fragment.clone();
         if (newValue.getName().equals(SpecialUpdateTags.REPLACE) ||
                    newValue.getName().equals(SpecialUpdateTags.ADD) ||
                    newValue.getName().equals(SpecialUpdateTags.CREATE)) {
