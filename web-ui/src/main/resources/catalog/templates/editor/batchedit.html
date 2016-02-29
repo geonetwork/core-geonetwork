@@ -12,11 +12,11 @@
         <a href="" data-translate="">chooseASet</a></li>
       <li role="presentation"
           data-ng-class="{'active': selectedStep === 2, 'disabled': searchResults.selectedCount < 1}"
-          data-ng-click="setStep(2)">
+          data-ng-click="searchResults.selectedCount > 0 && setStep(2)">
         <a href="" data-translate="">defineEdits</a></li>
       <li role="presentation"
           data-ng-class="{'active' : selectedStep === 3, 'disabled': searchResults.selectedCount < 1}"
-          data-ng-click="setStep(3)">
+          data-ng-click="searchResults.selectedCount > 0 && setStep(3)">
         <a href="" data-translate="">confirmAndSave</a></li>
       <li class="gn-batch-editor-info">{{searchResults.selectedCount}} <span data-translate="">recordsInSelection</span></li>
     </ul>
@@ -357,9 +357,12 @@
 
       <div class="panel-body">
 
-        <div data-ng-show="searchResults.records.length > 0"
-             class="row">
-          <div class="col-sm-6">
+        <div class="row">
+          <div class="col-sm-6" data-ng-hide="changes.length > 0">
+            <p class="alert alert-warning"
+               data-translate="">noChangesToApply</p>
+          </div>
+          <div class="col-sm-6" data-ng-show="changes.length > 0">
             <h4 data-translate="">changesToApply</h4>
             <ul>
               <li data-ng-repeat="change in changes"
@@ -373,7 +376,13 @@
               </li>
             </ul>
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-6"
+               data-ng-hide="selectedRecords.metadata.length > 0">
+            <p class="alert alert-warning"
+               data-translate="">selectRecordsToEdit</p>
+          </div>
+          <div class="col-sm-6"
+               data-ng-show="selectedRecords.metadata.length > 0">
             <h4 data-translate="">aboutToUpdateTheFollowing</h4>
             <ul>
               <li data-ng-repeat="record in selectedRecords.metadata">
@@ -383,16 +392,15 @@
           </div>
         </div>
 
-        <p class="alert alert-info"
-           data-translate="">applyBatchEditInfo</p>
-
-
         <button class="btn btn-default"
                 data-ng-disabled="changes.length < 1"
                 data-gn-click-and-spin="applyChanges()">
           <i class="fa fa-save"/>
           <span data-translate="">save</span>
         </button>
+
+        <div data-ng-show="processReport"
+             data-gn-batch-report="processReport"/>
       </div>
     </div>
   </div>

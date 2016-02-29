@@ -103,6 +103,29 @@
       };
     }]);
 
+  module.directive('gnBatchReport', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          processReport: '=gnBatchReport'
+        },
+        templateUrl: '../../catalog/components/utility/' +
+        'partials/batchreport.html',
+        link: function(scope, element, attrs) {
+          scope.$watch('processReport', function (n, o) {
+            if (n != o) {
+            scope.processReportWarning = n.notFound != 0 ||
+              n.notOwner != 0 ||
+              n.notProcessFound != 0 ||
+              n.metadataErrorReport.metadataErrorReport.length != 0;
+            }
+          });
+        }
+      };
+    }]);
+
   /**
    * Region picker coupled with typeahead.
    * scope.region will tell what kind of region to load

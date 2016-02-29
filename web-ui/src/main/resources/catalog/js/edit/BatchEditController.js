@@ -361,6 +361,8 @@
     };
 
 
+    $scope.processReport = null;
+
     $scope.applyChanges = function() {
       var params = {}, i = 0;
       angular.forEach($scope.changes, function(field) {
@@ -390,10 +392,9 @@
         headers: {'Content-Type':
           'application/x-www-form-urlencoded'}
       }).success(function(data) {
-        console.log(data);
-        // TODO: report
+        $scope.processReport = data;
       }).error(function(response) {
-        console.log(response);
+        $scope.processReport = response.data;
       });
     };
 
@@ -406,7 +407,7 @@
       }).success(function (data) {
         $scope.fieldConfig = data;
       }).error(function(response) {
-        console.log(response);
+        console.warn(response);
       });
     }
 
