@@ -140,4 +140,8 @@
     <constructor-arg value="${ldap.base.search.filter}"/>
   </bean>
 
+  <bean id="slashSplitClassifier"
+        class="org.fao.geonet.kernel.search.classifier.Split" lazy-init="true">
+    <constructor-arg name="regex" value="\s*?/\s*?"/>
+  </bean>
 </beans>
