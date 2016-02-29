@@ -1370,7 +1370,7 @@
     <section name="identification">
       <!-- Update existing title in metadata record -->
       <field name="title"
-             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+             xpath="gmd:identificationInfo/*/
                       gmd:citation/gmd:CI_Citation/gmd:title"
              indexField="title">
         <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
@@ -1393,7 +1393,7 @@
       Warning: Duplicates may be inserted.
       -->
       <field name="topicCats"
-             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+             xpath="gmd:identificationInfo/*/
                       gmd:topicCategory"
              use="data-gn-codelist-picker"
              codelist="gmd:MD_TopicCategoryCode"
@@ -1414,7 +1414,7 @@
       Warning: Duplicates may be inserted.
       -->
       <field name="language"
-             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+             xpath="gmd:identificationInfo/*/
                       gmd:language"
              use="data-gn-language-picker"
              insertMode="gn_replace"
@@ -1451,7 +1451,7 @@
             Warning: Duplicates may be inserted.
       -->
       <field name="legalConstraints"
-             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+             xpath="gmd:identificationInfo/*/
                       gmd:resourceConstraints/gmd:MD_LegalConstraints/
                         gmd:accessConstraints"
              use="data-gn-codelist-picker"
@@ -1465,7 +1465,7 @@
             Warning: Duplicates may be inserted.
       -->
       <field name="otherConstraints"
-             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+             xpath="gmd:identificationInfo/*/
                       gmd:resourceConstraints/gmd:MD_LegalConstraints/
                         gmd:otherConstraints"
              use="textarea"
