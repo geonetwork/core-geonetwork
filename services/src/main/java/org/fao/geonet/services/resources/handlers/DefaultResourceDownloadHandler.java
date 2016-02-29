@@ -23,6 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import static org.fao.geonet.services.api.metadata.resources.ResourcesApi.getFileContentType;
+
 public class DefaultResourceDownloadHandler implements IResourceDownloadHandler {
 
     @Autowired
@@ -50,29 +52,7 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
             MultiValueMap<String, String> headers = new HttpHeaders();
             headers.add("Content-Disposition", "inline; filename=\"" + fileName + "\"");
             headers.add("Cache-Control", "no-cache");
-            String contentType = Files.probeContentType(file);
-            if (contentType == null) {
-                String ext = com.google.common.io.Files.getFileExtension(file.getFileName().toString()).toLowerCase();
-                switch (ext) {
-                    case "png":
-                    case "gif":
-                    case "bmp":
-                    case "tif":
-                    case "tiff":
-                    case "jpg":
-                    case "jpeg":
-                        contentType = "image/" + ext;
-                        break;
-                    case "txt":
-                    case "html":
-                        contentType = "text/" + ext;
-                        break;
-                    default:
-                        contentType = "application/" + ext;
-                }
-            }
-
-            headers.add("Content-Type", contentType);
+            headers.add("Content-Type", getFileContentType(file));
 
             return new HttpEntity<>(Files.readAllBytes(file), headers);
 
@@ -167,8 +147,6 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
                     metadataFileUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, fname);
 
                 } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
-                    Log.warning(Geonet.RESOURCES, "Store file download request: No upload request for (metadataid, file): (" + metadataId + "," + fname + ")");
-
                     // No related upload is found
                     metadataFileUpload = null;
                 }

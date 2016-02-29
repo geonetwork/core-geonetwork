@@ -4,6 +4,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import jeeves.JeevesCacheManager;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.rdf.QueryBuilder;
@@ -105,4 +106,20 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
 	    });
 	}
 
+    public java.util.List<KeywordBean> getRegionTopConcepts(final ServiceContext context) throws Exception{
+        return JeevesCacheManager.findInTenSecondCache(CATEGORY_ID_CACHE_KEY + context.getLanguage(),
+            new Callable<java.util.List<KeywordBean>>(){
+
+                @Override
+                public java.util.List<KeywordBean> call() throws Exception {
+                    Thesaurus thesaurus = getThesaurus(context);
+                    if (thesaurus != null) {
+                        return thesaurus.getTopConcepts(context.getLanguage());
+                    } else {
+                        return null;
+                    }
+                }
+
+            });
+    }
 }

@@ -149,7 +149,7 @@
           map: '=gnKmlImportMap'
         },
         controllerAs: 'kmlCtrl',
-        controller: ['$scope', function($scope) {
+        controller: ['$scope', '$http', function($scope, $http) {
 
           /**
            * Create new vector Kml file from url and add it to
@@ -165,30 +165,26 @@
               return;
             }
 
-            //FIXME use global constant defined in gnGlobalSettings
             var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
-            var kmlSource = new ol.source.KML({
-              projection: 'EPSG:3857',
-              url: proxyUrl
-            });
+            $http.get(proxyUrl).then(function(response) {
+              var kmlSource = new ol.source.Vector();
+              kmlSource.addFeatures(
+                  new ol.format.KML().readFeatures(
+                  response.data, {
+                    featureProjection: $scope.map.getView().getProjection(),
+                    dataProjection: 'EPSG:4326'
+                  }));
+              var vector = new ol.layer.Vector({
+                source: kmlSource,
+                getinfo: true,
+                label: 'Fichier externe : ' + url.split('/').pop()
+              });
+              $scope.addToMap(vector, map);
+              $scope.url = '';
+              $scope.validUrl = true;
 
-            var vector = new ol.layer.Vector({
-              source: kmlSource,
-              getinfo: true,
-              label: 'Fichier externe : ' + url.split('/').pop()
-            });
-
-            var listenerKey = kmlSource.on('change', function() {
-              if (kmlSource.getState() == 'ready') {
-                kmlSource.unByKey(listenerKey);
-                $scope.addToMap(vector, map);
-                $scope.validUrl = true;
-                $scope.url = '';
-              }
-              else if (kmlSource.getState() == 'error') {
-                $scope.validUrl = false;
-              }
-              $scope.$apply();
+            }, function() {
+              $scope.validUrl = false;
             });
           };
 

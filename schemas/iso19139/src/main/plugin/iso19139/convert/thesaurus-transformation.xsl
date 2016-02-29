@@ -8,6 +8,7 @@
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 exclude-result-prefixes="#all">
 
@@ -148,7 +149,7 @@
           <!-- Multilingual output if more than one requested language -->
           <xsl:choose>
             <xsl:when test="count($listOfLanguage) > 1">
-
+              <xsl:attribute name="xsi:type" select="'gmd:PT_FreeText_PropertyType'"/>
               <xsl:variable name="keyword" select="." />
 
               <xsl:if test="not($textgroupOnly)">

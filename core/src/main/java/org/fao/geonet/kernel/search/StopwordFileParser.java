@@ -1,10 +1,5 @@
 package org.fao.geonet.kernel.search;
 
-import org.fao.geonet.Constants;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,9 +7,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.util.Set;
+
+import org.fao.geonet.Constants;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 
 /**
  * Parses stopword files. Stopword files have lines with zero or more stopwords. Any content from the character | until
@@ -49,7 +49,7 @@ public class StopwordFileParser {
                         Set<String> stopwordsFromLine = parseLine(scanner.nextLine());
                         if (stopwordsFromLine != null) {
                             if (stopwords == null) {
-                                stopwords = new HashSet<String>();
+                                stopwords = new LinkedHashSet<String>();
                             }
                             stopwords.addAll(stopwordsFromLine);
                         }
@@ -95,7 +95,7 @@ public class StopwordFileParser {
             while (whitespaceTokenizer.hasNext()) {
                 String stopword = whitespaceTokenizer.next();
                 if (stopwords == null) {
-                    stopwords = new HashSet<String>();
+                    stopwords = new LinkedHashSet<String>();
                 }
                 stopwords.add(stopword);
             }

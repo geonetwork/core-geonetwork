@@ -78,29 +78,36 @@
 
       var Modal = function(options, scope) {
         var element = angular.element('' +
-            '<div class="modal fade in">' +
-            '<div class="modal-dialog in">' +
-            '  <div class="modal-content">' +
-            '    <div class="modal-header">' +
-            '      <button type="button" class="close" data-dismiss="modal">' +
-            '        &times;</button>' +
-            '      <h5 class="modal-title" translate>' +
-            '        <span>' + options.title + '</span></h5>' +
+            '<div class="modal fade in ' + (options.class || '') + '">' +
+            '  <div class="modal-dialog in">' +
+            '    <div class="modal-content">' +
+            '      <div class="modal-header">' +
+            '        <button type="button" class="close" ' +
+            '                data-dismiss="modal">' +
+            '          &times;</button>' +
+            '        <h5 class="modal-title" translate>' +
+            '          <span>' + options.title + '</span></h5>' +
             '      </div>' +
-            '    <div class="modal-body">' + options.content + '</div>' +
+            '      <div class="modal-body">' + options.content + '</div>' +
+            '    </div>' +
             '  </div>' +
-            '</div>' +
             '</div>');
 
-        var newScope = scope || $rootScope.$new();
+        var newScope = scope || $rootScope.$new(),
+            scopeProvided = angular.isDefined(scope);
         element = $compile(element)(newScope);
 
         $(document.body).append(element);
         element.modal();
         element.on('hidden.bs.modal', function() {
+          element.modal('hide');
+          $('body > .modal-backdrop').remove();
           element.remove();
-          newScope.$destroy();
+          if (!scopeProvided) {
+            newScope.$destroy();
+          }
         });
+        return element;
       };
       return {
         create: function(options, scope) {

@@ -23,15 +23,13 @@
 
 package org.fao.geonet.services.thesaurus;
 
-import java.util.List;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -66,23 +64,25 @@ public class GetTopConcept implements Service {
         
        	// perform the search for the top concepts of the concept scheme
         searcher = new KeywordsSearcher(context, thesaurusMan);
-        searcher.searchTopConcepts(sThesaurusName, langForThesaurus);
-			
-				KeywordBean topConcept = new KeywordBean(the.getIsoLanguageMapper());
-				topConcept.setThesaurusInfo(the);
-				topConcept.setValue("topConcepts", langForThesaurus);
-				topConcept.setUriCode(sThesaurusName);
-        Element root = KeywordsSearcher.toRawElement(new Element("descKeys"), topConcept);
 
-				Element keywordType = new Element("narrower");
-				for (KeywordBean kbr : searcher.getResults()) {
-					keywordType.addContent(kbr.toElement("eng", context.getLanguage()));
-				}
-				root.addContent(keywordType);
-        
-        return root;
+        Element response = new Element("descKeys");
+        try {
+            searcher.searchTopConcepts(sThesaurusName, langForThesaurus);
+
+            KeywordBean topConcept = new KeywordBean(the.getIsoLanguageMapper());
+            topConcept.setThesaurusInfo(the);
+            topConcept.setValue("topConcepts", langForThesaurus);
+            topConcept.setUriCode(sThesaurusName);
+            Element root = KeywordsSearcher.toRawElement(response, topConcept);
+
+            Element keywordType = new Element("narrower");
+            for (KeywordBean kbr : searcher.getResults()) {
+                keywordType.addContent(kbr.toElement("eng", context.getLanguage()));
+            }
+            root.addContent(keywordType);
+        } catch (TermNotFoundException ignored) {
+            // No top concept in thesaurus. Return empty element
+        }
+        return response;
     }
 }
-
-// =============================================================================
-

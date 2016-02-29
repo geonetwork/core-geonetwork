@@ -135,7 +135,6 @@ import static org.junit.Assert.assertTrue;
         final Constructor<?> constructor = GeonetContext.class.getDeclaredConstructors()[0];
         constructor.setAccessible(true);
         GeonetContext gc = new GeonetContext(_applicationContext, false, null);
-
         contexts.put(Geonet.CONTEXT_NAME, gc);
         final ServiceContext context = new ServiceContext("mockService", _applicationContext, contexts, _entityManager);
         context.setAsThreadLocal();

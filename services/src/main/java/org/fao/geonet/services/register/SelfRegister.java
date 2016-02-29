@@ -58,6 +58,7 @@ import org.springframework.security.crypto.keygen.StringKeyGenerator;
 /**
  * Register user.
  */
+@Deprecated
 public class SelfRegister extends NotInReadOnlyModeService {
 
 	private static final String PROFILE_TEMPLATE = "profileTemplate";
@@ -116,6 +117,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
         element.setAttribute(Params.SURNAME, surname);
         element.setAttribute(Params.NAME, name);
         element.setAttribute(Params.EMAIL, email);
+        element.setAttribute(Params.USERNAME, username);
 
         final UserRepository userRepository = context.getBean(UserRepository.class);
         if (userRepository.findOneByEmail(email) != null) {
@@ -130,7 +132,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
                 .setKind(kind)
                 .setName(name)
                 .setOrganisation(organ)
-                .setProfile(Profile.findProfileIgnoreCase(profile))
+                .setProfile(Profile.RegisteredUser)
                 .setSurname(surname)
                 .setUsername(username);
         user.getSecurity().setPassword(passwordHash);
@@ -158,7 +160,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
         return element.addContent(new Element("result").setText("errorProfileRequestFailed"));
       }
 
-    return element.setAttribute(Params.USERNAME, username);
+    return element;
 	}
 
 	/**

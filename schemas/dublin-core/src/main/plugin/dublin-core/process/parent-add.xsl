@@ -17,9 +17,11 @@ Stylesheet used to update metadata adding a reference to a parent record.
       <xsl:copy-of
           select="dc:*|dct:*"/>
 
-      <dct:isPartOf>
-        <xsl:value-of select="$parentUuid"/>
-      </dct:isPartOf>
+      <xsl:if test="not(dct:isPartOf[text() = $parentUuid])">
+        <dct:isPartOf>
+          <xsl:value-of select="$parentUuid"/>
+        </dct:isPartOf>
+      </xsl:if>
     </xsl:copy>
   </xsl:template>
 

@@ -97,7 +97,7 @@
                   );
               $http.get(url, { cache: true }).
                   success(function(data, status) {
-                    if (data.narrower) {
+                    if (data != null && data.narrower) {
                       defer.resolve(data);
                     } else {
                       // not a top concept

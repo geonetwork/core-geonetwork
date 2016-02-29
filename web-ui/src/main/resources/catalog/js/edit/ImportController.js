@@ -1,10 +1,10 @@
 (function() {
   goog.provide('gn_import_controller');
 
+
   goog.require('gn_category');
   goog.require('gn_formfields_directive');
   goog.require('gn_importxsl');
-  goog.require('gn_formfields_directive');
 
   var module = angular.module('gn_import_controller', [
     'gn_importxsl',
@@ -90,15 +90,31 @@
         }];
       };
 
+      $scope.uploadScope = angular.element('#md-import-file').scope();
+      $scope.unsupportedFile = false;
+      $scope.$watchCollection('uploadScope.queue', function(n, o) {
+        if (n != o && n.length == 1) {
+          if (n[0].name.match(/.xml$/i) !== null) {
+            $scope.file_type = 'single';
+          } else if (
+              n[0].name.match(/.zip$/i) !== null ||
+              n[0].name.match(/.mef$/i) !== null) {
+            $scope.file_type = 'mef';
+          } else {
+            $scope.unsupportedFile = true;
+            return;
+          }
+        }
+        $scope.unsupportedFile = false;
+      });
       $scope.importRecords = function(formId) {
         $scope.reports = [];
         $scope.error = null;
 
         if ($scope.importMode == 'uploadFile') {
-          var uploadScope = angular.element('#md-import-file').scope();
-          if (uploadScope.queue.length > 0) {
+          if ($scope.uploadScope.queue.length > 0) {
             $scope.importing = true;
-            uploadScope.submit();
+            $scope.uploadScope.submit();
           }
           else {
             $scope.reports = [{

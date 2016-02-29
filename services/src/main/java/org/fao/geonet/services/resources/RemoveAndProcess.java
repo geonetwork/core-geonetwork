@@ -56,6 +56,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @ReadWriteController
 @Controller("resource.del.and.detach")
+@Deprecated
 public class RemoveAndProcess  {
 
     @Autowired

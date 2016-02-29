@@ -14,7 +14,34 @@
     word-break: break-all;
     white-space: normal;
   }
+
+  .iti-box[data-ng-click] {
+    cursor: pointer;
+  }
+  .gn-iti {
+    border-color: @text-muted;
+    color: @text-muted;
+    padding-left: 2px;
+    cursor: pointer;
+    .label {
+      color: @text-muted !important;
+      text-align: left;
+      width: 194px !important;
+    }
+    .icon {
+      border-radius: 4px;
+      border: 1px solid #ffffff;
+      padding-left: 4px;
+      width: 34px !important;
+      height: 34px !important;
+      span {
+        display: table-cell;
+        font-size: 28px;
+      }
+    }
+  }
 }
+
 
 .gn-metadata-view {
 
@@ -213,7 +240,7 @@
       padding-left: 15px;
     }
     h4 {
-      word-break: break-all;
+      word-break: break-word;
     }
   }
 }

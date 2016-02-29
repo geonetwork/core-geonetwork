@@ -520,32 +520,62 @@
     <xsl:message> = Display action <xsl:value-of select="$nonExistingChildParent/* and $isDisplayed = 'true'"/></xsl:message>
     -->
     <xsl:if test="$nonExistingChildParent/* and $isDisplayed = 'true'">
-      <!-- The element does not exist in current record.
-          Add an action to add an element. -->
-      <xsl:variable name="name" select="@name"/>
       <xsl:variable name="childName" select="@or"/>
-      <xsl:variable name="btnLabel" select="@btnLabel"/>
-      <xsl:variable name="btnLabelTranslation" select="$strings/*[name() = $btnLabel]"/>
 
-      <xsl:call-template name="render-element-template-field">
-        <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
-        <xsl:with-param name="id" select="concat('_X', 
-          $nonExistingChildParent/*[position() = last()]/gn:element/@ref, '_', 
-          $nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, 'COLON', @or)"/>
-        <xsl:with-param name="isExisting" select="false()"/>
-        <xsl:with-param name="template" select="template"/>
-        <xsl:with-param name="hasAddAction" select="true()"/>
-        <xsl:with-param name="addDirective" select="@addDirective"/>
-        <xsl:with-param name="directiveAttributes" select="directiveAttributes"/>
-        <xsl:with-param name="parentRef" select="$nonExistingChildParent/*[position() = last()]/gn:element/@ref"/>
-        <xsl:with-param name="qname" select="concat($nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, ':', @or)"/>
-        <xsl:with-param name="isFirst" select="@forceLabel or count($elementOfSameKind/*) = 0"/>
-        <xsl:with-param name="isAddAction" select="true()"/>
-        <xsl:with-param name="btnLabel" select="if ($btnLabelTranslation != '') then $btnLabelTranslation else $btnLabel"/>
-        <xsl:with-param name="btnClass" select="@btnClass"/>
-      </xsl:call-template>
+      <!-- Get label from action or from gn:child -->
+      <xsl:variable name="elementName" select="$nonExistingChildParent/*/gn:child[@name = $childName]/concat(@prefix, ':', @name)"/>
+      <xsl:variable name="btnOverrideName"
+                    select="@name"/>
+      <xsl:variable name="btnName"
+                    select="if ($btnOverrideName)
+                            then $strings/*[name() = $btnOverrideName]
+                            else ''"/>
+      <xsl:variable name="name"
+                    select="if ($btnName != '')
+                            then $btnName
+                            else gn-fn-metadata:getLabel($schema, $elementName, $labels)/label"/>
+      <xsl:variable name="btnLabel" select="@btnLabel"/>
+      <xsl:variable name="btnClass" select="@btnClass"/>
+      <xsl:variable name="btnLabelTranslation" select="$strings/*[name() = $btnLabel]"/>
+      <xsl:variable name="directive" select="."/>
+
+      <xsl:choose>
+        <xsl:when test="template">
+          <!-- TODO: render-element-to-add should contains all
+          logic for add field (based on geonet:child/geonet:choose
+          and also when having directives or templates. -->
+          <xsl:call-template name="render-element-template-field">
+            <xsl:with-param name="name" select="$name"/>
+            <xsl:with-param name="id" select="concat('_X',
+     $nonExistingChildParent/*[position() = last()]/gn:element/@ref, '_',
+     $nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, 'COLON', @or)"/>
+            <xsl:with-param name="isExisting" select="false()"/>
+            <xsl:with-param name="template" select="template"/>
+            <xsl:with-param name="hasAddAction" select="true()"/>
+            <xsl:with-param name="addDirective" select="@addDirective"/>
+            <xsl:with-param name="directiveAttributes" select="directiveAttributes"/>
+            <xsl:with-param name="parentRef" select="$nonExistingChildParent/*[position() = last()]/gn:element/@ref"/>
+            <xsl:with-param name="qname" select="concat($nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, ':', @or)"/>
+            <xsl:with-param name="isFirst" select="@forceLabel or count($elementOfSameKind/*) = 0"/>
+            <xsl:with-param name="isAddAction" select="true()"/>
+            <xsl:with-param name="btnLabel" select="if ($btnLabelTranslation != '') then $btnLabelTranslation else $btnLabel"/>
+            <xsl:with-param name="btnClass" select="@btnClass"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:for-each select="$nonExistingChildParent/*/gn:child[@name = $childName]">
+            <xsl:call-template name="render-element-to-add">
+              <xsl:with-param name="label" select="$name"/>
+              <xsl:with-param name="directive" select="$directive"/>
+              <xsl:with-param name="childEditInfo" select="."/>
+              <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+              <xsl:with-param name="btnClass" select="$btnClass"/>
+              <xsl:with-param name="btnLabel" select="$btnLabelTranslation"/>
+            </xsl:call-template>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
-    
+
   </xsl:template>
-  
 </xsl:stylesheet>

@@ -43,7 +43,7 @@
            * @return {HttpPromise} Future object
            */
         remove: function(id) {
-          var url = gnUrlUtils.append('md.delete@json',
+          var url = gnUrlUtils.append('md.delete?_content_type=json&',
               gnUrlUtils.toKeyValue({
                 id: id
               })
@@ -63,7 +63,7 @@
          * @return {HttpPromise} Future object
          */
         validate: function(id) {
-          var url = gnUrlUtils.append('md.validate@json',
+          var url = gnUrlUtils.append('md.validate?_content_type=json&',
               gnUrlUtils.toKeyValue({
                 id: id
               })
@@ -139,7 +139,7 @@
          */
         importFromDir: function(data) {
           return $http({
-            url: 'md.import@json?' + data,
+            url: 'md.import?_content_type=json&' + data,
             method: 'GET',
             transformResponse: function(defaults) {
               try {
@@ -315,19 +315,19 @@
    */
 
   module.value('gnHttpServices', {
-    mdCreate: 'md.create@json',
-    mdView: 'md.view@json',
-    mdInsert: 'md.insert@json',
-    mdDelete: 'md.delete@json',
+    mdCreate: 'md.create?_content_type=json&',
+    mdView: 'md.view?_content_type=json&',
+    mdInsert: 'md.insert?_content_type=json&',
+    mdDelete: 'md.delete?_content_type=json&',
     mdDeleteBatch: 'md.delete.batch',
-    mdEdit: 'md.edit@json',
-    mdEditSave: 'md.edit.save@json',
-    mdEditSaveonly: 'md.edit.saveonly@json',
-    mdEditSaveandclose: 'md.edit.save.and.close@json',
-    mdEditCancel: 'md.edit.cancel@json',
-    getRelations: 'md.relations@json',
-    suggestionsList: 'md.suggestion@json',
-    getValidation: 'md.validate@json',
+    mdEdit: 'md.edit?_content_type=json&',
+    mdEditSave: 'md.edit.save?_content_type=json&',
+    mdEditSaveonly: 'md.edit.saveonly?_content_type=json&',
+    mdEditSaveandclose: 'md.edit.save.and.close?_content_type=json&',
+    mdEditCancel: 'md.edit.cancel?_content_type=json&',
+    getRelations: 'md.relations?_content_type=json&',
+    suggestionsList: 'md.suggestion?_content_type=json&',
+    getValidation: 'md.validate?_content_type=json&',
     mdSelect: 'metadata.select?_content_type=json', // TODO: CHANGE
 
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
@@ -336,8 +336,8 @@
     mdGetXML19139: 'xml_iso19139',
     csv: 'csv.search',
 
-    mdPrivileges: 'md.privileges.update@json',
-    mdPrivilegesBatch: 'md.privileges.batch.update@json',
+    mdPrivileges: 'md.privileges.update?_content_type=json&',
+    mdPrivilegesBatch: 'md.privileges.batch.update?_content_type=json&',
     mdValidateBatch: 'md.validation',
     publish: 'md.publish',
     unpublish: 'md.unpublish',
@@ -351,8 +351,8 @@
 
     country: 'regions.list?_content_type=json&categoryId=' +
         'http://geonetwork-opensource.org/regions%23country',
-    regionsList: 'regions.category.list@json',
-    region: 'regions.list@json',
+    regionsList: 'regions.category.list?_content_type=json&',
+    region: 'regions.list?_content_type=json&',
 
     suggest: 'suggest',
 
@@ -360,8 +360,8 @@
     search: 'q',
     internalSearch: 'qi',
     subtemplate: 'subtemplate',
-    lang: 'lang@json',
-    removeThumbnail: 'md.thumbnail.remove@json',
+    lang: 'lang?_content_type=json&',
+    removeThumbnail: 'md.thumbnail.remove?_content_type=json&',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
     geoserverNodes: 'geoserver.publisher?_content_type=json&',
     suggest: 'suggest',
@@ -648,20 +648,24 @@
         }
         angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
-          types.forEach(function(type) {
-            if (type.substr(0, 1) == '#') {
-              if (linkInfo.protocol == type.substr(1, type.length - 1) &&
-                  (!groupId || groupId == linkInfo.group)) {
-                ret.push(linkInfo);
+          if (types.length > 0) {
+            types.forEach(function(type) {
+              if (type.substr(0, 1) == '#') {
+                if (linkInfo.protocol == type.substr(1, type.length - 1) &&
+                    (!groupId || groupId == linkInfo.group)) {
+                  ret.push(linkInfo);
+                }
               }
-            }
-            else {
-              if (linkInfo.protocol.indexOf(type) >= 0 &&
-                  (!groupId || groupId == linkInfo.group)) {
-                ret.push(linkInfo);
+              else {
+                if (linkInfo.protocol.indexOf(type) >= 0 &&
+                    (!groupId || groupId == linkInfo.group)) {
+                  ret.push(linkInfo);
+                }
               }
-            }
-          });
+            });
+          } else {
+            ret.push(linkInfo);
+          }
         });
         this.linksCache[key] = ret;
         return ret;

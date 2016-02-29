@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<server-mediator>
-	<class>org.fao.geonet.test.LocalJeevesMediator</class>
-
-	<!-- <class>org.fao.geonet.test.HTTPMediator</class>
-	<params>
-		<param name="baseurl">http://local.geocat.ch/geonetwork</param>
-	</params>   -->
-</server-mediator>

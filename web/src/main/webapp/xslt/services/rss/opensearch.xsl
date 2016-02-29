@@ -25,6 +25,12 @@
           <xsl:text>any={searchTerms}&amp;hitsPerPage={count?}&amp;bbox={geo:box?}&amp;geometry={geo:geometry?}&amp;name={geo:locationString?}</xsl:text>
         </xsl:attribute>
       </Url>
+      <Url type="application/rdf+xml">
+        <xsl:attribute name="template">
+          <xsl:value-of select="concat('http://',//server/host,':',//server/port,/root/gui/locService,'/rdf.search?')"/>
+          <xsl:text>any={searchTerms}&amp;hitsPerPage={count?}&amp;bbox={geo:box?}&amp;geometry={geo:geometry?}&amp;name={geo:locationString?}</xsl:text>
+        </xsl:attribute>
+      </Url>
       <Url type="text/html">
         <xsl:attribute name="template">
           <xsl:value-of

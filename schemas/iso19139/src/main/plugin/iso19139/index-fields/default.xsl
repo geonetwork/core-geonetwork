@@ -353,6 +353,7 @@
             <xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString|gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor">
 
                 <Field name="orgName" string="{string(.)}" store="true" index="true"/>
+                <Field name="orgNameTree" string="{string(.)}" store="true" index="true"/>
 
                 <xsl:variable name="role"    select="../../gmd:role/*/@codeListValue"/>
                 <xsl:variable name="roleTranslation" select="util:getCodelistTranslation('gmd:CI_RoleCode', string($role), string($isoLangId))"/>
@@ -531,36 +532,16 @@
                 </xsl:for-each>
             </xsl:for-each>
 
-            <xsl:for-each select="gmd:graphicOverview/gmd:MD_BrowseGraphic">
+            <xsl:for-each select="gmd:graphicOverview/gmd:MD_BrowseGraphic[normalize-space(gmd:fileName/gco:CharacterString) != '']">
                 <xsl:variable name="fileName"  select="gmd:fileName/gco:CharacterString"/>
-                <xsl:if test="$fileName != ''">
-                    <xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
-                    <xsl:choose>
-                        <xsl:when test="contains($fileName ,'://')">
-                            <xsl:choose>
-                                <xsl:when test="string($fileDescr)='thumbnail'">
-                                    <Field  name="image" string="{concat('thumbnail|', $fileName)}" store="true" index="false"/>
-                                </xsl:when>
-                                <xsl:when test="string($fileDescr)='large_thumbnail'">
-                                    <Field  name="image" string="{concat('overview|', $fileName)}" store="true" index="false"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <Field  name="image" string="{concat('unknown|', $fileName)}" store="true" index="false"/>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:when>
-                        <xsl:when test="string($fileDescr)='thumbnail'">
-                            <!-- FIXME : relative path -->
-                            <Field  name="image" string="{concat($fileDescr, '|', 'resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
-                        </xsl:when>
-                        <xsl:when test="string($fileDescr)='large_thumbnail'">
-                            <!-- FIXME : relative path -->
-                            <Field  name="image" string="{concat('overview', '|', 'resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
-                        </xsl:when>
-                    </xsl:choose>
-                </xsl:if>
+                <xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
+                <xsl:variable name="thumbnailType"
+                              select="if (position() = 1) then 'thumbnail' else 'overview'"/>
+                <!-- First thumbnail is flagged as thumbnail and could be considered the main one -->
+                <Field  name="image"
+                        string="{concat($thumbnailType, '|', $fileName, '|', $fileDescr)}"
+                        store="true" index="false"/>
             </xsl:for-each>
-
         </xsl:for-each>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -944,7 +925,7 @@
                                     or $englishKeyword='soil' or $englishKeyword='land use'
                                     or $englishKeyword='human health and safety' or $englishKeyword='utility and governmental services'
                                     or $englishKeyword='environmental monitoring facilities' or $englishKeyword='production and industrial facilities'
-                                    or $englishKeyword='agricultural and aquaculture facilities' or $englishKeyword='population distribution - demography'
+                                    or $englishKeyword='agricultural and aquaculture facilities' or $englishKeyword='population distribution — demography'
                                     or $englishKeyword='area management/restriction/regulation zones and reporting units'
                                     or $englishKeyword='natural risk zones' or $englishKeyword='atmospheric conditions'
                                     or $englishKeyword='meteorological geographical features' or $englishKeyword='oceanographic geographical features'

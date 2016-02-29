@@ -359,7 +359,7 @@
                   regionsList.push({
                     id: id,
                     name: id.split('#')[1],
-                    label: $translate(id.split('#')[1])
+                    label: value['@label'] || id.split('#')[1]
                   });
                 }
               });

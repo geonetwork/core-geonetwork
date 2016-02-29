@@ -38,6 +38,7 @@ public class ISO19110SchemaPlugin
         allTypenames = ImmutableMap.<String, Namespace>builder()
                 .put("csw:Record", Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2"))
                 .put("gfc:FC_FeatureCatalogue", ISO19110Namespaces.GFC)
+                .put("dcat", Namespace.getNamespace("dcat", "http://www.w3.org/ns/dcat#"))
                 .build();
     }
 

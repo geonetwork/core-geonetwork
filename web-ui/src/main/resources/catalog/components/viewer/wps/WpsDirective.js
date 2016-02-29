@@ -101,7 +101,7 @@
         link: function(scope, element, attrs) {
           var defaults;
 
-          if(scope.defaults) {
+          if (scope.defaults) {
             defaults = parseKvpParams(scope.defaults);
           }
 
@@ -126,7 +126,7 @@
                         var value;
                         var defaultValue;
 
-                        if(defaults) {
+                        if (defaults) {
                           var datainput =
                               defaults.datainputs[input.identifier.value];
                           if (datainput != undefined) {
@@ -293,7 +293,7 @@
                       response.status.processFailed != undefined) {
                     scope.executeState = 'finished';
 
-                    if(response.status.processSucceeded) {
+                    if (response.status.processSucceeded) {
                       var layers = gnWpsService.extractWmsLayerFromResponse(
                           response, scope.map);
                     }
@@ -339,23 +339,25 @@
 
           // Guess the mimeType associated with the selected output.
           scope.$watch('selectedOutput.identifier', function(v) {
-            if(v) {
+            if (v) {
               try {
                 scope.selectedOutput.mimeType = '';
                 var os = scope.describeResponse.
                     processDescription[0].processOutputs.output;
 
-                for(var i = 0; i< os.length;i++) {
+                for (var i = 0; i < os.length; i++) {
                   var o = os[i];
-                  if(v == o.identifier.value) {
-                    for(var j = 0; j< o.complexOutput.supported.format.length;j++) {
+                  if (v == o.identifier.value) {
+                    for (var j = 0;
+                         j < o.complexOutput.supported.format.length;
+                         j++) {
                       var f = o.complexOutput.supported.format[j];
-                      if(f.mimeType == gnWpsService.WMS_MIMETYPE) {
+                      if (f.mimeType == gnWpsService.WMS_MIMETYPE) {
                         o.mimeType = f.mimeType;
                         break;
                       }
                     }
-                    if(!o.mimeType) {
+                    if (!o.mimeType) {
                       o.mimeType = o.complexOutput._default.format.mimeType;
                     }
                     break;

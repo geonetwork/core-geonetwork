@@ -1,6 +1,20 @@
 package org.fao.geonet.kernel.search.index;
 
-import com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.annotation.Nonnull;
+
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.NRTCachingDirectory;
@@ -11,19 +25,7 @@ import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.Nonnull;
+import com.google.common.annotations.VisibleForTesting;
 
 /**
  * Create filesystem based Directory objects.
@@ -191,7 +193,7 @@ public class FSDirectoryFactory implements DirectoryFactory {
     @Override
     public Set<String> listIndices() throws IOException {
         init();
-        Set<String> indices = new HashSet<>();
+        Set<String> indices = new LinkedHashSet<>();
         if (Files.exists(this.indexFile)) {
             try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(this.indexFile)) {
                 for (Path file : dirStream) {

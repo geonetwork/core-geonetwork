@@ -51,10 +51,21 @@
              scope.thesaurusKey = null;
              scope.snippet = null;
              scope.snippetRef = null;
-             var restrictTo =
-                 scope.include ? (
-                     scope.include.indexOf(',') !== -1 ?
-                      scope.include.split(',') : [scope.include]) : [];
+             var restrictionList = scope.include ? (
+             scope.include.indexOf(',') !== -1 ?
+                 scope.include.split(',') : [scope.include]) : [];
+
+             var includeThesaurus = [];
+             var excludeThesaurus = [];
+             for (var i = 0; i < restrictionList.length; i++) {
+               var t = restrictionList[i];
+               if (t.indexOf('-') === 0) {
+                 excludeThesaurus.push(t.substring(1));
+               } else {
+                 includeThesaurus.push(t);
+               }
+             }
+
 
              scope.allowFreeTextKeywords =
              (attrs.allowFreeTextKeywords === undefined) ||
@@ -64,18 +75,17 @@
              // in the record ?
              gnThesaurusService.getAll().then(
              function(listOfThesaurus) {
-               // TODO: Sort them
-               if (restrictTo.length > 0) {
-                 var filteredList = [];
-                 angular.forEach(listOfThesaurus, function(thesaurus) {
-                   if ($.inArray(thesaurus.getKey(), restrictTo) !== -1) {
-                     filteredList.push(thesaurus);
-                   }
-                 });
-                 scope.thesaurus = filteredList;
-               } else {
-                 scope.thesaurus = listOfThesaurus;
-               }
+               scope.thesaurus = [];
+               angular.forEach(listOfThesaurus, function(thesaurus) {
+                 if (excludeThesaurus.length > 0 &&
+                 $.inArray(thesaurus.getKey(), excludeThesaurus) !== -1) {
+
+                 } else if (includeThesaurus.length == 0 || (
+                 includeThesaurus.length > 0 &&
+                 $.inArray(thesaurus.getKey(), includeThesaurus) !== -1)) {
+                   scope.thesaurus.push(thesaurus);
+                 }
+               });
              });
 
              scope.add = function() {

@@ -9,6 +9,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import javax.annotation.Nonnull;
 import static org.fao.geonet.domain.Pair.read;
 import static org.junit.Assert.assertEquals;
 
-public class ReportUpdatedMetadataTest extends AbstractCoreIntegrationTest {
+public class ReportUpdatedMetadataTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     MetadataRepository metadataRepository;

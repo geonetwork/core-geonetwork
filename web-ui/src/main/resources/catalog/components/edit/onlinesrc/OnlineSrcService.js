@@ -25,26 +25,36 @@
     'gnEditor',
     'gnCurrentEdit',
     '$q',
+    '$http',
     '$rootScope',
     '$translate',
     'Metadata',
     function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit,
-             $q, $rootScope, $translate, Metadata) {
+             $q, $http, $rootScope, $translate, Metadata) {
 
       var reload = false;
       var openCb = {};
 
       /**
        * To match an icon to a protocol
+       * TODO: Should be the same as in related resource directive
        */
       var protocolIcons = [
+        ['dq', 'fa-certificate'],
+        ['portrayal', 'fa-paint-brush'],
+        ['FILE:', 'fa-database'],
+        ['OGC:OWS', 'fa-map'],
+        ['OGC:WMC', 'fa-map'],
+        ['OGC:WM', 'fa-map'],
+        ['OGC:WFS', 'fa-download'],
         ['OGC:', 'fa-globe'],
+        ['KML:', 'fa-globe'],
         ['ESRI', 'fa-globe'],
         ['WWW:LINK', 'fa-link'],
         ['DB:', 'fa-columns'],
         ['WWW:DOWNLOAD', 'fa-download']
       ];
-
+      var defaultIcon = 'fa-link';
       /**
      * Prepare batch process request parameters.
      *   - get parameters from onlinesrc form
@@ -266,10 +276,10 @@
         /**
          * @ngdoc method
          * @methodOf gn_onlinesrc.service:gnOnlinesrc
-         * @name gnOnlinesrc#addOnlinesrc
+         * @name gnOnlinesrc#add
          *
          * @description
-         * The `addOnlinesrc` method call a batch process to add a new online
+         * The `add` method call a batch process to add a new online
          * resource to the current metadata.
          * It prepares the parameters and call batch
          * request from the `gnBatchProcessing` service.
@@ -277,29 +287,9 @@
          * @param {string} params to send to the batch process
          * @param {string} popupid id of the popup to close after process.
          */
-        addOnlinesrc: function(params, popupid) {
+        add: function(params, popupid) {
           return runProcess(this,
-              setParams('onlinesrc-add', params)).then(function() {
-            closePopup(popupid);
-          });
-        },
-
-        /**
-         * @ngdoc method
-         * @name gnOnlinesrc#addThumbnailByURL
-         * @methodOf gn_onlinesrc.service:gnOnlinesrc
-         *
-         * @description
-         * The `addThumbnailByURL` method call a batch
-         * process to add a thumbnail
-         * from an url to the current metadata.
-         *
-         * @param {string} params to send to the batch process
-         * @param {string} popupid id of the popup to close after process.
-         */
-        addThumbnailByURL: function(params, popupid) {
-          return runProcess(this,
-              setParams('thumbnail-add', params)).then(function() {
+              setParams(params.process, params)).then(function() {
             closePopup(popupid);
           });
         },
@@ -349,11 +339,23 @@
          * @return {string} icon class
          */
         getIconByProtocol: function(p) {
-          for (i = 0; i < protocolIcons.length; ++i) {
-            if (p.indexOf(protocolIcons[i][0]) >= 0) {
-              return protocolIcons[i][1];
+          if (p['@subtype']) {
+            for (i = 0; i < protocolIcons.length; ++i) {
+              if (p['@subtype'].indexOf(protocolIcons[i][0]) >= 0 ||
+                  p['@subtype'].indexOf(protocolIcons[i][0]) >= 0) {
+                return protocolIcons[i][1];
+              }
             }
           }
+          if (p.protocol) {
+            for (i = 0; i < protocolIcons.length; ++i) {
+              if (p.protocol.indexOf(protocolIcons[i][0]) >= 0 ||
+                  p.protocol.indexOf(protocolIcons[i][0]) >= 0) {
+                return protocolIcons[i][1];
+              }
+            }
+          }
+          return defaultIcon;
         },
 
         /**
@@ -382,6 +384,7 @@
               uuidref: qParams.uuidSrv,
               uuid: qParams.uuidDS,
               url: qParams.url,
+              protocol: qParams.protocol,
               process: qParams.process
             }).then(function() {
               closePopup(popupid);
@@ -417,6 +420,7 @@
             url: qParams.url,
             uuidref: qParams.uuidSrv,
             uuid: qParams.uuidDS,
+            protocol: qParams.protocol,
             process: qParams.process
           }).then(function() {
             var qParams = setParams('dataset-add', params);
@@ -496,22 +500,13 @@
          * @param {Object} onlinesrc the online resource to remove
          */
         removeOnlinesrc: function(onlinesrc) {
-          var scope = this;
 
-          if (onlinesrc.protocol == 'WWW:DOWNLOAD-1.0-http--download') {
-            return runService('removeOnlinesrc', {
-              id: gnCurrentEdit.id,
-              url: onlinesrc.url,
-              name: onlinesrc.name
-            }, this);
-          } else {
-            return runProcess(this,
-                setParams('onlinesrc-remove', {
-                  id: gnCurrentEdit.id,
-                  url: onlinesrc.url,
-                  name: onlinesrc.name
-                }));
-          }
+          return runProcess(this,
+              setParams('onlinesrc-remove', {
+                id: gnCurrentEdit.id,
+                url: onlinesrc.url,
+                name: onlinesrc.name
+              }));
         },
 
         /**
@@ -599,7 +594,8 @@
         removeFeatureCatalog: function(onlinesrc) {
           var params = {
             uuid: gnCurrentEdit.uuid,
-            uuidref: onlinesrc['geonet:info'].uuid
+            uuidref: onlinesrc['@subtype'] ? onlinesrc.url :
+                onlinesrc['geonet:info'].uuid
           };
           runProcess(this,
               setParams('fcats-remove', params));

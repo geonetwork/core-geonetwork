@@ -1,13 +1,14 @@
-<div class="clearfix gn-share-help">
-  <div data-gn-need-help="editor_sharing" class="pull-right"></div>
-  <h5 translate>whoCanAccess</h5>
-  <div ng-if="alertMsg" class="alert alert-warning" role="alert" translate>privilegesBatchAlert</div>
-</div>
-
-<div class="form-group gn-searchgroup-input">
-  <input class="form-control input-sm" data-ng-model="groupSearch.$"
-         placeholder="{{'filterGroup' | translate}}"/>
-
+<div class="clearfix gn-share-help row">
+  <div class="col-md-4 form-group gn-searchgroup-input">
+    <h5 translate>whoCanAccess</h5>
+    <input class="form-control input-sm" data-ng-model="groupSearch.$"
+           placeholder="{{'filterGroup' | translate}}"/>
+  </div>
+  <div class="col-md-8">
+    <div ng-if="alertMsg" class="alert alert-warning"
+         role="alert"
+         translate>privilegesBatchAlert</div>
+  </div>
 </div>
 
 <!-- TODO: simplify layout if only one group -->
@@ -17,18 +18,18 @@
     <thead>
       <tr>
         <th><a href="" ng-click="setSorter('g')">
-            <span translate>groupOwners</span>
+            <span translate>groupOwners</span>&nbsp;
             <i data-ng-if="sorter.predicate == 'g'" class="fa" ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"></i>
           </a>
         </th>
         <th data-ng-repeat="o in operations">
           <a href="" ng-click="setSorter(o.id)">
-            <span>{{o.label[lang]}}</span>
+            <span>{{o.label[lang]}}</span>&nbsp;
             <i data-ng-if="sorter.predicate == o.id" class="fa" data-ng-class="sorter.reverse ? 'fa-long-arrow-down' : 'fa-long-arrow-up'"></i>
           </a>
         </th>
         <th><a href="" ng-click="setSorter('p')" data-ng-if="displayProfile">
-          <span translate>profile</span>
+          <span translate>profile</span>&nbsp;
           <i data-ng-if="sorter.predicate == 'p'" class="fa" ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"></i>
         </a>
         </th>
@@ -83,4 +84,7 @@
     <i class="fa fa-save"></i>&nbsp;
     <span data-translate="">save</span>
   </button>
+  <div data-gn-need-help="user-guide/publishing/index.html"
+       data-icon-only="true"
+       class="pull-right"></div>
 </div>

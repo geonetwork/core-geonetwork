@@ -11,24 +11,16 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu pull-right" role="menu">
-        <li data-ng-show="isCategoryEnable('thumbnail')">
-          <a href=""
-             data-ng-click="onlinesrcService.onOpenPopup('thumbnail')">
-            <i class="fa gn-icon-thumbnail"></i>
-            <i class="icon-external-link"></i>&nbsp;
-            <span data-translate="">addThumbnail</span>
-          </a>
-        </li>
-        <li data-ng-show="isCategoryEnable('onlinesrc')">
+        <li data-ng-show="isCategoryEnable('thumbnail') || isCategoryEnable('onlinesrc')">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('onlinesrc')">
             <i class="fa gn-icon-onlinesrc"></i>
             <i class="icon-external-link"></i>&nbsp;
-            <span data-translate="">addOnlinesrc</span>
+            <span data-translate="">addDocument</span>
           </a>
         </li>
-        <li class="divider"
-            data-ng-show="isCategoryEnable('thumbnail') || isCategoryEnable('onlinesrc')"></li>
+        <li class="dropdown-header"
+            data-translate>linkMetadata</li>
         <li data-ng-show="isCategoryEnable('parent')">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('parent')">
@@ -79,19 +71,30 @@
         </li>
       </ul>
     </div>
+
+
+    <div data-gn-need-help="user-guide/associating-resources/index.html"
+         data-icon-only="true"
+         class="pull-right"></div>
   </div>
   <div class="panel-body">
     <div class="gn-onlinesrc-panel">
       
       <!-- ******* Display Thumbnails ******* -->
       <ul class="list-inline">
-        <li data-ng-repeat="thumb in relations.thumbnail"><img
-          class="thumb-small" data-ng-src="{{thumb.id}}" />
+        <li class="gn-list-thumb thumbnail"
+            data-ng-repeat="thumb in relations.thumbnail">
+          <img class="thumb-small"
+               title="{{thumb.title.length > 0 ? thumb.title : ''}}"
+               data-gn-img-modal="thumb"
+               data-ng-src="{{thumb.id}}" />
+
           <a href="" class="onlinesrc-remove"
             data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
-            data-ng-click="onlinesrcService.removeThumbnail(thumb)">
+            data-ng-click="onlinesrcService.removeThumbnail(thumb)"
+            title="{{'removeThumbnail' | translate}}">
             <i class="btn fa fa-times text-danger"></i>
-          </a> 
+          </a>
         </li>
       </ul>
 
@@ -106,21 +109,39 @@
       </h4>
       <ul class="list-group">
         <li class="list-group-item" href=""
-          data-ng-repeat="resource in relations.onlinesrc | orderBy:'title'">
-          <i class="fa fa-fw" data-ng-class="onlinesrcService.getIconByProtocol(resource.protocol)"/>
-          <a data-ng-href="{{resource.url}}" target="_blank">
-            {{resource.title}}
-         </a> 
-         <span class="onlinesrc-remove"
-            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
-            data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(resource)"><i class="btn fa fa-times text-danger pull-right"></i></span>
+            data-ng-repeat="resource in relations.onlinesrc | orderBy:'title'">
+          <div class="row">
+            <div class="col-md-11"
+                 title="{{resource.description}}">
+              <a data-ng-href="{{resource.url}}"
+                 data-ng-if="resource.url.match('^http|ftp') !== null"
+                 target="_blank">
+                <i class="fa fa-fw"
+                   data-ng-class="onlinesrcService.getIconByProtocol(resource)"/>
+                {{resource.title}}
+              </a>
+              <span data-ng-if="resource.url.match('^http|ftp') === null">
+                <i class="fa fa-fw"
+                   data-ng-class="onlinesrcService.getIconByProtocol(resource)"/>
+                {{resource.title}}
+              </span>
+            </div>
+            <div class="col-md-1">
+              <a class="btn onlinesrc-remove"
+                 title="{{('remove' | translate) + ' ' + resource.description}}"
+                 data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+                 data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(resource)">
+                <i class="fa fa-times text-danger"></i>
+              </a>
+            </div>
+          </div>
         </li>
       </ul>
 
       <!-- ******* List of datasets ******* -->
       <h4 class="onlinesrc-title" data-ng-show="relations.datasets">
         <a href=""
-          data-ng-click="onlinesrcService.onOpenPopup('dataset')"> 
+           data-ng-click="onlinesrcService.onOpenPopup('dataset')">
           <i class="fa fa-files-o"></i><i class="icon-external-link"></i>&nbsp;
           <span data-translate="">datasets</span>&nbsp;
           <i class="fa fa-plus"></i>
@@ -128,10 +149,23 @@
       </h4>
       <ul class="list-group">
         <li class="list-group-item"
-          data-ng-repeat="resource in relations.datasets | orderBy:'title'">
-          {{resource.title}} <a href="" class="onlinesrc-remove"
-            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
-          data-ng-click="onlinesrcService.removeDataset(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+            data-ng-repeat="resource in relations.datasets | orderBy:'title'">
+          <div class="row">
+            <div class="col-md-11"
+                 title="{{resource.description}}">
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+              </a>
+            </div>
+            <div class="col-md-1">
+              <a href="" class="onlinesrc-remove"
+                 data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+                 data-ng-click="onlinesrcService.removeDataset(resource)">
+                <i class="fa fa-times text-danger"></i>
+              </a>
+            </div>
+          </div>
         </li>
       </ul>
 
@@ -147,17 +181,30 @@
       </h4>
       <ul class="list-group">
         <li class="list-group-item"
-          data-ng-repeat="resource in relations.services | orderBy:'title'">
-          {{resource.title}} <a href="" class="onlinesrc-remove"
-            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
-            data-ng-click="onlinesrcService.removeService(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+            data-ng-repeat="resource in relations.services | orderBy:'title'">
+          <div class="row">
+            <div class="col-md-11"
+                 title="{{resource.description}}">
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+              </a>
+            </div>
+            <div class="col-md-1">
+              <a href="" class="onlinesrc-remove"
+                 data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+                 data-ng-click="onlinesrcService.removeService(resource)">
+                <i class="fa fa-times text-danger"></i>
+              </a>
+            </div>
+          </div>
         </li>
       </ul>
 
       <!--******* List of parent ******* -->
       <h4 class="onlinesrc-title" data-ng-show="relations.parent">
         <a href=""
-          data-ng-click="onlinesrcService.onOpenPopup('parent')">
+           data-ng-click="onlinesrcService.onOpenPopup('parent')">
           <i class="fa fa-sitemap" data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
           <i class="icon-external-link"></i>&nbsp;
           <span data-translate="">parentMd</span>&nbsp;
@@ -167,9 +214,22 @@
       <ul class="list-group">
         <li class="list-group-item"
           data-ng-repeat="resource in relations.parent | orderBy:'title'">
-          {{resource.title}} <a href="" class="onlinesrc-remove"
-            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
-            data-ng-click="onlinesrcService.removeMdLink('parent', resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+          <div class="row">
+            <div class="col-md-11"
+                 title="{{resource.description}}">
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+              </a>
+            </div>
+            <div class="col-md-1">
+              <a href="" class="onlinesrc-remove"
+                 data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+                 data-ng-click="onlinesrcService.removeMdLink('parent', resource)">
+                <i class="fa fa-times text-danger"></i>
+              </a>
+            </div>
+          </div>
         </li>
       </ul>
 
@@ -187,9 +247,22 @@
       <ul class="list-group">
         <li class="list-group-item"
           data-ng-repeat="resource in relations.sources | orderBy:'title'">
-          {{resource.title}} <a href="" class="onlinesrc-remove"
-            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
-            data-ng-click="onlinesrcService.removeMdLink('source', resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+          <div class="row">
+            <div class="col-md-11"
+                 title="{{resource.description}}">
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+              </a>
+            </div>
+            <div class="col-md-1">
+              <a href="" class="onlinesrc-remove"
+                 data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+                 data-ng-click="onlinesrcService.removeMdLink('source', resource)">
+                <i class="fa fa-times text-danger"></i>
+              </a>
+            </div>
+          </div>
         </li>
       </ul>
 
@@ -197,7 +270,7 @@
       <h4 class="onlinesrc-title" data-ng-show="relations.fcats">
         <a href="" data-ng-click="onlinesrcService.onOpenPopup('fcats')">
           <i class="fa fa-table"
-            data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
+             data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
           <i class="icon-external-link"></i>&nbsp;
           <span data-translate="">featureCatalog</span>&nbsp;
           <i class="fa fa-plus"></i>
@@ -206,9 +279,22 @@
       <ul class="list-group">
         <li class="list-group-item"
           data-ng-repeat="resource in relations.fcats | orderBy:'title'">
-          {{resource.title}} <a href="" class="onlinesrc-remove"
-            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
-            data-ng-click="onlinesrcService.removeFeatureCatalog(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+          <div class="row">
+            <div class="col-md-11"
+                 title="{{resource.description}}">
+              <a target="_blank"
+                 data-ng-href="{{resource['@subtype'] ? resource.url : ('../metadata/' + resource['geonet:info'].uuid)}}">
+                {{resource.title}}
+              </a>
+            </div>
+            <div class="col-md-1">
+              <a href="" class="onlinesrc-remove"
+                 data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+                 data-ng-click="onlinesrcService.removeFeatureCatalog(resource)">
+                <i class="fa fa-times text-danger"></i>
+              </a>
+            </div>
+          </div>
         </li>
       </ul>
       
@@ -220,8 +306,16 @@
       </h4>
       <ul class="list-group">
         <li class="list-group-item"
-          data-ng-repeat="resource in relations.hasfeaturecat | orderBy:'title'">
-          {{resource.title}}</li>
+            data-ng-repeat="resource in relations.hasfeaturecat | orderBy:'title'">
+          <div class="row">
+            <div class="col-md-11"
+                 title="{{resource.description}}">
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+              </a>
+            </div>
+          </div>
         </li>
       </ul>
       
@@ -239,11 +333,23 @@
       <ul class="list-group">
         <li class="list-group-item"
           data-ng-repeat="resource in relations.sibling | orderBy:'title'">
-          {{resource.title}} 
-          <span>{{'(' + resource.subType.toUpperCase() + ')'}}</span>
-          <a href="" class="onlinesrc-remove"
-            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
-            data-ng-click="onlinesrcService.removeSibling(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+          <div class="row">
+            <div class="col-md-11"
+                 title="{{resource.description}}">
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+                <span>{{'(' + resource.subType.toUpperCase() + ')'}}</span>
+              </a>
+            </div>
+            <div class="col-md-1">
+              <a href="" class="onlinesrc-remove"
+                 data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+                 data-ng-click="onlinesrcService.removeSibling(resource)">
+                <i class="fa fa-times text-danger"></i>
+              </a>
+            </div>
+          </div>
         </li>
       </ul>
       
@@ -256,8 +362,16 @@
       <ul class="list-group">
         <li class="list-group-item"
           data-ng-repeat="resource in relations.associated | orderBy:'title'">
-          {{resource.title}}</li>
-          </li>
+          <div class="row">
+            <div class="col-md-11"
+                 title="{{resource.description}}">
+              <a target="_blank"
+                 data-ng-href="{{'../metadata/' + resource['geonet:info'].uuid}}">
+                {{resource.title}}
+              </a>
+            </div>
+          </div>
+        </li>
       </ul>
       
     </div>

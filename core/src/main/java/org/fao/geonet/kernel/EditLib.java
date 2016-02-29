@@ -49,16 +49,7 @@ import org.jdom.filter.ElementFilter;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * TODO javadoc.
@@ -469,7 +460,7 @@ public class EditLib {
      * @return the number of updates.
      */
     public int addElementOrFragmentFromXpaths(Element metadataRecord,
-                                              Map<String, AddElemValue> xmlAndXpathInputs,
+                                              LinkedHashMap<String, AddElemValue> xmlAndXpathInputs,
                                               MetadataSchema metadataSchema,
                                               boolean createXpathNodeIfNotExist) {
 
@@ -485,7 +476,6 @@ public class EditLib {
                 numUpdated ++;
             }
         }
-
         return numUpdated;
     }
 
@@ -977,8 +967,8 @@ public class EditLib {
     }
 
     private Pair<Element, String> findLongestMatch(final Element metadataRecord, final Element bestMatch, final int indexOfBestMatch,
-                                     final MetadataSchema metadataSchema,  final int nextIndex, final List<String> xpathPropertyParts,
-                                     BitSet visited) {
+                                                   final MetadataSchema metadataSchema, final int nextIndex, final List<String> xpathPropertyParts,
+                                                   BitSet visited) {
 
         if (visited.get(nextIndex)) {
             return Pair.read(bestMatch, SLASH_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size())));
@@ -1326,7 +1316,7 @@ public class EditLib {
      * @return
      * @throws Exception
      */
-	public List<Element> searchChildren(String chName, Element md, String schema) throws Exception	{
+	public List<Element> searchChildren(String chName, Element md, String schema) throws Exception {
 
 		// FIXME? CHOICE_ELEMENT containers can only have one element in them
 		// if there are more then the container will need to be duplicated
@@ -1515,7 +1505,7 @@ public class EditLib {
 		Element elem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
 		elem.setAttribute(new Attribute(Edit.Element.Attr.REF, thisRef +""));
 		elem.setAttribute(new Attribute(Edit.Element.Attr.PARENT, parent +""));
-		elem.setAttribute(new Attribute(Edit.Element.Attr.UUID, md.getQualifiedName()+"_"+UUID.randomUUID().toString()));
+		elem.setAttribute(new Attribute(Edit.Element.Attr.UUID, md.getQualifiedName()+"_"+ UUID.randomUUID().toString()));
 		md.addContent(elem);
 
 		return ref;
@@ -1655,7 +1645,7 @@ public class EditLib {
 				for (int j=0; j<list.size(); j++) {
 					Element listChild = (Element) list.get(j);
 					Element listElem  = listChild.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-					listElem.setAttribute(new Attribute(Edit.Element.Attr.UUID, listChild.getQualifiedName()+"_"+UUID.randomUUID().toString()));
+					listElem.setAttribute(new Attribute(Edit.Element.Attr.UUID, listChild.getQualifiedName()+"_"+ UUID.randomUUID().toString()));
 					listElem.setAttribute(new Attribute(Edit.Element.Attr.MIN, ""+type.getMinCardinAt(i)));
 					listElem.setAttribute(new Attribute(Edit.Element.Attr.MAX, ""+type.getMaxCardinAt(i)));
 
@@ -1991,7 +1981,7 @@ public class EditLib {
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAME, getUnqualifiedName(qname)));
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.PREFIX, getPrefix(qname)));
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAMESPACE, childNS));
-		child.setAttribute(new Attribute(Edit.ChildElem.Attr.UUID, Edit.RootChild.CHILD+"_"+qname+"_"+UUID.randomUUID().toString()));
+		child.setAttribute(new Attribute(Edit.ChildElem.Attr.UUID, Edit.RootChild.CHILD+"_"+qname+"_"+ UUID.randomUUID().toString()));
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.MIN, ""+min));
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.MAX, ""+max));
 
@@ -2069,7 +2059,7 @@ public class EditLib {
      * @return
      * @throws Exception
      */
-	private List<String> recurseOnNestedChoices(MetadataSchema schema,String chElem,String parent) throws Exception {
+	private List<String> recurseOnNestedChoices(MetadataSchema schema, String chElem, String parent) throws Exception {
 		List<String> chElems = new ArrayList<String>();
 		String elemType = schema.getElementType(chElem,parent);
 		MetadataType type = schema.getTypeInfo(elemType);

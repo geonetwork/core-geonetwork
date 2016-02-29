@@ -16,7 +16,7 @@ public class FullViewFormatterLocalizationTest extends AbstractFullViewFormatter
     @Autowired
     private IsoLanguagesMapper mapper;
 
-    @Test @DirtiesContext
+    @Test
     @SuppressWarnings("unchecked")
     public void testPrintFormatLocales() throws Exception {
         final FormatType formatType = FormatType.testpdf;

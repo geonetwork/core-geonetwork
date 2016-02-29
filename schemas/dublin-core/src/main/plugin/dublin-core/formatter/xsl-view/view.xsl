@@ -37,8 +37,8 @@
     <xsl:value-of select="dc:description"/>
   </xsl:template>
 
-
-
+  <xsl:template mode="getMetadataHeader" match="simpledc">
+  </xsl:template>
 
 
   <!-- Most of the elements are ... -->
