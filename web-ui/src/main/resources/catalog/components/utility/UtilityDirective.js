@@ -115,7 +115,7 @@
         'partials/batchreport.html',
         link: function(scope, element, attrs) {
           scope.$watch('processReport', function (n, o) {
-            if (n != o) {
+            if (n && n != o) {
             scope.processReportWarning = n.notFound != 0 ||
               n.notOwner != 0 ||
               n.notProcessFound != 0 ||

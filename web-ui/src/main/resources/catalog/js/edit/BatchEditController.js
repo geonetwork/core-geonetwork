@@ -131,10 +131,11 @@
     '$http',
     '$compile',
     'gnSearchSettings',
-    'gnCurrentEdit'
+    'gnCurrentEdit',
+    'gnSchemaManagerService'
   ,
   function($scope, $location, $http, $compile,
-           gnSearchSettings, gnCurrentEdit) {
+           gnSearchSettings, gnCurrentEdit, gnSchemaManagerService) {
 
     // Simple tab handling.
     $scope.selectedStep = 1;
@@ -406,12 +407,11 @@
         url: 'md.edit.batch.config'
       }).success(function (data) {
         $scope.fieldConfig = data;
+        gnSchemaManagerService.getNamespaces();
       }).error(function(response) {
         console.warn(response);
       });
     }
-
-
     init();
   }
 ]);

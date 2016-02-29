@@ -215,7 +215,7 @@
 
                   var schemaId = gnCurrentEdit.schema || scope.schema;
                   gnSchemaManagerService
-                     .getCodelist(gnCurrentEdit.schema + '|' + 'roleCode')
+                     .getCodelist(schemaId + '|' + 'roleCode')
                       .then(function(data) {
                         scope.roles = data[0].entry;
                       });

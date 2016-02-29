@@ -551,9 +551,6 @@
 
               var init = function() {
                 var schema = attrs['schema'] || gnCurrentEdit.schema || 'iso19139';
-                var element = (gnElementsMap[attrs['gnSchemaInfo']] &&
-                    gnElementsMap[attrs['gnSchemaInfo']][schema]) ||
-                    attrs['gnSchemaInfo'];
                 var config = schema + '|' + attrs['gnSchemaInfo'] + '|||';
 
                 scope.type = attrs['schemaInfoCombo'];
