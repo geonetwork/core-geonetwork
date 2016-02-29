@@ -201,9 +201,7 @@ public class BatchEdits implements ApplicationContextAware { // extends NotInRea
         ServiceContext serviceContext = ServiceContext.get();
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataMan = appContext.getBean(DataManager.class);
-        XslProcessing xslProcessing = appContext.getBean(XslProcessing.class);
-        ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
-
+        XslProcessingReport report = new XslProcessingReport("batchediting");
 
         Iterator<String> keyIterator = parameters.keySet().iterator();
         List<BatchEditParameter> listOfupdates = new ArrayList<BatchEditParameter>();
@@ -224,7 +222,6 @@ public class BatchEdits implements ApplicationContextAware { // extends NotInRea
                 String searchValue = parameters.get("search_" + tripletId).get(0);
                 String replaceValue = parameters.get("replace_" + tripletId).get(0);
 
-                // TODO: Warning on parameter checks
                 // If no replace return error
                 if (StringUtils.isEmpty(xpath)) {
                     throw new IllegalArgumentException(String.format(
@@ -242,6 +239,7 @@ public class BatchEdits implements ApplicationContextAware { // extends NotInRea
             throw new IllegalArgumentException("At least one replacement must be defined. Use xpath_<id>, search_<id>, replace_<id> parameters in order to define edits.");
         }
 
+
         final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();
         if (serviceContext == null) {
             throw new IllegalStateException("There needs to be a ServiceContext in the thread local for this thread");
@@ -250,66 +248,68 @@ public class BatchEdits implements ApplicationContextAware { // extends NotInRea
         SelectionManager selectionManager =
                 SelectionManager.getManager(serviceContext.getUserSession());
 
-        final Set<String> setOfUuidsToValidate;
+        final Set<String> setOfUuidsToEdit;
 
         if(uuid == null) {
             synchronized (selectionManager.getSelection("metadata")) {
                 final Set<String> selection = selectionManager.getSelection(SelectionManager.SELECTION_METADATA);
-                setOfUuidsToValidate = Sets.newHashSet(selection);
+                setOfUuidsToEdit = Sets.newHashSet(selection);
             }
         } else {
-            setOfUuidsToValidate = Sets.newHashSet(Arrays.asList(uuid));
+            setOfUuidsToEdit = Sets.newHashSet(Arrays.asList(uuid));
         }
+        report.setTotalRecords(setOfUuidsToEdit.size());
+
         SchemaManager _schemaManager = context.getBean(SchemaManager.class);
         AccessManager accessMan = context.getBean(AccessManager.class);
         String changeDate = null;
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        for (String recordUuid : setOfUuidsToValidate) {
+        for (String recordUuid : setOfUuidsToEdit) {
             Metadata record = metadataRepository.findOneByUuid(recordUuid);
             if (record == null) {
-//                        this.report.get("notFoundRecords").add(record.getId());
+              report.incrementNullRecords();
             } else if (!accessMan.isOwner(serviceContext, String.valueOf(record.getId()))) {
-//                        this.report.get("notOwnerRecords").add(record.getId());
+              // TODO
             } else {
                 // Processing
-                EditLib editLib = new EditLib(_schemaManager);
-                MetadataSchema metadataSchema = _schemaManager.getSchema(record.getDataInfo().getSchemaId());
-                final String settingId = SettingManager.CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
-                boolean createXpathNodeIfNotExists = context.getBean(SettingManager.class).getValueAsBool(settingId);
-                Element metadata = record.getXmlData(false);
-                boolean metadataChanged = false;
+                try {
+                    EditLib editLib = new EditLib(_schemaManager);
+                    MetadataSchema metadataSchema = _schemaManager.getSchema(record.getDataInfo().getSchemaId());
+                    final String settingId = SettingManager.CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
+                    boolean createXpathNodeIfNotExists = context.getBean(SettingManager.class).getValueAsBool(settingId);
+                    Element metadata = record.getXmlData(false);
+                    boolean metadataChanged = false;
 
-                Iterator<BatchEditParameter> listOfUpdatesIterator = listOfupdates.iterator();
-                while (listOfUpdatesIterator.hasNext()) {
-                    BatchEditParameter batchEditParameter = listOfUpdatesIterator.next();
+                    Iterator<BatchEditParameter> listOfUpdatesIterator = listOfupdates.iterator();
+                    while (listOfUpdatesIterator.hasNext()) {
+                        BatchEditParameter batchEditParameter = listOfUpdatesIterator.next();
 
-                    Element xmlValue = null;
-                    AddElemValue propertyValue = null;
-                    propertyValue = new AddElemValue(batchEditParameter.getReplaceValue());
+                        AddElemValue propertyValue =
+                                new AddElemValue(batchEditParameter.getReplaceValue());
 
-                    metadataChanged = editLib.addElementOrFragmentFromXpath(
-                            metadata,
-                            metadataSchema,
-                            batchEditParameter.getXpath(),
-                            propertyValue,
-                            createXpathNodeIfNotExists
-                    );
+                        metadataChanged = editLib.addElementOrFragmentFromXpath(
+                                metadata,
+                                metadataSchema,
+                                batchEditParameter.getXpath(),
+                                propertyValue,
+                                createXpathNodeIfNotExists
+                        );
+                    }
+                    if (metadataChanged) {
+                        boolean validate = false;
+                        boolean ufo = false;
+                        boolean index = true;
+                        dataMan.updateMetadata(serviceContext, record.getId() + "", metadata,
+                                validate, ufo, index, lang, changeDate, false);
+                        //                    updatedMd.add(id);
+                        //                    totalUpdated++;
+                    }
+                } catch (Exception e) {
+                    report.addMetadataError(record.getId(), e);
                 }
-                if (metadataChanged) {
-                    boolean validate = false;
-                    boolean ufo = false;
-                    boolean index = true;
-                    dataMan.updateMetadata(serviceContext, record.getId() + "", metadata,
-                            validate, ufo, index, lang, changeDate, false);
-//                    updatedMd.add(id);
-//                    totalUpdated++;
-                }
-
+                report.incrementProcessedRecords();
             }
         }
-
-        //ServiceContext context = serviceManager.createServiceContext("md.processing.batch", lang, request);
-
-        return null;
+        return report;
     }
 }
