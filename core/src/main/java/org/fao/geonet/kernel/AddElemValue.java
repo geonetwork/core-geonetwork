@@ -1,6 +1,5 @@
 package org.fao.geonet.kernel;
 
-import com.google.common.collect.Lists;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -8,9 +7,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A simple container class for some add methods in {@link EditLib}
@@ -20,18 +16,20 @@ public class AddElemValue {
     private final String stringValue;
     private final Element nodeValue;
 
-    public AddElemValue(String stringValue) {
+    public AddElemValue(String stringValue) throws JDOMException, IOException {
         String finalStringVal = stringValue;
         Element finalNodeVal = null;
-        if (stringValue.trim().startsWith("<")) {
+
+        if (Xml.isXMLLike(stringValue)) {
             try {
                 finalNodeVal = Xml.loadString(stringValue, false);
                 finalStringVal = null;
             } catch (JDOMException e) {
                 Log.debug(Geonet.EDITORADDELEMENT, "Invalid XML fragment to insert " + stringValue + ". Error is: " + e.getMessage());
-                e.printStackTrace();
+                throw e;
             } catch (IOException e) {
                 e.printStackTrace();
+                throw e;
             }
         }
         this.nodeValue = finalNodeVal;

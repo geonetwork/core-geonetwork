@@ -16,6 +16,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -654,7 +655,7 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
 
 
     @Test
-    public void testMultiUpdate() throws JDOMException {
+    public void testMultiUpdate() throws JDOMException, IOException {
         SchemaManager manager = _schemaManager;
         MetadataSchema schema = manager.getSchema("iso19139");
         final Element metadataElement = new Element("MD_Metadata", GMD);
@@ -680,7 +681,7 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
      */
     @Test
     @Ignore
-    public void testAddAttributeExistingElement() throws JDOMException {
+    public void testAddAttributeExistingElement() throws JDOMException, IOException {
         SchemaManager manager = _schemaManager;
         MetadataSchema schema = manager.getSchema("iso19139");
         final Element metadataElement = new Element("MD_Metadata", GMD);
