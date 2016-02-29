@@ -12,113 +12,6 @@
 
   <xsl:include href="layout-custom-fields-keywords.xsl"/>
   
-  <xsl:template mode="mode-iso19139" priority="2002" match="gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor[/root/gui/currTab/text()='inspire_sds']">
-    <xsl:call-template name="render-element">
-      <xsl:with-param name="label" select="''" />
-      <xsl:with-param name="value" select="@xlink:title" />
-      <xsl:with-param name="name" select="gn:element/@ref" />
-      <xsl:with-param name="cls" select="local-name()" />
-      <xsl:with-param name="editInfo" select="../../../gn:element" />
-      <xsl:with-param name="isDisabled" select="false()" />
-    </xsl:call-template>
-  </xsl:template>
-  
-  <xsl:template mode="mode-iso19139" priority="2002" match="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency[/root/gui/currTab/text()='inspire_sds']">
-    <xsl:call-template name="render-boxed-element">
-      <xsl:with-param name="label" select="concat(/root/gui/schemas/iso19139/strings/qos_measure, gmd:nameOfMeasure/gmx:Anchor/text())" />
-      <xsl:with-param name="editInfo" select="gn:element" />
-      <xsl:with-param name="subTreeSnippet">
-<!--        <xsl:call-template name="render-element">
-          <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/qos_description" />
-          <xsl:with-param name="value" select="gmd:measureIdentification/gmd:MD_Identifier/gmd:code/gco:CharacterString/text()" />
-          <xsl:with-param name="name" select="gmd:measureIdentification/gmd:MD_Identifier/gmd:code/gco:CharacterString/gn:element/@ref" />
-          <xsl:with-param name="cls" select="local-name()" />
-          <xsl:with-param name="editInfo" select="gmd:measureIdentification/gmd:MD_Identifier/gmd:code/gco:CharacterString/gn:element" />
-        </xsl:call-template>-->
-        <xsl:if test="gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit/@xlink:href != ''">
-          <xsl:call-template name="render-element">
-            <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/qos_uom" />
-            <xsl:with-param name="value" select="gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit/@xlink:href" />
-            <xsl:with-param name="cls" select="local-name()" />
-            <xsl:with-param name="editInfo" select="gn:element" />
-            <xsl:with-param name="isDisabled" select="true()" />
-          </xsl:call-template>
-        </xsl:if>
-        <xsl:call-template name="render-element">
-          <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/qos_value" />
-          <xsl:with-param name="value" select="gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record/text()" />
-          <xsl:with-param name="name" select="gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record/gn:element/@ref" />
-          <xsl:with-param name="cls" select="local-name()" />
-          <xsl:with-param name="editInfo" select="gn:element" />
-        </xsl:call-template>
-      </xsl:with-param>
-    </xsl:call-template>
-  </xsl:template>
-
-  <!-- SDS tool: Render an anchor as select box populating it with a codelist -->
-  <xsl:template mode="mode-iso19139" priority="2000" match="gmd:dataQualityInfo/*/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor[/root/gui/currTab/text()='inspire_sds']">
-    <xsl:call-template name="render-element">
-      <xsl:with-param name="label" select="/root/gui/strings/category"/>
-      <xsl:with-param name="value" select="@xlink:href"/>
-      <xsl:with-param name="cls" select="local-name()"/>
-      <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-      <xsl:with-param name="type" select="'select'"/>
-      <xsl:with-param name="listOfValues" select="/root/gui/schemas/iso19139/codelists/codelist[@name='INSPIRE_category']"/>
-      <xsl:with-param name="name" select="concat(gn:element/@ref,'_xlinkCOLONhref')"/>
-      <xsl:with-param name="editInfo" select="*/gn:element"/>
-      <xsl:with-param name="parentEditInfo" select="gn:element"/>
-      <xsl:with-param name="isDisabled" select="false()"/>
-    </xsl:call-template>
-    
-    <script>
-        $( document ).ready(function(){
-	        var id = <xsl:value-of select="gn:element/@ref" />;
-	        var gnselect = "_" + id + "_xlinkCOLONhref";
-	        var gnhidden = "#_" + id;
-	        if(!$(gnhidden).value){
-	            getHiddenFiekdContent(gnselect, gnhidden);
-			}
-	    	$("select[name=" + gnselect + "]").on('change', function() {
-	  			getHiddenFiekdContent(gnselect, gnhidden);
-			})
-		});
-		function getHiddenFiekdContent(gnselect, gnhidden){
-			var value = $("select[name=" + gnselect + "]").val();
-	        var lastindexof = value.lastIndexOf("/")+1;
-	  		$(gnhidden).val(value.substring(lastindexof));
-		}
-    </script>
-    
-    <input type="hidden">
-    	<xsl:attribute name="name" select="concat('_',gn:element/@ref)"/>
-    	<xsl:attribute name="id" select="concat('_',gn:element/@ref)"/>
-    </input>
-    
-  </xsl:template>
-
-  <!-- SDS: Render Constraints anchors -->
-
-  <xsl:template mode="mode-iso19139"
-                match="srv:SV_ServiceIdentification[/root/gui/currTab/text()='inspire_sds']/gmd:resourceConstraints[gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor]"
-                priority="2000">
-
-     <xsl:variable name="anchor" select="./gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor"/>
-     <xsl:variable name="accessCode" select="substring-after($anchor/@xlink:href, 'ConditionsApplyingToAccessAndUse/')"/>
-
-    <xsl:call-template name="render-element">
-      <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/sds-limitation"/>
-      <xsl:with-param name="value" select="/root/gui/schemas/iso19139/strings/sds/*[name()=$accessCode]"/>
-      <xsl:with-param name="cls" select="local-name()"/>
-      <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-      <xsl:with-param name="name" select="concat(gn:element/@ref,'_xlinkCOLONhref')"/>
-      <xsl:with-param name="editInfo" select="*/gn:element"/>
-      <xsl:with-param name="parentEditInfo" select="gn:element"/>
-      <xsl:with-param name="isDisabled" select="false()"/>
-      <xsl:with-param name="isReadOnly" select="true()"/>
-    </xsl:call-template>
-  </xsl:template>
-
-
   <!-- Readonly elements -->
   <xsl:template mode="mode-iso19139" priority="2000" match="gmd:fileIdentifier|gmd:dateStamp">
 
@@ -244,4 +137,106 @@
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
+
+
+  <!-- SDS: Category. Render an anchor as select box populating it with a codelist -->
+  <xsl:template mode="mode-iso19139" priority="2000" match="gmd:dataQualityInfo/*/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor[/root/gui/currTab/text()='inspire_sds']">
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label" select="/root/gui/strings/category"/>
+      <xsl:with-param name="value" select="@xlink:href"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+      <xsl:with-param name="type" select="'select'"/>
+      <xsl:with-param name="listOfValues" select="/root/gui/schemas/iso19139/codelists/codelist[@name='INSPIRE_category']"/>
+      <xsl:with-param name="name" select="concat(gn:element/@ref,'_xlinkCOLONhref')"/>
+      <xsl:with-param name="editInfo" select="*/gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="gn:element"/>
+      <xsl:with-param name="isDisabled" select="false()"/>
+    </xsl:call-template>
+
+    <script>
+        $( document ).ready(function(){
+	        var id = <xsl:value-of select="gn:element/@ref" />;
+	        var gnselect = "_" + id + "_xlinkCOLONhref";
+	        var gnhidden = "#_" + id;
+	        if(!$(gnhidden).value){
+	            getHiddenFiekdContent(gnselect, gnhidden);
+			}
+	    	$("select[name=" + gnselect + "]").on('change', function() {
+	  			getHiddenFiekdContent(gnselect, gnhidden);
+			})
+		});
+		function getHiddenFiekdContent(gnselect, gnhidden){
+			var value = $("select[name=" + gnselect + "]").val();
+	        var lastindexof = value.lastIndexOf("/")+1;
+	  		$(gnhidden).val(value.substring(lastindexof));
+		}
+    </script>
+
+    <input type="hidden">
+    	<xsl:attribute name="name" select="concat('_',gn:element/@ref)"/>
+    	<xsl:attribute name="id" select="concat('_',gn:element/@ref)"/>
+    </input>
+
+  </xsl:template>
+
+  <!-- SDS: CRS -->
+  <xsl:template mode="mode-iso19139" priority="2002" match="gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor[/root/gui/currTab/text()='inspire_sds']">
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label" select="''" />
+      <xsl:with-param name="value" select="@xlink:title" />
+      <xsl:with-param name="name" select="gn:element/@ref" />
+      <xsl:with-param name="cls" select="local-name()" />
+      <xsl:with-param name="editInfo" select="../../../gn:element" />
+      <xsl:with-param name="isDisabled" select="false()" />
+    </xsl:call-template>
+  </xsl:template>
+
+  <!-- SDS: Quality of Service-->
+  <xsl:template mode="mode-iso19139" priority="2002" match="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency[/root/gui/currTab/text()='inspire_sds']">
+    <xsl:call-template name="render-boxed-element">
+      <xsl:with-param name="label" select="concat(/root/gui/schemas/iso19139/strings/qos_measure, gmd:nameOfMeasure/gmx:Anchor/text())" />
+      <xsl:with-param name="editInfo" select="gn:element" />
+      <xsl:with-param name="subTreeSnippet">
+        <xsl:if test="gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit/@xlink:href != ''">
+          <xsl:call-template name="render-element">
+            <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/qos_uom" />
+            <xsl:with-param name="value" select="gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit/@xlink:href" />
+            <xsl:with-param name="cls" select="local-name()" />
+            <xsl:with-param name="editInfo" select="gn:element" />
+            <xsl:with-param name="isDisabled" select="true()" />
+          </xsl:call-template>
+        </xsl:if>
+        <xsl:call-template name="render-element">
+          <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/qos_value" />
+          <xsl:with-param name="value" select="gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record/text()" />
+          <xsl:with-param name="name" select="gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record/gn:element/@ref" />
+          <xsl:with-param name="cls" select="local-name()" />
+          <xsl:with-param name="editInfo" select="gn:element" />
+        </xsl:call-template>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <!-- SDS: Render Constraints anchors -->
+  <xsl:template mode="mode-iso19139"
+                match="srv:SV_ServiceIdentification[/root/gui/currTab/text()='inspire_sds']/gmd:resourceConstraints[gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor]"
+                priority="2000">
+
+     <xsl:variable name="anchor" select="./gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor"/>
+     <xsl:variable name="accessCode" select="substring-after($anchor/@xlink:href, 'ConditionsApplyingToAccessAndUse/')"/>
+
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label" select="/root/gui/schemas/iso19139/strings/sds-limitation"/>
+      <xsl:with-param name="value" select="/root/gui/schemas/iso19139/strings/sds/*[name()=$accessCode]"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+      <xsl:with-param name="name" select="concat(gn:element/@ref,'_xlinkCOLONhref')"/>
+      <xsl:with-param name="editInfo" select="*/gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="gn:element"/>
+      <xsl:with-param name="isDisabled" select="false()"/>
+      <xsl:with-param name="isReadOnly" select="true()"/>
+    </xsl:call-template>
+  </xsl:template>
+
 </xsl:stylesheet>

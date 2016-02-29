@@ -11,8 +11,6 @@
 
   <!-- Form field type configuration. Default is text. -->
   <fields>
-    <for name="gmd:anchor" use="text"/>
-
     <for name="gmd:abstract" use="textarea"/>
     <for name="gmd:checkPointDescription" use="textarea"/>
     <for name="gmd:credit" use="textarea"/>
@@ -233,7 +231,7 @@
   <!-- View configuration -->
   <views>
     <!--Turn off INSPIRE view by default -->
-    <view name="inspire" upAndDownControlHidden="true">
+    <view name="inspire" upAndDownControlHidden="true" disabled="true">
       <tab id="inspire" default="true" mode="flat">
         <section name="resource">
           <field
