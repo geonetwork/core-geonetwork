@@ -1323,21 +1323,24 @@ An XML snippet with replacement for each key defined in that field.
   <xs:element name="batchEditing">
     <xs:annotation>
       <xs:documentation><![CDATA[
-      Batch editing configuration element.
+Batch editing configuration element.
       ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:element name="section" minOccurs="1" maxOccurs="unbounded">
           <xs:annotation>
-            <xs:documentation>A group of field</xs:documentation>
+            <xs:documentation><![CDATA[
+A group of field
+]]></xs:documentation>
           </xs:annotation>
           <xs:complexType>
             <xs:sequence>
               <xs:element name="field" minOccurs="1" maxOccurs="unbounded">
                 <xs:annotation>
-                  <xs:documentation>
-                    A field on which user can do batch editing.
+                  <xs:documentation><![CDATA[
+A field on which user can do batch editing.
+]]>
                   </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -1346,7 +1349,7 @@ An XML snippet with replacement for each key defined in that field.
                       <xs:annotation>
                         <xs:documentation>
                           <![CDATA[
-                        Define an XML template to use for the value to insert.
+Define an XML template to use for the value to insert.
                         ]]>
                         </xs:documentation>
                       </xs:annotation>
@@ -1356,8 +1359,8 @@ An XML snippet with replacement for each key defined in that field.
                     <xs:annotation>
                       <xs:documentation>
                         <![CDATA[
-                        Field identifier.
-                        Translations are set on client side.
+Field identifier.
+Translations are set on client side.
                         ]]>
                       </xs:documentation>
                     </xs:annotation>
@@ -1366,7 +1369,7 @@ An XML snippet with replacement for each key defined in that field.
                     <xs:annotation>
                       <xs:documentation>
                         <![CDATA[
-                        XPath of the element to edit.
+XPath of the element to edit.
                         ]]>
                       </xs:documentation>
                     </xs:annotation>
@@ -1375,8 +1378,8 @@ An XML snippet with replacement for each key defined in that field.
                     <xs:annotation>
                       <xs:documentation>
                         <![CDATA[
-                        Lucene index field name (as defined in dumpfields).
-                        The field will be used to preview current record values.
+Lucene index field name (as defined in dumpfields).
+The field will be used to preview current record values (TODO).
                         ]]>
                       </xs:documentation>
                     </xs:annotation>
@@ -1385,8 +1388,8 @@ An XML snippet with replacement for each key defined in that field.
                     <xs:annotation>
                       <xs:documentation>
                         <![CDATA[
-                        Field type. Register here any Angular directive to be used
-                        on the client side. Default is simple text field.
+Field type. Register here any Angular directive to be used
+on the client side. Default is simple text field.
                         ]]>
                       </xs:documentation>
                     </xs:annotation>
@@ -1395,7 +1398,7 @@ An XML snippet with replacement for each key defined in that field.
                     <xs:annotation>
                       <xs:documentation>
                         <![CDATA[
-                        Define if the field could be marked as deleted.
+Define if the field could be marked as deleted.
                         ]]>
                       </xs:documentation>
                     </xs:annotation>
@@ -1404,8 +1407,8 @@ An XML snippet with replacement for each key defined in that field.
                     <xs:annotation>
                       <xs:documentation>
                         <![CDATA[
-                        Define if the field should be insert or replace.
-                        Do not set this property for mandatory field (eg. title).
+Define if the field should be insert or replace.
+Do not set this property for mandatory field (eg. title).
                         ]]>
                       </xs:documentation>
                     </xs:annotation>
@@ -1421,7 +1424,7 @@ An XML snippet with replacement for each key defined in that field.
                     <xs:annotation>
                       <xs:documentation>
                         <![CDATA[
-                        The codelist identifier. eg. gmd:MD_TopicCategoryCode for topic category.
+The codelist identifier. eg. gmd:MD_TopicCategoryCode for topic category.
                         ]]>
                       </xs:documentation>
                     </xs:annotation>
@@ -1433,8 +1436,8 @@ An XML snippet with replacement for each key defined in that field.
               <xs:annotation>
                 <xs:documentation>
                   <![CDATA[
-                  Section identifier.
-                  Translations are set on client side.
+Section identifier.
+Translations are set on client side.
                     ]]>
                 </xs:documentation>
               </xs:annotation>
