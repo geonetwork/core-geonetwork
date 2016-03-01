@@ -4,8 +4,11 @@ import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
+import org.apache.commons.lang.StringUtils;
 import org.apache.jcs.access.exception.CacheException;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.JeevesJCS;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -420,13 +423,15 @@ public final class Processor {
     private static String doXLink(String hrefUri, String idSearch, Attribute xlink, String action, ServiceContext srvContext) {
         Element element = xlink.getParent();
 
-        // Don't process XLink for operatesOn
+        // Don't process XLink for configured elements
         List<String> excludedXlinkElements = new ArrayList<String>();
-        excludedXlinkElements.add("operatesOn");
-        excludedXlinkElements.add("featureCatalogueCitation");
-        excludedXlinkElements.add("Anchor");
-        excludedXlinkElements.add("source");
-        // TODO: Add configuration file
+        SettingManager sm = ApplicationContextHolder.get().getBean(SettingManager.class);
+        String xlinkElementNamesToIgnore = sm.getValue("system/xlinkResolver/ignore");
+        if (StringUtils.isNotEmpty(xlinkElementNamesToIgnore)) {
+            for(String el : xlinkElementNamesToIgnore.split(",")) {
+                excludedXlinkElements.add(el.trim());
+            }
+        }
 
         if (excludedXlinkElements.contains(element.getName())) {
             return null;
