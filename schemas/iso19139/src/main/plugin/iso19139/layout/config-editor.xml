@@ -1366,7 +1366,6 @@
     </view>
   </views>
   <batchEditing>
-    <!-- TODO: Service identification section ? -->
     <section name="identification">
       <!-- Update existing title in metadata record -->
       <field name="title"

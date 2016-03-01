@@ -75,7 +75,7 @@
       $scope.$watch('searchResults.selectedCount',
         function (newvalue, oldvalue) {
           if (oldvalue != newvalue) {
-            $http.get('md.selected?_content_type=json').
+            $http.get('../api/selections/metadata').
               success(function(uuids) {
               $http.get('q?_content_type=json&_isTemplate=y or n or s&' +
                           'fast=index&resultType=manager&' +
@@ -110,7 +110,7 @@
       // Get current selection which returns the list of uuids.
       // Then search those records.
       $scope.searchSelection = function(params) {
-        $http.get('md.selected?_content_type=json').success(function(uuids) {
+        $http.get('../api/selections/metadata').success(function(uuids) {
           $scope.searchObj.params = angular.extend({
             _uuid: uuids.join(' or ')
           },
@@ -365,7 +365,7 @@
     $scope.processReport = null;
 
     $scope.applyChanges = function() {
-      var params = {}, i = 0;
+      var params = [], i = 0;
       angular.forEach($scope.changes, function(field) {
         if (field.value != null) {
           var value = field.value, xpath = field.xpath;
@@ -376,23 +376,23 @@
           } else {
             value = value;
           }
-
-          params['xpath_' + i] = xpath;
-          params['search_' + i] = ''; // TODO: unused
-          params['replace_' + i] = value;
+          params.push({xpath: xpath, value: value});
           i++;
         }
       });
 
       // TODO: Apply changes to a mix of records is maybe not the best
       // XPath will be applied whatever the standard is.
-      return $http({
-        method: 'POST',
-        url: 'md.edit.batch?_content_type=json',
-        data: $.param(params),
-        headers: {'Content-Type':
-          'application/x-www-form-urlencoded'}
-      }).success(function(data) {
+      return $http.put('../api/records/actions/batchedit',
+        params
+        //headers: {'Content-Type':
+       //return $http({
+       // method: 'PUT',
+       // url: '../api/records/actions/batchedit',
+       // data: $.param(params),
+       // headers: {'Content-Type':
+       //   'application/x-www-form-urlencoded'}
+      ).success(function(data) {
         $scope.processReport = data;
       }).error(function(response) {
         $scope.processReport = response.data;
@@ -402,10 +402,8 @@
 
 
     function init() {
-      $http({
-        method: 'GET',
-        url: 'md.edit.batch.config'
-      }).success(function (data) {
+      $http.get('../api/standard/actions/batchconfiguration').
+      success(function (data) {
         $scope.fieldConfig = data;
         gnSchemaManagerService.getNamespaces();
       }).error(function(response) {

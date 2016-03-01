@@ -21,6 +21,7 @@ import java.util.Set;
  * Select a list of elements stored in session
  * Returns status
  */
+@Deprecated
 @Controller("selection")
 @ReadWriteController
 public class Select implements ApplicationContextAware {

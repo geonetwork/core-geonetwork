@@ -6,9 +6,11 @@
 
   module.directive('gnSelectionWidget', [
     '$translate', 'hotkeys',
-    'gnHttp', 'gnMetadataActions', 'gnSearchSettings',
+    'gnHttp', 'gnMetadataActions',
+    'gnSearchSettings', 'gnSearchManagerService',
     function($translate, hotkeys,
-             gnHttp, gnMetadataActions, gnSearchSettings) {
+             gnHttp, gnMetadataActions,
+             gnSearchSettings, gnSearchManagerService) {
 
       return {
         restrict: 'A',
@@ -25,8 +27,8 @@
           scope.mdService = gnMetadataActions;
 
           // initial state
-          gnHttp.callService('mdSelect', {}).success(function(res) {
-            scope.searchResults.selectedCount = parseInt(res[0], 10);
+          gnSearchManagerService.selected().success(function(res) {
+            scope.searchResults.selectedCount = parseInt(res, 10);
           });
 
           var updateCkb = function(records) {
@@ -69,27 +71,20 @@
           };
 
           scope.selectAllInPage = function(selected) {
-            var params = {
-              selected: selected ? 'add' : 'remove',
-              id: []
-            };
+            var uuids = [];
             scope.searchResults.records.forEach(function(record) {
-              params.id.push(record.getUuid());
+              uuids.push(record.getUuid());
               record['geonet:info'].selected = selected;
             });
 
-            gnHttp.callService('mdSelect', params, {
-              method: 'POST'
-            }).success(function(res) {
-              scope.searchResults.selectedCount = parseInt(res[0], 10);
+            gnSearchManagerService.select(uuids).success(function(res) {
+              scope.searchResults.selectedCount = parseInt(res, 10);
             });
           };
 
           scope.selectAll = function() {
-            gnHttp.callService('mdSelect', {
-              selected: 'add-all'
-            }).success(function(res) {
-              scope.searchResults.selectedCount = parseInt(res[0], 10);
+            gnSearchManagerService.selectAll().success(function(res) {
+              scope.searchResults.selectedCount = parseInt(res, 10);
               scope.searchResults.records.forEach(function(record) {
                 record['geonet:info'].selected = true;
               });
@@ -97,10 +92,8 @@
           };
 
           scope.unSelectAll = function() {
-            gnHttp.callService('mdSelect', {
-              selected: 'remove-all'
-            }).success(function(res) {
-              scope.searchResults.selectedCount = parseInt(res[0], 10);
+            gnSearchManagerService.selectNone().success(function(res) {
+              scope.searchResults.selectedCount = parseInt(res, 10);
               scope.searchResults.records.forEach(function(record) {
                 record['geonet:info'].selected = false;
               });
@@ -131,18 +124,18 @@
 
     }]);
 
-  module.directive('gnSelectionMd', ['gnHttp', function(gnHttp) {
+  module.directive('gnSelectionMd', ['gnSearchManagerService',
+    function(gnSearchManagerService) {
 
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
 
         scope.change = function() {
-          gnHttp.callService('mdSelect', {
-            selected: element[0].checked ? 'add' : 'remove',
-            id: scope.md.getUuid()
-          }).success(function(res) {
-            scope.searchResults.selectedCount = parseInt(res[0], 10);
+          var method = element[0].checked ? 'select' : 'unselect';
+          gnSearchManagerService[method](scope.md.getUuid()).
+          success(function(res) {
+            scope.searchResults.selectedCount = parseInt(res, 10);
           });
         };
 
@@ -151,7 +144,6 @@
   }]);
 
   module.directive('gnContributeWidget', [function() {
-
     return {
       restrict: 'A',
       templateUrl: '../../catalog/components/search/resultsview/partials/' +
