@@ -43,6 +43,22 @@
           var heatmapsRequest =
               gnSolrRequestManager.register('WfsFilter', 'heatmaps');
 
+          scope.isHeatMapVisible = false;
+          scope.heatmapLayer = null;
+          var source;
+          if (scope.map) {
+            source = new ol.source.Vector();
+            scope.isHeatMapVisible = true;
+            scope.heatmapLayer = new ol.layer.Heatmap({
+              source: source,
+              radius: 40,
+              blur: 50,
+              opacity: .8,
+              visible: scope.isHeatMapVisible
+            });
+            scope.map.addLayer(scope.heatmapLayer);
+          }
+
           /**
            * Init the directive when the scope.layer has changed.
            * If the layer is given through the isolate scope object, the init
@@ -78,6 +94,11 @@
 
             scope.checkWFSServerUrl();
             scope.initSolrRequest();
+
+            if (scope.map) {
+              resetHeatMap();
+              scope.map.on('moveend', refreshHeatmap);
+            }
           };
 
           /**
@@ -323,35 +344,19 @@
           }
           else {
             scope.$watch('layer', function(n, o) {
-              if (n === null) {
+              if (n === null && scope.map) {
                 resetHeatMap();
               } else if (n !== o) {
                 init();
-                if (scope.map) {
-                  resetHeatMap();
-                  scope.map.on('moveend', refreshHeatmap);
-                }
               }
             });
           }
 
-          scope.isHeatMapVisible = false;
-          scope.heatmapLayer = null;
-          if (scope.map) {
-            var source = new ol.source.Vector();
-            scope.isHeatMapVisible = true;
-            scope.heatmapLayer = new ol.layer.Heatmap({
-              source: source,
-              radius: 40,
-              blur: 50,
-              opacity: .8,
-              visible: scope.isHeatMapVisible
-            });
-            scope.map.addLayer(scope.heatmapLayer);
-          }
 
           function resetHeatMap() {
-            source.clear();
+            if (source) {
+              source.clear();
+            }
             scope.map.un('moveend', refreshHeatmap);
           }
 
