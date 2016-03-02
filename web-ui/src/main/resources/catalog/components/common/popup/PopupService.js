@@ -110,7 +110,7 @@
         });
         element.on('hidden.bs.modal', function() {
           element.modal('hide');
-          $('body > .modal-backdrop').remove();
+          $('body .modal-backdrop').remove();
           element.remove();
           if (!scopeProvided) {
             newScope.$destroy();
