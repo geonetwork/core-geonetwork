@@ -126,8 +126,9 @@ public class SolrWFSFeatureIndexer {
      * @param exchange
      */
     public void deleteFeatures(Exchange exchange) {
-        final String url = (String) exchange.getProperty("url");
-        final String typeName = (String) exchange.getProperty("typeName");
+        WFSHarvesterExchangeState state = (WFSHarvesterExchangeState) exchange.getProperty("featureTypeConfig");
+        final String url = state.getParameters().getUrl();
+        final String typeName = state.getParameters().getTypeName();
 
         logger.info(String.format(
                 "Deleting features previously index from service '%s' and feature type '%s' in '%s'",
@@ -320,24 +321,34 @@ public class SolrWFSFeatureIndexer {
                 docCollection.add(document);
                 numInBatch++;
                 if (numInBatch >= featureCommitInterval) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format(
+                                "  %d features to index.",
+                                nbOfFeatures));
+                    }
                     UpdateResponse response = solr.add(docCollection);
                     solr.commit();
                     docCollection.clear();
                     numInBatch = 0;
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                                "  %d features indexed (commit within %dms).",
-                                nbOfFeatures, solrCommitWithinMs));
+                                "  %d features indexed.",
+                                nbOfFeatures));
                     }
                 }
             }
             if (docCollection.size() > 0) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                            "  %d features to index.",
+                            nbOfFeatures));
+                }
                 UpdateResponse response = solr.add(docCollection);
                 solr.commit();
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                            "  %d features indexed (commit within %dms).",
-                            nbOfFeatures, solrCommitWithinMs));
+                            "  %d features indexed.",
+                            nbOfFeatures));
                 }
             }
             logger.info(String.format("Total number of features indexed is %d.", nbOfFeatures));
