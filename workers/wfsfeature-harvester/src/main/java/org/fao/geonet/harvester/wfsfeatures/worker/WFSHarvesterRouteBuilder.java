@@ -59,7 +59,6 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
                         "Exception occured: ${exception.message}")
                 .log(LoggingLevel.ERROR, LOGGER_NAME,
                         "Harvesting task terminated due to previous exception (Exchange ${exchangeId}).");
-        final JAXBContext jaxbContext = JAXBContext.newInstance(WFSHarvesterParameter.class);
         JaxbDataFormat jaxb = new JaxbDataFormat(false);
         jaxb.setContextPath(WFSHarvesterParameter.class.getPackage().getName());
 
