@@ -286,14 +286,22 @@
             scope.switchGroupCombo = controller.switchGroupCombo;
 
             var d =  scope.member.get('downloads');
-            if(angular.isArray(d)) {
+            var downloadable =
+              scope.member.get('md')['geonet:info'].download == 'true';
+            if(angular.isArray(d) && downloadable) {
               scope.download = d[0];
             }
-            scope.process =  scope.member.get('processes');
 
             var wfs =  scope.member.get('wfs');
-            if(angular.isArray(wfs)) {
+            if(angular.isArray(wfs) && downloadable) {
               scope.wfs = wfs[0];
+            }
+
+            var processable =
+              scope.member.get('md')['geonet:info'].process == 'true';
+            var p = scope.member.get('processes');
+            if(angular.isArray(p) && processable) {
+              scope.process = p;
             }
           }
 
