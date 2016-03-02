@@ -67,7 +67,7 @@
     <for name="gmd:contact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="true"
-              data-search-action="true"
+              data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -75,7 +75,7 @@
     <for name="gmd:pointOfContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="true"
-              data-search-action="true"
+              data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -83,7 +83,7 @@
     <for name="gmd:distributorContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="true"
-              data-search-action="true"
+              data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -91,7 +91,7 @@
     <for name="gmd:processor" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="true"
-              data-search-action="true"
+              data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -99,7 +99,7 @@
     <for name="gmd:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="true"
-              data-search-action="true"
+              data-search-action="false"
               ddata-popup-action="true"
               ata-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
