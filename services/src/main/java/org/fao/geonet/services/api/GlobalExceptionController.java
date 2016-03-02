@@ -66,7 +66,6 @@ public class GlobalExceptionController {
             MaxUploadSizeExceededException.class
     })
     public Object maxFileExceededHandler(final Exception exception) {
-        exception.printStackTrace();
         return new LinkedHashMap<String, String>() {{
             put("code", "max_file_exceeded");
             put("message", exception.getClass().getSimpleName());
@@ -80,7 +79,6 @@ public class GlobalExceptionController {
             FileNotFoundException.class,
             NoResultsFoundException.class})
     public Object NotFoundHandler(final Exception exception) {
-        exception.printStackTrace();
         return new LinkedHashMap<String, String>() {{
             put("code", "not_found");
             put("message", exception.getClass().getSimpleName());

@@ -198,6 +198,15 @@
       q: this.config.docIdField + ':"' + this.config.idDoc(options) + '"',
       wt: 'json'
     });
+    this.baseUrl = url;
+    this.initBaseParams();
+  };
+
+  /**
+   * set the solr request base params for facets and stats.
+   * It's dont on request init, but can be overwritten by application.
+   */
+  geonet.GnSolrRequest.prototype.initBaseParams = function() {
 
     var facetParams = {
       'facet': true,
@@ -218,12 +227,12 @@
       }
     });
 
-    this.baseUrl = url;
     this.initialParams = {
       facets: facetParams,
       stats: statParams
     };
   };
+
   /**
    * Update the baseUrl with search params. Search params can be on any field,
    * or for a specific field.

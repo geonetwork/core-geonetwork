@@ -7,8 +7,8 @@ and unzip the file.
 
 ```
 cd solr/solr-config
-wget http://apache.crihan.fr/dist/lucene/solr/5.3.1/solr-5.3.1.tgz
-tar xvfz solr-5.3.1.tgz
+wget http://apache.crihan.fr/dist/lucene/solr/5.4.1/solr-5.4.1.tgz
+tar xvfz solr-5.4.1.tgz
 ```
 
 Additional libraries need to be installed to activate features like
@@ -21,19 +21,19 @@ Additional libraries need to be installed to activate features like
 Manually start and stop Solr using:
 
 ```
-solr-5.3.1/bin/solr start -c -p 8984
+solr-5.4.1/bin/solr start -c -p 8984
 ```
 
 Then create the default collection:
 
 ```
-solr-5.3.1/bin/solr create -p 8984 -c srv-catalog -d src/main/solr-cores/catalog
+solr-5.4.1/bin/solr create -p 8984 -c catalog_srv -d src/main/solr-cores/catalog
 ```
 
 Stop Solr using
 
 ```
-solr-5.3.1/bin/solr stop
+solr-5.4.1/bin/solr stop
 ```
 
 

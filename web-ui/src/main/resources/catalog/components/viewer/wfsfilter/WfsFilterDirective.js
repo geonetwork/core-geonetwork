@@ -28,7 +28,7 @@
         },
         link: function(scope, element, attrs) {
 
-          var solrUrl, uuid, ftName;
+          var solrUrl, uuid, ftName, appProfile, appProfilePromise;
           scope.map = scope.$parent.map;
 
           // Only admin can index the features
@@ -50,6 +50,7 @@
            * all different feature types.
            */
           function init() {
+
             angular.extend(scope, {
               fields: [],
               isWfsAvailable: undefined,
@@ -63,8 +64,20 @@
             ftName = scope.featureTypeName ||
                 scope.layer.getSource().getParams().LAYERS;
 
+            appProfile = null;
+            appProfilePromise = wfsFilterService.getApplicationProfile(uuid,
+              ftName,
+              scope.url,
+              // A WFS URL is in the metadata or we're guessing WFS has
+              // same URL as WMS
+              scope.wfsUrl ? 'WFS' : 'WMS').then(
+              function(response) {
+                appProfile = response.data;
+                return appProfile;
+              }).catch(function(){});
+
             scope.checkWFSServerUrl();
-            scope.checkFeatureTypeInSolr();
+            scope.initSolrRequest();
           };
 
           /**
@@ -81,39 +94,19 @@
                 });
           };
 
-
           /**
-           * Create SOLR request to get facets values
-           * Check if the feature has an applicationDefinition, else get the
-           * indexed fields for the Feature. From this, build the solr request
-           * and retrieve the facet config from solr response.
-           * This config is stored in `scope.fields` and is used to build
-           * the facet UI.
+           * Init the solr Request Object, either from meta index or from
+           * application profile.
            */
-
-          var appProfile = null;
-          var appProfilePromise = wfsFilterService.getApplicationProfile(uuid,
-              ftName,
-              scope.url,
-              // A WFS URL is in the metadata or we're guessing WFS has
-              // same URL as WMS
-              scope.wfsUrl ? 'WFS' : 'WMS').then(
-              function(data) {
-                appProfile = data;
-                return data;
-              });
-
           function loadFields() {
-            var url;
-            if (appProfile && appProfile.fields != null) {
-              url = wfsFilterService.getSolrRequestFromApplicationProfile(
-                  appProfile, ftName, scope.url,
-                  solrObject.filteredDocTypeFieldsInfo);
-            } else {
-              url = solrObject.baseUrl;
+
+            // If an app profile is defined, then we update s
+            // `olrObject.initialParams` with external config
+            if (appProfile && appProfile.fields) {
+              wfsFilterService.solrMergeApplicationProfile(
+                  solrObject.filteredDocTypeFieldsInfo, appProfile.fields);
+              solrObject.initBaseParams();
             }
-            solrUrl = url;
-            // Init the facets
             scope.resetFacets();
           }
           function getDataModelLabel(fieldId) {
@@ -126,7 +119,7 @@
             return null;
           }
 
-          scope.checkFeatureTypeInSolr = function() {
+          scope.initSolrRequest = function() {
             var config = {
               wfsUrl: scope.url,
               featureTypeName: ftName
@@ -147,7 +140,7 @@
                   }
                 }
               }
-              appProfilePromise.finally(loadFields);
+              appProfilePromise.then(loadFields);
             }, function(error) {
               scope.status = error.statusText;
             });
@@ -306,7 +299,7 @@
            * Only available for administrators.
            */
           scope.indexWFSFeatures = function() {
-            appProfilePromise.finally(function() {
+            appProfilePromise.then(function() {
               wfsFilterService.indexWFSFeatures(
                   scope.url,
                   ftName,

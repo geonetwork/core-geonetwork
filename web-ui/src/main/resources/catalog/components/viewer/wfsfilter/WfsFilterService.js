@@ -201,40 +201,29 @@
        * @param {string} wfsUrl url of the wfs service
        * @param {array} idxFields info about doc fields
        */
-      this.getSolrRequestFromApplicationProfile =
-          function(config, ftName, wfsUrl, idxFields) {
+      this.solrMergeApplicationProfile = function(fields, newFields) {
 
-        var url = buildSolrUrl({
-          rows: 0,
-          q: 'featureTypeId:"' + wfsUrl + '#' +
-              ftName.replace(':', '\\:') + '"',
-          wt: 'json',
-          facet: 'true',
-          'facet.mincount' : 1
-        });
+        var toRemoveIdx = [];
 
-        angular.forEach(config.fields, function(field) {
-          var fNameObj = getIdxNameObj(field.name, idxFields);
-          if (field.label) {
-            fNameObj.label = field.label[gnGlobalSettings.lang];
+        fields.forEach(function(field, idx) {
+          var keep;
+          for (var i = 0; i < newFields.length; i++) {
+            if (field.label == newFields[i].name) {
+              keep = true;
+              if(newFields[i].label) {
+                field.label = newFields[i].label[gnGlobalSettings.lang];
+              }
+              break;
+            }
           }
-          var docName = fNameObj.idxName;
-          var p = '&facet.field=' + docName;
-
-          angular.forEach(field.fq, function(v, k) {
-            if (angular.isString(v)) {
-              p += '&' + k + '=' + v;
-            }
-            else if (angular.isArray(v)) {
-              angular.forEach(v, function(range) {
-                p += '&f.' + docName + '.' + k + '=' + range;
-              });
-            }
-          });
-          url += p;
+          if(!keep) {
+            toRemoveIdx.unshift(idx);
+          }
         });
 
-        return url;
+        toRemoveIdx.forEach(function(i) {
+          fields.splice(i, 1);
+        });
       };
 
       /**

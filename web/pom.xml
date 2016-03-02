@@ -620,6 +620,7 @@
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
                 <resource>
+<<<<<<< HEAD
                   <directory>${project.basedir}/../schemas/iso19139.sextant/src/main/plugin</directory>
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
@@ -644,6 +645,8 @@
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
                 <resource>
+=======
+>>>>>>> upstream/solr-wfs-indexing
                   <directory>${project.basedir}/../schemas/iso19110/src/main/plugin</directory>
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
