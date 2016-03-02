@@ -313,6 +313,11 @@
                  name="sextant-theme"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.external.theme.inspire-theme']"
                  name="inspireTheme"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() !=
+                            'geonetwork.thesaurus.local.theme.sextant-theme' and
+                          */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() !=
+                            'geonetwork.thesaurus.external.theme.inspire-theme']"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]"
                  or="descriptiveKeywords"
                  in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
