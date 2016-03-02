@@ -266,6 +266,8 @@ public class SolrWFSFeatureIndexer {
             int numInBatch = 0, nbOfFeatures = 0;
             Collection<SolrInputDocument> docCollection = new ArrayList<SolrInputDocument>();
 
+            saveHarvesterReport();
+
             while (features.hasNext()) {
                 SimpleFeature feature = features.next();
                 nbOfFeatures ++;
@@ -318,7 +320,8 @@ public class SolrWFSFeatureIndexer {
                 docCollection.add(document);
                 numInBatch++;
                 if (numInBatch >= featureCommitInterval) {
-                    UpdateResponse response = solr.add(docCollection, solrCommitWithinMs);
+                    UpdateResponse response = solr.add(docCollection);
+                    solr.commit();
                     docCollection.clear();
                     numInBatch = 0;
                     if (logger.isDebugEnabled()) {
@@ -329,7 +332,8 @@ public class SolrWFSFeatureIndexer {
                 }
             }
             if (docCollection.size() > 0) {
-                UpdateResponse response = solr.add(docCollection, solrCommitWithinMs);
+                UpdateResponse response = solr.add(docCollection);
+                solr.commit();
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
                             "  %d features indexed (commit within %dms).",
