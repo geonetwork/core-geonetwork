@@ -401,7 +401,7 @@
             <directiveAttributes
                     data-template-add-action="true"
                     data-template-type="contact"
-                    data-search-action="true"
+                    data-search-action="false"
                     data-popup-action="true"
                     data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
           </action>
@@ -653,7 +653,7 @@
                   in="/gmd:MD_Metadata">
             <directiveAttributes
                     data-template-add-action="true"
-                    data-search-action="true"
+                    data-search-action="false"
                     data-popup-action="true"
                     data-template-type="contact"
                     data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
