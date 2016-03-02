@@ -20,7 +20,8 @@
         </a></li>
 
         <!--downloads-->
-        <li class="list-group-item" data-ng-if="download"><a href="" data-ng-click="addToPanier(download)">
+        <li class="list-group-item" data-ng-if="download">
+          <a href="" data-ng-click="addToPanier(download)">
           <!--<i class="fa fa-download"></i>&nbsp;--><span translate="">download</span>
         </a></li>
 
@@ -36,9 +37,9 @@
         </a></li>
 
         <!--WPS-->
-        <li class="list-group-item" data-ng-if="process && process.length == 1"><a href="" data-ng-click="showWPS(process[0])">
+        <lif class="list-group-item" data-ng-if="process && process.length == 1"><a href="" data-ng-click="showWPS(process[0])">
           <!--<i class="fa fa-gear"></i>&nbsp;--><span translate="">process</span>
-        </a></li>
+        </a></lif>
         <li class="list-group-item btn-group" ng-if="process && process.length > 1 ">
           <div class="btn-link dropdown-toggle" data-toggle="dropdown">
             <span translate="">process</span>&nbsp;
