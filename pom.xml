@@ -1167,10 +1167,10 @@
     <geotools.version>14.0</geotools.version>
     <lucene.version>4.9.0</lucene.version>
 
-    <solr.version>5.3.1</solr.version>
+    <solr.version>5.4.1</solr.version>
     <solr.port>8984</solr.port>
     <solr.url>http://localhost:${solr.port}/solr</solr.url>
-    <solr.collection>srv-catalog</solr.collection>
+    <solr.collection>catalog_srv</solr.collection>
 
     <jms.url>tcp://localhost:61616</jms.url>
     <activemq.version>5.6.0</activemq.version>

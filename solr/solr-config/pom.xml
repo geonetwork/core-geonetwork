@@ -36,7 +36,7 @@
                   <url>http://apache.crihan.fr/dist/lucene/solr/${solr.version}/solr-${solr.version}.tgz</url>
                   <unpack>true</unpack>
                   <outputDirectory>${project.basedir}</outputDirectory>
-                  <md5>dc1eec12e2fabd38dfcd24c120295014</md5>
+                  <md5>7d9a623cbf1555da7e5a4cadfedf7133</md5>
                 </configuration>
               </execution>
               <execution>
@@ -146,7 +146,7 @@
                     <argument>-p</argument>
                     <argument>${solr.port}</argument>
                     <argument>-c</argument>
-                    <argument>${nodeid}-catalog</argument>
+                    <argument>catalog_${nodeid}</argument>
                     <argument>-d</argument>
                     <argument>src/main/solr-cores/catalog/</argument>
                   </arguments>
