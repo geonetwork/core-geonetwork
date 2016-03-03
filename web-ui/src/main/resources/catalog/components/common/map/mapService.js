@@ -943,6 +943,11 @@
             var defer = $q.defer();
             var $this = this;
 
+            try {
+              // Avoid double encoding
+              name = decodeURIComponent(escape(name));
+            } catch (e) {}
+
             if (!isLayerInMap(map, name, url)) {
               gnWmsQueue.add(url, name);
               gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
