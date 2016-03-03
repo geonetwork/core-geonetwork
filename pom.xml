@@ -515,7 +515,7 @@
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
-        <version>1.3</version>
+        <version>1.3.1</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -874,7 +874,7 @@
       <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
-        <version>5.1.26</version>
+        <version>5.1.38</version>
       </dependency>
       <!-- Not permitted under oracle licensing rules
       <dependency>
@@ -1198,8 +1198,8 @@
     <jetty.version>8.1.9.v20130131</jetty.version>
     <geotools.version>8.6</geotools.version>
     <lucene.version>4.9.0</lucene.version>
-    <spring.version>3.2.5.RELEASE</spring.version>
-    <spring.security.version>3.1.4.RELEASE</spring.security.version>
+    <spring.version>3.2.8.RELEASE</spring.version>
+    <spring.security.version>3.1.6.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
