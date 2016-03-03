@@ -637,7 +637,7 @@
                 }
                 query = query || "";
                 uriEncodedQuery = encodeURIComponent(query);
-                url = this.remote.replace ? this.remote.replace(this.remote.url, query) : this.remote.url.replace(this.remote.wildcard, uriEncodedQuery);
+                url = this.remote.replace ? this.remote.replace(this.remote.url, query) : this.remote.url.replace(new RegExp(this.remote.wildcard, 'g'), uriEncodedQuery);
                 return this.transport.get(url, this.remote.ajax, handleRemoteResponse);
                 function handleRemoteResponse(err, resp) {
                     err ? cb([]) : cb(that.remote.filter ? that.remote.filter(resp) : resp);
