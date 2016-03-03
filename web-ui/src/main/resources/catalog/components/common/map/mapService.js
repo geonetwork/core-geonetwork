@@ -1440,6 +1440,13 @@
                   }),
                   title: 'Bing Aerial'
                 });
+              case 'stamen':
+                  return new ol.layer.Tile({
+                  source: new ol.source.Stamen({
+                    layer: 'watercolor'// we could easily change this to other Stamen layers (e.g.: toner, terrain)
+                  }),
+                  title: 'Stamen'
+                });
               case 'wmts':
                 var that = this;
                 if (opt.name && opt.url) {
