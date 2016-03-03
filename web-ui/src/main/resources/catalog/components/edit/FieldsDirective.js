@@ -34,6 +34,52 @@
 
   /**
    * @ngdoc directive
+   * @name gn_fields.directive:gnMeasure
+   * @function
+   *
+   * @description
+   * Component to edit a measure type field composed
+   * of a numberic value and a unit.
+   */
+  module.directive('gnMeasure',
+      function() {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/edit/partials/' +
+              'measure.html',
+          scope: {
+            uom: '@',
+            ref: '@'
+          },
+          link: function(scope, element, attrs) {
+            scope.value = parseFloat(attrs['gnMeasure'], 10) || null;
+
+            // Load the config from the textarea containing the helpers
+            scope.config =
+                angular.fromJson($('#' + scope.ref + '_config')[0].value);
+            if (scope.config == null) {
+              scope.config = {
+                option: []
+              };
+            }
+            // If only one option, convert to an array
+            if (!$.isArray(scope.config.option)) {
+              scope.config.option = [scope.config.option];
+            }
+            if (angular.isArray(scope.config)) {
+              scope.config.option = scope.config;
+            }
+            scope.$watch('selected', function(n, o) {
+              if (n && n !== o) {
+                scope.value = parseFloat(n['@value'], 10);
+                scope.uom = n['@title'];
+              }
+            });
+          }
+        };
+      });
+  /**
+   * @ngdoc directive
    * @name gn_fields.directive:gnFieldTooltip
    * @function
    *

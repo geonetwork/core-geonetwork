@@ -4939,4 +4939,19 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <element name="gmd:DS_InitiativeTypeCode">
         <label>Type d'Initiative</label>
     </element>
+    <element name="gco:Angle">
+      <label>Angle</label>
+    </element>
+    <element name="gco:Distance">
+      <label>Distance</label>
+    </element>
+    <element name="gco:Length">
+      <label>Longueur</label>
+    </element>
+    <element name="gco:Measure">
+      <label>Mesure</label>
+    </element>
+    <element name="gco:Scale">
+      <label>Échelle</label>
+    </element>
 </labels>

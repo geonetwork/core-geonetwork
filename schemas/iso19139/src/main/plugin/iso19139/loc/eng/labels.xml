@@ -3049,4 +3049,19 @@
     <element name="gmd:DS_InitiativeTypeCode">
         <label>Initiative Type</label>
     </element>
+    <element name="gco:Angle">
+      <label>Angle</label>
+    </element>
+    <element name="gco:Distance">
+      <label>Distance</label>
+    </element>
+    <element name="gco:Length">
+      <label>Length</label>
+    </element>
+    <element name="gco:Measure">
+      <label>Measure</label>
+    </element>
+    <element name="gco:Scale">
+      <label>Scale</label>
+    </element>
 </labels>
