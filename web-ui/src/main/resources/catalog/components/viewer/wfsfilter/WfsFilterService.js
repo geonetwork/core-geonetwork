@@ -209,13 +209,13 @@
           for (var i = 0; i < newFields.length; i++) {
             if (field.label == newFields[i].name) {
               keep = true;
-              if(newFields[i].label) {
+              if (newFields[i].label) {
                 field.label = newFields[i].label[gnGlobalSettings.lang];
               }
               break;
             }
           }
-          if(!keep) {
+          if (!keep) {
             toRemoveIdx.unshift(idx);
           }
         });

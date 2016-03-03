@@ -59,22 +59,21 @@
             scope.map.addLayer(scope.heatmapLayer);
 
             $('body').append('<div id="heatmap-info" data-content=""' +
-              'style="position: absolute; z-index: 100;"/>');
+                'style="position: absolute; z-index: 100;"/>');
             var info = $('#heatmap-info');
             var displayFeatureInfo = function(pixel) {
               var feature = scope.map.forEachFeatureAtPixel(pixel,
-                function(feature, layer) {
-                  if (layer == scope.heatmapLayer) {
-                    return feature;
-                  }
-                });
+                  function(feature, layer) {
+                    if (layer == scope.heatmapLayer) {
+                      return feature;
+                    }
+                  });
               if (feature) {
                 info.css({
                   left: pixel[0] + 'px',
-                  top: (pixel[1] + 45) + 'px'
+                  top: (pixel[1] + 50) + 'px'
                 });
-                info.tooltip('hide')
-                    .attr('data-original-title', feature.get('count'))
+                info.attr('data-original-title', feature.get('count'))
                     .tooltip('show');
               } else {
                 info.tooltip('hide');
@@ -113,15 +112,15 @@
 
             appProfile = null;
             appProfilePromise = wfsFilterService.getApplicationProfile(uuid,
-              ftName,
-              scope.url,
-              // A WFS URL is in the metadata or we're guessing WFS has
-              // same URL as WMS
-              scope.wfsUrl ? 'WFS' : 'WMS').then(
-              function(response) {
-                appProfile = response.data;
-                return appProfile;
-              }).catch(function(){});
+                ftName,
+                scope.url,
+                // A WFS URL is in the metadata or we're guessing WFS has
+                // same URL as WMS
+                scope.wfsUrl ? 'WFS' : 'WMS').then(
+                function(response) {
+                  appProfile = response.data;
+                  return appProfile;
+                }).catch (function() {});
 
             scope.checkWFSServerUrl();
             scope.initSolrRequest();
@@ -391,7 +390,7 @@
             scope.map.un('moveend', refreshHeatmap);
           }
 
-          scope.$watch('isHeatMapVisible', function (n, o) {
+          scope.$watch('isHeatMapVisible', function(n, o) {
             if (n != o) {
               scope.heatmapLayer.setVisible(n);
             }

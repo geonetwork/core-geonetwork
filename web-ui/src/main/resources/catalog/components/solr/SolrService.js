@@ -71,6 +71,11 @@
                     ycell = (grid.maxY - grid.minY) / grid.rows,
                     max = 0;
 
+                if (rows === null) {
+                  console.warn('Empty heatmap returned.');
+                  return [];
+                }
+
                 for (var i = 0; i < rows.length; i++) {
                   for (var j = 0; rows[i] != null && j < rows[i].length; j++) {
                     max = Math.max(max, rows[i][j]);
@@ -95,7 +100,7 @@
                       geometry: point.transform(
                           'EPSG:4326',
                           proj),
-                      value: value,
+                      count: value,
                       weight: value / max
                     });
                     features.push(feature);
