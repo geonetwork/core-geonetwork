@@ -59,7 +59,8 @@
                     pThesauri: thesaurus,
                     pMode: 'searchBox',
                     maxResults: max,
-                    pKeyword: filter || ''
+                    pKeyword: filter || '',
+                    pUri: ('*' + filter + '*') || ''
                   })
               );
             };
