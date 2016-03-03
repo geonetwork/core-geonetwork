@@ -83,12 +83,8 @@ public class XmlSearch implements Service
 		// perform the search and save search result into session
 		MetaSearcher searcher;
 		context.info("Creating searchers");
-		
-        if(remote) {
-			searcher = searchMan.newSearcher(SearcherType.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
-        } else {
-			searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-        }
+
+        searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 		
 		try {
 			

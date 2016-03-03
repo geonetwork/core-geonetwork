@@ -829,35 +829,27 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 				}
 			}
 
-            if (_styleSheetName.equals(Geonet.File.SEARCH_Z3950_SERVER)) {
-				// Construct Lucene query by XSLT, not Java, for Z3950 anyway :-)
-				Element xmlQuery = _sm.transform(_styleSheetName, request);
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
-				_query = LuceneSearcher.makeLocalisedQuery(xmlQuery, SearchManager.getAnalyzer(_language.analyzerLanguage, true), _luceneConfig, _language.presentationLanguage, requestedLanguageOnly);
-			} 
-            else {
-		        // Construct Lucene query (Java)
-                if(Log.isDebugEnabled(Geonet.LUCENE))
-                    Log.debug(Geonet.LUCENE, "LuceneSearcher constructing Lucene query (LQB)");
-                LuceneQueryInput luceneQueryInput = new LuceneQueryInput(request);
-                luceneQueryInput.setRequestedLanguageOnly(requestedLanguageOnly);
 
-                _query = new LuceneQueryBuilder(_luceneConfig, _tokenizedFieldSet, SearchManager.getAnalyzer(_language.analyzerLanguage, true), _language.presentationLanguage).build(luceneQueryInput);
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Lucene query: " + _query);
+            // Construct Lucene query (Java)
+            if(Log.isDebugEnabled(Geonet.LUCENE))
+                Log.debug(Geonet.LUCENE, "LuceneSearcher constructing Lucene query (LQB)");
+            LuceneQueryInput luceneQueryInput = new LuceneQueryInput(request);
+            luceneQueryInput.setRequestedLanguageOnly(requestedLanguageOnly);
 
-                try {
-                    // only for debugging -- might cause NPE is query was wrongly constructed
-                    //Query rw = _query.rewrite(_indexAndTaxonomy.indexReader);
-                    //if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) Log.debug(Geonet.SEARCH_ENGINE,"Rewritten Lucene query: " + _query);
-                    //System.out.println("** rewritten:\n"+ rw);
-                }
-                catch(Throwable x){
-                    Log.warning(Geonet.SEARCH_ENGINE,"Error rewriting Lucene query: " + _query);
-                    //System.out.println("** error rewriting query: "+x.getMessage());
-                }
-			}
+            _query = new LuceneQueryBuilder(_luceneConfig, _tokenizedFieldSet, SearchManager.getAnalyzer(_language.analyzerLanguage, true), _language.presentationLanguage).build(luceneQueryInput);
+            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                Log.debug(Geonet.SEARCH_ENGINE,"Lucene query: " + _query);
+
+            try {
+                // only for debugging -- might cause NPE is query was wrongly constructed
+                //Query rw = _query.rewrite(_indexAndTaxonomy.indexReader);
+                //if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) Log.debug(Geonet.SEARCH_ENGINE,"Rewritten Lucene query: " + _query);
+                //System.out.println("** rewritten:\n"+ rw);
+            }
+            catch(Throwable x){
+                Log.warning(Geonet.SEARCH_ENGINE,"Error rewriting Lucene query: " + _query);
+                //System.out.println("** error rewriting query: "+x.getMessage());
+            }
 
 			// Boosting query
 			if (_boostQueryClass != null) {

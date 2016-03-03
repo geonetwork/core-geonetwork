@@ -56,8 +56,6 @@ public final class Geonet {
 		public static final String SCHEMATRON_XML      = "schematron_xml.xsl";
 		public static final String SCHEMATRON_VERBID   = "schematron_verbid.xsl";
 		public static final String SEARCH_LUCENE       = "lucene.xsl";
-		public static final String SEARCH_Z3950_CLIENT = "z3950Client.xsl";
-		public static final String SEARCH_Z3950_SERVER = "z3950Server.xsl";
 		public static final String UPDATE_FIXED_INFO   = "update-fixed-info.xsl";
 		public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
 		public static final String EXTRACT_UUID        = "extract-uuid.xsl";
@@ -76,8 +74,6 @@ public final class Geonet {
 		public static final String SCHEMA_OASIS        = "oasis-catalog.xml";
 		public static final String SCHEMA_PLUGINS_CATALOG = "schemaplugin-uri-catalog.xml";
 		public static final String SORT_HARVESTERS     = "sort-harvesters.xsl";
-		public static final String JZKITCONFIG_TEMPLATE= "JZKitConfig.xml.tem";
-		public static final String JZKITAPPLICATIONCONTEXT= "JZkitApplicationContext.xml";
 		
 		/**
 		 * Stylesheet to convert a CQL parameter to a filter.
@@ -153,7 +149,6 @@ public final class Geonet {
 		public static final String WFS_STYLESHEETS    = "convert/WFSToFragments";
 		public static final String DIF_STYLESHEETS    = "convert/ThreddsDIFToISO";
 		public static final String TDS_STYLESHEETS    = "convert/ThreddsToFragments";
-		public static final String ISO19119TOJZKIT_STYLESHEET = "convert/19119ToJZKitRepository.xsl";
 		public static final String OGC_STYLESHEETS    = "convert/OGCWxSGetCapabilitiesto19119";
 		public static final String CONVERT_STYLESHEETS       = "convert/";
 		public static final String LOGOS              = "images/logos/";
@@ -345,16 +340,18 @@ public final class Geonet {
          * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
         public static final String EXTENDED      = "extended";
 
-        /** Parameter name: {@value #REMOTE} - Boolean that indicates if 
+        /** Parameter name: {@value #REMOTE} - Boolean that indicates if
          * search is done on the local repository or using Z39.50 for on the 
          * fly searches in remote catalogs. Values are 
          * {@value org.fao.geonet.constants.Geonet.Text#ON} or 
          * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
+        @Deprecated
         public static final String REMOTE        = "remote";
         
         /** Parameter name: {@value #TIMEOUT} - Time in seconds the Z39.50
          * search waits for responses from remote servers before timing out.
          * Default is 20 seconds */
+        @Deprecated
         public static final String TIMEOUT       = "timeout";
 
 				/** Parameter name: {@value #SERVERHTML} - Boolean that indicates
@@ -556,9 +553,7 @@ public final class Geonet {
 	public static final String SEARCH_ENGINE = GEONETWORK + ".search";
     public static final String FACET_ENGINE = GEONETWORK + ".facet";
     public static final String CUSTOM_ELEMENTSET = GEONETWORK + ".customelementset";
-	public static final String Z3950_SERVER = GEONETWORK + ".z3950server";
-	public static final String Z3950        = GEONETWORK + ".z3950";
-    public static final String INDEX_ENGINE = GEONETWORK + ".index";
+	public static final String INDEX_ENGINE = GEONETWORK + ".index";
     public static final String LUCENE = GEONETWORK + ".lucene";
     public static final String LUCENE_TRACKING = LUCENE + ".tracking";
 	public static final String MEF          = GEONETWORK + ".mef";
@@ -573,8 +568,6 @@ public final class Geonet {
 	public static final String REGION      = GEONETWORK + ".region";
     public static final String CSW_SEARCH   = CSW + ".search";
     public static final String CSW_HARVEST   = CSW + ".harvest";
-	public static final String SRU          = GEONETWORK + ".sru";
-	public static final String SRU_SEARCH   = SRU + ".search";
 	public static final String OAI          = GEONETWORK + ".oai";
 	public static final String OAI_HARVESTER = OAI + ".provider";
   // keys for logging search log

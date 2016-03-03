@@ -7,5 +7,5 @@ package org.fao.geonet.kernel.search;
 * @author Jesse on 12/24/2014.
 */
 public enum SearcherType {
-    LUCENE, Z3950, UNUSED
+    LUCENE, UNUSED
 }

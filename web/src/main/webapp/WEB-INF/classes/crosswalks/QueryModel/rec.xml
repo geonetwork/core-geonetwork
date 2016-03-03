@@ -1,5 +1,0 @@
-<Crosswalk scope="Global" sourceNamespace="rec">
-  <SourceAttr sourceAttrValue="id">
-    <MapsTo targetNamespace="rec">1.12</MapsTo>
-  </SourceAttr>
-</Crosswalk>

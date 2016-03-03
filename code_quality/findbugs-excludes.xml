@@ -41,11 +41,6 @@
       <Bug pattern="SE_BAD_FIELD_INNER_CLASS" />
     </Match>
     <Match>
-      <Class name="org.fao.geonet.kernel.search.Z3950Searcher" />
-      <Bug pattern="REC_CATCH_EXCEPTION" />
-      <Method name="presentDocuments" />
-    </Match>
-    <Match>
       <Class name="org.fao.geonet.kernel.Thesaurus" />
       <Bug pattern="REC_CATCH_EXCEPTION" />
       <Method name="retrieveThesaurusTitle" />
@@ -87,11 +82,6 @@
       <Method name="processServices"/>
     </Match>
     <Match>
-      <Class name="org.fao.geonet.services.util.z3950.DefaultContextSetCQLString" />
-      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-      <Method name="processCQLTermNode"/>
-    </Match>
-    <Match>
       <Class name="de.fzi.dbs.xml.transform.CachingTransformerFactory" />
       <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
     </Match>
@@ -112,7 +102,6 @@
     <Match>
       <Or>
         <Class name="org.fao.geonet.monitor.health.NoIndexErrorsHealthCheck$1" />
-        <Class name="org.fao.geonet.kernel.harvest.harvester.z3950.Harvester" />
         <Class name="org.fao.geonet.kernel.search.SearchManager" />
         <Class name="org.fao.geonet.kernel.oaipmh.Lib" />
         <Class name="org.fao.geonet.services.main.Info" />

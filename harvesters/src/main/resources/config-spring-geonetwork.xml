@@ -14,8 +14,6 @@
     <bean id="geoPREST" class="org.fao.geonet.kernel.harvest.harvester.geoPREST.GeoPRESTHarvester" scope="prototype"/>
     <bean id="webdav" class="org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester" scope="prototype"/>
     <bean id="csw" class="org.fao.geonet.kernel.harvest.harvester.csw.CswHarvester" scope="prototype"/>
-    <bean id="z3950" class="org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester" scope="prototype"/>
-    <bean id="z3950Config" class="org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester" scope="prototype"/>
     <bean id="oaipmh" class="org.fao.geonet.kernel.harvest.harvester.oaipmh.OaiPmhHarvester" scope="prototype"/>
     <bean id="ogcwxs" class="org.fao.geonet.kernel.harvest.harvester.ogcwxs.OgcWxSHarvester" scope="prototype"/>
     <bean id="thredds" class="org.fao.geonet.kernel.harvest.harvester.thredds.ThreddsHarvester" scope="prototype"/>

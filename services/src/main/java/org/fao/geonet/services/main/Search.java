@@ -114,13 +114,9 @@ public class Search implements Service
 
 		context.info("Creating searchers");
 
-		if (remote)	searcher = searchMan.newSearcher(SearcherType.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
-		else        searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+        searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 
 		searcher.search(context, elData, _config);
-		if (remote && (searcher.getSize() == 0)) { // do it again for Z3950
-			searcher.search(context, elData, _config);
-		}
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 		session.removeProperty(Geonet.Session.SEARCH_REQUEST);
 		context.info("Getting summary");
