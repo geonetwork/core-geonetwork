@@ -3004,4 +3004,49 @@
     <element name="gml:realizationEpoch">
         <label>Realization epoch</label>
     </element>
+    <element name="gmd:MD_ProgressCode">
+        <label>Progress</label>
+    </element>
+    <element name="gmd:MD_MaintenanceFrequencyCode">
+        <label>Maintenance Frequency</label>
+    </element>
+    <element name="gmd:MD_SpatialRepresentationTypeCode">
+        <label>Spatial Representation Type</label>
+    </element>
+    <element name="gmd:MD_CharacterSetCode">
+        <label>Character Set</label>
+    </element>
+    <element name="gmd:MD_TopologyLevelCode">
+        <label>Topology Level</label>
+    </element>
+    <element name="gmd:MD_GeometricObjectTypeCode">
+        <label>Geometric Object Type</label>
+    </element>
+    <element name="gmd:MD_RestrictionCode" context="gmd:accessConstraints">
+        <label>Access Restriction</label>
+    </element>
+    <element name="gmd:MD_RestrictionCode" context="gmd:useConstraints">
+        <label>Use Restriction</label>
+    </element>
+    <element name="gmd:DS_AssociationTypeCode">
+        <label>Association Type</label>
+    </element>
+    <element name="gmd:DS_InitiativeTypeCode">
+        <label>Initiative Type</label>
+    </element>
+    <element name="gco:Angle">
+      <label>Angle</label>
+    </element>
+    <element name="gco:Distance">
+      <label>Distance</label>
+    </element>
+    <element name="gco:Length">
+      <label>Length</label>
+    </element>
+    <element name="gco:Measure">
+      <label>Measure</label>
+    </element>
+    <element name="gco:Scale">
+      <label>Scale</label>
+    </element>
 </labels>

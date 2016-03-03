@@ -4917,4 +4917,19 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
       <label>Langue des métadonnées</label>
       <description></description>
     </element>
+    <element name="gco:Angle">
+      <label>Angle</label>
+    </element>
+    <element name="gco:Distance">
+      <label>Distance</label>
+    </element>
+    <element name="gco:Length">
+      <label>Longueur</label>
+    </element>
+    <element name="gco:Measure">
+      <label>Mesure</label>
+    </element>
+    <element name="gco:Scale">
+      <label>Échelle</label>
+    </element>
 </labels>

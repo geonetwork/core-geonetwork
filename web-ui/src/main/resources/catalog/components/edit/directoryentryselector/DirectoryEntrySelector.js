@@ -263,7 +263,7 @@
                  gnGlobalSettings.modelOptions);
                },
                post: function postLink(scope, iElement, iAttrs) {
-                 scope.defaultRoleCode = 'pointOfContact';
+                 scope.defaultRoleCode = iAttrs['defaultRole'] || null;
                  scope.defaultRole = null;
                  angular.forEach(scope.roles, function(r) {
                    if (r.code == scope.defaultRoleCode) {
@@ -278,6 +278,10 @@
                      scope.closeModal();
                    });
                  };
+                 // Trigger search but for all
+                 // search form in the page
+                 // TODO: improve
+                 // scope.$broadcast('resetSearch', scope.searchObj.params);
                }
              };
            }
