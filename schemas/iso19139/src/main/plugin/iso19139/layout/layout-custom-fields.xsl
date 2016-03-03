@@ -49,6 +49,7 @@
     <xsl:variable name="isRequired" select="gn:element/@min = 1 and gn:element/@max = 1"/>
 
     <div class="form-group gn-field gn-title {if ($isRequired) then 'gn-required' else ''}"
+         id="gn-el-{*/gn:element/@ref}"
          data-gn-field-highlight="">
       <label class="col-sm-2 control-label">
         <xsl:value-of select="$labelConfig/label"/>
@@ -59,11 +60,11 @@
       </label>
       <div class="col-sm-9 gn-value">
         <xsl:variable name="elementRef"
-                      select="gco:Distance/gn:element/@ref"/>
+                      select="gco:*/gn:element/@ref"/>
         <xsl:variable name="helper"
                       select="gn-fn-metadata:getHelper($labelConfig/helper, .)"/>
-        <div data-gn-measure="{gco:Distance/text()}"
-             data-uom="{gco:Distance/@uom}"
+        <div data-gn-measure="{gco:*/text()}"
+             data-uom="{gco:*/@uom}"
              data-ref="{concat('_', $elementRef)}">
         </div>
 
@@ -73,8 +74,8 @@
       </div>
       <div class="col-sm-1 gn-control">
         <xsl:call-template name="render-form-field-control-remove">
-          <xsl:with-param name="editInfo" select="gn:element"/>
-          <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+          <xsl:with-param name="editInfo" select="*/gn:element"/>
+          <xsl:with-param name="parentEditInfo" select="gn:element"/>
         </xsl:call-template>
       </div>
     </div>
