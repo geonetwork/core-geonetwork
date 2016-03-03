@@ -35,7 +35,9 @@
           });
           var feature = scope.map.forEachFeatureAtPixel(pixel,
               function(feature, layer) {
-                return feature;
+                if (!(layer instanceof ol.layer.Heatmap)) {
+                  return feature;
+                }
               });
           if (feature) {
             var props = feature.getProperties();

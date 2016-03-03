@@ -58,6 +58,8 @@
 
       var firstLoad = true;
 
+      var firstLoad = true;
+
       /**
        * @ngdoc method
        * @name gnOwsContextService#loadContext
@@ -74,7 +76,7 @@
         var layersToRemove = [];
         map.getLayers().forEach(function(layer) {
           if (layer.displayInLayerManager) {
-            if(!(layer.get('fromUrlParams') && firstLoad)) {
+            if (!(layer.get('fromUrlParams') && firstLoad)) {
               layersToRemove.push(layer);
             }
           }
