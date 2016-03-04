@@ -105,9 +105,7 @@
 
           var searchMap = new ol.Map({
             controls:[],
-            layers: [new ol.layer.Tile({
-              source: new ol.source.OSM()
-            })],
+            layers: viewerMap.getLayers(),
             view: new ol.View({
               center: mapsConfig.center,
               zoom: 2
