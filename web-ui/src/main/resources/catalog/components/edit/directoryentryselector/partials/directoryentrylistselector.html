@@ -1,3 +1,26 @@
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
 <div data-ng-search-form="">
   <div class="row">
     <div class="col-md-12">
@@ -81,7 +104,8 @@
         <button type="button"
                 class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                 data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}">
-          <span data-translate="">chooseContactRole</span>&nbsp;
+          <span data-translate="" data-ng-if="defaultRole">chooseContactRole</span>&nbsp;
+          <i data-ng-if="!defaultRole" class="fa fa-plus"></i>&nbsp;
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -108,7 +132,8 @@
         <button type="button" class="btn btn-default dropdown-toggle"
                 data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"
                 data-toggle="dropdown">
-          <span data-translate="">chooseContactRole</span>&nbsp;
+          <span data-translate="" data-ng-if="defaultRole">chooseContactRole</span>&nbsp;
+          <i data-ng-if="!defaultRole" class="fa fa-link"></i>&nbsp;
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
