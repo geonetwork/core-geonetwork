@@ -133,6 +133,7 @@
           $http.get('keywords@json?pNewSearch=true&pTypeSearch=1' +
               '&pThesauri=' + $scope.thesaurusSelected.key +
                       '&pMode=searchBox' +
+                      '&pLang=fre&pLang=eng' +
                       '&maxResults=' +
                       ($scope.maxNumberOfKeywords ||
                               defaultMaxNumberOfKeywords) +
