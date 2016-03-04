@@ -415,6 +415,10 @@
           return gnMap.addWmsFromScratch(map, res.href, layer.name, createOnly).
               then(function(olL) {
                 if (olL) {
+                  try {
+                    // Avoid double encoding
+                    layer.group = decodeURIComponent(escape(layer.group));
+                  } catch (e) {}
                   olL.set('group', layer.group);
                   olL.set('groupcombo', layer.groupcombo);
                   olL.setOpacity(layer.opacity);
