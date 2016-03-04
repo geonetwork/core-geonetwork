@@ -65,7 +65,8 @@
             </a>
           </li>
           <li>
-            <a data-gn-active-tb-item="catalog.edit#/batchedit">
+            <a data-gn-active-tb-item="catalog.edit#/batchedit"
+               data-ng-if="user.isReviewerOrMore()">
               <i class="fa fa-pencil"/>&nbsp;<span data-translate="">batchEditing</span>
             </a>
           </li>
