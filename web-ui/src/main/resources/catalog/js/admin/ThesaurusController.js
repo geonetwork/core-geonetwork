@@ -110,6 +110,10 @@
           $http.get('keywords@json?pNewSearch=true&pTypeSearch=1' +
               '&pThesauri=' + $scope.thesaurusSelected.key +
                       '&pMode=searchBox' +
+                      // Hack to load keywords in all Sextant languages
+                      // to edit keyword translations
+                      // TODO: Needs improvements
+                      '&pLang=fre&pLang=eng' +
                       '&maxResults=' +
                       ($scope.maxNumberOfKeywords ||
                               defaultMaxNumberOfKeywords) +
