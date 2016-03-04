@@ -105,16 +105,28 @@
         var layers = context.resourceList.layer;
         var i, j, olLayer, bgLayers = [];
         var self = this;
-        var re = /type\s*=\s*([^,|^}|^\s]*)/;
         var promises = [];
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.name) {
+            var re=this.getREForPar('type');
+
             if (layer.group == 'Background layers' &&
                 layer.name.match(re)) {
               var type = re.exec(layer.name)[1];
+
+              //Check if we have a layer parameter
+              re=this.getREForPar('layer');
+
+              var opt;
+              if (layer.name.match(re)){
+                var lyr=re.exec(layer.name)[1];
+                opt={name:lyr};
+              }
+
               if (type != 'wmts') {
-                var olLayer = gnMap.createLayerForType(type);
+                var olLayer = gnMap.createLayerForType(type,opt);
+
                 if (olLayer) {
                   bgLayers.push({layer: olLayer, idx: i});
                   olLayer.displayInLayerManager = false;
@@ -399,6 +411,23 @@
               }).catch (function() {});
         }
       };
+
+      /**
+       * @ngdoc method
+       * @name gnOwsContextService#getREForPar
+       * @methodOf gn_viewer.service:gnOwsContextService
+       *
+       * @description
+       * Creates a regular expression for a given parameter
+       *
+       * * @param {Object} context parameter
+       */
+        this.getREForPar = function(par) {
+
+            return re=new RegExp(par + '\\s*=\\s*([^,|^}|^\\s]*)');
+
+        };
+
     }
   ]);
 })();
