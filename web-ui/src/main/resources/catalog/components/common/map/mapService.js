@@ -1419,6 +1419,7 @@
            * @return {ol.layer} layer
            */
           createLayerForType: function(type, opt) {
+
             switch (type) {
               case 'mapquest':
                 return new ol.layer.Tile({
@@ -1443,7 +1444,7 @@
               case 'stamen':
                   return new ol.layer.Tile({
                   source: new ol.source.Stamen({
-                    layer: 'watercolor'// we could easily change this to other Stamen layers (e.g.: toner, terrain)
+                    layer: (opt && opt.name ? opt.name: 'watercolor') //We make watercolor the default layer
                   }),
                   title: 'Stamen'
                 });
