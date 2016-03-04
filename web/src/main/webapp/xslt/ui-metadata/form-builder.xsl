@@ -655,6 +655,8 @@
     <xsl:if test="not($isDisabled)">
       <xsl:variable name="id" select="generate-id()"/>
       <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
+      <xsl:variable name="parentName"
+                    select="name(ancestor::*[not(contains(name(), 'CHOICE_ELEMENT'))][1])"/>
       <xsl:variable name="isRequired" select="$childEditInfo/@min = 1 and $childEditInfo/@max = 1"/>
 
       <!-- This element is replaced by the content received when clicking add -->
@@ -662,7 +664,7 @@
            id="gn-el-{$id}"
            data-gn-field-highlight="">
         <label class="col-sm-2 control-label"
-               data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
+               data-gn-field-tooltip="{$schema}|{$qualifiedName}|{$parentName}|">
           <xsl:if test="normalize-space($label) != ''">
             <xsl:value-of select="$label"/>
           </xsl:if>&#160;
@@ -682,7 +684,7 @@
               -->
               <xsl:when test="count($childEditInfo/gn:choose) = 1">
                 <xsl:for-each select="$childEditInfo/gn:choose">
-                  <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
+                  <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels, $parentName, '', '')"/>
 
                   <a class="btn btn-default"
                      title="{$i18n/addA} {$label/label}"
@@ -708,8 +710,8 @@
                   </button>
                   <ul class="dropdown-menu">
                     <xsl:for-each select="$childEditInfo/gn:choose">
-                      <xsl:sort select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
-                      <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
+                      <xsl:sort select="gn-fn-metadata:getLabel($schema, @name, $labels, $parentName, '', '')"/>
+                      <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels, $parentName, '', '')"/>
 
                       <li title="{$label/description}">
                         <a
