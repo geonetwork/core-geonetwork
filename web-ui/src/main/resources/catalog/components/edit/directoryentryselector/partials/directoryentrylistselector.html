@@ -81,7 +81,8 @@
         <button type="button"
                 class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                 data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}">
-          <span data-translate="">chooseContactRole</span>&nbsp;
+          <span data-translate="" data-ng-if="defaultRole">chooseContactRole</span>&nbsp;
+          <i data-ng-if="!defaultRole" class="fa fa-plus"></i>&nbsp;
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -108,7 +109,8 @@
         <button type="button" class="btn btn-default dropdown-toggle"
                 data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"
                 data-toggle="dropdown">
-          <span data-translate="">chooseContactRole</span>&nbsp;
+          <span data-translate="" data-ng-if="defaultRole">chooseContactRole</span>&nbsp;
+          <i data-ng-if="!defaultRole" class="fa fa-link"></i>&nbsp;
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
