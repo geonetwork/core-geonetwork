@@ -82,7 +82,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
 //                        .setProperty("url", xpath("wfs/@url", String.class))
 //                        .setProperty("typeName", xpath("wfs/@typeName", String.class))
                         .log(LoggingLevel.INFO, LOGGER_NAME, "#${property.CamelSplitIndex}. Harvesting ${property.configuration.url} - start (Exchange ${exchangeId}).")
-                        .bean(FeatureTypeBean.class, "initialize(*, true)")
+                        .bean(SolrWFSFeatureIndexer.class, "initialize(*, true)")
                         .to("direct:delete-wfs-featuretype-features")
                         .to("direct:index-wfs")
                         .log(LoggingLevel.INFO, LOGGER_NAME, "#${property.CamelSplitIndex}. Harvesting ${property.configuration.url} - end (Exchange ${exchangeId}).")
@@ -100,7 +100,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
                 .log(LoggingLevel.INFO, LOGGER_NAME, "Harvest features message received.")
                 .log(LoggingLevel.INFO, LOGGER_NAME, "${body}")
                 .setProperty("configuration", simple("${body.parameters}"))
-                .bean(FeatureTypeBean.class, "initialize(*, true)")
+                .bean(SolrWFSFeatureIndexer.class, "initialize(*, true)")
                 .to("direct:delete-wfs-featuretype-features")
                 .to("direct:index-wfs");
 

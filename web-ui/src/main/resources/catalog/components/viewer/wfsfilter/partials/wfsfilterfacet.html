@@ -101,12 +101,17 @@
           </a>
         </li>
         <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
-          <a href="" data-ng-click="checkFeatureTypeInSolr()">
+          <a href="" data-ng-click="initSolrRequest()">
             <i class="fa fa-refresh"></i>&nbsp;
             <span data-translate="">refresh</span>
           </a>
         </li>
-        <!-- TODO: Add a drop features from index -->
+        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
+          <a href="" data-ng-click="dropFeatures()">
+            <i class="fa fa-times"></i>&nbsp;
+            <span data-translate="">removeFeatures</span>
+          </a>
+        </li>
       </ul>
     </div>
   </div>

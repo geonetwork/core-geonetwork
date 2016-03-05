@@ -126,6 +126,7 @@
   <field name="featureTypeId" type="string" indexed="true" stored="true" required="false" multiValued="false" />
   <!-- Type of resources: feature, dataset, services, maps, ... -->
   <field name="resourceType" type="string" indexed="true" stored="true" required="false" multiValued="true" />
+  <field name="resourceTitle" type="string" indexed="true" stored="true" required="false" multiValued="false" />
   <!-- Parent document eg. a metadata record for a feature -->
   <field name="parent" type="string" indexed="true" stored="true" required="false" multiValued="true" />
 
@@ -602,6 +603,8 @@
     <!-- An alternative geospatial field type new to Solr 4.  It supports multiValued and polygon shapes.
       For more information about this and other Spatial fields new to Solr 4, see:
       http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4
+
+      maxDistErr the default is one meter – just a bit less than 0.000009 degrees
     -->
     <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
                spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
