@@ -120,6 +120,9 @@
                   scope.layerTabs[tab].active = true;
                   activeTab = tab;
                 } else if (tab == activeTab) {
+                  if (tab == 'wps') {
+                    iElement.find('.panel-wps').remove();
+                  }
                   scope.active.layersTools = false;
                   scope.layerTabs[tab].active = false;
                   activeTab = null;
@@ -132,7 +135,7 @@
                   $('.sxt-layertree').mCustomScrollbar('update');
                 }, 0);
               };
-              
+
               scope.loadTool = function(tab, layer) {
                   scope.layerTabs[tab].active = true;
                   scope.active.layersTools = true;
