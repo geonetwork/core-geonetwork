@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_solr_request');
 
@@ -7,6 +30,7 @@
     search: 'search'
   };
 
+  var ROWS = 20;
   var FACET_RANGE_COUNT = 5;
   var FACET_RANGE_DELIMITER = ' - ';
 
@@ -17,6 +41,11 @@
     this.urlUtils = $injector.get('gnUrlUtils');
 
     this.config = config;
+
+    this.page = {
+      start: 0,
+      rows: ROWS
+    };
 
     /**
      * @type {integer}>
@@ -166,7 +195,7 @@
   geonet.GnSolrRequest.prototype.search = function(params, any, solrParams) {
 
     var url = this.getSearchUrl_(params, any);
-    url += this.parseKeyValue_(solrParams);
+    url += this.parseKeyValue_(angular.extend({}, this.page, solrParams));
 
     return this.$http.get(url).then(angular.bind(this,
         function(solrResponse) {
@@ -184,20 +213,38 @@
         }));
   };
 
+  geonet.GnSolrRequest.prototype.next = function() {
+    this.page = {
+      start: this.page.start + ROWS,  // TODO: Max on total
+      rows: ROWS
+    };
+    this.search();
+  };
+  geonet.GnSolrRequest.prototype.previous = function() {
+    this.page = {
+      start: Math.max(this.page.start - ROWS, 0),
+      rows: ROWS
+    };
+    this.search();
+  };
   /**
    * Init the SolRRequest object values: baseUrl, and initial params for
-   * facets and stats.
+   * facets and stats. If configuration contains a docIdField then
+   * a filter query is added to the parameters.
    *
    * @param {Object} options from SolrRequest object type config.
    * @private
    */
   geonet.GnSolrRequest.prototype.initBaseRequest_ = function(options) {
-
-    var url = this.buildSolrUrl({
-      rows: 0,
-      q: this.config.docIdField + ':"' + this.config.idDoc(options) + '"',
+    var params = {
+      //rows: 0,
       wt: 'json'
-    });
+    };
+    if (this.config.docIdField) {
+      params.fq = this.config.docIdField +
+                    ':"' + this.config.idDoc(options) + '"';
+    }
+    var url = this.buildSolrUrl(params);
     this.baseUrl = url;
     this.initBaseParams();
   };
@@ -265,7 +312,6 @@
    * @private
    */
   geonet.GnSolrRequest.prototype.getSearchUrl_ = function(params, any) {
-
     var fieldsQ = [];
     angular.forEach(params, function(field, fieldName) {
       var valuesQ = [];
@@ -287,13 +333,23 @@
         fieldsQ.push('+*' + v + '*');
       });
     }
+
+    // Search for all if no filter defined
+    if (fieldsQ.length === 0) {
+      fieldsQ.push('*:*');
+    }
+
     var url = this.baseUrl;
-    if (fieldsQ.length) {
-      url = url.replace('&q=', '&q=' +
-          encodeURIComponent(fieldsQ.join(' ') + ' +'));
+    var filter = encodeURIComponent(fieldsQ.join(' '));
+    if (url.indexOf('&q=') === -1) {
+      url = url + '&q=' + filter;
+    } else
+    { // Append to existing
+      url = url.replace('&q=', '&q=' + filter + encodeURIComponent(' +'));
     }
     return url;
   };
+
 
   /**
    * Retrieve the index field object from the array given from feature type
@@ -305,7 +361,7 @@
    * @return {*}
    */
   geonet.GnSolrRequest.prototype.getIdxNameObj_ = function(name) {
-    var fields = this.docTypeFieldsInfo;
+    var fields = this.docTypeFieldsInfo || [];
     for (var i = 0; i < fields.length; i++) {
       if (fields[i].label == name ||
           fields[i].idxName == name) {
@@ -355,7 +411,7 @@
         var fNameObj = this.getIdxNameObj_(fieldProp);
         var facetField = {
           name: fieldProp,
-          label: fNameObj.label || fNameObj.label,
+          label: fNameObj && fNameObj.label ? fNameObj.label : fieldProp,
           values: [],
           type: facetType
         };

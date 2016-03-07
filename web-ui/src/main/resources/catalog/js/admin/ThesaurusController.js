@@ -43,9 +43,9 @@
    */
   module.controller('GnThesaurusController', [
     '$scope', '$http', '$rootScope', '$translate',
-    'gnConfig', 'gnSearchManagerService',
+    'gnConfig', 'gnSearchManagerService', 'gnUtilityService',
     function($scope, $http, $rootScope, $translate,
-             gnConfig, gnSearchManagerService) {
+             gnConfig, gnSearchManagerService, gnUtilityService) {
 
       $scope.gnConfig = gnConfig;
       /**
@@ -133,10 +133,7 @@
           $http.get('keywords@json?pNewSearch=true&pTypeSearch=1' +
               '&pThesauri=' + $scope.thesaurusSelected.key +
                       '&pMode=searchBox' +
-                      // Hack to load keywords in all Sextant languages
-                      // to edit keyword translations
-                      // TODO: Needs improvements
-                      '&pLang=fre&pLang=eng' +
+                      '&pUri=*' + encodeURI($scope.keywordFilter) + '*' +
                       '&maxResults=' +
                       ($scope.maxNumberOfKeywords ||
                               defaultMaxNumberOfKeywords) +
@@ -368,9 +365,10 @@
         creatingKeyword = true;
         $scope.keywordSuggestedUri = '';
         $scope.keywordSelected = {
-          'uri': $scope.thesaurusSelected.defaultNamespace + '#',
+          'uri': $scope.thesaurusSelected.defaultNamespace + '#' +
+            gnUtilityService.randomUuid(),
           'value': {'@language': $scope.lang, '#text': ''},
-          'definition': {'@language': $scope.lang},
+          'definition': {'@language': $scope.lang, '#text': ''},
           'defaultLang': $scope.lang
         };
         if ($scope.isPlaceType()) {

@@ -25,13 +25,18 @@ package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import org.apache.camel.Exchange;
+import org.apache.commons.lang.StringUtils;
+import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
+import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
 import org.geotools.data.wfs.WFSDataStore;
@@ -39,24 +44,69 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.jdom.Namespace;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.filter.Filter;
 import org.opengis.metadata.extent.Extent;
 import org.opengis.metadata.extent.GeographicBoundingBox;
 import org.opengis.metadata.extent.GeographicExtent;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SolrWFSFeatureIndexer {
     public static final String MULTIVALUED_SUFFIX = "s";
     private SolrClient solr;
+
+
+    /**
+     * Create exchange states for this feature type.
+     *
+     * Load configuration from exchange properties.
+     * Could be a {@link WFSHarvesterParameter} or url and typeName
+     * exchange properties.
+     *
+     * @param exchange
+     * @param connect   Init datastore ie. connect to WFS, retrieve schema
+     */
+    public void initialize(
+            Exchange exchange,
+            boolean connect) throws InvalidArgumentException {
+        WFSHarvesterParameter configuration =
+                (WFSHarvesterParameter) exchange.getProperty("configuration");
+        if (configuration == null) {
+            throw new InvalidArgumentException("Missing WFS harvester configuration.");
+        }
+
+        logger.info(
+                String.format(
+                        "Initializing harvester configuration for uuid '%s', url '%s', feature type '%s'. Exchange id is '%s'.",
+                        configuration.getMetadataUuid(),
+                        configuration.getUrl(),
+                        configuration.getTypeName(),
+                        exchange.getExchangeId()
+                ));
+
+        WFSHarvesterExchangeState config = new WFSHarvesterExchangeState(configuration);
+        if (connect) {
+            try {
+                config.initDataStore();
+            } catch (Exception e) {
+                String errorMsg = String.format(
+                        "Failed to connect to server '%s'. Error is %s",
+                        configuration.getUrl(),
+                        e.getMessage());
+                logger.error(errorMsg);
+                throw new RuntimeException(errorMsg);
+            }
+        }
+        exchange.setProperty("featureTypeConfig", config);
+    }
 
     /**
      * Define for each attribute type the Solr field suffix.
@@ -269,6 +319,9 @@ public class SolrWFSFeatureIndexer {
 
             saveHarvesterReport();
 
+            String titleExpression = state.getParameters().getTitleExpression();
+            String defaultTitleAttribute = titleExpression == null ? guessFeatureTitleAttribute(fields) : null;
+
             while (features.hasNext()) {
                 SimpleFeature feature = features.next();
                 nbOfFeatures ++;
@@ -278,6 +331,12 @@ public class SolrWFSFeatureIndexer {
                 document.addField("docType", "feature");
                 document.addField("resourceType", "feature");
                 document.addField("featureTypeId", url + "#" + typeName);
+
+                if (titleExpression != null) {
+                    document.addField("resourceTitle",
+                            buildFeatureTitle(feature, fields, titleExpression));
+                }
+
                 if (state.getParameters().getMetadataUuid() != null) {
                     document.addField("parent", state.getParameters().getMetadataUuid());
                 }
@@ -313,6 +372,12 @@ public class SolrWFSFeatureIndexer {
                                 document.addField(
                                         attributeName + XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType),
                                         attributeValue);
+                            }
+
+
+                            if (defaultTitleAttribute != null &&
+                                defaultTitleAttribute.equals(attributeName)) {
+                                document.addField("resourceTitle", attributeValue);
                             }
                         }
                     }
@@ -369,5 +434,75 @@ public class SolrWFSFeatureIndexer {
         } finally {
             saveHarvesterReport();
         }
+    }
+
+    private static Pattern pt = Pattern.compile("\\{\\{([^}]*)\\}\\}");
+    /**
+     * Build a title for the feature. The title expression could be
+     * an attribute name or could contain expression were attributes
+     * will be substituted. eg. "{{TITLE_FR}} ({{ID}})"
+     *
+     * @param feature   A simple feature
+     * @param fields    List of columns
+     * @param titleExpression A title expression based on one or more attributes
+     * @return
+     */
+    public static String buildFeatureTitle(SimpleFeature feature,
+                                    Map<String, String> fields,
+                                    String titleExpression) {
+        if (StringUtils.isNotEmpty(titleExpression)) {
+            if (titleExpression.contains("{{")) {
+                Matcher m = pt.matcher(titleExpression);
+                while (m.find()) {
+                    String attributeName = m.group(1);
+                    String attributeValue = (String) feature.getAttribute(attributeName);
+                    titleExpression = titleExpression.replaceAll(
+                            "\\{\\{" + attributeName + "\\}\\}",
+                            attributeValue);
+
+                }
+                return titleExpression;
+            } else {
+                String attributeValue = (String) feature.getAttribute(titleExpression);
+                if (attributeValue != null) {
+                    return attributeValue;
+                } else {
+                    return null;
+                }
+            }
+        } else {
+            for (String attributeName : fields.keySet()) {
+                String attributeType = fields.get(attributeName);
+                String attributeValue = (String) feature.getAttribute(attributeName);
+                if (attributeValue != null && !attributeType.equals("geometry")) {
+                    return attributeValue;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static Pattern titleColumnShouldMatchPattern =
+            Pattern.compile(
+                    ".*(TITLE|LABEL|NAME|TITRE|NOM|LIBELLE).*",
+                    Pattern.CASE_INSENSITIVE);
+
+    /**
+     * From the list of attributes try to find the best one
+     * for a title. If not found, return the first attribute.
+     * If none, return null.
+     *
+     * @param fields List of attributes
+     * @return
+     */
+    public static String guessFeatureTitleAttribute(Map<String, String> fields) {
+        Set<String> keySet = fields.keySet();
+        for (String attributeName : keySet) {
+            Matcher m = titleColumnShouldMatchPattern.matcher(attributeName);
+            if (m.find()) {
+                return attributeName;
+            }
+        }
+        return keySet.size() > 0 ? (String)keySet.toArray()[0] : null;
     }
 }
