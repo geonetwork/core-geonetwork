@@ -417,7 +417,9 @@
                 if (olL) {
                   try {
                     // Avoid double encoding
-                    layer.group = decodeURIComponent(escape(layer.group));
+                    if (layer.group) {
+                      layer.group = decodeURIComponent(escape(layer.group));
+                    }
                   } catch (e) {}
                   olL.set('group', layer.group);
                   olL.set('groupcombo', layer.groupcombo);
