@@ -631,6 +631,7 @@
                 if (legendUrl) {
                   legend = legendUrl.OnlineResource;
                 }
+                legend = encodeURI(legend)
               }
               if (angular.isDefined(getCapLayer.Attribution)) {
                 if (angular.isArray(getCapLayer.Attribution)) {
