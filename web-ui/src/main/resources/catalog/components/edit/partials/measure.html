@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-xs-8">
+    <div class="input-group">
+      <input type="number"
+             class="form-control"
+             data-ng-model="value"
+             placeholder="{{'value' | translate}}"
+             name="{{ref}}"/>
+      <span class="input-group-btn" style="width:0px;"></span>
+      <input type="text"
+             data-ng-model="uom"
+             name="{{ref}}_uom"
+             placeholder="{{'unit' | translate}}"
+             class="form-control"/>
+    </div>
+  </div>
+  <div class="col-xs-4">
+    <select class="form-control"
+            data-ng-show="config.option.length > 0"
+            data-ng-model="selected"
+            data-ng-options="o as o['#text'] for o in config.option">
+      <option value="" disabled="" data-translate="">recommendedValues</option>
+    </select>
+  </div>
+</div>
+
