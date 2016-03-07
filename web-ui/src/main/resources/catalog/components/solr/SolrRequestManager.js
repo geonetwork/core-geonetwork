@@ -45,7 +45,7 @@
     /**
      * Register a Solr request object with a given type and name.
      * The manager will check in the pool if such an object has already been
-     * instanciated, returns it or instanciate it.
+     * instantiated, returns it or instantiate it.
      * The solr request object is initialize following its type. For the given
      * type, an config angular Value must exist with the corresponding name.
      *

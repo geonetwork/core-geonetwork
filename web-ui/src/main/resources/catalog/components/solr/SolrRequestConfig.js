@@ -43,4 +43,12 @@
     };
   }]);
 
+  module.factory('gnSolrDefaultConfig', ['gnHttp', function(gnHttp) {
+    return {
+      url: gnHttp.getService('solrproxy'),
+      facets: true,
+      stats: false
+    };
+  }]);
+
 })();
