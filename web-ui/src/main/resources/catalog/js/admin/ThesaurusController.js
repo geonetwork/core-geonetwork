@@ -133,7 +133,7 @@
           $http.get('keywords@json?pNewSearch=true&pTypeSearch=1' +
               '&pThesauri=' + $scope.thesaurusSelected.key +
                       '&pMode=searchBox' +
-                      '&pUri=*' + encodeURI($scope.keywordFilter) + '*' +
+                      '&pUri=*' + encodeURIComponent($scope.keywordFilter) + '*' +
                       '&maxResults=' +
                       ($scope.maxNumberOfKeywords ||
                               defaultMaxNumberOfKeywords) +
@@ -352,6 +352,13 @@
        */
       $scope.editKeyword = function(k) {
         $scope.keywordSelected = k;
+        // Add current language labels if not set in keywords
+        if (!$scope.keywordSelected.value['#text']) {
+          $scope.keywordSelected.value['#text'] = '';
+        };
+        if (!$scope.keywordSelected.definition['#text']) {
+          $scope.keywordSelected.definition['#text'] = '';
+        };
         selectedKeywordOldId = k.uri;
         creatingKeyword = false;
         $('#keywordModal').modal();
