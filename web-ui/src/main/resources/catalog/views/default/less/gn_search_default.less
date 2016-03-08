@@ -14,13 +14,13 @@
     padding-top: 0;
     padding-bottom: 0;
     line-height: 50px;
-    font-size: 16px;
+    font-size: @font-size-base;
   }
 }
 
 .jumbotron {
   h1 {
-    font-size: 36px;
+    font-size: @font-size-h1;
   }
 }
 
@@ -185,7 +185,6 @@ ul.gn-resultview {
         a {
           //text-transform: uppercase;
           font-weight: normal;
-          font-size: 80%;
           color: #333333;
           max-height: 82px;
           text-overflow: ellipsis; 
@@ -324,7 +323,7 @@ ul.gn-resultview {
   .loading {
     position: absolute;
     top: 1.8em;
-    font-size: 40px;
+    font-size: @font-size-h1;
     left: 46%;
     text-shadow: 0 0 1px white;
     z-index: 200;
@@ -442,7 +441,7 @@ ul.gn-resultview {
       > div.gn-md-title {
         a {
           color: #333333;
-          font-size: 1.3em;
+          font-size: @font-size-large;
         }
       }
     }
@@ -489,6 +488,7 @@ ul.gn-resultview {
   width:100%;
   margin-bottom:0px;
   border-radius: 0px;
+  font-size: @font-size-small;
 }
 
 .cookie-warning {
