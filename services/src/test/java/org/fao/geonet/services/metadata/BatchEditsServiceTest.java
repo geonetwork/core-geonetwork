@@ -28,6 +28,7 @@ import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.services.api.metadata.model.BatchEditParameter;
 import org.fao.geonet.services.api.metadata.BatchEditsApi;
 import org.jdom.Element;
@@ -47,7 +48,7 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-public class BatchEditsServiceTest extends AbstractCoreIntegrationTest {
+public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private MetadataRepository repository;
