@@ -43,6 +43,8 @@
     "searchAservice": "Choisir un service du catalogue",
     "searchAnApplication": "Choisir une application du catalogue",
     "check": "Vérifier",
+    "value": "Value",
+    "unit": "Unit",
     "conceptBroader": "est plus générique que",
     "conceptNarrower": "est plus précis que",
     "conceptRelated": "est associé à",

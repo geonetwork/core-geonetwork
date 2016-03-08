@@ -43,6 +43,8 @@
     "searchAservice": "카탈로그에서 서비스 선택",
     "searchAnApplication": "카탈로그에서 응용프로그램 선택",
     "check": "확인",
+    "value": "Value",
+    "unit": "Unit",
     "conceptBroader": "is more general than",
     "conceptNarrower": "is more specific than",
     "conceptRelated": "is related to",

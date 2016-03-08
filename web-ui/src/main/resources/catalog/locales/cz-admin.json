@@ -874,6 +874,8 @@
     "system/xlinkResolver/enable-help": "V případě jejich nastavení dojde v záznamech k rozlišení odkazů XLinks na fragmenty metadat.",
     "system/xlinkResolver/localXlinkEnable": "Aktivovat místní XLink",
     "system/xlinkResolver/localXlinkEnable-help": "Místní odkazy XLinks používají místní://<lang>/<service> URL k odkazování na související oddíly místo HTTP URL. Místní XLinks jsou zpravidla rychlejší než HTTP XLinks.",
+    "system/xlinkResolver/ignore": "Elements to ignore by XLink resolution",
+    "system/xlinkResolver/ignore-help": "Comma separated list of elements to ignore by XLink resolution",
     "system/z3950": "Z39.50",
     "system/z3950/enable": "Aktivovat server Z39.50",
     "system/z3950/enable-help": "V případě příslušného nastavení spustí systém Geonetwork při spuštění komponentu serveru Z39.50. Tato komponenta využívá protokol ISO23950.",
