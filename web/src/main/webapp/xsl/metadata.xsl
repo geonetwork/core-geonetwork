@@ -14,9 +14,7 @@
   <xsl:import href="text-utilities.xsl"/>
   
   <xsl:include href="utils-fn.xsl"/>
-  <xsl:include href="metadata-tab-utils.xsl"/>
 	<xsl:include href="metadata-utils.xsl"/>
-	<xsl:include href="metadata-controls.xsl"/>
   
   <xsl:variable name="flat" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/@flat"/>
 	
