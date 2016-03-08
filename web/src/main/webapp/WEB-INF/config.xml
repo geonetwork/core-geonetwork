@@ -154,12 +154,6 @@
 		</service>
 
 
-		<service name="file.download">
-			<class name=".services.feedback.Insert" />
-
-			<output sheet="file-download.xsl" />
-		</service>
-
 		<service name="prepare.file.download">
 			<class name=".services.metadata.PrepareFileDownload" />
 			<output sheet="file-download-list.xsl" />
