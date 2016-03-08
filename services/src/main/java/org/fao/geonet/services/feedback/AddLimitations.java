@@ -53,8 +53,10 @@ import java.util.List;
 
 /**
  * Adds Limitations/Constraints etc from Metadata record and prepares them for display
+ *
+ * TODO: Need a rework to make it work with Angular apps
  */
-
+@Deprecated
 public class AddLimitations implements Service {
     private Path stylePath;
 

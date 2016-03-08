@@ -133,7 +133,7 @@ public class Search implements Service {
 					description += " (" + authorityCodeSpace + ":" + code + ")";
 					
 					if (matchesFilter(description.toUpperCase(), filter)) {
-						Element crs = GetCRS.formatCRS(authorityTitle,
+						Element crs = formatCRS(authorityTitle,
 								authorityEdition, authorityCodeSpace, code,
 								description);
 						crsList.addContent(crs);
@@ -149,6 +149,20 @@ public class Search implements Service {
 		return crsList;
 	}
 
+    protected static Element formatCRS(String authorityTitle, String authorityEdition,
+                                       String authorityCodeSpace, String code, String description) {
+        Element crs = new Element("crs");
+        crs.addContent(new Element("code").setText(code));
+        crs.addContent(new Element("authority")
+                .setText(authorityTitle));
+        crs.addContent(new Element("version")
+                .setText(authorityEdition));
+        crs.addContent(new Element("codeSpace")
+                .setText(authorityCodeSpace));
+        crs.addContent(new Element("description")
+                .setText(description));
+        return crs;
+    }
 
 	/**
 	 * checks if all keywords in filter array are in input
