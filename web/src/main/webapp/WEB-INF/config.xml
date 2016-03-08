@@ -144,6 +144,7 @@
 	<!-- ====================================================================== -->
 
 	<services package="org.fao.geonet">
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Resources management services                                 -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -216,19 +217,6 @@
 			<output file="true" />
 			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
-
-
-		<service name="crs.types" deprecated="true">
-      <!-- Still used by ExtJS editor -->
-			<class name=".services.crs.GetCRSTypes" />
-		</service>
-		<service name="crs.get" deprecated="true">
-      <!-- Still used by ExtJS editor -->
-      <class name=".services.crs.GetCRS" />
-			<output sheet="crs.xsl" contentType="text/xml; charset=UTF-8" />
-		</service>
-		
-		
 		<service name="isolanguages" deprecated="true">
       <!-- Still used by ExtJS search form criteria on language -->
 			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
