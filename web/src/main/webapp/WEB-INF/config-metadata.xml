@@ -38,15 +38,10 @@
             </error>
         </service>
 
-
-        <service name="metadata.batch.children.form">
-          <!-- TODO: migrate to widget/Angular -->
-            <output sheet="metadata-children.xsl" />
-        </service>
-
-        <service name="metadata.batch.update.children">
-          <!-- TODO: migrate to widget/Angular -->
-          <class name=".services.metadata.UpdateChildren" />
+        <service name="metadata.select">
+            <class name=".services.main.Select">
+                <param name="type" value="metadata" />
+            </class>
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
