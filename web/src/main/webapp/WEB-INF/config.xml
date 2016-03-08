@@ -247,12 +247,24 @@
         </service>
     -->
 
-	</services>
+
+    <service name="pdf" deprecated="true">
+      <documentation>Use formatter and PDF output instead.</documentation>
+      <class name=".services.metadata.Show" />
+      <output sheet="layout-pdf.xsl" file="true" contentType="application/pdf">
+        <call name="siteURL" class=".guiservices.util.GetSiteURL" />
+        <call name="sources" class=".guiservices.util.Sources" />
+      </output>
+      <error id="access" sheet="error-form.xsl">
+        <xml name="privError" file="xml/privileges-error.xml" />
+      </error>
+    </service>
+
+
+  </services>
 
 	<!-- ====================================================================== -->
-
-	<include>config-metadata.xml</include>
-	<include>config-portal.xml</include>
+  <include>config-portal.xml</include>
 	<include>config-export.xml</include>
 
 	<!-- ====================================================================== -->
