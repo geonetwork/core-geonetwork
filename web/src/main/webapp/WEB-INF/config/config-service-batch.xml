@@ -37,10 +37,6 @@
             ]]></documentation>
 
       <class name=".services.metadata.BatchDelete" />
-
-      <output sheet="metadata-batch-results.xsl">
-        <xml name="info" file="xml/metadata-batchDelete.xml" />
-      </output>
     </service>
   </services>
 </geonet>
