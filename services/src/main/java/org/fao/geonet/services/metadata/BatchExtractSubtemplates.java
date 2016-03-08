@@ -67,6 +67,8 @@ import java.util.Set;
 
 /**
  * Extracts subtemplates from a set of selected metadata records.
+ *
+ * TODO: Not used from the UI
  */
 public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 	private Map<String,List<Namespace>> namespaceList = new HashMap<String,List<Namespace>>();
