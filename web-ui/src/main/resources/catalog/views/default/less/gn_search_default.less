@@ -1,12 +1,12 @@
 @import "../../../style/gn_search.less";
 @import "../../../style/gn_metadata.less";
+@import "gn_view.less";
 
 /* Hide the tabset selector because tab
    switch is available in the top tool bar */
 #main-tabset > ul:nth-child(1) {
   display: none;
 }
-
 
 .navbar {
   margin-bottom: 14px;
@@ -17,13 +17,6 @@
     font-size: @font-size-base;
   }
 }
-
-.jumbotron {
-  h1 {
-    font-size: @font-size-h1;
-  }
-}
-
 
 /* Pagination */
 .gn-pager {
@@ -61,8 +54,6 @@
     }
   }
 }
-
-
 
 .gn-sort-by {
   .btn-group > button {
@@ -487,6 +478,7 @@ ul.gn-resultview {
   overflow:hidden;
   width:100%;
   margin-bottom:0px;
+  margin-top: 10px !important;
   border-radius: 0px;
   font-size: @font-size-small;
 }
@@ -543,8 +535,6 @@ html, body {
     //width: calc(~"33% - 15px");
   }
 }
-
-@import "gn_view.less";
 
 .socialmedia-text {
   margin-top: 15px;
