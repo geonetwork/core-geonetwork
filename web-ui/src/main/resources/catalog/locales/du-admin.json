@@ -499,7 +499,7 @@
     "manageVirtualCSW": "Virtual CSW",
     "map/isMapViewerEnabled": "Kaartweergave aanzetten",
     "map/isMapViewerEnabled-help": "Indien niet geselecteerd zal de kaart niet gebruikt worden",
-    "map/is3DModeAllowed-help": "Indien actief, kan een gebruiker switchen naar 3D modus. De lapmodule moet ook beschikbaar zijn. Als u de 3D modus niet voor alle gebruikers aan wilt zetten kunt u deze ook starten door <a href='catalog.search?with3d'>?with3d</a> aan de url toe te voegen.",
+    "map/is3DModeAllowed-help": "Indien actief, kan een gebruiker switchen naar 3D modus. De kaartviewer moet ook beschikbaar zijn. Als u de 3D modus niet voor alle gebruikers aan wilt zetten kunt u deze ook starten door <a href='catalog.search?with3d'>?with3d</a> aan de url toe te voegen.",
     "map/is3DModeAllowed": "3D modus toestaan (beta)",
     "map/isSaveMapInCatalogAllowed": "Sta gebruikers toe kaart contexten op te slaan in de catalogus",
     "map/isSaveMapInCatalogAllowed-help": "Vanuit de map viewer kan een gebruiker de kaart context, inclusief titel en omschrijving, in de catalogus opslaan als metadata record.",
