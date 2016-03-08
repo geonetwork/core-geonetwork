@@ -38,57 +38,12 @@
             </error>
         </service>
 
-        <service name="metadata.select">
-            <class name=".services.main.Select">
-                <param name="type" value="metadata" />
-            </class>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
         <service name="metadata.create.thesaurus.form">
           <documentation>Convert an ISO19135 record into SKOS format.</documentation>
             <output sheet="metadata-create-thesaurus.xsl">
                 <call name="thesaurusTypes" class=".services.thesaurus.GetList" />
             </output>
         </service>
-
-
-        <service name="metadata.status" deprecated="">
-            <class name=".services.metadata.UpdateStatus" />
-
-        </service>
-
-        <service name="metadata.category" deprecated="true">
-            <class name=".services.metadata.UpdateCategories" />
-
-        </service>
-
-        <!-- Massive metadata update services -->
-
-        <service name="metadata.batch.replace.form">
-          <documentation><![CDATA[
-          Service to display the metadata massive update form.
-          ]]></documentation>
-          <output sheet="metadata/replace/replace.xsl">
-            <xml name="massive-replace" file="xml/metadata-massive-replace.xml" />
-          </output>
-        </service>
-
-        <service name="metadata.batch.replace">
-          <documentation><![CDATA[
-          Service to apply the metadata massive update process configured to the selected metadata.
-          ]]></documentation>
-          <class name=".services.metadata.replace.MassiveReplaceContent">
-            <param name="fullResponse" value="true" />
-          </class>
-
-          <output sheet="metadata/replace/replace-results.xsl">
-            <xml name="massive-replace" file="xml/metadata-massive-replace.xml" />
-          </output>
-        </service>
-
-
     </services>
 </geonet>
 
