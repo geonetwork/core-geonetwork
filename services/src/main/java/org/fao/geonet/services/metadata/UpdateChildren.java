@@ -43,8 +43,11 @@ import java.util.Set;
  * A simple service that returns a small report
  * about children update process. 
  *
+ * TODO: Service not enabled and no UI available. See 2.10 series.
+ *
  * @author m.coudert
  */
+@Deprecated
 public class UpdateChildren extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---
