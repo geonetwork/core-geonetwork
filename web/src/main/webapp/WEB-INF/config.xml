@@ -53,7 +53,6 @@
 			<call name="session" class="jeeves.guiservices.session.Get" />
 		  <call name="env" class="org.fao.geonet.guiservices.util.Env" />
 		  <call name="systemConfig" class="org.fao.geonet.services.config.Get" />
-			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
 			<call name="schemalist" class="org.fao.geonet.guiservices.schemas.Get" />
 			<call name="svnmanager" class="org.fao.geonet.guiservices.util.GetSvnDetails"/>
 
