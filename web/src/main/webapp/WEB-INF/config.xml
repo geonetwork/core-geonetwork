@@ -96,7 +96,7 @@
 			xml files. For example, export produce one file for
 			iso19139 and on file for the ISO profil (eg. fra, che).
 
-			Recommanded value is iso19139 if user is not 
+			Recommanded value is iso19139 if user is not
 			interested for having metadata in a specific
 			ISO profil.
 		-->
@@ -118,21 +118,21 @@
 			Set to 1 forces the spatialIndexWriter to commit after each spatial
 			feature is written. Set to a large number and commits are delayed until
 			that number of spatial features is written (this should be faster than
-			committing after each write). Be aware that setting this 
-			number to anything other than 1 can cause problems with indexing 
+			committing after each write). Be aware that setting this
+			number to anything other than 1 can cause problems with indexing
 			if the connection to the database is closed whilst GeoNetwork is running
-			(eg. if the db admin shuts the database for maintenance reasons). 
+			(eg. if the db admin shuts the database for maintenance reasons).
 		-->
 		<param name="maxWritesInTransaction" value="1" />
 
         <param name="DBHeartBeatEnabled" value="false"/>
         <param name="DBHeartBeatInitialDelaySeconds" value="20"/>
         <param name="DBHeartBeatFixedDelaySeconds" value="20"/>
-		
+
 		<!-- Define if the schema catalog should be updated on startup.
 		Default is true. -->
 		<param name="createOrUpdateSchemaCatalog" value="true"/>
-		
+
 		<!-- Define the class to use when metadata status change
 		-->
         <param name="statusActionsClass" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
@@ -198,7 +198,7 @@
       <!-- TODO rename Catalogue.js -->
 			<class name=".services.mef.Import" />
 			<output sheet="metadata/md-insert-results.xsl"/>
-			
+
 			<error sheet="error-xml.xsl"/>
 		</service>
 
@@ -218,12 +218,25 @@
       <!-- Still used by ExtJS search form criteria on language -->
 			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
 		</service>
-	</services>
+
+
+    <service name="pdf" deprecated="true">
+      <documentation>Use formatter and PDF output instead.</documentation>
+      <class name=".services.metadata.Show" />
+      <output sheet="layout-pdf.xsl" file="true" contentType="application/pdf">
+        <call name="siteURL" class=".guiservices.util.GetSiteURL" />
+        <call name="sources" class=".guiservices.util.Sources" />
+      </output>
+      <error id="access" sheet="error-form.xsl">
+        <xml name="privError" file="xml/privileges-error.xml" />
+      </error>
+    </service>
+
+
+  </services>
 
 	<!-- ====================================================================== -->
-
-	<include>config-metadata.xml</include>
-	<include>config-portal.xml</include>
+  <include>config-portal.xml</include>
 	<include>config-export.xml</include>
 
 	<!-- ====================================================================== -->
@@ -240,10 +253,10 @@
   <include>config/config-service-csv.xml</include>
   <include>config/config-service-dcat-rdf.xml</include>
   <include>config/config-service-pdf.xml</include>
-  
+
   <include>config/config-service-thesaurus.xml</include>
   <include>config/config-service-region.xml</include>
-  
+
   <include>config/config-service-admin.xml</include>
     <include>config/config-service-admin-harvesting.xml</include>
 
@@ -264,7 +277,7 @@
 
   <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>
-  
+
   <include>config/config-service-sitemap.xml</include>
 
   <include>config/config-service-crs.xml</include>
@@ -274,7 +287,7 @@
   <include>config/config-ui-search.xml</include>
   <include>config/config-ui-metadata.xml</include>
   <include>config/config-ui-admin.xml</include>
-  
+
   <include>config/config-service-monitoring.xml</include>
 
   <include>config/config-service-reports.xml</include>
