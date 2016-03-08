@@ -174,7 +174,6 @@ public final class Geonet {
 		public static final String METADATA_EDITING		= "metadata.editing";
 		public static final String METADATA_BEFORE_ANY_CHANGES = "metadata.before.any.changes";
         public static final String METADATA_EDITING_TAB   = "metadata.editing.tab";
-		public static final String METADATA_POSITION  = "metadata.position";
 		public static final String SEARCH_KEYWORDS_RESULT	= "search.keywords.result";
 		public static final String SELECTED_RESULT          = "selected.result";
 		public static final String VALIDATION_REPORT = "validation.report";
