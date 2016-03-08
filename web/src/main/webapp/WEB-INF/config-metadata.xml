@@ -37,61 +37,7 @@
                 <xml name="privError" file="xml/privileges-error.xml" />
             </error>
         </service>
-        <service name="metadata.delete">
-            <class name=".services.metadata.Delete" />
 
-            <output sheet="infomodal.xsl">
-                <xml name="info" file="xml/metadata-delete.xml" />
-            </output>
-        </service>
-
-        <service name="metadata.batch.delete">
-            <class name=".services.metadata.BatchDelete" />
-
-            <output sheet="metadata-batch-results.xsl">
-                <xml name="info" file="xml/metadata-batchDelete.xml" />
-            </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.batch.status.form">
-            <class name=".services.metadata.PrepareBatchUpdateStatus" />
-
-            <output sheet="metadata-status.xsl" />
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.batch.update.status">
-            <class name=".services.metadata.BatchUpdateStatus" />
-
-            <output sheet="metadata-batch-results.xsl">
-                <xml name="info" file="xml/metadata-batchUpdateStatus.xml" />
-            </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.batch.category.form">
-            <class name=".services.metadata.PrepareBatchUpdateCategories" />
-
-            <output sheet="metadata-category.xsl" />
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.batch.update.categories">
-            <class name=".services.metadata.BatchUpdateCategories" />
-
-            <output sheet="metadata-batch-results.xsl">
-                <xml name="info" file="xml/metadata-batchUpdateCategories.xml" />
-            </output>
-        </service>
-
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!-- Update child -->
 
         <service name="metadata.batch.children.form">
           <!-- TODO: migrate to widget/Angular -->
@@ -119,28 +65,11 @@
             </output>
         </service>
 
-        <service name="metadata.status.form" deprecated="false">
-            <class name=".services.metadata.GetStatus" />
-
-            <output sheet="metadata-status.xsl" />
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="metadata.status" deprecated="">
             <class name=".services.metadata.UpdateStatus" />
 
         </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.category.form" deprecated="true">
-            <class name=".services.metadata.GetCategories" />
-
-            <output sheet="metadata-category.xsl" />
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="metadata.category" deprecated="true">
             <class name=".services.metadata.UpdateCategories" />
