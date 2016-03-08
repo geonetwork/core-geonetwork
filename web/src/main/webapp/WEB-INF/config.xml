@@ -263,8 +263,6 @@
 
   </services>
 
-	<include>config-export.xml</include>
-
 	<!-- ====================================================================== -->
 
 	<!-- New section of services based on refactoring

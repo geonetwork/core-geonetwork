@@ -28,5 +28,66 @@
       <documentation>Open Archive Initiative, Protocol for Metadata Harvesting</documentation>
       <class name=".services.main.OaiPmhDispatcher" />
     </service>
+
+
+    <service name="xml_dublin-core">
+      <class name=".services.metadata.Show" />
+      <output sheet="../xslt/services/oai/xml_any.xsl" contentType="text/xml; charset=UTF-8"/>
+      <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+        <xml name="error" file="xml/privileges-error.xml" />
+      </error>
+    </service>
+
+    <service name="xml_dublin-coreTooai_dc">
+      <class name=".services.metadata.Show" />
+      <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+        <xml name="error" file="xml/privileges-error.xml" />
+      </error>
+    </service>
+
+    <service name="xml_iso19139">
+      <class name=".services.metadata.Show" />
+      <output sheet="../xslt/services/oai/xml_any.xsl" contentType="text/xml; charset=UTF-8"/>
+      <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+        <xml name="error" file="xml/privileges-error.xml" />
+      </error>
+    </service>
+
+    <service name="xml_iso19139Tooai_dc">
+      <class name=".services.metadata.Convert" />
+      <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+        <xml name="error" file="xml/privileges-error.xml" />
+      </error>
+    </service>
+
+    <service name="xml_iso19110">
+      <class name=".services.metadata.Show" />
+      <output sheet="../xslt/services/oai/xml_any" contentType="text/xml; charset=UTF-8"/>
+      <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+        <xml name="error" file="xml/privileges-error.xml" />
+      </error>
+    </service>
+
+    <service name="xml_iso19110Tooai_dc">
+      <class name=".services.metadata.Convert" />
+      <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+        <xml name="error" file="xml/privileges-error.xml" />
+      </error>
+    </service>
+
+    <service name="xml_csw-record">
+      <class name=".services.metadata.Convert" />
+      <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+        <xml name="error" file="xml/privileges-error.xml" />
+      </error>
+    </service>
+
+    <service name="xml_csw-recordTooai_dc">
+      <class name=".services.metadata.Convert" />
+      <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+        <xml name="error" file="xml/privileges-error.xml" />
+      </error>
+    </service>
+
   </services>
 </geonet>
