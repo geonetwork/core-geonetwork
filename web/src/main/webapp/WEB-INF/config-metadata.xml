@@ -37,13 +37,6 @@
                 <xml name="privError" file="xml/privileges-error.xml" />
             </error>
         </service>
-
-        <service name="metadata.create.thesaurus.form">
-          <documentation>Convert an ISO19135 record into SKOS format.</documentation>
-            <output sheet="metadata-create-thesaurus.xsl">
-                <call name="thesaurusTypes" class=".services.thesaurus.GetList" />
-            </output>
-        </service>
     </services>
 </geonet>
 
