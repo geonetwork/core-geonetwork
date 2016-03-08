@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_cat_controller');
 
@@ -22,6 +45,28 @@
     }
   });
 
+  module.constant('gnLangs', {
+    langs: {
+      'eng': 'en',
+      'dut': 'du',
+      'fre': 'fr',
+      'ger': 'ge',
+      'kor': 'ko',
+      'spa': 'es',
+      'cze': 'cz'
+    },
+    getIso2Lang: function(iso3lang) {
+      return this.langs[iso3lang];
+    },
+    getIso3Lang: function(iso2lang) {
+      for (p in this.langs) {
+        if (this.langs[p] == iso2lang) {
+          return p;
+        }
+      }
+    }
+  });
+
   /**
    * The catalogue controller takes care of
    * loading site information, check user login state
@@ -35,9 +80,11 @@
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
+    'gnLangs',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
-            gnGlobalSettings, $location, gnUtilityService, gnSessionService) {
+            gnGlobalSettings, $location, gnUtilityService, gnSessionService,
+            gnLangs) {
       $scope.version = '0.0.1';
       //Update Links for social media
       $scope.socialMediaLink = $location.absUrl();
@@ -52,8 +99,7 @@
       $scope.lang = tokens[5];
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
-      $scope.langs = {'eng': 'en', 'dut': 'du', 'fre': 'fr',
-        'ger': 'ge', 'kor': 'ko', 'spa': 'es', 'cze': 'cz'};
+      $scope.langs = gnLangs.langs;
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',

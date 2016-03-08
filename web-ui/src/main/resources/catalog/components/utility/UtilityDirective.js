@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_utility_directive');
 
@@ -902,4 +925,66 @@
       }
     };
   });
+
+  module.directive('gnPopoverDropdown', ['$timeout', function($timeout) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        // Container is one ul with class list-group
+        // Avoid to set style on embedded drop down menu
+        var content = element.find('ul.list-group').css('display', 'none');
+        var button = element.find('> .btn');
+
+        $timeout(function() {
+          var className = (attrs['fixedHeight'] != 'false') ?
+              'popover-dropdown popover-dropdown-' + content.find('li').length :
+              '';
+          button.popover({
+            animation: false,
+            container: '[gn-main-viewer]',
+            placement: attrs['placement'] || 'bottom',
+            content: ' ',
+            template:
+                '<div class="popover ' + className + '">' +
+                '  <div class="arrow"></div>' +
+                '  <h3 class="popover-title"></h3>' +
+                '  <div class="popover-content"></div>' +
+                '</div>'
+          });
+        }, 1);
+
+        button.on('shown.bs.popover', function() {
+          var $tip = button.data('bs.popover').$tip;
+          content.css('display', 'inline').appendTo(
+              $tip.find('.popover-content')
+          );
+        });
+        button.on('hidden.bs.popover', function() {
+          content.css('display', 'none').appendTo(element);
+        });
+
+        // can’t use dismiss boostrap option: incompatible with opacity slider
+        $('body').on('mousedown click', function(e) {
+          if ((button.data('bs.popover') && button.data('bs.popover').$tip) &&
+              (button[0] != e.target) &&
+              (!$.contains(button[0], e.target)) &&
+              (
+              $(e.target).parents('.popover')[0] !=
+              button.data('bs.popover').$tip[0])
+          ) {
+            $timeout(function() {
+              button.popover('hide');
+            }, 30);
+          }
+        });
+
+        if (attrs['gnPopoverDismiss']) {
+          $(attrs['gnPopoverDismiss']).on('scroll', function() {
+            button.popover('hide');
+          });
+        }
+
+      }
+    };
+  }]);
 })();

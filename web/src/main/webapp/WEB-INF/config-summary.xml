@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
 <bean:beans default-lazy-init="true"
     xmlns="http://www.fao.org/geonetwork/spring"
     xmlns:bean="http://www.springframework.org/schema/beans"
@@ -67,6 +90,7 @@
         <facet name="spatialRepresentationType" indexKey="cl_spatialRepresentationType"
             label="spatialRepresentationTypes"/>
         <facet name="orgName" indexKey="orgName" label="orgNames" localized="true"/>
+        <facet name="orgNameTree" indexKey="orgNameTree" label="orgNamesTree" classifier="slashSplitClassifier"/>
         <facet name="metadataPOC" indexKey="metadataPOC" label="metadataPOCs"/>
         <facet name="serviceType" indexKey="serviceType" label="serviceTypes"/>
         <facet name="type" indexKey="type" label="types"/>
@@ -169,6 +193,11 @@
         <summaryType name="subtemplates">
             <item facet="subTemplateType"/>
             <item facet="groupOwner" max="99" sortBy="value"
+                translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+        </summaryType>
+        <summaryType name="contact" format="DIMENSION">
+          <item facet="orgNameTree" max="99"/>
+          <item facet="groupOwner" max="99" sortBy="value"
                 translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
         </summaryType>
         <summaryType name="titles">

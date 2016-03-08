@@ -21,6 +21,17 @@
       cursor: wait;
     }
   }
+  .popover-dropdown, [gn-popover-dropdown] {
+    .dropdown-menu {
+      max-height: 45vh;
+      overflow: auto;
+
+    }
+    .dropdown-toggle {
+      padding: 0;
+      border: none;
+    }
+  }
   .search-container {
     position: absolute;
     top: @viewport-padding;
@@ -48,7 +59,7 @@
         padding: .5em 1em;
         display: block;
         em {
-          font-size: 90%;
+          font-size: @font-size-small;
           color: grey;
         }
       }
@@ -116,7 +127,7 @@
     }
     .gn-searchlayer {
       label {
-        font-size: 90%;
+        font-size: @font-size-small;
         max-width: 68%;
       }
     }
@@ -143,7 +154,7 @@
         font-weight: normal;
       }
       & > label {
-        font-size: 90%;
+        font-size: @font-size-small;
         max-width: 72%;
       }
       &.active {
@@ -191,7 +202,7 @@
       margin-right: .2em;
     }
     .details {
-      font-size: 90%;
+      font-size: @font-size-small;
       margin: 0 0 .5em 0;
       display: none;
       .delete {
@@ -213,7 +224,7 @@
         .fa {
           display: block;
           color: #666;
-          font-size: 12px;
+          font-size: @font-size-small;
           &:hover, &:focus {
             text-decoration: none;
             color: @link-color;
@@ -229,7 +240,7 @@
       .btn-link;
       width: 100%;
       font-style: italic;
-      font-size: 13px;
+      font-size: @font-size-small;
     }
   }
 
@@ -295,7 +306,7 @@
     color: #fff;
     text-shadow: 0 0 1px #000;
     border-radius: 2px;
-    font-size: 12px;
+    font-size: @font-size-small;
     &:after {
       content: ' ';
       position: absolute;
@@ -336,7 +347,7 @@
     .ui-slider-range {
       position: absolute;
       z-index: 1;
-      font-size: .7em;
+      font-size: @font-size-small;
       display: block;
       border: 0;
       background-position: 0 0;
@@ -446,7 +457,7 @@
     }
     label {
       font-weight: normal;
-      font-size: 13px;
+      font-size: @font-size-small;
     }
     form {
       margin-top: 10px;
@@ -500,7 +511,7 @@
   overflow: auto;
   max-width: inherit;
   max-height: 600px;
-  font-size: 12px;
+  font-size: @font-size-small;
   @media (max-width: @screen-phone) {
     width: 100%;
     height: auto;
