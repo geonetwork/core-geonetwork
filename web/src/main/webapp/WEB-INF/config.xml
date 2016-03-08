@@ -145,11 +145,6 @@
 
 	<services package="org.fao.geonet">
 
-        <!-- Ext GUIs -->
-        <service name="feedback.send">
-            <class name=".services.feedback.Receptor" />
-            <output sheet="extjs-feedback-response.xsl" contentType="application/json; charset=UTF-8" />
-        </service>
 
 		<service name="util.ping">
       <class name="jeeves.services.Ping" />
