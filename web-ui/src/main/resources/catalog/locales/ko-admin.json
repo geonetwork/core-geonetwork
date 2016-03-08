@@ -874,6 +874,8 @@
     "system/xlinkResolver/enable-help": "설정하면 레코드 내의 메타데이터 조각의 XLink가 해결됩니다.",
     "system/xlinkResolver/localXlinkEnable": "로컬 XLink 활성화",
     "system/xlinkResolver/localXlinkEnable-help": "로컬 XLink 사용 local://<lang>/<service> URL을 HTTP URL을 대신하여 관련된 부분을 참조하여 만듭니다. 로컬 XLink는 HTTP XLink보다 일반적으로 더 빠릅니다.",
+    "system/xlinkResolver/ignore": "Elements to ignore by XLink resolution",
+    "system/xlinkResolver/ignore-help": "Comma separated list of elements to ignore by XLink resolution",
     "system/z3950": "Z39.50",
     "system/z3950/enable": "Z39.50서버 활성화",
     "system/z3950/enable-help": "설정하면 GeoNetwork가 시작되는 도중에  Z39.50서버 기능이 시작될 것입니다. 이 기능은 ISO23950 프로토콜을 사용합니다.",
