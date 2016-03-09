@@ -24,6 +24,39 @@
 
 <geonet>
   <services package="org.fao.geonet">
+    <service name="resources.get.archive">
+      <class name=".services.resources.DownloadArchive" />
+      <error sheet="../xslt/error/error-json.xsl"/>
+      <output file="true" />
+    </service>
+
+    <service name="mef.import">
+      <class name=".services.mef.Import" />
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+
+    <service name="xml.mef.import.ui">
+      <class name=".services.mef.Import" />
+      <output sheet="../xslt/services/metadata/importreport.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+
+    <service name="map.import">
+      <class name=".services.mef.ImportWebMap" />
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+
+    <service name="mef.export">
+      <class name=".services.mef.Export" />
+      <output file="true" />
+      <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+    </service>
+    <service name="isolanguages" deprecated="true">
+      <!-- Still used by ExtJS search form criteria on language -->
+      <class name="org.fao.geonet.guiservices.isolanguages.Get" />
+    </service>
+
+
 
     <service name="md.import">
       <documentation><![CDATA[

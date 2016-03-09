@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<geonet>
+  <services package="org.fao.geonet">
+    <!-- Those services were available in old XSL interface and partially
+    used in ExtJS and would be relevant to port to Angular.
+    Service definition is preserved here but XSL may be available only
+    in 3.0.3 branch.
+    -->
+
+    <!--<service name="file.disclaimer">
+      <class name=".services.feedback.AddLimitations" />
+      <output sheet="file-download-disclaimer.xsl" />
+    </service>
+
+
+    <service name="prepare.file.download">
+      <class name=".services.metadata.PrepareFileDownload" />
+      <output sheet="file-download-list.xsl" />
+    </service>
+    -->
+  </services>
+</geonet>
