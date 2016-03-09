@@ -174,10 +174,7 @@
         <param name="format" value="WKT"/>
       </class>
 
-      <output sheet="extracttext.xsl" contentType="text/plain; charset=utf-8"/>
-
       <error id="region-not-found" sheet="../xslt/error/error-xml.xsl" statusCode="404"/>
-
     </service>
 
     <service name="region.geom.gml3">
@@ -189,7 +186,6 @@
       </class>
 
       <error id="region-not-found" sheet="../xslt/error/error-xml.xsl" statusCode="404"/>
-
     </service>
   </services>
 </geonet>
