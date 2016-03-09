@@ -12,8 +12,6 @@
 
   <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
 
-  <xsl:variable name="siteURL"
-                select="concat(/root/gui/env/server/protocol,'://',/root/gui/env/server/host,':',/root/gui/env/server/port)"/>
 
   <xsl:template match="/root">
 
@@ -56,15 +54,7 @@
                 <xsl:choose>
                   <!-- small thumbnail -->
                   <xsl:when test="$metadata/image[@type='thumbnail']">
-                    <xsl:choose>
-                      <xsl:when
-                              test="contains($metadata/image[@type='thumbnail'],':')">
-                        <img src="{$metadata/image[@type='thumbnail']}"/>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <img src="{$siteURL}{$metadata/image[@type='thumbnail']}"/>
-                      </xsl:otherwise>
-                    </xsl:choose>
+                      <img src="{$metadata/image[@type='thumbnail']}"/>
                   </xsl:when>
                 </xsl:choose>
               </td>
@@ -73,7 +63,7 @@
           <p>
             <xsl:value-of select="$metadata/abstract"/>
           </p>
-          <a href="{concat($siteURL, /root/gui/locService, '/catalog.search#/metadata/', $metadata/geonet:info/uuid)}">
+          <a href="{concat($fullURLForService, '/catalog.search#/metadata/', $metadata/geonet:info/uuid)}">
             <xsl:value-of select="$metadata/title"/>
           </a>
         </description>

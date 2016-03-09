@@ -30,6 +30,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Edit;
@@ -44,6 +45,7 @@ import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.User_;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.search.MetaSearcher;
@@ -69,6 +71,7 @@ import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.util.StringUtils;
@@ -112,7 +115,7 @@ public class Info implements Service {
     public static final String SITE = "site";
     private static final String STAGING_PROFILE = "stagingProfile";
 
-    private Path xslPath;
+
 	private Path otherSheets;
 	private ServiceConfig _config;
 
@@ -130,7 +133,6 @@ public class Info implements Service {
      */
 	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
-		xslPath = appPath.resolve(Geonet.Path.STYLESHEETS).resolve("xml");
 		otherSheets = appPath.resolve(Geonet.Path.STYLESHEETS);
 		_config = config;
 	}
@@ -278,7 +280,10 @@ public class Info implements Service {
 		}
 		
 		result.addContent(getEnv(context));
-		Element response = Xml.transform(result, xslPath.resolve("../xslt/services/settingscopy.xsl"));
+
+        GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
+        // TODO: This XSL transformation should be removed
+		Element response = Xml.transform(result, dataDirectory.getWebappDir().resolve("xslt").resolve("services").resolve("settingscopy.xsl"));
 
         return response;
 	}
