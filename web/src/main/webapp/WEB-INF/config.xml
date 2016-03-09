@@ -21,10 +21,7 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-
 <geonet>
-	<!-- ====================================================================== -->
-
 	<general>
 		<!-- Size must be in megabyte (integer), 100MB by default -->
 		<maxUploadSize>100</maxUploadSize>
@@ -46,13 +43,13 @@
 		<contentType>text/html; charset=UTF-8</contentType>
 
 		<gui>
-			<call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
-
 			<call name="session" class="jeeves.guiservices.session.Get" />
+
+      <!-- TODO: env and systemConfig are similar. Env is only
+      the system node with an extra readonly element. Combine the 2.
+      -->
 		  <call name="env" class="org.fao.geonet.guiservices.util.Env" />
 		  <call name="systemConfig" class="org.fao.geonet.services.config.Get" />
-			<call name="schemalist" class="org.fao.geonet.guiservices.schemas.Get" />
-			<call name="svnmanager" class="org.fao.geonet.guiservices.util.GetSvnDetails"/>
 
 			<!-- this service adds labels and codelists from all schemas -->
 			<call name="schemas" class="org.fao.geonet.guiservices.schemas.GetSchemaInfo" />
@@ -68,7 +65,6 @@
 
 		<!-- general error -->
 		<error sheet="../xslt/common/error-xml.xsl"/>
-
 	</default>
 
 	<!-- ====================================================================== -->
@@ -157,14 +153,7 @@
     -->
 
   </services>
-
-	<!-- ====================================================================== -->
-
-	<!-- New section of services based on refactoring
-	guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
-
   <include>config/config-service-xml-api.xml</include>
-
   <include>config/config-service-search.xml</include>
   <include>config/config-service-sru.xml</include>
   <include>config/config-service-oai.xml</include>
@@ -173,44 +162,31 @@
   <include>config/config-service-csv.xml</include>
   <include>config/config-service-dcat-rdf.xml</include>
   <include>config/config-service-pdf.xml</include>
-  
   <include>config/config-service-thesaurus.xml</include>
   <include>config/config-service-region.xml</include>
-  
   <include>config/config-service-admin.xml</include>
-    <include>config/config-service-admin-harvesting.xml</include>
-
-    <include>config/config-service-admin-schema.xml</include>
-    <include>config/config-service-admin-schematron.xml</include>
-    <include>config/config-service-batch.xml</include>
-
-    <include>config/config-service-admin-notification.xml</include>
-    <include>config/config-service-admin-index.xml</include>
-    <include>config/config-service-admin-io.xml</include>
-    <include>config/config-service-admin-logo.xml</include>
-    <include>config/config-service-admin-user-and-group.xml</include>
-    <include>config/config-service-admin-geoserver-publication.xml</include>
-    <include>config/config-service-admin-transfert-privileges.xml</include>
-    <include>config/config-service-admin-formatter.xml</include>
-
+  <include>config/config-service-admin-harvesting.xml</include>
+  <include>config/config-service-admin-schema.xml</include>
+  <include>config/config-service-admin-schematron.xml</include>
+  <include>config/config-service-batch.xml</include>
+  <include>config/config-service-admin-notification.xml</include>
+  <include>config/config-service-admin-index.xml</include>
+  <include>config/config-service-admin-io.xml</include>
+  <include>config/config-service-admin-logo.xml</include>
+  <include>config/config-service-admin-user-and-group.xml</include>
+  <include>config/config-service-admin-geoserver-publication.xml</include>
+  <include>config/config-service-admin-transfert-privileges.xml</include>
+  <include>config/config-service-admin-formatter.xml</include>
   <include>config/config-service-statistics.xml</include>
-
   <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>
-  
   <include>config/config-service-sitemap.xml</include>
-
   <include>config/config-service-crs.xml</include>
-
   <include>config/config-service-subtemplate.xml</include>
-
   <include>config/config-ui-search.xml</include>
   <include>config/config-ui-metadata.xml</include>
   <include>config/config-ui-admin.xml</include>
-  
   <include>config/config-service-monitoring.xml</include>
-
   <include>config/config-service-reports.xml</include>
-
   <include>config/config-service-inspireatom.xml</include>
 </geonet>

@@ -522,7 +522,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         Path baseLoc = appPath.resolve("loc");
         Path locDir = findLocDir(lang, baseLoc);
         if (Files.exists(locDir)) {
-            return Xml.loadFile(locDir.resolve("xml").resolve("strings.xml"));
+            return Xml.loadFile(locDir.resolve("xml").resolve("i18n.xml"));
         }
         return new Element("strings");
     }
