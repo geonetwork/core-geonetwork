@@ -31,10 +31,8 @@
               contentType="application/kml; charset=UTF-8">
       </output>
       <error id="operation-not-allowed"
-             sheet="../xslt/common/error.xsl"
-             statusCode="403">
-        <xml name="error" file="xml/privileges-error.xml" />
-      </error>
+             sheet="../xslt/common/error-xml.xsl"
+             statusCode="403"/>
     </service>
   </services>
 </geonet>

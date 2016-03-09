@@ -6,7 +6,7 @@
   <xsl:template match="/">
     {
      "success":true, 
-     "msg": "<xsl:value-of select="/root/gui/strings/fileUploadSuccessful"/>",
+     "msg": "Success",
      "id" : "<xsl:value-of select="/root/response/id"/>",
      "uuid" : "<xsl:value-of select="/root/response/uuid"/>",
      "records" : "<xsl:value-of select="/root/response/records"/>"

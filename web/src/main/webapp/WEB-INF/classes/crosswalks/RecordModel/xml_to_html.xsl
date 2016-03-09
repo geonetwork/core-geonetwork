@@ -63,9 +63,7 @@
 		     available but initialize the variable anyway -->
 
 		<script language="JavaScript" type="text/javascript">
-            var translations = {
-        <xsl:apply-templates select="/root/gui/strings/*[@js='true' and not(*) and not(@id)]" mode="js-translations"/>
-      };
+            var translations = {};
     </script>
 
 	  <link href="{$baseurl}/images/logos/favicon.png" rel="shortcut icon" type="image/x-icon" />

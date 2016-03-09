@@ -46,8 +46,6 @@
 		<contentType>text/html; charset=UTF-8</contentType>
 
 		<gui>
-			<xml name="strings" file="xml/strings.xml" />
-
 			<call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
 
 			<call name="session" class="jeeves.guiservices.session.Get" />
@@ -63,22 +61,13 @@
 		</gui>
 
 		<!-- no privileges to access the service -->
-
-		<error id="service-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
-			<xml name="error" file="xml/privileges-error.xml" />
-		</error>
+		<error id="service-not-allowed" sheet="../xslt/common/error-xml.xsl" statusCode="403"/>
 
 		<!-- data in upload too big -->
-
-		<error id="file-upload-too-big" sheet="../xslt/common/error.xsl">
-			<xml name="error" file="xml/file-too-big-error.xml" />
-		</error>
+		<error id="file-upload-too-big" sheet="../xslt/common/error-xml.xsl"/>
 
 		<!-- general error -->
-
-		<error sheet="../xslt/common/error.xsl">
-			<xml name="error" file="xml/error.xml" />
-		</error>
+		<error sheet="../xslt/common/error-xml.xsl"/>
 
 	</default>
 

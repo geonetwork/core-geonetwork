@@ -35,9 +35,7 @@
         <xsl:value-of
                 select="concat($env/system/site/name, ' (', $env/system/site/organization, ')')"/>
       </LongName>
-      <Description>
-        <xsl:value-of select="/root/gui/strings/opensearch"/>
-      </Description>
+      <Description>Opensearch service</Description>
       <Tags>Catalogue Metadata ISO19115 ISO19139 DC</Tags>
       <Contact>
         <xsl:value-of select="//feedback/email"/>
