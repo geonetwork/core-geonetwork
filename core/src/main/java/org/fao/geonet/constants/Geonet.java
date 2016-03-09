@@ -85,7 +85,7 @@ public final class Geonet {
 		public static final String CQL_TO_FILTER       = "cql-to-filter.xsl";
 		public static final String FILTER_TO_LUCENE    = "filter-to-lucene.xsl";
 		public static final String LICENSE_ANNEX       = "license-annex.html";
-		public static final String LICENSE_ANNEX_XSL   = "metadata-license-annex.xsl";
+		public static final String LICENSE_ANNEX_XSL   = "../xslt/services/metadata/license-annex.xsl";
 		public static final String METADATA_BRIEF      = "metadata-brief.xsl";
 		public static final String METADATA_BASEBLANK  = "blanks/metadata-schema00";
 		public static final String METADATA_BLANK			 = "blanks/metadata-schema";

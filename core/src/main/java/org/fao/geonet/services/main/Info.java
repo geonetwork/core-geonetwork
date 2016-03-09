@@ -278,7 +278,7 @@ public class Info implements Service {
 		}
 		
 		result.addContent(getEnv(context));
-		Element response = Xml.transform(result, xslPath.resolve("info.xsl"));
+		Element response = Xml.transform(result, xslPath.resolve("../xslt/services/settingscopy.xsl"));
 
         return response;
 	}
