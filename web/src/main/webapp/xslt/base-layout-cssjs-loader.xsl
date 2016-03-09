@@ -57,7 +57,6 @@
 
   <xsl:template name="javascript-load">
 
-    <script>var geonet = {provide:function(s){},require:function(s){}};</script>
     <xsl:choose>
       <xsl:when test="$isDebugMode">
 

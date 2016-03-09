@@ -34,7 +34,7 @@
   var FACET_RANGE_COUNT = 5;
   var FACET_RANGE_DELIMITER = ' - ';
 
-  geonet.GnSolrRequest = function(config, $injector) {
+  geonetwork.GnSolrRequest = function(config, $injector) {
     this.$http = $injector.get('$http');
     this.$q = $injector.get('$q');
     this.$translate = $injector.get('$translate');
@@ -81,7 +81,7 @@
 
   };
 
-  geonet.GnSolrRequest.prototype.buildSolrUrl = function(params) {
+  geonetwork.GnSolrRequest.prototype.buildSolrUrl = function(params) {
     return this.urlUtils.append(this.config.url + '/query',
         this.urlUtils.toKeyValue(params));
   };
@@ -92,7 +92,7 @@
    *
    * @param {object} options
    */
-  geonet.GnSolrRequest.prototype.init = function(options) {
+  geonetwork.GnSolrRequest.prototype.init = function(options) {
     this.initBaseRequest_(options);
   };
 
@@ -104,7 +104,7 @@
    * @param {string} wfsUrl url of the wfs service
    * @return {httpPromise} return array of field names
    */
-  geonet.GnSolrRequest.prototype.getDocTypeInfo = function(options) {
+  geonetwork.GnSolrRequest.prototype.getDocTypeInfo = function(options) {
     var docTypeId = this.config.idDoc(options);
     var url = this.buildSolrUrl({
       rows: 1,
@@ -157,7 +157,7 @@
     return defer.promise;
   };
 
-  geonet.GnSolrRequest.prototype.searchWithFacets =
+  geonetwork.GnSolrRequest.prototype.searchWithFacets =
       function(params, any, solrParams) {
 
     if (this.initialParams.stats['stats.field'].length > 0) {
@@ -192,7 +192,7 @@
    * @param {string} any Filter on any field
    * @return {string} the updated url
    */
-  geonet.GnSolrRequest.prototype.search = function(params, any, solrParams) {
+  geonetwork.GnSolrRequest.prototype.search = function(params, any, solrParams) {
 
     var url = this.getSearchUrl_(params, any);
     url += this.parseKeyValue_(angular.extend({}, this.page, solrParams));
@@ -213,14 +213,14 @@
         }));
   };
 
-  geonet.GnSolrRequest.prototype.next = function() {
+  geonetwork.GnSolrRequest.prototype.next = function() {
     this.page = {
       start: this.page.start + ROWS,  // TODO: Max on total
       rows: ROWS
     };
     this.search();
   };
-  geonet.GnSolrRequest.prototype.previous = function() {
+  geonetwork.GnSolrRequest.prototype.previous = function() {
     this.page = {
       start: Math.max(this.page.start - ROWS, 0),
       rows: ROWS
@@ -235,7 +235,7 @@
    * @param {Object} options from SolrRequest object type config.
    * @private
    */
-  geonet.GnSolrRequest.prototype.initBaseRequest_ = function(options) {
+  geonetwork.GnSolrRequest.prototype.initBaseRequest_ = function(options) {
     var params = {
       //rows: 0,
       wt: 'json'
@@ -253,7 +253,7 @@
    * set the solr request base params for facets and stats.
    * It's dont on request init, but can be overwritten by application.
    */
-  geonet.GnSolrRequest.prototype.initBaseParams = function() {
+  geonetwork.GnSolrRequest.prototype.initBaseParams = function() {
 
     var facetParams = {
       'facet': true,
@@ -311,7 +311,7 @@
    * @return {string} the updated url
    * @private
    */
-  geonet.GnSolrRequest.prototype.getSearchUrl_ = function(params, any) {
+  geonetwork.GnSolrRequest.prototype.getSearchUrl_ = function(params, any) {
     var fieldsQ = [];
     angular.forEach(params, function(field, fieldName) {
       var valuesQ = [];
@@ -360,7 +360,7 @@
    * @param {string} name
    * @return {*}
    */
-  geonet.GnSolrRequest.prototype.getIdxNameObj_ = function(name) {
+  geonetwork.GnSolrRequest.prototype.getIdxNameObj_ = function(name) {
     var fields = this.docTypeFieldsInfo || [];
     for (var i = 0; i < fields.length; i++) {
       if (fields[i].label == name ||
@@ -370,7 +370,7 @@
     }
   };
 
-  geonet.GnSolrRequest.prototype.getFacetType_ = function(solrPropName) {
+  geonetwork.GnSolrRequest.prototype.getFacetType_ = function(solrPropName) {
     var type = '';
     if (solrPropName == 'facet_ranges') {
       type = 'range';
@@ -398,7 +398,7 @@
    * @return {Array} Facet config
    * @private
    */
-  geonet.GnSolrRequest.prototype.createFacetData_ = function(solrData) {
+  geonetwork.GnSolrRequest.prototype.createFacetData_ = function(solrData) {
     var fields = [];
     for (var kind in solrData.facet_counts) {
       var facetType = this.getFacetType_(kind);
@@ -479,7 +479,7 @@
    * @return {{[facet.range]: Array}}
    * @private
    */
-  geonet.GnSolrRequest.prototype.createFacetSpecFromStats_ =
+  geonetwork.GnSolrRequest.prototype.createFacetSpecFromStats_ =
       function(solrData) {
     var fields = {
       'facet.range': []
@@ -510,7 +510,7 @@
    * @return {string} url param
    * @private
    */
-  geonet.GnSolrRequest.prototype.parseKeyValue_ = function(params) {
+  geonetwork.GnSolrRequest.prototype.parseKeyValue_ = function(params) {
     var urlParams = '';
     angular.forEach(params, function(v, k) {
 
@@ -525,11 +525,11 @@
     return urlParams;
   };
 
-  geonet.GnSolrRequest.prototype.on = function(key, callback, opt_this) {
+  geonetwork.GnSolrRequest.prototype.on = function(key, callback, opt_this) {
     this.eventsListener[key].push({callback: callback, this: opt_this});
   };
 
-  geonet.GnSolrRequest.prototype.sendEvent = function(key, args) {
+  geonetwork.GnSolrRequest.prototype.sendEvent = function(key, args) {
     this.eventsListener[key].forEach(angular.bind(this, function(event) {
       event.callback.call(event.this || this, args);
     }));
