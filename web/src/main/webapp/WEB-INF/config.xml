@@ -180,6 +180,7 @@
   <include>config/config-service-sru.xml</include>
   <include>config/config-service-oai.xml</include>
   <include>config/config-service-rss.xml</include>
+  <include>config/config-service-kml.xml</include>
   <include>config/config-service-csv.xml</include>
   <include>config/config-service-dcat-rdf.xml</include>
   <include>config/config-service-pdf.xml</include>
