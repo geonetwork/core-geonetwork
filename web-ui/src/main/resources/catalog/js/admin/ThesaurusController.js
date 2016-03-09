@@ -372,7 +372,9 @@
         creatingKeyword = true;
         $scope.keywordSuggestedUri = '';
         $scope.keywordSelected = {
-          'uri': $scope.thesaurusSelected.defaultNamespace + '#' +
+          'uri': $scope.thesaurusSelected.defaultNamespace +
+            ($scope.thesaurusSelected.defaultNamespace.indexOf('#') === -1 ?
+            '#' : '') +
             gnUtilityService.randomUuid(),
           'value': {'@language': $scope.lang, '#text': ''},
           'definition': {'@language': $scope.lang, '#text': ''},
@@ -496,7 +498,8 @@
       $scope.computeKeywordId = function() {
         $scope.keywordSuggestedUri =
             $scope.thesaurusSelected.defaultNamespace +
-            '#' +
+            ($scope.thesaurusSelected.defaultNamespace.indexOf('#') === -1 ?
+              '#' : '') +
             $scope.keywordSelected.value['#text'].replace(/[^\d\w]/gi, '');
       };
 
