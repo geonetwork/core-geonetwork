@@ -32,16 +32,14 @@
         <table>
             <tr>
                 <td colspan="2">
-                    <b><xsl:value-of select="/root/gui/strings/stat.clickToDownload"/>:&#160;
                     <i>
                         <a>
                             <xsl:attribute name="href">
                                 <xsl:value-of select="root/gui/statCSV/fileURL"/>
                             </xsl:attribute>
-                            <xsl:value-of select="root/gui/statCSV/exportedTable"/>
+                            Download <xsl:value-of select="root/gui/statCSV/exportedTable"/>
                         </a>
                     </i>
-                    </b>
                 </td>
             </tr>
         </table>

@@ -249,31 +249,31 @@
 
                           <fo:table-body>
                             <xsl:call-template name="info-rows">
-                              <xsl:with-param name="label" select="$oldGuiStrings/uuid"/>
+                              <xsl:with-param name="label" select="'uuid'"/>
                               <xsl:with-param name="value" select="$metadata/geonet:info/uuid"/>
                             </xsl:call-template>
 
 
                             <xsl:call-template name="info-rows">
-                              <xsl:with-param name="label" select="$oldGuiStrings/abstract"/>
+                              <xsl:with-param name="label" select="'abstract'"/>
                               <xsl:with-param name="value" select="$metadata/abstract"/>
                             </xsl:call-template>
 
 
                             <xsl:call-template name="info-rows">
-                              <xsl:with-param name="label" select="$oldGuiStrings/keywords"/>
+                              <xsl:with-param name="label" select="'keywords'"/>
                               <xsl:with-param name="value"
                                 select="string-join($metadata/keyword, ', ')"/>
                             </xsl:call-template>
 
 
                             <xsl:call-template name="info-rows">
-                              <xsl:with-param name="label" select="$oldGuiStrings/schema"/>
+                              <xsl:with-param name="label" select="'schema'"/>
                               <xsl:with-param name="value" select="$metadata/geonet:info/schema"/>
                             </xsl:call-template>
 
                             <xsl:call-template name="metadata-resources">
-                              <xsl:with-param name="gui" select="$oldGuiStrings"/>
+                              <xsl:with-param name="gui" select="$i18n"/>
                               <xsl:with-param name="metadata" select="$metadata"/>
                             </xsl:call-template>
 
@@ -353,7 +353,7 @@
 
     <!-- display metadata url but only if its not a remote result -->
     <xsl:call-template name="info-rows">
-      <xsl:with-param name="label" select="if ($title) then $oldGuiStrings/resources else ''"/>
+      <xsl:with-param name="label" select="''"/>
       <xsl:with-param name="content">
         <xsl:choose>
           <xsl:when test="$remote=false()"><fo:basic-link text-decoration="underline" color="blue">
@@ -365,7 +365,7 @@
             <xsl:attribute name="external-destination"> url('<xsl:value-of
               select="concat($baseURL, '/srv/', $lang, '/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
             />') </xsl:attribute>
-            <xsl:value-of select="$oldGuiStrings/show"/> (XML)
+            XML
           </fo:basic-link> | </xsl:when>
           <xsl:otherwise>
             <fo:block text-align="left" font-style="italic">
@@ -386,7 +386,7 @@
 
             <fo:basic-link text-decoration="underline" color="blue">
               <xsl:attribute name="external-destination"> url('<xsl:value-of select="$link"/>') </xsl:attribute>
-              <xsl:value-of select="$oldGuiStrings/download"/>
+              Download
             </fo:basic-link> | </xsl:for-each>
         </xsl:if>
 
@@ -401,7 +401,7 @@
 
             <fo:basic-link text-decoration="underline" color="blue">
               <xsl:attribute name="external-destination"> url('<xsl:value-of select="$link"/>') </xsl:attribute>
-              <xsl:value-of select="$oldGuiStrings/visualizationService"/> (<xsl:value-of
+              View service (<xsl:value-of
                 select="$title"/>) </fo:basic-link> | </xsl:for-each>
         </xsl:if>
 
