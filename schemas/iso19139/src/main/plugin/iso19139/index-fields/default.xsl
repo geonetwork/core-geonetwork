@@ -37,7 +37,7 @@
                 exclude-result-prefixes="#all">
 
     <xsl:include href="../convert/functions.xsl" />
-    <xsl:include href="../../../xsl/utils-fn.xsl" />
+    <xsl:include href="common/functions-core.xsl" />
     <xsl:include href="index-subtemplate-fields.xsl" />
 
     <!-- This file defines what parts of the metadata are indexed by Lucene

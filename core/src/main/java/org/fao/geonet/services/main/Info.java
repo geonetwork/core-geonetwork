@@ -97,6 +97,7 @@ public class Info implements Service {
     public static final String AUTH = "auth";
     public static final String ME = "me";
     public static final String Z_3950_REPOSITORIES = "z3950repositories";
+    @Deprecated
     public static final String TEMPLATES = "templates";
     public static final String USERS = "users";
     public static final String SOURCES = "sources";
@@ -116,7 +117,6 @@ public class Info implements Service {
     private static final String STAGING_PROFILE = "stagingProfile";
 
 
-	private Path otherSheets;
 	private ServiceConfig _config;
 
 	//--------------------------------------------------------------------------
@@ -133,7 +133,6 @@ public class Info implements Service {
      */
 	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
-		otherSheets = appPath.resolve(Geonet.Path.STYLESHEETS);
 		_config = config;
 	}
 
@@ -158,7 +157,7 @@ public class Info implements Service {
 		Element params = (Element)inParams.clone();
 
 		// --- if we have a parameter specified in the config then use it instead
-		// --- of the usual params 
+		// --- of the usual params
 		String ptype = _config.getValue("type");
 		if (ptype != null) {
 			params.removeContent();
@@ -176,7 +175,7 @@ public class Info implements Service {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
                         new String[]{
                                 SettingManager.SYSTEM_SITE_NAME_PATH,
-                                "system/site/organization", 
+                                "system/site/organization",
                                 SettingManager.SYSTEM_SITE_SITE_ID_PATH,
                                 "system/platform/version",
                                 "system/platform/subVersion"
@@ -203,13 +202,13 @@ public class Info implements Service {
             } else if (type.equals(INSPIRE)) {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
 				            new String[]{
-				                         "system/inspire/enableSearchPanel", 
+				                         "system/inspire/enableSearchPanel",
 				                         "system/inspire/enable"
 				                         }));
             } else if (type.equals(HARVESTER)) {
 			    result.addContent(gc.getBean(SettingManager.class).getValues(
                         new String[]{ "system/harvester/enableEditing"}));
-			
+
 			} else if (type.equals(USER_GROUP_ONLY)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(
                         new String[]{"system/metadataprivs/usergrouponly"}));
@@ -250,14 +249,14 @@ public class Info implements Service {
 				result.addContent(getUsers(context));
 
             } else if (type.equals(TEMPLATES))   {
-				result.addContent(getTemplates(context));
+                throw new BadParameterEx("To search for template, use the search service.", type);
 
             } else if (type.equals(Z_3950_REPOSITORIES)) {
 				result.addContent(getZRepositories(context, sm));
 
             } else if (type.equals(ME)) {
 				result.addContent(getMyInfo(context));
-			
+
             } else if (type.equals(AUTH)) {
 				result.addContent(getAuth(context));
 
@@ -278,7 +277,7 @@ public class Info implements Service {
 				throw new BadParameterEx("Unknown type parameter value.", type);
             }
 		}
-		
+
 		result.addContent(getEnv(context));
 
         GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
@@ -289,16 +288,16 @@ public class Info implements Service {
 	}
 
    /**
-    * Returns whether GN is in indexing (true or false). 
-    * @param gc 
-    * @return 
-    */ 
-    private Element getIndex(GeonetContext gc) { 
-        Element isIndexing = new Element(INDEX); 
-        isIndexing.setText(Boolean.toString(gc.getBean(DataManager.class).isIndexing())); 
-        return isIndexing; 
+    * Returns whether GN is in indexing (true or false).
+    * @param gc
+    * @return
+    */
+    private Element getIndex(GeonetContext gc) {
+        Element isIndexing = new Element(INDEX);
+        isIndexing.setText(Boolean.toString(gc.getBean(DataManager.class).isIndexing()));
+        return isIndexing;
     }
-    
+
     /**
      * Returns whether GN is in read-only mode (true or false).
      * @param gc
@@ -323,7 +322,7 @@ public class Info implements Service {
 		return auth;
 	}
 
-	
+
 
 	//--------------------------------------------------------------------------
 	//---
@@ -390,7 +389,7 @@ public class Info implements Service {
       response.addContent(elem);
     }
 
-    return response;	
+    return response;
 	}
 
     /**
@@ -500,93 +499,6 @@ public class Info implements Service {
 
 		return response;
 	}
-
-	//--------------------------------------------------------------------------
-	//--- Templates
-	//--------------------------------------------------------------------------
-
-	private Element getTemplates(ServiceContext context) throws Exception
-	{
-		Path styleSheet = otherSheets.resolve("portal-present.xsl");
-		Element result = search(context).setName(Jeeves.Elem.RESPONSE);
-		Element root   = new Element("root");
-
-		root.addContent(result);
-
-		@SuppressWarnings("unchecked")
-        List<Element> list = Xml.transform(root, styleSheet).getChildren();
-
-		Element response = new Element("templates");
-
-		for (Element elem : list) {
-			Element info = elem.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-
-			if (!elem.getName().equals("metadata"))
-				continue;
-
-			String id       = info.getChildText(Edit.Info.Elem.ID);
-			String template = info.getChildText(Edit.Info.Elem.IS_TEMPLATE);
-			String schema   = info.getChildText(Edit.Info.Elem.SCHEMA);
-
-			if (template.equals("y"))
-				response.addContent(buildTemplateRecord(id, elem.getChildText("title"), schema));
-		}
-
-		return response;
-	}
-
-	//--------------------------------------------------------------------------
-
-	private Element search(ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		context.info("Creating searcher");
-
-		Element       params = buildParams();
-		ServiceConfig config = new ServiceConfig();
-
-		ISearchManager searchMan = gc.getBean(ISearchManager.class);
-		try (MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-
-            searcher.search(context, params, config);
-
-            params.addContent(new Element("from").setText("1"));
-            params.addContent(new Element("to").setText(searcher.getSize() + ""));
-
-            return searcher.present(context, params, config);
-        }
-
-	}
-
-	//--------------------------------------------------------------------------
-
-	private Element buildParams()
-	{
-		Element params = new Element(Jeeves.Elem.REQUEST);
-		String arParams[] = {
-			"extended", "off",
-			"remote",   "off",
-			"attrset",  "geo",
-			"template", "y",
-			"any",      "",
-		};
-
-		for(int i=0; i<arParams.length/2; i++)
-			params.addContent(new Element(arParams[i*2]).setText(arParams[i*2 +1]));
-
-		return params;
-	}
-
-	//--------------------------------------------------------------------------
-
-	private Element buildTemplateRecord(String id, String title, String schema)
-	{
-		return buildRecord(id, title, Collections.<String, String>emptyMap(), schema, null);
-	}
-
-
-	//--------------------------------------------------------------------------
 
 	private Element buildRecord(String id, String name, Map<String, String> labelTranslations, String code, String serverCode)
 	{

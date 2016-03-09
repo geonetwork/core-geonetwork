@@ -50,13 +50,6 @@
 	<system systemId="XMLSchema.dtd" 
 	        uri="../xml/validation/oai/dc/XMLSchema.dtd"/>
 
-	<!-- remap utils-fn.xsl included in schematrons to the correct place
-	     relative to this catalog file -->
-
-
-	<uri    name="../../../xsl/utils-fn.xsl"
-					uri="../xsl/utils-fn.xsl"/>
-
   <uri name="common/functions-core.xsl"
        uri="../xslt/common/functions-core.xsl"/>
 

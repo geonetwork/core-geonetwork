@@ -24,9 +24,31 @@
 
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:gn-old-fn="http://www.fao.org/geonetwork"
   xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core" >
-  
-  
+
+  <!-- Old functions / start
+  Those are used in schematron and some CSW
+  -->
+  <xsl:function name="gn-old-fn:protocolMimeType" as="xs:string">
+    <xsl:param name="linkage" as="xs:string"/>
+    <xsl:param name="protocol" as="xs:string?"/>
+    <xsl:param name="mimeType" as="xs:string?"/>
+    <xsl:value-of select="gn-fn-core:protocolMimeType($linkage, $protocol, $mimeType)"/>
+  </xsl:function>
+  <xsl:function name="gn-old-fn:contains-any-of" as="xs:boolean">
+    <xsl:param name="arg" as="xs:string?"/>
+    <xsl:param name="searchStrings" as="xs:string*"/>
+    <xsl:value-of select="gn-fn-core:contains-any-of($arg, $searchStrings)"/>
+  </xsl:function>
+  <xsl:function name="gn-old-fn:ends-with-any-of" as="xs:boolean">
+    <xsl:param name="arg" as="xs:string?"/>
+    <xsl:param name="searchStrings" as="xs:string*"/>
+    <xsl:value-of select="gn-fn-core:ends-with-any-of($arg, $searchStrings)"/>
+  </xsl:function>
+  <!-- Old functions / end -->
+
+
   <!-- Return mimetype according to protocol and linkage extension -->
   <xsl:function name="gn-fn-core:protocolMimeType" as="xs:string">
     <xsl:param name="linkage" as="xs:string"/>
@@ -64,6 +86,18 @@
       select=" 
       some $searchString in $searchStrings
       satisfies contains($arg,$searchString)
+      "
+    />
+  </xsl:function>
+
+  <xsl:function name="gn-fn-core:ends-with-any-of" as="xs:boolean">
+    <xsl:param name="arg" as="xs:string?"/>
+    <xsl:param name="searchStrings" as="xs:string*"/>
+
+    <xsl:sequence
+            select="
+      some $searchString in $searchStrings
+      satisfies ends-with($arg,$searchString)
       "
     />
   </xsl:function>

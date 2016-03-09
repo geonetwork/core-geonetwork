@@ -48,7 +48,7 @@
         <param name="fast" value="false" />
       </class>
       <output sheet="../xslt/services/dcat/rdf.xsl" contentType=" application/rdf+xml; charset=UTF-8"/>
-      <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
+      <error id="search-error" sheet="../xslt/error/error-xml.xsl" statusCode="500"/>
     </service>
 
     <service name="rdf.metadata.public.get">

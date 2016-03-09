@@ -206,7 +206,7 @@
 		</xsl:if>
     </axsl:output>
 	
-	<axsl:include href="../../../xsl/utils-fn.xsl"/>
+	<axsl:include href="common/functions-core.xsl"/>
    
     <axsl:param name="lang" />
     <axsl:param name="thesaurusDir" />
