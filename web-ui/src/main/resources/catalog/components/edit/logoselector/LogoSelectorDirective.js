@@ -49,7 +49,7 @@
           };
 
           $http.get('admin.harvester.info@json?type=icons', {cache: true})
-          .success(function(data) {
+              .success(function(data) {
                 scope.logos = data[0];
               });
         }

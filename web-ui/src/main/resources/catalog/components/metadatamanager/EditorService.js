@@ -96,7 +96,7 @@
            if (previousElement !== undefined) {
              var findExp = 'div.gn-move';
              var previousElementCtrl = $(previousElement
-               .find(findExp).get(0)).children();
+             .find(findExp).get(0)).children();
 
              // Up control is enabled if the previous element is
              // not on top.

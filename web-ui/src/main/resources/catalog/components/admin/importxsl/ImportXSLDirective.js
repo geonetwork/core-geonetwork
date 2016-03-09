@@ -45,7 +45,7 @@
         link: function(scope, element, attrs) {
           $http.get('admin.harvester.info?' +
               'type=importStylesheets&_content_type=json')
-            .success(function(data) {
+              .success(function(data) {
                 scope.stylesheets = data[0];
                 scope.stylesheets.unshift({
                   id: '',

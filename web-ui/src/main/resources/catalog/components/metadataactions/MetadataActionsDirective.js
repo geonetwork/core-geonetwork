@@ -173,7 +173,7 @@
               scope.ids.splice(existIndex, 1);
             }
             gnMetadataActions.assignCategories(scope.metadataId, scope.ids)
-              .then(function() {
+                .then(function() {
                   scope.currentCategories.push(c.name);
                 }, function(response) {
                   $rootScope.$broadcast('StatusUpdated', {
@@ -232,7 +232,7 @@
           scope.assignGroup = function(g, event) {
             event.stopPropagation();
             gnMetadataActions.assignGroup(scope.metadataId, g['@id'])
-              .then(function() {
+                .then(function() {
                   scope.groupOwner = g['@id'];
                 }, function(error) {
                   $rootScope.$broadcast('StatusUpdated', {

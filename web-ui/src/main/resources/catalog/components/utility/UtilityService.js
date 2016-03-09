@@ -219,7 +219,7 @@
     var getUrlParameter = function(parameterName) {
       var parameterValue = null;
       angular.forEach(window.location
-                  .search.replace('?', '').split('&'),
+          .search.replace('?', '').split('&'),
           function(value) {
             if (value.indexOf(parameterName) === 0) {
               parameterValue = value.split('=')[1];

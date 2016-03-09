@@ -130,7 +130,7 @@
             });
           };
           hotkeys.bindTo(scope)
-            .add({
+              .add({
                 combo: 'a',
                 description: $translate('hotkeySelectAll'),
                 callback: scope.selectAll
