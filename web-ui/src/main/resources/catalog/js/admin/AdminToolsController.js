@@ -208,7 +208,7 @@
             });
 
         $http.get('admin.ownership.groups?_content_type=json&id=' + id)
-          .success(function(data) {
+            .success(function(data) {
               // If user does not have group and only one
               // target group, a simple object is returned
               // and it should be a target group ? FIXME
@@ -257,7 +257,7 @@
 
       function loadProcessConfig() {
         $http.get($scope.base + 'config/batch-process-cfg.json')
-        .success(function(data) {
+            .success(function(data) {
               $scope.batchProcesses = data.config;
 
               $timeout(initProcessByRoute);
@@ -333,7 +333,7 @@
         $scope.processReport = null;
         $http.get(service + '&' +
             formParams)
-          .success(function(data) {
+            .success(function(data) {
               $scope.processReport = data;
               $scope.processReportWarning = data.notFound != 0 ||
                   data.notOwner != 0 ||
@@ -362,7 +362,7 @@
                 checkLastBatchProcessReport();
               }
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('processError'),
                 error: data,

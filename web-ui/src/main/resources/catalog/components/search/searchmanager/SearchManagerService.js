@@ -160,7 +160,7 @@
               pageOptions.hitsPerPage + 1) +
               '&to=' + ((pageOptions.currentPage + 1) *
               pageOptions.hitsPerPage), config.error)
-                .then(function(data) {
+              .then(function(data) {
                 scope[config.records] = data;
                 pageOptions.count = parseInt(data.count);
                 pageOptions.pages = Math.round(

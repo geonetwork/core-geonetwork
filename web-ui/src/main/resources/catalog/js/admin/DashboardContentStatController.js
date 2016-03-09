@@ -64,12 +64,12 @@
 
         nv.addGraph(function() {
           var chart = nv.models.pieChart()
-                       .x(function(d) { return d.label})
+              .x(function(d) { return d.label})
               // TODO : Need to translate facet labels ?
-                       .y(function(d) { return d.count})
-                       .values(function(d) { return d})
-                       .tooltips(true)
-                       .tooltipContent(function(key, y, e, graph) {
+              .y(function(d) { return d.count})
+              .values(function(d) { return d})
+              .tooltips(true)
+              .tooltipContent(function(key, y, e, graph) {
                 // TODO : %age should be relative to
                 // the current set of displayed values
                 var value = d3.format('.0f')(y.replace(',', ''));
@@ -78,12 +78,12 @@
                     $translate('records') + ' (' +
                     (value / total * 100).toFixed() + '%)</p>';
               })
-                       .showLabels(true);
+              .showLabels(true);
 
           d3.select('#gn-stat-md-by-facet')
-                     .datum([data])
-                     .transition().duration(1200)
-                     .call(chart);
+              .datum([data])
+              .transition().duration(1200)
+              .call(chart);
 
           return chart;
         });
@@ -106,7 +106,7 @@
         };
 
         $http.get('statistics-content?_content_type=json')
-        .success(function(data) {
+            .success(function(data) {
               $scope.statistics.md.mainStatistics = data;
             }).error(function(data) {
               // TODO
@@ -119,7 +119,7 @@
         $http.get('statistics-content-metadata?_content_type=json?' +
                 'by=' + by +
                 '&isTemplate=' + encodeURIComponent(isTemplate))
-                  .success(function(data) {
+            .success(function(data) {
 
               if (data == 'null') { // Null response returned
                 // TODO : Add no data message
@@ -134,11 +134,11 @@
               $scope.statistics.md[by] = data;
               nv.addGraph(function() {
                 var chart = nv.models.pieChart()
-                         .x(function(d) { return $translate(d.label) })
-                         .y(function(d) { return d.total})
-                         .values(function(d) { return d})
-                         .tooltips(true)
-                         .tooltipContent(function(key, y, e, graph) {
+                .x(function(d) { return $translate(d.label) })
+                .y(function(d) { return d.total})
+                .values(function(d) { return d})
+                .tooltips(true)
+                .tooltipContent(function(key, y, e, graph) {
                       // TODO : %age should be relative to
                       // the current set of displayed values
                       return '<h3>' + key + '</h3>' +
@@ -146,12 +146,12 @@
                           $translate('records') + ' (' +
                           (y / total * 100).toFixed() + '%)</p>';
                     })
-                         .showLabels(true);
+                .showLabels(true);
 
                 d3.select('#gn-stat-md-by-' + by)
-                       .datum([data])
-                       .transition().duration(1200)
-                       .call(chart);
+                .datum([data])
+                .transition().duration(1200)
+                .call(chart);
 
                 return chart;
               });

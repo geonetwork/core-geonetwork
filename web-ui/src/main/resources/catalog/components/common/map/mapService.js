@@ -747,7 +747,7 @@
               // TODO: parse better legend & attribution
               if (angular.isArray(layer.Style) && layer.Style.length > 0) {
                 var url = layer.Style[layer.Style.length - 1]
-                  .LegendURL[0];
+                    .LegendURL[0];
                 if (url) {
                   legend = url.OnlineResource;
                 }
@@ -812,7 +812,7 @@
                   $.ajax({
                     url: proxyUrl
                   })
-                    .done(function(response) {
+                      .done(function(response) {
                         // TODO: Check WFS exception
                         vectorSource.addFeatures(vectorFormat.
                             readFeatures(response));
@@ -830,7 +830,7 @@
                         map.getView().fit(extent, map.getSize());
 
                       })
-                    .then(function() {
+                      .then(function() {
                         this.loadingLayer = false;
                       });
                 },
@@ -1016,7 +1016,7 @@
                     finishCreation();
                   }
                   else {
-                    $this.feedLayerMd(olL).finally (finishCreation);
+                    $this.feedLayerMd(olL).finally(finishCreation);
                   }
                 }
 
@@ -1442,9 +1442,10 @@
                   title: 'Bing Aerial'
                 });
               case 'stamen':
-                  return new ol.layer.Tile({
+                return new ol.layer.Tile({
                   source: new ol.source.Stamen({
-                    layer: (opt && opt.name ? opt.name: 'watercolor') //We make watercolor the default layer
+                    //We make watercolor the default layer
+                    layer: (opt && opt.name ? opt.name : 'watercolor')
                   }),
                   title: 'Stamen'
                 });

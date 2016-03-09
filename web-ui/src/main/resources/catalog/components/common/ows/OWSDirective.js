@@ -26,7 +26,7 @@
 
   angular.module('gn_ows_directive', [])
 
-    .directive(
+      .directive(
       'gnLayersGrid',
       [
        'gnOwsCapabilities',

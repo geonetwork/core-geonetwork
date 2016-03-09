@@ -137,7 +137,7 @@
           };
 
           gnWpsService.describeProcess(scope.uri, scope.processId)
-          .then(
+              .then(
               function(response) {
                 scope.describeState = 'succeeded';
                 scope.describeResponse = response;
@@ -192,7 +192,7 @@
                   );
 
                   angular.forEach(
-                    scope.processDescription.processOutputs.output,
+                  scope.processDescription.processOutputs.output,
                       function(output, idx) {
                         output.asReference = true;
 
@@ -341,7 +341,7 @@
                   scope.executeState = 'failed';
                   scope.executeResponse = response;
                 }
-            ).finally (
+            ).finally(
                 function() {
                   scope.running = false;
                 });

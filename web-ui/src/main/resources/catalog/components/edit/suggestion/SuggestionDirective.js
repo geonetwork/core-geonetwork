@@ -31,7 +31,7 @@
    * - gnSuggestionList
    */
   angular.module('gn_suggestion_directive', [])
-    .directive('gnSuggestionList',
+      .directive('gnSuggestionList',
       ['gnSuggestion', 'gnCurrentEdit', '$rootScope',
         '$translate', '$interpolate',
        function(gnSuggestion, gnCurrentEdit, $rootScope,
@@ -90,7 +90,7 @@
            }
          };
        }])
-    .directive('gnRunSuggestion', ['gnSuggestion', '$interpolate',
+      .directive('gnRunSuggestion', ['gnSuggestion', '$interpolate',
         function(gnSuggestion, $interpolate) {
           return {
             restrict: 'A',
