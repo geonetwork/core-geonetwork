@@ -51,7 +51,7 @@
         <call name="siteURL" class=".guiservices.util.GetSiteURL"/>
         <xml name="i18n" file="xml/i18n.xml"/>
       </output>
-      <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
+      <error id="search-error" sheet="../xslt/error/error-xml.xsl" statusCode="500"/>
     </service>
 
 

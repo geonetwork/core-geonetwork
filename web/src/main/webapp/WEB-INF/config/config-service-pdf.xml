@@ -42,7 +42,7 @@
         <call name="siteURL" class=".guiservices.util.GetSiteURL" />
       </output>
       
-      <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
+      <error id="search-error" sheet="../xslt/error/error-xml.xsl" statusCode="500"/>
     </service>
     
     
@@ -68,7 +68,7 @@
       <output sheet="../xslt/services/pdf/portal-present-fop.xsl" file="true" contentType="application/pdf">
         <call name="siteURL" class=".guiservices.util.GetSiteURL" />
       </output>
-      <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
+      <error id="search-error" sheet="../xslt/error/error-xml.xsl" statusCode="500"/>
     </service>
 
   </services>

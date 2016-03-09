@@ -171,7 +171,7 @@
 
     <service name="xml.search.keywordlink" type="xml" deprecated="true" xmlapi="true">
       <class name=".services.thesaurus.GetNarrowerBroader"/>
-      <output sheet="thesaurus/thesaurus-autosearchlist.xsl"/>
+      <output sheet="../xslt/services/thesaurus/to-ulli.xsl"/>
     </service>
 
     <service name="xml.keyword.get" type="xml" deprecated="true" xmlapi="true">
@@ -181,7 +181,7 @@
 
       </documentation>
       <class name=".services.thesaurus.GetKeywordById"/>
-      <output sheet="thesaurus/convert.xsl">
+      <output sheet="../xslt/services/thesaurus/convert.xsl">
         <call name="thesaurus" class=".services.thesaurus.GetList" />
       </output>
     </service>

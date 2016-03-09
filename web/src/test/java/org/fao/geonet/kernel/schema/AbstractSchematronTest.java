@@ -82,9 +82,11 @@ public class AbstractSchematronTest {
     @Before
     public void before (){
         try {
-            final Path targetUtilsFnFile = temporaryFolder.getRoot().toPath().resolve("xsl/utils-fn.xsl");
+            // This is a hack to copy xsl:included files in schematron
+            // normally resolved by the use of the oasis catalog
+            final Path targetUtilsFnFile = temporaryFolder.getRoot().toPath().resolve("path/requiredtoFind/utilsfile/common/functions-core.xsl");
             Files.createDirectories(targetUtilsFnFile.getParent());
-            IO.copyDirectoryOrFile(WEBAPP_DIR.resolve("xsl/utils-fn.xsl"), targetUtilsFnFile, false);
+            IO.copyDirectoryOrFile(WEBAPP_DIR.resolve("xslt/common/functions-core.xsl"), targetUtilsFnFile, false);
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }

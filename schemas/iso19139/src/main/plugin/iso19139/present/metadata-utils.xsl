@@ -73,7 +73,7 @@
 
 	<!-- Check if the element has hidden subelements -->
     <xsl:template mode="localised" match="*[@gco:nilReason='withheld' and count(./*) = 0 and count(./@*) = 1]" priority="100">
-        <xsl:value-of select="/root/gui/strings/concealed"/>
+        <xsl:value-of select="'withheld'"/>
 	</xsl:template>
 
     <!-- Map GUI language to iso3code -->
