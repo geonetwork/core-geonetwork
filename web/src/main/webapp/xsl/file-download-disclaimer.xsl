@@ -7,7 +7,6 @@
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
-	<xsl:include href="modal.xsl"/>
 	<xsl:include href="metadata.xsl"/>
 
 	<!--
