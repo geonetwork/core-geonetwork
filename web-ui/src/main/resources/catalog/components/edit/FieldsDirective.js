@@ -94,8 +94,12 @@
             }
             scope.$watch('selected', function(n, o) {
               if (n && n !== o) {
-                scope.value = parseFloat(n['@value'], 10);
-                scope.uom = n['@title'];
+                if (n['@value']) {
+                  scope.value = parseFloat(n['@value'], 10);
+                }
+                if (n['@title']) {
+                  scope.uom = n['@title'];
+                }
               }
             });
           }

@@ -83,7 +83,7 @@ input[type=text], input[type=number], select {
     padding: 2px;
 
     :nth-of-type(1) {
-      font-size: 120%;
+      font-size: @font-size-large;
       padding-top: 8px;
     }
 
@@ -154,11 +154,12 @@ form.gn-editor {
   
   legend {
     margin-bottom: 10px;
+    font-size: @font-size-large;
   }
 
   .gn-textarea-xml {
     font-family: courier;
-    font-size: 12px;
+    font-size: @font-size-small;
     min-height: 700px;
   }
   
@@ -334,7 +335,7 @@ form.gn-editor {
 
   .gn-required > label:after {
       content: "*";
-      font-size: 2.5em;
+      font-size: @font-size-h1;
       margin: 7px 0 0 7px;
       position: absolute;
       color: #a94442;
@@ -530,6 +531,7 @@ table.gn-data-store {
 
 .gn-schematron-title {
   word-wrap: break-word;
+  font-size: @font-size-base;
 }
 .navbar-collapse {
   padding-right: 0px;
@@ -548,11 +550,11 @@ table.gn-data-store {
   .nav > li > a {
     padding: 2px 5px;
     margin-top: 2px;
-    font-size: 8px;
+    font-size: @font-size-x-small;
   }
   .label {
     line-height: 2;
-    font-size: 8px;
+    font-size: @font-size-x-small;
   }
   .no-data a {
     color: @gray-light;

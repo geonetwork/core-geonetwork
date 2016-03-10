@@ -874,6 +874,8 @@
     "system/xlinkResolver/enable-help": "Si se activa, los fragmentos XLink de los metadatos se resolverán",
     "system/xlinkResolver/localXlinkEnable": "Habilitar XLink local",
     "system/xlinkResolver/localXlinkEnable-help": "Los XLink locales usan la URL local://<lang>/<service> para referenciar secciones relacionadas en vez de una URL HTTP. Los XLink locales son normalmente más rápidos que los XLink HTTP.",
+    "system/xlinkResolver/ignore": "Elements to ignore by XLink resolution",
+    "system/xlinkResolver/ignore-help": "Comma separated list of elements to ignore by XLink resolution",
     "system/z3950": "Z39.50",
     "system/z3950/enable": "Habilitar Servidor Z39.50",
     "system/z3950/enable-help": "Si se habilita, GeoNetwork arrancará el servidor Z39.50 al inicio. Este componente usa el protocolo ISO23950.",

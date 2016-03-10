@@ -1,8 +1,6 @@
 // GN Styles
 @import "../lib/style/font-awesome/less/font-awesome.less";
 @import "gn_bootstrap.less";
-@import "gn_infolist.less";
-@import "gn_badge_categories.less";
 
 @import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
 // import the css files as less files so they are included in the final output of wro4j
@@ -40,6 +38,7 @@
       margin-bottom: 0px;
       //width: 90%; /* hack */
       cursor: pointer;
+      font-weight: normal;
     }
     label.gn-facet-active {
       color: @gray-darker
@@ -61,7 +60,7 @@
   }
   .gn-facet-moreorless {
     list-style: none;
-    padding-left: 0.5em;
+    padding-left: @font-size-x-small;
     button {
       width: 100%;
       margin: 0px;
@@ -72,8 +71,7 @@
     color: @brand-primary;
   }
   h4 {
-    font-size: 14px;
-    font-weight: bold;
+    font-size: @font-size-small;
     text-transform: uppercase;
     margin-bottom: 0px;
     border-bottom: 2px @gray-lighter solid;
@@ -93,7 +91,7 @@
 
   text-align: center;
   .gn-icon-label {
-    font-size: 70%;
+    font-size: @font-size-small;
   }
   .badge {
     background-color: #428BCA;
@@ -111,6 +109,7 @@
 
 span.gn-facet-label {
   display: inline-block;
+  font-size: @font-size-small;
 }
 
 .gn-select ul.dropdown-menu > li > a:first-letter,
@@ -135,7 +134,7 @@ span.gn-facet-label:first-letter {
 
 [data-gn-facet-list] {
   h4 {
-    font-size: 14px;
+    font-size: @font-size-h4;
   }
 }
 
@@ -213,8 +212,8 @@ span.gn-facet-label:first-letter {
 .tagsinput-trigger {
   top: .575em;
   right: 20px;
-  font-size: 16px;
-  font-weight: normal;
+  font-size: medium;
+  font-weight: @font-size-base;
 }
 
 [gn-bootstrap-datepicker].input-group[class*="col-"] {
@@ -229,7 +228,7 @@ span.gn-facet-label:first-letter {
   .backtonormal {
     margin-bottom: -20px;
   }
-  font-size: 90%;
+  font-size: @font-size-small;
   label {
     font-weight: normal;
   }
@@ -250,7 +249,7 @@ span.gn-facet-label:first-letter {
     width: 100%;
   }
   legend {
-    font-size: 1em;
+    font-size: @font-size-base;
     font-style: italic;
     padding-top: .4em;
     margin-bottom: 12px;
@@ -258,7 +257,7 @@ span.gn-facet-label:first-letter {
   .bootstrap-tagsinput {
     .label {
       .label-primary;
-      font-size: 12px;
+      font-size: @font-size-small;
       font-weight: normal;
       margin: 2px;
     }
@@ -293,7 +292,7 @@ span.gn-facet-label:first-letter {
 
 [search-results] {
   h4 {
-    font-size: 15px;
+    font-size: @font-size-base;
   }
   .list-group {
     margin-bottom: 0;
@@ -315,7 +314,7 @@ span.gn-facet-label:first-letter {
   .gn-md-links {
     background: rgba(0,0,0,.02);
     line-height: 3em;
-    font-size: 90%;
+    font-size: @font-size-small;
     margin: 0;
     //margin-left: 6em;
     .dropdown-menu {
@@ -330,15 +329,15 @@ span.gn-facet-label:first-letter {
 
   }
   h4 {
-    font-size: 14px;
+    font-size: @font-size-h4;
   }
   p {
-    font-size: .9em;
+    font-size: @font-size-small;
   }
   blockquote {
     padding: 6px 20px;
     margin:0;
-    font-size: 90%;
+    font-size: @font-size-small;
     color: #666;
   }
   li:hover {
@@ -374,7 +373,7 @@ span.gn-facet-label:first-letter {
 }
 .gn-img-thumbnail-caption {
   text-align: center;
-  font-size: 90%;
+  font-size: @font-size-small;
   font-style: italic;
   color: @text-muted;
 }
