@@ -338,7 +338,9 @@
       viewerSettings.menuExpanded = true;
 
       // Define if children button must be displayed in search results.
-      searchSettings.displayChildren = true;
+      searchSettings.displayChildrenBtn = true;
+      // Define if search should exclude children
+      searchSettings.excludeChildrenFromSearch = false;
 
       if(typeof sxtSettings != 'undefined') {
         angular.extend(searchSettings, sxtSettings);
@@ -359,8 +361,12 @@
         if(sxtSettings.menuExpanded)  {
           viewerSettings.menuExpanded = sxtSettings.menuExpanded;
         }
-        if(sxtSettings.displayChildren)  {
-          searchSettings.displayChildren = sxtSettings.displayChildren;
+        if(sxtSettings.displayChildrenBtn)  {
+          searchSettings.displayChildrenBtn = sxtSettings.displayChildrenBtn;
+        }
+        if(sxtSettings.excludeChildrenFromSearch)  {
+          searchSettings.excludeChildrenFromSearch =
+            sxtSettings.excludeChildrenFromSearch;
         }
         if(angular.isUndefined(searchSettings.tabOverflow.search)) {
           delete searchSettings.mainTabs.search;
@@ -383,6 +389,9 @@
         angular.extend(searchSettings.hiddenParams, {
           orgName: searchSettings.configWho.replace(/,/g, ' or ')
         })
+      }
+      if(searchSettings.excludeChildrenFromSearch) {
+        searchSettings.hiddenParams.isChild = 'false';
       }
 
       searchSettings.configWhat = searchSettings.configWhat || '';

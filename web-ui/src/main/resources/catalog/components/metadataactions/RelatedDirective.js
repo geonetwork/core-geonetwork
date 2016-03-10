@@ -99,8 +99,8 @@
               };
               scope.config = gnRelatedResources;
 
-              if (gnSearchSettings.displayChildren === undefined ||
-                  gnSearchSettings.displayChildren === true) {
+              if (gnSearchSettings.displayChildrenBtn === undefined ||
+                  gnSearchSettings.displayChildrenBtn === true) {
                 scope.$watchCollection('md', function() {
                   scope.updateRelations();
                 });
