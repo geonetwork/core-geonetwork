@@ -30,7 +30,7 @@
     'blueimp.fileupload'
   ])
 
-  .directive('gnFileStore', [
+      .directive('gnFileStore', [
         'gnFileStoreService',
         '$translate',
         '$rootScope',

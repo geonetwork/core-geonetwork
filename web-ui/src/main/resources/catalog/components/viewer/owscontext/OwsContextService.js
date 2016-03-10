@@ -128,16 +128,45 @@
         var layers = context.resourceList.layer;
         var i, j, olLayer, bgLayers = [];
         var self = this;
-        var re = /type\s*=\s*([^,|^}|^\s]*)/;
         var promises = [];
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.name) {
+<<<<<<< HEAD
+            var re=this.getREForPar('type');
+=======
+            var re = this.getREForPar('type');
+>>>>>>> 087065de2ba4d080ce07cb9e283c590e3884fb25
+
             if (layer.group == 'Background layers' &&
                 layer.name.match(re)) {
               var type = re.exec(layer.name)[1];
+
+              //Check if we have a layer parameter
+<<<<<<< HEAD
+              re=this.getREForPar('layer');
+
+              var opt;
+              if (layer.name.match(re)){
+                var lyr=re.exec(layer.name)[1];
+                opt={name:lyr};
+              }
+
               if (type != 'wmts') {
-                var olLayer = gnMap.createLayerForType(type);
+                var olLayer = gnMap.createLayerForType(type,opt);
+=======
+              re = this.getREForPar('layer');
+
+              var opt;
+              if (layer.name.match(re)) {
+                var lyr = re.exec(layer.name)[1];
+                opt = {name: lyr};
+              }
+
+              if (type != 'wmts') {
+                var olLayer = gnMap.createLayerForType(type, opt);
+>>>>>>> 087065de2ba4d080ce07cb9e283c590e3884fb25
+
                 if (olLayer) {
                   bgLayers.push({layer: olLayer, idx: i});
                   olLayer.displayInLayerManager = false;
@@ -268,6 +297,8 @@
             name = '{type=mapquest}';
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
+          } else if (source instanceof ol.source.Stamen) {
+            name = '{type=stamen}';
           } else if (source instanceof ol.source.WMTS) {
             name = '{type=wmts,name=' + layer.get('name') + '}';
             params.server = [{
@@ -401,7 +432,7 @@
                     olL.set('bgIdx', bgIdx);
                   }
                   return olL;
-                }).catch (function() {});
+                }).catch(function() {});
           }
         }
         else { // we suppose it's WMS
@@ -417,9 +448,34 @@
                   olL.set('label', layer.title);
                 }
                 return olL;
-              }).catch (function() {});
+              }).catch(function() {});
         }
       };
+
+      /**
+       * @ngdoc method
+       * @name gnOwsContextService#getREForPar
+       * @methodOf gn_viewer.service:gnOwsContextService
+       *
+       * @description
+       * Creates a regular expression for a given parameter
+       *
+       * * @param {Object} context parameter
+       */
+<<<<<<< HEAD
+        this.getREForPar = function(par) {
+
+            return re=new RegExp(par + '\\s*=\\s*([^,|^}|^\\s]*)');
+
+        };
+=======
+      this.getREForPar = function(par) {
+
+            return re = new RegExp(par + '\\s*=\\s*([^,|^}|^\\s]*)');
+
+      };
+>>>>>>> 087065de2ba4d080ce07cb9e283c590e3884fb25
+
     }
   ]);
 })();

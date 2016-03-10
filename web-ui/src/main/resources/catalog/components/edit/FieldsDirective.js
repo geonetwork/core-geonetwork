@@ -328,12 +328,12 @@
 
             element.addClass('field-bg');
             element.find('a').has('.fa-times.text-danger')
-              .css('visibility', 'visible');
+                .css('visibility', 'visible');
           });
           element.on('mouseout', function() {
             element.removeClass('field-bg');
             element.find('a').has('.fa-times.text-danger')
-              .css('visibility', 'hidden');
+                .css('visibility', 'hidden');
           });
         }
       };

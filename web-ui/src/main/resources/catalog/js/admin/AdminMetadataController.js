@@ -183,7 +183,7 @@
 
       var loadTemplates = function() {
         $http.get('admin.templates.list?_content_type=json')
-        .success(function(data) {
+            .success(function(data) {
               $scope.templates = data;
             });
       };
@@ -288,11 +288,11 @@
           url += '&schema=' + f.schema;
         }
         $http.get(url)
-        .success(function(data) {
+            .success(function(data) {
               $scope.formatterSelected = null;
               loadFormatter();
             })
-        .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('formatterRemovalError'),
                 error: data,

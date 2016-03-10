@@ -104,10 +104,8 @@
           });
 
           var searchMap = new ol.Map({
-            controls:[],
-            layers: [new ol.layer.Tile({
-              source: new ol.source.OSM()
-            })],
+            controls: [],
+            layers: viewerMap.getLayers(),
             view: new ol.View({
               center: mapsConfig.center,
               zoom: 2
@@ -200,7 +198,7 @@
             links: ['LINK', 'kml'],
             downloads: ['DOWNLOAD'],
             //layers:['OGC', 'kml'],
-            layers:['OGC'],
+            layers: ['OGC'],
             maps: ['ows']
           };
 
