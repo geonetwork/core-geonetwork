@@ -40,8 +40,9 @@
           [
         '$http',
         'gnGlobalSettings',
+        'gnSearchSettings',
         'gnRelatedResources',
-        function($http, gnGlobalSettings, gnRelatedResources) {
+        function($http, gnGlobalSettings, gnSearchSettings, gnRelatedResources) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {
@@ -98,9 +99,12 @@
               };
               scope.config = gnRelatedResources;
 
-              scope.$watchCollection('md', function() {
-                scope.updateRelations();
-              });
+              if (gnSearchSettings.displayChildren === undefined ||
+                  gnSearchSettings.displayChildren === true) {
+                scope.$watchCollection('md', function() {
+                  scope.updateRelations();
+                });
+              }
 
               /**
                * Return an array of all relations of the given types

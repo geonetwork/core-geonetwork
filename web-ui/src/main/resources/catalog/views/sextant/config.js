@@ -337,6 +337,9 @@
 
       viewerSettings.menuExpanded = true;
 
+      // Define if children button must be displayed in search results.
+      searchSettings.displayChildren = true;
+
       if(typeof sxtSettings != 'undefined') {
         angular.extend(searchSettings, sxtSettings);
         angular.extend(gnPanierSettings, sxtSettings.panier);
@@ -355,6 +358,9 @@
         }
         if(sxtSettings.menuExpanded)  {
           viewerSettings.menuExpanded = sxtSettings.menuExpanded;
+        }
+        if(sxtSettings.displayChildren)  {
+          searchSettings.displayChildren = sxtSettings.displayChildren;
         }
         if(angular.isUndefined(searchSettings.tabOverflow.search)) {
           delete searchSettings.mainTabs.search;
@@ -385,7 +391,5 @@
           _groupPublished: searchSettings.configWhat.replace(/,/g, ' or ')
         })
       }
-
-
     }]);
 })();
