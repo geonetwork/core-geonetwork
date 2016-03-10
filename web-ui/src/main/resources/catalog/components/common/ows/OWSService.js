@@ -121,14 +121,14 @@
                 $http.get(proxyUrl, {
                   cache: true
                 })
-                  .success(function(data) {
+                    .success(function(data) {
                       try {
                         defer.resolve(displayFileContent(data));
                       } catch (e) {
                         defer.reject('capabilitiesParseError');
                       }
                     })
-                  .error(function(data, status) {
+                    .error(function(data, status) {
                       defer.reject(status);
                     });
               }

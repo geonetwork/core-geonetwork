@@ -132,13 +132,18 @@
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.name) {
+<<<<<<< HEAD
             var re=this.getREForPar('type');
+=======
+            var re = this.getREForPar('type');
+>>>>>>> 087065de2ba4d080ce07cb9e283c590e3884fb25
 
             if (layer.group == 'Background layers' &&
                 layer.name.match(re)) {
               var type = re.exec(layer.name)[1];
 
               //Check if we have a layer parameter
+<<<<<<< HEAD
               re=this.getREForPar('layer');
 
               var opt;
@@ -149,6 +154,18 @@
 
               if (type != 'wmts') {
                 var olLayer = gnMap.createLayerForType(type,opt);
+=======
+              re = this.getREForPar('layer');
+
+              var opt;
+              if (layer.name.match(re)) {
+                var lyr = re.exec(layer.name)[1];
+                opt = {name: lyr};
+              }
+
+              if (type != 'wmts') {
+                var olLayer = gnMap.createLayerForType(type, opt);
+>>>>>>> 087065de2ba4d080ce07cb9e283c590e3884fb25
 
                 if (olLayer) {
                   bgLayers.push({layer: olLayer, idx: i});
@@ -415,7 +432,7 @@
                     olL.set('bgIdx', bgIdx);
                   }
                   return olL;
-                }).catch (function() {});
+                }).catch(function() {});
           }
         }
         else { // we suppose it's WMS
@@ -431,7 +448,7 @@
                   olL.set('label', layer.title);
                 }
                 return olL;
-              }).catch (function() {});
+              }).catch(function() {});
         }
       };
 
@@ -445,11 +462,19 @@
        *
        * * @param {Object} context parameter
        */
+<<<<<<< HEAD
         this.getREForPar = function(par) {
 
             return re=new RegExp(par + '\\s*=\\s*([^,|^}|^\\s]*)');
 
         };
+=======
+      this.getREForPar = function(par) {
+
+            return re = new RegExp(par + '\\s*=\\s*([^,|^}|^\\s]*)');
+
+      };
+>>>>>>> 087065de2ba4d080ce07cb9e283c590e3884fb25
 
     }
   ]);
