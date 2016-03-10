@@ -568,8 +568,15 @@ div.gn-individualName {
   padding-top: 20px !important;
 }
 
-.gn-tab-sextant-contact, .gn-tab-sextant-metadata {
+.gn-tab-sextant-contact,
+.gn-tab-sextant-metadata,
+.gn-tab-sextant-identification {
   div.gn-individualName.gn-extra-field > label {
     visibility: visible;
+  }
+  [data-gn-keyword-selector] {
+    .btn-group.pull-right {
+      display: none;
+    }
   }
 }
