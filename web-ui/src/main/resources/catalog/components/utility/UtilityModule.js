@@ -32,7 +32,7 @@
     'gn_utility_service',
     'gn_utility_directive'
   ])
-      .filter('characters', function() {
+  .filter('characters', function() {
         return function(input, chars, breakOnWord) {
           if (isNaN(chars)) return input;
           if (chars <= 0) return '';
@@ -55,7 +55,7 @@
           return input;
         };
       })
-      .filter('words', function() {
+.filter('words', function() {
         return function(input, words) {
           if (isNaN(words)) return input;
           if (words <= 0) return '';
@@ -68,7 +68,7 @@
           return input;
         };
       })
-      .filter('striptags', function() {
+.filter('striptags', function() {
         return function(value, allowed) {
           if (!value) return value;
           allowed = (((allowed || '') + '').toLowerCase().
@@ -86,7 +86,7 @@
       /* filter to split a string and grab the nth item
  (default splitter: '|', default item: 1st),
  used on {{metadata[n].type | split:',':0 }}*/
-      .filter('split', function() {
+.filter('split', function() {
         return function(input, splitChar, splitIndex) {
           if (!input || !angular.isFunction(input.split)) {
             return '';

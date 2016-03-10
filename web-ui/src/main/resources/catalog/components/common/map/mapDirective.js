@@ -28,7 +28,7 @@
   angular.module('gn_map_directive',
       ['gn_owscontext_service'])
 
-      .directive(
+    .directive(
       'gnDrawBbox',
       [
        'gnMap',

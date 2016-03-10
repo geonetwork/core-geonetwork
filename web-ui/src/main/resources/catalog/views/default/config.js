@@ -104,7 +104,7 @@
           });
 
           var searchMap = new ol.Map({
-            controls: [],
+            controls:[],
             layers: viewerMap.getLayers(),
             view: new ol.View({
               center: mapsConfig.center,
@@ -198,7 +198,7 @@
             links: ['LINK', 'kml'],
             downloads: ['DOWNLOAD'],
             //layers:['OGC', 'kml'],
-            layers: ['OGC'],
+            layers:['OGC'],
             maps: ['ows']
           };
 
