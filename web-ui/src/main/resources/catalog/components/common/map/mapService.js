@@ -1440,6 +1440,14 @@
                   }),
                   title: 'Bing Aerial'
                 });
+              case 'stamen':
+                return new ol.layer.Tile({
+                  source: new ol.source.Stamen({
+                    //We make watercolor the default layer
+                    layer: (opt && opt.name ? opt.name : 'watercolor')
+                  }),
+                  title: 'Stamen'
+                });
               case 'wmts':
                 var that = this;
                 if (opt.name && opt.url) {
