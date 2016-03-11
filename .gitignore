@@ -34,6 +34,7 @@ schematrons/.build
 docs/*/users/build
 docs/schema-loc-*.rst
 .props/
+web/src/main/webapp/WEB-INF/server.prop
 *.iml
 .idea/
 eclipse/

@@ -874,6 +874,8 @@
     "system/xlinkResolver/enable-help": "Quand la résolution des XLinks est activé, les URL des XLinks sont interrogées et le contenu inséré dans les fiches à la position demandée.",
     "system/xlinkResolver/localXlinkEnable": "Activer les XLinks locaux",
     "system/xlinkResolver/localXlinkEnable-help": "Local XLinks are using local://<lang>/<service> URL to make references to related sections instead of HTTP URL. Local XLinks are usually faster than HTTP XLinks.",
+    "system/xlinkResolver/ignore": "Elements to ignore by XLink resolution",
+    "system/xlinkResolver/ignore-help": "Comma separated list of elements to ignore by XLink resolution",
     "system/z3950": "Z39.50",
     "system/z3950/enable": "Activer Z39.50 Server",
     "system/z3950/enable-help": "S'il est mis en place, le composant serveur Z39.50 sera démarré lors du démarrage du catalogue. Ce composant utilise le protocole ISO23950.",
