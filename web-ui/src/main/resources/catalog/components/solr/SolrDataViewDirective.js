@@ -93,10 +93,16 @@
                    }
                  });
 
+                 // TODO: Should use the solObject to get table of results
+                 // and do paging/sorting instead of re-running the query
                  solrObject.on('search', function(event) {
+                   var url = solrUrl.replace('rows=0', '');
+                   if (url.indexOf('&q=') === -1) {
+                     url += '&q=*:*';
+                   }
                    table.bootstrapTable('destroy');
                    table.bootstrapTable({
-                     url: solrUrl.replace('rows=0', ''),
+                     url: url,
                      queryParams: function(p) {
                        return {
                          rows: p.limit,

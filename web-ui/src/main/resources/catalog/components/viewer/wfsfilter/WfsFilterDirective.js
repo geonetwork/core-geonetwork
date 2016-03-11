@@ -24,6 +24,7 @@
 (function() {
   goog.provide('gn_wfsfilter_directive');
 
+
   var module = angular.module('gn_wfsfilter_directive', [
   ]);
 
@@ -47,7 +48,8 @@
           featureTypeName: '@',
           wfsUrl: '@',
           displayCount: '@',
-          layer: '='
+          layer: '=',
+          heatmapConfig: '@'
         },
         link: function(scope, element, attrs) {
 
@@ -60,25 +62,31 @@
           // Display or not the results count
           scope.showCount = angular.isDefined(attrs['showcount']);
 
+          scope.heatmapConfig = angular.fromJson(scope.heatmapConfig);
+
           // Get an instance of solr object
           var solrObject =
               gnSolrRequestManager.register('WfsFilter', 'facets');
           var heatmapsRequest =
               gnSolrRequestManager.register('WfsFilter', 'heatmaps');
-
+          var defaultHeatmapConfig = {
+            radius: 30,
+            blur: 55,
+            opacity: .7,
+            //gradient: ['#0f0', '#ff0', '#f00', '#fff'],
+            visible: true
+          };
           scope.isHeatMapVisible = false;
           scope.heatmapLayer = null;
           scope.source = null;
           if (scope.map) {
             scope.source = new ol.source.Vector();
             scope.isHeatMapVisible = true;
-            scope.heatmapLayer = new ol.layer.Heatmap({
-              source: scope.source,
-              radius: 40,
-              blur: 50,
-              opacity: .8,
-              visible: scope.isHeatMapVisible
-            });
+            scope.heatmapLayer = new ol.layer.Heatmap(
+                angular.extend({
+                  source: scope.source,
+                  visible: scope.isHeatMapVisible
+                }, defaultHeatmapConfig, scope.heatmapConfig));
             scope.map.addLayer(scope.heatmapLayer);
 
             $('body').append('<div id="heatmap-info" data-content=""' +
@@ -219,12 +227,12 @@
               scope.status = error.statusText;
             });
           };
-          scope.dropFeatures = function () {
+          scope.dropFeatures = function() {
             return gnSolrService.deleteDocs('+featureTypeId:"' +
-              scope.url + '#' + ftName + '"').then(function() {
+                scope.url + '#' + ftName + '"').then(function() {
               scope.initSolrRequest();
             });
-          }
+          };
           /**
            * Update the state of the facet search.
            * The `scope.output` structure represent the state of the facet

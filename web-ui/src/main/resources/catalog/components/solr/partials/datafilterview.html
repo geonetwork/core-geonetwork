@@ -23,7 +23,15 @@
         <div class="col-md-2">
           <div data-gn-wfs-filter-facets=""
                data-layer="currentLayer"
-               data-boot-mode="solr"></div>
+               data-boot-mode="solr"
+               ></div>
+          <!--
+          eg. with a custom gradient
+          <div data-gn-wfs-filter-facets=""
+               data-layer="currentLayer"
+               data-boot-mode="solr"
+               data-heatmap-config='{"gradient": ["#9e9ac8","#8582bc","#7262ac","#61409b","#4f1f8b"]}'
+               data-heatmap-config='{"gradient": ["#ffffe5","#fef0ad","#fece65","#fe9929","#e1640e","#aa3c03"]}'></div>-->
         </div>
         <div class="col-md-10">
           <div data-gn-data-table="currentLayer.get('solrQ')"

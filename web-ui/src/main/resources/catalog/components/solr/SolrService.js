@@ -59,6 +59,41 @@
                   ymin = Math.max(extent[1], -90).toFixed(5),
                   ymax = Math.min(extent[3], 90).toFixed(5);
 
+
+              // Compute grid level based on current zoom
+              // Zoom goes from 1 to 28
+              // GridLevel 1 to 11 but Solr may return exception
+              // if too many cells are requested (depends on extent).
+              // Restrict between 3 and 11
+              var gridLevel = function(z) {
+                if (0 <= z && z <= 2) {return 2;}
+                if (2 < z && z <= 5) {return 3;}
+                if (5 < z && z <= 7) {return 4;}
+                if (7 < z && z <= 10) {return 5;}
+                if (10 < z && z <= 12) {return 6;}
+                if (12 < z && z <= 14) {return 7;}
+                if (14 < z && z <= 18) {return 8;}
+                if (18 < z && z <= 20) {return 9;}
+                if (20 < z && z <= 24) {return 10;}
+                if (24 < z) {return 11;}
+                // Depends on distErrPct in Solr geom field configuration
+                // TODO: Maybe compute another lower grid level
+                // when the following exception occur: Caused by:
+                // java.lang.IllegalArgumentException: Too many cells
+                // (361 x 434) for level 8 shape
+                // Rect(minX=3.49852,maxX=3.62211,minY=40.49707,maxY=40.57137)
+              };
+              var computedGridLevel = gridLevel(map.getView().getZoom());
+              //var computedGridLevel =
+              //  (Math.min(11,
+              //    Math.max(2,
+              //      (map.getView().getZoom() / 2)
+              //      // Better resolution but slow
+              //      //(map.getView().getZoom() / 2) + 1
+              //  ))).toFixed(0);
+              //console.log('Zoom: ' + map.getView().getZoom() +
+              //  ' Grid: ' + computedGridLevel);
+
               return {
                 'facet.heatmap': name || 'geom',
                 'facet.heatmap.geom': '["' +
@@ -67,9 +102,7 @@
                     xmax + ' ' +
                     ymax + '"]',
                 'facet.heatmap.gridLevel':
-                    gridlevel ||
-                    // Compute grid level based on current zoom
-                    Math.max(3, map.getView().getZoom() / 2).toFixed(0)
+                    gridlevel || computedGridLevel
               };
             };
             /**
@@ -77,9 +110,11 @@
              *
              * @param {object} heatmap The heatmap object from the Solr response
              * @param {string} proj  The map projection to create feature into.
+             * @param {string} asGrid Use a grid instead of points
+             * in cell center
              * @return {Array}
              */
-            function heatmapToFeatures(heatmap, proj) {
+            function heatmapToFeatures(heatmap, proj, asGrid) {
               var grid = {}, features = [];
               for (var i = 0; i < heatmap.length; i++) {
                 grid[heatmap[i]] = heatmap[i + 1];
@@ -90,10 +125,10 @@
                 // then the inner arrays are the columns (left-right).
                 // The entire value is null if there is no matching data.
                 var rows = grid.counts_ints2D,
-                    xcell = (grid.maxX - grid.minX) / grid.columns,
-                    ycell = (grid.maxY - grid.minY) / grid.rows,
+                    cellwidth = (grid.maxX - grid.minX) / grid.columns,
+                    cellheight = (grid.maxY - grid.minY) / grid.rows,
                     max = 0;
-
+                //console.log(grid.columns + " x " + grid.rows);
                 if (rows === null) {
                   console.warn('Empty heatmap returned.');
                   return [];
@@ -115,29 +150,50 @@
                     if (rows[i][j] == 0) {
                       continue;
                     }
-                    var point = new ol.geom.Point([
-                      grid.minX + xcell * j + xcell / 2,
-                      grid.maxY - ycell * i - ycell / 2]);
+                    var geom;
+                    // TODO: Start of experiment to display grid
+                    if (asGrid) {
+                      var pt = new ol.geom.Point([
+                        grid.minX + cellwidth * j,
+                        grid.maxY - cellheight * i]);
+                      var ulc = pt.clone();
+                      var coords = [ulc.getCoordinates()];
+                      pt.translate(0, -cellheight);
+                      coords.push(pt.getCoordinates());
+                      pt.translate(cellwidth, 0);
+                      coords.push(pt.getCoordinates());
+                      pt.translate(0, cellheight);
+                      coords.push(pt.getCoordinates());
+                      coords.push(ulc.getCoordinates());
+                      geom = new ol.geom.Polygon([coords]);
+                    } else {
+                      geom = new ol.geom.Point([
+                        grid.minX + cellwidth * j + cellwidth / 2,
+                        grid.maxY - cellheight * i - cellheight / 2]);
+                    }
                     var value = rows[i][j];
+                    var weight = (value / max).toFixed(4);
+                    //var weight = 1 - (1 / (1 + value / (1 / max)));
                     var feature = new ol.Feature({
-                      geometry: point.transform(
+                      geometry: geom.transform(
                           'EPSG:4326',
                           proj),
                       count: value,
-                      weight: value / max
+                      weight: weight
                     });
+                    //console.log(value + " = " + weight);
                     features.push(feature);
                   }
                 }
               }
               return features;
             };
-            function deleteDocs(filter){
+            function deleteDocs(filter) {
               return $http.delete(
-                '../api/search/update',
-                {
-                  params: {'query': filter}
-                }
+                  '../api/search/update',
+                  {
+                    params: {'query': filter}
+                  }
               );
             };
             return {
