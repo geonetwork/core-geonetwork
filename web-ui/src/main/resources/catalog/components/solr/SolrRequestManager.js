@@ -71,7 +71,7 @@
 
       // Instanciate the solr request object
       if (!pool_[objId]) {
-        var solrObj = new geonet.GnSolrRequest(
+        var solrObj = new geonetwork.GnSolrRequest(
             $injector.get(configName), $injector);
         pool_[objId] = solrObj;
       }
