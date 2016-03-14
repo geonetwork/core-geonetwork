@@ -27,10 +27,13 @@ public class Functions {
         el.'gmd:URL'.text()
     }
     def isoText = { el ->
-        def uiCode = '#'+env.lang2.toUpperCase()
+        def uiCode2 = '#'+env.lang2.toUpperCase()
+        def uiCode3 = '#'+env.lang3.toUpperCase()
+
         def locStrings = el.'**'.findAll{ it.name() == 'gmd:LocalisedCharacterString' && !it.text().isEmpty()}
-        def ptEl = locStrings.find{it.'@locale' == uiCode}
+        def ptEl = locStrings.find{(it.'@locale' == uiCode2 || it.'@locale' == uiCode3)}
         if (ptEl != null) return ptEl.text()
+
         def charString = el.'**'.findAll {it.name() == 'gco:CharacterString' && !it.text().isEmpty()}
         if (!charString.isEmpty()) return charString[0].text()
         if (!locStrings.isEmpty()) return locStrings[0].text()
