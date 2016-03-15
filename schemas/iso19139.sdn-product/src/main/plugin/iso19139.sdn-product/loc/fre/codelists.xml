@@ -54,5 +54,10 @@
 			<label>Originator</label>
 			<description>Party who created the resource</description>
 		</entry>
+    <entry>
+      <code>resourceProvider</code>
+      <label>Resource provider</label>
+      <description>Party that supplies the resource</description>
+    </entry>
 	</codelist>
 </codelists>
