@@ -242,7 +242,7 @@
     };
     if (this.config.docIdField) {
       params.fq = this.config.docIdField +
-                    ':"' + this.config.idDoc(options) + '"';
+          ':"' + this.config.idDoc(options) + '"';
     }
     var url = this.buildSolrUrl(params);
     this.baseUrl = url;

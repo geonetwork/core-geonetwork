@@ -134,12 +134,13 @@
         var re = /type\s*=\s*([^,|^}|^\s]*)/;
         var promises = [];
         for (i = 0; i < layers.length; i++) {
-          var layer = layers[i];
+          var type, layer = layers[i];
           if (layer.name) {
-            if (layer.group == 'Background layers' &&
-                layer.name.match(re)) {
-              var type = re.exec(layer.name)[1];
-              if (type != 'wmts') {
+            if (layer.group == 'Background layers') {
+
+              // {type=bing_aerial} (mapquest, osm ...)
+              if (layer.name.match(re) &&
+                  (type = re.exec(layer.name)[1]) != 'wmts') {
                 var olLayer = gnMap.createLayerForType(type);
                 if (olLayer) {
                   bgLayers.push({layer: olLayer, idx: i});
@@ -149,6 +150,8 @@
                   olLayer.setVisible(!layer.hidden);
                 }
               }
+
+              // {type=wmts,name=Ocean_Basemap} or WMS
               else {
                 promises.push(this.createLayer(layer, map, i).then(
                     function(olLayer) {
@@ -199,6 +202,12 @@
                 firstVisibleBgLayer = false;
               }
             });
+            if (firstVisibleBgLayer && gnViewerSettings.bgLayers.length) {
+              var l = gnViewerSettings.bgLayers[0];
+              l.setVisible(true);
+              map.getLayers().insertAt(0, l);
+              firstVisibleBgLayer = false;
+            }
           }
         });
       };

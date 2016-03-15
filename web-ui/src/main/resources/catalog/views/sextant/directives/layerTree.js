@@ -146,7 +146,7 @@
               var fLayers = $filter('filter')(scope.layers,
                   scope.layerFilterFn);
 
-              if(scope.layerFilter.length > 2) {
+              if(scope.layerFilter.q.length > 2) {
                 fLayers = $filter('filter')(fLayers, filterFn);
               }
 
@@ -184,25 +184,27 @@
             gnWmsQueue.removeFromError(layer);
           };
 
-          scope.layerFilter = '';
+          scope.layerFilter = {
+            q: ''
+          };
           var filterFn = function(layer) {
             var labelLc = layer.get('label') && layer.get('label').
                 toLowerCase();
             var groupLc = layer.get('group') && layer.get('group').
                 toLowerCase();
-            var filterLc = scope.layerFilter.toLowerCase();
+            var filterLc = scope.layerFilter.q.toLowerCase();
             return (labelLc && labelLc.indexOf(filterLc)) >= 0 ||
                 (groupLc && groupLc.indexOf(filterLc) >= 0);
           };
 
           scope.filterLayers = function() {
-            if(scope.layerFilter == '' || scope.layerFilter.length > 2) {
+            if(scope.layerFilter.q == '' || scope.layerFilter.q.length > 2) {
               buildTree();
             }
           };
 
           scope.filterClear = function() {
-            scope.layerFilter = '';
+            scope.layerFilter.q = '';
             scope.filterLayers();
           };
 

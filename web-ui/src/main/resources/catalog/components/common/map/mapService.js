@@ -629,7 +629,7 @@
                 if (legendUrl) {
                   legend = legendUrl.OnlineResource;
                 }
-                legend = encodeURI(legend)
+                legend = encodeURI(legend);
               }
               if (angular.isDefined(getCapLayer.Attribution)) {
                 if (angular.isArray(getCapLayer.Attribution)) {
@@ -1057,7 +1057,7 @@
                   var layers = capObj.layers || capObj.Layer;
                   for (var i = 0, len = layers.length; i < len; i++) {
                     var capL = layers[i];
-                    if(capL.Layer) continue; // Process only leaves
+                    if (capL.Layer) continue; // Process only leaves
                     var olL = $this.createOlWMSFromCap(map, capL);
                     if (!createOnly) {
                       map.addLayer(olL);
@@ -1510,9 +1510,9 @@
           feedLayerWithDownloads: function(layer, linkGroup) {
             var md = layer.get('md');
 
-            if(!linkGroup) {
+            if (!linkGroup) {
               console.warn('The layer has not been found in any group: ' +
-              layer.getSource().getParams().LAYERS);
+                  layer.getSource().getParams().LAYERS);
               return;
             }
 

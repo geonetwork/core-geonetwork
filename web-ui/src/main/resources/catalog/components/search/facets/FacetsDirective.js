@@ -234,7 +234,7 @@
               scope.isInSearch = function(value) {
 
                 var p = scope.searchObj.params[scope.facetConfig.key];
-                if(angular.isString(p)) {
+                if (angular.isString(p)) {
                   p = [p];
                 }
                 return p && p.indexOf(value) >= 0;
@@ -248,11 +248,11 @@
                 var search = scope.searchObj.params[key];
 
                 // null, undefined or ''
-                if(!search) {
+                if (!search) {
                   scope.searchObj.params[key] = [value];
                 }
                 else {
-                  if(angular.isArray(search)) {
+                  if (angular.isArray(search)) {
                     var idx = search.indexOf(value);
                     if (idx < 0) {
                       search.push(value);

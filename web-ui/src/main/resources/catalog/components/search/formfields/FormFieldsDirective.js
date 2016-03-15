@@ -701,6 +701,7 @@
             scope: {
               crs: '=',
               value: '=',
+              required: '=',
               map: '='
             },
             templateUrl: '../../catalog/components/search/formfields/' +

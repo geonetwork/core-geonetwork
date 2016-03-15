@@ -132,12 +132,12 @@
               }
               return features;
             };
-            function deleteDocs(filter){
+            function deleteDocs(filter) {
               return $http.delete(
-                '../api/search/update',
-                {
-                  params: {'query': filter}
-                }
+                  '../api/search/update',
+                  {
+                    params: {'query': filter}
+                  }
               );
             };
             return {
