@@ -793,80 +793,103 @@
 			
 		</xsl:call-template>
 		
-		<!-- 1.4 Organization responsible for management ... -->
-		<xsl:call-template name="complexElementGuiWrapper">
-			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/pointOfContact" />
-			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/pointOfContact)" />
+    <!-- 1.4 Organization responsible for management ... -->
+    <xsl:call-template name="complexElementGuiWrapper">
+      <xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/pointOfContact" />
+      <xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/pointOfContact)" />
 
-			<xsl:with-param name="content">		
-				<xsl:if test="$edit">
-					<xsl:copy-of select="geonet:makeSubTemplateButton(gmd:identificationInfo/gmd:MD_DataIdentification/geonet:element/@ref, 
-						'gmd:pointOfContact', 
-						'gmd:CI_ResponsibleParty', 
-						/root/gui/schemas/*[name()=$schema]/strings/orgAdd,
-						/root/gui/schemas/*[name()=$schema]/strings/orgAdd, 
-						/root/gui/schemalist/name[text()=$schema]/@namespaces)"/>
-				</xsl:if>
-				
-				<!-- custodian -->
-				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
-					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']">
-					
-					<xsl:variable name="id" select="concat('seadatanet-product-', generate-id(.))"/>
-					
-					<xsl:call-template name="complexElementGuiWrapper">
-					<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/custodian"/>
-					<xsl:with-param name="id" select="$id"/>
-						<xsl:with-param name="content">
-							<span class="buttons">
-								<a class="small del" href="javascript:void(0);" 
-									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
-							</span>
-							<!-- Org name -->							
-							<xsl:apply-templates mode="iso19139.sdn-product" select=".">
-								<xsl:with-param name="schema" select="$schema"/>
-								<xsl:with-param name="edit"   select="$edit"/>
-							</xsl:apply-templates>
+      <xsl:with-param name="content">
+        <xsl:if test="$edit">
+          <xsl:copy-of select="geonet:makeSubTemplateButton(gmd:identificationInfo/gmd:MD_DataIdentification/geonet:element/@ref,
+            'gmd:pointOfContact',
+            'gmd:CI_ResponsibleParty',
+            /root/gui/schemas/*[name()=$schema]/strings/orgAdd,
+            /root/gui/schemas/*[name()=$schema]/strings/orgAdd,
+            /root/gui/schemalist/name[text()=$schema]/@namespaces)"/>
+        </xsl:if>
 
-						</xsl:with-param>
-				</xsl:call-template>
-			</xsl:for-each>
+        <!-- custodian -->
+        <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+          gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']">
 
-			<!-- originator -->
-			<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
-					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator']">
-					
-					<xsl:variable name="id" select="concat('seadatanet-product-', generate-id(.))"/>
-					
-					<xsl:call-template name="complexElementGuiWrapper">
-					<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/originator"/>
-					<xsl:with-param name="id" select="$id"/>
-						<xsl:with-param name="content">
-							<span class="buttons">
-								<a class="small del" href="javascript:void(0);" 
-									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
-							</span>
-							<!-- Org name -->							
-							<xsl:apply-templates mode="iso19139.sdn-product" select=".">
-								<xsl:with-param name="schema" select="$schema"/>
-								<xsl:with-param name="edit"   select="$edit"/>
-							</xsl:apply-templates>
-							<!-- Indiv. name -->
-<!-- 							<xsl:apply-templates mode="iso19139" select="./gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress"> -->
-<!-- 								<xsl:with-param name="schema" select="$schema"/> -->
-<!-- 								<xsl:with-param name="edit"   select="$edit"/> -->
-<!-- 							</xsl:apply-templates> -->
-							<!-- Electronic mail address -->
-<!-- 							<xsl:apply-templates mode="iso19139" select="./gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress"> -->
-<!-- 								<xsl:with-param name="schema" select="$schema"/> -->
-<!-- 								<xsl:with-param name="edit"   select="$edit"/> -->
-<!-- 							</xsl:apply-templates> -->
-						</xsl:with-param>
-				</xsl:call-template>
-			</xsl:for-each>	
-		 </xsl:with-param>
-	  </xsl:call-template>
-    </xsl:template>
+          <xsl:variable name="id" select="concat('seadatanet-product-', generate-id(.))"/>
+
+          <xsl:call-template name="complexElementGuiWrapper">
+          <xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/custodian"/>
+          <xsl:with-param name="id" select="$id"/>
+            <xsl:with-param name="content">
+              <span class="buttons">
+                <a class="small del" href="javascript:void(0);"
+                  onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
+              </span>
+              <!-- Org name -->
+              <xsl:apply-templates mode="iso19139.sdn-product" select=".">
+                <xsl:with-param name="schema" select="$schema"/>
+                <xsl:with-param name="edit"   select="$edit"/>
+              </xsl:apply-templates>
+
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:for-each>
+
+        <!-- originator -->
+        <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+            gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator']">
+
+            <xsl:variable name="id" select="concat('seadatanet-product-', generate-id(.))"/>
+
+            <xsl:call-template name="complexElementGuiWrapper">
+            <xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/originator"/>
+            <xsl:with-param name="id" select="$id"/>
+              <xsl:with-param name="content">
+                <span class="buttons">
+                  <a class="small del" href="javascript:void(0);"
+                    onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
+                </span>
+                <!-- Org name -->
+                <xsl:apply-templates mode="iso19139.sdn-product" select=".">
+                  <xsl:with-param name="schema" select="$schema"/>
+                  <xsl:with-param name="edit"   select="$edit"/>
+                </xsl:apply-templates>
+                <!-- Indiv. name -->
+    <!-- 							<xsl:apply-templates mode="iso19139" select="./gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress"> -->
+    <!-- 								<xsl:with-param name="schema" select="$schema"/> -->
+    <!-- 								<xsl:with-param name="edit"   select="$edit"/> -->
+    <!-- 							</xsl:apply-templates> -->
+                <!-- Electronic mail address -->
+    <!-- 							<xsl:apply-templates mode="iso19139" select="./gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress"> -->
+    <!-- 								<xsl:with-param name="schema" select="$schema"/> -->
+    <!-- 								<xsl:with-param name="edit"   select="$edit"/> -->
+    <!-- 							</xsl:apply-templates> -->
+              </xsl:with-param>
+          </xsl:call-template>
+        </xsl:for-each>
+
+        <!-- originator -->
+        <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+          gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='resourceProvider']">
+
+          <xsl:variable name="id" select="concat('seadatanet-product-', generate-id(.))"/>
+
+          <xsl:call-template name="complexElementGuiWrapper">
+            <xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/resourceProvider"/>
+            <xsl:with-param name="id" select="$id"/>
+            <xsl:with-param name="content">
+              <span class="buttons">
+                <a class="small del" href="javascript:void(0);"
+                   onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
+              </span>
+              <!-- Org name -->
+              <xsl:apply-templates mode="iso19139.sdn-product" select=".">
+                <xsl:with-param name="schema" select="$schema"/>
+                <xsl:with-param name="edit"   select="$edit"/>
+              </xsl:apply-templates>
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:for-each>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
 
 	
 	<!-- Match all elements in schema mode and return nothing in 

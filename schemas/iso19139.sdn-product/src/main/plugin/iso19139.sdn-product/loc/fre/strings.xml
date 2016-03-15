@@ -21,6 +21,7 @@
     <unknown>Inconnu</unknown>    
     <custodian>Gardien</custodian>
     <originator>Initiateur</originator>
+    <resourceProvider>Fournisseur</resourceProvider>
     <productAccess>Accès au produit</productAccess>
     <orgAdd>Ajouter une organisation</orgAdd>
     <creationDate>Date de création</creationDate>

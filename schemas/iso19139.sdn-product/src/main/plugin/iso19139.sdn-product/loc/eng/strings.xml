@@ -21,6 +21,7 @@
     <unknown>Unknown</unknown>
     <custodian>Custodian</custodian>
     <originator>Originator</originator>
+    <resourceProvider>Resource provider</resourceProvider>
     <productAccess>Product access</productAccess> 
     <orgAdd>Add organisation</orgAdd>
     <creationDate>Creation date</creationDate>
