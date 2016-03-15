@@ -45,6 +45,14 @@ public class WFSHarvesterExchangeState {
 
     private WFSHarvesterParameter parameters;
 
+    public static Map<String, Object> getHarvesterReport() {
+        return harvesterReport;
+    }
+
+    public static void setHarvesterReport(Map<String, Object> harvesterReport) {
+        WFSHarvesterExchangeState.harvesterReport = harvesterReport;
+    }
+
     public WFSHarvesterParameter getParameters() {
         return parameters;
     }
@@ -77,6 +85,11 @@ public class WFSHarvesterExchangeState {
         this.parameters = parameters;
         checkTaskParameters();
     }
+
+    /**
+     * A list of properties to be saved in the index
+     */
+    private static Map<String, Object> harvesterReport = new HashMap<>();
 
 
     private void checkTaskParameters() {

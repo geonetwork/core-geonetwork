@@ -104,14 +104,6 @@
           scope.removeFailed = function(layer) {
             gnWmsQueue.removeFromError(layer);
           };
-
-          function resetPopup() {
-            // Hack to remove popup on layer remove eg.
-            $('[gn-popover-dropdown] .btn').each(function(i, button) {
-              $(button).popover('hide');
-            });
-          };
-          scope.map.getLayers().on('change:length', resetPopup);
         }
       };
     }]);
@@ -147,8 +139,14 @@
           scope.showMetadata = function() {
             gnMdView.openMdFromLayer(scope.layer);
           };
-
+          function resetPopup() {
+            // Hack to remove popup on layer remove eg.
+            $('[gn-popover-dropdown] .btn').each(function(i, button) {
+              $(button).popover('hide');
+            });
+          };
           scope.removeLayer = function(layer, map) {
+            resetPopup();
             map.removeLayer(layer);
           };
           scope.zoomToExtent = function(layer, map) {

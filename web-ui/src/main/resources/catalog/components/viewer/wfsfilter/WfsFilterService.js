@@ -27,6 +27,7 @@
   var module = angular.module('gn_wfsfilter_service', [
   ]);
 
+
   module.service('wfsFilterService', [
     'gnSolrRequestManager',
     'gnHttp',

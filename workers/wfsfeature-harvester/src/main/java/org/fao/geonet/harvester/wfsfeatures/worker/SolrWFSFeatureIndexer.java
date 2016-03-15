@@ -61,6 +61,7 @@ import java.util.regex.Pattern;
 
 public class SolrWFSFeatureIndexer {
     public static final String MULTIVALUED_SUFFIX = "s";
+    public static final String FEATURE_FIELD_PREFIX = "ft_";
     private SolrClient solr;
 
 
@@ -113,10 +114,6 @@ public class SolrWFSFeatureIndexer {
      */
     private static Map<String, String> XSDTYPES_TO_SOLRFIELDSUFFIX;
 
-    /**
-     * A list of properties to be saved in the index
-     */
-    private static Map<String, Object> harvesterReportFields = new HashMap<>();
 
     Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     // TODO: Move attributeType / solr dynamic index field suffix to config
@@ -212,15 +209,15 @@ public class SolrWFSFeatureIndexer {
         }
     }
 
-    private void saveHarvesterReport() {
+    private void saveHarvesterReport(WFSHarvesterExchangeState state) {
         solr = new HttpSolrClient(solrCollectionUrl);
         SolrInputDocument harvestingTaskDocument = new SolrInputDocument();
-        Iterator<String> fields = harvesterReportFields.keySet().iterator();
+        Iterator<String> fields = state.getHarvesterReport().keySet().iterator();
         while (fields.hasNext()) {
             String field = fields.next();
             harvestingTaskDocument.addField(
                     field,
-                    harvesterReportFields.get(field));
+                    state.getHarvesterReport().get(field));
         }
         try {
             UpdateResponse response = solr.add(harvestingTaskDocument);
@@ -251,37 +248,40 @@ public class SolrWFSFeatureIndexer {
                 url, typeName));
 
         WFSDataStore wfs = state.getWfsDatastore();
-        Map<String, String> fields = state.getFields();
+        // Feature attribute name and type
+        Map<String, String> featureAttributes = state.getFields();
+        // Feature attribute name and document field name
+        Map<String, String> documentFields = new LinkedHashMap<String, String>();
 
         solr = new HttpSolrClient(solrCollectionUrl);
 
-        harvesterReportFields.put("id", url + "#" + typeName);
-        harvesterReportFields.put("docType", "harvesterReport");
+        state.getHarvesterReport().put("id", url + "#" + typeName);
+        state.getHarvesterReport().put("docType", "harvesterReport");
 
         final Map<String, String> tokenizedFields = state.getParameters().getTokenize();
         final boolean hasTokenizedFields = tokenizedFields != null;
 
-        List<String> docColumns = new ArrayList<>(fields.size());
-        for (String attributeName : fields.keySet()) {
-            String attributeType = fields.get(attributeName);
+        for (String attributeName : featureAttributes.keySet()) {
+            String attributeType = featureAttributes.get(attributeName);
             String separator = null;
             if (hasTokenizedFields) {
                 separator = tokenizedFields.get(attributeName);
             }
             if (attributeType.equals("geometry")) {
-                docColumns.add("geom");
+                documentFields.put(attributeName, "geom");
             } else {
                 boolean isTokenized = separator != null;
-                docColumns.add(attributeName +
+                documentFields.put(attributeName, FEATURE_FIELD_PREFIX +
+                               attributeName +
                                XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType) +
                                (isTokenized ? MULTIVALUED_SUFFIX : "")
                 );
             }
         }
-        harvesterReportFields.put("ftColumns_s", Joiner.on("|").join(fields.keySet()));
-        harvesterReportFields.put("docColumns_s", Joiner.on("|").join(docColumns));
+        state.getHarvesterReport().put("ftColumns_s", Joiner.on("|").join(featureAttributes.keySet()));
+        state.getHarvesterReport().put("docColumns_s", Joiner.on("|").join(documentFields.values()));
         if (state.getParameters().getMetadataUuid() != null) {
-            harvesterReportFields.put("parent", state.getParameters().getMetadataUuid());
+            state.getHarvesterReport().put("parent", state.getParameters().getMetadataUuid());
         }
 
         CoordinateReferenceSystem wgs84 = CRS.decode("EPSG:4326");
@@ -317,10 +317,10 @@ public class SolrWFSFeatureIndexer {
             int numInBatch = 0, nbOfFeatures = 0;
             Collection<SolrInputDocument> docCollection = new ArrayList<SolrInputDocument>();
 
-            saveHarvesterReport();
+            saveHarvesterReport(state);
 
             String titleExpression = state.getParameters().getTitleExpression();
-            String defaultTitleAttribute = titleExpression == null ? guessFeatureTitleAttribute(fields) : null;
+            String defaultTitleAttribute = titleExpression == null ? guessFeatureTitleAttribute(featureAttributes) : null;
 
             while (features.hasNext()) {
                 SimpleFeature feature = features.next();
@@ -334,51 +334,43 @@ public class SolrWFSFeatureIndexer {
 
                 if (titleExpression != null) {
                     document.addField("resourceTitle",
-                            buildFeatureTitle(feature, fields, titleExpression));
+                            buildFeatureTitle(feature, featureAttributes, titleExpression));
                 }
 
                 if (state.getParameters().getMetadataUuid() != null) {
                     document.addField("parent", state.getParameters().getMetadataUuid());
                 }
 
-                for (String attributeName : fields.keySet()) {
-                    String attributeType = fields.get(attributeName);
+                for (String attributeName : featureAttributes.keySet()) {
+                    String attributeType = featureAttributes.get(attributeName);
                     Object attributeValue = feature.getAttribute(attributeName);
 
                     if (attributeValue != null) {
-                        if (attributeType.equals("geometry")) {
-                            try {
-                             document.addField("geom", attributeValue);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                        // Check if field has to be tokenized
+                        String separator = null;
+                        if (hasTokenizedFields) {
+                            separator = tokenizedFields.get(attributeName);
+                        }
+                        boolean isTokenized = separator != null;
+                        if (isTokenized){
+                            StringTokenizer tokenizer =
+                                    new StringTokenizer((String) attributeValue, separator);
+                            while (tokenizer.hasMoreElements()) {
+                                String token = tokenizer.nextToken();
+                                document.addField(
+                                    documentFields.get(attributeName),
+                                    token);
                             }
                         } else {
-                            // Check if field has to be tokenized
-                            String separator = null;
-                            if (hasTokenizedFields) {
-                                separator = tokenizedFields.get(attributeName);
-                            }
-                            boolean isTokenized = separator != null;
-                            if (isTokenized){
-                                StringTokenizer tokenizer =
-                                        new StringTokenizer((String) attributeValue, separator);
-                                while (tokenizer.hasMoreElements()) {
-                                    String token = tokenizer.nextToken();
-                                    document.addField(
-                                        attributeName + XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType) + MULTIVALUED_SUFFIX,
-                                        token);
-                                }
-                            } else {
-                                document.addField(
-                                        attributeName + XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType),
-                                        attributeValue);
-                            }
+                            document.addField(
+                                    documentFields.get(attributeName),
+                                    attributeValue);
+                        }
 
 
-                            if (defaultTitleAttribute != null &&
-                                defaultTitleAttribute.equals(attributeName)) {
-                                document.addField("resourceTitle", attributeValue);
-                            }
+                        if (defaultTitleAttribute != null &&
+                            defaultTitleAttribute.equals(attributeName)) {
+                            document.addField("resourceTitle", attributeValue);
                         }
                     }
                 }
@@ -417,22 +409,22 @@ public class SolrWFSFeatureIndexer {
                 }
             }
             logger.info(String.format("Total number of features indexed is %d.", nbOfFeatures));
-            harvesterReportFields.put("status_s", "success");
-            harvesterReportFields.put("totalRecords_i", nbOfFeatures);
-            harvesterReportFields.put("endDate_dt",
+            state.getHarvesterReport().put("status_s", "success");
+            state.getHarvesterReport().put("totalRecords_i", nbOfFeatures);
+            state.getHarvesterReport().put("endDate_dt",
                     ISODateTimeFormat.dateTime().print(new DateTime()));
         } catch (IOException e) {
-            harvesterReportFields.put("status_s", "error");
-            harvesterReportFields.put("error_s", e.getMessage());
+            state.getHarvesterReport().put("status_s", "error");
+            state.getHarvesterReport().put("error_s", e.getMessage());
             logger.error(e.getMessage());
             throw e;
         } catch (SolrServerException e) {
-            harvesterReportFields.put("status_s", "error");
-            harvesterReportFields.put("error_s", e.getMessage());
+            state.getHarvesterReport().put("status_s", "error");
+            state.getHarvesterReport().put("error_s", e.getMessage());
             logger.error(e.getMessage());
             throw e;
         } finally {
-            saveHarvesterReport();
+            saveHarvesterReport(state);
         }
     }
 
