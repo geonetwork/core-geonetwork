@@ -75,8 +75,9 @@
     '$q',
     '$filter',
     '$timeout',
+    'gnGlobalSettings',
     function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
-             $translate, $q, $filter, $timeout) {
+             $translate, $q, $filter, $timeout, gnGlobalSettings) {
 
       var firstLoad = true;
 
@@ -217,10 +218,10 @@
        * @param {string} url URL to context
        * @param {ol.map} map map
        */
-      this.loadContextFromUrl = function(url, map, useProxy) {
+      this.loadContextFromUrl = function(url, map) {
         var self = this;
-        if (useProxy) {
-          url = '../../proxy?url=' + encodeURIComponent(url);
+        if (/^(f|ht)tps?:\/\//i.test(url)) {
+          url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
         }
         $http.get(url).success(function(data) {
           self.loadContext(data, map);

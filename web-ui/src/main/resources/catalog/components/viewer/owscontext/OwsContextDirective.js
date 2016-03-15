@@ -145,7 +145,7 @@
               window[gnViewerSettings.storage] : window.localStorage;
           if (gnViewerSettings.owsContext) {
             gnOwsContextService.loadContextFromUrl(gnViewerSettings.owsContext,
-                scope.map, true);
+                scope.map);
           } else if (storage.getItem('owsContext')) {
             var c = storage.getItem('owsContext');
             gnOwsContextService.loadContext(c, scope.map);
