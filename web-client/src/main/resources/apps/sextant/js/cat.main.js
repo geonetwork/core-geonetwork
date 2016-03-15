@@ -289,7 +289,7 @@ cat.app = function() {
               url += 'create/from/' + metadataId +
                 '/in/' + group;
             } else {
-              url += 'metadata/' + metadataId + '/tab/sextant';
+              url += 'metadata/' + metadataId + '/tab/sextant-identification';
             }
             window.open(
               catalogue.services.rootUrl + url)
