@@ -194,6 +194,12 @@
                 firstVisibleBgLayer = false;
               }
             });
+            if(firstVisibleBgLayer && gnViewerSettings.bgLayers.length) {
+              var l = gnViewerSettings.bgLayers[0];
+              l.setVisible(true);
+              map.getLayers().insertAt(0, l);
+              firstVisibleBgLayer = false;
+            }
           }
         });
       };
