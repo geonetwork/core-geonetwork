@@ -168,12 +168,6 @@
               $scope.mdTitle = data.metadata[0].title ||
                   data.metadata[0].defaultTitle;
 
-              if ($scope.mdSchema === 'fgdc-std' ||
-                  $scope.mdSchema === 'iso19115') {
-                $scope.unsupportedSchema = true;
-                return;
-              }
-
               // Set default schema configuration in case none is defined
               var config =
                   gnConfig['metadata.editor.schemaConfig'][$scope.mdSchema];
