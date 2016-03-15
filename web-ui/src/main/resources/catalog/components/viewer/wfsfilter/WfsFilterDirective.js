@@ -219,12 +219,12 @@
               scope.status = error.statusText;
             });
           };
-          scope.dropFeatures = function () {
+          scope.dropFeatures = function() {
             return gnSolrService.deleteDocs('+featureTypeId:"' +
-              scope.url + '#' + ftName + '"').then(function() {
+                scope.url + '#' + ftName + '"').then(function() {
               scope.initSolrRequest();
             });
-          }
+          };
           /**
            * Update the state of the facet search.
            * The `scope.output` structure represent the state of the facet
