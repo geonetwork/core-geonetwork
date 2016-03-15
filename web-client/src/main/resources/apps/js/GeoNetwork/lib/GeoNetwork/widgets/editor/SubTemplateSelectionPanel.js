@@ -275,7 +275,12 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         
         this.codeListStore.on({
             'load': function(){
-                this.defaultRole && this.codeListCombo.setValue(this.defaultRole);
+                if (this.defaultRole) {
+                  this.codeListCombo.setValue(this.defaultRole);
+                } else {
+                  this.codeListCombo.setValue(
+                    this.codeListStore.data.get(0).get('code'));
+                };
             },
             scope: this
         });
