@@ -574,7 +574,10 @@ public class Handlers {
             useLimitation = el."gmd:useLimitation"
             accessConstraints = f.codelistValueLabel(el."gmd:accessConstraints"."gmd:MD_RestrictionCode")
             useConstraints = f.codelistValueLabel(el."gmd:useConstraints"."gmd:MD_RestrictionCode")
-            otherConstraints = el.collectNested {it.'**'.findAll{it.name() == 'gmd:otherConstraints'}}.flatten()
+            otherConstraints = []
+            el.collectNested {it.'**'.findAll{it.name() == 'gmd:otherConstraints'}}.flatten().each { k ->
+                otherConstraints.add(this.isofunc.isoText(k))
+            }
         }
 
         def replacements = [

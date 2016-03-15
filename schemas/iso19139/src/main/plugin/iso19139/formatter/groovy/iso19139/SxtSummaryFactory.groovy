@@ -125,9 +125,14 @@ class SxtSummaryFactory {
     }
 
     def configureDataQualityInfo(metadata, summary) {
-        def statements = metadata."**".findAll{it.name() == 'gmd:statement'}
-        if (!statements.isEmpty()) {
-            summary.formats = this.isoHandlers.dataQualityInfoElSxt(statements).toString()
+        def statementsElts = metadata."**".findAll{it.name() == 'gmd:statement'}
+        def statementsString = []
+        statementsElts.collectNested {metadata.'**'.findAll{it.name() == 'gmd:statement'}}.flatten().each { k ->
+            statementsString.add(this.isoHandlers.isofunc.isoText(k))
+        }
+
+        if (!statementsString.isEmpty()) {
+            summary.formats = this.isoHandlers.dataQualityInfoElSxt(statementsString).toString()
         }
     }
 
