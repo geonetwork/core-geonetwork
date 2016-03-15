@@ -132,7 +132,7 @@
             } else if (md['geonet:info'].schema == 'iso19139') {
               if (md.standardName.
                   indexOf('ISO 19115:2003/19139 - SEXTANT') >= 0) {
-                return baseUrl + '/tab/sextant';
+                return baseUrl + '/tab/sextant-identification';
               } else if (md.standardName.
                   indexOf('EMODNET - HYDROGRAPHY') >= 0) {
                 return baseUrl + '/tab/emodnetHydrography';
