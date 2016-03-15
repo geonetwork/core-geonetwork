@@ -272,7 +272,10 @@
 								</xsl:if>
 
 								<!-- **************************************** Contact **************************************** -->
-								<xsl:if test="//gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian' or //gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian'">
+								<xsl:if test="count(//gmd:pointOfContact[
+								*/gmd:role/*/@codeListValue = 'custodian' or
+								*/gmd:role/*/@codeListValue = 'originator' or
+								*/gmd:role/*/@codeListValue = 'resourceProvider']) > 0">
 									<tr valign="top">
 										<td class="print_ttl">
 											<xsl:value-of select="$schemaLabels19139/element[@name='gmd:contact' and @id='8.0' and @context='gmd:MD_Metadata']/label/text()"/>	
@@ -281,10 +284,13 @@
 										</td>
 									</tr>
 
-									<xsl:for-each select="//gmd:pointOfContact">
-										<xsl:apply-templates select=".">
-										</xsl:apply-templates>
-									</xsl:for-each>
+									<xsl:for-each-group select="//gmd:pointOfContact"
+                                      group-by="*/gmd:role/*/@codeListValue">
+                    <xsl:call-template name="contact-layout">
+                      <xsl:with-param name="role" select="current-grouping-key()"/>
+                      <xsl:with-param name="contacts" select="current-group()"/>
+                    </xsl:call-template>
+									</xsl:for-each-group>
 								</xsl:if>
 
 								<!-- **************************************** Metadata **************************************** -->
@@ -502,71 +508,44 @@
 		</tr>
 	</xsl:template>
 
-	<xsl:template match="gmd:pointOfContact">
-		<xsl:if test="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian'">
-			<xsl:call-template name="getContact"/>
-		</xsl:if>
-		<xsl:if test="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator'">
-			<xsl:call-template name="getContact"/>
-		</xsl:if>
+  <xsl:template name="contact-layout">
+    <xsl:param name="role"/>
+    <xsl:param name="contacts"/>
 
-	</xsl:template>
+    <tr valign="top">
+      <td class="print_ttl_h1">
+        <xsl:value-of select="$schemaStrings/*[name() = $role]/text()" />
+      </td>
+      <td class="print_data">
 
-	<xsl:template name="getContact">
-		<xsl:if test="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian'">
-			<tr valign="top">
-				<td class="print_ttl_h1">
-					<xsl:value-of select="$schemaStrings/custodian/text()" />
-				</td>
-				<td class="print_data"/>
-			</tr>
-		</xsl:if>
-		<xsl:if test="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator'">
-			<tr valign="top">
-				<td class="print_ttl_h1">
-					<xsl:value-of select="$schemaStrings/originator/text()" />
-				</td>
-				<td class="print_data"/>
-			</tr>
-		</xsl:if>
-		<tr valign="top">
-			<td class="print_desc">
-				<xsl:value-of select="$schemaStrings/organisationName/text()" />
-			</td>
-			<td class="print_data">
-				<xsl:value-of select="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString" />
-			</td>
-		</tr>
+        <xsl:for-each select="$contacts">
+          <xsl:variable name="org"
+                        select="*/gmd:organisationName/gco:CharacterString"/>
+          <xsl:variable name="href"
+                        select="*/@uuid"/>
+          <xsl:variable name="mail"
+                        select="*/gmd:contactInfo/*/gmd:address/*/
+                                  gmd:electronicMailAddress/gco:CharacterString"/>
 
-		<xsl:if test="gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString!=''">
-			<tr valign="top">
-				<td class="print_desc">
-					<xsl:value-of select="$schemaStrings/electronicMailAddress/text()" />
-				</td>
-				<td class="print_data">
-					<xsl:value-of select="gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString" />
-				</td>
-			</tr>
-		</xsl:if>
-
-		<tr valign="top">
-			<td class="print_desc">
-				<xsl:value-of select="$schemaLabels19139/element[@name='src']/label/text()"/>	
-			</td>
-			<td class="print_data">
-
-				<xsl:element name="a">
-					<xsl:attribute name="href">
-						<xsl:value-of select="gmd:CI_ResponsibleParty/@uuid" />
-					</xsl:attribute>
-					<xsl:attribute name="target">
-						<xsl:text>_blank</xsl:text>
-					</xsl:attribute>
-					<xsl:value-of select="gmd:CI_ResponsibleParty/@uuid" />
-				</xsl:element>
-
-			</td>
-		</tr>
-	</xsl:template>
-
+          <xsl:choose>
+            <xsl:when test="$href != ''">
+              <a href="{$href}" target="_blank">
+                <xsl:value-of select="$org"/>
+              </a>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$org"/>
+            </xsl:otherwise>
+          </xsl:choose>
+          &#13;
+          <xsl:if test="contains($mail, '@')">
+            <a href="mailto:{$mail}">
+              <img src="{root/url}/geonetwork/images/mail.png"/>
+            </a>
+          </xsl:if>
+          <xsl:if test="position() != last()">, </xsl:if>
+        </xsl:for-each>
+      </td>
+    </tr>
+  </xsl:template>
 </xsl:stylesheet>
