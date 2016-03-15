@@ -42,11 +42,18 @@
                   </select>
                 </div>
                 <div ng-if="::input.literalData.allowedValues == undefined">
-                  <input type="{{::input.type}}" id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value"></input>
+                  <input ng-if="input.minOccurs" type="{{::input.type}}" id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value" required></input>
+                  <input ng-if="!input.minOccurs" type="{{::input.type}}" id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value"></input>
                 </div>
               </div>
               <div ng-if="::input.boundingBoxData">
-                <gn-bbox-input id="{{::input.identifier.value}}"
+                <gn-bbox-input ng-if="input.minOccurs" id="{{::input.identifier.value}}"
+                    data-crs="input._default.crs"
+                    data-value="input.value"
+                    data-map="map"
+                    data-required="true"
+                    />
+                <gn-bbox-input ng-if="!input.minOccurs" id="{{::input.identifier.value}}"
                     data-crs="input._default.crs"
                     data-value="input.value"
                     data-map="map"
