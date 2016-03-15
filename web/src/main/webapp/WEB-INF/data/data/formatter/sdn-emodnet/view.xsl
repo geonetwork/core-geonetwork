@@ -513,7 +513,7 @@
     <xsl:param name="contacts"/>
 
     <tr valign="top">
-      <td class="print_ttl_h1">
+      <td class="print_desc">
         <xsl:value-of select="$schemaStrings/*[name() = $role]/text()" />
       </td>
       <td class="print_data">
@@ -543,7 +543,7 @@
               <img src="{root/url}/geonetwork/images/mail.png"/>
             </a>
           </xsl:if>
-          <xsl:if test="position() != last()">, </xsl:if>
+          <xsl:if test="position() != last()"><br/></xsl:if>
         </xsl:for-each>
       </td>
     </tr>
