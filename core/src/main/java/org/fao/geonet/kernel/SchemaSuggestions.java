@@ -64,29 +64,37 @@ public class SchemaSuggestions
 	//---
 	//--------------------------------------------------------------------------
 
-	public boolean isSuggested(String parent, String child)
+	private boolean isX(String parent, String child, String what)
 	{
-		Element fieldEl = htFields.get(parent);
+		final Element fieldEl = htFields.get(parent);
 
 		if (fieldEl == null)
 			return false;
 
 		@SuppressWarnings("unchecked")
-        List<Element> list = fieldEl.getChildren();
+		final List<Element> list = fieldEl.getChildren();
 
 		for (Element elem : list) {
-            if (elem.getName().equals("suggest")) {
-                String name = elem.getAttributeValue("name");
+			if (elem.getName().equals(what)) {
+				String name = elem.getAttributeValue("name");
 
-                if (child.equals(name)) {
-                    return true;
-                }
-            }
-        }
+				if (child.equals(name)) {
+					return true;
+				}
+			}
+		}
 
 		return false;
 	}
-	
+
+	public boolean isSuggested(String parent, String child)	{
+		return isX(parent, child, "suggest");
+	}
+
+	public boolean isFiltered(String parent, String child) {
+		return isX(parent, child, "filter");
+	}
+
 	/**
 	 * Return true if parent element is defined in suggestion
 	 * file and check that suggested elements are valid children

@@ -1206,9 +1206,10 @@ public class EditLib {
         //     isOrType if element has substitutes and one of them should be chosen
         if (!type.isOrType()) {
             for(int i=0; i<type.getElementCount(); i++) {
-                String childName = type.getElementAt(i);
-                boolean childIsMandatory = type.getMinCardinAt(i) > 0;
-                boolean childIsSuggested = sugg.isSuggested(elemName, childName);
+                final String childName = type.getElementAt(i);
+                final boolean childIsMandatory = type.getMinCardinAt(i) > 0;
+                final boolean childIsSuggested = sugg.isSuggested(elemName, childName);
+                final boolean childIsFiltered = sugg.isFiltered(elemName, childName);
                 
                 if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
                     Log.debug(Geonet.EDITORFILLELEMENT,"####   - " + i + " element = " + childName);
@@ -1218,7 +1219,7 @@ public class EditLib {
                 
                 
                 
-                if (childIsMandatory || childIsSuggested) {
+                if ((childIsMandatory || childIsSuggested) && !childIsFiltered) {
                     
                     MetadataType elemType = schema.getTypeInfo(schema.getElementType(childName, elemName));
                     List<String> childSuggestion = sugg.getSuggestedElements(childName);
@@ -1229,7 +1230,7 @@ public class EditLib {
                         Log.debug(Geonet.EDITORFILLELEMENT,"####     - is or type = "+ elemType.isOrType());
                         Log.debug(Geonet.EDITORFILLELEMENT,"####     - has suggestion = "+ childHasOneSuggestion);
                         Log.debug(Geonet.EDITORFILLELEMENT,"####     - elem type list = " + elemType.getElementList());
-                        Log.debug(Geonet.EDITORFILLELEMENT,"####     - suggested types list = " + sugg.getSuggestedElements(childName));
+                        Log.debug(Geonet.EDITORFILLELEMENT,"####     - suggested types list = " + childSuggestion);
                     }
                     
                     //--- There can be 'or' elements with other 'or' elements inside them.
