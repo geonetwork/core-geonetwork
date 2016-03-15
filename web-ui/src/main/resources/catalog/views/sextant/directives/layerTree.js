@@ -146,7 +146,7 @@
               var fLayers = $filter('filter')(scope.layers,
                   scope.layerFilterFn);
 
-              if(scope.layerFilter.q.length > 2) {
+              if(scope.layerFilter.q.length > 1) {
                 fLayers = $filter('filter')(fLayers, filterFn);
               }
 

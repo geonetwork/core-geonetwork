@@ -166,13 +166,13 @@
             };
 
             var styles, featureStyle = feature.get('_style');
-            if(angular.isFunction(featureStyle)) {
+            if (angular.isFunction(featureStyle)) {
               styles = featureStyle(feature);
             }
-            else if(angular.isArray(featureStyle)) {
+            else if (angular.isArray(featureStyle)) {
               styles = featureStyle;
             }
-            else if(featureStyle) {
+            else if (featureStyle) {
               styles = [featureStyle];
             }
             else {
@@ -483,8 +483,9 @@
         literal.fontWeight = 'normal'; //fontValues[0];
         literal.label = textStyle.getText();
         literal.labelAlign = textStyle.getTextAlign();
-        if(textStyle.getStroke()) {
-          literal.labelOutlineColor = toHexa(ol.color.asArray(textStyle.getStroke().getColor()));
+        if (textStyle.getStroke()) {
+          literal.labelOutlineColor = toHexa(ol.color.asArray(
+              textStyle.getStroke().getColor()));
           literal.labelOutlineWidth = textStyle.getStroke().getWidth();
         }
         literal.fillOpacity = 0.0;
