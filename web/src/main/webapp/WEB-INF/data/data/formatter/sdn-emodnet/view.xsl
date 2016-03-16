@@ -545,6 +545,8 @@
           </xsl:if>
           <xsl:if test="position() != last()"><br/></xsl:if>
         </xsl:for-each>
+        <br/>
+        <br/>
       </td>
     </tr>
   </xsl:template>
