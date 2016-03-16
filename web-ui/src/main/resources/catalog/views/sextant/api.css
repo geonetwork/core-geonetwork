@@ -16050,6 +16050,13 @@ yx-axis
   font-size: 12px;
   padding: 5px;
 }
+.gn [sxt-main-viewer] .layerTree .dropdown-menu,
+.g [sxt-main-viewer] .layerTree .dropdown-menu {
+  max-height: 12em;
+  overflow-y: auto;
+  width: 98%;
+  left: .5%;
+}
 .gn [sxt-main-viewer] .layerTree input[type='text'],
 .g [sxt-main-viewer] .layerTree input[type='text'] {
   border: none;
