@@ -11,6 +11,17 @@
 .mCSB_inside > .mCSB_container {
   margin-right: 15px;
 }
+
+.sm-max-and-api(@rules) {
+  @media (max-width: @screen-sm-max) {
+    @rules();
+  }
+  .sxt-max-sm {
+    @rules();
+  }
+}
+
+
 @import (less) "../../../lib/bootstrap-select/bootstrap-select.min.css";
 
 @import "../../../style/ellipsis.less";
@@ -255,7 +266,7 @@
 
 }
 
-@media (max-width: @screen-sm-max) {
+.sm-max-and-api({ // CAREFUL: passing rulesets to mixin
   .gn-resultview {
     clear: both;
   }
@@ -298,7 +309,7 @@
   [sxt-main-viewer] .main-tools.activeTool {
     height: ~"calc(100% - 7em)";
   }
-}
+});
 
 .sxt-side-btn {
   position: absolute;

@@ -19208,6 +19208,55 @@ yx-axis
     height: calc(100% - 7em);
   }
 }
+.gn.sxt-max-sm .gn-resultview,
+.g .sxt-max-sm .gn-resultview {
+  clear: both;
+}
+.gn.sxt-max-sm .sxt-main-tabs,
+.g .sxt-max-sm .sxt-main-tabs {
+  height: 6em;
+}
+.gn.sxt-max-sm [sxt-main-viewer] .main-tools,
+.g .sxt-max-sm [sxt-main-viewer] .main-tools,
+.gn.sxt-max-sm [sxt-main-viewer] .search-container,
+.g .sxt-max-sm [sxt-main-viewer] .search-container {
+  top: 3.5em;
+}
+.gn.sxt-max-sm [sxt-panier].sxt-panier .sxt-main-tabs .sxt-download-btn,
+.g .sxt-max-sm [sxt-panier].sxt-panier .sxt-main-tabs .sxt-download-btn {
+  top: 3.8em;
+}
+.gn.sxt-max-sm #sxt-tabswitcher,
+.g .sxt-max-sm #sxt-tabswitcher {
+  display: block;
+  position: absolute;
+  top: -0.8em;
+  left: 50%;
+  margin-left: -12em;
+}
+.gn.sxt-max-sm .sxt-searchform-content,
+.g .sxt-max-sm .sxt-searchform-content {
+  display: none;
+}
+.gn.sxt-max-sm .row .sxt-left-panel,
+.g .sxt-max-sm .row .sxt-left-panel {
+  float: none;
+  width: 100%;
+}
+.gn.sxt-max-sm .row .sxt-left-panel .sxt-reset-btn,
+.g .sxt-max-sm .row .sxt-left-panel .sxt-reset-btn {
+  bottom: -2.6em;
+}
+.gn.sxt-max-sm .row .sxt-center-panel,
+.g .sxt-max-sm .row .sxt-center-panel {
+  margin-top: 3em;
+  float: none;
+  width: 100%;
+}
+.gn.sxt-max-sm [sxt-main-viewer] .main-tools.activeTool,
+.g .sxt-max-sm [sxt-main-viewer] .main-tools.activeTool {
+  height: calc(100% - 7em);
+}
 .gn .sxt-side-btn,
 .g .sxt-side-btn {
   position: absolute;
