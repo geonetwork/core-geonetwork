@@ -70,7 +70,7 @@
             // Load english locale file if not available
             $http({
               method: 'GET',
-              url: buildUrl(options.prefix, 'en', value, options.suffix)
+              url: buildUrl(options.prefix, 'eng', value, options.suffix)
             }).success(function(data) {
               deferredInst.resolve(data);
             }).error(function() {
