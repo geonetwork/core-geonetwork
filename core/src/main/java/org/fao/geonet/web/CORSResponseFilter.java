@@ -46,6 +46,11 @@ public class CORSResponseFilter
                     System.out.println("#### found: " + clientOriginHost);
                     httpResponse.setHeader("Access-Control-Allow-Origin", clientOriginUrl);
                     httpResponse.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
+                    httpResponse.setHeader("'Access-Control-Allow-Credentials", "'Access-Control-Allow-Credentials: true'");
+                    httpResponse.setHeader("Cache-Control", "no-cache");
+                    httpResponse.setHeader("Pragma'", "no-cache");
+                    httpResponse.setHeader("Vary", "Origin");
+
                     System.out.println("#### response: Access-Control-Allow-Origin " + httpResponse.getHeader("Access-Control-Allow-Origin"));
                     System.out.println("#### response: Access-Control-Allow-Headers " + httpResponse.getHeader("Access-Control-Allow-Headers"));
 
