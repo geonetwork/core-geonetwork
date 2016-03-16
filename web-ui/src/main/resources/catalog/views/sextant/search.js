@@ -40,13 +40,6 @@
             iso3lang,
             lCfg = sxtSettings.langDetector;
 
-        console.warn("*** DEBUG LANG detection ***");
-        console.warn("### sxtSettings.langDetector");
-        console.warn(lCfg);
-        console.warn("### gnLangs");
-        console.warn(gnLangs);
-
-
         if(lCfg) {
           if(lCfg.fromHtmlTag) {
             iso2lang = $('html').attr('lang').substr(0,2);
@@ -63,14 +56,7 @@
 
           iso3lang = gnLangs.getIso3Lang(iso2lang);
         }
-
-        console.warn("### iso2lang");
-        console.warn(iso2lang);
-
         iso3lang = iso3lang || 'eng';
-
-        console.warn("### iso3lang");
-        console.warn(iso3lang);
 
         gnGlobalSettings.locale = {
           iso3lang: iso3lang

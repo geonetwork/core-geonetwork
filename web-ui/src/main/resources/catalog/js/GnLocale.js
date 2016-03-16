@@ -52,12 +52,6 @@
           var deferredInst = $q.defer();
           allPromises.push(deferredInst.promise);
 
-          console.warn("*** GN LocaleLoader ***");
-          console.warn("### langUrl");
-          console.warn(langUrl);
-          console.warn("### options.key");
-          console.warn(options.key);
-
           $http({
             method: 'GET',
             url: langUrl,
@@ -102,13 +96,6 @@
       gnGlobalSettings.lang = gnLangs.getIso2Lang(gnGlobalSettings.iso3lang);
       $translateProvider.preferredLanguage(gnGlobalSettings.iso3lang);
       moment.lang(gnGlobalSettings.lang);
-
-      console.warn("*** GN LOCALE ***");
-      console.warn("### gnGlobalSettings.lang");
-      console.warn(gnGlobalSettings.lang);
-      console.warn("### gnGlobalSettings.iso3lang");
-      console.warn(gnGlobalSettings.iso3lang);
-
     }]);
 
 })();
