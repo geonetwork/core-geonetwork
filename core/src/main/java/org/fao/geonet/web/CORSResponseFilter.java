@@ -32,13 +32,28 @@ public class CORSResponseFilter
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+        System.out.println("############# CORS FILTER #############");
+
         try {
             String clientOriginUrl = httpRequest.getHeader("origin");
+            System.out.println("#### origin: " + clientOriginUrl);
+            System.out.println("#### host: " + httpRequest.getHeader("host"));
+            System.out.println("#### path: " + httpRequest.getServletPath());
+
             if(clientOriginUrl != null) {
                 String clientOriginHost = new java.net.URI(clientOriginUrl).getHost();
                 if(allowedRemoteHosts.indexOf(clientOriginHost) != -1) {
+                    System.out.println("#### found: " + clientOriginHost);
                     httpResponse.setHeader("Access-Control-Allow-Origin", clientOriginUrl);
                     httpResponse.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
+                    httpResponse.setHeader("'Access-Control-Allow-Credentials", "'Access-Control-Allow-Credentials: true'");
+                    httpResponse.setHeader("Cache-Control", "no-cache");
+                    httpResponse.setHeader("Pragma'", "no-cache");
+                    httpResponse.setHeader("Vary", "Origin");
+
+                    System.out.println("#### response: Access-Control-Allow-Origin " + httpResponse.getHeader("Access-Control-Allow-Origin"));
+                    System.out.println("#### response: Access-Control-Allow-Headers " + httpResponse.getHeader("Access-Control-Allow-Headers"));
+
                 }
             }
         }
