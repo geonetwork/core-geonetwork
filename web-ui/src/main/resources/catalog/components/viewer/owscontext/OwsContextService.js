@@ -113,8 +113,13 @@
         var bbox = context.general.boundingBox.value;
         var ll = bbox.lowerCorner;
         var ur = bbox.upperCorner;
-        var extent = ll.concat(ur);
         var projection = bbox.crs;
+
+        if(projection == 'EPSG:4326') {
+          ll.reverse();
+          ur.reverse();
+        }
+        var extent = ll.concat(ur);
         // reproject in case bbox's projection doesn't match map's projection
         extent = ol.proj.transformExtent(extent,
             projection, map.getView().getProjection());
