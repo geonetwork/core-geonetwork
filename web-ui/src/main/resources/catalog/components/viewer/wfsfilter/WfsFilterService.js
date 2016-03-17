@@ -182,7 +182,7 @@
         };
 
         angular.forEach(facetState, function(attrValue, attrName) {
-          var fieldInfo = attrName.match(/(.*)_([a-z]{1})?([a-z]{1})?$/);
+          var fieldInfo = attrName.match(/ft_(.*)_([a-z]{1})?([a-z]{1})?$/);
           var field = {
             // TODO : remove the field type suffix
             field_name: fieldInfo[1],
