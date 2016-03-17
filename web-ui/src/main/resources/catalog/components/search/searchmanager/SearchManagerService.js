@@ -200,20 +200,6 @@
             });
         return defer.promise;
       };
-
-      var _select = function(uuid, andClearSelection, action) {
-        var defer = $q.defer();
-        $http.get('metadata.select?_content_type=json&' +
-            (uuid ? 'id=' + uuid : '') +
-                  (andClearSelection ? '' : '&selected=' + action)).
-            success(function(data, status) {
-              defer.resolve(data);
-            }).
-            error(function(data, status) {
-              defer.reject(error);
-            });
-        return defer.promise;
-      };
       var indexSetOfRecords = function(params) {
         var defer = $q.defer();
         var defaultParams = {
@@ -251,17 +237,28 @@
             });
         return defer.promise;
       };
-      var select = function(uuid, andClearSelection) {
-        return _select(uuid, andClearSelection, 'add');
+      var selected = function() {
+        return $http.get('../api/selections/metadata');
+      };
+      var select = function(uuid) {
+        return $http.put('../api/selections/metadata', null, {
+          params: {
+            uuid: uuid
+          }
+        });
       };
       var unselect = function(uuid) {
-        return _select(uuid, false, 'remove');
+        return $http.delete('../api/selections/metadata', null, {
+          params: {
+            uuid: uuid
+          }
+        });
       };
       var selectAll = function() {
-        return _select(null, false, 'add-all');
+        return $http.put('../api/selections/metadata');
       };
       var selectNone = function() {
-        return _select(null, false, 'remove-all');
+        return $http.delete('../api/selections/metadata');
       };
 
       return {
@@ -269,6 +266,7 @@
         format: format,
         gnSearch: gnSearch,
         register: register,
+        selected: selected,
         select: select,
         unselect: unselect,
         selectAll: selectAll,

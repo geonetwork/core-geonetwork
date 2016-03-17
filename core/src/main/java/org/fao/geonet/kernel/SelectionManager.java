@@ -54,11 +54,11 @@ public class SelectionManager {
 	// used to limit select all if get system setting maxrecords fails or contains value we can't parse
 	public static final int DEFAULT_MAXHITS = 1000;
 
-    private static final String ADD_ALL_SELECTED = "add-all";
+    public static final String ADD_ALL_SELECTED = "add-all";
 	public static final String REMOVE_ALL_SELECTED = "remove-all";
-	private static final String ADD_SELECTED = "add";
-	private static final String REMOVE_SELECTED = "remove";
-	private static final String CLEAR_ADD_SELECTED = "clear-add";
+    public static final String ADD_SELECTED = "add";
+    public static final String REMOVE_SELECTED = "remove";
+    public static final String CLEAR_ADD_SELECTED = "clear-add";
 
 	private SelectionManager() {
 		selections = new Hashtable<String, Set<String>>(0);
@@ -149,6 +149,13 @@ public class SelectionManager {
 		return manager.updateSelection(type, context, selected, listOfIdentifiers, session);
 	}
 
+    public static int updateSelection(String type, UserSession session, String actionOnSelection, List<String> listOfIdentifiers, ServiceContext context) {
+        // Get the selection manager or create it
+        SelectionManager manager = getManager(session);
+
+        return manager.updateSelection(type, context, actionOnSelection, listOfIdentifiers, session);
+    }
+
 	/**
 	 * <p>
 	 * Update selected element in session
@@ -183,6 +190,7 @@ public class SelectionManager {
             else if (selected.equals(REMOVE_ALL_SELECTED))
                 this.close(type);
             else if (selected.equals(ADD_SELECTED) && listOfIdentifiers.size() > 0) {
+                // TODO ? Should we check that the element exist first ?
 				for (String paramid : listOfIdentifiers) {
 					selection.add(paramid);
 				}

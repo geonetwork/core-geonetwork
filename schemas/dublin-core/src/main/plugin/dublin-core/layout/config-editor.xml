@@ -94,4 +94,9 @@
       <tab id="xml" default="true"/>
     </view>
   </views>
+  <batchEditing>
+    <section name="identification">
+      <field name="title" xpath="dc:title"></field>
+    </section>
+  </batchEditing>
 </editor>

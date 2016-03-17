@@ -398,9 +398,8 @@
           scope.save = function() {
             if (scope.selectedUser && scope.selectedGroup) {
               if (angular.isDefined(mdUuid)) {
-                return gnHttp.callService('mdSelect', {
-                  selected: 'add',
-                  id: mdUuid
+                return $http.put('../api/selections/metadata', {
+                  uuids: mdUuid
                 }).success(function() {
                   updateSelection();
                 });

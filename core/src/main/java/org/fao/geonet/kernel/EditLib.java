@@ -621,8 +621,11 @@ public class EditLib {
                 ));
             }
 
-            // If a property is not found in metadata, create it...
-            if (nodeList.size() == 0 && createXpathNodeIfNotExist)  {
+            // If a property is not found in metadata,
+            // or in create mode, create it...
+            if (
+                    (nodeList.size() == 0 && createXpathNodeIfNotExist) ||
+                    isCreateMode)  {
                 int indexOfRequiredPortion = -1;
                 // Extract the XPath for the element to match. For:
                 //  * Relative XPath (*//gmd:RS_Identifier)[2]/gmd:code/gco:CharacterString
@@ -736,8 +739,9 @@ public class EditLib {
      * Performs the updating of the element selected from the metadata by the xpath.
      */
     private void doAddFragmentFromXpath(MetadataSchema metadataSchema,
-                                        Element newValue, Element propEl) throws Exception {
+                                        Element fragment, Element propEl) throws Exception {
 
+        Element newValue = (Element) fragment.clone();
         if (newValue.getName().equals(SpecialUpdateTags.REPLACE) ||
                    newValue.getName().equals(SpecialUpdateTags.ADD) ||
                    newValue.getName().equals(SpecialUpdateTags.CREATE)) {

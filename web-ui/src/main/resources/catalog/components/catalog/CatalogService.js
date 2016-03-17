@@ -351,7 +351,6 @@
     getRelations: 'md.relations?_content_type=json&',
     suggestionsList: 'md.suggestion?_content_type=json&',
     getValidation: 'md.validate?_content_type=json&',
-    mdSelect: 'metadata.select?_content_type=json', // TODO: CHANGE
 
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
