@@ -26,32 +26,47 @@
   <!-- 
   Basic search interface which does not require JS.
   -->
-  <xsl:import href="../base-layout.xsl"/>
+  <xsl:import href="../base-layout-nojs.xsl"/>
 
   <xsl:template mode="content" match="/">
-    <div class="row">
-      <div class="col-lg-9">
-        <form action="catalog.search.nojs">
-          <fieldset>
+    <div class="row" style="padding-bottom:20px" >
+      <div class="col-md-push-3 col-md-6">
+        <form action="catalog.search.nojs" class="form-inline">
+         <div class="form-group">
+    		<input type="text" name="any" id="fldAny" class="form-control input-large gn-search-text" autofocus="" />
+  		 </div>
+  		 <div class="form-group">
+  			<input type="submit" class="btn btn-primary" value="Search" /> 
+  		</div>
             <input type="hidden" name="fast" value="index"/>
-            <div class="form-group">
-              <input type="text" name="any" class="form-control input-large gn-search-text" autofocus=""/>
-            </div>
-          </fieldset>
-        </form>
+        </form>        
+    </div>
+</div>
+
+
 
         <xsl:if test="/root/request/*">
-          <xsl:for-each select="/root/response/metadata">
-            <li>
-              <h2>
-                <xsl:value-of select="title"/>
-              </h2>
+
+<div class="row"  style="padding-bottom:20px">
+<div class="col-xs-12">
+From <b><xsl:value-of select="/root/request/from"/></b>
+to <b><xsl:value-of select="/root/request/to"/></b>
+out of <b><xsl:value-of select="/root/response/summary/@count"/></b> results.
+</div>
+</div>
+
+         <xsl:for-each select="/root/response/metadata">
+           <div class="row" style="padding-bottom:20px;">
+            <div class="col-xs-10">
+              <a href="../../metadata/{*[name()='geonet:info']/uuid}">
+                <xsl:value-of select="title|defaultTitle"/>
+              </a><br/>
               <xsl:value-of select="abstract"/>
-            </li>
+            </div>
+            </div>
           </xsl:for-each>
         </xsl:if>
-      </div>
-    </div>
+    
   </xsl:template>
 
 </xsl:stylesheet>
