@@ -16012,7 +16012,7 @@ yx-axis
 .g [sxt-main-viewer] .sxtb-speciestree ul .list-group {
   border-left: 1px solid rgba(0, 0, 0, 0.2);
   margin-left: 4px;
-  padding-left: 6px;
+  padding: 0 0 0 6px;
 }
 .gn [sxt-main-viewer] [sxt-layertree] .dropdown-menu > li,
 .g [sxt-main-viewer] [sxt-layertree] .dropdown-menu > li,
@@ -16075,7 +16075,7 @@ yx-axis
   border: none;
   border-left: 1px dotted rgba(0, 0, 0, 0.2);
   margin-left: .5em;
-  padding-left: 1em;
+  padding: 0 0 0 1em;
   margin-bottom: 0;
 }
 .gn [sxt-main-viewer] .layerTree .list-group-item,
