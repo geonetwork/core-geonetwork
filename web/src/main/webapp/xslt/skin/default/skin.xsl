@@ -43,8 +43,7 @@
 </xsl:template>
 
 <xsl:template name="footer">
-
-<footer class="navbar">
+<!--<footer class="navbar">
 <div class="navbar navbar-default gn-bottom-bar ng-scope">
   <ul class="nav navbar-nav">
     <li><a href="http://geonetwork-opensource.org/">
@@ -59,7 +58,7 @@
     </li>
   </ul>
 </div>
-</footer>
+</footer>-->
 </xsl:template>
 
 

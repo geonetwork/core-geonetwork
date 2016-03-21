@@ -49,8 +49,8 @@
 
 <div class="row"  style="padding-bottom:20px">
 <div class="col-xs-12">
-From <b><xsl:value-of select="/root/request/from"/></b>
-to <b><xsl:value-of select="/root/request/to"/></b>
+From <b><xsl:value-of select="/root/response/@from"/></b>
+to <b><xsl:value-of select="/root/response/@to"/></b>
 out of <b><xsl:value-of select="/root/response/summary/@count"/></b> results.
 </div>
 </div>
@@ -66,6 +66,16 @@ out of <b><xsl:value-of select="/root/response/summary/@count"/></b> results.
             </div>
           </xsl:for-each>
         </xsl:if>
+    
+    
+    <div class="row" style="background-color:#999;color:white;padding:40px">
+    <h2>Browse by topic</h2>
+    <xsl:for-each select="root/response/summary/topicCats/topicCat">
+    <div class="col-xs-12 col-sm-6 col-lg-4" style="padding:15px">
+    	<a style="color:white" href="catalog.search.nojs?fast=index&amp;any={@name}"><xsl:value-of select="@label"/> (<xsl:value-of select="@count"/>)</a></div>
+    </xsl:for-each>
+    </div>
+    
     
   </xsl:template>
 
