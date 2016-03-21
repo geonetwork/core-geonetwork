@@ -136,6 +136,8 @@
     <name>gmd:EX_TemporalExtent</name>
     <name>gmd:MD_Distributor</name>
     <name>srv:containsOperations</name>
+    <name>srv:SV_Parameter</name>
+    <name>srv:connectPoint</name>
     <name>srv:SV_CoupledResource</name>
     <name>gmd:metadataConstraints</name>
     <name>gmd:aggregationInfo</name>
@@ -1179,7 +1181,7 @@
                                       <gmd:URL>{{linkage}}</gmd:URL>
                                   </gmd:linkage>
                                   <gmd:description>
-                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorFunction/accessPoint">accessPoint</gmx:Anchor>
+                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorDescription/accessPoint">accessPoint</gmx:Anchor>
                                   </gmd:description>
                                   <gmd:function>
                                       <gmd:CI_OnLineFunctionCode
@@ -1206,7 +1208,7 @@
                                       <gmd:URL>http://accesspoint.url</gmd:URL>
                                   </gmd:linkage>
                                   <gmd:description>
-                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorFunction/accessPoint">accessPoint</gmx:Anchor>
+                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorDescription/accessPoint">accessPoint</gmx:Anchor>
                                   </gmd:description>
                                   <gmd:function>
                                       <gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"></gmd:CI_OnLineFunctionCode>
@@ -1237,7 +1239,7 @@
                                       <gmd:URL>{{linkage}}</gmd:URL>
                                   </gmd:linkage>
                                   <gmd:description>
-                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorFunction/endPoint">endPoint</gmx:Anchor>
+                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorDescription/endPoint">endPoint</gmx:Anchor>
                                   </gmd:description>
                                   <gmd:function>
                                       <gmd:CI_OnLineFunctionCode
@@ -1264,7 +1266,7 @@
                                       <gmd:URL>http://endpoint.url</gmd:URL>
                                   </gmd:linkage>
                                   <gmd:description>
-                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorFunction/endPoint">endPoint</gmx:Anchor>
+                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorDescription/endPoint">endPoint</gmx:Anchor>
                                   </gmd:description>
                                   <gmd:function>
                                       <gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"></gmd:CI_OnLineFunctionCode>
@@ -1723,10 +1725,52 @@
 
           </section>
 
+          <!-- CONFORMITY CLASS 3 -->
+
           <section name="inspire_sds_cc3">
-            
+
+            <field
+                xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations" />
+
+            <action type="add"
+                    forceLabel="true"
+                    name="sds-addOperation"
+                    or="containsOperations" in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+                <template>
+                    <snippet>
+                        <srv:containsOperations>
+                            <srv:SV_OperationMetadata>
+                                <srv:operationName>
+                                    <gco:CharacterString></gco:CharacterString>
+                                </srv:operationName>
+                                <srv:DCP>
+                                    <srv:DCPList 
+                                        codeList="http://inspire.ec.europa.eu/metadata-codelist/DCPList"
+                                        codeListValue="webServices">Web services</srv:DCPList>
+                                </srv:DCP>
+                                <srv:connectPoint>
+                                    <gmd:CI_OnlineResource>
+                                        <gmd:linkage>
+                                            <gmd:URL>http://</gmd:URL>
+                                        </gmd:linkage>
+                                    </gmd:CI_OnlineResource>
+                                </srv:connectPoint>
+                            </srv:SV_OperationMetadata>
+                        </srv:containsOperations>
+                    </snippet>
+                </template>
+            </action>
+
           </section>
       </tab>
+
+      <!-- Elements that should not use the "flat" mode -->
+      <flatModeExceptions>
+        <for name="srv:containsOperations" />
+        <for name="srv:SV_OperationMetadata" />
+        <for name="srv:parameters" />
+      </flatModeExceptions>
 
     </view>
 
