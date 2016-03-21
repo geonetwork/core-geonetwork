@@ -279,7 +279,7 @@
         if (tabIdentifier !== $('#currTab')[0].value) {
           gnUtilityService.scrollTo();
         }
-        $scope.gnCurrentEdit.tab = tabIdentifier;
+
         $('#currTab')[0].value = tabIdentifier;
         $('#flat')[0].value = mode === 'flat';
 
