@@ -21,69 +21,71 @@
 
   var tplFolder = '../../catalog/templates/admin/';
   
-  module.service('authorizationService', ['$location', function($location) {     
-      this.location = $location;
-      this.check = function(route, rol) {
-        if(this.listener) {
-          this.listener();
-        }
+  module.provider('authorizationService', [function () {
+    
+    this.$get = [function () {
+        return {
+          check : function(rol) {
 
-        //FIXME get a better way to get the authenticated user
-        //other UIs may not have this? This is dirty
-        this.scope = angular.element($("*[data-ng-controller=GnCatController]")[0])
-                          .scope();
-        
-        this.scope["$location"] = this.$location;
-        
-        var $location = this.$location;
-        
-        this.listener = this.scope.$watch('user.profile', function(newProfile, oldProfile) {
-          
-          
-          if(!newProfile) {
-            return;
-          }
-
-          var roles = ["GUEST", "REGISTEREDUSER", "EDITOR", 
-                  "REVIEWER", "USERADMIN", "ADMINISTRATOR"];
-          
-          var irol = 0;
-          for(i = 0; i < roles.length; i++) {
-            if(rol.toUpperCase() == roles[i].toUpperCase()) {
-              irol = i;
-            }
-          }
-          
-          var iprofile = 0;
-          for(i = 0; i < roles.length; i++) {
-            if(newProfile.toUpperCase() == roles[i].toUpperCase()) {
-              iprofile = i;
-            }
-          }
-          
-          if(iprofile < irol) {
-            var href = window.location.href;
-            if(href.indexOf("#") > 0) {
-              href = href.substring(0, href.indexOf("#"));
+            //FIXME get a better way to get the authenticated user
+            //other UIs may not have this? This is dirty
+            this.scope = angular.element($("*[data-ng-controller=GnCatController]")[0])
+                              .scope();
+            if(this.scope.routelistener) {
+              this.scope.routelistener();
             }
             
-            //redirect to home
-            window.location.href = (href.substring(0, 
-                href.lastIndexOf("/")) + "/catalog.search");
+            this.listener = this.scope.$watch('user.profile', function(newProfile, oldProfile) {
+              
+              
+              if(!newProfile) {
+                return;
+              }
+
+              var roles = ["GUEST", "REGISTEREDUSER", "EDITOR", 
+                      "REVIEWER", "USERADMIN", "ADMINISTRATOR"];
+              
+              var irol = 0;
+              for(i = 0; i < roles.length; i++) {
+                if(rol.toUpperCase() == roles[i].toUpperCase()) {
+                  irol = i;
+                }
+              }
+              
+              var iprofile = 0;
+              for(i = 0; i < roles.length; i++) {
+                if(newProfile.toUpperCase() == roles[i].toUpperCase()) {
+                  iprofile = i;
+                }
+              }
+              
+              if(iprofile < irol) {
+                var href = window.location.href;
+                if(href.indexOf("#") > 0) {
+                  href = href.substring(0, href.indexOf("#"));
+                }
+                
+                //redirect to home
+                window.location.href = (href.substring(0, 
+                    href.lastIndexOf("/")) + "/catalog.search");
+              }
+            });
+            
+            this.scope.routelistener = this.listener;
           }
-        });
-      }
+        };
+    }];
   }]);
   
-  module.config(['$routeProvider',
-    function($routeProvider) {
+  module.config(['$routeProvider', 'authorizationServiceProvider',
+    function($routeProvider, authorizationService) {
      $routeProvider.
         when('/metadata', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminMetadataController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Guest');
+            permission: function() {
+              authorizationService.$get[0]().check('Guest');
             }
           }
         }).
@@ -91,8 +93,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminMetadataController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Guest');
+            permission: function() {
+              authorizationService.$get[0]().check('Guest');
             }
           }
           }).
@@ -100,8 +102,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminMetadataController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Guest');
+            permission: function() {
+              authorizationService.$get[0]().check('Guest');
             }
           }
         }).
@@ -109,8 +111,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminMetadataController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Guest');
+            permission: function() {
+              authorizationService.$get[0]().check('Guest');
             }
           }
         }).
@@ -118,8 +120,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminMetadataController',
           resolve: {
-            permission: function(authorizationService, $route) {
-               authorizationService.check($route, 'Guest');
+            permission: function() {
+               authorizationService.$get[0]().check('Guest');
             }
           }
         }).
@@ -127,8 +129,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnDashboardController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Editor');
+            permission: function() {
+              authorizationService.$get[0]().check('Editor');
             }
           }
         }).
@@ -136,8 +138,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnDashboardController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Editor');
+            permission: function() {
+              authorizationService.$get[0]().check('Editor');
             }
           }
         }).
@@ -145,8 +147,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnUserGroupController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Editor');
+            permission: function() {
+              authorizationService.$get[0]().check('Editor');
             }
           }
         }).
@@ -154,8 +156,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnUserGroupController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Editor');
+            permission: function() {
+              authorizationService.$get[0]().check('Editor');
             }
           }
         }).
@@ -163,8 +165,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnUserGroupController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'RegisteredUser');
+            permission: function() {
+              authorizationService.$get[0]().check('RegisteredUser');
             }
           }
         }).
@@ -172,8 +174,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnClassificationController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Editor');
+            permission: function() {
+              authorizationService.$get[0]().check('Editor');
             }
           }
         }).
@@ -181,8 +183,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnClassificationController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Editor');
+            permission: function() {
+              authorizationService.$get[0]().check('Editor');
             }
           }
         }).
@@ -190,8 +192,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminToolsController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Administrator');
+            permission: function() {
+              authorizationService.$get[0]().check('Administrator');
             }
           }
         }).
@@ -199,8 +201,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminToolsController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Administrator');
+            permission: function() {
+              authorizationService.$get[0]().check('Administrator');
             }
           }
         }).
@@ -208,8 +210,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminToolsController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Administrator');
+            permission: function() {
+              authorizationService.$get[0]().check('Administrator');
             }
           }
         }).
@@ -217,8 +219,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnHarvestController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Editor');
+            permission: function() {
+              authorizationService.$get[0]().check('Editor');
             }
           }
         }).
@@ -226,8 +228,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnHarvestController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Editor');
+            permission: function() {
+              authorizationService.$get[0]().check('Editor');
             }
           }
         }).
@@ -235,8 +237,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnSettingsController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Administrator');
+            permission: function() {
+              authorizationService.$get[0]().check('Administrator');
             }
           }
         }).
@@ -244,8 +246,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnSettingsController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Administrator');
+            permission: function() {
+              authorizationService.$get[0]().check('Administrator');
             }
           }
         }).
@@ -253,8 +255,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnStandardsController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Editor');
+            permission: function() {
+              authorizationService.$get[0]().check('Editor');
             }
           }
         }).
@@ -262,8 +264,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnReportController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Administrator');
+            permission: function() {
+              authorizationService.$get[0]().check('Administrator');
             }
           }
         }).
@@ -271,8 +273,8 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnReportController',
           resolve: {
-            permission: function(authorizationService, $route) {
-              authorizationService.check($route, 'Administrator');
+            permission: function() {
+              authorizationService.$get[0]().check('Administrator');
             }
           }
         }).
