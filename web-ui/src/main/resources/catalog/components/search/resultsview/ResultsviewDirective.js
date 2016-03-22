@@ -139,7 +139,8 @@
               }
               return baseUrl;
             } else {
-              return '../../apps/sextant/?edit=' + md['geonet:info'].id;
+              return '../../apps/sextant/?edit=' + md['geonet:info'].id +
+                  '&hl=' + scope.lang;
             }
           };
 
