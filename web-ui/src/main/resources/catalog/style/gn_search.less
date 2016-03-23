@@ -1,6 +1,8 @@
 // GN Styles
 @import "../lib/style/font-awesome/less/font-awesome.less";
 @import "gn_bootstrap.less";
+@import "gn_infolist.less";
+@import "gn_badge_categories.less";
 
 @import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
 // import the css files as less files so they are included in the final output of wro4j
@@ -37,7 +39,6 @@
       margin-bottom: 0px;
       //width: 90%; /* hack */
       cursor: pointer;
-      font-weight: normal;
     }
     label.gn-facet-active {
       color: @gray-darker
@@ -71,6 +72,7 @@
   }
   h4 {
     font-size: 14px;
+    font-weight: bold;
     text-transform: uppercase;
     margin-bottom: 0px;
     border-bottom: 2px @gray-lighter solid;
