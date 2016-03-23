@@ -173,9 +173,9 @@
                           $timeout(function() {
                             // Save the metadata and refresh the form
                             gnEditor.save(gnCurrentEdit.id, true).then(
-                             function(r) {
-                               defer.resolve();
-                             });
+                           function(r) {
+                             defer.resolve();
+                           });
                           });
                         }
                         if (angular.isFunction(scope.selectEntryCb)) {

@@ -1424,12 +1424,12 @@
                 return new ol.layer.Tile({
                   style: 'Road',
                   source: new ol.source.MapQuest({layer: 'osm'}),
-                  title: title || 'MapQuest'
+                  title: title ||  'MapQuest'
                 });
               case 'osm':
                 return new ol.layer.Tile({
                   source: new ol.source.OSM(),
-                  title: title || 'OpenStreetMap'
+                  title: title ||  'OpenStreetMap'
                 });
               case 'bing_aerial':
                 return new ol.layer.Tile({
@@ -1438,18 +1438,18 @@
                     key: viewerSettings.bingKey,
                     imagerySet: 'Aerial'
                   }),
-                  title: title || 'Bing Aerial'
+                  title: title ||  'Bing Aerial'
                 });
               case 'stamen':
                 //We make watercolor the default layer
                 var type = opt && opt.name ? opt.name : 'watercolor',
                     source = new ol.source.Stamen({
-                  layer: type
-                });
+                      layer: type
+                    });
                 source.set('type', type);
                 return new ol.layer.Tile({
                   source: source,
-                  title: title || 'Stamen'
+                  title: title ||  'Stamen'
                 });
               case 'wmts':
                 var that = this;

@@ -135,14 +135,14 @@
           processReport: '=gnBatchReport'
         },
         templateUrl: '../../catalog/components/utility/' +
-        'partials/batchreport.html',
+            'partials/batchreport.html',
         link: function(scope, element, attrs) {
-          scope.$watch('processReport', function (n, o) {
+          scope.$watch('processReport', function(n, o) {
             if (n && n != o) {
-            scope.processReportWarning = n.notFound != 0 ||
-              n.notOwner != 0 ||
-              n.notProcessFound != 0 ||
-              n.metadataErrorReport.metadataErrorReport.length != 0;
+              scope.processReportWarning = n.notFound != 0 ||
+                  n.notOwner != 0 ||
+                  n.notProcessFound != 0 ||
+                  n.metadataErrorReport.metadataErrorReport.length != 0;
             }
           });
         }
@@ -315,62 +315,62 @@
    *
    */
   module.directive('gnMetadataPicker',
-    ['gnUrlUtils', 'gnSearchManagerService',
-      function(gnUrlUtils, gnSearchManagerService) {
-        return {
-          restrict: 'A',
-          link: function(scope, element, attrs) {
-            element.attr('placeholder', '...');
-            var displayField = attrs['displayField'] || 'defaultTitle';
-            var valueField = attrs['valueField'] || displayField;
-            var params = angular.fromJson(element.attr('params') || '{}');
+      ['gnUrlUtils', 'gnSearchManagerService',
+       function(gnUrlUtils, gnSearchManagerService) {
+         return {
+           restrict: 'A',
+           link: function(scope, element, attrs) {
+             element.attr('placeholder', '...');
+             var displayField = attrs['displayField'] || 'defaultTitle';
+             var valueField = attrs['valueField'] || displayField;
+             var params = angular.fromJson(element.attr('params') || '{}');
 
-            var url = gnUrlUtils.append('q?_content_type=json',
-              gnUrlUtils.toKeyValue(angular.extend({
-                  _isTemplate: 'n',
-                  any: '*QUERY*',
-                  sortBy: 'title',
-                  fast: 'index'
-                }, params)
-              )
-            );
-            var parseResponse = function(data) {
-              var records = gnSearchManagerService.format(data);
-              return records.metadata;
-            };
-            var source = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              limit: 200,
-              remote: {
-                wildcard: 'QUERY',
-                url: url,
-                filter: parseResponse
-              }
-            });
-            source.initialize();
-            $(element).typeahead({
-              minLength: 0,
-              highlight: true
-            }, {
-              name: 'metadata',
-              displayKey: function(data) {
-                if(valueField === 'uuid') {
-                  return data['geonet:info'].uuid;
-                } else {
-                  return data[valueField];
-                }
-              },
-              source: source.ttAdapter(),
-              templates: {
-                suggestion: function(datum) {
-                  return '<p>' + datum[displayField] + '</p>';
-                }
-              }
-            });
-          }
-        };
-      }]);
+             var url = gnUrlUtils.append('q?_content_type=json',
+             gnUrlUtils.toKeyValue(angular.extend({
+               _isTemplate: 'n',
+               any: '*QUERY*',
+               sortBy: 'title',
+               fast: 'index'
+             }, params)
+             )
+             );
+             var parseResponse = function(data) {
+               var records = gnSearchManagerService.format(data);
+               return records.metadata;
+             };
+             var source = new Bloodhound({
+               datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+               queryTokenizer: Bloodhound.tokenizers.whitespace,
+               limit: 200,
+               remote: {
+                 wildcard: 'QUERY',
+                 url: url,
+                 filter: parseResponse
+               }
+             });
+             source.initialize();
+             $(element).typeahead({
+               minLength: 0,
+               highlight: true
+             }, {
+               name: 'metadata',
+               displayKey: function(data) {
+                 if (valueField === 'uuid') {
+                   return data['geonet:info'].uuid;
+                 } else {
+                   return data[valueField];
+                 }
+               },
+               source: source.ttAdapter(),
+               templates: {
+                 suggestion: function(datum) {
+                   return '<p>' + datum[displayField] + '</p>';
+                 }
+               }
+             });
+           }
+         };
+       }]);
 
   /**
    * @name gn_utility.directive:gnClickToggle
