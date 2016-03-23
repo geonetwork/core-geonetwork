@@ -30,6 +30,7 @@ import com.google.common.base.Predicate;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.UserSecurity;
+import org.jdom.Element;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -93,6 +94,7 @@ public class SwaggerConfig {
                 .pathMapping("/srv/")
                 .directModelSubstitute(LocalDate.class, String.class)
                 .directModelSubstitute(UserSecurity.class, Object.class)
+                .directModelSubstitute(Element.class, Object.class)
                 .genericModelSubstitutes(ResponseEntity.class)
                 .alternateTypeRules(
                         newRule(typeResolver.resolve(DeferredResult.class,

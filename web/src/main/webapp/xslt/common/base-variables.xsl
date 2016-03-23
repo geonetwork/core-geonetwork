@@ -74,7 +74,9 @@
     else if ($service = 'contact.us') then 'gn_contact_us'
     else if ($service = 'catalog.edit') then 'gn_editor'
     else if ($service = 'catalog.viewer') then 'gn_viewer'
-    else if ($service = 'catalog.search') then 'gn_search'
+    else if ($service = 'catalog.search' 
+      or $service = 'catalog.search.nojs' 
+      or $service = 'md.format.html') then 'gn_search'
     else if ($service = 'md.viewer') then 'gn_formatter_viewer'
     else 'gn'"/>
 
