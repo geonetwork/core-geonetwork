@@ -329,6 +329,32 @@ public class GeonetworkDataDirectory {
             }
         }
 
+        // Copy config-viewer-XXX.xml files
+        Path mapDir = this.resourcesDir.resolve("map");
+        if (!Files.exists(mapDir) || IO.isEmptyDir(mapDir)) {
+            Log.info(Geonet.DATA_DIRECTORY, "     - Copying config-viewer-XXX.xml files ...");
+
+            try {
+                final Path srcMap = webappDir.resolve("WEB-INF").resolve("data").
+                        resolve("data").resolve("resources").resolve("map");
+
+                if (Files.exists(srcMap)) {
+                    try (DirectoryStream<Path> paths = Files.newDirectoryStream(srcMap)) {
+                        for (Path path : paths) {
+                            final Path relativePath = srcMap.relativize(path);
+                            final Path dest = mapDir.resolve(relativePath.toString());
+                            if (!Files.exists(dest)) {
+                                IO.copyDirectoryOrFile(path, dest, false);
+                            }
+                        }
+                    }
+                }
+
+            } catch (IOException e) {
+                Log.error(Geonet.DATA_DIRECTORY, "     - config-viewer-XXX.xml copy failed: " + e.getMessage(), e);
+            }
+        }
+
         // Copy default logo to the harvesting folder
         Path logoDir = this.resourcesDir.resolve("images").resolve("harvesting");
         if (!Files.exists(logoDir) || IO.isEmptyDir(logoDir)) {
