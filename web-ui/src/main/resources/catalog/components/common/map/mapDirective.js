@@ -88,17 +88,17 @@
                '</gex:EX_GeographicBoundingBox></gex:geographicElement>' +
                '</gex:EX_Extent>'
              };
-             var xmlExtentFn = function (coords, location) {
+             var xmlExtentFn = function(coords, location) {
                if (angular.isArray(coords) &&
-                 coords.length === 4 &&
-                 !isNaN(coords[0]) &&
-                 !isNaN(coords[1]) &&
-                 !isNaN(coords[2]) &&
-                 !isNaN(coords[3]) &&
-                 angular.isNumber(coords[0]) &&
-                 angular.isNumber(coords[1]) &&
-                 angular.isNumber(coords[2]) &&
-                 angular.isNumber(coords[3])) {
+               coords.length === 4 &&
+               !isNaN(coords[0]) &&
+               !isNaN(coords[1]) &&
+               !isNaN(coords[2]) &&
+               !isNaN(coords[3]) &&
+               angular.isNumber(coords[0]) &&
+               angular.isNumber(coords[1]) &&
+               angular.isNumber(coords[2]) &&
+               angular.isNumber(coords[3])) {
                  scope.extentXml = extentTpl[scope.schema || 'iso19139']
                    .replace('{{west}}', coords[0])
                    .replace('{{south}}', coords[1])
@@ -205,7 +205,7 @@
                  zoom: 2
                })
              });
-             element.data('map', map)
+             element.data('map', map);
 
              //Uses configuration from database
              if (gnMap.getMapConfig().context) {

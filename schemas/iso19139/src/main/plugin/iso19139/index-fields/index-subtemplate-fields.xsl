@@ -44,7 +44,9 @@
       store="true" index="true"/>
     <Field name="orgName" string="{$org}" store="true" index="true"/>
     <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
-
+    <xsl:for-each select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
+      <Field name="email" string="{.}" store="true" index="true"/>
+    </xsl:for-each>
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>
 
