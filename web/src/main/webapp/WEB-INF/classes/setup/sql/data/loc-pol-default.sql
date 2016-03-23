@@ -16,7 +16,6 @@ INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'pol','Zdjęcia');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'pol','Audio/Wideo');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'pol','Katalogi');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'pol','Inne źródła informacji');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (11,'pol','Serwery Z3950');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'pol','Rejestry');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'pol','Physical Samples');
 

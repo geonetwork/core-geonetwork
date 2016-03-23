@@ -68,9 +68,6 @@
 		-->
 		<update linePattern="INSERT INTO Settings VALUES \(22,20,'port','.+?('.*)">INSERT INTO Settings VALUES (22,20,'port','8080$3</update>
 		<update linePattern="(INSERT INTO Settings VALUES \(23,20,'protocol',').+?('.*)">$1http$2</update>
-		<!-- z3950 -->
-		<update linePattern="(INSERT INTO Settings VALUES \(41,40,'enable',').+?('.*)">$1true$2</update>
-		<update linePattern="INSERT INTO Settings VALUES \(42,40,'port','.+?('.*)">INSERT INTO Settings VALUES (42,40,'port','2100$3</update>
 		<!-- xlink resolver -->
 		<update linePattern="(INSERT INTO Settings VALUES \(231,230,'enable',').+?('.*)">$1false$2</update>
 		<!-- search stats -->

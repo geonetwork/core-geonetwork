@@ -58,10 +58,6 @@
             <artifactId>jdom</artifactId>
         </dependency>
         <dependency>
-            <groupId>jdbm</groupId>
-            <artifactId>jdbm</artifactId>
-        </dependency>
-        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
         </dependency>

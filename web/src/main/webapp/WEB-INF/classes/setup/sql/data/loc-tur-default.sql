@@ -17,7 +17,6 @@ INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'tur','Fotoğraf');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'tur','Ses/Video');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'tur','Dizinler');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'tur','Diğer bilgi kaynakları');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (11,'tur','Z3950 Sunucular');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'tur','Kayıtlar');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'tur','Fiziksel Örnekleri');
 

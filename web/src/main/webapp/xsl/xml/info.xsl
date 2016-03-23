@@ -66,21 +66,6 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<!-- ============================================================================================= -->
-
-	<xsl:template match="z3950repositories">
-		<xsl:copy>
-			<xsl:for-each select="record">
-				<xsl:sort select="name" order="ascending"/>
-				<repository id="{id}">
-					<xsl:copy-of select="id"/>
-					<label>
-						<xsl:value-of select="name"/>
-					</label>
-				</repository>
-			</xsl:for-each>
-		</xsl:copy>
-	</xsl:template>
 
 	<!-- ============================================================================================= -->
 

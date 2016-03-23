@@ -596,28 +596,6 @@
 				<version>3.7.0</version>
 			</dependency>
 
-      <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
-      <dependency>
-        <groupId>org.dspace</groupId>
-        <artifactId>cql-java</artifactId>
-        <version>1.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jzkit</groupId>
-        <artifactId>a2j</artifactId>
-        <version>2.0.4</version>
-      </dependency>
-      <dependency>
-        <groupId>marc4j</groupId>
-        <artifactId>marc4j</artifactId>
-        <version>2.3.1</version>
-      </dependency>
-      <dependency>
-        <groupId>jdbm</groupId>
-        <artifactId>jdbm</artifactId>
-        <version>1.0</version>
-      </dependency>
-
       <!-- Geotools and spatial search stuff -->
       <dependency>
         <groupId>org.geotools</groupId>

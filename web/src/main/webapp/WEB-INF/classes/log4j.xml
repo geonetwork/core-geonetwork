@@ -93,18 +93,6 @@
     <logger name="geonetwork.mef">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.z3950server">
-        <level value="WARN" />
-    </logger>
-    <logger name="geonetwork.z3950">
-        <level value="WARN" />
-    </logger>
-    <logger name="geonetwork.sru">
-        <level value="WARN" />
-    </logger>
-    <logger name="geonetwork.sru.search">
-        <level value="WARN" />
-    </logger>
     <logger name="geonetwork.GeoServerPublisher">
         <level value="WARN" />
     </logger>
@@ -174,21 +162,6 @@
         <level value="ERROR" />
     </logger>
 
-    <!--  JZKIT logging configuration -->
-    <logger name="com.k_int" additivity="false">
-        <level value="WARN" />
-        <appender-ref ref="consoleAppender" />
-        <appender-ref ref="fileAppender" />
-    </logger>
-    <logger name="org.jzkit">
-        <level value="WARN" />
-    </logger>
-    <logger name="org.jzkit.a2j">
-        <level value="WARN" />
-    </logger>
-    <logger name="org.jzkit.search.impl.LRUCache">
-        <level value="WARN" />
-    </logger>
     <logger name="ro.isdc.wro.http" additivity="false">
         <level value="WARN" />
         <appender-ref ref="allConsoleAppender" />

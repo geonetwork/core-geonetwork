@@ -369,7 +369,6 @@
           </fo:basic-link> | </xsl:when>
           <xsl:otherwise>
             <fo:block text-align="left" font-style="italic">
-              <xsl:text>Z3950: </xsl:text>
               <xsl:value-of select="$metadata/geonet:info/server"/>
               <xsl:text> </xsl:text>
             </fo:block>

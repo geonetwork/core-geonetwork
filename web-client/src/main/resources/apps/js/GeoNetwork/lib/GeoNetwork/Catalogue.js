@@ -363,7 +363,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             getInspireInfo: serviceUrl + 'xml.info?type=inspire',
             getIsoLanguages: serviceUrl + 'isolanguages',
             schemaInfo: serviceUrl + 'xml.schema.info',
-            getZ3950repositories: serviceUrl + 'xml.info?type=z3950repositories',
             getCategories: serviceUrl + 'xml.info?type=categories',
             getHarvesters: serviceUrl + 'xml.harvesting.get',
             rate: serviceUrl + 'xml.metadata.rate',
