@@ -288,14 +288,12 @@
                 then(function(resp) {
                   scope.fields = resp.facets;
                   scope.count = resp.count;
-                  if (formInput) {
-                    angular.forEach(scope.fields, function(f) {
-                      if (!collapsedFields ||
-                          collapsedFields.indexOf(f.name) >= 0) {
-                        f.collapsed = true;
-                      }
-                    });
-                  }
+                  angular.forEach(scope.fields, function(f) {
+                    if (!collapsedFields ||
+                        collapsedFields.indexOf(f.name) >= 0) {
+                      f.collapsed = true;
+                    }
+                  });
                   refreshHeatmap();
                 });
           };
