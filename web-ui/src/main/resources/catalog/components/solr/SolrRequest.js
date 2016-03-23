@@ -68,6 +68,31 @@
     this.baseUrl;
 
     /**
+     * @type {object}
+     * Contain current params for the solr request param.
+     * Any and Q params will help to generate the Q request param. The solr
+     * params object are other request params.
+     *
+     * {
+     *  any: 'river',
+     *  qParams: {
+     *    t_OPE_NOM_s: {
+     *      type: 'field',
+     *      values: {
+     *        GIT-CPTu01: true
+     * }},
+     * solrParams: {
+     *   facet:true,
+     *   facet.field: [
+     *     0: 'ft_OPE_COPE_s',
+     *     1: 'ft_OPE_NOM_s'
+     *   ],
+     *   facet.mincount: 1
+     * }}}
+     */
+    this.requestParams = {};
+
+    /**
      * Event listener object, for each event key, contains an array of
      * event option (params, callback).
      * @type {Object}
@@ -132,6 +157,12 @@
         indexInfos.forEach(function(field) {
           var f = field.idxName;
           var fname = f.toLowerCase();
+
+          // Set geometry field
+          if (['geom', 'the_geom', 'msgeometry'].indexOf(fname) >= 0) {
+            this.geomField = field;
+          }
+          // Set facet fields
           if ($.inArray(fname, this.config.excludedFields) === -1) {
             this.filteredDocTypeFieldsInfo.push(field);
           }
@@ -162,7 +193,7 @@
 
     if (this.initialParams.stats['stats.field'].length > 0) {
 
-      return this.search(params, any, this.initialParams.stats).then(
+      return this.searchQuiet(params, any, this.initialParams.stats).then(
           function(resp) {
             var statsP = this.createFacetSpecFromStats_(resp.solrData);
             return this.search(params, any, angular.extend(
@@ -178,6 +209,35 @@
     }
   };
 
+  geonetwork.GnSolrRequest.prototype.search = function(params, any,
+                                                       solrParams) {
+    angular.extend(this.requestParams, {
+      any: any,
+      qParams: params,
+      solrParams: solrParams
+    });
+    return this.search_(params, any, solrParams);
+  };
+
+  geonetwork.GnSolrRequest.prototype.searchQuiet =
+      function(params, any, solrParams) {
+    return this.search_(params, any, solrParams, true);
+  };
+
+  geonetwork.GnSolrRequest.prototype.updateSearch =
+      function(params, any, solrParams) {
+    return this.search_(
+        angular.extend(this.requestParams.qParams, params),
+        any,
+        angular.extend(this.requestParams.solrParams, solrParams)
+    );
+  };
+
+  geonetwork.GnSolrRequest.prototype.setGeometry = function(geom) {
+    this.requestParams.geometry = geom;
+  };
+
+
 
   /**
    * Update solr url depending on the current facet ui selection state.
@@ -192,7 +252,8 @@
    * @param {string} any Filter on any field
    * @return {string} the updated url
    */
-  geonetwork.GnSolrRequest.prototype.search = function(params, any, solrParams) {
+  geonetwork.GnSolrRequest.prototype.search_ =
+      function(params, any, solrParams, quiet) {
 
     var url = this.getSearchUrl_(params, any);
     url += this.parseKeyValue_(angular.extend({}, this.page, solrParams));
@@ -206,9 +267,11 @@
             facets: this.createFacetData_(solrResponse.data),
             count: solrResponse.data.response.numFound
           };
-          this.sendEvent('search', angular.extend({}, resp, {
-            sender: this
-          }));
+          if (!quiet) {
+            this.sendEvent('search', angular.extend({}, resp, {
+              sender: this
+            }));
+          }
           return resp;
         }));
   };
@@ -328,6 +391,7 @@
         fieldsQ.push('+(' + valuesQ.join(' ') + ')');
       }
     });
+
     if (any) {
       any.split(' ').forEach(function(v) {
         fieldsQ.push('+*' + v + '*');
@@ -347,6 +411,12 @@
     { // Append to existing
       url = url.replace('&q=', '&q=' + filter + encodeURIComponent(' +'));
     }
+
+    if (this.requestParams.geometry) {
+      url += '&fq={!field f=' + this.geomField.idxName +
+          '}Intersects(ENVELOPE(' + this.requestParams.geometry + '))';
+    }
+
     return url;
   };
 

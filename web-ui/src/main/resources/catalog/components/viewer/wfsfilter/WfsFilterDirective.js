@@ -64,9 +64,15 @@
 
           scope.heatmapConfig = angular.fromJson(scope.heatmapConfig);
 
+          scope.ctrl = {
+            searchGeometry: undefined
+          };
+
           // Get an instance of solr object
           var solrObject =
               gnSolrRequestManager.register('WfsFilter', 'facets');
+          scope.solrObject = solrObject;
+
           var heatmapsRequest =
               gnSolrRequestManager.register('WfsFilter', 'heatmaps');
           var defaultHeatmapConfig = {
@@ -276,11 +282,10 @@
           scope.filterFacets = function(formInput) {
 
             // Update the facet UI
-            var collapsedFields = [];
+            var expandedFields = [];
             angular.forEach(scope.fields, function(f) {
-              collapsedFields;
-              if (f.collapsed) {
-                collapsedFields.push(f.name);
+              if (f.expanded) {
+                expandedFields.push(f.name);
               }
             });
 
@@ -289,9 +294,8 @@
                   scope.fields = resp.facets;
                   scope.count = resp.count;
                   angular.forEach(scope.fields, function(f) {
-                    if (!collapsedFields ||
-                        collapsedFields.indexOf(f.name) >= 0) {
-                      f.collapsed = true;
+                    if (expandedFields.indexOf(f.name) >= 0) {
+                      f.expanded = true;
                     }
                   });
                   refreshHeatmap();
@@ -328,9 +332,6 @@
                 then(function(resp) {
                   scope.fields = resp.facets;
                   scope.count = resp.count;
-                  angular.forEach(scope.fields, function(f) {
-                    f.collapsed = true;
-                  });
                   refreshHeatmap();
                 });
 
@@ -416,6 +417,25 @@
             });
           }
 
+          //Manage geographic search
+          scope.$watch('ctrl.searchGeometry', function(geom, old) {
+            if (geom && geom != ',,,') {
+              var extent = geom.split(',').map(function(val) {
+                return parseFloat(val);
+              });
+              extent = ol.proj.transformExtent(extent,
+                  scope.map.getView().getProjection(), 'EPSG:4326');
+
+              solrObject.setGeometry([
+                extent[0], extent[2], extent[3], extent[1]
+              ].join(','));
+              scope.filterFacets();
+            }
+            else if (old) {
+              solrObject.setGeometry(null);
+              scope.filterFacets();
+            }
+          });
 
           function resetHeatMap() {
             if (scope.source) {
