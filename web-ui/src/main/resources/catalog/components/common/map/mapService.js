@@ -729,7 +729,11 @@
                 var mapProjection = map.getView().
                     getProjection().getCode();
                 for (var i = 0; i < layer.otherSRS.length; i++) {
-                  if (layer.otherSRS[i] === mapProjection) {
+                  var srs = layer.otherSRS[i];
+                  if (srs.indexOf('urn:ogc:def:crs:EPSG::') === 0) {
+                    srs = 'EPSG:' + srs.split('::')[1];
+                  }
+                  if (srs === mapProjection) {
                     isLayerAvailableInMapProjection = true;
                     break;
                   }
@@ -863,6 +867,7 @@
                 extent: extent
               });
               layer.set('errors', errors);
+              layer.set('featureTooltip', true);
               ngeoDecorateLayer(layer);
               layer.displayInLayerManager = true;
               layer.set('label', getCapLayer.name.prefix + ':' +

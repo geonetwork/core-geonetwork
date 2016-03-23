@@ -24,6 +24,7 @@
 (function() {
   goog.provide('gn_wfsfilter_directive');
 
+  goog.require('ngeo.Debounce');
 
   var module = angular.module('gn_wfsfilter_directive', [
   ]);
@@ -36,9 +37,9 @@
    */
   module.directive('gnWfsFilterFacets', [
     '$http', 'wfsFilterService', '$q', '$rootScope',
-    'gnSolrRequestManager', 'gnSolrService',
+    'gnSolrRequestManager', 'gnSolrService', 'ngeoDebounce',
     function($http, wfsFilterService, $q, $rootScope,
-             gnSolrRequestManager, gnSolrService) {
+             gnSolrRequestManager, gnSolrService, ngeoDebounce) {
       return {
         restrict: 'A',
         replace: true,
@@ -111,13 +112,13 @@
               }
             };
 
-            scope.map.on('pointermove', function(evt) {
+            scope.map.on('pointermove', ngeoDebounce(function(evt) {
               if (evt.dragging) {
                 info.tooltip('hide');
                 return;
               }
               displayFeatureInfo(scope.map.getEventPixel(evt.originalEvent));
-            });
+            }, 300));
           }
 
           /**

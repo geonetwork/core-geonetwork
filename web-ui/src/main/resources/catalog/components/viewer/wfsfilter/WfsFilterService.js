@@ -342,7 +342,7 @@
         return $http.put('../api/0.1/workers/data/wfs/actions/start', {
           url: url,
           typeName: type,
-          //version: '1.1.0',
+          // version: '1.1.0',
           tokenize: idxConfig,
           metadataUuid: uuid
         }

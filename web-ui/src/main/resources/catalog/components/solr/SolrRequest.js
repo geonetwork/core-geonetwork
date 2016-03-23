@@ -192,7 +192,8 @@
    * @param {string} any Filter on any field
    * @return {string} the updated url
    */
-  geonetwork.GnSolrRequest.prototype.search = function(params, any, solrParams) {
+  geonetwork.GnSolrRequest.prototype.search =
+      function(params, any, solrParams) {
 
     var url = this.getSearchUrl_(params, any);
     url += this.parseKeyValue_(angular.extend({}, this.page, solrParams));
