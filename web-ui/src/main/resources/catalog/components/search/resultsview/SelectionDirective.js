@@ -150,21 +150,21 @@
   module.directive('gnSelectionMd', ['gnSearchManagerService',
     function(gnSearchManagerService) {
 
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
 
-        scope.change = function() {
-          var method = element[0].checked ? 'select' : 'unselect';
-          gnSearchManagerService[method](scope.md.getUuid()).
-          success(function(res) {
-            scope.searchResults.selectedCount = parseInt(res, 10);
-          });
-        };
+          scope.change = function() {
+            var method = element[0].checked ? 'select' : 'unselect';
+            gnSearchManagerService[method](scope.md.getUuid()).
+                success(function(res) {
+                  scope.searchResults.selectedCount = parseInt(res, 10);
+                });
+          };
 
-      }
-    };
-  }]);
+        }
+      };
+    }]);
 
   module.directive('gnContributeWidget', [function() {
     return {
