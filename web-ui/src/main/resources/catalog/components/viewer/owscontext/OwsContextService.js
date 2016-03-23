@@ -75,8 +75,9 @@
     '$q',
     '$filter',
     '$timeout',
+    'gnGlobalSettings',
     function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
-             $translate, $q, $filter, $timeout) {
+             $translate, $q, $filter, $timeout, gnGlobalSettings) {
 
       var firstLoad = true;
 
@@ -109,8 +110,13 @@
         var bbox = context.general.boundingBox.value;
         var ll = bbox.lowerCorner;
         var ur = bbox.upperCorner;
-        var extent = ll.concat(ur);
         var projection = bbox.crs;
+
+        if(projection == 'EPSG:4326') {
+          ll.reverse();
+          ur.reverse();
+        }
+        var extent = ll.concat(ur);
         // reproject in case bbox's projection doesn't match map's projection
         extent = ol.proj.transformExtent(extent, map.getView().getProjection(),
             projection);
@@ -128,16 +134,22 @@
         var layers = context.resourceList.layer;
         var i, j, olLayer, bgLayers = [];
         var self = this;
-        var re = /type\s*=\s*([^,|^}|^\s]*)/;
         var promises = [];
         for (i = 0; i < layers.length; i++) {
-          var layer = layers[i];
+          var type, layer = layers[i];
           if (layer.name) {
+            var re = this.getREForPar('type');
             if (layer.group == 'Background layers' &&
                 layer.name.match(re)) {
               var type = re.exec(layer.name)[1];
+              re = this.getREForPar('name');
+              var opt;
+              if (layer.name.match(re)) {
+                var lyr = re.exec(layer.name)[1];
+                opt = {name: lyr};
+              }
               if (type != 'wmts') {
-                var olLayer = gnMap.createLayerForType(type);
+                var olLayer = gnMap.createLayerForType(type, opt, layer.title);
                 if (olLayer) {
                   bgLayers.push({layer: olLayer, idx: i});
                   olLayer.displayInLayerManager = false;
@@ -146,6 +158,8 @@
                   olLayer.setVisible(!layer.hidden);
                 }
               }
+
+              // {type=wmts,name=Ocean_Basemap} or WMS
               else {
                 promises.push(this.createLayer(layer, map, i).then(
                     function(olLayer) {
@@ -194,6 +208,12 @@
                 firstVisibleBgLayer = false;
               }
             });
+            if (firstVisibleBgLayer && gnViewerSettings.bgLayers.length) {
+              var l = gnViewerSettings.bgLayers[0];
+              l.setVisible(true);
+              map.getLayers().insertAt(0, l);
+              firstVisibleBgLayer = false;
+            }
           }
         });
       };
@@ -208,10 +228,10 @@
        * @param {string} url URL to context
        * @param {ol.map} map map
        */
-      this.loadContextFromUrl = function(url, map, useProxy) {
+      this.loadContextFromUrl = function(url, map) {
         var self = this;
-        if (useProxy) {
-          url = '../../proxy?url=' + encodeURIComponent(url);
+        if (/^(f|ht)tps?:\/\//i.test(url)) {
+          url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
         }
         $http.get(url).success(function(data) {
           self.loadContext(data, map);
@@ -268,6 +288,8 @@
             name = '{type=mapquest}';
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
+          } else if (source instanceof ol.source.Stamen) {
+            name = '{type=stamen,name=' + layer.getSource().get('type') + '}';
           } else if (source instanceof ol.source.WMTS) {
             name = '{type=wmts,name=' + layer.get('name') + '}';
             params.server = [{
@@ -420,6 +442,21 @@
               }).catch (function() {});
         }
       };
+
+      /**
+       * @ngdoc method
+       * @name gnOwsContextService#getREForPar
+       * @methodOf gn_viewer.service:gnOwsContextService
+       *
+       * @description
+       * Creates a regular expression for a given parameter
+       *
+       * * @param {Object} context parameter
+       */
+        this.getREForPar = function(par) {
+            return re = new RegExp(par + '\\s*=\\s*([^,|^}|^\\s]*)');
+        };
+
     }
   ]);
 })();

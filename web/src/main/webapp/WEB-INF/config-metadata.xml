@@ -207,13 +207,6 @@
           <class name=".services.metadata.UpdateChildren" />
         </service>
 
-
-        <service name="metadata.select">
-            <class name=".services.main.Select">
-                <param name="type" value="metadata" />
-            </class>
-        </service>
-
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="metadata.create.thesaurus.form">

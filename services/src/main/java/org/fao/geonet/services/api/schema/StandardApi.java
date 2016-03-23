@@ -25,8 +25,12 @@ package org.fao.geonet.services.api.schema;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.editorconfig.BatchEditing;
+import org.fao.geonet.kernel.schema.editorconfig.Editor;
 import org.fao.geonet.services.api.API;
 import org.fao.geonet.services.api.exception.ResourceNotFoundException;
 import org.fao.geonet.services.api.tools.i18n.LanguageUtils;
@@ -35,15 +39,17 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.nio.file.Path;
+import java.util.*;
 
 /**
  *
@@ -72,6 +78,70 @@ public class StandardApi implements ApplicationContextAware {
         this.context = context;
     }
 
+
+
+    @ApiOperation(value = "Get batch editor configuration for standards",
+            nickname = "getBatchConfigurations")
+    @RequestMapping(value = "/actions/batchconfiguration",
+            method = RequestMethod.GET,
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE
+            })
+    public
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    Map<String, BatchEditing> getConfigurations(
+            @ApiParam(value = "Schema identifiers",
+                    required = false,
+                    example = "iso19139")
+            @RequestParam(required = false)
+            String[] schema
+    ) throws Exception {
+        List<String> listOfRequestedSchema = schema == null ? new ArrayList<String>() : Arrays.asList(schema);
+        Set<String> listOfSchemas = schemaManager.getSchemas();
+        Map<String, BatchEditing> schemasConfig = new HashMap<>();
+        for (String schemaIdentifier : listOfSchemas) {
+            if (listOfRequestedSchema.size() == 0 || listOfRequestedSchema.contains(schemaIdentifier)) {
+                MetadataSchema metadataSchema = schemaManager.getSchema(schemaIdentifier);
+                Editor editorConfiguration = metadataSchema.getConfigEditor();
+                if (editorConfiguration != null) {
+                    schemasConfig.put(schemaIdentifier,
+                            editorConfiguration.getBatchEditing());
+                }
+            }
+        }
+        return schemasConfig;
+    }
+
+
+    @ApiOperation(value = "Get batch editor configuration for a standard",
+            nickname = "getBatchConfiguration")
+    @RequestMapping(value = "/{schema}/actions/batchconfiguration",
+                    method = RequestMethod.GET,
+                    produces = {
+                        MediaType.APPLICATION_JSON_VALUE
+                    })
+    public
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    Map<String, BatchEditing> getConfiguration(
+            @ApiParam(value = "Schema identifier",
+                      required = true,
+                      example = "iso19139")
+            @PathVariable
+            String schema
+    ) throws Exception {
+        Map<String, BatchEditing> schemasConfig = new HashMap<>();
+        MetadataSchema metadataSchema = schemaManager.getSchema(schema);
+        Editor editorConfiguration = metadataSchema.getConfigEditor();
+        if (editorConfiguration != null) {
+            schemasConfig.put(schema,
+                    editorConfiguration.getBatchEditing());
+        }
+        return schemasConfig;
+    }
+
+
     @ApiOperation(value = "List a codelist entries",
                   nickname = "getSchemaTranslations")
     @RequestMapping(value = "/{schema}/codelists/{codelist}",
@@ -81,6 +151,9 @@ public class StandardApi implements ApplicationContextAware {
             })
     @ResponseBody
     public Map<String, String> getSchemaTranslations(
+            @ApiParam(value = "Schema identifier",
+                    required = true,
+                    example = "iso19139")
             @PathVariable String schema,
             @PathVariable String codelist,
             @RequestParam(required = false) String parent,

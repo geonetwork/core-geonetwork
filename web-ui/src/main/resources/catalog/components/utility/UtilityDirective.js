@@ -126,6 +126,29 @@
       };
     }]);
 
+  module.directive('gnBatchReport', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          processReport: '=gnBatchReport'
+        },
+        templateUrl: '../../catalog/components/utility/' +
+        'partials/batchreport.html',
+        link: function(scope, element, attrs) {
+          scope.$watch('processReport', function (n, o) {
+            if (n && n != o) {
+            scope.processReportWarning = n.notFound != 0 ||
+              n.notOwner != 0 ||
+              n.notProcessFound != 0 ||
+              n.metadataErrorReport.metadataErrorReport.length != 0;
+            }
+          });
+        }
+      };
+    }]);
+
   /**
    * Region picker coupled with typeahead.
    * scope.region will tell what kind of region to load
@@ -282,6 +305,74 @@
 
   /**
    * @ngdoc directive
+   * @name gn_utility.directive:gnMetadataPicker
+   * @function
+   *
+   * @description
+   * Use the search service
+   * to retrieve the list of entry available and provide autocompletion
+   * for the input field with that directive attached.
+   *
+   */
+  module.directive('gnMetadataPicker',
+    ['gnUrlUtils', 'gnSearchManagerService',
+      function(gnUrlUtils, gnSearchManagerService) {
+        return {
+          restrict: 'A',
+          link: function(scope, element, attrs) {
+            element.attr('placeholder', '...');
+            var displayField = attrs['displayField'] || 'defaultTitle';
+            var valueField = attrs['valueField'] || displayField;
+            var params = angular.fromJson(element.attr('params') || '{}');
+
+            var url = gnUrlUtils.append('q?_content_type=json',
+              gnUrlUtils.toKeyValue(angular.extend({
+                  _isTemplate: 'n',
+                  any: '*QUERY*',
+                  sortBy: 'title',
+                  fast: 'index'
+                }, params)
+              )
+            );
+            var parseResponse = function(data) {
+              var records = gnSearchManagerService.format(data);
+              return records.metadata;
+            };
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              limit: 200,
+              remote: {
+                wildcard: 'QUERY',
+                url: url,
+                filter: parseResponse
+              }
+            });
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              name: 'metadata',
+              displayKey: function(data) {
+                if(valueField === 'uuid') {
+                  return data['geonet:info'].uuid;
+                } else {
+                  return data[valueField];
+                }
+              },
+              source: source.ttAdapter(),
+              templates: {
+                suggestion: function(datum) {
+                  return '<p>' + datum[displayField] + '</p>';
+                }
+              }
+            });
+          }
+        };
+      }]);
+
+  /**
    * @name gn_utility.directive:gnClickToggle
    * @function
    *
@@ -445,7 +536,6 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
-
           element.on('click', function(e) {
             /**
              * Toggle collapse-expand fieldsets
@@ -468,6 +558,9 @@
               }
             });
           });
+          if (attrs['gnSlideToggle'] == 'true') {
+            element.click();
+          }
         }
       };
     }]);
