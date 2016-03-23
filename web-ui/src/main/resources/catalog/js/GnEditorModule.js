@@ -44,6 +44,7 @@
     'gn_validation',
     'gn_draggable_directive',
     'gn_editor_controller',
+    'gn_batchedit_controller',
     'gn_ows',
     'gn_geopublisher',
     'gn_batch_service',

@@ -80,7 +80,6 @@
     function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
              $translate, $q, $filter, $rootScope, $timeout, gnGlobalSettings) {
 
-      var firstLoad = true;
 
       var firstLoad = true;
 
@@ -115,7 +114,7 @@
         var ur = bbox.upperCorner;
         var projection = bbox.crs;
 
-        if(projection == 'EPSG:4326') {
+        if (projection == 'EPSG:4326') {
           ll.reverse();
           ur.reverse();
         }
@@ -137,7 +136,6 @@
         var layers = context.resourceList.layer;
         var i, j, olLayer, bgLayers = [];
         var self = this;
-        var re = /type\s*=\s*([^,|^}|^\s]*)/;
         var promises = [];
         for (i = 0; i < layers.length; i++) {
           var type, layer = layers[i];
@@ -145,9 +143,16 @@
             if (layer.group == 'Background layers') {
 
               // {type=bing_aerial} (mapquest, osm ...)
+              var re = this.getREForPar('type');
               if (layer.name.match(re) &&
                   (type = re.exec(layer.name)[1]) != 'wmts') {
-                var olLayer = gnMap.createLayerForType(type);
+                re = this.getREForPar('name');
+                var opt;
+                if (layer.name.match(re)) {
+                  var lyr = re.exec(layer.name)[1];
+                  opt = {name: lyr};
+                }
+                var olLayer = gnMap.createLayerForType(type, opt, layer.title);
                 if (olLayer) {
                   bgLayers.push({layer: olLayer, idx: i});
                   olLayer.displayInLayerManager = false;
@@ -288,11 +293,22 @@
             name = '{type=mapquest}';
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
+          } else if (source instanceof ol.source.Stamen) {
+            name = '{type=stamen,name=' + layer.getSource().get('type') + '}';
           } else if (source instanceof ol.source.WMTS) {
             name = '{type=wmts,name=' + layer.get('name') + '}';
             params.server = [{
               onlineResource: [{
                 href: layer.get('urlCap')
+              }],
+              service: 'urn:ogc:serviceType:WMS'
+            }];
+          } else if (source instanceof ol.source.ImageWMS) {
+            var s = layer.getSource();
+            name = s.getParams().LAYERS;
+            params.server = [{
+              onlineResource: [{
+                href: s.getUrl()
               }],
               service: 'urn:ogc:serviceType:WMS'
             }];
@@ -451,6 +467,21 @@
               }).catch (function() {});
         }
       };
+
+      /**
+       * @ngdoc method
+       * @name gnOwsContextService#getREForPar
+       * @methodOf gn_viewer.service:gnOwsContextService
+       *
+       * @description
+       * Creates a regular expression for a given parameter
+       *
+       * * @param {Object} context parameter
+       */
+      this.getREForPar = function(par) {
+        return re = new RegExp(par + '\\s*=\\s*([^,|^}|^\\s]*)');
+      };
+
     }
   ]);
 })();

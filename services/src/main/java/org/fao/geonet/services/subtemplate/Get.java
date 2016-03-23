@@ -51,7 +51,7 @@ import java.util.List;
  */
 public class Get implements Service {
 
-    private static final char SEPARATOR = '~';
+    public static final char SEPARATOR = '~';
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

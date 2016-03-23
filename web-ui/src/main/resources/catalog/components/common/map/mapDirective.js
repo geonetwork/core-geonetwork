@@ -45,14 +45,67 @@
              hleftRef: '@',
              hrightRef: '@',
              dcRef: '@',
+             extentXml: '=',
              lang: '=',
+             schema: '@',
              location: '@'
            },
            link: function(scope, element, attrs) {
              scope.drawing = false;
-             var mapRef = scope.htopRef || scope.dcRef;
+             var mapRef = scope.htopRef || scope.dcRef || '';
              scope.mapId = 'map-drawbbox-' +
              mapRef.substring(1, mapRef.length);
+
+             var extentTpl = {
+               'iso19139': '<gmd:EX_Extent ' +
+               'xmlns:gmd="http://www.isotc211.org/2005/gmd" ' +
+               'xmlns:gco="http://www.isotc211.org/2005/gco">' +
+               '<gmd:geographicElement>' +
+               '<gmd:EX_GeographicBoundingBox>' +
+               '<gmd:westBoundLongitude><gco:Decimal>{{west}}</gco:Decimal>' +
+               '</gmd:westBoundLongitude>' +
+               '<gmd:eastBoundLongitude><gco:Decimal>{{east}}</gco:Decimal>' +
+               '</gmd:eastBoundLongitude>' +
+               '<gmd:southBoundLatitude><gco:Decimal>{{south}}</gco:Decimal>' +
+               '</gmd:southBoundLatitude>' +
+               '<gmd:northBoundLatitude><gco:Decimal>{{north}}</gco:Decimal>' +
+               '</gmd:northBoundLatitude>' +
+               '</gmd:EX_GeographicBoundingBox></gmd:geographicElement>' +
+               '</gmd:EX_Extent>',
+               'iso19115-3': '<gex:EX_Extent ' +
+               'xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0" ' +
+               'xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">' +
+               '<gex:geographicElement>' +
+               '<gex:EX_GeographicBoundingBox>' +
+               '<gex:westBoundLongitude><gco:Decimal>{{west}}</gco:Decimal>' +
+               '</gex:westBoundLongitude>' +
+               '<gex:eastBoundLongitude><gco:Decimal>{{east}}</gco:Decimal>' +
+               '</gex:eastBoundLongitude>' +
+               '<gex:southBoundLatitude><gco:Decimal>{{south}}</gco:Decimal>' +
+               '</gex:southBoundLatitude>' +
+               '<gex:northBoundLatitude><gco:Decimal>{{north}}</gco:Decimal>' +
+               '</gex:northBoundLatitude>' +
+               '</gex:EX_GeographicBoundingBox></gex:geographicElement>' +
+               '</gex:EX_Extent>'
+             };
+             var xmlExtentFn = function(coords, location) {
+               if (angular.isArray(coords) &&
+               coords.length === 4 &&
+               !isNaN(coords[0]) &&
+               !isNaN(coords[1]) &&
+               !isNaN(coords[2]) &&
+               !isNaN(coords[3]) &&
+               angular.isNumber(coords[0]) &&
+               angular.isNumber(coords[1]) &&
+               angular.isNumber(coords[2]) &&
+               angular.isNumber(coords[3])) {
+                 scope.extentXml = extentTpl[scope.schema || 'iso19139']
+                   .replace('{{west}}', coords[0])
+                   .replace('{{south}}', coords[1])
+                   .replace('{{east}}', coords[2])
+                   .replace('{{north}}', coords[3]);
+               }
+             };
 
              /**
               * set dublin-core coverage output
@@ -63,6 +116,7 @@
                  scope.extent.md,
                  scope.location);
                }
+               xmlExtentFn(scope.extent.md, scope.location);
              };
 
              /**
@@ -151,6 +205,7 @@
                  zoom: 2
                })
              });
+             element.data('map', map);
 
              //Uses configuration from database
              if (gnMap.getMapConfig().context) {

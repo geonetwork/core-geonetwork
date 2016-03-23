@@ -118,29 +118,6 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.batch.extract.subtemplates.form">
-          <!-- TODO: migrate to widget/angular app -->
-            <!-- use same service for category update -->
-            <class name=".services.metadata.PrepareBatchUpdateCategories" />
-
-            <output sheet="metadata-batchextractsubtemplates.xsl">
-                <xml name="info" file="xml/metadata-batchExtractSubtemplates.xml" />
-            </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.batch.extract.subtemplates">
-          <!-- TODO: migrate to widget/angular app -->
-          <class name=".services.metadata.BatchExtractSubtemplates" />
-
-            <output sheet="metadata-batch-extract-subtemplates-results.xsl">
-                <xml name="info" file="xml/metadata-batchExtractSubtemplates.xml" />
-            </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
         <service name="metadata.delete">
             <class name=".services.metadata.Delete" />
 
@@ -205,13 +182,6 @@
         <service name="metadata.batch.update.children">
           <!-- TODO: migrate to widget/Angular -->
           <class name=".services.metadata.UpdateChildren" />
-        </service>
-
-
-        <service name="metadata.select">
-            <class name=".services.main.Select">
-                <param name="type" value="metadata" />
-            </class>
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
