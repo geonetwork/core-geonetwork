@@ -13027,6 +13027,7 @@ yx-axis
 .gn ::-webkit-scrollbar,
 .g ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
   background-color: transparent;
 }
 .gn ::-webkit-scrollbar-thumb,
@@ -16099,6 +16100,13 @@ yx-axis
 .gn [sxt-main-viewer] .layerTree .fa-plus-square-o:before,
 .g [sxt-main-viewer] .layerTree .fa-plus-square-o:before {
   content: "\f0fe";
+}
+.gn [sxt-main-viewer] [gn-legend-panel],
+.g [sxt-main-viewer] [gn-legend-panel] {
+  /* ul { */
+  /*   width     : auto; */
+  /*   min-width : 20em; */
+  /* } */
 }
 .gn [sxt-main-viewer] .ncwms-root,
 .g [sxt-main-viewer] .ncwms-root {
@@ -20643,6 +20651,9 @@ yx-axis
 }
 .g * {
   pointer-events: auto;
+}
+.g > div:only-child {
+  position: absolute;
 }
 .modal-open {
   overflow: visible;
