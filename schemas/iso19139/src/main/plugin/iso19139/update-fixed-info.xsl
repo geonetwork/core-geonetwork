@@ -10,6 +10,9 @@
 	<xsl:include href="../iso19139/convert/thesaurus-transformation.xsl"/>
 
   <xsl:variable name="serviceUrl" select="/root/env/siteURL" />
+
+  <!-- We use the category check to find out if this is an SDS metadata. Please replace with anything better -->
+  <xsl:variable name="isSDS" select="count(//gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor[starts-with(@xlink:href, 'http://inspire.ec.europa.eu/metadata-codelist/Category')]) = 1" />
   
 	<!-- ================================================================= -->
 
@@ -497,6 +500,20 @@
 			<xsl:with-param name="prefix" select="'gml'"/>
 		</xsl:call-template>
 	</xsl:template>
+
+<!-- ================================================================= -->
+        <!-- SDS fixes -->
+        
+        <!-- DCP codelist -->
+	<xsl:template match="srv:DCP[$isSDS]/srv:DCPList[@codeListValue]">
+		<xsl:copy>
+			<xsl:apply-templates select="@*"/>
+			<xsl:attribute name="codeList">
+				<xsl:value-of select="'http://inspire.ec.europa.eu/metadata-codelist/DCPList'"/>
+			</xsl:attribute>
+		</xsl:copy>
+	</xsl:template>
+
 
 <!-- ================================================================= -->
 	<!-- copy everything else as is -->
