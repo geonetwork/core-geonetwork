@@ -31,6 +31,12 @@
              scope.snippetRef = gnEditor.
              buildXMLFieldName(scope.elementRef, scope.elementName);
 
+             // Replace the name attribute with id since this textarea is used only to store the template, we don't wanna submit it
+             var textarea = $.find("textarea[name="+scope.snippetRef+"]")[0];
+             var elemValue = $(textarea).attr('name');
+             $(textarea).removeAttr('name');
+             $(textarea).attr('id', elemValue);
+             
              scope.add = function() {
                gnEditor.add(gnCurrentEdit.id,
                scope.elementRef, scope.elementName, scope.domId, 'before');
@@ -52,9 +58,10 @@
              scope.$watch('filter', scope.search);
 
              scope.addCRS = function(crs) {
-               scope.snippet = gnEditorXMLService.buildCRSXML(
-               crs,
-               gnCurrentEdit.schema);
+
+               var textarea = $.find("textarea[id="+scope.snippetRef+"]")[0];
+               var xmlSnippet = textarea ? $(textarea).text() : undefined;
+               scope.snippet = gnEditorXMLService.buildCRSXML(crs, gnCurrentEdit.schema, xmlSnippet);
                scope.crsResults = [];
 
                $timeout(function() {
