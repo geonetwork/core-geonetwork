@@ -42,12 +42,14 @@
         'gnGlobalSettings',
         'gnSearchSettings',
         'gnRelatedResources',
-        function($http, gnGlobalSettings, gnSearchSettings, gnRelatedResources) {
+        function($http, gnGlobalSettings,
+                 gnSearchSettings, gnRelatedResources) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {
               return attrs.template ||
-                      '../../catalog/components/metadataactions/partials/related.html';
+                      '../../catalog/components/' +
+                      'metadataactions/partials/related.html';
             },
             scope: {
               md: '=gnRelated',
