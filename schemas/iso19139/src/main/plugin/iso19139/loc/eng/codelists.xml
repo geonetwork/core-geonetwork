@@ -2046,6 +2046,59 @@
 		</entry>
 	</codelist>
 
+	<!-- INSPIRE SDS  ================================================== -->
+
+	<codelist name="SDS_category">
+            <entry>
+                <code>http://inspire.ec.europa.eu/metadata-codelist/Category/harmonised</code>
+                <label>harmonised</label>
+                <description>Harmonised</description>
+            </entry>
+            <entry>
+                <code>http://inspire.ec.europa.eu/metadata-codelist/Category/interoperable</code>
+                <label>interoperable</label>
+                <description>Interoperable</description>
+            </entry>
+            <entry>
+                <code>http://inspire.ec.europa.eu/metadata-codelist/Category/invocable</code>
+                <label>invocable</label>
+                <description>Invocable</description>
+            </entry>
+	</codelist>
+
+	<codelist name="SDS_DCP">
+            <entry>
+                <code>xml</code>
+                <label>XML</label>
+                <description>XML</description>
+            </entry>
+            <entry>
+                <code>corba</code>
+                <label>CORBA</label>
+                <description>CORBA</description>
+            </entry>
+            <entry>
+                <code>java</code>
+                <label>JAVA</label>
+                <description>JAVA</description>
+            </entry>
+            <entry>
+                <code>com</code>
+                <label>COM</label>
+                <description>COM</description>
+            </entry>
+            <entry>
+                <code>sql</code>
+                <label>SQL</label>
+                <description>SQL</description>
+            </entry>
+            <entry>
+                <code>webServices</code>
+                <label>Web Services</label>
+                <description>Web Services</description>
+            </entry>
+        </codelist>
+
   <codelist name="gco:nilReason">
     <entry>
       <code>missing</code>
