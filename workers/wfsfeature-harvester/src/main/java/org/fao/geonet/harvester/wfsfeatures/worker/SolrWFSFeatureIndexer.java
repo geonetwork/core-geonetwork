@@ -481,20 +481,27 @@ public class SolrWFSFeatureIndexer {
 
     /**
      * From the list of attributes try to find the best one
-     * for a title. If not found, return the first attribute.
-     * If none, return null.
+     * for a title. If not found, return the first attribute
+     * which is not a geometry. If none, return null.
      *
      * @param fields List of attributes
      * @return
      */
     public static String guessFeatureTitleAttribute(Map<String, String> fields) {
         Set<String> keySet = fields.keySet();
+        String defaultTitle = null;
         for (String attributeName : keySet) {
-            Matcher m = titleColumnShouldMatchPattern.matcher(attributeName);
-            if (m.find()) {
-                return attributeName;
+            if (!"geometry".equals(fields.get(attributeName))) {
+                // Default title is the first column which is not a geom
+                if (defaultTitle == null) {
+                    defaultTitle = attributeName;
+                }
+                Matcher m = titleColumnShouldMatchPattern.matcher(attributeName);
+                if (m.find()) {
+                    return attributeName;
+                }
             }
         }
-        return keySet.size() > 0 ? (String)keySet.toArray()[0] : null;
+        return defaultTitle;
     }
 }
