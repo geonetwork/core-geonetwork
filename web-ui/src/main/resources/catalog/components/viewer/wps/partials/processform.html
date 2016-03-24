@@ -30,7 +30,7 @@
 
       <div ng-if="describeResponse.processDescription">
         <div ng-repeat="processDescription in describeResponse.processDescription">
-          <form>
+          <form novalidate>
 
             <!-- Inputs -->
             <div ng-repeat="input in processDescription.dataInputs.input" class="form-group" ng-class="{'gn-required': input.minOccurs}">
