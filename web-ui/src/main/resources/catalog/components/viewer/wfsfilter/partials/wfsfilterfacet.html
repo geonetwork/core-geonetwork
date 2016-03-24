@@ -59,13 +59,13 @@
     <!--Facet fields-->
     <div class="gn-facet"
          data-ng-repeat="field in fields">
-      <h5 gn-collapsible="field.collapsed">
+      <h5 gn-collapsible="field.expanded">
         <span class="fa fa-arrow-circle-right"
-              data-ng-class="{'fa-rotate-90': !field.collapsed, 'gn-field-empty': !output[field.name]}"></span>
+              data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !output[field.name]}"></span>
         {{field.label}}
       </h5>
       <div class="list-group"
-           data-ng-class="{'collapse': field.collapsed}" sxt-custom-scroll>
+           data-ng-class="{'collapse': !field.collapsed}" sxt-custom-scroll>
         <div class="checkbox list-group-item"
              data-ng-repeat="facet in field.values | filter:searchInput"
              data-ng-click="onCheckboxClick(field.name, facet.value, field.type)"
@@ -75,6 +75,24 @@
         </div>
       </div>
     </div>
+
+    <!--Geometry Field-->
+    <div class="gn-facet" ng-if="solrObject.geomField">
+      <h5 gn-collapsible="solrObject.geomField.expanded">
+        <span class="fa fa-arrow-circle-right"
+              data-ng-class="{'fa-rotate-90': solrObject.geomField.expanded, 'gn-field-empty': !output[solrObject.geomField.name]}"></span>
+        {{solrObject.geomField.label}}
+      </h5>
+      <div class="list-group"
+           data-ng-class="{'collapse': !solrObject.geomField.expanded}">
+        <gn-bbox-input data-crs="map.getView().getProjection().getCode()"
+                       data-value="ctrl.searchGeometry"
+                       data-map="map"
+        />
+      </div>
+    </div>
+
+
     <!--admin buttons-->
     <div class="btn-group dropup">
       <button class="btn btn-default btn-xs"
@@ -97,7 +115,13 @@
         <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
           <a href="" data-ng-click="indexWFSFeatures()">
             <i class="fa fa-codiepie"></i>&nbsp;
-            <span data-translate="">reindexWFSFeatures</span>
+            <span data-translate="">reindexWFSFeatures</span> (WFS 1.0.0)
+          </a>
+        </li>
+        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
+          <a href="" data-ng-click="indexWFSFeatures('1.1.0')">
+            <i class="fa fa-codiepie"></i>&nbsp;
+            <span data-translate="">reindexWFSFeatures</span> (WFS 1.1.0)
           </a>
         </li>
         <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">

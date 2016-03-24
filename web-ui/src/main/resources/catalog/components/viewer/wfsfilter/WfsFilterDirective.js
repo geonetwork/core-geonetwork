@@ -24,6 +24,7 @@
 (function() {
   goog.provide('gn_wfsfilter_directive');
 
+  goog.require('ngeo.Debounce');
 
   var module = angular.module('gn_wfsfilter_directive', [
   ]);
@@ -36,9 +37,9 @@
    */
   module.directive('gnWfsFilterFacets', [
     '$http', 'wfsFilterService', '$q', '$rootScope',
-    'gnSolrRequestManager', 'gnSolrService',
+    'gnSolrRequestManager', 'gnSolrService', 'ngeoDebounce',
     function($http, wfsFilterService, $q, $rootScope,
-             gnSolrRequestManager, gnSolrService) {
+             gnSolrRequestManager, gnSolrService, ngeoDebounce) {
       return {
         restrict: 'A',
         replace: true,
@@ -64,9 +65,15 @@
 
           scope.heatmapConfig = angular.fromJson(scope.heatmapConfig);
 
+          scope.ctrl = {
+            searchGeometry: undefined
+          };
+
           // Get an instance of solr object
           var solrObject =
               gnSolrRequestManager.register('WfsFilter', 'facets');
+          scope.solrObject = solrObject;
+
           var heatmapsRequest =
               gnSolrRequestManager.register('WfsFilter', 'heatmaps');
           var defaultHeatmapConfig = {
@@ -100,9 +107,10 @@
                     }
                   });
               if (feature) {
+                var mapTop = scope.map.getTarget().getBoundingClientRect().top;
                 info.css({
                   left: pixel[0] + 'px',
-                  top: (pixel[1] + 50) + 'px'
+                  top: (pixel[1] + mapTop) + 'px'
                 });
                 info.attr('data-original-title', feature.get('count'))
                     .tooltip('show');
@@ -111,13 +119,13 @@
               }
             };
 
-            scope.map.on('pointermove', function(evt) {
+            scope.map.on('pointermove', ngeoDebounce(function(evt) {
               if (evt.dragging) {
                 info.tooltip('hide');
                 return;
               }
               displayFeatureInfo(scope.map.getEventPixel(evt.originalEvent));
-            });
+            }, 300));
           }
 
           /**
@@ -276,11 +284,10 @@
           scope.filterFacets = function(formInput) {
 
             // Update the facet UI
-            var collapsedFields = [];
+            var expandedFields = [];
             angular.forEach(scope.fields, function(f) {
-              collapsedFields;
-              if (f.collapsed) {
-                collapsedFields.push(f.name);
+              if (f.expanded) {
+                expandedFields.push(f.name);
               }
             });
 
@@ -289,9 +296,8 @@
                   scope.fields = resp.facets;
                   scope.count = resp.count;
                   angular.forEach(scope.fields, function(f) {
-                    if (!collapsedFields ||
-                        collapsedFields.indexOf(f.name) >= 0) {
-                      f.collapsed = true;
+                    if (expandedFields.indexOf(f.name) >= 0) {
+                      f.expanded = true;
                     }
                   });
                   refreshHeatmap();
@@ -328,9 +334,6 @@
                 then(function(resp) {
                   scope.fields = resp.facets;
                   scope.count = resp.count;
-                  angular.forEach(scope.fields, function(f) {
-                    f.collapsed = true;
-                  });
                   refreshHeatmap();
                 });
 
@@ -383,13 +386,14 @@
            * Trigger the SOLR indexation of the feature type.
            * Only available for administrators.
            */
-          scope.indexWFSFeatures = function() {
+          scope.indexWFSFeatures = function(version) {
             appProfilePromise.then(function() {
               wfsFilterService.indexWFSFeatures(
                   scope.url,
                   ftName,
                   appProfile ? appProfile.tokenize : null,
-                  uuid);
+                  uuid,
+                  version);
             });
           };
 
@@ -416,6 +420,25 @@
             });
           }
 
+          //Manage geographic search
+          scope.$watch('ctrl.searchGeometry', function(geom, old) {
+            if (geom && geom != ',,,') {
+              var extent = geom.split(',').map(function(val) {
+                return parseFloat(val);
+              });
+              extent = ol.proj.transformExtent(extent,
+                  scope.map.getView().getProjection(), 'EPSG:4326');
+
+              solrObject.setGeometry([
+                extent[0], extent[2], extent[3], extent[1]
+              ].join(','));
+              scope.filterFacets();
+            }
+            else if (old) {
+              solrObject.setGeometry(null);
+              scope.filterFacets();
+            }
+          });
 
           function resetHeatMap() {
             if (scope.source) {

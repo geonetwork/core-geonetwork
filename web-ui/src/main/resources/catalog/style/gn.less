@@ -30,7 +30,7 @@ div[gn-transfer-ownership] * .list-group {
     li > a {
       padding: 2px 5px;
       border-radius: 6px;
-      font-size: @font-size-large;
+      font-size: 120%;
     }
     em {
       font-style: normal;
@@ -43,7 +43,7 @@ div[gn-transfer-ownership] * .list-group {
   height: 30px;
   text-align: center;
   padding: 6px 0;
-  font-size: @font-size-small;
+  font-size: 12px;
   line-height: 1.428571429;
   border-radius: 15px;
 }
@@ -51,7 +51,7 @@ div[gn-transfer-ownership] * .list-group {
   width: 50px;
   height: 50px;
   padding: 10px 16px;
-  font-size: @font-size-large;
+  font-size: 18px;
   line-height: 1.33;
   border-radius: 25px;
 }
@@ -59,7 +59,7 @@ div[gn-transfer-ownership] * .list-group {
   width: 70px;
   height: 70px;
   padding: 10px 16px;
-  font-size: @font-size-h3;
+  font-size: 24px;
   line-height: 1.33;
   border-radius: 35px;
 }
@@ -142,7 +142,7 @@ a {
     overflow: hidden;
     margin-bottom: 4px;
     width: 100%;
-    font-size: @font-size-h3;
+    font-size: 150%;
   }
 }
 .gn-btn-modal-img {
@@ -164,7 +164,7 @@ a {
   padding-top:3px;
   padding-bottom:3px;
   padding-left:30px;
-  font-size:@font-size-small;
+  font-size:90%;
 }
 
 .gn-info{
@@ -194,7 +194,7 @@ div.gn-scroll-spy {
   bottom: 0%;
   right: 0px;
   opacity: 0.8;
-  font-size: @font-size-small;
+  font-size: 80%;
   width: 150px;
   z-index: 999;
   max-height: 99vh;
@@ -222,7 +222,7 @@ div.gn-scroll-spy {
             padding-top: 1px;
             padding-bottom: 1px;
             padding-left: 15px;
-            font-size: small;
+            font-size: 90%;
           }
         }
         li.active > a {
@@ -267,7 +267,7 @@ div.gn-scroll-spy {
       table-layout: fixed;
 
       th, td {
-        font-size: @font-size-small;
+        font-size: 70%;
       }
       /* Group name often contains long upper case value */
       td {
@@ -317,7 +317,7 @@ img.thumb-small {
 .gn-layers-grid-container {
   overflow:auto;
   max-height:200px;
-  font-size: @font-size-small;
+  font-size: small;
 
   tr.success {
     td {
@@ -375,7 +375,7 @@ img.thumb-small {
 
 .tt-suggestion {
   padding: 3px 20px;
-  font-size: @font-size-large;
+  font-size: 18px;
   line-height: 24px;
 }
 
@@ -450,7 +450,7 @@ span.twitter-typeahead {
   overflow: auto;
   max-width: inherit;
   max-height: ~"calc(100% - 149px)";
-  font-size: @font-size-small;
+  font-size: 12px;
   @media (max-width: @screen-phone) {
     width: 100%;
     height: auto;
@@ -517,7 +517,7 @@ input[type=file] {
   text-decoration: inherit;
   position: absolute;
   margin-left: -14px;
-  font-size: @font-size-base;
+  font-size: 16px;
 }
 [data-gn-slide-toggle].collapsed:before {
   content: "\f0da"
@@ -542,20 +542,20 @@ i.fa-times.delete:hover {
   .gn-status {
     border: 3px solid darken(@brand-info, 5%);
     position: absolute;
-    bottom: 2px;
+    top: 95px;
     left: 2px;
-    border-radius: 5px;
+    border-radius: 15px;
     padding: 2px;
-    /* -ms-transform: rotate(-30deg); */
-    /* -webkit-transform: rotate(-30deg); */
-    /* transform: rotate(-30deg); */
+    -ms-transform: rotate(-30deg);
+    -webkit-transform: rotate(-30deg);
+    transform: rotate(-30deg);
     color: @brand-info;
     font-weight: bold;
-    font-size: @font-size-small;
+    font-size: 80%;
     background-color: rgba(255, 255, 255 , 0.7);
   }
   .gn-status-mdview {
-    font-size: @font-size-large;
+    font-size: 120%;
     position: relative;
     float: right;
     top: -52px;

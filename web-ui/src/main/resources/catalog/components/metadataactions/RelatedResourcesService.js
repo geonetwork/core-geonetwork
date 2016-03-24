@@ -59,13 +59,13 @@
             angular.extend(this.map, options);
           };
 
-          var addWMSToMap = function(link, md) {
+          function addWMSToMap(link, md) {
 
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
               angular.forEach(link.name, function(name) {
                 gnMap.addWmsFromScratch(gnSearchSettings.viewerMap,
-                                  link.url, name, false, md);
+                   link.url, name, false, md);
               });
             } else if (link.name && !angular.isArray(link.name)) {
               gnMap.addWmsFromScratch(gnSearchSettings.viewerMap,
@@ -78,9 +78,7 @@
           };
 
 
-          var addWFSToMap = function(link, md) {
-
-
+          function addWFSToMap(link, md) {
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
               angular.forEach(link.name, function(name) {
@@ -98,7 +96,7 @@
           };
 
 
-          var addWMTSToMap = function(link, md) {
+          function addWMTSToMap(link, md) {
 
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
@@ -126,13 +124,13 @@
             }
           };
 
-          var addKMLToMap = function(record, md) {
+          function addKMLToMap(record, md) {
             gnMap.addKmlToMap(record.name, record.url,
                gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();
           };
 
-          var addMapToMap = function(record, md) {
+          function addMapToMap(record, md) {
             gnOwsContextService.loadContextFromUrl(record.url,
                 gnSearchSettings.viewerMap);
 

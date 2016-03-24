@@ -88,14 +88,13 @@
                 return link.title['#text'] || link.title;
               };
               scope.hasAction = function(mainType) {
-                // Do not display add to map action when map
-                // viewer is disabled.
-                if (mainType === 'WMS' &&
+                var fn = gnRelatedResources.map[mainType].action;
+                // If function name ends with ToMap do not display the action
+                if (fn.name.match(/.*ToMap$/) &&
                    gnGlobalSettings.isMapViewerEnabled === false) {
                   return false;
                 }
-                return angular.isFunction(
-                   gnRelatedResources.map[mainType].action);
+                return angular.isFunction(fn);
               };
               scope.config = gnRelatedResources;
 
