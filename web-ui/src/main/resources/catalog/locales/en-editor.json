@@ -97,6 +97,8 @@
     "createChildOf": "Create a child record",
     "createCopyOf": "Create copy of",
     "createMetadata": "Create",
+    "createMetadataRestricted": "Create (restricted)",
+    "createMetadataRestricted-help": "Create in the group, editable by the author only",
     "createMetadataError": "Create metadata error",
     "createMetadataForGroup": "Create and publish for group editors",
     "createMetadataForGroup-help": "The record will be editable by all members of the group",
