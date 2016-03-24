@@ -81,14 +81,16 @@
           </div>
         </div>
       </div>
-      <div class="btn-group">
+      <!-- In Sextant we always create a metadata record and
+      publish it for all group members. -->
+      <!--<div class="btn-group">-->
         <button type="button" class="btn btn-success btn-lg"
-          data-gn-click-and-spin="createNewMetadata()"
+          data-gn-click-and-spin="createNewMetadata(true)"
           data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}">
           <i class="fa fa-plus"/>
           <span data-translate="">createMetadata</span>
         </button>
-        <button type="button"
+        <!--<button type="button"
                 class="btn btn-success btn-lg dropdown-toggle"
                 data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}"
                 data-toggle="dropdown">
@@ -100,8 +102,8 @@
               data-gn-click-and-spin="createNewMetadata(true)"
               href="" data-translate="">
             createMetadataForGroup</a></li>
-        </ul>
-      </div>
+        </ul>-->
+      <!--</div>-->
     </div>
   </div>
 </div>
