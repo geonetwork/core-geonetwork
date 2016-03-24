@@ -24,7 +24,6 @@
 (function() {
   goog.provide('gn_wfsfilter_directive');
 
-  goog.require('ngeo.Debounce');
 
   var module = angular.module('gn_wfsfilter_directive', [
   ]);
