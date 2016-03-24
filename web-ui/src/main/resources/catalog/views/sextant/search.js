@@ -524,15 +524,18 @@
       link: {
         post: function(scope, element, attrs) {
           var axis = attrs['axis'] || 'y';
+          var advanced = {
+            updateOnContentResize: true,
+            updateOnImageLoad: true
+          };
+          if (axis.indexOf('x')>=0) {
+            advanced.autoExpandHorizontalScroll = 1;
+          }
 
           element.mCustomScrollbar({
             theme: 'dark-3',
             axis: axis,
-            advanced:{
-              updateOnContentResize: true,
-              updateOnImageLoad: true
-            },
-            // alwaysShowScrollbar: 2,
+            advanced: advanced,
             scrollButtons: {
               enable: true
             },
