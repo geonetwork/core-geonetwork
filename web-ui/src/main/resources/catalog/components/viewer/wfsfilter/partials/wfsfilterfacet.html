@@ -115,7 +115,13 @@
         <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
           <a href="" data-ng-click="indexWFSFeatures()">
             <i class="fa fa-codiepie"></i>&nbsp;
-            <span data-translate="">reindexWFSFeatures</span>
+            <span data-translate="">reindexWFSFeatures</span> (WFS 1.0.0)
+          </a>
+        </li>
+        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
+          <a href="" data-ng-click="indexWFSFeatures('1.1.0')">
+            <i class="fa fa-codiepie"></i>&nbsp;
+            <span data-translate="">reindexWFSFeatures</span> (WFS 1.1.0)
           </a>
         </li>
         <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">

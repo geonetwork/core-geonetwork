@@ -55,11 +55,12 @@
             });
 
             var displayFeatureInfo = function(pixel) {
+              var mapTop = scope.map.getTarget().getBoundingClientRect().top;
               info.css({
                 left: pixel[0] + 'px',
-                // TODO: check map position
-                top: (pixel[1] + 45) + 'px'
+                top: (pixel[1] + mapTop) + 'px'
               });
+
               var feature = scope.map.forEachFeatureAtPixel(pixel,
                function(feature, layer) {
                  if (layer.get('featureTooltip')) {

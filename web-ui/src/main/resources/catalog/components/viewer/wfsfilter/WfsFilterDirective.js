@@ -107,9 +107,10 @@
                     }
                   });
               if (feature) {
+                var mapTop = scope.map.getTarget().getBoundingClientRect().top;
                 info.css({
                   left: pixel[0] + 'px',
-                  top: (pixel[1] + 50) + 'px'
+                  top: (pixel[1] + mapTop) + 'px'
                 });
                 info.attr('data-original-title', feature.get('count'))
                     .tooltip('show');
@@ -385,13 +386,14 @@
            * Trigger the SOLR indexation of the feature type.
            * Only available for administrators.
            */
-          scope.indexWFSFeatures = function() {
+          scope.indexWFSFeatures = function(version) {
             appProfilePromise.then(function() {
               wfsFilterService.indexWFSFeatures(
                   scope.url,
                   ftName,
                   appProfile ? appProfile.tokenize : null,
-                  uuid);
+                  uuid,
+                  version);
             });
           };
 
