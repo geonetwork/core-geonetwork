@@ -105,16 +105,25 @@
    * GFI results as an array in a popup.
    * The template could be overriden using `gfiTemplateURL` constant.
    */
-  module.directive('gnGfi', ['$http', 'gfiTemplateURL',
-    function($http, gfiTemplateURL) {
+  module.directive('gnGfi', [
+    '$http',
+    'gfiTemplateURL',
+    'gnFeaturesTableManager',
+    function($http, gfiTemplateURL, gnFeaturesTableManager) {
 
       return {
         restrict: 'A',
         scope: {
           map: '='
         },
+        controller: 'gnGfiController',
         templateUrl: gfiTemplateURL,
         link: function(scope, element, attrs) {
+
+          gnFeaturesTableManager.addTable({
+            name: 'layer1',
+            type: 'gfi'
+          });
 
           var map = scope.map;
           var mapElement = $(map.getTarget());
@@ -217,9 +226,7 @@
         }
       };
 
-    }]);
-
-  angular.module('gfiFilters', ['ngSanitize'])
+    }])
 
   .filter('attributes', function() {
         return function(properties) {
@@ -234,5 +241,59 @@
           return props;
         };
       });
+
+
+  geonetwork.GnGfiController = function($scope, gnFeaturesTableManager) {
+
+    this.gnFeaturesTableManager = gnFeaturesTableManager;
+    this.$scope = $scope;
+    this.map = $scope.map;
+    var map = this.map;
+
+    map.on('singleclick', function (e) {
+      this.$scope.$apply(function() {
+        if(!this.canApply()) {
+          return;
+        }
+        var layers = map.getLayers().getArray().filter(function(layer) {
+          return layer.getSource() instanceof ol.source.ImageWMS ||
+              layer.getSource() instanceof ol.source.TileWMS;
+        });
+
+        this.registerTables(layers);
+
+      }.bind(this));
+    }.bind(this));
+  };
+
+  geonetwork.GnGfiController.prototype.canApply = function() {
+    var map = this.map;
+    for (var i = 0; i < map.getInteractions().getArray().length; i++) {
+      var interaction = map.getInteractions().getArray()[i];
+      if ((interaction instanceof ol.interaction.Draw ||
+          interaction instanceof ol.interaction.Select) &&
+          interaction.getActive()) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  geonetwork.GnGfiController.prototype.registerTables = function(layers) {
+    this.gnFeaturesTableManager.clear();
+    layers.forEach(function(layer) {
+      this.gnFeaturesTableManager.addTable({
+        name: layer.get('label') || layer.get('name'),
+        type: 'gfi'
+      });
+    }.bind(this));
+  };
+
+
+    module.controller('gnGfiController', [
+    '$scope',
+    'gnFeaturesTableManager',
+    geonetwork.GnGfiController]);
+
 
 })();

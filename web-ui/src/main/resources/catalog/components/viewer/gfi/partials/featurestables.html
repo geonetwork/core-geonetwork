@@ -1,0 +1,17 @@
+<div class="gn-features-table" data-ng-show="ctrl.tables.length > 0">
+  <ul class="nav nav-pills">
+    <li data-ng-repeat="table in ctrl.tables"
+        data-ng-class="{active: table == ctrl.currentTable}">
+      <a role="tab" data-ng-click="ctrl.currentTable = table"
+         title="{{::table.name}}">
+        {{table.name}}
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content" data-ng-show="ctrl.currentTable">
+    <div role="tabpanel" class="tab-pane active">
+    </div>
+  </div>
+
+</div>

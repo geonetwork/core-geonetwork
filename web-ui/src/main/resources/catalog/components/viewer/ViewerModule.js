@@ -64,6 +64,7 @@
   goog.require('gn_wfs');
   goog.require('gn_wfsfilter');
   goog.require('gn_wmsimport');
+  goog.require('gn_featurestable');
 
   /**
    * @ngdoc overview
@@ -93,7 +94,8 @@
     'gn_searchlayerformap_directive',
     'gn_terrainswitcher_directive',
     'gn_wfsfilter',
-    'gn_solr'
+    'gn_solr',
+    'gn_featurestable'
   ]);
 
   module.controller('gnViewerController', [
