@@ -573,7 +573,8 @@
                   });
 
               var init = function() {
-                var schema = gnCurrentEdit.schema || 'iso19139';
+                var schema = attrs['schema'] ||
+                    gnCurrentEdit.schema || 'iso19139';
                 var config = schema + '|' + attrs['gnSchemaInfo'] + '|||';
 
                 scope.type = attrs['schemaInfoCombo'];

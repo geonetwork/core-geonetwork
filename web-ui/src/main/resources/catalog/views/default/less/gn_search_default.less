@@ -1,6 +1,5 @@
 @import "../../../style/gn_search.less";
 @import "../../../style/gn_metadata.less";
-@import "gn_view.less";
 
 /* Hide the tabset selector because tab
    switch is available in the top tool bar */
@@ -8,15 +7,23 @@
   display: none;
 }
 
+
 .navbar {
   margin-bottom: 14px;
   .navbar-brand {
     padding-top: 0;
     padding-bottom: 0;
     line-height: 50px;
-    font-size: @font-size-base;
+    font-size: 16px;
   }
 }
+
+.jumbotron {
+  h1 {
+    font-size: 36px;
+  }
+}
+
 
 /* Pagination */
 .gn-pager {
@@ -55,6 +62,8 @@
   }
 }
 
+
+
 .gn-sort-by {
   .btn-group > button {
     .btn-link();
@@ -62,7 +71,7 @@
 }
 .gn-search-page {
   clear: both;
-  padding-bottom:20px;
+  padding-bottom:40px;
   .gn-md-view {
     padding: 0 20px;
   }
@@ -165,7 +174,7 @@ ul.gn-resultview {
     .gn-md-title {
       margin-top: 2px;
       min-height: 3.5em;
-      max-height: 5em;
+      max-height: 3.5em;
       overflow: hidden;
       cursor: pointer;
       h3 {
@@ -176,6 +185,7 @@ ul.gn-resultview {
         a {
           //text-transform: uppercase;
           font-weight: normal;
+          font-size: 80%;
           color: #333333;
           max-height: 82px;
           text-overflow: ellipsis; 
@@ -314,7 +324,7 @@ ul.gn-resultview {
   .loading {
     position: absolute;
     top: 1.8em;
-    font-size: @font-size-h1;
+    font-size: 40px;
     left: 46%;
     text-shadow: 0 0 1px white;
     z-index: 200;
@@ -432,7 +442,7 @@ ul.gn-resultview {
       > div.gn-md-title {
         a {
           color: #333333;
-          font-size: @font-size-large;
+          font-size: 120%;
         }
       }
     }
@@ -474,13 +484,11 @@ ul.gn-resultview {
 .gn-bottom-bar {
   bottom:0;
   height:50px;
-  /* position:absolute; */
+  position:absolute;
   overflow:hidden;
   width:100%;
   margin-bottom:0px;
-  margin-top: 10px !important;
   border-radius: 0px;
-  font-size: @font-size-small;
 }
 
 .cookie-warning {
@@ -535,6 +543,8 @@ html, body {
     //width: calc(~"33% - 15px");
   }
 }
+
+@import "gn_view.less";
 
 .socialmedia-text {
   margin-top: 15px;

@@ -81,8 +81,7 @@
                 //Uses configuration from database
                 if (gnMap.getMapConfig().context) {
                   gnOwsContextService.
-                      loadContextFromUrl(gnMap.getMapConfig().context,
-                          map, true);
+                      loadContextFromUrl(gnMap.getMapConfig().context, map);
                 }
 
                 scope.selectNode(scope.nodeId);

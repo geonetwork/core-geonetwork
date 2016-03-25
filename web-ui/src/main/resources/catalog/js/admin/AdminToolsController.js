@@ -116,11 +116,6 @@
       $scope.processReport = null;
 
       /**
-       * True if no process found, or privileges issues.
-       */
-      $scope.processReportWarning = false;
-
-      /**
        * The list of records to be processed
        */
       $scope.recordsToProcess = null;
@@ -335,10 +330,6 @@
             formParams)
           .success(function(data) {
               $scope.processReport = data;
-              $scope.processReportWarning = data.notFound != 0 ||
-                  data.notOwner != 0 ||
-                  data.notProcessFound != 0 ||
-                  data.metadataErrorReport.metadataErrorReport.length != 0;
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('processFinished'),
                 timeout: 2,

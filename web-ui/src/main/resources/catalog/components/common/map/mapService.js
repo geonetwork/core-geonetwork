@@ -1418,18 +1418,18 @@
            * @param {Object} opt for url or layer name
            * @return {ol.layer} layer
            */
-          createLayerForType: function(type, opt) {
+          createLayerForType: function(type, opt, title) {
             switch (type) {
               case 'mapquest':
                 return new ol.layer.Tile({
                   style: 'Road',
                   source: new ol.source.MapQuest({layer: 'osm'}),
-                  title: 'MapQuest'
+                  title: title ||  'MapQuest'
                 });
               case 'osm':
                 return new ol.layer.Tile({
                   source: new ol.source.OSM(),
-                  title: 'OpenStreetMap'
+                  title: title ||  'OpenStreetMap'
                 });
               case 'bing_aerial':
                 return new ol.layer.Tile({
@@ -1438,7 +1438,18 @@
                     key: viewerSettings.bingKey,
                     imagerySet: 'Aerial'
                   }),
-                  title: 'Bing Aerial'
+                  title: title ||  'Bing Aerial'
+                });
+              case 'stamen':
+                //We make watercolor the default layer
+                var type = opt && opt.name ? opt.name : 'watercolor',
+                    source = new ol.source.Stamen({
+                      layer: type
+                    });
+                source.set('type', type);
+                return new ol.layer.Tile({
+                  source: source,
+                  title: title ||  'Stamen'
                 });
               case 'wmts':
                 var that = this;

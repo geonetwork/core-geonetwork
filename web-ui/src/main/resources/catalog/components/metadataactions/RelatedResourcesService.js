@@ -134,7 +134,7 @@
 
           var addMapToMap = function(record, md) {
             gnOwsContextService.loadContextFromUrl(record.url,
-               gnSearchSettings.viewerMap, true);
+                gnSearchSettings.viewerMap);
 
             gnSearchLocation.setMap();
           };

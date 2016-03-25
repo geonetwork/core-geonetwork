@@ -83,13 +83,26 @@ input[type=text], input[type=number], select {
     padding: 2px;
 
     :nth-of-type(1) {
-      font-size: @font-size-large;
+      font-size: 120%;
       padding-top: 8px;
     }
 
     .gn-record-details {
       padding-left: 38px;
     }
+  }
+}
+
+.gn-autocomplete-list {
+  position: absolute;
+  margin-top: 35px;
+  width: inherit;
+  z-index: 999;
+
+  /**/
+  .tt-suggestion:hover {
+    color: #fff;
+    background-color: #0097cf;
   }
 }
 
@@ -154,12 +167,11 @@ form.gn-editor {
   
   legend {
     margin-bottom: 10px;
-    font-size: @font-size-large;
   }
 
   .gn-textarea-xml {
     font-family: courier;
-    font-size: @font-size-small;
+    font-size: 12px;
     min-height: 700px;
   }
   
@@ -335,7 +347,7 @@ form.gn-editor {
 
   .gn-required > label:after {
       content: "*";
-      font-size: @font-size-h1;
+      font-size: 2.5em;
       margin: 7px 0 0 7px;
       position: absolute;
       color: #a94442;
@@ -421,7 +433,6 @@ table.gn-data-store {
 
 .gn-schematron-title {
   word-wrap: break-word;
-  font-size: @font-size-base;
 }
 .navbar-collapse {
   padding-right: 0px;
@@ -440,14 +451,27 @@ table.gn-data-store {
   .nav > li > a {
     padding: 2px 5px;
     margin-top: 2px;
-    font-size: @font-size-x-small;
+    font-size: 8px;
   }
   .label {
     line-height: 2;
-    font-size: @font-size-x-small;
+    font-size: 8px;
   }
   .no-data a {
     color: @gray-light;
+  }
+}
+
+.gn-batch-editor {
+  .gn-resultview li.list-group-item {
+    margin-bottom: 0px;
+    padding: 4px;
+  }
+  li.gn-batch-editor-info {
+    margin-top: 11px;
+  }
+  [data-ng-search-form] .gn-top-search .gn-form-any {
+    max-width: 80vw;
   }
 }
 

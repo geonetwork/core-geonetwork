@@ -185,7 +185,6 @@
     <name>gmd:processStep</name>
     <name>gmd:lineage</name>
     <name>gmd:centerPoint</name>
-    <name>gmd:verticalCRS</name>
     <name>gml:verticalCS</name>
     <name>gml:verticalDatum</name>
     <name>gmd:identifier</name>
@@ -318,7 +317,7 @@
             xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
             /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
             del="../..">
-            <template> 
+            <template>
               <values>
                 <key label="url" xpath="gmd:URL" tooltip="gmd:linkage"/>
               </values>
@@ -1293,8 +1292,8 @@
           <field xpath="/gmd:MD_Metadata/gmd:featureAttribute"/>
         </section>
       </tab>
-      
-      <!-- Elements that should not use the "flat" mode --> 
+
+      <!-- Elements that should not use the "flat" mode -->
       <flatModeExceptions>
         <for name="gmd:descriptiveKeywords" />
         <for name="gmd:keyword"/>
@@ -1389,4 +1388,150 @@
       <tab id="xml" default="true"/>
     </view>
   </views>
+  <batchEditing>
+    <section name="identification">
+      <!-- Update existing title in metadata record -->
+      <field name="title"
+             xpath="gmd:identificationInfo/*/
+                      gmd:citation/gmd:CI_Citation/gmd:title"
+             indexField="title">
+        <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
+      </field>
+
+      <!-- Insert a new keyword in the first gmd:descriptiveKeywords found.
+      Warning: The section may contains a thesaurusName reference and
+      the keyword may not be part of it.
+      Warning: Duplicates may be inserted.
+      -->
+      <field name="keyword"
+             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/
+                      gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword"
+             indexField="keyword"
+             insertMode="gn_create">
+        <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
+      </field>
+
+      <!-- Insert a new topic category
+      Warning: Duplicates may be inserted.
+      -->
+      <field name="topicCats"
+             xpath="gmd:identificationInfo/*/
+                      gmd:topicCategory"
+             use="data-gn-codelist-picker"
+             codelist="gmd:MD_TopicCategoryCode"
+             indexField="topicCat"
+             insertMode="gn_create">
+        <template><![CDATA[<gmd:MD_TopicCategoryCode xmlns:gmd='http://www.isotc211.org/2005/gmd'>{{value}}</gmd:MD_TopicCategoryCode>]]></template>
+      </field>
+
+      <!-- Insert a new extent
+      Warning: Duplicates may be inserted.
+      -->
+      <field name="extent"
+             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent"
+             use="data-gn-draw-bbox"
+             insertMode="gn_create"/>
+
+      <!-- Insert a new resource language
+      Warning: Duplicates may be inserted.
+      -->
+      <field name="language"
+             xpath="gmd:identificationInfo/*/
+                      gmd:language"
+             use="data-gn-language-picker"
+             insertMode="gn_replace"
+             removable="true">
+        <template><![CDATA[<gmd:LanguageCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
+      </field>
+
+      <!-- Insert, or replace if existing, the parent identifier.
+      Warning: Duplicates may be inserted.
+      -->
+      <field name="parentIdentifier"
+             xpath="gmd:parentIdentifier"
+             use="data-gn-metadata-picker"
+             insertMode="gn_replace"
+             removable="true">
+        <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
+      </field>
+
+      <field name="resourceStatus"
+             xpath="gmd:identificationInfo/*/
+                      gmd:status"
+             use="data-gn-codelist-picker"
+             codelist="gmd:MD_ProgressCode"
+             insertMode="gn_replace"
+             removable="true">
+        <template><![CDATA[<gmd:MD_ProgressCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
+      </field>
+    </section>
+
+    <section name="resourceConstraints">
+      <!-- Insert a new access contraints
+            Warning: Duplicates may be inserted.
+      -->
+      <field name="legalConstraints"
+             xpath="gmd:identificationInfo/*/
+                      gmd:resourceConstraints/gmd:MD_LegalConstraints/
+                        gmd:accessConstraints"
+             use="data-gn-codelist-picker"
+             codelist="gmd:MD_RestrictionCode"
+             insertMode="gn_create"
+             removable="true">
+        <template><![CDATA[<gmd:MD_RestrictionCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
+      </field>
+
+      <!-- Insert a new other contraints
+            Warning: Duplicates may be inserted.
+      -->
+      <field name="otherConstraints"
+             xpath="gmd:identificationInfo/*/
+                      gmd:resourceConstraints/gmd:MD_LegalConstraints/
+                        gmd:otherConstraints"
+             use="textarea"
+             insertMode="gn_create"
+             removable="true">
+        <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
+      </field>
+    </section>
+
+
+    <!-- Replace current lineage or insert a new one.
+          Warning: Duplicates may be inserted.
+    -->
+    <section name="quality">
+      <field name="lineage"
+             xpath="gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                      gmd:lineage/gmd:LI_Lineage/gmd:statement"
+             use="textarea"
+             insertMode="gn_replace"
+             removable="true">
+        <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
+      </field>
+    </section>
+
+    <section name="contact">
+      <field name="resourceContact"
+             xpath="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact"
+             use="data-gn-directory-entry-selector"
+             insertMode="gn_create"/>
+      <field name="distributor"
+             xpath="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact"
+             use="data-gn-directory-entry-selector"
+             insertMode="gn_create"/>
+      <field name="mdContact"
+             xpath="gmd:contact"
+             use="data-gn-directory-entry-selector"
+             insertMode="gn_create"/>
+    </section>
+
+    <section name="metadata">
+      <field name="mdLanguage"
+             xpath="gmd:language"
+             use="data-gn-language-picker"
+             removable="true">
+        <template><![CDATA[<gmd:LanguageCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
+      </field>
+    </section>
+  </batchEditing>
 </editor>
