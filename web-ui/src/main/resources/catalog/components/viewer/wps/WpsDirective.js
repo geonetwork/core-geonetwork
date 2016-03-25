@@ -111,10 +111,8 @@
       return {
         restrict: 'AE',
         scope: {
-          uri: '=',
-          processId: '=',
-          defaults: '=',
-          map: '='
+          map: '=',
+          wpsLink: '='
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
@@ -124,7 +122,12 @@
         link: function(scope, element, attrs) {
           var defaults;
 
-          if (scope.defaults) {
+          var processId = attrs['processId'] || scope.wpsLink.name;
+          var uri = attrs['uri'] || scope.wpsLink.url;
+          var defaults = scope.$eval(attrs['defaults']) ||
+              scope.wpsLink.applicationProfile;
+
+          if (defaults) {
             defaults = parseKvpParams(scope.defaults);
           }
 
@@ -136,7 +139,7 @@
             mimeType: ''
           };
 
-          gnWpsService.describeProcess(scope.uri, scope.processId)
+          gnWpsService.describeProcess(uri, processId)
           .then(
               function(response) {
                 scope.describeState = 'succeeded';
@@ -317,8 +320,8 @@
                     scope.executeState = 'finished';
 
                     if (response.status.processSucceeded) {
-                      var layers = gnWpsService.extractWmsLayerFromResponse(
-                          response, scope.map);
+                      gnWpsService.extractWmsLayerFromResponse(
+                          response, scope.map, scope.wpsLink.layer);
                     }
                   }
                 }
@@ -329,8 +332,8 @@
             scope.running = true;
             scope.executeState = 'sended';
             gnWpsService.execute(
-                scope.uri,
-                scope.processId,
+                uri,
+                processId,
                 inputs,
                 scope.responseDocument
             ).then(
