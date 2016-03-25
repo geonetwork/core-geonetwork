@@ -68,7 +68,6 @@ import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.SettingSpec;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
-import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -250,9 +249,6 @@ public class Info implements Service {
 
             } else if (type.equals(TEMPLATES))   {
                 throw new BadParameterEx("To search for template, use the search service.", type);
-
-            } else if (type.equals(Z_3950_REPOSITORIES)) {
-				result.addContent(getZRepositories(context, sm));
 
             } else if (type.equals(ME)) {
 				result.addContent(getMyInfo(context));
@@ -476,29 +472,6 @@ public class Info implements Service {
         return element;
     }
 
-	//--------------------------------------------------------------------------
-	//--- ZRepositories
-	//--------------------------------------------------------------------------
-
-	public Element getZRepositories(ServiceContext context, SettingManager sm) throws Exception
-	{
-		boolean z3950Enable   = sm.getValue("system/z3950/enable").equals("true");
-
-		List<RepositoryInfo> repoList = new ArrayList<RepositoryInfo>(RepositoryInfo.getRepositories(context));
-
-		Element response = new Element("z3950repositories");
-
-		for (RepositoryInfo repo : repoList) {
-			if (!z3950Enable && repo.getClassName().startsWith("org.fao.geonet") ) {
-				continue; // skip Local GeoNetwork Z server if not enabled
-			} else {
-				response.addContent(buildRecord(repo.getDn(),repo.getName(), Collections.<String, String>emptyMap(),
-                        repo.getCode(), repo.getServerCode()));
-			}
-		}
-
-		return response;
-	}
 
 	private Element buildRecord(String id, String name, Map<String, String> labelTranslations, String code, String serverCode)
 	{

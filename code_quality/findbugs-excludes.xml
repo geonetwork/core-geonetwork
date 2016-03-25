@@ -64,11 +64,6 @@
       <Bug pattern="SE_BAD_FIELD_INNER_CLASS" />
     </Match>
     <Match>
-      <Class name="org.fao.geonet.kernel.search.Z3950Searcher" />
-      <Bug pattern="REC_CATCH_EXCEPTION" />
-      <Method name="presentDocuments" />
-    </Match>
-    <Match>
       <Class name="org.fao.geonet.kernel.Thesaurus" />
       <Bug pattern="REC_CATCH_EXCEPTION" />
       <Method name="retrieveThesaurusTitle" />

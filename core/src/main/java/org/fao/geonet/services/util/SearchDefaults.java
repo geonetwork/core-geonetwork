@@ -53,8 +53,6 @@ public class SearchDefaults {
 			{ Geonet.SearchResult.RELATION,
 					Geonet.SearchResult.Relation.OVERLAPS },
 			{ Geonet.SearchResult.EXTENDED, Geonet.Text.OFF },
-			{ Geonet.SearchResult.REMOTE, Geonet.Text.OFF },
-			{ Geonet.SearchResult.TIMEOUT, "20" },
 			{ Geonet.SearchResult.HITS_PER_PAGE, "10" },
 			{ Geonet.SearchResult.SIMILARITY, "1" },
 			{ Geonet.SearchResult.OUTPUT, Geonet.SearchResult.Output.FULL },

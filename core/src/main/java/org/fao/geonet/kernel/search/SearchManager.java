@@ -549,7 +549,6 @@ public class SearchManager implements ISearchManager {
          _luceneTermsToExclude = luceneTermsToExclude;
 
          initLucene();
-         initZ3950();
 
          _luceneOptimizerManager = new LuceneOptimizerManager(this, settingInfo);
     }
@@ -567,7 +566,6 @@ public class SearchManager implements ISearchManager {
         } else {
             Log.error(Geonet.SEARCH_ENGINE, "Unable to get a hook on the application context (already destroyed ?).");
         }
-        endZ3950();
         _spatial.end();
         _luceneOptimizerManager.cancel();
     }
@@ -652,7 +650,6 @@ public class SearchManager implements ISearchManager {
         switch (type) {
 			case LUCENE:
                 return new LuceneSearcher(this, stylesheetName, luceneConfig);
-			case Z3950: return new Z3950Searcher(this, schemaManager, stylesheetName);
 			case UNUSED: return new UnusedSearcher();
 			default: throw new Exception("unknown MetaSearcher type: " + type);
 		}
@@ -665,18 +662,6 @@ public class SearchManager implements ISearchManager {
 	private void initLucene() throws Exception {
 		setupIndex(false);
 	}
-
-	// Z39.50 init/end methods
-
-	/**
-     * Initializes the Z3950 client searcher.
-	 */
-	private void initZ3950() {}
-
-	/**
-	 * deinitializes the Z3950 client searcher.
-	 */
-	private void endZ3950() {}
 
 	public Path getHtmlCacheDir() {
 		return _htmlCacheDir;
