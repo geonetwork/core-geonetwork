@@ -39,13 +39,17 @@
    *
    * @constructor
    */
-  var GnFeaturesTableManager = function() {
+  var GnFeaturesTableManager = function(gnFeaturesTableLoader) {
+    this.gnFeaturesTableLoader = gnFeaturesTableLoader;
     this.tables = [];
   };
-  GnFeaturesTableManager.prototype.addTable = function(config) {
+  GnFeaturesTableManager.prototype.addTable = function(tableConfig,
+                                                       loaderConfig) {
     var table = {
-      name: config.name,
-      type: config.type
+      name: tableConfig.name,
+      type: tableConfig.type,
+      loader: this.gnFeaturesTableLoader.createLoader(tableConfig.type,
+          loaderConfig)
     };
 
     this.tables.push(table);
@@ -55,15 +59,8 @@
     this.tables.length = 0;
   };
 
-  /**
-   *
-   * @constructor
-   */
-  var GnFeaturesTableLoader = function() {
-  };
 
   module.service('gnFeaturesTableManager', GnFeaturesTableManager);
   module.service('gnFeaturesTableService', GnFeaturesTableService);
-  module.service('gnFeaturesTableLoader', GnFeaturesTableLoader);
 
 })();

@@ -9,9 +9,8 @@
     </li>
   </ul>
 
-  <div class="tab-content" data-ng-show="ctrl.currentTable">
-    <div role="tabpanel" class="tab-pane active">
-    </div>
+  <div class="tab-content" data-ng-if="ctrl.currentTable">
+    <gn-features-table gn-features-table-loader="ctrl.currentTable.loader"></gn-features-table>
   </div>
 
 </div>

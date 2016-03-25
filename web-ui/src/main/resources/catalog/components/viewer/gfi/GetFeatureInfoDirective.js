@@ -108,8 +108,7 @@
   module.directive('gnGfi', [
     '$http',
     'gfiTemplateURL',
-    'gnFeaturesTableManager',
-    function($http, gfiTemplateURL, gnFeaturesTableManager) {
+    function($http, gfiTemplateURL) {
 
       return {
         restrict: 'A',
@@ -119,11 +118,6 @@
         controller: 'gnGfiController',
         templateUrl: gfiTemplateURL,
         link: function(scope, element, attrs) {
-
-          gnFeaturesTableManager.addTable({
-            name: 'layer1',
-            type: 'gfi'
-          });
 
           var map = scope.map;
           var mapElement = $(map.getTarget());
@@ -260,7 +254,7 @@
               layer.getSource() instanceof ol.source.TileWMS;
         });
 
-        this.registerTables(layers);
+        this.registerTables(layers, e.coordinate);
 
       }.bind(this));
     }.bind(this));
@@ -279,12 +273,18 @@
     return true;
   };
 
-  geonetwork.GnGfiController.prototype.registerTables = function(layers) {
+  geonetwork.GnGfiController.prototype.registerTables =
+      function(layers, coordinates) {
+
     this.gnFeaturesTableManager.clear();
     layers.forEach(function(layer) {
       this.gnFeaturesTableManager.addTable({
         name: layer.get('label') || layer.get('name'),
-        type: 'gfi'
+        type: 'gfi',
+      }, {
+        map: this.map,
+        layer: layer,
+        coordinates: coordinates
       });
     }.bind(this));
   };

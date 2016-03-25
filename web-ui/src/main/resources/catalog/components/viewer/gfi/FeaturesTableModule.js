@@ -26,6 +26,7 @@
   goog.require('gn_gfi_directive');
   goog.require('gn_featurestable_directive');
   goog.require('gn_featurestables_directive');
+  goog.require('gn_featurestable_loader');
   goog.require('gn_featurestable_service');
 
   var module = angular.module('gn_featurestable', [
@@ -33,6 +34,7 @@
     'gn_featurestable_directive',
     'gn_featurestables_directive',
     'gn_featurestable_service',
+    'gn_featurestable_loader',
     'ngSanitize'
   ]);
 })();

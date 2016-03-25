@@ -32,7 +32,7 @@
       return {
         restrict: 'E',
         scope: {
-          loader: '?=gnFeaturesTableLoader'
+          loader: '=?gnFeaturesTableLoader'
         },
         controllerAs: 'ctrl',
         bindToController: true,
@@ -47,9 +47,16 @@
 
   var GnFeaturesTableController = function($scope) {
     this.$scope = $scope;
+    this.initTable();
   };
 
   GnFeaturesTableController.prototype.initTable = function() {
+
+    this.loader.loadAll().then(function(features){
+      this.features = features;
+    }.bind(this));
+
+/*
     this.tableElt.bootstrapTable('destroy');
     this.tableElt.bootstrapTable({
       columns: [{
@@ -72,6 +79,7 @@
         price: '$2'
       }]
     });
+*/
 
   };
 
