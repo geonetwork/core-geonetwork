@@ -10,7 +10,7 @@
       <ul style="display:none" class="list-group">
 
         <!--Zoom To layer-->
-        <li class="list-group-item"><a href="" data-ng-click="mapService.zoomLayerToExtent(member, map)">
+        <li class="list-group-item" ng-if="member.get('cextent')"><a href="" data-ng-click="mapService.zoomLayerToExtent(member, map)">
           <!--<i class="fa fa-arrows-alt"></i>&nbsp;--><span translate="">layerExtentZoom</span>
         </a></li>
 
