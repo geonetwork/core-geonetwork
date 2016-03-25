@@ -171,15 +171,20 @@
             //var olExtent = [ext[1],ext[0],ext[3],ext[2]];
             // TODO fix using layer.BoundingBox[0].extent
             // when sextant fix his capabilities
-            if (angular.isArray(layer.EX_GeographicBoundingBox)) {
-              extent =
-                  ol.extent.containsExtent(
-                      proj.getWorldExtent(),
-                      layer.EX_GeographicBoundingBox) ?
-                      ol.proj.transformExtent(layer.EX_GeographicBoundingBox,
-                          'EPSG:4326', proj) :
-                      proj.getExtent();
 
+            var bboxProp;
+            ['EX_GeographicBoundingBox', 'WGS84BoundingBox'].forEach(
+                function(prop) {
+                  if(angular.isArray(layer[prop])) {
+                    bboxProp = layer[prop];
+                  }
+                });
+
+            if (bboxProp) {
+              extent = ol.extent.containsExtent( proj.getWorldExtent(),
+                      bboxProp) ?
+                      ol.proj.transformExtent(bboxProp, 'EPSG:4326', proj) :
+                      proj.getExtent();
             } else if (angular.isArray(layer.BoundingBox)) {
               for (var i = 0; i < layer.BoundingBox.length; i++) {
                 var bbox = layer.BoundingBox[i];
