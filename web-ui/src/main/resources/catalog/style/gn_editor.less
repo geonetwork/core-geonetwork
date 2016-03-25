@@ -93,6 +93,19 @@ input[type=text], input[type=number], select {
   }
 }
 
+.gn-autocomplete-list {
+  position: absolute;
+  margin-top: 35px;
+  width: inherit;
+  z-index: 999;
+
+  /**/
+  .tt-suggestion:hover {
+    color: #fff;
+    background-color: #0097cf;
+  }
+}
+
 form.gn-editor {
   /* Move each sub fieldset to the left */
   @editor-fieldset-padding-left: 5px;
@@ -446,6 +459,19 @@ table.gn-data-store {
   }
   .no-data a {
     color: @gray-light;
+  }
+}
+
+.gn-batch-editor {
+  .gn-resultview li.list-group-item {
+    margin-bottom: 0px;
+    padding: 4px;
+  }
+  li.gn-batch-editor-info {
+    margin-top: 11px;
+  }
+  [data-ng-search-form] .gn-top-search .gn-form-any {
+    max-width: 80vw;
   }
 }
 

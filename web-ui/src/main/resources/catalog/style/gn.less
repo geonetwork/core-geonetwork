@@ -283,6 +283,11 @@ div.gn-scroll-spy {
   display: none;
   .modal-content {
     width: 90vw;
+    max-height: 90vh;
+    .modal-body {
+      max-height: 76vh;
+      overflow: auto;
+    }
   }
   .modal-dialog {
     margin: 10px 5vw;
@@ -604,6 +609,7 @@ button, .btn, .btn:active, a {
 }
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
   background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {

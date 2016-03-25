@@ -1,6 +1,12 @@
 
 # Software development
 
+As the title of this document says, this manual is for software developers that want to 
+customize or develop GeoNetwork themselves. If you just want to use the software and are 
+looking for instructions on how to do that, there is a lot of documentation for users, 
+administrators, metadata editors and application maintainers at 
+http://geonetwork-opensource.org/manuals/trunk/eng/users/index.html
+
 ## System Requirements
 
 GeoNetwork is a Java application that runs as a servlet so the Java Runtime

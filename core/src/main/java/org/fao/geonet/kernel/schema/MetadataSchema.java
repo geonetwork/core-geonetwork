@@ -38,6 +38,7 @@ import org.fao.geonet.domain.SchematronCriteriaGroup;
 import org.fao.geonet.domain.SchematronCriteriaGroupId;
 import org.fao.geonet.domain.SchematronCriteriaType;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.schema.editorconfig.Editor;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
@@ -45,6 +46,9 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -133,6 +137,22 @@ public class MetadataSchema
 	{
 		return schemaName;
 	}
+
+    public Editor getConfigEditor() {
+        Path metadataSchemaConfig =
+                getSchemaDir().resolve("layout").resolve("config-editor.xml");
+        if (metadataSchemaConfig.toFile().exists()) {
+            try {
+                JAXBContext jaxbContext = JAXBContext.newInstance(Editor.class);
+                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+                return (Editor) unmarshaller.unmarshal(metadataSchemaConfig.toFile());
+            } catch (JAXBException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
 
 	/**
 	 * Get schema directory

@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_utility_directive');
 
@@ -99,6 +122,29 @@
           scope.setRegion = function(regionType) {
             scope.regionType = regionType;
           };
+        }
+      };
+    }]);
+
+  module.directive('gnBatchReport', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          processReport: '=gnBatchReport'
+        },
+        templateUrl: '../../catalog/components/utility/' +
+            'partials/batchreport.html',
+        link: function(scope, element, attrs) {
+          scope.$watch('processReport', function(n, o) {
+            if (n && n != o) {
+              scope.processReportWarning = n.notFound != 0 ||
+                  n.notOwner != 0 ||
+                  n.notProcessFound != 0 ||
+                  n.metadataErrorReport.metadataErrorReport.length != 0;
+            }
+          });
         }
       };
     }]);
@@ -259,6 +305,74 @@
 
   /**
    * @ngdoc directive
+   * @name gn_utility.directive:gnMetadataPicker
+   * @function
+   *
+   * @description
+   * Use the search service
+   * to retrieve the list of entry available and provide autocompletion
+   * for the input field with that directive attached.
+   *
+   */
+  module.directive('gnMetadataPicker',
+      ['gnUrlUtils', 'gnSearchManagerService',
+       function(gnUrlUtils, gnSearchManagerService) {
+         return {
+           restrict: 'A',
+           link: function(scope, element, attrs) {
+             element.attr('placeholder', '...');
+             var displayField = attrs['displayField'] || 'defaultTitle';
+             var valueField = attrs['valueField'] || displayField;
+             var params = angular.fromJson(element.attr('params') || '{}');
+
+             var url = gnUrlUtils.append('q?_content_type=json',
+             gnUrlUtils.toKeyValue(angular.extend({
+               _isTemplate: 'n',
+               any: '*QUERY*',
+               sortBy: 'title',
+               fast: 'index'
+             }, params)
+             )
+             );
+             var parseResponse = function(data) {
+               var records = gnSearchManagerService.format(data);
+               return records.metadata;
+             };
+             var source = new Bloodhound({
+               datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+               queryTokenizer: Bloodhound.tokenizers.whitespace,
+               limit: 200,
+               remote: {
+                 wildcard: 'QUERY',
+                 url: url,
+                 filter: parseResponse
+               }
+             });
+             source.initialize();
+             $(element).typeahead({
+               minLength: 0,
+               highlight: true
+             }, {
+               name: 'metadata',
+               displayKey: function(data) {
+                 if (valueField === 'uuid') {
+                   return data['geonet:info'].uuid;
+                 } else {
+                   return data[valueField];
+                 }
+               },
+               source: source.ttAdapter(),
+               templates: {
+                 suggestion: function(datum) {
+                   return '<p>' + datum[displayField] + '</p>';
+                 }
+               }
+             });
+           }
+         };
+       }]);
+
+  /**
    * @name gn_utility.directive:gnClickToggle
    * @function
    *
@@ -422,7 +536,6 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
-
           element.on('click', function(e) {
             /**
              * Toggle collapse-expand fieldsets
@@ -445,6 +558,9 @@
               }
             });
           });
+          if (attrs['gnSlideToggle'] == 'true') {
+            element.click();
+          }
         }
       };
     }]);

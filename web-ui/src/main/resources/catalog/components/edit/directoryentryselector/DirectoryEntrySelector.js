@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_directory_entry_selector');
 
@@ -50,7 +73,11 @@
               // An optional transformation applies to the subtemplate
               // This may be used when using an ISO19139 contact directory
               // in an ISO19115-3 records.
-              transformation: '@'
+              transformation: '@',
+              // If not using the directive in an editor context, set
+              // the schema id to properly retrieve the codelists.
+              schema: '@',
+              selectEntryCb: '='
             },
             templateUrl: '../../catalog/components/edit/' +
                 'directoryentryselector/partials/' +
@@ -110,15 +137,15 @@
                   scope.snippetRef = gnEditor.
                       buildXMLFieldName(scope.elementRef, scope.elementName);
 
-
+                  scope.attrs = iAttrs;
                   scope.add = function() {
                     return gnEditor.add(gnCurrentEdit.id,
                         scope.elementRef, scope.elementName,
                         scope.domId, 'before').then(function() {
-                     if (scope.templateAddAction) {
-                       gnEditor.save(gnCurrentEdit.id, true);
-                     }
-                   });
+                      if (scope.templateAddAction) {
+                        gnEditor.save(gnCurrentEdit.id, true);
+                      }
+                    });
                   };
 
                   // <request><codelist schema="iso19139"
@@ -133,7 +160,7 @@
                     scope.snippet = '';
                     var snippets = [];
 
-                    var checkState = function() {
+                    var checkState = function(c) {
                       if (snippets.length === entry.length) {
                         scope.snippet = snippets.join(separator);
                         // Clean results
@@ -141,13 +168,19 @@
                         // searchFormController
                         //                   scope.searchResults.records = null;
                         //                   scope.searchResults.count = null;
-                        $timeout(function() {
-                          // Save the metadata and refresh the form
-                          gnEditor.save(gnCurrentEdit.id, true).then(
-                         function(r) {
-                           defer.resolve();
-                         });
-                        });
+                        // Only if editing.
+                        if (gnCurrentEdit.id) {
+                          $timeout(function() {
+                            // Save the metadata and refresh the form
+                            gnEditor.save(gnCurrentEdit.id, true).then(
+                           function(r) {
+                             defer.resolve();
+                           });
+                          });
+                        }
+                        if (angular.isFunction(scope.selectEntryCb)) {
+                          scope.selectEntryCb(scope, c, role);
+                        }
                       }
                     };
 
@@ -196,15 +229,16 @@
                                   buildXML(scope.schema,
                          scope.elementName, xml));
                        }
-                       checkState();
+                       checkState(c);
                      });
                     });
 
                     return defer.promise;
                   };
 
+                  var schemaId = gnCurrentEdit.schema || scope.schema;
                   gnSchemaManagerService
-                      .getCodelist(gnCurrentEdit.schema + '|' + 'roleCode')
+                     .getCodelist(schemaId + '|' + 'roleCode')
                       .then(function(data) {
                         scope.roles = data[0].entry;
                       });
@@ -263,7 +297,7 @@
                  gnGlobalSettings.modelOptions);
                },
                post: function postLink(scope, iElement, iAttrs) {
-                 scope.defaultRoleCode = 'pointOfContact';
+                 scope.defaultRoleCode = iAttrs['defaultRole'] || null;
                  scope.defaultRole = null;
                  angular.forEach(scope.roles, function(r) {
                    if (r.code == scope.defaultRoleCode) {
@@ -278,6 +312,10 @@
                      scope.closeModal();
                    });
                  };
+                 // Trigger search but for all
+                 // search form in the page
+                 // TODO: improve
+                 // scope.$broadcast('resetSearch', scope.searchObj.params);
                }
              };
            }

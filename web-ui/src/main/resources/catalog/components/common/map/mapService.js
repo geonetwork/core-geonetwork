@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_map_service');
 
@@ -1395,18 +1418,18 @@
            * @param {Object} opt for url or layer name
            * @return {ol.layer} layer
            */
-          createLayerForType: function(type, opt) {
+          createLayerForType: function(type, opt, title) {
             switch (type) {
               case 'mapquest':
                 return new ol.layer.Tile({
                   style: 'Road',
                   source: new ol.source.MapQuest({layer: 'osm'}),
-                  title: 'MapQuest'
+                  title: title ||  'MapQuest'
                 });
               case 'osm':
                 return new ol.layer.Tile({
                   source: new ol.source.OSM(),
-                  title: 'OpenStreetMap'
+                  title: title ||  'OpenStreetMap'
                 });
               case 'bing_aerial':
                 return new ol.layer.Tile({
@@ -1415,7 +1438,18 @@
                     key: viewerSettings.bingKey,
                     imagerySet: 'Aerial'
                   }),
-                  title: 'Bing Aerial'
+                  title: title ||  'Bing Aerial'
+                });
+              case 'stamen':
+                //We make watercolor the default layer
+                var type = opt && opt.name ? opt.name : 'watercolor',
+                    source = new ol.source.Stamen({
+                      layer: type
+                    });
+                source.set('type', type);
+                return new ol.layer.Tile({
+                  source: source,
+                  title: title ||  'Stamen'
                 });
               case 'wmts':
                 var that = this;

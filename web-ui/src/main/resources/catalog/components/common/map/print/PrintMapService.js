@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_printmap_service');
 
@@ -136,21 +159,25 @@
           var encFeatures = [];
           var stylesDict = {};
           var styleId = 0;
-          var hasLayerStyleFunction = !!(layer.getStyleFunction &&
-              layer.getStyleFunction());
 
           angular.forEach(features, function(feature) {
             var encStyle = {
               id: styleId
             };
 
-            var hasLayerStyleFunction = !!(feature.getStyleFunction &&
-                feature.getStyleFunction());
-
-            var styles = (hasLayerStyleFunction) ?
-                feature.getStyleFunction()(feature) :
-                ol.feature.defaultStyleFunction(feature);
-
+            var styles, featureStyle = feature.get('_style');
+            if (angular.isFunction(featureStyle)) {
+              styles = featureStyle(feature);
+            }
+            else if (angular.isArray(featureStyle)) {
+              styles = featureStyle;
+            }
+            else if (featureStyle) {
+              styles = [featureStyle];
+            }
+            else {
+              styles = ol.style.defaultStyleFunction(feature);
+            }
 
             var geometry = feature.getGeometry();
 
@@ -448,7 +475,6 @@
 
       if (textStyle) {
         var fillColor = ol.color.asArray(textStyle.getFill().getColor());
-        var strokeColor = ol.color.asArray(textStyle.getStroke().getColor());
         var fontValues = textStyle.getFont().split(' ');
         literal.fontColor = toHexa(fillColor);
         // Fonts managed by print server: COURIER, HELVETICA, TIMES_ROMAN
@@ -457,8 +483,11 @@
         literal.fontWeight = 'normal'; //fontValues[0];
         literal.label = textStyle.getText();
         literal.labelAlign = textStyle.getTextAlign();
-        literal.labelOutlineColor = toHexa(strokeColor);
-        literal.labelOutlineWidth = textStyle.getStroke().getWidth();
+        if (textStyle.getStroke()) {
+          literal.labelOutlineColor = toHexa(ol.color.asArray(
+              textStyle.getStroke().getColor()));
+          literal.labelOutlineWidth = textStyle.getStroke().getWidth();
+        }
         literal.fillOpacity = 0.0;
         literal.pointRadius = 0;
       }

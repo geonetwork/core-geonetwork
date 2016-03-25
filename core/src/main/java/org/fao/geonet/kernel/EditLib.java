@@ -621,8 +621,11 @@ public class EditLib {
                 ));
             }
 
-            // If a property is not found in metadata, create it...
-            if (nodeList.size() == 0 && createXpathNodeIfNotExist)  {
+            // If a property is not found in metadata,
+            // or in create mode, create it...
+            if (
+                    (nodeList.size() == 0 && createXpathNodeIfNotExist) ||
+                    isCreateMode)  {
                 int indexOfRequiredPortion = -1;
                 // Extract the XPath for the element to match. For:
                 //  * Relative XPath (*//gmd:RS_Identifier)[2]/gmd:code/gco:CharacterString
@@ -736,8 +739,9 @@ public class EditLib {
      * Performs the updating of the element selected from the metadata by the xpath.
      */
     private void doAddFragmentFromXpath(MetadataSchema metadataSchema,
-                                        Element newValue, Element propEl) throws Exception {
+                                        Element fragment, Element propEl) throws Exception {
 
+        Element newValue = (Element) fragment.clone();
         if (newValue.getName().equals(SpecialUpdateTags.REPLACE) ||
                    newValue.getName().equals(SpecialUpdateTags.ADD) ||
                    newValue.getName().equals(SpecialUpdateTags.CREATE)) {
@@ -1206,9 +1210,10 @@ public class EditLib {
         //     isOrType if element has substitutes and one of them should be chosen
         if (!type.isOrType()) {
             for(int i=0; i<type.getElementCount(); i++) {
-                String childName = type.getElementAt(i);
-                boolean childIsMandatory = type.getMinCardinAt(i) > 0;
-                boolean childIsSuggested = sugg.isSuggested(elemName, childName);
+                final String childName = type.getElementAt(i);
+                final boolean childIsMandatory = type.getMinCardinAt(i) > 0;
+                final boolean childIsSuggested = sugg.isSuggested(elemName, childName);
+                final boolean childIsFiltered = sugg.isFiltered(elemName, childName);
                 
                 if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
                     Log.debug(Geonet.EDITORFILLELEMENT,"####   - " + i + " element = " + childName);
@@ -1218,7 +1223,7 @@ public class EditLib {
                 
                 
                 
-                if (childIsMandatory || childIsSuggested) {
+                if ((childIsMandatory || childIsSuggested) && !childIsFiltered) {
                     
                     MetadataType elemType = schema.getTypeInfo(schema.getElementType(childName, elemName));
                     List<String> childSuggestion = sugg.getSuggestedElements(childName);
@@ -1229,7 +1234,7 @@ public class EditLib {
                         Log.debug(Geonet.EDITORFILLELEMENT,"####     - is or type = "+ elemType.isOrType());
                         Log.debug(Geonet.EDITORFILLELEMENT,"####     - has suggestion = "+ childHasOneSuggestion);
                         Log.debug(Geonet.EDITORFILLELEMENT,"####     - elem type list = " + elemType.getElementList());
-                        Log.debug(Geonet.EDITORFILLELEMENT,"####     - suggested types list = " + sugg.getSuggestedElements(childName));
+                        Log.debug(Geonet.EDITORFILLELEMENT,"####     - suggested types list = " + childSuggestion);
                     }
                     
                     //--- There can be 'or' elements with other 'or' elements inside them.
