@@ -624,7 +624,7 @@
       };
     }]);
 
-  module.directive('gnFocusOn', function($timeout) {
+  module.directive('gnFocusOn', ['$timeout', function($timeout) {
     return {
       restrict: 'A',
       link: function($scope, $element, $attr) {
@@ -638,7 +638,7 @@
         });
       }
     };
-  });
+  }]);
 
   /**
    * Use to initialize bootstrap datepicker
