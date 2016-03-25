@@ -3,6 +3,9 @@
 
   var module = angular.module('sxt_layertree', []);
 
+  // Contains all layers that come from wps service
+  var wpsLayers = [];
+
   module.directive('sxtLayertree', [
     'gnLayerFilters',
     '$filter',
@@ -17,14 +20,13 @@
         controller: [ '$scope', '$compile', function($scope, $compile) {
           var $this = this;
 
-          this.setWPS = function(process, layer) {
+          this.setWPS = function(wpsLink, layer) {
             $scope.loadTool('wps', layer);
 
             var scope = $scope.$new();
-            scope.wpsUri = process.url;
-            scope.wpsProcessId = process.name;
-            scope.applicationProfile = process.applicationProfile;
-            var el = angular.element('<gn-wps-process-form map="map" data-uri="wpsUri" data-process-id="wpsProcessId" defaults="applicationProfile"></gn-wps-process-form>');
+            wpsLink.layer = layer;
+            scope.wpsLink = wpsLink;
+            var el = angular.element('<gn-wps-process-form map="map" data-wps-link="wpsLink"></gn-wps-process-form>');
             $compile(el)(scope);
             var element = $('.sxt-wps-panel');
             element.empty();
@@ -99,6 +101,15 @@
             return aName < bName ? -1 : 1;
           };
 
+          var addWpsLayers = function(layer, nodes) {
+            var nodeIdx = nodes.indexOf(layer);
+            wpsLayers.forEach(function(l) {
+              if (l.get('wpsParent') == layer) {
+                nodes.splice(nodeIdx+1, 0, l);
+              }
+            });
+          };
+
           var createNode = function(layer, node, g, index) {
             var group = g[index];
             if (group) {
@@ -116,8 +127,7 @@
               if (!node.nodes) node.nodes = [];
               node.nodes.push(layer);
               node.nodes.sort(sortNodeFn);
-
-
+              addWpsLayers(layer, node.nodes);
             }
           };
 
@@ -146,6 +156,10 @@
               var fLayers = $filter('filter')(scope.layers,
                   scope.layerFilterFn);
 
+              wpsLayers = scope.layers.filter(function(l) {
+                return !!l.get('fromWps');
+              });
+
               if(scope.layerFilter.q.length > 1) {
                 fLayers = $filter('filter')(fLayers, filterFn);
               }
@@ -156,7 +170,7 @@
                 if (!groups) {
                   scope.layerTree.nodes.push(l);
                   scope.layerTree.nodes.sort(sortNodeFn);
-
+                  addWpsLayers(l, scope.layerTree.nodes);
                 }
                 else {
                   if (groups[0] != '/') {
@@ -279,6 +293,12 @@
           scope.setNCWMS = controller.setNCWMS;
 
           scope.remove = function() {
+            wpsLayers.forEach(function(l) {
+              if (l.get('wpsParent') == scope.member) {
+                scope.map.removeLayer(l);
+              }
+            });
+
             scope.map.removeLayer(scope.member);
           };
 
