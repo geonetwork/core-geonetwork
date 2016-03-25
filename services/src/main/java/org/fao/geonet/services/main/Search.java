@@ -73,8 +73,6 @@ public class Search implements Service
 		SearchManager searchMan = gc.getBean(SearchManager.class);
 
 		Element elData  = SearchDefaults.getDefaultSearch(context, params);
-		String  sRemote = elData.getChildText(Geonet.SearchResult.REMOTE);
-		boolean remote  = sRemote != null && sRemote.equals(Geonet.Text.ON);
 
 		// Parse bbox & assign to four *BL params
 		Element bbox  = elData.getChild(Geonet.SearchResult.BBOX);
@@ -110,17 +108,9 @@ public class Search implements Service
 		
 
 		// perform the search and save search query into session
-		MetaSearcher searcher;
-
-		context.info("Creating searchers");
-
-		if (remote)	searcher = searchMan.newSearcher(SearcherType.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
-		else        searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+		MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 
 		searcher.search(context, elData, _config);
-		if (remote && (searcher.getSize() == 0)) { // do it again for Z3950
-			searcher.search(context, elData, _config);
-		}
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 		session.removeProperty(Geonet.Session.SEARCH_REQUEST);
 		context.info("Getting summary");

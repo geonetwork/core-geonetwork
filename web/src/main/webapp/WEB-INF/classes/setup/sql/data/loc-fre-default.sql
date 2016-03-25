@@ -16,7 +16,6 @@ INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'fre','Répertoires')
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'fre','Applications');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'fre','Ressources interactives');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'fre','Conférences');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (11,'fre','Serveurs Z3950');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'fre','Annuaires');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'fre','Echantillons physiques');
 

@@ -104,7 +104,6 @@
 			ISO profil.
 		-->
 		<param name="preferredSchema" value="iso19139" />
-		<param name="jzkitConfig" value="JZkitApplicationContext.xml" />
 		<param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml" />
 
 		<!-- search statistics stuff -->

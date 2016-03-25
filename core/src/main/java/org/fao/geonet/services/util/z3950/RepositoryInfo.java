@@ -105,12 +105,12 @@ public class RepositoryInfo {
 	     	Collection<CollectionDescriptionDBO> col = ssd.getCollections();
 				if (col.size()>0) {
 					Iterator<CollectionDescriptionDBO> colit = col.iterator();
-                    if(Log.isDebugEnabled(Geonet.Z3950))
-                        Log.debug(Geonet.Z3950, "Service "+ssd.getServiceName()+" has "+col.size()+" collections "+colit.hasNext());
+                    if(Log.isDebugEnabled(Geonet.SRU))
+                        Log.debug(Geonet.SRU, "Service "+ssd.getServiceName()+" has "+col.size()+" collections "+colit.hasNext());
 					while (colit.hasNext()) {
 						CollectionDescriptionDBO oneCol = colit.next();
-                        if(Log.isDebugEnabled(Geonet.Z3950))
-                            Log.debug(Geonet.Z3950, "Adding collection "+oneCol.getCode()+":"+oneCol.getCollectionName()+":"+oneCol.getLocalId()+":"+ssd.getCode());
+                        if(Log.isDebugEnabled(Geonet.SRU))
+                            Log.debug(Geonet.SRU, "Adding collection "+oneCol.getCode()+":"+oneCol.getCollectionName()+":"+oneCol.getLocalId()+":"+ssd.getCode());
 						ret.add( new RepositoryInfo(  oneCol.getCode() , oneCol.getCollectionName(), oneCol.getLocalId(), ssd.getCode(), ssd.getClassName()) ) ;                               
 					}
 				}

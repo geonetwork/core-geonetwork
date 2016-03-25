@@ -54,7 +54,7 @@ public class Server
 		catch (Exception e)
 		{
 			//--- Z39.50 must not stop Geonetwork starting even if there are problems
-			Log.warning(Geonet.Z3950_SERVER, "Cannot start Z39.50 server : "+ e.getMessage());
+			Log.warning(Geonet.SRU, "Cannot start Z39.50 server : "+ e.getMessage());
 			e.printStackTrace();
 		}
 	}

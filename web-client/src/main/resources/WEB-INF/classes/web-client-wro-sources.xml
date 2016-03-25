@@ -1,6 +1,5 @@
 <sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="../../../../web/src/main/webResources/WEB-INF/wro-sources.xsd">
-    <!-- geonetwork.css -->
     <declarative name="geonetwork-client_css" pathOnDisk="${project.basedir}/src/main/resources">
         <cssSource webappPath="/apps/css/gndefault.css"/>
         <cssSource webappPath="/apps/css/gnmapdefault.css"/>

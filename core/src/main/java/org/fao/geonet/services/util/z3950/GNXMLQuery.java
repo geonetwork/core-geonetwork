@@ -130,8 +130,8 @@ class GNRemoteQueryDecoder
                                }
                                @Override
                                public void onAttrPlusTermNode(AttrPlusTermNode aptn) {
-                                   if(Log.isDebugEnabled(Geonet.Z3950_SERVER))
-                                       Log.debug(Geonet.Z3950_SERVER, "doing nothing..."+aptn); //TODO: find out how this is supposed to be used
+                                   if(Log.isDebugEnabled(Geonet.SRU))
+                                       Log.debug(Geonet.SRU, "doing nothing..."+aptn); //TODO: find out how this is supposed to be used
                                }
                                
 

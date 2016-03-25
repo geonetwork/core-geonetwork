@@ -74,22 +74,12 @@ public class XmlSearch implements Service
 		SearchManager searchMan = gc.getBean(SearchManager.class);
 
 		Element elData  = SearchDefaults.getDefaultSearch(context, params);
-		String  sRemote = elData.getChildText(Geonet.SearchResult.REMOTE);
-		boolean remote  = sRemote != null && sRemote.equals(Geonet.Text.ON);
 
 		// possibly close old searcher
 		UserSession  session     = context.getUserSession();
 		
 		// perform the search and save search result into session
-		MetaSearcher searcher;
-		context.info("Creating searchers");
-		
-        if(remote) {
-			searcher = searchMan.newSearcher(SearcherType.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
-        } else {
-			searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-        }
-		
+		MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 		try {
 			
 			// Check is user asked for summary only without building summary
