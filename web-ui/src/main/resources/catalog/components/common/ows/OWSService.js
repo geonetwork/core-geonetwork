@@ -175,13 +175,13 @@
             var bboxProp;
             ['EX_GeographicBoundingBox', 'WGS84BoundingBox'].forEach(
                 function(prop) {
-                  if(angular.isArray(layer[prop])) {
+                  if (angular.isArray(layer[prop])) {
                     bboxProp = layer[prop];
                   }
                 });
 
             if (bboxProp) {
-              extent = ol.extent.containsExtent( proj.getWorldExtent(),
+              extent = ol.extent.containsExtent(proj.getWorldExtent(),
                       bboxProp) ?
                       ol.proj.transformExtent(bboxProp, 'EPSG:4326', proj) :
                       proj.getExtent();

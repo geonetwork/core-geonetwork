@@ -21,30 +21,22 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_filestore_service');
+package org.fao.geonet.api.exception;
 
-  var module = angular.module('gn_filestore_service', []);
+public class ResourceAlreadyExistException extends Exception {
+    public ResourceAlreadyExistException() {
+        super();
+    }
 
-  module.factory('gnFileStoreService',
-      ['$http',
-       function($http) {
-         return {
-           get: function(metadataUuid, filter) {
-             return $http.get('../api/0.1/records/' +
-                                  metadataUuid + '/attachments', {
-               params: {
-                 filter: filter
-               }
-             });
-           },
-           updateStatus: function(resource) {
-             return $http.patch(resource.url + '?visibility=' +
-             (resource.type == 'private' ? 'public' : 'private'));
-           },
-           delete: function(resource) {
-             return $http.delete(resource.url);
-           }
-         };
-       }]);
-})();
+    public ResourceAlreadyExistException(String message) {
+        super(message);
+    }
+
+    public ResourceAlreadyExistException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ResourceAlreadyExistException(Throwable cause) {
+        super(cause);
+    }
+}
