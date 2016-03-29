@@ -86,7 +86,7 @@
 	  
 	 <mvc:annotation-driven content-negotiation-manager="cnManager">
      <mvc:message-converters>
-       <bean class="org.fao.geonet.services.api.DOMElementMessageConverter"/>
+       <bean class="org.fao.geonet.api.DOMElementMessageConverter"/>
      </mvc:message-converters>
    </mvc:annotation-driven>
 </beans>

@@ -21,30 +21,28 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_filestore_service');
+package org.fao.geonet.api.user;
 
-  var module = angular.module('gn_filestore_service', []);
+/**
+ * Created by francois on 09/02/16.
+ */
+public class PasswordUpdateParameter {
+    private String password;
+    private String changeKey;
 
-  module.factory('gnFileStoreService',
-      ['$http',
-       function($http) {
-         return {
-           get: function(metadataUuid, filter) {
-             return $http.get('../api/0.1/records/' +
-                                  metadataUuid + '/attachments', {
-               params: {
-                 filter: filter
-               }
-             });
-           },
-           updateStatus: function(resource) {
-             return $http.patch(resource.url + '?visibility=' +
-             (resource.type == 'private' ? 'public' : 'private'));
-           },
-           delete: function(resource) {
-             return $http.delete(resource.url);
-           }
-         };
-       }]);
-})();
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getChangeKey() {
+        return changeKey;
+    }
+
+    public void setChangeKey(String changeKey) {
+        this.changeKey = changeKey;
+    }
+}
