@@ -6,3 +6,4 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 
 DELETE FROM Settings WHERE name = 'system/z3950/enable';
 DELETE FROM Settings WHERE name = 'system/z3950/port';
+DELETE FROM Settings WHERE name = 'system/removedMetadata/dir';

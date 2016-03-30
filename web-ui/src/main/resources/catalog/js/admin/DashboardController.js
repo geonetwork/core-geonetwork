@@ -79,11 +79,12 @@
 
       $scope.info = {};
 
-      $http.get($scope.url + 'xml.config.info@json').success(function(data) {
-        $scope.info = data;
-      }).error(function(data) {
-        // TODO
-      });
+      $http.get($scope.url + 'xml.config.info?_content_type=json').
+          success(function(data) {
+            $scope.info = data;
+          }).error(function(data) {
+            // TODO
+          });
 
     }]);
 

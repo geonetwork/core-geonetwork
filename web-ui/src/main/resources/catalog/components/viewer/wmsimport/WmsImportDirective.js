@@ -172,59 +172,59 @@
           map: '=gnKmlImportMap'
         },
         controllerAs: 'kmlCtrl',
-        controller: ['$scope', '$http', function($scope, $http) {
+        controller: ['$scope', '$http', '$translate',
+          function($scope, $http, $translate) {
 
-          /**
+            /**
            * Create new vector Kml file from url and add it to
            * the Map.
            *
            * @param {string} url remote url of the kml file
            * @param {ol.map} map
            */
-          this.addKml = function(url, map) {
+            this.addKml = function(url, map) {
 
-            if (url == '') {
-              $scope.validUrl = true;
-              return;
-            }
+              if (url == '') {
+                $scope.validUrl = true;
+                return;
+              }
 
-            var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
-            $http.get(proxyUrl).then(function(response) {
-              var kmlSource = new ol.source.Vector();
-              kmlSource.addFeatures(
-                  new ol.format.KML().readFeatures(
-                  response.data, {
-                    featureProjection: $scope.map.getView().getProjection(),
-                    dataProjection: 'EPSG:4326'
-                  }));
-              var vector = new ol.layer.Vector({
-                source: kmlSource,
-                getinfo: true,
-                label: 'Fichier externe : ' + url.split('/').pop()
+              var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+              $http.get(proxyUrl).then(function(response) {
+                var kmlSource = new ol.source.Vector();
+                kmlSource.addFeatures(
+                    new ol.format.KML().readFeatures(
+                    response.data, {
+                      featureProjection: $scope.map.getView().getProjection(),
+                      dataProjection: 'EPSG:4326'
+                    }));
+                var vector = new ol.layer.Vector({
+                  source: kmlSource,
+                  getinfo: true,
+                  label: $translate('kmlFile', {layer: url.split('/').pop()})
+                });
+                $scope.addToMap(vector, map);
+                $scope.url = '';
+                $scope.validUrl = true;
+
+              }, function() {
+                $scope.validUrl = false;
               });
-              $scope.addToMap(vector, map);
-              $scope.url = '';
-              $scope.validUrl = true;
+            };
 
-            }, function() {
-              $scope.validUrl = false;
-            });
-          };
+            $scope.addToMap = function(layer, map) {
+              ngeoDecorateLayer(layer);
+              layer.displayInLayerManager = true;
+              map.getLayers().push(layer);
+              map.getView().fit(layer.getSource().getExtent(),
+                  map.getSize());
 
-          $scope.addToMap = function(layer, map) {
-            ngeoDecorateLayer(layer);
-            layer.displayInLayerManager = true;
-            map.getLayers().push(layer);
-            map.getView().fit(layer.getSource().getExtent(),
-                map.getSize());
-
-            gnAlertService.addAlert({
-              msg: 'Une couche ajoutée : <strong>' +
-                  layer.get('label') + '</strong>',
-              type: 'success'
-            });
-          };
-        }],
+              gnAlertService.addAlert({
+                msg: $translate('layerAdded', {layer: layer.get('label')}),
+                type: 'success'
+              });
+            };
+          }],
         link: function(scope, element, attrs) {
 
           /** Used for ngClass of the input */
@@ -242,7 +242,7 @@
 
           var onError = function(msg) {
             gnAlertService.addAlert({
-              msg: 'Import impossible',
+              msg: $translate('mapImportFailure'),
               type: 'danger'
             });
           };
@@ -263,7 +263,7 @@
             var layer = new ol.layer.Vector({
               source: vectorSource,
               getinfo: true,
-              label: 'Fichier local : ' + event.file.name
+              label: $translate('localLayerFile', {layer: event.file.name})
             });
             scope.addToMap(layer, scope.map);
             scope.$apply();
@@ -313,7 +313,7 @@
               });
 
               var vector = new ol.layer.Vector({
-                label: 'Fichier local : ' + entry.filename,
+                label: $translate('localLayerFile', {layer: entry.filename}),
                 getinfo: true,
                 source: source
               });
@@ -381,8 +381,9 @@
    */
   module.directive('gnCapTreeElt', [
     '$compile',
+    '$translate',
     'gnAlertService',
-    function($compile, gnAlertService) {
+    function($compile, $translate, gnAlertService) {
       return {
         restrict: 'E',
         require: '^gnWmsImport',
@@ -400,8 +401,9 @@
           var select = function() {
             controller.addLayer(scope.member);
             gnAlertService.addAlert({
-              msg: 'Une couche ajoutée : <strong>' +
-                  (scope.member.Title || scope.member.title) + '</strong>',
+              msg: $translate('layerAdded', {layer:
+                    (scope.member.Title || scope.member.title)
+              }),
               type: 'success'
             });
           };
