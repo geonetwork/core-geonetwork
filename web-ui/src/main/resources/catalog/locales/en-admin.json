@@ -1046,6 +1046,8 @@
     "region/getmap/width": "Width",
     "metadata/editor": "Metadata editor configuration",
     "metadata/editor/schemaConfig": "Configuration par standard",
-	  "logActivity" : "Activity",
-    "selectExistingLogo": "Select from existing logos"
+    "logActivity" : "Activity",
+    "selectExistingLogo": "Select from existing logos",
+    "serviceUrlHelp": "Web service URL without GetCapabilities parameters",
+    "serviceTypeHelp": "Service type"
 }
