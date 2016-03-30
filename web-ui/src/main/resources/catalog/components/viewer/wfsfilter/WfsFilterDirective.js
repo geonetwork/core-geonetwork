@@ -35,10 +35,17 @@
    * @description
    */
   module.directive('gnWfsFilterFacets', [
-    '$http', 'wfsFilterService', '$q', '$rootScope',
-    'gnSolrRequestManager', 'gnSolrService', 'ngeoDebounce',
+    '$http',
+    'wfsFilterService',
+    '$q',
+    '$rootScope',
+    'gnSolrRequestManager',
+    'gnSolrService',
+    'ngeoDebounce',
+    'gnFeaturesTableManager',
     function($http, wfsFilterService, $q, $rootScope,
-             gnSolrRequestManager, gnSolrService, ngeoDebounce) {
+             gnSolrRequestManager, gnSolrService, ngeoDebounce,
+             gnFeaturesTableManager) {
       return {
         restrict: 'A',
         replace: true,
@@ -477,6 +484,20 @@
               }
             }
           });
+
+
+          scope.showTable = function() {
+            gnFeaturesTableManager.clear();
+            gnFeaturesTableManager.addTable({
+              name: scope.layer.get('label') || scope.layer.get('name'),
+              type: 'solr'
+            }, {
+              map: scope.map,
+              solrObject: solrObject,
+              layer: scope.layer
+            });
+
+          };
         }
       };
     }]);

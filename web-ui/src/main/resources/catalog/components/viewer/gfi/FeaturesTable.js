@@ -53,7 +53,10 @@
 
     this.loader.getBsTableConfig().then(function(bstConfig) {
       element.bootstrapTable('destroy');
-      element.bootstrapTable(bstConfig);
+      element.bootstrapTable(
+          angular.extend({
+            sortable: true
+          },bstConfig));
     });
 
   };
