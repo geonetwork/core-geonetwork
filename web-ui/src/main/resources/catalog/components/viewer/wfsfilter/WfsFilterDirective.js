@@ -69,9 +69,7 @@
           };
 
           // Get an instance of solr object
-          var solrObject =
-              gnSolrRequestManager.register('WfsFilter', 'facets');
-          scope.solrObject = solrObject;
+          var solrObject, geometry;
 
           var heatmapsRequest =
               gnSolrRequestManager.register('WfsFilter', 'heatmaps');
@@ -159,6 +157,13 @@
                   appProfile = response.data;
                   return appProfile;
                 }).catch (function() {});
+
+            solrObject =
+                gnSolrRequestManager.register('WfsFilter',
+                    scope.url + '#' + ftName);
+            scope.solrObject = solrObject;
+            scope.layer.set('solrObject', solrObject);
+
 
             scope.checkWFSServerUrl();
             scope.initSolrRequest();
@@ -290,7 +295,11 @@
               }
             });
 
-            solrObject.searchWithFacets(scope.output, scope.searchInput).
+            solrObject.searchWithFacets({
+              params: scope.output,
+              any: scope.searchInput,
+              geom: geometry
+            }).
                 then(function(resp) {
                   scope.fields = resp.facets;
                   scope.count = resp.count;
@@ -305,8 +314,10 @@
 
           function refreshHeatmap() {
             if (scope.isFeaturesIndexed) {
-              heatmapsRequest.searchWithFacets(
-                  scope.output, scope.searchInput,
+              heatmapsRequest.searchWithFacets({
+                    params: scope.output,
+                    any: scope.searchInput
+                  },
                   gnSolrService.getHeatmapParams(scope.map)).
                   then(function(resp) {
                     scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
@@ -329,7 +340,7 @@
 
 
             // load all facet and fill ui structure for the list
-            solrObject.searchWithFacets(null, null).
+            solrObject.searchWithFacets({}).
                 then(function(resp) {
                   scope.fields = resp.facets;
                   scope.count = resp.count;
@@ -428,13 +439,13 @@
               extent = ol.proj.transformExtent(extent,
                   scope.map.getView().getProjection(), 'EPSG:4326');
 
-              solrObject.setGeometry([
+              geometry = [
                 extent[0], extent[2], extent[3], extent[1]
-              ].join(','));
+              ].join(',');
               scope.filterFacets();
             }
             else if (old) {
-              solrObject.setGeometry(null);
+              geometry = null;
               scope.filterFacets();
             }
           });

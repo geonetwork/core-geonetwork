@@ -240,6 +240,7 @@
   geonetwork.GnGfiController = function($scope, gnFeaturesTableManager) {
 
     this.gnFeaturesTableManager = gnFeaturesTableManager;
+
     this.$scope = $scope;
     this.map = $scope.map;
     var map = this.map;
@@ -278,11 +279,16 @@
 
     this.gnFeaturesTableManager.clear();
     layers.forEach(function(layer) {
+
+      var solrObject = layer.get('solrObject');
+      var type = solrObject ? 'solr' : 'gfi';
+
       this.gnFeaturesTableManager.addTable({
         name: layer.get('label') || layer.get('name'),
-        type: 'gfi'
+        type: type
       }, {
         map: this.map,
+        solrObject: solrObject,
         layer: layer,
         coordinates: coordinates
       });

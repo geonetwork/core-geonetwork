@@ -45,10 +45,12 @@
     this.$injector = $injector;
     this.$http = this.$injector.get('$http');
     this.gnProxyUrl =  this.$injector.get('gnGlobalSettings').proxyUrl;
-    this.data;
+
+    this.excludeCols = [];
   };
   geonetwork.GnFeaturesLoader.prototype.load = function(){};
   geonetwork.GnFeaturesLoader.prototype.loadAll = function(){};
+  geonetwork.GnFeaturesLoader.prototype.getBsTableConfig = function(){};
 
   geonetwork.GnFeaturesLoader.prototype.proxyfyUrl = function(url){
     return this.gnProxyUrl + encodeURIComponent(url);
@@ -92,6 +94,27 @@
 
   };
 
+  geonetwork.GnFeaturesGFILoader.prototype.getBsTableConfig = function() {
+    return this.loadAll().then(function(features) {
+
+      if (!features || features.length == 0) {
+        return;
+      }
+      var columns = Object.keys(features[0].getProperties()).map(function(x) {
+        return {
+          field: x,
+          title: x
+        };
+      });
+
+      return  {
+        columns: columns,
+        data: features.map(function(f) { return f.getProperties() })
+      };
+    });
+  };
+
+
   geonetwork.GnFeaturesGFILoader.prototype.getCount = function() {
     if (!this.features) {
       return 0;
@@ -104,9 +127,63 @@
    * @constructor
    */
   geonetwork.GnFeaturesSOLRLoader = function(config, $injector) {
+    geonetwork.GnFeaturesLoader.call(this, config, $injector);
+
+    this.layer = config.layer;
+    this.coordinates = config.coordinates;
+    this.solrObject = config.solrObject;
   };
+
   geonetwork.inherits(geonetwork.GnFeaturesSOLRLoader,
       geonetwork.GnFeaturesLoader);
+
+  geonetwork.GnFeaturesSOLRLoader.prototype.getBsTableConfig = function() {
+    var $q = this.$injector.get('$q');
+    var defer = $q.defer();
+
+    var pageList = [5, 10, 50, 100];
+    var columns = [],
+        fields = this.solrObject.filteredDocTypeFieldsInfo;
+
+    fields.forEach(function(field) {
+      if ($.inArray(field.idxName, this.excludeCols) === -1) {
+        columns.push({
+          field: field.idxName,
+          title: field.label
+        });
+      }
+    });
+
+    var url = this.solrObject.baseUrl.replace('rows=0', '');
+    if (url.indexOf('&q=') === -1) {
+      url += '&q=*:*';
+    }
+    defer.resolve({
+      url: url,
+      queryParams: function(p) {
+        return {
+          rows: p.limit,
+          start: p.offset
+        };
+      },
+      //data: scope.data.response.docs,
+      responseHandler: function(res) {
+        return {
+          total: res.response.numFound,
+          rows: res.response.docs
+        };
+      },
+      columns: columns,
+      pagination: true,
+      sidePagination: 'server',
+      totalRows: this.solrObject.totalCount,
+      pageSize: pageList[0],
+      pageList: pageList
+    });
+    return defer.promise;
+  };
+
+
 
 
   /**

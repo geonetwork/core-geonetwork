@@ -11,7 +11,7 @@
     </li>
   </ul>
 
-  <div class="tab-content" data-ng-show="ctrl.currentTable == table" ng-repeat="table in ctrl.tables">
+  <div class="tab-content" data-ng-show="ctrl.currentTable == table" ng-repeat="table in ctrl.tables" data-ng-init="ctrl.currentTable = ctrl.tables[0]">
     <gn-features-table gn-features-table-loader="table.loader"></gn-features-table>
   </div>
 

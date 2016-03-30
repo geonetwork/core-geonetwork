@@ -51,24 +51,9 @@
 
   GnFeaturesTableController.prototype.initTable = function(element) {
 
-    this.promise.then(function(features) {
-
-      if (!features || features.length == 0) {
-        return;
-      }
-      var columns = Object.keys(features[0].getProperties()).map(function(x) {
-        return {
-          field: x,
-          title: x
-        };
-      });
-
+    this.loader.getBsTableConfig().then(function(bstConfig) {
       element.bootstrapTable('destroy');
-      element.bootstrapTable({
-        columns: columns,
-        data: features.map(function(f) { return f.getProperties() })
-      });
-
+      element.bootstrapTable(bstConfig);
     });
 
   };

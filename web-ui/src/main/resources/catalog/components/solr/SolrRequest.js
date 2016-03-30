@@ -189,39 +189,38 @@
   };
 
   geonetwork.GnSolrRequest.prototype.searchWithFacets =
-      function(params, any, solrParams) {
+      function(qParams, solrParams) {
 
     if (this.initialParams.stats['stats.field'].length > 0) {
 
-      return this.searchQuiet(params, any, this.initialParams.stats).then(
+      return this.searchQuiet(qParams, this.initialParams.stats).then(
           function(resp) {
             var statsP = this.createFacetSpecFromStats_(resp.solrData);
-            return this.search(params, any, angular.extend(
+            return this.search(qParams, angular.extend(
                 {}, this.initialParams.facets, statsP, solrParams)
             );
           }.bind(this));
     }
     else {
       return this.search(
-          params,
-          any,
+          qParams,
           angular.extend({}, this.initialParams.facets, solrParams));
     }
   };
 
-  geonetwork.GnSolrRequest.prototype.search = function(params, any,
-                                                       solrParams) {
+  geonetwork.GnSolrRequest.prototype.search = function(qParams, solrParams) {
     angular.extend(this.requestParams, {
-      any: any,
-      qParams: params,
-      solrParams: solrParams
+      any: qParams.any,
+      qParams: qParams.params,
+      solrParams: solrParams,
+      geometry: qParams.geom
     });
-    return this.search_(params, any, solrParams);
+    return this.search_(qParams, solrParams);
   };
 
   geonetwork.GnSolrRequest.prototype.searchQuiet =
-      function(params, any, solrParams) {
-    return this.search_(params, any, solrParams, true);
+      function(qParams, solrParams) {
+    return this.search_(qParams, solrParams, true);
   };
 
   geonetwork.GnSolrRequest.prototype.updateSearch =
@@ -233,9 +232,6 @@
     );
   };
 
-  geonetwork.GnSolrRequest.prototype.setGeometry = function(geom) {
-    this.requestParams.geometry = geom;
-  };
 
 
 
@@ -253,9 +249,9 @@
    * @return {string} the updated url
    */
   geonetwork.GnSolrRequest.prototype.search_ =
-      function(params, any, solrParams, quiet) {
+      function(qParams, solrParams, quiet) {
 
-    var url = this.getSearchUrl_(params, any);
+    var url = this.getSearchUrl_(qParams.params, qParams.any, qParams.geom);
     url += this.parseKeyValue_(angular.extend({}, this.page, solrParams));
 
     return this.$http.get(url).then(angular.bind(this,
@@ -374,7 +370,9 @@
    * @return {string} the updated url
    * @private
    */
-  geonetwork.GnSolrRequest.prototype.getSearchUrl_ = function(params, any) {
+  geonetwork.GnSolrRequest.prototype.getSearchUrl_ =
+      function(params, any, geom) {
+
     var fieldsQ = [];
     angular.forEach(params, function(field, fieldName) {
       var valuesQ = [];
@@ -412,9 +410,9 @@
       url = url.replace('&q=', '&q=' + filter + encodeURIComponent(' +'));
     }
 
-    if (this.requestParams.geometry) {
+    if (geom) {
       url += '&fq={!field f=' + this.geomField.idxName +
-          '}Intersects(ENVELOPE(' + this.requestParams.geometry + '))';
+          '}Intersects(ENVELOPE(' + geom + '))';
     }
 
     return url;
