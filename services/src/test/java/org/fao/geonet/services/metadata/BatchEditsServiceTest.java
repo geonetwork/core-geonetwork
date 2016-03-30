@@ -23,23 +23,18 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.api.records.BatchEditsApi;
+import org.fao.geonet.api.records.model.BatchEditParameter;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
-import org.fao.geonet.services.api.metadata.model.BatchEditParameter;
-import org.fao.geonet.services.api.metadata.BatchEditsApi;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 

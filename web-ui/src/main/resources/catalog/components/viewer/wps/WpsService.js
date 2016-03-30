@@ -261,8 +261,9 @@
        *
        * @param {object} response excecuteProcess response object.
        * @param {ol.Map} map
+       * @param {ol.layer.Base} parentLayer
        */
-      this.extractWmsLayerFromResponse = function(response, map) {
+      this.extractWmsLayerFromResponse = function(response, map, parentLayer) {
 
         try {
           var ref = response.processOutputs.output[0].reference;
@@ -271,6 +272,7 @@
                 then(function(layers) {
                   layers.map(function(l) {
                     l.set('fromWps', true);
+                    l.set('wpsParent', parentLayer);
                     map.addLayer(l);
                   });
                 });

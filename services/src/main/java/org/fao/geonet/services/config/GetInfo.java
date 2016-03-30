@@ -111,7 +111,7 @@ public class GetInfo implements Service {
         String[] props = {Geonet.Config.DATA_DIR, Geonet.Config.CODELIST_DIR,
                 Geonet.Config.CONFIG_DIR, Geonet.Config.SCHEMAPLUGINS_DIR,
                 Geonet.Config.SUBVERSION_PATH, Geonet.Config.RESOURCES_DIR,
-                Geonet.Config.FORMATTER_PATH};
+                Geonet.Config.FORMATTER_PATH, Geonet.Config.BACKUP_DIR};
 
     	for (String prop : props) {
     		catProperties.put("data." + prop, sc.getValue(prop));

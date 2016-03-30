@@ -31,8 +31,8 @@
        function($http) {
          return {
            get: function(metadataUuid, filter) {
-             return $http.get('../api/0.1/metadata/' +
-                                  metadataUuid + '/resources', {
+             return $http.get('../api/0.1/records/' +
+                                  metadataUuid + '/attachments', {
                params: {
                  filter: filter
                }
