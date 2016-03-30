@@ -37,10 +37,14 @@
         controllerAs: 'ctrl',
         bindToController: true,
         controller: 'gnFeaturesTableController',
+        require: {
+          featuresTablesCtrl: '^^gnFeaturesTables',
+          ctrl: 'gnFeaturesTable'
+        },
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
           'featurestable.html',
-        link: function (scope, element, attrs, ctrl) {
-          ctrl.initTable(element.find('table'));
+        link: function (scope, element, attrs, ctrls) {
+          ctrls.ctrl.initTable(element.find('table'));
         }
       };
     }]);
@@ -55,10 +59,13 @@
       element.bootstrapTable('destroy');
       element.bootstrapTable(
           angular.extend({
-            sortable: true
+            sortable: true,
+            onClickRow: function(row, elt) {
+              var feature = this.loader.getGeomFromRow(row);
+              this.featuresTablesCtrl.fOverlay.getSource().addFeature(feature);
+            }.bind(this)
           },bstConfig));
-    });
-
+    }.bind(this));
   };
 
   module.controller('gnFeaturesTableController', GnFeaturesTableController);

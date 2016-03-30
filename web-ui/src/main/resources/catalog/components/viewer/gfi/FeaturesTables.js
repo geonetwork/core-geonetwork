@@ -31,7 +31,9 @@
 
       return {
         restrict: 'E',
-        scope: {},
+        scope: {
+          map: '<gnFeaturesTablesMap'
+        },
         controllerAs: 'ctrl',
         bindToController: true,
         controller: 'gnFeaturesTablesController',
@@ -45,6 +47,16 @@
 
   var GnFeaturesTablesController = function(gnFeaturesTableManager) {
     this.tables = gnFeaturesTableManager.tables;
+
+    this.fOverlay = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        useSpatialIndex: false
+      }),
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      map: this.map
+    });
+
   };
 
 

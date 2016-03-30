@@ -197,6 +197,17 @@
     return defer.promise;
   };
 
+  geonetwork.GnFeaturesSOLRLoader.prototype.getGeomFromRow = function(row) {
+    var geom = row[this.solrObject.geomField.idxName];
+    if(angular.isArray(geom)) {
+      geom = geom[0];
+    }
+    geom = new ol.format.WKT().readFeature(geom, {
+      dataProjection: 'EPSG:4326',
+      featureProjection: this.map.getView().getProjection()
+    });
+    return geom;
+  };
 
 
 
