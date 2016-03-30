@@ -215,8 +215,10 @@
               <label>
                 <input type="checkbox"
                        data-ng-checked="userSelected.profile == 'Administrator'"
-                       data-ng-click="setUserProfile(true)"/>
-                <span data-translate="">isAdministrator</span>
+                       data-ng-click="setUserProfile(true)"
+                       data-ng-show="user.isAdministratorOrMore()"/>
+                <span data-translate=""
+                       data-ng-show="user.isAdministratorOrMore()">isAdministrator</span>
               </label>
 
               <div>
