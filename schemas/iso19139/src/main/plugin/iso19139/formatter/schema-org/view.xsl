@@ -341,7 +341,7 @@
 
     <div class="gn-contact">
       <h3>
-        <i class="fa fa-envelope"></i>
+        
         <xsl:apply-templates mode="render-value"
                              select="*/gmd:role/*/@codeListValue"/>
       </h3>
@@ -404,7 +404,7 @@
 			  </xsl:variable>
 			  <xsl:if test="$CPUrl!=''">
 				   <a href="{$CPUrl}" target="_blank">
-				   <i class="fa fa-link"></i> <span itemprop="url"><xsl:value-of select="$CPUrl"/></span></a>
+				   <span itemprop="url"><xsl:value-of select="$CPUrl"/></span></a>
 			  </xsl:if>	
 			  
 			  
@@ -420,12 +420,12 @@
 				
 				<xsl:if test="normalize-space($phoneNumber)!=''">
 				<a href="tel:{normalize-space($phoneNumber)}">
-                  <i class="fa fa-phone"></i> <span  itemprop="telephone"><xsl:value-of select="$phoneNumber"/></span>
+                   <span  itemprop="telephone"><xsl:value-of select="$phoneNumber"/></span>
                 </a><br/>
 				</xsl:if>
                 <xsl:if test="normalize-space($faxNumber)!=''">
 					<a href="fax:{normalize-space($faxNumber)}">
-					  <i class="fa fa-fax"></i> <span itemprop="faxNumber"><xsl:value-of select="$faxNumber"/></span>
+					   <span itemprop="faxNumber"><xsl:value-of select="$faxNumber"/></span>
 					</a><br/>
 				  </xsl:if>				  
 			  
@@ -738,9 +738,8 @@
           <ul>
             <xsl:for-each select="parent::node()/*[name() = $nodeName]">
               <li><a href="#uuid={@uuidref}">
-                <i class="fa fa-link"></i>
-                <xsl:value-of select="gn-fn-render:getMetadataTitle(@uuidref, $language)"/>
-              </a></li>
+                
+                <xsl:value-of select="gn-fn-render:getMetadataTitle(@uuidref, $language)"/></a></li>
             </xsl:for-each>
           </ul>
         </dd>
@@ -896,7 +895,7 @@
   <title><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></title>
   <xsl:variable name="abs"><xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/></xsl:variable>
   <meta name="description" content="{normalize-space($abs)}"/>
-  <xsl:call-template name="css-load"/>
+  <link href="{$baseUrl}../../static/gn_search_default.css" rel="stylesheet" media="screen"></link>
   </head>
   
 	<body>
