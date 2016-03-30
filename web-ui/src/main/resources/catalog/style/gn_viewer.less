@@ -608,11 +608,17 @@
 
 
 gn-features-tables {
-  display:block;
-  position: absolute;
-  bottom: 50px;
-  left: 0;
-  right: 0;
-  height: 200px;
-  background-color: white;
+  display          : block;
+  position         : absolute;
+  bottom           : 1em;
+  left             : 1em;
+  right            : 1em;
+  max-height       : 15em;
+  background-color : rgba(255,255,255, .6);
+  border-radius    : 3px;
+  outline          : .25em solid rgba(255, 255, 255, .3);
+  .tab-content {
+    background : white;
+    min-height: 5em;
+  }
 }

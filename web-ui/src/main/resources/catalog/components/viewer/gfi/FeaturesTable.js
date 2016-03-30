@@ -39,47 +39,37 @@
         controller: 'gnFeaturesTableController',
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
           'featurestable.html',
-        link: function (scope, element, attrs, controller) {
-          controller.tableElt = element.find('table');
+        link: function (scope, element, attrs, ctrl) {
+          ctrl.initTable(element.find('table'));
         }
       };
     }]);
 
-  var GnFeaturesTableController = function($scope) {
-    this.$scope = $scope;
-    this.initTable();
+  var GnFeaturesTableController = function() {
+    this.promise = this.loader.loadAll();
   };
 
-  GnFeaturesTableController.prototype.initTable = function() {
+  GnFeaturesTableController.prototype.initTable = function(element) {
 
-    this.loader.loadAll().then(function(features){
-      this.features = features;
-    }.bind(this));
+    this.promise.then(function(features) {
 
-/*
-    this.tableElt.bootstrapTable('destroy');
-    this.tableElt.bootstrapTable({
-      columns: [{
-        field: 'id',
-        title: 'Item ID'
-      }, {
-        field: 'name',
-        title: 'Item Name'
-      }, {
-        field: 'price',
-        title: 'Item Price'
-      }],
-      data: [{
-        id: 1,
-        name: 'Item 1',
-        price: '$1'
-      }, {
-        id: 2,
-        name: 'Item 2',
-        price: '$2'
-      }]
+      if (!features || features.length == 0) {
+        return;
+      }
+      var columns = Object.keys(features[0].getProperties()).map(function(x) {
+        return {
+          field: x,
+          title: x
+        };
+      });
+
+      element.bootstrapTable('destroy');
+      element.bootstrapTable({
+        columns: columns,
+        data: features.map(function(f) { return f.getProperties() })
+      });
+
     });
-*/
 
   };
 

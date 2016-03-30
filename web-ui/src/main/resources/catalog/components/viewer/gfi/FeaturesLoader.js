@@ -86,10 +86,17 @@
     return this.$http.get(proxyUrl).then(function(response) {
       var format = new ol.format.WMSGetFeatureInfo();
       var features = format.readFeatures(response.data);
+      this.features = features;
       return features;
-    });
+    }.bind(this));
 
+  };
 
+  geonetwork.GnFeaturesGFILoader.prototype.getCount = function() {
+    if (!this.features) {
+      return 0;
+    }
+    return this.features.length;
   };
 
   /**

@@ -1,16 +1,18 @@
 <div class="gn-features-table" data-ng-show="ctrl.tables.length > 0">
-  <ul class="nav nav-pills">
+
+  <ul class="nav nav-tabs">
     <li data-ng-repeat="table in ctrl.tables"
         data-ng-class="{active: table == ctrl.currentTable}">
       <a role="tab" data-ng-click="ctrl.currentTable = table"
          title="{{::table.name}}">
         {{table.name}}
+        <span ng-if="table.loader.getCount() > 0" class="badge">{{table.loader.getCount()}}</span>
       </a>
     </li>
   </ul>
 
-  <div class="tab-content" data-ng-if="ctrl.currentTable">
-    <gn-features-table gn-features-table-loader="ctrl.currentTable.loader"></gn-features-table>
+  <div class="tab-content" data-ng-show="ctrl.currentTable == table" ng-repeat="table in ctrl.tables">
+    <gn-features-table gn-features-table-loader="table.loader"></gn-features-table>
   </div>
 
 </div>

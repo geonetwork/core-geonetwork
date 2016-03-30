@@ -280,7 +280,7 @@
     layers.forEach(function(layer) {
       this.gnFeaturesTableManager.addTable({
         name: layer.get('label') || layer.get('name'),
-        type: 'gfi',
+        type: 'gfi'
       }, {
         map: this.map,
         layer: layer,

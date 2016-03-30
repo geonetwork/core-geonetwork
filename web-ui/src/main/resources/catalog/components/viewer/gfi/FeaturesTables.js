@@ -31,16 +31,15 @@
 
       return {
         restrict: 'E',
-        scope: {
-        },
+        scope: {},
         controllerAs: 'ctrl',
         bindToController: true,
         controller: 'gnFeaturesTablesController',
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
-          'featurestables.html',
-        link: function (scope, element, attrs, controller) {
-          controller.tableElt = element.find('table');
-        }
+          'featurestables.html'
+        // link: function (scope, element, attrs, controller) {
+        //   controller.tableElt = element.find('table');
+        // }
       };
     }]);
 
@@ -51,6 +50,7 @@
 
   module.controller('gnFeaturesTablesController', [
     'gnFeaturesTableManager',
-    GnFeaturesTablesController]);
+    GnFeaturesTablesController
+  ]);
 
 })();
