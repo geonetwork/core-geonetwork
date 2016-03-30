@@ -29,51 +29,62 @@
   <xsl:import href="../base-layout-nojs.xsl"/>
 
   <xsl:template mode="content" match="/">
+  
+  <div class="page-body">
+  
     <div class="row" style="padding-bottom:20px" >
       <div class="col-md-push-3 col-md-6">
         <form action="catalog.search.nojs" class="form-inline">
          <div class="form-group">
-    		<input type="text" name="any" id="fldAny" class="form-control input-large gn-search-text" autofocus="" />
+    		<input type="text" value="{/root/request/any}" name="any" id="fldAny" class="form-control input-large gn-search-text" autofocus="" />
   		 </div>
   		 <div class="form-group">
   			<input type="submit" class="btn btn-primary" value="Search" /> 
-  		</div>
-            <input type="hidden" name="fast" value="index"/>
+  		 </div>
+         <input type="hidden" name="fast" value="index"/>
         </form>        
-    </div>
-</div>
-
-
+       </div>
+     </div>
 
         <xsl:if test="/root/request/*">
 
-<div class="row"  style="padding-bottom:20px">
-<div class="col-xs-12">
-From <b><xsl:value-of select="/root/response/@from"/></b>
-to <b><xsl:value-of select="/root/response/@to"/></b>
-out of <b><xsl:value-of select="/root/response/summary/@count"/></b> results.
-</div>
-</div>
+			<div class="row"  style="padding-bottom:20px">
+				<div class="col-xs-12">				
+					<xsl:choose>
+					<xsl:when test="/root/response/summary/@count &gt; 0">
+						From <b><xsl:value-of select="/root/response/@from"/></b>
+						to <b><xsl:value-of select="/root/response/@to"/></b>
+						out of <b><xsl:value-of select="/root/response/summary/@count"/></b> results.
+					</xsl:when>
+					<xsl:otherwise>
+						No results
+					</xsl:otherwise>
+					</xsl:choose>
+				</div>
+			</div>
 
-         <xsl:for-each select="/root/response/metadata">
-           <div class="row" style="padding-bottom:20px;">
-            <div class="col-xs-10">
-              <a href="../../metadata/{*[name()='geonet:info']/uuid}">
-                <xsl:value-of select="title|defaultTitle"/>
-              </a><br/>
-              <xsl:value-of select="abstract"/>
-            </div>
-            </div>
-          </xsl:for-each>
+			 <xsl:for-each select="/root/response/metadata">
+			   <div class="row" style="padding-bottom:20px;">
+				<div class="col-xs-12">
+				  <a href="../../metadata/{*[name()='geonet:info']/uuid}">
+					<xsl:value-of select="title|defaultTitle"/>
+				  </a><br/>
+				  <xsl:value-of select="abstract"/>
+				</div>
+				</div>
+			  </xsl:for-each>
         </xsl:if>
     
+    </div>
     
-    <div class="row" style="background-color:#999;color:white;padding:40px">
-    <h2>Browse by topic</h2>
-    <xsl:for-each select="root/response/summary/topicCats/topicCat">
-    <div class="col-xs-12 col-sm-6 col-lg-4" style="padding:15px">
-    	<a style="color:white" href="catalog.search.nojs?fast=index&amp;any={@name}"><xsl:value-of select="@label"/> (<xsl:value-of select="@count"/>)</a></div>
-    </xsl:for-each>
+    <div class="row footer" style="background-color:#999;color:white;padding:40px">
+		<div class="col-md-12">
+			<h2>Browse by topic</h2>
+			<xsl:for-each select="root/response/summary/topicCats/topicCat">
+			<div class="col-xs-12 col-sm-6 col-lg-4" style="padding:15px">
+				<a style="color:white" href="catalog.search.nojs?fast=index&amp;any={@name}"><xsl:value-of select="@label"/> (<xsl:value-of select="@count"/>)</a></div>
+			</xsl:for-each>
+		</div>
     </div>
     
     
