@@ -513,19 +513,13 @@
              location.href = 'catalog.edit?#/metadata/' +
              md['geonet:info'].id;
            },
-           getRecord: function(id) {
+           getRecord: function(uuid) {
              var defer = $q.defer();
-             // TODO : replace to use new services
-             var url = gnUrlUtils.append('xml.metadata.get',
-             gnUrlUtils.toKeyValue({
-               id: id
-             })
-             );
-             $http.get(url).
-             success(function(data, status) {
+             $http.get('../api/records/' + uuid).
+             success(function(data) {
                defer.resolve(data);
              }).
-             error(function(data, status) {
+             error(function(data) {
                //                TODO handle error
                //                defer.reject(error);
              });

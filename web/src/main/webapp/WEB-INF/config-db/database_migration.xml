@@ -157,7 +157,7 @@
         </entry>
         <entry key="3.1.0">
           <list>
-            <value>java:org.fao.geonet.services.api.metadata.resources.MetadataResourceDatabaseMigration</value>
+            <value>java:org.fao.geonet.api.records.attachments.MetadataResourceDatabaseMigration</value>
             <value>WEB-INF/classes/setup/sql/migrate/v310/migrate-</value>
           </list>
         </entry>
