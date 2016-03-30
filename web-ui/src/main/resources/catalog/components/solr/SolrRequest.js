@@ -232,6 +232,26 @@
     );
   };
 
+  /**
+   * Merge the current solr request params with the given ones and build the
+   * result url. Doesn't update the state of the solr object.
+   *
+   * @param {object} qParams
+   * @param {object} solrParams
+   * @returns {string} The merged url
+   */
+  geonetwork.GnSolrRequest.prototype.getMergedRequestUrl =
+      function(qParams, solrParams) {
+
+        var url =  this.getSearchUrl_(
+            angular.extend({}, this.requestParams.qParams, qParams.params),
+            qParams.any || this.requestParams.any,
+            qParams.geom || this.requestParams.geometry
+        );
+        url += this.parseKeyValue_(angular.extend({},
+            this.requestParams.solrParams, solrParams));
+        return url;
+      };
 
 
 

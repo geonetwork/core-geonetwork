@@ -46,6 +46,9 @@
     this.$http = this.$injector.get('$http');
     this.gnProxyUrl =  this.$injector.get('gnGlobalSettings').proxyUrl;
 
+    this.layer = config.layer;
+    this.map = config.map;
+
     this.excludeCols = [];
   };
   geonetwork.GnFeaturesLoader.prototype.load = function(){};
@@ -64,8 +67,6 @@
 
     geonetwork.GnFeaturesLoader.call(this, config, $injector);
 
-    this.layer = config.layer;
-    this.map = config.map;
     this.coordinates = config.coordinates;
   };
 
@@ -141,9 +142,11 @@
     var $q = this.$injector.get('$q');
     var defer = $q.defer();
 
-    var pageList = [5, 10, 50, 100];
-    var columns = [],
-        fields = this.solrObject.filteredDocTypeFieldsInfo;
+    var pageList = [5, 10, 50, 100],
+        columns = [],
+        solr = this.solrObject,
+        map = this.map,
+        fields = solr.filteredDocTypeFieldsInfo;
 
     fields.forEach(function(field) {
       if ($.inArray(field.idxName, this.excludeCols) === -1) {
@@ -154,7 +157,18 @@
       }
     });
 
-    var url = this.solrObject.baseUrl.replace('rows=0', '');
+    // get an update solr request url with geometry filter based on a point
+    var url = this.coordinates ?
+        this.solrObject.getMergedRequestUrl({}, {
+          pt: ol.proj.transform(this.coordinates,
+            map.getView().getProjection(), 'EPSG:4326').reverse().join(','),
+          //5 pixels radius tolerance
+          d: map.getView().getResolution() / 400,
+          sfield: solr.geomField.idxName
+        }) + '&fq={!geofilt sfield=' + solr.geomField.idxName + '}' :
+        this.solrObject.baseUrl;
+
+    url = url.replace('rows=0', '');
     if (url.indexOf('&q=') === -1) {
       url += '&q=*:*';
     }
