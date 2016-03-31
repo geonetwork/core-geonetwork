@@ -36,6 +36,8 @@
     locale: {},
     isMapViewerEnabled: false,
     is3DModeAllowed: false,
+    //docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
+    docUrl: '../../doc/',
     modelOptions: {
       updateOn: 'default blur',
       debounce: {
