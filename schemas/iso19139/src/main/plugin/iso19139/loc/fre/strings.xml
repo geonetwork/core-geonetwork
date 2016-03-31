@@ -93,7 +93,6 @@
   <format>Format</format>
   <indeterminatePosition>Position indéterminée</indeterminatePosition>
   <format_version>Version</format_version>
-  <bboxesSection></bboxesSection>
   <inspireTheme>Thème INSPIRE</inspireTheme>
   <inspireThemeURI>Thème INSPIRE</inspireThemeURI>
   <temporalRangeSection>Étendue temporelle</temporalRangeSection>
