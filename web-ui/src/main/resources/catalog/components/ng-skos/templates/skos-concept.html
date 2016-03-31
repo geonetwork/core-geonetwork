@@ -52,10 +52,9 @@
   <div ng-if="broader.length || narrower.length || related.length"
        class="skos-concept-connected">
     <div ng-if="broader.length">
-    <strong>{{'parentConcept' | translate}}</strong>
-    <hr/>
+      <strong>{{'parentConcept' | translate}}</strong>
+      <hr/>
       <ul>
-      
         <li ng-repeat="c in broader"
             data-ng-mouseover="initConceptNavigationHelp(c)">
           <a class="skos-btn-icons btn-small btn-link"
@@ -79,8 +78,8 @@
       </ul>
     </div>
     <div ng-if="narrower.length">
-    <strong>{{'moreSpecificConcept' | translate}}</strong>
-    <hr/>      
+      <strong>{{'moreSpecificConcept' | translate}}</strong>
+      <hr/>      
       <ul>
         <li ng-repeat="c in narrower"
             data-ng-mouseover="initConceptNavigationHelp(c)">
@@ -104,8 +103,8 @@
       </ul>
     </div>
     <div ng-if="related.length">
-    <strong>{{'associatedConcept' | translate}}</strong>
-    <hr/> 
+      <strong>{{'associatedConcept' | translate}}</strong>
+      <hr/> 
       <ul>
         <li ng-repeat="c in related"
             data-ng-mouseover="initConceptNavigationHelp(c)">
