@@ -4,7 +4,8 @@
 @import (less) "../lib/style/datetimepicker.css";
 @import (less) "../lib/jquery.ext/jquery.fileupload-ui.css";
 @import "gn.less";
-
+@color_1: grey;
+@color_2: green;
 body {
   
 }
@@ -478,5 +479,12 @@ table.gn-data-store {
 form.gn-tab-xml {
   div[data-gn-toggle] {
     display:none;
+  }
+}
+.skos-btn-icons {
+  text-decoration: none !important;
+  color: @color_1;
+  &:hover {
+    color: @color_2;
   }
 }
