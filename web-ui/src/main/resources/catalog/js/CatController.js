@@ -24,13 +24,15 @@
 (function() {
   goog.provide('gn_cat_controller');
 
+
+
+  goog.require('gn_admin_menu');
   goog.require('gn_search_manager');
   goog.require('gn_session_service');
-  goog.require('gn_admin_menu');
 
 
   var module = angular.module('gn_cat_controller',
-      ['gn_search_manager', 'gn_session_service','gn_admin_menu']);
+      ['gn_search_manager', 'gn_session_service', 'gn_admin_menu']);
 
 
   module.constant('gnGlobalSettings', {
@@ -89,9 +91,9 @@
             gnLangs, gnAdminMenu) {
       $scope.version = '0.0.1';
       //Display or not the admin menu
-      if ($location.absUrl().indexOf('/admin.console')!=-1){
-          $scope.viewMenuAdmin=true;
-      }else{$scope.viewMenuAdmin=false}
+      if ($location.absUrl().indexOf('/admin.console') != -1) {
+        $scope.viewMenuAdmin = true;
+      }else {$scope.viewMenuAdmin = false}
       //Update Links for social media
       $scope.socialMediaLink = $location.absUrl();
       $scope.$on('$locationChangeSuccess', function(event) {

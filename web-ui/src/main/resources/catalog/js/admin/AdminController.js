@@ -36,6 +36,17 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+  goog.require('gn_admin_menu');
   goog.require('gn_adminmetadata_controller');
   goog.require('gn_admintools_controller');
   goog.require('gn_cat_controller');
@@ -46,14 +57,13 @@
   goog.require('gn_settings_controller');
   goog.require('gn_standards_controller');
   goog.require('gn_usergroup_controller');
-  goog.require('gn_admin_menu');
 
   var module = angular.module('gn_admin_controller',
       ['gn_dashboard_controller', 'gn_usergroup_controller',
        'gn_admintools_controller', 'gn_settings_controller',
        'gn_adminmetadata_controller', 'gn_classification_controller',
        'gn_harvest_controller', 'gn_standards_controller',
-       'gn_report_controller','gn_admin_menu']);
+       'gn_report_controller', 'gn_admin_menu']);
 
 
   var tplFolder = '../../catalog/templates/admin/';
@@ -140,7 +150,7 @@
     '$scope', '$http', '$q', '$rootScope', '$route', '$routeParams',
     'gnUtilityService', 'gnAdminMenu',
     function($scope, $http, $q, $rootScope, $route, $routeParams,
-        gnUtilityService,gnAdminMenu) {
+        gnUtilityService, gnAdminMenu) {
       $scope.menu = gnAdminMenu;
       /**
        * Define menu position on the left (nav-stacked)
