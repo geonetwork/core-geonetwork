@@ -81,7 +81,7 @@ import java.util.*;
 })
 @Api(value = "tools",
      tags= "tools",
-     description = "Mail related operations",
+     description = "Utility operations",
      position = 100)
 @Controller("mail")
 public class MailApi {
