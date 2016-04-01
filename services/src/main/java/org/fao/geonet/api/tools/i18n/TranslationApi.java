@@ -76,8 +76,7 @@ import java.util.*;
                 "/tools/i18n"
 })
 @Api(value = "tools",
-        tags= "tools",
-        description = "Translation related operations")
+        tags= "tools")
 @Controller("translation")
 public class TranslationApi implements ApplicationContextAware {
 
