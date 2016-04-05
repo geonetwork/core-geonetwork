@@ -78,43 +78,71 @@
         map = this.map,
         coordinates = this.coordinates;
 
-    var uri = layer.getSource().getGetFeatureInfoUrl(coordinates,
-        map.getView().getResolution(),
-        map.getView().getProjection(), {
-          INFO_FORMAT: layer.ncInfo ? 'text/xml' :
-              'application/vnd.ogc.gml'
-        });
+    var uri = layer.getSource().getGetFeatureInfoUrl(
+      coordinates,
+      map.getView().getResolution(),
+      map.getView().getProjection(),
+      {
+        INFO_FORMAT: layer.ncInfo ? 'text/xml' : 'application/vnd.ogc.gml'
+      }
+    );
 
-    var proxyUrl = this.proxyfyUrl(uri);
-    return this.$http.get(proxyUrl).then(function(response) {
+    this.loading = true;
+    this.promise = this.$http.get(this.proxyfyUrl(uri)).then(function(response) {
+      this.loading = false;
       var format = new ol.format.WMSGetFeatureInfo();
       var features = format.readFeatures(response.data);
       this.features = features;
       return features;
+    }.bind(this), function() {
+      this.loading = false;
+      this.error   = true;
     }.bind(this));
 
   };
 
   geonetwork.GnFeaturesGFILoader.prototype.getBsTableConfig = function() {
-    return this.loadAll().then(function(features) {
+    var exclude = ['FID', 'boundedBy', 'the_geom', 'thegeom'];
+    var $filter = this.$injector.get('$filter');
+
+    return this.promise.then(function(features) {
 
       if (!features || features.length == 0) {
         return;
       }
-      var columns = Object.keys(features[0].getProperties()).map(function(x) {
+      var columns = Object.keys(
+        features[0].getProperties()
+      ).filter(function(x) {
+        return exclude.indexOf(x) == -1;
+      }).map(function(x) {
         return {
-          field: x,
-          title: x
+          field        : x,
+          title        : x,
+          titleTooltip : x,
+          sortable     : true
         };
       });
 
       return  {
         columns: columns,
-        data: features.map(function(f) { return f.getProperties() })
+        data: features.map(function(f) {
+          var obj = f.getProperties();
+          exclude.forEach(function(key, value) {
+            delete obj[key];
+          });
+          Object.keys(obj).forEach(function(key){
+            obj[key] = $filter('linky')(obj[key], '_blank');
+          });
+          return obj;
+        })
       };
     });
   };
 
+
+  geonetwork.GnFeaturesGFILoader.prototype.isLoading = function() {
+    return this.loading;
+  };
 
   geonetwork.GnFeaturesGFILoader.prototype.getCount = function() {
     if (!this.features) {

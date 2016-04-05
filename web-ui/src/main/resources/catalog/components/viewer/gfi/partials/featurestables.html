@@ -6,6 +6,9 @@
       <a role="tab" data-ng-click="ctrl.currentTable = table"
          title="{{::table.name}}">
         {{table.name}}
+        <span ng-if="table.loader.isLoading()" class="badge">
+          <i class="fa fa-spin fa-spinner"></i>
+        </span>
         <span ng-if="table.loader.getCount() > 0" class="badge">{{table.loader.getCount()}}</span>
       </a>
     </li>
