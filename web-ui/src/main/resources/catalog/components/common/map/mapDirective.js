@@ -45,7 +45,7 @@
              hleftRef: '@',
              hrightRef: '@',
              dcRef: '@',
-             extentXml: '=',
+             extentXml: '=?',
              lang: '=',
              schema: '@',
              location: '@'

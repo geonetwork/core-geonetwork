@@ -26,7 +26,7 @@ package org.fao.geonet.solr;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.solr.client.solrj.SolrClient;
-import org.fao.geonet.services.api.API;
+import org.fao.geonet.api.API;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

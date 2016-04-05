@@ -1341,7 +1341,9 @@
                 label: layer.Title,
                 source: source,
                 url: url,
-                urlCap: urlCap
+                urlCap: urlCap,
+                cextent: gnOwsCapabilities.getLayerExtentFromGetCap(map,
+                    getCapLayer)
               });
               ngeoDecorateLayer(olLayer);
               olLayer.displayInLayerManager = true;
