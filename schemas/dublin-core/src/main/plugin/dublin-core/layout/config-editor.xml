@@ -57,34 +57,6 @@
         <for name="dc:subject" />
       </flatModeExceptions>
     </view>
-    <view name="grandlyon">
-      <tab id="gl-main" default="true" mode="flat">
-        <section name="glidentification">
-          <field xpath="/simpledc//dc:title"/>
-          <field xpath="/simpledc//dc:description"/>
-          <field xpath="/simpledc//dc:type"/>
-          <field xpath="/simpledc//dct:dateSubmitted"/>
-          <field xpath="/simpledc//dct:accrualPeriodicity"/>
-        </section>
-        <section name="glcategory">
-          <text ref="glcategory-help"/>
-          <field xpath="/simpledc//dc:subject"/>
-        </section>
-        <section xpath="/simpledc//dc:coverage"/>
-        <section xpath="/simpledc//dc:publisher"/>
-        <section name="dc:rights">
-          <field xpath="/simpledc//dc:rights"/>
-          <field xpath="/simpledc//dct:accessRights"/>
-        </section>
-        <section xpath="/simpledc//dc:source"/>
-        <section name="dc:format">
-          <section xpath="/simpledc//dc:format"/>
-        </section>
-        <section name="metadata">
-          <field xpath="/simpledc//dc:creator"/>
-        </section>
-      </tab>
-    </view>
     <view name="advanced">
       <tab id="advanced" default="true">
         <section xpath="/simpledc"/>

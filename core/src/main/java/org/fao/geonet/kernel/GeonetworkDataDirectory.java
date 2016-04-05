@@ -74,6 +74,7 @@ public class GeonetworkDataDirectory {
     private Path thesauriDir;
     private Path schemaPluginsDir;
     private Path metadataDataDir;
+    private Path backupDir;
     private Path metadataRevisionDir;
     private Path resourcesDir;
     private Path htmlCacheDir;
@@ -318,6 +319,9 @@ public class GeonetworkDataDirectory {
 
         htmlCacheDir = setDir(jeevesServlet, webappName, handlerConfig, htmlCacheDir,
                 ".htmlcache" + KEY_SUFFIX, Geonet.Config.HTMLCACHE_DIR, handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache"
+        );
+        backupDir = setDir(jeevesServlet, webappName, handlerConfig, backupDir,
+                ".backup" + KEY_SUFFIX, Geonet.Config.BACKUP_DIR, "data", "backup"
         );
 
         handlerConfig.setValue(Geonet.Config.SYSTEM_DATA_DIR, this.systemDataDir.toString());
@@ -649,6 +653,22 @@ public class GeonetworkDataDirectory {
             resourcePath = resourcePath.substring(1);
         }
         return this.webappDir.resolve(resourcePath);
+    }
+
+    /**
+     * Get directory use to backup metadata when removed.
+     * @return
+     */
+    public Path getBackupDir() {
+        return backupDir;
+    }
+
+    /**
+     * Set directory to use to backup metadata when removed.
+     * @param backupDir
+     */
+    public void setBackupDir(Path backupDir) {
+        this.backupDir = backupDir;
     }
 
     /**

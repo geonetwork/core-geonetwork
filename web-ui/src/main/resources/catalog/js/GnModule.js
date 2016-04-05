@@ -52,6 +52,7 @@
 
 
   goog.require('gn');
+  goog.require('gn_admin_menu');
   goog.require('gn_alert');
   goog.require('gn_cat_controller');
   goog.require('gn_formfields');
@@ -87,7 +88,8 @@
     'gn_map',
     'gn_search_form_controller',
     'gn_needhelp',
-    'gn_alert'
+    'gn_alert',
+    'gn_admin_menu'
   ]);
 
 })();
