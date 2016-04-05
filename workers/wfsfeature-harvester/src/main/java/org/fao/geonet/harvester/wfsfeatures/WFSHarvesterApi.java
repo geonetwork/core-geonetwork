@@ -23,36 +23,23 @@
 
 package org.fao.geonet.harvester.wfsfeatures;
 
-import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.API;
+import org.fao.geonet.harvester.wfsfeatures.event.WFSHarvesterEvent;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
-import org.fao.geonet.harvester.wfsfeatures.event.WFSHarvesterEvent;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.services.api.API;
-import org.fao.geonet.utils.Xml;
 import org.geonetwork.messaging.JMSMessager;
-import org.jdom.Element;
-import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 
 /**
  * Created by fgravin on 10/29/15.

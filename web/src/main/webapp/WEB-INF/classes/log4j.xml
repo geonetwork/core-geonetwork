@@ -120,7 +120,7 @@
         <level value="WARN" />
     </logger>
     <logger name="geonetwork.wro4j">
-        <level value="WARN" />
+        <level value="DEBUG" />
     </logger>
     <logger name="geonetwork.httpproxy">
         <level value="WARN" />
@@ -227,12 +227,25 @@
     </logger>
 
     <logger name="org.apache.camel" additivity="true">
-        <level value="WARN"/>
-        <appender-ref ref="consoleAppender" />
-        <appender-ref ref="fileAppender" />
+      <level value="DEBUG"/>
+      <appender-ref ref="consoleAppender" />
+      <appender-ref ref="fileAppender" />
     </logger>
 
-    <!-- Turn off logging except when explicitly declared below -->
+    <logger name="geonetwork.camel-harvester" additivity="true">
+      <level value="DEBUG"/>
+      <appender-ref ref="consoleAppender" />
+      <appender-ref ref="fileAppender" />
+    </logger>
+
+    <logger name="harvest.wfs.features" additivity="true">
+      <level value="DEBUG"/>
+      <appender-ref ref="consoleAppender" />
+      <appender-ref ref="fileAppender" />
+    </logger>
+
+
+  <!-- Turn off logging except when explicitly declared below -->
     <root>
         <level value="OFF"></level>
         <appender-ref ref="consoleAppender"/>

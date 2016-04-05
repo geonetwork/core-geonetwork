@@ -413,16 +413,11 @@ public class SolrWFSFeatureIndexer {
             state.getHarvesterReport().put("totalRecords_i", nbOfFeatures);
             state.getHarvesterReport().put("endDate_dt",
                     ISODateTimeFormat.dateTime().print(new DateTime()));
-        } catch (IOException e) {
+        } catch (Exception e) {
             state.getHarvesterReport().put("status_s", "error");
             state.getHarvesterReport().put("error_s", e.getMessage());
             logger.error(e.getMessage());
-            throw e;
-        } catch (SolrServerException e) {
-            state.getHarvesterReport().put("status_s", "error");
-            state.getHarvesterReport().put("error_s", e.getMessage());
-            logger.error(e.getMessage());
-            throw e;
+            e.printStackTrace();
         } finally {
             saveHarvesterReport(state);
         }

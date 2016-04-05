@@ -23,10 +23,10 @@
 
 package org.fao.geonet.api;
 
+import org.fao.geonet.api.exception.NoResultsFoundException;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.exceptions.UserNotFoundEx;
-import org.fao.geonet.services.api.exception.NoResultsFoundException;
-import org.fao.geonet.services.api.exception.ResourceAlreadyExistException;
-import org.fao.geonet.services.api.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;

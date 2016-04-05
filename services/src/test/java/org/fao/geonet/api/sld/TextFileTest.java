@@ -1,4 +1,4 @@
-package org.fao.geonet.services.api.tools.ogc.sld;
+package org.fao.geonet.api.sld;
 
 import org.fao.geonet.domain.TextFile;
 import org.fao.geonet.repository.AbstractSpringDataTest;

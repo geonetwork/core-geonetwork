@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.services.api.exception;
+package org.fao.geonet.api.exception;
 
 public class NoResultsFoundException extends Exception {
     public NoResultsFoundException() {

@@ -1,4 +1,4 @@
-package org.fao.geonet.services.api.tools.ogc.sld;
+package org.fao.geonet.api.sld;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiParam;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.TextFile;
 import org.fao.geonet.repository.TextFileRepository;
-import org.fao.geonet.services.api.API;
-import org.fao.geonet.services.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.API;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.geonetwork.map.wms.SLDUtil;
 import org.geotools.ows.ServiceException;
 import org.geotools.styling.SLDTransformer;

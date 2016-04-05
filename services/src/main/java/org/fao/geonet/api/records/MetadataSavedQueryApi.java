@@ -1,4 +1,27 @@
-package org.fao.geonet.services.api.metadata;
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
+package org.fao.geonet.api.records;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,9 +33,9 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SavedQuery;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.services.api.API;
-import org.fao.geonet.services.api.exception.NoResultsFoundException;
-import org.fao.geonet.services.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.API;
+import org.fao.geonet.api.exception.NoResultsFoundException;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -37,7 +60,7 @@ import java.util.*;
 @Api(value = "metadata",
         tags= "metadata",
         description = "Metadata operations")
-public class MetadataApi {
+public class MetadataSavedQueryApi {
     private static final String LOG_MODULE = "MetadataApi";
 
     @Autowired
