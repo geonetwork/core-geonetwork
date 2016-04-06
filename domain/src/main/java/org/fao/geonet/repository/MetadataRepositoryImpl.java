@@ -146,7 +146,7 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
        Query query =  _entityManager.createQuery(
                "select new org.fao.geonet.repository.SimpleMetadata("
                + "id, uuid, dataInfo.changeDate, dataInfo.type_JPAWorkaround) "
-                + "from Metadata where harvestInfo.uuid = '" + id + "'");
+                + "from Metadata where harvestInfo.uuid = :id").setParameter("id", id);
        
        //TODO paginate
         
