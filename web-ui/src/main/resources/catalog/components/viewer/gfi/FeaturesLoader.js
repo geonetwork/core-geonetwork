@@ -189,14 +189,14 @@
 
     // get an update solr request url with geometry filter based on a point
     var url = this.coordinates ?
-        this.solrObject.getMergedRequestUrl({}, {
+        this.solrObject.getMergedUrl({}, {
           pt: ol.proj.transform(this.coordinates,
             map.getView().getProjection(), 'EPSG:4326').reverse().join(','),
           //5 pixels radius tolerance
           d: map.getView().getResolution() / 400,
           sfield: solr.geomField.idxName
         }, this.solrObject.getState()) + '&fq={!geofilt sfield=' + solr.geomField.idxName + '}' :
-            this.solrObject.getMergedRequestUrl({}, {}, this.solrObject.getState());
+            this.solrObject.getMergedUrl({}, {}, this.solrObject.getState());
 
     url = url.replace('rows=0', '');
     if (url.indexOf('&q=') === -1) {

@@ -307,7 +307,7 @@
             solrObject.searchWithFacets({
               params: scope.output,
               any: scope.searchInput,
-              geom: geometry
+              geometry: geometry
             }).
                 then(function(resp) {
                   scope.fields = resp.facets;
