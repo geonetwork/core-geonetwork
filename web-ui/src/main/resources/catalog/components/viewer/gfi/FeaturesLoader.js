@@ -55,6 +55,10 @@
   geonetwork.GnFeaturesLoader.prototype.loadAll = function(){};
   geonetwork.GnFeaturesLoader.prototype.getBsTableConfig = function(){};
 
+  geonetwork.GnFeaturesLoader.prototype.isLoading = function() {
+    return this.loading;
+  };
+
   geonetwork.GnFeaturesLoader.prototype.proxyfyUrl = function(url){
     return this.gnProxyUrl + encodeURIComponent(url);
   };
@@ -140,10 +144,6 @@
   };
 
 
-  geonetwork.GnFeaturesGFILoader.prototype.isLoading = function() {
-    return this.loading;
-  };
-
   geonetwork.GnFeaturesGFILoader.prototype.getCount = function() {
     if (!this.features) {
       return 0;
@@ -179,8 +179,10 @@
     fields.forEach(function(field) {
       if ($.inArray(field.idxName, this.excludeCols) === -1) {
         columns.push({
-          field: field.idxName,
-          title: field.label
+          field        : field.idxName,
+          title        : field.label,
+          titleTooltip : field.label,
+          sortable     : true
         });
       }
     });
@@ -200,21 +202,38 @@
     if (url.indexOf('&q=') === -1) {
       url += '&q=*:*';
     }
+    this.loading = true;
     defer.resolve({
       url: url,
       queryParams: function(p) {
-        return {
+        var params = {
           rows: p.limit,
           start: p.offset
         };
+        if (p.sort) {
+          params.sort = p.sort + ' ' + p.order;
+        }
+        return params;
       },
       //data: scope.data.response.docs,
       responseHandler: function(res) {
+        this.count = res.response.numFound;
         return {
           total: res.response.numFound,
           rows: res.response.docs
         };
-      },
+      }.bind(this),
+      onSort: function() {
+        this.loading = true;
+      }.bind(this),
+      onLoadSuccess: function() {
+        this.loading = false;
+        this.error = false;
+      }.bind(this),
+      onLoadError: function() {
+        this.loading = false;
+        this.error = true;
+      }.bind(this),
       columns: columns,
       pagination: true,
       sidePagination: 'server',
@@ -223,6 +242,10 @@
       pageList: pageList
     });
     return defer.promise;
+  };
+
+  geonetwork.GnFeaturesSOLRLoader.prototype.getCount = function() {
+    return this.count;
   };
 
   geonetwork.GnFeaturesSOLRLoader.prototype.getGeomFromRow = function(row) {

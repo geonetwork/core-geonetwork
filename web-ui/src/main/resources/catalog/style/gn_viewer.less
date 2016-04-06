@@ -616,10 +616,13 @@ gn-features-tables {
   max-height       : 15em;
   background-color : rgba(255,255,255, .6);
   border-radius    : 3px;
-  outline          : .25em solid rgba(255, 255, 255, .3);
+  padding          : .25em;
   .nav li a {
     background  : rgba(255, 255, 255, .5);
     text-shadow : 0 0 1px white;
+    .badge {
+      text-shadow : none;
+    }
   }
   .tab-content {
     background : white;
