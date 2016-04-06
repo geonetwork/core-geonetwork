@@ -1126,8 +1126,8 @@
 
       <tab id="inspire_sds"
            mode="flat"
-           if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
-          
+           displayIfRecord="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+
           <section name="inspire_sds_cc1">
 
               <!-- 4.4.1 TG4 : ensure gmd:DQ_DataQuality for service exists -->
