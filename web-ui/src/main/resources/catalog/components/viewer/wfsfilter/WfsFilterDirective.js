@@ -208,7 +208,9 @@
                   solrObject.filteredDocTypeFieldsInfo, appProfile.fields);
               solrObject.initBaseParams();
             }
-            scope.resetFacets();
+            scope.resetFacets().then(function() {
+              solrObject.pushState();
+            });
           }
           function getDataModelLabel(fieldId) {
             for (var j = 0; j < scope.md.attributeTable.length; j++) {
@@ -342,19 +344,17 @@
 
             // output structure to send to filter service
             scope.output = {};
-
             scope.searchInput = '';
-
+            scope.resetSLDFilters();
 
             // load all facet and fill ui structure for the list
-            solrObject.searchWithFacets({}).
+            return solrObject.searchWithFacets({}).
                 then(function(resp) {
                   scope.fields = resp.facets;
                   scope.count = resp.count;
                   refreshHeatmap();
                 });
 
-            scope.resetSLDFilters();
           };
 
           scope.resetSLDFilters = function() {
@@ -370,6 +370,7 @@
           scope.filterWMS = function() {
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
+            solrObject.pushState();
             if (sldConfig.filters.length > 0) {
               wfsFilterService.getSldUrl(sldConfig, scope.layer.get('url'),
                   ftName).success(function(sldURL) {

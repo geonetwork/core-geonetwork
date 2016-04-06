@@ -195,8 +195,8 @@
           //5 pixels radius tolerance
           d: map.getView().getResolution() / 400,
           sfield: solr.geomField.idxName
-        }) + '&fq={!geofilt sfield=' + solr.geomField.idxName + '}' :
-        this.solrObject.baseUrl;
+        }, this.solrObject.getState()) + '&fq={!geofilt sfield=' + solr.geomField.idxName + '}' :
+            this.solrObject.getMergedRequestUrl({}, {}, this.solrObject.getState());
 
     url = url.replace('rows=0', '');
     if (url.indexOf('&q=') === -1) {

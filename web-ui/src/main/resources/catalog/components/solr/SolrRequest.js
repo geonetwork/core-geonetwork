@@ -99,6 +99,13 @@
      */
     this.eventsListener = {};
 
+    /**
+     * Keep a tracking on solr request states
+     * @type {Array<Object>} store all search params as an object
+     * @private
+     */
+    this.states_ = [];
+
     // Initialize all events
     angular.forEach(solrRequestEvents, function(k) {
       this.eventsListener[k] = [];
@@ -235,21 +242,25 @@
   /**
    * Merge the current solr request params with the given ones and build the
    * result url. Doesn't update the state of the solr object.
+   * If state param is provided, the url is computed from the state object
+   * instead of current solr request params.
    *
    * @param {object} qParams
    * @param {object} solrParams
+   * @param {undefined|object} state optional solr state
    * @returns {string} The merged url
    */
   geonetwork.GnSolrRequest.prototype.getMergedRequestUrl =
-      function(qParams, solrParams) {
+      function(qParams, solrParams, state) {
 
+        var baseObj = state || this.requestParams;
         var url =  this.getSearchUrl_(
-            angular.extend({}, this.requestParams.qParams, qParams.params),
-            qParams.any || this.requestParams.any,
-            qParams.geom || this.requestParams.geometry
+            angular.extend({}, baseObj.qParams, qParams.params),
+            qParams.any || baseObj.any,
+            qParams.geom || baseObj.geometry
         );
         url += this.parseKeyValue_(angular.extend({},
-            this.requestParams.solrParams, solrParams));
+            baseObj.solrParams, solrParams));
         return url;
       };
 
@@ -621,6 +632,20 @@
     this.eventsListener[key].forEach(angular.bind(this, function(event) {
       event.callback.call(event.this || this, args);
     }));
+  };
+
+  geonetwork.GnSolrRequest.prototype.pushState = function(state) {
+    var state_ = state || angular.copy(this.requestParams);
+    this.states_.push(state_);
+  };
+
+  geonetwork.GnSolrRequest.prototype.popState = function(state) {
+    return this.states_.pop();
+  };
+
+  geonetwork.GnSolrRequest.prototype.getState = function(idx) {
+    var idx_ = idx || this.states_.length-1;
+    return idx_ >= 0 && this.states_[idx_] || null;
   };
 
 })();
