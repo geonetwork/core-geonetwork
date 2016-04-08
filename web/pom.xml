@@ -574,6 +574,11 @@
                   <directory>${project.basedir}/../schemas/csw-record/src/main/plugin</directory>
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
+                <!-- Copy the documentation in the webapp. -->
+                <resource>
+                  <directory>${project.basedir}/../docs/manuals/target/doc</directory>
+                  <targetPath>${basedir}/src/main/webapp/doc</targetPath>
+                </resource>
               </resources>
             </configuration>
           </execution>
