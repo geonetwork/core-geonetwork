@@ -491,7 +491,7 @@ public class SpatialIndexWriter implements FeatureListener
 
         SimpleFeatureType type = typeBuilder.buildFeatureType();
         datastore.createSchema(type);
-        return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(type.getName());
+        return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(_SPATIAL_INDEX_TYPENAME);
     }
 
     public static Name findIdColumn(FeatureSource<SimpleFeatureType, SimpleFeature> featureSource) {

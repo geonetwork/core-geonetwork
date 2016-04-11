@@ -32,7 +32,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.jdom.Element;
 
@@ -73,7 +73,7 @@ public class Delete implements Service {
 		// fast search to see if any records are present that use this schema
 		ServiceConfig config = new ServiceConfig();
 
-    SearchManager searchMan = gc.getBean(SearchManager.class);
+    ISearchManager searchMan = gc.getBean(ISearchManager.class);
 		Element searchParams = new Element("parameters");
     searchParams.addContent(new Element("_schema").setText(schema));
 

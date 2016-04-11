@@ -33,7 +33,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -89,7 +89,7 @@ public class GetLatestUpdated implements Service
 		if (System.currentTimeMillis() > _lastUpdateTime + _timeBetweenUpdates)
 		{
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-			SearchManager searchMan = gc.getBean(SearchManager.class);
+			ISearchManager searchMan = gc.getBean(ISearchManager.class);
 			DataManager   dataMan   = gc.getBean(DataManager.class);
 
 			_request.getChild("to").setText(""+_maxItems);

@@ -49,7 +49,7 @@ import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
@@ -438,7 +438,7 @@ public class GetRelated implements Service, RelatedMetadata {
 
     private Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SearchManager searchMan = gc.getBean(SearchManager.class);
+        ISearchManager searchMan = gc.getBean(ISearchManager.class);
 
         // perform the search
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))

@@ -47,7 +47,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -541,7 +541,7 @@ public class Info implements Service {
 		Element       params = buildParams();
 		ServiceConfig config = new ServiceConfig();
 
-		SearchManager searchMan = gc.getBean(SearchManager.class);
+		ISearchManager searchMan = gc.getBean(ISearchManager.class);
 		try (MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
             searcher.search(context, params, config);

@@ -30,7 +30,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -72,7 +72,7 @@ public class IndexRebuild implements Service
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		SearchManager searchMan = gc.getBean(SearchManager.class);
+		ISearchManager searchMan = gc.getBean(ISearchManager.class);
 		
 		boolean info = searchMan.rebuildIndex(context, xlinks, reset, fromSelection);
 

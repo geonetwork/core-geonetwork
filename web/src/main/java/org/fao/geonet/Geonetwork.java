@@ -44,8 +44,8 @@ import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.LuceneConfig;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -109,7 +109,7 @@ import java.util.concurrent.TimeUnit;
 public class Geonetwork implements ApplicationHandler {
     private Logger logger;
     private Path appPath;
-    private SearchManager searchMan;
+    private ISearchManager searchMan;
     private MetadataNotifierControl metadataNotifierControl;
     private ConfigurableApplicationContext _applicationContext;
 
@@ -269,14 +269,6 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Search...");
 
-        boolean logSpatialObject = "true".equalsIgnoreCase(handlerConfig.getMandatoryValue(Geonet.Config.STAT_LOG_SPATIAL_OBJECTS));
-        boolean logAsynch = "true".equalsIgnoreCase(handlerConfig.getMandatoryValue(Geonet.Config.STAT_LOG_ASYNCH));
-        logger.info("  - Log spatial object: " + logSpatialObject);
-        logger.info("  - Log in asynch mode: " + logAsynch);
-
-        String luceneTermsToExclude = "";
-        luceneTermsToExclude = handlerConfig.getMandatoryValue(Geonet.Config.STAT_LUCENE_TERMS_EXCLUDE);
-
         LuceneConfig lc = _applicationContext.getBean(LuceneConfig.class);
         lc.configure(luceneConfigXmlFile);
         logger.info("  - Lucene configuration is:");
@@ -293,21 +285,9 @@ public class Geonetwork implements ApplicationHandler {
             }
         }
 
-        String maxWritesInTransactionStr = handlerConfig.getMandatoryValue(Geonet.Config.MAX_WRITES_IN_TRANSACTION);
-        int maxWritesInTransaction = SpatialIndexWriter.MAX_WRITES_IN_TRANSACTION;
-        try {
-            maxWritesInTransaction = Integer.parseInt(maxWritesInTransactionStr);
-        } catch (NumberFormatException nfe) {
-            logger.error("Invalid config parameter: maximum number of writes to spatial index in a transaction (maxWritesInTransaction)"
-                         + ", Using " + maxWritesInTransaction + " instead.");
-            nfe.printStackTrace();
-        }
-
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
-        searchMan = _applicationContext.getBean(SearchManager.class);
-        searchMan.init(logAsynch,
-                logSpatialObject, luceneTermsToExclude,
-                maxWritesInTransaction);
+        searchMan = _applicationContext.getBean(ISearchManager.class);
+        searchMan.init(handlerConfig);
 
 
         // if the validator exists the proxyCallbackURL needs to have the external host and

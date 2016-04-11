@@ -48,7 +48,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
@@ -325,7 +325,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld, width);
         final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
 
-        ISODate changeDate = context.getBean(SearchManager.class).getDocChangeDate(resolvedId);
+        ISODate changeDate = context.getBean(ISearchManager.class).getDocChangeDate(resolvedId);
 
         Validator validator;
         if (changeDate != null) {

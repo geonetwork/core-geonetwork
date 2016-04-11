@@ -41,7 +41,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
@@ -109,7 +109,7 @@ public class Import extends NotInReadOnlyModeService {
         }
 
         List<String> uuids = Lists.newArrayList();
-        try (IndexAndTaxonomy idxTax = context.getBean(SearchManager.class).getNewIndexReader(null);){
+        try (IndexAndTaxonomy idxTax = context.getBean(ISearchManager.class).getNewIndexReader(null);){
             IndexSearcher searcher = new IndexSearcher(idxTax.indexReader);
             TopDocs search = searcher.search(query, 500);
 

@@ -213,6 +213,13 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     }
 
     public static void logSearch(ServiceContext srvContext, ServiceConfig config, Query query, int numHits, Sort sort, String geomWKT,
+            ISearchManager sm) {
+        if (sm instanceof SearchManager) {
+            logSearch(srvContext, config, query, numHits, sort, geomWKT, (SearchManager) sm);
+        } //TODO
+    }
+
+    public static void logSearch(ServiceContext srvContext, ServiceConfig config, Query query, int numHits, Sort sort, String geomWKT,
             SearchManager sm) {
         SettingInfo si = srvContext.getBean(SettingInfo.class);
         if (si.isSearchStatsEnabled()) {

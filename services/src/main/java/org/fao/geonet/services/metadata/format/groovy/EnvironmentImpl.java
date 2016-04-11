@@ -40,7 +40,7 @@ import org.apache.lucene.search.TopFieldCollector;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatType;
@@ -197,7 +197,7 @@ public class EnvironmentImpl implements Environment {
     @Override
     public synchronized Map<String, Collection<String>> getIndexInfo() throws Exception {
         if (this.indexInfo == null) {
-            final SearchManager searchManager = getBean(SearchManager.class);
+            final ISearchManager searchManager = getBean(ISearchManager.class);
 
             try (IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(getLang3())) {
                 TopFieldCollector collector = TopFieldCollector.create(Sort.RELEVANCE, 1, true, false, false, false);

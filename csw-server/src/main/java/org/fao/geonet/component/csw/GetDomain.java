@@ -52,7 +52,7 @@ import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SummaryComparator;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
@@ -204,7 +204,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			domainValues.addContent(pn.setText(property));
 			
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-			SearchManager sm = gc.getBean(SearchManager.class);
+			ISearchManager sm = gc.getBean(ISearchManager.class);
 			
 
 	        IndexAndTaxonomy indexAndTaxonomy= sm.getNewIndexReader(null);

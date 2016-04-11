@@ -36,7 +36,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.jdom.Element;
 
@@ -105,12 +105,12 @@ public class Utils {
 
     public static String lookupMetadataIdFromFileId(GeonetContext gc, String fileId) throws IOException,
             InterruptedException {
-        SearchManager searchManager = gc.getBean(SearchManager.class);
+        ISearchManager searchManager = gc.getBean(ISearchManager.class);
 
         return lookupMetadataIdFromFileId(fileId, searchManager);
     }
 
-    public static String lookupMetadataIdFromFileId(String fileId, SearchManager searchManager) throws IOException, InterruptedException {
+    public static String lookupMetadataIdFromFileId(String fileId, ISearchManager searchManager) throws IOException, InterruptedException {
         TermQuery query = new TermQuery(new Term("fileId", fileId));
 
         IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1);
