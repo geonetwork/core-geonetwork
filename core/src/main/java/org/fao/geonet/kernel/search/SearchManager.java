@@ -762,25 +762,6 @@ public class SearchManager implements ISearchManager {
 
     /**
      * TODO javadoc.
-     *
-     * @param fld
-     * @param txt
-     * @throws Exception
-     */
-	public void deleteGroup(String fld, String txt) throws Exception {
-        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        LuceneIndexLanguageTracker tracker = applicationContext.getBean(LuceneIndexLanguageTracker.class);
-
-        // possibly remove old document
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
-            Log.debug(Geonet.INDEX_ENGINE,"Deleting document ");
-        tracker.deleteDocuments(new Term(fld, txt));
-
-		_spatial.writer().delete(txt);
-	}
-
-    /**
-     * TODO javadoc.
      *  @param schemaDir
      * @param metadata
      * @param id
@@ -898,32 +879,30 @@ public class SearchManager implements ISearchManager {
     /**
      *  deletes a document.
      *
-     * @param fld
      * @param txt
      * @throws Exception
      */
-	public void delete(String fld, String txt) throws Exception {
+	public void delete(String txt) throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         LuceneIndexLanguageTracker tracker = applicationContext.getBean(LuceneIndexLanguageTracker.class);
 		// possibly remove old document
-		tracker.deleteDocuments(new Term(fld, txt));
+		tracker.deleteDocuments(new Term(LuceneIndexField.ID, txt));
 		_spatial.writer().delete(txt);
 	}
 
     /**
      *  deletes a list of documents.
      *
-     * @param fld
      * @param txts
      * @throws Exception
      */
-    public void delete(String fld, List<String> txts) throws Exception {
+    public void delete(List<String> txts) throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         LuceneIndexLanguageTracker tracker = applicationContext.getBean(LuceneIndexLanguageTracker.class);
 
         // possibly remove old document
         for(String txt : txts) {
-            tracker.deleteDocuments(new Term(fld, txt));
+            tracker.deleteDocuments(new Term(LuceneIndexField.ID, txt));
         }
         _spatial.writer().delete(txts);
     }

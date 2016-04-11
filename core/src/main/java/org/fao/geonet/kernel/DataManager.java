@@ -309,7 +309,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         // remove from index metadata not in DBMS
         for (String id : docs.keySet()) {
-            getSearchManager().delete("_id", id);
+            getSearchManager().delete(id);
 
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "- removed record (" + id + ") from index");
@@ -2203,7 +2203,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
 
         //--- update search criteria
-        getSearchManager().delete("_id", metadataId + "");
+        getSearchManager().delete(metadataId + "");
 //        _entityManager.flush();
 //        _entityManager.clear();
     }
@@ -2217,7 +2217,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     public synchronized void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
         deleteMetadataFromDB(context, metadataId);
         //--- update search criteria
-        getSearchManager().deleteGroup("_id", metadataId + "");
+        getSearchManager().delete(metadataId);
     }
 
     /**
@@ -3430,7 +3430,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
 
         // Remove records from the index
-        getSearchManager().delete("_id", Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
+        getSearchManager().delete(Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
             @Nullable
             @Override
             public String apply(@Nonnull Integer input) {
