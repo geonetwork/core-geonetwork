@@ -52,7 +52,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PreDestroy;
 
+import jeeves.server.ServiceConfig;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.spi.LoggerFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
@@ -81,6 +83,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -139,7 +142,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Indexes metadata using Lucene.
  */
-public class SearchManager {
+public class SearchManager implements ISearchManager {
     private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
 	public static final String INDEXING_ERROR_FIELD = "_indexingError";
 
@@ -492,15 +495,29 @@ public class SearchManager {
 		return pfa;
 	}
 
+    public void init(final ServiceConfig handlerConfig ) throws Exception {
+        boolean logSpatialObject = "true".equalsIgnoreCase(handlerConfig.getMandatoryValue(Geonet.Config.STAT_LOG_SPATIAL_OBJECTS));
+        boolean logAsynch = "true".equalsIgnoreCase(handlerConfig.getMandatoryValue(Geonet.Config.STAT_LOG_ASYNCH));
+        Log.info(Geonet.SEARCH_ENGINE, "  - Log spatial object: " + logSpatialObject);
+        Log.info(Geonet.SEARCH_ENGINE, "  - Log in asynch mode: " + logAsynch);
+
+        String luceneTermsToExclude = handlerConfig.getMandatoryValue(Geonet.Config.STAT_LUCENE_TERMS_EXCLUDE);
+
+        String maxWritesInTransactionStr = handlerConfig.getMandatoryValue(Geonet.Config.MAX_WRITES_IN_TRANSACTION);
+        int maxWritesInTransaction = SpatialIndexWriter.MAX_WRITES_IN_TRANSACTION;
+        try {
+            maxWritesInTransaction = Integer.parseInt(maxWritesInTransactionStr);
+        } catch (NumberFormatException nfe) {
+            Log.error(Geonet.SEARCH_ENGINE, "Invalid config parameter: maximum number of writes to spatial index in a transaction (maxWritesInTransaction)"
+                    + ", Using " + maxWritesInTransaction + " instead.");
+            nfe.printStackTrace();
+        }
+
+        init(logAsynch, logSpatialObject, luceneTermsToExclude, maxWritesInTransaction);
+    }
+
     /**
      * TODO javadoc.
-     *
-     *
-     *
-     *
-     *
-     *
-     *
      *
      * @param logAsynch
      * @param logSpatialObject
@@ -508,7 +525,7 @@ public class SearchManager {
      * @param maxWritesInTransaction
      * @throws Exception
      */
-	public void init(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
+    public void init(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
                      int maxWritesInTransaction) throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory geonetworkDataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
@@ -1667,7 +1684,7 @@ public class SearchManager {
      * TODO javadoc.
      *
      */
-	public class Spatial {
+	public class Spatial implements ISpatial {
 		private final DataStore _datastore;
         private static final long 	TIME_BETWEEN_SPATIAL_COMMITS_IN_SECONDS = 10;
         private final Map<String, Constructor<? extends SpatialFilter>> _types;

@@ -92,6 +92,7 @@ import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -1798,22 +1799,6 @@ public class DataManager implements ApplicationEventPublisherAware {
         return !getMetadataRepository().findAllIdsBy(hasMetadataUuid(uuid)).isEmpty();
     }
 
-    /**
-     * Returns all the keywords in the system.
-     *
-     * @return
-     * @throws Exception
-     */
-    public Element getKeywords() throws Exception {
-        Collection<String> keywords = getSearchManager().getTerms("keyword");
-        Element el = new Element("keywords");
-
-        for (Object keyword : keywords) {
-            el.addContent(new Element("keyword").setText((String) keyword));
-        }
-        return el;
-    }
-
     //--------------------------------------------------------------------------
     //---
     //--- Metadata Update API
@@ -3471,8 +3456,8 @@ public class DataManager implements ApplicationEventPublisherAware {
         return getApplicationContext().getBean(requiredType);
     }
 
-    private SearchManager getSearchManager() {
-        return getBean(SearchManager.class);
+    private ISearchManager getSearchManager() {
+        return getBean(ISearchManager.class);
     }
     public AccessManager getAccessManager() {
         return getBean(AccessManager.class);

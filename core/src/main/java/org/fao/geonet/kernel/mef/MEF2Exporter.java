@@ -48,7 +48,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.NoFilterFilter;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.utils.IO;
@@ -87,7 +87,7 @@ class MEF2Exporter {
 			Format format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 
 		Path file = Files.createTempFile("mef-", ".mef");
-        SearchManager searchManager = context.getBean(SearchManager.class);
+        ISearchManager searchManager = context.getBean(ISearchManager.class);
         String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
         try (
                 FileSystem zipFs = ZipUtil.createZipFs(file);

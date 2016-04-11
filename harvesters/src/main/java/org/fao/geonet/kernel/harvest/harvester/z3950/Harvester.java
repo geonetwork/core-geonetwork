@@ -41,7 +41,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -66,7 +66,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 	private UUIDMapper localUuids;
 	private final DataManager dataMan;
-	private final SearchManager searchMan;
+	private final ISearchManager searchMan;
 	private final SettingManager settingMan;
 
 	// --------------------------------------------------------------------------
@@ -80,7 +80,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		this.context = context;
 		this.log = log;
-		this.searchMan = gc.getBean(SearchManager.class);
+		this.searchMan = gc.getBean(ISearchManager.class);
 		this.dataMan = gc.getBean(DataManager.class);
 		this.settingMan = gc.getBean(SettingManager.class);
 		this.context = context;
@@ -399,7 +399,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
                 }
             }
 
-            context.getBean(SearchManager.class).forceIndexChanges();
+            context.getBean(ISearchManager.class).forceIndexChanges();
 
             return serverResults;
         }

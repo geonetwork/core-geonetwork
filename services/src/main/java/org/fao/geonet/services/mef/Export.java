@@ -41,7 +41,7 @@ import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -213,7 +213,7 @@ public class Export implements Service {
 
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
-		SearchManager searchMan = gc.getBean(SearchManager.class);
+		ISearchManager searchMan = gc.getBean(ISearchManager.class);
 		try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
             Set<String> uuids = new HashSet<>();

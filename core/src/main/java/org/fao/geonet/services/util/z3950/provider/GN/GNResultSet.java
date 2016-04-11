@@ -28,7 +28,7 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.services.util.z3950.GNXMLQuery;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -68,7 +68,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
 
                        GeonetContext gc = (GeonetContext) this.srvxtx
                        .getHandlerContext(Geonet.CONTEXT_NAME);
-                       SearchManager searchMan = gc.getBean(SearchManager.class);
+                       ISearchManager searchMan = gc.getBean(ISearchManager.class);
 
                        metasearcher = searchMan.newSearcher(SearcherType.LUCENE,
                                        Geonet.File.SEARCH_Z3950_SERVER);

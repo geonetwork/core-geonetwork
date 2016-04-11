@@ -26,6 +26,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.ApplicationContextHolder;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;

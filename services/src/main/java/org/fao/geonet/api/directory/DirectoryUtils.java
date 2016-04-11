@@ -16,7 +16,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
@@ -408,7 +408,7 @@ public class DirectoryUtils {
     private static String search(String field, String value) {
         ServiceConfig _config = new ServiceConfig();
         ServiceContext context = ServiceContext.get();
-        SearchManager searchMan = context.getBean(SearchManager.class);
+        ISearchManager searchMan = context.getBean(ISearchManager.class);
 
         try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
             // Creating parameters for search, fast only to retrieve uuid

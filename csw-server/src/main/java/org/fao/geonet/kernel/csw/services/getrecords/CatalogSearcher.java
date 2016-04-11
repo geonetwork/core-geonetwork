@@ -70,6 +70,7 @@ import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.MetadataRecordSelector;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
@@ -182,7 +183,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
             Log.debug(Geonet.CSW_SEARCH, "after remapfields:\n"+ Xml.getString(luceneExpr));
         
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SearchManager sm = gc.getBean(SearchManager.class);
+        ISearchManager sm = gc.getBean(ISearchManager.class);
         IndexAndTaxonomy indexAndTaxonomy = null;
         try {
             if (luceneExpr != null) {
@@ -236,7 +237,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 	public List<String> getAllUuids(int maxHits, ServiceContext context) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SearchManager sm = gc.getBean(SearchManager.class);
+		ISearchManager sm = gc.getBean(ISearchManager.class);
 		LuceneConfig luceneConfig = getLuceneConfig();
         IndexAndTaxonomy indexAndTaxonomy = sm.getIndexReader(null, _searchToken);
 
@@ -449,7 +450,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
         }
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SearchManager sm = gc.getBean(SearchManager.class);
+		ISearchManager sm = gc.getBean(ISearchManager.class);
 
 		if (luceneExpr != null) {
             if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
@@ -755,7 +756,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
      * @throws QueryNodeException 
      */
     public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint, LuceneConfig _luceneConfig) throws ParseException, QueryNodeException {
-//        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , SearchManager.getAnalyzer());
+//        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , ISearchManager.getAnalyzer());
         StandardQueryParser parser = new StandardQueryParser(SearchManager.getAnalyzer());
         Map<String, NumericConfig> numericMap = new HashMap<String, NumericConfig>();
         for (LuceneConfigNumericField field : _luceneConfig.getNumericFields().values()) {

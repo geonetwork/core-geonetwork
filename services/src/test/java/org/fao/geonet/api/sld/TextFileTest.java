@@ -3,6 +3,7 @@ package org.fao.geonet.api.sld;
 import org.fao.geonet.domain.TextFile;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.TextFileRepository;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Test File service
  */
-public class TextFileTest extends AbstractSpringDataTest {
+public class TextFileTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private TextFileRepository textFileRepository;

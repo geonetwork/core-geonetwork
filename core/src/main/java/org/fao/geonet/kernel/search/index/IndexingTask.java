@@ -26,7 +26,7 @@ package org.fao.geonet.kernel.search.index;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.utils.Log;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -75,7 +75,7 @@ public class IndexingTask extends QuartzJobBean {
                 }
             }
             try {
-                this.applicationContext.getBean(SearchManager.class).forceIndexChanges();
+                this.applicationContext.getBean(ISearchManager.class).forceIndexChanges();
             } catch (IOException e) {
                 Log.error(Geonet.INDEX_ENGINE, "Error forcing index changes", e);
             }

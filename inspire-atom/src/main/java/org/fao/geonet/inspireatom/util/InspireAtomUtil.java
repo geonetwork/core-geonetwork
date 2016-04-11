@@ -30,7 +30,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
@@ -252,7 +252,7 @@ public class InspireAtomUtil {
     }
 
     public static List<Metadata> searchMetadataByType(ServiceContext context,
-                                                      SearchManager searchMan,
+                                                      ISearchManager searchMan,
                                                       String type) {
 
         Element request = new Element(Jeeves.Elem.REQUEST);
@@ -277,7 +277,7 @@ public class InspireAtomUtil {
 
 
     public static String retrieveDatasetUuidFromIdentifier(ServiceContext context,
-                                                      SearchManager searchMan,
+                                                      ISearchManager searchMan,
                                                       String datasetIdCode) {
 
         String uuid = "";
