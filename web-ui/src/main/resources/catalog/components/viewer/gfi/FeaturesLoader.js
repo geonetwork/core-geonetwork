@@ -93,14 +93,31 @@
 
     this.loading = true;
     this.promise = this.$http.get(this.proxyfyUrl(uri)).then(function(response) {
+
       this.loading = false;
-      var format = new ol.format.WMSGetFeatureInfo();
-      var features = format.readFeatures(response.data);
-      this.features = features;
-      return features;
+      if (layer.ncInfo) {
+        var doc = ol.xml.parse(response.data);
+        var props = {};
+        ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
+          var node = doc.getElementsByTagName(v);
+          if (node && node.length > 0) {
+            props[v] = ol.xml.getAllTextContent(node[0], true);
+          }
+        });
+        this.features = (props.value && props.value != 'none') ?
+          [new ol.Feature(props)] : [];
+      } else {
+        var format = new ol.format.WMSGetFeatureInfo();
+        this.features = format.readFeatures(response.data);
+      }
+
+      return this.features;
+
     }.bind(this), function() {
+
       this.loading = false;
       this.error   = true;
+
     }.bind(this));
 
   };
@@ -110,7 +127,6 @@
     var $filter = this.$injector.get('$filter');
 
     return this.promise.then(function(features) {
-
       if (!features || features.length == 0) {
         return;
       }
