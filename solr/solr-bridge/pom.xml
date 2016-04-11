@@ -14,17 +14,18 @@
   <dependencies>
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>common</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.5</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>services</artifactId>
-      <version>${project.version}</version>
     </dependency>
   </dependencies>
   <build>
