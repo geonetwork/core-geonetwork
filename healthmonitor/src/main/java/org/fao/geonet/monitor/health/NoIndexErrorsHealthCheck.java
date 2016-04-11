@@ -31,6 +31,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearchManagerUtils;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.jdom.Element;
 
@@ -54,7 +55,7 @@ public class NoIndexErrorsHealthCheck implements HealthCheckFactory {
                 try (MetaSearcher metaSearcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
                     Element request = new Element("request")
                             .addContent(new Element(Geonet.SearchResult.FAST).setText("true"))
-                            .addContent(new Element(SearchManager.INDEXING_ERROR_FIELD).setText("1"))
+                            .addContent(new Element(SearchManagerUtils.INDEXING_ERROR_FIELD).setText("1"))
                             .addContent(new Element("from").setText("1"))
                             .addContent(new Element("to").setText("50"));
                     metaSearcher.search(context, request, config);

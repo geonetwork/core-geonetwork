@@ -54,7 +54,6 @@ import javax.annotation.PreDestroy;
 
 import jeeves.server.ServiceConfig;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.spi.LoggerFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
@@ -83,7 +82,6 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -143,8 +141,6 @@ import jeeves.server.context.ServiceContext;
  * Indexes metadata using Lucene.
  */
 public class SearchManager implements ISearchManager {
-    private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
-	public static final String INDEXING_ERROR_FIELD = "_indexingError";
 
     private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
     private static final String STOPWORDS_DIR_PATH = "resources/stopwords";
@@ -752,14 +748,14 @@ public class SearchManager implements ISearchManager {
             _spatial.writer().index(schemaDir, id, metadata);
         } catch (Exception e) {
             Log.error(Geonet.INDEX_ENGINE, "Failed to properly index geometry of metadata " + id + ". Error: " + e.getMessage(), e);
-            moreFields.add(SearchManager.makeField(INDEXING_ERROR_FIELD, "1", true, true));
-            moreFields.add(SearchManager.makeField(INDEXING_ERROR_MSG, "GNIDX-GEOWRITE||" + e.getMessage(), true, false));
+            moreFields.add(SearchManagerUtils.makeField(SearchManagerUtils.INDEXING_ERROR_FIELD, "1", true, true));
+            moreFields.add(SearchManagerUtils.makeField(SearchManagerUtils.INDEXING_ERROR_MSG, "GNIDX-GEOWRITE||" + e.getMessage(), true, false));
         }
         Map<String, String> errors = _spatial.writer().getErrorMessage();
         if (errors.size() > 0) {
             for (Entry<String, String> e : errors.entrySet()) {
-            moreFields.add(SearchManager.makeField(INDEXING_ERROR_FIELD, "1", true, true));
-            moreFields.add(SearchManager.makeField(INDEXING_ERROR_MSG, "GNIDX-GEO|" + e.getKey() + "|" + e.getValue(), true, false));
+            moreFields.add(SearchManagerUtils.makeField(SearchManagerUtils.INDEXING_ERROR_FIELD, "1", true, true));
+            moreFields.add(SearchManagerUtils.makeField(SearchManagerUtils.INDEXING_ERROR_MSG, "GNIDX-GEO|" + e.getKey() + "|" + e.getValue(), true, false));
             }
         }
 	}
@@ -800,8 +796,8 @@ public class SearchManager implements ISearchManager {
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n" + Xml.getString(metadata));
         }
-         Path defaultLangStyleSheet = getIndexFieldsXsl(schemaDir, root, "");
-         Path otherLocalesStyleSheet = getIndexFieldsXsl(schemaDir, root, "language-");
+         Path defaultLangStyleSheet = SearchManagerUtils.getIndexFieldsXsl(schemaDir, root, "");
+         Path otherLocalesStyleSheet = SearchManagerUtils.getIndexFieldsXsl(schemaDir, root, "language-");
 
         Element xmlDoc = getIndexFields(metadata, defaultLangStyleSheet, otherLocalesStyleSheet);
 
@@ -816,7 +812,7 @@ public class SearchManager implements ISearchManager {
         List<IndexInformation> documents = Lists.newArrayList();
         for( Element doc : documentElements ) {
             // add _id field
-            SearchManager.addField(doc, LuceneIndexField.ID, id, true, true);
+            SearchManagerUtils.addField(doc, LuceneIndexField.ID, id, true, true);
 
             // add more fields
             for( Element moreField : moreFields ) {
@@ -830,27 +826,6 @@ public class SearchManager implements ISearchManager {
             Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n" + Xml.getString(xmlDoc));
         return documents;
 	}
-
-    private Path getIndexFieldsXsl(Path schemaDir, String root, String indexName) {
-        if (root == null) {
-            root = "";
-        }
-        root = root.toLowerCase();
-        if (root.contains(":")) {
-            root = root.split(":",2)[1];
-        }
-
-        final String basicName = "index-fields";
-        Path defaultLangStyleSheet = schemaDir.resolve(basicName).resolve(indexName + root + ".xsl");
-        if (!Files.exists(defaultLangStyleSheet)) {
-            defaultLangStyleSheet = schemaDir.resolve(basicName).resolve(indexName + "default.xsl");
-        }
-        if (!Files.exists(defaultLangStyleSheet)) {
-            // backward compatibility
-            defaultLangStyleSheet = schemaDir.resolve(indexName + basicName + ".xsl");
-        }
-        return defaultLangStyleSheet;
-    }
 
     private Collection<Field> findMultilingualSortElements(List<Element> documentElements) {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -892,38 +867,6 @@ public class SearchManager implements ISearchManager {
 		return locale;
 	}
 
-	/**
-	 * Creates a new XML field for the Lucene index and add it to the document.
-     *
-	 * @param xmlDoc
-	 * @param name
-	 * @param value
-	 * @param store
-	 * @param index
-	 */
-	private static void addField(Element xmlDoc, String name, String value, boolean store, boolean index) {
-		Element field = makeField(name, value, store, index);
-		xmlDoc.addContent(field);
-	}
-
-    /**
-    * Creates a new XML field for the Lucene index.
-    *
-    * @param name
-    * @param value
-    * @param store
-    * @param index
-    * @return
-    */
-	public static Element makeField(String name, String value, boolean store, boolean index) {
-		Element field = new Element("Field");
-		field.setAttribute(LuceneFieldAttribute.NAME.toString(), name);
-		field.setAttribute(LuceneFieldAttribute.STRING.toString(), value == null ? "" : value);
-		field.setAttribute(LuceneFieldAttribute.STORE.toString(), Boolean.toString(store));
-		field.setAttribute(LuceneFieldAttribute.INDEX.toString(), Boolean.toString(index));
-		return field;
-	}
-
 
     public enum LuceneFieldAttribute {
         NAME {
@@ -951,27 +894,6 @@ public class SearchManager implements ISearchManager {
             }
         }
     }
-	/**
-	 * Extracts text from metadata record.
-	 *
-	 *
-     * @param metadata
-     * @param sb
-     * @return all text in the metadata elements for indexing
-	 */
-	private void allText(Element metadata, StringBuilder sb) {
-		String text = metadata.getText().trim();
-		if (text.length() > 0) {
-			if (sb.length() > 0)
-				sb.append(" ");
-			sb.append(text);
-		}
-		@SuppressWarnings("unchecked")
-        List<Element> children = metadata.getChildren();
-        for (Element aChildren : children) {
-            allText(aChildren, sb);
-        }
-	}
 
     /**
      *  deletes a document.
@@ -1293,11 +1215,11 @@ public class SearchManager implements ISearchManager {
                     String.format("Indexing stylesheet contains errors: %s \n\t Marking the metadata as _indexingError=1 in index",
                             e.getMessage()));
             Element xmlDoc = new Element("Document");
-            SearchManager.addField(xmlDoc, INDEXING_ERROR_FIELD, "1", true, true);
-            SearchManager.addField(xmlDoc, INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage(), true, false);
+            SearchManagerUtils.addField(xmlDoc, SearchManagerUtils.INDEXING_ERROR_FIELD, "1", true, true);
+            SearchManagerUtils.addField(xmlDoc, SearchManagerUtils.INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage(), true, false);
             StringBuilder sb = new StringBuilder();
-            allText(xml, sb);
-            SearchManager.addField(xmlDoc, Geonet.IndexFieldNames.ANY, sb.toString(), false, true);
+            SearchManagerUtils.allText(xml, sb);
+            SearchManagerUtils.addField(xmlDoc, Geonet.IndexFieldNames.ANY, sb.toString(), false, true);
             documents.addContent(xmlDoc);
         }
         return documents;
@@ -1543,8 +1465,8 @@ public class SearchManager implements ISearchManager {
                     } catch (Exception e) {
                         String msg = "Invalid value. Field '" + name + "' is not added to the document. Error is: " + e.getMessage();
 
-                        Field idxError = new Field(INDEXING_ERROR_FIELD, "1", storeNotTokenizedFieldType);
-                        Field idxMsg = new Field(INDEXING_ERROR_MSG, "GNIDX-BADNUMVALUE|" + name + "|" +  e.getMessage(), storeNotIndexedFieldType);
+                        Field idxError = new Field(SearchManagerUtils.INDEXING_ERROR_FIELD, "1", storeNotTokenizedFieldType);
+                        Field idxMsg = new Field(SearchManagerUtils.INDEXING_ERROR_MSG, "GNIDX-BADNUMVALUE|" + name + "|" +  e.getMessage(), storeNotIndexedFieldType);
 
                         doc.add(idxError);
                         doc.add(idxMsg);

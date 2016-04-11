@@ -23,6 +23,18 @@
 
 package org.fao.geonet.solr;
 
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.springframework.util.StringUtils;
+
+import javax.annotation.Nonnull;
+
 /**
  */
 public class SolrConfig {
@@ -90,5 +102,27 @@ public class SolrConfig {
     public SolrConfig setSolrServerPassword(String solrServerPassword) {
         this.solrServerPassword = solrServerPassword;
         return this;
+    }
+
+    @Nonnull
+    public SolrClient createClient() throws Exception {
+        if (solrServerUrl != null) {
+            String url = solrServerUrl + "/" + solrServerCore;
+            if (!StringUtils.isEmpty(solrServerUsername) &&
+                    !StringUtils.isEmpty(solrServerPassword)) {
+                CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                credentialsProvider.setCredentials(AuthScope.ANY,
+                        new UsernamePasswordCredentials(
+                                solrServerUsername,
+                                solrServerPassword));
+                CloseableHttpClient httpClient =
+                        HttpClientBuilder.create().setDefaultCredentialsProvider(credentialsProvider).build();
+                return new HttpSolrClient(url, httpClient);
+            } else {
+                return new HttpSolrClient(url);
+            }
+        } else {
+            throw new Exception("No Solr URL defined. Check configuration.");
+        }
     }
 }

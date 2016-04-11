@@ -33,6 +33,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearchManagerUtils;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataRepositoryTest;
 import org.fao.geonet.utils.Xml;
@@ -358,9 +359,9 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         metadata = _metadataRepository.save(metadata);
         final Path schemaDir = _schemaManager.getSchemaDir("iso19139");
         List<Element> extras = Lists.newArrayList(
-                SearchManager.makeField("_uuid", PHOTOGRAPHIC_UUID, false, true),
-                SearchManager.makeField("_isTemplate", "n", true, true),
-                SearchManager.makeField("_owner", "" + ownerId, true, true)
+                SearchManagerUtils.makeField("_uuid", PHOTOGRAPHIC_UUID, false, true),
+                SearchManagerUtils.makeField("_isTemplate", "n", true, true),
+                SearchManagerUtils.makeField("_owner", "" + ownerId, true, true)
         );
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
                 MetadataType.METADATA, metadata.getDataInfo().getRoot(), false);

@@ -93,7 +93,7 @@ import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearchManagerUtils;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -500,18 +500,18 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (getXmlSerializer().resolveXLinks()) {
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "1", true, true));
+                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.HASXLINKS, "1", true, true));
                     StringBuilder sb = new StringBuilder();
                     for (Attribute xlink : xlinks) {
                         sb.append(xlink.getValue()); sb.append(" ");
                     }
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.XLINK, sb.toString(), true, true));
+                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.XLINK, sb.toString(), true, true));
                     Processor.detachXLink(md, getServiceContext());
                 } else {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
+                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
                 }
             } else {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
+                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
             }
 
             fullMd = getMetadataRepository().findOne(id$);
@@ -536,34 +536,34 @@ public class DataManager implements ApplicationEventPublisherAware {
                 Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); //DEBUG
             }
 
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.ROOT,        root,        true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SCHEMA,      schema,      true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CREATE_DATE,  createDate,  true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE,  changeDate,  true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SOURCE,      source,      true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE,  metadataType.codeString,  true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.UUID,        uuid,        true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.OWNER,       owner,       true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DUMMY,       "0",        false, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.POPULARITY,  popularity,  true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.RATING,      rating,      true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DISPLAY_ORDER,displayOrder, true, false));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.EXTRA,       extra,       false, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.ROOT,        root,        true, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.SCHEMA,      schema,      true, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.DATABASE_CREATE_DATE,  createDate,  true, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE,  changeDate,  true, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.SOURCE,      source,      true, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.IS_TEMPLATE,  metadataType.codeString,  true, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.UUID,        uuid,        true, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested, true, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.OWNER,       owner,       true, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.DUMMY,       "0",        false, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.POPULARITY,  popularity,  true, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.RATING,      rating,      true, true));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.DISPLAY_ORDER,displayOrder, true, false));
+            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.EXTRA,       extra,       false, true));
 
             // If the metadata has an atom document, index related information
             InspireAtomFeedRepository inspireAtomFeedRepository = getApplicationContext().getBean(InspireAtomFeedRepository.class);
             InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
 
             if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
-                moreFields.add(SearchManager.makeField("has_atom", "y", true, true));
-                moreFields.add(SearchManager.makeField("any", feed.getAtom(), false, true));
+                moreFields.add(SearchManagerUtils.makeField("has_atom", "y", true, true));
+                moreFields.add(SearchManagerUtils.makeField("any", feed.getAtom(), false, true));
             }
 
             if (owner != null) {
                 User user = getApplicationContext().getBean(UserRepository.class).findOne(fullMd.getSourceInfo().getOwner());
                 if (user != null) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
+                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
                             .getName() + "|" + user.getProfile(), true, false));
                 }
             }
@@ -575,10 +575,10 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (groupOwner != null) {
                 final Group group = groupRepository.findOne(groupOwner);
                 if (group != null) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner), true, true));
+                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner), true, true));
                     final boolean preferGroup = getSettingManager().getValueAsBool(SettingManager.SYSTEM_PREFER_GROUP_LOGO, true);
                     if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
-                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite(), true, false));
+                        moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite(), true, false));
                     }
                     if (group.getLogo() != null && preferGroup) {
                         logoUUID = group.getLogo();
@@ -598,13 +598,13 @@ public class DataManager implements ApplicationEventPublisherAware {
                     final Path logoPath = logosDir.resolve(logoUUID + "." + ext);
                     if (Files.exists(logoPath)) {
                         added = true;
-                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoPath.getFileName(), true, false));
+                        moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoPath.getFileName(), true, false));
                         break;
                     }
                 }
 
                 if (!added) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID + ".png", true, false));
+                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID + ".png", true, false));
                 }
             }
 
@@ -616,17 +616,17 @@ public class DataManager implements ApplicationEventPublisherAware {
                 int groupId = operationAllowedId.getGroupId();
                 int operationId = operationAllowedId.getOperationId();
 
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.OP_PREFIX + operationId, String.valueOf(groupId), true, true));
+                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.OP_PREFIX + operationId, String.valueOf(groupId), true, true));
                 if(operationId == ReservedOperation.view.getId()) {
                     Group g = groupRepository.findOne(groupId);
                     if (g != null) {
-                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.getName(), true, true));
+                        moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.getName(), true, true));
                     }
                 }
             }
 
             for (MetadataCategory category : fullMd.getCategories()) {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CAT, category.getName(), true, true));
+                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.CAT, category.getName(), true, true));
             }
 
             final MetadataStatusRepository statusRepository = getApplicationContext().getBean(MetadataStatusRepository.class);
@@ -637,9 +637,9 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (!statuses.isEmpty()) {
                 MetadataStatus stat = statuses.get(0);
                 String status = String.valueOf(stat.getId().getStatusId());
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS, status, true, true));
+                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.STATUS, status, true, true));
                 String statusChangeDate = stat.getId().getChangeDate().getDateAndTime();
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate, true, true));
+                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate, true, true));
             }
 
             // getValidationInfo
@@ -650,7 +650,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                     .class);
             List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id$);
             if (validationInfo.isEmpty()) {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, "-1", true, true));
+                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.VALID, "-1", true, true));
             } else {
                 String isValid = "1";
                 for (MetadataValidation vi : validationInfo) {
@@ -659,9 +659,9 @@ public class DataManager implements ApplicationEventPublisherAware {
                     if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
                         isValid = "0";
                     }
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode(), true, true));
+                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode(), true, true));
                 }
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, isValid, true, true));
+                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.VALID, isValid, true, true));
             }
             getSearchManager().index(getSchemaManager().getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
         } catch (Exception x) {

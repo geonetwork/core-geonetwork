@@ -78,27 +78,8 @@ public class SolrJProxy implements InitializingBean {
      */
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (config.getSolrServerUrl() != null) {
-            String url = config.getSolrServerUrl() + "/" +
-                    config.getSolrServerCore();
-            if (!StringUtils.isEmpty(config.getSolrServerUsername()) &&
-                    !StringUtils.isEmpty(config.getSolrServerPassword())) {
-                CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                credentialsProvider.setCredentials(AuthScope.ANY,
-                        new UsernamePasswordCredentials(
-                                config.getSolrServerUsername(),
-                                config.getSolrServerPassword()));
-                CloseableHttpClient httpClient =
-                        HttpClientBuilder.create().setDefaultCredentialsProvider(credentialsProvider).build();
-                client = new HttpSolrClient(url, httpClient);
-            } else {
-                client = new HttpSolrClient(url);
-            }
-
-            instance = this;
-        } else {
-            throw new Exception("No Solr URL defined. Check configuration.");
-        }
+        client = config.createClient();
+        instance = this;
     }
 
     /**
