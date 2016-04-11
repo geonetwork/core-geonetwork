@@ -42,9 +42,12 @@
         //   controller.tableElt = element.find('table');
         // }
       };
-    }]);
+
+  }]);
 
   var GnFeaturesTablesController = function(gnFeaturesTableManager) {
+    this.tm = gnFeaturesTableManager;
+
     this.tables = gnFeaturesTableManager.tables;
 
     this.fOverlay = new ol.layer.Vector({
@@ -56,6 +59,10 @@
       map: this.map
     });
 
+  };
+
+  GnFeaturesTablesController.prototype.clear = function() {
+    this.tm.clear();
   };
 
 
