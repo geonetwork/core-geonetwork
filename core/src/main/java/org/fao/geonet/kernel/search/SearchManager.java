@@ -180,12 +180,6 @@ public class SearchManager implements ISearchManager {
 	private boolean _logAsynch;
 	private LuceneOptimizerManager _luceneOptimizerManager;
 
-    public SettingInfo getSettingInfo() {
-
-        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        return applicationContext.getBean(SettingInfo.class);
-    }
-
 
     /**
      * Creates GeoNetworkAnalyzer, using Admin-defined stopwords if there are any.

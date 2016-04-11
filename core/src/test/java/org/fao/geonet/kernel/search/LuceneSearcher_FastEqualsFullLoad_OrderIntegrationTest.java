@@ -25,6 +25,8 @@ package org.fao.geonet.kernel.search;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Xml;
@@ -63,7 +65,7 @@ public class LuceneSearcher_FastEqualsFullLoad_OrderIntegrationTest extends Abst
         final List<Namespace> theNSs = Arrays.asList(Geonet.Namespaces.GMD);
         final List<Element> nodes = (List<Element>) Xml.selectNodes(result, xpath, theNSs);
 
-        final SettingInfo settingInfo = _serviceContext.getBean(SearchManager.class).getSettingInfo();
+        final SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
         final LuceneSearcher.LanguageSelection language = LuceneSearcher.determineLanguage(_serviceContext, request,settingInfo);
 
         String[] titles = new String[nodes.size()];

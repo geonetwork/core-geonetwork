@@ -79,6 +79,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopFieldCollector;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
@@ -190,7 +191,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
         String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
 		boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
-		_language = determineLanguage(srvContext, request, _sm.getSettingInfo());
+		_language = determineLanguage(srvContext, request, ApplicationContextHolder.get().getBean(SettingInfo.class));
 
         if(Log.isDebugEnabled(Geonet.LUCENE)) {
             Log.debug(Geonet.LUCENE, "LuceneSearcher initializing search range");
@@ -475,7 +476,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 		// To count the number of values added and stop if maxNumberOfTerms reach
         if (_language == null) {
             final Element request = new Element("request").addContent(new Element("any").setText(searchValue));
-            _language = determineLanguage(srvContext, request, _sm.getSettingInfo());
+            _language = determineLanguage(srvContext, request, ApplicationContextHolder.get().getBean(SettingInfo.class));
         }
 
         _logSearch = false;
@@ -735,9 +736,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             _summaryConfig = new SummaryType(_summaryConfig.getName(), requestedItems);
         }
 
-        _language = determineLanguage(srvContext, request, _sm.getSettingInfo());
-        
-		if (srvContext != null) {
+        _language = determineLanguage(srvContext, request, srvContext.getBean(SettingInfo.class));
+        SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
+
+        if (srvContext != null) {
             @SuppressWarnings("unchecked")
             List<Element> requestedGroups = request.getChildren(SearchParameter.GROUP);
 
@@ -799,7 +801,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             if(Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "CRITERIA:\n"+ Xml.getString(request));
 
-            SettingInfo settingInfo = _sm.getSettingInfo();
             SettingInfo.SearchRequestLanguage requestedLanguageOnly = settingInfo.getRequestedLanguageOnly();
             if(Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "requestedLanguageOnly: " + requestedLanguageOnly);
@@ -937,7 +938,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Sorting by : " + sortBy);
 
-        SettingInfo settingInfo = _sm.getSettingInfo();
         boolean sortRequestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "sortRequestedLanguageOnTop: " + sortRequestedLanguageOnTop);
@@ -1752,7 +1752,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         try {
             IndexSearcher searcher = new IndexSearcher(reader);
             TermQuery query = new TermQuery(new Term(field, value));
-            SettingInfo settingInfo = searchmanager.getSettingInfo();
+            SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
             boolean sortRequestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
             if(Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "sortRequestedLanguageOnTop: " + sortRequestedLanguageOnTop);
