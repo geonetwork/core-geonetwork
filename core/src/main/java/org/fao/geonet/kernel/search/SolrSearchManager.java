@@ -26,10 +26,13 @@ package org.fao.geonet.kernel.search;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.solr.SolrConfig;
 import org.fao.geonet.utils.Log;
@@ -77,6 +80,7 @@ public class SolrSearchManager implements ISearchManager {
         addMDFields(doc, schemaDir, metadata, root);
         addMoreFields(doc, moreFields);
         client.add(doc);
+        client.commit();
     }
 
     private static void addMDFields(SolrInputDocument doc, Path schemaDir, Element metadata, String root) {
@@ -136,12 +140,36 @@ public class SolrSearchManager implements ISearchManager {
 
     @Override
     public boolean rebuildIndex(ServiceContext context, boolean xlinks, boolean reset, boolean fromSelection) throws Exception {
-        return false;
+        DataManager dataMan = context.getBean(DataManager.class);
+        try {
+            if (reset) {
+                clearIndex();
+            }
+            if (fromSelection) {
+                dataMan.rebuildIndexForSelection(context, xlinks);
+            } else if (xlinks) {
+                dataMan.rebuildIndexXLinkedMetadata(context);
+            } else {
+                clearIndex();
+                dataMan.init(context, true);
+            }
+            client.commit();
+            return true;
+        }
+        catch (Exception e) {
+            Log.error(Geonet.INDEX_ENGINE, "Exception while rebuilding solr index, going to rebuild it: " +
+                    e.getMessage(), e);
+            return false;
+        }
+    }
+
+    private void clearIndex() throws SolrServerException, IOException {
+        client.deleteByQuery(DOC_TYPE + ":metadata");
     }
 
     @Override
     public Map<String, String> getDocsChangeDate() throws Exception {
-        return null;
+        return new HashMap<>();
     }
 
     @Override

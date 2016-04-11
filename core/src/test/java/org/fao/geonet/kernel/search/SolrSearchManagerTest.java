@@ -112,5 +112,10 @@ public class SolrSearchManagerTest {
             addedDocs.add(doc);
             return null;
         }
+
+        @Override
+        public UpdateResponse commit(String collection, boolean waitFlush, boolean waitSearcher) throws SolrServerException, IOException {
+            return null;
+        }
     }
 }
