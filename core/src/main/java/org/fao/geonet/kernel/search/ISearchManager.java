@@ -29,7 +29,6 @@ import jeeves.server.context.ServiceContext;
 import org.apache.lucene.search.Filter;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
 
 import java.io.IOException;
@@ -94,18 +93,15 @@ public interface ISearchManager {
     /**
      * deletes a document.
      */
-    void delete(String fld, String txt) throws Exception;
+    void delete(String txt) throws Exception;
 
     /**
      * deletes a list of documents.
      *
-     * @param fld
      * @param txts
      * @throws Exception
      */
-    void delete(String fld, List<String> txts) throws Exception;
-
-    void deleteGroup(String fld, String txt) throws Exception;
+    void delete(List<String> txts) throws Exception;
 
     void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception;
 

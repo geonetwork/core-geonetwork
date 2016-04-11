@@ -32,8 +32,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.solr.SolrConfig;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -69,18 +67,22 @@ public class SolrSearchManager implements ISearchManager {
 
     @Override
     public MetaSearcher newSearcher(SearcherType type, String stylesheetName) throws Exception {
+        //TODO
         return null;
     }
 
     @Override
-    public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields, MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {
+    public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
+                      MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {
         final SolrInputDocument doc = new SolrInputDocument();
         doc.addField(ID, id);
         doc.addField(DOC_TYPE, "metadata");
         addMDFields(doc, schemaDir, metadata, root);
         addMoreFields(doc, moreFields);
         client.add(doc);
-        client.commit();
+        if (forceRefreshReaders) {
+            client.commit();
+        }
     }
 
     private static void addMDFields(SolrInputDocument doc, Path schemaDir, Element metadata, String root) {
@@ -115,22 +117,28 @@ public class SolrSearchManager implements ISearchManager {
 
     @Override
     public IndexAndTaxonomy getNewIndexReader(String preferredLang) throws IOException, InterruptedException {
+        //TODO
         return null;
     }
 
     @Override
     public IndexAndTaxonomy getIndexReader(String preferredLang, long versionToken) throws IOException {
+        //TODO
         return null;
     }
 
     @Override
     public void forceIndexChanges() throws IOException {
-
+        try {
+            client.commit();
+        } catch (SolrServerException e) {
+            throw new IOException(e);
+        }
     }
 
     @Override
     public void releaseIndexReader(IndexAndTaxonomy reader) throws InterruptedException, IOException {
-
+        //useless for this implementation
     }
 
     @Override
@@ -183,28 +191,25 @@ public class SolrSearchManager implements ISearchManager {
     }
 
     @Override
-    public void delete(String fld, String txt) throws Exception {
-
+    public void delete(String txt) throws Exception {
+        client.deleteById(txt);
+        client.commit();
     }
 
     @Override
-    public void delete(String fld, List<String> txts) throws Exception {
-
-    }
-
-    @Override
-    public void deleteGroup(String fld, String txt) throws Exception {
-
+    public void delete(List<String> txts) throws Exception {
+        client.deleteById(txts);
+        client.commit();
     }
 
     @Override
     public void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception {
-
+        //useless for this implementation
     }
 
     @Override
     public void disableOptimizer() throws Exception {
-
+        //useless for this implementation
     }
 
     /**
