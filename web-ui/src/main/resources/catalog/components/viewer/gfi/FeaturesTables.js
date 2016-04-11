@@ -26,8 +26,7 @@
 
   var module = angular.module('gn_featurestables_directive', []);
 
-  module.directive('gnFeaturesTables', [
-    function() {
+  module.directive('gnFeaturesTables', [ function() {
 
       return {
         restrict: 'E',

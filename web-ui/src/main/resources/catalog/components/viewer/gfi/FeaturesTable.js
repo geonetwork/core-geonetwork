@@ -32,7 +32,8 @@
       return {
         restrict: 'E',
         scope: {
-          loader: '=?gnFeaturesTableLoader'
+          loader: '=?gnFeaturesTableLoader',
+          map: '=?gnFeaturesTableLoaderMap'
         },
         controllerAs: 'ctrl',
         bindToController: true,
@@ -62,7 +63,26 @@
             sortable: true,
             onClickRow: function(row, elt) {
               var feature = this.loader.getGeomFromRow(row);
-              this.featuresTablesCtrl.fOverlay.getSource().addFeature(feature);
+              var source = this.featuresTablesCtrl.fOverlay.getSource();
+              source.clear();
+              source.addFeature(feature);
+            }.bind(this),
+            onDblClickRow: function(row, elt) {
+              if (!this.map) {
+                return;
+              }
+              var feature = this.loader.getGeomFromRow(row);
+              var pan = ol.animation.pan({
+                duration: 500,
+                source: this.map.getView().getCenter()
+              });
+              this.map.beforeRender(pan);
+              this.map.getView().fit(
+                feature.getGeometry(),
+                this.map.getSize(),
+                { maxZoom: 17 }
+              );
+
             }.bind(this)
           },bstConfig));
     }.bind(this));
