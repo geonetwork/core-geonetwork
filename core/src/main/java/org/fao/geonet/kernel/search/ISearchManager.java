@@ -62,8 +62,6 @@ public interface ISearchManager {
 
     IndexAndTaxonomy getIndexReader(String preferredLang, long versionToken) throws IOException;
 
-    boolean optimizeIndex();
-
     /**
      * Force the index to wait until all changes are processed and the next reader obtained will get the latest data.
      *

@@ -30,9 +30,7 @@
 
 
   <xsl:template match="/">
-    <add>
-      <xsl:apply-templates mode="index"/>
-    </add>
+    <xsl:apply-templates mode="index"/>
   </xsl:template>
 
 

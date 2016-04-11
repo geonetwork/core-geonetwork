@@ -437,6 +437,11 @@
             <artifactId>dummy-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>solr-bridge</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- Handled locally by a temporarly repository -->
         <dependency>
