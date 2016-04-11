@@ -244,6 +244,14 @@
     this.$scope = $scope;
     this.map = $scope.map;
     var map = this.map;
+    var coordinates;
+
+    this.overlay = new ol.Overlay({
+      positioning: 'center-center',
+      position: undefined,
+      element: $('<span class="marker">+</span>')[0]
+    });
+    map.addOverlay(this.overlay);
 
     map.on('singleclick', function (e) {
       this.$scope.$apply(function() {
@@ -256,9 +264,18 @@
             layer.getVisible();
         });
 
+        coordinates = e.coordinate;
         this.registerTables(layers, e.coordinate);
 
       }.bind(this));
+    }.bind(this));
+
+    $scope.$watch(function() {
+      return this.gnFeaturesTableManager.getCount();
+    }.bind(this), function(newVal, oldVal) {
+      this.overlay.setPosition(
+        (newVal == 0) ? undefined : coordinates
+      );
     }.bind(this));
   };
 

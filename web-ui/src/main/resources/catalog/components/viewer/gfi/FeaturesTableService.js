@@ -60,6 +60,15 @@
   };
 
 
+  GnFeaturesTableManager.prototype.getCount = function() {
+    var count = 0;
+    this.tables.forEach(function(table) {
+      count += table.loader.getCount();
+    });
+    return count;
+  };
+
+
   module.service('gnFeaturesTableManager', GnFeaturesTableManager);
   module.service('gnFeaturesTableService', GnFeaturesTableService);
 
