@@ -71,8 +71,6 @@ public interface ISearchManager {
      */
     void forceIndexChanges() throws IOException;
 
-    SettingInfo getSettingInfo();
-
     void releaseIndexReader(IndexAndTaxonomy reader) throws InterruptedException, IOException;
 
     ISpatial getSpatial();

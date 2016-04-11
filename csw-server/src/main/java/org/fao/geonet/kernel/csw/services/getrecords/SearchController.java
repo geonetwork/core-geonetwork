@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.Sort;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
@@ -122,7 +123,7 @@ public class SearchController {
         Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion,
                 typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
 
-        final SettingInfo settingInfo = context.getBean(ISearchManager.class).getSettingInfo();
+        final SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
         String displayLanguage = LuceneSearcher.determineLanguage(context, filterExpr, settingInfo).presentationLanguage;
         // retrieve actual metadata for results
         int counter = retrieveMetadataMatchingResults(context, results, summaryAndSearchResults, maxRecords, setName,

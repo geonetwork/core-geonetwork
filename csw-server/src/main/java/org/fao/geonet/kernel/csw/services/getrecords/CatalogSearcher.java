@@ -47,6 +47,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -191,7 +192,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
                     Log.debug(Geonet.CSW_SEARCH, "after convertphrases:\n" + Xml.getString(luceneExpr));
             }
-            _lang = LuceneSearcher.determineLanguage(context, filterExpr, sm.getSettingInfo());
+            _lang = LuceneSearcher.determineLanguage(context, filterExpr, ApplicationContextHolder.get().getBean(SettingInfo.class));
 
             indexAndTaxonomy = sm.getIndexReader(_lang.presentationLanguage, _searchToken);
             Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
@@ -462,7 +463,8 @@ public class CatalogSearcher implements MetadataRecordSelector {
         }
 
 
-		boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
+        SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
+		boolean requestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
 		
         Query data;
         LuceneConfig luceneConfig = getLuceneConfig();
@@ -471,7 +473,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
             Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made null query");
         } else {
             PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_lang.analyzerLanguage, true);
-            SettingInfo.SearchRequestLanguage requestedLanguageOnly = sm.getSettingInfo().getRequestedLanguageOnly();
+            SettingInfo.SearchRequestLanguage requestedLanguageOnly = settingInfo.getRequestedLanguageOnly();
             data = LuceneSearcher.makeLocalisedQuery(luceneExpr,
                 analyzer, luceneConfig, _lang.presentationLanguage, requestedLanguageOnly);
             Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made query:\n" + data.toString());

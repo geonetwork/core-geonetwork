@@ -28,6 +28,8 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.ISearchManager;
@@ -164,7 +166,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 			    // to the requested MD 
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
-                final SettingInfo settingInfo = gc.getBean(ISearchManager.class).getSettingInfo();
+                final SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
                 final String displayLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
 				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null,
                         displayLanguage);
