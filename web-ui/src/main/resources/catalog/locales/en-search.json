@@ -12,6 +12,7 @@
   "chooseSpatialFilterType": "Choose the type of spatial search (eg. intersect, within).",
   "openLargeMap": "Open map viewer",
   "type": "Type",
+  "noDataInCatalog": "The catalog currently contains no information. Sign in, and then load samples, harvest or import records.",
   "archive": "Archive",
   "archiveincluded": "Include archived",
   "archiveexcluded": "Exclude archived",

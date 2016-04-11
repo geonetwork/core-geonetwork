@@ -1146,6 +1146,12 @@
 
   <profiles>
     <profile>
+      <id>with-doc</id>
+      <modules>
+        <module>docs</module>
+      </modules>
+    </profile>
+    <profile>
       <id>all</id>
       <activation>
         <file>
@@ -1160,12 +1166,6 @@
         <module>web</module>
         <module>e2e-tests</module>
         <module>geoserver</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>with-doc</id>
-      <modules>
-        <module>docs/manuals</module>
       </modules>
     </profile>
     <profile>
