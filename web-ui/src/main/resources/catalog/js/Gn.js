@@ -28,7 +28,7 @@ var geonetwork = {};
   goog.provide('gn');
 
   goog.require('gn_locale');
-  goog.require('gn_solr_interceptor');
+  goog.require('gn_interceptor');
 
   /**
    * Main gn module.
@@ -41,7 +41,7 @@ var geonetwork = {};
    * @type {module|*}
    */
   var module = angular.module('gn', [
-    'gn_locale', 'cfp.hotkeys', 'gn_solr_interceptor'
+    'gn_locale', 'cfp.hotkeys', 'gn_interceptor'
   ]);
 
 })();

@@ -33,6 +33,9 @@
     <xsl:apply-templates mode="index"/>
   </xsl:template>
 
+  <xsl:template match="*[gco:CharacterString|gmd:PT_FreeText]" mode="index">
+
+  </xsl:template>
 
   <xsl:template match="gmi:MI_Metadata|gmd:MD_Metadata" mode="index">
     <!-- Main variables for the document -->
@@ -214,7 +217,7 @@
         <xsl:for-each select="gmd:graphicOverview/gmd:MD_BrowseGraphic/
                 gmd:fileName/gco:CharacterString[. != '']">
           <field name="overviewUrl">
-            <xsl:value-of select="."/>
+            <xsl:value-of select="concat('overview|', ., '|', ../gmd:fileDescription/gco:CharacterString)"/>
           </field>
         </xsl:for-each>
 
