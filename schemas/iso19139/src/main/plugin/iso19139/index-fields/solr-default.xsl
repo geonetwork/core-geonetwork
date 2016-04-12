@@ -33,9 +33,6 @@
     <xsl:apply-templates mode="index"/>
   </xsl:template>
 
-  <xsl:template match="*[gco:CharacterString|gmd:PT_FreeText]" mode="index">
-
-  </xsl:template>
 
   <xsl:template match="gmi:MI_Metadata|gmd:MD_Metadata" mode="index">
     <!-- Main variables for the document -->
@@ -716,5 +713,62 @@
       role:"<xsl:value-of select="$role"/>"
       }
     </field>
+  </xsl:template>
+
+
+
+  <xsl:template mode="index" match="gmd:CI_ResponsibleParty[count(ancestor::node()) =  1]">
+    <doc>
+      <xsl:variable name="org"
+                    select="normalize-space(gmd:organisationName/gco:CharacterString)"/>
+      <xsl:variable name="name"
+                    select="normalize-space(gmd:individualName/gco:CharacterString)"/>
+      <field name="resourceTitle">
+        <xsl:value-of select="if ($name != '') then concat($org, ' (', $name, ')') else $org"/>
+      </field>
+
+      <field name="orgName"><xsl:value-of select="$org"/></field>
+      <xsl:for-each select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
+        <field name="email"><xsl:value-of select="."/></field>
+      </xsl:for-each>
+      <xsl:call-template name="subtemplate-common-fields"/>
+    </doc>
+  </xsl:template>
+
+
+  <xsl:template mode="index" match="gmd:MD_Distribution[count(ancestor::node()) =  1]">
+    <doc>
+      <field name="resourceTitle">
+        <xsl:value-of select="string-join(gmd:transferOptions/gmd:MD_DigitalTransferOptions/
+          gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL, ', ')"/>
+      </field>
+      <xsl:call-template name="subtemplate-common-fields"/>
+    </doc>
+  </xsl:template>
+
+
+  <xsl:template mode="index" match="gmd:CI_OnlineResource[count(ancestor::node()) =  1]">
+    <doc>
+      <field name="resourceTitle">
+        <xsl:value-of select="gmd:linkage/gmd:URL"/>
+      </field>
+
+      <xsl:call-template name="subtemplate-common-fields"/>
+    </doc>
+  </xsl:template>
+
+  <xsl:template mode="index" match="gmd:EX_Extent[count(ancestor::node()) =  1]">
+    <doc>
+      <field name="resourceTitle">
+        <xsl:value-of select="gmd:description/gco:CharacterString"/>
+      </field>
+      <field name="_root"><xsl:value-of select="name(.)"/></field>
+
+      <xsl:call-template name="subtemplate-common-fields"/>
+    </doc>
+  </xsl:template>
+
+  <xsl:template name="subtemplate-common-fields">
+    <field name="_root"><xsl:value-of select="name(.)"/></field>
   </xsl:template>
 </xsl:stylesheet>
