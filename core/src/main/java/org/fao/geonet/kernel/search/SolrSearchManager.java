@@ -50,6 +50,7 @@ import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -210,6 +211,16 @@ public class SolrSearchManager implements ISearchManager {
         }
     }
 
+    public static Integer convertInteger(Object value) {
+        if (value == null) {
+            return null;
+        } else if (value instanceof Number) {
+            return ((Number) value).intValue();
+        } else {
+            return Integer.valueOf(value.toString());
+        }
+    }
+
     @Override
     public Map<String, String> getDocsChangeDate() throws Exception {
         final SolrQuery params = new SolrQuery("*:*");
@@ -235,11 +246,19 @@ public class SolrSearchManager implements ISearchManager {
             final Date date = (Date) results.get(0).getFieldValue(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
             return date != null ? new ISODate(date) : null;
         }
+
     }
 
     @Override
     public Set<Integer> getDocsWithXLinks() throws Exception {
-        return null;
+        final SolrQuery params = new SolrQuery("*:*");
+        params.setFilterQueries(DOC_TYPE + ":metadata");
+        params.setFilterQueries(Geonet.IndexFieldNames.HASXLINKS + ":1");
+        params.setFields(ID);
+        Set<Integer> result = new HashSet<>();
+        iterateQuery(client, params,
+                doc -> result.add(convertInteger(doc.getFieldValue(ID))));
+        return result;
     }
 
     @Override

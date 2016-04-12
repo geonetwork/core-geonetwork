@@ -3,8 +3,8 @@
 
   var module = angular.module('gn_interceptor', []);
 
-  module.factory('interceptor', ['gnGlobalSettings',
-    function(gnGlobalSettings) {
+  module.factory('interceptor', ['gnGlobalSettings', 'gnUrlUtils',
+    function(gnGlobalSettings, gnUrlUtils) {
 
       var lucene2solrParams = {
         from: 'start',
@@ -13,52 +13,58 @@
       var luceneParamsToSkip = ['_content_type', 'fast'];
       return {
         'request': function(config) {
-          if (config.url === 'q') {
+          var split = config.url.split(/[?@]/);
+          var urlPath = split[0];
+          if ((urlPath === 'q') || (urlPath === 'qi')) {
+            if (split.length > 1) {
+              config.params = gnUrlUtils.parseKeyValue(split[split.length - 1]);
+            }
             config.isSolrRequest = true;
-            config.url = '../api/0.1/search/query';
+            config.url = '../api/0.1/search/records';
             var solrParams = {
-              wt: 'json',
-              fq: 'docType:metadata'
+              wt: 'json'
             };
             console.log(config);
-            $.each(config.params, function(k, v) {
-              if (luceneParamsToSkip.indexOf(k) === -1) {
-                switch (k) {
-                  case 'from':
-                    solrParams.start = v - 1;
-                    break;
-                  case 'to':
-                    solrParams.rows = v - config.params.from;
-                    break;
-                  case 'any':
-                    if (v !== undefined) {
-                      solrParams.q = v;
+            if (config.params) {
+                $.each(config.params, function(k, v) {
+                  if (luceneParamsToSkip.indexOf(k) === -1) {
+                    switch (k) {
+                      case 'from':
+                        solrParams.start = v - 1;
+                        break;
+                      case 'to':
+                        solrParams.rows = v - config.params.from;
+                        break;
+                      case 'any':
+                        if (v !== undefined) {
+                          solrParams.q = v;
+                        }
+                        break;
+                      case '_isTemplate':
+                        if (v.indexOf(' or ') !== -1) {
+                          var values = v.split(' or ');
+                          var or = [];
+                          for (var j = 0; j < values. length; j++) {
+                            or.push(k + ':' + v);
+                          }
+                          solrParams.q += ' +(' + or.join(' ') + ')';
+                        } else {
+                          solrParams.q += ' +' + k + ':' + v;
+                        }
+                        break;
+                      case 'uuid':
+                        solrParams.q += ' +metadataIdentifier:"' + v + '"';
+                        break;
+                      default:
+                        console.log('Skipped param: ' + k);
                     }
-                    break;
-                  case '_isTemplate':
-                    if (v.indexOf(' or ') !== -1) {
-                      var values = v.split(' or ');
-                      var or = [];
-                      for (var j = 0; j < values. length; j++) {
-                        or.push(k + ':' + v);
-                      }
-                      solrParams.q += ' +(' + or.join(' ') + ')';
-                    } else {
-                      solrParams.q += ' +' + k + ':' + v;
-                    }
-                    break;
-                  case 'uuid':
-                    solrParams.q += ' +metadataIdentifier:"' + v + '"';
-                    break;
-                  default:
-                    console.log('Skipped param: ' + k);
-                }
-              }
-              if (solrParams.q === undefined) {
-                solrParams.q = '*:*';
-              }
-            });
-            config.params = solrParams;
+                  }
+                  if (solrParams.q === undefined) {
+                    solrParams.q = '*:*';
+                  }
+                });
+                config.params = solrParams;
+            }
           }
           return config;
         },
@@ -80,13 +86,13 @@
                 title: doc.resourceTitle,
                 'abstract': doc.resourceAbstract,
                 lineage: doc.lineage,
-                type: doc.resourceType[0],
+                type: doc.resourceType || [],
                 image: doc.overviewUrl,
                 keyword: doc.tag,
                 'geonet:info':  {
-                  _id: doc.id,
+                  id: doc.id,
                   edit: 'true', // Can edit all TODO
-                  uuid: doc.metadataIdentifier[0]
+                  uuid: doc._uuid
                 }
               });
             }
