@@ -8,7 +8,12 @@
 
       var lucene2solrParams = {
         from: 'start',
-        to: 'rows'
+        to: 'rows',
+        uuid: 'metadataIdentifier',
+        title: 'resourceTitle',
+        template: '_isTemplate',
+        any: '_text_',
+        _id: 'id'
       };
       var luceneParamsToSkip = ['_content_type', 'fast'];
       return {
@@ -22,9 +27,9 @@
             config.isSolrRequest = true;
             config.url = '../api/0.1/search/records';
             var solrParams = {
-              wt: 'json'
+              wt: 'json',
+              q: ''
             };
-            console.log(config);
             if (config.params) {
                 $.each(config.params, function(k, v) {
                   if (luceneParamsToSkip.indexOf(k) === -1) {
@@ -35,31 +40,18 @@
                       case 'to':
                         solrParams.rows = v - config.params.from;
                         break;
-                      case 'any':
-                        if (v !== undefined) {
-                          solrParams.q = v;
-                        }
-                        break;
                       case '_isTemplate':
-                        if (v.indexOf(' or ') !== -1) {
-                          var values = v.split(' or ');
-                          var or = [];
-                          for (var j = 0; j < values. length; j++) {
-                            or.push(k + ':' + v);
-                          }
-                          solrParams.q += ' +(' + or.join(' ') + ')';
-                        } else {
-                          solrParams.q += ' +' + k + ':' + v;
-                        }
-                        break;
-                      case 'uuid':
-                        solrParams.q += ' +metadataIdentifier:"' + v + '"';
+                          solrParams.q += ' +' + k + ':(' + v + ')';
                         break;
                       default:
-                        console.log('Skipped param: ' + k);
+                        if (lucene2solrParams[k] && v !== undefined) {
+                            solrParams.q += ' +' + lucene2solrParams[k] + ':"' + v + '"';
+                        } else {
+                          console.warn('Skipped param: ' + k);
+                        }
                     }
                   }
-                  if (solrParams.q === undefined) {
+                  if (solrParams.q === '') {
                     solrParams.q = '*:*';
                   }
                 });
@@ -73,10 +65,11 @@
             console.log(response);
             var data = response.data;
             var docs = data.response.docs;
-            var start = data.responseHeader.params.start + 1;
+            var start = data.response.start + 1;
             var gnResponse = {
               '@from': start,
               '@to': start + docs.length,
+              '@count': data.response.numFound + '',
               metadata: [],
               summary: []
             };
@@ -89,10 +82,13 @@
                 type: doc.resourceType || [],
                 image: doc.overviewUrl,
                 keyword: doc.tag,
+                category: doc._cat,
+                isTemplate: doc._isTemplate,
                 'geonet:info':  {
                   id: doc.id,
                   edit: 'true', // Can edit all TODO
-                  uuid: doc._uuid
+                  uuid: doc._uuid,
+                  schema: doc._schema
                 }
               });
             }
