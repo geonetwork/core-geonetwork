@@ -134,7 +134,7 @@ WARNING: The _text_ catch-all field will significantly increase your index size.
          multiValued="true"/>
   <field name="resourceTitle" type="string" indexed="true" stored="true" required="false"
          multiValued="false"/>
-  <field name="resourceAbstract" type="string" indexed="true" stored="true" required="false"
+  <field name="resourceAbstract" type="text_general" indexed="true" stored="true" required="false"
          multiValued="false"/>
   <field name="resourceIdentifier" type="string" indexed="true" stored="true" required="false"
          multiValued="true"/>
