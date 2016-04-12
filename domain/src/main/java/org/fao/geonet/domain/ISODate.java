@@ -111,6 +111,11 @@ public class ISODate
         _shortDate = false;
     }
 
+    public ISODate(final Date date) {
+        _calendar.setTime(date);
+        _shortDate = false;
+    }
+
     // ---------------------------------------------------------------------------
 
     public ISODate(@Nonnull final String isoDate) {

@@ -25,10 +25,15 @@ package org.fao.geonet.kernel.search;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.StreamingResponseCallback;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.utils.TransformerFactoryFactory;
@@ -43,8 +48,13 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -95,6 +105,15 @@ public class SolrSearchManagerTest {
         assertEquals("Hierarchical facet test template", doc.getFieldValue("resourceTitle"));
     }
 
+    @Test
+    public void testGetDocsChangeDate() throws Exception {
+        Map<String, String> map = manager.getDocsChangeDate();
+        Map<String, String> expected = new HashMap<>();
+        expected.put("toto", "1970");
+        expected.put("tutu", "1971");
+        assertEquals(expected, map);
+    }
+
     private static class MockSolrClient extends SolrClient {
         private final List<SolrInputDocument> addedDocs = new ArrayList<>();
 
@@ -115,6 +134,24 @@ public class SolrSearchManagerTest {
 
         @Override
         public UpdateResponse commit(String collection, boolean waitFlush, boolean waitSearcher) throws SolrServerException, IOException {
+            return null;
+        }
+
+        @Override
+        public QueryResponse queryAndStreamResponse(String collection, SolrParams params, StreamingResponseCallback callback) {
+            SolrQuery query = (SolrQuery) params;
+            Integer start = query.getStart();
+            callback.streamDocListInfo(2, start, 0.0f);
+            SolrDocument doc = new SolrDocument();
+            if (start == 0) {
+                doc.setField(SolrSearchManager.ID, "toto");
+                doc.setField("_changeDate", "1970");
+                callback.streamSolrDocument(doc);
+            } else {
+                doc.setField(SolrSearchManager.ID, "tutu");
+                doc.setField("_changeDate", "1971");
+                callback.streamSolrDocument(doc);
+            }
             return null;
         }
     }

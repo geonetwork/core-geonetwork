@@ -25,8 +25,15 @@ package org.fao.geonet.kernel.search;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.mutable.MutableLong;
 import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.StreamingResponseCallback;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -41,10 +48,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class SolrSearchManager implements ISearchManager {
     public static final String ID = "id";
@@ -93,7 +102,7 @@ public class SolrSearchManager implements ISearchManager {
             <doc>
               <field name="toto">Contenu</field>
             </doc>*/
-            for (Element field: (List<Element>)fields.getChildren("field")) {
+            for (Element field : (List<Element>) fields.getChildren("field")) {
                 doc.addField(field.getAttributeValue("name"), field.getValue());
             }
         } catch (Exception e) {
@@ -109,7 +118,7 @@ public class SolrSearchManager implements ISearchManager {
     }
 
     private static void addMoreFields(SolrInputDocument doc, List<Element> fields) {
-        for (Element field: fields) {
+        for (Element field : fields) {
             doc.addField(field.getAttributeValue(SearchManager.LuceneFieldAttribute.NAME.toString()),
                     field.getAttributeValue(SearchManager.LuceneFieldAttribute.STRING.toString()));
         }
@@ -117,14 +126,12 @@ public class SolrSearchManager implements ISearchManager {
 
     @Override
     public IndexAndTaxonomy getNewIndexReader(String preferredLang) throws IOException, InterruptedException {
-        //TODO
-        return null;
+        return getIndexReader(preferredLang, 0);
     }
 
     @Override
     public IndexAndTaxonomy getIndexReader(String preferredLang, long versionToken) throws IOException {
-        //TODO
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
@@ -163,8 +170,7 @@ public class SolrSearchManager implements ISearchManager {
             }
             client.commit();
             return true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.error(Geonet.INDEX_ENGINE, "Exception while rebuilding solr index, going to rebuild it: " +
                     e.getMessage(), e);
             return false;
@@ -175,14 +181,60 @@ public class SolrSearchManager implements ISearchManager {
         client.deleteByQuery(DOC_TYPE + ":metadata");
     }
 
+
+    public static void iterateQuery(SolrClient client, SolrQuery params, final Consumer<SolrDocument> callback) throws IOException, SolrServerException {
+        final MutableLong pos = new MutableLong(0);
+        final MutableLong last = new MutableLong(1);
+        while (pos.longValue() < last.longValue()) {
+            params.setStart(pos.intValue());
+            client.queryAndStreamResponse(params, new StreamingResponseCallback() {
+                @Override
+                public void streamSolrDocument(SolrDocument doc) {
+                    pos.add(1);
+                    callback.accept(doc);
+                }
+
+                @Override
+                public void streamDocListInfo(long numFound, long start, Float maxScore) {
+                    last.setValue(numFound);
+                }
+            });
+        }
+    }
+
+    public static String convertDate(Object date) {
+        if (date != null) {
+            return new ISODate((Date) date).toString();
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public Map<String, String> getDocsChangeDate() throws Exception {
-        return new HashMap<>();
+        final SolrQuery params = new SolrQuery("*:*");
+        params.setFilterQueries(DOC_TYPE + ":metadata");
+        params.setFields(ID, Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
+        final Map<String, String> result = new HashMap<>();
+        iterateQuery(client, params, doc ->
+                result.put(doc.getFieldValue(ID).toString(),
+                        convertDate(doc.getFieldValue(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE))));
+        return result;
     }
 
     @Override
     public ISODate getDocChangeDate(String mdId) throws Exception {
-        return null;
+        final SolrQuery params = new SolrQuery("*:*");
+        params.setFilterQueries(ID + ":" + mdId);
+        params.setFields(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
+        QueryResponse response = client.query(params);
+        final SolrDocumentList results = response.getResults();
+        if (results.size() == 0) {
+            return null;
+        } else {
+            final Date date = (Date) results.get(0).getFieldValue(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
+            return date != null ? new ISODate(date) : null;
+        }
     }
 
     @Override
