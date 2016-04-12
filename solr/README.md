@@ -76,3 +76,11 @@ or
 cd solr/solr-config
 ./solrdeletedoc.sh
 ```
+
+
+## Reload configuration 
+
+```
+server/scripts/cloud-scripts/zkcli.sh -z localhost:9984 \
+      -cmd upconfig -confdir ../src/main/solr-cores/catalog/conf/ -confname data
+```
