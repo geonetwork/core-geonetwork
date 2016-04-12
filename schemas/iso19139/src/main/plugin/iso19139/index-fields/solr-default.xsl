@@ -74,6 +74,11 @@
         </field>
       </xsl:for-each>
 
+      <xsl:for-each select="gmd:parentIdentifier/gco:CharacterString">
+        <field name="parent">
+          <xsl:value-of select="normalize-space(.)"/>
+        </field>
+      </xsl:for-each>
 
       <!-- Indexing record information -->
       <!-- # Date -->
@@ -168,6 +173,10 @@
           <field name="resourceAltTitle">
             <xsl:value-of select="normalize-space(gmd:alternateTitle/gco:CharacterString/text())"/>
           </field>
+
+          <xsl:for-each select="gmd:identifier/*/gmd:code/gco:CharacterString">
+            <field name="resourceIdentifier"><xsl:value-of select="."/></field>
+          </xsl:for-each>
 
           <xsl:for-each select="gmd:date/gmd:CI_Date[gmd:date/*/text() != '']">
             <xsl:variable name="dateType"
