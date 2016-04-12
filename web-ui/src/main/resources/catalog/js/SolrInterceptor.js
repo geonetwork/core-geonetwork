@@ -78,7 +78,7 @@
               var doc = docs[i];
               gnResponse.metadata.push({
                 title: doc.resourceTitle,
-                'abstract': doc.resourceAbstract[0],
+                'abstract': doc.resourceAbstract,
                 lineage: doc.lineage,
                 type: doc.resourceType[0],
                 image: doc.overviewUrl,
