@@ -43,6 +43,8 @@ import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
  * Date: 3/26/12
  * Time: 9:01 AM
  */
+// TODO: SOLR-MIGRATION-TO-DELETE
+@Deprecated
 public class LuceneIndexHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
         return new HealthCheck("Lucene Index") {
