@@ -32,7 +32,14 @@
   exclude-result-prefixes="#all">
   
   <xsl:import href="metadata-view.xsl"/>
-  <xsl:include href="metadata-markup.xsl"/>
+
+  <xsl:template mode="permitMarkup-dublin-core" match="*">
+    <xsl:value-of select="false()"/>
+  </xsl:template>
+
+  <xsl:template name="permitMarkup-dublin-core">
+     <xsl:apply-templates mode="permitMarkup-dublin-core" select="."/>
+  </xsl:template>
   
 	<!-- main template - the way into processing dublin-core -->
   <xsl:template name="metadata-dublin-core">
