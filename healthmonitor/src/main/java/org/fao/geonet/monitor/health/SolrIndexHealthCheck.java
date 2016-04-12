@@ -24,40 +24,33 @@
 package org.fao.geonet.monitor.health;
 
 import com.yammer.metrics.core.HealthCheck;
-import jeeves.monitor.HealthCheckFactory;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearchManagerUtils;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.search.SolrSearchManager;
-import org.jdom.Element;
+
+import jeeves.monitor.HealthCheckFactory;
+import jeeves.server.context.ServiceContext;
 
 /**
- * Verifies that all metadata have been correctly indexed (without errors)
- * <p/>
- * User: jeichar
- * Date: 3/26/12
- * Time: 9:01 AM
+ * Checks to ensure that the Solr index is accessible and readable
  */
-public class NoIndexErrorsHealthCheck implements HealthCheckFactory {
+public class SolrIndexHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
-        return new HealthCheck("Metadata Index Errors") {
+        return new HealthCheck("Solr Index") {
             @Override
             protected Result check() throws Exception {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                 SolrSearchManager searchMan = gc.getBean(SolrSearchManager.class);
-                int hits = searchMan.getNumDocs(
-                    String.format("+%s:1", SearchManagerUtils.INDEXING_ERROR_FIELD)
-                );
-                if (hits > 0) {
-                    return Result.unhealthy(
-                        String.format("Found %d records that had errors during indexing", hits));
-                } else {
-                    return Result.healthy();
+                try {
+                    int totalHits = searchMan.getNumDocs("*:*");
+                    if (totalHits > 1) {
+                        return Result.healthy();
+                    } else {
+                        return Result.unhealthy("Solr search returned " + totalHits + " hits.");
+                    }
+                } catch (Throwable e) {
+                    return Result.unhealthy(e);
                 }
             }
         };
