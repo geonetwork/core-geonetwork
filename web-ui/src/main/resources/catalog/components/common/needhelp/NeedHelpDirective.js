@@ -51,11 +51,11 @@
         restrict: 'A',
         replace: true,
         templateUrl: '../../catalog/components/common/needhelp/partials/' +
-        'needhelp.html',
+            'needhelp.html',
         link: function(scope, element, attrs) {
           scope.iconOnly = attrs.iconOnly === 'true';
           var helpBaseUrl = gnGlobalSettings.docUrl ||
-            'http://geonetwork-opensource.org/manuals/trunk/';
+              'http://geonetwork-opensource.org/manuals/trunk/';
 
           scope.showHelp = function() {
             var page = attrs.gnNeedHelp;
