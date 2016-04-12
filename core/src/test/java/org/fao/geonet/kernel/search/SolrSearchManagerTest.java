@@ -114,6 +114,14 @@ public class SolrSearchManagerTest {
         assertEquals(expected, map);
     }
 
+    @Test
+    public void testConvertInteger() {
+        assertEquals(Integer.valueOf(23), SolrSearchManager.convertInteger(Integer.valueOf(23)));
+        assertEquals(Integer.valueOf(23), SolrSearchManager.convertInteger(Long.valueOf(23)));
+        assertEquals(Integer.valueOf(23), SolrSearchManager.convertInteger(Integer.valueOf(23)));
+        assertEquals(null, SolrSearchManager.convertInteger(null));
+    }
+
     private static class MockSolrClient extends SolrClient {
         private final List<SolrInputDocument> addedDocs = new ArrayList<>();
 
