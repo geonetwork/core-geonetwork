@@ -25,7 +25,14 @@ package org.fao.geonet.solr;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.httpclient.util.URIUtil;
+import org.apache.http.client.utils.URIUtils;
 import org.fao.geonet.api.API;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.AccessManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -45,8 +52,12 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
@@ -72,18 +83,43 @@ public class SolrHTTPProxy {
     @Autowired
     private SolrConfig config;
 
-    @ApiOperation(value = "Search",
-                  notes = "See https://cwiki.apache.org/confluence/display/solr/Common+Query+Parameters for parameters.")
-    @RequestMapping(value = "/query",
-                    method = RequestMethod.GET)
+    @ApiOperation(value = "Search metadata",
+            notes = "See https://cwiki.apache.org/confluence/display/solr/Common+Query+Parameters for parameters.")
+    @RequestMapping(value = "/records",
+            method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public void handleGETRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        handleRequest(request, response,
-                        config.getSolrServerUrl() + "/" +
-                            config.getSolrServerCore() + "/select?" + request.getQueryString());
+    public void handleGETMetadata(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        final String url = config.getSolrServerUrl() + "/" +
+                config.getSolrServerCore() + "/select?" + addPermissions(addDocType(request.getQueryString(), "metadata"));
+        handleRequest(request, response, url);
     }
 
+    @ApiOperation(value = "Search features",
+            notes = "See https://cwiki.apache.org/confluence/display/solr/Common+Query+Parameters for parameters.")
+    @RequestMapping(value = "/features",
+            method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public void handleGETFeatures(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        final String url = config.getSolrServerUrl() + "/" +
+                config.getSolrServerCore() + "/select?" + addDocType(request.getQueryString(), "feature");
+        handleRequest(request, response, url);
+    }
+
+    private String addPermissions(String queryString) throws Exception {
+        ServiceContext context = ServiceContext.get();
+        AccessManager accessManager = context.getBean(AccessManager.class);
+        Set<Integer> groups = accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
+        final int viewId = ReservedOperation.view.getId();
+        final String ids = groups.stream().map(Object::toString)
+                .collect(Collectors.joining("\" \"", "(\"", "\")"));
+        return queryString + String.format("&fq=_op%d:%s", viewId, URIUtil.encodeQuery(ids));
+    }
+
+    private String addDocType(String queryString, String type) {
+        return queryString +"&fq=docType:" + type;
+    }
 
     /**
      *
@@ -106,6 +142,13 @@ public class SolrHTTPProxy {
             // connect to remote host
             // interactions with the resource are enabled now
             connectionWithFinalHost.connect();
+
+            int code = connectionWithFinalHost.getResponseCode();
+            if (code != 200) {
+                response.sendError(code,
+                        connectionWithFinalHost.getResponseMessage());
+                return;
+            }
 
             // get content type
             String contentType = connectionWithFinalHost.getContentType();

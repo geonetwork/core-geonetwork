@@ -13,22 +13,12 @@
   <name>Solr module</name>
   <packaging>pom</packaging>
   <modules>
+    <module>solr-core</module>
     <module>solr-config</module>
     <module>solr-bridge</module>
   </modules>
 
   <dependencies>
-    <dependency>
-      <groupId>org.apache.solr</groupId>
-      <artifactId>solr-solrj</artifactId>
-      <version>${solr.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-beans</artifactId>
-      <version>${spring.version}</version>
-    </dependency>
   </dependencies>
 
 

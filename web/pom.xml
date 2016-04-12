@@ -346,6 +346,11 @@
           <artifactId>inspire-atom</artifactId>
           <version>${project.version}</version>
       </dependency>
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>solr-bridge</artifactId>
+          <version>${project.version}</version>
+      </dependency>
 
       <!-- Handled locally by a temporarly repository -->
     <dependency>
@@ -488,12 +493,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-dublin-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>solr-bridge</artifactId>
       <version>${project.version}</version>
     </dependency>
 
