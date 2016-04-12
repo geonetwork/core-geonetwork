@@ -147,7 +147,13 @@ WARNING: The _text_ catch-all field will significantly increase your index size.
   <!-- Parent document eg. a metadata record for a feature -->
   <field name="parent" type="string" indexed="true" stored="true" required="false"
          multiValued="false"/>
+  <field name="hasfeaturecat" type="string" indexed="true" stored="true" required="false"
+         multiValued="true"/>
   <field name="recordOperateOn" type="string" indexed="true" stored="true" required="false"
+         multiValued="true"/>
+  <field name="agg_associated" type="string" indexed="true" stored="true" required="false"
+         multiValued="true"/>
+  <field name="hassource" type="string" indexed="true" stored="true" required="false"
          multiValued="true"/>
 
   <field name="_schema" type="string" indexed="true" stored="true" required="false"
