@@ -1,9 +1,9 @@
 (function() {
-  goog.provide('gn_solr_interceptor');
+  goog.provide('gn_interceptor');
 
-  var module = angular.module('gn_solr_interceptor', []);
+  var module = angular.module('gn_interceptor', []);
 
-  module.factory('solrInterceptor', ['gnGlobalSettings',
+  module.factory('interceptor', ['gnGlobalSettings',
     function(gnGlobalSettings) {
 
       var lucene2solrParams = {
@@ -67,7 +67,7 @@
             console.log(response);
             var data = response.data;
             var docs = data.response.docs;
-            var start = data.responseHeader.start + 1;
+            var start = data.responseHeader.params.start + 1;
             var gnResponse = {
               '@from': start,
               '@to': start + docs.length,
@@ -81,6 +81,7 @@
                 'abstract': doc.resourceAbstract[0],
                 lineage: doc.lineage,
                 type: doc.resourceType[0],
+                image: doc.overviewUrl,
                 keyword: doc.tag,
                 'geonet:info':  {
                   _id: doc.id,
@@ -101,6 +102,6 @@
     '$httpProvider',
     'gnGlobalSettings',
     function($httpProvider, gnGlobalSettings) {
-      $httpProvider.interceptors.push('solrInterceptor');
+      $httpProvider.interceptors.push('interceptor');
     }]);
 })();
