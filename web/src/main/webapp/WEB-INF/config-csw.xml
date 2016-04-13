@@ -39,19 +39,19 @@
 				<!-- - - - - - - - - - - - - - -->
 				<!-- Core queryable properties -->
 				<!-- - - - - - - - - - - - - - -->
-                <parameter name="Subject" field="keyword" type="SupportedISOQueryables">
+                <parameter name="Subject" field="tag" type="SupportedISOQueryables">
                     <xpath schema="iso19139" path="*/gmd:MD_Keywords/gmd:keyword/gco:CharacterString" />
                 </parameter>
 
-                <parameter name="Title" field="title" type="SupportedISOQueryables">
+                <parameter name="Title" field="resourceTitle" type="SupportedISOQueryables">
                     <xpath schema="iso19139" path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
                 </parameter>
 
-                <parameter name="Abstract" field="abstract" type="SupportedISOQueryables">
+                <parameter name="Abstract" field="resourceAbstract" type="SupportedISOQueryables">
                     <xpath schema="iso19139" path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString"/>
                 </parameter>
 
-                <parameter name="AnyText" field="any" type="SupportedISOQueryables" />
+                <parameter name="AnyText" field="text" type="SupportedISOQueryables" />
 
                 <parameter name="Format" field="format" type="SupportedISOQueryables">
                     <xpath schema="iso19139" path="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString"/>
@@ -232,7 +232,7 @@
 
                 <parameter name="ResponsiblePartyRole" field="responsiblePartyRole"
                     type="AdditionalQueryables" />
-                
+
 				<!-- - - - - - - - - - - - - - - - - - - - - - -->
 				<!-- Other additional queryable properties   -->
 				<!-- - - - - - - - - - - - - - - - - - - - - - -->

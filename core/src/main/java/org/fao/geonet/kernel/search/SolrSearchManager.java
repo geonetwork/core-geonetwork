@@ -31,6 +31,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.StreamingResponseCallback;
+import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -47,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -114,7 +116,7 @@ public class SolrSearchManager implements ISearchManager {
             doc.addField(SearchManagerUtils.INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage());
             StringBuilder sb = new StringBuilder();
             SearchManagerUtils.allText(metadata, sb);
-            doc.addField(Geonet.IndexFieldNames.ANY, sb.toString());
+            doc.addField("_text_", sb.toString());
         }
     }
 
@@ -249,6 +251,40 @@ public class SolrSearchManager implements ISearchManager {
 
     }
 
+    public SolrDocument getDocFieldValue(String query, String... field) throws IOException, SolrServerException {
+        final SolrQuery params = new SolrQuery(query);
+        params.setFilterQueries(DOC_TYPE + ":metadata");
+        params.setFields(field);
+        QueryResponse response = client.query(params);
+        final SolrDocumentList results = response.getResults();
+        if (results.size() == 0) {
+            return null;
+        } else {
+            return results.get(0);
+        }
+    }
+
+    public SolrDocumentList getDocsFieldValue(String query, String... field) throws IOException, SolrServerException {
+        final SolrQuery params = new SolrQuery(query);
+        params.setFilterQueries(DOC_TYPE + ":metadata");
+        params.setFields(field);
+        QueryResponse response = client.query(params);
+        return response.getResults();
+    }
+
+    public List<String> getDocsUuids(String query, Integer rows) throws IOException, SolrServerException {
+        final SolrQuery solrQuery = new SolrQuery(query == null ? "*:*" : query);
+        solrQuery.setFilterQueries(DOC_TYPE + ":metadata");
+        solrQuery.setFields(LuceneIndexField.UUID);
+        if (rows != null) {
+            solrQuery.setRows(rows);
+        }
+        final List<String> result = new ArrayList<>();
+        iterateQuery(client, solrQuery, doc ->
+            result.add(doc.getFieldValue(LuceneIndexField.UUID).toString()));
+        return result;
+    }
+
     @Override
     public Set<Integer> getDocsWithXLinks() throws Exception {
         final SolrQuery params = new SolrQuery("*:*");
@@ -288,5 +324,30 @@ public class SolrSearchManager implements ISearchManager {
      */
     void setClient(SolrClient client) {
         this.client = client;
+    }
+
+    public int getNumDocs(String query) throws IOException, SolrServerException {
+        final SolrQuery solrQuery = new SolrQuery(query == null ? "*:*" : query);
+        solrQuery.setFilterQueries(DOC_TYPE + ":metadata");
+        solrQuery.setRows(0);
+        QueryResponse response = client.query(solrQuery);
+        return (int) response.getResults().getNumFound();
+    }
+
+    public List<FacetField.Count> getDocFieldValues(String indexField,
+                                                    String query,
+                                                    boolean missing,
+                                                    Integer limit,
+                                                    String sort) throws IOException, SolrServerException {
+        final SolrQuery solrQuery = new SolrQuery(query == null ? "*:*" : query)
+            .setFilterQueries(DOC_TYPE + ":metadata")
+            .setRows(0)
+            .setFacet(true)
+            .setFacetMissing(missing == true)
+            .setFacetLimit(limit != null ? limit : 1000)
+            .setFacetSort(sort != null ? sort : "count") // or index
+            .addFacetField(indexField);
+        QueryResponse response = client.query(solrQuery);
+        return response.getFacetField(indexField).getValues();
     }
 }

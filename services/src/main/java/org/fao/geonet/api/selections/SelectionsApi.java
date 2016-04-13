@@ -100,7 +100,11 @@ public class SelectionsApi {
             @ApiParam(value = "One or more record UUIDs. If null, select all in current search if bucket name is 'metadata' (TODO: remove this limitation?).",
                       required = false)
             @RequestParam(required = false)
-            String[] uuid
+            String[] uuid,
+            @ApiParam(value = "A query to select a subset of records.",
+                      required = false)
+            @RequestParam(required = false)
+            String q
     )
             throws Exception {
         ServiceContext serviceContext = ServiceContext.get();
@@ -112,7 +116,7 @@ public class SelectionsApi {
                         SelectionManager.ADD_ALL_SELECTED,
                 uuid != null ?
                         Arrays.asList(uuid) : null,
-                serviceContext);
+                q, serviceContext);
 
         return new ResponseEntity<>(nbSelected, HttpStatus.CREATED);
     }
@@ -150,7 +154,7 @@ public class SelectionsApi {
                         SelectionManager.REMOVE_ALL_SELECTED,
                 uuid != null ?
                         Arrays.asList(uuid) : null,
-                serviceContext);
+            null, serviceContext);
 
         return new ResponseEntity<>(nbSelected, HttpStatus.OK);
     }

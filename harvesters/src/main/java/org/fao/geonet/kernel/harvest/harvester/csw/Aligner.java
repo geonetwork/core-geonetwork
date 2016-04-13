@@ -47,7 +47,11 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
@@ -122,8 +126,8 @@ public class Aligner extends BaseAligner
 
 		if (params.isUseAccount()) {
 			request.setCredentials(params.getUsername(), params.getPassword());
-		}	
-		
+		}
+
 	}
 
 	//--------------------------------------------------------------------------
@@ -185,9 +189,9 @@ public class Aligner extends BaseAligner
             }
 
             try{
-    
+
     			String id = dataMan.getMetadataId(ri.uuid);
-    
+
     			if (id == null)	addMetadata(ri);
     			else				updateMetadata(ri, id);
                 result.totalMetadata++;
@@ -348,7 +352,7 @@ public class Aligner extends BaseAligner
 
     /**
      *  Returns true if the uuid is present in the remote node.
-     * 
+     *
      * @param records
      * @param uuid
      * @return
@@ -412,7 +416,7 @@ public class Aligner extends BaseAligner
                     return null;
                 }
             }
-            
+
             return response;
 		}
 		catch(Exception e)
@@ -429,28 +433,30 @@ public class Aligner extends BaseAligner
     /**
      * Check for metadata in the catalog having the same resource identifier as the
      * harvested record.
-     * 
-     * If one dataset (same MD_metadata/../identificationInfo/../identifier/../code) 
-     * (eg. a NMA layer for roads) is described in 2 or more catalogs with different 
+     *
+     * If one dataset (same MD_metadata/../identificationInfo/../identifier/../code)
+     * (eg. a NMA layer for roads) is described in 2 or more catalogs with different
      * metadata uuids. The metadata may be slightly different depending on the author,
-     * but the resource is the same. When harvesting, some users would like to have 
+     * but the resource is the same. When harvesting, some users would like to have
      * the capability to exclude "duplicate" description of the same dataset.
-     * 
-     * The check is made searching the identifier field in the index using 
+     *
+     * The check is made searching the identifier field in the index using
      * {@link org.fao.geonet.kernel.search.LuceneSearcher#getAllMetadataFromIndexFor(String, String, String, java.util.Set, boolean)}
-     * 
+     *
      * @param uuid the metadata unique identifier
      * @param response  the XML document to check
      * @return true if a record with same resource identifier is found. false otherwise.
      */
     private boolean foundDuplicateForResource(String uuid, Element response) {
         String schema = dataMan.autodetectSchema(response);
-        
+        ServiceContext context = ServiceContext.get();
+        ISearchManager searchmanager = context.getBean(ISearchManager.class);
+
         if(schema != null && schema.startsWith("iso19139")) {
             String resourceIdentifierXPath = "gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString";
             String resourceIdentifierLuceneIndexField = "identifier";
             String defaultLanguage = "eng";
-            
+
             try {
                 // Extract resource identifier
                 XPath xp = XPath.newInstance (resourceIdentifierXPath);
@@ -461,23 +467,32 @@ public class Aligner extends BaseAligner
                 if (resourceIdentifiers.size() > 0) {
                     // Check if the metadata to import has a resource identifier
                     // existing in current catalog for a record with a different UUID
-                    
                     log.debug("  - Resource identifiers found : " + resourceIdentifiers.size());
-                    
+
                     for (Element identifierNode : resourceIdentifiers) {
                         String identifier = identifierNode.getTextTrim();
                         log.debug("    - Searching for duplicates for resource identifier: " + identifier);
-                        
-                        Map<String, Map<String,String>> values = LuceneSearcher.getAllMetadataFromIndexFor(defaultLanguage, resourceIdentifierLuceneIndexField,
+
+                        // TODO: SOLR-MIGRATION-TO-DELETE
+                        if (searchmanager instanceof SearchManager) {
+                            Map<String, Map<String, String>> values = LuceneSearcher.getAllMetadataFromIndexFor(defaultLanguage, resourceIdentifierLuceneIndexField,
                                 identifier, Collections.singleton("_uuid"), true);
-                        log.debug("    - Number of resources with same identifier: " + values.size());
-                        for (Map<String, String> recordFieldValues : values.values()) {
-                            String indexRecordUuid = recordFieldValues.get("_uuid");
-                            if (!indexRecordUuid.equals(uuid)) {
-                                log.debug("      - UUID " + indexRecordUuid + " in index does not match harvested record UUID " + uuid);
+                            log.debug("    - Number of resources with same identifier: " + values.size());
+                            for (Map<String, String> recordFieldValues : values.values()) {
+                                String indexRecordUuid = recordFieldValues.get("_uuid");
+                                if (!indexRecordUuid.equals(uuid)) {
+                                    log.debug("      - UUID " + indexRecordUuid + " in index does not match harvested record UUID " + uuid);
+                                    log.warning("      - Duplicates found. Skipping record with UUID " + uuid + " and resource identifier " + identifier);
+
+                                    result.duplicatedResource++;
+                                    return true;
+                                }
+                            }
+                        } else if (searchmanager instanceof SolrSearchManager) {
+                            List<String> uuids = ((SolrSearchManager) searchmanager).getDocsUuids("+" + LuceneIndexField.RESOURCE_IDENTIFIER + ":\"" + identifier + "\"", 1);
+                            if (uuids.size() > 0) {
                                 log.warning("      - Duplicates found. Skipping record with UUID " + uuid + " and resource identifier " + identifier);
-                                
-                                result.duplicatedResource ++;
+                                result.duplicatedResource++;
                                 return true;
                             }
                         }

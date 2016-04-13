@@ -284,10 +284,10 @@ public class ISODateTest {
                 .toString(min + (int) (Math.random() * ((max - min) + 1)));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateISODateExceptionBecauseOfNull() throws Exception {
-        new ISODate(null);
-    }
+//    @Test(expected = IllegalArgumentException.class)
+//    public void testCreateISODateExceptionBecauseOfNull() throws Exception {
+//        new ISODate(null);
+//    }
     @Test(expected = IllegalArgumentException.class)
     public void testCreateISODateExceptionBecauseOfBadFormat() throws Exception {
         new ISODate("2001");

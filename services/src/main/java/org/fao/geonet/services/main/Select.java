@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.main;
 
-import com.google.common.collect.Sets;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
@@ -76,7 +75,7 @@ public class Select implements ApplicationContextAware {
         int nbSelected = SelectionManager.updateSelection(type,
                 serviceContext.getUserSession(),
                 selected, id != null ? Arrays.asList(id) : null,
-                serviceContext);
+                null, serviceContext);
 
         return new String[]{nbSelected + ""};
     }
@@ -122,7 +121,7 @@ public class Select implements ApplicationContextAware {
         int nbSelected = SelectionManager.updateSelection(type,
                 serviceContext.getUserSession(),
                 selected, id != null ? Arrays.asList(id) : null,
-                serviceContext);
+            null, serviceContext);
 
         return new SelectServiceResponse().setSelected("" + nbSelected);
     }

@@ -27,6 +27,8 @@ package org.fao.geonet.kernel.search;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.lucene.search.Filter;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.common.SolrDocument;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.jdom.Element;
@@ -106,6 +108,9 @@ public interface ISearchManager {
     void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception;
 
     void disableOptimizer() throws Exception;
+
+
+
 
     interface ISpatial {
         Filter filter(org.apache.lucene.search.Query query, int numHits, Element filterExpr, String filterVersion)

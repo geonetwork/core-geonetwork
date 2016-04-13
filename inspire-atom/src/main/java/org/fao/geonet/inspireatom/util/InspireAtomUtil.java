@@ -25,13 +25,20 @@ package org.fao.geonet.inspireatom.util;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -43,6 +50,7 @@ import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -254,25 +262,57 @@ public class InspireAtomUtil {
     public static List<Metadata> searchMetadataByType(ServiceContext context,
                                                       ISearchManager searchMan,
                                                       String type) {
+        // TODO: SOLR-MIGRATION-TO-DELETE
+        if (searchMan instanceof SearchManager) {
+            Element request = new Element(Jeeves.Elem.REQUEST);
+            request.addContent(new Element("type").setText(type));
+            request.addContent(new Element("fast").setText("true"));
 
-        Element request = new Element(Jeeves.Elem.REQUEST);
-        request.addContent(new Element("type").setText(type));
-        request.addContent(new Element("fast").setText("true"));
+            // perform the search and return the results read from the index
+            MetaSearcher searcher = null;
+            try {
+                searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+                searcher.search(context, request, new ServiceConfig());
 
-        // perform the search and return the results read from the index
-        MetaSearcher searcher = null;
-        try {
-            searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-            searcher.search(context, request, new ServiceConfig());
-
-            Map<Integer,Metadata> allMdInfo = ((LuceneSearcher)searcher).getAllMdInfo(context, searcher.getSize());
-            return new ArrayList<Metadata>(allMdInfo.values());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ArrayList<Metadata>();
-        } finally {
-            if (searcher != null) searcher.close();
+                Map<Integer, Metadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, searcher.getSize());
+                return new ArrayList<Metadata>(allMdInfo.values());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return new ArrayList<Metadata>();
+            } finally {
+                if (searcher != null) searcher.close();
+            }
+        } else if (searchMan instanceof SolrSearchManager) {
+            try {
+                SolrDocumentList documentList = ((SolrSearchManager) searchMan).getDocsFieldValue(
+                    String.format("+%s:%s", LuceneIndexField.RESOURCE_TYPE, type),
+                    SolrSearchManager.ID,
+                    LuceneIndexField.ROOT,
+                    LuceneIndexField.SCHEMA,
+                    Geonet.IndexFieldNames.DATABASE_CREATE_DATE,
+                    Geonet.IndexFieldNames.DATABASE_CHANGE_DATE,
+                    LuceneIndexField.SOURCE,
+                    LuceneIndexField.IS_TEMPLATE,
+                    LuceneIndexField.RESOURCE_TITLE,
+                    LuceneIndexField.UUID,
+                    Geonet.IndexFieldNames.IS_HARVESTED,
+                    LuceneIndexField.OWNER,
+                    LuceneIndexField.GROUP_OWNER
+                );
+                Iterator<SolrDocument> iterator = documentList.iterator();
+                Map<Integer, Metadata> allMdInfo = new HashMap<>(documentList.size());
+                while (iterator.hasNext()) {
+                    SolrDocument document = iterator.next();
+                    allMdInfo.put(
+                        Integer.valueOf(document.getFieldValue(SolrSearchManager.ID).toString()),
+                        Metadata.createFromSolrIndexDocument(document));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new ArrayList<Metadata>();
+            }
         }
+        return new ArrayList<Metadata>();
     }
 
 
@@ -282,22 +322,35 @@ public class InspireAtomUtil {
 
         String uuid = "";
 
-        Element request = new Element(Jeeves.Elem.REQUEST);
-        request.addContent(new Element("identifier").setText(datasetIdCode));
-        request.addContent(new Element("has_atom").setText("y"));
-        request.addContent(new Element("fast").setText("true"));
-
         // perform the search and return the results read from the index
+        // TODO: SOLR-MIGRATION-TO-DELETE
+        if (searchMan instanceof SearchManager) {
+            try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
-        try ( MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-            searcher.search(context, request, new ServiceConfig());
+                Element request = new Element(Jeeves.Elem.REQUEST);
+                request.addContent(new Element("identifier").setText(datasetIdCode));
+                request.addContent(new Element("has_atom").setText("y"));
+                request.addContent(new Element("fast").setText("true"));
 
-            List<String> uuids = ((LuceneSearcher)searcher).getAllUuids(1, context);
-            if (uuids.size() > 0) {
-                uuid = uuids.get(0);
+                searcher.search(context, request, new ServiceConfig());
+
+                List<String> uuids = ((LuceneSearcher) searcher).getAllUuids(1, context);
+                if (uuids.size() > 0) {
+                    uuid = uuids.get(0);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } else if (searchMan instanceof SolrSearchManager) {
+            String query =
+                "+" + LuceneIndexField.RESOURCE_IDENTIFIER + ":\"" + datasetIdCode + "\" " +
+                "+" + LuceneIndexField.HAS_ATOM + ":y";
+            try {
+                return (String) ((SolrSearchManager) searchMan).getDocFieldValue(query, LuceneIndexField.UUID).getFieldValue(LuceneIndexField.UUID);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         return uuid;

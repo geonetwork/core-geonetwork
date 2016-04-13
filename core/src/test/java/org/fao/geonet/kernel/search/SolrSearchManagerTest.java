@@ -48,13 +48,10 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -115,11 +112,19 @@ public class SolrSearchManagerTest {
     }
 
     @Test
-    public void testConvertInteger() {
+    public void testConvertInteger() throws IOException, SolrServerException {
         assertEquals(Integer.valueOf(23), SolrSearchManager.convertInteger(Integer.valueOf(23)));
         assertEquals(Integer.valueOf(23), SolrSearchManager.convertInteger(Long.valueOf(23)));
         assertEquals(Integer.valueOf(23), SolrSearchManager.convertInteger(Integer.valueOf(23)));
         assertEquals(null, SolrSearchManager.convertInteger(null));
+    }
+
+    @Test
+    public void testGetDocField() throws Exception {
+        String value = (String) manager.getDocFieldValue(
+                                            "+" + SolrSearchManager.ID + ":toto",
+                                            SolrSearchManager.ID).getFieldValue(SolrSearchManager.ID);
+        assertEquals("toto", value);
     }
 
     private static class MockSolrClient extends SolrClient {

@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import jeeves.server.context.ServiceContext;
 
 public interface MetadataRecordSelector {
-    
+
     /**
      * Return UUIDs of all the metadata selected by this object.
      *
@@ -40,5 +40,6 @@ public interface MetadataRecordSelector {
      * @throws Exception
      */
     @Nonnull
+    @Deprecated
     List<String> getAllUuids(@Nonnegative int maxHits, @Nonnull ServiceContext context) throws Exception;
 }

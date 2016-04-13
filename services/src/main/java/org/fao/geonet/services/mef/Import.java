@@ -42,6 +42,9 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.LuceneIndexField;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
@@ -50,6 +53,7 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Import MEF file.
@@ -99,26 +103,41 @@ public class Import extends NotInReadOnlyModeService {
         StringBuilder ids = new StringBuilder();
         StringBuilder uuidString = new StringBuilder();
 
-        BooleanQuery query = new BooleanQuery();
-
-        Iterator<String> iter = id.iterator();
-        while (iter.hasNext()) {
-            String item = iter.next();
-            ids.append(item).append(";");
-            query.add(new TermQuery(new Term(Geonet.IndexFieldNames.ID, item)), BooleanClause.Occur.SHOULD);
-        }
 
         List<String> uuids = Lists.newArrayList();
-        try (IndexAndTaxonomy idxTax = context.getBean(ISearchManager.class).getNewIndexReader(null);){
-            IndexSearcher searcher = new IndexSearcher(idxTax.indexReader);
-            TopDocs search = searcher.search(query, 500);
+        ISearchManager searchManager = context.getBean(ISearchManager.class);
 
-            for (ScoreDoc scoreDoc : search.scoreDocs) {
-                Document doc = idxTax.indexReader.document(scoreDoc.doc, UUID_FIELD_LOADER);
-                String uuid = doc.get(Geonet.IndexFieldNames.UUID);
-                uuids.add(uuid);
-                uuidString.append(uuid).append(';');
+        // TODO: SOLR-MIGRATION-TO-DELETE
+        if (searchManager instanceof SearchManager) {
+            BooleanQuery query = new BooleanQuery();
+
+            Iterator<String> iter = id.iterator();
+            while (iter.hasNext()) {
+                String item = iter.next();
+                ids.append(item).append(";");
+                query.add(new TermQuery(new Term(Geonet.IndexFieldNames.ID, item)), BooleanClause.Occur.SHOULD);
             }
+
+            try (IndexAndTaxonomy idxTax = searchManager.getNewIndexReader(null);) {
+                IndexSearcher searcher = new IndexSearcher(idxTax.indexReader);
+                TopDocs search = searcher.search(query, 500);
+
+                for (ScoreDoc scoreDoc : search.scoreDocs) {
+                    Document doc = idxTax.indexReader.document(scoreDoc.doc, UUID_FIELD_LOADER);
+                    String uuid = doc.get(Geonet.IndexFieldNames.UUID);
+                    uuids.add(uuid);
+                    uuidString.append(uuid).append(';');
+                }
+            }
+        } else if (searchManager instanceof SolrSearchManager) {
+            uuids.addAll(
+                ((SolrSearchManager) searchManager).getDocsUuids(
+                    String.format("+%s:%s",
+                        SolrSearchManager.ID,
+                        id.stream().collect(Collectors.joining("\" \"", "(\"", "\")"))
+                    ),
+                    null)
+            );
         }
 
         IO.deleteFile(file, false, Geonet.MEF);
