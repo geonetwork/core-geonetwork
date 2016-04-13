@@ -38,14 +38,15 @@
    * @description
    * The `suggestService` service provides all tools required to get
    * suggestions from the index.
+   * TODO: SOLR-MIGRATION-TO-DELETE or substitute by spell checker
    */
   module.service('suggestService', [
-        'gnHttpServices',
-        'gnUrlUtils',
-        '$http',
-        function(gnHttpServices, gnUrlUtils, $http) {
+    'gnHttpServices',
+    'gnUrlUtils',
+    '$http',
+    function(gnHttpServices, gnUrlUtils, $http) {
 
-          /**
+      /**
            * @ngdoc method
            * @methodOf gn_searchsuggestion.service:suggestService
            * @name suggestService#getUrl
@@ -58,17 +59,17 @@
            * @param {string} sortBy option.
            * @return {string} service
            */
-          this.getUrl = function(filter, field, sortBy) {
-            return gnUrlUtils.append(gnHttpServices.suggest,
-                gnUrlUtils.toKeyValue({
-                  field: field,
-                  sortBy: sortBy,
-                  q: filter || ''
-                })
-            );
-          };
+      this.getUrl = function(filter, field, sortBy) {
+        return gnUrlUtils.append(gnHttpServices.suggest,
+            gnUrlUtils.toKeyValue({
+              field: field,
+              sortBy: sortBy,
+              q: filter || ''
+            })
+        );
+      };
 
-          /**
+      /**
            * @ngdoc method
            * @methodOf gn_searchsuggestion.service:suggestService
            * @name suggestService#getInfoUrl
@@ -79,15 +80,15 @@
            * @param {string} type of info
            * @return {string} url
            */
-          this.getInfoUrl = function(type) {
-            return gnUrlUtils.append(gnHttpServices.info,
-                gnUrlUtils.toKeyValue({
-                  type: type
-                })
-            );
-          };
+      this.getInfoUrl = function(type) {
+        return gnUrlUtils.append(gnHttpServices.info,
+            gnUrlUtils.toKeyValue({
+              type: type
+            })
+        );
+      };
 
-          /**
+      /**
            * @ngdoc method
            * @methodOf gn_searchsuggestion.service:suggestService
            * @name suggestService#getAnySuggestions
@@ -98,18 +99,18 @@
            * @param {string} val any filter
            * @return {HttpPromise} promise
            */
-          this.getAnySuggestions = function(val) {
-            var url = this.getUrl(val, 'anylight',
-                ('STARTSWITHFIRST'));
+      this.getAnySuggestions = function(val) {
+        var url = this.getUrl(val, 'anylight',
+            ('STARTSWITHFIRST'));
 
-            return $http.get(url, {
-            }).then(function(res) {
-              return res.data[1];
-            });
-          };
+        return $http.get(url, {
+        }).then(function(res) {
+          return res.data[1];
+        });
+      };
 
 
-          /**
+      /**
            * @ngdoc method
            * @methodOf gn_searchsuggestion.service:suggestService
            * @name suggestService#filterResponse
@@ -121,11 +122,11 @@
            * @param {Array} data needed to be filtered
            * @return {?Array} suggestions array
            */
-          this.filterResponse = function(data) {
-            return data[1];
-          };
+      this.filterResponse = function(data) {
+        return data[1];
+      };
 
-          /**
+      /**
            * @ngdoc method
            * @methodOf gn_searchsuggestion.service:suggestService
            * @name suggestService#bhFilter
@@ -137,15 +138,15 @@
            * @param {Array} data needed to be filtered
            * @return {?Array} suggestions array
            */
-          this.bhFilter = function(data) {
-            var datum = [];
-            data[1].forEach(function(item) {
-              datum.push({ id: item, name: item });
-            });
-            return datum;
-          };
+      this.bhFilter = function(data) {
+        var datum = [];
+        data[1].forEach(function(item) {
+          datum.push({ id: item, name: item });
+        });
+        return datum;
+      };
 
-        }]);
+    }]);
 
   /**
    * Experiment SOLR spell check API
@@ -161,11 +162,11 @@
         // q=spell:nort&rows=0&
         // wt=json&spellcheck=true&spellcheck.collateParam.q.op=AND&spellcheck.collate=true
         return gnUrlUtils.append('../api/0.1/search/records/spell',
-                   gnUrlUtils.toKeyValue({
-                                           q: filter,
-                                           wt: 'json',
-                                           row: 0
-                                         })
+            gnUrlUtils.toKeyValue({
+              q: filter,
+              wt: 'json',
+              row: 0
+            })
         );
       };
 
@@ -174,29 +175,20 @@
 
         return $http.get(url, {
         }).then(function(res) {
-          console.log(res);
-          var suggestions = res.data.spellcheck.suggestions, data = [];
-          for (var i = 0; i < suggestions.length; i ++) {
-            data.push({
-              id: suggestions[i].word,
-              name: suggestions[i].word + ' (' + suggestions[i].freq + ')'
-            });
+          // TODO: We may have more than one suggestions
+          var suggestions = res.data.spellcheck.suggestions[1] &&
+                            res.data.spellcheck.suggestions[1].suggestion,
+              data = [];
+          if (suggestions) {
+            for (var i = 0; i < suggestions.length; i++) {
+              data.push({
+                value: suggestions[i].word,
+                label: suggestions[i].word + ' (' + suggestions[i].freq + ')'
+              });
+            }
           }
           return data;
         });
       };
-
-      this.filterResponse = function(data) {
-        return data[1];
-      };
-
-      this.bhFilter = function(data) {
-        var datum = [];
-        data[1].forEach(function(item) {
-          datum.push({ id: item, name: item });
-        });
-        return datum;
-      };
-
     }]);
 })();
