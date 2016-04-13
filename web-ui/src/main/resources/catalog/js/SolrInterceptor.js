@@ -20,7 +20,8 @@
         any: '_text_',
         _id: 'id'
       };
-      var luceneParamsToSkip = ['_content_type', 'fast', 'sortOrder', 'resultType', 'facet.q'];
+      var luceneParamsToSkip = ['_content_type', 'fast', 'sortOrder',
+                                'resultType', 'facet.q'];
       return {
         'request': function(config) {
           var split = config.url.split(/[?@]/);
@@ -51,7 +52,8 @@
                       if (v !== 'relevance') {
                         solrParams.sort =
                             (lucene2solrParams[v] || v) + ' ' +
-                            (config.params.sortOrder === 'reverse' ? 'asc' : 'desc');
+                            (config.params.sortOrder === 'reverse' ?
+                            'asc' : 'desc');
                       }
                       break;
                     case 'template':
@@ -61,7 +63,8 @@
                       break;
                     default:
                       if (lucene2solrParams[k] && v !== undefined) {
-                          solrParams.q += ' +' + lucene2solrParams[k] + ':"' + v + '"';
+                        solrParams.q += ' +' + lucene2solrParams[k] +
+                                        ':"' + v + '"';
                       } else {
                         console.warn('Skipped param: ' + k);
                       }
