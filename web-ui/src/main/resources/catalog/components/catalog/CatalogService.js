@@ -113,7 +113,7 @@
            *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
-        copy: function(id, groupId, withFullPrivileges, 
+        copy: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, metadataUuid) {
           var url = gnUrlUtils.append('md.create',
               gnUrlUtils.toKeyValue({
@@ -221,7 +221,7 @@
            *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
-        create: function(id, groupId, withFullPrivileges, 
+        create: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, tab, metadataUuid) {
 
           return this.copy(id, groupId, withFullPrivileges,
@@ -652,11 +652,18 @@
         this['geonet:info'].isPublishedToAll = this.isPublished() ?
             'false' : 'true';
       },
-
-
-
+      
       getLinks: function() {
         return this.link;
+      },
+      getLinkGroup: function(layer) {
+        var links = this.getLinksByType('OGC');
+        for (var i = 0; i < links.length; ++i) {
+          var link = links[i];
+          if (link.name == layer.getSource().getParams().LAYERS) {
+            return link.group;
+          }
+        }
       },
       getLinksByType: function() {
         var ret = [];

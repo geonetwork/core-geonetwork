@@ -1527,8 +1527,40 @@
               });
             }
             return defer.promise;
-          }
+          },
 
+          /**
+           * Check for online resource that could be bound to the layer.
+           * WPS, downloads, WFS etc..
+           *
+           * @param {ol.Layer} layer
+           * @param {string} linkGroup
+           */
+          feedLayerWithRelated: function(layer, linkGroup) {
+            var md = layer.get('md');
+
+            if (!linkGroup) {
+              console.warn('The layer has not been found in any group: ' +
+                  layer.getSource().getParams().LAYERS);
+              return;
+            }
+
+            // We can bind layer and download/process
+            if (md.getLinksByType(linkGroup, '#OGC:WMTS',
+                    '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map').length == 1) {
+
+              var downloads = md && md.getLinksByType(linkGroup,
+                      'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
+                      'WFS', 'WCS', 'COPYFILE');
+              layer.set('downloads', downloads);
+
+              var wfs = md && md.getLinksByType(linkGroup, '#WFS');
+              layer.set('wfs', wfs);
+
+              var process = md && md.getLinksByType(linkGroup, 'OGC:WPS');
+              layer.set('processes', process);
+            }
+          }
         };
       }];
   });
