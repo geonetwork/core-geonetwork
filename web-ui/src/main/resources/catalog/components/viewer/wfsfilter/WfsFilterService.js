@@ -44,7 +44,7 @@
       var solrObject = gnSolrRequestManager.register('WfsFilter', 'facets');
 
       var buildSolrUrl = function(params) {
-        return gnUrlUtils.append(solrProxyUrl + '/query',
+        return gnUrlUtils.append(solrProxyUrl + '/features',
             gnUrlUtils.toKeyValue(params));
       };
 
