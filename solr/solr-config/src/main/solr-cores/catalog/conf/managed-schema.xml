@@ -173,6 +173,8 @@ WARNING: The _text_ catch-all field will significantly increase your index size.
          multiValued="false"/>
   <field name="_owner" type="string" indexed="true" stored="true" required="false"
          multiValued="false"/>
+  <field name="_groupOwner" type="string" indexed="true" stored="true" required="false"
+         multiValued="false"/>
   <field name="_userinfo" type="string" indexed="true" stored="true" required="false"
          multiValued="false"/>
   <field name="_hasxlinks" type="string" indexed="true" stored="true" required="false"
