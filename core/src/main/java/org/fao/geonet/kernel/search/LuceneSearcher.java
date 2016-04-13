@@ -128,6 +128,8 @@ import jeeves.server.context.ServiceContext;
 /**
  * search metadata locally using lucene.
  */
+// TODO: SOLR-MIGRATION-TO-DELETE
+@Deprecated
 public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelector{
 	private SearchManager _sm;
 	private String        _styleSheetName;
@@ -136,7 +138,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 	private Filter        _filter;
 	private Sort          _sort;
 	private Element       _elSummary;
-	
+
 	private int           _numHits;
     private LanguageSelection        _language;
 
@@ -144,7 +146,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 	private LuceneConfig _luceneConfig;
 	private String _boostQueryClass;
 
-	
+
 	/**
      * Filter geometry object WKT, used in the logger ugly way to store this object, as ChainedFilter API is a little bit cryptic to me...
 	 */
@@ -750,7 +752,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 (userSession.getProfile() != Profile.Administrator && userSession.isAuthenticated())) {
             	if(!CollectionUtils.isEmpty(requestedGroups)) {
                     for(Element group : requestedGroups) {
-                        if(! "".equals(group.getText()) 
+                        if(! "".equals(group.getText())
                         		&& ! userGroups.contains(Integer.valueOf(group.getText()))) {
                             throw new UnAuthorizedException("You are not authorized to do this.", null);
                         }
@@ -843,7 +845,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                     Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
 				_query = LuceneSearcher.makeLocalisedQuery(xmlQuery, SearchManager.getAnalyzer(_language.analyzerLanguage, true), _luceneConfig, _language.presentationLanguage, requestedLanguageOnly);
-			} 
+			}
             else {
 		        // Construct Lucene query (Java)
                 if(Log.isDebugEnabled(Geonet.LUCENE))
@@ -873,11 +875,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                     if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
                         Log.debug(Geonet.SEARCH_ENGINE, "Create boosting query:" + _boostQueryClass);
                     }
-                    
+
 					@SuppressWarnings("unchecked")
                     Class<Query> boostClass = (Class<Query>) Class.forName(_boostQueryClass);
-					Class<?>[] clTypesArray = _luceneConfig.getBoostQueryParameterClass();				
-					Object[] inParamsArray = _luceneConfig.getBoostQueryParameter(); 
+					Class<?>[] clTypesArray = _luceneConfig.getBoostQueryParameterClass();
+					Object[] inParamsArray = _luceneConfig.getBoostQueryParameter();
 
 					Class<?>[] clTypesArrayAll = new Class[clTypesArray.length + 1];
 					clTypesArrayAll[0] = Class.forName("org.apache.lucene.search.Query");
@@ -892,16 +894,16 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 						Constructor<Query> c = boostClass.getConstructor(clTypesArrayAll);
 						_query = c.newInstance(inParamsArrayAll);
 					} catch (Exception e) {
-						Log.warning(Geonet.SEARCH_ENGINE, " Failed to create boosting query: " + e.getMessage() 
+						Log.warning(Geonet.SEARCH_ENGINE, " Failed to create boosting query: " + e.getMessage()
 								+ ". Check Lucene configuration");
 						e.printStackTrace();
-					}	
+					}
 				} catch (Exception e1) {
 					Log.warning(Geonet.SEARCH_ENGINE, " Error on boosting query initialization: " + e1.getMessage()
 							+ ". Check Lucene configuration");
 				}
 			}
-			
+
 		    // Use RegionsData rather than fetching from the DB everytime
 		    //
 		    //request.addContent(Lib.db.select(dbms, "Regions", "region"));
@@ -1312,10 +1314,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         }
 
 
-	
+
 	/**
 	 * Do Lucene search and optionally build a summary for the search.
-	 * 
+	 *
 	 * @param numHits	the maximum number of hits to collect
 	 * @param startHit	the start hit to return in the TopDocs if not building summary
 	 * @param endHit	the end hit to return in the TopDocs if not building summary
@@ -1329,10 +1331,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 	 * @param buildSummary	true to build query summary element. Summary is stored in the second element of the returned Pair.
 	 * @return	the topDocs for the search. When building summary, topDocs will contains all search hits
 	 * and need to be filtered to return only required hits according to search parameters.
-	 * 
+	 *
 	 * @throws Exception hmm
 	 */
-	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, String langCode, 
+	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, String langCode,
 			SummaryType summaryConfig, LuceneConfig luceneConfig, IndexReader reader,
 			Query query, Filter cFilter, Sort sort, TaxonomyReader taxonomyReader, boolean buildSummary) throws Exception {
         FacetsConfig facetConfiguration = luceneConfig.getTaxonomyConfiguration();
@@ -1370,7 +1372,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 				e.printStackTrace();
 				Log.warning(Geonet.FACET_ENGINE, "BuildFacetSummary error. " + e.getMessage());
 			}
-			
+
         } else {
             searcher.search(query, cFilter, tfc);
         }
@@ -1386,11 +1388,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
 	/**
 	 * Create an XML summary from the search facets collector.
-	 * 
+	 *
 	 * @param elSummary	The element in which to add the facet report
 	 * @param summaryConfigValues	The summary configuration
 	 * @param facetCollector
-	 * @param langCode 
+	 * @param langCode
 	 * @throws IOException
 	 */
     private static void buildFacetSummary(Element elSummary,
@@ -1711,7 +1713,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     private static Map<String,String> getMetadataFromIndex(String priorityLang, String uuid, Set<String> fieldnames) throws Exception {
         return LuceneSearcher.getMetadataFromIndex(priorityLang, "_uuid", uuid, fieldnames);
     }
-    
+
     public static Map<String,String> getMetadataFromIndex(String priorityLang, String idField, String id, Set<String> fieldnames) throws Exception {
         Map<String,Map<String,String>> results = LuceneSearcher.getAllMetadataFromIndexFor(priorityLang, idField, id, fieldnames, false);
         if (results.size() == 1) {

@@ -54,8 +54,9 @@
                             (config.params.sortOrder === 'reverse' ? 'asc' : 'desc');
                       }
                       break;
+                    case 'template':
                     case '_isTemplate':
-                      solrParams.q += ' +' + k + ':(' + v + ')';
+                      solrParams.q += ' +_isTemplate:(' + v + ')';
                       hasTemplateCriteria = true;
                       break;
                     default:
@@ -71,7 +72,9 @@
                 }
               });
               // Solr search does not set any defaults.
-              solrParams.q += ' +_isTemplate:n';
+              if (!hasTemplateCriteria) {
+                solrParams.q += ' +_isTemplate:n';
+              }
               config.params = solrParams;
             }
           }

@@ -95,6 +95,18 @@ public class SolrHTTPProxy {
         handleRequest(request, response, url);
     }
 
+    @ApiOperation(value = "Search suggestion on metadata",
+        notes = "See https://cwiki.apache.org/confluence/display/solr/Spell+Checking for parameters.")
+    @RequestMapping(value = "/records/spell",
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public void metadataSpellChecker(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        final String url = config.getSolrServerUrl() + "/" +
+            config.getSolrServerCore() + "/spell?" + addPermissions(addDocType(request.getQueryString(), "metadata"));
+        handleRequest(request, response, url);
+    }
+
     @ApiOperation(value = "Search features",
             notes = "See https://cwiki.apache.org/confluence/display/solr/Common+Query+Parameters for parameters.")
     @RequestMapping(value = "/features",
@@ -176,25 +188,25 @@ public class SolrHTTPProxy {
             }
 
             // send remote host's response to client
-            
+
             /* Here comes the tricky part because some host send files without the charset
              * in the header, therefore we do not know how they are text encoded. It can result
              * in serious issues on IE browsers when parsing those files.
              * There is a workaround which consists to read the encoding within the file. It is made
-             * possible because this proxy mainly forwards xml files. They all have the encoding 
+             * possible because this proxy mainly forwards xml files. They all have the encoding
              * attribute in the first xml node.
-             * 
+             *
              * This is implemented as follows:
-             * 
+             *
              * A. The content type provides a charset:
              *     Nothing special, just send back the stream to the client
              * B. There is no charset provided:
-             *     The encoding has to be extracted from the file. 
-             *     The file is read in ASCII, which is common to many charsets, 
-             *     like that the encoding located in the first not can be retrieved. 
+             *     The encoding has to be extracted from the file.
+             *     The file is read in ASCII, which is common to many charsets,
+             *     like that the encoding located in the first not can be retrieved.
              *     Once the charset is found, the content-type header is overridden and the
-             *     charset is appended.    
-             *     
+             *     charset is appended.
+             *
              *     /!\ Special case: whenever data are compressed in gzip/deflate the stream has to
              *     be uncompressed and compressed
              */
@@ -276,7 +288,7 @@ public class SolrHTTPProxy {
             connectionWithFinalHost.disconnect();
             streamToClient.close();
         } catch (IOException e) {
-            // connection problem with the host 
+            // connection problem with the host
             e.printStackTrace();
 
             throw new Exception(

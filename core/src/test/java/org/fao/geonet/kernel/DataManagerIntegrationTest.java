@@ -27,6 +27,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
+import org.apache.solr.client.solrj.SolrServerException;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -39,8 +41,10 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -285,11 +289,17 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(0, Xml.selectNodes(updateMd, "*//gmd:PT_Locale[string-length(@id) > 2]").size());
     }
 
-    private int numDocs(SearchManager searchManager, String lang) throws IOException, InterruptedException {
-        IndexAndTaxonomy indexReader = searchManager.getNewIndexReader(lang);
-        final int startIndexDocs = indexReader.indexReader.numDocs();
-        indexReader.close();
-        return startIndexDocs;
+    private int numDocs(ISearchManager searchManager, String lang) throws IOException, InterruptedException, SolrServerException {
+        // TODO: SOLR-MIGRATION-TO-DELETE
+        if (searchManager instanceof SearchManager) {
+            IndexAndTaxonomy indexReader = searchManager.getNewIndexReader(lang);
+            final int startIndexDocs = indexReader.indexReader.numDocs();
+            indexReader.close();
+            return startIndexDocs;
+        } else if (searchManager instanceof SolrSearchManager) {
+            return ((SolrSearchManager) searchManager).getNumDocs(null);
+        }
+        return -1;
     }
 
     static int importMetadata(AbstractCoreIntegrationTest test, ServiceContext serviceContext) throws Exception {

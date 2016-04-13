@@ -37,10 +37,13 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopFieldCollector;
+import org.apache.solr.common.SolrDocument;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatType;
@@ -56,7 +59,9 @@ import org.springframework.web.context.request.WebRequest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * The actual Environment implementation.
@@ -199,25 +204,48 @@ public class EnvironmentImpl implements Environment {
         if (this.indexInfo == null) {
             final ISearchManager searchManager = getBean(ISearchManager.class);
 
-            try (IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(getLang3())) {
-                TopFieldCollector collector = TopFieldCollector.create(Sort.RELEVANCE, 1, true, false, false, false);
-                IndexSearcher searcher = new IndexSearcher(newIndexReader.indexReader);
-                Query query = new TermQuery(new Term("_id", String.valueOf(getMetadataId())));
-                searcher.search(query, collector);
-                ScoreDoc[] topDocs = collector.topDocs().scoreDocs;
+            // TODO: SOLR-MIGRATION-TO-DELETE
+            if (searchManager instanceof SearchManager) {
+                try (IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(getLang3())) {
+                    TopFieldCollector collector = TopFieldCollector.create(Sort.RELEVANCE, 1, true, false, false, false);
+                    IndexSearcher searcher = new IndexSearcher(newIndexReader.indexReader);
+                    Query query = new TermQuery(new Term("_id", String.valueOf(getMetadataId())));
+                    searcher.search(query, collector);
+                    ScoreDoc[] topDocs = collector.topDocs().scoreDocs;
 
+                    Multimap<String, String> fields = HashMultimap.create();
+                    for (ScoreDoc scoreDoc : topDocs) {
+                        Document doc = searcher.doc(scoreDoc.doc);
+                        for (IndexableField field : doc) {
+                            fields.put(field.name(), field.stringValue());
+                        }
+                    }
+                    this.indexInfo = fields;
+                }
+                return Collections.unmodifiableMap(this.indexInfo.asMap());
+            } else if (searchManager instanceof SolrSearchManager) {
+                SolrDocument document = ((SolrSearchManager) searchManager).getDocFieldValue(
+                    String.format("+%s:\"%s\"", SolrSearchManager.ID, getMetadataId()),
+                    "*"
+                );
+                Iterator<Map.Entry<String, Object>> iterator = document.iterator();
                 Multimap<String, String> fields = HashMultimap.create();
-                for (ScoreDoc scoreDoc : topDocs) {
-                    Document doc = searcher.doc(scoreDoc.doc);
-                    for (IndexableField field : doc) {
-                        fields.put(field.name(), field.stringValue());
+                while (iterator.hasNext()) {
+                    Map.Entry<String, Object> e = iterator.next();
+                    Object value = e.getValue();
+                    if (value instanceof Iterable) {
+                        Iterator<Object> valueIterator = ((Iterable) value).iterator();
+                        while (valueIterator.hasNext()) {
+                            fields.put(e.getKey(), valueIterator.next().toString());
+                        }
+                    } else {
+                        fields.put(e.getKey(), e.getValue().toString());
                     }
                 }
-                this.indexInfo = fields;
+                return Collections.unmodifiableMap(fields.asMap());
             }
-
         }
-        return Collections.unmodifiableMap(this.indexInfo.asMap());
+        return null;
     }
 
     @Override

@@ -31,7 +31,9 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.jdom.Element;
@@ -99,33 +101,40 @@ public class Lib
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		ISearchManager sm = gc.getBean(ISearchManager.class);
 
-		try (MetaSearcher searcher = sm.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+        // TODO: SOLR-MIGRATION-TO-DELETE
+        if (sm instanceof SearchManager) {
+            try (MetaSearcher searcher = sm.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
-            if (context.isDebugEnabled()) context.debug("Searching with params:\n" + Xml.getString(params));
+                if (context.isDebugEnabled())
+                    context.debug("Searching with params:\n" + Xml.getString(params));
 
-            searcher.search(context, params, dummyConfig);
+                searcher.search(context, params, dummyConfig);
 
-            params.addContent(new Element("fast").setText("true"));
-            params.addContent(new Element("from").setText("1"));
-            params.addContent(new Element("to").setText(searcher.getSize() + ""));
+                params.addContent(new Element("fast").setText("true"));
+                params.addContent(new Element("from").setText("1"));
+                params.addContent(new Element("to").setText(searcher.getSize() + ""));
 
-            context.info("Records found : " + searcher.getSize());
+                context.info("Records found : " + searcher.getSize());
 
-            Element records = searcher.present(context, params, dummyConfig);
+                Element records = searcher.present(context, params, dummyConfig);
 
-            records.getChild("summary").detach();
+                records.getChild("summary").detach();
 
-            List<Integer> result = new ArrayList<Integer>();
+                List<Integer> result = new ArrayList<Integer>();
 
-            for (Object o : records.getChildren()) {
-                Element rec = (Element) o;
-                Element info = rec.getChild("info", Edit.NAMESPACE);
+                for (Object o : records.getChildren()) {
+                    Element rec = (Element) o;
+                    Element info = rec.getChild("info", Edit.NAMESPACE);
 
-                result.add(Integer.parseInt(info.getChildText("id")));
+                    result.add(Integer.parseInt(info.getChildText("id")));
+                }
+                return result;
             }
-            return result;
+        } else if (sm instanceof SolrSearchManager) {
+            // TODO: SOLR-MIGRATION
+            throw new UnsupportedOperationException("Solr search does not support OAI yet");
         }
-
+        return null;
 	}
 
 	//---------------------------------------------------------------------------

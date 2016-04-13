@@ -18,6 +18,7 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.subtemplate.Get;
@@ -202,6 +203,8 @@ public class DirectoryUtils {
 
         int numberOfEntries = 0;
         boolean updated = false;
+        SolrSearchManager searchMan = context.getBean(SolrSearchManager.class);
+
         for (Iterator<?> iter = nodes.iterator(); iter.hasNext(); ) {
             Object o = iter.next();
 
@@ -276,9 +279,12 @@ public class DirectoryUtils {
                         }
                     } else {
                         // or search in Lucene
-                        String id = search(searchIndexField, identifier);
+                        Object id = searchMan.getDocFieldValue(
+                            String.format(
+                                "+_isTemplate:s +%s:\"%s\"", searchIndexField, identifier),
+                            SolrSearchManager.ID);
                         if (id != null) {
-                            Metadata subTemplate = metadataRepository.findOne(id);
+                            Metadata subTemplate = metadataRepository.findOne(id.toString());
                             if (subTemplate != null) {
                                 subTemplateElement = subTemplate.getXmlData(false);
                             }
@@ -397,38 +403,5 @@ public class DirectoryUtils {
             }
         }
         return properties.toString();
-    }
-    /**
-     * Search using Lucene a matching document
-     *
-     * @param field
-     * @param value
-     * @return  The record identifier
-     */
-    private static String search(String field, String value) {
-        ServiceConfig _config = new ServiceConfig();
-        ServiceContext context = ServiceContext.get();
-        ISearchManager searchMan = context.getBean(ISearchManager.class);
-
-        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-            // Creating parameters for search, fast only to retrieve uuid
-            Element parameters = new Element(Jeeves.Elem.REQUEST);
-            parameters.addContent(new Element("fast").addContent("index"));
-            parameters.addContent(new Element("_isTemplate").addContent("s"));
-            parameters.addContent(new Element(field).addContent(value));
-            parameters.addContent(new Element("from").addContent(1 + ""));
-            parameters.addContent(new Element("to").addContent(1 + ""));
-
-            searcher.search(context, parameters, _config);
-
-            Element response = searcher.present(context, parameters, _config);
-            Element record = response.getChild("metadata");
-            if (record != null) {
-                return record.getChild("info", Geonet.Namespaces.GEONET).getChildText("id");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

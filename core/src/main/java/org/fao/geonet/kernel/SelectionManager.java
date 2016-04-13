@@ -27,6 +27,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.solr.client.solrj.SolrServerException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -34,10 +35,13 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetadataRecordSelector;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
 
+import java.io.IOException;
 import java.util.*;
 
 import javax.annotation.Nonnull;
@@ -76,10 +80,10 @@ public class SelectionManager {
 	 * <li>set selected false if result element not in session</li>
 	 * </ul>
 	 * </p>
-	 * 
+	 *
 	 * @param result
 	 *            the result modified<br/>
-	 * 
+	 *
 	 * @see org.fao.geonet.services.main.Result <br/>
 	 */
 	public static void updateMDResult(UserSession session, Element result) {
@@ -121,7 +125,7 @@ public class SelectionManager {
 	 * <li>[selected=status] : number of selected elements</li>
 	 * </ul>
 	 * </p>
-	 * 
+	 *
 	 * @param type
 	 *            The type of selected element handled in session
 	 * @param session
@@ -129,7 +133,7 @@ public class SelectionManager {
 	 * @param params
 	 *            Parameters
 	 * @param context
-	 * 
+	 *
 	 * @return number of selected elements
 	 */
 	public static int updateSelection(String type, UserSession session, Element params, ServiceContext context) {
@@ -146,21 +150,21 @@ public class SelectionManager {
 		// Get the selection manager or create it
 		SelectionManager manager = getManager(session);
 
-		return manager.updateSelection(type, context, selected, listOfIdentifiers, session);
+		return manager.updateSelection(type, context, selected, listOfIdentifiers, null, session);
 	}
 
-    public static int updateSelection(String type, UserSession session, String actionOnSelection, List<String> listOfIdentifiers, ServiceContext context) {
+    public static int updateSelection(String type, UserSession session, String actionOnSelection, List<String> listOfIdentifiers, String q, ServiceContext context) {
         // Get the selection manager or create it
         SelectionManager manager = getManager(session);
 
-        return manager.updateSelection(type, context, actionOnSelection, listOfIdentifiers, session);
+        return manager.updateSelection(type, context, actionOnSelection, listOfIdentifiers, q, session);
     }
 
 	/**
 	 * <p>
 	 * Update selected element in session
 	 * </p>
-	 * 
+	 *
 	 * @param type
 	 *            The type of selected element handled in session
 	 * @param context
@@ -168,14 +172,16 @@ public class SelectionManager {
 	 *            true, false, single, all, none
 	 * @param listOfIdentifiers
 	 *            Array of UUIDs
-	 * 
-	 * @return number of selected element
+	 *
+	 * @param q
+     * @return number of selected element
 	 */
 	public int updateSelection(String type,
-							   ServiceContext context,
-							   String selected,
-							   List<String> listOfIdentifiers,
-							   UserSession session) {
+                               ServiceContext context,
+                               String selected,
+                               List<String> listOfIdentifiers,
+                               String q,
+                               UserSession session) {
 
 		// Get the selection manager or create it
 		Set<String> selection = this.getSelection(type);
@@ -186,7 +192,7 @@ public class SelectionManager {
 
         if (selected != null) {
             if (selected.equals(ADD_ALL_SELECTED))
-                this.selectAll(type, context, session);
+                this.selectAll(type, context, session, q);
             else if (selected.equals(REMOVE_ALL_SELECTED))
                 this.close(type);
             else if (selected.equals(ADD_SELECTED) && listOfIdentifiers.size() > 0) {
@@ -221,7 +227,7 @@ public class SelectionManager {
 	 * <p>
 	 * Gets selection manager in session, if null creates it.
 	 * </p>
-	 * 
+	 *
 	 * @param session
 	 *            Current user session
 	 * @return selection manager
@@ -240,12 +246,12 @@ public class SelectionManager {
 	 * <p>
 	 * Selects all element in a LuceneSearcher or CatalogSearcher.
 	 * </p>
-	 * 
-	 * @param type
+	 *  @param type
 	 * @param context
-	 * 
+     * @param q
+     *
 	 */
-	public void selectAll(String type, ServiceContext context, UserSession session) {
+	public void selectAll(String type, ServiceContext context, UserSession session, String q) {
 		Set<String> selection = selections.get(type);
 		SettingInfo si = context.getBean(SettingInfo.class);
 		int maxhits = DEFAULT_MAXHITS;
@@ -259,51 +265,65 @@ public class SelectionManager {
 		if (selection != null)
 			selection.clear();
 
-		if (type.equals(SELECTION_METADATA)) {
-		    Element request = (Element)session.getProperty(Geonet.Session.SEARCH_REQUEST);
-			Object searcher = null;
-			
-			// Run last search if xml.search or q service is used (ie. last searcher is not stored in current session).
-			if (request != null) {
-	            request = (Element) request.clone();
-	            request.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
-				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-				ISearchManager searchMan = gc.getBean(ISearchManager.class);
-				try {
-					searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-					ServiceConfig sc = new ServiceConfig();
-					((LuceneSearcher)searcher).search(context, request, sc);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} else {
-				searcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
-			}
-			if (searcher == null)
-				return;
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        ISearchManager searchMan = gc.getBean(ISearchManager.class);
 
-			List<String> uuidList;
-			try {
-				if (searcher instanceof MetadataRecordSelector)
-					uuidList = ((MetadataRecordSelector) searcher).getAllUuids(maxhits, context);
-				else
-					return;
+        if (type.equals(SELECTION_METADATA)) {
+            // TODO: SOLR-MIGRATION-TO-DELETE
+            if (searchMan instanceof SearchManager) {
+                Element request = (Element) session.getProperty(Geonet.Session.SEARCH_REQUEST);
+                Object searcher = null;
 
-                if (selection != null) {
-                    selection.addAll(uuidList);
+                // Run last search if xml.search or q service is used (ie. last searcher is not stored in current session).
+                if (request != null) {
+                    request = (Element) request.clone();
+                    request.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
+                    try {
+                        searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+                        ServiceConfig sc = new ServiceConfig();
+                        ((LuceneSearcher) searcher).search(context, request, sc);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    searcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
                 }
+                if (searcher == null)
+                    return;
 
-            } catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+                List<String> uuidList;
+                try {
+                    if (searcher instanceof MetadataRecordSelector)
+                        uuidList = ((MetadataRecordSelector) searcher).getAllUuids(maxhits, context);
+                    else
+                        return;
+
+                    if (selection != null) {
+                        selection.addAll(uuidList);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (searchMan instanceof SolrSearchManager) {
+                // SOLR-MIGRATION : If we want to select based on last search add last search in session ?
+                // For now,
+                try {
+                    selection.addAll(((SolrSearchManager) searchMan).getDocsUuids(q, maxhits));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (SolrServerException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 	}
 
 	/**
 	 * <p>
 	 * Closes the current selection manager for the given element type.
 	 * </p>
-	 * 
+	 *
 	 * @param type
 	 */
 	public void close(String type) {
@@ -316,7 +336,7 @@ public class SelectionManager {
 	 * <p>
 	 * Close the current selection manager
 	 * </p>
-	 * 
+	 *
 	 */
 	public void close() {
         for (Set<String> selection : selections.values()) {
@@ -328,10 +348,10 @@ public class SelectionManager {
 	 * <p>
 	 * Gets selection for given element type.
 	 * </p>
-	 * 
+	 *
 	 * @param type
 	 *            The type of selected element handled in session
-	 * 
+	 *
 	 * @return Set<String>
 	 */
 	public Set<String> getSelection(String type) {
@@ -342,12 +362,12 @@ public class SelectionManager {
 	 * <p>
 	 * Adds new element to the selection.
 	 * </p>
-	 * 
+	 *
 	 * @param type
 	 *            The type of selected element handled in session
 	 * @param uuid
 	 *            Element identifier to select
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean addSelection(String type, String uuid) {
@@ -358,12 +378,12 @@ public class SelectionManager {
 	 * <p>
 	 * Adds a collection to the selection.
 	 * </p>
-	 * 
+	 *
 	 * @param type
 	 *            The type of selected element handled in session
 	 * @param uuids
 	 *            Collection of uuids to select
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean addAllSelection(String type, Set<String> uuids) {

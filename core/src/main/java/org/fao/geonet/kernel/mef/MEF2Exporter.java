@@ -32,6 +32,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
+import org.apache.solr.common.SolrDocument;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
@@ -49,6 +50,8 @@ import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.NoFilterFilter;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.utils.IO;
@@ -72,7 +75,7 @@ import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
 class MEF2Exporter {
 	/**
 	 * Create a MEF2 file in ZIP format.
-	 * 
+	 *
 	 * @param context
 	 * @param uuids
 	 *            List of records to export.
@@ -91,7 +94,6 @@ class MEF2Exporter {
         String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
         try (
                 FileSystem zipFs = ZipUtil.createZipFs(file);
-                IndexAndTaxonomy indexReaderAndTaxonomy = searchManager.getNewIndexReader(contextLang);
         ) {
             StringBuilder csvBuilder = new StringBuilder("\"schema\";\"uuid\";\"id\";\"type\";\"isHarvested\";\"title\";\"abstract\"\n");
             Element html = new Element("html").addContent(new Element("head").addContent(Arrays.asList(
@@ -120,38 +122,62 @@ class MEF2Exporter {
             html.addContent(body);
             for (Object uuid1 : uuids) {
                 String uuid = (String) uuid1;
-                IndexSearcher searcher = new IndexSearcher(indexReaderAndTaxonomy.indexReader);
-                BooleanQuery query = new BooleanQuery();
-                query.add(new BooleanClause(new TermQuery(new Term(UUID, uuid)), BooleanClause.Occur.MUST));
-                query.add(new BooleanClause(new TermQuery(new Term(LOCALE, contextLang)), BooleanClause.Occur.SHOULD));
-                TopDocs topDocs = searcher.search(query, NoFilterFilter.instance(), 5);
                 String mdSchema = null, mdTitle = null, mdAbstract = null, id = null, isHarvested = null;
                 MetadataType mdType = null;
 
-                for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
-                    Document doc = searcher.doc(scoreDoc.doc);
-                    String locale = doc.get(Geonet.IndexFieldNames.LOCALE);
-                    if (mdSchema == null) {
-                        mdSchema = doc.get(Geonet.IndexFieldNames.SCHEMA);
-                    }
-                    if (mdTitle == null || contextLang.equals(locale)) {
-                        mdTitle = doc.get(LuceneIndexField.TITLE);
-                    }
-                    if (mdAbstract == null || contextLang.equals(locale)) {
-                        mdAbstract = doc.get(LuceneIndexField.ABSTRACT);
-                    }
-                    if (id == null) {
-                        id = doc.get(LuceneIndexField.ID);
-                    }
-                    if (isHarvested == null) {
-                        isHarvested = doc.get(Geonet.IndexFieldNames.IS_HARVESTED);
-                    }
-                    if (mdType == null) {
-                        String tmp = doc.get(LuceneIndexField.IS_TEMPLATE);
-                        mdType = MetadataType.lookup(tmp.charAt(0));
-                    }
+                // TODO: SOLR-MIGRATION-TO-DELETE
+                if (searchManager instanceof SearchManager) {
+                    try (IndexAndTaxonomy indexReaderAndTaxonomy = searchManager.getNewIndexReader(contextLang);) {
+                        IndexSearcher searcher = new IndexSearcher(indexReaderAndTaxonomy.indexReader);
+                        BooleanQuery query = new BooleanQuery();
+                        query.add(new BooleanClause(new TermQuery(new Term(UUID, uuid)), BooleanClause.Occur.MUST));
+                        query.add(new BooleanClause(new TermQuery(new Term(LOCALE, contextLang)), BooleanClause.Occur.SHOULD));
+                        TopDocs topDocs = searcher.search(query, NoFilterFilter.instance(), 5);
 
+                        for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+                            Document doc = searcher.doc(scoreDoc.doc);
+                            String locale = doc.get(Geonet.IndexFieldNames.LOCALE);
+                            if (mdSchema == null) {
+                                mdSchema = doc.get(Geonet.IndexFieldNames.SCHEMA);
+                            }
+                            if (mdTitle == null || contextLang.equals(locale)) {
+                                mdTitle = doc.get(LuceneIndexField.TITLE);
+                            }
+                            if (mdAbstract == null || contextLang.equals(locale)) {
+                                mdAbstract = doc.get(LuceneIndexField.ABSTRACT);
+                            }
+                            if (id == null) {
+                                id = doc.get(LuceneIndexField.ID);
+                            }
+                            if (isHarvested == null) {
+                                isHarvested = doc.get(Geonet.IndexFieldNames.IS_HARVESTED);
+                            }
+                            if (mdType == null) {
+                                String tmp = doc.get(LuceneIndexField.IS_TEMPLATE);
+                                mdType = MetadataType.lookup(tmp.charAt(0));
+                            }
+                        }
+                    }
+                } else if (searchManager instanceof SolrSearchManager) {
+                    SolrDocument document = ((SolrSearchManager) searchManager).getDocFieldValue(
+                        "+" + LuceneIndexField.RECORD_IDENTIFIER + ":\"" + uuid + "\"",
+                        Geonet.IndexFieldNames.SCHEMA,
+                        LuceneIndexField.RESOURCE_TITLE,
+                        LuceneIndexField.RESOURCE_ABSTRACT,
+                        SolrSearchManager.ID,
+                        Geonet.IndexFieldNames.IS_HARVESTED,
+                        Geonet.IndexFieldNames.IS_TEMPLATE);
+                    if(document != null) {
+                        mdSchema = (String) document.getFieldValue(Geonet.IndexFieldNames.SCHEMA);
+                        id = (String) document.getFieldValue(SolrSearchManager.ID);
+                        mdTitle = (String) document.getFieldValue(LuceneIndexField.RESOURCE_TITLE);
+                        mdAbstract = (String) document.getFieldValue(LuceneIndexField.RESOURCE_ABSTRACT);
+                        isHarvested = (String) document.getFieldValue(Geonet.IndexFieldNames.IS_HARVESTED);
+                        String type = mdSchema = (String) document.getFieldValue(Geonet.IndexFieldNames.IS_TEMPLATE);
+                        mdType = MetadataType.lookup(type.charAt(0));
+                    }
                 }
+
 
                 if (mdType == null) {
                     mdType = MetadataType.METADATA;
@@ -215,7 +241,7 @@ class MEF2Exporter {
 	 * stylesheet /convert/to19139.xsl is used to map to ISO. Both files are
 	 * included in MEF file. Export relevant information according to format
 	 * parameter.
-	 * 
+	 *
 	 * @param context
 	 * @param uuid
 	 *            Metadata record to export
@@ -292,7 +318,7 @@ class MEF2Exporter {
 
 	/**
 	 * Get Feature Catalog ID if exists using relation table.
-	 * 
+	 *
 	 * @param context
 	 * @param metadataId
 	 *            Metadata record id to search for feature catalogue for.

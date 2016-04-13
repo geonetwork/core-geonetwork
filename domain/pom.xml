@@ -113,6 +113,11 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
+      <dependency>
+        <groupId>org.apache.solr</groupId>
+        <artifactId>solr-solrj</artifactId>
+        <version>5.5.0</version>
+      </dependency>
     </dependencies>
 
     <build>

@@ -25,6 +25,7 @@ package org.fao.geonet.domain;
 
 import com.vividsolutions.jts.util.Assert;
 import org.apache.lucene.document.Document;
+import org.apache.solr.common.SolrDocument;
 import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
 import org.fao.geonet.utils.Xml;
 import org.hibernate.annotations.Type;
@@ -359,6 +360,8 @@ public class Metadata extends GeonetEntity {
         this._metadataCategories = categories;
     }
 
+    // TODO: SOLR-MIGRATION-TO-DELETE
+    @Deprecated
     public static Metadata createFromLuceneIndexDocument(Document doc) {
         Metadata metadata = new Metadata();
         metadata.setId(Integer.valueOf(doc.get("_id")));
@@ -391,6 +394,45 @@ public class Metadata extends GeonetEntity {
         }
 
         final String groupOwner = doc.get("_groupOwner");
+        if (groupOwner != null) {
+            sourceInfo.setGroupOwner(Integer.valueOf(groupOwner));
+        }
+        return metadata;
+    }
+
+    public static Metadata createFromSolrIndexDocument(SolrDocument doc) {
+        Metadata metadata = new Metadata();
+        // TODO: SOLR-MIGRATION Use constant for fields
+        metadata.setId(Integer.valueOf(doc.getFieldValue("id").toString()));
+        metadata.setUuid(doc.getFieldValue("_uuid").toString());
+
+        final MetadataDataInfo dataInfo = metadata.getDataInfo();
+        dataInfo.setSchemaId(doc.getFieldValue("_schema").toString());
+        String metadataType = doc.getFieldValue("_isTemplate").toString();
+        if (metadataType != null) {
+            dataInfo.setType(MetadataType.lookup(metadataType));
+        }
+        dataInfo.setCreateDate(new ISODate(doc.getFieldValue("_createDate").toString()));
+        dataInfo.setChangeDate(new ISODate(doc.getFieldValue("_changeDate").toString()));
+        dataInfo.setRoot(doc.getFieldValue("_root").toString());
+        final String displayOrder = doc.getFieldValue("_displayOrder").toString();
+        if (displayOrder != null) {
+            dataInfo.setDisplayOrder(Integer.valueOf(displayOrder));
+        }
+
+        String tmpIsHarvest = doc.getFieldValue("_isHarvested").toString();
+        if (tmpIsHarvest != null) {
+            metadata.getHarvestInfo().setHarvested(doc.getFieldValue("_isHarvested").equals("y"));
+
+        }
+        final MetadataSourceInfo sourceInfo = metadata.getSourceInfo();
+        sourceInfo.setSourceId(doc.getFieldValue("_source").toString());
+        final String owner = doc.getFieldValue("_owner").toString();
+        if (owner != null) {
+            sourceInfo.setOwner(Integer.valueOf(owner));
+        }
+
+        final String groupOwner = doc.getFieldValue("_groupOwner").toString();
         if (groupOwner != null) {
             sourceInfo.setGroupOwner(Integer.valueOf(groupOwner));
         }

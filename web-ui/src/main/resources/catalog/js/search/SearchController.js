@@ -42,9 +42,10 @@
     '$q',
     '$http',
     'suggestService',
+    'spellCheckService',
     'gnAlertService',
     'gnSearchSettings',
-    function($scope, $q, $http, suggestService,
+    function($scope, $q, $http, suggestService, spellCheckService,
              gnAlertService, gnSearchSettings) {
 
       /** Object to be shared through directives and controllers */
@@ -67,7 +68,8 @@
           gnSearchSettings.resultViewTpls[0].tplUrl;
 
       $scope.getAnySuggestions = function(val) {
-        return suggestService.getAnySuggestions(val);
+        return spellCheckService.getAnySuggestions(val);
+        // return suggestService.getAnySuggestions(val);
       };
 
       $scope.keywordsOptions = {

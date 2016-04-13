@@ -24,6 +24,7 @@
 package org.fao.geonet.guiservices.metadata;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
 import jeeves.constants.Jeeves;
@@ -31,6 +32,9 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
@@ -50,7 +54,9 @@ import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
@@ -74,28 +80,29 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * Perform a search and return all children metadata record for current record.
- * 
+ *
  * In some cases, related records found :
  * <ul>
  * <li>could not be readable by current user.</li>
  * <li>could not be visible by current user.</li>
  * </ul>
  * so results depend on user privileges for related records.
- * 
+ *
  * Parameters:
  * <ul>
  * <li>type: online|thumbnail|service|dataset|parent|children|source|fcat|siblings|associated|related|null (ie. all)</li>
  * <li>from: start record</li>
  * <li>to: end record (default 1000)</li>
- * <li>id or uuid: could be optional if call in Jeeves service forward call. 
+ * <li>id or uuid: could be optional if call in Jeeves service forward call.
  *  In that case geonet:info/uuid is used.</li>
  * </ul>
- * 
+ *
  * Relations are usually defined in records using ISO19139 or ISO19115-3 standards
  * or profiles. Therefore, some other schema plugin may also support association
  * of resources like Dublin Core using isPartOf element. In all types of
@@ -114,64 +121,64 @@ import javax.servlet.http.HttpServletRequest;
  *     is defined in the service metadata record. In that case, the search
  *     is made in the index.</li>
  * </ul>
- * 
+ *
  * Note about each type of associations:
  * <h3>online</h3>
  * List of online resources (see <schema>/process/extract-relations.xsl for details).
- * 
+ *
  * <h3>thumbnail</h3>
  * List of thumbnails (see <schema>/process/extract-relations.xsl for details).
- * 
+ *
  * <h3>service</h3>
  * Only apply to ISO19139, ISO19115-3 and ISO profiles.
- * Search for all records having an operatesOn element pointing to the requested 
+ * Search for all records having an operatesOn element pointing to the requested
  * metadata record UUID (see indexing to know how operatesOn element is indexed).
- * 
+ *
  * <h3>parent</h3>
  * Only apply to ISO19139, ISO19115-3 and ISO profiles.
- * Get the parentIdentifier from the requested 
+ * Get the parentIdentifier from the requested
  * metadata record
- * 
+ *
  * <h3>children</h3>
  * Only apply to ISO19139, ISO19115-3 and ISO profiles.
- * Search for all records having an parentUuid element pointing to the requested 
+ * Search for all records having an parentUuid element pointing to the requested
  * metadata record UUID (see indexing to know how parent/child relation is indexed).
- * 
- * 
+ *
+ *
  * <h3>dataset</h3>
  * Only apply to ISO19139, ISO19115-3 and ISO profiles.
  * Get all records defined in operatesOn element (the current metadata is supposed
  * to be a service metadata in that case).
- * 
+ *
  * <h3>source</h3>
  * Only apply to ISO19139, ISO19115-3 and ISO profiles.
  * Get all records defined in source element (in data quality section).
- * 
+ *
  * <h3>hassource</h3>
  * Only apply to ISO19139, ISO19115-3 and ISO profiles.
  * Get all records where this record is defined has source (in data quality section).
- * 
+ *
  * <h3>fcat</h3>
  * Only apply to ISO19110, ISO19139, ISO19115-3 and ISO profiles.
  * Get all records defined in featureCatalogueCitation.
- * 
+ *
  * <h3>siblings</h3>
  * Only apply to ISO19139, ISO19115-3 and ISO profiles.
  * Get all aggregationInfo records. This relation provides
  * information about association type and initiative type.
- * 
+ *
  * <h3>associated</h3>
  * Only apply to ISO19139, ISO19115-3 and ISO profiles.
  * Search for all records having an agg_associated field pointing to the requested
  * metadata record (inverse direction of siblings). This relation does not
  * inform about association type and initiative type.
- * 
+ *
  * <h3>related</h3>
  * (deprecated) Use to link ISO19110 and ISO19139 record using database table.
  *
  * @see org.fao.geonet.kernel.schema.SchemaPlugin for more details
  * on how specific schema plugin implement relations extraction.
- * 
+ *
  */
 @Controller
 @Qualifier("getRelated")
@@ -412,7 +419,7 @@ public class GetRelated implements Service, RelatedMetadata {
             }
         }
 
-        // 
+        //
         if (listOfTypes.size() == 0 || listOfTypes.contains("hassource")) {
             // Return records where this record is a source dataset
             relatedRecords.addContent(search(uuid, "hassource", context, from, to, fast));
@@ -435,46 +442,83 @@ public class GetRelated implements Service, RelatedMetadata {
         return relatedRecords;
     }
 
+    private static Map<String, String> relationTypeToIndexField;
+    static {
+        relationTypeToIndexField = ImmutableMap.<String, String>builder()
+            .put("children", "parent")
+            .put("services", "recordOperateOn")
+            .put("hasfeaturecat", "hasfeaturecat")
+            .put("hassource", "hassource")
+            .put("associated", "agg_associated")
+            .put("datasets", "_uuid")
+            .put("fcats", "_uuid")
+            .put("siblings", "_uuid")
+            .put("parent", "_uuid")
+            .build();
+    }
 
     private Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         ISearchManager searchMan = gc.getBean(ISearchManager.class);
 
-        // perform the search
-        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-            Log.debug(Geonet.SEARCH_ENGINE, "Searching for: " + type);
+        if (searchMan instanceof SearchManager) {
+            // perform the search
+            if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                Log.debug(Geonet.SEARCH_ENGINE, "Searching for: " + type);
 
-        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-            // Creating parameters for search, fast only to retrieve uuid
-            Element parameters = new Element(Jeeves.Elem.REQUEST);
-            if ("children".equals(type))
-                parameters.addContent(new Element("parentUuid").setText(uuid));
-            else if ("services".equals(type))
-                parameters.addContent(new Element("operatesOn").setText(uuid));
-            else if ("hasfeaturecat".equals(type))
-                parameters.addContent(new Element("hasfeaturecat").setText(uuid));
-            else if ("hassource".equals(type))
-                parameters.addContent(new Element("hassource").setText(uuid));
-            else if ("associated".equals(type))
-                parameters.addContent(new Element("agg_associated").setText(uuid));
-            else if ("datasets".equals(type) || "fcats".equals(type) ||
+            try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+                // Creating parameters for search, fast only to retrieve uuid
+                Element parameters = new Element(Jeeves.Elem.REQUEST);
+                if ("children".equals(type))
+                    parameters.addContent(new Element("parentUuid").setText(uuid));
+                else if ("services".equals(type))
+                    parameters.addContent(new Element("operatesOn").setText(uuid));
+                else if ("hasfeaturecat".equals(type))
+                    parameters.addContent(new Element("hasfeaturecat").setText(uuid));
+                else if ("hassource".equals(type))
+                    parameters.addContent(new Element("hassource").setText(uuid));
+                else if ("associated".equals(type))
+                    parameters.addContent(new Element("agg_associated").setText(uuid));
+                else if ("datasets".equals(type) || "fcats".equals(type) ||
                     "sources".equals(type) || "siblings".equals(type) ||
                     "parent".equals(type))
-                parameters.addContent(new Element("uuid").setText(uuid));
+                    parameters.addContent(new Element("uuid").setText(uuid));
 
-            parameters.addContent(new Element("fast").addContent("index"));
-            parameters.addContent(new Element("sortBy").addContent("title"));
-            parameters.addContent(new Element("sortOrder").addContent("reverse"));
-            parameters.addContent(new Element("from").addContent(from));
-            parameters.addContent(new Element("to").addContent(to));
+                parameters.addContent(new Element("fast").addContent("index"));
+                parameters.addContent(new Element("sortBy").addContent("title"));
+                parameters.addContent(new Element("sortOrder").addContent("reverse"));
+                parameters.addContent(new Element("from").addContent(from));
+                parameters.addContent(new Element("to").addContent(to));
 
-            searcher.search(context, parameters, _config);
+                searcher.search(context, parameters, _config);
 
+                Element response = new Element(type);
+                Element relatedElement = searcher.present(context, parameters, _config);
+                response.addContent(relatedElement);
+                return response;
+            }
+        } else if (searchMan instanceof SolrSearchManager){
             Element response = new Element(type);
-            Element relatedElement = searcher.present(context, parameters, _config);
+            SolrDocumentList documentList = ((SolrSearchManager) searchMan).getDocsFieldValue(
+                String.format("+%s:\"%s\"",
+                    relationTypeToIndexField.get(type),
+                    uuid),
+                "*"
+            );
+            Element relatedElement =  new Element("response");
+            for (SolrDocument document : documentList) {
+                Element md = new Element("metadata");
+                for(String field : document.getFieldNames()) {
+                    for(Object value : document.getFieldValues(field)) {
+                        md.addContent(new Element(field).setText(value.toString()));
+                    }
+                }
+                relatedElement.addContent(md);
+            }
             response.addContent(relatedElement);
             return response;
         }
+        return new Element(type);
     }
 
     private Element getRecord(String uuid, ServiceContext context, DataManager dm) {

@@ -134,9 +134,12 @@ WARNING: The _text_ catch-all field will significantly increase your index size.
          multiValued="true"/>
   <field name="resourceTitle" type="string" indexed="true" stored="true" required="false"
          multiValued="false"/>
+
   <field name="resourceAbstract" type="text_general" indexed="true" stored="true" required="false"
          multiValued="false"/>
   <field name="resourceIdentifier" type="string" indexed="true" stored="true" required="false"
+         multiValued="true"/>
+  <field name="tag" type="string" indexed="true" stored="true" required="false"
          multiValued="true"/>
 
   <field name="_indexingError" type="string" indexed="true" stored="true" required="false"
@@ -193,6 +196,10 @@ WARNING: The _text_ catch-all field will significantly increase your index size.
   <field name="_root_" type="string" indexed="true" stored="false"/>
   <field name="_text_" type="text_general" indexed="true" stored="false" multiValued="true"/>
   <copyField source="*" dest="_text_"/>
+
+  <field name="spell" type="textSpell" indexed="true" stored="true" multiValued="true" />
+  <copyField source="resourceTitle" dest="spell"/>
+  <copyField source="tag" dest="spell"/>
 
 
   <!-- Dynamic field definitions allow using convention over configuration
@@ -455,6 +462,22 @@ WARNING: The _text_ catch-all field will significantly increase your index size.
   <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
     <analyzer>
       <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+    </analyzer>
+  </fieldType>
+
+  <fieldType name="textSpell" class="solr.TextField" positionIncrementGap="100" omitNorms="true">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory" />
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+      <filter class="solr.LowerCaseFilterFactory" />
+      <filter class="solr.StandardFilterFactory" />
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory" />
+      <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true" />
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+      <filter class="solr.LowerCaseFilterFactory" />
+      <filter class="solr.StandardFilterFactory" />
     </analyzer>
   </fieldType>
 

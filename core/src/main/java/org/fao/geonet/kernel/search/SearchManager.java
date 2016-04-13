@@ -140,6 +140,8 @@ import jeeves.server.context.ServiceContext;
 /**
  * Indexes metadata using Lucene.
  */
+// TODO: SOLR-MIGRATION-TO-DELETE
+@Deprecated
 public class SearchManager implements ISearchManager {
 
     private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";

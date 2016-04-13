@@ -103,5 +103,13 @@ public class LuceneIndexField {
 	public static final String UUID = "_uuid";
 	public static final String VALID = "_valid";
 	public static final String WEST = "westBL";
-
+	public static final String RECORD_IDENTIFIER = "metadataIdentifier";
+	public static final String RESOURCE_IDENTIFIER = "resourceIdentifier";
+	public static final String HAS_ATOM = "has_atom";
+	public static final String PARENT_RECORD_UUID = "parent";
+    public static final String RECORD_OPERATE_ON = "recordOperateOn";
+    public static final String RESOURCE_TITLE = "resourceTitle";
+    public static final String RESOURCE_ABSTRACT = "resourceAbstract";
+    public static final String RESOURCE_TYPE = "resourceType";
+    public static final String ROOT = "_root";
 }

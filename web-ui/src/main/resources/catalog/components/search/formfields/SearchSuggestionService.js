@@ -24,8 +24,8 @@
 (function() {
   goog.provide('gn_searchsuggestion_service');
 
-  angular.module('gn_searchsuggestion_service', [
-  ])
+  var module = angular.module('gn_searchsuggestion_service', [
+  ]);
 
   /**
    * @ngdoc service
@@ -39,8 +39,7 @@
    * The `suggestService` service provides all tools required to get
    * suggestions from the index.
    */
-
-      .service('suggestService', [
+  module.service('suggestService', [
         'gnHttpServices',
         'gnUrlUtils',
         '$http',
@@ -147,4 +146,57 @@
           };
 
         }]);
+
+  /**
+   * Experiment SOLR spell check API
+   */
+  module.service('spellCheckService', [
+    'gnHttpServices',
+    'gnUrlUtils',
+    '$http',
+    function(gnHttpServices, gnUrlUtils, $http) {
+
+      this.getUrl = function(filter, field, sortBy) {
+        // http://localhost:8080/geonetwork/srv/api/0.1/search/records/spell?
+        // q=spell:nort&rows=0&
+        // wt=json&spellcheck=true&spellcheck.collateParam.q.op=AND&spellcheck.collate=true
+        return gnUrlUtils.append('../api/0.1/search/records/spell',
+                   gnUrlUtils.toKeyValue({
+                                           q: filter,
+                                           wt: 'json',
+                                           row: 0
+                                         })
+        );
+      };
+
+      this.getAnySuggestions = function(val) {
+        var url = this.getUrl(val);
+
+        return $http.get(url, {
+        }).then(function(res) {
+          console.log(res);
+          var suggestions = res.data.spellcheck.suggestions, data = [];
+          for (var i = 0; i < suggestions.length; i ++) {
+            data.push({
+              id: suggestions[i].word,
+              name: suggestions[i].word + ' (' + suggestions[i].freq + ')'
+            });
+          }
+          return data;
+        });
+      };
+
+      this.filterResponse = function(data) {
+        return data[1];
+      };
+
+      this.bhFilter = function(data) {
+        var datum = [];
+        data[1].forEach(function(item) {
+          datum.push({ id: item, name: item });
+        });
+        return datum;
+      };
+
+    }]);
 })();
