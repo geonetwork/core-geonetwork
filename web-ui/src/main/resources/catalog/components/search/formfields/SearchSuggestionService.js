@@ -178,6 +178,7 @@
           // TODO: We may have more than one suggestions
           var suggestions = res.data.spellcheck.suggestions[1] &&
                             res.data.spellcheck.suggestions[1].suggestion,
+              collations = res.data.spellcheck.collations,
               data = [];
           if (suggestions) {
             for (var i = 0; i < suggestions.length; i++) {
@@ -185,6 +186,17 @@
                 value: suggestions[i].word,
                 label: suggestions[i].word + ' (' + suggestions[i].freq + ')'
               });
+            }
+          }
+          if (collations) {
+            for (var i = 0; i < collations.length; i++) {
+              var c = collations[i];
+              if (angular.isObject(c)) {
+                data.push({
+                  value: c.collationQuery,
+                  label: c.collationQuery + ' (' + c.hits + ')'
+                });
+              }
             }
           }
           return data;
