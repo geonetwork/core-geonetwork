@@ -69,7 +69,9 @@
   };
 
 
-  module.service('gnFeaturesTableManager', GnFeaturesTableManager);
+  module.service('gnFeaturesTableManager',
+      ['gnFeaturesTableLoader', GnFeaturesTableManager]);
+  
   module.service('gnFeaturesTableService', GnFeaturesTableService);
 
 })();
