@@ -10,12 +10,17 @@
         from: 'start',
         to: 'rows',
         uuid: 'metadataIdentifier',
+        type: 'resourceType',
+        changeDate: '_changeDate',
+        rating: '_rating',
+        popularity: '_popularity',
+        denominator: 'resolutionScaleDenominator',
         title: 'resourceTitle',
         template: '_isTemplate',
         any: '_text_',
         _id: 'id'
       };
-      var luceneParamsToSkip = ['_content_type', 'fast'];
+      var luceneParamsToSkip = ['_content_type', 'fast', 'sortOrder', 'resultType', 'facet.q'];
       return {
         'request': function(config) {
           var split = config.url.split(/[?@]/);
@@ -31,31 +36,43 @@
               q: ''
             };
             if (config.params) {
-                $.each(config.params, function(k, v) {
-                  if (luceneParamsToSkip.indexOf(k) === -1) {
-                    switch (k) {
-                      case 'from':
-                        solrParams.start = v - 1;
-                        break;
-                      case 'to':
-                        solrParams.rows = v - config.params.from;
-                        break;
-                      case '_isTemplate':
-                          solrParams.q += ' +' + k + ':(' + v + ')';
-                        break;
-                      default:
-                        if (lucene2solrParams[k] && v !== undefined) {
-                            solrParams.q += ' +' + lucene2solrParams[k] + ':"' + v + '"';
-                        } else {
-                          console.warn('Skipped param: ' + k);
-                        }
-                    }
+              var hasTemplateCriteria = false;
+              $.each(config.params, function(k, v) {
+                if (luceneParamsToSkip.indexOf(k) === -1) {
+                  switch (k) {
+                    case 'from':
+                      solrParams.start = v - 1;
+                      break;
+                    case 'to':
+                      solrParams.rows = v - config.params.from;
+                      break;
+                    case 'sortBy':
+                      // can not sort on multivalued field
+                      if (v !== 'relevance') {
+                        solrParams.sort =
+                            (lucene2solrParams[v] || v) + ' ' +
+                            (config.params.sortOrder === 'reverse' ? 'asc' : 'desc');
+                      }
+                      break;
+                    case '_isTemplate':
+                      solrParams.q += ' +' + k + ':(' + v + ')';
+                      hasTemplateCriteria = true;
+                      break;
+                    default:
+                      if (lucene2solrParams[k] && v !== undefined) {
+                          solrParams.q += ' +' + lucene2solrParams[k] + ':"' + v + '"';
+                      } else {
+                        console.warn('Skipped param: ' + k);
+                      }
                   }
-                  if (solrParams.q === '') {
-                    solrParams.q = '*:*';
-                  }
-                });
-                config.params = solrParams;
+                }
+                if (solrParams.q === '') {
+                  solrParams.q = '*:*';
+                }
+              });
+              // Solr search does not set any defaults.
+              solrParams.q += ' +_isTemplate:n';
+              config.params = solrParams;
             }
           }
           return config;
@@ -69,9 +86,10 @@
             var gnResponse = {
               '@from': start,
               '@to': start + docs.length,
-              '@count': data.response.numFound + '',
               metadata: [],
-              summary: []
+              summary: {
+                '@count': data.response.numFound + ''
+              }
             };
             for (var i = 0; i < docs.length; i++) {
               var doc = docs[i];
