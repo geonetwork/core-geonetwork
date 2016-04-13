@@ -65,6 +65,10 @@
                       solrParams.q += ' +_isTemplate:(' + v + ')';
                       hasTemplateCriteria = true;
                       break;
+                    case 'any':
+                      // Make a or on each terms for full text search
+                      solrParams.q += ' +_text_:(' + v + ')';
+                      break;
                     default:
                       if (lucene2solrParams[k] && v !== undefined) {
                         solrParams.q += ' +' + lucene2solrParams[k] +
