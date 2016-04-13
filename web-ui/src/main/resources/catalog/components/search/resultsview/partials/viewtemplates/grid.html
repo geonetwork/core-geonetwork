@@ -4,13 +4,13 @@
       data-gn-fix-mdlinks=""
       data-gn-displayextent-onhover=""
       data-gn-zoomto-onclick="">
-     
+
       <!--start top row-->
       <div class="row">
         <input data-gn-selection-md type="checkbox"
                data-ng-model="md['geonet:info'].selected"
                data-ng-change="change()"/>
-               
+
         <!--Source catalog Logo-->
         <a data-ng-if="md.groupWebsite"
            href="{{md.groupWebsite}}" target="_blank">
@@ -76,12 +76,12 @@
                title="{{md.status_text[0]}}"
                class="gn-status gn-status-{{md.status[0]}}">{{md.status_text[0]}}</div>
         </div>
-        
+
         <div style="float:left; display:block; width: calc(100% - 162px)">
 
           <div class="text-justify gn-md-abstract ellipsis">
             <div>
-              <p>{{(md.abstract || md.defaultAbstract) | striptags}}</p>
+              <p ng-bind-html="md.abstract"></p>
             </div>
           </div>
 
@@ -102,7 +102,7 @@
             </p>-->
           </div>
         </div>
-      
+
       </div>
       <!--end middle row-->
 

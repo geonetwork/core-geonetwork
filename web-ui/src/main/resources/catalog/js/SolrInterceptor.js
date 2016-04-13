@@ -22,6 +22,10 @@
       };
       var luceneParamsToSkip = ['_content_type', 'fast', 'sortOrder',
                                 'resultType', 'facet.q'];
+
+      // Turn on highlight on field starting with resource* prefix
+      var highlight = true;
+
       return {
         'request': function(config) {
           var split = config.url.split(/[?@]/);
@@ -78,6 +82,15 @@
               if (!hasTemplateCriteria) {
                 solrParams.q += ' +_isTemplate:n';
               }
+
+              if (highlight) {
+                angular.extend(solrParams, {
+                  'hl': true,
+                  'hl.fl': 'resource*',
+                  'hl.simple.pre': '<strong>',
+                  'hl.simple.post': '</strong>'
+                });
+              }
               config.params = solrParams;
             }
           }
@@ -88,6 +101,7 @@
             console.log(response);
             var data = response.data;
             var docs = data.response.docs;
+            var hls = data.highlighting || {};
             var start = data.response.start + 1;
             var gnResponse = {
               '@from': start,
@@ -99,9 +113,15 @@
             };
             for (var i = 0; i < docs.length; i++) {
               var doc = docs[i];
+              var dochl = {};
+              if (highlight) {
+                dochl = hls[doc.id];
+              }
               gnResponse.metadata.push({
                 title: doc.resourceTitle,
-                'abstract': doc.resourceAbstract,
+                'abstract':
+                    (dochl.resourceAbstract && dochl.resourceAbstract[0]) ||
+                    doc.resourceAbstract,
                 lineage: doc.lineage,
                 type: doc.resourceType || [],
                 image: doc.overviewUrl,
