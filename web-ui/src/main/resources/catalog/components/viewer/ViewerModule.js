@@ -62,6 +62,7 @@
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
   goog.require('gn_wfs');
+  goog.require('gn_wps');
   goog.require('gn_wfsfilter');
   goog.require('gn_wmsimport');
   goog.require('gn_featurestable');
@@ -95,6 +96,7 @@
     'gn_terrainswitcher_directive',
     'gn_wfsfilter',
     'gn_solr',
+    'gn_wps',
     'gn_featurestable'
   ]);
 
