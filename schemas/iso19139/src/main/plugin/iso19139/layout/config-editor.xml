@@ -114,8 +114,8 @@
       <directiveAttributes
               data-template-add-action="true"
               data-search-action="true"
-              ddata-popup-action="true"
-              ata-template-type="contact"
+              data-popup-action="true"
+              data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
 

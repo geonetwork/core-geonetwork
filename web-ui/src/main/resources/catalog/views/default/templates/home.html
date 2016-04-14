@@ -34,7 +34,14 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row" data-ng-show="searchInfo.count == 0">
+    <div data-ng-show="searchInfo.count == 0"
+         class="col-md-offset-4 col-md-4 alert alert-warning">
+      <span data-translate="">noDataInCatalog</span>
+      <div data-gn-need-help="user-guide/quick-start/index.html"></div>
+    </div>
+  </div>
+  <div class="row" data-ng-show="searchInfo.count > 0">
     <div class="col-sm-8" data-ng-show="browse !== ''">
       <span data-translate="">browseBy</span>
       <span data-ng-show="searchInfo.facet['inspireThemes'].length > 0 && searchInfo.facet['topicCats'].length > 0">
@@ -107,7 +114,7 @@
         </div>
     </div>
   </div>
-  <div class="row gn-row-info">
+  <div class="row gn-row-info" data-ng-show="searchInfo.count > 0">
       <div class="col-xs-12">
         <tabset id="info-tabset">
           <tab heading="{{'lastRecords' | translate}}"
