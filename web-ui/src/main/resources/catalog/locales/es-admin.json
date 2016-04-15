@@ -290,6 +290,7 @@
     "data.dataDir": "Carpeta de Datos:",
     "data.formatterPath": "Directorio del formateador:",
     "data.resources": "Carpeta de Recursos:",
+    "data.backupDir": "Backup folder:",
     "data.schemaPluginsDir": "Carpeta Estándar:",
     "data.subversionPath": "Repositorio SVN:",
     "databaseStatus": "Estado de la Base de Datos",
@@ -744,6 +745,7 @@
     "system/harvesting/mail/templateWarning": "Plantilla para alertas",
     "system/hidewithheldelements": "Metadata / ISO19139 / Atributos retenidos con motivo nulo",
     "system/hidewithheldelements/enable": "Ocultar Elementos Retenidos",
+    "system/hidewithheldelements/enableLogging": "Enable logging",
     "system/hidewithheldelements/keepMarkedElement": "Mantener Elementos Marcados",
     "system/indexoptimizer": "Optimización de Índice",
     "system/indexoptimizer/at/hour": "Hora",
@@ -813,9 +815,6 @@
     "system/proxy/username": "Nombre de usuario para el proxy",
     "system/proxy/ignorehostlist": "Ignorar lista de hosts",
     "system/proxy/ignorehostlist-help": "Para permitir hosts específicos, introduce una dirección IP o un nombre de host como www.midominio.com o un rango de direcciones usando comodines como 192.168.2.*. Usa | para separar los diferentes valores.",
-    "system/removedMetadata": "Metadatos eliminados",
-    "system/removedMetadata/dir": "Directorio",
-    "system/removedMetadata/dir-help": "Directorio usado para guardar metadatos (en formato MEF) cuando se borran.",
     "system/requestedLanguage": "Búsqueda e idioma",
     "system/requestedLanguage/ignorechars": "Caracteres a ignorar cuando se analice el texto",
     "system/requestedLanguage/ignored": "Ignorar peticiones de idioma para los resultados de búsqueda",
@@ -856,6 +855,8 @@
     "system/threadedindexing/maxthreads": "Número de hilos indexadores",
     "system/userSelfRegistration": "Auto-registro de usuarios",
     "system/userSelfRegistration/enable": "Habitar auto-registro",
+    "system/userFeedback": "User feedback",
+    "system/userFeedback/enable": "Enable feedback",
     "system/xlinkResolver": "XLink del metadato",
     "system/xlinkResolver/enable": "Habilitar resolución de XLin",
     "system/xlinkResolver/enable-help": "Si se activa, los fragmentos XLink de los metadatos se resolverán",
@@ -1049,5 +1050,7 @@
     "metadata/editor": "Configuración del editor de metadatos",
     "metadata/editor/schemaConfig": "Configuración de estándares",
     "logActivity": "Actividad",
-    "selectExistingLogo": "Selección para logos existentes"
+    "selectExistingLogo": "Selección para logos existentes",
+    "serviceUrlHelp": "Web service URL without GetCapabilities parameters",
+    "serviceTypeHelp": "Service type"
 }
