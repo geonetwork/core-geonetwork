@@ -290,6 +290,7 @@
     "data.dataDir": "Aktive Verbindungen",
     "data.formatterPath": "Formatter Verzeichnis:",
     "data.resources": "Ressourcen Verzeichnis:",
+    "data.backupDir": "Backup folder:",
     "data.schemaPluginsDir": "Standard Verzeichnis:",
     "data.subversionPath": "Subversion Verzeichnis:",
     "databaseStatus": "Datenbankstatus",
@@ -744,6 +745,7 @@
     "system/harvesting/mail/templateWarning": "Warning template",
     "system/hidewithheldelements": "Metadata / ISO19139 / Nil reason attribute with held",
     "system/hidewithheldelements/enable": "Hide Withheld Elements",
+    "system/hidewithheldelements/enableLogging": "Enable logging",
     "system/hidewithheldelements/keepMarkedElement": "Keep Marked Element",
     "system/indexoptimizer": "Index optimization",
     "system/indexoptimizer/at/hour": "Stunde",
@@ -813,9 +815,6 @@
     "system/proxy/username": "Benutzername für Proxy",
     "system/proxy/ignorehostlist": "Liste der zu ignorierenden Hosts",
     "system/proxy/ignorehostlist-help": "To bypass specific hosts enter a specific IP address or host name such as www.mydomain.com or an address range using wildcards, such as 192.168.2.*. Use | to separate the different host values.",
-    "system/removedMetadata": "gelöschte Metadaten",
-    "system/removedMetadata/dir": "Verzeichnis",
-    "system/removedMetadata/dir-help": "Directory used to store metadata (in MEF format) when they are deleted.",
     "system/requestedLanguage": "Suche & Sprache",
     "system/requestedLanguage/ignorechars": "Characters to ignore when analyzing text",
     "system/requestedLanguage/ignored": "Ignore requested language for search results.",
@@ -856,6 +855,8 @@
     "system/threadedindexing/maxthreads": "Number of indexing threads",
     "system/userSelfRegistration": "User self-registration",
     "system/userSelfRegistration/enable": "Enable self-registration",
+    "system/userFeedback": "User feedback",
+    "system/userFeedback/enable": "Enable feedback",
     "system/xlinkResolver": "Metadaten XLink",
     "system/xlinkResolver/enable": "Aktiviere XLink Auflösung",
     "system/xlinkResolver/enable-help": "If set, XLinks to metadata fragments in records will be resolved.",
@@ -1049,5 +1050,7 @@
     "metadata/editor": "Metadata editor configuration",
     "metadata/editor/schemaConfig": "Configuration par standard",
     "logActivity": "Activity",
-    "selectExistingLogo": "Select from existing logos"
+    "selectExistingLogo": "Select from existing logos",
+    "serviceUrlHelp": "Web service URL without GetCapabilities parameters",
+    "serviceTypeHelp": "Service type"
 }
