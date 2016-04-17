@@ -307,5 +307,9 @@
     "notEvaluated": "Niet geëvalueerd",
     "notConformant": "Niet conform",
     "capabilitiesParseError": "Error bij het uitlezen van de WMS capabilities",
-    "conformant": "Conform"
+    "conformant": "Conform",
+    "currentConcept": "Current concept",
+    "parentConcept": "Parent concept",
+    "moreSpecificConcept": "More specific concepts",
+    "associatedConcept": "Associated concepts"
 }
