@@ -36,8 +36,10 @@ import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.Xml;
+import org.jasig.cas.client.util.XmlUtils;
 import org.jdom.Element;
 
+import groovy.xml.XmlUtil;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -72,10 +74,26 @@ public class List implements Service {
             java.util.List<UserGroup> usergroups = context.getBean(UserGroupRepository.class).findAll(
                     GroupSpecs.isEditorOrMore(session.getUserIdAsInt()));
             java.util.List<Integer> ids = new LinkedList<Integer>();
+            java.util.List<Integer> editableIds = new LinkedList<Integer>();
             for(UserGroup ug : usergroups) {
                 ids.add(ug.getGroup().getId());
+                if(ug.getProfile().equals(Profile.UserAdmin)) {
+                    editableIds.add(ug.getGroup().getId());
+                }
             }
             elRes = context.getBean(GroupRepository.class).findAllAsXml(GroupSpecs.in(ids));
+            
+            for(Object o : elRes.getChildren()) {
+                Element e = (Element) o;
+                for(Object o2 : e.getChildren("id")) {
+                    Element e2 = (Element) o2;
+                    System.out.println(e2.getTextTrim());
+                    if(editableIds.contains(Integer.valueOf(e2.getTextTrim()))){
+                        e.setAttribute("editable", "true");
+                    }
+                }
+            }
+            
         } else {
             throw new SecurityException("You are not authorized to see this");
         }

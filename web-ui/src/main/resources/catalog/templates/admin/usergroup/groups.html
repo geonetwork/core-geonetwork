@@ -43,7 +43,7 @@
         <span data-ng-hide="groupSelected.id != ''" data-translate="">newGroup</span>
         <span><strong>{{groupSelected.name}}</strong></span>
         <div class="btn-toolbar"
-                data-ng-show="user.isAdministratorOrMore()">
+                data-ng-show="user.isAdministratorOrMore() || groupSelected['@editable'] == 'true'">
           <button type="button" class="btn btn-primary pull-right"
             data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
             data-ng-click="saveGroup('#gn-group-edit', '#group-logo-upload')" id="gn-btn-group-save">
