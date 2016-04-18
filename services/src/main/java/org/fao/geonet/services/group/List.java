@@ -23,20 +23,26 @@
 
 package org.fao.geonet.services.group;
 
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import static org.springframework.data.jpa.domain.Specifications.not;
+
+import java.nio.file.Path;
+import java.util.LinkedList;
+
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.nio.file.Path;
-
-import static org.springframework.data.jpa.domain.Specifications.not;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -56,18 +62,39 @@ public class List implements Service {
 
     public Element exec(Element params, ServiceContext context)
             throws Exception {
-        Element elRes = context.getBean(GroupRepository.class).findAllAsXml(
-                not(GroupSpecs.isReserved()));
-        final Path resourcesDir = context.getBean(GeonetworkDataDirectory.class).getResourcesDir();
+
+        UserSession session = context.getUserSession();
+        Element elRes = null;
+        if (session.getProfile().equals(Profile.Administrator)) {
+            elRes = context.getBean(GroupRepository.class)
+                    .findAllAsXml(not(GroupSpecs.isReserved()));
+        } else if (session.isAuthenticated()) {
+            java.util.List<UserGroup> usergroups = context.getBean(UserGroupRepository.class).findAll(
+                    GroupSpecs.isEditorOrMore(session.getUserIdAsInt()));
+            java.util.List<Integer> ids = new LinkedList<Integer>();
+            for(UserGroup ug : usergroups) {
+                ids.add(ug.getGroup().getId());
+            }
+            elRes = context.getBean(GroupRepository.class).findAllAsXml(GroupSpecs.in(ids));
+        } else {
+            throw new SecurityException("You are not authorized to see this");
+        }
+        
+        final Path resourcesDir = context.getBean(GeonetworkDataDirectory.class)
+                .getResourcesDir();
         final Path logosDir = Resources.locateLogosDir(context);
-        final java.util.List<?> logoElements = Xml.selectNodes(elRes, "*//logo");
+        final java.util.List<?> logoElements = Xml.selectNodes(elRes,
+                "*//logo");
         for (Object logoObj : logoElements) {
             Element logoEl = (Element) logoObj;
             final String logoRef = logoEl.getTextTrim();
-            if (logoRef != null && !logoRef.isEmpty() && !logoRef.startsWith("http://")) {
-                final Path imagePath = Resources.findImagePath(logoRef, logosDir);
+            if (logoRef != null && !logoRef.isEmpty()
+                    && !logoRef.startsWith("http://")) {
+                final Path imagePath = Resources.findImagePath(logoRef,
+                        logosDir);
                 if (imagePath != null) {
-                    String relativePath = resourcesDir.relativize(imagePath).toString().replace('\\', '/');
+                    String relativePath = resourcesDir.relativize(imagePath)
+                            .toString().replace('\\', '/');
                     logoEl.setText(context.getBaseUrl() + '/' + relativePath);
                 }
             }
@@ -83,4 +110,3 @@ public class List implements Service {
 }
 
 // =============================================================================
-
