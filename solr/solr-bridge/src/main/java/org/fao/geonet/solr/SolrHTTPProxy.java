@@ -258,7 +258,7 @@ public class SolrHTTPProxy {
             addSelectionInfo(doc, selections);
         });
 
-        generator.close();
+        generator.flush();
     }
 
     private static Integer getInteger(ObjectNode node, String name) {
@@ -391,8 +391,9 @@ public class SolrHTTPProxy {
                 valuesList.forEach(sBuilder::append);
 
                 // add header to HttpServletResponse object
-                if (headerName != null) {
-                    if ("Transfer-Encoding".equalsIgnoreCase(headerName) && "chunked".equalsIgnoreCase(sBuilder.toString())) {
+                if (headerName != null && !"Content-Length".equalsIgnoreCase(headerName)) {
+                    if ("Transfer-Encoding".equalsIgnoreCase(headerName) &&
+                        "chunked".equalsIgnoreCase(sBuilder.toString())) {
                         // do not write this header because Tomcat already assembled the chunks itself
                         continue;
                     }

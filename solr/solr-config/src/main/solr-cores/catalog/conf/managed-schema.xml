@@ -711,7 +711,7 @@ WARNING: The _text_ catch-all field will significantly increase your index size.
     maxDistErr the default is one meter – just a bit less than 0.000009 degrees
   -->
   <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
-             spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
+             spatialContextFactory="org.locationtech.spatial4j.context.jts.JtsSpatialContextFactory"
              geo="true" distErrPct="0.01" maxDistErr="0.001" distanceUnits="kilometers"/>
 
   <!-- Money/currency field type. See http://wiki.apache.org/solr/MoneyFieldType

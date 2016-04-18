@@ -362,9 +362,15 @@ public class SolrWFSFeatureIndexer {
                                     token);
                             }
                         } else {
-                            document.addField(
+                            if (documentFields.get(attributeName).equals("geom")) {
+                                document.addField(
+                                    documentFields.get(attributeName),
+                                    attributeValue.toString());
+                            } else {
+                                document.addField(
                                     documentFields.get(attributeName),
                                     attributeValue);
+                            }
                         }
 
 
