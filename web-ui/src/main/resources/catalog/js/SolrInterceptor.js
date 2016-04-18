@@ -35,10 +35,11 @@
               config.params = gnUrlUtils.parseKeyValue(split[split.length - 1]);
             }
             config.isSolrRequest = true;
-            config.url = '../api/0.1/search/records';
+            config.url = '../api/0.1/search';
             var solrParams = {
               wt: 'json',
-              q: ''
+              q: '',
+              fq: 'docType:metadata'
             };
             if (config.params) {
               var hasTemplateCriteria = false;
@@ -67,7 +68,9 @@
                       break;
                     case 'any':
                       // Make a or on each terms for full text search
-                      solrParams.q += ' +_text_:(' + v + ')';
+                      if (v) {
+                        solrParams.q += ' +_text_:(' + v + ')';
+                      }
                       break;
                     default:
                       if (lucene2solrParams[k] && v !== undefined) {

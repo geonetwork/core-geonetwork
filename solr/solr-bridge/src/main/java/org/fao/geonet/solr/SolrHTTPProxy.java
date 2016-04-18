@@ -75,8 +75,8 @@ import java.util.zip.GZIPOutputStream;
  * Created by fgravin on 11/4/15.
  */
 @RequestMapping(value = {
-        "/api/search",
-        "/api/" + API.VERSION_0_1 + "/search"
+        "/api",
+        "/api/" + API.VERSION_0_1
 })
 @Api(value = "search",
         tags = "search",
@@ -90,40 +90,16 @@ public class SolrHTTPProxy {
     @Autowired
     private SolrConfig config;
 
-    @ApiOperation(value = "Search metadata",
+    @ApiOperation(value = "Search in Solr",
             notes = "See https://cwiki.apache.org/confluence/display/solr/Common+Query+Parameters for parameters.")
-    @RequestMapping(value = "/records",
+    @RequestMapping(value = "/search",
             method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public void handleGETMetadata(HttpServletRequest request, HttpServletResponse response) throws Exception {
         final String url = config.getSolrServerUrl() + "/" +
-                config.getSolrServerCore() + "/select?" + addPermissions(addDocType(request.getQueryString(), "metadata"));
+                config.getSolrServerCore() + "/select?" + addPermissions(request.getQueryString());
         handleRequest(request, response, url, true);
-    }
-
-    @ApiOperation(value = "Search suggestion on metadata",
-            notes = "See https://cwiki.apache.org/confluence/display/solr/Spell+Checking for parameters.")
-    @RequestMapping(value = "/records/spell",
-            method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
-    @ResponseBody
-    public void metadataSpellChecker(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        final String url = config.getSolrServerUrl() + "/" +
-                config.getSolrServerCore() + "/spell?" + addPermissions(addDocType(request.getQueryString(), "metadata"));
-        handleRequest(request, response, url, false);
-    }
-
-    @ApiOperation(value = "Search features",
-            notes = "See https://cwiki.apache.org/confluence/display/solr/Common+Query+Parameters for parameters.")
-    @RequestMapping(value = "/features",
-            method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
-    @ResponseBody
-    public void handleGETFeatures(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        final String url = config.getSolrServerUrl() + "/" +
-                config.getSolrServerCore() + "/select?" + addDocType(request.getQueryString(), "feature");
-        handleRequest(request, response, url, false);
     }
 
     private String addPermissions(String queryString) throws Exception {
@@ -133,11 +109,7 @@ public class SolrHTTPProxy {
         final int viewId = ReservedOperation.view.getId();
         final String ids = groups.stream().map(Object::toString)
                 .collect(Collectors.joining("\" \"", "(\"", "\")"));
-        return queryString + String.format("&fq=_op%d:%s", viewId, URIUtil.encodeQuery(ids));
-    }
-
-    private String addDocType(String queryString, String type) {
-        return queryString + "&fq=docType:" + type;
+        return queryString + "&fq=" + URIUtil.encodeQuery(String.format("(-docType:metadata) or _op%d:%s", viewId, ids));
     }
 
     private void handleRequest(HttpServletRequest request, HttpServletResponse response, String sUrl,
