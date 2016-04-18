@@ -55,14 +55,12 @@
             >resetPassword</span></button>
           <button type="button" class="btn btn-primary pull-right"
             data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
-            data-ng-show="user.isUserAdminOrMore()"
             data-ng-click="saveUser('#gn-user-edit')" id="gn-btn-user-save">
             <i class="fa fa-save"></i> <span data-translate=""
             >saveUser</span></button>
           <button type="button" class="btn pull-right btn-danger"
             data-ng-disabled="searchResults.count > 0"
             data-ng-show="user.isUserAdminOrMore()"
-            data-ng-hide="userSelected.id == ''"
             data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
             <i class="fa fa-times"></i> <span data-translate=""
             >deleteUser</span></button>
@@ -115,7 +113,7 @@
                 </div>
               </div>
               <div
-                data-ng-class="gnUserEdit.password.$valid == false || 
+                data-ng-class="gnUserEdit.password.$valid == false ||
                   (passwordCheck !== userSelected.password) ? 'has-error' : ''" class="form-group">
                 <label class="control-label col-sm-3" data-translate="">passwordRepeat</label>
                 <div class="col-sm-9">
@@ -123,7 +121,7 @@
                     data-ng-model="passwordCheck"/>
                   <p class="help-block">
                     <span class="error"
-                      data-ng-show="gnUserEdit.password.$valid 
+                      data-ng-show="gnUserEdit.password.$valid
                               && passwordCheck != userSelected.password"
                       data-translate="">passwordNotMatching</span>
                   </p>
@@ -160,10 +158,10 @@
                   data-ng-model="userSelected.organisation"/>
               </div>
             </div>
-            
+
             <fieldset>
               <legend data-translate="">address</legend>
-              
+
               <div class="form-group">
                 <label class="control-label col-sm-3" data-translate="">address</label>
                 <div class="col-sm-9">
@@ -171,7 +169,7 @@
                     data-ng-model="userSelected.primaryaddress.address"/>
                 </div>
               </div>
-              
+
               <div class="form-group">
                 <label class="control-label col-sm-3" data-translate="">zip</label>
                 <div class="col-sm-9">
@@ -179,8 +177,8 @@
                     data-ng-model="userSelected.primaryaddress.zip"/>
                 </div>
               </div>
-              
-              
+
+
               <div class="form-group">
                 <label class="control-label col-sm-3" data-translate="">state</label>
                 <div class="col-sm-9">
@@ -188,8 +186,8 @@
                     data-ng-model="userSelected.primaryaddress.state"/>
                 </div>
               </div>
-              
-              
+
+
               <div class="form-group">
                 <label class="control-label col-sm-3" data-translate="">city</label>
                 <div class="col-sm-9">
@@ -197,8 +195,8 @@
                     data-ng-model="userSelected.primaryaddress.city"/>
                 </div>
               </div>
-              
-              
+
+
               <div class="form-group">
                 <label class="control-label col-sm-3" data-translate="">country</label>
                 <div class="col-sm-9">
@@ -208,8 +206,8 @@
                 </div>
               </div>
             </fieldset>
-            
-            
+
+
             <fieldset>
               <legend data-translate="">defineUserGroupsPerProfile</legend>
               <input type="hidden" name="profile" data-ng-model="userSelected.profile"
@@ -231,21 +229,21 @@
                   <option data-ng-repeat="g in groups | orderBy:sortByLabel"
                           value="{{g.id}}"
                     data-ng-selected="isUserGroup(g.id, 'RegisteredUser')"
-                    >{{g.label[lang]}}</option>
+                    >{{g.label[lang]|empty:g.name}}</option>
                 </select>
                 <h3 data-translate="">Editor</h3>
                 <select multiple="multiple" id="groups_Editor" name="groups_Editor"
                   class="form-control" data-ng-click="setUserProfile()">
                   <option data-ng-repeat="g in groups | orderBy:sortByLabel"
                           value="{{g.id}}"
-                    data-ng-selected="isUserGroup(g.id, 'Editor')">{{g.label[lang]}}</option>
+                    data-ng-selected="isUserGroup(g.id, 'Editor')">{{g.label[lang]|empty:g.name}}</option>
                 </select>
                 <h3 data-translate="">Reviewer</h3>
                 <select multiple="multiple" id="groups_Reviewer" name="groups_Reviewer"
                   class="form-control" data-ng-click="setUserProfile()">
                   <option data-ng-repeat="g in groups | orderBy:sortByLabel"
                           value="{{g.id}}"
-                    data-ng-selected="isUserGroup(g.id, 'Reviewer')">{{g.label[lang]}}</option>
+                    data-ng-selected="isUserGroup(g.id, 'Reviewer')">{{g.label[lang]|empty:g.name}}</option>
                 </select>
 
                 <p class="help-block"
@@ -257,7 +255,7 @@
                   class="form-control" data-ng-click="setUserProfile()">
                   <option data-ng-repeat="g in groups | orderBy:sortByLabel"
                           value="{{g.id}}"
-                    data-ng-selected="isUserGroup(g.id, 'UserAdmin')">{{g.label[lang]}}</option>
+                    data-ng-selected="isUserGroup(g.id, 'UserAdmin')">{{g.label[lang]|empty:g.name}}</option>
                 </select>
 
                 <p class="help-block"
@@ -285,8 +283,8 @@
       </div>
     </div>
   </div>
-  
-  
+
+
 
   <div class="modal fade" id="passwordResetModal" tabindex="-1" role="dialog"
     aria-labelledby="{{'passwordReset' | translate}}" aria-hidden="true">
@@ -295,7 +293,7 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
             >&times;</button>
-          <h4 class="modal-title" data-translate="" 
+          <h4 class="modal-title" data-translate=""
             data-translate-values="{ user: '{{userSelected.name}} {{userSelected.surname}}'}">
             resetPasswordTitle</h4>
         </div>
@@ -315,7 +313,7 @@
               </div>
             </div>
             <div class="form-group"
-              data-ng-class="gnPasswordReset.password.$valid == false || 
+              data-ng-class="gnPasswordReset.password.$valid == false ||
                       (resetPassword2 !== resetPassword1) ? 'has-error' : ''">
               <label class="control-label col-sm-3" data-translate="">passwordRepeat</label>
               <div class="col-sm-9">
@@ -323,7 +321,7 @@
                   data-ng-model="resetPassword2"/>
                 <p class="help-block">
                   <span class="error"
-                    data-ng-show="gnPasswordReset.password.$valid 
+                    data-ng-show="gnPasswordReset.password.$valid
                     && resetPassword2 !== resetPassword1"
                     data-translate="">passwordNotMatching</span>
                 </p>
@@ -347,5 +345,5 @@
       </div>
     </div>
   </div>
-  
+
 </div>

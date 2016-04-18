@@ -65,7 +65,7 @@
                       class="form-control">
                 <option data-ng-repeat="g in groups" value="{{g.id}}"
                         data-ng-selected="isUserGroup(g.id, 'RegisteredUser')"
-                  >{{g.label[lang]}}</option>
+                  >{{g.label[lang]|empty:g.name}}</option>
               </select>
             </div>
           </div>
