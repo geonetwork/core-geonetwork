@@ -181,7 +181,7 @@
                     // Load groups label for 'publishedForGroup'
                     if (scope.facetConfig.label == 'publishedForGroup') {
                       promises.push(gnHttp.callService('info', {
-                        type: 'groups'}).
+                        type: 'groupsAll'}).
                           success(function(data) {
                             groups = data.group;
                           }));
