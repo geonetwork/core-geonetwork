@@ -343,11 +343,30 @@ public class SolrSearchManager implements ISearchManager {
             .setFilterQueries(DOC_TYPE + ":metadata")
             .setRows(0)
             .setFacet(true)
-            .setFacetMissing(missing == true)
+            .setFacetMissing(missing)
             .setFacetLimit(limit != null ? limit : 1000)
             .setFacetSort(sort != null ? sort : "count") // or index
             .addFacetField(indexField);
         QueryResponse response = client.query(solrQuery);
         return response.getFacetField(indexField).getValues();
+    }
+
+    public void updateRating(int metadataId, int newValue) throws IOException, SolrServerException {
+        updateField(metadataId, Geonet.IndexFieldNames.RATING, newValue, "set");
+    }
+
+    public void incrementPopularity(int metadataId) throws IOException, SolrServerException {
+        //TODO: check that works
+        updateField(metadataId, Geonet.IndexFieldNames.POPULARITY, 1, "inc");
+    }
+
+    private void updateField(int metadataId, String fieldName, int newValue, String operator) throws IOException, SolrServerException {
+        SolrInputDocument doc = new SolrInputDocument();
+        doc.addField(ID, metadataId);
+        Map<String,Object> fieldModifier = new HashMap<>(1);
+        fieldModifier.put(operator, newValue);
+        doc.addField(fieldName, fieldModifier);
+        client.add(doc);
+        client.commit();
     }
 }
