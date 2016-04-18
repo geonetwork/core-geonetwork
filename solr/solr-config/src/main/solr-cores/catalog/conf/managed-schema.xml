@@ -165,9 +165,9 @@ WARNING: The _text_ catch-all field will significantly increase your index size.
          multiValued="false"/>
   <field name="_root" type="string" indexed="true" stored="true" required="false"
          multiValued="false"/>
-  <field name="_popularity" type="string" indexed="true" stored="true" required="false"
+  <field name="_popularity" type="int" indexed="true" stored="true" required="false"
          multiValued="false"/>
-  <field name="_rating" type="string" indexed="true" stored="true" required="false"
+  <field name="_rating" type="int" indexed="true" stored="true" required="false"
          multiValued="false"/>
   <field name="_displayOrder" type="string" indexed="true" stored="true" required="false"
          multiValued="false"/>

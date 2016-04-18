@@ -93,7 +93,9 @@ import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearchManagerUtils;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -1440,9 +1442,14 @@ public class DataManager implements ApplicationEventPublisherAware {
             _entityManager.flush();
             _entityManager.clear();
 
-            // And register the metadata to be indexed in the near future
-            final IndexingList list = srvContext.getBean(IndexingList.class);
-            list.add(iId);
+            final ISearchManager sm = getSearchManager();
+            if (sm instanceof SearchManager) {
+                // And register the metadata to be indexed in the near future
+                final IndexingList list = srvContext.getBean(IndexingList.class);
+                list.add(iId);
+            } else {
+                ((SolrSearchManager)sm).incrementPopularity(iId);
+            }
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");
@@ -1483,7 +1490,12 @@ public class DataManager implements ApplicationEventPublisherAware {
             }
         });
 
-        indexMetadata(Integer.toString(metadataId), true);
+        final ISearchManager sm = getSearchManager();
+        if (sm instanceof SearchManager) {
+            indexMetadata(Integer.toString(metadataId), true);
+        } else {
+            ((SolrSearchManager)sm).updateRating(metadataId, newRating);
+        }
 
         return rating;
     }
