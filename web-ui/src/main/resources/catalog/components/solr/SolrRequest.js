@@ -124,7 +124,7 @@
   };
 
   geonetwork.GnSolrRequest.prototype.buildSolrUrl = function(params) {
-    return this.urlUtils.append(this.config.url + '/features',
+    return this.urlUtils.append(this.config.url,
         this.urlUtils.toKeyValue(params));
   };
 

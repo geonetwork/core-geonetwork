@@ -109,7 +109,11 @@ public class SolrHTTPProxy {
         final int viewId = ReservedOperation.view.getId();
         final String ids = groups.stream().map(Object::toString)
                 .collect(Collectors.joining("\" \"", "(\"", "\")"));
-        return queryString + "&fq=" + URIUtil.encodeQuery(String.format("(-docType:metadata) or _op%d:%s", viewId, ids));
+        return queryString + "&fq=" + URIUtil.encodeQuery(String.format(
+            "(+docType:metadata +_op%d:%s) " +
+                "or (+docType:feature) " +
+                "or (+docType:harvesterReport)", viewId, ids));
+//        return queryString + "&fq=" + URIUtil.encodeQuery(String.format("(-docType:metadata) or _op%d:%s", viewId, ids));
     }
 
     private void handleRequest(HttpServletRequest request, HttpServletResponse response, String sUrl,
