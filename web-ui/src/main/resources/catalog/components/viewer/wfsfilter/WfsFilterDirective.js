@@ -324,10 +324,10 @@
           function refreshHeatmap() {
             if (scope.isFeaturesIndexed) {
               heatmapsRequest.searchWithFacets({
-                    params: scope.output,
-                    any: scope.searchInput
-                  },
-                  gnSolrService.getHeatmapParams(scope.map)).
+                params: scope.output,
+                any: scope.searchInput
+              },
+              gnSolrService.getHeatmapParams(scope.map)).
                   then(function(resp) {
                     scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
                   });

@@ -43,8 +43,8 @@
           ctrl: 'gnFeaturesTable'
         },
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
-          'featurestable.html',
-        link: function (scope, element, attrs, ctrls) {
+            'featurestable.html',
+        link: function(scope, element, attrs, ctrls) {
           ctrls.ctrl.initTable(element.find('table'));
         }
       };
@@ -78,9 +78,9 @@
               });
               this.map.beforeRender(pan);
               this.map.getView().fit(
-                feature.getGeometry(),
-                this.map.getSize(),
-                { maxZoom: 17 }
+                  feature.getGeometry(),
+                  this.map.getSize(),
+                  { maxZoom: 17 }
               );
 
             }.bind(this)

@@ -161,11 +161,14 @@
         // http://localhost:8080/geonetwork/srv/api/0.1/search/records/spell?
         // q=spell:nort&rows=0&
         // wt=json&spellcheck=true&spellcheck.collateParam.q.op=AND&spellcheck.collate=true
-        return gnUrlUtils.append('../api/0.1/search/records/spell',
+        return gnUrlUtils.append('../api/0.1/search',
             gnUrlUtils.toKeyValue({
               q: filter,
               wt: 'json',
-              row: 0
+              row: 0,
+              spellcheck: 'true',
+              'spellcheck.collateParam.q.op': 'AND',
+              'spellcheck.collate': 'true'
             })
         );
       };
