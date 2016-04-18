@@ -147,6 +147,7 @@
       $rootScope.user = $scope.user;
       $scope.authenticated = false;
       $scope.initialized = false;
+      $scope.searchable = true;
 
       /**
        * Keep a reference on main cat scope
@@ -279,6 +280,9 @@
           return gnSearchManagerService.search(url).
               then(function(data) {
                 $scope.searchInfo = data;
+              }, function(response) {
+                console.warn('Solr is not responding.');
+                $scope.searchable = false;
               });
         });
       };

@@ -13,7 +13,12 @@
       <p data-translate=""
          data-translate-values="{records: '{{searchInfo.count}}'}">searchOver</p>
 
-      <div class="input-group gn-form-any">
+      <div class="alert alert-danger"
+           data-ng-hide="searchable">
+        <span data-translate="">searchNotWorking</span>
+      </div>
+      <div class="input-group gn-form-any"
+           data-ng-show="searchable">
         <input type="text"
                class="form-control input-lg"
                autofocus=""

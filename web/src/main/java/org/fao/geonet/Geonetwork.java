@@ -237,7 +237,7 @@ public class Geonetwork implements ApplicationHandler {
                     ContextContainer cc = (ContextContainer) appContext.getBean("ContextGateway");
                     cc.setSrvctx(context);
                     Server.init(z3950port, appContext);
-                    
+
                 } catch (Exception e) {
                     logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
                                  "harvesting) may not work. Error is:" + e.getMessage());
@@ -344,7 +344,15 @@ public class Geonetwork implements ApplicationHandler {
         beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
 
 
-        _applicationContext.getBean(DataManager.class).init(context, false);
+        try {
+            _applicationContext.getBean(DataManager.class).init(context, false);
+        } catch (Exception e) {
+            logger.error("Failed to synchronize database and search engine. " +
+                "Records may not be indexed and search may not work. " +
+                "Check that Solr is up and running. " +
+                "Error is:" + e.getMessage());
+            e.printStackTrace();
+        }
         _applicationContext.getBean(HarvestManager.class).init(context, gnContext.isReadOnly());
 
         _applicationContext.getBean(ThumbnailMaker.class).init(context);
