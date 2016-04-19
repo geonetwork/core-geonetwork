@@ -87,7 +87,7 @@ public class SettingInfo {
             } else {
                 protocol = "https";
                 port = secureport;
-            }		    
+            }
 		}
 
 		StringBuffer sb = new StringBuffer(protocol + "://");
@@ -121,21 +121,7 @@ public class SettingInfo {
 		return value;
 	}
 
-    /**
-     * Whether to use auto detection of the language used in search terms.
-     * @return
-     */
-    public boolean getAutoDetect() {
-        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        String value = settingManager.getValue("system/autodetect/enable");
-        if(value == null) {
-            return false;
-        }
-        else {
-            return value.equals("true");
-        }
-    }
-
+    @Deprecated
     public enum SearchRequestLanguage {
         OFF("off", null, null),
         PREFER_LOCALE("prefer_locale", "_locale", SHOULD),
@@ -250,7 +236,7 @@ public class SettingInfo {
 		int result = -1;
 		try {
             SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-            
+
             int day  = Integer.parseInt(settingManager.getValue("system/indexoptimizer/interval/day"));
 			int hour = Integer.parseInt(settingManager.getValue("system/indexoptimizer/interval/hour"));
 			int min  = Integer.parseInt(settingManager.getValue("system/indexoptimizer/interval/min"));

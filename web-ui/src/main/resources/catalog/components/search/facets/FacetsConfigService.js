@@ -31,22 +31,15 @@
    * TODO: Translate indexkey/facetkey
    */
   module.factory('gnFacetConfigService', [
-    'gnHttp',
-    function(gnHttp) {
-
+    '$q', '$timeout',
+    function($q, $timeout) {
       var loadConfig = function(summaryType) {
-        return gnHttp.callService('facetConfig', {}, {
-          cache: true
-        }).then(function(data) {
-          if (data.status != 200) {
-            return;
-          }
-          if (!data.data.hasOwnProperty(summaryType)) {
-            alert('ERROR: The config-summary.xml file does ' +
-                "not declare a summary type of: '" + summaryType + "'");
-          }
-          return data.data[summaryType];
-        });
+        // TODO: SOLR-MIGRATION-TO-DELETE
+        var deferred = $q.defer();
+        $timeout(function() {
+          deferred.resolve(null);
+        }, 100);
+        return deferred.promise;
       };
 
       return {

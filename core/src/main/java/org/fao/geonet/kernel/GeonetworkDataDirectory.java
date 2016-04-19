@@ -45,8 +45,7 @@ import java.util.Iterator;
  * GeoNetwork stores all of its custom configuration. This configuration defines
  * such things as: What thesaurus is used by GeoNetwork? What schema is plugged
  * in GeoNetwork?. The data directory also contains a number of support files
- * used by GeoNetwork for various purposes (eg. Lucene index, spatial index,
- * logos).
+ * used by GeoNetwork for various purposes (eg. logos).
  */
 public class GeonetworkDataDirectory {
     /**
@@ -68,7 +67,6 @@ public class GeonetworkDataDirectory {
 
     private Path webappDir;
     private Path systemDataDir;
-    private Path luceneDir;
     private Path spatialIndexPath;
     private Path configDir;
     private Path thesauriDir;
@@ -182,8 +180,8 @@ public class GeonetworkDataDirectory {
                     value = handlerConfig.getValue(keyToUse);
                     break;
                 case 3:
-//				Environment variable names used by the utilities in the Shell and Utilities 
-//				volume of IEEE Std 1003.1-2001 consist solely of uppercase letters, digits, and the '_' 
+//				Environment variable names used by the utilities in the Shell and Utilities
+//				volume of IEEE Std 1003.1-2001 consist solely of uppercase letters, digits, and the '_'
 //				Instead of looking for geonetwork.dir, get geonetwork_dir
                     value = System.getenv(keyWithNode.replace('.', '_'));
                     break;
@@ -289,8 +287,6 @@ public class GeonetworkDataDirectory {
                                         + systemDataDir);
 
         // Set subfolder data directory
-        luceneDir = setDir(jeevesServlet, webappName, handlerConfig, luceneDir, ".lucene" + KEY_SUFFIX,
-                Geonet.Config.LUCENE_DIR, "index");
         spatialIndexPath = setDir(jeevesServlet, "", handlerConfig, spatialIndexPath, "spatial" + KEY_SUFFIX,
                 null, "spatialindex");
 
@@ -479,20 +475,6 @@ public class GeonetworkDataDirectory {
     public void setSystemDataDir(Path systemDataDir) {
         this.systemDataDir = systemDataDir;
     }
-    /**
-     * Get the directory to store the lucene indices in.
-     * @return The directory to store the lucene indices in.
-     */
-    public Path getLuceneDir() {
-        return luceneDir;
-    }
-    /**
-     * Set the directory to store the lucene indices in.
-     */
-    public void setLuceneDir(Path luceneDir) {
-        this.luceneDir = luceneDir;
-    }
-
     /**
      * Get the directory to store the metadata spatial index. If the spatial index is to be stored locally this is the directory to use.
      *

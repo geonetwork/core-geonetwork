@@ -105,11 +105,6 @@ public interface ISearchManager {
      */
     void delete(List<String> txts) throws Exception;
 
-    void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception;
-
-    void disableOptimizer() throws Exception;
-
-
 
 
     interface ISpatial {

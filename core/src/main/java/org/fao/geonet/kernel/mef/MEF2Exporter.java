@@ -24,14 +24,6 @@
 package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
 import org.apache.solr.common.SolrDocument;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
@@ -125,57 +117,22 @@ class MEF2Exporter {
                 String mdSchema = null, mdTitle = null, mdAbstract = null, id = null, isHarvested = null;
                 MetadataType mdType = null;
 
-                // TODO: SOLR-MIGRATION-TO-DELETE
-                if (searchManager instanceof SearchManager) {
-                    try (IndexAndTaxonomy indexReaderAndTaxonomy = searchManager.getNewIndexReader(contextLang);) {
-                        IndexSearcher searcher = new IndexSearcher(indexReaderAndTaxonomy.indexReader);
-                        BooleanQuery query = new BooleanQuery();
-                        query.add(new BooleanClause(new TermQuery(new Term(UUID, uuid)), BooleanClause.Occur.MUST));
-                        query.add(new BooleanClause(new TermQuery(new Term(LOCALE, contextLang)), BooleanClause.Occur.SHOULD));
-                        TopDocs topDocs = searcher.search(query, NoFilterFilter.instance(), 5);
-
-                        for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
-                            Document doc = searcher.doc(scoreDoc.doc);
-                            String locale = doc.get(Geonet.IndexFieldNames.LOCALE);
-                            if (mdSchema == null) {
-                                mdSchema = doc.get(Geonet.IndexFieldNames.SCHEMA);
-                            }
-                            if (mdTitle == null || contextLang.equals(locale)) {
-                                mdTitle = doc.get(LuceneIndexField.TITLE);
-                            }
-                            if (mdAbstract == null || contextLang.equals(locale)) {
-                                mdAbstract = doc.get(LuceneIndexField.ABSTRACT);
-                            }
-                            if (id == null) {
-                                id = doc.get(LuceneIndexField.ID);
-                            }
-                            if (isHarvested == null) {
-                                isHarvested = doc.get(Geonet.IndexFieldNames.IS_HARVESTED);
-                            }
-                            if (mdType == null) {
-                                String tmp = doc.get(LuceneIndexField.IS_TEMPLATE);
-                                mdType = MetadataType.lookup(tmp.charAt(0));
-                            }
-                        }
-                    }
-                } else if (searchManager instanceof SolrSearchManager) {
-                    SolrDocument document = ((SolrSearchManager) searchManager).getDocFieldValue(
-                        "+" + LuceneIndexField.RECORD_IDENTIFIER + ":\"" + uuid + "\"",
-                        Geonet.IndexFieldNames.SCHEMA,
-                        LuceneIndexField.RESOURCE_TITLE,
-                        LuceneIndexField.RESOURCE_ABSTRACT,
-                        SolrSearchManager.ID,
-                        Geonet.IndexFieldNames.IS_HARVESTED,
-                        Geonet.IndexFieldNames.IS_TEMPLATE);
-                    if(document != null) {
-                        mdSchema = (String) document.getFieldValue(Geonet.IndexFieldNames.SCHEMA);
-                        id = (String) document.getFieldValue(SolrSearchManager.ID);
-                        mdTitle = (String) document.getFieldValue(LuceneIndexField.RESOURCE_TITLE);
-                        mdAbstract = (String) document.getFieldValue(LuceneIndexField.RESOURCE_ABSTRACT);
-                        isHarvested = (String) document.getFieldValue(Geonet.IndexFieldNames.IS_HARVESTED);
-                        String type = mdSchema = (String) document.getFieldValue(Geonet.IndexFieldNames.IS_TEMPLATE);
-                        mdType = MetadataType.lookup(type.charAt(0));
-                    }
+                SolrDocument document = ((SolrSearchManager) searchManager).getDocFieldValue(
+                    "+" + LuceneIndexField.RECORD_IDENTIFIER + ":\"" + uuid + "\"",
+                    Geonet.IndexFieldNames.SCHEMA,
+                    LuceneIndexField.RESOURCE_TITLE,
+                    LuceneIndexField.RESOURCE_ABSTRACT,
+                    SolrSearchManager.ID,
+                    Geonet.IndexFieldNames.IS_HARVESTED,
+                    Geonet.IndexFieldNames.IS_TEMPLATE);
+                if(document != null) {
+                    mdSchema = (String) document.getFieldValue(Geonet.IndexFieldNames.SCHEMA);
+                    id = (String) document.getFieldValue(SolrSearchManager.ID);
+                    mdTitle = (String) document.getFieldValue(LuceneIndexField.RESOURCE_TITLE);
+                    mdAbstract = (String) document.getFieldValue(LuceneIndexField.RESOURCE_ABSTRACT);
+                    isHarvested = (String) document.getFieldValue(Geonet.IndexFieldNames.IS_HARVESTED);
+                    String type = mdSchema = (String) document.getFieldValue(Geonet.IndexFieldNames.IS_TEMPLATE);
+                    mdType = MetadataType.lookup(type.charAt(0));
                 }
 
 

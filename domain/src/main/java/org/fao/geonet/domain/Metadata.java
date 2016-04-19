@@ -24,7 +24,6 @@
 package org.fao.geonet.domain;
 
 import com.vividsolutions.jts.util.Assert;
-import org.apache.lucene.document.Document;
 import org.apache.solr.common.SolrDocument;
 import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
 import org.fao.geonet.utils.Xml;
@@ -358,46 +357,6 @@ public class Metadata extends GeonetEntity {
      */
     protected void setCategories(@Nonnull Set<MetadataCategory> categories) {
         this._metadataCategories = categories;
-    }
-
-    // TODO: SOLR-MIGRATION-TO-DELETE
-    @Deprecated
-    public static Metadata createFromLuceneIndexDocument(Document doc) {
-        Metadata metadata = new Metadata();
-        metadata.setId(Integer.valueOf(doc.get("_id")));
-        metadata.setUuid(doc.get("_uuid"));
-
-        final MetadataDataInfo dataInfo = metadata.getDataInfo();
-        dataInfo.setSchemaId(doc.get("_schema"));
-        String metadataType = doc.get("_isTemplate");
-        if (metadataType != null) {
-            dataInfo.setType(MetadataType.lookup(metadataType));
-        }
-        dataInfo.setCreateDate(new ISODate(doc.get("_createDate")));
-        dataInfo.setChangeDate(new ISODate(doc.get("_changeDate")));
-        dataInfo.setRoot(doc.get("_root"));
-        final String displayOrder = doc.get("_displayOrder");
-        if (displayOrder != null) {
-            dataInfo.setDisplayOrder(Integer.valueOf(displayOrder));
-        }
-
-        String tmpIsHarvest = doc.get("_isHarvested");
-        if (tmpIsHarvest != null) {
-            metadata.getHarvestInfo().setHarvested(doc.get("_isHarvested").equals("y"));
-
-        }
-        final MetadataSourceInfo sourceInfo = metadata.getSourceInfo();
-        sourceInfo.setSourceId(doc.get("_source"));
-        final String owner = doc.get("_owner");
-        if (owner != null) {
-            sourceInfo.setOwner(Integer.valueOf(owner));
-        }
-
-        final String groupOwner = doc.get("_groupOwner");
-        if (groupOwner != null) {
-            sourceInfo.setGroupOwner(Integer.valueOf(groupOwner));
-        }
-        return metadata;
     }
 
     public static Metadata createFromSolrIndexDocument(SolrDocument doc) {

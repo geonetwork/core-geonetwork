@@ -27,13 +27,11 @@
 
 
   goog.require('gn_dashboard_content_stat_controller');
-  goog.require('gn_dashboard_search_stat_controller');
   goog.require('gn_dashboard_status_controller');
   goog.require('gn_vcs_controller');
 
   var module = angular.module('gn_dashboard_controller',
       ['gn_dashboard_status_controller',
-       'gn_dashboard_search_stat_controller',
        'gn_dashboard_content_stat_controller',
        'gn_vcs_controller']);
 
@@ -54,11 +52,6 @@
               label: 'status',
               icon: 'fa-dashboard',
               href: '#/dashboard/status'
-            },{
-              type: 'statistics-search',
-              label: 'searchStatistics',
-              icon: 'fa-search',
-              href: '#/dashboard/statistics-search'
             },{
               type: 'statistics-content',
               label: 'contentStatistics',

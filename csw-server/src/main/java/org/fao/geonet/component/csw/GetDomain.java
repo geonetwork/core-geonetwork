@@ -27,16 +27,6 @@ import bak.pcj.map.ObjectKeyIntMapIterator;
 import bak.pcj.map.ObjectKeyIntOpenHashMap;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.DocumentStoredFieldVisitor;
-import org.apache.lucene.index.FieldInfos;
-import org.apache.lucene.index.SlowCompositeReaderWrapper;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.CachingWrapperFilter;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TopDocs;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -81,26 +71,12 @@ import java.util.TreeSet;
 @Component(CatalogService.BEAN_PREFIX+GetDomain.NAME)
 public class GetDomain extends AbstractOperation implements CatalogService
 {
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
-
 	static final String NAME = "GetDomain";
-	@Autowired
-    private LuceneConfig _luceneConfig;
 
     @Autowired
     private ApplicationContext springAppContext;
     @Autowired
     private CatalogConfiguration _catalogConfig;
-
-    //---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
 
 	public String getName() { return NAME; }
 
@@ -125,7 +101,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			try {
                 final int maxNumberOfRecordsForPropertyNames = _catalogConfig.getMaxNumberOfRecordsForPropertyNames();
                 domainValues = handlePropertyName(_catalogConfig, propertyNames, context, false, maxNumberOfRecordsForPropertyNames,
-                        cswServiceSpecificConstraint, _luceneConfig);
+                        cswServiceSpecificConstraint);
             } catch (Exception e) {
 	            Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
 	            throw new NoApplicableCodeEx(
@@ -180,8 +156,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 
 	public static List<Element> handlePropertyName(CatalogConfiguration catalogConfig, String[] propertyNames,
                                                    ServiceContext context, boolean freq, int maxRecords,
-                                                   String cswServiceSpecificConstraint,
-                                                   LuceneConfig luceneConfig) throws Exception {
+                                                   String cswServiceSpecificConstraint) throws Exception {
 
 		List<Element> domainValuesList = new ArrayList<Element>();
 
@@ -209,163 +184,50 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			ISearchManager sm = gc.getBean(ISearchManager.class);
 
-            // TODO: SOLR-MIGRATION-TO-DELETE
-            if (sm instanceof SearchManager) {
-                IndexAndTaxonomy indexAndTaxonomy = sm.getNewIndexReader(null);
-                try {
-                    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
-                    BooleanQuery groupsQuery = (BooleanQuery) CatalogSearcher.getGroupsQuery(context);
-                    BooleanQuery query = null;
+            String query = "";
+            String groupsQuery = CatalogSearcher.getGroupsSolrQuery(context);
+            if (StringUtils.isNotEmpty(cswServiceSpecificConstraint)) {
+                String constraintQuery = "";
+                // TODO SOLR-MIGRATION
+                query = String.format("+(%s %s)", constraintQuery, groupsQuery);
+            } else {
+                query = groupsQuery;
+            }
 
-                    // Apply CSW service specific constraint
-                    if (StringUtils.isNotEmpty(cswServiceSpecificConstraint)) {
-                        Query constraintQuery = CatalogSearcher.getCswServiceSpecificConstraintQuery(cswServiceSpecificConstraint, luceneConfig);
+            String indexField = catalogConfig.getFieldMapping().get(
+                property.toLowerCase());
 
-                        query = new BooleanQuery();
+            List<FacetField.Count> fieldValues = ((SolrSearchManager)sm).getDocFieldValues(
+                indexField, query, false, null, null);
 
-                        BooleanClause.Occur occur = LuceneUtils
-                            .convertRequiredAndProhibitedToOccur(true, false);
+            boolean isRange = false;
+            if (catalogConfig.getGetRecordsRangeFields().contains(property)) {
+                isRange = true;
+            }
 
-                        query.add(groupsQuery, occur);
-                        query.add(constraintQuery, occur);
+            if (isRange) {
+                listOfValues = new Element("RangeOfValues", Csw.NAMESPACE_CSW);
+            } else {
+                listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
+            }
 
-                    } else {
-                        query = groupsQuery;
-                    }
-
-                    List<Pair<String, Boolean>> sortFields = Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true));
-                    Sort sort = LuceneSearcher.makeSort(sortFields, context.getLanguage(), false);
-                    CachingWrapperFilter filter = null;
-
-                    Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(
-                        maxRecords, 0, maxRecords, context.getLanguage(),
-                        null, luceneConfig, reader,
-                        query, filter, sort, null, false
-                    );
-                    TopDocs hits = searchResults.one();
-
-                    try {
-                        // Get mapped lucene field in CSW configuration
-                        String indexField = catalogConfig.getFieldMapping().get(
-                            property.toLowerCase());
-                        if (indexField != null)
-                            property = indexField;
-
-                        // check if params asked is in the index using getFieldNames ?
-                        @SuppressWarnings("resource")
-                        FieldInfos fi = SlowCompositeReaderWrapper.wrap(reader).getFieldInfos();
-                        if (fi.fieldInfo(property) == null)
-                            continue;
-
-                        boolean isRange = false;
-                        if (catalogConfig.getGetRecordsRangeFields().contains(property))
-                            isRange = true;
-
-                        if (isRange)
-                            listOfValues = new Element("RangeOfValues", Csw.NAMESPACE_CSW);
-                        else
-                            listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
-
-                        Set<String> fields = new HashSet<String>();
-                        fields.add(property);
-                        fields.add("_isTemplate");
-
-
-                        // parse each document in the index
-                        String[] fieldValues;
-                        Collator stringCollator = Collator.getInstance();
-                        stringCollator.setStrength(Collator.PRIMARY);
-                        SortedSet<String> sortedValues = new TreeSet<String>(stringCollator);
-                        ObjectKeyIntOpenHashMap duplicateValues = new ObjectKeyIntOpenHashMap();
-                        for (int j = 0; j < hits.scoreDocs.length; j++) {
-                            DocumentStoredFieldVisitor selector = new DocumentStoredFieldVisitor(fields);
-                            reader.document(hits.scoreDocs[j].doc, selector);
-                            Document doc = selector.getDocument();
-
-                            // Skip templates and subTemplates
-                            String[] isTemplate = doc.getValues("_isTemplate");
-                            if (isTemplate[0] != null && !isTemplate[0].equals("n"))
-                                continue;
-
-                            // Get doc values for specified property
-                            fieldValues = doc.getValues(property);
-                            if (fieldValues == null)
-                                continue;
-
-                            addtoSortedSet(sortedValues, fieldValues, duplicateValues);
-                        }
-
-                        SummaryComparator valuesComparator = new SummaryComparator(SortOption.FREQUENCY, Type.STRING, context.getLanguage(), null);
-                        TreeSet<SummaryComparator.SummaryElement> sortedValuesFrequency = new TreeSet<SummaryComparator.SummaryElement>(valuesComparator);
-                        ObjectKeyIntMapIterator entries = duplicateValues.entries();
-
-                        while (entries.hasNext()) {
-                            entries.next();
-                            sortedValuesFrequency.add(new SummaryComparator.SummaryElement(entries));
-                        }
-
-                        if (freq)
-                            return createValuesByFrequency(sortedValuesFrequency);
-                        else
-                            listOfValues.addContent(createValuesElement(sortedValues, isRange));
-
-                    } finally {
-                        // any children means that the catalog was unable to determine
-                        // anything about the specified parameter
-                        if (listOfValues != null && listOfValues.getChildren().size() != 0)
-                            domainValues.addContent(listOfValues);
-
-                        // Add current DomainValues to the list
-                        domainValuesList.add(domainValues);
-                    }
-                } finally {
-                    sm.releaseIndexReader(indexAndTaxonomy);
-                }
-            } else if (sm instanceof SolrSearchManager) {
-                String query = "";
-                String groupsQuery = CatalogSearcher.getGroupsSolrQuery(context);
-                if (StringUtils.isNotEmpty(cswServiceSpecificConstraint)) {
-                    String constraintQuery = "";
-                    // TODO SOLR-MIGRATION
-                    query = String.format("+(%s %s)", constraintQuery, groupsQuery);
-                } else {
-                    query = groupsQuery;
-                }
-
-                String indexField = catalogConfig.getFieldMapping().get(
-                    property.toLowerCase());
-
-                List<FacetField.Count> fieldValues = ((SolrSearchManager)sm).getDocFieldValues(
-                    indexField, query, false, null, null);
-
-                boolean isRange = false;
-                if (catalogConfig.getGetRecordsRangeFields().contains(property)) {
-                    isRange = true;
-                }
-
-                if (isRange) {
-                    listOfValues = new Element("RangeOfValues", Csw.NAMESPACE_CSW);
-                } else {
-                    listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
-                }
-
-                if (isRange) {
-                    // TODO: SOLR-MIGRATION
+            if (isRange) {
+                // TODO: SOLR-MIGRATION
 //                    valuesList.add(new Element("MinValue",Csw.NAMESPACE_CSW).setText(sortedValues.first()));
 //                    valuesList.add(new Element("MaxValue",Csw.NAMESPACE_CSW).setText(sortedValues.last()));
-                } else {
-                    for (FacetField.Count count : fieldValues) {
-                        Element value = new Element("Value", Csw.NAMESPACE_CSW);
-                        value.setAttribute("count", count.getCount() + "");
-                        value.setText(count.getName());
-                        listOfValues.addContent(value);
-                    }
+            } else {
+                for (FacetField.Count count : fieldValues) {
+                    Element value = new Element("Value", Csw.NAMESPACE_CSW);
+                    value.setAttribute("count", count.getCount() + "");
+                    value.setText(count.getName());
+                    listOfValues.addContent(value);
                 }
-
-                if (listOfValues != null && listOfValues.getChildren().size() != 0)
-                    domainValues.addContent(listOfValues);
-                domainValuesList.add(domainValues);
             }
+
+            if (listOfValues != null && listOfValues.getChildren().size() != 0) {
+                domainValues.addContent(listOfValues);
+            }
+            domainValuesList.add(domainValues);
 		}
 		return domainValuesList;
 

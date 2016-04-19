@@ -69,120 +69,113 @@ public class RdfOutputManager {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
 
+        List<String> results = searcher.search(context);
+
+        Element records = createXsltModel(context);
+
+        // Write results intermediate files:
+        //  - recordsFile: File where each metadata is written in DCAT format.
+        //  - catalogFile: File where the catalog section (dcat:Catalog) with all dcat:dataset elements is written.
+        //                 Required as the results are paginated to avoid memory issues and
+        //                 the catalog section goes at the top of the final file, can't be managed all in 1 file
+
+        BufferedWriter outputRecordsFile = null, outputCatalogFile = null, outputRdfFile = null;
+        File recordsFile = null, catalogFile = null, rdfFile = null;
+
         try {
-            List results = searcher.search(context);
+            recordsFile = File.createTempFile("records-", ".rdf");
+            outputRecordsFile = new BufferedWriter(new FileWriter(recordsFile));
 
-            Element records = createXsltModel(context);
+            catalogFile = File.createTempFile("catalog-", ".rdf");
+            outputCatalogFile = new BufferedWriter(new FileWriter(catalogFile));
 
-            // Write results intermediate files:
-            //  - recordsFile: File where each metadata is written in DCAT format.
-            //  - catalogFile: File where the catalog section (dcat:Catalog) with all dcat:dataset elements is written.
-            //                 Required as the results are paginated to avoid memory issues and
-            //                 the catalog section goes at the top of the final file, can't be managed all in 1 file
+            Path xslPath = context.getAppPath().resolve(Geonet.Path.XSLT_FOLDER).
+                    resolve("services").resolve("dcat").resolve("rdf.xsl");
 
-            BufferedWriter outputRecordsFile = null, outputCatalogFile = null, outputRdfFile = null;
-            File recordsFile = null, catalogFile = null, rdfFile = null;
+            int size = results.size();
+            int page = 1;
 
-            try {
-                recordsFile = File.createTempFile("records-", ".rdf");
-                outputRecordsFile = new BufferedWriter(new FileWriter(recordsFile));
+            Log.info(Geonet.GEONETWORK, "DCAT - Processing " + size + " results");
 
-                catalogFile = File.createTempFile("catalog-", ".rdf");
-                outputCatalogFile = new BufferedWriter(new FileWriter(catalogFile));
+            if (size == 0) {
+                Element recordsRdf = Xml.transform(records, xslPath);
+                writeCatalogResults(outputCatalogFile, recordsRdf, page);
+                writeFileResults(outputRecordsFile, recordsRdf, page);
 
-                Path xslPath = context.getAppPath().resolve(Geonet.Path.XSLT_FOLDER).
-                        resolve("services").resolve("dcat").resolve("rdf.xsl");
+            } else {
+                for (int i = 0; i < size; i++) {
+                    String id = results.get(i);
 
-                int size = results.size();
-                int page = 1;
+                    boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+                    Element md = dm.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+                    records.addContent(md.detach());
 
-                Log.info(Geonet.GEONETWORK, "DCAT - Processing " + size + " results");
+                    // write results to file when processing the last record of the page or last record of the results
+                    if (hasToWriteResults(i, size)) {
+                        Log.info(Geonet.GEONETWORK, "DCAT - Processing results from page " + page);
 
-                if (size == 0) {
-                    Element recordsRdf = Xml.transform(records, xslPath);
-                    writeCatalogResults(outputCatalogFile, recordsRdf, page);
-                    writeFileResults(outputRecordsFile, recordsRdf, page);
+                        // Process the resultset
+                        Element recordsRdf = Xml.transform(records, xslPath);
 
-                } else {
-                    for (int i = 0; i < size; i++) {
-                        Element mdInfo = (Element) results.get(i);
+                        writeCatalogResults(outputCatalogFile, recordsRdf, page);
 
-                        Element info = mdInfo.getChild("info", Edit.NAMESPACE);
-                        String id = info.getChildText("id");
+                        // Write results
+                        writeFileResults(outputRecordsFile, recordsRdf, page);
 
-                        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-                        Element md = dm.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
-                        records.addContent(md.detach());
+                        records = createXsltModel(context);
 
-                        // write results to file when processing the last record of the page or last record of the results
-                        if (hasToWriteResults(i, size)) {
-                            Log.info(Geonet.GEONETWORK, "DCAT - Processing results from page " + page);
-
-                            // Process the resultset
-                            Element recordsRdf = Xml.transform(records, xslPath);
-
-                            writeCatalogResults(outputCatalogFile, recordsRdf, page);
-
-                            // Write results
-                            writeFileResults(outputRecordsFile, recordsRdf, page);
-
-                            records = createXsltModel(context);
-
-                            page++;
-                        }
+                        page++;
                     }
-
                 }
 
-            } finally {
-                IOUtils.closeQuietly(outputRecordsFile);
-                IOUtils.closeQuietly(outputCatalogFile);
             }
-
-
-            // Create the final rdf file
-            Log.info(Geonet.GEONETWORK, "DCAT - Creating RDF file with results");
-
-            BufferedReader reader1 = null, reader2 = null;
-            try {
-                rdfFile = File.createTempFile("rdf-", ".rdf");
-                outputRdfFile = new BufferedWriter(new FileWriter(rdfFile));
-
-                // File header
-                Log.info(Geonet.GEONETWORK, "DCAT - ... Writing file header and dcat:Catalog section");
-                writeFileHeader(outputRdfFile);
-
-                // Append catalog records
-                reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(catalogFile)));
-                IOUtils.copy(reader1, outputRdfFile);
-
-                // Close dcat:Catalog
-                outputRdfFile.write("</dcat:Catalog>");
-                outputRdfFile.write("\n");
-
-                // Append records file
-                Log.info(Geonet.GEONETWORK, "DCAT - ... Writing catalog records");
-                reader2 = new BufferedReader(new InputStreamReader(new FileInputStream(recordsFile)));
-                IOUtils.copy(reader2, outputRdfFile);
-
-                // File footer
-                Log.info(Geonet.GEONETWORK, "DCAT - ... Writing file footer");
-                writeFileFooter(outputRdfFile);
-            } finally {
-                IOUtils.closeQuietly(outputRdfFile);
-                IOUtils.closeQuietly(reader1);
-                IOUtils.closeQuietly(reader2);
-            }
-
-            // Delete temporal files
-            FileUtils.deleteQuietly(recordsFile);
-            FileUtils.deleteQuietly(catalogFile);
-
-            return rdfFile;
 
         } finally {
-            searcher.close();
+            IOUtils.closeQuietly(outputRecordsFile);
+            IOUtils.closeQuietly(outputCatalogFile);
         }
+
+
+        // Create the final rdf file
+        Log.info(Geonet.GEONETWORK, "DCAT - Creating RDF file with results");
+
+        BufferedReader reader1 = null, reader2 = null;
+        try {
+            rdfFile = File.createTempFile("rdf-", ".rdf");
+            outputRdfFile = new BufferedWriter(new FileWriter(rdfFile));
+
+            // File header
+            Log.info(Geonet.GEONETWORK, "DCAT - ... Writing file header and dcat:Catalog section");
+            writeFileHeader(outputRdfFile);
+
+            // Append catalog records
+            reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(catalogFile)));
+            IOUtils.copy(reader1, outputRdfFile);
+
+            // Close dcat:Catalog
+            outputRdfFile.write("</dcat:Catalog>");
+            outputRdfFile.write("\n");
+
+            // Append records file
+            Log.info(Geonet.GEONETWORK, "DCAT - ... Writing catalog records");
+            reader2 = new BufferedReader(new InputStreamReader(new FileInputStream(recordsFile)));
+            IOUtils.copy(reader2, outputRdfFile);
+
+            // File footer
+            Log.info(Geonet.GEONETWORK, "DCAT - ... Writing file footer");
+            writeFileFooter(outputRdfFile);
+        } finally {
+            IOUtils.closeQuietly(outputRdfFile);
+            IOUtils.closeQuietly(reader1);
+            IOUtils.closeQuietly(reader2);
+        }
+
+        // Delete temporal files
+        FileUtils.deleteQuietly(recordsFile);
+        FileUtils.deleteQuietly(catalogFile);
+
+        return rdfFile;
+
     }
 
     /**

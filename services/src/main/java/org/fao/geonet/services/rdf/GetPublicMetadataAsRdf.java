@@ -36,21 +36,14 @@ import java.nio.file.Path;
 public class GetPublicMetadataAsRdf implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {}
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
-
     public Element exec(Element params, ServiceContext context) throws Exception {
         Element thesaurusEl = new GetList().exec(params, context);
 
         RdfOutputManager manager = new RdfOutputManager((Element) thesaurusEl.getChild("thesauri").detach());
 
-        RdfSearcher rdfHarvestSearcher = new RdfSearcher(params, context);
+        RdfSearcher rdfHarvestSearcher = new RdfSearcher(params.getChildText("q"));
         File rdfFile = manager.createRdfFile(context, rdfHarvestSearcher);
 
         return BinaryFile.encode(200, rdfFile.toPath().toAbsolutePath().normalize(), true).getElement();
     }
-
 }

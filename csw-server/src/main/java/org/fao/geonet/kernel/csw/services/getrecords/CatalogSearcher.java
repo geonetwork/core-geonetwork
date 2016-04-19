@@ -780,7 +780,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
     // TODO: SOLR-MIGRATION-TO-DELETE
     @Deprecated
     public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint, LuceneConfig _luceneConfig) throws ParseException, QueryNodeException {
-//        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , ISearchManager.getAnalyzer());
+//        MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_4_9, fields , ISearchManager.getAnalyzer());
         StandardQueryParser parser = new StandardQueryParser(SearchManager.getAnalyzer());
         Map<String, NumericConfig> numericMap = new HashMap<String, NumericConfig>();
         for (LuceneConfigNumericField field : _luceneConfig.getNumericFields().values()) {

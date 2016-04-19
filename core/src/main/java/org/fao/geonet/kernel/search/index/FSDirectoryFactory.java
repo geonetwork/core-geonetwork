@@ -71,13 +71,7 @@ public class FSDirectoryFactory implements DirectoryFactory {
     protected volatile Path indexFile;
 
     public synchronized void init() throws IOException {
-
-        GeonetworkDataDirectory dataDir = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         if (taxonomyFile == null) {
-            final Path luceneDir = dataDir.getLuceneDir();
-            if (luceneDir == null) {
-                throw new IllegalStateException("This object cannot be constructed until GeonetworkDataDirectory has been initialized");
-            }
             indexFile = findLatestIndexDir(NON_SPATIAL_DIR);
 
             taxonomyFile = findLatestIndexDir(TAXONOMY_DIR);
@@ -85,24 +79,7 @@ public class FSDirectoryFactory implements DirectoryFactory {
     }
 
     private Path findLatestIndexDir(String baseName) throws IOException {
-        GeonetworkDataDirectory dataDir = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
-
         Path indexDir = null;
-        try (DirectoryStream<Path> paths = Files.newDirectoryStream(dataDir.getLuceneDir()) ){
-            Iterator<Path> pathIter = paths.iterator();
-            while (pathIter.hasNext()) {
-                Path file =  pathIter.next();
-                if (file.getFileName().toString().equals(baseName) && !Files.exists(file.resolve(DELETE_DIR_FLAG_FILE))) {
-                    if (indexDir == null || indexDir.getFileName().compareTo(file.getFileName()) < 0) {
-                        indexDir = file;
-                    }
-                }
-            }
-        }
-
-        if (indexDir == null) {
-            return dataDir.getLuceneDir().resolve(baseName);
-        }
         return indexDir;
     }
 
@@ -140,35 +117,14 @@ public class FSDirectoryFactory implements DirectoryFactory {
     }
 
     private void cleanOldDirectoriesIfPossible() throws IOException {
-        GeonetworkDataDirectory dataDir = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
 
-        try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(dataDir.getLuceneDir())) {
-            for (Path path : directoryStream) {
-                Path deleteFlagFile = path.resolve(DELETE_DIR_FLAG_FILE);
-                if (Files.exists(deleteFlagFile)) {
-                    try {
-                        IO.deleteFileOrDirectory(path);
-                    } catch (IOException e) {
-                        Log.debug(Geonet.LUCENE_TRACKING, "Unable to delete obsolete index directory: " + path);
-                        IO.touch(deleteFlagFile);
-                    }
-                }
-            }
-        }
     }
 
     @Nonnull
     @VisibleForTesting
     protected Path createNewIndexDirectory(String baseName) throws IOException {
-        GeonetworkDataDirectory dataDir = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
 
-        Path newFile = dataDir.getLuceneDir().resolve(baseName);
-        int i = 0;
-        while (Files.exists(newFile) || Files.exists(newFile.resolve(DELETE_DIR_FLAG_FILE))) {
-            i++;
-            newFile = dataDir.getLuceneDir().resolve(baseName + "_"+i);
-        }
-        return newFile;
+        return null;
     }
 
     private boolean cleanDirectory(Path root) throws IOException {

@@ -45,8 +45,6 @@ import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.LuceneConfig;
-import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
@@ -172,8 +170,6 @@ public class Geonetwork implements ApplicationHandler {
         // Get config handler properties
         String systemDataDir = handlerConfig.getMandatoryValue(Geonet.Config.SYSTEM_DATA_DIR);
         String thesauriDir = handlerConfig.getMandatoryValue(Geonet.Config.CODELIST_DIR);
-        String luceneDir = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR);
-        String luceneConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
 
         logger.info("Data directory: " + systemDataDir);
 
@@ -225,27 +221,7 @@ public class Geonetwork implements ApplicationHandler {
                 schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA),
                 createOrUpdateSchemaCatalog);
 
-        //------------------------------------------------------------------------
-        //--- initialize search and editing
-
         logger.info("  - Search...");
-
-        LuceneConfig lc = _applicationContext.getBean(LuceneConfig.class);
-        lc.configure(luceneConfigXmlFile);
-        logger.info("  - Lucene configuration is:");
-        logger.info(lc.toString());
-
-        try {
-            _applicationContext.getBean(DataStore.class);
-        } catch (NoSuchBeanDefinitionException e) {
-            DataStore dataStore = createShapefileDatastore(luceneDir);
-            _applicationContext.getBeanFactory().registerSingleton("dataStore", dataStore);
-            //--- no datastore for spatial indexing means that we can't continue
-            if (dataStore == null) {
-                throw new IllegalArgumentException("GeoTools datastore creation failed - check logs for more info/exceptions");
-            }
-        }
-
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
         searchMan = _applicationContext.getBean(ISearchManager.class);
         searchMan.init(handlerConfig);
@@ -612,42 +588,5 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Harvest Manager...");
         _applicationContext.getBean(HarvestManager.class).shutdown();
-    }
-
-    //---------------------------------------------------------------------------
-
-    private DataStore createShapefileDatastore(String indexDir) throws Exception {
-
-        File file = new File(indexDir + "/" + SpatialIndexWriter._SPATIAL_INDEX_TYPENAME + ".shp");
-        if (!file.getParentFile().mkdirs() && !file.getParentFile().exists()) {
-            throw new RuntimeException("Unable to create the spatial index (shapefile) directory: " + file.getParentFile());
-        }
-        if (!file.exists()) {
-            logger.info("Creating shapefile " + file.getAbsolutePath());
-        } else {
-            logger.info("Using shapefile " + file.getAbsolutePath());
-        }
-        ShapefileDataStore ids = new ShapefileDataStore(file.toURI().toURL());
-        ids.setNamespaceURI("http://geonetwork.org");
-        ids.setMemoryMapped(false);
-        ids.setCharset(Charset.forName(Constants.ENCODING));
-        ids.setIndexCreationEnabled(false);
-        CoordinateReferenceSystem crs = CRS.decode("EPSG:4326");
-
-        if (crs != null) {
-            ids.forceSchemaCRS(crs);
-        }
-
-        if (!file.exists()) {
-            SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
-            AttributeDescriptor geomDescriptor = new AttributeTypeBuilder().crs(DefaultGeographicCRS.WGS84).binding(MultiPolygon.class).buildDescriptor("the_geom");
-            builder.setName(SpatialIndexWriter._SPATIAL_INDEX_TYPENAME);
-            builder.add(geomDescriptor);
-            builder.add(SpatialIndexWriter._IDS_ATTRIBUTE_NAME, String.class);
-            ids.createSchema(builder.buildFeatureType());
-        }
-
-        logger.info("NOTE: Using shapefile for spatial index, this can be slow for larger catalogs");
-        return ids;
     }
 }

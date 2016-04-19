@@ -31,6 +31,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.solr.SolrConfig;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.jdom.Element;
 
@@ -53,9 +54,9 @@ import javax.xml.transform.TransformerFactory;
  * transformer factory, Lucene index properties). Usually these properties could not
  * be set from the web interface and some of them could be updated in configuration
  * file.
- * 
+ *
  * @author francois
- * 
+ *
  */
 public class GetInfo implements Service {
 	private HashMap<String, String> catProperties = new HashMap<String, String>();
@@ -148,44 +149,19 @@ public class GetInfo implements Service {
 	}
 
 	/**
-	 * Compute information about Lucene index.
+	 * Compute information about Solr index.
 	 *
      * @param context
      */
 	private void loadIndexInfo(ServiceContext context) throws IOException {
-        final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
-        Path luceneDir = dataDirectory.getLuceneDir();
-		indexProperties.put("index.path", luceneDir.toAbsolutePath().normalize().toString());
-        Path lDir = dataDirectory.getSpatialIndexPath();
-		if (Files.exists(luceneDir)) {
-			long size = sizeOfDirectory(luceneDir) / 1024;
-			indexProperties.put("index.size", "" + size); // lucene + Shapefile
-															// if exist
-        }
-
-        if (Files.exists(lDir)) {
-            long size = sizeOfDirectory(lDir) / 1024;
-            indexProperties.put("index.size.lucene", "" + size);
-        }
-		indexProperties.put("index.lucene.config", context.getBean(LuceneConfig.class).toString());
+        final SolrConfig solrConfig = context.getBean(SolrConfig.class);
+		indexProperties.put("index.url", solrConfig.getSolrServerUrl());
+		indexProperties.put("index.core", solrConfig.getSolrServerCore());
 	}
-
-    private long sizeOfDirectory(Path lDir) throws IOException {
-        final long[] size = new long[]{0};
-        Files.walkFileTree(lDir, new SimpleFileVisitor<Path>(){
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                size[0] += Files.size(file);
-                return FileVisitResult.CONTINUE;
-            }
-        });
-
-        return size[0];
-    }
 
     /**
 	 * Compute information about database.
-	 * 
+	 *
 	 * @param context
 	 */
 	private void loadDatabaseInfo(ServiceContext context) throws SQLException {
@@ -220,11 +196,11 @@ public class GetInfo implements Service {
 		databaseProperties.put("db.url", dbURL);
 
 	}
-	
-	
+
+
 	/**
 	 * Add HashMap content to an Element.
-	 * 
+	 *
 	 * @param el
 	 * @param h
 	 */

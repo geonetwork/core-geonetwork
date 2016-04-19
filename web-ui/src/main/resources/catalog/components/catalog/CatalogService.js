@@ -386,7 +386,6 @@
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
     geoserverNodes: 'geoserver.publisher?_content_type=json&',
     suggest: 'suggest',
-    facetConfig: 'search/facet/config',
     selectionLayers: 'selection.layers',
 
     // wfs indexing

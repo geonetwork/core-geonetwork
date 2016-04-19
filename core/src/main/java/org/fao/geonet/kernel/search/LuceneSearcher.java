@@ -103,7 +103,6 @@ import org.fao.geonet.kernel.search.facet.ItemBuilder;
 import org.fao.geonet.kernel.search.facet.ItemConfig;
 import org.fao.geonet.kernel.search.facet.SummaryType;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
-import org.fao.geonet.kernel.search.log.SearcherLogger;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -153,7 +152,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 	private String _geomWKT = null;
     private long _versionToken = -1;
     private SummaryType _summaryConfig;
-    private boolean _logSearch = true;
 
     /**
      * constructor
@@ -209,48 +207,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         }
         performQuery(srvContext, getFrom() - 1, getTo(), buildSummary);
         updateSearchRange(request);
-
-        if (_logSearch) {
-            logSearch(srvContext, config, _query, _numHits, _sort, _geomWKT, _sm);
-        }
     }
 
-    public static void logSearch(ServiceContext srvContext, ServiceConfig config, Query query, int numHits, Sort sort, String geomWKT,
-            ISearchManager sm) {
-        if (sm instanceof SearchManager) {
-            logSearch(srvContext, config, query, numHits, sort, geomWKT, (SearchManager) sm);
-        } //TODO
-    }
-
-    public static void logSearch(ServiceContext srvContext, ServiceConfig config, Query query, int numHits, Sort sort, String geomWKT,
-            SearchManager sm) {
-        SettingInfo si = srvContext.getBean(SettingInfo.class);
-        if (si.isSearchStatsEnabled()) {
-            if (sm.getLogAsynch()) {
-                // Run asynch
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in asynch mode - start.");
-                GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-                SearchLoggerTask logTask = srvContext.getBean(SearchLoggerTask.class);
-                logTask.configure(srvContext, sm.getLogSpatialObject(), sm.getLuceneTermsToExclude(), query, numHits, sort, geomWKT,
-                        config.getValue(Jeeves.Text.GUI_SERVICE,"n"));
-
-                gc.getThreadPool().runTask(logTask);
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in asynch mode - end.");
-            } else {
-                // Run synch - alter search performance
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in synch mode - start.");
-                SearcherLogger searchLogger = new SearcherLogger(srvContext, sm.getLogSpatialObject(),
-                        sm.getLuceneTermsToExclude());
-                searchLogger.logSearch(query, numHits, sort, geomWKT,
-                        config.getValue(Jeeves.Text.GUI_SERVICE,"n"));
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in synch mode - end.");
-            }
-        }
-    }
     /**
      * TODO javadoc.
      *
@@ -481,7 +439,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             _language = determineLanguage(srvContext, request, ApplicationContextHolder.get().getBean(SettingInfo.class));
         }
 
-        _logSearch = false;
 
 		// Search for all current session could search for
 		// Do a like query to limit the size of the results
@@ -607,7 +564,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             // no requestedLanguage in request
             boolean detected = false;
             // autodetection is enabled
-            if (settingInfo.getAutoDetect()) {
+            if (true) {
                 if (Log.isDebugEnabled(Geonet.LUCENE)) {
                     Log.debug(Geonet.LUCENE, "auto-detecting request language is enabled");
                 }
@@ -1656,9 +1613,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                       "_source", "_isTemplate", "_title", "_uuid", "_isHarvested", "_owner", "_groupOwner");
               indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
               Document doc = docVisitor.getDocument();
-
-              Metadata mdInfo = Metadata.createFromLuceneIndexDocument(doc);
-              response.put(mdInfo.getId(), mdInfo);
+//              Metadata mdInfo = Metadata.createFromLuceneIndexDocument(doc);
+//              response.put(mdInfo.getId(), mdInfo);
           }
       } finally {
           _sm.releaseIndexReader(indexAndTaxonomy);

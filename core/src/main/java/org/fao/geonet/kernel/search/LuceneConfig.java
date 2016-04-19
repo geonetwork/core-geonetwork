@@ -58,9 +58,9 @@ import jeeves.server.overrides.ConfigurationOverrides;
 
 /**
  * Lucene configuration class load Lucene XML configuration file.
- * 
+ *
  * @author fxprunayre
- * 
+ *
  */
 public class LuceneConfig {
     public static final String USE_NRT_MANAGER_REOPEN_THREAD = "useNRTManagerReopenThread";
@@ -130,7 +130,7 @@ public class LuceneConfig {
         private LuceneConfig getOuterType() {
             return LuceneConfig.this;
         }
-		
+
 	}
 
 	private Set<String> tokenizedFields = new LinkedHashSet<String>();
@@ -169,8 +169,8 @@ public class LuceneConfig {
 	private boolean useNRTManagerReopenThread = true;
 	private double nrtManagerReopenThreadMaxStaleSec = 5;
 	private double nrtManagerReopenThreadMinStaleSec = 0.1f;
-	
-	private Version LUCENE_VERSION = Geonet.LUCENE_VERSION;
+
+	private Version LUCENE_VERSION = Version.LUCENE_4_9;
 	private Set<String> multilingualSortFields = new LinkedHashSet<String>();
 
     private Facets facets;
@@ -212,7 +212,7 @@ public class LuceneConfig {
 				ConfigurationOverrides.DEFAULT.updateWithOverrides(luceneConfigXmlFile, servletContext,
                         geonetworkDataDirectory.getWebappDir(), luceneConfig);
 			}
-			
+
 			// Main Lucene index configuration option
 			Element elem = luceneConfig.getChild("index");
 			String version = elem.getChildText("luceneVersion");
@@ -221,13 +221,13 @@ public class LuceneConfig {
 				try {
 					LUCENE_VERSION = Version.valueOf("LUCENE_" + version);
 					if (LUCENE_VERSION == null) {
-					    LUCENE_VERSION = Geonet.LUCENE_VERSION;
+					    LUCENE_VERSION = Version.LUCENE_4_9;
 					}
 				} catch (Exception e) {
 					Log.warning(Geonet.SEARCH_ENGINE,
 							"Failed to set Lucene version to: " + version
-									+ ". Set to default: " + Geonet.LUCENE_VERSION.toString());
-					LUCENE_VERSION = Geonet.LUCENE_VERSION;
+									+ ". Set to default: " + Version.LUCENE_4_9.toString());
+					LUCENE_VERSION = Version.LUCENE_4_9;
 				}
 			}
 
@@ -256,7 +256,7 @@ public class LuceneConfig {
 					MergeFactor = DEFAULT_MERGEFACTOR;
 				}
 			}
-			
+
 			String cI = elem.getChildText("commitInterval");
 			if (cI != null) {
 			    try {
@@ -366,11 +366,11 @@ public class LuceneConfig {
 			// Fields specific analyzer
 			fieldSpecificAnalyzers = new HashMap<String, String>();
 			loadAnalyzerConfig("fieldSpecificAnalyzer", fieldSpecificAnalyzers);
-			
+
 			// Fields specific search analyzer (is a clone of fieldSpecificAnalyzers it not overridden)
 			fieldSpecificSearchAnalyzers = new HashMap<String, String>(fieldSpecificAnalyzers);
 			loadAnalyzerConfig("fieldSpecificSearchAnalyzer", fieldSpecificSearchAnalyzers);
-			
+
 			// Fields boosting
             elem = luceneConfig.getChild("fieldBoosting");
             fieldBoost = new HashMap<String, Float>();
@@ -395,7 +395,7 @@ public class LuceneConfig {
                     }
                 }
             }
-            
+
             // Document boosting
             elem = luceneConfig.getChild("boostDocument");
             if (elem != null) {
@@ -406,7 +406,7 @@ public class LuceneConfig {
                         elem.getChildren("Param"));
             }
 
-			
+
 			// Search
 			Element searchConfig = luceneConfig.getChild("search");
 
@@ -440,10 +440,10 @@ public class LuceneConfig {
 							}
 						}
 					}
-				}				
+				}
 			}
 
-			
+
 			// Score
 			elem = searchConfig.getChild("trackDocScores");
 			if (elem != null && elem.getText().equals("true")) {
@@ -473,7 +473,7 @@ public class LuceneConfig {
 							+ e.getMessage());
 		}
 	}
-	
+
 	private void loadAnalyzerConfig(String configRootName, Map<String, String> fieldAnalyzer) {
 		Element elem;
 		elem = luceneConfig.getChild(configRootName);
@@ -591,15 +591,15 @@ public class LuceneConfig {
 
 	/**
 	 * Get the fields that are used for sorting also may have translations.
-	 * 
+	 *
 	 * See http://trac.osgeo.org/geonetwork/ticket/1112
 	 */
 	public Set<String> getMultilingualSortFields() {
 		return multilingualSortFields;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return The list of tokenized fields which could not determined using
 	 *         Lucene API.
 	 */
@@ -619,7 +619,7 @@ public class LuceneConfig {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param name
 	 * @return	True if the field has to be tokenized
 	 */
@@ -628,7 +628,7 @@ public class LuceneConfig {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The list of numeric fields which could not determined using
 	 *         Lucene API.
 	 */
@@ -642,9 +642,9 @@ public class LuceneConfig {
 	public Map<String, String> getDumpFields() {
 		return this.dumpFields;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return The list of numeric fields which could not determined using
 	 *         Lucene API.
 	 */
@@ -654,7 +654,7 @@ public class LuceneConfig {
 
 	/**
 	 * Check if a field is numeric or not
-	 * 
+	 *
 	 * @param fieldName field name
 	 * @return True if the field has to be indexed as a numeric field
 	 */
@@ -663,7 +663,7 @@ public class LuceneConfig {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param analyzer
 	 *            The analyzer name (could be a class name or field concatenated
 	 *            with class name for specific field analyzer)
@@ -674,7 +674,7 @@ public class LuceneConfig {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param analyzer
 	 *            The analyzer name (could be a class name or field concatenated
 	 *            with class name for specific field analyzer)
@@ -685,7 +685,7 @@ public class LuceneConfig {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The list of values for boost query parameters.
 	 */
 	public Object[] getBoostQueryParameter() {
@@ -693,7 +693,7 @@ public class LuceneConfig {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The list of classes for boost query parameters.
 	 */
 	public Class<?>[] getBoostQueryParameterClass() {
@@ -701,7 +701,7 @@ public class LuceneConfig {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Class name of the boosting query or null if not defined.
 	 */
 	public String getBoostQueryClass() {
@@ -709,7 +709,7 @@ public class LuceneConfig {
 	}
 
 	/**
-     * 
+     *
      * @return The list of values for document boost parameters.
      */
     public Object[] getDocumentBoostParameter() {
@@ -717,7 +717,7 @@ public class LuceneConfig {
     }
 
     /**
-     * 
+     *
      * @return The list of classes for document boost parameters.
      */
     public Class<?>[] getDocumentBoostParameterClass() {
@@ -725,17 +725,17 @@ public class LuceneConfig {
     }
 
     /**
-     * 
+     *
      * @return Class name of the boosting document or null if not defined.
      */
     public String getDocumentBoostClass() {
         return documentBoostClass;
     }
 
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * @return Class name of the default analyzer (default is StandardAnalyzer).
 	 */
 	public String getDefaultAnalyzerClass() {
@@ -743,23 +743,23 @@ public class LuceneConfig {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Each specific fields analyzer.
 	 */
 	public Map<String, String> getFieldSpecificAnalyzers() {
 		return this.fieldSpecificAnalyzers;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return Each specific fields search analyzer.
 	 */
 	public Map<String, String> getFieldSpecificSearchAnalyzers() {
 		return this.fieldSpecificSearchAnalyzers;
 	}
-	
+
 	/**
-     * 
+     *
      * @return Each fields boost factor.
      */
     public Map<String, Float> getFieldBoost() {
@@ -768,10 +768,10 @@ public class LuceneConfig {
     public Float getFieldBoost(String field) {
         return this.fieldBoost.get(field);
     }
-    
-    
+
+
 	/**
-	 * 
+	 *
 	 * @return The merge factor.
 	 */
 	public int getMergeFactor() {
@@ -779,7 +779,7 @@ public class LuceneConfig {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The RAM buffer size.
 	 */
 	public double getRAMBufferSize() {
@@ -799,7 +799,7 @@ public class LuceneConfig {
     }
 
 	/**
-	 * 
+	 *
 	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -840,7 +840,7 @@ public class LuceneConfig {
 	/**
 	 * @see TopFieldCollector#create(org.apache.lucene.search.Sort, int,
 	 *      boolean, boolean, boolean, boolean)
-	 * 
+	 *
 	 * @return whether document scores should be tracked and set on the results.
 	 */
 	public boolean isTrackDocScores() {
@@ -854,7 +854,7 @@ public class LuceneConfig {
 	/**
 	 * @see TopFieldCollector#create(org.apache.lucene.search.Sort, int,
 	 *      boolean, boolean, boolean, boolean)
-	 * 
+	 *
 	 * @return whether the query's maxScore should be tracked and set on the
 	 *         resulting TopDocs
 	 */
@@ -869,7 +869,7 @@ public class LuceneConfig {
 	/**
 	 * @see TopFieldCollector#create(org.apache.lucene.search.Sort, int,
 	 *      boolean, boolean, boolean, boolean)
-	 * 
+	 *
 	 * @return whether documents are scored in doc Id order or not by the given
 	 *         Scorer
 	 */
@@ -891,21 +891,21 @@ public class LuceneConfig {
     public long commitInterval() {
         return this.commitInterval;
     }
-    
+
     /**
      * How often to check if a commit is required
      */
     public boolean useNRTManagerReopenThread() {
         return this.useNRTManagerReopenThread;
     }
-    
+
     /**
      * How often to check if a commit is required
      */
     public double getNRTManagerReopenThreadMaxStaleSec() {
         return this.nrtManagerReopenThreadMaxStaleSec;
     }
-    
+
     /**
      * How often to check if a commit is required
      */

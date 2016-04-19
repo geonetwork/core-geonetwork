@@ -23,6 +23,8 @@
 
 package org.fao.geonet.kernel.search;
 
+import com.itextpdf.text.Meta;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
@@ -36,14 +38,18 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.solr.SolrConfig;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -309,16 +315,6 @@ public class SolrSearchManager implements ISearchManager {
         client.commit();
     }
 
-    @Override
-    public void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception {
-        //useless for this implementation
-    }
-
-    @Override
-    public void disableOptimizer() throws Exception {
-        //useless for this implementation
-    }
-
     /**
      * Only for UTs
      */
@@ -372,5 +368,43 @@ public class SolrSearchManager implements ISearchManager {
 
     public SolrClient getClient() {
         return client;
+    }
+    public List<Element> getDocs(String query, Integer start, Integer rows) throws IOException, SolrServerException, JDOMException {
+        final List<String> result = getDocIds(query, start, rows);
+        List<Element> xmlDocs = new ArrayList<>(result.size());
+        MetadataRepository metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+        for (String id : result) {
+            Metadata metadata = metadataRepository.findOne(id);
+            xmlDocs.add(metadata.getXmlData(false));
+        }
+        return xmlDocs;
+    }
+
+    public List<String> getDocIds(String query, Integer start, Integer rows) throws IOException, SolrServerException, JDOMException {
+        final SolrQuery solrQuery = new SolrQuery(query == null ? "*:*" : query);
+        solrQuery.setFilterQueries(DOC_TYPE + ":metadata");
+        solrQuery.setFields(SolrSearchManager.ID);
+        if (start != null) {
+            solrQuery.setStart(start);
+        }
+        if (rows != null) {
+            solrQuery.setRows(rows);
+        }
+        QueryResponse response = client.query(solrQuery);
+        SolrDocumentList results = response.getResults();
+        List<String> idList = new ArrayList<>(results.size());
+        for (SolrDocument document : results) {
+            idList.add(document.getFieldValue(SolrSearchManager.ID).toString());
+        }
+        return idList;
+    }
+
+    public List<Element> getAllDocs(String query) throws IOException, SolrServerException, JDOMException {
+        int hitsNumber = getNumDocs(query);
+        return getDocs(query, 0, hitsNumber);
+    }
+    public List<String> getAllDocIds(String query) throws IOException, SolrServerException, JDOMException {
+        int hitsNumber = getNumDocs(query);
+        return getDocIds(query, 0, hitsNumber);
     }
 }

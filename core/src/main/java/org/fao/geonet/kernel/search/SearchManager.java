@@ -94,7 +94,6 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.classifier.Classifier;
 import org.fao.geonet.kernel.search.facet.Dimension;
-import org.fao.geonet.kernel.search.function.DocumentBoosting;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.index.IndexInformation;
 import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
@@ -163,7 +162,6 @@ public class SearchManager implements ISearchManager {
     private static Map<String, Analyzer> analyzerMap = new HashMap<String, Analyzer>();
     private static Map<String, Analyzer> searchAnalyzerMap = new HashMap<String, Analyzer>();
 
-	private static DocumentBoosting _documentBoostClass;
 	private String _luceneTermsToExclude;
 	private boolean _logSpatialObject;
 	private static PerFieldAnalyzerWrapper _defaultAnalyzer;
@@ -171,7 +169,6 @@ public class SearchManager implements ISearchManager {
     private Spatial _spatial;
 
 	private boolean _logAsynch;
-	private LuceneOptimizerManager _luceneOptimizerManager;
 
 
     /**
@@ -550,7 +547,6 @@ public class SearchManager implements ISearchManager {
 
          initLucene();
 
-         _luceneOptimizerManager = new LuceneOptimizerManager(this, settingInfo);
     }
 
     @PreDestroy
@@ -567,41 +563,12 @@ public class SearchManager implements ISearchManager {
             Log.error(Geonet.SEARCH_ENGINE, "Unable to get a hook on the application context (already destroyed ?).");
         }
         _spatial.end();
-        _luceneOptimizerManager.cancel();
     }
 
     /**
      * TODO javadoc.
      */
 	private void createDocumentBoost() {
-        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        LuceneConfig luceneConfig = applicationContext.getBean(LuceneConfig.class);
-
-        String className = luceneConfig.getDocumentBoostClass();
-	    if (className != null) {
-    	    try {
-                @SuppressWarnings(value = "unchecked")
-    	        Class<? extends DocumentBoosting> clazz = (Class<? extends DocumentBoosting>) Class.forName(className);
-                Class<?>[] clTypesArray = luceneConfig.getDocumentBoostParameterClass();
-                Object[] inParamsArray = luceneConfig.getDocumentBoostParameter();
-                try {
-                    if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                        Log.debug(Geonet.SEARCH_ENGINE, " Creating document boost object with parameter");
-                    Constructor<? extends DocumentBoosting> c = clazz.getConstructor(clTypesArray);
-                    _documentBoostClass = c.newInstance(inParamsArray);
-                }
-                catch (Exception x) {
-                    Log.warning(Geonet.SEARCH_ENGINE, "   Failed to create document boost object with parameter: " + x.getMessage());
-                    x.printStackTrace();
-                    // Try using a default constructor without parameter
-                    Log.warning(Geonet.SEARCH_ENGINE, "   Now trying without parameter");
-                    _documentBoostClass = clazz.newInstance();
-                }
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
@@ -612,27 +579,6 @@ public class SearchManager implements ISearchManager {
 		createDocumentBoost();
 	}
 
-
-    /**
-     * TODO javadoc.
-     *
-     * @throws Exception
-     */
-	public synchronized void disableOptimizer() throws Exception {
-        Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");
-		_luceneOptimizerManager.cancel();
-    }
-
-    /**
-     * TODO javadoc.
-     *
-     * @param optimizerBeginAt
-     * @param optimizerInterval
-     * @throws Exception
-     */
-	public synchronized void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception {
-		_luceneOptimizerManager.reschedule(optimizerBeginAt, optimizerInterval);
-	}
 
     /**
      * TODO javadoc.
@@ -1387,15 +1333,7 @@ public class SearchManager implements ISearchManager {
 		storeNotIndexedFieldType.setTokenized(false);
 		storeNotIndexedFieldType.setStored(true);
 		float documentBoost = 1;
-        // Set boost to promote some types of document selectively according to DocumentBoosting class
-        if (_documentBoostClass != null) {
-            Float f = (_documentBoostClass).getBoost(xml);
-            if (f != null) {
-                if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
-                    Log.debug(Geonet.INDEX_ENGINE, "Boosting document with boost factor: " + f);
-                documentBoost = f;
-            }
-        }
+
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         LuceneConfig luceneConfig = applicationContext.getBean(LuceneConfig.class);
 

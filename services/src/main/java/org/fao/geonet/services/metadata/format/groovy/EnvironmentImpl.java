@@ -27,22 +27,11 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import jeeves.server.context.ServiceContext;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexableField;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopFieldCollector;
+
 import org.apache.solr.common.SolrDocument;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -61,7 +50,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.function.Function;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  * The actual Environment implementation.
@@ -204,46 +194,25 @@ public class EnvironmentImpl implements Environment {
         if (this.indexInfo == null) {
             final ISearchManager searchManager = getBean(ISearchManager.class);
 
-            // TODO: SOLR-MIGRATION-TO-DELETE
-            if (searchManager instanceof SearchManager) {
-                try (IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(getLang3())) {
-                    TopFieldCollector collector = TopFieldCollector.create(Sort.RELEVANCE, 1, true, false, false, false);
-                    IndexSearcher searcher = new IndexSearcher(newIndexReader.indexReader);
-                    Query query = new TermQuery(new Term("_id", String.valueOf(getMetadataId())));
-                    searcher.search(query, collector);
-                    ScoreDoc[] topDocs = collector.topDocs().scoreDocs;
-
-                    Multimap<String, String> fields = HashMultimap.create();
-                    for (ScoreDoc scoreDoc : topDocs) {
-                        Document doc = searcher.doc(scoreDoc.doc);
-                        for (IndexableField field : doc) {
-                            fields.put(field.name(), field.stringValue());
-                        }
+            SolrDocument document = ((SolrSearchManager) searchManager).getDocFieldValue(
+                String.format("+%s:\"%s\"", SolrSearchManager.ID, getMetadataId()),
+                "*"
+            );
+            Iterator<Map.Entry<String, Object>> iterator = document.iterator();
+            Multimap<String, String> fields = HashMultimap.create();
+            while (iterator.hasNext()) {
+                Map.Entry<String, Object> e = iterator.next();
+                Object value = e.getValue();
+                if (value instanceof Iterable) {
+                    Iterator<Object> valueIterator = ((Iterable) value).iterator();
+                    while (valueIterator.hasNext()) {
+                        fields.put(e.getKey(), valueIterator.next().toString());
                     }
-                    this.indexInfo = fields;
+                } else {
+                    fields.put(e.getKey(), e.getValue().toString());
                 }
-                return Collections.unmodifiableMap(this.indexInfo.asMap());
-            } else if (searchManager instanceof SolrSearchManager) {
-                SolrDocument document = ((SolrSearchManager) searchManager).getDocFieldValue(
-                    String.format("+%s:\"%s\"", SolrSearchManager.ID, getMetadataId()),
-                    "*"
-                );
-                Iterator<Map.Entry<String, Object>> iterator = document.iterator();
-                Multimap<String, String> fields = HashMultimap.create();
-                while (iterator.hasNext()) {
-                    Map.Entry<String, Object> e = iterator.next();
-                    Object value = e.getValue();
-                    if (value instanceof Iterable) {
-                        Iterator<Object> valueIterator = ((Iterable) value).iterator();
-                        while (valueIterator.hasNext()) {
-                            fields.put(e.getKey(), valueIterator.next().toString());
-                        }
-                    } else {
-                        fields.put(e.getKey(), e.getValue().toString());
-                    }
-                }
-                return Collections.unmodifiableMap(fields.asMap());
             }
+            return Collections.unmodifiableMap(fields.asMap());
         }
         return null;
     }

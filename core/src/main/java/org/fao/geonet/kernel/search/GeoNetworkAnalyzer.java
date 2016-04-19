@@ -30,6 +30,7 @@ import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.util.CharArraySet;
+import org.apache.lucene.util.Version;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 
@@ -65,7 +66,7 @@ public final class GeoNetworkAnalyzer extends Analyzer {
         if (stopwords == null || stopwords.isEmpty()) {
             this.stopwords = CharArraySet.EMPTY_SET;
         } else {
-            this.stopwords = new CharArraySet(Geonet.LUCENE_VERSION, stopwords, true);
+            this.stopwords = new CharArraySet(Version.LUCENE_4_9, stopwords, true);
         }
 
         if (charsToIgnore == null) {
@@ -89,12 +90,12 @@ public final class GeoNetworkAnalyzer extends Analyzer {
      */
     @Override
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
-        final Tokenizer source = new StandardTokenizer(Geonet.LUCENE_VERSION, reader);
-        ASCIIFoldingFilter asciiFoldingFilter = new ASCIIFoldingFilter(new LowerCaseFilter(Geonet.LUCENE_VERSION,
-                new StandardFilter(Geonet.LUCENE_VERSION, source)));
+        final Tokenizer source = new StandardTokenizer(Version.LUCENE_4_9, reader);
+        ASCIIFoldingFilter asciiFoldingFilter = new ASCIIFoldingFilter(new LowerCaseFilter(Version.LUCENE_4_9,
+                new StandardFilter(Version.LUCENE_4_9, source)));
 
         if (this.stopwords != null && !this.stopwords.isEmpty()) {
-            return new TokenStreamComponents(source, new StopFilter(Geonet.LUCENE_VERSION, asciiFoldingFilter, this.stopwords)) {
+            return new TokenStreamComponents(source, new StopFilter(Version.LUCENE_4_9, asciiFoldingFilter, this.stopwords)) {
                 @Override
                 protected void setReader(final Reader reader) throws IOException {
                     super.setReader(wrapReader(reader));

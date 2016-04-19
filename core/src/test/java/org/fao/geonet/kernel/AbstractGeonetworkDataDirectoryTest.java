@@ -57,7 +57,6 @@ public abstract class AbstractGeonetworkDataDirectoryTest extends AbstractCoreIn
         // reinitialize data directory so that it uses the defaults
         dataDirectory.setSystemDataDir(null);
         dataDirectory.setConfigDir(null);
-        dataDirectory.setLuceneDir(null);
         dataDirectory.setSpatialIndexPath(null);
         dataDirectory.setMetadataDataDir(null);
         dataDirectory.setMetadataRevisionDir(null);
@@ -80,7 +79,6 @@ public abstract class AbstractGeonetworkDataDirectoryTest extends AbstractCoreIn
     private void assertSystemDirSubFolders(Path expectedDataDir) {
         final Path expectedConfigDir = expectedDataDir.resolve("config");
         assertEquals(expectedConfigDir, dataDirectory.getConfigDir());
-        assertEquals(expectedDataDir.resolve("index"), dataDirectory.getLuceneDir());
         assertEquals(expectedDataDir.resolve("spatialindex"), dataDirectory.getSpatialIndexPath());
         assertEquals(expectedDataDir.resolve("data").resolve("metadata_data"), dataDirectory.getMetadataDataDir());
         assertEquals(expectedDataDir.resolve("data").resolve("metadata_subversion"), dataDirectory.getMetadataRevisionDir());

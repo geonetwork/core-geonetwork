@@ -26,13 +26,8 @@ package org.fao.geonet.services.metadata;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import jeeves.constants.Jeeves;
-import jeeves.server.context.ServiceContext;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
+
+import org.apache.solr.common.SolrDocument;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.OperationAllowed;
@@ -42,8 +37,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest.ImportMetadata;
-import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
@@ -57,10 +51,12 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -79,7 +75,7 @@ public class PublishTest extends AbstractServiceIntegrationTest {
     @Autowired
     private DataManager dataManager;
     @Autowired
-    private SearchManager searchManager;
+    private SolrSearchManager searchManager;
 
 
     @Before
@@ -259,17 +255,32 @@ public class PublishTest extends AbstractServiceIntegrationTest {
         assertEquals(report.toString(), disallowed, report.getDisallowed());
     }
 
-    private void assertPublishedInIndex(boolean published, String metadataId) throws IOException {
-        try (IndexAndTaxonomy indexReader = this.searchManager.getIndexReader(null, -1)) {
-            final IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
-            final TopDocs docs = searcher.search(new TermQuery(new Term(Geonet.IndexFieldNames.ID, metadataId)), 1);
-            final Document document = indexReader.indexReader.document(docs.scoreDocs[0].doc);
+    private void assertPublishedInIndex(boolean published, String metadataId) throws Exception {
+        SolrDocument document = this.searchManager.getDocFieldValue(
+            String.format("+id:%s", metadataId),
+            Geonet.IndexFieldNames.GROUP_PUBLISHED);
+        if (document == null) {
+            assert (false);
+        } else {
+            Collection<Object> values = document.getFieldValues(Geonet.IndexFieldNames.GROUP_PUBLISHED);
             for (ReservedGroup reservedGroup : Lists.newArrayList(ReservedGroup.all, ReservedGroup.intranet)) {
-                    final String[] values = document.getValues(Geonet.IndexFieldNames.GROUP_PUBLISHED);
-                    final String expectedInIndex = Geonet.IndexFieldNames.GROUP_PUBLISHED + ":" + reservedGroup;
-                    assertEquals(expectedInIndex + " is not in " + Arrays.asList(values),
-                            published, Arrays.asList(values).contains("" + reservedGroup.name()));
+                final String expectedInIndex = Geonet.IndexFieldNames.GROUP_PUBLISHED + ":" + reservedGroup;
+                assertEquals(expectedInIndex + " is not in " + values,
+                    published,
+                    values.contains("" + reservedGroup.name()));
             }
+
         }
+//        try (IndexAndTaxonomy indexReader = this.searchManager.getIndexReader(null, -1)) {
+//            final IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
+//            final TopDocs docs = searcher.search(new TermQuery(new Term(Geonet.IndexFieldNames.ID, metadataId)), 1);
+//            final Document document = indexReader.indexReader.document(docs.scoreDocs[0].doc);
+//            for (ReservedGroup reservedGroup : Lists.newArrayList(ReservedGroup.all, ReservedGroup.intranet)) {
+//                    final String[] values = document.getValues(Geonet.IndexFieldNames.GROUP_PUBLISHED);
+//                    final String expectedInIndex = Geonet.IndexFieldNames.GROUP_PUBLISHED + ":" + reservedGroup;
+//                    assertEquals(expectedInIndex + " is not in " + Arrays.asList(values),
+//                            published, Arrays.asList(values).contains("" + reservedGroup.name()));
+//            }
+//        }
     }
 }

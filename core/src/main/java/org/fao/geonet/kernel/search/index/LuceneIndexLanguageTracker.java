@@ -55,6 +55,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TrackingIndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
+import org.apache.lucene.util.Version;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
@@ -138,7 +139,7 @@ public class LuceneIndexLanguageTracker {
         TrackingIndexWriter trackingIndexWriter;
         try {
             cachedFSDir = directoryFactory.createIndexDirectory(indexId, luceneConfig);
-            IndexWriterConfig conf = new IndexWriterConfig(Geonet.LUCENE_VERSION, SearchManager.getAnalyzer(indexId, false));
+            IndexWriterConfig conf = new IndexWriterConfig(Version.LUCENE_4_9, SearchManager.getAnalyzer(indexId, false));
             ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
             conf.setMergeScheduler(mergeScheduler);
             writer = new IndexWriter(cachedFSDir, conf);

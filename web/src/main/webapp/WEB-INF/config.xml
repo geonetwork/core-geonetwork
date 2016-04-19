@@ -124,8 +124,8 @@
 	<!-- ====================================================================== -->
 
 	<services package="org.fao.geonet">
+	</services>
 
-  </services>
   <include>config/config-service-xml-api.xml</include>
   <include>config/config-service-search.xml</include>
   <include>config/config-service-sru.xml</include>
@@ -151,6 +151,27 @@
   <include>config/config-service-admin-transfert-privileges.xml</include>
   <include>config/config-service-admin-formatter.xml</include>
   <include>config/config-service-statistics.xml</include>
+  <include>config/config-service-csw.xml</include>
+  <include>config/config-service-csw-virtual.xml</include>
+
+  <include>config/config-service-thesaurus.xml</include>
+  <include>config/config-service-region.xml</include>
+
+  <include>config/config-service-admin.xml</include>
+    <include>config/config-service-admin-harvesting.xml</include>
+
+    <include>config/config-service-admin-schema.xml</include>
+    <include>config/config-service-admin-schematron.xml</include>
+    <include>config/config-service-batch.xml</include>
+
+    <include>config/config-service-admin-notification.xml</include>
+    <include>config/config-service-admin-index.xml</include>
+    <include>config/config-service-admin-io.xml</include>
+    <include>config/config-service-admin-logo.xml</include>
+    <include>config/config-service-admin-user-and-group.xml</include>
+    <include>config/config-service-admin-geoserver-publication.xml</include>
+    <include>config/config-service-admin-transfert-privileges.xml</include>
+    <include>config/config-service-admin-formatter.xml</include>
   <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>
   <include>config/config-service-sitemap.xml</include>

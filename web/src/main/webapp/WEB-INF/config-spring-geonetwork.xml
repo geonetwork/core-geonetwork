@@ -32,7 +32,6 @@
 
   <import resource="config-spring-env.xml" />
   <import resource="config-security/config-security.xml" />
-  <import resource="config-summary.xml" />
   <import resource="classpath:JZkitApplicationContext.xml" />
 
   <import resource="config-db/initial_data.xml" />
@@ -47,8 +46,6 @@
   <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="applicationContextSchedulerContextKey" value="applicationContext" />
   </bean>
-
-  <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true" scope=""/>
 
   <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
     <property name="numberOfConcurrentRequests" value="30" />

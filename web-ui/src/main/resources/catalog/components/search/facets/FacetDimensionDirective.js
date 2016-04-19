@@ -30,7 +30,7 @@
 
   module.directive('gnFacetDimensionList', [
     'gnFacetConfigService', '$timeout',
-    function(gnFacetConfigService, $timeout) {
+    function($timeout) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/search/facets/' +
@@ -54,27 +54,13 @@
           scope.isFacetsCollapse = function(facetKey) {
             return !angular.isDefined(scope.params[facetKey]);
           };
-
-          // Load facet configuration to know which index field
-          // correspond to which dimension.
-          gnFacetConfigService.loadConfig(scope.facetType).
-              then(function(data) {
-                scope.facetConfig = {
-                  config: data,
-                  map:  {}
-                };
-
-                angular.forEach(scope.facetConfig.config, function(key) {
-                  scope.facetConfig.map[key.label] = key.name;
-                });
-              });
         }
       };
     }]);
 
   module.directive('gnFacetDimensionCategory', [
     'gnFacetConfigService', 'RecursionHelper', '$parse',
-    function(gnFacetConfigService, RecursionHelper, $parse) {
+    function(RecursionHelper, $parse) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/search/facets/' +

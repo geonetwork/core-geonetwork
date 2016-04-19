@@ -34,6 +34,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearchManagerUtils;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataRepositoryTest;
 import org.fao.geonet.utils.Xml;
@@ -82,7 +83,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     private MetadataRepository _metadataRepository;
     @Autowired
-    private SearchManager _searchManager;
+    private SolrSearchManager _searchManager;
     @Autowired
     private Transaction _transaction;
     @Autowired
