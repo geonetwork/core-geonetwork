@@ -70,17 +70,12 @@ public class Transaction extends AbstractOperation implements CatalogService {
     //---------------------------------------------------------------------------
 
     static final String NAME = "Transaction";
+    @Autowired
     private SearchController _searchController;
     @Autowired
     private FieldMapper _fieldMapper;
     @Autowired
     SchemaManager _schemaManager;
-
-    @Autowired
-    public Transaction(ApplicationContext context) {
-        _searchController = new SearchController(context);
-    }
-
 
     //---------------------------------------------------------------------------
     //---
@@ -547,7 +542,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
     private Element getTransactionSummary(int totalInserted, int totalUpdated, int totalDeleted) {
         Element transactionSummary = new Element("TransactionSummary", Csw.NAMESPACE_CSW);
 //		if( totalInserted>0 )
-//		{			
+//		{
         Element insert = new Element("totalInserted", Csw.NAMESPACE_CSW);
         insert.setText(Integer.toString(totalInserted));
         transactionSummary.addContent(insert);

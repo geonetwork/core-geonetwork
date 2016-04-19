@@ -25,7 +25,6 @@ package org.fao.geonet.component.csw;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.search.Sort;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -47,9 +46,12 @@ import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
+import org.fao.geonet.kernel.csw.services.getrecords.ISearchController;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.CustomElementSetRepository;
 import org.fao.geonet.util.xml.NamespaceUtils;
@@ -85,7 +87,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     //---
     //---------------------------------------------------------------------------
 
-	private SearchController _searchController;
+    @Autowired
+	private ISearchController _searchController;
     @Autowired
     private CatalogConfiguration _catalogConfig;
     @Autowired
@@ -93,18 +96,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
     @Autowired
     private SchemaManager _schemaManager;
-    @Autowired
-	public GetRecords(ApplicationContext context) {
-    	_searchController = new SearchController(context);
-    }
 
-    /**
-     * @return
-     */
-	public SearchController getSearchController() {
-		return _searchController;
-	};
-	
     //---------------------------------------------------------------------------
     //---
     //--- API methods
@@ -121,14 +113,14 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      */
     public Element execute(Element request, ServiceContext context) throws CatalogException {
         String timeStamp = new ISODate().toString();
-        
+
         // Return exception is indexing.
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataManager = gc.getBean(DataManager.class);
         if (dataManager.isIndexing()) {
             throw new RuntimeException("Catalog is indexing records, retry later.");
         }
-        
+
         //
         // some validation checks (note: this is not an XSD validation)
         //
@@ -182,7 +174,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         ElementSetName setName = ElementSetName.FULL;
 
         //
-        // no ElementNames requested: use ElementSetName
+        // no ElementNames requested: use ElementSetNam
         //
         if((elemNames == null)) {
             setName = getElementSetName(query , ElementSetName.SUMMARY);
@@ -211,8 +203,6 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             // sMaxRecordsInKeywordSummary = config.getValue("maxHitsInSummary", "1000");
             maxHitsInSummary = Integer.parseInt(sMaxRecordsInKeywordSummary);
         }
-
-        Sort sort = getSortFields(request, context);
 
         Element response;
 
@@ -251,10 +241,10 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
 
             Pair<Element, Element> search = _searchController.search(context, startPos, maxRecords, resultType, outSchema,
-                    setName, filterExpr, filterVersion, sort, elemNames, typeName, maxHitsInSummary, cswServiceSpecificContraint, elementnameStrategy);
+                    setName, filterExpr, filterVersion, request, elemNames, typeName, maxHitsInSummary, cswServiceSpecificContraint, elementnameStrategy);
 
             // Only add GeoNetwork summary on results_with_summary option
-            if (resultType == ResultType.RESULTS_WITH_SUMMARY) {
+            if (resultType == ResultType.RESULTS_WITH_SUMMARY && search.one() != null) {
                 response.addContent(search.one());
             }
 
@@ -384,7 +374,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @throws CatalogException
      */
     public Element retrieveValues(String parameterName) throws CatalogException {
-		
+
     	Element listOfValues = null;
     	if (parameterName.equalsIgnoreCase("resultType")
 				|| parameterName.equalsIgnoreCase("outputFormat")
@@ -392,7 +382,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 				|| parameterName.equalsIgnoreCase("outputSchema")
 				|| parameterName.equalsIgnoreCase("typenames"))
 			listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
-    	
+
     	// Handle resultType parameter
     	if (parameterName.equalsIgnoreCase("resultType")) {
     		List<Element> values = new ArrayList<Element>();
@@ -405,7 +395,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 listOfValues.addContent(values);
             }
         }
-    	
+
     	// Handle elementSetName parameter
     	if (parameterName.equalsIgnoreCase("elementSetName")) {
     		List<Element> values = new ArrayList<Element>();
@@ -418,7 +408,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 listOfValues.addContent(values);
             }
         }
-    	
+
     	// Handle outputFormat parameter
 		if (parameterName.equalsIgnoreCase("outputformat")) {
 			Set<String> formats = _catalogConfig
@@ -428,7 +418,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 listOfValues.addContent(values);
             }
         }
-    	
+
 		// Handle outputSchema parameter
 		if (parameterName.equalsIgnoreCase("outputSchema")) {
 			Set<String> namespacesUri = _catalogConfig
@@ -448,7 +438,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 listOfValues.addContent(values);
             }
         }
-		
+
     	return listOfValues;
 	}
 
@@ -736,52 +726,6 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 //        }
 //        throw new InvalidParameterValueEx("hopCount", hopCount);
 //    }
-
-    /**
-     * TODO javadoc.
-     *
-     * @param request
-     * @param context 
-     * @return
-     */
-    private Sort getSortFields(Element request, ServiceContext context) {
-		Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
-		if (query == null) {
-			return null;
-        }
-
-		Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
-		if (sortBy == null) {
-			return null;
-        }
-
-		@SuppressWarnings("unchecked")
-        List<Element> list = sortBy.getChildren();
-		List<Pair<String, Boolean>> sortFields = new ArrayList<Pair<String, Boolean>>();
-        for (Element el : list) {
-            String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
-            String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
-
-            // Map CSW search field to Lucene for sorting. And if not mapped assumes the field is a Lucene field.
-            String luceneField = _fieldMapper.map(field);
-            if (luceneField != null) {
-                sortFields.add(Pair.read(luceneField, "DESC".equals(order)));
-            }
-            else {
-                sortFields.add(Pair.read(field, "DESC".equals(order)));
-            }
-        }
-        
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
-        boolean requestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
-
-        String preferredLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
-
-        // we always want to keep the relevancy as part of the sorting mechanism
-		return LuceneSearcher.makeSort(sortFields, preferredLanguage, requestedLanguageOnTop);
-	}
-
 
     /**
      * Returns the values of ElementNames in the query, or null if there are none.

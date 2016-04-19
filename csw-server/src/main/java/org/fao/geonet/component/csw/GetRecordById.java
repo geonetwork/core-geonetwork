@@ -82,18 +82,13 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 	//---------------------------------------------------------------------------
 
     static final String NAME = "GetRecordById";
+    @Autowired
     private SearchController _searchController;
     @Autowired
     private CatalogConfiguration _catalogConfig;
 
     @Autowired
     private SchemaManager _schemaManager;
-
-    @Autowired
-    public GetRecordById(ApplicationContext applicationContext) {
-        _searchController = new SearchController(applicationContext);
-    }
-
 
 	//---------------------------------------------------------------------------
 	//---
@@ -129,7 +124,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 				String  uuid = ids.next().getText();
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				String id = gc.getBean(DataManager.class).getMetadataId(uuid);
-				
+
 				// Metadata not found, search for next ids
 				if (id == null)
 					continue;
@@ -162,8 +157,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
                         continue;
                 }
 
-				// Check if the current user has access 
-			    // to the requested MD 
+				// Check if the current user has access
+			    // to the requested MD
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
                 final SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
@@ -226,11 +221,11 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 		return request;
 	}
-	
+
 	//---------------------------------------------------------------------------
-	
+
 	public Element retrieveValues(String parameterName) throws CatalogException {
-		// TODO 
+		// TODO
 		return null;
 	}
 

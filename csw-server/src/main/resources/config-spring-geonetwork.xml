@@ -41,5 +41,5 @@
 
     <bean id="CatalogConfiguration" class="org.fao.geonet.kernel.csw.CatalogConfiguration" lazy-init="true" />
     <bean id="FieldMapper" class="org.fao.geonet.kernel.csw.services.getrecords.FieldMapper" lazy-init="true" />
-
+    <bean id="SearchController" class="org.fao.geonet.kernel.csw.services.getrecords.SearchController" lazy-init="true"/>
 </beans>

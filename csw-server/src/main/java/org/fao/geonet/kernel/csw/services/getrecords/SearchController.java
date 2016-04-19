@@ -33,7 +33,6 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
-import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -43,7 +42,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -51,11 +49,11 @@ import org.geotools.gml2.GMLConfiguration;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -66,59 +64,42 @@ import java.util.Set;
 /**
  * TODO javadoc.
  */
-public class SearchController {
-    
+public class SearchController implements ISearchController {
+
 	private final Set<String> _selector;
 	private final Set<String> _uuidselector;
     private GMLConfiguration _gmlConfig;
+    @Autowired
     private ApplicationContext _applicationContext;
+    @Autowired
+    private FieldMapper _fieldMapper;
 
-	public SearchController(ApplicationContext applicationContext) {
+    public SearchController() {
 		_selector = Collections.singleton("_id");
 		_uuidselector = Collections.singleton("_uuid");
 		_gmlConfig = new GMLConfiguration();
-		this._applicationContext = applicationContext;
     }
-    
+
 	//---------------------------------------------------------------------------
     //---
     //--- Single public method to perform the general search tasks
     //---
     //---------------------------------------------------------------------------
 
-    /**
-     * TODO improve description of method.
-     * Performs the general search tasks.
-     *
-     * @param context Service context
-     * @param startPos start position (if paged)
-     * @param maxRecords max records to return
-     * @param resultType requested ResultType
-     * @param outSchema requested OutputSchema
-     * @param setName requested ElementSetName
-     * @param filterExpr requested FilterExpression
-     * @param filterVersion requested Filter version
-     * @param sort requested sorting
-     * @param elemNames requested ElementNames
-     * @param typeName requested typeName
-     * @param maxHitsFromSummary ?
-     * @param cswServiceSpecificContraint specific contraint for specialized CSW services
-     * @param strategy ElementNames strategy
-     * @return result
-     * @throws CatalogException hmm
-     */
     public Pair<Element, Element> search(ServiceContext context, int startPos, int maxRecords,
                                          ResultType resultType, String outSchema, ElementSetName setName,
-                                         Element filterExpr, String filterVersion, Sort sort,
+                                         Element filterExpr, String filterVersion, Element request,
                                          Set<String> elemNames, String typeName, int maxHitsFromSummary,
                                          String cswServiceSpecificContraint, String strategy) throws CatalogException {
+
+        Sort sort = getSortFields(request, context);
 
         Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
         CatalogSearcher searcher = new CatalogSearcher(_gmlConfig, _selector, _uuidselector, _applicationContext);
-        
+
         context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
-        
+
 		// search for results, filtered and sorted
         Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion,
                 typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
@@ -147,6 +128,55 @@ public class SearchController {
 
 	    return Pair.read(summary, results);
     }
+
+    /**
+     * TODO javadoc.
+     *
+     * @param request
+     * @param context
+     * @return
+     */
+    private Sort getSortFields(Element request, ServiceContext context) {
+        if (request == null) {
+            return null;
+        }
+        Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
+        if (query == null) {
+            return null;
+        }
+
+        Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
+        if (sortBy == null) {
+            return null;
+        }
+
+        @SuppressWarnings("unchecked")
+        List<Element> list = sortBy.getChildren();
+        List<Pair<String, Boolean>> sortFields = new ArrayList<Pair<String, Boolean>>();
+        for (Element el : list) {
+            String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
+            String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
+
+            // Map CSW search field to Lucene for sorting. And if not mapped assumes the field is a Lucene field.
+            String luceneField = _fieldMapper.map(field);
+            if (luceneField != null) {
+                sortFields.add(Pair.read(luceneField, "DESC".equals(order)));
+            }
+            else {
+                sortFields.add(Pair.read(field, "DESC".equals(order)));
+            }
+        }
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
+        boolean requestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
+
+        String preferredLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
+
+        // we always want to keep the relevancy as part of the sorting mechanism
+        return LuceneSearcher.makeSort(sortFields, preferredLanguage, requestedLanguageOnTop);
+    }
+
 
     /**
      * Retrieve actual metadata matching the results. Adds elements to results parameter as a side effect.
@@ -463,12 +493,12 @@ public class SearchController {
                     }
                     @SuppressWarnings("unchecked")
                     List<Element> elementsMatching = (List<Element>)Xml.selectDocumentNodes(result, xpath, namespaces);
-                    
+
                     if(strategy.equals("context")) {
                         if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
                             Log.debug(Geonet.CSW_SEARCH, "strategy is context, constructing context to root");
                         }
-                        
+
                         List<Element> elementsInContextMatching = new ArrayList<Element>();
                         for (Element match : elementsInContextMatching) {
                             Element parent = match.getParentElement();
