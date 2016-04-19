@@ -159,12 +159,7 @@ public class SearchController implements ISearchController {
 
             // Map CSW search field to Lucene for sorting. And if not mapped assumes the field is a Lucene field.
             String luceneField = _fieldMapper.map(field);
-            if (luceneField != null) {
-                sortFields.add(Pair.read(luceneField, "DESC".equals(order)));
-            }
-            else {
-                sortFields.add(Pair.read(field, "DESC".equals(order)));
-            }
+            sortFields.add(Pair.read(luceneField, "DESC".equals(order)));
         }
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -302,7 +297,7 @@ public class SearchController implements ISearchController {
      * @return metadata
      * @throws InvalidParameterValueEx hmm
      */
-    private static Element applyElementSetName(ServiceContext context, SchemaManager schemaManager, String schema,
+    public static Element applyElementSetName(ServiceContext context, SchemaManager schemaManager, String schema,
                                                Element result, String outputSchema, ElementSetName elementSetName,
                                                ResultType resultType, String id, String displayLanguage) throws InvalidParameterValueEx {
 		Path schemaDir  = schemaManager.getSchemaCSWPresentDir(schema);
@@ -424,7 +419,7 @@ public class SearchController implements ISearchController {
      * @return results of applying ElementNames filter
      * @throws InvalidParameterValueEx hmm
      */
-    private static Element applyElementNames(ServiceContext context, Set<String> elementNames, String typeName,
+    public static Element applyElementNames(ServiceContext context, Set<String> elementNames, String typeName,
                                              SchemaManager schemaManager, String schema, Element result,
                                              ResultType resultType, Element info, String strategy) throws InvalidParameterValueEx {
         if (elementNames != null) {

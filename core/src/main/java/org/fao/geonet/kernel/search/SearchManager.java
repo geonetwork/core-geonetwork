@@ -118,13 +118,11 @@ import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Transaction;
 import org.geotools.gml3.GMLConfiguration;
-import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.filter.capability.FilterCapabilities;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -147,9 +145,6 @@ public class SearchManager implements ISearchManager {
     private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
     private static final String STOPWORDS_DIR_PATH = "resources/stopwords";
 
-	private static final Configuration FILTER_1_0_0 = new org.geotools.filter.v1_0.OGCConfiguration();
-    private static final Configuration FILTER_1_1_0 = new org.geotools.filter.v1_1.OGCConfiguration();
-    private static final Configuration FILTER_2_0_0 = new org.geotools.filter.v2_0.FESConfiguration();
     private Path _stylesheetsDir;
     private static Path _stopwordsDir;
 
@@ -1712,7 +1707,7 @@ public class SearchManager implements ISearchManager {
                 throws Exception {
             _lock.lock();
             try {
-            	Parser filterParser = getFilterParser(filterVersion);
+            	Parser filterParser = SearchManagerUtils.createFilterParser(filterVersion);
                 Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> accessor = new SpatialIndexAccessor();
                 return OgcGenericFilters.create(query, numHits, filterExpr, accessor, filterParser);
             }
@@ -1797,26 +1792,6 @@ public class SearchManager implements ISearchManager {
             }
             return _writer;
         }
-
-        /**
-         * TODO javadoc.
-         *
-         * @param filterVersion
-         * @return
-         */
-        private Parser getFilterParser(String filterVersion) {
-			Configuration config;
-			if (filterVersion.equals(FilterCapabilities.VERSION_100)) {
-			    config = FILTER_1_0_0;
-			} else if (filterVersion.equals(FilterCapabilities.VERSION_200)) {
-			    config = FILTER_2_0_0;
-			} else if (filterVersion.equals(FilterCapabilities.VERSION_110)) {
-			    config = FILTER_1_1_0;
-			} else {
-			    throw new IllegalArgumentException("UnsupportFilterVersion: "+filterVersion);
-			}
-			return new Parser(config);
-		}
 
         private final class SpatialIndexAccessor
 				extends

@@ -23,30 +23,67 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords.solr;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTWriter;
+import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
 import org.geotools.filter.expression.AbstractExpressionVisitor;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 
 public class Expression2CswVisitor extends AbstractExpressionVisitor {
+    public static final WKTWriter WKT_WRITER = new WKTWriter();
     private final StringBuilder builder;
+    private final IFieldMapper fieldMapper;
 
-    public Expression2CswVisitor(StringBuilder builder) {
+    public Expression2CswVisitor(StringBuilder builder, IFieldMapper fieldMapper) {
         this.builder = builder;
+        this.fieldMapper = fieldMapper;
     }
 
     @Override
     public Object visit(PropertyName expr, Object extraData) {
-        builder.append(expr.getPropertyName());
+        builder.append(fieldMapper.map(expr.getPropertyName()));
         return expr;
     }
 
     @Override
     public Object visit(Literal expr, Object extraData) {
-        builder.append("\"").append(quoteString(expr.getValue().toString())).append("\"");
+        if (expr.getValue() instanceof Geometry) {
+            Geometry geometry = (Geometry) expr.getValue();
+            geometry2wkt(geometry);
+        } else {
+            builder.append("\"").append(quoteString(expr.getValue().toString())).append("\"");
+        }
         return expr;
+    }
+
+    private void geometry2wkt(Geometry geometry) {
+        try {
+            final CoordinateReferenceSystem sourceCRS;
+            if (geometry.getUserData() != null && geometry.getUserData() instanceof CoordinateReferenceSystem) {
+                sourceCRS = (CoordinateReferenceSystem) geometry.getUserData();
+            } else {
+                sourceCRS = CRS.decode("EPSG:" + geometry.getSRID());
+            }
+            final CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:4326");
+
+            final MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
+            geometry = JTS.transform(geometry, transform);
+        } catch (FactoryException | TransformException e) {
+            e.printStackTrace();
+        }
+        builder.append(WKT_WRITER.write(geometry));
     }
 
     private static String quoteString(String text) {
         return text.replace("\"", "\\\"");
     }
+
+
 }

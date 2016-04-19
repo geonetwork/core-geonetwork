@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 //==============================================================================
-public class FieldMapper {
+public class FieldMapper implements IFieldMapper {
     //---------------------------------------------------------------------------
     //---
     //--- API methods
@@ -43,7 +43,8 @@ public class FieldMapper {
 
     public String map(String field)
     {
-    	return _catalogConfig.getFieldMapping().get(getAbsolute(field));
+        final String result = _catalogConfig.getFieldMapping().get(getAbsolute(field));
+        return result != null ? result : field;
     }
 
     //---------------------------------------------------------------------------
@@ -69,16 +70,16 @@ public class FieldMapper {
 	String name = elem.getQualifiedName();
 
 	for (String field : elemNames)
-		// Here we supposed that namespaces prefix are equals when removing elements 
+		// Here we supposed that namespaces prefix are equals when removing elements
 		// when an ElementName parameter is set.
 	    if (field.equals(name))
 	    	return true;
 
 	return false;
     }
-    
+
     //---------------------------------------------------------------------------
-    
+
     public Set<String> getPropertiesByType(String type) {
     	return  _catalogConfig.getTypeMapping(type);
     }
@@ -93,7 +94,7 @@ public class FieldMapper {
     {
 	if (field.startsWith("./"))
 	    field = field.substring(2);
-	
+
 	// Remove any namespaces ... to be validated
 	if (field.contains(":"))
 		field = field.substring(field.indexOf(':')+1);

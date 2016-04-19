@@ -48,7 +48,7 @@
     <property name="applicationContextSchedulerContextKey" value="applicationContext" />
   </bean>
 
-  <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true" />
+  <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true" scope=""/>
 
   <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
     <property name="numberOfConcurrentRequests" value="30" />

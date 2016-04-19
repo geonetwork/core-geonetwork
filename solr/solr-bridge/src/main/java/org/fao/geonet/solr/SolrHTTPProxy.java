@@ -27,7 +27,6 @@ import com.google.common.collect.Sets;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonNode;
@@ -42,6 +41,7 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.search.SolrAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -64,7 +64,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
@@ -98,22 +97,8 @@ public class SolrHTTPProxy {
     @ResponseBody
     public void handleGETMetadata(HttpServletRequest request, HttpServletResponse response) throws Exception {
         final String url = config.getSolrServerUrl() + "/" +
-                config.getSolrServerCore() + "/select?" + addPermissions(request.getQueryString());
+                config.getSolrServerCore() + "/select?" + SolrAuth.addPermissions(request.getQueryString());
         handleRequest(request, response, url, true);
-    }
-
-    private String addPermissions(String queryString) throws Exception {
-        ServiceContext context = ServiceContext.get();
-        AccessManager accessManager = context.getBean(AccessManager.class);
-        Set<Integer> groups = accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
-        final int viewId = ReservedOperation.view.getId();
-        final String ids = groups.stream().map(Object::toString)
-                .collect(Collectors.joining("\" \"", "(\"", "\")"));
-        return queryString + "&fq=" + URIUtil.encodeQuery(String.format(
-            "(+docType:metadata +_op%d:%s) " +
-                "or (+docType:feature) " +
-                "or (+docType:harvesterReport)", viewId, ids));
-//        return queryString + "&fq=" + URIUtil.encodeQuery(String.format("(-docType:metadata) or _op%d:%s", viewId, ids));
     }
 
     private void handleRequest(HttpServletRequest request, HttpServletResponse response, String sUrl,

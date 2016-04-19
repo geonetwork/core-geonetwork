@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.csw.services.getrecords.solr;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
 import org.geotools.filter.visitor.AbstractFilterVisitor;
 import org.opengis.filter.And;
 import org.opengis.filter.BinaryComparisonOperator;
@@ -44,10 +45,12 @@ import org.opengis.filter.PropertyIsLike;
 import org.opengis.filter.PropertyIsNil;
 import org.opengis.filter.PropertyIsNotEqualTo;
 import org.opengis.filter.PropertyIsNull;
+import org.opengis.filter.expression.Expression;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.BBOX;
 import org.opengis.filter.spatial.Beyond;
+import org.opengis.filter.spatial.BinarySpatialOperator;
 import org.opengis.filter.spatial.Contains;
 import org.opengis.filter.spatial.Crosses;
 import org.opengis.filter.spatial.DWithin;
@@ -78,14 +81,20 @@ import java.util.regex.Pattern;
  * Manages the translation from CSW &lt;Filter&gt; into a Solr expression.
  */
 public class CswFilter2Solr extends AbstractFilterVisitor {
-    private final StringBuilder builder = new StringBuilder();
-    private final Expression2CswVisitor expressionVisitor = new Expression2CswVisitor(builder);
+    private final StringBuilder out = new StringBuilder();
+    private final Expression2CswVisitor expressionVisitor;
 
+    public CswFilter2Solr(IFieldMapper fieldMapper) {
+        expressionVisitor = new Expression2CswVisitor(out, fieldMapper);
+    }
 
-    public static String translate(Filter filter) {
-        CswFilter2Solr translator = new CswFilter2Solr();
+    public static String translate(Filter filter, IFieldMapper fieldMapper) {
+        if (filter == null) {
+            return null;
+        }
+        CswFilter2Solr translator = new CswFilter2Solr(fieldMapper);
         filter.accept(translator, translator);
-        return translator.builder.toString();
+        return translator.out.toString();
     }
 
     @Override
@@ -109,17 +118,17 @@ public class CswFilter2Solr extends AbstractFilterVisitor {
     }
 
     private Object visitBinaryLogic(BinaryLogicOperator filter, String operator, Object extraData) {
-        builder.append("(");
+        out.append("(");
         boolean first = true;
         for (Filter sub : filter.getChildren()) {
             if (first) {
                 first = false;
             } else {
-                builder.append(" ").append(operator).append(" ");
+                out.append(" ").append(operator).append(" ");
             }
             sub.accept(this, extraData);
         }
-        builder.append(")");
+        out.append(")");
         return this;
     }
 
@@ -131,9 +140,9 @@ public class CswFilter2Solr extends AbstractFilterVisitor {
 
     @Override
     public Object visit(Not filter, Object extraData) {
-        builder.append("(NOT ");
+        out.append("(NOT ");
         filter.getFilter().accept(this, extraData);
-        builder.append(")");
+        out.append(")");
         return this;
     }
 
@@ -144,48 +153,48 @@ public class CswFilter2Solr extends AbstractFilterVisitor {
 
     @Override
     public Object visit(PropertyIsBetween filter, Object extraData) {
-        builder.append("(");
+        out.append("(");
         filter.getExpression().accept(expressionVisitor, extraData);
-        builder.append(":[");
+        out.append(":[");
         filter.getLowerBoundary().accept(expressionVisitor, extraData);
-        builder.append(" TO ");
+        out.append(" TO ");
         filter.getUpperBoundary().accept(expressionVisitor, extraData);
-        builder.append("])");
+        out.append("])");
         return this;
     }
 
     @Override
     public Object visit(PropertyIsEqualTo filter, Object extraData) {
-        builder.append("(");
+        out.append("(");
         assert filter.getExpression1() instanceof PropertyName;
         filter.getExpression1().accept(expressionVisitor, extraData);
-        builder.append(":");
+        out.append(":");
         assert filter.getExpression2() instanceof Literal;
         filter.getExpression2().accept(expressionVisitor, extraData);
-        builder.append(")");
+        out.append(")");
         return this;
     }
 
     @Override
     public Object visit(PropertyIsNotEqualTo filter, Object extraData) {
-        builder.append("(-");
+        out.append("(-");
         assert filter.getExpression1() instanceof PropertyName;
         filter.getExpression1().accept(expressionVisitor, extraData);
-        builder.append(":");
+        out.append(":");
         assert filter.getExpression2() instanceof Literal;
         filter.getExpression2().accept(expressionVisitor, extraData);
-        builder.append(")");
+        out.append(")");
         return this;
     }
 
     public Object visitRange(BinaryComparisonOperator filter, String start, String end, Object extraData) {
-        builder.append("(");
+        out.append("(");
         assert filter.getExpression1() instanceof PropertyName;
         filter.getExpression1().accept(expressionVisitor, extraData);
-        builder.append(":").append(start);
+        out.append(":").append(start);
         assert filter.getExpression2() instanceof Literal;
         filter.getExpression2().accept(expressionVisitor, extraData);
-        builder.append(end).append(")");
+        out.append(end).append(")");
         return this;
     }
 
@@ -241,41 +250,57 @@ public class CswFilter2Solr extends AbstractFilterVisitor {
 
     @Override
     public Object visit(PropertyIsLike filter, Object extraData) {
-        builder.append("(");
-        boolean first=true;
-        for (String expression: convertLikePattern(filter)) {
+        out.append("(");
+        boolean first = true;
+        for (String expression : convertLikePattern(filter)) {
             if (first) {
                 first = false;
             } else {
-                builder.append(" ");
+                out.append(" ");
             }
             filter.getExpression().accept(expressionVisitor, extraData);
-            builder.append(":").append(expression);
+            out.append(":").append(expression);
         }
-        builder.append(")");
+        out.append(")");
         return this;
     }
 
     @Override
     public Object visit(PropertyIsNull filter, Object extraData) {
-        builder.append("(-");
+        out.append("(-");
         filter.getExpression().accept(expressionVisitor, extraData);
-        builder.append(":[* TO *])");
+        out.append(":[* TO *])");
         return this;
     }
 
     @Override
     public Object visit(PropertyIsNil filter, Object extraData) {
-        builder.append("(-");
+        out.append("(-");
         filter.getExpression().accept(expressionVisitor, extraData);
-        builder.append(":[* TO *])");
+        out.append(":[* TO *])");
         return this;
     }
 
     @Override
     public Object visit(BBOX filter, Object extraData) {
-        //TODO
-        throw new NotImplementedException();
+        // Intersects matches only if the Polygon's border intersects with the BBOX's border.
+        return addGeomFilter(filter, "Intersects", extraData);
+    }
+
+    private Object addGeomFilter(BinarySpatialOperator filter, String geoOperator, Object extraData) {
+        //{!field f=geom}Intersects(ENVELOPE(minX, maxX, maxY, minY))
+        out.append("(");
+        if (filter.getExpression2() == null || filter.getExpression1() == null) {
+            out.append("geom");
+        } else {
+            filter.getExpression1().accept(expressionVisitor, extraData);
+        }
+        out.append(":\"").append(geoOperator).append("(");
+        final Expression geoExpression = filter.getExpression2() == null ?
+            filter.getExpression1() : filter.getExpression2();
+        geoExpression.accept(expressionVisitor, extraData);
+        out.append(")\")");
+        return this;
     }
 
     @Override
@@ -286,20 +311,21 @@ public class CswFilter2Solr extends AbstractFilterVisitor {
 
     @Override
     public Object visit(Contains filter, Object extraData) {
-        //TODO
-        throw new NotImplementedException();
+        return addGeomFilter(filter, "Contains", extraData);
     }
 
     @Override
     public Object visit(Crosses filter, Object extraData) {
-        //TODO
-        throw new NotImplementedException();
+        //best match...
+        return addGeomFilter(filter, "Intersects", extraData);
     }
 
     @Override
     public Object visit(Disjoint filter, Object extraData) {
-        //TODO
-        throw new NotImplementedException();
+        out.append("(NOT ");
+        addGeomFilter(filter, "Intersects", extraData);
+        out.append(")");
+        return this;
     }
 
     @Override
@@ -310,20 +336,23 @@ public class CswFilter2Solr extends AbstractFilterVisitor {
 
     @Override
     public Object visit(Equals filter, Object extraData) {
-        //TODO
-        throw new NotImplementedException();
+        out.append("(");
+        filter.getExpression1().accept(expressionVisitor, extraData);
+        out.append("==");
+        filter.getExpression2().accept(expressionVisitor, extraData);
+        out.append(")");
+        return this;
     }
 
     @Override
     public Object visit(Intersects filter, Object extraData) {
-        //TODO
-        throw new NotImplementedException();
+        return addGeomFilter(filter, "Intersects", extraData);
     }
 
     @Override
     public Object visit(Overlaps filter, Object extraData) {
-        //TODO
-        throw new NotImplementedException();
+        //best match
+        return addGeomFilter(filter, "Intersects", extraData);
     }
 
     @Override
@@ -334,8 +363,7 @@ public class CswFilter2Solr extends AbstractFilterVisitor {
 
     @Override
     public Object visit(Within filter, Object extraData) {
-        //TODO
-        throw new NotImplementedException();
+        return addGeomFilter(filter, "IsWithin", extraData);
     }
 
     @Override

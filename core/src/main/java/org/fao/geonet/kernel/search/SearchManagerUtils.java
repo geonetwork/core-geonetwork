@@ -23,7 +23,10 @@
 
 package org.fao.geonet.kernel.search;
 
+import org.geotools.xml.Configuration;
+import org.geotools.xml.Parser;
 import org.jdom.Element;
+import org.opengis.filter.capability.FilterCapabilities;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,6 +35,9 @@ import java.util.List;
 public abstract class SearchManagerUtils {
     public static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
     public static final String INDEXING_ERROR_FIELD = "_indexingError";
+    private static final Configuration FILTER_1_0_0 = new org.geotools.filter.v1_0.OGCConfiguration();
+    private static final Configuration FILTER_1_1_0 = new org.geotools.filter.v1_1.OGCConfiguration();
+    private static final Configuration FILTER_2_0_0 = new org.geotools.filter.v2_0.FESConfiguration();
 
     public static Path getIndexFieldsXsl(Path schemaDir, String root, String indexName) {
         if (root == null) {
@@ -105,5 +111,19 @@ public abstract class SearchManagerUtils {
         for (Element aChildren : children) {
             allText(aChildren, sb);
         }
+    }
+
+    public static Parser createFilterParser(String filterVersion) {
+        Configuration config;
+        if (filterVersion.equals(FilterCapabilities.VERSION_100)) {
+            config = FILTER_1_0_0;
+        } else if (filterVersion.equals(FilterCapabilities.VERSION_200)) {
+            config = FILTER_2_0_0;
+        } else if (filterVersion.equals(FilterCapabilities.VERSION_110)) {
+            config = FILTER_1_1_0;
+        } else {
+            throw new IllegalArgumentException("UnsupportFilterVersion: "+filterVersion);
+        }
+        return new Parser(config);
     }
 }

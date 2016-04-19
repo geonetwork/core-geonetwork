@@ -872,13 +872,13 @@ public class DataManager implements ApplicationEventPublisherAware {
      * Start an editing session. This will record the original metadata record
      * in the session under the {@link org.fao.geonet.constants.Geonet.Session#METADATA_BEFORE_ANY_CHANGES} + id
      * session property.
-     * 
+     *
      * The record contains geonet:info element.
-     * 
+     *
      * Note: Only the metadata record is stored in session. If the editing
      * session upload new documents or thumbnails, those documents will not
      * be cancelled. This needs improvements.
-     * 
+     *
      * @param context
      * @param id
      * @throws Exception
@@ -888,7 +888,7 @@ public class DataManager implements ApplicationEventPublisherAware {
       if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
         Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
       }
-      
+
       boolean keepXlinkAttributes = true;
       boolean forEditing = false;
       boolean withValidationErrors = false;
@@ -899,7 +899,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     /**
      * Rollback to the record in the state it was when the editing session started
      * (See {@link #startEditingSession(ServiceContext, String)}).
-     * 
+     *
      * @param context
      * @param id
      * @throws Exception
@@ -908,13 +908,13 @@ public class DataManager implements ApplicationEventPublisherAware {
         String id) throws Exception {
         UserSession session = context.getUserSession();
         Element metadataBeforeAnyChanges = (Element) session.getProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
-        
+
         if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-              Log.debug(Geonet.EDITOR_SESSION, 
-                  "Editing session end. Cancel changes. Restore record " + id + 
+              Log.debug(Geonet.EDITOR_SESSION,
+                  "Editing session end. Cancel changes. Restore record " + id +
                   ". Replace by original record which was: ");
         }
-        
+
         if (metadataBeforeAnyChanges != null) {
             if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
               Log.debug(Geonet.EDITOR_SESSION, " > restoring record: ");
@@ -925,14 +925,14 @@ public class DataManager implements ApplicationEventPublisherAware {
             boolean ufo = false;
                 boolean index = true;
                 metadataBeforeAnyChanges.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-                updateMetadata(context, id, metadataBeforeAnyChanges, 
-                    validate, ufo, index, 
+                updateMetadata(context, id, metadataBeforeAnyChanges,
+                    validate, ufo, index,
                     context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), false);
                 endEditingSession(id, session);
         } else {
             if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-              Log.debug(Geonet.EDITOR_SESSION, 
-                  " > nothing to cancel for record " + id + 
+              Log.debug(Geonet.EDITOR_SESSION,
+                  " > nothing to cancel for record " + id +
                   ". Original record was null. Use starteditingsession to.");
             }
         }
@@ -940,7 +940,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
     /**
      * Remove the original record stored in session.
-     * 
+     *
      * @param id
      * @param session
      */
@@ -1566,7 +1566,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 .setGroupOwner(Integer.valueOf(groupOwner))
                 .setOwner(owner)
                 .setSourceId(source);
-        
+
         //If there is a default category for the group, use it:
         Group group = getApplicationContext()
                 .getBean(GroupRepository.class)
@@ -2205,9 +2205,9 @@ public class DataManager implements ApplicationEventPublisherAware {
         Metadata findOne = getMetadataRepository().findOne(metadataId);
         if(findOne != null) {
             boolean isMetadata = findOne.getDataInfo().getType() == MetadataType.METADATA;
-    
+
             deleteMetadataFromDB(context, metadataId);
-    
+
             // Notifies the metadata change to metatada notifier service
             if (isMetadata) {
                 context.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, uuid, context);
@@ -2240,7 +2240,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      */
     public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllIntranet) throws Exception {
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        
+
         if (skipAllIntranet) {
             operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), ReservedGroup.intranet.getId());
         } else {
@@ -2465,7 +2465,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     //--- Privileges API
     //---
     //--------------------------------------------------------------------------
-    
+
     /**
      *  Adds a permission to a group. Metadata is not reindexed.
      *
@@ -3225,7 +3225,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
     /**
      * Add privileges information about metadata record
-     * which depends on context and usually could not be stored in db 
+     * which depends on context and usually could not be stored in db
      * or Lucene index because depending on the current user
      * or current client IP address.
      *

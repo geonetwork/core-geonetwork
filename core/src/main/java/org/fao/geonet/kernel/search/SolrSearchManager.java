@@ -185,7 +185,7 @@ public class SolrSearchManager implements ISearchManager {
     }
 
 
-    public static void iterateQuery(SolrClient client, SolrQuery params, final Consumer<SolrDocument> callback) throws IOException, SolrServerException {
+    public void iterateQuery(SolrQuery params, final Consumer<SolrDocument> callback) throws IOException, SolrServerException {
         final MutableLong pos = new MutableLong(0);
         final MutableLong last = new MutableLong(1);
         while (pos.longValue() < last.longValue()) {
@@ -229,7 +229,7 @@ public class SolrSearchManager implements ISearchManager {
         params.setFilterQueries(DOC_TYPE + ":metadata");
         params.setFields(ID, Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
         final Map<String, String> result = new HashMap<>();
-        iterateQuery(client, params, doc ->
+        iterateQuery(params, doc ->
                 result.put(doc.getFieldValue(ID).toString(),
                         convertDate(doc.getFieldValue(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE))));
         return result;
@@ -280,7 +280,7 @@ public class SolrSearchManager implements ISearchManager {
             solrQuery.setRows(rows);
         }
         final List<String> result = new ArrayList<>();
-        iterateQuery(client, solrQuery, doc ->
+        iterateQuery(solrQuery, doc ->
             result.add(doc.getFieldValue(LuceneIndexField.UUID).toString()));
         return result;
     }
@@ -292,7 +292,7 @@ public class SolrSearchManager implements ISearchManager {
         params.setFilterQueries(Geonet.IndexFieldNames.HASXLINKS + ":1");
         params.setFields(ID);
         Set<Integer> result = new HashSet<>();
-        iterateQuery(client, params,
+        iterateQuery(params,
                 doc -> result.add(convertInteger(doc.getFieldValue(ID))));
         return result;
     }
@@ -368,5 +368,9 @@ public class SolrSearchManager implements ISearchManager {
         doc.addField(fieldName, fieldModifier);
         client.add(doc);
         client.commit();
+    }
+
+    public SolrClient getClient() {
+        return client;
     }
 }

@@ -403,13 +403,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
             }
 
 			String mapped = getFieldMapper().map(field);
-
-			if (mapped != null) {
-                elem.setAttribute("fld", mapped);
-            } else {
-                Log.info(Geonet.CSW_SEARCH, "Unknown queryable field : "
-                                            + field); // FIXME log doesn't work
-            }
+            elem.setAttribute("fld", mapped);
 		}
 
 		@SuppressWarnings("unchecked")
