@@ -1,0 +1,14 @@
+<div class="clearfix solr-result" ng-mouseenter="ctrl.add()" ng-mouseleave="ctrl.remove()">
+  <div class="solr-result-overview">
+    <img
+      src="{{::ctrl.overviews[0].url}}"
+      alt="{{::ctrl.overviews[0].name}}"
+      class="img-rounded pull-left"
+      ng-if="ctrl.overviews[0]"
+      style="background-image: url({{::ctrl.overviews[0].url}})"/>
+  </div>
+  <div class="solr-result-detail">
+    <h5>{{::ctrl.record.resourceTitle}}</h5>
+    <p ng-if="ctrl.record.resourceAbstract">{{::ctrl.record.resourceAbstract}}</p>
+  </div>
+</div>
