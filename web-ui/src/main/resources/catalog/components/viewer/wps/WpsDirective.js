@@ -128,7 +128,7 @@
               scope.wpsLink.applicationProfile;
 
           if (defaults) {
-            defaults = parseKvpParams(scope.defaults);
+            defaults = parseKvpParams(defaults);
           }
 
           scope.describeState = 'sended';
