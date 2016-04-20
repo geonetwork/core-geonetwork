@@ -251,11 +251,6 @@ public class Geonetwork implements ApplicationHandler {
             svnManager.init();
         }
 
-        /**
-         * Initialize language detector
-         */
-        LanguageDetector.init(appPath.resolve(_applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class)));
-
         //------------------------------------------------------------------------
         //--- Initialize thesaurus
 

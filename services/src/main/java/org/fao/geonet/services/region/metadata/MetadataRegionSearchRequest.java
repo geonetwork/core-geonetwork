@@ -40,6 +40,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
@@ -263,7 +264,7 @@ public class MetadataRegionSearchRequest extends Request {
     }
     private Element findMetadata(Id id, boolean includeEditData) throws Exception {
         final DataManager dataManager = context.getBean(DataManager.class);
-        String mdId = id.getMdId(context.getBean(ISearchManager.class), dataManager);
+        String mdId = id.getMdId(context.getBean(SolrSearchManager.class), dataManager);
         try {
             if (context.getBean(MetadataRepository.class).exists(Integer.parseInt(mdId))) {
                 Lib.resource.checkPrivilege(context, mdId, ReservedOperation.view);
@@ -289,7 +290,7 @@ public class MetadataRegionSearchRequest extends Request {
         if (id.startsWith(MetadataRegionSearchRequest.PREFIX)) {
             String[] idParts = id.substring(MetadataRegionSearchRequest.PREFIX.length()).split(":");
 
-            ISearchManager searchManager = this.context.getBean(ISearchManager.class);
+            SolrSearchManager searchManager = this.context.getBean(SolrSearchManager.class);
             DataManager dataManager = this.context.getBean(DataManager.class);
             final String mdId = MetadataRegionSearchRequest.Id.create(idParts[0]).getMdId(searchManager, dataManager);
 
@@ -315,7 +316,7 @@ public class MetadataRegionSearchRequest extends Request {
         /**
          * Convert ID to the id for looking up the metadata in the database
          */
-        public abstract String getMdId(ISearchManager searchManager, DataManager dataManager) throws Exception;
+        public abstract String getMdId(SolrSearchManager searchManager, DataManager dataManager) throws Exception;
         /**
          * Strip the identifier from the id and return the id
          */
@@ -344,7 +345,7 @@ public class MetadataRegionSearchRequest extends Request {
         }
 
         @Override
-        public String getMdId(ISearchManager searchManager, DataManager dataManager) throws Exception {
+        public String getMdId(SolrSearchManager searchManager, DataManager dataManager) throws Exception {
             String mdId = Utils.lookupMetadataIdFromFileId(id, searchManager);
 
             if (mdId == null) {
@@ -366,7 +367,7 @@ public class MetadataRegionSearchRequest extends Request {
         }
 
         @Override
-        public String getMdId(ISearchManager searchManager, DataManager dataManager) {
+        public String getMdId(SolrSearchManager searchManager, DataManager dataManager) {
             return id;
         }
 
@@ -384,7 +385,7 @@ public class MetadataRegionSearchRequest extends Request {
         }
 
         @Override
-        public String getMdId(ISearchManager searchManager, DataManager dataManager) throws Exception {
+        public String getMdId(SolrSearchManager searchManager, DataManager dataManager) throws Exception {
             return dataManager.getMetadataId(id);
         }
 

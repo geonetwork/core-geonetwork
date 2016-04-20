@@ -63,7 +63,6 @@ import javax.sql.DataSource;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
-import static org.fao.geonet.constants.Geonet.Config.LANGUAGE_PROFILES_DIR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -122,8 +121,6 @@ public class GeonetTestFixture {
                     });
                     Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
                     deploySchema(webappDir, schemaPluginsDir);
-                    LanguageDetector.init(AbstractCoreIntegrationTest.getWebappDir(test.getClass()).resolve(_applicationContext.getBean
-                            (LANGUAGE_PROFILES_DIR, String.class)));
 
                     final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
                     final ServiceConfig serviceConfig = new ServiceConfig(Lists.<Element>newArrayList());

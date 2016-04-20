@@ -68,9 +68,6 @@
 	<!-- ====================================================================== -->
 
 	<appHandler class="org.fao.geonet.Geonetwork">
-		<!-- language profiles for automatic language detection -->
-		<param name="languageProfilesDir" value="resources/language-profiles" />
-
 		<param name="licenseDir" value="WEB-INF/licenses" />
 		<param name="summaryConfig" value="WEB-INF/config-summary.xml" />
 		<param name="luceneConfig" value="WEB-INF/config-lucene.xml" />
@@ -150,7 +147,6 @@
   <include>config/config-service-admin-geoserver-publication.xml</include>
   <include>config/config-service-admin-transfert-privileges.xml</include>
   <include>config/config-service-admin-formatter.xml</include>
-  <include>config/config-service-statistics.xml</include>
   <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>
 

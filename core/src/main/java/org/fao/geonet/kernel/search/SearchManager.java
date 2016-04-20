@@ -267,7 +267,7 @@ public class SearchManager implements ISearchManager {
         SettingInfo settingInfo = applicationContext.getBean(SettingInfo.class);
         LuceneConfig _luceneConfig = applicationContext.getBean(LuceneConfig.class);
 
-        final char[] ignoreChars = settingInfo.getAnalyzerIgnoreChars();
+        final char[] ignoreChars = null;
         Analyzer analyzer = null;
         try {
             if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
@@ -339,7 +339,7 @@ public class SearchManager implements ISearchManager {
         }
         // there is no default analyzer defined in lucene config
 
-        char[] ignoreChars = settingInfo.getAnalyzerIgnoreChars();
+        char[] ignoreChars = null;
 		if (defaultAnalyzerClass == null) {
             // create default (hardcoded) analyzer
             SearchManager.initHardCodedAnalyzers(ignoreChars);
