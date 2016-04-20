@@ -28,7 +28,7 @@
     <service name="csv.search">
       <documentation><![CDATA[
         Search service returning results in CSV format.
-        
+
         Parameters:
         * Any search criteria supported by Lucene search service.
         ]]></documentation>
@@ -42,9 +42,9 @@
       <documentation><![CDATA[
         Service taking care of rendering results as CSV from csv.search service
         ]]></documentation>
-      <class name=".services.main.Result">
+      <!--TODO SOLR-MIGRATION <class name=".services.main.Result">
         <param name="range" value="all"/>
-      </class>
+      </class>-->
       <output sheet="../xslt/services/csv/csv-search.xsl" contentType="text/plain; charset=UTF-8"/>
       <error id="search-error" sheet="../xslt/error/error-xml.xsl" statusCode="500"/>
     </service>

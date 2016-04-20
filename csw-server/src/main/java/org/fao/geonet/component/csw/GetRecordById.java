@@ -130,18 +130,18 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
                 // Apply CSW service specific constraint
                 String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
-
+                Pair<Element, Element> results;
                 if (StringUtils.isNotEmpty(cswServiceSpecificContraint)) {
                     if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
                         Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint): " + cswServiceSpecificContraint);
 
-                    cswServiceSpecificContraint = cswServiceSpecificContraint + " +_id: " + id;
+                    cswServiceSpecificContraint = cswServiceSpecificContraint + " +_uuid:\"" + id + "\"";
                     if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
                         Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint with uuid): " + cswServiceSpecificContraint);
 
                     Element filterExpr = new Element("Filter", Csw.NAMESPACE_OGC);
 
-                    Pair<Element, Element> results= _searchController.search(context, 0, 1, ResultType.HITS, "csw",
+                   results = _searchController.search(context, 0, 1, ResultType.HITS, "csw",
                             ElementSetName.BRIEF,  filterExpr, Csw.FILTER_VERSION_1_1, null, null, null, 0, cswServiceSpecificContraint, null);
 
 
@@ -158,13 +158,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 			    // to the requested MD
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
-                final SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
-                // TODO: SOLR-MIGRATION
-//                final String displayLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
-//				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null,
-//                        displayLanguage);
-
-                Element md = null;
+                Element md = results.two();
 				if (md != null) {
                     final Map<String, GetRecordByIdMetadataTransformer> transformers = context.getApplicationContext()
                             .getBeansOfType(GetRecordByIdMetadataTransformer.class);
