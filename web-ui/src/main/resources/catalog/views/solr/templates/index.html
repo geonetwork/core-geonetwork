@@ -17,7 +17,7 @@
         </div><!-- /input-group -->
       </div>
       <div class="panel-body" ng-if="anyField">
-        <a href="">
+        <a href="" ng-click="reset()">
           <i class="glyphicon glyphicon-remove-circle"></i>
           Reset search
         </a>
@@ -29,9 +29,11 @@
   <div class="row results-row">
 
     <div class="col-md-8">
+
+
       <ul class="nav nav-tabs">
         <li role="presentation" ng-class="{'active': !active}">
-          <a ng-click="search()">All</a>
+          <a ng-click="search('all')">All</a>
         </li>
         <li role="presentation" ng-class="{'active': active=='dataset'}"> <a
           ng-click="search('dataset')">Datasets</a>
@@ -41,10 +43,17 @@
         </li>
       </ul>
 
-      <div dir-paginate="r in results | itemsPerPage: pagination.itemsPerPage"
-        gn-solr-result record="r" collection="collection" total-items="pagination.count" currentPage="pagination.page"></div>
+      <div class="results-list">
 
-      <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+        <div class="mask" ng-if="loading"></div>
+
+        <div dir-paginate="r in results | itemsPerPage: pager.itemsPerPage"
+          total-items="pager.count" currentPage="pager.page"
+          gn-solr-result record="r" collection="collection"></div>
+
+        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+
+      </div>
 
     </div>
 

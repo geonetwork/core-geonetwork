@@ -228,7 +228,9 @@
   geonetwork.GnSolrRequest.prototype.search = function(qParams, solrParams) {
     angular.extend(this.requestParams, {
       any: qParams.any,
-      qParams: qParams.params,
+      qParams: {
+        params: qParams.params
+      },
       solrParams: solrParams,
       geometry: qParams.geometry
     });
@@ -249,10 +251,21 @@
     );
   };
 
-  geonetwork.GnSolrRequest.prototype.affineSearch = function(params, any, solrParams) {
+  geonetwork.GnSolrRequest.prototype.affineSearch = function(params, solrParams) {
     return this.search_(
       angular.extend({}, this.requestParams.qParams, params),
       angular.extend({}, this.requestParams.solrParams, solrParams)
+    );
+  };
+
+  geonetwork.GnSolrRequest.prototype.resetSearch = function(solrParams) {
+    this.requestParams = {};
+    return this.search(
+      {
+        any    : '',
+        params : {}
+      },
+      angular.extend({}, this.initialParams.facets, solrParams || {})
     );
   };
 

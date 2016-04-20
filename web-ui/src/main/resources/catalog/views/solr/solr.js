@@ -43,10 +43,12 @@
   module.controller('GnSearchSolrController', [
 
     '$scope',
+    '$element',
+    '$timeout',
     'gnSolrRequestManager',
     'gnFeaturesTableManager',
 
-    function($scope, gnSolrRequestManager, gnFeaturesTableManager) {
+    function($scope, $element, $timeout, gnSolrRequestManager, gnFeaturesTableManager) {
 
       let viewConfig = {
         center : [280274.03240585705, 6053178.654789996],
@@ -92,52 +94,79 @@
 
       $scope.anyField = '';
 
-      $scope.pagination = {
+      $scope.pager = {
         page         : 1,
         itemsPerPage : 10
+      };
+
+      let solrParams = {
+        'facet'       : true,
+        'facet.field' : [ 'resourceType' ],
+        start         : ($scope.pager.page - 1) * $scope.pager.itemsPerPage,
+        rows          : $scope.pager.itemsPerPage
       };
 
 
       $scope.search = function(resourceType) {
 
-        $scope.active = resourceType;
-        let solrParams = {
-          'facet'       : true,
-          'facet.field' : [ 'resourceType' ],
-          start         : ($scope.pagination.page - 1) * $scope.pagination.itemsPerPage,
-          rows          : $scope.pagination.itemsPerPage
-        };
+        if (resourceType) {
+          $scope.active  = (resourceType == 'all') ? undefined : resourceType;
+        }
+        $scope.pager.page = 1;
+
         let qParams = {
           any: $scope.anyField,
           params: {}
         };
-        if (resourceType) {
-          let values                  = {}
-          values[resourceType]        = true
+        if ($scope.active) {
+          let values           = {}
+          values[resourceType] = true
+          console.log(values);
           qParams.params.resourceType = {
             type   : 'field',
             values : values
           };
-          console.log(qParams)
         }
-        $scope.solrObject.searchWithFacets(qParams, solrParams);
+
+        $scope.loading = true;
+        $scope.promise = $scope.solrObject.searchWithFacets(
+          qParams, solrParams
+        );
+
+
+      };
+
+      $scope.reset = function() {
+        $scope.anyField   = '';
+        $scope.pager = {
+          page         : 1,
+          itemsPerPage : 10
+        };
+        $scope.active = undefined;
+        $scope.loading = true;
+        $scope.solrObject.resetSearch(solrParams);
       };
 
       $scope.solrObject.on('search', function(resp) {
-        console.log('resp', resp)
-        $scope.pagination.count = resp.count;
-        $scope.facets           = resp.facets;
-        $scope.results          = resp.records;
+        let page           = (resp.solrData.response.start / $scope.pager.itemsPerPage) + 1;
+        $scope.loading     = false;
+        $scope.pager.count = resp.count;
+        $scope.facets      = resp.facets;
+        $scope.results     = resp.records;
       });
 
       $scope.search();
 
       $scope.pageChanged = function(pageNumber) {
-        $scope.solrObject.affineSearch({}, undefined, {
-          start: (pageNumber - 1) * $scope.pagination.itemsPerPage
+        $scope.loading = true;
+        $scope.pager.page = pageNumber;
+        console.log('pagechanged : ' + pageNumber)
+        $scope.solrObject.affineSearch({}, {
+          start: (pageNumber - 1) * $scope.pager.itemsPerPage
         });
         $scope.feature = undefined;
-      }
+      };
+
 
       $scope.validProperty = function(key) {
         return key.substr(0,3) == 'ft_';
