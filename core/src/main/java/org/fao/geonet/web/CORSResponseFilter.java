@@ -37,7 +37,8 @@ public class CORSResponseFilter
             if(clientOriginUrl != null) {
                 String clientOriginHost = new java.net.URI(clientOriginUrl).getHost();
                 if(allowedRemoteHosts.indexOf(clientOriginHost) != -1) {
-                    httpResponse.setHeader("Access-Control-Allow-Origin", clientOriginUrl);
+                    //httpResponse.setHeader("Access-Control-Allow-Origin", clientOriginUrl);
+                    httpResponse.setHeader("Access-Control-Allow-Origin", "*");
                     httpResponse.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
                     httpResponse.setHeader("Access-Control-Allow-Credentials","true");
                     httpResponse.setHeader("Cache-Control", "no-cache");
