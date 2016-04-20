@@ -203,52 +203,6 @@ public class SettingInfo {
 		else return value.equals("true");
 	}
 
-	//---------------------------------------------------------------------------
-
-	public boolean isSearchStatsEnabled()
-	{
-        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        String value = settingManager.getValue("system/searchStats/enable");
-		if (value == null) return false;
-		else return value.equals("true");
-	}
-
-	//---------------------------------------------------------------------------
-
-	public Calendar getLuceneIndexOptimizerSchedulerAt() throws IllegalArgumentException {
-		Calendar calendar = Calendar.getInstance();
-		try {
-            SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-
-            calendar.set(0,0,0,
-					Integer.parseInt(settingManager.getValue("system/indexoptimizer/at/hour")),
-					Integer.parseInt(settingManager.getValue("system/indexoptimizer/at/min")) ,
-					Integer.parseInt(settingManager.getValue("system/indexoptimizer/at/sec")));
-		} catch (Exception e) {
-			throw new IllegalArgumentException("Failed parsing schedule at info from settings: "+e.getMessage());
-		}
-		return calendar;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public int getLuceneIndexOptimizerSchedulerInterval() throws IllegalArgumentException {
-		int result = -1;
-		try {
-            SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-
-            int day  = Integer.parseInt(settingManager.getValue("system/indexoptimizer/interval/day"));
-			int hour = Integer.parseInt(settingManager.getValue("system/indexoptimizer/interval/hour"));
-			int min  = Integer.parseInt(settingManager.getValue("system/indexoptimizer/interval/min"));
-			result = (day * 24 * 60) + (hour * 60) + min;
-		} catch (Exception e) {
-			throw new IllegalArgumentException("Failed parsing scheduler interval from settings: "+e.getMessage());
-		}
-		return result;
-	}
-
-	//---------------------------------------------------------------------------
-
 	public String getFeedbackEmail()
 	{
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
@@ -261,18 +215,4 @@ public class SettingInfo {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         return settingManager.getValueAsBool("system/inspire/enable");
     }
-
-
-    public char[] getAnalyzerIgnoreChars() {
-        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        String ignoreChars = settingManager.getValue(SettingManager.SYSTEM_LUCENE_IGNORECHARS);
-        if(ignoreChars == null || ignoreChars.length() == 0) {
-            return null;
-        }
-        return ignoreChars.toCharArray();
-    }
-
 }
-
-//=============================================================================
-

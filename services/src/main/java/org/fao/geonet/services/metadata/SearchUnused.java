@@ -32,7 +32,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -78,7 +77,7 @@ public class SearchUnused implements Service
 
 		context.info("Creating UnusedSearcher");
 
-		try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.UNUSED, Geonet.File.SEARCH_LUCENE)) {
+		try (MetaSearcher searcher = searchMan.newSearcher(Geonet.File.SEARCH_LUCENE)) {
 
             searcher.search(context, params, null);
             session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);

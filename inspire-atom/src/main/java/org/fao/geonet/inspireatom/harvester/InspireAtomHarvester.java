@@ -44,7 +44,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +90,7 @@ public class InspireAtomHarvester {
         // Using index information, as type is only available in index and not in database.
         // If retrieved from database retrieves all iso19139 metadata and should apply for each result an xslt process
         // to identify if a service or dataset (slow process)
-        List<Metadata> iso19139Metadata = InspireAtomUtil.searchMetadataByType(ServiceContext.get(), ISearchManager, "service");
+        List<Metadata> iso19139Metadata = InspireAtomUtil.searchMetadataByType(ISearchManager, "service");
         //List<Metadata> iso19139Metadata = metadataRepository.findAll(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
 
         Element result = new Element("response");
@@ -289,7 +288,7 @@ public class InspireAtomHarvester {
         final InspireAtomFeedRepository repository = gc.getBean(InspireAtomFeedRepository.class);
         final MetadataRepository metadataRepository = gc.getBean(MetadataRepository.class);
 
-        List<Metadata> iso19139Metadata = InspireAtomUtil.searchMetadataByType(ServiceContext.get(), gc.getBean(ISearchManager.class), "dataset");
+        List<Metadata> iso19139Metadata = InspireAtomUtil.searchMetadataByType(gc.getBean(ISearchManager.class), "dataset");
         //List<Metadata> iso19139Metadata = metadataRepository.findAll(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
 
         Map<String, String> metadataWithAtomFeeds =
@@ -365,8 +364,8 @@ public class InspireAtomHarvester {
             String metadataUuid = "";
 
             try {
-                metadataUuid = InspireAtomUtil.retrieveDatasetUuidFromIdentifier(context,
-                        gc.getBean(ISearchManager.class), atomDatasetId);
+                metadataUuid = InspireAtomUtil.retrieveDatasetUuidFromIdentifier(
+                    gc.getBean(ISearchManager.class), atomDatasetId);
 
                 String atomDatasetNs = datasetsInformation.get(atomDatasetId);
                 logger.debug("Dataset, id=" + atomDatasetId + ", namespace=" + atomDatasetNs);

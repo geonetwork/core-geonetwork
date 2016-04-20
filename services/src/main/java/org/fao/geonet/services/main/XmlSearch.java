@@ -31,10 +31,9 @@ import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.search.LuceneIndexField;
+import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Element;
 
@@ -62,7 +61,7 @@ public class XmlSearch implements Service
 	/**
 	 * Run a search and return results as XML.
 	 *
-	 * @param params	All search parameters defined in {@link LuceneIndexField}.
+	 * @param params	All search parameters defined in {@link IndexFields}.
 	 * <br/>
 	 * To return only results summary, set summaryOnly parameter to 1.
 	 * Default is 0 (ie.results and summary).
@@ -77,21 +76,21 @@ public class XmlSearch implements Service
 
 		// possibly close old searcher
 		UserSession  session     = context.getUserSession();
-		
+
 		// perform the search and save search result into session
-		MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+		MetaSearcher searcher = searchMan.newSearcher(Geonet.File.SEARCH_LUCENE);
 		try {
-			
+
 			// Check is user asked for summary only without building summary
 			String summaryOnly = Util.getParam(params, Geonet.SearchResult.SUMMARY_ONLY, "0");
 			String sBuildSummary = params.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
             if(sBuildSummary != null && sBuildSummary.equals("false") && ! "0".equals(summaryOnly)) {
 				elData.getChild(Geonet.SearchResult.BUILD_SUMMARY).setText("true");
             }
-			
+
 			session.setProperty(Geonet.Session.SEARCH_REQUEST, elData.clone());
 			searcher.search(context, elData, _config);
-	
+
 			if (!"0".equals(summaryOnly)) {
 				return searcher.getSummary();
 			} else {
@@ -100,14 +99,14 @@ public class XmlSearch implements Service
 				elData.addContent(new Element("from").setText("1"));
 				// FIXME ? from and to parameter could be used but if not
 				// set, the service return the whole range of results
-				// which could be huge in non fast mode ? 
+				// which could be huge in non fast mode ?
 				elData.addContent(new Element("to").setText(searcher.getSize() +""));
-		
+
 				Element result = searcher.present(context, elData, _config);
-				
+
 				// Update result elements to present
 				SelectionManager.updateMDResult(context.getUserSession(), result);
-		
+
 				return result;
 			}
 		} finally {

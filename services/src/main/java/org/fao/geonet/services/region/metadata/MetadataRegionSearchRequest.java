@@ -25,10 +25,13 @@ package org.fao.geonet.services.region.metadata;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import jeeves.server.context.ServiceContext;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -37,21 +40,29 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.region.MetadataRegion;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
+import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import jeeves.server.context.ServiceContext;
 
 public class MetadataRegionSearchRequest extends Request {
 
@@ -172,10 +183,10 @@ public class MetadataRegionSearchRequest extends Request {
         Geometry geometry = null;
         if ("polygon".equals(extentObj.getName())) {
             String gml = Xml.getString(extentObj);
-            geometry = SpatialIndexWriter.parseGml(parser, gml);
+            geometry = parseGml(parser, gml);
         } else if ("EX_BoundingPolygon".equals(extentObj.getName())) {
             String gml = Xml.getString(extentObj.getChild("polygon", Geonet.Namespaces.GMD));
-            geometry = SpatialIndexWriter.parseGml(parser, gml);
+            geometry = parseGml(parser, gml);
         } else if ("EX_GeographicBoundingBox".equals(extentObj.getName())) {
             double minx = Double.parseDouble(extentObj.getChild("westBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
             double maxx = Double.parseDouble(extentObj.getChild("eastBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
@@ -195,6 +206,61 @@ public class MetadataRegionSearchRequest extends Request {
         }
     }
 
+    public static MultiPolygon parseGml(Parser parser, String gml) throws IOException, SAXException,
+        ParserConfigurationException
+    {
+        Object value = parser.parse(new StringReader(gml));
+        if (value instanceof HashMap) {
+            @SuppressWarnings("rawtypes")
+            HashMap map = (HashMap) value;
+            List<Polygon> geoms = new ArrayList<Polygon>();
+            for (Object entry : map.values()) {
+                addToList(geoms, entry);
+            }
+            if( geoms.isEmpty() ){
+                return null;
+            } else if( geoms.size()>1 ){
+                GeometryFactory factory = geoms.get(0).getFactory();
+                return factory.createMultiPolygon(geoms.toArray(new Polygon[0]));
+            } else {
+                return toMultiPolygon(geoms.get(0));
+            }
+
+        } else if (value == null) {
+            return null;
+        } else {
+            return toMultiPolygon((Geometry) value);
+        }
+    }
+
+    public static MultiPolygon toMultiPolygon(Geometry geometry)
+    {
+        if (geometry instanceof Polygon) {
+            Polygon polygon = (Polygon) geometry;
+
+            return geometry.getFactory().createMultiPolygon(
+                new Polygon[] { polygon });
+        }else if (geometry instanceof MultiPolygon) {
+            return  (MultiPolygon) geometry;
+        }
+        String message = geometry.getClass()+" cannot be converted to a polygon. Check Metadata";
+        Log.error(Geonet.INDEX_ENGINE, message);
+        throw new IllegalArgumentException(message);
+    }
+
+
+    public static void addToList(List<Polygon> geoms, Object entry)
+    {
+        if (entry instanceof Polygon) {
+            geoms.add((Polygon) entry);
+        } else if (entry instanceof Collection) {
+            @SuppressWarnings("rawtypes")
+            Collection collection = (Collection) entry;
+            for (Object object : collection) {
+                geoms.add((Polygon) object);
+            }
+        }
+    }
     private Element findMetadata(Id id, boolean includeEditData) throws Exception {
         final DataManager dataManager = context.getBean(DataManager.class);
         String mdId = id.getMdId(context.getBean(ISearchManager.class), dataManager);
@@ -254,7 +320,7 @@ public class MetadataRegionSearchRequest extends Request {
          * Strip the identifier from the id and return the id
          */
         abstract String getId();
-        
+
         static Id create(String id) {
             if(id.toLowerCase().startsWith(MdId.PREFIX)) {
                 return new MdId(id);
@@ -280,7 +346,7 @@ public class MetadataRegionSearchRequest extends Request {
         @Override
         public String getMdId(ISearchManager searchManager, DataManager dataManager) throws Exception {
             String mdId = Utils.lookupMetadataIdFromFileId(id, searchManager);
-            
+
             if (mdId == null) {
                 mdId = dataManager.getMetadataId(id);
             }
@@ -308,7 +374,7 @@ public class MetadataRegionSearchRequest extends Request {
         public String getId() {
             return id;
         }
-        
+
     }
     public static class Uuid extends Id {
 
@@ -326,7 +392,7 @@ public class MetadataRegionSearchRequest extends Request {
         public String getId() {
             return null;
         }
-        
+
     }
 
     private static final FindByNodeName EXTENT_FINDER = new FindByNodeName("EX_BoundingPolygon", "EX_GeographicBoundingBox", "polygon");

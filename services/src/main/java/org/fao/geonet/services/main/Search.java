@@ -34,7 +34,6 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Element;
 
@@ -80,7 +79,7 @@ public class Search implements Service
 		Element southBL = elData.getChild(Geonet.SearchResult.SOUTH_BL);
 		Element eastBL = elData.getChild(Geonet.SearchResult.EAST_BL);
 		Element northBL = elData.getChild(Geonet.SearchResult.NORTH_BL);
-		
+
 		if (bbox != null && westBL == null && southBL == null && eastBL == null && northBL == null) {
 			String bounds[] = bbox.getText().split(",");
 			if (bounds.length == 4) {
@@ -90,25 +89,25 @@ public class Search implements Service
 				elData.addContent(new Element(Geonet.SearchResult.NORTH_BL).addContent(bounds[3]));
 			}
 		}
-		
+
 		// possibly close old searcher
 		UserSession  session     = context.getUserSession();
 		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
-		
+
  		if (oldSearcher != null)
  			if (oldSearcher instanceof LuceneSearcher)
  				((LuceneSearcher)oldSearcher).close();
-		
+
 		// possibly close old selection
 		SelectionManager oldSelection = (SelectionManager)session.getProperty(Geonet.Session.SELECTED_RESULT);
-		
+
 		if (oldSelection != null){
 			oldSelection.close();
 		}
-		
+
 
 		// perform the search and save search query into session
-		MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+		MetaSearcher searcher = searchMan.newSearcher(Geonet.File.SEARCH_LUCENE);
 
 		searcher.search(context, elData, _config);
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);

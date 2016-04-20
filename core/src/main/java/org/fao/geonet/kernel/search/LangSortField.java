@@ -36,6 +36,7 @@ import org.apache.lucene.search.SortField;
 
 import java.io.IOException;
 
+@Deprecated
 public class LangSortField extends SortField {
 
     private static final String MD_DOC_LANG_FIELD = "_docLocale";

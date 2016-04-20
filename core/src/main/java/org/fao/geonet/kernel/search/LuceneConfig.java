@@ -62,6 +62,7 @@ import jeeves.server.overrides.ConfigurationOverrides;
  * @author fxprunayre
  *
  */
+@Deprecated
 public class LuceneConfig {
     public static final String USE_NRT_MANAGER_REOPEN_THREAD = "useNRTManagerReopenThread";
     private static final int ANALYZER_CLASS = 1;

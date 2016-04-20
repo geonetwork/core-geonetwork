@@ -48,7 +48,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.LuceneIndexField;
+import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SolrSearchManager;
@@ -489,7 +489,7 @@ public class Aligner extends BaseAligner
                                 }
                             }
                         } else if (searchmanager instanceof SolrSearchManager) {
-                            List<String> uuids = ((SolrSearchManager) searchmanager).getDocsUuids("+" + LuceneIndexField.RESOURCE_IDENTIFIER + ":\"" + identifier + "\"", 1);
+                            List<String> uuids = ((SolrSearchManager) searchmanager).getDocsUuids("+" + IndexFields.RESOURCE_IDENTIFIER + ":\"" + identifier + "\"", 1);
                             if (uuids.size() > 0) {
                                 log.warning("      - Duplicates found. Skipping record with UUID " + uuid + " and resource identifier " + identifier);
                                 result.duplicatedResource++;

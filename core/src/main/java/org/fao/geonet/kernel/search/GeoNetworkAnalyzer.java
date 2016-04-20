@@ -47,6 +47,7 @@ import java.util.Set;
  *
  * @author heikki doeleman
  */
+@Deprecated
 public final class GeoNetworkAnalyzer extends Analyzer {
 
     private final char[] charsToIgnore;

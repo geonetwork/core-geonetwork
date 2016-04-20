@@ -22,7 +22,7 @@ package org.fao.geonet.services.util.z3950.provider.GN;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.search.SearcherType;
+
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -71,8 +71,8 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                        .getHandlerContext(Geonet.CONTEXT_NAME);
                        ISearchManager searchMan = gc.getBean(ISearchManager.class);
 
-                       metasearcher = searchMan.newSearcher(SearcherType.LUCENE,
-                                       SEARCH_Z3950_SERVER);
+                       metasearcher = searchMan.newSearcher(
+                           SEARCH_Z3950_SERVER);
 
                } catch (Exception e) {
                    if(Log.isDebugEnabled(Geonet.SRU))
@@ -168,15 +168,15 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
 
                                //fragment[i] = new DOMTree("geonetwork", "geonetwork", null,   getRecord(md),rec_spec );
                                //fragment[i].setHitNo(startingFragment+i);
-                               
+
                                DOMOutputter outputter = new DOMOutputter();
                                Document doc = new Document(md);
                                org.w3c.dom.Document doc2 = outputter.output(doc);
-                               
+
                                fragment[i] = new InformationFragmentImpl(startingFragment+i,"geonetwork","geonetwork",null,doc2,rec_spec);
                                //fragment[i] = new InformationFragmentImpl(startingFragment+i,"geonetwork","geonetwork",null,doc,rec_spec);
 
-                               
+
                                //System.err.println(fragment[i]);
 
                        }
@@ -209,8 +209,8 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
        private void setFragmentCount(int i) {
                this.fragmentcount = i;
        }
-       
-       
+
+
 
        public int getFragmentCount() {
                return this.fragmentcount;
@@ -226,6 +226,6 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
 
        }
 
-       
+
 
 }

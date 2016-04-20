@@ -24,17 +24,14 @@
 package org.fao.geonet.monitor.health;
 
 import com.yammer.metrics.core.HealthCheck;
-import jeeves.monitor.HealthCheckFactory;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearchManagerUtils;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.search.SolrSearchManager;
-import org.jdom.Element;
+
+import jeeves.monitor.HealthCheckFactory;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Verifies that all metadata have been correctly indexed (without errors)

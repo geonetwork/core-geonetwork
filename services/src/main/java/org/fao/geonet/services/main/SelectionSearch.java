@@ -34,7 +34,6 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -59,14 +58,14 @@ public class SelectionSearch implements Service
 
 	/*
 	 * Get the current search and add an uuid params
-	 * with the list of records contain in the 
-	 * selection manager. 
-	 * 
+	 * with the list of records contain in the
+	 * selection manager.
+	 *
 	 */
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		
+
 		ISearchManager searchMan = gc.getBean(ISearchManager.class);
 
 		String restoreLastSearch = _config.getValue("restoreLastSearch","no");
@@ -94,7 +93,7 @@ public class SelectionSearch implements Service
         if (StringUtils.isNotEmpty(params.getChildText(Geonet.SearchResult.SORT_ORDER))) {
             params.addContent(new Element(Geonet.SearchResult.SORT_ORDER).setText(params.getChildText(Geonet.SearchResult.SORT_ORDER)));
         }
-        
+
 		if (sm != null) {
 			String uuids= "";
 			boolean first = true;
@@ -105,7 +104,7 @@ public class SelectionSearch implements Service
 						uuids = (String) uuid;
 						first = false;
 					}
-					else 
+					else
 						uuids = uuids +" or "+ uuid;
 				}
 			}
@@ -113,26 +112,26 @@ public class SelectionSearch implements Service
                 context.debug("List of selected uuids: " + uuids);
 			params.addContent(new Element(Geonet.SearchResult.UUID).setText(uuids));
 
-		} 
-		
+		}
+
 		// perform the search and save search result into session
 		MetaSearcher searcher;
 
 		context.info("Creating searchers");
 
-		searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+		searcher = searchMan.newSearcher(Geonet.File.SEARCH_LUCENE);
 
 		searcher.search(context, params, _config);
 
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 
 		context.info("Getting summary");
-		
+
 		Element summary = searcher.getSummary();
 		summary.addContent(new Element(Geonet.SearchResult.RESTORELASTSEARCH).setText(restoreLastSearch));
 
-		return summary;	
-		
+		return summary;
+
 	}
 }
 

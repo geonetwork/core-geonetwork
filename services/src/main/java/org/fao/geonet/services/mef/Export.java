@@ -29,9 +29,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.kernel.search.LuceneIndexField;
+import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
@@ -169,8 +168,8 @@ public class Export implements Service {
                         }
                     } else if (searchMan instanceof SolrSearchManager) {
                         List<String> listOfUuids = ((SolrSearchManager) searchMan).getDocsUuids(
-                            LuceneIndexField.PARENT_RECORD_UUID + ":\"" + uuid + "\" "
-                            + LuceneIndexField.RECORD_OPERATE_ON + ":\"" + uuid + "\"",
+                            IndexFields.PARENT_RECORD_UUID + ":\"" + uuid + "\" "
+                            + IndexFields.RECORD_OPERATE_ON + ":\"" + uuid + "\"",
                             null);
                         tmpUuid.addAll(listOfUuids);
                     }
@@ -222,7 +221,7 @@ public class Export implements Service {
             if(Log.isDebugEnabled(Geonet.MEF))
                 Log.debug(Geonet.MEF, "Creating searcher to run request: " + Xml.getString(request));
 
-            try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+            try (MetaSearcher searcher = searchMan.newSearcher(Geonet.File.SEARCH_LUCENE)) {
 
                 Set<String> uuids = new HashSet<>();
 

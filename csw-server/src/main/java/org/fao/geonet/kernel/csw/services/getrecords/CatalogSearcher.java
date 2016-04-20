@@ -24,8 +24,7 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import com.vividsolutions.jts.geom.Geometry;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
@@ -48,7 +47,6 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -64,30 +62,26 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.search.DuplicateDocFilter;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
-import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.MetadataRecordSelector;
-import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
-import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.gml2.GMLConfiguration;
-import org.geotools.xml.Encoder;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.NumberFormat;
@@ -104,6 +98,9 @@ import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -525,7 +522,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 
         updateRegionsInSpatialFilter(context, filterExpr);
 		// TODO Handle NPE creating spatial filter (due to constraint)
-        _filter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
+//        _filter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
 
         boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
         // get as many results as instructed or enough for search summary
@@ -538,7 +535,6 @@ public class CatalogSearcher implements MetadataRecordSelector {
 
 	    ServiceConfig config = new ServiceConfig();
 	    String geomWkt = null;
-	    LuceneSearcher.logSearch(context, config, _query, numHits, _sort, geomWkt, sm);
 
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
                 maxRecords, _lang.presentationLanguage,
@@ -626,7 +622,6 @@ public class CatalogSearcher implements MetadataRecordSelector {
 
             updateWithinFilter(regionEl, geoms);
 
-            setGeom(regionEl, unionedGeom);
         }
 
     }
@@ -653,28 +648,6 @@ public class CatalogSearcher implements MetadataRecordSelector {
             return;
         }
         Element withinFilter = findWithinFilter(regionEl);
-
-        if(withinFilter!=null ){
-            Element parentElement = withinFilter.getParentElement();
-            int index = parentElement.indexOf(withinFilter);
-
-            ArrayList<Element> ors = new ArrayList<Element>();
-            ors.add(withinFilter);
-            for (Geometry geometry : geoms) {
-                Element newEl = (Element) withinFilter.clone();
-                org.jdom.filter.Filter filter = new FindRegionFilterElements();
-                Iterator<?> children = regionEl.getDescendants(filter);
-                if (children.hasNext()) {
-                    setGeom((Element) children.next(), geometry);
-                }
-                ors.add(newEl);
-            }
-
-            Element or = new Element("Or","ogc", "http://www.opengis.net/ogc");
-            parentElement.setContent(index, or);
-
-            or.addContent(ors);
-        }
     }
 
     /**
@@ -696,28 +669,11 @@ public class CatalogSearcher implements MetadataRecordSelector {
      */
     private void setGeom(Element element, Geometry fullGeom) throws IOException, JDOMException
     {
-        Element parentElement = element.getParentElement();
-        int index = parentElement.indexOf(element);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Encoder encoder = new Encoder(_configuration);
-        encoder.setOmitXMLDeclaration(true);
-        encoder.setNamespaceAware(true);
-
-        encoder.encode(SpatialIndexWriter.toMultiPolygon(fullGeom), org.geotools.gml3.GML.MultiPolygon, out);
-        Element geomElem = org.fao.geonet.csw.common.util.Xml.loadString(out.toString(Constants.ENCODING), false);
-        parentElement.setContent(index, geomElem);
     }
 
     private ArrayList<Element> lookupGeoms(Element filterExpr)
     {
-        org.jdom.filter.Filter filter = new FindRegionFilterElements();
-        Iterator<?> children = filterExpr.getDescendants(filter);
-        ArrayList<Element> elements = new ArrayList<Element>();
-        while (children.hasNext()) {
-            elements.add((Element) children.next());
-        }
-        return elements;
+        return null;
     }
 
     // ---------------------------------------------------------------------------
@@ -796,8 +752,8 @@ public class CatalogSearcher implements MetadataRecordSelector {
 
         // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
         List<String> SECURITY_FIELDS = Arrays.asList(
-                LuceneIndexField.OWNER,
-                LuceneIndexField.GROUP_OWNER);
+                IndexFields.OWNER,
+                IndexFields.GROUP_OWNER);
 
         BooleanQuery bq;
         if (q instanceof BooleanQuery) {

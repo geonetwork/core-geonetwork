@@ -29,7 +29,7 @@ package org.fao.geonet.kernel.search;
  * @author heikki doeleman
  *
  */
-public class LuceneIndexField {
+public class IndexFields {
 
     /**
      * Groups allowed to view.

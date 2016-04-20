@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.search;
 import java.text.Collator;
 import java.util.Locale;
 
+@Deprecated
 class LocalizedStringComparable implements Comparable<LocalizedStringComparable>
 {
     public final String _wrapped;
@@ -60,9 +61,9 @@ class LocalizedStringComparable implements Comparable<LocalizedStringComparable>
         if (getClass() != obj.getClass())
             return false;
         LocalizedStringComparable other = (LocalizedStringComparable) obj;
-        
+
         return compareTo(other) == 0;
     }
-    
-    
+
+
 }

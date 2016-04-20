@@ -23,8 +23,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.itextpdf.text.Meta;
-
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
@@ -53,9 +51,9 @@ import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,6 +65,8 @@ import java.util.function.Consumer;
 public class SolrSearchManager implements ISearchManager {
     public static final String ID = "id";
     public static final String DOC_TYPE = "docType";
+    public static final String SCHEMA_INDEX_XSLT_FOLDER = "index-fields";
+    public static final String SCHEMA_INDEX_XSTL_FILENAME = "solr-default.xsl";
 
     @Autowired
     private SolrConfig config;
@@ -84,7 +84,7 @@ public class SolrSearchManager implements ISearchManager {
     }
 
     @Override
-    public MetaSearcher newSearcher(SearcherType type, String stylesheetName) throws Exception {
+    public MetaSearcher newSearcher(String stylesheetName) throws Exception {
         //TODO
         return null;
     }
@@ -103,8 +103,19 @@ public class SolrSearchManager implements ISearchManager {
         }
     }
 
+
+    public static Path getXSLTForIndexing(Path schemaDir) {
+        Path xsltForIndexing = schemaDir
+            .resolve(SCHEMA_INDEX_XSLT_FOLDER).resolve(SCHEMA_INDEX_XSTL_FILENAME);
+        if (!Files.exists(xsltForIndexing)) {
+            throw new RuntimeException(String.format(
+                "XSLT for schema indexing does not exist. Create file '%s'.",
+                xsltForIndexing.toString()));
+        }
+        return xsltForIndexing;
+    }
     private static void addMDFields(SolrInputDocument doc, Path schemaDir, Element metadata, String root) {
-        final Path styleSheet = SearchManagerUtils.getIndexFieldsXsl(schemaDir, root, "solr-");
+        final Path styleSheet = getXSLTForIndexing(schemaDir);
         try {
             Element fields = Xml.transform(metadata, styleSheet);
             /* Generates something like that:
@@ -155,11 +166,6 @@ public class SolrSearchManager implements ISearchManager {
     @Override
     public void releaseIndexReader(IndexAndTaxonomy reader) throws InterruptedException, IOException {
         //useless for this implementation
-    }
-
-    @Override
-    public ISpatial getSpatial() {
-        return null;
     }
 
     @Override
@@ -281,13 +287,13 @@ public class SolrSearchManager implements ISearchManager {
     public List<String> getDocsUuids(String query, Integer rows) throws IOException, SolrServerException {
         final SolrQuery solrQuery = new SolrQuery(query == null ? "*:*" : query);
         solrQuery.setFilterQueries(DOC_TYPE + ":metadata");
-        solrQuery.setFields(LuceneIndexField.UUID);
+        solrQuery.setFields(IndexFields.UUID);
         if (rows != null) {
             solrQuery.setRows(rows);
         }
         final List<String> result = new ArrayList<>();
         iterateQuery(solrQuery, doc ->
-            result.add(doc.getFieldValue(LuceneIndexField.UUID).toString()));
+            result.add(doc.getFieldValue(IndexFields.UUID).toString()));
         return result;
     }
 

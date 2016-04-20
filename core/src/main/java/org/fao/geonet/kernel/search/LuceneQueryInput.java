@@ -35,8 +35,9 @@ import org.jdom.Element;
  * Input to {@link LuceneQueryBuilder}, consisting of user-provided parameters plus system-provided parameters.
  *
  * @author heikki doeleman
- * 
+ *
  */
+@Deprecated
 public class LuceneQueryInput extends UserQueryInput {
 
     private String owner;
@@ -58,7 +59,7 @@ public class LuceneQueryInput extends UserQueryInput {
 
     /**
      * Creates this from a JDOM element.
-     * 
+     *
      * @param jdom input
      */
     public LuceneQueryInput(Element jdom) {

@@ -36,7 +36,6 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetadataRecordSelector;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
@@ -279,7 +278,7 @@ public class SelectionManager {
                     request = (Element) request.clone();
                     request.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
                     try {
-                        searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+                        searcher = searchMan.newSearcher(Geonet.File.SEARCH_LUCENE);
                         ServiceConfig sc = new ServiceConfig();
                         ((LuceneSearcher) searcher).search(context, request, sc);
                     } catch (Exception e) {

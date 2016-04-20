@@ -48,6 +48,7 @@ import java.util.BitSet;
  *
  * @author jeichar
  */
+@Deprecated
 public class DuplicateDocFilter extends Filter {
 
 	public Query getQuery() {
@@ -77,12 +78,12 @@ public class DuplicateDocFilter extends Filter {
             @Override
             public void setScorer(Scorer scorer) throws IOException {
             }
-            
+
             @Override
             public void setNextReader(AtomicReaderContext context) throws IOException {
                 this.docBase = context.docBase;
             }
-            
+
             @Override
             public void collect(int doc) throws IOException {
                 try {
@@ -96,7 +97,7 @@ public class DuplicateDocFilter extends Filter {
                     throw new RuntimeException(e);
                 }
             }
-            
+
             @Override
             public boolean acceptsDocsOutOfOrder() {
                 return true;

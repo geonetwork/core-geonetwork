@@ -55,7 +55,6 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
@@ -460,65 +459,25 @@ public class GetRelated implements Service, RelatedMetadata {
     private Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         ISearchManager searchMan = gc.getBean(ISearchManager.class);
-
-        if (searchMan instanceof SearchManager) {
-            // perform the search
-            if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                Log.debug(Geonet.SEARCH_ENGINE, "Searching for: " + type);
-
-            try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-                // Creating parameters for search, fast only to retrieve uuid
-                Element parameters = new Element(Jeeves.Elem.REQUEST);
-                if ("children".equals(type))
-                    parameters.addContent(new Element("parentUuid").setText(uuid));
-                else if ("services".equals(type))
-                    parameters.addContent(new Element("operatesOn").setText(uuid));
-                else if ("hasfeaturecat".equals(type))
-                    parameters.addContent(new Element("hasfeaturecat").setText(uuid));
-                else if ("hassource".equals(type))
-                    parameters.addContent(new Element("hassource").setText(uuid));
-                else if ("associated".equals(type))
-                    parameters.addContent(new Element("agg_associated").setText(uuid));
-                else if ("datasets".equals(type) || "fcats".equals(type) ||
-                    "sources".equals(type) || "siblings".equals(type) ||
-                    "parent".equals(type))
-                    parameters.addContent(new Element("uuid").setText(uuid));
-
-                parameters.addContent(new Element("fast").addContent("index"));
-                parameters.addContent(new Element("sortBy").addContent("title"));
-                parameters.addContent(new Element("sortOrder").addContent("reverse"));
-                parameters.addContent(new Element("from").addContent(from));
-                parameters.addContent(new Element("to").addContent(to));
-
-                searcher.search(context, parameters, _config);
-
-                Element response = new Element(type);
-                Element relatedElement = searcher.present(context, parameters, _config);
-                response.addContent(relatedElement);
-                return response;
-            }
-        } else if (searchMan instanceof SolrSearchManager){
-            Element response = new Element(type);
-            SolrDocumentList documentList = ((SolrSearchManager) searchMan).getDocsFieldValue(
-                String.format("+%s:\"%s\"",
-                    relationTypeToIndexField.get(type),
-                    uuid),
-                "*"
-            );
-            Element relatedElement =  new Element("response");
-            for (SolrDocument document : documentList) {
-                Element md = new Element("metadata");
-                for(String field : document.getFieldNames()) {
-                    for(Object value : document.getFieldValues(field)) {
-                        md.addContent(new Element(field).setText(value.toString()));
-                    }
+        Element response = new Element(type);
+        SolrDocumentList documentList = ((SolrSearchManager) searchMan).getDocsFieldValue(
+            String.format("+%s:\"%s\"",
+                relationTypeToIndexField.get(type),
+                uuid),
+            "*"
+        );
+        Element relatedElement =  new Element("response");
+        for (SolrDocument document : documentList) {
+            Element md = new Element("metadata");
+            for(String field : document.getFieldNames()) {
+                for(Object value : document.getFieldValues(field)) {
+                    md.addContent(new Element(field).setText(value.toString()));
                 }
-                relatedElement.addContent(md);
             }
-            response.addContent(relatedElement);
-            return response;
+            relatedElement.addContent(md);
         }
-        return new Element(type);
+        response.addContent(relatedElement);
+        return response;
     }
 
     private Element getRecord(String uuid, ServiceContext context, DataManager dm) {

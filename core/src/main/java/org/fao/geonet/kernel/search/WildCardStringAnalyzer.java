@@ -30,6 +30,7 @@ import java.util.Set;
 /**
  * @author heikki doeleman
  */
+@Deprecated
 public class WildCardStringAnalyzer {
     /**
      *

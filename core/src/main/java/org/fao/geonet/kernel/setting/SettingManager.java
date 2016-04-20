@@ -69,10 +69,7 @@ public class SettingManager {
     public static final String SYSTEM_PROXY_USERNAME = "system/proxy/username";
     public static final String SYSTEM_PROXY_PASSWORD = "system/proxy/password";
 
-    public static final String SYSTEM_LUCENE_IGNORECHARS = "system/requestedLanguage/ignorechars";
-    public static final String SYSTEM_REQUESTED_LANGUAGE_SORTED = "system/requestedLanguage/sorted";
     public static final String SYSTEM_REQUESTED_LANGUAGE_ONLY = "system/requestedLanguage/only";
-    public static final String SYSTEM_AUTODETECT_ENABLE = "system/autodetect/enable";
     public static final String SYSTEM_XLINKRESOLVER_ENABLE = "system/xlinkResolver/enable";
 	public static final String SYSTEM_SERVER_LOG = "system/server/log";
 
@@ -167,7 +164,7 @@ public class SettingManager {
 
     /**
      * Return a setting by its key
-     * 
+     *
      * @param path eg. system/site/name
      */
     public String getValue(String path) {
@@ -194,7 +191,7 @@ public class SettingManager {
 
     /**
      * Return a set of values as XML
-     * 
+     *
      * @param keys A list of setting's key to retrieve
      */
     public Element getValues(String[] keys) {
@@ -220,7 +217,7 @@ public class SettingManager {
 
     /**
      * Get value of a setting as boolean
-     * 
+     *
      * @param key The setting key
      * @return The setting valueThe setting key
      */
@@ -233,7 +230,7 @@ public class SettingManager {
 
     /**
      * Get value of a setting as boolean
-     * 
+     *
      * @param key The setting key
      * @param defaultValue The default value
      * @return The setting value as boolean
@@ -249,7 +246,7 @@ public class SettingManager {
 
     /**
      * Get value of a setting as integer
-     * 
+     *
      * @param key The setting key
      * @return The integer value of the setting or null
      */
@@ -262,10 +259,10 @@ public class SettingManager {
 
     /**
      * Set the value of a Setting entity
-     * 
+     *
      * @param key the path/name/key of the setting.
      * @param value the new value
-     * 
+     *
      * @return true if the types are correct and the setting is found.
      */
     public boolean setValue(String key, String value) {
@@ -290,7 +287,7 @@ public class SettingManager {
 
     /**
      * Set the setting value by key to the boolean value.
-     * 
+     *
      * @param key the key/path/name of the setting.
      * @param value the new boolean value
      */
@@ -300,10 +297,10 @@ public class SettingManager {
 
     /**
      * Set a list of settings.
-     * 
+     *
      * @param values The settings to update
      * @return true if the types are correct and the setting is found.
-     * 
+     *
      * @throws SQLException
      */
     public final boolean setValues(final Map<String, String> values) {

@@ -40,7 +40,7 @@
     'gnSearchManagerService',
     'gnUtilityService',
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
-            gnSearchManagerService, 
+            gnSearchManagerService,
             gnUtilityService) {
 
       $scope.pageMenu = {
@@ -181,12 +181,6 @@
 
       $scope.templates = null;
 
-      var loadTemplates = function() {
-        $http.get('admin.templates.list?_content_type=json')
-        .success(function(data) {
-              $scope.templates = data;
-            });
-      };
 
       $scope.sortOrder = function(item) {
         return parseInt(item.displayorder, 10);

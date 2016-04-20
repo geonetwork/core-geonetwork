@@ -27,15 +27,12 @@ package org.fao.geonet.kernel.search;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.lucene.search.Filter;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.common.SolrDocument;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.jdom.Element;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,7 +45,7 @@ public interface ISearchManager {
 
     void end() throws Exception;
 
-    MetaSearcher newSearcher(SearcherType type, String stylesheetName) throws Exception;
+    MetaSearcher newSearcher(String stylesheetName) throws Exception;
 
     /**
      * Indexes a metadata record.
@@ -72,7 +69,6 @@ public interface ISearchManager {
 
     void releaseIndexReader(IndexAndTaxonomy reader) throws InterruptedException, IOException;
 
-    ISpatial getSpatial();
 
     /**
      * Rebuilds the Lucene index. If xlink or from selection parameters

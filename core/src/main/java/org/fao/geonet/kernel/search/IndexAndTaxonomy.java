@@ -29,6 +29,7 @@ import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import java.io.Closeable;
 import java.io.IOException;
 
+@Deprecated
 public class IndexAndTaxonomy implements Closeable {
     public final TaxonomyReader taxonomyReader;
     public final GeonetworkMultiReader indexReader;

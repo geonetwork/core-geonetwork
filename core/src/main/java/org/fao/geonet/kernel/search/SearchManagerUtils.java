@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+@Deprecated
 public abstract class SearchManagerUtils {
     public static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
     public static final String INDEXING_ERROR_FIELD = "_indexingError";
@@ -70,7 +71,7 @@ public abstract class SearchManagerUtils {
      * @param index
      */
     public static void addField(Element xmlDoc, String name, String value, boolean store, boolean index) {
-        Element field = makeField(name, value, store, index);
+        Element field = makeField(name, value);
         xmlDoc.addContent(field);
     }
 
@@ -79,16 +80,12 @@ public abstract class SearchManagerUtils {
      *
      * @param name
      * @param value
-     * @param store
-     * @param index
      * @return
      */
-    public static Element makeField(String name, String value, boolean store, boolean index) {
+    public static Element makeField(String name, String value) {
         Element field = new Element("Field");
-        field.setAttribute(SearchManager.LuceneFieldAttribute.NAME.toString(), name);
-        field.setAttribute(SearchManager.LuceneFieldAttribute.STRING.toString(), value == null ? "" : value);
-        field.setAttribute(SearchManager.LuceneFieldAttribute.STORE.toString(), Boolean.toString(store));
-        field.setAttribute(SearchManager.LuceneFieldAttribute.INDEX.toString(), Boolean.toString(index));
+        field.setAttribute("name", name);
+        field.setAttribute("string", value == null ? "" : value);
         return field;
     }
 

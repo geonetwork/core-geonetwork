@@ -31,6 +31,7 @@ import org.apache.lucene.util.OpenBitSet;
 
 import java.io.IOException;
 
+@Deprecated
 public class NoFilterFilter extends Filter {
 
     private final static NoFilterFilter instance = new NoFilterFilter();

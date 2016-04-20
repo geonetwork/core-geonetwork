@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.server.context.ServiceContext;
 import org.apache.solr.common.SolrDocument;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
@@ -37,12 +36,8 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.LuceneIndexField;
-import org.fao.geonet.kernel.search.NoFilterFilter;
 import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
@@ -53,12 +48,14 @@ import org.jdom.Element;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
+import jeeves.server.context.ServiceContext;
 
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 import static org.fao.geonet.Constants.CHARSET;
-import static org.fao.geonet.constants.Geonet.IndexFieldNames.LOCALE;
-import static org.fao.geonet.constants.Geonet.IndexFieldNames.UUID;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 import static org.fao.geonet.kernel.mef.MEFConstants.MD_DIR;
@@ -118,18 +115,18 @@ class MEF2Exporter {
                 MetadataType mdType = null;
 
                 SolrDocument document = ((SolrSearchManager) searchManager).getDocFieldValue(
-                    "+" + LuceneIndexField.RECORD_IDENTIFIER + ":\"" + uuid + "\"",
+                    "+" + IndexFields.RECORD_IDENTIFIER + ":\"" + uuid + "\"",
                     Geonet.IndexFieldNames.SCHEMA,
-                    LuceneIndexField.RESOURCE_TITLE,
-                    LuceneIndexField.RESOURCE_ABSTRACT,
+                    IndexFields.RESOURCE_TITLE,
+                    IndexFields.RESOURCE_ABSTRACT,
                     SolrSearchManager.ID,
                     Geonet.IndexFieldNames.IS_HARVESTED,
                     Geonet.IndexFieldNames.IS_TEMPLATE);
                 if(document != null) {
                     mdSchema = (String) document.getFieldValue(Geonet.IndexFieldNames.SCHEMA);
                     id = (String) document.getFieldValue(SolrSearchManager.ID);
-                    mdTitle = (String) document.getFieldValue(LuceneIndexField.RESOURCE_TITLE);
-                    mdAbstract = (String) document.getFieldValue(LuceneIndexField.RESOURCE_ABSTRACT);
+                    mdTitle = (String) document.getFieldValue(IndexFields.RESOURCE_TITLE);
+                    mdAbstract = (String) document.getFieldValue(IndexFields.RESOURCE_ABSTRACT);
                     isHarvested = (String) document.getFieldValue(Geonet.IndexFieldNames.IS_HARVESTED);
                     String type = mdSchema = (String) document.getFieldValue(Geonet.IndexFieldNames.IS_TEMPLATE);
                     mdType = MetadataType.lookup(type.charAt(0));

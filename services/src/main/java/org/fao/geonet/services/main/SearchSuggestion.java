@@ -29,7 +29,7 @@ import com.google.common.collect.ComparisonChain;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.search.SearcherType;
+
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.apache.commons.lang.StringUtils;
@@ -47,19 +47,19 @@ import java.util.*;
 /**
  * Return a list of suggestion for a field. The values could be filtered and
  * only values contained in field values are returned.
- * 
+ *
  * Two modes are defined. First one is browse the index for a field and return a
  * list of suggestion. For this origin should be set to INDEX_TERM_VALUES. The
  * second mode, using origin RECORDS_FIELD_VALUES, perform a search and extract
  * the field for all docs and return the matching values.
- * 
+ *
  * If no origin is set, a RECORDS_FIELD_VALUES mode is done and if no suggestion
  * found, a INDEX_TERM_VALUES mode is done.
- * 
- * 
+ *
+ *
  * The response body is converted to JSON using search-suggestion.xsl
- * 
- * 
+ *
+ *
  * OpenSearch suggestion specification:
  * http://www.opensearch.org/Specifications/OpenSearch/Extensions/Suggestions/1.0
  *
@@ -104,7 +104,7 @@ public class SearchSuggestion implements Service {
     private String _defaultSearchField = "any";
 
     private ServiceConfig _config;
-    
+
     enum SORT_BY_OPTION {
         FREQUENCY, ALPHA, STARTSWITHFIRST, STARTSWITHONLY
     }
@@ -142,7 +142,7 @@ public class SearchSuggestion implements Service {
                     .result();
         }
     }
-    
+
     /**
      * Set default parameters
      */
@@ -173,19 +173,19 @@ public class SearchSuggestion implements Service {
         // The minimum frequency for a term value to be proposed in suggestion -
         // only apply while searching terms
         int threshold = Util.getParam(params, PARAM_THRESHOLD, _threshold);
-        
+
         String sortBy = Util.getParam(params, PARAM_SORT_BY, SORT_BY_OPTION.FREQUENCY.toString());
-        
+
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
-            Log.debug(Geonet.SEARCH_ENGINE, 
-                    "Autocomplete on field: '" + fieldName + "'" + 
-                    "\tsearching: '" + searchValue + "'" + 
-                    "\tthreshold: '" + threshold + "'" + 
-                    "\tmaxNumberOfTerms: '" + maxNumberOfTerms + "'" + 
-                    "\tsortBy: '" + sortBy + "'" + 
+            Log.debug(Geonet.SEARCH_ENGINE,
+                    "Autocomplete on field: '" + fieldName + "'" +
+                    "\tsearching: '" + searchValue + "'" +
+                    "\tthreshold: '" + threshold + "'" +
+                    "\tmaxNumberOfTerms: '" + maxNumberOfTerms + "'" +
+                    "\tsortBy: '" + sortBy + "'" +
                     "\tfrom: '" + origin + "'");
         }
-        
+
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager sm = gc.getBean(SearchManager.class);
@@ -203,12 +203,12 @@ public class SearchSuggestion implements Service {
         } else {
             listOfSuggestions = new TreeSet<>(new FrequencyComparator());
         }
-        
+
         // If a field is stored, field values could be retrieved from the index
         // The main advantage is that only values from records visible to the
         // user are returned, because the search filter the results first.
         if (origin.equals("") || origin.equals(RECORDS_FIELD_VALUES)) {
-            LuceneSearcher searcher = (LuceneSearcher) sm.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+            LuceneSearcher searcher = (LuceneSearcher) sm.newSearcher(Geonet.File.SEARCH_LUCENE);
 
             searcher.getSuggestionForFields(context, fieldName, searchValue, _config, maxNumberOfTerms, threshold, listOfSuggestions);
         }
@@ -226,7 +226,7 @@ public class SearchSuggestion implements Service {
                     "  Found: " + listOfSuggestions.size()
                             + " suggestions from " + origin + ".");
         }
-        
+
         suggestionsResponse.setAttribute(new Attribute(PARAM_ORIGIN, origin));
 
         Collection<TermFrequency> collectionOfSuggestions;

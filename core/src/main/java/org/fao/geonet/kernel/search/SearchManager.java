@@ -22,37 +22,12 @@
 
 package org.fao.geonet.kernel.search;
 
-import static org.fao.geonet.constants.Geonet.IndexFieldNames.DATABASE_CHANGE_DATE;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.Vector;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import com.vividsolutions.jts.util.Assert;
 
-import javax.annotation.PreDestroy;
-
-import jeeves.server.ServiceConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -75,19 +50,15 @@ import org.apache.lucene.index.SlowCompositeReaderWrapper;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
-import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -97,42 +68,40 @@ import org.fao.geonet.kernel.search.facet.Dimension;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.index.IndexInformation;
 import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
-import org.fao.geonet.kernel.search.spatial.ContainsFilter;
-import org.fao.geonet.kernel.search.spatial.CrossesFilter;
-import org.fao.geonet.kernel.search.spatial.EqualsFilter;
-import org.fao.geonet.kernel.search.spatial.IntersectionFilter;
-import org.fao.geonet.kernel.search.spatial.IsFullyOutsideOfFilter;
-import org.fao.geonet.kernel.search.spatial.OgcGenericFilters;
-import org.fao.geonet.kernel.search.spatial.OrSpatialFilter;
-import org.fao.geonet.kernel.search.spatial.OverlapsFilter;
-import org.fao.geonet.kernel.search.spatial.SpatialFilter;
-import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
-import org.fao.geonet.kernel.search.spatial.TouchesFilter;
-import org.fao.geonet.kernel.search.spatial.WithinFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.geotools.data.DataStore;
-import org.geotools.data.DefaultTransaction;
-import org.geotools.data.FeatureSource;
-import org.geotools.data.Transaction;
-import org.geotools.gml3.GMLConfiguration;
-import org.geotools.xml.Parser;
 import org.jdom.Content;
 import org.jdom.Element;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
-import com.vividsolutions.jts.util.Assert;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PreDestroy;
+
+import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
+import static org.fao.geonet.constants.Geonet.IndexFieldNames.DATABASE_CHANGE_DATE;
 
 /**
  * Indexes metadata using Lucene.
@@ -166,7 +135,6 @@ public class SearchManager implements ISearchManager {
 	private boolean _logSpatialObject;
 	private static PerFieldAnalyzerWrapper _defaultAnalyzer;
 	private Path _htmlCacheDir;
-    private Spatial _spatial;
 
 	private boolean _logAsynch;
 
@@ -196,10 +164,10 @@ public class SearchManager implements ISearchManager {
         PerFieldAnalyzerWrapper pfaw;
         Analyzer geoNetworkAnalyzer = SearchManager.createGeoNetworkAnalyzer(stopwords, ignoreChars);
 		Map<String, Analyzer> analyzers = new HashMap<String, Analyzer>();
-		analyzers.put(LuceneIndexField.UUID, new GeoNetworkAnalyzer());
-		analyzers.put(LuceneIndexField.PARENTUUID, new GeoNetworkAnalyzer());
-		analyzers.put(LuceneIndexField.OPERATESON, new GeoNetworkAnalyzer());
-		analyzers.put(LuceneIndexField.SUBJECT, new KeywordAnalyzer());
+		analyzers.put(IndexFields.UUID, new GeoNetworkAnalyzer());
+		analyzers.put(IndexFields.PARENTUUID, new GeoNetworkAnalyzer());
+		analyzers.put(IndexFields.OPERATESON, new GeoNetworkAnalyzer());
+		analyzers.put(IndexFields.SUBJECT, new KeywordAnalyzer());
 
 		pfaw = new PerFieldAnalyzerWrapper(geoNetworkAnalyzer, analyzers );
         return pfaw;
@@ -268,7 +236,7 @@ public class SearchManager implements ISearchManager {
                         Log.info(Geonet.LUCENE, "invalid iso 639-1 code for language: " + language);
                     }
                     // look up stopwords for that language
-                    Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.toAbsolutePath());
+                    Set<String> stopwordsForLanguage = null;
                     if (stopwordsForLanguage != null) {
                         if (Log.isDebugEnabled(Geonet.LUCENE)) {
                             Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
@@ -398,7 +366,7 @@ public class SearchManager implements ISearchManager {
                             Log.warning(Geonet.LUCENE, "Stopwords file with incorrect ISO 639-2 language as filename: " + language);
                         }
                         // look up stopwords for that language
-                        Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.toAbsolutePath());
+                        Set<String> stopwordsForLanguage = null;
                         if (stopwordsForLanguage != null) {
                             if (Log.isDebugEnabled(Geonet.LUCENE)) {
                                 Log.debug(Geonet.LUCENE, "Loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
@@ -488,16 +456,7 @@ public class SearchManager implements ISearchManager {
         String luceneTermsToExclude = handlerConfig.getMandatoryValue(Geonet.Config.STAT_LUCENE_TERMS_EXCLUDE);
 
         String maxWritesInTransactionStr = handlerConfig.getMandatoryValue(Geonet.Config.MAX_WRITES_IN_TRANSACTION);
-        int maxWritesInTransaction = SpatialIndexWriter.MAX_WRITES_IN_TRANSACTION;
-        try {
-            maxWritesInTransaction = Integer.parseInt(maxWritesInTransactionStr);
-        } catch (NumberFormatException nfe) {
-            Log.error(Geonet.SEARCH_ENGINE, "Invalid config parameter: maximum number of writes to spatial index in a transaction (maxWritesInTransaction)"
-                    + ", Using " + maxWritesInTransaction + " instead.");
-            nfe.printStackTrace();
-        }
-
-        init(logAsynch, logSpatialObject, luceneTermsToExclude, maxWritesInTransaction);
+        init(logAsynch, logSpatialObject, luceneTermsToExclude, 1000);
     }
 
     /**
@@ -538,9 +497,6 @@ public class SearchManager implements ISearchManager {
          Path htmlCacheDirTest = geonetworkDataDirectory.getHtmlCacheDir();
          Files.createDirectories(htmlCacheDirTest);
          _htmlCacheDir = htmlCacheDirTest.toAbsolutePath();
-
-         _spatial = new Spatial(applicationContext.getBean(DataStore.class), maxWritesInTransaction);
-
          _logAsynch = logAsynch;
          _logSpatialObject = logSpatialObject;
          _luceneTermsToExclude = luceneTermsToExclude;
@@ -562,7 +518,6 @@ public class SearchManager implements ISearchManager {
         } else {
             Log.error(Geonet.SEARCH_ENGINE, "Unable to get a hook on the application context (already destroyed ?).");
         }
-        _spatial.end();
     }
 
     /**
@@ -583,22 +538,16 @@ public class SearchManager implements ISearchManager {
     /**
      * TODO javadoc.
      *
-     * @param type
      * @param stylesheetName
      * @return
      * @throws Exception
      */
-	public MetaSearcher newSearcher(SearcherType type, String stylesheetName) throws Exception {
+	public MetaSearcher newSearcher(String stylesheetName) throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         SchemaManager schemaManager = applicationContext.getBean(SchemaManager.class);
         LuceneConfig luceneConfig = applicationContext.getBean(LuceneConfig.class);
 
-        switch (type) {
-			case LUCENE:
-                return new LuceneSearcher(this, stylesheetName, luceneConfig);
-			case UNUSED: return new UnusedSearcher();
-			default: throw new Exception("unknown MetaSearcher type: " + type);
-		}
+        return new LuceneSearcher(this, stylesheetName, luceneConfig);
 	}
 
 	/**
@@ -655,9 +604,6 @@ public class SearchManager implements ISearchManager {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         LuceneIndexLanguageTracker tracker = applicationContext.getBean(LuceneIndexLanguageTracker.class);
 
-        // Update spatial index first and if error occurs, record it to Lucene index
-        indexGeometry(schemaDir, metadata, id, moreFields);
-
         // Update Lucene index
         List<IndexInformation> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, metadataType, root);
         tracker.deleteDocuments(new Term(Geonet.IndexFieldNames.ID, id));
@@ -666,25 +612,6 @@ public class SearchManager implements ISearchManager {
         }
         if (forceRefreshReaders) {
             forceIndexChanges();
-        }
-	}
-
-    private void indexGeometry(Path schemaDir, Element metadata, String id,
-            List<Element> moreFields) throws Exception {
-        try {
-            _spatial.writer().delete(id);
-            _spatial.writer().index(schemaDir, id, metadata);
-        } catch (Exception e) {
-            Log.error(Geonet.INDEX_ENGINE, "Failed to properly index geometry of metadata " + id + ". Error: " + e.getMessage(), e);
-            moreFields.add(SearchManagerUtils.makeField(SearchManagerUtils.INDEXING_ERROR_FIELD, "1", true, true));
-            moreFields.add(SearchManagerUtils.makeField(SearchManagerUtils.INDEXING_ERROR_MSG, "GNIDX-GEOWRITE||" + e.getMessage(), true, false));
-        }
-        Map<String, String> errors = _spatial.writer().getErrorMessage();
-        if (errors.size() > 0) {
-            for (Entry<String, String> e : errors.entrySet()) {
-            moreFields.add(SearchManagerUtils.makeField(SearchManagerUtils.INDEXING_ERROR_FIELD, "1", true, true));
-            moreFields.add(SearchManagerUtils.makeField(SearchManagerUtils.INDEXING_ERROR_MSG, "GNIDX-GEO|" + e.getKey() + "|" + e.getValue(), true, false));
-            }
         }
 	}
 
@@ -721,7 +648,7 @@ public class SearchManager implements ISearchManager {
         List<IndexInformation> documents = Lists.newArrayList();
         for( Element doc : documentElements ) {
             // add _id field
-            SearchManagerUtils.addField(doc, LuceneIndexField.ID, id, true, true);
+            SearchManagerUtils.addField(doc, IndexFields.ID, id, true, true);
 
             // add more fields
             for( Element moreField : moreFields ) {
@@ -814,8 +741,7 @@ public class SearchManager implements ISearchManager {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         LuceneIndexLanguageTracker tracker = applicationContext.getBean(LuceneIndexLanguageTracker.class);
 		// possibly remove old document
-		tracker.deleteDocuments(new Term(LuceneIndexField.ID, txt));
-		_spatial.writer().delete(txt);
+		tracker.deleteDocuments(new Term(IndexFields.ID, txt));
 	}
 
     /**
@@ -830,9 +756,8 @@ public class SearchManager implements ISearchManager {
 
         // possibly remove old document
         for(String txt : txts) {
-            tracker.deleteDocuments(new Term(LuceneIndexField.ID, txt));
+            tracker.deleteDocuments(new Term(IndexFields.ID, txt));
         }
-        _spatial.writer().delete(txts);
     }
 
 
@@ -878,7 +803,7 @@ public class SearchManager implements ISearchManager {
 	}
 
     public ISODate getDocChangeDate(String mdId) throws Exception {
-        Query query= new TermQuery(new Term(LuceneIndexField.ID, mdId));
+        Query query= new TermQuery(new Term(IndexFields.ID, mdId));
         try (final IndexAndTaxonomy indexReader = getIndexReader(Geonet.DEFAULT_LANGUAGE, -1)) {
             final IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
             final TopDocs search = searcher.search(query, 1);
@@ -1491,311 +1416,5 @@ public class SearchManager implements ISearchManager {
 		}
 	}
 
-	public Spatial getSpatial() {
-        return _spatial;
-    }
 
-    /**
-     * TODO javadoc.
-     *
-     */
-	public class Spatial implements ISpatial {
-		private final DataStore _datastore;
-        private static final long 	TIME_BETWEEN_SPATIAL_COMMITS_IN_SECONDS = 10;
-        private final Map<String, Constructor<? extends SpatialFilter>> _types;
-        {
-            Map<String, Constructor<? extends SpatialFilter>> types = new HashMap<String, Constructor<? extends SpatialFilter>>();
-            try {
-                types.put(Geonet.SearchResult.Relation.ENCLOSES.toLowerCase(), constructor(ContainsFilter.class));
-                types.put(Geonet.SearchResult.Relation.CROSSES.toLowerCase(), constructor(CrossesFilter.class));
-                types.put(Geonet.SearchResult.Relation.OUTSIDEOF.toLowerCase(), constructor(IsFullyOutsideOfFilter.class));
-                types.put(Geonet.SearchResult.Relation.EQUAL.toLowerCase(), constructor(EqualsFilter.class));
-                types.put(Geonet.SearchResult.Relation.INTERSECTION.toLowerCase(), constructor(IntersectionFilter.class));
-                types.put(Geonet.SearchResult.Relation.OVERLAPS.toLowerCase(), constructor(OverlapsFilter.class));
-                types.put(Geonet.SearchResult.Relation.TOUCHES.toLowerCase(), constructor(TouchesFilter.class));
-                types.put(Geonet.SearchResult.Relation.WITHIN.toLowerCase(), constructor(WithinFilter.class));
-                // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(BeyondFilter.class));
-                // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(DWithinFilter.class));
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException("Unable to create types mapping", e);
-            }
-            _types = Collections.unmodifiableMap(types);
-        }
-        private final Transaction                     _transaction;
-        private final int                             _maxWritesInTransaction;
-        private final Parser                          _gmlParser;
-        private final Lock                            _lock;
-        private SpatialIndexWriter                    _writer;
-        private volatile Committer                    _committerTask;
-
-        /**
-         * TODO javadoc.
-         *
-         * @param dataStore
-         * @param maxWritesInTransaction - Number of features to write
-				 * to before commit - set 1 and the transaction will be
-				 * autocommit which results in faster loading for some (all?)
-				 * configurations and does not keep a long running transaction
-				 * open.
-         * @throws Exception
-         */
-        public Spatial(DataStore dataStore, int maxWritesInTransaction) throws Exception {
-            _lock = new ReentrantLock();
-            _datastore = dataStore;
-
-			if (maxWritesInTransaction > 1) {
-            	_transaction = new DefaultTransaction("SpatialIndexWriter");
-            }
-            else {
-            	_transaction = Transaction.AUTO_COMMIT;
-            }
-            _maxWritesInTransaction = maxWritesInTransaction;
-            _gmlParser = new Parser(new GMLConfiguration());
-            boolean rebuildIndex;
-
-            rebuildIndex = createWriter(_datastore);
-            if (rebuildIndex) {
-                setupIndex(true);
-            }
-            else{
-                // since the index is considered good we will
-                // call getIndex to make sure the in-memory index is
-                // generated
-                _writer.getIndex();
-            }
-        }
-
-        /**
-         * TODO javadoc.
-         *
-         * @param datastore
-         * @return
-         * @throws IOException
-         */
-        private boolean createWriter(DataStore datastore) throws IOException {
-            boolean rebuildIndex;
-            try {
-                _writer = new SpatialIndexWriter(datastore, _gmlParser,_transaction, _maxWritesInTransaction, _lock);
-				rebuildIndex = _writer.getFeatureSource().getSchema() == null;
-            }
-            catch (Throwable e) {
-
-				if (_writer == null) {
-					throw new RuntimeException(e);
-				}
-                String exceptionString = Xml.getString(JeevesException.toElement(e));
-                Log.warning(Geonet.SPATIAL, "Failure to make _writer, maybe a problem but might also not be an issue:" +
-                        exceptionString);
-                try {
-                    _writer.reset();
-                }
-                catch (Exception e1) {
-                    Log.error(Geonet.SPATIAL, "Unable to call reset on Spatial writer: "+e1.getMessage());
-                    e1.printStackTrace();
-                }
-                rebuildIndex = true;
-            }
-            return rebuildIndex;
-        }
-
-        /**
-         * Closes spatial index.
-         */
-		public void end() {
-            _lock.lock();
-            try {
-                _writer.close();
-            }
-            catch (IOException e) {
-                Log.error(Geonet.SPATIAL,"error closing spatial index: "+e.getMessage());
-                e.printStackTrace();
-            }
-            finally {
-                _lock.unlock();
-            }
-        }
-
-        /**
-         * TODO javadoc.
-         *
-         * @param query
-         * @param filterExpr
-         * @param filterVersion
-         * @return
-         * @throws Exception
-         */
-        public Filter filter(org.apache.lucene.search.Query query, int numHits, Element filterExpr, String filterVersion)
-                throws Exception {
-            _lock.lock();
-            try {
-            	Parser filterParser = SearchManagerUtils.createFilterParser(filterVersion);
-                Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> accessor = new SpatialIndexAccessor();
-                return OgcGenericFilters.create(query, numHits, filterExpr, accessor, filterParser);
-            }
-            catch (Exception e) {
-            	// TODO Handle NPE creating spatial filter (due to constraint language version).
-    			throw new IllegalArgumentException("Error when parsing spatial filter (version: " + filterVersion + "):" +
-                        Xml.getString(filterExpr) + ". Error is: " + e.toString());
-            }
-            finally {
-                _lock.unlock();
-            }
-        }
-
-        /**
-         * TODO javadoc.
-         *
-         * @param query
-         * @param geom
-         * @param request
-         * @return
-         * @throws Exception
-         */
-        public SpatialFilter filter(org.apache.lucene.search.Query query, int numHits,
-                Collection<Geometry> geom, Element request) throws Exception {
-            _lock.lock();
-            try {
-                String relation = Util.getParam(request, Geonet.SearchResult.RELATION,
-                        Geonet.SearchResult.Relation.INTERSECTION);
-                if(geom.size() == 1) {
-                    return _types.get(relation.toLowerCase()).newInstance(query, numHits, geom.iterator().next(), new SpatialIndexAccessor());
-                } else {
-                    Collection<SpatialFilter> filters = new ArrayList<SpatialFilter>(geom.size());
-                    Envelope bounds = null;
-                    for (Geometry geometry : geom) {
-                        if(bounds == null) {
-                            bounds = geometry.getEnvelopeInternal();
-                        } else {
-                            bounds.expandToInclude(geometry.getEnvelopeInternal());
-                        }
-                        filters.add(_types.get(relation).newInstance(query, numHits, geometry, new SpatialIndexAccessor()));
-                    }
-                    return new OrSpatialFilter(query, numHits, bounds, new SpatialIndexAccessor(), filters);
-                }
-            }
-            finally {
-                _lock.unlock();
-            }
-        }
-
-        /**
-         * TODO javadoc.
-         *
-         * @return
-         * @throws Exception
-         */
-        public SpatialIndexWriter writer() throws Exception {
-            _lock.lock();
-            try {
-                if (_committerTask != null) {
-                    _committerTask.cancel();
-                }
-                _committerTask = new Committer();
-                ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-                ScheduledThreadPoolExecutor timer = applicationContext.getBean("timerThreadPool", ScheduledThreadPoolExecutor.class);
-
-                timer.schedule(_committerTask, TIME_BETWEEN_SPATIAL_COMMITS_IN_SECONDS, TimeUnit.SECONDS);
-                return writerNoLocking();
-            }
-            finally {
-                _lock.unlock();
-            }
-        }
-
-        /**
-         * TODO javadoc.
-         * @return
-         * @throws Exception
-         */
-        private SpatialIndexWriter writerNoLocking() throws Exception {
-            if (_writer == null) {
-                _writer = new SpatialIndexWriter(_datastore, _gmlParser, _transaction, _maxWritesInTransaction, _lock);
-            }
-            return _writer;
-        }
-
-        private final class SpatialIndexAccessor
-				extends
-				Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> {
-			@Override
-			public FeatureSource<SimpleFeatureType, SimpleFeature> one() {
-			    return _writer.getFeatureSource();
-			}
-
-			@Override
-			public SpatialIndex two() {
-			    try {
-			        return _writer.getIndex();
-			    } catch (IOException e) {
-			        throw new RuntimeException(e);
-			    }
-			}
-		}
-
-		/**
-         * TODO javadoc.
-         *
-         */
-        private class Committer implements Runnable {
-            private AtomicBoolean cancelled = new AtomicBoolean(false);
-
-            @Override
-            public void run() {
-                if (cancelled.get()) {
-                    return;
-                }
-                _lock.lock();
-                try {
-                    if (_committerTask == this) {
-                        _writer.commit();
-                        _committerTask = null;
-                    }
-                }
-                catch (IOException e) {
-                    Log.error(Geonet.SPATIAL, "error writing spatial index "+e.getMessage());
-                }
-                finally {
-                    _lock.unlock();
-                }
-            }
-
-            public void cancel() {
-                this.cancelled.set(true);
-            }
-        }
-    }
-
-    /**
-     * TODO javadoc.
-     *
-     * @param clazz
-     * @return
-     * @throws SecurityException
-     * @throws NoSuchMethodException
-     */
-    private static Constructor<? extends SpatialFilter> constructor(Class<? extends SpatialFilter> clazz)
-            throws SecurityException, NoSuchMethodException {
-        return clazz.getConstructor(org.apache.lucene.search.Query.class, int.class, Geometry.class, Pair.class);
-    }
-
-    LuceneIndexLanguageTracker getIndexTracker() {
-
-        ConfigurableApplicationContext context = ApplicationContextHolder.get();
-        return context.getBean(LuceneIndexLanguageTracker.class);
-	}
-
-    public boolean optimizeIndex() {
-        try {
-            ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-            LuceneIndexLanguageTracker tracker = applicationContext.getBean(LuceneIndexLanguageTracker.class);
-
-            tracker.optimize();
-            return true;
-        } catch (Throwable e) {
-            Log.error(Geonet.INDEX_ENGINE, "Exception while optimizing lucene index: " + e.getMessage());
-            return false;
-        }
-    }
 }

@@ -23,25 +23,12 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Constructor;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -103,7 +90,6 @@ import org.fao.geonet.kernel.search.facet.ItemBuilder;
 import org.fao.geonet.kernel.search.facet.ItemConfig;
 import org.fao.geonet.kernel.search.facet.SummaryType;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
-import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.LanguageDetector;
@@ -113,11 +99,25 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.reflect.Constructor;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
@@ -538,6 +538,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      * @param srvContext
      * @param request
      */
+    @Deprecated
     public static LanguageSelection determineLanguage(
             @Nullable ServiceContext srvContext,
             @Nonnull Element request,
@@ -1076,13 +1077,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         }
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Sort by: " + sortBy + " order: " + sortOrder + " type: " + sortType);
-        if (sortType == org.apache.lucene.search.SortField.Type.STRING) {
-            if(searchLang != null) {
-                return new SortField(sortBy, new CaseInsensitiveFieldComparatorSource(searchLang), sortOrder);
-            } else {
-                return new SortField(sortBy, CaseInsensitiveFieldComparatorSource.languageInsensitiveInstance(), sortOrder);
-            }
-        }
         return new SortField(sortBy, sortType, sortOrder);
     }
 
@@ -1185,14 +1179,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
 				returnValue = TermRangeQuery.newStringRange(fld, lowerTxt, upperTxt, inclusive, inclusive);
 			}
-		}
-		else if (name.equals("DateRangeQuery"))
-		{
-			String  fld        = xmlQuery.getAttributeValue("fld");
-			String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
-			String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
-			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
-			returnValue = new DateRangeQuery(fld, lowerTxt, upperTxt, sInclusive);
 		}
 		else if (name.equals("BooleanQuery"))
 		{
@@ -1403,7 +1389,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         } else {
             // Owner
             boolean isOwner = false;
-            IndexableField[] values = doc.getFields(LuceneIndexField.OWNER);
+            IndexableField[] values = doc.getFields(IndexFields.OWNER);
 
             if (us.isAuthenticated()) {
                 for (IndexableField f : values) {
@@ -1422,7 +1408,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
             } else {
                 // Download
-                values = doc.getFields(LuceneIndexField._OP1);
+                values = doc.getFields(IndexFields._OP1);
                 for (IndexableField f : values) {
                     if (f != null) {
                         if (userGroups.contains(Integer.parseInt(f.stringValue()))) {
@@ -1433,7 +1419,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 }
 
                 // Dynamic
-                values = doc.getFields(LuceneIndexField._OP5);
+                values = doc.getFields(IndexFields._OP5);
                 for (IndexableField f : values) {
                     if (f != null) {
                         if (userGroups.contains(Integer.parseInt(f.stringValue()))) {
