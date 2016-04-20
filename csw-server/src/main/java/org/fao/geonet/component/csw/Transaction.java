@@ -47,7 +47,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
-import org.fao.geonet.kernel.csw.services.getrecords.SolrSearchController;
+import org.fao.geonet.kernel.csw.services.getrecords.ISearchController;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
@@ -83,7 +83,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
     static final String NAME = "Transaction";
     @Autowired
-    private SolrSearchController _searchController;
+    private ISearchController _searchController;
     @Autowired
     private FieldMapper _fieldMapper;
     @Autowired

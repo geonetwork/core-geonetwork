@@ -52,6 +52,7 @@
                 </parameter>
 
                 <parameter name="AnyText" field="_text_" type="SupportedISOQueryables" />
+                <parameter name="any" field="_text_" type="SupportedISOQueryables" />
 
                 <parameter name="Format" field="format" type="SupportedISOQueryables">
                     <xpath schema="iso19139" path="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString"/>
