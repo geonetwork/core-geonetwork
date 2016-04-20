@@ -22,32 +22,32 @@
 //==============================================================================
 package org.fao.geonet.services.inspireatom;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.inspireatom.InspireAtomService;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.InspireAtomFeedRepository;
-import org.fao.geonet.utils.Log;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.inspireatom.util.InspireAtomUtil;
-import org.fao.geonet.inspireatom.harvester.InspireAtomHarvester;
 import org.fao.geonet.domain.InspireAtomFeed;
 import org.fao.geonet.domain.InspireAtomFeedEntry;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.inspireatom.InspireAtomService;
+import org.fao.geonet.inspireatom.harvester.InspireAtomHarvester;
+import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.InspireAtomFeedRepository;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * INSPIRE OpenSearchDescription atom service.
@@ -138,8 +138,9 @@ public class AtomServiceDescription implements Service
         String feedLang = inspireAtomFeed.getLang();
         String feedUrl = inspireAtomFeed.getAtomUrl();
 
-        String keywords =  LuceneSearcher.getMetadataFromIndex(context.getLanguage(), fileIdentifier, "keyword");
-
+        // TODO : SOLR-MIGRATION
+//        String keywords =  LuceneSearcher.getMetadataFromIndex(context.getLanguage(), fileIdentifier, "keyword");
+        String keywords = "";
 
         // Process datasets information
         Element datasetsEl = processDatasetsInfo(datasetIdentifiers, fileIdentifier, context);

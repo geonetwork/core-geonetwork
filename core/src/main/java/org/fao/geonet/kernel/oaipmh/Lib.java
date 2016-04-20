@@ -23,24 +23,20 @@
 
 package org.fao.geonet.kernel.oaipmh;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.jdom.Element;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
+
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 

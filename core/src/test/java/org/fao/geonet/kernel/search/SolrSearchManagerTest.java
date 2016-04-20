@@ -89,13 +89,13 @@ public class SolrSearchManagerTest {
     public void testIndex() throws Exception {
         Element metadata = Xml.loadFile(SolrSearchManagerTest.class.getResource("templated-keyword.iso19139.xml"));
         Element moreFields = new Element("toto");
-        SearchManagerUtils.addField(moreFields, "test1", "TEST1", true, false);
+        SolrSearchManager.addField(moreFields, "test1", "TEST1", true, false);
 
         manager.index(getSchemaDir(), metadata, "tutu", moreFields.getChildren(), null, "", true);
 
         assertEquals(1, client.addedDocs.size());
         SolrInputDocument doc = client.addedDocs.get(0);
-        assertNull(doc.getFieldValue(SearchManagerUtils.INDEXING_ERROR_FIELD));
+        assertNull(doc.getFieldValue(IndexFields.INDEXING_ERROR_FIELD));
         Assert.assertEquals("TEST1", doc.getFieldValue("test1"));
         Assert.assertEquals("tutu", doc.getFieldValue(SolrSearchManager.ID));
         Assert.assertEquals("metadata", doc.getFieldValue(SolrSearchManager.DOC_TYPE));

@@ -24,26 +24,19 @@
 package org.fao.geonet.services.main;
 
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
 /** main.search service. Perform a search
   */
-
+@Deprecated
 public class Search implements Service
 {
 	private ServiceConfig _config;

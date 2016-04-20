@@ -23,26 +23,13 @@
 
 package org.fao.geonet.services.main;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ComparisonChain;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearchManager.TermFrequency;
-import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.nio.file.Path;
-import java.util.*;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Return a list of suggestion for a field. The values could be filtered and

@@ -25,8 +25,6 @@ package org.fao.geonet.kernel;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 
 import org.apache.solr.client.solrj.SolrServerException;
 import org.fao.geonet.AbstractCoreIntegrationTest;
@@ -42,8 +40,6 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -63,7 +59,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.annotation.Nonnull;
+
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -250,7 +250,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
 
-        final SearchManager searchManager = context.getBean(SearchManager.class);
+        final SolrSearchManager searchManager = context.getBean(SolrSearchManager.class);
         final long startMdCount = _metadataRepository.count();
         final String lang = "eng";
         final int startIndexDocs = numDocs(searchManager, lang);
@@ -290,16 +290,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
     }
 
     private int numDocs(ISearchManager searchManager, String lang) throws IOException, InterruptedException, SolrServerException {
-        // TODO: SOLR-MIGRATION-TO-DELETE
-        if (searchManager instanceof SearchManager) {
-            IndexAndTaxonomy indexReader = searchManager.getNewIndexReader(lang);
-            final int startIndexDocs = indexReader.indexReader.numDocs();
-            indexReader.close();
-            return startIndexDocs;
-        } else if (searchManager instanceof SolrSearchManager) {
-            return ((SolrSearchManager) searchManager).getNumDocs(null);
-        }
-        return -1;
+        return ((SolrSearchManager) searchManager).getNumDocs(null);
     }
 
     static int importMetadata(AbstractCoreIntegrationTest test, ServiceContext serviceContext) throws Exception {

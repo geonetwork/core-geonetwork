@@ -417,4 +417,24 @@ public class SolrSearchManager implements ISearchManager {
         int hitsNumber = getNumDocs(query);
         return getDocIds(query, 0, hitsNumber);
     }
+
+    public static Element makeField(String name, String value) {
+        Element field = new Element("Field");
+        field.setAttribute(SolrSearchManager.FIELDNAME, name);
+        field.setAttribute(SolrSearchManager.FIELDSTRING, value == null ? "" : value);
+        return field;
+    }
+    /**
+     * Creates a new XML field for the Lucene index and add it to the document.
+     *
+     * @param xmlDoc
+     * @param name
+     * @param value
+     * @param store
+     * @param index
+     */
+    public static void addField(Element xmlDoc, String name, String value, boolean store, boolean index) {
+        Element field = makeField(name, value);
+        xmlDoc.addContent(field);
+    }
 }

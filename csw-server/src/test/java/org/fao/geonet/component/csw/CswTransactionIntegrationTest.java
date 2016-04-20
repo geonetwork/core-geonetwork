@@ -25,14 +25,11 @@ package org.fao.geonet.component.csw;
 
 import com.google.common.collect.Lists;
 
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.SearchManagerUtils;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataRepositoryTest;
@@ -49,6 +46,8 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import jeeves.server.context.ServiceContext;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
@@ -359,9 +358,9 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         metadata = _metadataRepository.save(metadata);
         final Path schemaDir = _schemaManager.getSchemaDir("iso19139");
         List<Element> extras = Lists.newArrayList(
-                SearchManagerUtils.makeField("_uuid", PHOTOGRAPHIC_UUID),
-                SearchManagerUtils.makeField("_isTemplate", "n"),
-                SearchManagerUtils.makeField("_owner", "" + ownerId)
+            SolrSearchManager.makeField("_uuid", PHOTOGRAPHIC_UUID),
+            SolrSearchManager.makeField("_isTemplate", "n"),
+            SolrSearchManager.makeField("_owner", "" + ownerId)
         );
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
                 MetadataType.METADATA, metadata.getDataInfo().getRoot(), false);

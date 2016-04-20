@@ -23,17 +23,19 @@
 
 package org.fao.geonet.services.reports;
 
-import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.jdom.Element;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import jeeves.server.context.ServiceContext;
 
 
 public class ReportUtils {
@@ -96,7 +98,8 @@ public class ReportUtils {
         String value = "";
 
         try {
-            value = LuceneSearcher.getMetadataFromIndexById(context.getLanguage(), metadataId + "", fieldName);
+            // TODO: SOLR-MIGRATION
+            //value = LuceneSearcher.getMetadataFromIndexById(context.getLanguage(), metadataId + "", fieldName);
 
             if (value == null) value = "";
         } catch (Exception ex) {

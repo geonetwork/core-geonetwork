@@ -22,15 +22,16 @@
 //==============================================================================
 package org.fao.geonet.services.inspireatom;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvester;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Class to test the InspireAtomHarvester.

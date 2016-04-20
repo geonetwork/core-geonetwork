@@ -30,11 +30,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.kernel.search.LuceneConfig;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.index.DirectoryFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
@@ -77,15 +73,10 @@ public class GeonetTestFixture {
     @Autowired
     private ConfigurableApplicationContext _applicationContext;
     @Autowired
-    protected DirectoryFactory _directoryFactory;
-    @Autowired
     protected DataStore dataStore;
 
 
     private FileSystemPool.CreatedFs currentFs;
-
-    private static LuceneConfig templateLuceneConfig;
-    private static SearchManager templateSearchManager;
 
     public void tearDown() throws IOException {
         IO.setFileSystemThreadLocal(null);
@@ -129,8 +120,6 @@ public class GeonetTestFixture {
 
                     templateSchemaManager = initSchemaManager(webappDir, geonetworkDataDirectory);
 
-                    _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
-                    _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
                     Files.createDirectories(templateDataDirectory.resolve("data/resources/htmlcache"));
                 }
             }
@@ -142,7 +131,6 @@ public class GeonetTestFixture {
         assertTrue(Files.isDirectory(currentFs.dataDir.resolve("config")));
         assertTrue(Files.isDirectory(currentFs.dataDir.resolve("data")));
 
-        System.setProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD, Boolean.toString(true));
         configureNodeId(test);
 
 
@@ -151,17 +139,12 @@ public class GeonetTestFixture {
 
         assertCorrectDataDir();
 
-        if (test.resetLuceneIndex()) {
-        _directoryFactory.resetIndex();
-        }
 
         ServiceContext serviceContext = test.createServiceContext();
 
         ApplicationContextHolder.set(_applicationContext);
         serviceContext.setAsThreadLocal();
 
-        _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
-        _applicationContext.getBean(SearchManager.class).initNonStaticData(false, false, "", 100);
         _applicationContext.getBean(DataManager.class).init(serviceContext, false);
         _applicationContext.getBean(ThesaurusManager.class).init(true, serviceContext, "WEB-INF/data/config/codelist");
 

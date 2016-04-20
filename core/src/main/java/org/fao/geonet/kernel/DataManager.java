@@ -93,7 +93,7 @@ import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.SearchManagerUtils;
+import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -500,18 +500,18 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (getXmlSerializer().resolveXLinks()) {
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
-                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.HASXLINKS, "1"));
+                    moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "1"));
                     StringBuilder sb = new StringBuilder();
                     for (Attribute xlink : xlinks) {
                         sb.append(xlink.getValue()); sb.append(" ");
                     }
-                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.XLINK, sb.toString()));
+                    moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.XLINK, sb.toString()));
                     Processor.detachXLink(md, getServiceContext());
                 } else {
-                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.HASXLINKS, "0"));
+                    moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0"));
                 }
             } else {
-                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.HASXLINKS, "0"));
+                moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0"));
             }
 
             fullMd = getMetadataRepository().findOne(id$);
@@ -536,34 +536,34 @@ public class DataManager implements ApplicationEventPublisherAware {
                 Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); //DEBUG
             }
 
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.ROOT,        root));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.SCHEMA,      schema));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.DATABASE_CREATE_DATE,  createDate));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE,  changeDate));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.SOURCE,      source));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.IS_TEMPLATE,  metadataType.codeString));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.UUID,        uuid));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.OWNER,       owner));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.DUMMY,       "0"));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.POPULARITY,  popularity));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.RATING,      rating));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.DISPLAY_ORDER,displayOrder));
-            moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.EXTRA,       extra));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.ROOT,        root));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.SCHEMA,      schema));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CREATE_DATE,  createDate));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE,  changeDate));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.SOURCE,      source));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE,  metadataType.codeString));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.UUID,        uuid));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.OWNER,       owner));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.DUMMY,       "0"));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.POPULARITY,  popularity));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.RATING,      rating));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.DISPLAY_ORDER,displayOrder));
+            moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.EXTRA,       extra));
 
             // If the metadata has an atom document, index related information
             InspireAtomFeedRepository inspireAtomFeedRepository = getApplicationContext().getBean(InspireAtomFeedRepository.class);
             InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
 
             if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
-                moreFields.add(SearchManagerUtils.makeField("has_atom", "y"));
-                moreFields.add(SearchManagerUtils.makeField("any", feed.getAtom()));
+                moreFields.add(SolrSearchManager.makeField("has_atom", "y"));
+                moreFields.add(SolrSearchManager.makeField("any", feed.getAtom()));
             }
 
             if (owner != null) {
                 User user = getApplicationContext().getBean(UserRepository.class).findOne(fullMd.getSourceInfo().getOwner());
                 if (user != null) {
-                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
+                    moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
                             .getName() + "|" + user.getProfile()));
                 }
             }
@@ -575,10 +575,10 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (groupOwner != null) {
                 final Group group = groupRepository.findOne(groupOwner);
                 if (group != null) {
-                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner)));
+                    moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner)));
                     final boolean preferGroup = getSettingManager().getValueAsBool(SettingManager.SYSTEM_PREFER_GROUP_LOGO, true);
                     if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
-                        moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite()));
+                        moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite()));
                     }
                     if (group.getLogo() != null && preferGroup) {
                         logoUUID = group.getLogo();
@@ -598,13 +598,13 @@ public class DataManager implements ApplicationEventPublisherAware {
                     final Path logoPath = logosDir.resolve(logoUUID + "." + ext);
                     if (Files.exists(logoPath)) {
                         added = true;
-                        moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoPath.getFileName()));
+                        moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoPath.getFileName()));
                         break;
                     }
                 }
 
                 if (!added) {
-                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID + ".png"));
+                    moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID + ".png"));
                 }
             }
 
@@ -616,17 +616,17 @@ public class DataManager implements ApplicationEventPublisherAware {
                 int groupId = operationAllowedId.getGroupId();
                 int operationId = operationAllowedId.getOperationId();
 
-                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.OP_PREFIX + operationId, String.valueOf(groupId)));
+                moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.OP_PREFIX + operationId, String.valueOf(groupId)));
                 if(operationId == ReservedOperation.view.getId()) {
                     Group g = groupRepository.findOne(groupId);
                     if (g != null) {
-                        moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.getName()));
+                        moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.getName()));
                     }
                 }
             }
 
             for (MetadataCategory category : fullMd.getCategories()) {
-                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.CAT, category.getName()));
+                moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.CAT, category.getName()));
             }
 
             final MetadataStatusRepository statusRepository = getApplicationContext().getBean(MetadataStatusRepository.class);
@@ -637,9 +637,9 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (!statuses.isEmpty()) {
                 MetadataStatus stat = statuses.get(0);
                 String status = String.valueOf(stat.getId().getStatusId());
-                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.STATUS, status));
+                moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.STATUS, status));
                 String statusChangeDate = stat.getId().getChangeDate().getDateAndTime();
-                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate));
+                moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate));
             }
 
             // getValidationInfo
@@ -650,7 +650,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                     .class);
             List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id$);
             if (validationInfo.isEmpty()) {
-                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.VALID, "-1"));
+                moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.VALID, "-1"));
             } else {
                 String isValid = "1";
                 for (MetadataValidation vi : validationInfo) {
@@ -659,9 +659,9 @@ public class DataManager implements ApplicationEventPublisherAware {
                     if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
                         isValid = "0";
                     }
-                    moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode()));
+                    moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode()));
                 }
-                moreFields.add(SearchManagerUtils.makeField(Geonet.IndexFieldNames.VALID, isValid));
+                moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.VALID, isValid));
             }
             getSearchManager().index(getSchemaManager().getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
         } catch (Exception x) {

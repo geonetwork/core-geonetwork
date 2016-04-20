@@ -22,32 +22,28 @@
 //==============================================================================
 package org.fao.geonet.services.config;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.solr.SolrConfig;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.jdom.Element;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.sql.DataSource;
 import javax.xml.transform.TransformerFactory;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Retrieve various type of information about the system (eg. Java version, XSLT

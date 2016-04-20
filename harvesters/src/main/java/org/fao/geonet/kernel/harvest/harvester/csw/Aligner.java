@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -49,8 +48,6 @@ import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.IndexFields;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -58,12 +55,13 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import jeeves.server.context.ServiceContext;
 
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
@@ -440,8 +438,6 @@ public class Aligner extends BaseAligner
      * but the resource is the same. When harvesting, some users would like to have
      * the capability to exclude "duplicate" description of the same dataset.
      *
-     * The check is made searching the identifier field in the index using
-     * {@link org.fao.geonet.kernel.search.LuceneSearcher#getAllMetadataFromIndexFor(String, String, String, java.util.Set, boolean)}
      *
      * @param uuid the metadata unique identifier
      * @param response  the XML document to check
@@ -473,28 +469,12 @@ public class Aligner extends BaseAligner
                         String identifier = identifierNode.getTextTrim();
                         log.debug("    - Searching for duplicates for resource identifier: " + identifier);
 
-                        // TODO: SOLR-MIGRATION-TO-DELETE
-                        if (searchmanager instanceof SearchManager) {
-                            Map<String, Map<String, String>> values = LuceneSearcher.getAllMetadataFromIndexFor(defaultLanguage, resourceIdentifierLuceneIndexField,
-                                identifier, Collections.singleton("_uuid"), true);
-                            log.debug("    - Number of resources with same identifier: " + values.size());
-                            for (Map<String, String> recordFieldValues : values.values()) {
-                                String indexRecordUuid = recordFieldValues.get("_uuid");
-                                if (!indexRecordUuid.equals(uuid)) {
-                                    log.debug("      - UUID " + indexRecordUuid + " in index does not match harvested record UUID " + uuid);
-                                    log.warning("      - Duplicates found. Skipping record with UUID " + uuid + " and resource identifier " + identifier);
 
-                                    result.duplicatedResource++;
-                                    return true;
-                                }
-                            }
-                        } else if (searchmanager instanceof SolrSearchManager) {
-                            List<String> uuids = ((SolrSearchManager) searchmanager).getDocsUuids("+" + IndexFields.RESOURCE_IDENTIFIER + ":\"" + identifier + "\"", 1);
-                            if (uuids.size() > 0) {
-                                log.warning("      - Duplicates found. Skipping record with UUID " + uuid + " and resource identifier " + identifier);
-                                result.duplicatedResource++;
-                                return true;
-                            }
+                        List<String> uuids = ((SolrSearchManager) searchmanager).getDocsUuids("+" + IndexFields.RESOURCE_IDENTIFIER + ":\"" + identifier + "\"", 1);
+                        if (uuids.size() > 0) {
+                            log.warning("      - Duplicates found. Skipping record with UUID " + uuid + " and resource identifier " + identifier);
+                            result.duplicatedResource++;
+                            return true;
                         }
                     }
                 }

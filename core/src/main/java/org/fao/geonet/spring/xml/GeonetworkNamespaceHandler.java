@@ -28,8 +28,7 @@ public class GeonetworkNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override
     public void init() {
-        registerBeanDefinitionParser("facets", new FacetsBeanDefinitionParser());
-        registerBeanDefinitionParser("summaryTypes", new SummaryTypesBeanDefinitionParser());
+
     }
 
 }

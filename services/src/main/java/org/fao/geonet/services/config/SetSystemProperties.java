@@ -23,15 +23,15 @@
 
 package org.fao.geonet.services.config;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.util.ThreadPool;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Configure geonetwork's thread pool to not add tasks to thread pool but instead execute them in calling thread.
@@ -53,8 +53,6 @@ public class SetSystemProperties implements Service {
         final boolean newValue = Boolean.parseBoolean(Util.getParam(params, "value"));
         if(propertyName.equalsIgnoreCase(ThreadPool.SEQUENTIAL_EXECUTION)) {
             System.setProperty(ThreadPool.SEQUENTIAL_EXECUTION, Boolean.toString(newValue));
-        } else if (propertyName.equalsIgnoreCase(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD)){
-            System.setProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD, Boolean.toString(newValue));
         } else {
             throw new IllegalArgumentException("system property: "+propertyName+" is not permitted to be set via web API");
         }

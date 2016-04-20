@@ -25,8 +25,7 @@ package org.fao.geonet.component.csw;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.overrides.ConfigurationOverrides;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -43,7 +42,6 @@ import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
-import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.CswCapabilitiesInfo;
@@ -65,9 +63,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
+
+import jeeves.server.context.ServiceContext;
+import jeeves.server.overrides.ConfigurationOverrides;
 
 /**
  * TODO javadoc.

@@ -23,32 +23,35 @@
 
 package org.fao.geonet.services.mef;
 
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.kernel.search.IndexFields;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SolrSearchManager;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
-import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.IndexFields;
+import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.SolrSearchManager;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 
 /**
@@ -132,47 +135,15 @@ public class Export implements Service {
 				Set<String> tmpUuid = new HashSet<String>();
 				for (Iterator<String> iter = uuids.iterator(); iter.hasNext();) {
 					String _uuid = (String) iter.next();
-
-                    // TODO: SOLR-MIGRATION-TO-DELETE Remove that and use parent:uuid operatesOn:uuid query to retrieve all in one Solr query
                     GeonetContext gc = (GeonetContext) context
                         .getHandlerContext(Geonet.CONTEXT_NAME);
                     ISearchManager searchMan = gc.getBean(ISearchManager.class);
-                    if (searchMan instanceof SearchManager) {
-                        // Creating request for services search
-                        Element childRequest = new Element("request");
-                        childRequest.addContent(new Element("parentUuid")
-                            .setText(_uuid));
-                        childRequest.addContent(new Element("to").setText("1000"));
 
-                        // Get children to export - It could be better to use GetRelated service TODO
-                        Set<String> childs = getUuidsToExport(_uuid, context,
-                            childRequest);
-                        if (childs.size() != 0) {
-                            tmpUuid.addAll(childs);
-                        }
-
-                        // Creating request for services search
-                        Element servicesRequest = new Element(Jeeves.Elem.REQUEST);
-                        servicesRequest.addContent(new Element(
-                            org.fao.geonet.constants.Params.OPERATES_ON)
-                            .setText(_uuid));
-                        servicesRequest.addContent(new Element(
-                            org.fao.geonet.constants.Params.TYPE)
-                            .setText("service"));
-
-                        // Get linked services for export
-                        Set<String> services = getUuidsToExport(_uuid, context,
-                            servicesRequest);
-                        if (services.size() != 0) {
-                            tmpUuid.addAll(services);
-                        }
-                    } else if (searchMan instanceof SolrSearchManager) {
-                        List<String> listOfUuids = ((SolrSearchManager) searchMan).getDocsUuids(
-                            IndexFields.PARENT_RECORD_UUID + ":\"" + uuid + "\" "
-                            + IndexFields.RECORD_OPERATE_ON + ":\"" + uuid + "\"",
-                            null);
-                        tmpUuid.addAll(listOfUuids);
-                    }
+                    List<String> listOfUuids = ((SolrSearchManager) searchMan).getDocsUuids(
+                        IndexFields.PARENT_RECORD_UUID + ":\"" + uuid + "\" "
+                        + IndexFields.RECORD_OPERATE_ON + ":\"" + uuid + "\"",
+                        null);
+                    tmpUuid.addAll(listOfUuids);
 				}
 
 				if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {
@@ -217,42 +188,7 @@ public class Export implements Service {
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		ISearchManager searchMan = gc.getBean(ISearchManager.class);
         // TODO: SOLR-MIGRATION-TO-DELETE
-        if (searchMan instanceof SearchManager) {
-            if(Log.isDebugEnabled(Geonet.MEF))
-                Log.debug(Geonet.MEF, "Creating searcher to run request: " + Xml.getString(request));
 
-            try (MetaSearcher searcher = searchMan.newSearcher(Geonet.File.SEARCH_LUCENE)) {
-
-                Set<String> uuids = new HashSet<>();
-
-                // perform the search
-                searcher.search(context, request, _config);
-
-                // If element type found, then get their uuid
-                if (searcher.getSize() != 0) {
-                    if (Log.isDebugEnabled(Geonet.MEF))
-                        Log.debug(Geonet.MEF, "  Exporting record(s) found for metadata: " + uuid);
-                    Element elt = searcher.present(context, request, _config);
-
-                    // Get ISO records only
-                    @SuppressWarnings("unchecked")
-                    List<Element> isoElt = elt.getChildren();
-                    for (Element md : isoElt) {
-                        // -- Only metadata record should be processed
-                        if (!md.getName().equals("summary")) {
-                            String mdUuid = md.getChild(Edit.RootChild.INFO,
-                                Edit.NAMESPACE).getChildText(Edit.Info.Elem.UUID);
-                            if (Log.isDebugEnabled(Geonet.MEF))
-                                Log.debug(Geonet.MEF, "    Adding: " + mdUuid);
-                            uuids.add(mdUuid);
-                        }
-                    }
-                }
-                Log.info(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
-
-                return uuids;
-            }
-        }
         return null;
 	}
 }

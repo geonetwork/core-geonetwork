@@ -23,13 +23,11 @@
 
 package org.fao.geonet.services.reports;
 
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.domain.MetadataFileUpload_;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserRepository;
@@ -42,6 +40,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Service to return the uploaded files to metadata records during a period.
@@ -123,10 +126,11 @@ public class ReportDataUploads implements Service {
             Set<String> fields = new HashSet<String>();
             fields.add("linkage_name_des");
 
-            Map<String,Map<String,String>>  fieldValues = LuceneSearcher.getAllMetadataFromIndexFor(context.getLanguage(), "_id",
-                    fileUpload.getMetadataId() + "", fields, false);
-
-            if (!fieldValues.isEmpty()) {
+            // TODO: SOLR-MIGRATION
+//            Map<String,Map<String,String>>  fieldValues = LuceneSearcher.getAllMetadataFromIndexFor(context.getLanguage(), "_id",
+//                    fileUpload.getMetadataId() + "", fields, false);
+            Map<String,Map<String,String>>  fieldValues = null;
+            if (fieldValues != null && !fieldValues.isEmpty()) {
                 uploadDescription = fieldValues.get("0").get("linkage_name_des");
             }
 

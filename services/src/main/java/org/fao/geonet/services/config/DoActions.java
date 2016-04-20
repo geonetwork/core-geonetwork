@@ -44,7 +44,7 @@ import org.jdom.Element;
 //=============================================================================
 
 /**
- * do any immediate actions resulting from changes to settings  
+ * do any immediate actions resulting from changes to settings
  */
 public class DoActions implements Service
 {
@@ -77,21 +77,7 @@ public class DoActions implements Service
 
     public static void doActions(ServiceContext context) throws Exception {
         GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager     dataMan = gc.getBean(DataManager.class);
         SettingManager settingMan = gc.getBean(SettingManager.class);
-        SettingInfo si = context.getBean(SettingInfo.class);
-
-        try {
-            if (si.getLuceneIndexOptimizerSchedulerEnabled()) {
-                dataMan.rescheduleOptimizer(si.getLuceneIndexOptimizerSchedulerAt(), si.getLuceneIndexOptimizerSchedulerInterval());
-            } else {
-                dataMan.disableOptimizer();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: "+e.getMessage());
-        }
-        
         LogUtils.refreshLogConfiguration();
 
         try {

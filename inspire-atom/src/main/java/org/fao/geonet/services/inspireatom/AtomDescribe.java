@@ -23,24 +23,25 @@
 package org.fao.geonet.services.inspireatom;
 
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.inspireatom.InspireAtomService;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.inspireatom.InspireAtomService;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Service to get Atom feed.

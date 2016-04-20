@@ -24,8 +24,7 @@
 package org.fao.geonet.component.csw;
 
 import com.vividsolutions.jts.util.Assert;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
@@ -40,21 +39,34 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.AddElemValue;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
-import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
+import org.fao.geonet.kernel.csw.services.getrecords.SolrSearchController;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -71,7 +83,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
     static final String NAME = "Transaction";
     @Autowired
-    private SearchController _searchController;
+    private SolrSearchController _searchController;
     @Autowired
     private FieldMapper _fieldMapper;
     @Autowired

@@ -23,23 +23,12 @@
 
 package org.fao.geonet.component.csw;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import com.google.common.base.Optional;
-import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-
-import org.fao.geonet.utils.Xml;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
@@ -49,18 +38,26 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
-import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.csw.services.getrecords.SolrSearchController;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.util.Iterator;
+import java.util.Map;
+
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -83,7 +80,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
     static final String NAME = "GetRecordById";
     @Autowired
-    private SearchController _searchController;
+    private SolrSearchController _searchController;
     @Autowired
     private CatalogConfiguration _catalogConfig;
 
@@ -162,10 +159,12 @@ public class GetRecordById extends AbstractOperation implements CatalogService
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
                 final SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
-                final String displayLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
-				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null,
-                        displayLanguage);
+                // TODO: SOLR-MIGRATION
+//                final String displayLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
+//				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null,
+//                        displayLanguage);
 
+                Element md = null;
 				if (md != null) {
                     final Map<String, GetRecordByIdMetadataTransformer> transformers = context.getApplicationContext()
                             .getBeansOfType(GetRecordByIdMetadataTransformer.class);

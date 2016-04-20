@@ -23,30 +23,25 @@
 package org.fao.geonet.services.inspireatom;
 
 import com.google.common.base.Joiner;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.csw.common.util.Xml;
+
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.InspireAtomFeed;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.inspireatom.InspireAtomService;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
-import org.fao.geonet.utils.Log;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.main.Result;
-import org.fao.geonet.services.main.Search;
-import org.jdom.Content;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.nio.file.Path;
 import java.util.List;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * INSPIRE atom search service.
@@ -55,12 +50,12 @@ import java.util.List;
  */
 public class AtomSearch implements Service
 {
-    private Search search = new Search();
-    private Result result = new Result();
+//    private Search search = new Search();
+//    private Result result = new Result();
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
-        search.init(appPath, params);
-        result.init(appPath, params);
+//        search.init(appPath, params);
+//        result.init(appPath, params);
     }
 
     //--------------------------------------------------------------------------
@@ -114,31 +109,31 @@ public class AtomSearch implements Service
         // Depending on INSPIRE atom format decide which service use.
         String atomFormat = sm.getValue("system/inspire/atom");
 
-        search.exec(params, context);
-
-        // Create atom feed from search results.
-        if (atomFormat.equalsIgnoreCase(InspireAtomType.ATOM_LOCAL)) {
-            return result.exec(params, context);
-
-            // Create atom feed from feeds referenced in metadata.
-        } else {
-            Element results = result.exec(params, context);
-
-            Element feeds = new Element("feeds");
-
-            // Loop over the results and retrieve feeds to add in results
-            // First element in results (pos=0) is the summary, ignore it
-            for(int i = 1; i < results.getChildren().size(); i++) {
-                String id = ((Element) results.getChildren().get(i)).getChild("info", Edit.NAMESPACE).getChildText("id");
-
-                InspireAtomFeed feed =  service.findByMetadataId(Integer.parseInt(id));
-                Element feedEl = Xml.loadString(feed.getAtom(), false);
-                feeds.addContent((Content) feedEl.clone());
-            }
-
-            return feeds;
-        }
-
-
+        // TODO: SOLR-MIGRATION
+//        search.exec(params, context);
+//
+//        // Create atom feed from search results.
+//        if (atomFormat.equalsIgnoreCase(InspireAtomType.ATOM_LOCAL)) {
+//            return result.exec(params, context);
+//
+//            // Create atom feed from feeds referenced in metadata.
+//        } else {
+//            Element results = result.exec(params, context);
+//
+//            Element feeds = new Element("feeds");
+//
+//            // Loop over the results and retrieve feeds to add in results
+//            // First element in results (pos=0) is the summary, ignore it
+//            for(int i = 1; i < results.getChildren().size(); i++) {
+//                String id = ((Element) results.getChildren().get(i)).getChild("info", Edit.NAMESPACE).getChildText("id");
+//
+//                InspireAtomFeed feed =  service.findByMetadataId(Integer.parseInt(id));
+//                Element feedEl = Xml.loadString(feed.getAtom(), false);
+//                feeds.addContent((Content) feedEl.clone());
+//            }
+//
+//            return feeds;
+//        }
+        throw new RuntimeException("Needs migration to Solr");
     }
 }

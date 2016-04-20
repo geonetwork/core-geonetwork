@@ -23,7 +23,6 @@
 
 package org.fao.geonet.component.csw;
 
-import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
@@ -47,11 +46,6 @@ import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.ISearchController;
-import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.CustomElementSetRepository;
 import org.fao.geonet.util.xml.NamespaceUtils;
@@ -61,12 +55,19 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  * See OGC 07-006 and OGC 07-045.

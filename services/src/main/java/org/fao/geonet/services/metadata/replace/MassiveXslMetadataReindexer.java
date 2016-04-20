@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.metadata.replace;
 
-import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -34,7 +33,6 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -46,6 +44,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  *  Class to apply replacements to a metadata selection.
@@ -157,7 +157,8 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
         MetadataDataInfo info = metadataEntity.getDataInfo();
 
         // Get metadata title from the index
-        String metadataTitle = LuceneSearcher.getMetadataFromIndexById(context.getLanguage(), id, "title");
+        String metadataTitle = null; // TODO: SOLR-MIGRATION
+        // LuceneSearcher.getMetadataFromIndexById(context.getLanguage(), id, "title");
         if (StringUtils.isEmpty(metadataTitle)) metadataTitle = metadataEntity.getUuid();
 
         if (info == null) {

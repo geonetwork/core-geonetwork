@@ -23,27 +23,29 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-
 import org.apache.solr.client.solrj.SolrServerException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.MetadataRecordSelector;
 import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
+
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Manage objects selection for a user session.
@@ -83,7 +85,6 @@ public class SelectionManager {
 	 * @param result
 	 *            the result modified<br/>
 	 *
-	 * @see org.fao.geonet.services.main.Result <br/>
 	 */
 	public static void updateMDResult(UserSession session, Element result) {
 		SelectionManager manager = getManager(session);
@@ -268,52 +269,15 @@ public class SelectionManager {
         ISearchManager searchMan = gc.getBean(ISearchManager.class);
 
         if (type.equals(SELECTION_METADATA)) {
-            // TODO: SOLR-MIGRATION-TO-DELETE
-            if (searchMan instanceof SearchManager) {
-                Element request = (Element) session.getProperty(Geonet.Session.SEARCH_REQUEST);
-                Object searcher = null;
 
-                // Run last search if xml.search or q service is used (ie. last searcher is not stored in current session).
-                if (request != null) {
-                    request = (Element) request.clone();
-                    request.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
-                    try {
-                        searcher = searchMan.newSearcher(Geonet.File.SEARCH_LUCENE);
-                        ServiceConfig sc = new ServiceConfig();
-                        ((LuceneSearcher) searcher).search(context, request, sc);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    searcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
-                }
-                if (searcher == null)
-                    return;
-
-                List<String> uuidList;
-                try {
-                    if (searcher instanceof MetadataRecordSelector)
-                        uuidList = ((MetadataRecordSelector) searcher).getAllUuids(maxhits, context);
-                    else
-                        return;
-
-                    if (selection != null) {
-                        selection.addAll(uuidList);
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (searchMan instanceof SolrSearchManager) {
-                // SOLR-MIGRATION : If we want to select based on last search add last search in session ?
-                // For now,
-                try {
-                    selection.addAll(((SolrSearchManager) searchMan).getDocsUuids(q, maxhits));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (SolrServerException e) {
-                    e.printStackTrace();
-                }
+            // SOLR-MIGRATION : If we want to select based on last search add last search in session ?
+            // For now,
+            try {
+                selection.addAll(((SolrSearchManager) searchMan).getDocsUuids(q, maxhits));
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (SolrServerException e) {
+                e.printStackTrace();
             }
         }
 	}

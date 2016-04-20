@@ -27,7 +27,7 @@ import com.yammer.metrics.core.HealthCheck;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.SearchManagerUtils;
+import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 
 import jeeves.monitor.HealthCheckFactory;
@@ -48,7 +48,7 @@ public class NoIndexErrorsHealthCheck implements HealthCheckFactory {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                 SolrSearchManager searchMan = gc.getBean(SolrSearchManager.class);
                 int hits = searchMan.getNumDocs(
-                    String.format("+%s:1", SearchManagerUtils.INDEXING_ERROR_FIELD)
+                    String.format("+%s:1", IndexFields.INDEXING_ERROR_FIELD)
                 );
                 if (hits > 0) {
                     return Result.unhealthy(

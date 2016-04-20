@@ -110,7 +110,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- These plugins are responsible for generating the hibernate metamodel -->
+            <!-- These plugins are responsible for generating the hibernate metamodel
             <plugin>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
@@ -129,7 +129,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
