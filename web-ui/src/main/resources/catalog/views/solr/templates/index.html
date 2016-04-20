@@ -16,6 +16,12 @@
           </span>
         </div><!-- /input-group -->
       </div>
+      <div class="panel-body" ng-if="anyField">
+        <a href="">
+          <i class="glyphicon glyphicon-remove-circle"></i>
+          Reset search
+        </a>
+      </div>
     </div><!-- /.col-lg-6 -->
 
   </div>
@@ -24,23 +30,28 @@
 
     <div class="col-md-8">
       <ul class="nav nav-tabs">
-        <li role="presentation" class="active">
-          <a href="#">All ({{count}})</a>
+        <li role="presentation" ng-class="{'active': !active}">
+          <a ng-click="search()">All</a>
         </li>
-        <li role="presentation" ng-repeat="f in facets[0].values">
-          <a ng-click="filter(f.value)">{{f.value}} ({{f.count}})</a>
+        <li role="presentation" ng-class="{'active': active=='dataset'}"> <a
+          ng-click="search('dataset')">Datasets</a>
+        </li>
+        <li role="presentation" ng-class="{'active': active=='feature'}">
+          <a ng-click="search('feature')">Features</a>
         </li>
       </ul>
 
-      <div
-        ng-repeat="r in results"
-        gn-solr-result record="r" collection="collection"></div>
+      <div dir-paginate="r in results | itemsPerPage: pagination.itemsPerPage"
+        gn-solr-result record="r" collection="collection" total-items="pagination.count" currentPage="pagination.page"></div>
+
+      <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
 
     </div>
 
     <div class="col-md-4 results-map-col">
 
       <div class="sticky">
+
         <div ngeo-map="searchMap" class="map"></div>
 
         <div class="table-wrapper"
@@ -53,8 +64,10 @@
           </table>
         </div>
 
-      </div>
-    </div>
+      </div> <!-- /.sticky -->
+
+    </div> <!-- /.results-map-col -->
+
 
   </div>
 </div>

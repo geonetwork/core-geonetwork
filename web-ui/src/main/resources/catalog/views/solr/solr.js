@@ -25,13 +25,20 @@
 
   goog.provide('gn_search_solr');
 
+  goog.require('angularUtils.directives.dirPagination');
+
   goog.require('gn_search');
   goog.require('gn_solr_result');
 
   var module = angular.module('gn_search_solr', [
+    'angularUtils.directives.dirPagination',
     'gn_search',
-    'gn_solr_result'
+    'gn_solr_result',
   ]);
+
+  module.config([ 'paginationTemplateProvider', function(paginationTemplateProvider) {
+    paginationTemplateProvider.setPath('../../catalog/views/solr/dirPagination.tpl.html');
+  }]);
 
   module.controller('GnSearchSolrController', [
 
@@ -84,23 +91,53 @@
       $scope.solrObject.init({});
 
       $scope.anyField = '';
-      $scope.search = function() {
-        console.log(' ====> search() ',{ q: $scope.anyField })
-        $scope.solrObject.searchWithFacets({
-          q: $scope.anyField
-        }, {
-          'facet'       : true,
-          'facet.field' : [ 'resourceType' ],
-          'resourceType' : [ 'dataset' ],
-        }).then(function (resp) {
-          console.log(resp)
-          $scope.count   = resp.count;
-          $scope.facets  = resp.facets;
-          $scope.results = resp.records;
-        });
+
+      $scope.pagination = {
+        page         : 1,
+        itemsPerPage : 10
       };
 
+
+      $scope.search = function(resourceType) {
+
+        $scope.active = resourceType;
+        let solrParams = {
+          'facet'       : true,
+          'facet.field' : [ 'resourceType' ],
+          start         : ($scope.pagination.page - 1) * $scope.pagination.itemsPerPage,
+          rows          : $scope.pagination.itemsPerPage
+        };
+        let qParams = {
+          any: $scope.anyField,
+          params: {}
+        };
+        if (resourceType) {
+          let values                  = {}
+          values[resourceType]        = true
+          qParams.params.resourceType = {
+            type   : 'field',
+            values : values
+          };
+          console.log(qParams)
+        }
+        $scope.solrObject.searchWithFacets(qParams, solrParams);
+      };
+
+      $scope.solrObject.on('search', function(resp) {
+        console.log('resp', resp)
+        $scope.pagination.count = resp.count;
+        $scope.facets           = resp.facets;
+        $scope.results          = resp.records;
+      });
+
       $scope.search();
+
+      $scope.pageChanged = function(pageNumber) {
+        $scope.solrObject.affineSearch({}, undefined, {
+          start: (pageNumber - 1) * $scope.pagination.itemsPerPage
+        });
+        $scope.feature = undefined;
+      }
 
       $scope.validProperty = function(key) {
         return key.substr(0,3) == 'ft_';

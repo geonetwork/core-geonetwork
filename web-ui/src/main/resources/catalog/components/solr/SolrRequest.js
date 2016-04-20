@@ -244,8 +244,15 @@
       function(params, any, solrParams) {
     return this.search_(
         angular.extend(this.requestParams.qParams, params),
-        any,
-        angular.extend(this.requestParams.solrParams, solrParams)
+        angular.extend(this.requestParams.solrParams, solrParams),
+        true
+    );
+  };
+
+  geonetwork.GnSolrRequest.prototype.affineSearch = function(params, any, solrParams) {
+    return this.search_(
+      angular.extend({}, this.requestParams.qParams, params),
+      angular.extend({}, this.requestParams.solrParams, solrParams)
     );
   };
 
