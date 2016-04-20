@@ -83,6 +83,25 @@
         };
       })
 
+/* filter to check if a value is an empty array, and if so, return param or empty string
+quite some of the gn json returns empty array if undefined or empty string was intended */
+.filter('empty', function() {
+        return function(input, alt) {
+          if (!alt) alt="";
+          if (!input) return alt;
+          if (angular.isArray(input)){
+            if (input[0]){
+              return input[0];
+            } else {
+              return alt;
+            }
+          } else {
+            return input;
+          }
+        };
+      })
+
+
       /* filter to split a string and grab the nth item
  (default splitter: '|', default item: 1st),
  used on {{metadata[n].type | split:',':0 }}*/

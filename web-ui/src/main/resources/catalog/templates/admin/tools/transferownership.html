@@ -15,7 +15,7 @@
       </tr>
       <tr data-ng-repeat="g in editorGroups | orderBy:'name'"
           data-ng-init="transfertList[g.id] = {sourceGroup: g.id};">
-        <td>{{g.label[lang]}}</td>
+        <td>{{g.label[lang]|empty:g.name}}</td>
         <td><select class="form-control"
                     data-ng-model="transfertList[g.id].targetGroup"
                     data-ng-options="g as g.label[lang] for g in groupinfo.targetGroup | orderBy:'name'">

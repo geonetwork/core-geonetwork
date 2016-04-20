@@ -535,6 +535,13 @@
               var params = gnUrlUtils.parseKeyValue(
                   options.metadata.split('?')[1]);
               var uuid = params.uuid || params.id;
+              if (!uuid) {
+                var res = new RegExp(/\#\/metadata\/(.*)/g).
+                    exec(options.metadata);
+                if (angular.isArray(res) && res.length == 2) {
+                  uuid = res[1];
+                }
+              }
               if (uuid) {
                 olLayer.set('metadataUuid', uuid);
               }
@@ -1513,7 +1520,7 @@
 
             defer.resolve(layer);
 
-            if (layer.get('metadataUrl')) {
+            if (layer.get('metadataUrl') && layer.get('metadataUuid')) {
 
               return gnSearchManagerService.gnSearch({
                 uuid: layer.get('metadataUuid'),
