@@ -168,7 +168,10 @@
               row: 0,
               spellcheck: 'true',
               'spellcheck.collateParam.q.op': 'AND',
-              'spellcheck.collate': 'true'
+              'spellcheck.collate': 'true',
+              'suggest': 'true',
+              'suggest.dictionary': 'mainSuggester',
+              'suggest.count': 20
             })
         );
       };
@@ -179,15 +182,31 @@
         return $http.get(url, {
         }).then(function(res) {
           // TODO: We may have more than one suggestions
-          var suggestions = res.data.spellcheck.suggestions[1] &&
+          var suggestions = res.data.suggest.mainSuggester,
+              spellchecks = res.data.spellcheck.suggestions[1] &&
                             res.data.spellcheck.suggestions[1].suggestion,
               collations = res.data.spellcheck.collations,
               data = [];
           if (suggestions) {
-            for (var i = 0; i < suggestions.length; i++) {
+            for (var p in suggestions) {
+              if (suggestions.hasOwnProperty(p)) {
+                var values = suggestions[p].suggestions;
+                for (var i = 0; i < values.length; i++) {
+                  data.push({
+                    value: values[i].term,
+                    label: values[i].term // TODO: Get count ?
+                              // + ' (' + spellchecks[i].freq + ')'
+                  });
+                }
+              }
+            }
+          }
+
+          if (spellchecks) {
+            for (var i = 0; i < spellchecks.length; i++) {
               data.push({
-                value: suggestions[i].word,
-                label: suggestions[i].word + ' (' + suggestions[i].freq + ')'
+                value: spellchecks[i].word,
+                label: spellchecks[i].word + ' (' + spellchecks[i].freq + ')'
               });
             }
           }
