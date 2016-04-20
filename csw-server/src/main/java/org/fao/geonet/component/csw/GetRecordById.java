@@ -33,7 +33,6 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
-import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -49,8 +48,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
 import java.util.Map;
-
-import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -106,16 +103,25 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 			throw new MissingParameterValueEx("id");
 
 		try {
-			while(ids.hasNext()) {
-                String uuid = ids.next().getText();
-                String cswServiceSpecificContraint = "+_uuid:\"" + uuid + "\"";
-                if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                    Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint with uuid): " + cswServiceSpecificContraint);
-
-                Pair<Element, Element> results = _searchController.search(context, 1, 1, ResultType.HITS, "csw",
-                    ElementSetName.BRIEF, null, Csw.FILTER_VERSION_1_1, null, null, null, 0, cswServiceSpecificContraint, null);
-                response.addContent(results.two());
+            StringBuilder query1 = new StringBuilder();
+            query1.append("+_uuid:(");
+            int count = 0;
+            while(ids.hasNext()) {
+                if (count > 0) {
+                    query1.append(" ");
+                }
+                final String uuid = ids.next().getText();
+                query1.append(uuid);
+                count++;
             }
+            query1.append(")");
+            String query = query1.toString();
+            if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint with uuid): " + query);
+
+            Pair<Element, Element> results = _searchController.search(context, 1, count, ResultType.HITS, "csw",
+                ElementSetName.BRIEF, null, Csw.FILTER_VERSION_1_1, null, null, null, 0, query, null);
+            response.addContent(results.two());
             return response;
 		} catch (Exception e) {
 			context.error("Raised : "+ e);
@@ -124,7 +130,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 		}
 	}
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
 	public Element adaptGetRequest(Map<String, String> params)
 	{
