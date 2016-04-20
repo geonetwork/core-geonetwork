@@ -861,26 +861,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 		}
 
 		Collection<Geometry> geometry = getGeometry(srvContext, request);
-		SpatialFilter spatialfilter = null;
-        if (geometry != null) {
-            if (_sm.getLogSpatialObject()) {
-                StringBuilder wkt = new StringBuilder();
-                for (Geometry geom : geometry) {
-                    wkt.append("geom:").append(geom.toText()).append("\n");
-                }
-                _geomWKT = wkt.toString();
-            }
-            spatialfilter = _sm.getSpatial().filter(_query, Integer.MAX_VALUE, geometry, request);
-        }
 
         Filter duplicateRemovingFilter = new DuplicateDocFilter(_query);
         Filter filter;
-        if (spatialfilter == null) {
-            filter = duplicateRemovingFilter;
-        } else {
-            Filter[] filters = new Filter[]{duplicateRemovingFilter, spatialfilter};
-            filter = new ChainedFilter(filters, ChainedFilter.AND);
-        }
+        filter = duplicateRemovingFilter;
 
         _filter = new CachingWrapperFilter(filter);
 
