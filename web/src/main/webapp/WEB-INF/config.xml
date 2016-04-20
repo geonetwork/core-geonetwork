@@ -56,13 +56,13 @@
     </gui>
 
     <!-- no privileges to access the service -->
-    <error id="service-not-allowed" sheet="../xslt/common/error-xml.xsl" statusCode="403"/>
+    <error id="service-not-allowed" sheet="../xslt/error/error-xml.xsl" statusCode="403"/>
 
     <!-- data in upload too big -->
-    <error id="file-upload-too-big" sheet="../xslt/common/error-xml.xsl"/>
+    <error id="file-upload-too-big" sheet="../xslt/error/error-xml.xsl"/>
 
     <!-- general error -->
-    <error sheet="../xslt/common/error-xml.xsl"/>
+    <error sheet="../xslt/error/error-xml.xsl"/>
   </default>
 
   <!-- ====================================================================== -->
