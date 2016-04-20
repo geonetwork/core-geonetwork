@@ -130,7 +130,7 @@ public class SolrSearchController implements ISearchController {
 
     private String convertCswFilter(Element xml, String filterVersion) {
         String result = CswFilter2Solr.translate(parseFilter(xml, filterVersion), fieldMapper);
-        if (!result.contains("_isTemplate:")) {
+        if (result != null && !result.contains("_isTemplate:")) {
             result += " AND (_isTemplate:n)";
         }
         return result;
