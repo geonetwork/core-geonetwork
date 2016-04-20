@@ -22,106 +22,79 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 <geonet>
-	<general>
-		<!-- Size must be in megabyte (integer), 100MB by default -->
-		<maxUploadSize>100</maxUploadSize>
-		<uploadDir>./data/tmp</uploadDir>
-		<debug>true</debug>
-	</general>
+  <general>
+    <!-- Size must be in megabyte (integer), 100MB by default -->
+    <maxUploadSize>100</maxUploadSize>
+    <uploadDir>./data/tmp</uploadDir>
+    <debug>true</debug>
+  </general>
 
-	<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
 
-	<default>
-		<service>home</service>
-		<!-- the following service is called if there is an exception raised
-			during the initialization of resources or
-			the appHandler org.fao.geonet.Geonetwork
-		-->
-		<startupErrorService>error</startupErrorService>
-		<language>eng</language>
-		<localized>true</localized>
-		<contentType>text/html; charset=UTF-8</contentType>
+  <default>
+    <service>home</service>
+    <!-- the following service is called if there is an exception raised
+            during the initialization of resources or
+            the appHandler org.fao.geonet.Geonetwork
+        -->
+    <startupErrorService>error</startupErrorService>
+    <language>eng</language>
+    <localized>true</localized>
+    <contentType>text/html; charset=UTF-8</contentType>
 
-		<gui>
-			<call name="session" class="jeeves.guiservices.session.Get" />
+    <gui>
+      <call name="session" class="jeeves.guiservices.session.Get"/>
 
       <!-- TODO: env and systemConfig are similar. Env is only
       the system node with an extra readonly element. Combine the 2.
       -->
-		  <call name="env" class="org.fao.geonet.guiservices.util.Env" />
-		  <call name="systemConfig" class="org.fao.geonet.services.config.Get" />
+      <call name="env" class="org.fao.geonet.guiservices.util.Env"/>
+      <call name="systemConfig" class="org.fao.geonet.services.config.Get"/>
 
-			<!-- this service adds labels and codelists from all schemas -->
-			<call name="schemas" class="org.fao.geonet.guiservices.schemas.GetSchemaInfo" />
+      <!-- this service adds labels and codelists from all schemas -->
+      <call name="schemas" class="org.fao.geonet.guiservices.schemas.GetSchemaInfo"/>
     </gui>
 
-		<!-- no privileges to access the service -->
-		<error id="service-not-allowed" sheet="../xslt/common/error-xml.xsl" statusCode="403"/>
+    <!-- no privileges to access the service -->
+    <error id="service-not-allowed" sheet="../xslt/common/error-xml.xsl" statusCode="403"/>
 
-		<!-- data in upload too big -->
-		<error id="file-upload-too-big" sheet="../xslt/common/error-xml.xsl"/>
+    <!-- data in upload too big -->
+    <error id="file-upload-too-big" sheet="../xslt/common/error-xml.xsl"/>
 
-		<!-- general error -->
-		<error sheet="../xslt/common/error-xml.xsl"/>
-	</default>
+    <!-- general error -->
+    <error sheet="../xslt/common/error-xml.xsl"/>
+  </default>
 
-	<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
 
-	<appHandler class="org.fao.geonet.Geonetwork">
-		<param name="licenseDir" value="WEB-INF/licenses" />
-		<param name="summaryConfig" value="WEB-INF/config-summary.xml" />
-		<param name="luceneConfig" value="WEB-INF/config-lucene.xml" />
+  <appHandler class="org.fao.geonet.Geonetwork">
+    <!-- Preferred schema parameter is used on import
+            when a ZIP or MEF file is imported with more than one
+            xml files. For example, export produce one file for
+            iso19139 and on file for the ISO profil (eg. fra, che).
 
-		<!-- Preferred schema parameter is used on import
-			when a ZIP or MEF file is imported with more than one
-			xml files. For example, export produce one file for
-			iso19139 and on file for the ISO profil (eg. fra, che).
+            Recommanded value is iso19139 if user is not
+            interested for having metadata in a specific
+            ISO profil.
+        -->
+    <param name="preferredSchema" value="iso19139"/>
+    <param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml"/>
 
-			Recommanded value is iso19139 if user is not
-			interested for having metadata in a specific
-			ISO profil.
-		-->
-		<param name="preferredSchema" value="iso19139" />
-		<param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml" />
+    <param name="DBHeartBeatEnabled" value="false"/>
+    <param name="DBHeartBeatInitialDelaySeconds" value="20"/>
+    <param name="DBHeartBeatFixedDelaySeconds" value="20"/>
 
-		<!-- search statistics stuff -->
-		<!-- true to log into DB WKT of spatial objects involved in a search operation
-		CAUTION ! this can lead to HUGE database and CSV export if detailed geo objects are used:
-		several Gb for instance...-->
-		<param name="statLogSpatialObjects" value="false" />
-		<param name="statLogAsynch" value="true" />
-		<!-- The list of Lucene term fields to exlucde from log, to avoid storing unecessary information -->
-		<param name="statLuceneTermsExclude" value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_isTemplate,_locale,_owner,_groupOwner,_dummy,type" />
+    <!-- Define if the schema catalog should be updated on startup.
+        Default is true. -->
+    <param name="createOrUpdateSchemaCatalog" value="true"/>
 
-		<!-- The maximum number of writes in a transaction on the spatial index
+    <!-- Define the class to use when metadata status change
+        -->
+    <param name="statusActionsClass" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
+  </appHandler>
 
-			Set to 1 forces the spatialIndexWriter to commit after each spatial
-			feature is written. Set to a large number and commits are delayed until
-			that number of spatial features is written (this should be faster than
-			committing after each write). Be aware that setting this
-			number to anything other than 1 can cause problems with indexing
-			if the connection to the database is closed whilst GeoNetwork is running
-			(eg. if the db admin shuts the database for maintenance reasons).
-		-->
-		<param name="maxWritesInTransaction" value="1" />
+  <services package="org.fao.geonet"/>
 
-        <param name="DBHeartBeatEnabled" value="false"/>
-        <param name="DBHeartBeatInitialDelaySeconds" value="20"/>
-        <param name="DBHeartBeatFixedDelaySeconds" value="20"/>
-
-		<!-- Define if the schema catalog should be updated on startup.
-		Default is true. -->
-		<param name="createOrUpdateSchemaCatalog" value="true"/>
-
-		<!-- Define the class to use when metadata status change
-		-->
-        <param name="statusActionsClass" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
-	</appHandler>
-
-	<!-- ====================================================================== -->
-
-	<services package="org.fao.geonet">
-	</services>
 
   <include>config/config-service-xml-api.xml</include>
   <include>config/config-service-search.xml</include>
@@ -140,34 +113,12 @@
   <include>config/config-service-admin-schematron.xml</include>
   <include>config/config-service-batch.xml</include>
   <include>config/config-service-admin-notification.xml</include>
-  <include>config/config-service-admin-index.xml</include>
   <include>config/config-service-admin-io.xml</include>
   <include>config/config-service-admin-logo.xml</include>
   <include>config/config-service-admin-user-and-group.xml</include>
   <include>config/config-service-admin-geoserver-publication.xml</include>
   <include>config/config-service-admin-transfert-privileges.xml</include>
   <include>config/config-service-admin-formatter.xml</include>
-  <include>config/config-service-csw.xml</include>
-  <include>config/config-service-csw-virtual.xml</include>
-
-  <include>config/config-service-thesaurus.xml</include>
-  <include>config/config-service-region.xml</include>
-
-  <include>config/config-service-admin.xml</include>
-    <include>config/config-service-admin-harvesting.xml</include>
-
-    <include>config/config-service-admin-schema.xml</include>
-    <include>config/config-service-admin-schematron.xml</include>
-    <include>config/config-service-batch.xml</include>
-
-    <include>config/config-service-admin-notification.xml</include>
-    <include>config/config-service-admin-index.xml</include>
-    <include>config/config-service-admin-io.xml</include>
-    <include>config/config-service-admin-logo.xml</include>
-    <include>config/config-service-admin-user-and-group.xml</include>
-    <include>config/config-service-admin-geoserver-publication.xml</include>
-    <include>config/config-service-admin-transfert-privileges.xml</include>
-    <include>config/config-service-admin-formatter.xml</include>
   <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>
   <include>config/config-service-sitemap.xml</include>

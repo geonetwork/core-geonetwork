@@ -24,9 +24,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.apache.lucene.search.Filter;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.jdom.Element;
@@ -36,6 +33,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Base interface for the search (Lucene or Solr).
@@ -56,10 +56,6 @@ public interface ISearchManager {
                MetadataType metadataType, String root, boolean forceRefreshReaders)
             throws Exception;
 
-    IndexAndTaxonomy getNewIndexReader(String preferredLang) throws IOException, InterruptedException;
-
-    IndexAndTaxonomy getIndexReader(String preferredLang, long versionToken) throws IOException;
-
     /**
      * Force the index to wait until all changes are processed and the next reader obtained will get the latest data.
      *
@@ -67,7 +63,6 @@ public interface ISearchManager {
      */
     void forceIndexChanges() throws IOException;
 
-    void releaseIndexReader(IndexAndTaxonomy reader) throws InterruptedException, IOException;
 
 
     /**
@@ -100,11 +95,4 @@ public interface ISearchManager {
      * @throws Exception
      */
     void delete(List<String> txts) throws Exception;
-
-
-
-    interface ISpatial {
-        Filter filter(org.apache.lucene.search.Query query, int numHits, Element filterExpr, String filterVersion)
-                throws Exception;
-    }
 }

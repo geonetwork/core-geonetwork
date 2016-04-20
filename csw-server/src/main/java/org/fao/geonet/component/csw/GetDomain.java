@@ -31,10 +31,10 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.OperationNotSupportedEx;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
-import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.utils.Log;
@@ -47,6 +47,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import jeeves.server.context.ServiceContext;
 
@@ -163,7 +165,7 @@ public class GetDomain extends AbstractOperation implements CatalogService {
             ISearchManager sm = gc.getBean(ISearchManager.class);
 
             String query = "";
-            String groupsQuery = CatalogSearcher.getGroupsSolrQuery(context);
+            String groupsQuery = getGroupsSolrQuery(context);
             if (StringUtils.isNotEmpty(cswServiceSpecificConstraint)) {
                 String constraintQuery = "";
                 // TODO SOLR-MIGRATION
@@ -209,6 +211,23 @@ public class GetDomain extends AbstractOperation implements CatalogService {
         }
         return domainValuesList;
 
+    }
+
+    public static String getGroupsSolrQuery(ServiceContext context) throws Exception {
+        AccessManager am = context.getBean(AccessManager.class);
+        Set<Integer> hs = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
+
+
+        String q = hs.stream().map(Object::toString).collect(Collectors.joining("\" \"", "(\"", "\")"));;
+
+        // If user is authenticated, add the current user to the query because
+        // if an editor unchecked all
+        // visible options in privileges panel for all groups, then the metadata
+        // records could not be found anymore, even by its editor.
+        if (context.getUserSession().getUserId() != null) {
+            q += " _owner:" + context.getUserSession().getUserId();
+        }
+        return q;
     }
 
     private List<Element> handleParameterName(String[] parameterNames) throws CatalogException {

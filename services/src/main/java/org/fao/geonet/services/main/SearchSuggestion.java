@@ -62,8 +62,9 @@ import java.util.*;
  *
  * OpenSearch suggestion specification:
  * http://www.opensearch.org/Specifications/OpenSearch/Extensions/Suggestions/1.0
- *
+ * TODO: SOLR-MIGRATION-TO-DELETE
  */
+@Deprecated
 public class SearchSuggestion implements Service {
     static final String RECORDS_FIELD_VALUES = "RECORDS_FIELD_VALUES";
 
@@ -85,73 +86,9 @@ public class SearchSuggestion implements Service {
     private static final String SUMMARY_FACET_CONFIG_KEY = "suggestions";
 
     /**
-     * Max number of term's values to look in the index. For large catalogue
-     * this value should be increased in order to get better results. If this
-     * value is too high, then looking for terms could take more times. The use
-     * of good analyzer should allow to reduce the number of useless values like
-     * (a, the, ...).
-     */
-    private Integer _maxNumberOfTerms;
-
-    /**
-     * Minimum frequency for a term value to be proposed in suggestion.
-     */
-    private Integer _threshold;
-
-    /**
-     * Default field to search in. any is full-text search field.
-     */
-    private String _defaultSearchField = "any";
-
-    private ServiceConfig _config;
-
-    enum SORT_BY_OPTION {
-        FREQUENCY, ALPHA, STARTSWITHFIRST, STARTSWITHONLY
-    }
-
-    /**
-     * Sort a TermFrequency collection by placing element starting with prefix on top
-     * then alphabetical order.
-     */
-    public static class StartsWithComparator implements Comparator<TermFrequency> {
-        private String prefix = "";
-
-        public StartsWithComparator(String prefix) {
-            this.prefix = prefix;
-        }
-
-        public int startsWith(String str) {
-            return StringUtils.startsWithIgnoreCase(str, prefix) ? -1 : 1;
-        }
-
-        public int compare(TermFrequency term1, TermFrequency term2) {
-            return ComparisonChain.start()
-                    .compare(startsWith(term1.getTerm()), startsWith(term2.getTerm()))
-                    .compare(term1.getTerm(), term2.getTerm()).result();
-        }
-    }
-
-    /**
-     * Sort a TermFrequency collection by decreasing frequency and alphabetical order
-     */
-    public static class FrequencyComparator implements Comparator<TermFrequency> {
-        public int compare(TermFrequency term1, TermFrequency term2) {
-            return ComparisonChain.start()
-                    .compare(term2.getFrequency(), term1.getFrequency())
-                    .compare(term1.getTerm(), term2.getTerm())
-                    .result();
-        }
-    }
-
-    /**
      * Set default parameters
      */
     public void init(Path appPath, ServiceConfig config) throws Exception {
-        _threshold = Integer.valueOf(config.getValue(PARAM_THRESHOLD));
-        String maxNumberOfTerms = config.getValue(CONFIG_PARAM_MAX_NUMBER_OF_TERMS);
-        _maxNumberOfTerms = Integer.valueOf(maxNumberOfTerms);
-        _defaultSearchField = config.getValue(CONFIG_PARAM_DEFAULT_SEARCH_FIELD);
-        _config = config;
     }
 
     /**
@@ -159,99 +96,6 @@ public class SearchSuggestion implements Service {
      */
     public Element exec(Element params, ServiceContext context)
             throws Exception {
-        // The field to search in
-        String fieldName = Util.getParam(params, PARAM_FIELD, _defaultSearchField);
-        // The value to search for
-        String searchValue = Util.getParam(params, PARAM_Q, "");
-        final String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
-
-        // Search index term and/or index records
-        String origin = Util.getParam(params, PARAM_ORIGIN, "");
-        // The max number of terms to return - only apply while searching terms
-        int maxNumberOfTerms = Util.getParam(params, PARAM_MAX_NUMBER_OF_TERMS,
-                _maxNumberOfTerms);
-        // The minimum frequency for a term value to be proposed in suggestion -
-        // only apply while searching terms
-        int threshold = Util.getParam(params, PARAM_THRESHOLD, _threshold);
-
-        String sortBy = Util.getParam(params, PARAM_SORT_BY, SORT_BY_OPTION.FREQUENCY.toString());
-
-        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
-            Log.debug(Geonet.SEARCH_ENGINE,
-                    "Autocomplete on field: '" + fieldName + "'" +
-                    "\tsearching: '" + searchValue + "'" +
-                    "\tthreshold: '" + threshold + "'" +
-                    "\tmaxNumberOfTerms: '" + maxNumberOfTerms + "'" +
-                    "\tsortBy: '" + sortBy + "'" +
-                    "\tfrom: '" + origin + "'");
-        }
-
-        GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
-        SearchManager sm = gc.getBean(SearchManager.class);
-        // The response element
-        Element suggestionsResponse = new Element(ELEM_ITEMS);
-
-        TreeSet<SearchManager.TermFrequency> listOfSuggestions;
-
-        // Starts with element first
-        if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.STARTSWITHFIRST.toString())) {
-            listOfSuggestions = new TreeSet<>(new StartsWithComparator(searchValueWithoutWildcard));
-        } else if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.ALPHA.toString())) {
-            // Sort by alpha and frequency
-            listOfSuggestions = new TreeSet<>();
-        } else {
-            listOfSuggestions = new TreeSet<>(new FrequencyComparator());
-        }
-
-        // If a field is stored, field values could be retrieved from the index
-        // The main advantage is that only values from records visible to the
-        // user are returned, because the search filter the results first.
-        if (origin.equals("") || origin.equals(RECORDS_FIELD_VALUES)) {
-            LuceneSearcher searcher = (LuceneSearcher) sm.newSearcher(Geonet.File.SEARCH_LUCENE);
-
-            searcher.getSuggestionForFields(context, fieldName, searchValue, _config, maxNumberOfTerms, threshold, listOfSuggestions);
-        }
-        // No values found from the index records field value ...
-        if (origin.equals(INDEX_TERM_VALUES)
-                || (listOfSuggestions.size() == 0 && origin.equals(""))) {
-            // If a field is not stored, field values could not be retrieved
-            // In that case search the index
-            listOfSuggestions.addAll(sm.getTermsFequency(
-                    fieldName, searchValue, maxNumberOfTerms, threshold, context));
-        }
-
-        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
-            Log.debug(Geonet.SEARCH_ENGINE,
-                    "  Found: " + listOfSuggestions.size()
-                            + " suggestions from " + origin + ".");
-        }
-
-        suggestionsResponse.setAttribute(new Attribute(PARAM_ORIGIN, origin));
-
-        Collection<TermFrequency> collectionOfSuggestions;
-        // Filter collection if sortBy STARTSWITHONLY is set
-        if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.STARTSWITHONLY.toString())) {
-            collectionOfSuggestions = Collections2.filter(listOfSuggestions, new Predicate<TermFrequency>() {
-                @Override
-                public boolean apply(TermFrequency term) {
-                    return StringUtils.startsWithIgnoreCase(term.getTerm(), searchValueWithoutWildcard);
-                }
-            });
-        }
-        else {
-            collectionOfSuggestions = listOfSuggestions;
-        }
-
-        for (TermFrequency suggestion : collectionOfSuggestions) {
-            Element md = new Element(ELEM_ITEM);
-            // md.setAttribute("term", suggestion.replaceAll("\"",""));
-            md.setAttribute(ATT_TERM, suggestion.getTerm());
-            md.setAttribute(ATT_FREQ, suggestion.getFrequency() + "");
-            suggestionsResponse.addContent(md);
-        }
-
-        return suggestionsResponse;
-
+        throw new RuntimeException("Use Solr suggestion service");
     }
 }

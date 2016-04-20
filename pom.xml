@@ -543,36 +543,6 @@
         <version>1.2.1</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-core</artifactId>
-        <version>${lucene.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-analyzers-common</artifactId>
-        <version>${lucene.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-misc</artifactId>
-        <version>${lucene.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-queries</artifactId>
-        <version>${lucene.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-queryparser</artifactId>
-        <version>${lucene.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-facet</artifactId>
-        <version>${lucene.version}</version>
-      </dependency>
-      <dependency>
         <groupId>pcj</groupId>
         <artifactId>pcj</artifactId>
         <version>1.2</version>
@@ -1186,7 +1156,6 @@
   <properties>
     <jetty.version>8.1.9.v20130131</jetty.version>
     <geotools.version>14.0</geotools.version>
-    <lucene.version>4.9.0</lucene.version>
 
     <solr.version>6.0.0</solr.version>
     <solr.port>8984</solr.port>

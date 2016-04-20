@@ -112,4 +112,6 @@ public class IndexFields {
     public static final String RESOURCE_ABSTRACT = "resourceAbstract";
     public static final String RESOURCE_TYPE = "resourceType";
     public static final String ROOT = "_root";
+    public static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
+    public static final String INDEXING_ERROR_FIELD = "_indexingError";
 }

@@ -129,29 +129,37 @@ public class SolrSearchManager implements ISearchManager {
             Log.error(Geonet.INDEX_ENGINE,
                     String.format("Indexing stylesheet contains errors: %s \n\t Marking the metadata as _indexingError=1 in index",
                             e.getMessage()));
-            doc.addField(SearchManagerUtils.INDEXING_ERROR_FIELD, "1");
-            doc.addField(SearchManagerUtils.INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage());
+            doc.addField(IndexFields.INDEXING_ERROR_FIELD, "1");
+            doc.addField(IndexFields.INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage());
             StringBuilder sb = new StringBuilder();
-            SearchManagerUtils.allText(metadata, sb);
+            allText(metadata, sb);
             doc.addField("_text_", sb.toString());
         }
     }
 
-    private static void addMoreFields(SolrInputDocument doc, List<Element> fields) {
-        for (Element field : fields) {
-            doc.addField(field.getAttributeValue(SearchManager.LuceneFieldAttribute.NAME.toString()),
-                    field.getAttributeValue(SearchManager.LuceneFieldAttribute.STRING.toString()));
+
+    private static void allText(Element metadata, StringBuilder sb) {
+        String text = metadata.getText().trim();
+        if (text.length() > 0) {
+            if (sb.length() > 0)
+                sb.append(" ");
+            sb.append(text);
+        }
+        @SuppressWarnings("unchecked")
+        List<Element> children = metadata.getChildren();
+        for (Element aChildren : children) {
+            allText(aChildren, sb);
         }
     }
 
-    @Override
-    public IndexAndTaxonomy getNewIndexReader(String preferredLang) throws IOException, InterruptedException {
-        return getIndexReader(preferredLang, 0);
-    }
+    public static final String FIELDNAME = "name";
+    public static final String FIELDSTRING = "string";
 
-    @Override
-    public IndexAndTaxonomy getIndexReader(String preferredLang, long versionToken) throws IOException {
-        throw new NotImplementedException();
+    private static void addMoreFields(SolrInputDocument doc, List<Element> fields) {
+        for (Element field : fields) {
+            doc.addField(field.getAttributeValue(FIELDNAME),
+                    field.getAttributeValue(FIELDSTRING));
+        }
     }
 
     @Override
@@ -163,10 +171,6 @@ public class SolrSearchManager implements ISearchManager {
         }
     }
 
-    @Override
-    public void releaseIndexReader(IndexAndTaxonomy reader) throws InterruptedException, IOException {
-        //useless for this implementation
-    }
 
     @Override
     public boolean rebuildIndex(ServiceContext context, boolean xlinks, boolean reset, boolean fromSelection) throws Exception {
