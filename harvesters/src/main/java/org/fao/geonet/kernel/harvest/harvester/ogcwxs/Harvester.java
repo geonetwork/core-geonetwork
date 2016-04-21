@@ -816,7 +816,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 if (parent != null) {
                     List<?> children = parent.getChildren();
                     if (children != null) {
-                        return Integer.toString(children.indexOf(layer));
+                        int index = children.indexOf(layer);
+                        if (index >= 0) {
+                            return Integer.toString(index);
+                        }
                     }
                 }
 
