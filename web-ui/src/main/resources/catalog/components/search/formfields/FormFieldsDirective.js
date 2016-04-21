@@ -769,8 +769,8 @@
               dragboxInteraction.on('boxend', function() {
                 dragboxInteraction.active = false;
                 var g = dragboxInteraction.getGeometry().clone();
-                var geom = g.clone()
-              .transform(scope.map.getView().getProjection(), scope.crs);
+                var geom = g.transform(scope.map.getView().getProjection(),
+                    scope.crs);
                 var extent = geom.getExtent();
                 scope.extent = extent.map(function(coord) {
                   return Math.round(coord * 10000) / 10000;
