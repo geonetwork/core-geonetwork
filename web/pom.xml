@@ -1163,6 +1163,22 @@
       </properties>
     </profile>
     <profile>
+      <id>aabt_local</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>dev</value>
+        </property>
+      </activation>
+      <properties>
+        <env>dev</env>
+        <server>aabt_local</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
+      </properties>
+    </profile>
+
+    <profile>
       <id>titellus</id>
       <activation>
         <property>
