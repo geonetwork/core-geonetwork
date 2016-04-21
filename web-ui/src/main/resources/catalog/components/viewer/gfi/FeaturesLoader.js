@@ -108,7 +108,9 @@
           [new ol.Feature(props)] : [];
       } else {
         var format = new ol.format.WMSGetFeatureInfo();
-        this.features = format.readFeatures(response.data);
+        this.features = format.readFeatures(response.data, {
+          featureProjection: map.getView().getProjection()
+        });
       }
 
       return this.features;
@@ -130,28 +132,24 @@
       if (!features || features.length == 0) {
         return;
       }
-      var columns = Object.keys(
-        features[0].getProperties()
-      ).filter(function(x) {
-        return exclude.indexOf(x) == -1;
-      }).map(function(x) {
-        return {
-          field        : x,
-          title        : x,
-          titleTooltip : x,
-          sortable     : true
-        };
+      var columns = Object.keys(features[0].getProperties()).map(function(x) {
+          return {
+            field        : x,
+            title        : x,
+            titleTooltip : x,
+            sortable     : true,
+            visible      : exclude.indexOf(x) == -1
+          };
       });
 
       return  {
         columns: columns,
         data: features.map(function(f) {
           var obj = f.getProperties();
-          exclude.forEach(function(key, value) {
-            delete obj[key];
-          });
           Object.keys(obj).forEach(function(key){
-            obj[key] = $filter('linky')(obj[key], '_blank');
+            if (exclude.indexOf(key) == -1) {
+              obj[key] = $filter('linky')(obj[key], '_blank');
+            }
           });
           return obj;
         })
@@ -165,6 +163,18 @@
       return 0;
     }
     return this.features.length;
+  };
+
+  geonetwork.GnFeaturesGFILoader.prototype.getFeatureFromRow = function(row) {
+    var geoms = [ 'the_geom', 'thegeom' ];
+    for (var i=0 ; i<2 ; i++) {
+      if (row[geoms[i]] instanceof ol.geom.Geometry) {
+        return new ol.Feature();
+        // return new ol.Feature({ // FIXME WMS-GFI doesnt guess dataProjection
+        //   geometry: row[geoms[i]]
+        // });
+      }
+    }
   };
 
   /**
@@ -264,7 +274,7 @@
     return this.count;
   };
 
-  geonetwork.GnFeaturesSOLRLoader.prototype.getGeomFromRow = function(row) {
+  geonetwork.GnFeaturesSOLRLoader.prototype.getFeatureFromRow = function(row) {
     var geom = row[this.solrObject.geomField.idxName];
     if(angular.isArray(geom)) {
       geom = geom[0];
