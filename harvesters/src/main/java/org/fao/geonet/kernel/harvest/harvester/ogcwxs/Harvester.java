@@ -590,10 +590,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                         }
                         else {
                             /*
-                             * use the layers hash code to create a unique but reproducible name
+                             * use the layers hash code to create a unique but reproducible name.
+                             * this is a fallback for services that do not provide a gml:id
                              */
                             log.warning("Could not derive layer name from " + layer);
-                            String generatedName = layer.getName() + "_" + layer.hashCode();
+                            String generatedName = layer.getName() + "_" + resolveLayerPosition(layer);
                             reg.name = Sha1Encoder.encodeString(generatedName);
                         }
 		}
@@ -809,6 +810,18 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		return reg;
 	}
 	
+        
+        private String resolveLayerPosition(Element layer) {
+                Element parent = layer.getParentElement();
+                if (parent != null) {
+                    List<?> children = parent.getChildren();
+                    if (children != null) {
+                        return Integer.toString(children.indexOf(layer));
+                    }
+                }
+
+                return Integer.toString(layer.hashCode());
+        }
 
 	/** 
      * Call GeoNetwork service to load thumbnails and create small and 
@@ -1001,7 +1014,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	private static final String GETMAP = "GetMap";
     private static final String IMAGE_FORMAT = "image/png";
     private List<WxSLayerRegistry> layersRegistry = new ArrayList<WxSLayerRegistry>();
-	
+
 	private static class WxSLayerRegistry {
 		public String uuid;
 		public String id;
