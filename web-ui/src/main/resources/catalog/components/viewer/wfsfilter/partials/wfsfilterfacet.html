@@ -31,9 +31,16 @@
   </div>
 
   <div data-ng-show="isFeaturesIndexed">
+
+    <!--Facet count-->
+    <div data-ng-if="isFeaturesIndexed" class="count text-center"
+         data-ng-if="showCount">
+      {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate="">features</span>
+    </div>
+
     <!--search input-->
     <div class="gn-layertree-filter">
-      <span class="fa fa-times-circle clear"
+      <span class="fa fa-times-circle clear" ng-if="searchInput != ''"
             data-ng-click="clearInput()"
             title="{{'clear' | translate}}"></span>
       <input type="text"
@@ -43,17 +50,6 @@
              data-ng-model-options="{ debounce: 400 }"
              class="layerfilter form-control input-sm"
              placeholder="{{'filter'|translate}}"/>
-      <label data-ng-show="map" data-ng-show="source.getFeatures().length > 0">
-        <input type="checkbox"
-               data-ng-model="isHeatMapVisible"/>
-        <span data-translate="">displayHeatMap</span>
-      </label>
-    </div>
-
-    <!--Facet count-->
-    <div data-ng-if="isFeaturesIndexed" class="count"
-         data-ng-if="showCount">
-      {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate="">features</span>
     </div>
 
     <!--Facet fields-->
@@ -91,20 +87,19 @@
       </div>
     </div>
 
-
     <!--admin buttons-->
     <div class="btn-group dropup">
-      <button class="btn btn-default btn-xs"
+      <button class="btn btn-default"
               data-gn-click-and-spin="filterWMS()">
         <i class="fa fa-filter"></i>&nbsp;
         <span data-translate="">filter</span>
       </button>
-      <button class="btn btn-default btn-xs"
+      <button class="btn btn-default"
               ng-click="showTable()">
         <i class="fa fa-table"></i>&nbsp;
         <span data-translate="">table</span>
       </button>
-      <button type="button" class="btn btn-default btn-xs dropdown-toggle"
+      <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-cog"></i>
         <span class="caret"></span>
@@ -142,5 +137,15 @@
         </li>
       </ul>
     </div>
+
+
+    <div>
+      <label data-ng-show="map" data-ng-show="source.getFeatures().length > 0">
+        <input type="checkbox"
+        data-ng-model="isHeatMapVisible"/>
+        <span data-translate="">displayHeatMap</span>
+      </label>
+    </div>
   </div>
+
 </form>
