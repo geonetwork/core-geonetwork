@@ -63,26 +63,30 @@
             height: 300,
             sortable: true,
             onClickRow: function(row, elt) {
-              var feature = this.loader.getGeomFromRow(row);
-              var source = this.featuresTablesCtrl.fOverlay.getSource();
-              source.clear();
-              source.addFeature(feature);
+              var feature = this.loader.getFeatureFromRow(row);
+                var source = this.featuresTablesCtrl.fOverlay.getSource();
+                source.clear();
+              if (feature && feature.getGeometry()) {
+                source.addFeature(feature);
+              }
             }.bind(this),
             onDblClickRow: function(row, elt) {
               if (!this.map) {
                 return;
               }
-              var feature = this.loader.getGeomFromRow(row);
-              var pan = ol.animation.pan({
-                duration: 500,
-                source: this.map.getView().getCenter()
-              });
-              this.map.beforeRender(pan);
-              this.map.getView().fit(
-                feature.getGeometry(),
-                this.map.getSize(),
-                { maxZoom: 17 }
-              );
+              var feature = this.loader.getFeatureFromRow(row);
+              if (feature && feature.getGeometry()) {
+                var pan = ol.animation.pan({
+                  duration: 500,
+                  source: this.map.getView().getCenter()
+                });
+                this.map.beforeRender(pan);
+                this.map.getView().fit(
+                  feature.getGeometry(),
+                  this.map.getSize(),
+                  { maxZoom: 17 }
+                );
+              }
 
             }.bind(this)
           },bstConfig));
