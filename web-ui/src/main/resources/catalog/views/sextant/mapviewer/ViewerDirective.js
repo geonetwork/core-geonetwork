@@ -124,7 +124,7 @@
                     iElement.find('.panel-wps').remove();
                   }
                   if (tab == 'wfsfilter') {
-                    iElement.find('.sxt-wfsfilter-panel').remove();
+                    iElement.find('[name="wfsFilterForm"]').remove();
                   }
                   scope.active.layersTools = false;
                   scope.layerTabs[tab].active = false;
