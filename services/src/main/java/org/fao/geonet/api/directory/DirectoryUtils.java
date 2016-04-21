@@ -266,12 +266,14 @@ public class DirectoryUtils {
                                 numberOfEntries, uuid
                         ));
                     }
+                    // TODO: Add support for other type of subtemplate
                     String searchIndexField = "email";
                     Element subTemplateElement = null;
                     // Search in DB by UUID matching entry UUID
                     if (StringUtils.isEmpty(searchIndexField)) {
                         Metadata subTemplate = metadataRepository.findOneByUuid(uuid);
                         if (subTemplate != null) {
+                            uuid = subTemplate.getUuid();
                             subTemplateElement = subTemplate.getXmlData(false);
                         }
                     } else {
