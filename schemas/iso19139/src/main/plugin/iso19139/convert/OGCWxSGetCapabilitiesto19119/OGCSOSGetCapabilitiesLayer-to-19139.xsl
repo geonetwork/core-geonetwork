@@ -58,7 +58,7 @@
 
 	<!-- ============================================================================= -->
 	
-	<xsl:template match="sos:Capabilities[//sos:ObservationOffering/gml:name=$Name]">
+	<xsl:template match="sos:Capabilities[//sos:ObservationOffering/gml:name=$Name | //sos:ObservationOffering/@gml:id=$Name]">
 
 		<MD_Metadata>
 
