@@ -36,15 +36,16 @@
                 ng-model="layer.opacity"/><br/>
        </li>
 
-       <li class="list-group-item" data-ng-if="member.get('advanced')"><a href="" data-ng-click="setNCWMS(member)">
+       <!--NCWMS-->
+       <li class="list-group-item" data-ng-if="layer.get('advanced')"><a href="" data-ng-click="setNCWMS(layer)">
          <span translate="">ncwms</span>
        </a></li>
 
-       <!--<li class="list-group-item" data-ng-if="process && process.length == 1"><a href="" data-ng-click="showWPS(process[0])">
+       <!--WPS-->
+       <li class="list-group-item" data-ng-if="process && process.length == 1"><a href="" data-ng-click="showWPS(process[0])">
          <span translate="">process</span>
-       </a></li>-->
-
-      <!-- <li class="list-group-item btn-group" ng-if="process && process.length > 1 ">
+       </a></li>
+       <li class="list-group-item btn-group" ng-if="process && process.length > 1 ">
          <div class="btn-link dropdown-toggle" data-toggle="dropdown">
            <span translate="">process</span>&nbsp;
            <span class="caret"></span>
@@ -54,7 +55,11 @@
          </ul>
        </li>
 
-       -->
+       <!--WFS Filter-->
+       <li class="list-group-item" data-ng-if="wfs"><a href="" data-ng-click="showWFSFilter()">
+         <span translate="">filter</span>
+       </a></li>
+
        <li class="list-group-item" data-gn-wfs-download="layer" data-map="map">
        </li>
 

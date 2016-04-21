@@ -239,7 +239,7 @@
         var md = l.get('md');
         if(md) {
           var linkGroup = md.getLinkGroup(l);
-          gnMap.feedLayerWithDownloads(l,linkGroup);
+          gnMap.feedLayerWithRelated(l,linkGroup);
         }
       });
 
@@ -286,7 +286,7 @@
                     }
                   }
                   layer.set('group', group);
-                  gnMap.feedLayerWithDownloads(layer, link.group);
+                  gnMap.feedLayerWithRelated(layer, link.group);
                   if(waitingLayers) waitingLayers.push(layer);
                   if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
 

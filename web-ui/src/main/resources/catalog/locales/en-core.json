@@ -279,5 +279,6 @@
     "ImportRecord": "Import new records",
     "directoryManager": "Manage directory",
     "typeOfRecord": "Type of record",
-    "load": "Load"
+    "load": "Load",
+    "solrAccessError": "Error during Solr access."
 }

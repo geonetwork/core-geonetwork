@@ -35,10 +35,17 @@
    * @description
    */
   module.directive('gnWfsFilterFacets', [
-    '$http', 'wfsFilterService', '$q', '$rootScope',
-    'gnSolrRequestManager', 'gnSolrService', 'ngeoDebounce',
+    '$http',
+    'wfsFilterService',
+    '$q',
+    '$rootScope',
+    'gnSolrRequestManager',
+    'gnSolrService',
+    'ngeoDebounce',
+    'gnFeaturesTableManager',
     function($http, wfsFilterService, $q, $rootScope,
-             gnSolrRequestManager, gnSolrService, ngeoDebounce) {
+             gnSolrRequestManager, gnSolrService, ngeoDebounce,
+             gnFeaturesTableManager) {
       return {
         restrict: 'A',
         replace: true,
@@ -69,9 +76,7 @@
           };
 
           // Get an instance of solr object
-          var solrObject =
-              gnSolrRequestManager.register('WfsFilter', 'facets');
-          scope.solrObject = solrObject;
+          var solrObject, geometry;
 
           var heatmapsRequest =
               gnSolrRequestManager.register('WfsFilter', 'heatmaps');
@@ -160,6 +165,13 @@
                   return appProfile;
                 }).catch (function() {});
 
+            solrObject =
+                gnSolrRequestManager.register('WfsFilter',
+                    scope.url + '#' + ftName);
+            scope.solrObject = solrObject;
+            scope.layer.set('solrObject', solrObject);
+
+
             scope.checkWFSServerUrl();
             scope.initSolrRequest();
 
@@ -196,7 +208,9 @@
                   solrObject.filteredDocTypeFieldsInfo, appProfile.fields);
               solrObject.initBaseParams();
             }
-            scope.resetFacets();
+            scope.resetFacets().then(function() {
+              solrObject.pushState();
+            });
           }
           function getDataModelLabel(fieldId) {
             for (var j = 0; j < scope.md.attributeTable.length; j++) {
@@ -231,7 +245,8 @@
               }
               appProfilePromise.then(loadFields);
             }, function(error) {
-              scope.status = error.statusText;
+              scope.status = error.data ? 'solrAccessError': error.statusText;
+              scope.statusTitle = error.statusText;
             });
           };
           scope.dropFeatures = function() {
@@ -290,7 +305,11 @@
               }
             });
 
-            solrObject.searchWithFacets(scope.output, scope.searchInput).
+            solrObject.searchWithFacets({
+              params: scope.output,
+              any: scope.searchInput,
+              geometry: geometry
+            }).
                 then(function(resp) {
                   scope.fields = resp.facets;
                   scope.count = resp.count;
@@ -305,8 +324,10 @@
 
           function refreshHeatmap() {
             if (scope.isFeaturesIndexed) {
-              heatmapsRequest.searchWithFacets(
-                  scope.output, scope.searchInput,
+              heatmapsRequest.searchWithFacets({
+                    params: scope.output,
+                    any: scope.searchInput
+                  },
                   gnSolrService.getHeatmapParams(scope.map)).
                   then(function(resp) {
                     scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
@@ -324,19 +345,17 @@
 
             // output structure to send to filter service
             scope.output = {};
-
             scope.searchInput = '';
-
+            scope.resetSLDFilters();
 
             // load all facet and fill ui structure for the list
-            solrObject.searchWithFacets(null, null).
+            return solrObject.searchWithFacets({}).
                 then(function(resp) {
                   scope.fields = resp.facets;
                   scope.count = resp.count;
                   refreshHeatmap();
                 });
 
-            scope.resetSLDFilters();
           };
 
           scope.resetSLDFilters = function() {
@@ -352,6 +371,7 @@
           scope.filterWMS = function() {
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
+            solrObject.pushState();
             if (sldConfig.filters.length > 0) {
               wfsFilterService.getSldUrl(sldConfig, scope.layer.get('url'),
                   ftName).success(function(sldURL) {
@@ -428,13 +448,13 @@
               extent = ol.proj.transformExtent(extent,
                   scope.map.getView().getProjection(), 'EPSG:4326');
 
-              solrObject.setGeometry([
+              geometry = [
                 extent[0], extent[2], extent[3], extent[1]
-              ].join(','));
+              ].join(',');
               scope.filterFacets();
             }
             else if (old) {
-              solrObject.setGeometry(null);
+              geometry = null;
               scope.filterFacets();
             }
           });
@@ -466,6 +486,20 @@
               }
             }
           });
+
+
+          scope.showTable = function() {
+            gnFeaturesTableManager.clear();
+            gnFeaturesTableManager.addTable({
+              name: scope.layer.get('label') || scope.layer.get('name'),
+              type: 'solr'
+            }, {
+              map: scope.map,
+              solrObject: solrObject,
+              layer: scope.layer
+            });
+
+          };
         }
       };
     }]);

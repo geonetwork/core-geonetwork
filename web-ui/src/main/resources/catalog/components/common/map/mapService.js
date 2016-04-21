@@ -1514,7 +1514,7 @@
                   angular.forEach(mdLayers, function(link) {
                     if (layer.get('url').indexOf(link.url) >= 0 &&
                         link.name == layer.getSource().getParams().LAYERS) {
-                      this.feedLayerWithDownloads(layer, link.group);
+                      this.feedLayerWithRelated(layer, link.group);
                       return;
                     }
                   }, $this);
@@ -1526,13 +1526,13 @@
           },
 
           /**
-           * Sextant specific
-           * Bind the download and process to the layer if we can.
+           * Check for online resource that could be bound to the layer.
+           * WPS, downloads, WFS etc..
            *
            * @param {ol.Layer} layer
            * @param {string} linkGroup
            */
-          feedLayerWithDownloads: function(layer, linkGroup) {
+          feedLayerWithRelated: function(layer, linkGroup) {
             var md = layer.get('md');
 
             if (!linkGroup) {
@@ -1543,11 +1543,11 @@
 
             // We can bind layer and download/process
             if (md.getLinksByType(linkGroup, '#OGC:WMTS',
-                '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map').length == 1) {
+                    '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map').length == 1) {
 
               var downloads = md && md.getLinksByType(linkGroup,
-                  'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
-                  'WFS', 'WCS', 'COPYFILE');
+                      'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
+                      'WFS', 'WCS', 'COPYFILE');
               layer.set('downloads', downloads);
 
               var wfs = md && md.getLinksByType(linkGroup, '#WFS');

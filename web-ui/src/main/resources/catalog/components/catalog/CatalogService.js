@@ -113,7 +113,7 @@
            *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
-        copy: function(id, groupId, withFullPrivileges, 
+        copy: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, metadataUuid) {
           var url = gnUrlUtils.append('md.create',
               gnUrlUtils.toKeyValue({
@@ -221,7 +221,7 @@
            *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
-        create: function(id, groupId, withFullPrivileges, 
+        create: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, tab, metadataUuid, useExtEditor) {
           return this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild, metadataUuid).success(function(data) {
@@ -680,8 +680,6 @@
         this['geonet:info'].isPublishedToAll = this.isPublished() ?
             'false' : 'true';
       },
-
-
 
       getLinks: function() {
         return this.link;

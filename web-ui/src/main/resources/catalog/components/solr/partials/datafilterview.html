@@ -1,45 +1,18 @@
 <div class="gn-data-view">
-  <ul class="nav nav-pills">
-    <li data-ng-repeat="layer in layers"
-        data-ng-if="layer.background != true"
-        data-ng-class="{active: layer == currentLayer}">
-      <a role="tab" data-ng-click="setLayer(layer)"
-         title="{{layer.get('label')}}">
-        {{layer.get('label') | limitTo:15}}
-        <span data-ng-show="layer.get('featureCount')">
-          ({{layer.get('featureCount')}}&nbsp;
-          {{'features' | translate}})
-        </span>
-      </a>
-    </li>
-  </ul>
+
+  <div class="text-center">
+    <select class="form-control" ng-model="layer" ng-options="layer as getLabel(layer) for layer in layers | overlay" ng-change="set()">
+    </select>
+  </div>
 
   <div class="tab-content" data-ng-show="currentLayer">
     <div role="tabpanel" class="tab-pane active" id="home">
-      <div data-gn-wfs-download="currentLayer" data-map="map" class="pull-right">
-      </div>
 
-      <div class="row">
-        <div class="col-md-2">
-          <div data-gn-wfs-filter-facets=""
-               data-layer="currentLayer"
-               data-boot-mode="solr"
-               ></div>
-          <!--
-          eg. with a custom gradient
-          <div data-gn-wfs-filter-facets=""
-               data-layer="currentLayer"
-               data-boot-mode="solr"
-               data-heatmap-config='{"gradient": ["#9e9ac8","#8582bc","#7262ac","#61409b","#4f1f8b"]}'
-               data-heatmap-config='{"gradient": ["#ffffe5","#fef0ad","#fece65","#fe9929","#e1640e","#aa3c03"]}'></div>-->
-        </div>
-        <div class="col-md-10">
-          <div data-gn-data-table="currentLayer.get('solrQ')"
-               data-gn-data-table-solr-type="WfsFilter"
-               data-gn-data-table-solr-name="facets"
-               data-exclude-cols="excludeCols"></div>
-        </div>
-      </div>
+      <div data-gn-wfs-download="currentLayer" data-map="map"></div>
+
+      <div data-gn-wfs-filter-facets="" data-layer="currentLayer" data-boot-mode="solr"> </div>
+
     </div>
   </div>
+
 </div>

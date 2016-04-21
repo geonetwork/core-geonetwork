@@ -41,11 +41,19 @@
              scope.currentLayer = null;
              scope.layers = scope.map.getLayers().getArray();
              scope.excludeCols = [
-               'id', '_version_',
-               'featureTypeId', 'docType'];
+               'id', '_version_', 'featureTypeId', 'docType'
+             ];
              scope.setLayer = function(l) {
                scope.currentLayer = l;
              };
+             scope.getLabel = function(layer) {
+               return layer.get('label');
+             };
+             scope.set = function() {
+               if (scope.layer) {
+                 scope.currentLayer = scope.layer;
+               }
+             }
              scope.map.getLayers().on('remove', function(e) {
                if (e.element == scope.currentLayer) {
                  scope.setLayer(null);
@@ -54,6 +62,15 @@
            }
          };
        }]);
+
+  module.filter('overlay', function() {
+    return function(input) {
+      if (!input) { return; }
+      return input.filter(function(l) {
+        return l.background != true && !(l instanceof ol.layer.Vector);
+      });
+    };
+  });
 
   module.directive('gnDataTable',
       ['$http', '$translate', 'gnSolrRequestManager',
@@ -125,8 +142,7 @@
                    });
                  });
 
-               }
-               else {
+               } else {
                  table.bootstrapTable('destroy');
                }
              });

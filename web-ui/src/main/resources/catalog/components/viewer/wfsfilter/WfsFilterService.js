@@ -348,9 +348,7 @@
           metadataUuid: uuid
         }
         ).then(function(data) {
-          console.log(data);
         }, function(response) {
-          console.log(response);
         });
       };
     }]);

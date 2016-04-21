@@ -60,7 +60,7 @@
         return;
       }
 
-      var objId = type + '_' + name;
+      var objId = this.getObjectId_(type, name);
       var configName = 'gnSolr' + type + 'Config';
 
       // Retrieve the angular value config object
@@ -79,6 +79,22 @@
     };
 
     /**
+     * Get a Solr request object with a given type and name from the pool.
+     *
+     * @param {string} type used to init the object
+     * @param {string} name identify the object in the pool
+     * @return {*} the solr request object.
+     */
+
+    this.get = function(type, name) {
+      if (!(type && name)) {
+        return;
+      }
+      var objId = this.getObjectId_(type, name);
+      return pool_[objId];
+    };
+
+    /**
      * Unregister the solr request object from manager. The object is deleted.
      * @param {string} type
      * @param {string} name
@@ -88,6 +104,10 @@
       if (pool_[objId]) {
         delete pool_[objId];
       }
+    };
+
+    this.getObjectId_ = function(type, name) {
+      return type + '_' + name;
     };
   };
 
