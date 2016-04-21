@@ -108,7 +108,7 @@ import javax.annotation.Nullable;
  * </ul>
  * 
  *  Note : Layer stands for "Layer" for WMS, "FeatureType" for WFS
- *  and "Coverage" for WCS.
+ *  and "Coverage" for WCS, and "ObservationOffering" for SOS.
  *  
  * <pre>  
  * <nodes>
@@ -580,7 +580,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		} else if (params.ogctype.substring(0,3).equals("SOS")) {
 			Namespace gml = Namespace.getNamespace("http://www.opengis.net/gml");
                         /*
-                         * SOS does not always provide a gml:name
+                         * SOS does not always provide a gml:name in ObservationOffering
                          */
                         if (layer.getChild ("name", gml) != null) {
                             reg.name = layer.getChild ("name", gml).getValue ();
