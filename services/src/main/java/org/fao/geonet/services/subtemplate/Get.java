@@ -28,11 +28,14 @@ import com.google.common.collect.Lists;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -84,6 +87,10 @@ public class Get implements Service {
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         final Metadata metadata = metadataRepository.findOneByUuid(uuid);
 
+        if (metadata == null) {
+            Log.error(Geonet.DATA_MANAGER, String.format("Subtemplate '%s' not found. Check records related to this directory entry." , uuid));
+            return new Element("subtemplateNotFound");
+        }
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
             throw new IllegalArgumentException("Metadata uuid="+uuid+" is not a subtemplate");
         }
