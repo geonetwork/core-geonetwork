@@ -108,7 +108,7 @@ import javax.annotation.Nullable;
  * </ul>
  * 
  *  Note : Layer stands for "Layer" for WMS, "FeatureType" for WFS
- *  and "Coverage" for WCS.
+ *  and "Coverage" for WCS, and "ObservationOffering" for SOS.
  *  
  * <pre>  
  * <nodes>
@@ -207,7 +207,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         // Try to load capabilities document
 		this.capabilitiesUrl = getBaseUrl(params.url) +
         		"SERVICE=" + params.ogctype.substring(0,3) +
-        		"&VERSION=" + params.ogctype.substring(3) +
+        		"&ACCEPTVERSIONS=" + params.ogctype.substring(3) +
         		"&REQUEST=" + GETCAPABILITIES
         		;
 
@@ -579,7 +579,24 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			reg.name 	= layer.getChild ("name", wcs).getValue ();
 		} else if (params.ogctype.substring(0,3).equals("SOS")) {
 			Namespace gml = Namespace.getNamespace("http://www.opengis.net/gml");
-			reg.name 	= layer.getChild ("name", gml).getValue ();
+                        /*
+                         * SOS does not always provide a gml:name in ObservationOffering
+                         */
+                        if (layer.getChild ("name", gml) != null) {
+                            reg.name = layer.getChild ("name", gml).getValue ();
+                        }
+                        else if (layer.getAttribute("id", gml) != null) {
+                            reg.name = layer.getAttribute("id", gml).getValue();
+                        }
+                        else {
+                            /*
+                             * use the layers hash code to create a unique but reproducible name.
+                             * this is a fallback for services that do not provide a gml:id
+                             */
+                            log.warning("Could not derive layer name from " + layer);
+                            String generatedName = layer.getName() + "_" + resolveLayerPosition(layer);
+                            reg.name = Sha1Encoder.encodeString(generatedName);
+                        }
 		}
 		
 		log.info ("  - Loading layer: " + reg.name);
@@ -793,6 +810,21 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		return reg;
 	}
 	
+        
+        private String resolveLayerPosition(Element layer) {
+                Element parent = layer.getParentElement();
+                if (parent != null) {
+                    List<?> children = parent.getChildren();
+                    if (children != null) {
+                        int index = children.indexOf(layer);
+                        if (index >= 0) {
+                            return Integer.toString(index);
+                        }
+                    }
+                }
+
+                return Integer.toString(layer.hashCode());
+        }
 
 	/** 
      * Call GeoNetwork service to load thumbnails and create small and 
@@ -985,7 +1017,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	private static final String GETMAP = "GetMap";
     private static final String IMAGE_FORMAT = "image/png";
     private List<WxSLayerRegistry> layersRegistry = new ArrayList<WxSLayerRegistry>();
-	
+
 	private static class WxSLayerRegistry {
 		public String uuid;
 		public String id;
