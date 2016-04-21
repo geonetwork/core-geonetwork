@@ -579,7 +579,23 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			reg.name 	= layer.getChild ("name", wcs).getValue ();
 		} else if (params.ogctype.substring(0,3).equals("SOS")) {
 			Namespace gml = Namespace.getNamespace("http://www.opengis.net/gml");
-			reg.name 	= layer.getChild ("name", gml).getValue ();
+                        /*
+                         * SOS does not always provide a gml:name
+                         */
+                        if (layer.getChild ("name", gml) != null) {
+                            reg.name = layer.getChild ("name", gml).getValue ();
+                        }
+                        else if (layer.getAttribute("id", gml) != null) {
+                            reg.name = layer.getAttribute("id", gml).getValue();
+                        }
+                        else {
+                            /*
+                             * use the layers hash code to create a unique but reproducible name
+                             */
+                            log.warning("Could not derive layer name from " + layer);
+                            String generatedName = layer.getName() + "_" + layer.hashCode();
+                            reg.name = Sha1Encoder.encodeString(generatedName);
+                        }
 		}
 		
 		log.info ("  - Loading layer: " + reg.name);
