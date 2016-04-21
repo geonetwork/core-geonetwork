@@ -60,6 +60,7 @@
       element.bootstrapTable('destroy');
       element.bootstrapTable(
           angular.extend({
+            height: 300,
             sortable: true,
             onClickRow: function(row, elt) {
               var feature = this.loader.getGeomFromRow(row);
