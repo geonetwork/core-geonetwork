@@ -9,10 +9,10 @@
 
   <!--WFS not indexed alert-->
   <div data-ng-show="status"
-       class="alert alert-warning">
+       class="alert alert-warning" title="{{statusTitle}}">
     <button type="button" class="close"
             data-ng-click="status = null"><i class="fa fa-times"/></button>
-    <span data-ng-bind-html="status"></span>
+    <span>{{status | translate}}</span>
   </div>
 
   <div class="btn-group"
@@ -58,7 +58,7 @@
 
     <!--Facet fields-->
     <div class="gn-facet"
-         data-ng-repeat="field in fields">
+         data-ng-repeat="field in fields" data-ng-show="field.values.length > 0">
       <h5 gn-collapsible="field.expanded">
         <span class="fa fa-arrow-circle-right"
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !output[field.name]}"></span>

@@ -245,7 +245,8 @@
               }
               appProfilePromise.then(loadFields);
             }, function(error) {
-              scope.status = error.statusText;
+              scope.status = error.data ? 'solrAccessError': error.statusText;
+              scope.statusTitle = error.statusText;
             });
           };
           scope.dropFeatures = function() {
