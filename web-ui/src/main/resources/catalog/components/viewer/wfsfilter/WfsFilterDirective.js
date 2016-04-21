@@ -445,9 +445,6 @@
               var extent = geom.split(',').map(function(val) {
                 return parseFloat(val);
               });
-              extent = ol.proj.transformExtent(extent,
-                  scope.map.getView().getProjection(), 'EPSG:4326');
-
               geometry = [
                 extent[0], extent[2], extent[3], extent[1]
               ].join(',');

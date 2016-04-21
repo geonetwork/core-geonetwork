@@ -700,7 +700,7 @@
           return {
             restrict: 'AE',
             scope: {
-              crs: '=',
+              crs: '=?',
               value: '=',
               required: '=',
               map: '='
