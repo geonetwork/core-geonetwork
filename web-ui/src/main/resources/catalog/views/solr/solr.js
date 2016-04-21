@@ -29,11 +29,13 @@
 
   goog.require('gn_search');
   goog.require('gn_solr_result');
+  goog.require('gn_searchsuggestion_service');
 
   var module = angular.module('gn_search_solr', [
     'angularUtils.directives.dirPagination',
     'gn_search',
     'gn_solr_result',
+    'gn_searchsuggestion_service',
   ]);
 
   module.config([ 'paginationTemplateProvider', function(paginationTemplateProvider) {
@@ -47,8 +49,9 @@
     '$timeout',
     'gnSolrRequestManager',
     'gnFeaturesTableManager',
+    'spellCheckService',
 
-    function($scope, $element, $timeout, gnSolrRequestManager, gnFeaturesTableManager) {
+    function($scope, $element, $timeout, gnSolrRequestManager, gnFeaturesTableManager, spellCheckService) {
 
       let viewConfig = {
         center : [280274.03240585705, 6053178.654789996],
@@ -171,6 +174,10 @@
       $scope.validProperty = function(key) {
         return key.substr(0,3) == 'ft_';
       }
+
+      $scope.getAnySuggestions = function(val) {
+        return spellCheckService.getAnySuggestions(val);
+      };
 
   }]);
 

@@ -8,7 +8,11 @@
           <input type="text" class="form-control" placeholder="Search for..."
             data-ng-keyup="$event.keyCode == 13 && search()"
             ng-model="anyField"
-            data-ng-model-options="{debounce: 300}">
+            data-ng-model-options="{debounce: 300}"
+            data-typeahead="item.value as item.label for item in getAnySuggestions($viewValue)"
+            data-typeahead-loading="anyLoading" class="form-control"
+            data-typeahead-min-length="1"
+            data-typeahead-focus-first="false">
           <span class="input-group-btn">
             <button class="btn btn-default" type="button" ng-click="search()">
               <i class="fa fa-search"></i>
