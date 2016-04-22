@@ -131,6 +131,7 @@
   };
 
   geonetwork.GnFeaturesGFILoader.prototype.getBsTableConfig = function() {
+    var pageList = [5, 10, 50, 100];
     var exclude = ['FID', 'boundedBy', 'the_geom', 'thegeom'];
     var $filter = this.$injector.get('$filter');
 
@@ -162,7 +163,10 @@
             }
           });
           return obj;
-        })
+        }),
+        pagination: true,
+        pageSize: pageList[1],
+        pageList: pageList
       };
     });
   };
@@ -274,7 +278,7 @@
       pagination: true,
       sidePagination: 'server',
       totalRows: this.solrObject.totalCount,
-      pageSize: pageList[0],
+      pageSize: pageList[1],
       pageList: pageList
     });
     return defer.promise;
