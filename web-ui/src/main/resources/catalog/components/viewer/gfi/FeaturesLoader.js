@@ -26,6 +26,11 @@
 
   var module = angular.module('gn_featurestable_loader', []);
 
+  var linkTpl = '<span class="fa-stack">' +
+      '<i class="fa fa-square fa-stack-2x"></i>' +
+      '<i class="fa fa-link fa-stack-1x fa-inverse"></i>' +
+      '</span>';
+
   geonetwork.inherits = function(childCtor, parentCtor) {
     function tempCtor() {
     };
@@ -151,6 +156,10 @@
           Object.keys(obj).forEach(function(key){
             if (exclude.indexOf(key) == -1) {
               obj[key] = $filter('linky')(obj[key], '_blank');
+              if(obj[key]) {
+                obj[key] = obj[key].replace(/>(.)*</,' ' +
+                    'target="_blank">' + linkTpl + '<');
+              }
             }
           });
           return obj;
