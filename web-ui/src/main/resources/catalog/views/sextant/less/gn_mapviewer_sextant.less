@@ -251,6 +251,9 @@
      margin: 1em 1em 0;
      li a {
        border-radius: 0;
+       &:hover {
+         cursor: pointer;
+       }
      }
    }
 
@@ -296,9 +299,11 @@
    }
 
    .no-records-found {
-     height: 298px;
+     border-top : 2em solid #fff;
      td {
        vertical-align: middle;
+       .alert;
+       .alert-warning;
      }
    }
 
@@ -317,6 +322,14 @@
          border-radius: 0;
        }
      }
+   }
+   .bootstrap-table .table,
+   .bootstrap-table .table > tbody > tr > td,
+   .bootstrap-table .table > tbody > tr > th,
+   .bootstrap-table .table > tfoot > tr > td,
+   .bootstrap-table .table > tfoot > tr > th,
+   .bootstrap-table .table > thead > tr > td {
+     padding: 4px !important;
    }
 
   }
