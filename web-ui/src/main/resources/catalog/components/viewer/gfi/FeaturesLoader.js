@@ -228,6 +228,14 @@
     if (url.indexOf('&q=') === -1) {
       url += '&q=*:*';
     }
+
+    // sxt specific
+    var gSetting = this.$injector.get('gnGlobalSettings');
+    if(gSetting.gnUrl) {
+      url = gSetting.gnUrl += url;
+    }
+    // end sxt specific
+
     this.loading = true;
     defer.resolve({
       url: url,
