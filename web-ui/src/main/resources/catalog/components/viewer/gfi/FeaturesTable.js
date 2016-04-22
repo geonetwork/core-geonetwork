@@ -62,13 +62,23 @@
           angular.extend({
             height: 300,
             sortable: true,
-            onClickRow: function(row, elt) {
-              var feature = this.loader.getFeatureFromRow(row);
-                var source = this.featuresTablesCtrl.fOverlay.getSource();
-                source.clear();
-              if (feature && feature.getGeometry()) {
-                source.addFeature(feature);
-              }
+            onPostBody: function() {
+              var trs = element.find('tbody').children();
+              for (var i = 0; i < trs.length; i++) {
+                $(trs[i]).mouseenter(function(e) {
+                  // Hackish over event from:
+                  // https://github.com/wenzhixin/bootstrap-table/issues/782
+                  var row = $(e.currentTarget).parents('table')
+                    .data()['bootstrap.table'].data[$(e.currentTarget).data('index')]
+                  if (!row) { return; }
+                  var feature = this.loader.getFeatureFromRow(row);
+                  var source = this.featuresTablesCtrl.fOverlay.getSource();
+                  source.clear();
+                  if (feature && feature.getGeometry()) {
+                    source.addFeature(feature);
+                  }
+                }.bind(this));
+              };
             }.bind(this),
             onDblClickRow: function(row, elt) {
               if (!this.map) {
