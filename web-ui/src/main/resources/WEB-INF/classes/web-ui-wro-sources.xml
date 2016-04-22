@@ -29,7 +29,6 @@
       <jsSource webappPath="/catalog/components/" />
       <cssSource webappPath="/catalog/views/" />
       <cssSource webappPath="/catalog/style/" />
-      <cssSource webappPath="/catalog/lib/bootstrap-table/dist" />
   </require>
   <declarative name="libcesium" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/ol3cesium/Cesium/Cesium.js"/>
