@@ -286,6 +286,20 @@
 
     .tab-content {
       padding-bottom: 0;
+      &, .nav {
+        font-size        : .9em;
+      }
+    }
+
+    .no-records-found {
+      height: 298px;
+      td {
+        vertical-align: middle;
+      }
+    }
+
+    th {
+      background: #eee;
     }
 
     .pagination {
@@ -730,6 +744,9 @@
     }
     .count {
       margin-bottom: 8px;
+      .alert;
+      .alert-info;
+      padding: 5px 15px;
     }
     .dropdown-toggle.btn-default {
       background : #4BA2D9;
