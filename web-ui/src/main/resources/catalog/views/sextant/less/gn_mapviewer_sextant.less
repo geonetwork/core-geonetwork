@@ -243,77 +243,81 @@
     background-color : white;
     box-shadow       : 0 1px 3px rgba(0,0,0,.4);
 
-    .nav {
-      margin: 1em 1em 0;
-      li a {
-        border-radius: 0;
-      }
-    }
+   .fixed-table-toolbar .columns {
+     margin-top: -4em;
+   }
 
-    .panel-heading {
-      position: absolute;
-      box-shadow: inset @sxt-shadow;
-      top: -1em;
-      right: 1em;
-      background: @sxt-base-color;
-      width: 15em;
-      height: auto;
-      border-radius: 0;
-      z-index: 0;
-      height: 2em;
-      padding: 0;
-      border-radius: 2px;
-      h5 {
-        margin: 0 .5em;
-        text-transform: uppercase;
-        font-size: 12px;
-        line-height: 2.3em;
-        color: white;
-        font-weight: bold;
-      }
-      .btn {
-        background: white;
-        box-shadow: @sxt-shadow;
-        opacity: 1;
-        width: 1.2em;
-        border-radius: 2px;
-        padding: 3px 0 3px;
-        color: black;
-        font-size: 22px;
-        margin: 0;
-      }
-    }
+   .nav {
+     margin: 1em 1em 0;
+     li a {
+       border-radius: 0;
+     }
+   }
 
-    .tab-content {
-      padding-bottom: 0;
-      &, .nav {
-        font-size        : .9em;
-      }
-    }
+   .panel-heading {
+     position: absolute;
+     box-shadow: inset @sxt-shadow;
+     top: -1em;
+     right: 1em;
+     background: @sxt-base-color;
+     width: 15em;
+     height: auto;
+     border-radius: 0;
+     z-index: 0;
+     height: 2em;
+     padding: 0;
+     border-radius: 2px;
+     h5 {
+       margin: 0 .5em;
+       text-transform: uppercase;
+       font-size: 12px;
+       line-height: 2.3em;
+       color: white;
+       font-weight: bold;
+     }
+     .btn {
+       background: white;
+       box-shadow: @sxt-shadow;
+       opacity: 1;
+       width: 1.2em;
+       border-radius: 2px;
+       padding: 3px 0 3px;
+       color: black;
+       font-size: 22px;
+       margin: 0;
+     }
+   }
 
-    .no-records-found {
-      height: 298px;
-      td {
-        vertical-align: middle;
-      }
-    }
+   .tab-content {
+     padding-bottom: 0;
+     &, .nav {
+       font-size        : .9em;
+     }
+   }
 
-    th {
-      background: #eee;
-    }
+   .no-records-found {
+     height: 298px;
+     td {
+       vertical-align: middle;
+     }
+   }
 
-    .pagination {
-      font-weight: bold;
-      & > .active > a {
-        box-shadow: inset @sxt-shadow;
-      }
-      li:first-child,
-      li:last-child {
-        & > a {
-          border-radius: 0;
-        }
-      }
-    }
+   th {
+     background: #eee;
+   }
+
+   .pagination {
+     font-weight: bold;
+     & > .active > a {
+       box-shadow: inset @sxt-shadow;
+     }
+     li:first-child,
+     li:last-child {
+       & > a {
+         border-radius: 0;
+       }
+     }
+   }
 
   }
 
