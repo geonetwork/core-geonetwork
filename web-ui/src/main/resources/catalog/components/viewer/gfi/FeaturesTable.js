@@ -98,7 +98,9 @@
                 );
               }
 
-            }.bind(this)
+            }.bind(this),
+            showExport: true,
+            exportTypes: [ 'csv' ]
           },bstConfig));
     }.bind(this));
   };
