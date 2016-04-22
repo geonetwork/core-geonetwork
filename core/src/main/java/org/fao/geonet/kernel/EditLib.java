@@ -591,6 +591,9 @@ public class EditLib {
                 Log.debug(Geonet.EDITORADDELEMENT, "Inserting at location " + xpathProperty + " the snippet or value " + value);
             }
 
+            // Removes root metadata element for xpath filters
+            xpathProperty = cleanRootFromXPath(xpathProperty, metadataRecord);
+
             final Object propNode = trySelectNode(metadataRecord, metadataSchema, xpathProperty).result;
 
             if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
@@ -693,12 +696,9 @@ public class EditLib {
     }
 
     private boolean createAndAddFromXPath(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty, AddElemValue value) throws Exception {
-        if (xpathProperty.startsWith("/")) {
-            xpathProperty = xpathProperty.substring(1);
-        }
-        if (xpathProperty.startsWith(metadataRecord.getQualifiedName()+"/")) {
-            xpathProperty = xpathProperty.substring(metadataRecord.getQualifiedName().length()+1);
-        }
+        // Removes root metadata element for xpath filters
+        xpathProperty = cleanRootFromXPath(xpathProperty, metadataRecord);
+
         List<String> xpathParts = Arrays.asList(xpathProperty.split("/"));
         SelectResult rootElem = trySelectNode(metadataRecord, metadataSchema, xpathParts.get(0));
 
@@ -2034,6 +2034,31 @@ public class EditLib {
 			md.addContent(attribute);
 		}
 	}
+
+    /**
+     * If the xpath starts with the metadata root element, it's removed. Used to apply
+     * the Xpath filters as the root element should not be included.
+     *
+     * Example:
+     *
+     *  /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString --> gmd:fileIdentifier/gco:CharacterString
+     *
+     * @param xpathProperty
+     * @param metadataRecord
+     *
+     * @return
+     */
+    private String cleanRootFromXPath(String xpathProperty, Element metadataRecord) {
+        if (xpathProperty.startsWith("/")) {
+            xpathProperty = xpathProperty.substring(1);
+        }
+
+        if (xpathProperty.startsWith(metadataRecord.getQualifiedName()+"/")) {
+            xpathProperty = xpathProperty.substring(metadataRecord.getQualifiedName().length()+1);
+        }
+
+        return xpathProperty;
+    }
 
 	/**
      * Adds missing namespace (ie. GML) to XML inputs. It should be done by the client side
