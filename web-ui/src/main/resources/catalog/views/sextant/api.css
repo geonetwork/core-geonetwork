@@ -42,6 +42,15 @@
  * 2015-08-03 08:20:09
  *
  */
+  /**
+ * @author zhixin wen <wenzhixin2010@gmail.com>
+ * version: 1.8.1
+ * https://github.com/wenzhixin/bootstrap-table/
+ */
+  /* the same color with .active */
+  /* support bootstrap 2 */
+  /* support bootstrap 3 */
+  /* calculate scrollbar width */
   /*! 
  * angular-hotkeys v1.4.5
  * https://chieffancypants.github.io/angular-hotkeys
@@ -12021,6 +12030,308 @@ yx-axis
   padding-right: 0;
   width: 35px;
 }
+.gn .bootstrap-table .table,
+.g .bootstrap-table .table {
+  margin-bottom: 0 !important;
+  border-bottom: 1px solid #dddddd;
+  border-collapse: collapse !important;
+  border-radius: 1px;
+}
+.gn .bootstrap-table .table,
+.g .bootstrap-table .table,
+.gn .bootstrap-table .table > tbody > tr > th,
+.g .bootstrap-table .table > tbody > tr > th,
+.gn .bootstrap-table .table > tfoot > tr > th,
+.g .bootstrap-table .table > tfoot > tr > th,
+.gn .bootstrap-table .table > thead > tr > td,
+.g .bootstrap-table .table > thead > tr > td,
+.gn .bootstrap-table .table > tbody > tr > td,
+.g .bootstrap-table .table > tbody > tr > td,
+.gn .bootstrap-table .table > tfoot > tr > td,
+.g .bootstrap-table .table > tfoot > tr > td {
+  padding: 8px !important;
+}
+.gn .bootstrap-table .table.table-no-bordered > thead > tr > th,
+.g .bootstrap-table .table.table-no-bordered > thead > tr > th,
+.gn .bootstrap-table .table.table-no-bordered > tbody > tr > td,
+.g .bootstrap-table .table.table-no-bordered > tbody > tr > td {
+  border-right: 2px solid transparent;
+}
+.gn .fixed-table-container,
+.g .fixed-table-container {
+  position: relative;
+  clear: both;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+}
+.gn .fixed-table-container.table-no-bordered,
+.g .fixed-table-container.table-no-bordered {
+  border: 1px solid transparent;
+}
+.gn .fixed-table-footer,
+.g .fixed-table-footer,
+.gn .fixed-table-header,
+.g .fixed-table-header {
+  overflow: hidden;
+}
+.gn .fixed-table-footer,
+.g .fixed-table-footer {
+  border-top: 1px solid #dddddd;
+}
+.gn .fixed-table-body,
+.g .fixed-table-body {
+  overflow-x: auto;
+  overflow-y: auto;
+  height: 100%;
+}
+.gn .fixed-table-container table,
+.g .fixed-table-container table {
+  width: 100%;
+}
+.gn .fixed-table-container thead th,
+.g .fixed-table-container thead th {
+  height: 0;
+  padding: 0;
+  margin: 0;
+  border-left: 1px solid #dddddd;
+}
+.gn .fixed-table-container thead th:first-child,
+.g .fixed-table-container thead th:first-child {
+  border-left: none;
+  border-top-left-radius: 4px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+}
+.gn .fixed-table-container thead th .th-inner,
+.g .fixed-table-container thead th .th-inner,
+.gn .fixed-table-container tbody td .th-inner,
+.g .fixed-table-container tbody td .th-inner {
+  padding: 8px;
+  line-height: 24px;
+  vertical-align: top;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gn .fixed-table-container thead th .sortable,
+.g .fixed-table-container thead th .sortable {
+  cursor: pointer;
+  background-position: right;
+  background-repeat: no-repeat;
+  padding-right: 30px;
+}
+.gn .fixed-table-container thead th .both,
+.g .fixed-table-container thead th .both {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAQAAADYWf5HAAAAkElEQVQoz7X QMQ5AQBCF4dWQSJxC5wwax1Cq1e7BAdxD5SL+Tq/QCM1oNiJidwox0355mXnG/DrEtIQ6azioNZQxI0ykPhTQIwhCR+BmBYtlK7kLJYwWCcJA9M4qdrZrd8pPjZWPtOqdRQy320YSV17OatFC4euts6z39GYMKRPCTKY9UnPQ6P+GtMRfGtPnBCiqhAeJPmkqAAAAAElFTkSuQmCC');
+}
+.gn .fixed-table-container thead th .asc,
+.g .fixed-table-container thead th .asc {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAZ0lEQVQ4y2NgGLKgquEuFxBPAGI2ahhWCsS/gDibUoO0gPgxEP8H4ttArEyuQYxAPBdqEAxPBImTY5gjEL9DM+wTENuQahAvEO9DMwiGdwAxOymGJQLxTyD+jgWDxCMZRsEoGAVoAADeemwtPcZI2wAAAABJRU5ErkJggg==');
+}
+.gn .fixed-table-container thead th .desc,
+.g .fixed-table-container thead th .desc {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAZUlEQVQ4y2NgGAWjYBSggaqGu5FA/BOIv2PBIPFEUgxjB+IdQPwfC94HxLykus4GiD+hGfQOiB3J8SojEE9EM2wuSJzcsFMG4ttQgx4DsRalkZENxL+AuJQaMcsGxBOAmGvopk8AVz1sLZgg0bsAAAAASUVORK5CYII= ');
+}
+.gn .fixed-table-container th.detail,
+.g .fixed-table-container th.detail {
+  width: 30px;
+}
+.gn .fixed-table-container tbody td,
+.g .fixed-table-container tbody td {
+  border-left: 1px solid #dddddd;
+}
+.gn .fixed-table-container tbody tr:first-child td,
+.g .fixed-table-container tbody tr:first-child td {
+  border-top: none;
+}
+.gn .fixed-table-container tbody td:first-child,
+.g .fixed-table-container tbody td:first-child {
+  border-left: none;
+}
+.gn .fixed-table-container tbody .selected td,
+.g .fixed-table-container tbody .selected td {
+  background-color: #f5f5f5;
+}
+.gn .fixed-table-container .bs-checkbox,
+.g .fixed-table-container .bs-checkbox {
+  text-align: center;
+}
+.gn .fixed-table-container .bs-checkbox .th-inner,
+.g .fixed-table-container .bs-checkbox .th-inner {
+  padding: 8px 0;
+}
+.gn .fixed-table-container input[type="radio"],
+.g .fixed-table-container input[type="radio"],
+.gn .fixed-table-container input[type="checkbox"],
+.g .fixed-table-container input[type="checkbox"] {
+  margin: 0 auto !important;
+}
+.gn .fixed-table-container .no-records-found,
+.g .fixed-table-container .no-records-found {
+  text-align: center;
+}
+.gn .fixed-table-pagination div.pagination,
+.g .fixed-table-pagination div.pagination,
+.gn .fixed-table-pagination .pagination-detail,
+.g .fixed-table-pagination .pagination-detail {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.gn .fixed-table-pagination div.pagination .pagination,
+.g .fixed-table-pagination div.pagination .pagination {
+  margin: 0;
+}
+.gn .fixed-table-pagination .pagination a,
+.g .fixed-table-pagination .pagination a {
+  padding: 6px 12px;
+  line-height: 1.428571429;
+}
+.gn .fixed-table-pagination .pagination-info,
+.g .fixed-table-pagination .pagination-info {
+  line-height: 34px;
+  margin-right: 5px;
+}
+.gn .fixed-table-pagination .btn-group,
+.g .fixed-table-pagination .btn-group {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+.gn .fixed-table-pagination .dropup .dropdown-menu,
+.g .fixed-table-pagination .dropup .dropdown-menu {
+  margin-bottom: 0;
+}
+.gn .fixed-table-pagination .page-list,
+.g .fixed-table-pagination .page-list {
+  display: inline-block;
+}
+.gn .fixed-table-toolbar .columns-left,
+.g .fixed-table-toolbar .columns-left {
+  margin-right: 5px;
+}
+.gn .fixed-table-toolbar .columns-right,
+.g .fixed-table-toolbar .columns-right {
+  margin-left: 5px;
+}
+.gn .fixed-table-toolbar .columns label,
+.g .fixed-table-toolbar .columns label {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.428571429;
+}
+.gn .fixed-table-toolbar .bars,
+.g .fixed-table-toolbar .bars,
+.gn .fixed-table-toolbar .search,
+.g .fixed-table-toolbar .search,
+.gn .fixed-table-toolbar .columns,
+.g .fixed-table-toolbar .columns {
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  line-height: 34px;
+}
+.gn .fixed-table-pagination li.disabled a,
+.g .fixed-table-pagination li.disabled a {
+  pointer-events: none;
+  cursor: default;
+}
+.gn .fixed-table-loading,
+.g .fixed-table-loading {
+  display: none;
+  position: absolute;
+  top: 42px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  background-color: #fff;
+  text-align: center;
+}
+.gn .fixed-table-body .card-view .title,
+.g .fixed-table-body .card-view .title {
+  font-weight: bold;
+  display: inline-block;
+  min-width: 30%;
+  text-align: left !important;
+}
+.gn .fixed-table-body thead th .th-inner,
+.g .fixed-table-body thead th .th-inner {
+  box-sizing: border-box;
+}
+.gn .table th,
+.g .table th,
+.gn .table td,
+.g .table td {
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+.gn .fixed-table-toolbar .dropdown-menu,
+.g .fixed-table-toolbar .dropdown-menu {
+  text-align: left;
+  max-height: 300px;
+  overflow: auto;
+}
+.gn .fixed-table-toolbar .btn-group > .btn-group,
+.g .fixed-table-toolbar .btn-group > .btn-group {
+  display: inline-block;
+  margin-left: -1px !important;
+}
+.gn .fixed-table-toolbar .btn-group > .btn-group > .btn,
+.g .fixed-table-toolbar .btn-group > .btn-group > .btn {
+  border-radius: 0;
+}
+.gn .fixed-table-toolbar .btn-group > .btn-group:first-child > .btn,
+.g .fixed-table-toolbar .btn-group > .btn-group:first-child > .btn {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.gn .fixed-table-toolbar .btn-group > .btn-group:last-child > .btn,
+.g .fixed-table-toolbar .btn-group > .btn-group:last-child > .btn {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.gn .bootstrap-table .table > thead > tr > th,
+.g .bootstrap-table .table > thead > tr > th {
+  vertical-align: bottom;
+  border-bottom: 1px solid #ddd;
+}
+.gn .bootstrap-table .table thead > tr > th,
+.g .bootstrap-table .table thead > tr > th {
+  padding: 0;
+  margin: 0;
+}
+.gn .bootstrap-table .fixed-table-footer tbody > tr > td,
+.g .bootstrap-table .fixed-table-footer tbody > tr > td {
+  padding: 0 !important;
+}
+.gn .bootstrap-table .fixed-table-footer .table,
+.g .bootstrap-table .fixed-table-footer .table {
+  border-bottom: none;
+  border-radius: 0;
+}
+.gn .pull-right .dropdown-menu,
+.g .pull-right .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+.gn p.fixed-table-scroll-inner,
+.g p.fixed-table-scroll-inner {
+  width: 100%;
+  height: 200px;
+}
+.gn div.fixed-table-scroll-outer,
+.g div.fixed-table-scroll-outer {
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  width: 200px;
+  height: 150px;
+  overflow: hidden;
+}
 .gn .ol-mouse-position,
 .g .ol-mouse-position {
   top: 8px;
@@ -15829,6 +16140,7 @@ yx-axis
   right: 1.9em;
   background-color: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  border-radius: 0;
 }
 .gn [sxt-main-viewer] gn-features-tables .fixed-table-toolbar .columns,
 .g [sxt-main-viewer] gn-features-tables .fixed-table-toolbar .columns {
@@ -15841,6 +16153,10 @@ yx-axis
 .gn [sxt-main-viewer] gn-features-tables .nav li a,
 .g [sxt-main-viewer] gn-features-tables .nav li a {
   border-radius: 0;
+}
+.gn [sxt-main-viewer] gn-features-tables .nav li a:hover,
+.g [sxt-main-viewer] gn-features-tables .nav li a:hover {
+  cursor: pointer;
 }
 .gn [sxt-main-viewer] gn-features-tables .panel-heading,
 .g [sxt-main-viewer] gn-features-tables .panel-heading {
@@ -15890,11 +16206,57 @@ yx-axis
 }
 .gn [sxt-main-viewer] gn-features-tables .no-records-found,
 .g [sxt-main-viewer] gn-features-tables .no-records-found {
-  height: 298px;
+  border-top: 2em solid #fff;
 }
 .gn [sxt-main-viewer] gn-features-tables .no-records-found td,
 .g [sxt-main-viewer] gn-features-tables .no-records-found td {
   vertical-align: middle;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  word-break: break-all;
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+  color: #8a6d3b;
+}
+.gn [sxt-main-viewer] gn-features-tables .no-records-found td h4,
+.g [sxt-main-viewer] gn-features-tables .no-records-found td h4 {
+  margin-top: 0;
+  color: inherit;
+}
+.gn [sxt-main-viewer] gn-features-tables .no-records-found td .alert-link,
+.g [sxt-main-viewer] gn-features-tables .no-records-found td .alert-link {
+  font-weight: bold;
+}
+.gn [sxt-main-viewer] gn-features-tables .no-records-found td > p,
+.g [sxt-main-viewer] gn-features-tables .no-records-found td > p,
+.gn [sxt-main-viewer] gn-features-tables .no-records-found td > ul,
+.g [sxt-main-viewer] gn-features-tables .no-records-found td > ul {
+  margin-bottom: 0;
+}
+.gn [sxt-main-viewer] gn-features-tables .no-records-found td > p + p,
+.g [sxt-main-viewer] gn-features-tables .no-records-found td > p + p {
+  margin-top: 5px;
+}
+.gn [sxt-main-viewer] gn-features-tables .no-records-found td button.close,
+.g [sxt-main-viewer] gn-features-tables .no-records-found td button.close {
+  opacity: 1;
+  font-size: 14px;
+}
+.gn [sxt-main-viewer] gn-features-tables .no-records-found td.alert-warning .close,
+.g [sxt-main-viewer] gn-features-tables .no-records-found td.alert-warning .close {
+  color: #8a6d3b;
+  background-color: transparent;
+  box-shadow: none;
+}
+.gn [sxt-main-viewer] gn-features-tables .no-records-found td hr,
+.g [sxt-main-viewer] gn-features-tables .no-records-found td hr {
+  border-top-color: #f7e1b5;
+}
+.gn [sxt-main-viewer] gn-features-tables .no-records-found td .alert-link,
+.g [sxt-main-viewer] gn-features-tables .no-records-found td .alert-link {
+  color: #66512c;
 }
 .gn [sxt-main-viewer] gn-features-tables th,
 .g [sxt-main-viewer] gn-features-tables th {
@@ -15913,6 +16275,20 @@ yx-axis
 .gn [sxt-main-viewer] gn-features-tables .pagination li:last-child > a,
 .g [sxt-main-viewer] gn-features-tables .pagination li:last-child > a {
   border-radius: 0;
+}
+.gn [sxt-main-viewer] gn-features-tables .bootstrap-table .table,
+.g [sxt-main-viewer] gn-features-tables .bootstrap-table .table,
+.gn [sxt-main-viewer] gn-features-tables .bootstrap-table .table > tbody > tr > td,
+.g [sxt-main-viewer] gn-features-tables .bootstrap-table .table > tbody > tr > td,
+.gn [sxt-main-viewer] gn-features-tables .bootstrap-table .table > tbody > tr > th,
+.g [sxt-main-viewer] gn-features-tables .bootstrap-table .table > tbody > tr > th,
+.gn [sxt-main-viewer] gn-features-tables .bootstrap-table .table > tfoot > tr > td,
+.g [sxt-main-viewer] gn-features-tables .bootstrap-table .table > tfoot > tr > td,
+.gn [sxt-main-viewer] gn-features-tables .bootstrap-table .table > tfoot > tr > th,
+.g [sxt-main-viewer] gn-features-tables .bootstrap-table .table > tfoot > tr > th,
+.gn [sxt-main-viewer] gn-features-tables .bootstrap-table .table > thead > tr > td,
+.g [sxt-main-viewer] gn-features-tables .bootstrap-table .table > thead > tr > td {
+  padding: 4px !important;
 }
 .gn [sxt-main-viewer] footer,
 .g [sxt-main-viewer] footer {
