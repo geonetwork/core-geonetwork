@@ -56,17 +56,16 @@
           };
 
           this.comboGroups = {};
-          this.switchGroupCombo = function(groupcombo) {
+          this.switchGroupCombo = function(groupcombo, layer) {
             var activeLayer = this.comboGroups[groupcombo];
             var fLayers = $filter('filter')($scope.layers,
                 $scope.layerFilterFn);
             for (var i = 0; i < fLayers.length; i++) {
               var l = fLayers[i];
-              if(l.get('groupcombo') == groupcombo) {
+              if(l.get('groupcombo') == groupcombo && activeLayer != l) {
                 l.visible = false;
               }
             }
-            activeLayer.visible = true;
           };
 
           $scope.setActiveComboGroup = function(l) {
@@ -306,6 +305,23 @@
             scope.groupCombo = scope.member.get('groupcombo');
             scope.comboGroups = controller.comboGroups;
             scope.switchGroupCombo = controller.switchGroupCombo;
+
+            /**
+             * On top of `switchGroupCombo` that set visible to false to all
+             * layers exept the clicked one, here we set the clicked layer
+             * visibility.
+             *
+             * @param {string} groupcombo Group id.
+             * @param {ol.layer.Base} layer Node layer.
+             */
+            scope.setLayerVisibility = function(groupcombo, layer) {
+              if(scope.comboGroups[groupcombo] == layer) {
+                layer.visible = !layer.visible;
+              }
+              else {
+                scope.comboGroups[groupcombo].visible = true;
+              }
+            };
 
             if (scope.member.get('md')) {
               var d =  scope.member.get('downloads');

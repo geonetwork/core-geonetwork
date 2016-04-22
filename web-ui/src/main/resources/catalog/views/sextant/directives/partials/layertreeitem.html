@@ -69,8 +69,8 @@
 
       <input ng-if="!groupCombo" type="checkbox" ng-model="member.visible" class="hidden"/>
       <input ng-if="groupCombo" ng-value="member" name="{{groupCombo}}" class="hidden"
-             type="radio" ng-model="comboGroups[groupCombo]" title="{{'layerVisible'|translate}}" data-ng-change="switchGroupCombo(groupCombo)"/>
-
+             type="radio" ng-model="comboGroups[groupCombo]" title="{{'layerVisible'|translate}}"
+             data-ng-change="switchGroupCombo(groupCombo)" data-ng-click="setLayerVisibility(groupCombo, member)"/>
       {{member.get('label')}}
     </label>
 
