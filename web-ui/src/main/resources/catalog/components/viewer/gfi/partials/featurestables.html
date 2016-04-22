@@ -1,7 +1,7 @@
 <div class="gn-features-table" data-ng-show="ctrl.tables.length > 0">
 
   <div class="panel-heading">
-    <button type="button" class="btn btn-default close" ng-click="close()" title="close">
+    <button type="button" class="btn btn-default close" ng-click="ctrl.clear()" title="close">
       ×
     </button>
     <h5>
@@ -9,8 +9,6 @@
       <span></span>
     </h5>
   </div>
-
-  <button class="btn btn-default close" ng-click="ctrl.clear()">&times;</button>
 
   <ul class="nav nav-tabs">
     <li data-ng-repeat="table in ctrl.tables"
