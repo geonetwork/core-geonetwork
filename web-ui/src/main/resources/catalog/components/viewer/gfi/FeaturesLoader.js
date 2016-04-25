@@ -120,6 +120,7 @@
         // FIXME: should be effective with a OL update ?
         var srsMatch = response.data.match(/srsName="(.*)"/);
         if (srsMatch) {
+          this.projection = srsMatch[1];
           options.dataProjection = ol.proj.get(srsMatch[1]);
         }
         this.features = format.readFeatures(response.data, options);
@@ -194,6 +195,12 @@
           geom = new ol.geom.Point([geom[0], geom[1]]);
         } else {
           geom = new ol.geom.Polygon.fromExtent(geom);
+        }
+        if (this.projection) {
+          geom = geom.transform(
+            this.projection,
+            this.map.getView().getProjection()
+          );
         }
       }
       if (geom instanceof ol.geom.Geometry) {
