@@ -16310,6 +16310,12 @@ yx-axis
   margin: 0 0 15px 15px;
   position: relative;
 }
+.gn [sxt-main-viewer] [sxt-layertree] .sublayer,
+.g [sxt-main-viewer] [sxt-layertree] .sublayer,
+.gn [sxt-main-viewer] .sxtb-speciestree .sublayer,
+.g [sxt-main-viewer] .sxtb-speciestree .sublayer {
+  margin-left: 15px;
+}
 .gn [sxt-main-viewer] .marker,
 .g [sxt-main-viewer] .marker {
   pointer-events: none;
@@ -19462,6 +19468,10 @@ yx-axis
     left: 50%;
     margin-left: -12em;
   }
+  .gn [gn-metadata-display],
+  .g [gn-metadata-display] {
+    top: .5em;
+  }
   .gn .sxt-searchform-content,
   .g .sxt-searchform-content {
     display: none;
@@ -19511,6 +19521,10 @@ yx-axis
   top: -0.8em;
   left: 50%;
   margin-left: -12em;
+}
+.gn.sxt-max-sm [gn-metadata-display],
+.g .sxt-max-sm [gn-metadata-display] {
+  top: .5em;
 }
 .gn.sxt-max-sm .sxt-searchform-content,
 .g .sxt-max-sm .sxt-searchform-content {
