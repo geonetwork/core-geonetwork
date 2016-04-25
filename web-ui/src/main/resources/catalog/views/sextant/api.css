@@ -221,6 +221,7 @@ yx-axis
 .gn > div:only-child,
 .g > div:only-child {
   height: 100%;
+  display: table-row;
 }
 .gn button,
 .g button {
