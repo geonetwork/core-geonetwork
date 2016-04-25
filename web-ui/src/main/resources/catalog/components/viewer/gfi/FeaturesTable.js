@@ -78,6 +78,9 @@
                     source.addFeature(feature);
                   }
                 }.bind(this));
+                $(trs[i]).mouseleave(function(e) {
+                  this.featuresTablesCtrl.fOverlay.getSource().clear();
+                }.bind(this));
               };
             }.bind(this),
             onDblClickRow: function(row, elt) {

@@ -114,9 +114,15 @@
           [new ol.Feature(props)] : [];
       } else {
         var format = new ol.format.WMSGetFeatureInfo();
-        this.features = format.readFeatures(response.data, {
+        var options = {
           featureProjection: map.getView().getProjection()
-        });
+        }
+        // FIXME: should be effective with a OL update ?
+        var srsMatch = response.data.match(/srsName="(.*)"/);
+        if (srsMatch) {
+          options.dataProjection = ol.proj.get(srsMatch[1]);
+        }
+        this.features = format.readFeatures(response.data, options);
       }
 
       return this.features;
@@ -180,13 +186,20 @@
   };
 
   geonetwork.GnFeaturesGFILoader.prototype.getFeatureFromRow = function(row) {
-    var geoms = [ 'the_geom', 'thegeom' ];
-    for (var i=0 ; i<2 ; i++) {
-      if (row[geoms[i]] instanceof ol.geom.Geometry) {
-        return new ol.Feature();
-        // return new ol.Feature({ // FIXME WMS-GFI doesnt guess dataProjection
-        //   geometry: row[geoms[i]]
-        // });
+    var geoms = [ 'the_geom', 'thegeom', 'boundedBy' ];
+    for (var i=0 ; i<geoms.length ; i++) {
+      var geom = row[geoms[i]];
+      if (geoms[i] == 'boundedBy' && jQuery.isArray(geom)) {
+        if (geom[0] == geom[2] && geom[1] == geom[3]) {
+          geom = new ol.geom.Point([geom[0], geom[1]]);
+        } else {
+          geom = new ol.geom.Polygon.fromExtent(geom);
+        }
+      }
+      if (geom instanceof ol.geom.Geometry) {
+        return new ol.Feature({
+          geometry: geom
+        });
       }
     }
   };
