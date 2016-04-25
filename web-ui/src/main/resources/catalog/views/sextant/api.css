@@ -19944,6 +19944,10 @@ yx-axis
     left: 50%;
     margin-left: -12em;
   }
+  .gn [gn-metadata-display],
+  .g [gn-metadata-display] {
+    top: .5em;
+  }
   .gn .sxt-searchform-content,
   .g .sxt-searchform-content {
     display: none;
@@ -19993,6 +19997,10 @@ yx-axis
   top: -0.8em;
   left: 50%;
   margin-left: -12em;
+}
+.gn.sxt-max-sm [gn-metadata-display],
+.g .sxt-max-sm [gn-metadata-display] {
+  top: .5em;
 }
 .gn.sxt-max-sm .sxt-searchform-content,
 .g .sxt-max-sm .sxt-searchform-content {
