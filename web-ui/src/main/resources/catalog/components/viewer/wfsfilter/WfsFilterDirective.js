@@ -85,14 +85,13 @@
             blur: 55,
             opacity: .7,
             //gradient: ['#0f0', '#ff0', '#f00', '#fff'],
-            visible: true
+            visible: false
           };
           scope.isHeatMapVisible = false;
           scope.heatmapLayer = null;
           scope.source = null;
           if (scope.map) {
             scope.source = new ol.source.Vector();
-            scope.isHeatMapVisible = true;
             scope.heatmapLayer = new ol.layer.Heatmap(
                 angular.extend({
                   source: scope.source,
