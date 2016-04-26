@@ -1,4 +1,4 @@
-<div class="gn-features-table" data-ng-show="ctrl.tables.length > 0">
+<div class="gn-features-table" data-ng-show="ctrl.tm.getCount() > 0">
 
   <div class="panel-heading">
     <button type="button" class="btn btn-default close" ng-click="ctrl.clear()" title="close">
@@ -6,13 +6,15 @@
     </button>
     <h5>
       <span class="ng-scope" data-translate="">Résultats</span>
+      ({{ctrl.tm.getCount()}})
       <span></span>
     </h5>
   </div>
 
   <ul class="nav nav-tabs">
     <li data-ng-repeat="table in ctrl.tables"
-        data-ng-class="{active: table == ctrl.currentTable}">
+        data-ng-class="{active: table == ctrl.currentTable}"
+        ng-hide="!table.loader.isLoading() && table.loader.getCount()==0">
       <a role="tab" data-ng-click="ctrl.currentTable = table"
          title="{{::table.name}}">
         <span class="layername">{{table.name}}</span>
@@ -24,7 +26,9 @@
     </li>
   </ul>
 
-  <div class="tab-content" data-ng-show="ctrl.currentTable == table" ng-repeat="table in ctrl.tables" data-ng-init="ctrl.currentTable = ctrl.tables[0]">
+  <div class="tab-content" ng-repeat="table in ctrl.tables"
+    data-ng-show="ctrl.currentTable == table && !table.loader.isLoading() && table.loader.getCount() > 0"
+    data-ng-init="ctrl.currentTable = ctrl.tables[0]">
     <gn-features-table gn-features-table-loader="table.loader" gn-features-table-loader-map="ctrl.map"></gn-features-table>
   </div>
 
