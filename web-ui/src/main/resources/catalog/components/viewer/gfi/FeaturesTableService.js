@@ -68,10 +68,18 @@
     return count;
   };
 
+  GnFeaturesTableManager.prototype.isLoading = function() {
+    var loading = false;
+    this.tables.forEach(function(table) {
+      loading = loading || table.loader.isLoading();
+    });
+    return loading;
+  };
+
 
   module.service('gnFeaturesTableManager',
       ['gnFeaturesTableLoader', GnFeaturesTableManager]);
-  
+
   module.service('gnFeaturesTableService', GnFeaturesTableService);
 
 })();

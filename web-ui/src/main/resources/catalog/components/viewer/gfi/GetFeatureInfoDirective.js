@@ -150,6 +150,13 @@
       }.bind(this));
     }.bind(this));
 
+
+    $scope.$watch(function() {
+      return this.gnFeaturesTableManager.isLoading();
+    }.bind(this), function(newVal, oldVal) {
+      $(map.getTarget()).toggleClass('gn-gfi-loading', newVal);
+    }.bind(this));
+
     $scope.$watch(function() {
       return this.gnFeaturesTableManager.getCount();
     }.bind(this), function(newVal, oldVal) {
