@@ -93,8 +93,19 @@
             if (dont) return;
             var layersCollection = map.getLayers();
             var index = layersCollection.getArray().indexOf(layer);
+            var group = layersCollection.item(index + delta).get('group') ?
+                layersCollection.item(index + delta).get('group').split('/')[1] :
+                undefined;
+            var i = index + delta;
+            while(
+              layersCollection.item(i) &&
+              layersCollection.item(i).get('group') &&
+              group == layersCollection.item(i).get('group').split('/')[1]
+            ) {
+              i += delta;
+            }
             layersCollection.removeAt(index);
-            layersCollection.insertAt(index + delta, layer);
+            layersCollection.insertAt(group ? i - delta : i, layer);
           };
         }
       };
