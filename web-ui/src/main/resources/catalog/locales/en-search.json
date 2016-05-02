@@ -37,7 +37,7 @@
   "uploadContext": "Load a map",
   "resetContext": "Load default map",
   "kmlContext": "KML format",
-  "displayHeatMap": "Show heatmap",
+  "displayHeatMap": "Heat map",
   "removeFeatures": "Remove features",
   "refresh": "Refresh",
   "kmlFile": "{{layer}} (KML)",

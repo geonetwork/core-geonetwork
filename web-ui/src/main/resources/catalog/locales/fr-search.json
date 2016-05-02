@@ -36,6 +36,7 @@
     "uploadContext": "Importer une carte",
     "resetContext": "Réinitialiser la carte",
     "kmlContext": "Format KML",
+    "displayHeatMap": "Carte de chaleur",
     "wmsLinkDetails": "Cette donnée est publiée dans le service de visualisation (WMS) disponible à l'adresse <a href='{{url}}'>{{url}}</a>, couche <strong>{{layer}}</strong>.",
     "wfsLinkDetails": "Cette donnée est publiée dans le service de téléchargement (WFS) disponible à l'adresse <a href='{{url}}'>{{url}}</a>, couche <strong>{{layer}}</strong>.",
     "wcsLinkDetails": "Cette donnée est publiée dans le service de téléchargement (WCS) disponible à l'adresse <a href='{{url}}'>{{url}}</a>, couche <strong>{{layer}}</strong>.",
