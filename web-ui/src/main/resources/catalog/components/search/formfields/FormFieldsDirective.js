@@ -709,7 +709,7 @@
                 'partials/bboxInput.html',
 
             link: function(scope, element, attrs) {
-              scope.crs = scope.crs || 'EPSG:4326';
+              var crs = scope.crs || 'EPSG:4326';
               scope.extent = extentFromValue(scope.value);
 
               var style = new ol.style.Style({
@@ -760,7 +760,7 @@
                 var coordinates, geom, f;
                 coordinates = gnMap.getPolygonFromExtent(scope.extent);
                 geom = new ol.geom.Polygon(coordinates)
-              .transform(scope.crs, scope.map.getView().getProjection());
+              .transform(crs, scope.map.getView().getProjection());
                 f = new ol.Feature();
                 f.setGeometry(geom);
                 layer.getSource().addFeature(f);
@@ -770,7 +770,7 @@
                 dragboxInteraction.active = false;
                 var g = dragboxInteraction.getGeometry().clone();
                 var geom = g.transform(scope.map.getView().getProjection(),
-                    scope.crs);
+                    crs);
                 var extent = geom.getExtent();
                 scope.extent = extent.map(function(coord) {
                   return Math.round(coord * 10000) / 10000;

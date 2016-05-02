@@ -347,6 +347,11 @@
             scope.searchInput = '';
             scope.resetSLDFilters();
 
+            var boxElt = element.find('.gn-bbox-input');
+            if(boxElt.length) {
+              angular.element(boxElt).scope().clear();
+            }
+
             // load all facet and fill ui structure for the list
             return solrObject.searchWithFacets({}).
                 then(function(resp) {
@@ -449,10 +454,11 @@
               ].join(',');
               scope.filterFacets();
             }
-            else if (old) {
-              geometry = null;
+            // when reset from gnBbox directive
+            else if (old && geom != '') {
               scope.filterFacets();
             }
+            // do nothing when reseted from wfsFilter directive
           });
 
           function resetHeatMap() {
