@@ -215,7 +215,7 @@ public class AtomServiceDescription implements Service
             Map<String, Integer> downloadsCountByCrs = new HashMap<String, Integer>();
             for(InspireAtomFeedEntry entry : inspireAtomFeed.getEntryList()) {
                 Integer count = downloadsCountByCrs.get(entry.getCrs());
-                if (count == null) count = new Integer(0);
+                if (count == null) count = Integer.valueOf(0);
                 downloadsCountByCrs.put(entry.getCrs(), count + 1);
             }
 

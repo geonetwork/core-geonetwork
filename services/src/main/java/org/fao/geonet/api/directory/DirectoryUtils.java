@@ -210,7 +210,7 @@ public class DirectoryUtils {
                 Element elem = (Element) o;
                 if (Log.isDebugEnabled(LOGGER)) {
                     Log.debug(LOGGER, String.format(
-                            "#%d. Entry XML:\n%s",
+                            "#%d. Entry XML:%n%s",
                             numberOfEntries, Xml.getString(elem)
                     ));
                 }
@@ -289,7 +289,7 @@ public class DirectoryUtils {
                     // Check subtemplate is similar to
                     if (subTemplateElement == null) {
                         Log.debug(LOGGER, String.format(
-                                "#%d. Not found in directory. Next.",
+                                "#%d. '%s' Not found in directory. Next.",
                                 numberOfEntries, uuid
                         ));
                     } else if (subTemplateElement.getName().equals(
