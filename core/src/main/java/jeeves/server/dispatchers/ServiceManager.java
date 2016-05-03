@@ -102,7 +102,7 @@ public class ServiceManager {
      * Detect crawlers. Useful to avoid creating sessions for them.
      */
     public static final String BOT_REGEXP = ".*(bot|crawler|baiduspider|80legs|ia_archiver|"
-            + "voyager|curl|wget|yahoo! slurp|mediapartners-google).*";
+            + "voyager|yahoo! slurp|mediapartners-google).*";
     private Pattern regex = Pattern.compile(BOT_REGEXP, Pattern.CASE_INSENSITIVE);
     
 
