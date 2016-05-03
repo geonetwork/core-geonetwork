@@ -99,7 +99,7 @@ public final class XslUtil
         String result = src.toString().replaceAll(pattern.toString(), substitution.toString());
         return result;
     }
-    
+
     public static boolean isCasEnabled() {
 		return ProfileManager.isCasEnabled();
 	}
@@ -154,9 +154,9 @@ public final class XslUtil
         }
         return "";
     }
-    /** 
+    /**
 	 * Check if bean is defined in the context
-	 * 
+	 *
 	 * @param beanId id of the bean to look up
 	 */
 	public static boolean existsBean(String beanId) {
@@ -166,9 +166,9 @@ public final class XslUtil
 	 * Optimistically check if user can access a given url.  If not possible to determine then
 	 * the methods will return true.  So only use to show url links, not check if a user has access
 	 * for certain.  Spring security should ensure that users cannot access restricted urls though.
-	 *  
-	 * @param serviceName the raw services name (main.home) or (admin) 
-	 * 
+	 *
+	 * @param serviceName the raw services name (main.home) or (admin)
+	 *
 	 * @return true if accessible or system is unable to determine because the current
 	 * 				thread does not have a ServiceContext in its thread local store
 	 */
@@ -196,7 +196,7 @@ public final class XslUtil
 
     /**
      * Convert a serialized XML node in JSON
-     * 
+     *
      * @param xml
      * @return
      */
@@ -275,16 +275,16 @@ public final class XslUtil
 
         return results.toString();
     }
-    
+
 
     /**
      * Get field value for metadata identified by uuid.
-     * 
+     *
      * @param appName 	Web application name to access Lucene index from environment variable
      * @param uuid 		Metadata uuid
      * @param field 	Lucene field name
      * @param lang 		Language of the index to search in
-     * 
+     *
      * @return metadata title or an empty string if Lucene index or uuid could not be found
      */
     public static String getIndexField(Object appName, Object uuid, Object field, Object lang) {
@@ -392,7 +392,7 @@ public final class XslUtil
     }
     /**
      * Return '' or error message if error occurs during URL connection.
-     * 
+     *
      * @param url   The URL to ckeck
      * @return
      */
@@ -404,15 +404,15 @@ public final class XslUtil
             u = new URL(url);
             conn = u.openConnection();
             conn.setConnectTimeout(connectionTimeout);
-            
+
             // TODO : set proxy
-            
+
             if (conn instanceof HttpURLConnection) {
                HttpURLConnection httpConnection = (HttpURLConnection) conn;
                httpConnection.setInstanceFollowRedirects(true);
                httpConnection.connect();
                httpConnection.disconnect();
-               // FIXME : some URL return HTTP200 with an empty reply from server 
+               // FIXME : some URL return HTTP200 with an empty reply from server
                // which trigger SocketException unexpected end of file from server
                int code = httpConnection.getResponseCode();
 
@@ -420,16 +420,16 @@ public final class XslUtil
                    return "";
                } else {
                    return "Status: " + code;
-               } 
+               }
             } // TODO : Other type of URLConnection
         } catch (Throwable e) {
             e.printStackTrace();
             return e.toString();
         }
-        
+
         return "";
     }
-    
+
 	public static String threeCharLangCode(String langCode) {
 	    if (langCode == null || langCode.length() < 2) {
             return Geonet.DEFAULT_LANGUAGE;
@@ -469,9 +469,11 @@ public final class XslUtil
         String contactDetails = "";
         int contactId = Integer.parseInt((String) contactIdentifier);
         final ServiceContext serviceContext = ServiceContext.get();
-        User user= serviceContext.getBean(UserRepository.class).findOne(contactId);
-        if (user != null) {
-            contactDetails = Xml.getString(user.asXml());
+        if (serviceContext != null) {
+            User user= serviceContext.getBean(UserRepository.class).findOne(contactId);
+            if (user != null) {
+                contactDetails = Xml.getString(user.asXml());
+            }
         }
         return contactDetails;
     }
@@ -530,12 +532,19 @@ public final class XslUtil
 
     public static String getSiteUrl() {
         ServiceContext context = ServiceContext.get();
+        String baseUrl = "";
+        if (context != null) baseUrl = context.getBaseUrl();
+
         SettingInfo si = new SettingInfo();
-        return si.getSiteUrl() + "/" + context.getBaseUrl();
+        return si.getSiteUrl() + "/" + baseUrl;
     }
 
     public static String getLanguage() {
         ServiceContext context = ServiceContext.get();
-        return context.getLanguage();
+        if (context != null) {
+            return context.getLanguage();
+        } else {
+            return "eng";
+        }
     }
 }

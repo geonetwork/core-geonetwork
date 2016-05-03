@@ -1279,7 +1279,7 @@ public class SearchManager {
         }
         catch (Exception e) {
             Log.error(Geonet.INDEX_ENGINE,
-                    String.format("Indexing stylesheet contains errors: %s \n\t Marking the metadata as _indexingError=1 in index",
+                    String.format("Indexing stylesheet contains errors: %s %n\t Marking the metadata as _indexingError=1 in index",
                             e.getMessage()));
             Element xmlDoc = new Element("Document");
             SearchManager.addField(xmlDoc, INDEXING_ERROR_FIELD, "1", true, true);
