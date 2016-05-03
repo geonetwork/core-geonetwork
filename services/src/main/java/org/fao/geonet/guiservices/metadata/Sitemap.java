@@ -27,11 +27,19 @@
 
 package org.fao.geonet.guiservices.metadata;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.fao.geonet.Util;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataDataInfo_;
+import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.SitemapDocumentNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.repository.MetadataRepository;
@@ -43,10 +51,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Create a sitemap document with metadata records
@@ -86,20 +93,19 @@ public class Sitemap implements Service {
             format = FORMAT_XML;
         }
 
-        AccessManager am = context.getBean(AccessManager.class);
+        Integer allgroup = 1;
 
-        Set<Integer> groups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
+        Specifications<OperationAllowed> spec = Specifications.where(
+                OperationAllowedSpecs.hasOperation(ReservedOperation.view));
+        spec = spec.and(OperationAllowedSpecs.hasGroupId(allgroup));
+        
+        OperationAllowedRepository operationAllowedRepository = 
+                context.getBean(OperationAllowedRepository.class);
+        MetadataRepository metadataRepository = 
+                context.getBean(MetadataRepository.class);
 
-        final OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        Specifications<OperationAllowed> spec = Specifications.where(OperationAllowedSpecs.hasOperation(ReservedOperation.view));
-        List<Integer> groupIds = new ArrayList<>();
-        for (Integer grpId : groups) {
-            groupIds.add(grpId);
-        }
-        spec = spec.and(OperationAllowedSpecs.hasGroupIdIn(groupIds));
-        final List<Integer> list = operationAllowedRepository.findAllIds(spec, OperationAllowedId_.metadataId);
-
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final List<Integer> list = operationAllowedRepository.findAllIds(spec,
+                OperationAllowedId_.metadataId);
         Sort sortByChangeDateDesc = new Sort(Sort.Direction.DESC, Metadata_.dataInfo.getName() + "." + MetadataDataInfo_.changeDate.getName());
 
         long metadatataCount = metadataRepository.count(MetadataSpecs.hasMetadataIdIn(list));
