@@ -237,12 +237,15 @@
   }
 
   gn-features-tables {
-    bottom           : 4em;
+    bottom           : 2.8em;
     left             : 29em;
-    right            : 1.9em;
-    background-color : white;
+    right            : .4em;
     box-shadow       : 0 1px 3px rgba(0,0,0,.4);
     border-radius    : 0;
+
+    .gn-features-table {
+      padding: 0;
+    }
 
    .fixed-table-toolbar .columns {
      margin-top: -4em;
@@ -293,10 +296,33 @@
    }
 
    .tab-content {
-     padding-bottom: 0;
+     padding: 0;
      &, .nav {
        font-size        : .9em;
      }
+   }
+
+   .fixed-table-container {
+     border-radius: 0;
+     thead th:last-child,
+     thead th:first-child {
+       border-radius: 0;
+     }
+     .fixed-table-body {
+       height: ~"calc(100% - 6.1em)";
+     }
+   }
+   .fixed-table-pagination {
+    .pagination-detail,
+    .pagination {
+      margin: 0 1em;
+    }
+   }
+
+   .columns.btn-group {
+     position: absolute;
+     right: 1em;
+     top: 5.4em;
    }
 
    .no-records-found {
