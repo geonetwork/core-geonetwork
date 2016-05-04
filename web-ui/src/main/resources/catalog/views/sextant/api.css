@@ -16136,12 +16136,19 @@ yx-axis
 }
 .gn [sxt-main-viewer] gn-features-tables,
 .g [sxt-main-viewer] gn-features-tables {
-  bottom: 4em;
-  left: 29em;
-  right: 1.9em;
-  background-color: white;
+  bottom: 2.8em;
+  left: .4em;
+  right: .4em;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   border-radius: 0;
+}
+.gn [sxt-main-viewer] gn-features-tables.leftBarExpanded,
+.g [sxt-main-viewer] gn-features-tables.leftBarExpanded {
+  left: 29em;
+}
+.gn [sxt-main-viewer] gn-features-tables .gn-features-table,
+.g [sxt-main-viewer] gn-features-tables .gn-features-table {
+  padding: 0;
 }
 .gn [sxt-main-viewer] gn-features-tables .fixed-table-toolbar .columns,
 .g [sxt-main-viewer] gn-features-tables .fixed-table-toolbar .columns {
@@ -16197,13 +16204,39 @@ yx-axis
 }
 .gn [sxt-main-viewer] gn-features-tables .tab-content,
 .g [sxt-main-viewer] gn-features-tables .tab-content {
-  padding-bottom: 0;
+  padding: 0;
 }
 .gn [sxt-main-viewer] gn-features-tables .tab-content,
 .g [sxt-main-viewer] gn-features-tables .tab-content,
 .gn [sxt-main-viewer] gn-features-tables .tab-content .nav,
 .g [sxt-main-viewer] gn-features-tables .tab-content .nav {
   font-size: .9em;
+}
+.gn [sxt-main-viewer] gn-features-tables .fixed-table-container,
+.g [sxt-main-viewer] gn-features-tables .fixed-table-container {
+  border-radius: 0;
+}
+.gn [sxt-main-viewer] gn-features-tables .fixed-table-container thead th:last-child,
+.g [sxt-main-viewer] gn-features-tables .fixed-table-container thead th:last-child,
+.gn [sxt-main-viewer] gn-features-tables .fixed-table-container thead th:first-child,
+.g [sxt-main-viewer] gn-features-tables .fixed-table-container thead th:first-child {
+  border-radius: 0;
+}
+.gn [sxt-main-viewer] gn-features-tables .fixed-table-container .fixed-table-body,
+.g [sxt-main-viewer] gn-features-tables .fixed-table-container .fixed-table-body {
+  height: calc(100% - 6.1em);
+}
+.gn [sxt-main-viewer] gn-features-tables .fixed-table-pagination .pagination-detail,
+.g [sxt-main-viewer] gn-features-tables .fixed-table-pagination .pagination-detail,
+.gn [sxt-main-viewer] gn-features-tables .fixed-table-pagination .pagination,
+.g [sxt-main-viewer] gn-features-tables .fixed-table-pagination .pagination {
+  margin: 0 1em;
+}
+.gn [sxt-main-viewer] gn-features-tables .columns.btn-group,
+.g [sxt-main-viewer] gn-features-tables .columns.btn-group {
+  position: absolute;
+  right: 1em;
+  top: 5.4em;
 }
 .gn [sxt-main-viewer] gn-features-tables .no-records-found,
 .g [sxt-main-viewer] gn-features-tables .no-records-found {
