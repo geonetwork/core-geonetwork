@@ -109,7 +109,8 @@
 
             }.bind(this),
             showExport: true,
-            exportTypes: [ 'csv' ]
+            exportTypes: [ 'csv' ],
+            exportDataType: 'all'
           },bstConfig));
     }.bind(this));
   };
