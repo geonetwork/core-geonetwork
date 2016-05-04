@@ -29,7 +29,9 @@
   <div class="tab-content" ng-repeat="table in ctrl.tables"
     data-ng-show="ctrl.currentTable == table && !table.loader.isLoading() && table.loader.getCount() > 0"
     data-ng-init="ctrl.currentTable = ctrl.tables[0]">
-    <gn-features-table gn-features-table-loader="table.loader" gn-features-table-loader-map="ctrl.map"></gn-features-table>
+    <gn-features-table gn-features-table-loader="table.loader"
+      gn-active="ctrl.active" gn-features-table-loader-map="ctrl.map">
+    </gn-features-table>
   </div>
 
 </div>

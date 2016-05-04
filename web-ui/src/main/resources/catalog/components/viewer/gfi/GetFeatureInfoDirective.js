@@ -110,7 +110,8 @@
       return {
         restrict: 'A',
         scope: {
-          map: '='
+          map: '=',
+          active: '='
         },
         controller: 'gnGfiController',
         templateUrl: gfiTemplateURL
