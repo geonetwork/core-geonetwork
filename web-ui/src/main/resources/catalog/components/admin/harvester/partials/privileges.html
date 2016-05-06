@@ -14,21 +14,21 @@
   </span>
   <ul class="list-group">
     <li class="list-group-item"><div class="input-group">
-	  <div class="input-group-btn"> 
+	  <div class="input-group-btn">
 	  <button class="btn btn-default" title="{{'SelectAllorNone'|translate}}">
       <i class="fa"
         data-ng-class="allGroup == true ? 'fa-check-square-o' : 'fa-square-o'"
         data-ng-click="visibleTo('allGroup');">
       </i>
 	  </button>
-	</div>	  
+	</div>
        <input class="form-control" data-ng-model="groupSearch.$"
            placeholder="{{'filter' | translate}}"/>
 	</div>
     </li>
     <li data-ng-repeat="g in groups | filter:groupSearch | orderBy:'name'" class="list-group-item">
       <input type="checkbox" id="group-{{g['@id']}}" data-ng-model="selectedPrivileges[g['@id']]"/>
-      <label for="group-{{g['@id']}}">{{g.label[lang]}}</label>
+      <label for="group-{{g['@id']}}">{{g.label[lang]|empty:g.name}}</label>
     </li>
   </ul>
 </fieldset>

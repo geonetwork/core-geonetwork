@@ -27,6 +27,7 @@
 
 package org.fao.geonet.kernel;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.Collection;
@@ -375,8 +376,8 @@ public class DataManager {
 
     @Deprecated
     public @CheckForNull String autodetectSchema(Element md,
-            String defaultSchema) throws SchemaMatchConflictException,
-                    NoSchemaMatchesException {
+            String defaultSchema)
+            throws SchemaMatchConflictException, NoSchemaMatchesException {
         return metadataSchemaUtils.autodetectSchema(md, defaultSchema);
     }
 
@@ -419,7 +420,7 @@ public class DataManager {
     public String createMetadata(ServiceContext context, String templateId,
             String groupOwner, String source, int owner, String parentUuid,
             String isTemplate, boolean fullRightsForGroup, String uuid)
-                    throws Exception {
+            throws Exception {
         return metadataManager.createMetadata(context, templateId, groupOwner,
                 source, owner, parentUuid, isTemplate, fullRightsForGroup,
                 uuid);
@@ -430,7 +431,7 @@ public class DataManager {
             Element metadataXml, String uuid, int owner, String groupOwner,
             String source, String metadataType, String docType, String category,
             String createDate, String changeDate, boolean ufo, boolean index)
-                    throws Exception {
+            throws Exception {
 
         return metadataManager.insertMetadata(context, schema, metadataXml,
                 uuid, owner, groupOwner, source, metadataType, docType,
@@ -510,7 +511,7 @@ public class DataManager {
             final String metadataId, final Element md, final boolean validate,
             final boolean ufo, final boolean index, final String lang,
             final String changeDate, final boolean updateDateStamp)
-                    throws Exception {
+            throws Exception {
         return metadataManager.updateMetadata(context, metadataId, md, validate,
                 ufo, index, lang, changeDate, updateDateStamp);
     }
@@ -529,7 +530,7 @@ public class DataManager {
     @Deprecated
     public Pair<Element, String> doValidate(UserSession session, String schema,
             String metadataId, Element md, String lang, boolean forEditing)
-                    throws Exception {
+            throws Exception {
         return metadataValidator.doValidate(session, schema, metadataId, md,
                 lang, forEditing);
     }
@@ -723,7 +724,7 @@ public class DataManager {
     @Deprecated
     public MetadataStatus setStatusExt(ServiceContext context, int id,
             int status, ISODate changeDate, String changeMessage)
-                    throws Exception {
+            throws Exception {
         return metadataStatus.setStatusExt(context, id, status, changeDate,
                 changeMessage);
     }
@@ -768,7 +769,7 @@ public class DataManager {
     public Element updateFixedInfo(String schema, Optional<Integer> metadataId,
             String uuid, Element md, String parentUuid,
             UpdateDatestamp updateDatestamp, ServiceContext context)
-                    throws Exception {
+            throws Exception {
         return metadataManager.updateFixedInfo(schema, metadataId, uuid, md,
                 parentUuid, updateDatestamp, context);
     }
@@ -776,7 +777,7 @@ public class DataManager {
     @Deprecated
     public Set<String> updateChildren(ServiceContext srvContext,
             String parentUuid, String[] children, Map<String, Object> params)
-                    throws Exception {
+            throws Exception {
         return metadataUtils.updateChildren(srvContext, parentUuid, children,
                 params);
     }
@@ -852,6 +853,11 @@ public class DataManager {
     @Deprecated
     public void flush() {
         metadataUtils.flush();
+    }
+
+    @Deprecated
+    public void forceIndexChanges() throws IOException {
+        metadataIndexer.forceIndexChanges();
     }
 
     @Deprecated

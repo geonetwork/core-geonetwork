@@ -140,7 +140,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
             String currentLanguage = "";
 
-            // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())            
+            // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())
             if (inspireEnabled) {
                 String isoLangParamValue = request.getAttributeValue("language");
 
@@ -274,11 +274,11 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 		return request;
 	}
-	
+
 	//---------------------------------------------------------------------------
-	
+
 	public Element retrieveValues(String parameterName) throws CatalogException {
-		// TODO 
+		// TODO
 		return null;
 	}
 
@@ -430,7 +430,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         vars.put("$ACCESS_CONSTRAINTS", cswCapabilitiesInfo.getAccessConstraints());
 
         vars.put("$LOCALE", langId);
-		
+
 		Lib.element.substitute(capab, vars);
 	}
 
@@ -499,7 +499,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             if (languages.contains(currLang)) {
                 vars.put("$INSPIRE_LOCALE", currLang);
 
-            } else {      
+            } else {
                 vars.put("$INSPIRE_LOCALE", defaultLang);
             }
 
@@ -532,7 +532,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                     cswServiceSpecificContraint, _luceneConfig);
 		} catch (Exception e) {
             Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
-			// If GetDomain operation failed, just add nothing to the capabilities document template.            
+			// If GetDomain operation failed, just add nothing to the capabilities document template.
             return;
         }
 
@@ -608,23 +608,20 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         List<Element> operations = op.getChildren("Parameter", Csw.NAMESPACE_OWS);
         for (Element operation : operations) {
             if ("typeNames".equals(operation.getAttributeValue("name"))) {
-                Iterator<String> iterator = typenames.keySet().iterator();
-                while(iterator.hasNext()) {
-                    String typeName = iterator.next();
-                    Namespace ns = typenames.get(typeName);
+                for (Map.Entry< String, Namespace > entry : typenames.entrySet()) {
+                    String typeName = entry.getKey();
+                    Namespace ns = entry.getValue();
                     String typename = typeName;
                     operation.addNamespaceDeclaration(ns);
                     operation.addContent(new Element("Value", Csw.NAMESPACE_OWS)
-                            .setText(typename));
+                        .setText(typename));
                 }
             } else if ("outputSchema".equals(operation.getAttributeValue("name"))) {
-                Iterator<String> iterator = typenames.keySet().iterator();
-                while(iterator.hasNext()) {
-                    String typeName = iterator.next();
-                    Namespace ns = typenames.get(typeName);
+                for (Map.Entry< String, Namespace > entry : typenames.entrySet()) {
+                    Namespace ns = entry.getValue();
                     operation.addNamespaceDeclaration(ns);
                     operation.addContent(new Element("Value", Csw.NAMESPACE_OWS)
-                            .setText(ns.getURI()));
+                        .setText(ns.getURI()));
                 }
             }
         }
@@ -640,7 +637,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 				.getPropertiesByType(Csw.ISO_QUERYABLES);
 		Element isoConstraint = new Element("Constraint", Csw.NAMESPACE_OWS)
 				.setAttribute("name", Csw.ISO_QUERYABLES);
-		
+
 		for (String params : isoQueryableMap) {
 			isoConstraint.addContent(new Element("Value", Csw.NAMESPACE_OWS)
 					.setText(params));
@@ -651,7 +648,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		Element additionalConstraint = new Element("Constraint",
 				Csw.NAMESPACE_OWS).setAttribute("name",
 				Csw.ADDITIONAL_QUERYABLES);
-		
+
 		for (String params : additionalQueryableMap) {
 			additionalConstraint.addContent(new Element("Value",
 					Csw.NAMESPACE_OWS).setText(params));

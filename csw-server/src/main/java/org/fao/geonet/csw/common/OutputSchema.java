@@ -93,10 +93,8 @@ public enum OutputSchema {
         if (schema.equals("own")) return "own";
 
         Map<String, Namespace> typenames = schemaManager.getHmSchemasTypenames();
-        Iterator<String> iterator = typenames.keySet().iterator();
-        while (iterator.hasNext()) {
-            String typeName = iterator.next();
-            Namespace ns = typenames.get(typeName);
+        for (Map.Entry< String, Namespace > entry : typenames.entrySet()) {
+            Namespace ns = entry.getValue();
             if (schema.equals(ns.getURI())) {
                 return ns.getPrefix();
             }

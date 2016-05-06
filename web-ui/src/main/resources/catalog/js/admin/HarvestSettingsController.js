@@ -339,7 +339,7 @@
         return $http.get('admin.harvester.history.delete?uuid=' +
             $scope.harvesterSelected.site.uuid)
           .success(function(data) {
-              loadHarvesters().then(function() {
+              $scope.$parent.loadHarvesters().then(function() {
                 $scope.selectHarvester($scope.harvesterSelected);
               });
             });

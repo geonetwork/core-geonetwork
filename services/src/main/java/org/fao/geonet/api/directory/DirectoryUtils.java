@@ -211,7 +211,7 @@ public class DirectoryUtils {
                 Element elem = (Element) o;
                 if (Log.isDebugEnabled(LOGGER)) {
                     Log.debug(LOGGER, String.format(
-                            "#%d. Entry XML:\n%s",
+                            "#%d. Entry XML:%n%s",
                             numberOfEntries, Xml.getString(elem)
                     ));
                 }
@@ -267,12 +267,14 @@ public class DirectoryUtils {
                                 numberOfEntries, uuid
                         ));
                     }
+                    // TODO: Add support for other type of subtemplate
                     String searchIndexField = "email";
                     Element subTemplateElement = null;
                     // Search in DB by UUID matching entry UUID
                     if (StringUtils.isEmpty(searchIndexField)) {
                         Metadata subTemplate = metadataRepository.findOneByUuid(uuid);
                         if (subTemplate != null) {
+                            uuid = subTemplate.getUuid();
                             subTemplateElement = subTemplate.getXmlData(false);
                         }
                     } else {
@@ -288,7 +290,7 @@ public class DirectoryUtils {
                     // Check subtemplate is similar to
                     if (subTemplateElement == null) {
                         Log.debug(LOGGER, String.format(
-                                "#%d. Not found in directory. Next.",
+                                "#%d. '%s' Not found in directory. Next.",
                                 numberOfEntries, uuid
                         ));
                     } else if (subTemplateElement.getName().equals(

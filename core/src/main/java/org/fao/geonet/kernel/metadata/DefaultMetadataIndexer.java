@@ -3,6 +3,7 @@
  */
 package org.fao.geonet.kernel.metadata;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -662,6 +663,18 @@ public class DefaultMetadataIndexer
     @Override
     public void disableOptimizer() throws Exception {
         searchManager.disableOptimizer();
+    }
+    
+
+
+    /**
+     * 
+     * @see org.fao.geonet.kernel.metadata.IMetadataIndexer#forceIndexChanges()
+     * @throws IOException
+     */
+    @Override
+    public void forceIndexChanges() throws IOException {
+        searchManager.forceIndexChanges();
     }
 
     /**

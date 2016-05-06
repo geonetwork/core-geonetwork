@@ -45,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -435,6 +436,16 @@ public class Update {
                 UserSession usrSess = (UserSession) tmp;
                 myProfile = usrSess.getProfile();
                 myUserId = usrSess.getUserId();
+            } else if (tmp == null) {
+                Object securityContext = session.getAttribute("SPRING_SECURITY_CONTEXT");
+                if (securityContext instanceof SecurityContext) {
+                    Object principal = ((SecurityContext)securityContext).getAuthentication().getPrincipal();
+                    if (principal instanceof User) {
+                        User user = (User)principal;
+                        myProfile = user.getProfile();
+                        myUserId = user.getId() + "";
+                    }
+                }
             }
 
             if (myProfile != Profile.Administrator && myProfile != Profile.UserAdmin && !myUserId.equals(id)) {

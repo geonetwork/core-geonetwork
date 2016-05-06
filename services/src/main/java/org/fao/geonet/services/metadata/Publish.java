@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -68,7 +67,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

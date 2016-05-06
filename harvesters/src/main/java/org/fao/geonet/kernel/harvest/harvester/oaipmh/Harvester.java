@@ -280,10 +280,16 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 			String id = localUuids.getID(ri.id);
 
-			if (id == null)	addMetadata(t, ri);
-			else				updateMetadata(t, ri, id);
+			if (id == null) {
+			    addMetadata(t, ri);
+			}
+			else {
+			    updateMetadata(t, ri, id);
+			}
 		}
 
+		dataMan.forceIndexChanges();
+		
 		log.info("End of alignment for : "+ params.getName());
 	}
 
@@ -345,8 +351,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         dataMan.flush();
-
-        dataMan.indexMetadata(id, true);
+        
+        dataMan.indexMetadata(id, Math.random() < 0.01);
 		result.addedMetadata++;
 	}
 
@@ -493,7 +499,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
             dataMan.flush();
-            dataMan.indexMetadata(id, true);
+            dataMan.indexMetadata(id, Math.random() < 0.01);
 			result.updatedMetadata++;
 		}
 	}

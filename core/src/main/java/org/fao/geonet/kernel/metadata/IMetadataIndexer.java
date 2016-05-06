@@ -3,6 +3,7 @@
  */
 package org.fao.geonet.kernel.metadata;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -76,6 +77,9 @@ public interface IMetadataIndexer {
     public void indexMetadata(final String metadataId,
             boolean forceRefreshReaders) throws Exception;
 
+
+    public void forceIndexChanges() throws IOException;
+    
     /**
      *
      * @param beginAt
