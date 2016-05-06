@@ -115,7 +115,9 @@
                   (passwordCheck !== userSelected.password) ? 'has-error' : ''" class="form-group">
                 <label class="control-label col-sm-3" data-translate="">passwordRepeat</label>
                 <div class="col-sm-9">
-                  <input type="password" id="gn-user-password2" name="password2" class="form-control"
+                  <input type="password" id="gn-user-password2" name="password2" 
+                    class="form-control"
+                    autocomplete="off"
                     data-ng-model="passwordCheck"/>
                   <p class="help-block">
                     <span class="error"
@@ -299,7 +301,8 @@
                 data-ng-class="gnPasswordReset.password.$error.required || gnPasswordReset.password.$error.minlength ? 'has-error' : ''">
               <label class="control-label col-sm-3" data-translate="">password</label>
               <div class="col-sm-9">
-                <input type="password" id="gn-user-password" name="password" class="form-control"
+                <input type="password" id="gn-user-password" name="password" 
+                  class="form-control" autocomplete="off"
                   data-ng-minlength="6" data-ng-required="true"
                   data-ng-model="resetPassword1"/>
                 <p class="help-block">
@@ -313,7 +316,9 @@
                       (resetPassword2 !== resetPassword1) ? 'has-error' : ''">
               <label class="control-label col-sm-3" data-translate="">passwordRepeat</label>
               <div class="col-sm-9">
-                <input type="password" id="gn-user-password2" name="password2" class="form-control"
+                <input type="password" id="gn-user-password2" 
+                  name="password2" class="form-control"
+                  autocomplete="off"
                   data-ng-model="resetPassword2"/>
                 <p class="help-block">
                   <span class="error"
