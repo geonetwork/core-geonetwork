@@ -165,7 +165,7 @@
             gnUrlUtils.toKeyValue({
               q: filter,
               wt: 'json',
-              row: 0,
+              rows: 0,
               spellcheck: 'true',
               'spellcheck.collateParam.q.op': 'AND',
               'spellcheck.collate': 'true',
