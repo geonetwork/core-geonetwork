@@ -1,0 +1,120 @@
+@import "../../../style/gn_search.less";
+// GN Styles
+@import "../../../lib/style/font-awesome/less/font-awesome.less";
+@import "../../../style/gn_bootstrap.less";
+@import "../../../style/gn_infolist.less";
+@import "../../../style/gn_badge_categories.less";
+
+
+/* @import "gn.less"; */
+/* @import "gn_viewer.less"; */
+
+@fa-version: '4.1.0';
+@fa-font-path: '../catalog/lib/style/font-awesome/fonts';
+
+// GENERAL --------------------------------------------------------------- {{{
+.container {
+  margin-top: 1.5em;
+}
+.nav li a {
+  text-transform: capitalize;
+}
+.results-list {
+  position : relative;
+}
+.mask {
+  position   : absolute;
+  left       : 0;
+  right      : 0;
+  top        : 0;
+  height     : 100%;
+  min-height : 10em;
+  background : rgba(255,255,255,.6);
+}
+// }}}
+
+// HEADER ---------------------------------------------------------------- {{{
+.search {
+  padding: 0;
+}
+.results-row {
+  display : flex;
+  .results-map-col {
+    flex     : 1;
+  }
+}
+.sticky {
+  position : sticky;
+  top      : 1em;
+}
+// }}}
+
+// RESULTS --------------------------------------------------------------- {{{
+.solr-result {
+  padding       : 15px;
+  display       : flex;
+  border-bottom : 1px solid #ddd;
+  img {
+    width            : 12em;
+    height           : 8em;
+    padding-left     : 12em;
+    background-size  : cover;
+    background-color : #ddd;
+    box-shadow       : 0 0 1px rgba(0,0,0,.4);
+    filter           : grayscale(100%);
+  }
+  &:hover {
+    cursor : pointer;
+    img {
+      filter: none;
+    }
+  }
+  .solr-result-overview {
+    width               : 12em;
+  }
+  .solr-result-detail {
+    flex        : 1;
+    margin-left : 1em;
+  }
+  h5 {
+    font-weight : bold;
+  }
+}
+// }}}
+
+// PAGINATION ------------------------------------------------------------ {{{
+dir-pagination-controls {
+  display    : block;
+  text-align : center;
+}
+// }}}
+
+// FEATURE-TABLE --------------------------------------------------------- {{{
+.table-wrapper {
+  max-height    : 30em;
+  overflow-y    : auto;
+  margin-top    : 2em;
+  border-radius : 6px;
+  border        : 1px solid #4a90cc;
+}
+.feature-table {
+  table-layout : fixed;
+  word-break   : break-all;
+  tr:first-child td {
+    border-top: none;
+  }
+}
+// }}}
+
+// MAP ------------------------------------------------------------------- {{{
+.map {
+  margin-top    : 3em;
+  border        : 1px solid #4a90cc;
+  background    : #ddd;
+  border-radius : 6px;
+  height        : 20em;
+}
+.ol-viewport {
+  border-radius: 5px;
+}
+// }}}

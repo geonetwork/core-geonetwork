@@ -1,0 +1,86 @@
+<div data-ng-controller="GnSearchSolrController" class="container">
+
+  <div class="row">
+
+    <div class="col-md-8 col-md-offset-2 panel panel-info search">
+      <div class="panel-heading">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search for..."
+            data-ng-keyup="$event.keyCode == 13 && search()"
+            ng-model="anyField"
+            data-ng-model-options="{debounce: 300}"
+            data-typeahead="item.value as item.label for item in getAnySuggestions($viewValue)"
+            data-typeahead-loading="anyLoading" class="form-control"
+            data-typeahead-min-length="1"
+            data-typeahead-focus-first="false">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" ng-click="search()">
+              <i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div><!-- /input-group -->
+      </div>
+      <div class="panel-body" ng-if="anyField">
+        <a href="" ng-click="reset()">
+          <i class="glyphicon glyphicon-remove-circle"></i>
+          Reset search
+        </a>
+      </div>
+    </div><!-- /.col-lg-6 -->
+
+  </div>
+
+  <div class="row results-row">
+
+    <div class="col-md-8">
+
+
+      <ul class="nav nav-tabs">
+        <li role="presentation" ng-class="{'active': !active}">
+          <a ng-click="search('all')">All</a>
+        </li>
+        <li role="presentation" ng-class="{'active': active=='dataset'}"> <a
+          ng-click="search('dataset')">Datasets</a>
+        </li>
+        <li role="presentation" ng-class="{'active': active=='feature'}">
+          <a ng-click="search('feature')">Features</a>
+        </li>
+      </ul>
+
+      <div class="results-list">
+
+        <div class="mask" ng-if="loading"></div>
+
+        <div dir-paginate="r in results | itemsPerPage: pager.itemsPerPage"
+          total-items="pager.count" currentPage="pager.page"
+          gn-solr-result record="r" collection="collection"></div>
+
+        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+
+      </div>
+
+    </div>
+
+    <div class="col-md-4 results-map-col">
+
+      <div class="sticky">
+
+        <div ngeo-map="searchMap" class="map"></div>
+
+        <div class="table-wrapper"
+          ng-if="feature && feature.get('docType') == 'feature'">
+          <table class="table table-striped feature-table">
+            <tr ng-repeat="(key,value) in feature.getProperties()" ng-if="validProperty(key)">
+              <td>{{key.substr(3)}}</td>
+              <td title="{{value}}">{{value}}</td>
+            </tr>
+          </table>
+        </div>
+
+      </div> <!-- /.sticky -->
+
+    </div> <!-- /.results-map-col -->
+
+
+  </div>
+</div>

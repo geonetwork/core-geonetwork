@@ -182,6 +182,9 @@
         return $http.get(url, {
         }).then(function(res) {
           // TODO: We may have more than one suggestions
+          if (!res.data.suggest) {
+            return [];
+          }
           var suggestions = res.data.suggest.mainSuggester,
               spellchecks = res.data.spellcheck.suggestions[1] &&
                             res.data.spellcheck.suggestions[1].suggestion,
