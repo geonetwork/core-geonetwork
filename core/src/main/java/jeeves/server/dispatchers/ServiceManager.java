@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.io.EofException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
@@ -373,12 +374,15 @@ public class ServiceManager {
         context.setServlet(servlet);
 
         String ip = request.getRemoteAddr();
-        
+
+        boolean notCrawler = true;
 
         String userAgent = request.getHeader("user-agent");
         
-        Matcher m = regex.matcher(userAgent);
-        boolean notCrawler = !m.find();
+        if(StringUtils.isNotBlank(userAgent)) {
+            Matcher m = regex.matcher(userAgent);
+            notCrawler = !m.find();
+        }
         
         if(notCrawler) {
             final HttpSession httpSession = request.getSession(true);
