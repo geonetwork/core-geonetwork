@@ -48,7 +48,7 @@
     'ga_print_directive'
   ])
 
-  /**
+      /**
    * @ngdoc directive
    * @name gn_onlinesrc.directive:gnOnlinesrcList
    *
@@ -76,7 +76,7 @@
    * </ul>
    *
    */
-  .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
+      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
         function(gnOnlinesrc, gnCurrentEdit) {
           return {
             restrict: 'A',
@@ -94,7 +94,7 @@
                */
               var loadRelations = function() {
                 gnOnlinesrc.getAllResources()
-                .then(function(data) {
+                    .then(function(data) {
                       scope.relations = data;
                     });
               };
@@ -156,7 +156,7 @@
      * On submit, the metadata is saved, the thumbnail is added, then the form
      * and online resource list are refreshed.
      */
-    .directive('gnAddOnlinesrc', [
+      .directive('gnAddOnlinesrc', [
         'gnOnlinesrc',
         'gnOwsCapabilities',
         'gnWfsService',
@@ -968,7 +968,7 @@
                     if (scope.OGCProtocol == 'WMS') {
                       return gnOwsCapabilities.getWMSCapabilities(
                           scope.params.url)
-                      .then(function(capabilities) {
+                          .then(function(capabilities) {
                             scope.layers = [];
                             scope.isUrlOk = true;
                             angular.forEach(capabilities.layers, function(l) {
@@ -976,13 +976,13 @@
                                 scope.layers.push(l);
                               }
                             });
-                          }).catch (function(error) {
+                          }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
                     } else if (scope.OGCProtocol == 'WFS') {
                       return gnWfsService.getCapabilities(
                           scope.params.url)
-                      .then(function(capabilities) {
+                          .then(function(capabilities) {
                             scope.layers = [];
                             scope.isUrlOk = true;
                             angular.forEach(
@@ -996,7 +996,7 @@
                                    });
                                  }
                                });
-                          }).catch (function(error) {
+                          }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
                     }
@@ -1151,7 +1151,7 @@
      * On submit, the metadata is saved, the thumbnail is added, then the form
      * and online resource list are refreshed.
      */
-    .directive('gnLinkServiceToDataset', [
+      .directive('gnLinkServiceToDataset', [
         'gnOnlinesrc',
         'Metadata',
         'gnOwsCapabilities',
@@ -1231,7 +1231,7 @@
                   scope.loadCurrentLink = function(url) {
                     scope.alertMsg = null;
                     return gnOwsCapabilities.getWMSCapabilities(url)
-                    .then(function(capabilities) {
+                        .then(function(capabilities) {
                           scope.layers = [];
                           scope.srcParams.selectedLayers = [];
                           scope.layers.push(capabilities.Layer[0]);
@@ -1321,7 +1321,7 @@
      * On submit, the metadata is saved, the link is added,
      * then the form and online resource list are refreshed.
      */
-    .directive('gnLinkToMetadata', [
+      .directive('gnLinkToMetadata', [
         'gnOnlinesrc', '$translate', 'gnGlobalSettings',
         function(gnOnlinesrc, $translate, gnGlobalSettings) {
           return {
@@ -1401,7 +1401,7 @@
      * then the form
      * and online resource list are refreshed.
      */
-    .directive('gnLinkToSibling', ['gnOnlinesrc', 'gnGlobalSettings',
+      .directive('gnLinkToSibling', ['gnOnlinesrc', 'gnGlobalSettings',
         function(gnOnlinesrc, gnGlobalSettings) {
           return {
             restrict: 'A',

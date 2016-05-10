@@ -66,8 +66,8 @@
             // id may be in id property (eg. group) or @id (eg. category)
             xml = xml.replace('{{id}}',
                 scope.element.id || scope.element['@id'])
-                              .replace(/{{key}}/g, e.key)
-                              .replace('{{value}}', e.value);
+                .replace(/{{key}}/g, e.key)
+                .replace('{{value}}', e.value);
             $http.post('admin.' + scope.type + '.update.labels', xml, {
               headers: {'Content-type': 'application/xml'}
             }).success(function(data) {

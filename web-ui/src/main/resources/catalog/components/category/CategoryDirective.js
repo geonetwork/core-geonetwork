@@ -92,7 +92,7 @@
               }
             });
             $http.get(url, {params: params})
-              .success(function(data) {
+                .success(function(data) {
                   scope.report = data;
                   defer.resolve(data);
                 }).error(function(data) {

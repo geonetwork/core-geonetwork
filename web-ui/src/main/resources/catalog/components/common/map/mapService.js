@@ -754,7 +754,7 @@
               // TODO: parse better legend & attribution
               if (angular.isArray(layer.Style) && layer.Style.length > 0) {
                 var url = layer.Style[layer.Style.length - 1]
-                  .LegendURL[0];
+                    .LegendURL[0];
                 if (url) {
                   legend = url.OnlineResource;
                 }
@@ -819,7 +819,7 @@
                   $.ajax({
                     url: proxyUrl
                   })
-                    .done(function(response) {
+                      .done(function(response) {
                         // TODO: Check WFS exception
                         vectorSource.addFeatures(vectorFormat.
                             readFeatures(response));
@@ -837,7 +837,7 @@
                         map.getView().fit(extent, map.getSize());
 
                       })
-                    .then(function() {
+                      .then(function() {
                         this.loadingLayer = false;
                       });
                 },
@@ -1023,7 +1023,7 @@
                     finishCreation();
                   }
                   else {
-                    $this.feedLayerMd(olL).finally (finishCreation);
+                    $this.feedLayerMd(olL).finally(finishCreation);
                   }
                 }
 

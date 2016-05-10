@@ -32,7 +32,7 @@
   angular.module('gn_validation_report_directive', [
     'gn_utility'
   ])
-  .directive('gnValidationReport', ['gnValidation', 'gnCurrentEdit',
+      .directive('gnValidationReport', ['gnValidation', 'gnCurrentEdit',
         function(gnValidation, gnCurrentEdit) {
           return {
             restrict: 'A',

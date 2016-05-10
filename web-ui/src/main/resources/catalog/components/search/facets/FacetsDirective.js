@@ -217,8 +217,8 @@
               scope.isInSearch = function(value) {
                 return scope.searchObj.params[scope.facetConfig.key] &&
                     scope.searchObj.params[scope.facetConfig.key]
-                      .split(delimiter)
-                      .indexOf(value) >= 0;
+                    .split(delimiter)
+                    .indexOf(value) >= 0;
               };
 
               //TODO improve performance here, maybe to complex $watchers
