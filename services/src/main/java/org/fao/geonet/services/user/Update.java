@@ -51,6 +51,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -161,6 +164,26 @@ public class Update {
 
         User user = getUser(userRepository, operation, id, username);
 
+        
+        //If it is a useradmin updating, 
+        //maybe we don't know all the groups the user is part of
+        if(!myProfile.equals(Profile.Administrator)) {
+            List<Integer> myUserAdminGroups = userGroupRepository.findGroupIds(Specifications.where(
+                    hasProfile(myProfile)).and(hasUserId(Integer.valueOf(myUserId))));
+            
+            List<UserGroup> usergroups = 
+                    userGroupRepository.findAll(Specifications.where(
+                            hasUserId(Integer.parseInt(id))));
+            
+            //keep unknown groups as is
+            for(UserGroup ug : usergroups) {
+                if(!myUserAdminGroups.contains(ug.getGroup().getId())) {
+                    groups.add(new GroupElem(ug.getProfile().name(),
+                            ug.getGroup().getId()));
+                }
+            }
+        }
+        
         setPassword(operation, password, user);
         if (operation.equalsIgnoreCase(Params.Operation.RESETPW)) {
             userRepository.save(user);
