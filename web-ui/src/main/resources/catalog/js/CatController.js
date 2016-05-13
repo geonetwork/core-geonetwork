@@ -46,7 +46,7 @@
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
       $scope.langs = {'eng': 'en', 'dut': 'du', 'fre': 'fr',
-        'ger': 'ge', 'kor': 'ko', 'spa': 'es', 'cat': 'ca', 'cze': 'cz'};
+        'ger': 'de', 'kor': 'ko', 'spa': 'es', 'cat': 'ca', 'cze': 'cz'};
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
