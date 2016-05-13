@@ -15880,7 +15880,6 @@ yx-axis
   top: 1.5em;
   padding: 0 10px;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
-  max-height: 90%;
 }
 .gn [sxt-main-viewer] .main-tools button:focus [role=tooltip],
 .g [sxt-main-viewer] .main-tools button:focus [role=tooltip],
@@ -15906,7 +15905,7 @@ yx-axis
 }
 .gn [sxt-main-viewer] .main-tools.activeTool,
 .g [sxt-main-viewer] .main-tools.activeTool {
-  height: calc(100% - 4em);
+  height: calc(100% - 4.35em);
   padding-bottom: 1em;
 }
 .gn [sxt-main-viewer] .sxt-panel-toggle,
@@ -16161,10 +16160,18 @@ yx-axis
 .gn [sxt-main-viewer] gn-features-tables .nav li a,
 .g [sxt-main-viewer] gn-features-tables .nav li a {
   border-radius: 0;
+  padding: 6px 15px;
 }
 .gn [sxt-main-viewer] gn-features-tables .nav li a:hover,
 .g [sxt-main-viewer] gn-features-tables .nav li a:hover {
   cursor: pointer;
+}
+.gn [sxt-main-viewer] gn-features-tables .export button,
+.g [sxt-main-viewer] gn-features-tables .export button {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
 }
 .gn [sxt-main-viewer] gn-features-tables .panel-heading,
 .g [sxt-main-viewer] gn-features-tables .panel-heading {
@@ -16224,7 +16231,7 @@ yx-axis
 }
 .gn [sxt-main-viewer] gn-features-tables .fixed-table-container .fixed-table-body,
 .g [sxt-main-viewer] gn-features-tables .fixed-table-container .fixed-table-body {
-  height: calc(100% - 6.1em);
+  height: calc(100% - 5.l5em);
 }
 .gn [sxt-main-viewer] gn-features-tables .fixed-table-pagination .pagination-detail,
 .g [sxt-main-viewer] gn-features-tables .fixed-table-pagination .pagination-detail,
@@ -16237,6 +16244,12 @@ yx-axis
   position: absolute;
   right: 1em;
   top: 5.4em;
+}
+.gn [sxt-main-viewer] gn-features-tables .fixed-table-container thead th .th-inner,
+.g [sxt-main-viewer] gn-features-tables .fixed-table-container thead th .th-inner,
+.gn [sxt-main-viewer] gn-features-tables .fixed-table-container tbody td .th-inner,
+.g [sxt-main-viewer] gn-features-tables .fixed-table-container tbody td .th-inner {
+  padding: 2px;
 }
 .gn [sxt-main-viewer] gn-features-tables .no-records-found,
 .g [sxt-main-viewer] gn-features-tables .no-records-found {
@@ -16296,6 +16309,13 @@ yx-axis
 .g [sxt-main-viewer] gn-features-tables th {
   background: #eee;
 }
+.gn [sxt-main-viewer] gn-features-tables .page-list button,
+.g [sxt-main-viewer] gn-features-tables .page-list button {
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
 .gn [sxt-main-viewer] gn-features-tables .pagination,
 .g [sxt-main-viewer] gn-features-tables .pagination {
   font-weight: bold;
@@ -16303,6 +16323,11 @@ yx-axis
 .gn [sxt-main-viewer] gn-features-tables .pagination > .active > a,
 .g [sxt-main-viewer] gn-features-tables .pagination > .active > a {
   box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.4);
+}
+.gn [sxt-main-viewer] gn-features-tables .pagination li a,
+.g [sxt-main-viewer] gn-features-tables .pagination li a {
+  padding: 3px 6px;
+  margin-top: .5em;
 }
 .gn [sxt-main-viewer] gn-features-tables .pagination li:first-child > a,
 .g [sxt-main-viewer] gn-features-tables .pagination li:first-child > a,
@@ -16322,7 +16347,7 @@ yx-axis
 .g [sxt-main-viewer] gn-features-tables .bootstrap-table .table > tfoot > tr > th,
 .gn [sxt-main-viewer] gn-features-tables .bootstrap-table .table > thead > tr > td,
 .g [sxt-main-viewer] gn-features-tables .bootstrap-table .table > thead > tr > td {
-  padding: 4px !important;
+  padding: 2px !important;
 }
 .gn [sxt-main-viewer] footer,
 .g [sxt-main-viewer] footer {
@@ -21312,6 +21337,11 @@ yx-axis
 .gn ul.gn-resultview li.gn-grid .gn-md-links .dropdown-menu,
 .g ul.gn-resultview li.gn-grid .gn-md-links .dropdown-menu {
   max-width: 195px;
+}
+.gn .metadata.panel-default,
+.g .metadata.panel-default {
+  border-bottom-color: #fff;
+  box-shadow: none;
 }
 .gn h4,
 .g h4 {
