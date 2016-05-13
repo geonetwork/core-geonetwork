@@ -28,7 +28,6 @@
     top: @sxt-vieweritem-top;
     padding: 0 10px;
     box-shadow: @sxt-shadow;
-    max-height: 90%;
     button:focus [role=tooltip],
     button:hover [role=tooltip] {
       right: auto;
@@ -47,7 +46,7 @@
       }
     }
     &.activeTool {
-      height: ~"calc(100% - 4em)";
+      height: ~"calc(100% - 4.35em)";
       padding-bottom: 1em;
     }
   }
@@ -258,10 +257,14 @@
      margin: 1em 1em 0;
      li a {
        border-radius: 0;
+       padding: 6px 15px;
        &:hover {
          cursor: pointer;
        }
      }
+   }
+   .export button {
+     .btn-sm;
    }
 
    .panel-heading {
@@ -312,7 +315,7 @@
        border-radius: 0;
      }
      .fixed-table-body {
-       height: ~"calc(100% - 6.1em)";
+       height: ~"calc(100% - 5.l5em)";
      }
    }
    .fixed-table-pagination {
@@ -328,6 +331,11 @@
      top: 5.4em;
    }
 
+   .fixed-table-container thead th .th-inner,
+   .fixed-table-container tbody td .th-inner {
+     padding: 2px;
+   }
+
    .no-records-found {
      border-top : 2em solid #fff;
      td {
@@ -341,10 +349,19 @@
      background: #eee;
    }
 
+   .page-list {
+     button {
+       .btn-xs;
+     }
+   }
    .pagination {
      font-weight: bold;
      & > .active > a {
        box-shadow: inset @sxt-shadow;
+     }
+     li a {
+       padding: 3px 6px;
+       margin-top: .5em;
      }
      li:first-child,
      li:last-child {
@@ -359,7 +376,7 @@
    .bootstrap-table .table > tfoot > tr > td,
    .bootstrap-table .table > tfoot > tr > th,
    .bootstrap-table .table > thead > tr > td {
-     padding: 4px !important;
+     padding: 2px !important;
    }
 
   }
