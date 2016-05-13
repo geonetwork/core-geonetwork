@@ -2716,9 +2716,6 @@
     <element name="gmd:MD_LegalConstraints">
         <label>Rechtliche Einschränkungen</label>
     </element>
-    <element name="gmd:MD_LegalConstraints">
-        <label>Rechtliche Einschränkungen</label>
-    </element>
     <element name="gmd:aggregateDataSetIdentifier">
         <label>Identifikator</label>
     </element>
