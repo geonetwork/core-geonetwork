@@ -61,7 +61,7 @@
       element.bootstrapTable('destroy');
       element.bootstrapTable(
         angular.extend({
-          height: 300,
+          height: 250,
           sortable: true,
           onPostBody: function() {
             var trs = element.find('tbody').children();
