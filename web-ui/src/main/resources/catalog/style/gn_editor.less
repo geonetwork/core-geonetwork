@@ -379,13 +379,13 @@ form.gn-tab-medsea-metadata {
   }
 
   /* Do not display remove control ... */
-  .btn.fa.fa-times.text-danger {
-    display: none;
+  a.btn[data-gn-click-and-spin^=remove] {
+    display: none !important;
   }
   /* ... but keep it for format and contact */
-  .gn-format .btn.fa.fa-times.text-danger,
-  .gn-organisationName .btn.fa.fa-times.text-danger{
-    display: block;
+  .gn-format a.btn[data-gn-click-and-spin^=remove],
+  .gn-organisationName a.btn[data-gn-click-and-spin^=remove]{
+    display: block !important;
   }
 
   .gn-required > label:after {
