@@ -258,7 +258,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : application/vnd.ogc.wms_xml</gco:CharacterString>
@@ -284,7 +284,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : image/png</gco:CharacterString>
@@ -300,7 +300,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : application/atom+xml</gco:CharacterString>
@@ -316,7 +316,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : application/openlayers</gco:CharacterString>
@@ -332,7 +332,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : application/pdf</gco:CharacterString>
@@ -348,7 +348,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : application/rss+xml</gco:CharacterString>
@@ -364,7 +364,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format :                   application/vnd.google-earth.kml+xml</gco:CharacterString>
@@ -380,7 +380,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : application/vnd.google-earth.kmz</gco:CharacterString>
@@ -396,7 +396,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : image/geotiff</gco:CharacterString>
@@ -412,7 +412,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : image/geotiff8</gco:CharacterString>
@@ -428,7 +428,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : image/gif</gco:CharacterString>
@@ -444,7 +444,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : image/jpeg</gco:CharacterString>
@@ -460,7 +460,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : image/png8</gco:CharacterString>
@@ -476,7 +476,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : image/svg+xml</gco:CharacterString>
@@ -492,7 +492,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : image/tiff</gco:CharacterString>
@@ -508,7 +508,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : image/tiff8</gco:CharacterString>
@@ -537,7 +537,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : text/plain</gco:CharacterString>
@@ -553,7 +553,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : text/html</gco:CharacterString>
@@ -569,7 +569,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : application/vnd.ogc.gml</gco:CharacterString>
@@ -595,7 +595,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : application/vnd.ogc.wms_xml</gco:CharacterString>
@@ -621,7 +621,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : image/png</gco:CharacterString>
@@ -637,7 +637,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : image/jpeg</gco:CharacterString>
@@ -653,7 +653,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                <gco:CharacterString>WWW:LINK</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:description>
                                 <gco:CharacterString>Format : image/gif</gco:CharacterString>
@@ -687,7 +687,7 @@
                                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
-                                <gco:CharacterString>OGC:WMS-1.1.1-http-get-map</gco:CharacterString>
+                                <gco:CharacterString>OGC:WMS</gco:CharacterString>
                             </gmd:protocol>
                             <gmd:name>
                                 <gco:CharacterString>gn:gboundaries</gco:CharacterString>

@@ -1548,8 +1548,9 @@
                     '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map').length == 1) {
 
               var downloads = md && md.getLinksByType(linkGroup,
-                      'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
-                      'WFS', 'WCS', 'COPYFILE');
+                  'WWW:DOWNLOAD-1.0-link--download', 'WWW:OPENDAP', 'MYO:MOTU-SUB',
+                  'FILE', 'DB', 'WWW:FTP',
+                  'WFS', 'WCS', 'COPYFILE');
               layer.set('downloads', downloads);
 
               var wfs = md && md.getLinksByType(linkGroup, '#WFS');

@@ -3117,17 +3117,17 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
     <help>Protocole de connexion utilisé, par exemple FTP.</help>
     <condition/>
     <helper>
-      <option value="WWW:LINK-1.0-http--link">Adresse internet (URL)</option>
+      <option value="WWW:LINK">Adresse internet (URL)</option>
       <option value="WWW:LINK-1.0-http--metadata-URL">Adresse internet vers la métadonnée</option>
-      <option value="OGC:WMS-1.1.1-http-get-map">Visualiser (WMS)</option>
+      <option value="OGC:WMS">Visualiser (WMS)</option>
       <option value="OGC:WMTS">Visualiser (WMTS)</option>
       <option value="OGC:OWS-C">Visualiser (OWS Context)</option>
       <option value="FILE">Télécharger (fichier)</option>
       <option value="COPYFILE">Télécharger (copie)</option>
       <option value="DB">Télécharger (base de données)</option>
       <option value="WWW:DOWNLOAD-1.0-link--download">Télécharger (lien)</option>
-      <option value="WFS">Télécharger (WFS)</option>
-      <option value="WCS">Télécharger (WCS)</option>
+      <option value="OGC:WFS">Télécharger (WFS)</option>
+      <option value="OGC:WCS">Télécharger (WCS)</option>
       <option value="OGC:WPS">Traitement en ligne (WPS)</option>
     </helper>
   </element>

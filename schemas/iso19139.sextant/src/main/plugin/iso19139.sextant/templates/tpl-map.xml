@@ -220,7 +220,7 @@
 								<gmd:URL/>
 							</gmd:linkage>
 							<gmd:protocol>
-								<gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+								<gco:CharacterString>WWW:LINK</gco:CharacterString>
 							</gmd:protocol>
 							<gmd:name>
 								<gmx:MimeFileType xmlns:gmx="http://www.isotc211.org/2005/gmx"

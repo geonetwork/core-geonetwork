@@ -32,14 +32,14 @@
     <description>Protocole de la connexion à utiliser</description>
     <help>Protocole de connexion utilisé, par exemple FTP.</help>
     <helper>
-      <option value="WWW:LINK-1.0-http--link">Adresse internet (URL)</option>
+      <option value="WWW:LINK">Adresse internet (URL)</option>
       <option value="FILE">Télécharger (fichier)</option>
       <option value="COPYFILE">Télécharger (copie)</option>
       <option value="DB">Télécharger (base de données)</option>
       <option value="WWW:DOWNLOAD-1.0-link--download">Télécharger (lien)</option>
       <option value="WFS">Télécharger (WFS)</option>
       <option value="WCS">Télécharger (WCS)</option>
-      <option value="OGC:WMS-1.1.1-http-get-map">Visualiser (WMS)</option>
+      <option value="OGC:WMS">Visualiser (WMS)</option>
       <option value="OGC:WMTS">View (WMTS)</option>
       <option value="OGC:WPS">OGC-WPS Web Processing Service</option>
       <option value="OGC:OWS-C">Visualiser (OWS Context)</option>

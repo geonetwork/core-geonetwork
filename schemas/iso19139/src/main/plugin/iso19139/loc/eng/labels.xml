@@ -1931,15 +1931,15 @@
 		<label>Protocol</label>
 		<description>Connection protocol to be used</description>
     <helper>
-      <option value="WWW:LINK-1.0-http--link">Web link (URL)</option>
+      <option value="WWW:LINK">Web link (URL)</option>
       <option value="WWW:LINK-1.0-http--metadata-URL">Point of truth URL of this metadata record</option>
       <option value="FILE">Download (file)</option>
       <option value="COPYFILE">Download (copy)</option>
       <option value="DB">Download (database)</option>
       <option value="WWW:DOWNLOAD-1.0-link--download">Download (link)</option>
-      <option value="WFS">Download (WFS)</option>
-      <option value="WCS">Download (WCS)</option>
-      <option value="OGC:WMS-1.1.1-http-get-map">View (WMS)</option>
+      <option value="OGC:WFS">Download (WFS)</option>
+      <option value="OGC:WCS">Download (WCS)</option>
+      <option value="OGC:WMS">View (WMS)</option>
       <option value="OGC:WMTS">View (WMTS)</option>
       <option value="OGC:WPS">OGC-WPS Web Processing Service</option>
       <option value="OGC:OWS-C">View (OWS Context)</option>
