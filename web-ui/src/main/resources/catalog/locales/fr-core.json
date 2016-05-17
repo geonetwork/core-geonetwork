@@ -203,7 +203,7 @@
     "sessionAlertMsg": "Dernière activité enregistrée {{startedAt}}. Votre session expirera dans {{willBeCancelledIn}}s (le temps d'inactivité maximum est de {{length}}s). Vous devriez enregistrer votre travail si vous avez des modifications non enregistrées! Si non, vous serez déconnecté bientôt.",
     "sessionWillExpireIn": "Votre session expirera dans {{remainingTime}}s. Sauvegarder votre travail!",
     "sessionIsProbablyCancelled": "Votre session a probablement expiré!",
-    "sessionAlertDisconnectedMsg": "Dernière activité enregistrée {{startedAt}}. Votre session a très probablement expirée maintenant (le temps d'inactivité maximum est de {{length}}s). Vous devriez recharger la page pour vérifier si votre session est encore active ou vous identifiez à nouveau !",
+    "sessionAlertDisconnectedMsg": "Dernière activité enregistrée {{startedAt}}. Votre session a très probablement expiré maintenant (le temps d'inactivité maximum est de {{length}}s). Vous devriez recharger la page pour vérifier si votre session est encore active ou vous identifiez à nouveau !",
     "layersLoading": "Ajout des couches à la carte ...",
     "updateStatus": "Mettre à jour l'état de la fiche.",
     "resourceContact": "Contact pour la ressource",
