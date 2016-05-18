@@ -53,8 +53,9 @@ import org.fao.geonet.utils.Xml;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.owasp.esapi.errors.EncodingException;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
@@ -545,6 +546,19 @@ public final class XslUtil
             return context.getLanguage();
         } else {
             return "eng";
+        }
+    }
+    
+    public static String encodeForJavaScript(String str) {
+        return DefaultEncoder.getInstance().encodeForJavaScript(str);
+    }
+
+    public static String encodeForURL(String str) {
+        try {
+            return DefaultEncoder.getInstance().encodeForURL(str) ;
+        } catch (EncodingException ex) {
+            ex.printStackTrace();
+            return str;
         }
     }
 }
