@@ -10,13 +10,13 @@
   <ows-context:ResourceList>
     <ows-context:Layer name="{type=mapquest}"
                        group="Background layers"
-                       hidden="false"
+                       hidden="true"
                        opacity="1">
       <ows:Title>MapQuest</ows:Title>
     </ows-context:Layer>
     <ows-context:Layer name="{type=osm}"
                        group="Background layers"
-                       hidden="true"
+                       hidden="false"
                        opacity="1">
       <ows:Title>OpenStreetMap
       </ows:Title>
@@ -27,5 +27,42 @@
                        opacity="1">
       <ows:Title>Bing Aerial</ows:Title>
     </ows-context:Layer>
+    <ows-context:Layer name="{type=stamen,name=watercolor}"
+                       group="Background layers"
+                       hidden="true"
+                       opacity="1">
+      <ows:Title>Stamen Watercolor</ows:Title>
+    </ows-context:Layer>
+    <ows-context:Layer name="{type=stamen,name=toner}"
+                       group="Background layers"
+                       hidden="true"
+                       opacity="1">
+      <ows:Title>Stamen Toner</ows:Title>
+    </ows-context:Layer>
+    <!--
+    Example for WMTS:
+
+    <ows-context:Layer queryable="false"
+                       name="{type=wmts,name=web_mercator_etopo1_hillshade}"
+                       hidden="true" opacity="1" group="Background layers">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Etopo1</ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    xlink:href="http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"/>
+      </ows-context:Server>
+      <ows-context:StyleList/>
+    </ows-context:Layer>
+
+    Example for WMS:
+     <ows-context:Layer queryable="false" name="TEMP"
+                        hidden="true" opacity="1"
+                        group="Background layers">
+            <ows:Title xmlns:ows="http://www.opengis.net/ows">Coriolis ncWMS</ows:Title>
+            <ows-context:Server service="urn:ogc:serviceType:WMS">
+                <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://tds0.ifremer.fr/thredds/wms/CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE?"/>
+            </ows-context:Server>
+            <ows-context:StyleList/>
+        </ows-context:Layer>
+    -->
   </ows-context:ResourceList>
 </ows-context:OWSContext>

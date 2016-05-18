@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_thesaurus_directive');
 
@@ -51,10 +74,21 @@
              scope.thesaurusKey = null;
              scope.snippet = null;
              scope.snippetRef = null;
-             var restrictTo =
-                 scope.include ? (
-                     scope.include.indexOf(',') !== -1 ?
-                      scope.include.split(',') : [scope.include]) : [];
+             var restrictionList = scope.include ? (
+             scope.include.indexOf(',') !== -1 ?
+                 scope.include.split(',') : [scope.include]) : [];
+
+             var includeThesaurus = [];
+             var excludeThesaurus = [];
+             for (var i = 0; i < restrictionList.length; i++) {
+               var t = restrictionList[i];
+               if (t.indexOf('-') === 0) {
+                 excludeThesaurus.push(t.substring(1));
+               } else {
+                 includeThesaurus.push(t);
+               }
+             }
+
 
              scope.allowFreeTextKeywords =
              (attrs.allowFreeTextKeywords === undefined) ||
@@ -64,18 +98,17 @@
              // in the record ?
              gnThesaurusService.getAll().then(
              function(listOfThesaurus) {
-               // TODO: Sort them
-               if (restrictTo.length > 0) {
-                 var filteredList = [];
-                 angular.forEach(listOfThesaurus, function(thesaurus) {
-                   if ($.inArray(thesaurus.getKey(), restrictTo) !== -1) {
-                     filteredList.push(thesaurus);
-                   }
-                 });
-                 scope.thesaurus = filteredList;
-               } else {
-                 scope.thesaurus = listOfThesaurus;
-               }
+               scope.thesaurus = [];
+               angular.forEach(listOfThesaurus, function(thesaurus) {
+                 if (excludeThesaurus.length > 0 &&
+                 $.inArray(thesaurus.getKey(), excludeThesaurus) !== -1) {
+
+                 } else if (includeThesaurus.length == 0 || (
+                 includeThesaurus.length > 0 &&
+                 $.inArray(thesaurus.getKey(), includeThesaurus) !== -1)) {
+                   scope.thesaurus.push(thesaurus);
+                 }
+               });
              });
 
              scope.add = function() {
@@ -90,8 +123,8 @@
                } else {
                  gnCurrentEdit.working = true;
                  return gnThesaurusService
-                         .getXML(thesaurusIdentifier,  null,
-                                 attrs.transformation).then(
+                 .getXML(thesaurusIdentifier,  null,
+                 attrs.transformation).then(
                          function(data) {
                    // Add the fragment to the form
                    scope.snippet = data;

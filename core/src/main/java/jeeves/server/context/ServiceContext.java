@@ -139,6 +139,10 @@ public class ServiceContext extends BasicContext {
 	public Path getUploadDir() { return getBean(GeonetworkDataDirectory.class).getUploadDir(); }
     public int getMaxUploadSize() { return _maxUploadSize; }
 
+    /**
+     * Warning: this may return a null value if the user is a crawler!!
+     * @return the user session stored on httpsession
+     */
 	public UserSession    getUserSession()    { return _userSession; }
 	public ProfileManager getProfileManager() { return getBean(ProfileManager.class);   }
 

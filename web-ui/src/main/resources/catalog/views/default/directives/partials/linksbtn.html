@@ -25,8 +25,7 @@
   </div>
 
   <div class="btn-group"
-       data-ng-if="isMapViewerEnabled"
-       data-ng-class="layers.length > 0 ? '' : 'hidden'">
+       data-ng-if="isMapViewerEnabled && layers.length > 1">
     <button type="button"
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown"
@@ -37,8 +36,8 @@
     <ul class="dropdown-menu" role="menu">
       <li ng-repeat="layer in ::layers">
         <a href="" data-ng-click="resultviewFns.addMdLayerToMap(layer, md)">
-                  <span class="fa fa-google"
-                        data-ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
+                  <!--<span class="fa fa-google"
+                        data-ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>-->
                   <span class="fa fa-globe"
                         data-ng-if="layer.contentType=='application/vnd.ogc.wms_xml'"></span>
           &nbsp;{{::layer.desc}}</a></li>
@@ -55,6 +54,15 @@
       </li>
     </ul>
   </div>
+  <button type="button"
+          class="btn btn-default"
+          data-ng-disabled="md['geonet:info'].dynamic == 'false'"
+          data-ng-if="isMapViewerEnabled && layers.length == 1"
+          data-ng-click="resultviewFns.addMdLayerToMap(layers[0], md)"
+          title="{{'view' | translate}}">
+    <span class="fa fa-globe"></span>
+  </button>
+
 
   <div class="btn-group"
        data-ng-if="isMapViewerEnabled"

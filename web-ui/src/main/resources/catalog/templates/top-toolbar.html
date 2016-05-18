@@ -64,6 +64,12 @@
               <i class="fa fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
             </a>
           </li>
+          <li>
+            <a data-gn-active-tb-item="catalog.edit#/batchedit"
+               data-ng-if="user.isReviewerOrMore()">
+              <i class="fa fa-pencil"/>&nbsp;<span data-translate="">batchEditing</span>
+            </a>
+          </li>
         </ul>
       </li>
       <li data-ng-show="user.isReviewerOrMore()">
@@ -72,6 +78,17 @@
           <i class="fa fa-th"></i>
           <span class="visible-lg" data-translate="">adminConsole</span>
         </a>
+      </li>
+      <li class="dropdown" data-ng-show="user.isReviewerOrMore() && viewMenuAdmin">
+        <a href="" class="dropdown-toggle" data-toggle="dropdown"
+           role="button" aria-expanded="false"><span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+          <li data-ng-repeat="t in adminMenu">
+            <a data-gn-active-tb-item="admin.console{{t.route}}">
+              <i class="fa {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
+            </a>
+          </li>
+        </ul>
       </li>
     </ul>
 

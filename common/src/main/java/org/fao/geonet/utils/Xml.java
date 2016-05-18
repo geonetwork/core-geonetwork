@@ -87,6 +87,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -1006,10 +1008,33 @@ public final class Xml
      * @return
      */
     public static Set<String> filterElementValues(Element element,
-                                                     ElementFilter elementFilter,
-                                                     String elementName,
-                                                     Namespace elementNamespace,
-                                                     String attributeName) {
+                                                  ElementFilter elementFilter,
+                                                  String elementName,
+                                                  Namespace elementNamespace,
+                                                  String attributeName) {
+        return filterElementValues(element, elementFilter, elementName, elementNamespace, attributeName, null);
+    }
+
+    /**
+     * Search in metadata all matching element for the filter
+     * and return a list of uuid separated by or to be used in a
+     * search on uuid. Extract uuid from matched element if
+     * elementName is null or from the elementName child.
+     *
+     * @param element
+     * @param elementFilter Filter to get element descendants
+     * @param elementName   Child element to get value from. If null, filtered element value is returned
+     * @param elementNamespace
+     * @param attributeName Attribute name to get value from. If null, TODO: improve
+     * @param attributeNamespace
+     * @return
+     */
+    public static Set<String> filterElementValues(Element element,
+                                                  ElementFilter elementFilter,
+                                                  String elementName,
+                                                  Namespace elementNamespace,
+                                                  String attributeName,
+                                                  Namespace attributeNamespace) {
         @SuppressWarnings("unchecked")
         Iterator<Element> i = element.getDescendants(elementFilter);
         Set<String> values = new HashSet<String>();
@@ -1020,7 +1045,8 @@ public final class Xml
                     e.getText() :
                     (attributeName == null ?
                             e.getChildText(elementName, elementNamespace) :
-                            e.getAttributeValue(attributeName)
+                            (attributeNamespace == null)?e.getAttributeValue(attributeName):
+                                    e.getAttributeValue(attributeName, attributeNamespace)
                     );
             if (uuid != null && !uuid.isEmpty()) {
                 values.add(uuid);
@@ -1418,5 +1444,32 @@ public final class Xml
             builder.insert(0, attBuilder);
         }
     }
+    /**
+     * return true if the String passed in is something like XML
+     *
+     *
+     * @param inString a string that might be XML
+     * @return true of the string is XML, false otherwise
+     */
+    public static boolean isXMLLike(String inXMLStr) {
 
+        boolean retBool = false;
+        Pattern pattern;
+        Matcher matcher;
+
+        // Regular expression to see if it starts and ends with the same element
+        final String XML_PATTERN_STR = "<(\\S+?)(.*?)>(.*?)</\\1>";
+
+        if (inXMLStr != null && inXMLStr.trim().length() > 0) {
+            if (inXMLStr.trim().startsWith("<")) {
+                pattern = Pattern.compile(XML_PATTERN_STR,
+                        Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE);
+
+                matcher = pattern.matcher(inXMLStr);
+                retBool = matcher.matches();
+            }
+        }
+
+        return retBool;
+    }
 }

@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_fields_directive');
 
@@ -32,6 +55,56 @@
         };
       });
 
+  /**
+   * @ngdoc directive
+   * @name gn_fields.directive:gnMeasure
+   * @function
+   *
+   * @description
+   * Component to edit a measure type field composed
+   * of a numberic value and a unit.
+   */
+  module.directive('gnMeasure',
+      function() {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/edit/partials/' +
+              'measure.html',
+          scope: {
+            uom: '@',
+            ref: '@'
+          },
+          link: function(scope, element, attrs) {
+            scope.value = parseFloat(attrs['gnMeasure'], 10) || null;
+
+            // Load the config from the textarea containing the helpers
+            scope.config =
+                angular.fromJson($('#' + scope.ref + '_config')[0].value);
+            if (scope.config == null) {
+              scope.config = {
+                option: []
+              };
+            }
+            // If only one option, convert to an array
+            if (!$.isArray(scope.config.option)) {
+              scope.config.option = [scope.config.option];
+            }
+            if (angular.isArray(scope.config)) {
+              scope.config.option = scope.config;
+            }
+            scope.$watch('selected', function(n, o) {
+              if (n && n !== o) {
+                if (n['@value']) {
+                  scope.value = parseFloat(n['@value'], 10);
+                }
+                if (n['@title']) {
+                  scope.uom = n['@title'];
+                }
+              }
+            });
+          }
+        };
+      });
   /**
    * @ngdoc directive
    * @name gn_fields.directive:gnFieldTooltip
@@ -255,12 +328,12 @@
 
             element.addClass('field-bg');
             element.find('a').has('.fa-times.text-danger')
-              .css('visibility', 'visible');
+                .css('visibility', 'visible');
           });
           element.on('mouseout', function() {
             element.removeClass('field-bg');
             element.find('a').has('.fa-times.text-danger')
-              .css('visibility', 'hidden');
+                .css('visibility', 'hidden');
           });
         }
       };

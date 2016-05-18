@@ -1,6 +1,37 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.kernel.search;
 
-import jeeves.server.ServiceConfig;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
@@ -24,14 +55,7 @@ import org.mockito.Mockito;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import jeeves.server.ServiceConfig;
 
 /**
  * Unit test for building Lucene queries.
@@ -97,7 +121,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx any:xxx) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(any:xxx title:xxx) +_isTemplate:n", query.toString());
     }
 
     /**
@@ -123,7 +147,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(category:yyy inspiretheme:xxx title:xxx any:yyy) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(inspiretheme:xxx title:xxx any:yyy category:yyy) +_isTemplate:n", query.toString());
     }
 
     /**
@@ -171,7 +195,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx title:zzz (+any:xxx +any:zzz)) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+((+any:xxx +any:zzz) title:xxx title:zzz) +_isTemplate:n", query.toString());
 
     }
 
@@ -194,7 +218,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx inspiretheme:xxx any:xxx) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(any:xxx title:xxx inspiretheme:xxx) +_isTemplate:n", query.toString());
     }
 
 
@@ -217,7 +241,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx title:zzz inspiretheme:xxx zzz (+any:xxx +any:zzz)) +_isTemplate:n",
+        assertEquals("unexpected Lucene query", "+((+any:xxx +any:zzz) title:xxx title:zzz inspiretheme:xxx zzz) +_isTemplate:n",
                 query.toString());
     }
 
@@ -262,8 +286,8 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx title:zzz inspiretheme:xxx inspiretheme:zzz any:xxx any:zzz) " +
-                                                "+_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(any:xxx any:zzz title:xxx title:zzz inspiretheme:xxx "
+        		+ "inspiretheme:zzz) +_isTemplate:n", query.toString());
     }
 
     /**
@@ -285,7 +309,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx _uuid:xxx) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(_uuid:xxx title:xxx) +_isTemplate:n", query.toString());
     }
 
     /**
@@ -307,7 +331,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx title:yyy _uuid:xxx _uuid:yyy) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(_uuid:xxx _uuid:yyy title:xxx title:yyy) +_isTemplate:n", query.toString());
     }
 
     @Test
@@ -330,9 +354,10 @@ public class LuceneQueryTest {
 
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
+     * @throws InterruptedException 
      */
     @Test
-    public void testSingleORSingleValueWithALL() {
+    public void testSingleORSingleValueWithALL() throws InterruptedException {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
         Element request = factory.element("request");
@@ -347,7 +372,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx any:xxx) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(any:xxx title:xxx) +_isTemplate:n", query.toString());
     }
 
 
@@ -371,7 +396,7 @@ public class LuceneQueryTest {
         LuceneQueryBuilder luceneQueryBuilder = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null);
         Query query = luceneQueryBuilder.build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(title:xxx title:yyy (+any:xxx +any:yyy)) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+((+any:xxx +any:yyy) title:xxx title:yyy) +_isTemplate:n", query.toString());
     }
 
 
@@ -481,7 +506,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(+any:demo +any:hoeperdepoep) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(+any:hoeperdepoep +any:demo) +_isTemplate:n", query.toString());
     }
 
     @Test
@@ -984,7 +1009,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(+topicCat:environment* +topicCat:boundaries +topicCat:biota*) +_isTemplate:n",
+        assertEquals("unexpected Lucene query", "+(+topicCat:biota* +topicCat:boundaries +topicCat:environment*) +_isTemplate:n",
                 query.toString());
     }
 
@@ -1352,7 +1377,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(+inspiretheme:Hydrography* +inspiretheme:\"Cadastral parcels\") +_isTemplate:n",
+        assertEquals("unexpected Lucene query", "+(+inspiretheme:\"Cadastral parcels\" +inspiretheme:Hydrography*) +_isTemplate:n",
                 query.toString());
     }
 
@@ -1413,7 +1438,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(+keyword:\"zat op de stoep\" +keyword:hoeperdepoep) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(+keyword:hoeperdepoep +keyword:\"zat op de stoep\") +_isTemplate:n", query.toString());
     }
 
     /**
@@ -1607,7 +1632,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(+_cat:\"zat op de stoep\" +_cat:hoeperdepoep) +_isTemplate:n", query.toString());
+        assertEquals("unexpected Lucene query", "+(+_cat:hoeperdepoep +_cat:\"zat op de stoep\") +_isTemplate:n", query.toString());
     }
 
     @Test
@@ -1723,7 +1748,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:nou moe _op2:nou moe _op0:hatsjekidee _op2:hatsjekidee) +_isTemplate:n",
+        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe) +_isTemplate:n",
                 query.toString());
     }
 
@@ -1749,7 +1774,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:nou moe _op2:nou moe _op0:hatsjekidee _op2:hatsjekidee) +_isTemplate:n",
+        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe) +_isTemplate:n",
                 query.toString());
     }
 
@@ -1775,7 +1800,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:nou moe _op2:nou moe _op0:hatsjekidee _op2:hatsjekidee _owner:yeah!) " +
+        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe _owner:yeah!) " +
                                                 "+_isTemplate:n", query.toString());
     }
 
@@ -1801,7 +1826,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:nou moe _op2:nou moe _op0:hatsjekidee _op2:hatsjekidee _dummy:0) " +
+        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe _dummy:0) " +
                                                 "+_isTemplate:n", query.toString());
     }
 
@@ -2073,8 +2098,8 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:1 _op2:1 _op0:0 _op2:0) +westBL:[-180.0 TO 180.0] +eastBL:[-180.0 TO 180.0] " +
-                                                "+northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0] +title:hoi +_isTemplate:n",
+        assertEquals("unexpected Lucene query", "+(_op0:0 _op2:0 _op0:1 _op2:1) +title:hoi +westBL:[-180.0 TO 180.0] "
+        		+ "+eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0] +_isTemplate:n",
                 query.toString());
     }
 
@@ -2190,8 +2215,8 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+_isTemplate:n +westBL:[-180.0 TO 180.0] +eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO " +
-                                                "90.0] +southBL:[-90.0 TO 90.0]", query.toString());
+        assertEquals("unexpected Lucene query", "+westBL:[-180.0 TO 180.0] +eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] "
+        		+ "+southBL:[-90.0 TO 90.0] +_isTemplate:n", query.toString());
     }
 
 
@@ -2385,7 +2410,7 @@ public class LuceneQueryTest {
         );
         LuceneQueryInput lQI = new LuceneQueryInput(request);
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
-        assertEquals("unexpected Lucene query", "+(+_isTemplate:n) +ConstantScore($facets:keywordoceanchemistry $facets:keywordoceansalinity $facets:keywordoceantemperature)^0.0", query.toString());
+        assertEquals("unexpected Lucene query", "+(+_isTemplate:n) +ConstantScore($facets:keywordoceansalinity $facets:keywordoceanchemistry $facets:keywordoceantemperature)^0.0", query.toString());
     }
 
     private Element buildSingleDrilldownQuery(String drilldownPath) {

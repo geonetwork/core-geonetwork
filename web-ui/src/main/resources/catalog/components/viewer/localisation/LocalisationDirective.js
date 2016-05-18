@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_localisation_directive');
 
@@ -29,6 +52,9 @@
         controllerAs: 'locCtrl',
         controller: ['$scope', '$http', 'gnGetCoordinate',
           function($scope, $http, gnGetCoordinate) {
+
+            var parent = $scope.$parent;
+            var lang = parent.langs[parent.lang];
 
             $scope.modelOptions =
                 angular.copy(gnGlobalSettings.modelOptions);
@@ -78,7 +104,7 @@
               var url = 'http://api.geonames.org/searchJSON';
               $http.get(url, {
                 params: {
-                  lang: 'fr',
+                  lang: lang,
                   style: 'full',
                   type: 'json',
                   maxRows: 10,
@@ -132,7 +158,7 @@
           element.on('keydown', 'input', function(e) {
             if (e.keyCode === 40) {
               $(this).parents('.search-container')
-                .find('.dropdown-menu a').first().focus();
+                  .find('.dropdown-menu a').first().focus();
             }
           });
 
@@ -149,6 +175,18 @@
               $(':focus').blur();
               scope.collapsed = true;
             });
+          });
+
+          $('body').on('click', function(e) {
+            if (!$.contains(element[0], e.target)) { return; }
+            if ((element.find('input')[0] != e.target) &&
+                ($(e.target).parents('.dropdown-menu')[0] !=
+                element.find('.dropdown-menu')[0])) {
+              scope.$apply(function() {
+                $(':focus').blur();
+                scope.collapsed = true;
+              });
+            }
           });
 
         }

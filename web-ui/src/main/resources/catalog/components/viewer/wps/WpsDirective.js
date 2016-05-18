@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_wps_directive');
 
@@ -88,10 +111,8 @@
       return {
         restrict: 'AE',
         scope: {
-          uri: '=',
-          processId: '=',
-          defaults: '=',
-          map: '='
+          map: '=',
+          wpsLink: '='
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
@@ -101,8 +122,13 @@
         link: function(scope, element, attrs) {
           var defaults;
 
-          if(scope.defaults) {
-            defaults = parseKvpParams(scope.defaults);
+          var processId = attrs['processId'] || scope.wpsLink.name;
+          var uri = attrs['uri'] || scope.wpsLink.url;
+          var defaults = scope.$eval(attrs['defaults']) ||
+              scope.wpsLink.applicationProfile;
+
+          if (defaults) {
+            defaults = parseKvpParams(defaults);
           }
 
           scope.describeState = 'sended';
@@ -113,8 +139,8 @@
             mimeType: ''
           };
 
-          gnWpsService.describeProcess(scope.uri, scope.processId)
-          .then(
+          gnWpsService.describeProcess(uri, processId)
+              .then(
               function(response) {
                 scope.describeState = 'succeeded';
                 scope.describeResponse = response;
@@ -126,7 +152,7 @@
                         var value;
                         var defaultValue;
 
-                        if(defaults) {
+                        if (defaults) {
                           var datainput =
                               defaults.datainputs[input.identifier.value];
                           if (datainput != undefined) {
@@ -169,7 +195,7 @@
                   );
 
                   angular.forEach(
-                    scope.processDescription.processOutputs.output,
+                  scope.processDescription.processOutputs.output,
                       function(output, idx) {
                         output.asReference = true;
 
@@ -293,9 +319,9 @@
                       response.status.processFailed != undefined) {
                     scope.executeState = 'finished';
 
-                    if(response.status.processSucceeded) {
-                      var layers = gnWpsService.extractWmsLayerFromResponse(
-                          response, scope.map);
+                    if (response.status.processSucceeded) {
+                      gnWpsService.extractWmsLayerFromResponse(
+                          response, scope.map, scope.wpsLink.layer);
                     }
                   }
                 }
@@ -306,8 +332,8 @@
             scope.running = true;
             scope.executeState = 'sended';
             gnWpsService.execute(
-                scope.uri,
-                scope.processId,
+                uri,
+                processId,
                 inputs,
                 scope.responseDocument
             ).then(
@@ -318,7 +344,7 @@
                   scope.executeState = 'failed';
                   scope.executeResponse = response;
                 }
-            ).finally (
+            ).finally(
                 function() {
                   scope.running = false;
                 });
@@ -339,23 +365,25 @@
 
           // Guess the mimeType associated with the selected output.
           scope.$watch('selectedOutput.identifier', function(v) {
-            if(v) {
+            if (v) {
               try {
                 scope.selectedOutput.mimeType = '';
                 var os = scope.describeResponse.
                     processDescription[0].processOutputs.output;
 
-                for(var i = 0; i< os.length;i++) {
+                for (var i = 0; i < os.length; i++) {
                   var o = os[i];
-                  if(v == o.identifier.value) {
-                    for(var j = 0; j< o.complexOutput.supported.format.length;j++) {
+                  if (v == o.identifier.value) {
+                    for (var j = 0;
+                         j < o.complexOutput.supported.format.length;
+                         j++) {
                       var f = o.complexOutput.supported.format[j];
-                      if(f.mimeType == gnWpsService.WMS_MIMETYPE) {
+                      if (f.mimeType == gnWpsService.WMS_MIMETYPE) {
                         o.mimeType = f.mimeType;
                         break;
                       }
                     }
-                    if(!o.mimeType) {
+                    if (!o.mimeType) {
                       o.mimeType = o.complexOutput._default.format.mimeType;
                     }
                     break;

@@ -71,6 +71,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.util.StringUtils;
 
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -102,6 +103,7 @@ public class Info implements Service {
     public static final String OPERATIONS = "operations";
     public static final String GROUPS_INCLUDING_SYSTEM_GROUPS = "groupsIncludingSystemGroups";
     public static final String GROUPS = "groups";
+    public static final String GROUPS_ALL = "groupsAll";
     public static final String CATEGORIES = "categories";
     public static final String USER_GROUP_ONLY = "userGroupOnly";
     public static final String HARVESTER = "harvester";
@@ -185,8 +187,17 @@ public class Info implements Service {
               for(Setting s : publicSettings) {
                 publicSettingsKey.add(s.getName());
               }
-              result.addContent(new Element("config").addContent(gc.getBean(SettingManager.class).getValues(
-                  publicSettingsKey.toArray(new String[0]))));
+              Element configElement = new Element("config");
+                Element settingsElement = gc.getBean(SettingManager.class).getValues(
+                        publicSettingsKey.toArray(new String[0]));
+
+                String mailServerHost = gc.getBean(SettingManager.class).getValue("system/feedback/mailServer/host");
+                Element mailServerElement = new Element("setting");
+                mailServerElement.setAttribute("name", "system/mail/enable");
+                mailServerElement.setAttribute("value", !StringUtils.isEmpty(mailServerHost) + "");
+                settingsElement.addContent(mailServerElement);
+                configElement.addContent(settingsElement);
+                result.addContent(configElement);
             } else if (type.equals(INSPIRE)) {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
 				            new String[]{
@@ -206,11 +217,15 @@ public class Info implements Service {
 
             } else if (type.equals(GROUPS))   {
                 String profile = params.getChildText("profile");
-                Element r = getGroups(context, Profile.findProfileIgnoreCase(profile), false);
+                Element r = getGroups(context, Profile.findProfileIgnoreCase(profile), false, false);
 				result.addContent(r);
 
             } else if (type.equals(GROUPS_INCLUDING_SYSTEM_GROUPS)) {
-                Element r = getGroups(context, null, true);
+                Element r = getGroups(context, null, true, false);
+                result.addContent(r);
+
+            } else if (type.equals(GROUPS_ALL)) {
+                Element r = getGroups(context, null, false, true);
                 result.addContent(r);
 
             } else if (type.equals(OPERATIONS)) {
@@ -379,16 +394,18 @@ public class Info implements Service {
      * @param context
      * @param profile
      * @param includingSystemGroups if true, also returns the system groups ('GUEST', 'intranet', 'all')
+     * @param all if true returns all the groups, even those the user doesn't belongs to
      * @return
      * @throws java.sql.SQLException
      */
-    private Element getGroups(ServiceContext context, Profile profile, boolean includingSystemGroups) throws SQLException {
+    private Element getGroups(ServiceContext context, Profile profile, boolean includingSystemGroups,
+                              boolean all) throws SQLException {
         final GroupRepository groupRepository = context.getBean(GroupRepository.class);
         final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
         final Sort sort = SortUtils.createSort(Group_.id);
 
         UserSession session = context.getUserSession();
-        if (!session.isAuthenticated()) {
+        if (all || !session.isAuthenticated()) {
             return groupRepository.findAllAsXml(Specifications.not(GroupSpecs.isReserved()), sort);
         }
 
@@ -423,9 +440,9 @@ public class Info implements Service {
 
             // filter all groups so only your groups (+ maybe system groups) are retained
             result = Lib.element.pruneChildren(groups, ids);
-		}
+        }
         return result;
-	}
+    }
 
     private Element getSources(ServiceContext context, SettingManager sm) throws SQLException {
         Element element = new Element("results");

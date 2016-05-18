@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_map_directive');
   goog.require('gn_owscontext_service');
@@ -5,7 +28,7 @@
   angular.module('gn_map_directive',
       ['gn_owscontext_service'])
 
-    .directive(
+      .directive(
       'gnDrawBbox',
       [
        'gnMap',
@@ -22,14 +45,67 @@
              hleftRef: '@',
              hrightRef: '@',
              dcRef: '@',
+             extentXml: '=?',
              lang: '=',
+             schema: '@',
              location: '@'
            },
            link: function(scope, element, attrs) {
              scope.drawing = false;
-             var mapRef = scope.htopRef || scope.dcRef;
+             var mapRef = scope.htopRef || scope.dcRef || '';
              scope.mapId = 'map-drawbbox-' +
              mapRef.substring(1, mapRef.length);
+
+             var extentTpl = {
+               'iso19139': '<gmd:EX_Extent ' +
+               'xmlns:gmd="http://www.isotc211.org/2005/gmd" ' +
+               'xmlns:gco="http://www.isotc211.org/2005/gco">' +
+               '<gmd:geographicElement>' +
+               '<gmd:EX_GeographicBoundingBox>' +
+               '<gmd:westBoundLongitude><gco:Decimal>{{west}}</gco:Decimal>' +
+               '</gmd:westBoundLongitude>' +
+               '<gmd:eastBoundLongitude><gco:Decimal>{{east}}</gco:Decimal>' +
+               '</gmd:eastBoundLongitude>' +
+               '<gmd:southBoundLatitude><gco:Decimal>{{south}}</gco:Decimal>' +
+               '</gmd:southBoundLatitude>' +
+               '<gmd:northBoundLatitude><gco:Decimal>{{north}}</gco:Decimal>' +
+               '</gmd:northBoundLatitude>' +
+               '</gmd:EX_GeographicBoundingBox></gmd:geographicElement>' +
+               '</gmd:EX_Extent>',
+               'iso19115-3': '<gex:EX_Extent ' +
+               'xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0" ' +
+               'xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">' +
+               '<gex:geographicElement>' +
+               '<gex:EX_GeographicBoundingBox>' +
+               '<gex:westBoundLongitude><gco:Decimal>{{west}}</gco:Decimal>' +
+               '</gex:westBoundLongitude>' +
+               '<gex:eastBoundLongitude><gco:Decimal>{{east}}</gco:Decimal>' +
+               '</gex:eastBoundLongitude>' +
+               '<gex:southBoundLatitude><gco:Decimal>{{south}}</gco:Decimal>' +
+               '</gex:southBoundLatitude>' +
+               '<gex:northBoundLatitude><gco:Decimal>{{north}}</gco:Decimal>' +
+               '</gex:northBoundLatitude>' +
+               '</gex:EX_GeographicBoundingBox></gex:geographicElement>' +
+               '</gex:EX_Extent>'
+             };
+             var xmlExtentFn = function(coords, location) {
+               if (angular.isArray(coords) &&
+               coords.length === 4 &&
+               !isNaN(coords[0]) &&
+               !isNaN(coords[1]) &&
+               !isNaN(coords[2]) &&
+               !isNaN(coords[3]) &&
+               angular.isNumber(coords[0]) &&
+               angular.isNumber(coords[1]) &&
+               angular.isNumber(coords[2]) &&
+               angular.isNumber(coords[3])) {
+                 scope.extentXml = extentTpl[scope.schema || 'iso19139']
+                 .replace('{{west}}', coords[0])
+                 .replace('{{south}}', coords[1])
+                 .replace('{{east}}', coords[2])
+                 .replace('{{north}}', coords[3]);
+               }
+             };
 
              /**
               * set dublin-core coverage output
@@ -40,6 +116,7 @@
                  scope.extent.md,
                  scope.location);
                }
+               xmlExtentFn(scope.extent.md, scope.location);
              };
 
              /**
@@ -128,12 +205,12 @@
                  zoom: 2
                })
              });
+             element.data('map', map);
 
              //Uses configuration from database
              if (gnMap.getMapConfig().context) {
                gnOwsContextService.
-                   loadContextFromUrl(gnMap.getMapConfig().context,
-                       map, true);
+                   loadContextFromUrl(gnMap.getMapConfig().context, map);
              }
 
              var dragbox = new ol.interaction.DragBox({

@@ -7,7 +7,9 @@
            name="{{elementRef}}" value="{{xmlSnippet}}"/>
 
 
-    <div class="input-group gn-date-picker" data-ng-show="dateTypeSupported === true">
+    <div class="input-group gn-date-picker"
+         data-ng-class="{'gn-time-with-ind-position': withIndeterminatePosition}"
+         data-ng-show="dateTypeSupported === true">
       <div class="input-group gn-indeterminate-position"
           data-ng-show="withIndeterminatePosition"
           data-schema-info-combo="codelist"

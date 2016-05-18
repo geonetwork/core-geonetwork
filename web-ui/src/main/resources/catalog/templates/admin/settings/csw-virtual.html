@@ -129,7 +129,7 @@
                       <li data-ng-repeat="g in groupsFilter | orderBy:sortByLabel"
                           data-ng-show="key === '_groupPublished'">
                         <a href="" data-ng-click="setFilterValue('_groupPublished', g.name)">
-                          <span data-translate="">{{g.label[lang]}}</span>
+                          <span data-translate="">{{g.label[lang]|empty:g.name}}</span>
                         </a>
                       </li>
                     </ul>

@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_utility');
 
@@ -9,7 +32,7 @@
     'gn_utility_service',
     'gn_utility_directive'
   ])
-  .filter('characters', function() {
+      .filter('characters', function() {
         return function(input, chars, breakOnWord) {
           if (isNaN(chars)) return input;
           if (chars <= 0) return '';
@@ -32,7 +55,7 @@
           return input;
         };
       })
-.filter('words', function() {
+      .filter('words', function() {
         return function(input, words) {
           if (isNaN(words)) return input;
           if (words <= 0) return '';
@@ -45,7 +68,7 @@
           return input;
         };
       })
-.filter('striptags', function() {
+      .filter('striptags', function() {
         return function(value, allowed) {
           if (!value) return value;
           allowed = (((allowed || '') + '').toLowerCase().
@@ -60,10 +83,30 @@
         };
       })
 
+      /* filter to check if a value is an empty array, and if so,
+         return param or empty string quite some of the gn json returns
+         empty array if undefined or empty string was intended */
+      .filter('empty', function() {
+        return function(input, alt) {
+          if (!alt) alt = '';
+          if (!input) return alt;
+          if (angular.isArray(input)) {
+            if (input[0]) {
+              return input[0];
+            } else {
+              return alt;
+            }
+          } else {
+            return input;
+          }
+        };
+      })
+
+
       /* filter to split a string and grab the nth item
  (default splitter: '|', default item: 1st),
  used on {{metadata[n].type | split:',':0 }}*/
-.filter('split', function() {
+      .filter('split', function() {
         return function(input, splitChar, splitIndex) {
           if (!input || !angular.isFunction(input.split)) {
             return '';

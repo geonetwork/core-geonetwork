@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_admintools_controller');
 
@@ -93,11 +116,6 @@
       $scope.processReport = null;
 
       /**
-       * True if no process found, or privileges issues.
-       */
-      $scope.processReportWarning = false;
-
-      /**
        * The list of records to be processed
        */
       $scope.recordsToProcess = null;
@@ -185,7 +203,7 @@
             });
 
         $http.get('admin.ownership.groups?_content_type=json&id=' + id)
-          .success(function(data) {
+            .success(function(data) {
               // If user does not have group and only one
               // target group, a simple object is returned
               // and it should be a target group ? FIXME
@@ -234,7 +252,7 @@
 
       function loadProcessConfig() {
         $http.get($scope.base + 'config/batch-process-cfg.json')
-        .success(function(data) {
+            .success(function(data) {
               $scope.batchProcesses = data.config;
 
               $timeout(initProcessByRoute);
@@ -310,12 +328,8 @@
         $scope.processReport = null;
         $http.get(service + '&' +
             formParams)
-          .success(function(data) {
+            .success(function(data) {
               $scope.processReport = data;
-              $scope.processReportWarning = data.notFound != 0 ||
-                  data.notOwner != 0 ||
-                  data.notProcessFound != 0 ||
-                  data.metadataErrorReport.metadataErrorReport.length != 0;
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('processFinished'),
                 timeout: 2,
@@ -339,7 +353,7 @@
                 checkLastBatchProcessReport();
               }
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('processError'),
                 error: data,

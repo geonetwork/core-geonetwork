@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Install transifex client first.
 # sudo apt-get install transifex-client
+# on OSX run pip if you have that installed
+# sudo pip install transifex-client
 
 mkdir transifex-src
 cd transifex-src
@@ -12,23 +14,25 @@ cd ..
 TRANSLATION_DIR=transifex-src/translations/core-geonetwork.
 SRC_DIR=src/main/resources/catalog/locales
 
-declare -A l
-l[es]="es"
-l[fr]="fr"
-l[ge]="de"
-l[it]="it"
-l[ko]="ko"
-l[du]="nl"
-l[cz]="cs_CZ"
+l=(
+    'es::es'
+    'fr::fr'
+    'ge::de'
+    'it::it'
+    'ko::ko'
+    'du::nl'
+    'cz::cs_CZ'
+    'ca::ca'
+)
 
-
-for lang in du es fr ge it ko cz
-do
-  echo "Language $lang"
+for index in "${l[@]}" ; do
+    KEY="${index%%::*}"
+    VALUE="${index##*::}"
+  echo "Language $VALUE"
   for mod in admin core editor search
   do 
-    cp $TRANSLATION_DIR$mod/${l[$lang]}.json $SRC_DIR/$lang-$mod.json
+    cp $TRANSLATION_DIR$mod/$VALUE.json $SRC_DIR/$KEY-$mod.json
   done;
-done;
+done
 
 

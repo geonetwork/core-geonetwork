@@ -1,253 +1,49 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-  <modelVersion>4.0.0</modelVersion>
-
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.0.4-SNAPSHOT</version>
+    <groupId>org.geonetwork-opensource</groupId>
+    <version>3.1.0-SNAPSHOT</version>
   </parent>
-
-
-  <!-- =========================================================== -->
-  <!--     Module Description                                      -->
-  <!-- =========================================================== -->
+  <modelVersion>4.0.0</modelVersion>
   <groupId>org.geonetwork-opensource</groupId>
-  <artifactId>geonetwork-docs</artifactId>
-  <name>GeoNetwork Documentation module</name>
-  <description> GeoNetwork documentation in HTML and PDF format. </description>
-
+  <artifactId>docs</artifactId>
+  <name>Documentation module</name>
+  <packaging>pom</packaging>
+  <description></description>
+  <version>3.1.0-SNAPSHOT</version>
   <licenses>
     <license>
       <name>General Public License (GPL)</name>
       <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
-<!--      <distribution>repo</distribution> -->
     </license>
   </licenses>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-			<!-- English user documentation -->
-            <execution>
-              <id>user-docs-clean</id>
-              <phase>prepare-package</phase>
-              <goals>
-                <goal>exec</goal>
-              </goals>
-              <configuration>
-                <executable>make</executable>
-                  <arguments>
-                    <argument>clean</argument>
-                  </arguments>
-                <workingDirectory>${basedir}/eng/users</workingDirectory>
-              </configuration>
-            </execution>
-
-            <execution>
-             <id>user-docs-build-html</id>
-             <phase>prepare-package</phase>
-             <goals>
-               <goal>exec</goal>
-             </goals>
-             <configuration>
-               <executable>make</executable>
-                 <arguments>
-                   <argument>html</argument>
-                 </arguments>
-               <workingDirectory>${basedir}/eng/users</workingDirectory>
-             </configuration>
-           </execution>
-
-            <execution>
-             <id>user-docs-build-latex</id>
-             <phase>prepare-package</phase>
-             <goals>
-               <goal>exec</goal>
-             </goals>
-             <configuration>
-               <executable>make</executable>
-                 <arguments>
-                   <argument>latex</argument>
-                 </arguments>
-               <workingDirectory>${basedir}/eng/users</workingDirectory>
-             </configuration>
-           </execution>
-
-            <execution>
-             <id>user-docs-build-all-pdf</id>
-             <phase>prepare-package</phase>
-             <goals>
-               <goal>exec</goal>
-             </goals>
-             <configuration>
-               <executable>make</executable>
-                 <arguments>
-                   <argument>all-pdf</argument>
-                 </arguments>
-               <workingDirectory>${basedir}/eng/users/build/latex</workingDirectory>
-             </configuration>
-           </execution>
-
-          <!-- Developer documentation -->
-           <execution>
-             <id>developer-docs-clean</id>
-             <phase>prepare-package</phase>
-             <goals>
-               <goal>exec</goal>
-             </goals>
-             <configuration>
-               <executable>make</executable>
-                 <arguments>
-                   <argument>clean</argument>
-                 </arguments>
-               <workingDirectory>${basedir}/eng/developer</workingDirectory>
-             </configuration>
-           </execution>
-
-           <execution>
-             <id>developer-docs-build-html</id>
-             <phase>prepare-package</phase>
-             <goals>
-               <goal>exec</goal>
-             </goals>
-             <configuration>
-               <executable>make</executable>
-                 <arguments>
-                   <argument>html</argument>
-                 </arguments>
-               <workingDirectory>${basedir}/eng/developer</workingDirectory>
-             </configuration>
-           </execution>
-
-            <execution>
-             <id>developer-docs-build-latex</id>
-             <phase>prepare-package</phase>
-             <goals>
-               <goal>exec</goal>
-             </goals>
-             <configuration>
-               <executable>make</executable>
-                 <arguments>
-                   <argument>latex</argument>
-                 </arguments>
-               <workingDirectory>${basedir}/eng/developer</workingDirectory>
-             </configuration>
-           </execution>
-
-            <execution>
-             <id>developer-docs-build-all-pdf</id>
-             <phase>prepare-package</phase>
-             <goals>
-               <goal>exec</goal>
-             </goals>
-             <configuration>
-               <executable>make</executable>
-                 <arguments>
-                   <argument>all-pdf</argument>
-                 </arguments>
-               <workingDirectory>${basedir}/eng/developer/build/latex</workingDirectory>
-             </configuration>
-           </execution>
-            
-			<!-- English documentation guide docs -->
-            <execution>
-              <id>docguide-docs-clean</id>
-              <phase>prepare-package</phase>
-              <goals>
-                <goal>exec</goal>
-              </goals>
-              <configuration>
-                <executable>make</executable>
-                  <arguments>
-                    <argument>clean</argument>
-                  </arguments>
-                <workingDirectory>${basedir}/eng/docguide</workingDirectory>
-              </configuration>
-            </execution>
-
-            <execution>
-             <id>docguide-docs-build-html</id>
-             <phase>prepare-package</phase>
-             <goals>
-               <goal>exec</goal>
-             </goals>
-             <configuration>
-               <executable>make</executable>
-                 <arguments>
-                   <argument>html</argument>
-                 </arguments>
-               <workingDirectory>${basedir}/eng/docguide</workingDirectory>
-             </configuration>
-           </execution>
-
-            <execution>
-             <id>docguide-docs-build-latex</id>
-             <phase>prepare-package</phase>
-             <goals>
-               <goal>exec</goal>
-             </goals>
-             <configuration>
-               <executable>make</executable>
-                 <arguments>
-                   <argument>latex</argument>
-                 </arguments>
-               <workingDirectory>${basedir}/eng/docguide</workingDirectory>
-             </configuration>
-           </execution>
-
-            <execution>
-             <id>docguide-docs-build-all-pdf</id>
-             <phase>prepare-package</phase>
-             <goals>
-               <goal>exec</goal>
-             </goals>
-             <configuration>
-               <executable>make</executable>
-                 <arguments>
-                   <argument>all-pdf</argument>
-                 </arguments>
-               <workingDirectory>${basedir}/eng/docguide/build/latex</workingDirectory>
-             </configuration>
-           </execution>
-      
-
-            <execution>
-              <id>user-docs-clean-fra</id>
-              <phase>prepare-package</phase>
-              <goals>
-                <goal>exec</goal>
-              </goals>
-              <configuration>
-                <executable>make</executable>
-                  <arguments>
-                    <argument>clean</argument>
-                  </arguments>
-                <workingDirectory>${basedir}/fra/users</workingDirectory>
-              </configuration>
-            </execution>
-
-            <execution>
-             <id>user-docs-build-html-fra</id>
-             <phase>prepare-package</phase>
-             <goals>
-               <goal>exec</goal>
-             </goals>
-             <configuration>
-               <executable>make</executable>
-                 <arguments>
-                   <argument>html</argument>
-                 </arguments>
-               <workingDirectory>${basedir}/fra/users</workingDirectory>
-             </configuration>
-           </execution>
-        </executions>      
-      </plugin>
-    </plugins>
-  </build>
-
+  <modules>
+    <module>schema-doc</module>
+    <module>manuals</module>
+  </modules>
 </project>

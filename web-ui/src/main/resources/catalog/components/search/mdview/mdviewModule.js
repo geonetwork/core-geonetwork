@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_mdview');
 
@@ -12,11 +35,11 @@
 
   module.controller('GnMdViewController', [
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
-    'gnMetadataActions', 'gnAlertService', '$translate',
+    'gnMetadataActions', 'gnAlertService', '$translate', '$location',
     'gnMdView', 'gnMdViewObj', 'gnMdFormatter',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
-             gnMetadataActions, gnAlertService, $translate, gnMdView,
-             gnMdViewObj, gnMdFormatter) {
+             gnMetadataActions, gnAlertService, $translate, $location,
+             gnMdView, gnMdViewObj, gnMdFormatter) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -24,6 +47,10 @@
       $scope.compileScope = $scope.$new();
       $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
 
+      $scope.search = function(params) {
+        $location.path('/search');
+        $location.search(params);
+      };
       $scope.deleteRecord = function(md) {
         return gnMetadataActions.deleteMd(md).then(function(data) {
           gnAlertService.addAlert({

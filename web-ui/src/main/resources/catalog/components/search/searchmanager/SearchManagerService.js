@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_search_manager_service');
 
@@ -137,7 +160,7 @@
               pageOptions.hitsPerPage + 1) +
               '&to=' + ((pageOptions.currentPage + 1) *
               pageOptions.hitsPerPage), config.error)
-                .then(function(data) {
+              .then(function(data) {
                 scope[config.records] = data;
                 pageOptions.count = parseInt(data.count);
                 pageOptions.pages = Math.round(
@@ -171,20 +194,6 @@
         gnHttp.callService('search', params).
             success(function(data, status) {
               defer.resolve(format(data));
-            }).
-            error(function(data, status) {
-              defer.reject(error);
-            });
-        return defer.promise;
-      };
-
-      var _select = function(uuid, andClearSelection, action) {
-        var defer = $q.defer();
-        $http.get('metadata.select?_content_type=json&' +
-            (uuid ? 'id=' + uuid : '') +
-                  (andClearSelection ? '' : '&selected=' + action)).
-            success(function(data, status) {
-              defer.resolve(data);
             }).
             error(function(data, status) {
               defer.reject(error);
@@ -228,17 +237,28 @@
             });
         return defer.promise;
       };
-      var select = function(uuid, andClearSelection) {
-        return _select(uuid, andClearSelection, 'add');
+      var selected = function() {
+        return $http.get('../api/selections/metadata');
+      };
+      var select = function(uuid) {
+        return $http.put('../api/selections/metadata', null, {
+          params: {
+            uuid: uuid
+          }
+        });
       };
       var unselect = function(uuid) {
-        return _select(uuid, false, 'remove');
+        return $http.delete('../api/selections/metadata', null, {
+          params: {
+            uuid: uuid
+          }
+        });
       };
       var selectAll = function() {
-        return _select(null, false, 'add-all');
+        return $http.put('../api/selections/metadata');
       };
       var selectNone = function() {
-        return _select(null, false, 'remove-all');
+        return $http.delete('../api/selections/metadata');
       };
 
       return {
@@ -246,6 +266,7 @@
         format: format,
         gnSearch: gnSearch,
         register: register,
+        selected: selected,
         select: select,
         unselect: unselect,
         selectAll: selectAll,

@@ -28,11 +28,14 @@ import com.google.common.collect.Lists;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -51,30 +54,30 @@ import java.util.List;
  */
 public class Get implements Service {
 
-    private static final char SEPARATOR = '~';
+    public static final char SEPARATOR = '~';
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     /**
-     * Execute the service and return the sub template. 
-     * 
+     * Execute the service and return the sub template.
+     *
      * <p>
      * Sub template are all public - no privileges check. Parameter "uuid" is mandatory.
      * </p>
-     * 
+     *
      * <p>
      * One or more "process" parameters could be added in order to alter the template extracted.
      * This parameter is composed of one XPath expression pointing to a single {@link org.jdom.Element} or {@link org.jdom.Attribute}
      * and a text value separated by "{@value #SEPARATOR}". Warning, when pointing to an element, the content
      * of the element is removed before the value added (See {@link org.jdom.Element#setText(String)}).
      * </p>
-     * 
+     *
      * <p>
-     * For example, to return a contact template with a custom role use 
+     * For example, to return a contact template with a custom role use
      * "&process=gmd:role/gmd:CI_RoleCode/@codeListValue~updatedRole".
      * </p>
-     * 
+     *
      */
     public Element exec(Element params, ServiceContext context)
             throws Exception {
@@ -84,13 +87,18 @@ public class Get implements Service {
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         final Metadata metadata = metadataRepository.findOneByUuid(uuid);
 
+        if (metadata == null) {
+            Log.error(Geonet.DATA_MANAGER, String.format("Subtemplate '%s' not found. Check records related to this directory entry." , uuid));
+            return new Element("subtemplateNotFound");
+        }
+
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
             throw new IllegalArgumentException("Metadata uuid="+uuid+" is not a subtemplate");
         }
 
         Element tpl = metadata.getXmlData(false);
-        
-        
+
+
         // Processing parameters process=xpath~value.
         // xpath must point to an Element or an Attribute.
         List<?> replaceList = params.getChildren(Params.PROCESS);
@@ -129,7 +137,7 @@ public class Get implements Service {
                 }
             }
         }
-        
+
         return tpl;
     }
 }

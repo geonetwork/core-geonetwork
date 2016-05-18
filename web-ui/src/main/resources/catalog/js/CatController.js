@@ -1,11 +1,38 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_cat_controller');
 
+
+
+  goog.require('gn_admin_menu');
   goog.require('gn_search_manager');
   goog.require('gn_session_service');
 
+
   var module = angular.module('gn_cat_controller',
-      ['gn_search_manager', 'gn_session_service']);
+      ['gn_search_manager', 'gn_session_service', 'gn_admin_menu']);
 
 
   module.constant('gnGlobalSettings', {
@@ -13,11 +40,36 @@
     locale: {},
     isMapViewerEnabled: false,
     is3DModeAllowed: false,
+    docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
+    //docUrl: '../../doc/',
     modelOptions: {
       updateOn: 'default blur',
       debounce: {
         default: 300,
         blur: 0
+      }
+    }
+  });
+
+  module.constant('gnLangs', {
+    langs: {
+      'eng': 'en',
+      'dut': 'du',
+      'fre': 'fr',
+      'ger': 'ge',
+      'kor': 'ko',
+      'spa': 'es',
+      'cze': 'cz',
+      'cat': 'ca'
+    },
+    getIso2Lang: function(iso3lang) {
+      return this.langs[iso3lang];
+    },
+    getIso3Lang: function(iso2lang) {
+      for (p in this.langs) {
+        if (this.langs[p] == iso2lang) {
+          return p;
+        }
       }
     }
   });
@@ -35,22 +87,34 @@
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
+    'gnLangs', 'gnAdminMenu',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
-            gnGlobalSettings, $location, gnUtilityService, gnSessionService) {
+            gnGlobalSettings, $location, gnUtilityService, gnSessionService,
+            gnLangs, gnAdminMenu) {
       $scope.version = '0.0.1';
+      //Display or not the admin menu
+      if ($location.absUrl().indexOf('/admin.console') != -1) {
+        $scope.viewMenuAdmin = true;
+      }else {$scope.viewMenuAdmin = false}
+      //Update Links for social media
+      $scope.socialMediaLink = $location.absUrl();
+      $scope.$on('$locationChangeSuccess', function(event) {
+        $scope.socialMediaLink = $location.absUrl();
+        $scope.showSocialMediaLink =
+            $scope.socialMediaLink.includes('/metadata/');
+      });
       // TODO : add language
       var tokens = location.href.split('/');
       $scope.service = tokens[6].split('?')[0];
       $scope.lang = tokens[5];
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
-      $scope.langs = {'eng': 'en', 'dut': 'du', 'fre': 'fr',
-        'ger': 'ge', 'kor': 'ko', 'spa': 'es', 'cze': 'cz'};
+      $scope.langs = gnLangs.langs;
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
-        'spa': 'Español', 'cze': 'Czech'};
+        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech'};
       $scope.url = '';
       $scope.base = '../../catalog/';
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;
@@ -218,8 +282,7 @@
               });
         });
       };
-
-
+      $scope.adminMenu = gnAdminMenu.Administrator;
       $scope.$on('loadCatalogInfo', function(event, status) {
         $scope.loadCatalogInfo();
       });

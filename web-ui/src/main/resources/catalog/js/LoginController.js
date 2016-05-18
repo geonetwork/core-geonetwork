@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
 
   goog.provide('gn_login_controller');
@@ -24,13 +47,11 @@
           $scope.formAction = '../../j_spring_security_check#' +
          $location.path();
           $scope.registrationStatus = null;
-          $scope.passwordReminderStatus = null;
           $scope.sendPassword = false;
           $scope.password = null;
           $scope.passwordCheck = null;
           $scope.userToRemind = null;
           $scope.changeKey = null;
-          $scope.passwordUpdated = false;
 
           $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
@@ -49,7 +70,7 @@
           $timeout(function() {
             $('input[data-ng-model], select[data-ng-model]').each(function() {
               angular.element(this).controller('ngModel')
-                .$setViewValue($(this).val());
+             .$setViewValue($(this).val());
             });
           }, 300);
 
@@ -62,15 +83,32 @@
           * user and another to the catalog admin if a profile
           * higher than registered user is requested.
           */
-         $scope.register = function(formId) {
-           $http.get('create.account@json?' + $(formId).serialize())
-          .success(function(data) {
-             $scope.registrationStatus = data;
-           })
-          .error(function(data) {
+         $scope.userInfo = {
+           username: '',
+           surname: '',
+           name: '',
+           emailAddresses: [''],
+           organisation: '',
+           profile: 'RegisteredUser',
+           addresses: [{
+             address: '',
+             city: '',
+             country: '',
+             state: '',
+             zip: ''
+           }]
+         };
+         $scope.register = function() {
+           $scope.userInfo.emailAddresses[0] = $scope.userInfo.username;
+           $http.put('../api/0.1/user/actions/register', $scope.userInfo)
+           .success(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
-               title: $translate('registrationError'),
-               error: data,
+               title: data
+             });
+           })
+           .error(function(data) {
+             $rootScope.$broadcast('StatusUpdated', {
+               title: data,
                timeout: 0,
                type: 'danger'});
            });
@@ -78,16 +116,20 @@
          /**
           * Remind user password.
           */
-         $scope.remindMyPassword = function(formId) {
-           $http.get('password.reminder@json?' + $(formId).serialize())
+         $scope.remindMyPassword = function() {
+           $http.get('../api/0.1/user/' +
+           $scope.usernameToRemind +
+                        '/actions/forgot-password')
             .success(function(data) {
-             $scope.passwordReminderStatus = data;
              $scope.sendPassword = false;
+             $rootScope.$broadcast('StatusUpdated', {
+               title: data
+             });
+             $scope.usernameToRemind = null;
            })
             .error(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
-               title: $translate('passwordReminderError'),
-               error: data,
+               title: data,
                timeout: 0,
                type: 'danger'});
            });
@@ -96,18 +138,19 @@
          /**
           * Change user password.
           */
-         $scope.updatePassword = function(formId) {
-           $http.get('password.change@json?' + $(formId).serialize())
+         $scope.updatePassword = function() {
+           $http.patch('../api/0.1/user/' + $scope.userToRemind, {
+             password: $scope.password,
+             changeKey: $scope.changeKey
+           })
             .success(function(data) {
-             if (data == 'null') {
-               $scope.passwordUpdated = true;
-             }
+             $rootScope.$broadcast('StatusUpdated', {
+               title: data
+             });
            })
             .error(function(data) {
-
              $rootScope.$broadcast('StatusUpdated', {
-               title: $translate('passwordUpdateError'),
-               error: data,
+               title: data,
                timeout: 0,
                type: 'danger'});
            });
@@ -115,7 +158,7 @@
 
          $scope.nodeChangeRedirect = function(redirectTo) {
            $http.get('../../j_spring_security_logout')
-              .success(function(data) {
+           .success(function(data) {
                   window.location.href = redirectTo;
            });
          };

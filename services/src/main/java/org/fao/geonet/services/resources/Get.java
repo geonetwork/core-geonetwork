@@ -41,6 +41,7 @@ import java.nio.file.Path;
  * Delete an uploaded file from the data directory.
  * 
  */
+@Deprecated
 public class Get extends NotInReadOnlyModeService {
 
     public void init(Path appPath, ServiceConfig params) throws Exception {

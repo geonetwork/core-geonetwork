@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
 
   goog.provide('gn_search_default_config');
@@ -25,8 +48,14 @@
             gnMap.createLayerForType('osm')
           ];
 
+          viewerSettings.bingKey = 'AnElW2Zqi4fI-9cYx1LHiQfokQ9GrNzcjOh_' +
+              'p_0hkO1yo78ba8zTLARcLBIf8H6D';
+
           viewerSettings.servicesUrl =
             viewerSettings.mapConfig.listOfServices || {};
+
+          // WMS settings
+          viewerSettings.singleTileWMS = true;
 
           var bboxStyle = new ol.style.Style({
             stroke: new ol.style.Stroke({
@@ -57,6 +86,9 @@
 
           };
 
+          // Object to store the current Map context
+          viewerSettings.storage = 'sessionStorage';
+
           /*******************************************************************
              * Define maps
              */
@@ -73,13 +105,8 @@
 
           var searchMap = new ol.Map({
             controls:[],
-            layers: [new ol.layer.Tile({
-              source: new ol.source.OSM()
-            })],
-            view: new ol.View({
-              center: mapsConfig.center,
-              zoom: 2
-            })
+            layers: viewerMap.getLayers(),
+            view: new ol.View(mapsConfig)
           });
 
 
@@ -165,9 +192,10 @@
 
           // Mapping for md links in search result list.
           searchSettings.linkTypes = {
-            links: ['LINK'],
+            links: ['LINK', 'kml'],
             downloads: ['DOWNLOAD'],
-            layers:['OGC', 'kml'],
+            //layers:['OGC', 'kml'],
+            layers:['OGC'],
             maps: ['ows']
           };
 

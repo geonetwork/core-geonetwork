@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -10,6 +33,9 @@
 	<xsl:include href="../iso19139/convert/thesaurus-transformation.xsl"/>
 
   <xsl:variable name="serviceUrl" select="/root/env/siteURL" />
+
+  <!-- We use the category check to find out if this is an SDS metadata. Please replace with anything better -->
+  <xsl:variable name="isSDS" select="count(//gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor[starts-with(@xlink:href, 'http://inspire.ec.europa.eu/metadata-codelist/Category')]) = 1" />
   
 	<!-- ================================================================= -->
 
@@ -184,7 +210,6 @@
 			</xsl:attribute>
 		</xsl:copy>
 	</xsl:template>
-
 	<!-- ================================================================= -->
 	<!-- online resources: download -->
 	<!-- ================================================================= -->
@@ -202,17 +227,7 @@
 			<xsl:copy-of select="@*"/>
 			<gmd:linkage>
 				<gmd:URL>
-					<xsl:choose>
-						<xsl:when test="/root/env/system/downloadservice/simple='true'">
-							<xsl:value-of select="concat($serviceUrl,'resources.get?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=public')"/>
-						</xsl:when>
-						<xsl:when test="/root/env/system/downloadservice/withdisclaimer='true'">
-							<xsl:value-of select="concat($serviceUrl,'file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=public')"/>
-						</xsl:when>
-						<xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
-							<xsl:value-of select="gmd:linkage/gmd:URL"/>
-						</xsl:otherwise>
-					</xsl:choose>
+					<xsl:value-of select="gmd:linkage/gmd:URL"/>
 				</gmd:URL>
 			</gmd:linkage>
 			<xsl:copy-of select="gmd:protocol"/>
@@ -228,7 +243,7 @@
 	</xsl:template>
 
 	<!-- ================================================================= -->
-	<!-- online resources: link-to-downloadable data etc -->
+	<!-- Add mime type for downloadable online resources -->
 	<!-- ================================================================= -->
 
 	<xsl:template match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:LINK-') and contains(gmd:protocol/gco:CharacterString,'http--download')]">
@@ -251,26 +266,6 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<!-- ================================================================= -->
-
-  <xsl:template match="gmx:FileName[name(..)!='gmd:contactInstructions']">
-    <xsl:copy>
-			<xsl:attribute name="src">
-				<xsl:choose>
-					<xsl:when test="/root/env/system/downloadservice/simple='true'">
-						<xsl:value-of select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
-					</xsl:when>
-					<xsl:when test="/root/env/system/downloadservice/withdisclaimer='true'">
-						<xsl:value-of select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
-					</xsl:when>
-					<xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
-						<xsl:value-of select="@src"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			<xsl:value-of select="."/>
-		</xsl:copy>
-	</xsl:template>
 
 	<!-- ================================================================= -->
 
@@ -299,20 +294,6 @@
 
 	</xsl:template>
 
-	<!-- Thumbnail may not contains full URL for the one updated to the catalog -->
-	<xsl:template match="gmd:MD_BrowseGraphic[
-					gmd:fileDescription/gco:CharacterString = 'thumbnail' or
-					gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/
-						gmd:fileName[gco:CharacterString != '' and not(starts-with(gco:CharacterString, 'http'))]">
-			<gmd:fileName>
-				<gco:CharacterString>
-					<xsl:value-of select="concat(
-					    $serviceUrl, 'resources.get?',
-					    'uuid=', /root/env/uuid,
-					    '&amp;fname=', gco:CharacterString)"/>
-				</gco:CharacterString>
-			</gmd:fileName>
-	</xsl:template>
 
 	<!-- ================================================================= -->
 	<!-- Set local identifier to the first 3 letters of iso code. Locale ids
@@ -497,6 +478,20 @@
 			<xsl:with-param name="prefix" select="'gml'"/>
 		</xsl:call-template>
 	</xsl:template>
+
+<!-- ================================================================= -->
+        <!-- SDS fixes -->
+        
+        <!-- DCP codelist -->
+	<xsl:template match="srv:DCP[$isSDS]/srv:DCPList[@codeListValue]">
+		<xsl:copy>
+			<xsl:apply-templates select="@*"/>
+			<xsl:attribute name="codeList">
+				<xsl:value-of select="'http://inspire.ec.europa.eu/metadata-codelist/DCPList'"/>
+			</xsl:attribute>
+		</xsl:copy>
+	</xsl:template>
+
 
 <!-- ================================================================= -->
 	<!-- copy everything else as is -->

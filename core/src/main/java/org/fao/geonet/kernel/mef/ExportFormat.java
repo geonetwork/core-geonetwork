@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
@@ -13,6 +36,7 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,11 +66,11 @@ public class ExportFormat implements GeonetworkExtension {
         SchemaPlugin schemaPlugin = metadataSchema.getSchemaPlugin();
         if (schemaPlugin instanceof ExportablePlugin) {
             Map<String, String> allFormats = ((ExportablePlugin) schemaPlugin).getExportFormats();
-            Iterator<String> allFiles = allFormats.keySet().iterator();
+
             Set<Pair<String, String>> allExports = new HashSet<>();
-            while (allFiles.hasNext()) {
-                String xslFileName = allFiles.next();
-                String outputFileName = allFormats.get(xslFileName);
+            for (Map.Entry< String, String> entry : allFormats.entrySet()) {
+                String xslFileName = entry.getKey();
+                String outputFileName = entry.getValue();
                 Path path = metadataSchema.getSchemaDir().resolve(xslFileName);
                 if (Files.isRegularFile(path)) {
                     String outputData = formatData(metadata, true, path);
@@ -55,8 +79,8 @@ public class ExportFormat implements GeonetworkExtension {
                     // A conversion that does not exist
                     if (Log.isDebugEnabled(Geonet.MEF)) {
                         Log.debug(Geonet.MEF, String.format("Exporting MEF file for '%s' schema plugin formats. File '%s' not found",
-                                metadataSchema.getName(),
-                                path.getFileName()));
+                            metadataSchema.getName(),
+                            path.getFileName()));
                     }
                 }
             }

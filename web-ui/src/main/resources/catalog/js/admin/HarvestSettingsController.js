@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_harvest_settings_controller');
 
@@ -127,7 +150,7 @@
       function loadHarvesterTypes() {
         $http.get('admin.harvester.info?_content_type=json&type=harvesterTypes',
             {cache: true})
-          .success(function(data) {
+            .success(function(data) {
               angular.forEach(data[0], function(value) {
                 $scope.harvesterTypes[value] = {
                   label: value,
@@ -172,7 +195,7 @@
       $scope.cloneHarvester = function(id) {
         $http.get('admin.harvester.clone?_content_type=json&id=' +
             id)
-          .success(function(data) {
+            .success(function(data) {
               $scope.$parent.loadHarvesters().then(function() {
                 // Select the clone
                 angular.forEach($scope.$parent.harvesters, function(h) {
@@ -220,7 +243,7 @@
         $scope.setHarvesterSchedule();
 
         var body = window['gnHarvester' + $scope.harvesterSelected['@type']]
-          .buildResponse($scope.harvesterSelected, $scope);
+            .buildResponse($scope.harvesterSelected, $scope);
 
         return $http.post('admin.harvester.' +
             ($scope.harvesterNew ? 'add' : 'update') +
@@ -288,7 +311,7 @@
         $scope.deleting.push($scope.harvesterSelected['@id']);
         return $http.get('admin.harvester.remove?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
-          .success(function(data) {
+            .success(function(data) {
               $scope.harvesterSelected = {};
               $scope.harvesterUpdated = false;
               $scope.harvesterNew = false;
@@ -303,7 +326,7 @@
       $scope.deleteHarvesterRecord = function() {
         return $http.get('admin.harvester.clear?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
-          .success(function(data) {
+            .success(function(data) {
               $scope.harvesterSelected = {};
               $scope.harvesterUpdated = false;
               $scope.harvesterNew = false;
@@ -315,8 +338,8 @@
       $scope.deleteHarvesterHistory = function() {
         return $http.get('admin.harvester.history.delete?uuid=' +
             $scope.harvesterSelected.site.uuid)
-          .success(function(data) {
-              loadHarvesters().then(function() {
+            .success(function(data) {
+              $scope.$parent.loadHarvesters().then(function() {
                 $scope.selectHarvester($scope.harvesterSelected);
               });
             });
@@ -324,7 +347,7 @@
       $scope.runHarvester = function() {
         return $http.get('admin.harvester.run?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
-          .success(function(data) {
+            .success(function(data) {
               $scope.$parent.loadHarvesters().then(function() {
                 refreshSelectedHarvester();
               });
@@ -337,7 +360,7 @@
         $scope.stopping = true;
         return $http.get('admin.harvester.stop?_content_type=json&id=' +
             id + '&status=' + status)
-          .success(function(data) {
+            .success(function(data) {
               $scope.$parent.loadHarvesters().then(refreshSelectedHarvester);
             }).then(function() {
               $scope.stopping = false;
@@ -353,7 +376,7 @@
             (status === 'active' ? 'start' : 'stop') +
             '?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
-          .success(function(data) {
+            .success(function(data) {
 
             }).error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
@@ -382,7 +405,7 @@
       $scope.geonetworkGetSources = function(url) {
         $http.get($scope.proxyUrl +
             encodeURIComponent(url + '/srv/eng/info?type=sources'))
-          .success(function(data) {
+            .success(function(data) {
               $scope.geonetworkSources = [];
               var i = 0;
               var xmlDoc = $.parseXML(data);
@@ -470,7 +493,7 @@
 
           $http.get($scope.proxyUrl +
               encodeURIComponent(url))
-            .success(function(data) {
+              .success(function(data) {
                 $scope.cswCriteria = [];
 
                 var i = 0;
@@ -539,7 +562,7 @@
       $scope.harvesterTemplates = null;
       var loadHarvesterTemplates = function() {
         $http.get('info?_content_type=json&type=templates')
-          .success(function(data) {
+            .success(function(data) {
               $scope.harvesterTemplates = data.templates;
             });
       };
@@ -574,7 +597,7 @@
       var loadHarvesterZ3950Repositories = function() {
         $http.get('info?_content_type=json&type=z3950repositories',
             {cache: true})
-          .success(function(data) {
+            .success(function(data) {
               $scope.harvesterZ3950repositories = data.z3950repositories;
             });
       };

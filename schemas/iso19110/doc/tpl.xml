@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gfc:FC_FeatureCatalogue xmlns:gfc="http://www.isotc211.org/2005/gfc" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="411cd05b-9a79-45f2-b39f-0b344a9f35af" xsi:schemaLocation="http://www.isotc211.org/2005/gfc http://www.isotc211.org/2005/gfc/gfc.xsd">
+  <gfc:name>
+    <gco:CharacterString>Elevation breakdown feature catalogue</gco:CharacterString>
+  </gfc:name>
+  <gfc:scope>
+    <gco:CharacterString>Dataset elevation breakdown (raster 1 km)</gco:CharacterString>
+  </gfc:scope>
+  <gfc:versionNumber>
+    <gco:CharacterString>1.0</gco:CharacterString>
+  </gfc:versionNumber>
+  <gfc:versionDate>
+    <gco:DateTime xmlns:gmx="http://www.isotc211.org/2005/gmx">2012-11-05T10:56:11</gco:DateTime>
+  </gfc:versionDate>
+  <gfc:producer>
+    <gmd:CI_ResponsibleParty>
+      <gmd:individualName>
+        <gco:CharacterString>European Environment Agency</gco:CharacterString>
+      </gmd:individualName>
+      <gmd:organisationName>
+        <gco:CharacterString />
+      </gmd:organisationName>
+      <gmd:positionName>
+        <gco:CharacterString />
+      </gmd:positionName>
+      <gmd:contactInfo>
+        <gmd:CI_Contact>
+          <gmd:address>
+            <gmd:CI_Address>
+              <gmd:deliveryPoint>
+                <gco:CharacterString>Kongens Nytorv 6</gco:CharacterString>
+              </gmd:deliveryPoint>
+              <gmd:city>
+                <gco:CharacterString>Copenhagen</gco:CharacterString>
+              </gmd:city>
+              <gmd:administrativeArea>
+                <gco:CharacterString>K</gco:CharacterString>
+              </gmd:administrativeArea>
+              <gmd:postalCode>
+                <gco:CharacterString>1050</gco:CharacterString>
+              </gmd:postalCode>
+              <gmd:country>
+                <gco:CharacterString>Denmark</gco:CharacterString>
+              </gmd:country>
+              <gmd:electronicMailAddress>
+                <gco:CharacterString>mauro.michielon@eea.europa.eu</gco:CharacterString>
+              </gmd:electronicMailAddress>
+            </gmd:CI_Address>
+          </gmd:address>
+        </gmd:CI_Contact>
+      </gmd:contactInfo>
+      <gmd:role>
+        <gmd:CI_RoleCode codeListValue="pointOfContact" codeList="CI_RoleCode" />
+      </gmd:role>
+    </gmd:CI_ResponsibleParty>
+  </gfc:producer>
+  <gfc:featureType>
+    <gfc:FC_FeatureType>
+      <gfc:typeName>
+        <gco:LocalName>Elevation breakdown</gco:LocalName>
+      </gfc:typeName>
+      <gfc:definition>
+        <gco:CharacterString>The Elevation breakdown is used to allocate Land cover changes into homogeneous areas as function of height, slope and distance to the sea.</gco:CharacterString>
+      </gfc:definition>
+      <gfc:isAbstract>
+        <gco:Boolean>false</gco:Boolean>
+      </gfc:isAbstract>
+      <gfc:featureCatalogue />
+      <gfc:carrierOfCharacteristics>
+        <gfc:FC_FeatureAttribute>
+          <gfc:memberName>
+            <gco:LocalName>VALUE</gco:LocalName>
+          </gfc:memberName>
+          <gfc:definition>
+            <gco:CharacterString />
+          </gfc:definition>
+          <gfc:cardinality>
+            <gco:Multiplicity>
+              <gco:range>
+                <gco:MultiplicityRange>
+                  <gco:lower>
+                    <gco:Integer>1</gco:Integer>
+                  </gco:lower>
+                  <gco:upper>
+                    <gco:UnlimitedInteger isInfinite="false" xsi:nil="false">1</gco:UnlimitedInteger>
+                  </gco:upper>
+                </gco:MultiplicityRange>
+              </gco:range>
+            </gco:Multiplicity>
+          </gfc:cardinality>
+          <gfc:featureType />
+          <gfc:valueMeasurementUnit>
+            <gml:UnitDefinition xmlns:gml="http://www.opengis.net/gml" gml:id="unknown">
+              <gml:description />
+              <gml:identifier codeSpace="unknown" />
+            </gml:UnitDefinition>
+          </gfc:valueMeasurementUnit>
+          <gfc:listedValue>
+            <gfc:FC_ListedValue>
+              <gfc:label>
+                <gco:CharacterString>Low coasts</gco:CharacterString>
+              </gfc:label>
+              <gfc:code>
+                <gco:CharacterString>1</gco:CharacterString>
+              </gfc:code>
+              <gfc:definition>
+                <gco:CharacterString>Areas within 10km from the coastline and with an elevation below 50m.</gco:CharacterString>
+              </gfc:definition>
+            </gfc:FC_ListedValue>
+          </gfc:listedValue>
+          <gfc:listedValue>
+            <gfc:FC_ListedValue>
+              <gfc:label>
+                <gco:CharacterString>High coasts</gco:CharacterString>
+              </gfc:label>
+              <gfc:code>
+                <gco:CharacterString>2</gco:CharacterString>
+              </gfc:code>
+              <gfc:definition>
+                <gco:CharacterString>Areas within 10km from the coastline and with an elevation above 50m.</gco:CharacterString>
+              </gfc:definition>
+            </gfc:FC_ListedValue>
+          </gfc:listedValue>
+          <gfc:listedValue>
+            <gfc:FC_ListedValue>
+              <gfc:label>
+                <gco:CharacterString>Inlands</gco:CharacterString>
+              </gfc:label>
+              <gfc:code>
+                <gco:CharacterString>3</gco:CharacterString>
+              </gfc:code>
+              <gfc:definition>
+                <gco:CharacterString>Areas between 0 and 200 m outside the coastal strip.</gco:CharacterString>
+              </gfc:definition>
+            </gfc:FC_ListedValue>
+          </gfc:listedValue>
+          <gfc:listedValue>
+            <gfc:FC_ListedValue>
+              <gfc:label>
+                <gco:CharacterString>Uplands</gco:CharacterString>
+              </gfc:label>
+              <gfc:code>
+                <gco:CharacterString>4</gco:CharacterString>
+              </gfc:code>
+              <gfc:definition>
+                <gco:CharacterString>Zones between 200 and 500 m plus the flat areas between 500 and 1000m.</gco:CharacterString>
+              </gfc:definition>
+            </gfc:FC_ListedValue>
+          </gfc:listedValue>
+          <gfc:listedValue>
+            <gfc:FC_ListedValue>
+              <gfc:label>
+                <gco:CharacterString>Mountains</gco:CharacterString>
+              </gfc:label>
+              <gfc:code>
+                <gco:CharacterString>5</gco:CharacterString>
+              </gfc:code>
+              <gfc:definition>
+                <gco:CharacterString>Slopy areas between 500 and 1000m and all the areas over 1000m.</gco:CharacterString>
+              </gfc:definition>
+            </gfc:FC_ListedValue>
+          </gfc:listedValue>
+          <gfc:valueType>
+            <gco:TypeName>
+              <gco:aName>
+                <gco:CharacterString>INTEGER</gco:CharacterString>
+              </gco:aName>
+            </gco:TypeName>
+          </gfc:valueType>
+        </gfc:FC_FeatureAttribute>
+      </gfc:carrierOfCharacteristics>
+    </gfc:FC_FeatureType>
+  </gfc:featureType>
+</gfc:FC_FeatureCatalogue>

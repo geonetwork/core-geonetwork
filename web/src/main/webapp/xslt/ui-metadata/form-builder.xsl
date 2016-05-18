@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
 <xsl:stylesheet version="2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xlink="http://www.w3.org/1999/xlink" 
   xmlns:gn="http://www.fao.org/geonetwork"
@@ -73,6 +96,7 @@
     element of same kind. eg. do not display label. -->
     <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
 
+    <xsl:param name="isReadOnly" required="no" as="xs:boolean" select="false()"/>
 
     <xsl:variable name="isMultilingual" select="count($value/values) > 0"/>
 
@@ -150,6 +174,7 @@
                     <xsl:with-param name="type" select="$type"/>
                     <xsl:with-param name="tooltip" select="$tooltip"/>
                     <xsl:with-param name="isRequired" select="$isRequired"/>
+                    <xsl:with-param name="isReadOnly" select="$isReadOnly"/>
                     <xsl:with-param name="isDisabled" select="$isDisabled"/>
                     <xsl:with-param name="editInfo" select="$editInfo"/>
                     <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
@@ -190,6 +215,7 @@
                   <xsl:with-param name="tooltip" select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
                   <xsl:with-param name="isRequired" select="$isRequired"/>
                   <xsl:with-param name="isDisabled" select="$isDisabled"/>
+                  <xsl:with-param name="isReadOnly" select="$isReadOnly"/>
                   <xsl:with-param name="editInfo" select="$editInfo"/>
                   <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
                   <xsl:with-param name="listOfValues" select="$listOfValues"/>
@@ -286,7 +312,7 @@
           <xsl:attribute name="data-gn-xpath" select="$xpath"/>
         </xsl:if>
 
-        <xsl:value-of select="$label"/>
+        <xsl:value-of select="$label"/>&#160;
 
         <xsl:if test="$editInfo and not($isDisabled)">
           <xsl:call-template name="render-boxed-element-control">
@@ -626,99 +652,131 @@
     <!-- Hide add element if child of an XLink section. -->
     <xsl:param name="isDisabled" select="ancestor::node()[@xlink:href]"/>
     <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
+    <xsl:param name="btnLabel" required="no" as="xs:string?" select="''"/>
+    <xsl:param name="btnClass" required="no" as="xs:string?" select="''"/>
 
     <xsl:if test="not($isDisabled)">
       <xsl:variable name="id" select="generate-id()"/>
       <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
+      <xsl:variable name="parentName"
+                    select="name(ancestor::*[not(contains(name(), 'CHOICE_ELEMENT'))][1])"/>
       <xsl:variable name="isRequired" select="$childEditInfo/@min = 1 and $childEditInfo/@max = 1"/>
 
       <!-- This element is replaced by the content received when clicking add -->
-      <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field"
+      <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field gn-add-field'} "
            id="gn-el-{$id}"
            data-gn-field-highlight="">
         <label class="col-sm-2 control-label"
-          data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
+               data-gn-field-tooltip="{$schema}|{$qualifiedName}|{$parentName}|">
           <xsl:if test="normalize-space($label) != ''">
-                  <xsl:value-of select="$label"/>
+            <xsl:value-of select="$label"/>
           </xsl:if>&#160;
         </label>
         <div class="col-sm-9">
 
-        <xsl:variable name="addActionDom">
-          <xsl:choose>
-            <!-- When element have different types, provide
-                  a list of those types to be selected. The type list
-                  is defined by the schema and optionaly overriden by
-                  the schema suggestion.
-                  
-                  TODO: Could be nice to select a type by default - a recommended type 
-                  
-                  If only one choice, make a simple button
-            -->
-            <xsl:when test="count($childEditInfo/gn:choose) = 1">
-                  <xsl:for-each select="$childEditInfo/gn:choose">
-                    <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
+          <xsl:variable name="addActionDom">
+            <xsl:choose>
+              <!-- When element have different types, provide
+                    a list of those types to be selected. The type list
+                    is defined by the schema and optionaly overriden by
+                    the schema suggestion.
 
-                    <a class="btn btn-default"
-                       title="{$i18n/addA} {$label/label}"
-                       data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'replaceWith');">
-                      <i type="button" class="fa fa-plus gn-add"
-                      title="{$label/description}">
-                      </i>
-                    </a>
-                  </xsl:for-each>
-            </xsl:when>
-            <!-- 
-                  If many choices, make a dropdown button -->
-            <xsl:when test="count($childEditInfo/gn:choose) > 1">
-              <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle fa fa-plus gn-add"
-                        data-toggle="dropdown"
-                        title="{$i18n/addA} {$label}">
-                  <span/>
-                  <span class="caret"/>
-                </button>
-                <ul class="dropdown-menu">
-                  <xsl:for-each select="$childEditInfo/gn:choose">
-                    <xsl:sort select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
-                    <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
+                    TODO: Could be nice to select a type by default - a recommended type
 
-                    <li title="{$label/description}">
-                      <a
-                              data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'before');">
-                        <xsl:value-of select="$label/label"/>
-                      </a>
-                    </li>
-                  </xsl:for-each>
-                </ul>
-              </div>
-            </xsl:when>
-            <xsl:otherwise>
-              <!-- Add custom widget to add element.
-                This could be a subtemplate (if one available), or a helper
-                like for projection.
-                The directive is in charge of displaying the default add button if needed.
+                    If only one choice, make a simple button
               -->
-              <a class="btn btn-default"
-                 title="{$i18n/addA} {$label}"
-                 data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');">
-                <i class="fa fa-plus gn-add"/>
-              </a>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
+              <xsl:when test="count($childEditInfo/gn:choose) = 1">
+                <xsl:for-each select="$childEditInfo/gn:choose">
+                  <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels, $parentName, '', '')"/>
+
+                  <a class="btn btn-default"
+                     title="{$i18n/addA} {$label/label}"
+                     data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'replaceWith');">
+                    <i type="button" class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"
+                       title="{$label/description}">
+                    </i>
+                  </a>
+                </xsl:for-each>
+              </xsl:when>
+              <!--
+                    If many choices, make a dropdown button -->
+              <xsl:when test="count($childEditInfo/gn:choose) > 1">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle {if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"
+                          data-toggle="dropdown"
+                          title="{$i18n/addA} {$label}">
+                    <span/>
+                    <xsl:if test="$btnLabel != ''">&#160;
+                      <span><xsl:value-of select="$btnLabel"/></span>
+                    </xsl:if>
+                    <span class="caret"/>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <xsl:for-each select="$childEditInfo/gn:choose">
+                      <xsl:sort select="gn-fn-metadata:getLabel($schema, @name, $labels, $parentName, '', '')"/>
+                      <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels, $parentName, '', '')"/>
+
+                      <li title="{$label/description}">
+                        <a
+                                data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'before');">
+                          <xsl:value-of select="$label/label"/>
+                        </a>
+                      </li>
+                    </xsl:for-each>
+                  </ul>
+                </div>
+              </xsl:when>
+              <xsl:otherwise>
+                <!-- Add custom widget to add element.
+                  This could be a subtemplate (if one available), or a helper
+                  like for projection.
+                  The directive is in charge of displaying the default add button if needed.
+                -->
+                <a class="btn btn-default"
+                   title="{$i18n/addA} {$label}"
+                   data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');">
+                  <i class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"/>
+                  <xsl:if test="$btnLabel != ''">&#160;
+                    <span><xsl:value-of select="$btnLabel"/></span>
+                  </xsl:if>
+                </a>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
 
           <xsl:choose>
             <xsl:when test="$directive/@addDirective != ''">
               <div>
                 <xsl:attribute name="{$directive/@addDirective}"/>
-                <xsl:copy-of select="$directive/directiveAttributes/@*"/>
                 <xsl:attribute name="data-dom-id" select="$id"/>
                 <xsl:attribute name="data-element-name" select="$qualifiedName"/>
                 <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
-                <xsl:copy-of
-                        select="gn-fn-metadata:getFieldAddDirectiveAttributes($editorConfig,
+                <xsl:choose>
+                  <xsl:when test="$directive/directiveAttributes">
+                    <xsl:for-each select="$directive/directiveAttributes/@*">
+                      <xsl:choose>
+                        <xsl:when test="starts-with(., 'xpath::')">
+                          <xsl:variable name="xpath" select="substring-after(., 'xpath::')"/>
+                          <xsl:attribute name="{name(.)}">
+                            <saxon:call-template name="{concat('evaluate-', $schema)}">
+                              <xsl:with-param name="base" select="$metadata"/>
+                              <xsl:with-param name="in"
+                                              select="concat('/../', $xpath)"/>
+                            </saxon:call-template>
+                          </xsl:attribute>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:copy-of select="."/>
+                        </xsl:otherwise>
+                      </xsl:choose>
+                    </xsl:for-each>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:copy-of
+                            select="gn-fn-metadata:getFieldAddDirectiveAttributes($editorConfig,
                                     $qualifiedName)"/>
+                  </xsl:otherwise>
+                </xsl:choose>
                 <xsl:copy-of select="$addActionDom"/>
               </div>
             </xsl:when>
@@ -745,6 +803,7 @@
     <xsl:param name="tooltip" required="no"/>
     <xsl:param name="isRequired"/>
     <xsl:param name="isDisabled"/>
+    <xsl:param name="isReadOnly"/>
     <xsl:param name="editInfo"/>
     <xsl:param name="parentEditInfo"/>
     <xsl:param name="checkDirective" select="$isRequired"/>
@@ -775,6 +834,9 @@
           <xsl:if test="$isDisabled">
             <xsl:attribute name="disabled" select="'disabled'"/>
           </xsl:if>
+          <xsl:if test="$isReadOnly">
+            <xsl:attribute name="readonly" select="'readonly'"/>
+          </xsl:if>
           <xsl:if test="$tooltip">
             <xsl:attribute name="data-gn-field-tooltip" select="$tooltip"/>
           </xsl:if>
@@ -804,11 +866,10 @@
 
               <div class="radio row">
                 <div class="col-xs-12">
-                  <label>
+                  <label title="{normalize-space(description)}">
                     <input type="radio"
                            name="_{$name}"
-                           value="{code}"
-                           title="{normalize-space(description)}">
+                           value="{code}">
                       <xsl:if test="$valueToEdit = code">
                         <xsl:attribute name="checked"/>
                       </xsl:if>
@@ -908,6 +969,10 @@
             <xsl:if test="$isDisabled">
               <xsl:attribute name="disabled" select="'disabled'"/>
             </xsl:if>
+           <xsl:if test="$isReadOnly">
+              <xsl:attribute name="readonly" select="'readonly'"/>
+           </xsl:if>
+
             <xsl:if test="$lang">
               <xsl:attribute name="lang" select="$lang"/>
             </xsl:if>

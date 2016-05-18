@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_needhelp_directive');
 
@@ -22,99 +45,28 @@
    * display only an icon and no label.
    *
    */
-  module.directive('gnNeedHelp', ['$http', '$translate',
-    function($http, $translate) {
-      // // add popup to document body
-      // var modalObj = angular.element(
-      //     '<div class="modal gn-doc">' +
-      //     '<div class="modal-dialog">' +
-      //     '  <div class="modal-content">' +
-      //     '    <div class="modal-header">' +
-      //     '      <button type="button" class="close" ' +
-      //     '  data-dismiss="modal" aria-hidden="true">&times;</button>' +
-      //     '      <h4 class="modal-title"></h4>' +
-      //     '    </div>' +
-      //     '    <div class="modal-body">' +
-      //     '    </div>' +
-      //     '  </div>' +
-      //     '</div>' +
-      //     '</div>');
-      // angular.element(window.document.body).append(modalObj);
-
-      // Help configuration TODO: move to an external file or db ?
-      var helpLinks = {
-        helpBaseUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
-        defaultLang: 'eng',
-        pages: {
-          editor: {
-            eng: 'eng/users/user-guide/describing-information/' +
-                'creating-metadata.html',
-            fre: 'fra/users/user-guide/describing-information/' +
-                'creating-metadata.html'
-          },
-          editor_sharing: {
-            eng: 'eng/users/user-guide/publishing/index.html',
-            fre: 'fra/users/user-guide/publishing/index.html'
-          },
-          editor_geopublisher: {
-            eng: 'eng/users/user-guide/workflow/geopublication.html',
-            fre: 'fra/users/user-guide/workflow/geopublication.html'
-          },
-          admin_settings: {
-            eng: 'eng/users/administrator-guide/configuring-the-catalog/' +
-                'system-configuration.html',
-            fre: 'fra/users/administrator-guide/configuring-the-catalog/' +
-                'system-configuration.html'
-          }
-        }
-      };
+  module.directive('gnNeedHelp', ['gnGlobalSettings',
+    function(gnGlobalSettings) {
       return {
         restrict: 'A',
         replace: true,
         templateUrl: '../../catalog/components/common/needhelp/partials/' +
             'needhelp.html',
         link: function(scope, element, attrs) {
-          //     var docPath = '../../catalog/docs/partials/user-doc-' +
-          //         scope.lang + '/';
-          //     var imgPath = '../../catalog/docs/img';
-          //     var modalBody = $(modalObj).find('.modal-body').get(0);
           scope.iconOnly = attrs.iconOnly === 'true';
-
-          var openPage = function(lang) {
-            var page = helpLinks.pages[attrs.gnNeedHelp] &&
-                helpLinks.pages[attrs.gnNeedHelp][lang];
-            if (page) {
-              var helpPageUrl = helpLinks.helpBaseUrl + page;
-              window.open(helpPageUrl);
-              return true;
-            } else {
-              console.log('No help page for ' + attrs.gnNeedHelp +
-                  ' and language ' + lang + '. Add page to helpLinks');
-              return false;
-            }
-          };
-
-          // Get lang from scope or parent scope
-          var lang = scope.lang || scope.$parent.lang;
+          var helpBaseUrl = gnGlobalSettings.docUrl ||
+              'http://geonetwork-opensource.org/manuals/trunk/';
 
           scope.showHelp = function() {
-            if (!openPage(lang)) {
-              openPage(helpLinks.defaultLang);
+            var page = attrs.gnNeedHelp;
+            var helpPageUrl = helpBaseUrl + gnGlobalSettings.lang + '/' + page;
+            // GeoNetwork website language folder are different
+            if (helpBaseUrl.indexOf('http://geonet') === 0) {
+              lang = gnGlobalSettings.lang == 'fr' ? 'fra' : 'eng';
+              helpPageUrl = helpBaseUrl + lang + '/users/' + page;
             }
-
-            //       var helpPageUrl = docPath + attrs.gnNeedHelp + '.html';
-            //       $http.get(helpPageUrl).success(function(data) {
-            //         // Replace image path
-            //         data = data.replace('img src="img',
-            //             'img src="' + imgPath);
-            //         modalBody.innerHTML = data;
-            //         $(modalObj).modal('toggle');
-            //       }).error(function() {
-            //   modalBody.innerHTML = '<div class="alert alert-danger">' +
-            //             $translate('docNotFound', {page: helpPageUrl}) +
-            //             '</div>';
-            //         $(modalObj).modal('toggle');
-            //       });
+            window.open(helpPageUrl, 'gn-documentation');
+            return true;
           };
         }
       };

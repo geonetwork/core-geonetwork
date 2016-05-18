@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_onlinesrc_directive');
 
@@ -25,7 +48,7 @@
     'ga_print_directive'
   ])
 
-  /**
+      /**
    * @ngdoc directive
    * @name gn_onlinesrc.directive:gnOnlinesrcList
    *
@@ -48,16 +71,12 @@
    *    here is watching this
    *    value to refresh when it is required.</li>
    *  <li> When the metadata is saved, the
-   *  gnCurrentEdit.saving flag is set
-   *    to true and we refresh the data. It doesn't
-   *    append when the onlinesrcService
-   *    wants to save the metadata (the saving flag
-   *    is kept as false) to avoid
-   *    undesired refresh.</li>
+   *  gnCurrentEdit.version is updated and the list
+   *  of resources is reloaded.</li>
    * </ul>
    *
    */
-  .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
+      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
         function(gnOnlinesrc, gnCurrentEdit) {
           return {
             restrict: 'A',
@@ -75,7 +94,7 @@
                */
               var loadRelations = function() {
                 gnOnlinesrc.getAllResources()
-                .then(function(data) {
+                    .then(function(data) {
                       scope.relations = data;
                     });
               };
@@ -102,114 +121,680 @@
                 }
               });
 
-              // When saving is done, refresh validation report
-              scope.$watch('gnCurrentEdit.saving', function(newValue) {
-                if (newValue === false) {
-                  loadRelations();
-                }
-              });
+              // When saving is done, refresh related resources
+              scope.$watch('gnCurrentEdit.version',
+                  function(newValue, oldValue) {
+                    if (parseInt(newValue || 0) > parseInt(oldValue || 0)) {
+                      loadRelations();
+                    }
+                  });
             }
           };
         }])
 
       /**
-   * @ngdoc directive
-   * @name gn_onlinesrc.directive:gnAddThumbnail
-   * @restrict A
-   * @requires gnOnlinesrc
-   * @requires gnEditor
-   * @requires gnCurrentEdit
-   *
-   * @description
-   * The `gnAddThumbnail` directive provides a form to add a new thumbnail
-   * from an url or by uploading an image.
-   * On submit, the metadata is saved, the thumbnail is added, then the form
-   * and online resource list are refreshed.
-   */
-   .directive('gnAddThumbnail', ['$http', '$rootScope', '$translate',
-        '$timeout', '$q',
+     * @ngdoc directive
+     * @name gn_onlinesrc.directive:gnAddOnlinesrc
+     * @restrict A
+     * @requires gnOnlinesrc
+     * @requires gnOwsCapabilities
+     * @requires gnEditor
+     * @requires gnCurrentEdit
+     *
+     * @description
+     * The `gnAddOnlinesrc` directive provides a form to add a
+     * new online resource
+     * to the currend metadata. Depending on the protocol :
+     * <ul>
+     *  <li>DOWNLOAD : we upload a data from the disk.</li>
+     *  <li>OGC:WMS : we call a capabilities on the given url,
+     *  then the user can add
+     *    several resources (layers) at the same time.</li>
+     *  <li>Others : we just fill the form and call a batch processing.</li>
+     * </ul>
+     *
+     * On submit, the metadata is saved, the thumbnail is added, then the form
+     * and online resource list are refreshed.
+     */
+      .directive('gnAddOnlinesrc', [
         'gnOnlinesrc',
+        'gnOwsCapabilities',
+        'gnWfsService',
         'gnEditor',
         'gnCurrentEdit',
-        'gnConfig',
         'gnMap',
-        function($http, $rootScope, $translate, $timeout, $q,
-                 gnOnlinesrc, gnEditor, gnCurrentEdit,
-                 gnConfig, gnMap) {
+        'gnGlobalSettings',
+        'Metadata',
+        '$rootScope',
+        '$translate',
+        '$timeout',
+        '$http',
+        function(gnOnlinesrc, gnOwsCapabilities, gnWfsService,
+            gnEditor, gnCurrentEdit, gnMap, gnGlobalSettings, Metadata,
+            $rootScope, $translate, $timeout, $http) {
           return {
             restrict: 'A',
-            scope: {
-              gnPopupid: '='
-            },
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
-                'partials/addThumbnail.html',
-            scope: {},
-            link: function(scope, element, attrs) {
+                'partials/addOnlinesrc.html',
+            link: {
+              pre: function preLink(scope) {
+                scope.searchObj = {
+                  params: {}
+                };
+                scope.modelOptions =
+                    angular.copy(gnGlobalSettings.modelOptions);
+              },
+              post: function(scope, element, attrs) {
+                scope.popupid = attrs['gnPopupid'];
 
-              // mode can be 'url' or 'upload'
-              scope.mode = 'url';
-              scope.action = 'md.thumbnail.upload';
+                //{
+                //  // Optional / optGroup
+                //  group: 'onlineDiscover',
+                //  // Label
+                //    label: 'onlineDiscoverWMS',
+                //  // Optional / On select copy the label in desc field
+                //  copyLabel: 'desc',
+                //  // Optional / Icon
+                //  icon: 'fa gn-icon-onlinesrc',
+                //  // XSL process to run
+                //  process: 'onlinesrc-add',
+                //  // Optional / List of fields
+                //  // (URL only will be displayed if none)
+                //  fields: {
+                //  'url': {},
+                //  'protocol': {
+                //    // Fixed value
+                //    value: 'OGC:WMS',
+                //      // Hide field
+                //      hidden: true},
+                //  'name': {},
+                //  'desc': {
+                //    // Rename parameter for the XSL process
+                //    param: 'myParam'},
+                //  'function': {value: 'browsing', hidden: true}
+                //}
+                //}
 
-              // the form params that will be submitted
-              scope.params = {};
-
-              scope.popupid = attrs['gnPopupid'];
-              scope.mapId = 'gn-thumbnail-maker-map';
-              scope.loaded = false;
-              scope.layers = null;
-              scope.gnCurrentEdit = gnCurrentEdit;
-              scope.map = null;
-
-              function loadLayers() {
-                if (!angular.isArray(scope.map.getSize()) ||
-                    scope.map.getSize().indexOf(0) >= 0) {
-                  $timeout(function() {
-                    scope.map.updateSize();
-                  });
-                }
-
-                // Reset map
-                angular.forEach(scope.map.getLayers(), function(layer) {
-                  scope.map.removeLayer(layer);
-                });
-
-                scope.map.addLayer(gnMap.getLayersFromConfig());
-
-                // Add each WMS layer to the map
-                angular.forEach(scope.gnCurrentEdit.layerConfig,
-                    function(layer) {
-                      scope.map.addLayer(new ol.layer.Tile({
-                        source: new ol.source.TileWMS({
-                          url: layer.url,
+                var schemaConfig = {
+                  'dublin-core': {
+                    display: 'radio',
+                    types: [{
+                      label: 'addOnlinesrc',
+                      sources: {
+                        filestore: true,
+                        thumbnailMaker: true
+                      },
+                      icon: 'fa gn-icon-onlinesrc',
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {}
+                      }
+                    }]
+                  },
+                  'iso19139': {
+                    display: 'radio',
+                    types: [{
+                      label: 'addOnlinesrc',
+                      sources: {
+                        filestore: true
+                      },
+                      icon: 'fa gn-icon-onlinesrc',
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {},
+                        'name': {},
+                        'desc': {}
+                      }
+                    }, {
+                      label: 'addThumbnail',
+                      sources: {
+                        filestore: true,
+                        thumbnailMaker: true
+                      },
+                      icon: 'fa gn-icon-thumbnail',
+                      fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
+                      process: 'thumbnail-add',
+                      fields: {
+                        'url': {param: 'thumbnail_url'},
+                        'desc': {param: 'thumbnail_desc'}
+                      }
+                    }]
+                  },
+                  'iso19115-3': {
+                    display: 'select',
+                    types: [{
+                      group: 'onlineDiscover',
+                      label: 'onlineDiscoverThumbnail',
+                      sources: {
+                        filestore: true,
+                        thumbnailMaker: true
+                      },
+                      icon: 'fa gn-icon-thumbnail',
+                      fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
+                      process: 'thumbnail-add',
+                      fields: {
+                        'url': {},
+                        'desc': {}
+                      }
+                    }, {
+                      group: 'onlineDiscover',
+                      label: 'onlineDiscoverInApp',
+                      copyLabel: 'name',
+                      sources: {
+                        metadataStore: {
+                          label: 'searchAnApplication',
                           params: {
-                            'LAYERS': layer.name,
-                            'URL': layer.url
+                            type: 'application'
                           }
-                        })
-                      }));
-                    });
-
-                $timeout(function() {
-                  if (angular.isArray(scope.gnCurrentEdit.extent)) {
-                    // FIXME : only first extent is took into account
-                    var extent = scope.gnCurrentEdit.extent[0],
-                        proj = ol.proj.get(gnMap.getMapConfig().projection),
-                        projectedExtent =
-                        ol.extent.containsExtent(
-                        proj.getWorldExtent(),
-                        extent) ?
-                        gnMap.reprojExtent(extent, 'EPSG:4326', proj) :
-                        proj.getExtent();
-                    scope.map.getView().fit(
-                        projectedExtent,
-                        scope.map.getSize());
+                        }
+                      },
+                      icon: 'fa gn-icon-map',
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {
+                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                        },
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'browsing', hidden: true}
+                      }
+                    }, {
+                      group: 'onlineDiscover',
+                      label: 'onlineDiscoverWMS',
+                      copyLabel: 'desc',
+                      icon: 'fa gn-icon-onlinesrc',
+                      sources: {
+                        metadataStore: {
+                          label: 'searchAservice',
+                          params: {
+                            serviceType: 'OGC:WMS or WMS or view'
+                          }
+                        }
+                      },
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {value: 'OGC:WMS', hidden: true},
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'browsing', hidden: true}
+                      }
+                    }, {
+                      group: 'onlineDiscover',
+                      label: 'onlineDiscoverINSPIREView',
+                      copyLabel: 'desc',
+                      icon: 'fa gn-icon-onlinesrc',
+                      sources: {
+                        metadataStore: {
+                          label: 'searchAservice',
+                          params: {
+                            serviceType: 'view'
+                          }
+                        }
+                      },
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {value: 'OGC:WMS', hidden: true},
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'browsing', hidden: true},
+                        'applicationProfile': {
+                          value: 'inspire-view', hidden: true
+                        }
+                      }
+                    }, {
+                      group: 'onlineDiscover',
+                      label: 'onlineDiscoverWMTS',
+                      copyLabel: 'desc',
+                      icon: 'fa gn-icon-onlinesrc',
+                      sources: {
+                        metadataStore: {
+                          label: 'searchAservice',
+                          params: {
+                            serviceType: 'OGC:WMTS or WMTS'
+                          }
+                        }
+                      },
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {value: 'OGC:WMTS', hidden: true},
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'browsing', hidden: true}
+                      }
+                    }, {
+                      group: 'onlineDiscover',
+                      label: 'onlineDiscoverArcGIS',
+                      copyLabel: 'desc',
+                      icon: 'fa gn-icon-onlinesrc',
+                      sources: {
+                        metadataStore: {
+                          label: 'searchAservice',
+                          params: {
+                            serviceType: 'ESRI:REST'
+                          }
+                        }
+                      },
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {value: 'ESRI:REST', hidden: true},
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'browsing', hidden: true}
+                      }
+                    }, {
+                      group: 'onlineDiscover',
+                      label: 'onlineDiscoverKML',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      icon: 'fa gn-icon-onlinesrc',
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {
+                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                        },
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'browsing', hidden: true},
+                        'applicationProfile': {
+                          value: 'application/vnd.google-earth.kml+xml',
+                          hidden: true
+                        }
+                      }
+                    }, {
+                      group: 'onlineDiscover',
+                      label: 'onlineDiscoverMap',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      icon: 'fa gn-icon-map',
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {
+                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                        },
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'browsing', hidden: true},
+                        'applicationProfile': 'applicationProfile'
+                      }
+                    }, {
+                      group: 'onlineDownload',
+                      label: 'onlineDownloadFile',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      icon: 'fa gn-icon-onlinesrc',
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {
+                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                        },
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'download', hidden: true}
+                      }
+                    }, {
+                      group: 'onlineDownload',
+                      label: 'onlineDownloadKML',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      icon: 'fa gn-icon-onlinesrc',
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {
+                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                        },
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'download', hidden: true},
+                        'applicationProfile': {
+                          value: 'application/vnd.google-earth.kml+xml',
+                          hidden: true
+                        }
+                      }
+                    }, {
+                      group: 'onlineDownload',
+                      label: 'onlineDownloadWWW',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      icon: 'fa gn-icon-onlinesrc',
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {
+                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                        },
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'download', hidden: true}
+                      }
+                    }, {
+                      group: 'onlineDownload',
+                      label: 'onlineDownloadWFS',
+                      copyLabel: 'desc',
+                      icon: 'fa gn-icon-onlinesrc',
+                      sources: {
+                        metadataStore: {
+                          label: 'searchAservice',
+                          params: {
+                            serviceType: 'OGC:WFS or WFS or download'
+                          }
+                        }
+                      },
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {value: 'OGC:WFS', hidden: true},
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'download', hidden: true}
+                      }
+                    }, {
+                      group: 'onlineDownload',
+                      label: 'onlineDownloadWCS',
+                      copyLabel: 'desc',
+                      icon: 'fa gn-icon-onlinesrc',
+                      sources: {
+                        metadataStore: {
+                          label: 'searchAservice',
+                          params: {
+                            serviceType: 'OGC:WCS or WCS'
+                          }
+                        }
+                      },
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {value: 'OGC:WCS', hidden: true},
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'download', hidden: true}
+                      }
+                    }, {
+                      group: 'onlineDownload',
+                      label: 'onlineDownloadINSPIRE',
+                      copyLabel: 'desc',
+                      icon: 'fa gn-icon-onlinesrc',
+                      sources: {
+                        metadataStore: {
+                          label: 'searchAservice',
+                          params: {
+                            serviceType: 'download'
+                          }
+                        }
+                      },
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {value: 'OGC:WFS', hidden: true},
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'download', hidden: true},
+                        'applicationProfile': {
+                          value: 'inspire-download', hidden: true
+                        }
+                      }
+                    }, {
+                      group: 'onlineUse',
+                      label: 'onlineUseFcats',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      icon: 'fa fa-table',
+                      process: 'fcats-file-add',
+                      fields: {
+                        'url': {},
+                        'name': {}
+                      }
+                    }, {
+                      group: 'onlineUse',
+                      label: 'onlineUseDQReport',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      icon: 'fa fa-table',
+                      process: 'dq-report-add',
+                      fields: {
+                        'url': {},
+                        'name': {},
+                        'desc': {},
+                        'type': {param: 'type', value: 'qualityReport'}
+                      }
+                    }, {
+                      group: 'onlineUse',
+                      label: 'onlineUseDQTOR',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      icon: 'fa fa-table',
+                      process: 'dq-report-add',
+                      fields: {
+                        'url': {},
+                        'name': {},
+                        'desc': {},
+                        'type': {param: 'type', value: 'qualitySpecification'}
+                      }
+                    }, {
+                      group: 'onlineUse',
+                      label: 'onlineUseDQProdReport',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      icon: 'fa fa-table',
+                      process: 'dq-report-add',
+                      fields: {
+                        'url': {},
+                        'name': {},
+                        'desc': {},
+                        'type': {param: 'type', value: 'lineage'}
+                      }
+                    }, {
+                      group: 'onlineUse',
+                      label: 'onlineUseLegendLYR',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      fileStoreFilter: '*.{lyr,LYR}',
+                      icon: 'fa fa-table',
+                      process: 'legend-add',
+                      fields: {
+                        'url': {},
+                        'name': {}
+                      }
+                    }, {
+                      group: 'onlineUse',
+                      label: 'onlineUseStyleSLD',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      fileStoreFilter: '*.{sld,SLD}',
+                      icon: 'fa fa-table',
+                      process: 'legend-add',
+                      fields: {
+                        'url': {},
+                        'name': {}
+                      }
+                    }, {
+                      group: 'onlineUse',
+                      label: 'onlineUseStyleQML',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      fileStoreFilter: '*.{qml,QML}',
+                      icon: 'fa fa-table',
+                      process: 'legend-add',
+                      fields: {
+                        'url': {},
+                        'name': {}
+                      }
+                      //},{
+                      //  group: 'onlineUse',
+                      //  label: 'onlineUseLimitation',
+                      //  copyLabel: 'name',
+                      //  sources: {
+                      //    templatestore: true,
+                      //    filestore: true
+                      //  },
+                      //  icon: 'fa fa-table',
+                      //  process: 'use-limitation-add',
+                      //  fields: {
+                      //  }
+                      //},{
+                      //  group: 'onlineUse',
+                      //  label: 'onlineAccessLimitation',
+                      //  copyLabel: 'name',
+                      //  sources: {
+                      //    templatestore: true,
+                      //    filestore: true
+                      //  },
+                      //  icon: 'fa fa-table',
+                      //  process: 'use-limitation-add',
+                      //  fields: {
+                      //  }
+                    }, {
+                      group: 'onlineMore',
+                      label: 'onlineMoreWWW',
+                      copyLabel: 'name',
+                      icon: 'fa gn-icon-onlinesrc',
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {
+                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                        },
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'information', hidden: true}
+                      }
+                    }, {
+                      group: 'onlineMore',
+                      label: 'onlineMoreFile',
+                      copyLabel: 'name',
+                      sources: {
+                        filestore: true
+                      },
+                      icon: 'fa gn-icon-onlinesrc',
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {},
+                        'protocol': {
+                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                        },
+                        'name': {},
+                        'desc': {},
+                        'function': {value: 'information', hidden: true}
+                      }
+                    }]
                   }
-                });
-              };
+                };
+                scope.config = null;
+                scope.linkType = null;
 
-              var init = function() {
+                scope.loaded = false;
+                scope.layers = null;
+                scope.mapId = 'gn-thumbnail-maker-map';
+                scope.map = null;
 
-                if (scope.mode === 'thumbnailMaker') {
+                scope.searchObj = {
+                  params: {
+                    sortBy: 'title'
+                  }
+                };
+
+                // This object is used to share value between this
+                // directive and the SearchFormController scope that
+                // is contained by the directive
+                scope.stateObj = {};
+
+                function loadLayers() {
+                  if (!angular.isArray(scope.map.getSize()) ||
+                      scope.map.getSize().indexOf(0) >= 0) {
+                    $timeout(function() {
+                      scope.map.updateSize();
+                    }, 300);
+                  }
+
+                  // Reset map
+                  angular.forEach(scope.map.getLayers(), function(layer) {
+                    scope.map.removeLayer(layer);
+                  });
+
+                  scope.map.addLayer(gnMap.getLayersFromConfig());
+
+                  // Add each WMS layer to the map
+                  scope.layers = scope.gnCurrentEdit.layerConfig;
+                  angular.forEach(scope.gnCurrentEdit.layerConfig,
+                      function(layer) {
+                        scope.map.addLayer(new ol.layer.Tile({
+                          source: new ol.source.TileWMS({
+                            url: layer.url,
+                            params: {
+                              'LAYERS': layer.name,
+                              'URL': layer.url
+                            }
+                          })
+                        }));
+                      });
+
+                  $timeout(function() {
+                    if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                      // FIXME : only first extent is took into account
+                      var extent = scope.gnCurrentEdit.extent[0],
+                          proj = ol.proj.get(gnMap.getMapConfig().projection),
+                          projectedExtent =
+                          ol.extent.containsExtent(
+                          proj.getWorldExtent(),
+                          extent) ?
+                          gnMap.reprojExtent(extent, 'EPSG:4326', proj) :
+                          proj.getExtent();
+                      scope.map.getView().fit(
+                          projectedExtent,
+                          scope.map.getSize());
+                    }
+                    // Trigger init of print directive
+                    scope.mode = 'thumbnailMaker';
+                  }, 300);
+                };
+
+                scope.generateThumbnail = function() {
+                  return $http.put('../api/0.1/records/' +
+                      scope.gnCurrentEdit.uuid +
+                      '/attachments/actions/save-thumbnail', null, {
+                        params: {
+                          jsonConfig: angular.fromJson(scope.jsonSpec)
+                        }
+                      }).then(function() {
+                    $rootScope.$broadcast('gnFileStoreUploadDone');
+                  });
+                };
+
+                var initThumbnailMaker = function() {
+
                   if (!scope.loaded) {
                     scope.map = new ol.Map({
                       layers: [],
@@ -227,366 +812,346 @@
                     scope.loaded = true;
                   }
 
-                  loadLayers();
-
                   scope.$watch('gnCurrentEdit.layerConfig', loadLayers);
+                };
+
+                gnOnlinesrc.register('onlinesrc', function() {
+                  scope.metadataId = gnCurrentEdit.id;
+                  scope.schema = gnCurrentEdit.schema;
+                  scope.config = schemaConfig[scope.schema];
+                  if (scope.config === undefined &&
+                      scope.schema.indexOf('iso19139') === 0) {
+                    scope.config = schemaConfig['iso19139'];
+                  }
+                  scope.params.linkType = scope.config.types[0];
+
+                  if (angular.isUndefined(scope.isMdMultilingual) &&
+                      gnCurrentEdit.mdOtherLanguages) {
+
+                    scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
+                    scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
+
+                    // not multilingual {"fre":"#"}
+                    if (Object.keys(scope.mdLangs).length > 1) {
+                      scope.isMdMultilingual = true;
+                      scope.mdLang = gnCurrentEdit.mdLanguage;
+
+                      for (var p in scope.mdLangs) {
+                        var v = scope.mdLangs[p];
+                        if (v.indexOf('#') == 0) {
+                          var l = v.substr(1);
+                          if (!l) {
+                            l = scope.mdLang;
+                          }
+                          scope.mdLangs[p] = l;
+                        }
+                      }
+                    } else {
+                      scope.isMdMultilingual = false;
+                    }
+                  }
+
+                  initThumbnailMaker();
+                  resetForm();
+                  $(scope.popupid).modal('show');
+                });
+
+                // mode can be 'url' or 'thumbnailMaker' to init thumbnail panel
+                scope.mode = 'url';
+
+                // the form parms that will be submited
+                scope.params = {};
+
+                // Tells if we need to display layer grid and send
+                // layers to the submit
+                scope.OGCProtocol = false;
+
+                scope.onlinesrcService = gnOnlinesrc;
+                scope.isUrlOk = false;
+                scope.setUrl = function(url) {
+                  scope.params.url = url;
+                };
+
+                var resetForm = function() {
+                  if (scope.params) {
+                    scope.params.url = '';
+                    scope.params.protocol = '';
+                    scope.params.function = '';
+                    scope.params.applicationProfile = '';
+                    resetProtocol();
+                  }
+                };
+                var resetProtocol = function() {
+                  scope.layers = [];
+                  scope.OGCProtocol = null;
+                  if (scope.params) {
+                    scope.params.name = scope.isMdMultilingual ? {} : '';
+                    scope.params.desc = scope.isMdMultilingual ? {} : '';
+                    scope.params.selectedLayers = [];
+                    scope.params.layers = [];
+                  }
+                };
+
+
+                function buildObjectParameter(param) {
+                  if (angular.isObject(param)) {
+                    var name = [];
+                    for (var p in param) {
+                      name.push(p + '#' + param[p]);
+                    }
+                    return name.join('|');
+                  }
+                  return param;
                 }
-              };
 
-              gnOnlinesrc.register('thumbnail', function() {
-                init();
-                $(scope.popupid).modal('show');
-              });
-
-              // TODO: should be in gnEditor ?
-              var getVersion = function() {
-                scope.metadataId = gnCurrentEdit.id;
-                return scope.params.version = gnCurrentEdit.version;
-              };
-
-              var resetForm = function() {
-                if (scope.params) {
-                  scope.params.url = '';
-                  scope.params.thumbnail_url = '';
-                  scope.params.thumbnail_desc = '';
+                function setParameterValue(param, value) {
+                  if (scope.isMdMultilingual) {
+                    $.each(scope.mdLangs, function(key, v) {
+                      param[v] = value;
+                    });
+                  } else {
+                    param = value;
+                  }
                 }
-                scope.clear(scope.queue);
-              };
 
-              /**
-               * Onlinesrc uploaded with success, close the popup,
-               * refresh the metadata form.
-               * Callback of the submit().
-               */
-              var uploadThumbnailDone = function(evt, data) {
-                resetForm();
-                gnEditor.refreshEditorForm();
-                gnOnlinesrc.reload = true;
-                $(scope.popupid).modal('hide');
-              };
+                /**
+                 *  Add online resource
+                 *  If it is an upload, then we submit the
+                 *  form with right content
+                 *  If it is an URL, we just call a $http.get
+                 */
+                scope.addOnlinesrc = function() {
+                  scope.params.name = buildObjectParameter(scope.params.name);
+                  scope.params.desc = buildObjectParameter(scope.params.desc);
 
-              /**
-               * Onlinesrc uploaded with error, broadcast it.
-               */
-              var uploadThumbnailError = function(data) {
-              };
 
-              // upload directive options
-              scope.thumbnailUploadOptions = {
-                autoUpload: false,
-                url: 'md.thumbnail.upload',
-                maxNumberOfFiles: 1,
-                singleUpload: true,
-                dropZone: $('#gn-upload-thumbnail'),
-                //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i,
-                done: uploadThumbnailDone,
-                fail: uploadThumbnailError
-              };
-
-              /**
-               *  Add thumbnail
-               *  If it is an upload, then we submit the form with right content
-               *  If it is an URL, we just call a $http.get
-               */
-              scope.addThumbnail = function() {
-                if (scope.mode == 'upload') {
-                  getVersion();
-                  return gnEditor.save(false, true)
-                  .then(function(data) {
-                        scope.submit();
+                  var processParams = {};
+                  angular.forEach(scope.params.linkType.fields,
+                      function(value, key) {
+                        if (value.param) {
+                          processParams[value.param] = scope.params[key];
+                        } else {
+                          processParams[key] = scope.params[key];
+                        }
                       });
-                } else if (scope.mode == 'thumbnailMaker') {
-                  getVersion();
-                  var deferred = $q.defer();
 
-                  gnEditor.save(false, true)
-                    .then(function(data) {
-                        scope.action =
-                            'md.thumbnail.generate?_content_type=json&';
-                        $http.post(scope.action,
-                            $('#gn-upload-thumbnail').serialize(), {
-                              headers: {'Content-Type':
-                                    'application/x-www-form-urlencoded'}
-                            }).success(function(data) {
-                          uploadThumbnailDone();
-                          deferred.resolve(data);
-                        }).error(function(data, status, headers, config) {
-                          $rootScope.$broadcast('StatusUpdated', {
-                            title: $translate('thumbnailCreationError'),
-                            // Hack to extract error message
-                            // from HTML page. At some point
-                            // the service should return JSON error
-                            error: {
-                              message: $(data).find('td[align=center]').text()
-                            },
-                            timeout: 0,
-                            type: 'danger'});
-                          deferred.resolve(data);
-                        });
-                      });
-                  return deferred.promise;
-                } else {
-                  return gnOnlinesrc.addThumbnailByURL(scope.params,
-                      scope.popupid).then(function() {
+                  // Add list of layers for WMS
+                  if (scope.params.selectedLayers) {
+                    processParams.selectedLayers = scope.params.selectedLayers;
+                  }
+                  processParams.process = scope.params.linkType.process;
+                  return scope.onlinesrcService.add(
+                      processParams, scope.popupid).then(function() {
                     resetForm();
                   });
-                }
-              };
-            }
-          };
-        }])
+                };
 
-      /**
-   * @ngdoc directive
-   * @name gn_onlinesrc.directive:gnAddOnlinesrc
-   * @restrict A
-   * @requires gnOnlinesrc
-   * @requires gnOwsCapabilities
-   * @requires gnEditor
-   * @requires gnCurrentEdit
-   *
-   * @description
-   * The `gnAddOnlinesrc` directive provides a form to add a new online resource
-   * to the currend metadata. Depending on the protocol :
-   * <ul>
-   *  <li>DOWNLOAD : we upload a data from the disk.</li>
-   *  <li>OGC:WMS : we call a capabilities on the given url,
-   *  then the user can add
-   *    several resources (layers) at the same time.</li>
-   *  <li>Others : we just fill the form and call a batch processing.</li>
-   * </ul>
-   *
-   * On submit, the metadata is saved, the thumbnail is added, then the form
-   * and online resource list are refreshed.
-   */
-  .directive('gnAddOnlinesrc', [
-        'gnOnlinesrc',
-        'gnOwsCapabilities',
-        'gnEditor',
-        'gnCurrentEdit',
-        '$rootScope',
-        '$translate',
-        function(gnOnlinesrc, gnOwsCapabilities, gnEditor,
-                 gnCurrentEdit, $rootScope, $translate) {
-          return {
-            restrict: 'A',
-            templateUrl: '../../catalog/components/edit/onlinesrc/' +
-                'partials/addOnlinesrc.html',
-            link: function(scope, element, attrs) {
+                scope.onAddSuccess = function() {
+                  gnEditor.refreshEditorForm();
+                  scope.onlinesrcService.reload = true;
+                };
 
-              scope.popupid = attrs['gnPopupid'];
-
-              gnOnlinesrc.register('onlinesrc', function() {
-                scope.metadataId = gnCurrentEdit.id;
-                scope.schema = gnCurrentEdit.schema;
-
-                if (angular.isUndefined(scope.isMdMultilingual) &&
-                    gnCurrentEdit.mdOtherLanguages) {
-
-                  scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
-                  scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
-
-                  // not multilingual {"fre":"#"}
-                  if (Object.keys(scope.mdLangs).length > 1) {
-                    scope.isMdMultilingual = true;
-                    scope.mdLang = gnCurrentEdit.mdLanguage;
-
-                    for (var p in scope.mdLangs) {
-                      var v = scope.mdLangs[p];
-                      if (v.indexOf('#') == 0) {
-                        var l = v.substr(1);
-                        if (!l) {
-                          l = scope.mdLang;
-                        }
-                        scope.mdLangs[p] = l;
-                      }
+                /**
+                 * loadCurrentLink
+                 *
+                 * Call WMS capabilities request with params.url.
+                 * Update params.layers scope value, that will be also
+                 * passed to the layers grid directive.
+                 */
+                scope.loadCurrentLink = function(reportError) {
+                  if (angular.isUndefined(scope.params.url) ||
+                      scope.params.url == '') {
+                    return;
+                  }
+                  if (scope.OGCProtocol) {
+                    scope.layers = [];
+                    if (scope.OGCProtocol == 'WMS') {
+                      return gnOwsCapabilities.getWMSCapabilities(
+                          scope.params.url)
+                          .then(function(capabilities) {
+                            scope.layers = [];
+                            scope.isUrlOk = true;
+                            angular.forEach(capabilities.layers, function(l) {
+                              if (angular.isDefined(l.Name)) {
+                                scope.layers.push(l);
+                              }
+                            });
+                          }).catch(function(error) {
+                            scope.isUrlOk = error === 200;
+                          });
+                    } else if (scope.OGCProtocol == 'WFS') {
+                      return gnWfsService.getCapabilities(
+                          scope.params.url)
+                          .then(function(capabilities) {
+                            scope.layers = [];
+                            scope.isUrlOk = true;
+                            angular.forEach(
+                               capabilities.featureTypeList.featureType,
+                               function(l) {
+                                 if (angular.isDefined(l.name)) {
+                                   scope.layers.push({
+                                     Name: l.name.localPart,
+                                     abstract: l._abstract,
+                                     Title: l.title
+                                   });
+                                 }
+                               });
+                          }).catch(function(error) {
+                            scope.isUrlOk = error === 200;
+                          });
                     }
+                  } else if (scope.params.url.indexOf('http') === 0) {
+                    var useProxy =
+                        scope.params.url.indexOf(location.hostname) === -1;
+                    var url = useProxy ?
+                        '../../proxy?url=' +
+                        encodeURIComponent(scope.params.url) : scope.params.url;
+                    return $http.get(url).then(function(response) {
+                      scope.isUrlOk = response.status === 200;
+                    },
+                    function(response) {
+                      // Proxy may return 500 when document is not proxyable
+                      scope.isUrlOk = response.status === 200;
+                    });
+                  } else {
+                    scope.isUrlOk = true;
                   }
-                  else {
-                    scope.isMdMultilingual = false;
-                  }
-                }
+                };
 
-                $(scope.popupid).modal('show');
-
-              });
-
-              // mode can be 'url' or 'upload'
-              scope.mode = 'url';
-
-              // the form parms that will be submited
-              scope.params = {};
-              scope.params.selectedLayers = [];
-
-              // Tells if we need to display layer grid and send
-              // layers to the submit
-              scope.isWMSProtocol = false;
-
-              scope.onlinesrcService = gnOnlinesrc;
-
-              var resetForm = function() {
-
-                scope.layers = [];
-                if (scope.params) {
-                  scope.params.desc = scope.isMdMultilingual ? {} : '';
-                  scope.params.url = '';
-                  scope.params.name = scope.isMdMultilingual ? {} : '';
-                  scope.params.protocol = '';
-                  scope.params.selectedLayers = [];
-                  scope.params.layers = [];
-                }
-                scope.clear(scope.queue);
-              };
-
-              /**
-               * Onlinesrc uploaded with success, close the popup,
-               * refresh the metadata.
-               */
-              var uploadOnlinesrcDone = function(data) {
-                resetForm();
-                gnEditor.refreshEditorForm();
-                gnOnlinesrc.reload = true;
-                $(scope.popupid).modal('hide');
-              };
-
-              /**
-               * Onlinesrc uploaded with error, broadcast it.
-               */
-              var uploadOnlineSrcError = function(data) {
-              };
-
-              scope.onlinesrcUploadOptions = {
-                autoUpload: false,
-                url: 'resource.upload.and.link',
-                dropZone: $('#gn-upload-onlinesrc'),
-                singleUpload: true,
-                // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
-                done: uploadOnlinesrcDone,
-                fail: uploadOnlineSrcError
-              };
-
-              /**
-               *  Add online resource
-               *  If it is an upload, then we submit the form with right content
-               *  If it is an URL, we just call a $http.get
-               */
-              scope.addOnlinesrc = function() {
-                if (scope.mode == 'upload') {
-                  return scope.submit();
-                } else {
-                  if (angular.isObject(scope.params.name)) {
-                    var name = [];
-                    for (var p in scope.params.name) {
-                      name.push(p + '#' + scope.params.name[p]);
+                /**
+                 * On protocol combo Change.
+                 * Update OGCProtocol values to display or hide
+                 * layer grid and call or not a getCapabilities.
+                 */
+                scope.$watch('params.protocol', function(n, o) {
+                  if (!angular.isUndefined(scope.params.protocol) && o != n) {
+                    resetProtocol();
+                    if (scope.params.protocol.indexOf('OGC:WMS') >= 0) {
+                      scope.OGCProtocol = 'WMS';
+                    } else if (scope.params.protocol.indexOf('OGC:WFS') >= 0) {
+                      scope.OGCProtocol = 'WFS';
                     }
-                    scope.params.name = name.join('|');
-                  }
-                  if (angular.isObject(scope.params.desc)) {
-                    var desc = [];
-                    for (var p in scope.params.desc) {
-                      desc.push(p + '#' + scope.params.desc[p]);
+                    if (scope.OGCProtocol != null) {
+                      // Reset parameter in case of multilingual metadata
+                      // Those parameters are object.
+                      scope.params.name = '';
+                      scope.params.desc = '';
                     }
-                    scope.params.desc = desc.join('|');
+                    scope.loadCurrentLink();
                   }
+                });
 
-                  return gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid).
-                      then(function() {
-                        resetForm();
-                      });
-                }
-              };
+                /**
+                 * On URL change, reload WMS capabilities
+                 * if the protocol is WMS
+                 */
+                scope.$watch('params.url', function() {
+                  if (!angular.isUndefined(scope.params.url)) {
+                    scope.loadCurrentLink();
+                    scope.isImage =
+                        scope.params.url.match(/.*.(png|jpg|gif)$/i);
+                  }
+                });
+                scope.$watchCollection('params.selectedLayers', function(n, o) {
+                  if (o != n) {
+                    var names = [],
+                        descs = [];
 
-              scope.onAddSuccess = function() {
-                gnEditor.refreshEditorForm();
-                scope.onlinesrcService.reload = true;
-              };
-
-              function handleError(reportError, error) {
-                if (reportError && error != undefined) {
-                  var errorMsg = !isNaN(parseFloat(error)) && isFinite(error) ?
-                      $translate('linkToServiceWithoutURLError') +
-                      ': ' +
-                      error :
-                      $translate(error);
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('error'),
-                    timeout: 0,
-                    msg: errorMsg,
-                    type: 'danger'});
-                }
-              }
-              /**
-               * loadWMSCapabilities
-               *
-               * Call WMS capabilities request with params.url.
-               * Update params.layers scope value, that will be also
-               * passed to the layers grid directive.
-               */
-              scope.loadWMSCapabilities = function(reportError) {
-                if (scope.isWMSProtocol) {
-                  gnOwsCapabilities.getWMSCapabilities(scope.params.url)
-                        .then(function(capabilities) {
-                        scope.layers = [];
-                        angular.forEach(capabilities.layers, function(l) {
-                          if (angular.isDefined(l.Name)) {
-                            scope.layers.push(l);
-                          }
+                    angular.forEach(scope.params.selectedLayers,
+                        function(layer) {
+                          names.push(layer.Name || layer.name);
+                          descs.push(layer.Title || layer.title);
                         });
-                      }).catch (function(error) {
-                        handleError(reportError, error);
+                    angular.extend(scope.params, {
+                      name: names.join(','),
+                      desc: descs.join(',')
+                    });
+                  }
+                });
+                scope.$watch('params.linkType', function(newValue, oldValue) {
+                  if (newValue !== oldValue) {
+                    resetForm();
+
+                    if (newValue.sources.metadataStore) {
+                      scope.$broadcast('resetSearch',
+                          newValue.sources.metadataStore.params);
+                    }
+
+                    if (angular.isDefined(newValue.fields)) {
+                      angular.forEach(newValue.fields, function(val, key) {
+                        if (angular.isDefined(val.value)) {
+                          scope.params[key] = val.value;
+                        }
                       });
                     }
-              };
+                    if (angular.isDefined(newValue.copyLabel)) {
+                      scope.params[newValue.copyLabel] =
+                          $translate(newValue.label);
+                    }
 
-              /**
-               * On protocol combo Change.
-               * Update isWMSProtocol values to display or hide
-               * layer grid and call or not a getCapabilities.
-               */
-              scope.$watch('params.protocol', function() {
-                if (!angular.isUndefined(scope.params.protocol)) {
-                  scope.isWMSProtocol = (scope.params.protocol.
-                      indexOf('OGC:WMS') >= 0);
-                  scope.loadWMSCapabilities();
-                }
-              });
+                    if (newValue.sources && newValue.sources.thumbnailMaker) {
+                      loadLayers();
+                    }
+                  }
+                });
 
-              /**
-               * On URL change, reload WMS capabilities
-               * if the protocol is WMS
-               */
-              scope.$watch('params.url', function() {
-                if (!angular.isUndefined(scope.params.url)) {
-                  scope.loadWMSCapabilities();
-                }
-              });
+                scope.resource = null;
+                scope.$watch('resource', function() {
+                  if (scope.resource && scope.resource.url) {
+                    scope.params.url = '';
+                    setParameterValue(scope.params.name, '');
+                    $timeout(function() {
+                      scope.params.url = scope.resource.url;
+                      setParameterValue(scope.params.name,
+                          scope.resource.id.split('/').splice(2).join('/'));
+                    }, 100);
+                  }
+                });
 
+                scope.$watchCollection('stateObj.selectRecords',
+                    function(n, o) {
+                      if (!angular.isUndefined(scope.stateObj.selectRecords) &&
+                          scope.stateObj.selectRecords.length > 0 &&
+                          n != o) {
+                        scope.metadataLinks = [];
+                        scope.metadataTitle = '';
+                        var md = new Metadata(scope.stateObj.selectRecords[0]);
+                        var links = md.getLinksByType();
+                        if (angular.isArray(links) && links.length == 1) {
+                          scope.params.url = links[0].url;
+                        } else {
+                          scope.metadataLinks = links;
+                          scope.metadataTitle = md.title;
+                        }
+                      }
+                    });
+              }
             }
           };
         }])
 
       /**
-   * @ngdoc directive
-   * @name gn_onlinesrc.directive:gnLinkServiceToDataset
-   * @restrict A
-   * @requires gnOnlinesrc
-   * @requires gnOwsCapabilities
-   * @requires Metadata
-   * @requires gnCurrentEdit
-   *
-   * @description
-   * The `gnLinkServiceToDataset` directive provides a
-   * form to either add a service
-   * to a metadata of type dataset, or to add a dataset to a
-   * metadata of service.
-   * The process will update both of the metadatas, the current
-   * one and the one it
-   * is linked to.
-   *
-   * On submit, the metadata is saved, the thumbnail is added, then the form
-   * and online resource list are refreshed.
-   */
-  .directive('gnLinkServiceToDataset', [
+     * @ngdoc directive
+     * @name gn_onlinesrc.directive:gnLinkServiceToDataset
+     * @restrict A
+     * @requires gnOnlinesrc
+     * @requires gnOwsCapabilities
+     * @requires Metadata
+     * @requires gnCurrentEdit
+     *
+     * @description
+     * The `gnLinkServiceToDataset` directive provides a
+     * form to either add a service
+     * to a metadata of type dataset, or to add a dataset to a
+     * metadata of service.
+     * The process will update both of the metadatas, the current
+     * one and the one it
+     * is linked to.
+     *
+     * On submit, the metadata is saved, the thumbnail is added, then the form
+     * and online resource list are refreshed.
+     */
+      .directive('gnLinkServiceToDataset', [
         'gnOnlinesrc',
         'Metadata',
         'gnOwsCapabilities',
@@ -595,7 +1160,7 @@
         '$translate',
         'gnGlobalSettings',
         function(gnOnlinesrc, Metadata, gnOwsCapabilities,
-                 gnCurrentEdit, $rootScope, $translate, gnGlobalSettings) {
+            gnCurrentEdit, $rootScope, $translate, gnGlobalSettings) {
           return {
             restrict: 'A',
             scope: {},
@@ -626,23 +1191,46 @@
                     };
                     scope.$broadcast('resetSearch', searchParams);
                     scope.layers = [];
+                    // Load service layers on load
+                    if (scope.mode !== 'service') {
+                      // TODO: Check the appropriate WMS service
+                      // or list URLs if many
+                      // TODO: If service URL is added, user need to reload
+                      // editor to get URL or current record.
+                      var links = [];
+                      links = links.concat(
+                          gnCurrentEdit.metadata.getLinksByType('OGC:WMS'));
+                      links = links.concat(
+                          gnCurrentEdit.metadata.getLinksByType('wms'));
+                      if (angular.isArray(links) && links.length == 1) {
+                        var serviceUrl = links[0].url;
+                        scope.loadCurrentLink(serviceUrl);
+                        scope.srcParams.url = serviceUrl;
+                        scope.srcParams.protocol = links[0].protocol || '';
+                        scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
+                      } else {
+                        scope.alertMsg =
+                            $translate('linkToServiceWithoutURLError');
+                      }
+                    }
                   });
 
                   // This object is used to share value between this
                   // directive and the SearchFormController scope that
                   // is contained by the directive
                   scope.stateObj = {};
+                  scope.currentMdTitle = null;
 
                   /**
-                   * loadWMSCapabilities
+                   * loadCurrentLink
                    *
                    * Call WMS capabilities on the service metadata URL.
                    * Update params.layers scope value, that will be also
                    * passed to the layers grid directive.
                    */
-                  scope.loadWMSCapabilities = function(url) {
+                  scope.loadCurrentLink = function(url) {
                     scope.alertMsg = null;
-                    gnOwsCapabilities.getWMSCapabilities(url)
+                    return gnOwsCapabilities.getWMSCapabilities(url)
                         .then(function(capabilities) {
                           scope.layers = [];
                           scope.srcParams.selectedLayers = [];
@@ -662,39 +1250,31 @@
                    * layers grid).
                    */
                   scope.$watchCollection('stateObj.selectRecords', function() {
+                    scope.currentMdTitle = null;
                     if (!angular.isUndefined(scope.stateObj.selectRecords) &&
                         scope.stateObj.selectRecords.length > 0) {
                       var md = new Metadata(scope.stateObj.selectRecords[0]);
-                      var links = [];
-
-                      scope.srcParams.selectedLayers = [];
+                      scope.currentMdTitle = md.title || md.defaultTitle;
                       if (scope.mode == 'service') {
+                        var links = [];
+                        scope.layers = [];
+                        scope.srcParams.selectedLayers = [];
+                        // TODO: WFS ?
                         links = links.concat(md.getLinksByType('OGC:WMS'));
                         links = links.concat(md.getLinksByType('wms'));
                         scope.srcParams.uuidSrv = md.getUuid();
                         scope.srcParams.uuidDS = gnCurrentEdit.uuid;
 
                         if (angular.isArray(links) && links.length == 1) {
-                          scope.loadWMSCapabilities(links[0].url);
+                          scope.loadCurrentLink(links[0].url);
                           scope.srcParams.url = links[0].url;
                         } else {
                           scope.srcParams.url = '';
                           scope.alertMsg =
                               $translate('linkToServiceWithoutURLError');
                         }
-                      }
-                      else {
-                        // TODO: Check the appropriate WMS service
-                        // or list URLs if many
-                        links = links.concat(
-                            gnCurrentEdit.metadata.getLinksByType('OGC:WMS'));
-                        links = links.concat(
-                            gnCurrentEdit.metadata.getLinksByType('wms'));
-                        var serviceUrl = links[0].url;
-                        scope.loadWMSCapabilities(serviceUrl);
-                        scope.srcParams.url = serviceUrl;
+                      } else {
                         scope.srcParams.uuidDS = md.getUuid();
-                        scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
                       }
                     }
                   });
@@ -721,27 +1301,27 @@
         }])
 
       /**
-   * @ngdoc directive
-   * @name gn_onlinesrc.directive:gnLinkToMetadata
-   * @restrict A
-   * @requires gnOnlinesrc
-   * @requires $translate
-   *
-   * @description
-   * The `gnLinkServiceToDataset` directive provides
-   * a form to link one metadata to
-   * another as :
-   * <ul>
-   *  <li>parent</li>
-   *  <li>feature catalog</li>
-   *  <li>source dataset</li>
-   * </ul>
-   * The directive contains a search form allowing one local selection.
-   *
-   * On submit, the metadata is saved, the link is added,
-   * then the form and online resource list are refreshed.
-   */
-  .directive('gnLinkToMetadata', [
+     * @ngdoc directive
+     * @name gn_onlinesrc.directive:gnLinkToMetadata
+     * @restrict A
+     * @requires gnOnlinesrc
+     * @requires $translate
+     *
+     * @description
+     * The `gnLinkServiceToDataset` directive provides
+     * a form to link one metadata to
+     * another as :
+     * <ul>
+     *  <li>parent</li>
+     *  <li>feature catalog</li>
+     *  <li>source dataset</li>
+     * </ul>
+     * The directive contains a search form allowing one local selection.
+     *
+     * On submit, the metadata is saved, the link is added,
+     * then the form and online resource list are refreshed.
+     */
+      .directive('gnLinkToMetadata', [
         'gnOnlinesrc', '$translate', 'gnGlobalSettings',
         function(gnOnlinesrc, $translate, gnGlobalSettings) {
           return {
@@ -805,22 +1385,23 @@
         }])
 
       /**
-   * @ngdoc directive
-   * @name gn_onlinesrc.directive:gnLinkToSibling
-   * @restrict A
-   * @requires gnOnlinesrc
-   *
-   * @description
-   * The `gnLinkToSibling` directive provides a form to link siblings to the
-   * current metdata. The user need to specify Association type and
-   * Initiative type
-   * to be able to add a metadata to his selection. The process alow a multiple
-   * selection.
-   *
-   * On submit, the metadata is saved, the resource is associated, then the form
-   * and online resource list are refreshed.
-   */
-  .directive('gnLinkToSibling', ['gnOnlinesrc', 'gnGlobalSettings',
+     * @ngdoc directive
+     * @name gn_onlinesrc.directive:gnLinkToSibling
+     * @restrict A
+     * @requires gnOnlinesrc
+     *
+     * @description
+     * The `gnLinkToSibling` directive provides a form to link siblings to the
+     * current metadata. The user need to specify Association type and
+     * Initiative type
+     * to be able to add a metadata to his selection. The process allow
+     * a multiple selection.
+     *
+     * On submit, the metadata is saved, the resource is associated,
+     * then the form
+     * and online resource list are refreshed.
+     */
+      .directive('gnLinkToSibling', ['gnOnlinesrc', 'gnGlobalSettings',
         function(gnOnlinesrc, gnGlobalSettings) {
           return {
             restrict: 'A',
@@ -871,23 +1452,23 @@
                    */
                   scope.addToSelection =
                       function(md, associationType, initiativeType) {
-                        if (associationType) {
-                          var idx = findObj(md);
-                          if (idx < 0) {
-                            scope.selection.push({
-                              md: md,
-                              associationType: associationType,
-                              initiativeType: initiativeType || ''
-                            });
-                          }
-                          else {
-                            angular.extend(scope.selection[idx], {
-                              associationType: associationType,
-                              initiativeType: initiativeType || ''
-                            });
-                          }
-                        }
-                      };
+                    if (associationType) {
+                      var idx = findObj(md);
+                      if (idx < 0) {
+                        scope.selection.push({
+                          md: md,
+                          associationType: associationType,
+                          initiativeType: initiativeType || ''
+                        });
+                      }
+                      else {
+                        angular.extend(scope.selection[idx], {
+                          associationType: associationType,
+                          initiativeType: initiativeType || ''
+                        });
+                      }
+                    }
+                  };
 
                   /**
                    * Remove a record from the selection

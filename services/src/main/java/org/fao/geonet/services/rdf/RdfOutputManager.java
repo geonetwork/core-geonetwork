@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.services.rdf;
 
 import jeeves.server.context.ServiceContext;
@@ -15,6 +38,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -62,10 +86,12 @@ public class RdfOutputManager {
 
             try {
                 recordsFile = File.createTempFile("records-", ".rdf");
-                outputRecordsFile = new BufferedWriter(new FileWriter(recordsFile));
+                outputRecordsFile = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(recordsFile), Charset.forName("UTF-8")));
 
                 catalogFile = File.createTempFile("catalog-", ".rdf");
-                outputCatalogFile = new BufferedWriter(new FileWriter(catalogFile));
+                outputCatalogFile = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(catalogFile), Charset.forName("UTF-8")));
 
                 Path xslPath = context.getAppPath().resolve(Geonet.Path.XSLT_FOLDER).
                         resolve("services").resolve("dcat").resolve("rdf.xsl");
@@ -123,14 +149,16 @@ public class RdfOutputManager {
             BufferedReader reader1 = null, reader2 = null;
             try {
                 rdfFile = File.createTempFile("rdf-", ".rdf");
-                outputRdfFile = new BufferedWriter(new FileWriter(rdfFile));
+                outputRdfFile = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(rdfFile), Charset.forName("UTF-8")));
+
 
                 // File header
                 Log.info(Geonet.GEONETWORK, "DCAT - ... Writing file header and dcat:Catalog section");
                 writeFileHeader(outputRdfFile);
 
                 // Append catalog records
-                reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(catalogFile)));
+                reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(catalogFile), Charset.forName("UTF-8")));
                 IOUtils.copy(reader1, outputRdfFile);
 
                 // Close dcat:Catalog
@@ -139,7 +167,7 @@ public class RdfOutputManager {
 
                 // Append records file
                 Log.info(Geonet.GEONETWORK, "DCAT - ... Writing catalog records");
-                reader2 = new BufferedReader(new InputStreamReader(new FileInputStream(recordsFile)));
+                reader2 = new BufferedReader(new InputStreamReader(new FileInputStream(recordsFile), Charset.forName("UTF-8")));
                 IOUtils.copy(reader2, outputRdfFile);
 
                 // File footer

@@ -5,11 +5,11 @@ RUN  export DEBIAN_FRONTEND=noninteractive
 ENV  DEBIAN_FRONTEND noninteractive
 RUN  dpkg-divert --local --rename --add /sbin/initctl
 
-#ADD 71-apt-cacher-ng /etc/apt/apt.conf.d/71-apt-cacher-ng
-
 RUN apt-get -y update
 
 #------ GeoNetwork specific stuff ------
+#------ GeoServer is not deployed with this Docker ------
+#ADD 71-apt-cacher-ng /etc/apt/apt.conf.d/71-apt-cacher-ng
 
 WORKDIR /usr/local/tomcat/webapps
 

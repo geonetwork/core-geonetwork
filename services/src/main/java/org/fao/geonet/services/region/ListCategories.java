@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.jdom.Element;
 
@@ -55,13 +56,24 @@ public class ListCategories implements Service {
         Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
         Element result = new Element("categories");
         for (RegionsDAO dao : daos) {
-
-            Collection<String> ids = dao.getRegionCategoryIds(context);
-            if (ids != null) {
-                for (String id : ids) {
-                    Element catEl = new Element("category");
-                    catEl.setAttribute("id", id);
-                    result.addContent(catEl);
+            if (dao instanceof ThesaurusBasedRegionsDAO) {
+                java.util.List<KeywordBean> keywords = ((ThesaurusBasedRegionsDAO) dao).getRegionTopConcepts(context);
+                if (keywords != null) {
+                    for (KeywordBean k : keywords) {
+                        Element catEl = new Element("category");
+                        catEl.setAttribute("id", k.getUriCode() + "");
+                        catEl.setAttribute("label", k.getPreferredLabel(context.getLanguage()));
+                        result.addContent(catEl);
+                    }
+                }
+            } else {
+                Collection<String> ids = dao.getRegionCategoryIds(context);
+                if (ids != null) {
+                    for (String id : ids) {
+                        Element catEl = new Element("category");
+                        catEl.setAttribute("id", id);
+                        result.addContent(catEl);
+                    }
                 }
             }
         }

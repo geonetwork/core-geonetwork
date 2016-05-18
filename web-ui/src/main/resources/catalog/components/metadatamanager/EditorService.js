@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_metadata_manager_service');
 
@@ -73,7 +96,7 @@
            if (previousElement !== undefined) {
              var findExp = 'div.gn-move';
              var previousElementCtrl = $(previousElement
-               .find(findExp).get(0)).children();
+             .find(findExp).get(0)).children();
 
              // Up control is enabled if the previous element is
              // not on top.
@@ -253,6 +276,7 @@
                uuid: getInputValue('uuid'),
                schema: getInputValue('schema'),
                version: getInputValue('version'),
+               tab: getInputValue('currTab'),
                geoPublisherConfig:
                angular.fromJson(getInputValue('geoPublisherConfig')),
                extent:
@@ -489,19 +513,13 @@
              location.href = 'catalog.edit?#/metadata/' +
              md['geonet:info'].id;
            },
-           getRecord: function(id) {
+           getRecord: function(uuid) {
              var defer = $q.defer();
-             // TODO : replace to use new services
-             var url = gnUrlUtils.append('xml.metadata.get',
-             gnUrlUtils.toKeyValue({
-               id: id
-             })
-             );
-             $http.get(url).
-             success(function(data, status) {
+             $http.get('../api/records/' + uuid).
+             success(function(data) {
                defer.resolve(data);
              }).
-             error(function(data, status) {
+             error(function(data) {
                //                TODO handle error
                //                defer.reject(error);
              });

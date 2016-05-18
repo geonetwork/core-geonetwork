@@ -2,6 +2,7 @@
 .checkstyle
 *.iml
 rebel.xml
+e2e-tests/images/
 harvesters/harvester_*.log
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron/schematron*.xsl
 web/src/main/webapp/WEB-INF/data/config/schemaplugin-uri-catalog.xml
@@ -9,9 +10,11 @@ web/src/main/webapp/WEB-INF/data/config/schema_plugins/csw-record
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/dublin-core
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/fgdc-std
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19*
+web/src/main/webapp/WEB-INF/data/wro4j-cache*
 web/src/main/webapp/scripts/lib/*
 web/src/main/webapp/images/logos/*
 web/src/main/webapp/images/statTmp
+web/src/main/webapp/WEB-INF/data/wro4j*.db
 web/logs/
 web/jcs_caching/
 web/*.db
@@ -32,6 +35,7 @@ schematrons/.build
 docs/*/users/build
 docs/schema-loc-*.rst
 .props/
+web/src/main/webapp/WEB-INF/server.prop
 *.iml
 .idea/
 eclipse/
@@ -47,6 +51,8 @@ datadir/
 *.factorypath
 web/src/main/webapp/WEB-INF/data/removed/
 web/.springBeans
+*/.fbExcludeFilterFile
+*/*/.fbExcludeFilterFile
 web/images/
 *.launch
 idea/
@@ -70,3 +76,6 @@ web/src/main/webapp/WEB-INF/data/data/upload/
 transifex/transifex-format/
 datadir_*
 web/src/main/webapp/WEB-INF/data/harvester_*
+web/src/main/webapp/doc
+web/src/main/webapp/WEB-INF/data/data/backup
+schemas/*/doc/*/*.rst

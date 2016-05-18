@@ -156,20 +156,7 @@ public class ResourceLib {
 	public Path getRemovedDir(ServiceContext context) {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		String remDirPath = gc.getBean(SettingManager.class).getValue(
-				"system/removedMetadata/dir");
-
-        Path remDir;
-        if (remDirPath == null) {
-            remDir = context.getAppPath().resolve("WEB-INF/data/removed").toAbsolutePath().normalize();
-        } else {
-            remDir = IO.toPath(remDirPath);
-        }
-		if (!remDir.isAbsolute())
-			remDir = context.getAppPath().resolve(remDir.toString());
-
-		return remDir;
+        return gc.getBean(GeonetworkDataDirectory.class).getBackupDir();
 	}
 
 	/**

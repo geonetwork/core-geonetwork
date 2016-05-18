@@ -1,9 +1,32 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
 
   goog.provide('gn_formfields_directive');
 
   angular.module('gn_formfields_directive', [])
-  /**
+      /**
    * @ngdoc directive
    * @name gn_formfields.directive:gnTypeahead
    * @restrict A
@@ -14,7 +37,7 @@
    * empty.
    */
 
-  .directive('gnTypeahead', [function() {
+      .directive('gnTypeahead', [function() {
 
         /**
          * If data are prefetched, get the label from the value
@@ -174,7 +197,7 @@
               field.parent().after(triggerElt);
               var resetElt = $('<span class="close ' +
                   'tagsinput-clear">&times;</span>')
-              .on('click', function() {
+                  .on('click', function() {
                     scope.gnValues = '';
                     scope.$apply();
                   });
@@ -199,7 +222,7 @@
       }])
 
 
-    .directive('groupsCombo', ['$http', function($http) {
+      .directive('groupsCombo', ['$http', function($http) {
         return {
 
           restrict: 'A',
@@ -249,7 +272,7 @@
         };
       }])
 
-  .directive('protocolsCombo', ['$http', 'gnSchemaManagerService',
+      .directive('protocolsCombo', ['$http', 'gnSchemaManagerService',
         function($http, gnSchemaManagerService) {
           return {
             restrict: 'A',
@@ -291,7 +314,7 @@
                 searchFormCtrl.triggerSearch(true);
               };
               hotkeys.bindTo(scope)
-                .add({
+                  .add({
                     combo: 's',
                     description: $translate('hotkeySortBy'),
                     callback: function() {
@@ -396,7 +419,7 @@
    * empty.
    */
 
-  .directive('gnRegionMultiselect',
+      .directive('gnRegionMultiselect',
       ['gnRegionService',
         function(gnRegionService) {
           return {
@@ -502,7 +525,7 @@
    * The schema used to retrieve the element info is based on
    * the gnCurrentEdit object or 'iso19139' if not defined.
    */
-  .directive('schemaInfoCombo', ['$http', 'gnSchemaManagerService',
+      .directive('schemaInfoCombo', ['$http', 'gnSchemaManagerService',
         'gnCurrentEdit',
         function($http, gnSchemaManagerService,
                  gnCurrentEdit) {
@@ -541,9 +564,17 @@
                 // on top of the list.
               };
 
+              scope.gnCurrentEdit = gnCurrentEdit;
+              scope.$watch('gnCurrentEdit.schema',
+                  function(newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                      init();
+                    }
+                  });
 
               var init = function() {
-                var schema = gnCurrentEdit.schema || 'iso19139';
+                var schema = attrs['schema'] ||
+                    gnCurrentEdit.schema || 'iso19139';
                 var config = schema + '|' + attrs['gnSchemaInfo'] + '|||';
 
                 scope.type = attrs['schemaInfoCombo'];
@@ -616,7 +647,7 @@
    *  - metadata
    *  - subtemplate
    */
-  .directive('gnRecordtypesCombo', ['$http', function($http) {
+      .directive('gnRecordtypesCombo', ['$http', function($http) {
         return {
 
           restrict: 'A',
@@ -648,7 +679,7 @@
    * @description
    * The `gnBboxInput` directive provides an input widget for bounding boxes.
    */
-  .directive('gnBboxInput', [
+      .directive('gnBboxInput', [
         'gnMap',
         'ngeoDecorateInteraction',
         function(gnMap, goDecoI) {
@@ -728,7 +759,7 @@
                 var coordinates, geom, f;
                 coordinates = gnMap.getPolygonFromExtent(scope.extent);
                 geom = new ol.geom.Polygon(coordinates)
-              .transform(scope.crs, scope.map.getView().getProjection());
+                    .transform(scope.crs, scope.map.getView().getProjection());
                 f = new ol.Feature();
                 f.setGeometry(geom);
                 layer.getSource().addFeature(f);
@@ -738,7 +769,7 @@
                 dragboxInteraction.active = false;
                 var g = dragboxInteraction.getGeometry().clone();
                 var geom = g.clone()
-              .transform(scope.map.getView().getProjection(), scope.crs);
+                    .transform(scope.map.getView().getProjection(), scope.crs);
                 var extent = geom.getExtent();
                 scope.extent = extent.map(function(coord) {
                   return Math.round(coord * 10000) / 10000;

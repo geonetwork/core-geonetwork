@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.kernel;
 
 import jeeves.server.ServiceConfig;
@@ -31,11 +54,11 @@ public class SelectionManager {
 	// used to limit select all if get system setting maxrecords fails or contains value we can't parse
 	public static final int DEFAULT_MAXHITS = 1000;
 
-    private static final String ADD_ALL_SELECTED = "add-all";
+    public static final String ADD_ALL_SELECTED = "add-all";
 	public static final String REMOVE_ALL_SELECTED = "remove-all";
-	private static final String ADD_SELECTED = "add";
-	private static final String REMOVE_SELECTED = "remove";
-	private static final String CLEAR_ADD_SELECTED = "clear-add";
+    public static final String ADD_SELECTED = "add";
+    public static final String REMOVE_SELECTED = "remove";
+    public static final String CLEAR_ADD_SELECTED = "clear-add";
 
 	private SelectionManager() {
 		selections = new Hashtable<String, Set<String>>(0);
@@ -126,6 +149,13 @@ public class SelectionManager {
 		return manager.updateSelection(type, context, selected, listOfIdentifiers, session);
 	}
 
+    public static int updateSelection(String type, UserSession session, String actionOnSelection, List<String> listOfIdentifiers, ServiceContext context) {
+        // Get the selection manager or create it
+        SelectionManager manager = getManager(session);
+
+        return manager.updateSelection(type, context, actionOnSelection, listOfIdentifiers, session);
+    }
+
 	/**
 	 * <p>
 	 * Update selected element in session
@@ -160,6 +190,7 @@ public class SelectionManager {
             else if (selected.equals(REMOVE_ALL_SELECTED))
                 this.close(type);
             else if (selected.equals(ADD_SELECTED) && listOfIdentifiers.size() > 0) {
+                // TODO ? Should we check that the element exist first ?
 				for (String paramid : listOfIdentifiers) {
 					selection.add(paramid);
 				}

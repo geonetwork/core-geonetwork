@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_dashboard_content_stat_controller');
 
@@ -41,12 +64,12 @@
 
         nv.addGraph(function() {
           var chart = nv.models.pieChart()
-                       .x(function(d) { return d.label})
+              .x(function(d) { return d.label})
               // TODO : Need to translate facet labels ?
-                       .y(function(d) { return d.count})
-                       .values(function(d) { return d})
-                       .tooltips(true)
-                       .tooltipContent(function(key, y, e, graph) {
+              .y(function(d) { return d.count})
+              .values(function(d) { return d})
+              .tooltips(true)
+              .tooltipContent(function(key, y, e, graph) {
                 // TODO : %age should be relative to
                 // the current set of displayed values
                 var value = d3.format('.0f')(y.replace(',', ''));
@@ -55,12 +78,12 @@
                     $translate('records') + ' (' +
                     (value / total * 100).toFixed() + '%)</p>';
               })
-                       .showLabels(true);
+              .showLabels(true);
 
           d3.select('#gn-stat-md-by-facet')
-                     .datum([data])
-                     .transition().duration(1200)
-                     .call(chart);
+              .datum([data])
+              .transition().duration(1200)
+              .call(chart);
 
           return chart;
         });
@@ -83,7 +106,7 @@
         };
 
         $http.get('statistics-content?_content_type=json')
-        .success(function(data) {
+            .success(function(data) {
               $scope.statistics.md.mainStatistics = data;
             }).error(function(data) {
               // TODO
@@ -96,7 +119,7 @@
         $http.get('statistics-content-metadata?_content_type=json?' +
                 'by=' + by +
                 '&isTemplate=' + encodeURIComponent(isTemplate))
-                  .success(function(data) {
+            .success(function(data) {
 
               if (data == 'null') { // Null response returned
                 // TODO : Add no data message
@@ -111,11 +134,11 @@
               $scope.statistics.md[by] = data;
               nv.addGraph(function() {
                 var chart = nv.models.pieChart()
-                         .x(function(d) { return $translate(d.label) })
-                         .y(function(d) { return d.total})
-                         .values(function(d) { return d})
-                         .tooltips(true)
-                         .tooltipContent(function(key, y, e, graph) {
+                .x(function(d) { return $translate(d.label) })
+                .y(function(d) { return d.total})
+                .values(function(d) { return d})
+                .tooltips(true)
+                .tooltipContent(function(key, y, e, graph) {
                       // TODO : %age should be relative to
                       // the current set of displayed values
                       return '<h3>' + key + '</h3>' +
@@ -123,12 +146,12 @@
                           $translate('records') + ' (' +
                           (y / total * 100).toFixed() + '%)</p>';
                     })
-                         .showLabels(true);
+                .showLabels(true);
 
                 d3.select('#gn-stat-md-by-' + by)
-                       .datum([data])
-                       .transition().duration(1200)
-                       .call(chart);
+                .datum([data])
+                .transition().duration(1200)
+                .call(chart);
 
                 return chart;
               });

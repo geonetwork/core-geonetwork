@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
   xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all" version="2.0">
@@ -48,6 +71,14 @@
 
   <xsl:template name="fill">
     <xsl:if test="$thumbnail_url != ''">
+
+      <xsl:variable name="useOnlyPTFreeText"
+                    select="count(//*[gmd:PT_FreeText and
+                                      not(gco:CharacterString)]) > 0" />
+      <xsl:variable name="separator" select="'\|'"/>
+      <xsl:variable name="mainLang"
+                    select="//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue" />
+
       <gmd:graphicOverview>
         <gmd:MD_BrowseGraphic>
           <gmd:fileName>
@@ -57,9 +88,44 @@
           </gmd:fileName>
           <xsl:if test="$thumbnail_desc!=''">
             <gmd:fileDescription>
-              <gco:CharacterString>
-                <xsl:value-of select="$thumbnail_desc"/>
-              </gco:CharacterString>
+
+              <xsl:choose>
+
+                <!--Multilingual-->
+                <xsl:when test="contains($thumbnail_desc, '|')">
+                  <xsl:for-each select="tokenize($thumbnail_desc, $separator)">
+                    <xsl:variable name="nameLang"
+                                  select="substring-before(., '#')"></xsl:variable>
+                    <xsl:variable name="nameValue"
+                                  select="substring-after(., '#')"></xsl:variable>
+
+                    <xsl:if test="$useOnlyPTFreeText = false() and $nameLang = $mainLang">
+                      <gco:CharacterString>
+                        <xsl:value-of select="$nameValue"/>
+                      </gco:CharacterString>
+                    </xsl:if>
+                  </xsl:for-each>
+
+                  <gmd:PT_FreeText>
+                    <xsl:for-each select="tokenize($thumbnail_desc, $separator)">
+                      <xsl:variable name="nameLang" select="substring-before(., '#')"></xsl:variable>
+                      <xsl:variable name="nameValue" select="substring-after(., '#')"></xsl:variable>
+
+                      <xsl:if test="$useOnlyPTFreeText = true() or
+                                    $nameLang != $mainLang">
+                        <gmd:textGroup>
+                          <gmd:LocalisedCharacterString locale="{concat('#', $nameLang)}"><xsl:value-of select="$nameValue" /></gmd:LocalisedCharacterString>
+                        </gmd:textGroup>
+                      </xsl:if>
+                    </xsl:for-each>
+                  </gmd:PT_FreeText>
+                </xsl:when>
+                <xsl:otherwise>
+                  <gco:CharacterString>
+                    <xsl:value-of select="$thumbnail_desc"/>
+                  </gco:CharacterString>
+                </xsl:otherwise>
+              </xsl:choose>
             </gmd:fileDescription>
           </xsl:if>
           <xsl:if test="$thumbnail_type!=''">

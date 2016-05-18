@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_utility_service');
 
@@ -196,7 +219,7 @@
     var getUrlParameter = function(parameterName) {
       var parameterValue = null;
       angular.forEach(window.location
-                  .search.replace('?', '').split('&'),
+          .search.replace('?', '').split('&'),
           function(value) {
             if (value.indexOf(parameterName) === 0) {
               parameterValue = value.split('=')[1];
@@ -273,6 +296,15 @@
       }
       return o;
     };
+
+    function randomUuid() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+          /[xy]/g,
+          function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+          });
+    }
     return {
       scrollTo: scrollTo,
       isInView: isInView,
@@ -282,7 +314,8 @@
       formatObjectPropertyAsArray: formatObjectPropertyAsArray,
       toCsv: toCsv,
       CSVToArray: CSVToArray,
-      getUrlParameter: getUrlParameter
+      getUrlParameter: getUrlParameter,
+      randomUuid: randomUuid
     };
   };
 
@@ -359,7 +392,7 @@
                   regionsList.push({
                     id: id,
                     name: id.split('#')[1],
-                    label: $translate(id.split('#')[1])
+                    label: value['@label'] || id.split('#')[1]
                   });
                 }
               });

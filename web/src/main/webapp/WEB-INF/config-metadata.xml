@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
 <geonet>
     <services package="org.fao.geonet">
 
@@ -95,29 +118,6 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.batch.extract.subtemplates.form">
-          <!-- TODO: migrate to widget/angular app -->
-            <!-- use same service for category update -->
-            <class name=".services.metadata.PrepareBatchUpdateCategories" />
-
-            <output sheet="metadata-batchextractsubtemplates.xsl">
-                <xml name="info" file="xml/metadata-batchExtractSubtemplates.xml" />
-            </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.batch.extract.subtemplates">
-          <!-- TODO: migrate to widget/angular app -->
-          <class name=".services.metadata.BatchExtractSubtemplates" />
-
-            <output sheet="metadata-batch-extract-subtemplates-results.xsl">
-                <xml name="info" file="xml/metadata-batchExtractSubtemplates.xml" />
-            </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
         <service name="metadata.delete">
             <class name=".services.metadata.Delete" />
 
@@ -182,13 +182,6 @@
         <service name="metadata.batch.update.children">
           <!-- TODO: migrate to widget/Angular -->
           <class name=".services.metadata.UpdateChildren" />
-        </service>
-
-
-        <service name="metadata.select">
-            <class name=".services.main.Select">
-                <param name="type" value="metadata" />
-            </class>
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

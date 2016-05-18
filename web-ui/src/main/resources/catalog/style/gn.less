@@ -121,6 +121,29 @@ a {
 
 [gn-img-modal], [data-gn-img-modal] {
   cursor: pointer;
+
+}
+.gn-img-modal {
+  width: 95vw;
+
+  img {
+    width: 100%
+  }
+  .gn-img-background {
+    background-image: linear-gradient(to bottom,transparent,rgba(0,0,0,0.74));
+    bottom: 0;
+    height: 60px;
+    position: absolute;
+    width: 100%;
+  }
+  .gn-img-thumbnail-caption {
+    line-height: 24px;
+    max-height: 48px;
+    overflow: hidden;
+    margin-bottom: 4px;
+    width: 100%;
+    font-size: 150%;
+  }
 }
 .gn-btn-modal-img {
   position: absolute;
@@ -254,23 +277,53 @@ div.gn-scroll-spy {
   }
 }
 
-.onlinesrc-popup {
+.onlinesrc-popup, .gn-modal-lg {
   max-width: none;
   max-height: none;
   display: none;
-}
-.onlinesrc-popup .modal-content {
-  width: 750px;
+  .modal-content {
+    width: 90vw;
+    max-height: 90vh;
+    .modal-body {
+      max-height: 76vh;
+      overflow: auto;
+    }
+  }
+  .modal-dialog {
+    margin: 10px 5vw;
+
+    .list-group-item {
+      word-wrap: break-word;
+    }
+  }
 }
 img.thumb-small {
-max-width: 80px;
-max-height: 80px;
-min-height: 40px;
+  max-width: 100%;
+  max-height: 80px;
+  min-height: 40px;
+}
+.gn-list-thumb {
+  position: relative;
+  margin: 2px;
+  width: 32%;
+  height: 92px;
+  a.onlinesrc-remove {
+    position: absolute;
+    z-index: 99;
+    top: 0px;
+    right: 0px;
+  }
 }
 .gn-layers-grid-container {
-overflow:auto;
-max-height:200px;
-font-size: small;
+  overflow:auto;
+  max-height:200px;
+  font-size: small;
+
+  tr.success {
+    td {
+      font-weight: bold;
+    }
+  }
 }
 .gn-layers-grid-container tr {
   cursor: pointer;
@@ -547,4 +600,19 @@ html[lang=fre] {
 .checkbox.disabled label, .radio.disabled label, fieldset[disabled] .checkbox label, fieldset[disabled] .radio label {
   cursor: not-allowed;
   color: #d3d3d3;
+}
+
+button, .btn, .btn:active, a {
+  &:focus {
+    outline: none;
+  }
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 4px;
 }

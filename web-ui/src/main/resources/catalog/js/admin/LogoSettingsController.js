@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 (function() {
   goog.provide('gn_logo_settings_controller');
 
@@ -62,14 +85,14 @@
 
         $http.get('admin.logo.update?fname=' + logoName +
             '&favicon=' + setFavicon)
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('logoUpdated'),
                 timeout: 2,
                 type: 'success'});
               $rootScope.$broadcast('loadCatalogInfo');
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('logoUpdateError'),
                 error: data,
@@ -84,14 +107,14 @@
        */
       $scope.removeLogo = function(logoName) {
         $http.get('admin.logo.remove?fname=' + logoName)
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('logoRemoved'),
                 timeout: 2,
                 type: 'success'});
               loadLogo();
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('logoRemoveError'),
                 error: data,

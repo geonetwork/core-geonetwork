@@ -1,3 +1,27 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
+
 /**
  * Created by Jesse on 2/12/14.
  */
@@ -84,7 +108,7 @@
       };
       $scope.saveGroupEdit = function() {
         gnSchematronAdminService.group
-          .update($scope.editGroup.updatedGroup, $scope.selection.group);
+            .update($scope.editGroup.updatedGroup, $scope.selection.group);
         $scope.editGroup.group = null;
         $scope.editGroup.updatedGroup = null;
       };
@@ -127,7 +151,7 @@
           var updated = angular.copy($scope.selection.group);
           updated.requirement = newRequirement;
           gnSchematronAdminService.group
-            .update(updated, $scope.selection.group);
+              .update(updated, $scope.selection.group);
         }
       };
       updateGroupCount = function(group, amount) {
@@ -159,9 +183,9 @@
             $translate('confirmDeleteSchematronCriteriaGroup');
         $scope.confirmationDialog.deleteConfirmed = function() {
           gnSchematronAdminService.group
-            .remove(group, $scope.schematronGroups, function() {
+              .remove(group, $scope.schematronGroups, function() {
                 if ($scope.schematronGroups
-                  .indexOf($scope.selection.group) < 0) {
+                .indexOf($scope.selection.group) < 0) {
                   if ($scope.schematronGroups.length === 0) {
                     $scope.selection.group = null;
                   } else {
@@ -183,14 +207,14 @@
         var idx = schema.schematron.indexOf(schematron);
         if (idx !== 0) {
           gnSchematronAdminService.schematron
-            .swapPriority(schema, schema.schematron[idx - 1], schematron);
+              .swapPriority(schema, schema.schematron[idx - 1], schematron);
         }
       };
       $scope.lowerSchematron = function(schema, schematron) {
         var idx = schema.schematron.indexOf(schematron);
         if (idx !== schema.schematron.length - 1) {
           gnSchematronAdminService.schematron
-            .swapPriority(schema, schematron, schema.schematron[idx + 1]);
+              .swapPriority(schema, schematron, schema.schematron[idx + 1]);
         }
       };
       $scope.createSchematronGroup = function(newGroup) {

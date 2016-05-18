@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.kernel;
 
 import jeeves.server.ServiceConfig;
@@ -51,6 +74,7 @@ public class GeonetworkDataDirectory {
     private Path thesauriDir;
     private Path schemaPluginsDir;
     private Path metadataDataDir;
+    private Path backupDir;
     private Path metadataRevisionDir;
     private Path resourcesDir;
     private Path htmlCacheDir;
@@ -296,6 +320,9 @@ public class GeonetworkDataDirectory {
         htmlCacheDir = setDir(jeevesServlet, webappName, handlerConfig, htmlCacheDir,
                 ".htmlcache" + KEY_SUFFIX, Geonet.Config.HTMLCACHE_DIR, handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache"
         );
+        backupDir = setDir(jeevesServlet, webappName, handlerConfig, backupDir,
+                ".backup" + KEY_SUFFIX, Geonet.Config.BACKUP_DIR, "data", "backup"
+        );
 
         handlerConfig.setValue(Geonet.Config.SYSTEM_DATA_DIR, this.systemDataDir.toString());
 
@@ -326,6 +353,32 @@ public class GeonetworkDataDirectory {
                 IO.copyDirectoryOrFile(srcThesauri, this.thesauriDir, false);
             } catch (IOException e) {
                 Log.error(Geonet.DATA_DIRECTORY, "     - Thesaurus copy failed: " + e.getMessage(), e);
+            }
+        }
+
+        // Copy config-viewer-XXX.xml files
+        Path mapDir = this.resourcesDir.resolve("map");
+        if (!Files.exists(mapDir) || IO.isEmptyDir(mapDir)) {
+            Log.info(Geonet.DATA_DIRECTORY, "     - Copying config-viewer-XXX.xml files ...");
+
+            try {
+                final Path srcMap = webappDir.resolve("WEB-INF").resolve("data").
+                        resolve("data").resolve("resources").resolve("map");
+
+                if (Files.exists(srcMap)) {
+                    try (DirectoryStream<Path> paths = Files.newDirectoryStream(srcMap)) {
+                        for (Path path : paths) {
+                            final Path relativePath = srcMap.relativize(path);
+                            final Path dest = mapDir.resolve(relativePath.toString());
+                            if (!Files.exists(dest)) {
+                                IO.copyDirectoryOrFile(path, dest, false);
+                            }
+                        }
+                    }
+                }
+
+            } catch (IOException e) {
+                Log.error(Geonet.DATA_DIRECTORY, "     - config-viewer-XXX.xml copy failed: " + e.getMessage(), e);
             }
         }
 
@@ -626,6 +679,22 @@ public class GeonetworkDataDirectory {
             resourcePath = resourcePath.substring(1);
         }
         return this.webappDir.resolve(resourcePath);
+    }
+
+    /**
+     * Get directory use to backup metadata when removed.
+     * @return
+     */
+    public Path getBackupDir() {
+        return backupDir;
+    }
+
+    /**
+     * Set directory to use to backup metadata when removed.
+     * @param backupDir
+     */
+    public void setBackupDir(Path backupDir) {
+        this.backupDir = backupDir;
     }
 
     /**

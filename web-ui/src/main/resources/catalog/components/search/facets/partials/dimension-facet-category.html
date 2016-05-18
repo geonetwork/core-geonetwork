@@ -1,6 +1,6 @@
 <ul class="list-group">
-  <li data-ng-repeat="c in category"
-      data-ng-init="path = buildPath(c); isSelected = isOnDrillDownPath(c)"
+  <li data-ng-repeat="c in category | orderBy: 'label'"
+      data-ng-init="path = buildPath(c); label = buildLabel(c); isSelected = isOnDrillDownPath(c)"
       data-ng-if="$index < maxItems"
       class="list-group-item">
     <span data-ng-click="toggleNode($event)"

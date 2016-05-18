@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
 <!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN" "http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
 <!--
     Configuration file for UrlRewriteFilter http://tuckey.org/urlrewrite/
@@ -50,7 +73,7 @@
         <to type="permanent-redirect" last="true">%{context-path}$1/fin/$2</to>
     </rule>
     <rule>
-        <from>^(.*)/fr/(.*)$</from>
+        <from>^(!doc)(.*)/fr/(.*)$</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/fre/$2</to>
     </rule>
     <rule>
@@ -74,7 +97,7 @@
         <to type="permanent-redirect" last="true">%{context-path}$1/spa/$2</to>
     </rule>
     <rule>
-        <from>^(.*)/en/(.*)$</from>
+        <from>^(!doc)(.*)/en/(.*)$</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/eng/$2</to>
     </rule>
     <rule>
@@ -117,10 +140,9 @@
         <to type="permanent-redirect" last="true">%{context-path}/home</to>
     </rule>
     <rule>
-      <from>^/(?!home$)(?!monitor$)(?!\w*healthcheck$)([a-zA-Z0-9_\-]+)$</from>
+      <from>^/(?!home$)(?!monitor$)(?!\w*healthcheck$)(?!swagger-resources.*$)([a-zA-Z0-9_\-]+)$</from>
       <to type="permanent-redirect" last="true">%{context-path}/home?node=$1</to>
     </rule>
-
     <!-- Rules for RESTful urls for metadata retrieve -->
     <rule>
         <note>
@@ -269,6 +291,29 @@
         <from>^/opensearch/(.*)/download?(.*)$</from>
         <to type="forward">/srv/$1/atom.download</to>
     </rule>
+
+  <!-- Rules for direct links (for RDF at least) -->
+    <rule>
+        <note>
+            Retrieves xml format for a metadata. No language
+            Example URL: http://localhost:8080/geonetwork/metadata/da165110-88fd-11da-a88f-000d939bc5d8
+        </note>
+        <from>^/(metadata|resource)/(.*)$</from>
+        <to type="forward">/srv/eng/xml.metadata.get?uuid=$1</to>
+    </rule>
+
+    <rule>
+        <note>
+            Retrieves xml format for a thesaurus
+            Example URL: http://localhost:8080/geonetwork/thesaurus/external.theme.inspire-service-taxonomy
+        </note>
+        <from>^/thesaurus/(.*)$</from>
+        <to type="forward">/srv/eng/thesaurus.download?ref=$1</to>
+    </rule>
+
+    <!-- /Rules for direct links (for RDF at least) -->
+
+ 
 
     <!-- Sitemap URLs -->
     <rule>
