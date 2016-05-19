@@ -353,6 +353,8 @@
               angular.element(boxElt).scope().clear();
             }
 
+            scope.layer.setExtent();
+
             // load all facet and fill ui structure for the list
             return solrObject.searchWithFacets({}).
                 then(function(resp) {
@@ -377,6 +379,10 @@
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             solrObject.pushState();
+            var extent = scope.ctrl.searchGeometry.split(',').map(parseFloat);
+            scope.layer.setExtent(
+              ol.proj.transformExtent(extent, 'EPSG:4326', 'EPSG:3857')
+            );
             if (sldConfig.filters.length > 0) {
               wfsFilterService.getSldUrl(sldConfig, scope.layer.get('url'),
                   ftName).success(function(sldURL) {
