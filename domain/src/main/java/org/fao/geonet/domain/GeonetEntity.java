@@ -93,7 +93,7 @@ public class GeonetEntity {
                         if (method.getDeclaringClass() == objclass 
                                 && !exclude.contains(method.getName())) {
                             final String descName = method.getName().substring(3);
-                            if (descName.equalsIgnoreCase("LabelTranslations")
+                            if (descName.equals("LabelTranslations")
                                     && !objclass.equals(Localized.class)) {
                                 Element labelEl = new Element(LABEL_EL_NAME);
         
@@ -107,7 +107,9 @@ public class GeonetEntity {
                                 }
         
                                 record.addContent(labelEl);
-                            } else if (!(descName.endsWith("AsInt") || descName.endsWith("AsBool"))){
+                            } else if (!(descName.endsWith("AsInt") 
+                                    || descName.endsWith("AsBool")
+                                    || descName.equals("LabelTranslations"))){
                                 final Object rawData = method.invoke(obj);
                                 if (rawData != null) {
                                     final Element element = propertyToElement(alreadyEncoded, descName, rawData, exclude);
