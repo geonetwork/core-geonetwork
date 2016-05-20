@@ -3,6 +3,7 @@
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
     xmlns:gco="http://www.isotc211.org/2005/gco"
     xmlns:srv="http://www.isotc211.org/2005/srv"
+    xmlns:java="java:org.fao.geonet.util.XslUtil"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt geonet gmd">
 	<xsl:include href="metadata/common.xsl" />
@@ -180,7 +181,7 @@
 		             </div>  
 					 -->
                        <xsl:variable name="authenticated">
-                           <xsl:value-of select="/root/request/user/authenticated" />
+                           <xsl:value-of select="java:encodeForJavaScript(/root/request/user/authenticated)" />
                        </xsl:variable>
                         <span class="user-button">
 	                        <a id="user-button">                            

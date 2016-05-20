@@ -484,6 +484,15 @@
             <artifactId>jsoup</artifactId>
             <version>0.2.2</version>
         </dependency>
+        
+        
+	    <!-- OWASP Enterprise Security API -->
+	    <dependency>
+	      <groupId>org.owasp.esapi</groupId>
+	      <artifactId>esapi</artifactId>
+           <version>2.1.0</version>
+	    </dependency>
+	        
     </dependencies>
 
     <build>
