@@ -227,7 +227,6 @@
 
   geonetwork.GnFeaturesSOLRLoader.prototype.getBsTableConfig = function() {
     var $q = this.$injector.get('$q');
-    var defer = $q.defer();
 
     var pageList = [5, 10, 50, 100],
         columns = [],
@@ -265,12 +264,12 @@
     // sxt specific
     var gSetting = this.$injector.get('gnGlobalSettings');
     if (gSetting.gnUrl) {
-      url = gSetting.gnUrl += url;
+      url = gSetting.gnUrl + url;
     }
     // end sxt specific
 
     this.loading = true;
-    defer.resolve({
+    return $q.when({
       url: url,
       queryParams: function(p) {
         var params = {
@@ -308,7 +307,6 @@
       pageSize: pageList[1],
       pageList: pageList
     });
-    return defer.promise;
   };
 
   geonetwork.GnFeaturesSOLRLoader.prototype.getCount = function() {
