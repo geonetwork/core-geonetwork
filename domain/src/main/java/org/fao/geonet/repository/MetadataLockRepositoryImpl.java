@@ -63,7 +63,7 @@ public class MetadataLockRepositoryImpl
         Root<MetadataLock> root = cquery.from(MetadataLock.class);
         cquery.where(cb.equal(root.get(MetadataLock_.metadata),
                 Integer.valueOf(id)));
-        cquery.where(cb.notEqual(root.get(MetadataLock_.user), user));
+      //  cquery.where(cb.notEqual(root.get(MetadataLock_.user), user));
         return _entityManager.createQuery(cquery).getResultList().size() > 0;
     }
 
