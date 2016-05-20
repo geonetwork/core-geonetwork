@@ -168,14 +168,16 @@
               $scope.metadataFound = data.count !== '0';
               $scope.metadataNotFoundId = $routeParams.id;
               
-              $http({
-                method: 'GET',
-                url: 'metadata/' + $routeParams.id + '/lock'
-              }).then(function successCallback(response) {
-                  $scope.metadataLocked = response.data;
-                }, function errorCallback(response) {
-                  $scope.metadataLocked = true;
-                });
+              if($scope.metadataFound) {
+                $http({
+                  method: 'GET',
+                  url: 'metadata/' + $routeParams.id + '/lock'
+                }).then(function successCallback(response) {
+                    $scope.metadataLocked = response.data;
+                  }, function errorCallback(response) {
+                    $scope.metadataLocked = true;
+                  });                
+              }
 
               $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
               $scope.mdCategories = [];
