@@ -6,19 +6,16 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
 import org.apache.commons.lang.StringUtils;
-import org.apache.pdfbox.util.StringUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.subtemplate.Get;
 import org.fao.geonet.util.Sha1Encoder;
@@ -120,14 +117,14 @@ public class DirectoryUtils {
      * @param record
      * @param xpath
      * @param identifierXpath
+     * @param directoryFilterQuery
      * @return
      * @throws Exception
      */
     public static CollectResults collectEntries(Metadata record,
                                                 String xpath,
-                                                String identifierXpath
-    ) throws Exception {
-        return collectEntries(record, xpath, identifierXpath, null, false, false);
+                                                String identifierXpath) throws Exception {
+        return collectEntries(record, xpath, identifierXpath, null, false, false, null);
     }
 
     /**
@@ -138,29 +135,30 @@ public class DirectoryUtils {
      * @param record
      * @param xpath
      * @param identifierXpath
-     * @param substituteAsXLink
      * @param propertiesToCopy
+     * @param substituteAsXLink
+     * @param directoryFilterQuery
      * @return
      * @throws Exception
      */
     public static CollectResults synchronizeEntries(Metadata record,
-                                                String xpath,
-                                                String identifierXpath,
-                                                List<String> propertiesToCopy,
-                                                boolean substituteAsXLink
-    ) throws Exception {
+                                                    String xpath,
+                                                    String identifierXpath,
+                                                    List<String> propertiesToCopy,
+                                                    boolean substituteAsXLink,
+                                                    String directoryFilterQuery) throws Exception {
         return collectEntries(record, xpath, identifierXpath,
-                propertiesToCopy, substituteAsXLink, true);
+                propertiesToCopy, substituteAsXLink, true, directoryFilterQuery);
     }
 
 
     private static CollectResults collectEntries(Metadata record,
-                                                String xpath,
-                                                String identifierXpath,
-                                                List<String> propertiesToCopy,
-                                                boolean substituteAsXLink,
-                                                boolean updateFromDirectory
-    ) throws Exception {
+                                                 String xpath,
+                                                 String identifierXpath,
+                                                 List<String> propertiesToCopy,
+                                                 boolean substituteAsXLink,
+                                                 boolean updateFromDirectory,
+                                                 String directoryFilterQuery) throws Exception {
         CollectResults collectResults = new CollectResults(record);
         Map<String, List<Namespace>> namespaceList = new HashMap<String, List<Namespace>>();
         ServiceContext context = ServiceContext.get();
@@ -210,7 +208,7 @@ public class DirectoryUtils {
                 Element elem = (Element) o;
                 if (Log.isDebugEnabled(LOGGER)) {
                     Log.debug(LOGGER, String.format(
-                            "#%d. Entry XML:%n%s",
+                            "#%d. XML entry: %s",
                             numberOfEntries, Xml.getString(elem)
                     ));
                 }
@@ -273,15 +271,28 @@ public class DirectoryUtils {
                     if (StringUtils.isEmpty(searchIndexField)) {
                         Metadata subTemplate = metadataRepository.findOneByUuid(uuid);
                         if (subTemplate != null) {
-                            uuid = subTemplate.getUuid();
                             subTemplateElement = subTemplate.getXmlData(false);
                         }
                     } else {
                         // or search in Lucene
-                        String id = search(searchIndexField, identifier);
+                        Map<String, String> parameters = new HashMap();
+                        if (directoryFilterQuery != null) {
+                            String[] tokens = directoryFilterQuery.split(":");
+                            if (tokens.length == 2) {
+                                parameters.put(tokens[0], tokens[1]);
+                            } else {
+                                Log.warning(LOGGER, String.format(
+                                    "Filter query for directory must be field:value format. '%s' is not.",
+                                    directoryFilterQuery
+                                ));
+                            }
+                        }
+                        parameters.put(searchIndexField, identifier);
+                        String id = search(parameters);
                         if (id != null) {
                             Metadata subTemplate = metadataRepository.findOne(id);
                             if (subTemplate != null) {
+                                uuid = subTemplate.getUuid();
                                 subTemplateElement = subTemplate.getXmlData(false);
                             }
                         }
@@ -403,11 +414,10 @@ public class DirectoryUtils {
     /**
      * Search using Lucene a matching document
      *
-     * @param field
-     * @param value
+     * @param searchParameters
      * @return  The record identifier
      */
-    private static String search(String field, String value) {
+    private static String search(Map<String, String> searchParameters) {
         ServiceConfig _config = new ServiceConfig();
         ServiceContext context = ServiceContext.get();
         SearchManager searchMan = context.getBean(SearchManager.class);
@@ -417,7 +427,10 @@ public class DirectoryUtils {
             Element parameters = new Element(Jeeves.Elem.REQUEST);
             parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("_isTemplate").addContent("s"));
-            parameters.addContent(new Element(field).addContent(value));
+            for (Map.Entry<String, String> e : searchParameters.entrySet()) {
+                parameters.addContent(
+                        new Element(e.getKey()).addContent(e.getValue()));
+            }
             parameters.addContent(new Element("from").addContent(1 + ""));
             parameters.addContent(new Element("to").addContent(1 + ""));
 
