@@ -115,6 +115,19 @@ public class GeonetEntity {
                                 }
                             }
                         }
+                    } else if(method.getName().startsWith("is")
+                            && method.getGenericParameterTypes().length == 0) {
+                        if (method.getDeclaringClass() == objclass 
+                                && !exclude.contains(method.getName())) {
+                            final String descName = method.getName().substring(2);
+                            if (!(descName.endsWith("AsInt") || descName.endsWith("AsBool"))){
+                                final Object rawData = method.invoke(obj);
+                                if (rawData != null) {
+                                    final Element element = propertyToElement(alreadyEncoded, descName, rawData, exclude);
+                                    record.addContent(element);
+                                }
+                            }
+                        }
                     }
                 } catch (InvalidPropertyException e) {
                     //just ignore it and get to the following property
