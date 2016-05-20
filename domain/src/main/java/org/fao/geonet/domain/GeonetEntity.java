@@ -23,7 +23,6 @@
 
 package org.fao.geonet.domain;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -35,7 +34,6 @@ import javax.annotation.Nonnull;
 import javax.persistence.Embeddable;
 
 import org.jdom.Element;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.InvalidPropertyException;
 
 /**
@@ -86,7 +84,6 @@ public class GeonetEntity {
         alreadyEncoded.put(obj, null);
         Element record = new Element(RECORD_EL_NAME);     
 
-        BeanWrapperImpl wrapper = new BeanWrapperImpl(obj); 
         Class<? extends Object> objclass = obj.getClass();
         while(objclass != null) {
             for(Method method : objclass.getDeclaredMethods()) { 
@@ -96,7 +93,8 @@ public class GeonetEntity {
                         if (method.getDeclaringClass() == objclass 
                                 && !exclude.contains(method.getName())) {
                             final String descName = method.getName().substring(3);
-                            if (descName.equalsIgnoreCase("LabelTranslations")) {
+                            if (descName.equalsIgnoreCase("LabelTranslations")
+                                    && !objclass.equals(Localized.class)) {
                                 Element labelEl = new Element(LABEL_EL_NAME);
         
                                 @SuppressWarnings("unchecked")
