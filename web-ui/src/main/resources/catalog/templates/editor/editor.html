@@ -1,4 +1,4 @@
-<div data-ng-hide="metadataFound">
+<div data-ng-hide="metadataFound && !metadataLocked">
   <div data-ng-show="!metadataLocked" class="alert alert-warning" 
     data-translate="" 
     data-translate-values="{ id: '{{metadataNotFoundId}}'}">metadataNotFound</div>
@@ -7,7 +7,7 @@
     data-translate="" >metadataLocked</div>
 </div>
 
-<div data-ng-show="metadataFound">
+<div data-ng-show="metadataFound && !metadataLocked">
 
   <div
     data-ng-include="'../../catalog/templates/editor/top-toolbar.html'">
