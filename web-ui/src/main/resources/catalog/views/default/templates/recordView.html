@@ -2,9 +2,12 @@
   <div class="alert alert-warning"
        data-ng-hide="mdView.current.record"
        data-translate=""
-       data-translate-values="{uuid: '{{recordIdentifierRequested}}'}">
+       data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}'}">
     recordNotFound
   </div>
+
+{{"hello<b>jj</b>"| htmlToPlaintext}}
+
 
   <div class="row gn-md-view"
        data-ng-show="mdView.current.record">
@@ -550,10 +553,10 @@
              target="_blank"
              class="btn btn-lg btn-default"><i class="fa fa-fw fa-facebook"></i></a>
           <a data-ng-href="http://www.linkedin.com/shareArticle?mini=true&amp;url={{socialMediaLink | encodeURIComponent}}"
-             target="_blank" 
+             target="_blank"
              class="btn btn-lg btn-default"><i class="fa fa-fw fa-linkedin"></i></a>
           <a data-ng-href="mailto:?subject={{mdView.current.record.title || mdView.current.record.defaultTitle}}&amp;body={{socialMediaLink | encodeURIComponent}}"
-             target="_blank" 
+             target="_blank"
              class="btn btn-lg btn-default"><i class="fa fa-fw fa-envelope-o"></i></a>
         </section></br>
 
