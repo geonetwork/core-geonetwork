@@ -72,6 +72,7 @@
         <script src="{$uiResourcesPath}lib/angular/angular-resource.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-route.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-sanitize.js"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-gettext.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-cookies.js"></script>
 
         <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
