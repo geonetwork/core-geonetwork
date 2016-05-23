@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.file.FileSystem;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -46,7 +47,7 @@ import java.util.zip.ZipFile;
  * Instances of this class represent geographic files. A geographic file can be
  * a ZIP file including ESRI Shapefiles and GeoTIFF files, or an individual
  * GeoTIFF file.
- * 
+ *
  * @author Éric Lemoine, Camptocamp France SAS
  * @author Francois Prunayre
  */
@@ -58,7 +59,7 @@ public class GeoFile implements Closeable {
 
 	/**
 	 * Constructs a <code>GeoFile</code> object from a <code>File</code> object.
-	 * 
+	 *
 	 * @param f
 	 *            the file from wich the <code>GeoFile</code> object is
 	 *            constructed
@@ -127,7 +128,7 @@ public class GeoFile implements Closeable {
 		if (_containsSld) {
 			ZipFile zf = new ZipFile(new File(this.file.toString()));
 			InputStream is = zf.getInputStream(zf.getEntry(_sldBody));
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String line;
 			_sldBody = "";
 			while ((line = br.readLine()) != null) { _sldBody += line; }

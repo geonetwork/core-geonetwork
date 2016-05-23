@@ -1,0 +1,49 @@
+================================================================================
+===
+=== GeoNetwork 3.0.4: List of changes
+===
+================================================================================
+
+- #1455 - Fix find wmts layer in capabitlities from its identifier.
+- Bump log4j requirement to 1.2.17.
+- #1448 Add gmx namespace in schemaLocation for iso19139.
+- Optimise dutch translations, add missing i18n.xml.
+- Less stress on indexing when harvesting. Useful for large harvesters.
+- #1448 Saving a metadata with an empty keyword value creates invalid metadata.
+- Dockerfile for GeoNetwork.
+- Fix the reference to the non-existent iso-....xsl.
+- Do not get all the metadata table for UUIDMapper. If the harvester collects from a big catalog, it throws a memory error
+- Add a redirect rule for ExtJS-style permalinks (#808).
+- Only take the first IP address when parsing client IP.
+- XSL formatter broken #1423.
+- Fix missing template getMetadataHeader, required in xsl formatter.
+- Enforce dependency on httpclient 4.3.2 in toplevel pom.xml (#1368).
+- Dublin core / Restore location name after extent coordinates.
+- DCAT enhancements: CSW/OAI-PMH dcat outputs. Service to return all the catalog public metadata in DCAT format.
+- Demote "XLink Resolver enabled|disabled" log message to debug.
+- Allow user to change its user details and password #1258.
+- Don't log a warning when an upload request wasnt found.
+- Geopublisher fixes.
+- ISO19139 / Multilingual keyword / Missing xsi:type #1392.
+- Remove XSL warning due to wrong selector in attribute context.
+- Remove sextant specific code.
+- Thesaurus / Restore the capability to activate or not a thesaurus (mainly for multinode mode which share thesaurus) #1387.
+- Home page links for INSPIRE themes broken #1386.
+- Formatter / XSL / Add support for template field.
+- Harvester / LFS / Add some more debug info to analyze progress on long harvesting tasks.
+- Privileges / RegisteredUser in group A MUST not be able to edit records #1382.
+- Wps: can auto add wms layer from execute response.
+- Wps: update ui.
+- Wps: remove useless fix for namespace in attributes.
+- Wps: fix ui if no default.
+- Fixes WPS default values containing spaces badly encoded.
+- Take into account amount of requests when bumping the initial hibernate_sequence value (#1373)
+- Privileges / Do not allow to set editing to internal group #1372.
+- Don't remove the id column on services table, as this breaks migration in 3.0.x
+- Enforce dependency on httpclient 4.3.2 to fix SNI support (#1368)
+- Dublin core / Improve indexing to mimic fields in ISO19139 and display them properly in the angular view. dct:modified is not editable. Better translations.
+- Feature catalogue are also available in some other schemas eg. ISO19115-3.
+- Add XslUtil method to retrieve user details.
+- Editor / Suggestion / Add support for codelist parameter and angular expression #1362.
+- Fixing if xsd is on an external URL, it just breaks validation.
+- #1347 Feature/datadir bean property.

@@ -58,11 +58,11 @@
       $scope.deleteCategory = function(id) {
         $http.get('admin.category.remove?id=' +
             id)
-        .success(function(data) {
+            .success(function(data) {
               $scope.unselectCategory();
               loadCategories();
             })
-        .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('categoryDeleteError'),
                 error: data,
@@ -76,7 +76,7 @@
        */
       $scope.saveCategory = function(formId) {
         $http.get('admin.category.update?' + $(formId).serialize())
-          .success(function(data) {
+            .success(function(data) {
               $scope.unselectCategory();
               loadCategories();
               $rootScope.$broadcast('StatusUpdated', {
@@ -84,7 +84,7 @@
                 timeout: 2,
                 type: 'success'});
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('categoryUpdateError'),
                 error: data,

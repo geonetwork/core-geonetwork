@@ -199,6 +199,7 @@ public class Aligner extends BaseAligner
 		        result.originalMetadata++;
 		    }
 		}
+        dataMan.forceIndexChanges();
 
 		log.info("End of alignment for : "+ params.getName());
 
@@ -277,7 +278,7 @@ public class Aligner extends BaseAligner
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, Math.random() < 0.01);
 		result.addedMetadata++;
 	}
 
@@ -334,7 +335,7 @@ public class Aligner extends BaseAligner
 
                 dataMan.flush();
 
-                dataMan.indexMetadata(id, true);
+                dataMan.indexMetadata(id, Math.random() < 0.01);
 				result.updatedMetadata++;
 			}
 		}

@@ -98,11 +98,11 @@
                   if (md['geonet:info'].selected === false) {
                     md['geonet:info'].selected = true;
                     gnSearchManagerService.select(md['geonet:info'].uuid)
-                      .then(updateSelectionNumber);
+                        .then(updateSelectionNumber);
                   } else {
                     md['geonet:info'].selected = false;
                     gnSearchManagerService.unselect(md['geonet:info'].uuid)
-                      .then(updateSelectionNumber);
+                        .then(updateSelectionNumber);
                   }
                 }
                 else {

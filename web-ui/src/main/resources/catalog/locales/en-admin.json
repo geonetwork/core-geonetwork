@@ -745,6 +745,7 @@
     "system/harvesting/mail/templateWarning": "Warning template",
     "system/hidewithheldelements": "Metadata / ISO19139 / Nil reason attribute with held",
     "system/hidewithheldelements/enable": "Hide Withheld Elements",
+    "system/hidewithheldelements/enableLogging": "Enable logging",
     "system/hidewithheldelements/keepMarkedElement": "Keep Marked Element",
     "system/indexoptimizer": "Index optimization",
     "system/indexoptimizer/at/hour": "Hour",
@@ -849,6 +850,8 @@
     "system/threadedindexing/maxthreads": "Number of indexing threads",
     "system/userSelfRegistration": "User self-registration",
     "system/userSelfRegistration/enable": "Enable self-registration",
+    "system/userFeedback": "User feedback",
+    "system/userFeedback/enable": "Enable feedback",
     "system/xlinkResolver": "Metadata XLink",
     "system/xlinkResolver/enable": "Enable XLink resolution",
     "system/xlinkResolver/enable-help": "If set, XLinks to metadata fragments in records will be resolved.",
@@ -1041,6 +1044,8 @@
     "region/getmap/width": "Width",
     "metadata/editor": "Metadata editor configuration",
     "metadata/editor/schemaConfig": "Configuration par standard",
-	  "logActivity" : "Activity",
-    "selectExistingLogo": "Select from existing logos"
+    "logActivity" : "Activity",
+    "selectExistingLogo": "Select from existing logos",
+    "serviceUrlHelp": "Web service URL without GetCapabilities parameters",
+    "serviceTypeHelp": "Service type"
 }

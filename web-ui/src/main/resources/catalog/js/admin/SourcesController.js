@@ -77,7 +77,7 @@
       function loadSources() {
 
         $http.get('info?type=sources&_content_type=json')
-          .success(function(data) {
+            .success(function(data) {
               $scope.sources = data.sources;
             });
 

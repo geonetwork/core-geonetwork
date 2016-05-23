@@ -23,14 +23,11 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.repository.MetadataRepository;
-
 import java.util.HashMap;
 import java.util.List;
 
-import static org.fao.geonet.repository.specification.MetadataSpecs.hasHarvesterUuid;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SimpleMetadata;
 
 //=============================================================================
 
@@ -52,17 +49,15 @@ public class UUIDMapper
 
 	public UUIDMapper(MetadataRepository repo, String harvestUuid) throws Exception
 	{
-        final List<Metadata> all = repo.findAll(where(hasHarvesterUuid(harvestUuid)));
 
-        for (Metadata record : all) {
-            String id = record.getId() + "";
-            String uuid = record.getUuid();
-            String date = record.getDataInfo().getChangeDate().getDateAndTime();
-            String isTemplate = record.getDataInfo().getType().codeString;
+	    final List<SimpleMetadata> all = repo.findAllSimple(harvestUuid);
 
-            hmUuidDate.put(uuid, date);
-            hmUuidId.put(uuid, id);
-            hmUuidTemplate.put(uuid, isTemplate);
+        //This may lead to problems if we have millions of records from the same harvester...
+        //If that happens, we may have to look for something that uses even less memory
+        for (SimpleMetadata record : all) {
+            hmUuidDate.put(record.getUuid(), record.getDate());
+            hmUuidId.put(record.getUuid(), record.getId());
+            hmUuidTemplate.put(record.getUuid(), record.getIsTemplate());
         }
 	}
 

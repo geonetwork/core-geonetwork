@@ -97,7 +97,7 @@
         operation = 'updateservice';
         $http.get('admin.config.virtualcsw.get?' +
             '_content_type=json&id=' + v.id)
-          .success(function(data) {
+            .success(function(data) {
               var params = [], formParams = ['abstract', 'title',
                 '_source', '_cat', 'any', '_groupPublished', 'keyword',
                 'denominator', 'type'];
@@ -164,14 +164,14 @@
         $http.get('admin.config.virtualcsw.update?' +
             '_content_type=json&operation=' + operation +
             '&' + $(formId).serialize())
-          .success(function(data) {
+            .success(function(data) {
               loadCSWVirtual();
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('virtualCswUpdated'),
                 timeout: 2,
                 type: 'success'});
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('virtualCswUpdateError'),
                 error: data,
@@ -183,10 +183,10 @@
       $scope.deleteVirtualCSW = function() {
         $http.get('admin.config.virtualcsw.remove?id=' +
             $scope.virtualCSWSelected.id)
-          .success(function(data) {
+            .success(function(data) {
               loadCSWVirtual();
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('virtualCswDeleteError'),
                 error: data,

@@ -70,8 +70,10 @@ public class DirectoryApi {
             "and then check if this element is available in the directory. " +
             "If Found, the element from the directory update the element " +
             "in the record and optionally properties are preserved.<br/><br/>" +
-            "The identifier XPath is used to find a match. If not, the UUID " +
-            "is based on the content of the snippet. It is recommended to use " +
+            "The identifier XPath is used to find a match. An optional filter" +
+            "can be added to restrict search to a subset of the directory. " +
+            "If no identifier XPaths is provided, the UUID " +
+            "is based on the content of the snippet (hash). It is recommended to use " +
             "an identifier for better matching (eg. ISO19139 contact with different " +
             "roles will not match on the automatic UUID mode).";
 
@@ -92,6 +94,8 @@ public class DirectoryApi {
             "List of XPath of properties to copy from record to matching entry.";
     public static final String APIPARAM_REPLACEWITHXLINK =
             "Replace entry by XLink.";
+    public static final String APIPARAM_DIRECTORYFILTERQUERY =
+        "Filter query for directory search.";
 
     @ApiOperation(value = "Preview directory entries extracted from records",
             nickname = "previewExtractedEntries",
@@ -108,7 +112,7 @@ public class DirectoryApi {
             @RequestParam(required = false)
             String[] uuids,
             @ApiParam(value = APIPARAM_XPATH,
-                    required = false,
+                    required = true,
                     example = ".//gmd:CI_ResponsibleParty")
             @RequestParam(required = true)
             String xpath,
@@ -118,7 +122,7 @@ public class DirectoryApi {
             @RequestParam(required = false)
             String identifierXpath
     ) throws Exception {
-        return collectEntries(uuids, xpath, identifierXpath, false);
+        return collectEntries(uuids, xpath, identifierXpath, false, null);
     }
 
 
@@ -137,7 +141,7 @@ public class DirectoryApi {
             @RequestParam(required = false)
             String[] uuids,
             @ApiParam(value = APIPARAM_XPATH,
-                    required = false,
+                    required = true,
                     example = ".//gmd:CI_ResponsibleParty")
             @RequestParam(required = true)
             String xpath,
@@ -150,15 +154,15 @@ public class DirectoryApi {
             // TODO: Add an option to set groupOwner ?
             // TODO: Add an option to set privileges ?
     ) throws Exception {
-        return collectEntries(uuids, xpath, identifierXpath, true);
+        return collectEntries(uuids, xpath, identifierXpath, true, null);
     }
 
 
     private ResponseEntity<Element> collectEntries(
-            String[] uuids,
-            String xpath,
-            String identifierXpath,
-            boolean save) throws Exception {
+        String[] uuids,
+        String xpath,
+        String identifierXpath,
+        boolean save, String directoryFilterQuery) throws Exception {
         ServiceContext context = ServiceContext.get();
         UserSession session = context.getUserSession();
         Profile profile = session.getProfile();
@@ -260,7 +264,7 @@ public class DirectoryApi {
             @RequestParam(required = false)
             String[] uuids,
             @ApiParam(value = APIPARAM_XPATH,
-                    required = false,
+                    required = true,
                     example = ".//gmd:CI_ResponsibleParty")
             @RequestParam(required = true)
             String xpath,
@@ -279,10 +283,15 @@ public class DirectoryApi {
                     example = "@uuid")
             @RequestParam(required = false, defaultValue = "false")
             boolean substituteAsXLink,
+            @ApiParam(value = APIPARAM_DIRECTORYFILTERQUERY,
+                required = false,
+                example = "groupPublished:IFREMER")
+            @RequestParam(required = false)
+                String fq,
             @ApiIgnore
             HttpServletRequest httpRequest
     ) throws Exception {
-        return updateRecordEntries(uuids, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, false);
+        return updateRecordEntries(uuids, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, false, fq);
     }
 
 
@@ -302,7 +311,7 @@ public class DirectoryApi {
             @RequestParam(required = false)
             String[] uuids,
             @ApiParam(value = APIPARAM_XPATH,
-                    required = false,
+                    required = true,
                     example = ".//gmd:CI_ResponsibleParty")
             @RequestParam(required = true)
             String xpath,
@@ -319,9 +328,14 @@ public class DirectoryApi {
             @ApiParam(value = APIPARAM_REPLACEWITHXLINK,
                     required = false)
             @RequestParam(required = false, defaultValue = "false")
-            boolean substituteAsXLink
+            boolean substituteAsXLink,
+            @ApiParam(value = APIPARAM_DIRECTORYFILTERQUERY,
+                required = false,
+                example = "groupPublished:IFREMER")
+            @RequestParam(required = false)
+                String fq
     ) throws Exception {
-        return updateRecordEntries(uuids, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, true);
+        return updateRecordEntries(uuids, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, true, fq);
     }
 
 
@@ -331,7 +345,7 @@ public class DirectoryApi {
             String identifierXpath,
             List<String> propertiesToCopy,
             boolean substituteAsXLink,
-            boolean save) throws Exception {
+            boolean save, String directoryFilterQuery) throws Exception {
         ServiceContext context = ServiceContext.get();
         UserSession session = context.getUserSession();
         Profile profile = session.getProfile();
@@ -383,7 +397,7 @@ public class DirectoryApi {
                     CollectResults collectResults =
                             DirectoryUtils.synchronizeEntries(
                                     record, xpath, identifierXpath,
-                                    propertiesToCopy, substituteAsXLink);
+                                    propertiesToCopy, substituteAsXLink, directoryFilterQuery);
                     listOfRecordInternalId.add(record.getId());
                     if (save && collectResults.isRecordUpdated()) {
                         // TODO: Only if there was a change
@@ -417,7 +431,7 @@ public class DirectoryApi {
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             // TODO: Limite size of large response ?
-            Element response = new Element("list");
+            Element response = new Element("entries");
             for (Element e : listOfUpdatedRecord) {
                 response.addContent(e);
             }

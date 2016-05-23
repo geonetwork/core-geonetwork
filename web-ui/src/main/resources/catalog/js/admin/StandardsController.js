@@ -63,14 +63,14 @@
 
       $scope.addStandard = function(formId, action) {
         $http.get('admin.schema.' + action + '?' + $(formId).serialize())
-          .success(function(data) {
+            .success(function(data) {
               loadSchemas();
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('standardAdded'),
                 timeout: 2,
                 type: 'success'});
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('standardAddError'),
                 error: data,
@@ -81,7 +81,7 @@
 
       $scope.removeStandard = function(s) {
         $http.get('admin.schema.remove@json?schema=' + s)
-          .success(function(data) {
+            .success(function(data) {
               if (data['@status'] === 'error') {
                 $rootScope.$broadcast('StatusUpdated', {
                   title: $translate('standardsDeleteError'),
@@ -92,7 +92,7 @@
                 loadSchemas();
               }
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('standardsDeleteError'),
                 error: data,

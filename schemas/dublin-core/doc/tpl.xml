@@ -1,0 +1,85 @@
+<simpledc xmlns:dc="http://purl.org/dc/elements/1.1/"
+          xmlns:dct="http://purl.org/dc/terms/"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://localhost/geonetwork/xml/schemas/dublin-core/schema.xsd">
+  <dc:title>
+    Maquette 3D texturée de la commune de Charly (la Métropole de Lyon)
+  </dc:title>
+  <dc:creator>
+    Métropole de Lyon / Direction Innovation Numérique et Systèmes d'Information
+    (DINSI) (Géomatique et données métropolitaines)
+  </dc:creator>
+  <dc:subject>Localisation</dc:subject>
+  <dc:description>
+    La maquette 3D de la commune (2009 ou 2012) est composée de deux à six
+    couches de données. A minima, toutes les maquettes se composent des deux
+    couches suivantes : - Le Modèle numérique de terrain (TIN) et ses textures
+    associées ; - Les bâtiments 3D texturés (BATIS). Elle est complétée par une
+    ou plusieurs des couches ci-dessous : - Les surfaces en eau (WATER) et leurs
+    textures associées ; - Les bâtiments « remarquables » (Mairies, Eglises
+    etc…) ; - Les ponts « remarquables » ; - Les objets « remarquables »
+    (Statues, Fontaines etc…). Ces données sont modélisées suivant la norme
+    CityGML et fournies dans ce format. Ces maquettes sont produites avec le
+    logiciel RhinoTerrain/RhinoCity.
+  </dc:description>
+  <dc:publisher>
+    Métropole de Lyon / Direction Innovation Numérique et Systèmes d'Information
+    (DINSI) (Géomatique et données métropolitaines)
+  </dc:publisher>
+  <dc:type>nonGeographicDataset</dc:type>
+  <dc:format>application/zip</dc:format>
+  <dc:format>CityGML (taille : 260.0 Mo)</dc:format>
+  <dc:format>application/zip</dc:format>
+  <dc:format>executable (taille : 829.2 Mo)</dc:format>
+  <dc:format>application/zip</dc:format>
+  <dc:format>CityGML (taille : 113.5 Mo)</dc:format>
+  <dc:format>application/zip</dc:format>
+  <dc:format>executable (taille : 339.2 Mo)</dc:format>
+  <dc:format>application/pdf</dc:format>
+  <dc:format>pdf (taille : 315 Ko)</dc:format>
+  <dc:source>
+    Le Modèle numérique de terrain est issu d’une saisie photogrammétrique
+    réalisée à partir de la prise de vue aérienne (2009 ou 2012). Les fichiers
+    des textures associées plaquées sur le MNT correspondent à
+    l’orthophotographie aérienne qui possède une résolution de 10 cm pour 2012
+    et 16 cm pour 2009. - Les surfaces en eau (WATER) ont été identifiées à
+    partir d’une saisie photogrammétrique réalisée à partir de la même prise de
+    vue aérienne. - Les bâtiments 3D proviennent de la saisie photogrammétrique
+    réalisée à partir de la prise de vue aérienne. Les textures plaquées sur ces
+    bâtiments proviennent des clichés issus de la prise de vue aérienne. - Les
+    bâtiments « remarquables » (Mairies, Eglises etc…), les ponts « remarquables
+    » et les objets « remarquables » (Statues, Fontaines etc…) ont été texturés
+    à partir de photographies terrestres.
+  </dc:source>
+  <dc:language>fre</dc:language>
+  <dc:relation>
+    https://download.data.grandlyon.com/files/grandlyon/localisation/bati3d/CHARLY_2012.zip
+  </dc:relation>
+  <dc:relation>
+    https://download.data.grandlyon.com/files/grandlyon/localisation/bati3d/_EXE_CHARLY_2012.zip
+  </dc:relation>
+  <dc:relation>
+    https://download.data.grandlyon.com/files/grandlyon/localisation/bati3d/CHARLY_2009.zip
+  </dc:relation>
+  <dc:relation>
+    https://download.data.grandlyon.com/files/grandlyon/localisation/bati3d/_EXE_CHARLY_2009.zip
+  </dc:relation>
+  <dc:relation>
+    https://download.data.grandlyon.com/files/grandlyon/localisation/bati3d/Maquettes_3D_CityGML.pdf
+  </dc:relation>
+  <dc:relation>
+    https://download.data.grandlyon.com/files/grandlyon/LicenceOuverte.pdf
+  </dc:relation>
+  <dc:coverage>
+    North 45.668, South 45.635, East 4.805, West 4.768. CHARLY
+  </dc:coverage>
+  <dc:rights>Licence Ouverte</dc:rights>
+  <dc:rights>Pas de restriction d'accès public selon INSPIRE</dc:rights>
+  <dct:created>2014-12-19</dct:created>
+  <dct:dateSubmitted>2015-01-23</dct:dateSubmitted>
+  <dct:isPartOf>8017c69a-5b17-404f-acdd-d9c37a0afac4</dct:isPartOf>
+  <dct:spatial>RGF93 / CC46 (EPSG:3946)</dct:spatial>
+  <dct:accrualPeriodicity>Irregular</dct:accrualPeriodicity>
+  <dct:modified>2016-02-03T21:33:45</dct:modified>
+  <dc:identifier>a806d3e1-c240-43a9-bbc3-643e8c93b10d</dc:identifier>
+</simpledc>

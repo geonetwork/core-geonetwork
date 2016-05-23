@@ -57,8 +57,8 @@ public class BatchEditParameter implements Serializable {
     public BatchEditParameter() {}
     public BatchEditParameter(String xpath, String value) {
         if (StringUtils.isEmpty(xpath)) {
-            throw new IllegalArgumentException(String.format(
-                    "Parameter xpath is not set. It should be not empty and define the XPath of the element to update.", xpath));
+            throw new IllegalArgumentException(
+                    "Parameter xpath is not set. It should be not empty and define the XPath of the element to update.");
         }
         this.xpath = xpath;
         this.value = value;

@@ -307,5 +307,9 @@
     "notEvaluated": "Nicht ausgewertet",
     "notConformant": "Nicht konform",
     "capabilitiesParseError": "Fehler beim Parsen der WMS Capabilities",
-    "conformant": "Konform"
+    "conformant": "Konform",
+    "currentConcept": "Current concept",
+    "parentConcept": "Parent concept",
+    "moreSpecificConcept": "More specific concepts",
+    "associatedConcept": "Associated concepts"
 }
