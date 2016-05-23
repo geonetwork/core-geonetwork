@@ -16987,6 +16987,11 @@ yx-axis
   background: #4BA2D9;
   color: white;
 }
+.gn [sxt-main-viewer] .sxt-wfsfilter-panel .gn-reset-facets,
+.g [sxt-main-viewer] .sxt-wfsfilter-panel .gn-reset-facets {
+  display: block;
+  margin: -2.5em auto 0;
+}
 .gn [sxt-main-viewer] .sxt-wps-panel .panel,
 .g [sxt-main-viewer] .sxt-wps-panel .panel {
   border: none;
@@ -21473,4 +21478,7 @@ yx-axis
 }
 .modal-open {
   overflow: visible;
+}
+#sns_sextant_content .gn-search-input > input {
+  z-index: initial;
 }
