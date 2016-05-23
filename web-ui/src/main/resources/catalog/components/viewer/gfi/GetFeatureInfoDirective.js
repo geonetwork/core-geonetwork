@@ -62,7 +62,7 @@
 
               var feature = scope.map.forEachFeatureAtPixel(pixel,
                function(feature, layer) {
-                 if (layer.get('featureTooltip')) {
+                 if (layer && layer.get('featureTooltip')) {
                    return feature;
                  }
                });
