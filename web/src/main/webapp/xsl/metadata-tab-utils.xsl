@@ -88,7 +88,6 @@
 		    <td class="banner-login banner-passive"></td>
 		  </tr>
 		  
-			<!-- Tab visibility is managed in config-gui.xml -->
 			<!-- simple tab -->
       <xsl:if test="/root/gui/env/metadata/enableSimpleView = 'true'">
 				<xsl:call-template name="displayTab">

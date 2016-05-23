@@ -307,10 +307,6 @@ An example of the configuration file for JRebel may be the following::
      			</dir>
      		</link>
              <link target="/">
-                 <dir name="------/web-client/src/main/resources">
-                 </dir>
-             </link>
-             <link target="/">
                  <dir name="-------/web/target/webapp">
                  </dir>
              </link>

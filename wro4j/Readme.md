@@ -25,7 +25,6 @@ and css minification.  This module has several customization to the out-of-the-b
 * __wro-sources.xml__ - Declares the javascript and css groups.  The _wro-sources.xsd_ contains information on how to write such a file.
   At the time of this writing there is a root _wro-sources.xml_ file in web/src/main/webResources/WEB-INF/wro-sources.xml which includes:
   * web-ui/src/main/resources/web-ui-wro-sources.xml
-  * web-client/src/main/resources/web-client/wro-sources.xml
 * __wro.properties__ - The wro configuration. See https://code.google.com/p/wro4j/wiki/ConfigurationOptions for the list and
   description of properties in the file.
 * __web/pom.xml__ - This file contains build/plugins/plugin plugin for wro4j which runs the minification and some minor checks on the wro4j
