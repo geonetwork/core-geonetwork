@@ -93,8 +93,7 @@
         map.getView().getProjection(),
         {
           INFO_FORMAT: layer.ncInfo ? 'text/xml' : 'application/vnd.ogc.gml'
-        }
-        );
+        });
     uri += '&FEATURE_COUNT=2147483647';
 
     this.loading = true;

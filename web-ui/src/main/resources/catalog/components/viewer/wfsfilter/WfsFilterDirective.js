@@ -351,7 +351,6 @@
             if (boxElt.length) {
               angular.element(boxElt).scope().clear();
             }
-
             scope.layer.setExtent();
 
             // load all facet and fill ui structure for the list
