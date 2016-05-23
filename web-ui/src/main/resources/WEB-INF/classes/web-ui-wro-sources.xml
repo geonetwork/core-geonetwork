@@ -36,6 +36,7 @@
   </declarative>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js"/>
+    <jsSource webappPath="/catalog/views/sextant/jquerynoconflict.js"/>
     <jsSource webappPath="/catalog/lib/jquery-2.0.3.min.js"/>
     <jsSource webappPath="/catalog/lib/moment+langs.min.js"/>
     <jsSource webappPath="/catalog/lib/angular/angular.min.js"/>
@@ -59,7 +60,7 @@
     <jsSource webappPath="/catalog/lib/angular.ext/colorpicker/angularjs-color-picker.js"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
 
-    <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.js"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/ngeo/ngeo.js"/>
     <jsSource webappPath="/catalog/lib/d3.v3.min.js"/>
