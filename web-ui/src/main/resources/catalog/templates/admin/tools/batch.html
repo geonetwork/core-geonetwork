@@ -208,9 +208,9 @@
   <div id="gn-batch-process-report" data-ng-switch="selectedProcess.type">
     <div class="col-md-12"
          data-ng-hide="!processing && !processReport"  data-ng-switch-when="fixed-params">
-      <div class="progress progress-striped active"
-           data-ng-show="processReport.running == 'true'">
-        <div class="progress-bar" style="width: 100%"/>
+
+      <div data-ng-show="processing">
+        <i class="fa fa-spinner fa-spin"/>
       </div>
 
       <div data-gn-batch-report="processReport"/>

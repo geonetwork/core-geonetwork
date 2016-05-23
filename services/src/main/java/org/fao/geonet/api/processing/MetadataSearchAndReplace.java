@@ -21,11 +21,11 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.services.metadata.replace;
+package org.fao.geonet.api.processing;
 
-import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -47,97 +47,96 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- *  Class to apply replacements to a metadata selection.
- *
- *  @author Jose García
- */
-public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
-    Iterator<String> iter;
-    String process;
-    Element params;
-    ServiceContext context;
-    Set<Integer> metadata;
-    MassiveReplaceReport report;
+import jeeves.server.context.ServiceContext;
 
-    public MassiveXslMetadataReindexer(DataManager dm, Iterator<String> iter,
-                                       String process,
-                                       Element params,
-                                       ServiceContext context,
-                                       Set<Integer> metadata,
-                                       MassiveReplaceReport report) {
+/**
+ * Class to apply replacements to a metadata selection.
+ *
+ * @author Jose García
+ */
+public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
+    String process;
+    Map<String, String> params;
+    ServiceContext context;
+    Set<String> metadata;
+    MetadataReplacementProcessingReport report;
+    boolean isTesting;
+    boolean isCaseInsensitive;
+    String vacuumMode;
+
+    public MetadataSearchAndReplace(DataManager dm,
+                                    String process,
+                                    boolean isTesting,
+                                    boolean isCaseInsensitive,
+                                    String vacuumMode, Map<String, String> params,
+                                    ServiceContext context,
+                                    Set<String> records,
+                                    MetadataReplacementProcessingReport report) {
         super(dm);
-        this.iter = iter;
         this.process = process;
         this.params = params;
         this.context = context;
-        this.metadata = metadata;
+        this.metadata = records;
         this.report = report;
+        this.isTesting = isTesting;
+        this.isCaseInsensitive = isCaseInsensitive;
+        this.vacuumMode = vacuumMode;
     }
 
     @Override
     public void process() throws Exception {
         GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
+            .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
 
         // Build replacements parameter for xslt process
         Element replacements = new Element("replacements");
 
-        if (!StringUtils.isEmpty(params.getChildText("caseinsensitive"))) {
-            Element caseInsensitiveEl = new Element("caseInsensitive").setText(params.getChildText("caseinsensitive"));
+        if (isCaseInsensitive) {
+            Element caseInsensitiveEl =
+                new Element("caseInsensitive").setText("true");
             replacements.addContent(caseInsensitiveEl);
         }
 
-        List<Element> paramsList = params.getChildren();
-        for (Element p: paramsList) {
-            if (p.getName().startsWith("mdfield-")) {
-                String key = p.getName().split("-")[1];
+        Iterator iterator = params.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+            if (entry.getKey().startsWith("mdfield-")) {
+                String key = entry.getKey().split("-")[1];
 
-                String searchValue = params.getChildText("searchValue-" + key);
-                String replaceValue = params.getChildText("replaceValue-" + key);
+                String searchValue = params.get("searchValue-" + key);
+                String replaceValue = params.get("replaceValue-" + key);
 
                 Element replacement = new Element("replacement");
-                replacement.addContent(new Element("field").setText(p.getText()));
+                replacement.addContent(new Element("field").setText(entry.getValue()));
                 replacement.addContent(new Element("searchValue").setText(searchValue));
                 replacement.addContent(new Element("replaceValue").setText(replaceValue));
 
                 replacements.addContent(replacement);
-
             }
         }
 
         String replacementsString = Xml.getString(replacements);
         //replacementsString = replacementsString.replaceAll("\\s","");
 
-        while (iter.hasNext()) {
-            String uuid = iter.next();
+        for (String uuid : this.metadata) {
             String id = dm.getMetadataId(uuid);
             context.info("Processing metadata with id:" + id);
-
-            processInternal(id, process, "replacements", replacementsString, context, metadata);
+            processInternal(id, process, "replacements", replacementsString, context);
         }
     }
 
     /**
      * Applies xslt to replace content in metadata record.
-     *
-     * @param id
-     * @param process
-     * @param paramNameXml
-     * @param paramXml
-     * @param context
-     * @param metadata
-     * @return
-     * @throws Exception
      */
-    private Element processInternal(String id, String process,
-                                    String paramNameXml, String paramXml,
-                                    ServiceContext context,
-                                    Set<Integer> metadata) throws Exception {
+    private Element processInternal(String id,
+                                    String process,
+                                    String paramNameXml,
+                                    String paramXml,
+                                    ServiceContext context) throws Exception {
 
         GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
+            .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
         SchemaManager schemaMan = gc.getBean(SchemaManager.class);
         AccessManager accessMan = gc.getBean(AccessManager.class);
@@ -153,7 +152,7 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
 
         int iId = Integer.valueOf(id);
 
-        Metadata metadataEntity =  context.getBean(MetadataRepository.class).findOne(iId);
+        Metadata metadataEntity = context.getBean(MetadataRepository.class).findOne(iId);
         MetadataDataInfo info = metadataEntity.getDataInfo();
 
         // Get metadata title from the index
@@ -161,14 +160,9 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
         if (StringUtils.isEmpty(metadataTitle)) metadataTitle = metadataEntity.getUuid();
 
         if (info == null) {
-            MassiveReplaceReportEntry notFoundEntry =
-                    new MassiveReplaceReportEntry(id, "", null);
-            report.addNotFound(notFoundEntry);
-
+            report.incrementNullRecords();
         } else if (!accessMan.isOwner(context, id)) {
-            MassiveReplaceReportEntry notOwnerEntry =
-                    new MassiveReplaceReportEntry(metadataEntity.getUuid(), metadataTitle, null);
-            report.addNotEditable(notOwnerEntry);
+            report.addNotEditableMetadataId(iId);
         } else {
 
             // -----------------------------------------------------------------------
@@ -178,12 +172,9 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
             File xslProcessing = new File(filePath);
             if (!xslProcessing.exists()) {
                 context.info("  Processing instruction not found for " + schema
-                        + " schema.");
+                    + " schema.");
 
-                MassiveReplaceReportEntry notOwnerEntry =
-                        new MassiveReplaceReportEntry(metadataEntity.getUuid(), metadataTitle, null);
-                report.addNoProcessFound(notOwnerEntry);
-
+                report.addNoProcessFoundMetadataId(iId);
                 return null;
             }
             // --- Process metadata
@@ -191,20 +182,6 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
 
             try {
                 Element md = dataMan.getMetadataNoInfo(context, id);
-
-                // -- here we send parameters set by user from
-                // URL if needed.
-                List<Element> children = params.getChildren();
-                Map<String, Object> xslParameter = new HashMap<String, Object>();
-                for (Element param : children) {
-                    if (param.getChildren().size() > 0) {
-                        xslParameter.put(param.getName(), param);
-                    } else {
-                        xslParameter.put(param.getName(), param.getTextTrim());
-
-                    }
-                }
-
                 processedMetadata = Xml.transformWithXmlParam(md, filePath, paramNameXml, paramXml);
 
                 // Get changes
@@ -214,32 +191,27 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
                 boolean hasChanges = (changesEl.size() > 0);
 
 
-                MassiveReplaceReportEntry mdEntry = new MassiveReplaceReportEntry(metadataEntity.getUuid(),
-                        metadataTitle,
-                        changesEl);
-
                 if (hasChanges) {
-                    report.addChanged(mdEntry);
+                    report.addMetadataChanges(iId, changesEl);
                 } else {
-                    report.addNotChanged(mdEntry);
+                    report.addMetadataInfos(iId, "No changes.");
                 }
 
                 // --- save metadata and return status
-                if ((changesEl.size() > 0) && (!params.getChildText("test").equalsIgnoreCase("true"))) {
+                if (changesEl.size() > 0 && !isTesting) {
                     Path filePath3 = schemaMan.getSchemaDir(schema).resolve("process/massive-content-update-clean-changes.xsl");
 
                     // Remove empty elements or vacuum record
-                    if (!StringUtils.isEmpty(params.getChildText("vacuum-mode"))) {
-                        String mode = params.getChildText("vacuum-mode");
+                    if (!StringUtils.isEmpty(this.vacuumMode)) {
                         // Search and replace, then vacuum record
-                        if ("record".equals(mode)) {
+                        if ("record".equals(this.vacuumMode)) {
                             processedMetadata = Xml.transform(processedMetadata, filePath3);
 
                             Path vacuumXsltPath = schemaMan.getSchemaDir(schema).resolve("process/vacuum.xsl");
                             if (vacuumXsltPath.toFile().exists()) {
                                 processedMetadata = Xml.transform(processedMetadata, vacuumXsltPath);
                             }
-                        } else {
+                        } else if ("element".equals(this.vacuumMode)) {
                             // Clean geonet:changes elements and remove
                             // elements having an empty new value.
                             Map<String, Object> params = new HashMap<>(1);
@@ -253,22 +225,15 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
 
 
                     dataMan.updateMetadata(context, id, processedMetadata,
-                            false, true, true,
-                            context.getLanguage(),
-                            new ISODate().toString(), true);
+                        false, true, true,
+                        context.getLanguage(),
+                        new ISODate().toString(), true);
                 }
-
-
-                metadata.add(new Integer(id));
             } catch (Exception e) {
                 report.addMetadataError(iId, e);
-                context.error("  Processing failed with error " + e.getMessage());
-                e.printStackTrace();
             }
-
             return processedMetadata;
         }
-
         return null;
     }
 }

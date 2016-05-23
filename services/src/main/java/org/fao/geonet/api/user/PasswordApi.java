@@ -23,17 +23,13 @@
 
 package org.fao.geonet.api.user;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.API;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.security.ldap.LDAPConstants;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.api.API;
-import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,50 +39,62 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import javax.servlet.ServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.servlet.ServletRequest;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.server.context.ServiceContext;
+
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-        "/api/user",
-        "/api/" + API.VERSION_0_1 +
-                "/user"
+    "/api/user",
+    "/api/" + API.VERSION_0_1 +
+        "/user"
 })
 @Api(value = "user",
-        tags = "user",
-        description = "User related operations")
+    tags = "user",
+    description = "User related operations")
 public class PasswordApi {
 
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
     @Autowired
     LanguageUtils languageUtils;
 
     @ApiOperation(value = "Update user password",
-            nickname = "updatePassword",
-            notes = "Get a valid changekey by email first and then update your password.")
+        nickname = "updatePassword",
+        notes = "Get a valid changekey by email first and then update your password.")
     @RequestMapping(
-            value = "/{username}",
-            method = RequestMethod.PATCH,
-            produces = MediaType.TEXT_PLAIN_VALUE)
+        value = "/{username}",
+        method = RequestMethod.PATCH,
+        produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<String> updatePassword(
-            @ApiParam(value = "The user name",
-                      required = true)
-            @PathVariable
+        @ApiParam(value = "The user name",
+            required = true)
+        @PathVariable
             String username,
-            @ApiParam(value = "The new password and a valid change key",
-                      required = true)
-            @RequestBody
+        @ApiParam(value = "The new password and a valid change key",
+            required = true)
+        @RequestBody
             PasswordUpdateParameter passwordAndChangeKey,
-            ServletRequest request)
-            throws Exception {
+        ServletRequest request)
+        throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
@@ -96,14 +104,14 @@ public class PasswordApi {
         User user = userRepository.findOneByUsername(username);
         if (user == null) {
             return new ResponseEntity<>(String.format(
-                    messages.getString("user_not_found"),
-                    username
+                messages.getString("user_not_found"),
+                username
             ), HttpStatus.PRECONDITION_FAILED);
         }
         if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
             return new ResponseEntity<>(String.format(
-                    messages.getString("user_from_ldap_cant_get_password"),
-                    username
+                messages.getString("user_from_ldap_cant_get_password"),
+                username
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
@@ -113,13 +121,13 @@ public class PasswordApi {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         String todaysDate = sdf.format(cal.getTime());
-        boolean passwordMatches = PasswordUtil.encoder(ApplicationContextHolder.get()).matches(scrambledPassword+todaysDate, passwordAndChangeKey.getChangeKey());
+        boolean passwordMatches = PasswordUtil.encoder(ApplicationContextHolder.get()).matches(scrambledPassword + todaysDate, passwordAndChangeKey.getChangeKey());
 
         //check change key
         if (!passwordMatches) {
             return new ResponseEntity<>(String.format(
-                    messages.getString("user_password_invalid_changekey"),
-                    passwordAndChangeKey.getChangeKey(), username
+                messages.getString("user_password_invalid_changekey"),
+                passwordAndChangeKey.getChangeKey(), username
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
@@ -130,49 +138,48 @@ public class PasswordApi {
         SettingManager sm = context.getBean(SettingManager.class);
         String adminEmail = sm.getValue("system/feedback/email");
         String subject = String.format(
-                messages.getString("password_change_subject"),
-                sm.getSiteName());
+            messages.getString("password_change_subject"),
+            sm.getSiteName());
         String content = String.format(
-                messages.getString("password_change_message"),
-                sm.getSiteName(),
-                adminEmail,
-                sm.getSiteName());
+            messages.getString("password_change_message"),
+            sm.getSiteName(),
+            adminEmail,
+            sm.getSiteName());
 
         // send change link via email with admin in CC
         if (!MailUtil.sendMail(user.getEmail(),
-                subject,
-                content,
-                sm,
-                adminEmail, "")) {
+            subject,
+            content,
+            sm,
+            adminEmail, "")) {
             return new ResponseEntity<>(String.format(
-                    messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
+                messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
         return new ResponseEntity<>(String.format(
-                messages.getString("user_password_changed"),
-                username
+            messages.getString("user_password_changed"),
+            username
         ), HttpStatus.CREATED);
     }
 
-
     @ApiOperation(value = "Send user password reminder by email",
-                  nickname = "sendPasswordByEmail",
-                  notes = "An email is sent to the requested user with a link to " +
-                          "reset his password. User MUST have an email to get the link. " +
-                          "LDAP users will not be able to retrieve their password " +
-                          "using this service.")
+        nickname = "sendPasswordByEmail",
+        notes = "An email is sent to the requested user with a link to " +
+            "reset his password. User MUST have an email to get the link. " +
+            "LDAP users will not be able to retrieve their password " +
+            "using this service.")
     @RequestMapping(
-            value = "/{username}/actions/forgot-password",
-            method = RequestMethod.GET,
-            produces = MediaType.TEXT_PLAIN_VALUE)
+        value = "/{username}/actions/forgot-password",
+        method = RequestMethod.GET,
+        produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<String> sendPasswordByEmail(
-            @ApiParam(value = "The user name",
-                    required = true)
-            @PathVariable
+        @ApiParam(value = "The user name",
+            required = true)
+        @PathVariable
             String username,
-            ServletRequest request)
-            throws Exception {
+        ServletRequest request)
+        throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         String language = locale.getISO3Language();
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
@@ -181,22 +188,22 @@ public class PasswordApi {
         final User user = appContext.getBean(UserRepository.class).findOneByUsername(username);
         if (user == null) {
             return new ResponseEntity<>(String.format(
-                    messages.getString("user_not_found"),
-                    username
+                messages.getString("user_not_found"),
+                username
             ), HttpStatus.PRECONDITION_FAILED);
         }
         if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
             return new ResponseEntity<>(String.format(
-                    messages.getString("user_from_ldap_cant_get_password"),
-                    username
+                messages.getString("user_from_ldap_cant_get_password"),
+                username
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
         String email = user.getEmail();
         if (StringUtils.isEmpty(email)) {
             return new ResponseEntity<>(String.format(
-                    messages.getString("user_has_no_email"),
-                    username
+                messages.getString("user_has_no_email"),
+                username
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
@@ -210,33 +217,32 @@ public class PasswordApi {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         String todaysDate = sdf.format(cal.getTime());
         String changeKey = PasswordUtil.encode(ServiceContext.get(),
-                scrambledPassword + todaysDate);
+            scrambledPassword + todaysDate);
 
         String subject = String.format(
-                messages.getString("password_forgotten_subject"),
-                sm.getSiteName(),
-                username);
+            messages.getString("password_forgotten_subject"),
+            sm.getSiteName(),
+            username);
         String content = String.format(
-                messages.getString("password_forgotten_message"),
-                sm.getSiteName(),
-                sm.getSiteURL(language),
-                username,
-                changeKey,
-                sm.getSiteName());
+            messages.getString("password_forgotten_message"),
+            sm.getSiteName(),
+            sm.getSiteURL(language),
+            username,
+            changeKey,
+            sm.getSiteName());
 
         // send change link via email with admin in CC
         if (!MailUtil.sendMail(email,
-                subject,
-                content,
-                sm,
-                adminEmail, "")) {
+            subject,
+            content,
+            sm,
+            adminEmail, "")) {
             return new ResponseEntity<>(String.format(
-                    messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
+                messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
         return new ResponseEntity<>(String.format(
-                messages.getString("user_password_sent"),
-                username, email
+            messages.getString("user_password_sent"),
+            username, email
         ), HttpStatus.CREATED);
     }
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
 }
