@@ -105,7 +105,7 @@
    * GFI results as an array in a popup.
    * The template could be overriden using `gfiTemplateURL` constant.
    */
-  module.directive('gnGfi', [ '$http', 'gfiTemplateURL',
+  module.directive('gnGfi', ['$http', 'gfiTemplateURL',
     function($http, gfiTemplateURL) {
       return {
         restrict: 'A',
@@ -116,7 +116,7 @@
         controller: 'gnGfiController',
         templateUrl: gfiTemplateURL
       };
-  }]);
+    }]);
 
   geonetwork.GnGfiController = function($scope, gnFeaturesTableManager) {
 
@@ -134,15 +134,15 @@
     });
     map.addOverlay(this.overlay);
 
-    map.on('singleclick', function (e) {
+    map.on('singleclick', function(e) {
       this.$scope.$apply(function() {
-        if(!this.canApply()) {
+        if (!this.canApply()) {
           return;
         }
         var layers = map.getLayers().getArray().filter(function(layer) {
           return (layer.getSource() instanceof ol.source.ImageWMS ||
-            layer.getSource() instanceof ol.source.TileWMS) &&
-            layer.getVisible();
+              layer.getSource() instanceof ol.source.TileWMS) &&
+              layer.getVisible();
         });
 
         coordinates = e.coordinate;
@@ -162,7 +162,7 @@
       return this.gnFeaturesTableManager.getCount();
     }.bind(this), function(newVal, oldVal) {
       this.overlay.setPosition(
-        (newVal == 0) ? undefined : coordinates
+          (newVal == 0) ? undefined : coordinates
       );
     }.bind(this));
   };
@@ -202,7 +202,7 @@
   };
 
 
-    module.controller('gnGfiController', [
+  module.controller('gnGfiController', [
     '$scope',
     'gnFeaturesTableManager',
     geonetwork.GnGfiController]);

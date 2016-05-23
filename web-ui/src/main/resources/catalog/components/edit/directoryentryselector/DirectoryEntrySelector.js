@@ -299,7 +299,7 @@
                    angular.extend(scope.searchObj.defaultParams, filter);
                  }
                  scope.modelOptions = angular.copy(
-                    gnGlobalSettings.modelOptions);
+                 gnGlobalSettings.modelOptions);
                },
                post: function postLink(scope, iElement, iAttrs) {
                  scope.defaultRoleCode = iAttrs['defaultRole'] || null;

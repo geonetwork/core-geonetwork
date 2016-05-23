@@ -244,7 +244,7 @@
               }
               appProfilePromise.then(loadFields);
             }, function(error) {
-              scope.status = error.data ? 'solrAccessError': error.statusText;
+              scope.status = error.data ? 'solrAccessError' : error.statusText;
               scope.statusTitle = error.statusText;
             });
           };
@@ -324,10 +324,10 @@
           function refreshHeatmap() {
             if (scope.isFeaturesIndexed) {
               heatmapsRequest.searchWithFacets({
-                    params: scope.output,
-                    any: scope.searchInput
-                  },
-                  gnSolrService.getHeatmapParams(scope.map)).
+                params: scope.output,
+                any: scope.searchInput
+              },
+              gnSolrService.getHeatmapParams(scope.map)).
                   then(function(resp) {
                     scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
                   });
@@ -348,7 +348,7 @@
             scope.resetSLDFilters();
 
             var boxElt = element.find('.gn-bbox-input');
-            if(boxElt.length) {
+            if (boxElt.length) {
               angular.element(boxElt).scope().clear();
             }
 
@@ -380,7 +380,7 @@
             solrObject.pushState();
             var extent = scope.ctrl.searchGeometry.split(',').map(parseFloat);
             scope.layer.setExtent(
-              ol.proj.transformExtent(extent, 'EPSG:4326', 'EPSG:3857')
+                ol.proj.transformExtent(extent, 'EPSG:4326', 'EPSG:3857')
             );
             if (sldConfig.filters.length > 0) {
               wfsFilterService.getSldUrl(sldConfig, scope.layer.get('url'),

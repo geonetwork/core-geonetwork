@@ -170,20 +170,20 @@
           };
 
           if (layer.get('md')) {
-            var d =  layer.get('downloads');
+            var d = layer.get('downloads');
             var downloadable =
                 layer.get('md')['geonet:info'].download == 'true';
-            if(angular.isArray(d) && downloadable) {
+            if (angular.isArray(d) && downloadable) {
               scope.download = d[0];
             }
 
-            var wfs =  layer.get('wfs');
-            if(angular.isArray(wfs) && downloadable) {
+            var wfs = layer.get('wfs');
+            if (angular.isArray(wfs) && downloadable) {
               scope.wfs = wfs[0];
             }
 
             var p = layer.get('processes');
-            if(angular.isArray(p)) {
+            if (angular.isArray(p)) {
               scope.process = p;
             }
           }

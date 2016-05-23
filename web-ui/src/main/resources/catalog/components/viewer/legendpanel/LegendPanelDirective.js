@@ -97,10 +97,10 @@
                 layersCollection.item(index + delta).get('group').split('/')[1] :
                 undefined;
             var i = index + delta;
-            while(
-              layersCollection.item(i) &&
-              layersCollection.item(i).get('group') &&
-              group == layersCollection.item(i).get('group').split('/')[1]
+            while (
+                layersCollection.item(i) &&
+                layersCollection.item(i).get('group') &&
+                group == layersCollection.item(i).get('group').split('/')[1]
             ) {
               i += delta;
             }

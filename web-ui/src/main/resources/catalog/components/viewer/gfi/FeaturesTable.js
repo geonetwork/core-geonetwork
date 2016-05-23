@@ -44,8 +44,8 @@
           ctrl: 'gnFeaturesTable'
         },
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
-          'featurestable.html',
-        link: function (scope, element, attrs, ctrls) {
+            'featurestable.html',
+        link: function(scope, element, attrs, ctrls) {
           ctrls.ctrl.initTable(element.find('table'), scope);
         }
       };
@@ -60,53 +60,53 @@
     this.loader.getBsTableConfig().then(function(bstConfig) {
       element.bootstrapTable('destroy');
       element.bootstrapTable(
-        angular.extend({
-          height: 250,
-          sortable: true,
-          onPostBody: function() {
-            var trs = element.find('tbody').children();
-            for (var i = 0; i < trs.length; i++) {
-              $(trs[i]).mouseenter(function(e) {
-                // Hackish over event from:
-                // https://github.com/wenzhixin/bootstrap-table/issues/782
-                var row = $(e.currentTarget).parents('table')
-                  .data()['bootstrap.table'].data[$(e.currentTarget).data('index')]
-                if (!row) { return; }
-                var feature = this.loader.getFeatureFromRow(row);
-                var source = this.featuresTablesCtrl.fOverlay.getSource();
-                source.clear();
-                if (feature && feature.getGeometry()) {
-                  source.addFeature(feature);
-                }
-              }.bind(this));
-              $(trs[i]).mouseleave(function(e) {
-                this.featuresTablesCtrl.fOverlay.getSource().clear();
-              }.bind(this));
-            };
-          }.bind(this),
-          onDblClickRow: function(row, elt) {
-            if (!this.map) {
-              return;
-            }
-            var feature = this.loader.getFeatureFromRow(row);
-            if (feature && feature.getGeometry()) {
-              var pan = ol.animation.pan({
-                duration: 500,
-                source: this.map.getView().getCenter()
-              });
-              this.map.beforeRender(pan);
-              this.map.getView().fit(
-                feature.getGeometry(),
-                this.map.getSize(),
-                { maxZoom: 17 }
-              );
-            }
+          angular.extend({
+            height: 250,
+            sortable: true,
+            onPostBody: function() {
+              var trs = element.find('tbody').children();
+              for (var i = 0; i < trs.length; i++) {
+                $(trs[i]).mouseenter(function(e) {
+                  // Hackish over event from:
+                  // https://github.com/wenzhixin/bootstrap-table/issues/782
+                  var row = $(e.currentTarget).parents('table')
+                  .data()['bootstrap.table'].data[$(e.currentTarget).data('index')];
+                  if (!row) { return; }
+                  var feature = this.loader.getFeatureFromRow(row);
+                  var source = this.featuresTablesCtrl.fOverlay.getSource();
+                  source.clear();
+                  if (feature && feature.getGeometry()) {
+                    source.addFeature(feature);
+                  }
+                }.bind(this));
+                $(trs[i]).mouseleave(function(e) {
+                  this.featuresTablesCtrl.fOverlay.getSource().clear();
+                }.bind(this));
+              }
+            }.bind(this),
+            onDblClickRow: function(row, elt) {
+              if (!this.map) {
+                return;
+              }
+              var feature = this.loader.getFeatureFromRow(row);
+              if (feature && feature.getGeometry()) {
+                var pan = ol.animation.pan({
+                  duration: 500,
+                  source: this.map.getView().getCenter()
+                });
+                this.map.beforeRender(pan);
+                this.map.getView().fit(
+                    feature.getGeometry(),
+                    this.map.getSize(),
+                    { maxZoom: 17 }
+                );
+              }
 
-          }.bind(this),
-          showExport: true,
-          exportTypes: [ 'csv' ],
-          exportDataType: 'all'
-        },bstConfig)
+            }.bind(this),
+            showExport: true,
+            exportTypes: ['csv'],
+            exportDataType: 'all'
+          },bstConfig)
       );
       scope.$watch('ctrl.active', function() {
         element.bootstrapTable('resetWidth');

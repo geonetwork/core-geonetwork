@@ -49,22 +49,22 @@
   geonetwork.GnFeaturesLoader = function(config, $injector) {
     this.$injector = $injector;
     this.$http = this.$injector.get('$http');
-    this.gnProxyUrl =  this.$injector.get('gnGlobalSettings').proxyUrl;
+    this.gnProxyUrl = this.$injector.get('gnGlobalSettings').proxyUrl;
 
     this.layer = config.layer;
     this.map = config.map;
 
     this.excludeCols = [];
   };
-  geonetwork.GnFeaturesLoader.prototype.load = function(){};
-  geonetwork.GnFeaturesLoader.prototype.loadAll = function(){};
-  geonetwork.GnFeaturesLoader.prototype.getBsTableConfig = function(){};
+  geonetwork.GnFeaturesLoader.prototype.load = function() {};
+  geonetwork.GnFeaturesLoader.prototype.loadAll = function() {};
+  geonetwork.GnFeaturesLoader.prototype.getBsTableConfig = function() {};
 
   geonetwork.GnFeaturesLoader.prototype.isLoading = function() {
     return this.loading;
   };
 
-  geonetwork.GnFeaturesLoader.prototype.proxyfyUrl = function(url){
+  geonetwork.GnFeaturesLoader.prototype.proxyfyUrl = function(url) {
     return this.gnProxyUrl + encodeURIComponent(url);
   };
 
@@ -88,13 +88,13 @@
         coordinates = this.coordinates;
 
     var uri = layer.getSource().getGetFeatureInfoUrl(
-      coordinates,
-      map.getView().getResolution(),
-      map.getView().getProjection(),
-      {
-        INFO_FORMAT: layer.ncInfo ? 'text/xml' : 'application/vnd.ogc.gml'
-      }
-    );
+        coordinates,
+        map.getView().getResolution(),
+        map.getView().getProjection(),
+        {
+          INFO_FORMAT: layer.ncInfo ? 'text/xml' : 'application/vnd.ogc.gml'
+        }
+        );
     uri += '&FEATURE_COUNT=2147483647';
 
     this.loading = true;
@@ -111,12 +111,12 @@
           }
         });
         this.features = (props.value && props.value != 'none') ?
-          [new ol.Feature(props)] : [];
+            [new ol.Feature(props)] : [];
       } else {
         var format = new ol.format.WMSGetFeatureInfo();
         var options = {
           featureProjection: map.getView().getProjection()
-        }
+        };
         // FIXME: should be effective with a OL update ?
         var srsMatch = response.data.match(/srsName="(.*)"/);
         if (srsMatch) {
@@ -131,7 +131,7 @@
     }.bind(this), function() {
 
       this.loading = false;
-      this.error   = true;
+      this.error = true;
 
     }.bind(this));
 
@@ -147,24 +147,24 @@
         return;
       }
       var columns = Object.keys(features[0].getProperties()).map(function(x) {
-          return {
-            field        : x,
-            title        : x,
-            titleTooltip : x,
-            sortable     : true,
-            visible      : exclude.indexOf(x) == -1
-          };
+        return {
+          field: x,
+          title: x,
+          titleTooltip: x,
+          sortable: true,
+          visible: exclude.indexOf(x) == -1
+        };
       });
 
-      return  {
+      return {
         columns: columns,
         data: features.map(function(f) {
           var obj = f.getProperties();
-          Object.keys(obj).forEach(function(key){
+          Object.keys(obj).forEach(function(key) {
             if (exclude.indexOf(key) == -1) {
               obj[key] = $filter('linky')(obj[key], '_blank');
-              if(obj[key]) {
-                obj[key] = obj[key].replace(/>(.)*</,' ' +
+              if (obj[key]) {
+                obj[key] = obj[key].replace(/>(.)*</, ' ' +
                     'target="_blank">' + linkTpl + '<');
               }
             }
@@ -187,8 +187,8 @@
   };
 
   geonetwork.GnFeaturesGFILoader.prototype.getFeatureFromRow = function(row) {
-    var geoms = [ 'the_geom', 'thegeom', 'boundedBy' ];
-    for (var i=0 ; i<geoms.length ; i++) {
+    var geoms = ['the_geom', 'thegeom', 'boundedBy'];
+    for (var i = 0; i < geoms.length; i++) {
       var geom = row[geoms[i]];
       if (geoms[i] == 'boundedBy' && jQuery.isArray(geom)) {
         if (geom[0] == geom[2] && geom[1] == geom[3]) {
@@ -198,9 +198,9 @@
         }
         if (this.projection) {
           geom = geom.transform(
-            this.projection,
-            this.map.getView().getProjection()
-          );
+              this.projection,
+              this.map.getView().getProjection()
+              );
         }
       }
       if (geom instanceof ol.geom.Geometry) {
@@ -239,10 +239,10 @@
     fields.forEach(function(field) {
       if ($.inArray(field.idxName, this.excludeCols) === -1) {
         columns.push({
-          field        : field.idxName,
-          title        : field.label,
-          titleTooltip : field.label,
-          sortable     : true
+          field: field.idxName,
+          title: field.label,
+          titleTooltip: field.label,
+          sortable: true
         });
       }
     });
@@ -251,7 +251,7 @@
     var url = this.coordinates ?
         this.solrObject.getMergedUrl({}, {
           pt: ol.proj.transform(this.coordinates,
-            map.getView().getProjection(), 'EPSG:4326').reverse().join(','),
+              map.getView().getProjection(), 'EPSG:4326').reverse().join(','),
           //5 pixels radius tolerance
           d: map.getView().getResolution() / 400,
           sfield: solr.geomField.idxName
@@ -265,7 +265,7 @@
 
     // sxt specific
     var gSetting = this.$injector.get('gnGlobalSettings');
-    if(gSetting.gnUrl) {
+    if (gSetting.gnUrl) {
       url = gSetting.gnUrl += url;
     }
     // end sxt specific
@@ -318,7 +318,7 @@
 
   geonetwork.GnFeaturesSOLRLoader.prototype.getFeatureFromRow = function(row) {
     var geom = row[this.solrObject.geomField.idxName];
-    if(angular.isArray(geom)) {
+    if (angular.isArray(geom)) {
       geom = geom[0];
     }
     geom = new ol.format.WKT().readFeature(geom, {
@@ -339,7 +339,7 @@
   };
   GnFeaturesTableLoaderService.prototype.createLoader = function(type, config) {
     var constructor = geonetwork['GnFeatures' + type.toUpperCase() + 'Loader'];
-    if(!angular.isFunction(constructor)) {
+    if (!angular.isFunction(constructor)) {
       console.warn('Cannot find constructor for loader type : ' + type);
     }
     return new constructor(config, this.$injector);
