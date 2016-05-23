@@ -308,7 +308,11 @@
         },
 
         addMdLayerToPanier: function(link, md) {
-          if(link.protocol == 'WWW:DOWNLOAD-1.0-link--download') {           //'WWW:DOWNLOAD-1.0-link--download') {
+          if(link.protocol.match(
+                  "WWW:FTP|WWW:DOWNLOAD-1.0-link--download|WWW:OPENDAP|MYO:MOTU-SUB") != null) {
+            if (link.protocol == 'MYO:MOTU-SUB') {
+              link.url = link.url.replace('action=describeproduct', 'action=productdownloadhome');
+            }
             window.open(link.url);
             return;
           }
@@ -604,7 +608,8 @@
         var layers = md.getLinksByType(i+1, '#OGC:WMTS',
             '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map', '#OGC:OWS-C');
         var downloads = md.getLinksByType(i+1, '#FILE', '#DB', '#COPYFILE',
-            '#WWW:DOWNLOAD-1.0-link--download', '#WFS', 'WCS');
+            '#WWW:DOWNLOAD-1.0-link--download', '#WWW:OPENDAP', '#MYO:MOTU-SUB',
+            '#WWW:FTP', '#WFS', 'WCS');
 
         if(downloads.length > 0) {
           // If only one layer, we get only one download (we bind them later)

@@ -172,7 +172,7 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
         CollectResults collectResults =
                 DirectoryUtils.synchronizeEntries(record,
                         xpath, uuidXpath, propertiesToCopy,
-                        false);
+                        false, null);
 
         Element updateRecord = collectResults.getUpdatedRecord();
         recordCity = Xml.selectString(
@@ -226,7 +226,7 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
         CollectResults collectResults =
                 DirectoryUtils.synchronizeEntries(record,
                         xpath, uuidXpath, propertiesToCopy,
-                        true);
+                        true, null);
 
         Element updateRecord = collectResults.getUpdatedRecord();
 

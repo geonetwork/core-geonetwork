@@ -447,7 +447,7 @@ Une liste de scénarios d’intérêt a été établie en concertation avec les 
                 <gmd:URL>http://www.ifremer.fr/lern/Pages/programme/ogive.htm</gmd:URL>
               </gmd:linkage>
               <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
               </gmd:protocol>
               <gmd:name gco:nilReason="missing">
                 <gco:CharacterString>Site web du LERN - projet OGIVE</gco:CharacterString>

@@ -294,7 +294,7 @@
                       fields: {
                         'url': {},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK', hidden: true
                         },
                         'name': {},
                         'desc': {},
@@ -399,7 +399,7 @@
                       fields: {
                         'url': {},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK', hidden: true
                         },
                         'name': {},
                         'desc': {},
@@ -421,7 +421,7 @@
                       fields: {
                         'url': {},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK', hidden: true
                         },
                         'name': {},
                         'desc': {},
@@ -440,7 +440,7 @@
                       fields: {
                         'url': {},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK', hidden: true
                         },
                         'name': {},
                         'desc': {},
@@ -458,7 +458,7 @@
                       fields: {
                         'url': {},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK', hidden: true
                         },
                         'name': {},
                         'desc': {},
@@ -480,7 +480,7 @@
                       fields: {
                         'url': {},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK', hidden: true
                         },
                         'name': {},
                         'desc': {},
@@ -685,7 +685,7 @@
                       fields: {
                         'url': {},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK', hidden: true
                         },
                         'name': {},
                         'desc': {},
@@ -703,7 +703,7 @@
                       fields: {
                         'url': {},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK', hidden: true
                         },
                         'name': {},
                         'desc': {},
