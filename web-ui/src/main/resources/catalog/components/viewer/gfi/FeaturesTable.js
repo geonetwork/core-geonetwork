@@ -69,15 +69,24 @@
                   // Hackish over event from:
                   // https://github.com/wenzhixin/bootstrap-table/issues/782
                   var row = $(e.currentTarget).parents('table')
-                    .data()['bootstrap.table'].data[$(e.currentTarget).data('index')]
+                    .data()['bootstrap.table'].data[$(e.currentTarget).data('index')];
                   if (!row) { return; }
                   var feature = this.loader.getFeatureFromRow(row);
                   var source = this.featuresTablesCtrl.fOverlay.getSource();
-                  source.clear();
                   if (feature && feature.getGeometry()) {
                     source.addFeature(feature);
                   }
                 }.bind(this));
+                $(trs[i]).mouseout(function(e) {
+                  // Hackish over event from:
+                  // https://github.com/wenzhixin/bootstrap-table/issues/782
+                  var row = $(e.currentTarget).parents('table')
+                      .data()['bootstrap.table'].data[$(e.currentTarget).data('index')];
+                  if (!row) { return; }
+                  var source = this.featuresTablesCtrl.fOverlay.getSource();
+                  source.clear();
+                }.bind(this));
+
               };
             }.bind(this),
             onDblClickRow: function(row, elt) {
