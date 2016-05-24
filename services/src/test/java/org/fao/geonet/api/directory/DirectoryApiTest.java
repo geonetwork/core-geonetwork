@@ -218,6 +218,7 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
                 MetadataType.SUB_TEMPLATE,
                 ReservedGroup.all.getId(),
                 Params.GENERATE_UUID);
+        String contact1uuid = _metadataRepo.findOne(contact1id).getUuid();
 
         final Metadata record = _metadataRepo.findOne(id);
         final String uuidXpath = ".//gmd:electronicMailAddress/gco:CharacterString/text()";
@@ -249,7 +250,8 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
                 String role = e.getName().equals("contact") ?
                         "shouldBePreserved" : "pointOfContact";
                 assertEquals("XLink is correct",
-                        "local://eng/subtemplate?uuid=26edc7da847cafff3bf9d90cb29227b7c6a125f8&amp;process=./gmd:role/*/@codeListValue~" + role, xlink.getValue()
+                             "local://eng/subtemplate?uuid=" + contact1uuid +
+                                "&amp;process=./gmd:role/*/@codeListValue~" + role, xlink.getValue()
                 );
             }
         }
