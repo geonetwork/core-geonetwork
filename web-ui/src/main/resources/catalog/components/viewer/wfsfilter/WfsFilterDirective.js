@@ -76,7 +76,7 @@
           };
 
           // Get an instance of solr object
-          var solrObject, geometry;
+          var solrObject, geometry, extentFilter;
 
           var heatmapsRequest =
               gnSolrRequestManager.register('WfsFilter', 'heatmaps');
@@ -351,7 +351,6 @@
             if (boxElt.length) {
               angular.element(boxElt).scope().clear();
             }
-            scope.layer.setExtent();
 
             // load all facet and fill ui structure for the list
             return solrObject.searchWithFacets({}).
@@ -367,6 +366,7 @@
             scope.layer.getSource().updateParams({
               SLD: null
             });
+            scope.layer.setExtent();
           };
 
           /**
@@ -377,10 +377,15 @@
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             solrObject.pushState();
-            var extent = scope.ctrl.searchGeometry.split(',').map(parseFloat);
-            scope.layer.setExtent(
-                ol.proj.transformExtent(extent, 'EPSG:4326', 'EPSG:3857')
-            );
+            if(!extentFilter) {
+              scope.layer.setExtent();
+            }
+            else {
+              scope.layer.setExtent(
+                  ol.proj.transformExtent(extentFilter, 'EPSG:4326',
+                      scope.map.getView().getProjection()));
+
+            }
             if (sldConfig.filters.length > 0) {
               wfsFilterService.getSldUrl(sldConfig, scope.layer.get('url'),
                   ftName).success(function(sldURL) {
@@ -450,12 +455,14 @@
 
           //Manage geographic search
           scope.$watch('ctrl.searchGeometry', function(geom, old) {
+            extentFilter = undefined;
             if (geom && geom != ',,,') {
-              var extent = geom.split(',').map(function(val) {
+              extentFilter = geom.split(',').map(function(val) {
                 return parseFloat(val);
               });
               geometry = [
-                extent[0], extent[2], extent[3], extent[1]
+                extentFilter[0], extentFilter[2],
+                extentFilter[3], extentFilter[1]
               ].join(',');
               scope.filterFacets();
             }
@@ -463,7 +470,7 @@
             else if (old && geom != '') {
               scope.filterFacets();
             }
-            // do nothing when reseted from wfsFilter directive
+            // do nothing when reset from wfsFilter directive
           });
 
           function resetHeatMap() {
