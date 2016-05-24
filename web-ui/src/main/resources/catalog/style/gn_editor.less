@@ -596,7 +596,38 @@ div.gn-individualName {
 
 .gn-tab-sextant-contact,
 .gn-tab-sextant-metadata,
-.gn-tab-sextant-identification {
+.gn-tab-sextant-identification,
+.gn-tab-sextant-spatial {
+  /* Hide remove control for source field, topic cat */
+  .gn-credit .col-sm-1.gn-control,
+  .gn-MD_TopicCategoryCode .col-sm-1.gn-control {
+    display: none;
+  }
+  /* Add mandatory flag to spatial representation type */
+  .gn-spatialRepresentationType label:after,
+  .gn-MD_TopicCategoryCode label:after {
+    content: "*";
+    font-size: 2.5em;
+    margin: 7px 0 0 7px;
+    position: absolute;
+    color: #a94442;
+    font-weight: normal;
+  }
+  /* Hide remove control */
+  .gn-topicCategory {
+    legend a.btn {
+      display: none;
+      visibility: hidden !important;
+    }
+  }
+  /* Hide Add action on CRS */
+  [data-gn-crs-selector] .input-group {
+    width: 100%;
+    .input-group-btn {
+      display: none;
+    }
+  }
+
   div.gn-individualName.gn-extra-field > label {
     visibility: visible;
   }
