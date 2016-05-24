@@ -1387,7 +1387,7 @@ de métadonnées de données « BD Carthage métropole »
     
   </element>
   <element name="gmd:credit" id="27.0">
-    <label>Reconnaissance</label>
+    <label>Source</label>
     <description>Reconnaissance de ceux qui ont contribués à ces ressources</description>
     <help>Reconnaissance ou confirmation des intervenants ayant apporté leur contribution à cette ressource.</help>
     <condition/>
