@@ -85,9 +85,10 @@ public class GetKeywords {
 			@RequestParam(value = XmlParams.pType, required = false) String thesauriDomainName,
 			@RequestParam(value = XmlParams.pTypeSearch, defaultValue = "2") String typeSearch,
 			@RequestParam(value = XmlParams.pUri, required = false) String keywordUriCode,
+			@RequestParam(value = XmlParams.sort, required = false, defaultValue = "DESC") String sort,
 			NativeWebRequest webRequest) throws Exception {
 		return exec(uiLang, newSearch, mode, searchTerm, maxResults, offset, targetLangs, thesauri,
-				thesauriDomainName, typeSearch, keywordUriCode, webRequest);
+				thesauriDomainName, typeSearch, keywordUriCode, sort, webRequest);
 	}
 	@RequestMapping(value = "/{uiLang}/keywords")
 	@ResponseBody
@@ -103,7 +104,8 @@ public class GetKeywords {
 			@RequestParam(value = XmlParams.pType, required = false) String thesauriDomainName,
 			@RequestParam(value = XmlParams.pTypeSearch, defaultValue = "2") String typeSearch,
 			@RequestParam(value = XmlParams.pUri, required = false) String keywordUriCode,
-			NativeWebRequest webRequest)
+            @RequestParam(value = XmlParams.sort, required = false, defaultValue = "DESC") String sort,
+            NativeWebRequest webRequest)
 			throws Exception {
 		ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
 		ServiceContext context = applicationContext.getBean(ServiceManager.class).createServiceContext("keywords", uiLang,
@@ -131,9 +133,9 @@ public class GetKeywords {
 			}
 
 			if (searchTerm == null || searchTerm.trim().isEmpty()) {
-				builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.ASC));
+				builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.parse(sort)));
 			} else {
-				builder.setComparator(KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC));
+				builder.setComparator(KeywordSort.searchResultsSorter(searchTerm, SortDirection.parse(sort)));
 			}
 
 			searcher.search(builder.build());
