@@ -1,1 +1,1 @@
-window.sxtApiJQuery = jQuery;
+if(typeof jQuery !== 'undefined')window.sxtApiJQuery = jQuery;
