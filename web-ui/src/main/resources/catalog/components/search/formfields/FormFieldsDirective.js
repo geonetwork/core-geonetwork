@@ -722,10 +722,6 @@
                 })
               });
 
-              var dragboxInteraction = new ol.interaction.DragBox({
-                style: style
-              });
-              scope.map.addInteraction(dragboxInteraction);
 
               // Create overlay to show bbox
               var layer = new ol.layer.Vector({
@@ -736,7 +732,12 @@
                 updateWhileAnimating: true,
                 updateWhileInteracting: true
               });
-              scope.map.addLayer(layer);
+
+              var dragboxInteraction = new ol.interaction.DragBox({
+                className: 'gnbbox-dragbox'
+              });
+              scope.map.addInteraction(dragboxInteraction);
+              layer.setMap(scope.map);
 
               var clearMap = function() {
                 layer.getSource().clear();
