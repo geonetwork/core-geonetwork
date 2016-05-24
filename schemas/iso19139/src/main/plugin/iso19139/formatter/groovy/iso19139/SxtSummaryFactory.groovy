@@ -45,7 +45,7 @@ class SxtSummaryFactory {
         SxtSummary summary = new SxtSummary(this.handlers, this.env, this.f)
 
         summary.title = this.isoHandlers.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:citation'.'gmd:CI_Citation'.'gmd:title')
-        summary.abstr = this.isoHandlers.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:abstract')
+        summary.abstr = this.isoHandlers.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:abstract').replaceAll("\n", "<br>")
 
         configureKeywords(metadata, summary)
         //configureFormats(metadata, summary)
@@ -77,8 +77,9 @@ class SxtSummaryFactory {
 
     def configureKeywords(metadata, summary) {
         def keywords = metadata."**".findAll{it.name() == 'gmd:descriptiveKeywords'}
-        if (!keywords.isEmpty()) {
-            summary.keywords = this.isoHandlers.keywordsElSxt(keywords).toString()
+        if (!keywords.isEmpty() && keywords.get(0)) {
+            def ks = this.isoHandlers.keywordsElSxt(keywords)
+            if(ks) summary.keywords = ks.toString()
         }
     }
     def configureFormats(metadata, summary) {

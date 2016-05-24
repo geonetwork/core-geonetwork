@@ -42,13 +42,13 @@
 
         <dl class="dl-horizontal">
 
-          <dt fmt-translate="">Date(s)</dt>
-          <dd>
+          <dt data-fmt-if="dates" translate="">Date(s)</dt>
+          <dd data-fmt-if="dates">
             {{dates}}
           </dd>
 
-          <dt fmt-translate="" translate="">abstract</dt>
-          <dd><p>{{abstract}}</p>
+          <dt data-fmt-if="abstract" translate="">abstract</dt>
+          <dd data-fmt-if="abstract"><p>{{abstract}}</p>
           </dd>
 
           <dt data-fmt-if="contacts" translate="">Contacts</dt>

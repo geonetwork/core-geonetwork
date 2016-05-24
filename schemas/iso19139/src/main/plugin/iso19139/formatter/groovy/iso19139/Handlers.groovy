@@ -482,15 +482,14 @@ public class Handlers {
                 thesaurusName = f.translate("noThesaurusName")
             }
             def keyValue = isofunc.isoText(k);
-            if(!keyValue) {
-                keyValue = k.'gmx:Anchor'.text()
-            }
-            keywordProps.put(thesaurusName, keyValue)
+            if(!keyValue) keyValue = k.'gmx:Anchor'.text()
+            if(keyValue) keywordProps.put(thesaurusName, keyValue)
         }
 
-        return handlers.fileResult('html/sxt-keyword.html', [
-                label : f.nodeLabel("gmd:descriptiveKeywords", null),
-                keywords: keywordProps.asMap()])
+        if(keywordProps.asMap().size() > 0)
+            return handlers.fileResult('html/sxt-keyword.html', [
+                    label : f.nodeLabel("gmd:descriptiveKeywords", null),
+                    keywords: keywordProps.asMap()])
     }
 
 
