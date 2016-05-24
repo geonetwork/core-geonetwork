@@ -62,6 +62,7 @@
 
           var solrUrl, uuid, ftName, appProfile, appProfilePromise;
           scope.map = scope.$parent.map;
+          var map = scope.map;
 
           // Only admin can index the features
           scope.user = $rootScope.user;
@@ -87,6 +88,8 @@
             //gradient: ['#0f0', '#ff0', '#f00', '#fff'],
             visible: true
           };
+          var hmEventKeys = [];
+
           scope.isHeatMapVisible = false;
           scope.heatmapLayer = null;
           scope.source = null;
@@ -177,7 +180,7 @@
 
             if (scope.map) {
               resetHeatMap();
-              scope.map.on('moveend', refreshHeatmap);
+              hmEventKeys.push(map.on('moveend', refreshHeatmap));
             }
           };
 
@@ -323,7 +326,7 @@
           };
 
           function refreshHeatmap() {
-            if (scope.isFeaturesIndexed) {
+            if (scope.isFeaturesIndexed && scope.isHeatMapVisible) {
               heatmapsRequest.searchWithFacets({
                     params: scope.output,
                     any: scope.searchInput
@@ -478,11 +481,14 @@
             if (scope.source) {
               scope.source.clear();
             }
-            scope.map.un('moveend', refreshHeatmap);
+            while(hmEventKeys.length) {
+              map.unByKey(hmEventKeys.pop());
+            }
           }
 
           scope.$watch('isHeatMapVisible', function(n, o) {
             if (n != o) {
+              refreshHeatmap();
               scope.heatmapLayer.setVisible(n);
             }
           });
@@ -502,7 +508,6 @@
             }
           });
 
-
           scope.showTable = function() {
             gnFeaturesTableManager.clear();
             gnFeaturesTableManager.addTable({
@@ -515,6 +520,11 @@
             });
 
           };
+
+          element.on('$destroy', function() {
+            scope.$destroy();
+            resetHeatMap();
+          });
         }
       };
     }]);
