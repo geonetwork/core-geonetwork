@@ -69,7 +69,7 @@ class SummaryFactory {
         Summary summary = new Summary(this.handlers, this.env, this.f)
 
         summary.title = this.isoHandlers.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:citation'.'gmd:CI_Citation'.'gmd:title')
-        summary.abstr = this.isoHandlers.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:abstract')
+        summary.abstr = this.isoHandlers.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:abstract').replaceAll("\n", "<br>")
 
         configureKeywords(metadata, summary)
         configureFormats(metadata, summary)
