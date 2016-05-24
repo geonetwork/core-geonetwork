@@ -27,7 +27,7 @@
   <xsl:include href="../base-layout.xsl"/>
 
   <xsl:template mode="content" match="/">
-    <div data-ng-include="'{$uiResourcesPath}views/{$searchView}/templates/index.html'" class="gn">
+    <div data-ng-include="'{$uiResourcesPath}views/{$searchView}/templates/sxtapimain.html'" class="gn">
     </div>
   </xsl:template>
 </xsl:stylesheet>
