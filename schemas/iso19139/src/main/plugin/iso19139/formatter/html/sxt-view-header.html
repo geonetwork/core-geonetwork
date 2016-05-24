@@ -51,17 +51,17 @@
           <dd><p>{{abstract}}</p>
           </dd>
 
-          <dt translate="" data-fmt-if="contacts">Contacts</dt>
-          <dd>{{contacts}}</dd>
+          <dt data-fmt-if="contacts" translate="">Contacts</dt>
+          <dd data-fmt-if="contacts">{{contacts}}</dd>
 
-          <dt fmt-translate="" translate="">keywords</dt>
-          <dd>{{keywords}}</dd>
+          <dt data-fmt-if="keywords" translate="">keywords</dt>
+          <dd data-fmt-if="keywords">{{keywords}}</dd>
 
-          <dt fmt-translate="" translate="">statements</dt>
-          <dd>{{formats}}</dd>
+          <dt data-fmt-if="formats" translate="">statements</dt>
+          <dd data-fmt-if="formats">{{formats}}</dd>
 
-          <dt fmt-translate="" translate="">constraints</dt>
-          <dd>{{constraints}}</dd>
+          <dt data-fmt-if="constraints" translate="">constraints</dt>
+          <dd data-fmt-if="constraints">{{constraints}}</dd>
 
         </dl>
       </div>

@@ -131,7 +131,7 @@ class SxtSummaryFactory {
             statementsString.add(this.isoHandlers.isofunc.isoText(k))
         }
 
-        if (!statementsString.isEmpty()) {
+        if (!statementsString.isEmpty() && statementsString.get(0)) {
             summary.formats = this.isoHandlers.dataQualityInfoElSxt(statementsString).toString()
         }
     }

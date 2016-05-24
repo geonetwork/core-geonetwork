@@ -642,7 +642,7 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
   'use strict';
 
 
-  if(window.sxtApiJQuery) return;
+  if(window.sxtApiJQuery && window.sxtApiJQuery.fn.dropdown) return;
 
   // DROPDOWN CLASS DEFINITION
   // =========================
