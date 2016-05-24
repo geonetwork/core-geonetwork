@@ -481,7 +481,11 @@ public class Handlers {
             if (thesaurusName.isEmpty()) {
                 thesaurusName = f.translate("noThesaurusName")
             }
-            keywordProps.put(thesaurusName, isofunc.isoText(k))
+            def keyValue = isofunc.isoText(k);
+            if(!keyValue) {
+                keyValue = k.'gmx:Anchor'.text()
+            }
+            keywordProps.put(thesaurusName, keyValue)
         }
 
         return handlers.fileResult('html/sxt-keyword.html', [
