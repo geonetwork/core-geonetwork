@@ -18,27 +18,23 @@
 
   <div class="sxt-searchform-content" sxt-custom-scroll>
 
-    <!--multi facets groups-->
-    <div gn-facet-multiselect="publishedForGroup" gn-facet-multiselect-collapsed="true"></div>
+    <div data-ng-repeat="facet in ::facetConfig">
 
-    <!--Category Tree-->
-    <div class="gn-facet">
-      <h5 gn-collapsible="treeFacetCollapsed">
-        <span class="fa fa-arrow-circle-right" ng-class="{'fa-rotate-90': !treeFacetCollapsed, 'gn-field-empty': isFacetsCollapse('sextantTheme')}"></span>
-        {{'sextantThemes' | translate}}
-      </h5>
-      <div sxt-category-tree class="sxt-categorytree" ng-class="{'collapse': treeFacetCollapsed}" sxt-category-tree-conf="thesaurus[0]" sxt-custom-scroll></div>
+      <!--Standard multi facet panel-->
+      <div data-ng-if="::facet.key != 'category'" gn-facet-multiselect="{{::facet.langs[lang] || facet.key}}"
+           gn-facet-multiselect-collapsed="{{::isFacetsCollapse(facet.langs[lang] || facet.index || facet.key)}}"></div>
+
+      <!--Facet tree for categories-->
+      <div class="gn-facet" data-ng-if="::facet.key == 'category'">
+        <h5 gn-collapsible="treeFacetCollapsed">
+          <span class="fa fa-arrow-circle-right" ng-class="{'fa-rotate-90': !treeFacetCollapsed, 'gn-field-empty': isFacetsCollapse('sextantTheme')}"></span>
+          {{'sextantThemes' | translate}}
+        </h5>
+        <div sxt-category-tree class="sxt-categorytree" ng-class="{'collapse': treeFacetCollapsed}" sxt-category-tree-conf="thesaurus[0]" sxt-custom-scroll></div>
+      </div>
+
     </div>
-
-    <!--TEST FACET MULTI-->
-    <div data-ng-if="::(lang == 'eng')" gn-facet-multiselect="inspireTheme_en" gn-facet-multiselect-collapsed="{{isFacetsCollapse('inspireTheme_en')}}"></div>
-    <div data-ng-if="::(lang == 'fre')" gn-facet-multiselect="inspireTheme_fr" gn-facet-multiselect-collapsed="{{isFacetsCollapse('inspireTheme_fr')}}"></div>
-    <div gn-facet-multiselect="keyword" gn-facet-multiselect-collapsed="{{isFacetsCollapse('keyword')}}"></div>
-    <div gn-facet-multiselect="orgName" gn-facet-multiselect-collapsed="{{isFacetsCollapse('orgName')}}"></div>
-    <div gn-facet-multiselect="createDateYear" gn-facet-multiselect-collapsed="{{isFacetsCollapse('createDateYear')}}"></div>
-
   </div>
-
 </div>
 
 <button type="submit" data-ng-click="resetSearch()" class="btn btn-default sxt-reset-btn" data-ng-disabled="!searchObj.canReset" translate>resetFilter</button>

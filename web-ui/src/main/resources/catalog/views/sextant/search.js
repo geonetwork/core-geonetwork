@@ -448,6 +448,8 @@
         }
         $scope.searchObj.canReset = false;
       });
+
+      $scope.facetConfig = searchSettings.facetConfig;
     }]);
 
   module.directive('sxtFixMdlinks', [ 'sxtService',

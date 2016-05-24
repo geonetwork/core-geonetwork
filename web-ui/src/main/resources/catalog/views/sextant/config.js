@@ -342,6 +342,24 @@
       // Define if search should exclude children
       searchSettings.excludeChildrenFromSearch = false;
 
+      searchSettings.facetConfig = [{
+        key: 'publishedForGroup',
+        index: '_groupPublished'
+      }, {
+        key: 'category'
+      }, {
+        langs: {
+          eng: 'inspireTheme_en',
+          fre: 'inspireTheme_fr'
+        }
+      }, {
+        key: 'keyword'
+      },{
+        key: 'orgName'
+      },{
+        key: 'createDateYear'
+      }];
+
       if(typeof sxtSettings != 'undefined') {
         angular.extend(searchSettings, sxtSettings);
         angular.extend(gnPanierSettings, sxtSettings.panier);
