@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sld:StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:sld="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" version="1.0.0">
+<sld:StyledLayerDescriptor xmlns:sld="http://www.opengis.net/sld" xmlns="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" version="1.0.0">
   <sld:NamedLayer>
     <sld:Name>IFR_RBT_PEUPL_GGASC_P</sld:Name>
     <sld:NamedStyle>
-      <sld:Name/>
+      <sld:Name />
     </sld:NamedStyle>
     <sld:UserStyle>
       <sld:Name>Default Styler</sld:Name>
@@ -38,12 +38,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -104,12 +102,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -175,12 +171,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -241,12 +235,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -307,12 +299,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -378,12 +368,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -444,12 +432,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -510,12 +496,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -576,12 +560,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -642,12 +624,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -708,12 +688,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -774,12 +752,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -840,12 +816,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -906,12 +880,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -972,12 +944,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1038,12 +1008,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1104,12 +1072,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1170,12 +1136,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1236,12 +1200,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1302,12 +1264,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1368,12 +1328,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1434,12 +1392,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1500,12 +1456,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1566,12 +1520,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1632,12 +1584,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1698,12 +1648,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1764,12 +1712,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1830,12 +1776,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1896,12 +1840,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -1962,12 +1904,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
@@ -2028,12 +1968,10 @@
                     </ogc:UpperBoundary>
                   </ogc:PropertyIsBetween>
                 </ogc:Or>
-                <ogc:Or>
-                  <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>departement</ogc:PropertyName>
-                    <ogc:Literal>Ain</ogc:Literal>
-                  </ogc:PropertyIsEqualTo>
-                </ogc:Or>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
                 <ogc:Or>
                   <ogc:PropertyIsBetween>
                     <ogc:PropertyName>date_renovation</ogc:PropertyName>
