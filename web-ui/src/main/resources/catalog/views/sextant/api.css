@@ -14857,6 +14857,13 @@ yx-axis
 .g * gn-wps-process-form ul {
   list-style: none;
 }
+.gn .ol-dragbox,
+.g .ol-dragbox,
+.gn .gnbbox-dragbox,
+.g .gnbbox-dragbox {
+  background-color: rgba(255, 255, 255, 0.4);
+  border: solid 2px red;
+}
 .gn .gn-facet .list-group,
 .g .gn-facet .list-group {
   border-left: 1px dotted #eeeeee;

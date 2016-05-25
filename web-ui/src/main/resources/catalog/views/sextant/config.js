@@ -118,6 +118,11 @@
       };
 
       if(typeof sxtSettings != 'undefined') {
+        if(sxtSettings.olView && sxtSettings.olView.extent) {
+          sxtSettings.olView.extent = ol.proj.transformExtent(
+              sxtSettings.olView.extent,
+              'EPSG:4326', 'EPSG:3857');
+        }
         angular.extend(mapsConfig, sxtSettings.olView);
       }
 
@@ -369,6 +374,10 @@
         }
         if(sxtSettings.localisations) {
           viewerSettings.localisations = sxtSettings.localisations;
+          viewerSettings.localisations.forEach(function(loc) {
+            loc.extent = ol.proj.transformExtent(loc.extent,
+                'EPSG:4326', viewerMap.getView().getProjection());
+          });
         }
         if(sxtSettings.layerFilter)  {
           viewerSettings.layerFilter = sxtSettings.layerFilter;
