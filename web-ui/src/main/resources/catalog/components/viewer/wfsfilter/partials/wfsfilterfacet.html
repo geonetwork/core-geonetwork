@@ -49,7 +49,7 @@
              data-ng-change="filterFacets()"
              data-ng-model-options="{ debounce: 400 }"
              class="layerfilter form-control input-sm"
-             placeholder="{{'filter'|translate}}"/>
+             placeholder="{{'filter'|translate}}..."/>
     </div>
 
     <!--Facet fields-->
@@ -97,39 +97,34 @@
       <button class="btn btn-default"
               ng-click="showTable()">
         <i class="fa fa-table"></i>&nbsp;
-        <span data-translate="">table</span>
+        <span data-translate="">Table</span>
       </button>
-      <button type="button" class="btn btn-default dropdown-toggle"
+      <button data-ng-if="::(user.canEditRecord(md) || md.isHarvested == 'y')"
+              type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-cog"></i>
         <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <li data-ng-if="isFeaturesIndexed">
-          <a href="" data-gn-click-and-spin="resetFacets()">
-            <i class="fa fa-close"></i>&nbsp;
-            <span data-translate="">reset</span>
-          </a>
-        </li>
-        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" data-ng-if="::(user.canEditRecord(md) || md.isHarvested == 'y')">
+        <li>
           <a href="" data-ng-click="indexWFSFeatures()">
             <i class="fa fa-codiepie"></i>&nbsp;
             <span data-translate="">reindexWFSFeatures</span> (WFS 1.0.0)
           </a>
         </li>
-        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
+        <li>
           <a href="" data-ng-click="indexWFSFeatures('1.1.0')">
             <i class="fa fa-codiepie"></i>&nbsp;
             <span data-translate="">reindexWFSFeatures</span> (WFS 1.1.0)
           </a>
         </li>
-        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
+        <li>
           <a href="" data-ng-click="initSolrRequest()">
             <i class="fa fa-refresh"></i>&nbsp;
             <span data-translate="">refresh</span>
           </a>
         </li>
-        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
+        <li>
           <a href="" data-ng-click="dropFeatures()">
             <i class="fa fa-times"></i>&nbsp;
             <span data-translate="">removeFeatures</span>
@@ -137,7 +132,6 @@
         </li>
       </ul>
     </div>
-
 
     <div>
       <label data-ng-show="map" data-ng-show="source.getFeatures().length > 0">
