@@ -158,6 +158,7 @@
             pre: function preLink(scope, element, attrs, controller) {
 
               var groups;
+              scope.title = attrs['gnFacetMultiselectTitle'];
 
               scope.name = attrs.gnFacetMultiselect;
               scope.contentCollapsed =
