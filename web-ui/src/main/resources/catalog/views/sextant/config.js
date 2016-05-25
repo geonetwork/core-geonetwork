@@ -349,7 +349,11 @@
 
       searchSettings.facetConfig = [{
         key: 'publishedForGroup',
-        index: '_groupPublished'
+        index: '_groupPublished',
+        labels: {
+          eng: 'Published',
+          fre: 'Publication'
+        }
       }, {
         key: 'category'
       }, {
