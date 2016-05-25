@@ -20688,6 +20688,7 @@ yx-axis
 .g ul.gn-resultview li.gn-grid div.gn-md-links button {
   width: 46px;
   margin: 0 3px 0 0;
+  height: 2.3em;
 }
 .gn ul.gn-resultview li.gn-grid div.gn-md-links .dropdown-menu,
 .g ul.gn-resultview li.gn-grid div.gn-md-links .dropdown-menu {
@@ -21349,6 +21350,12 @@ yx-axis
 .gn ul.gn-resultview li.gn-grid .gn-md-links .dropdown-menu,
 .g ul.gn-resultview li.gn-grid .gn-md-links .dropdown-menu {
   max-width: 195px;
+}
+.gn ul.gn-resultview li.gn-grid .gn-md-relations .btn-group button,
+.g ul.gn-resultview li.gn-grid .gn-md-relations .btn-group button,
+.gn ul.gn-resultview li.gn-grid .gn-md-links .btn-group button,
+.g ul.gn-resultview li.gn-grid .gn-md-links .btn-group button {
+  height: 2.3em;
 }
 .gn .metadata.panel-default,
 .g .metadata.panel-default {
