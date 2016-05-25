@@ -210,6 +210,8 @@
                   solrObject.filteredDocTypeFieldsInfo, appProfile.fields);
               solrObject.initBaseParams();
             }
+            scope.hmActive = appProfile && appProfile.heatmap;
+
             scope.resetFacets().then(function() {
               solrObject.pushState();
             });
