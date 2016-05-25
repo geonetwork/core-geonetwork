@@ -158,6 +158,7 @@
               var delimiter = ' or ';
               var oldParams;
               var groups;
+              scope.title = attrs['gnFacetMultiselectTitle'];
 
               scope.name = attrs.gnFacetMultiselect;
               scope.contentCollapsed =
