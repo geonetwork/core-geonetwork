@@ -142,5 +142,20 @@
         </li>
       </ul>
     </div>
+
+    <div data-ng-if="hmActive">
+      <label data-ng-show="map" data-ng-show="source.getFeatures().length > 0">
+        <input type="checkbox"
+        data-ng-model="isHeatMapVisible"/>
+        <span data-translate="">displayHeatMap</span>
+      </label>
+    </div>
+
+
+    <hr>
+    <button data-gn-click-and-spin="resetFacets()" class="btn btn-primary gn-reset-facets">
+      <span translate>reset</span>
+    </button>
+
   </div>
 </form>
