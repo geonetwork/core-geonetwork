@@ -113,7 +113,7 @@
            *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
-        copy: function(id, groupId, withFullPrivileges, 
+        copy: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, metadataUuid) {
           var url = gnUrlUtils.append('md.create',
               gnUrlUtils.toKeyValue({
@@ -221,7 +221,7 @@
            *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
-        create: function(id, groupId, withFullPrivileges, 
+        create: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, tab, metadataUuid) {
 
           return this.copy(id, groupId, withFullPrivileges,
@@ -311,8 +311,6 @@
    * {@link service/config-ui-metadata#services-
    * documentation-config-ui-metadataxml_-service-mdeditcancel mdEditCancel}
    * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdrelations getRelations}
-   * {@link service/config-ui-metadata#services-
    * documentation-config-ui-metadataxml_-service-mdsuggestion suggestionsList}
    * {@link service/config-ui-metadata#services-
    * documentation-config-ui-metadataxml_-service-mdvalidate getValidation}
@@ -348,7 +346,6 @@
     mdEditSaveonly: 'md.edit.saveonly?_content_type=json&',
     mdEditSaveandclose: 'md.edit.save.and.close?_content_type=json&',
     mdEditCancel: 'md.edit.cancel?_content_type=json&',
-    getRelations: 'md.relations?_content_type=json&',
     suggestionsList: 'md.suggestion?_content_type=json&',
     getValidation: 'md.validate?_content_type=json&',
 

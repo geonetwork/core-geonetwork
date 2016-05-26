@@ -195,7 +195,7 @@
                   );
 
                   angular.forEach(
-                  scope.processDescription.processOutputs.output,
+                      scope.processDescription.processOutputs.output,
                       function(output, idx) {
                         output.asReference = true;
 
@@ -344,7 +344,7 @@
                   scope.executeState = 'failed';
                   scope.executeResponse = response;
                 }
-            ).finally(
+            ).finally (
                 function() {
                   scope.running = false;
                 });

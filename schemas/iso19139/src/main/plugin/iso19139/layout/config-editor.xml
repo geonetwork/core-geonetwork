@@ -1368,7 +1368,7 @@
                                   </gmd:pass>
                               </gmd:DQ_ConformanceResult>
                           </gmd:result>
-                      </snippet>              
+                      </snippet>
                   </template>
               </field>
 
@@ -1379,7 +1379,7 @@
                       forceLabel="true"
                       or="report"
                       in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']">
-                  
+
                   <template>
                       <snippet>
                           <gmd:report>
@@ -1421,7 +1421,7 @@
 
           <!-- CONFORMITY CLASS 2 -->
           <section name="inspire_sds_cc2">
-          
+
               <section name="sds-section-crs">
                   <field xpath="gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor"
                          del="." />
@@ -1698,7 +1698,7 @@
 
               <section name="sds-section-custodian">
 
-                  <field name="pointOfContact" 
+                  <field name="pointOfContact"
                          templateModeOnly="true"
                          xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']"
                          del="." >
@@ -1786,7 +1786,7 @@
                                     <gco:CharacterString></gco:CharacterString>
                                 </srv:operationName>
                                 <srv:DCP>
-                                    <srv:DCPList 
+                                    <srv:DCPList
                                         codeList="http://inspire.ec.europa.eu/metadata-codelist/DCPList"
                                         codeListValue="webServices">Web services</srv:DCPList>
                                 </srv:DCP>

@@ -126,39 +126,6 @@
         return params;
       };
 
-      /**
-       * Parse XML result of md.relations.get service.
-       * Return an array of relations objects
-       */
-      var parseRelations = function(data) {
-
-        var relations = {};
-        if (data === null) {
-          data = {relation: []};
-        } else if (!angular.isArray(data.relation)) {
-          data.relation = [data.relation];
-        }
-        angular.forEach(data.relation, function(rel) {
-          if (angular.isDefined(rel)) {
-            var type = rel['@type'];
-            if (!relations[type]) {
-              relations[type] = [];
-            }
-            rel.type = type;
-            delete rel['@type'];
-
-            if (rel['@subType']) {
-              rel.subType = rel['@subType'];
-              delete rel['@subType'];
-            }
-            if (angular.isString(rel.title) ||
-                type == 'thumbnail') {
-              relations[type].push(rel);
-            }
-          }
-        });
-        return relations;
-      };
 
       var refreshForm = function(scope, data) {
         gnEditor.refreshEditorForm(data);
@@ -245,17 +212,14 @@
 
           var defer = $q.defer();
 
-          gnHttp.callService('getRelations', {
-            fast: false,
-            id: gnCurrentEdit.id
-          }, {
-            method: 'get',
+          $http.get('../api/records/' + gnCurrentEdit.uuid + '/related', {
             headers: {
-              'Content-type': 'application/xml'
+              'Accept': 'application/json'
             }
-          }).success(function(data) {
-            defer.resolve(parseRelations(data));
-          });
+          })
+            .success(function(data) {
+                defer.resolve(data);
+              });
           return defer.promise;
         },
 

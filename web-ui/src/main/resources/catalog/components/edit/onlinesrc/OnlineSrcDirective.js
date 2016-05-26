@@ -48,7 +48,7 @@
     'ga_print_directive'
   ])
 
-      /**
+  /**
    * @ngdoc directive
    * @name gn_onlinesrc.directive:gnOnlinesrcList
    *
@@ -86,6 +86,8 @@
             link: function(scope, element, attrs) {
               scope.onlinesrcService = gnOnlinesrc;
               scope.gnCurrentEdit = gnCurrentEdit;
+              scope.allowEdits = true;
+              scope.lang = scope.$parent.lang;
 
               /**
                * Calls service 'relations.get' to load
@@ -235,6 +237,7 @@
                     display: 'radio',
                     types: [{
                       label: 'addOnlinesrc',
+                      type: 'onlinesrc',
                       sources: {
                         filestore: true
                       },
@@ -248,6 +251,7 @@
                       }
                     }, {
                       label: 'addThumbnail',
+                      type: 'thumbnail',
                       sources: {
                         filestore: true,
                         thumbnailMaker: true
@@ -815,7 +819,18 @@
                   scope.$watch('gnCurrentEdit.layerConfig', loadLayers);
                 };
 
-                gnOnlinesrc.register('onlinesrc', function() {
+                function getTypeConfig(type) {
+                  for (var i = 0; i < scope.config.types.length; i++) {
+                    var c = scope.config.types[i];
+                    if (c.type === type) {
+                      return c;
+                    }
+                  }
+                  return scope.config.types[0];
+                };
+                gnOnlinesrc.register('onlinesrc', function(linkToEdit) {
+                  scope.isEditing = angular.isDefined(linkToEdit);
+
                   scope.metadataId = gnCurrentEdit.id;
                   scope.schema = gnCurrentEdit.schema;
                   scope.config = schemaConfig[scope.schema];
@@ -853,7 +868,40 @@
 
                   initThumbnailMaker();
                   resetForm();
+
                   $(scope.popupid).modal('show');
+
+                  if (scope.isEditing) {
+                    // Create a key which will be sent to XSL processing
+                    // for finding which element to edit.
+                    var name =
+                        angular.isObject(linkToEdit.title) ?
+                        linkToEdit.title[Object.keys(linkToEdit.title)[0]] : '';
+                    var desc =
+                        angular.isObject(linkToEdit.description) ?
+                        linkToEdit.description[
+                        Object.keys(linkToEdit.description)[0]] : '';
+                    scope.editingKey = [linkToEdit.url,
+                                        linkToEdit.protocol,
+                                        name].join('');
+                    scope.params = {
+                      linkType: getTypeConfig(linkToEdit.type),
+                      url: linkToEdit.url,
+                      protocol: linkToEdit.protocol,
+                      name: name,
+                      desc: desc
+                    };
+                    scope.isMdMultilingual = false; // FIXME
+                    // setParameterValue(scope.params.name, linkToEdit.name);
+                    // setParameterValue(scope.params.desc,
+                    //   linkToEdit.type === 'thumbnail' ?
+                    //   linkToEdit.name : linkToEdit.description);
+                    // scope.params.function = '';
+                    // scope.params.applicationProfile = '';
+                    // Readonly: a graphic overview can't become a link
+                  } else {
+                    scope.editingKey = null;
+                  }
                 });
 
                 // mode can be 'url' or 'thumbnailMaker' to init thumbnail panel
@@ -935,6 +983,10 @@
                         }
                       });
 
+                  if (scope.isEditing) {
+                    processParams.updateKey = scope.editingKey;
+                  }
+
                   // Add list of layers for WMS
                   if (scope.params.selectedLayers) {
                     processParams.selectedLayers = scope.params.selectedLayers;
@@ -976,7 +1028,7 @@
                                 scope.layers.push(l);
                               }
                             });
-                          }).catch(function(error) {
+                          }).catch (function(error) {
                             scope.isUrlOk = error === 200;
                           });
                     } else if (scope.OGCProtocol == 'WFS') {
@@ -996,7 +1048,7 @@
                                    });
                                  }
                                });
-                          }).catch(function(error) {
+                          }).catch (function(error) {
                             scope.isUrlOk = error === 200;
                           });
                     }
@@ -1031,7 +1083,7 @@
                     } else if (scope.params.protocol.indexOf('OGC:WFS') >= 0) {
                       scope.OGCProtocol = 'WFS';
                     }
-                    if (scope.OGCProtocol != null) {
+                    if (scope.OGCProtocol != null && !scope.isEditing) {
                       // Reset parameter in case of multilingual metadata
                       // Those parameters are object.
                       scope.params.name = '';
@@ -1052,8 +1104,15 @@
                         scope.params.url.match(/.*.(png|jpg|gif)$/i);
                   }
                 });
+
+                /**
+                 * Concat layer names and title in params names
+                 * and desc fields.
+                 * XSL processing tokenize thoses fields and add
+                 * them to the record.
+                 */
                 scope.$watchCollection('params.selectedLayers', function(n, o) {
-                  if (o != n) {
+                  if (o != n && scope.params.selectedLayers) {
                     var names = [],
                         descs = [];
 
@@ -1068,23 +1127,32 @@
                     });
                   }
                 });
+
+                /**
+                   * Init link based on linkType configuration.
+                   * Reset metadata store search, set defaults.
+                   */
                 scope.$watch('params.linkType', function(newValue, oldValue) {
                   if (newValue !== oldValue) {
-                    resetForm();
+                    if (!scope.isEditing) {
+                      resetForm();
+                    }
 
                     if (newValue.sources.metadataStore) {
                       scope.$broadcast('resetSearch',
                           newValue.sources.metadataStore.params);
                     }
 
-                    if (angular.isDefined(newValue.fields)) {
+                    if (!scope.isEditing &&
+                        angular.isDefined(newValue.fields)) {
                       angular.forEach(newValue.fields, function(val, key) {
                         if (angular.isDefined(val.value)) {
                           scope.params[key] = val.value;
                         }
                       });
                     }
-                    if (angular.isDefined(newValue.copyLabel)) {
+                    if (!scope.isEditing &&
+                        angular.isDefined(newValue.copyLabel)) {
                       scope.params[newValue.copyLabel] =
                           $translate(newValue.label);
                     }

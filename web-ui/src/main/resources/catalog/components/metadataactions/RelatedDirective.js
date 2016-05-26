@@ -63,21 +63,11 @@
                 scope.relations = [];
                 if (scope.uuid) {
                   $http.get(
-                     'md.relations?_content_type=json&uuid=' +
-                     scope.uuid + (scope.types ? '&type=' +
+                     '../api/records/' + scope.uuid + '/related?' +
+                     (scope.types ? '&type=' +
                      scope.types : ''), {cache: true})
                      .success(function(data, status, headers, config) {
-                       if (data && data != 'null' && data.relation) {
-                         if (!angular.isArray(data.relation)) {
-                           scope.relations = [
-                             data.relation
-                           ];
-                         } else {
-                           for (var i = 0; i < data.relation.length; i++) {
-                             scope.relations.push(data.relation[i]);
-                           }
-                         }
-                       }
+                       scope.relations = data;
                      });
                 }
               };

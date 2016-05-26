@@ -19,7 +19,7 @@
               {{c.label | translate}}
             </label>
           </div>
-
+{{params}}#
           <div class="form-group"
                data-ng-show="config.types.length > 1 && config.display == 'select'">
             <label class="col-sm-2 control-label">
@@ -302,10 +302,12 @@
             data-gn-click-and-spin="addOnlinesrc()">
       <i class="fa gn-icon-onlinesrc" />
       <i class="icon-external-link"></i>&nbsp;
-      <span data-ng-show="gnAddLink.$valid && isUrlOk"
-            data-translate="">addOnlinesrc</span>
-      <span data-ng-show="gnAddLink.$valid && !isUrlOk"
-            data-translate="">addLinkAnyway</span>
+      <span data-ng-show="gnAddLink.$valid && isUrlOk">
+        {{((isEditing ? 'update' : 'add') + 'Onlinesrc') | translate}}
+      </span>
+      <span data-ng-show="gnAddLink.$valid && !isUrlOk">
+        {{((isEditing ? 'update' : 'add') + 'LinkAnyway') | translate}}
+      </span>
     </button>
     <div data-gn-need-help="user-guide/associating-resources/linking-documents.html"
          class="pull-right"></div>
