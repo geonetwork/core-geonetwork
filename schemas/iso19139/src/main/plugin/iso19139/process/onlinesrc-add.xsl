@@ -139,10 +139,6 @@ Insert is made in first transferOptions found.
                         gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,
                         gmd:CI_OnlineResource/gmd:name/gco:CharacterString)
                         ]">
-    <xsl:message>Updating <xsl:value-of select="$updateKey"/> with:
-      <xsl:copy-of select="."/>
-    </xsl:message>
-
     <xsl:call-template name="createOnlineSrc"/>
   </xsl:template>
 
