@@ -171,9 +171,10 @@
         '$translate',
         '$timeout',
         '$http',
+        '$filter',
         function(gnOnlinesrc, gnOwsCapabilities, gnWfsService,
             gnEditor, gnCurrentEdit, gnMap, gnGlobalSettings, Metadata,
-            $rootScope, $translate, $timeout, $http) {
+            $rootScope, $translate, $timeout, $http, $filter) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -872,18 +873,48 @@
                   $(scope.popupid).modal('show');
 
                   if (scope.isEditing) {
+                    // If the title object contains more than one value,
+                    // Then the record resource is multilingual (and
+                    // probably the record also).
+                    // scope.isMdMultilingual =
+                    //   Object.keys(linkToEdit.title).length > 1 ||
+                    //   Object.keys(linkToEdit.description).length > 1;
+
+
                     // Create a key which will be sent to XSL processing
                     // for finding which element to edit.
-                    var name =
-                        angular.isObject(linkToEdit.title) ?
-                        linkToEdit.title[Object.keys(linkToEdit.title)[0]] : '';
-                    var desc =
-                        angular.isObject(linkToEdit.description) ?
-                        linkToEdit.description[
-                        Object.keys(linkToEdit.description)[0]] : '';
+                    var keysuffix = $filter('gnLocalized')(linkToEdit.title);
+                    if (scope.isMdMultilingual) {
+                      // Key in multilingual mode is
+                      // the title in the main language
+                      keysuffix =
+                          linkToEdit.title[Object.keys(scope.mdLangs)[0]];
+                      if (angular.isUndefined(keysuffix)) {
+                        console.warn(
+                            'Failed to compute key for updating the resource.');
+                      }
+                    }
                     scope.editingKey = [linkToEdit.url,
                                         linkToEdit.protocol,
-                                        name].join('');
+                                        keysuffix].join('');
+
+
+                    var name = $filter('gnLocalized')(linkToEdit.title),
+                        desc = $filter('gnLocalized')(linkToEdit.description);
+
+                    // Build name and desc based on loc IDs
+                    // and no iso3letter code.
+                    if (scope.isMdMultilingual) {
+                      name = {};
+                      desc = {};
+                      $.each(scope.mdLangs, function(key, v) {
+                        name[v] = linkToEdit.title[key] || '';
+                      });
+                      $.each(scope.mdLangs, function(key, v) {
+                        desc[v] = linkToEdit.description[key] || '';
+                      });
+                    }
+
                     scope.params = {
                       linkType: getTypeConfig(linkToEdit.type),
                       url: linkToEdit.url,
@@ -891,11 +922,7 @@
                       name: name,
                       desc: desc
                     };
-                    scope.isMdMultilingual = false; // FIXME
-                    // setParameterValue(scope.params.name, linkToEdit.name);
-                    // setParameterValue(scope.params.desc,
-                    //   linkToEdit.type === 'thumbnail' ?
-                    //   linkToEdit.name : linkToEdit.description);
+
                     // scope.params.function = '';
                     // scope.params.applicationProfile = '';
                     // Readonly: a graphic overview can't become a link
@@ -932,7 +959,7 @@
                 var resetProtocol = function() {
                   scope.layers = [];
                   scope.OGCProtocol = null;
-                  if (scope.params) {
+                  if (scope.params && !scope.isEditing) {
                     scope.params.name = scope.isMdMultilingual ? {} : '';
                     scope.params.desc = scope.isMdMultilingual ? {} : '';
                     scope.params.selectedLayers = [];
@@ -1116,15 +1143,19 @@
                     var names = [],
                         descs = [];
 
-                    angular.forEach(scope.params.selectedLayers,
-                        function(layer) {
-                          names.push(layer.Name || layer.name);
-                          descs.push(layer.Title || layer.title);
-                        });
-                    angular.extend(scope.params, {
-                      name: names.join(','),
-                      desc: descs.join(',')
-                    });
+                    if (scope.isEditing) {
+                      // Do somthing
+                    } else {
+                      angular.forEach(scope.params.selectedLayers,
+                          function(layer) {
+                            names.push(layer.Name || layer.name);
+                            descs.push(layer.Title || layer.title);
+                          });
+                      angular.extend(scope.params, {
+                        name: names.join(','),
+                        desc: descs.join(',')
+                      });
+                    }
                   }
                 });
 
@@ -1166,6 +1197,7 @@
                 scope.resource = null;
                 scope.$watch('resource', function() {
                   if (scope.resource && scope.resource.url) {
+                    console.log('resource');
                     scope.params.url = '';
                     setParameterValue(scope.params.name, '');
                     $timeout(function() {

@@ -34,6 +34,7 @@
     "associationType": "Association type",
     "chooseContactRole": "or choose role",
     "chooseEntry": "Search directory",
+    "clickToAddResource": "Click to select this resource",
     "beforeUnloadEditor": "You may have unsaved changes since last save {{timeAgo}}.",
     "batchEditing": "Batch editing",
     "fieldIsRemoved": "This field will be removed",
