@@ -982,7 +982,7 @@
       }
     };
   });
-  module.directive('gnImgModal', function() {
+  module.directive('gnImgModal', ['$filter', function($filter) {
     return {
       restrict: 'A',
       link: function(scope, element, attr, ngModel) {
@@ -990,7 +990,8 @@
         element.bind('click', function() {
           var img = scope.$eval(attr['gnImgModal']);
           if (img) {
-            var label = (img.label || img.title || '');
+            var label = (img.label || (
+                $filter('gnLocalized')(img.title, scope.lang)) || '');
             var labelDiv =
                 '<div class="gn-img-background">' +
                 '  <div class="gn-img-thumbnail-caption">' + label + '</div>' +
@@ -1017,7 +1018,7 @@
         });
       }
     };
-  });
+  }]);
 
   module.directive('gnPopoverDropdown', ['$timeout', function($timeout) {
     return {
