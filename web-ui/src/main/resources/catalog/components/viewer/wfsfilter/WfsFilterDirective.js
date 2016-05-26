@@ -212,9 +212,7 @@
             }
             scope.hmActive = appProfile && appProfile.heatmap;
 
-            scope.resetFacets().then(function() {
-              solrObject.pushState();
-            });
+            scope.resetFacets();
           }
           function getDataModelLabel(fieldId) {
             for (var j = 0; j < scope.md.attributeTable.length; j++) {
@@ -360,6 +358,7 @@
             // load all facet and fill ui structure for the list
             return solrObject.searchWithFacets({}).
                 then(function(resp) {
+                  solrObject.pushState();
                   scope.fields = resp.facets;
                   scope.count = resp.count;
                   refreshHeatmap();
