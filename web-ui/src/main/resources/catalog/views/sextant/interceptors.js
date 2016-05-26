@@ -10,7 +10,9 @@
     return {
       'request': function(config) {
         if(config.url.indexOf('http://') < 0 && config.url.indexOf('https://') < 0) {
-          config.url = gnGlobalSettings.gnUrl + config.url;
+          if(!config.url.match(/(partials\/).*(.html)$/)) {
+            config.url = gnGlobalSettings.gnUrl + config.url;
+          }
         }
         return config;
       }
