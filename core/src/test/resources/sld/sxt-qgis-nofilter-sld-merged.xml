@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:se="http://www.opengis.net/se" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" units="mm" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <se:Name>surval_30140_all_point</se:Name>
@@ -21,7 +22,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
           <ogc:Filter xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-            <ogc:PropertyIsEqualTo>
+            <ogc:PropertyIsEqualTo matchCase="true">
               <ogc:PropertyName>departement</ogc:PropertyName>
               <ogc:Literal>Ain</ogc:Literal>
             </ogc:PropertyIsEqualTo>

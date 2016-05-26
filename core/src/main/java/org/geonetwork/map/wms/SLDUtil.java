@@ -87,7 +87,7 @@ public class SLDUtil {
 
         String sFilter = SLDUtil.encodeFilter(filter);
         Element newFilterElt = Xml.loadString(sFilter, false);
-        List<Element> newFilterChildren = (List<Element>) newFilterElt.getChildren();
+        List<Element> newFilterChildren = (List<Element>) ((Element)newFilterElt.clone()).getChildren();
 
         if(newFilterChildren.size() > 0) {
             Content newFilterContent = newFilterChildren.get(0).detach();

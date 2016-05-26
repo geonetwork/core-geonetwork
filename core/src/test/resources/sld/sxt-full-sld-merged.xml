@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-15"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <Name>IFR_RBT_PEUPL_GGASC_P</Name>
@@ -13,7 +13,7 @@
                 <ogc:Literal>A3 ou A4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
               <ogc:And>
-                <ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsEqualTo matchCase="true">
                   <ogc:PropertyName>departement</ogc:PropertyName>
                   <ogc:Literal>Ain</ogc:Literal>
                 </ogc:PropertyIsEqualTo>
@@ -69,8 +69,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A2 x A1, Sédiment et/ou Roche et autres substrats durs intertidaux</Name>
-          <ogc:Filter />
+          <Name>A2 x A1, SÃ©diment et/ou Roche et autres substrats durs intertidaux</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A2 x A1</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -85,8 +138,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A2, Sédiment intertidal</Name>
-          <ogc:Filter />
+          <Name>A2, SÃ©diment intertidal</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A2</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -96,8 +202,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5, Sédiment subtidal</Name>
-          <ogc:Filter />
+          <Name>A5, SÃ©diment subtidal</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -107,8 +266,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A2 ou A5, Sédiment intertidal ou subtidal</Name>
-          <ogc:Filter />
+          <Name>A2 ou A5, SÃ©diment intertidal ou subtidal</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A2 ou A5</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -123,8 +335,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.12_FR01, Gravier propre infralittoral à [Dosinia exoleta]</Name>
-          <ogc:Filter />
+          <Name>A5.12_FR01, Gravier propre infralittoral Ã  [Dosinia exoleta]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.12_FR01</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -134,8 +399,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.43_FR01, Gravier envasé infralittoral à [Dosinia exoleta] et [Venus verrucosa]</Name>
-          <ogc:Filter />
+          <Name>A5.43_FR01, Gravier envasÃ© infralittoral Ã  [Dosinia exoleta] et [Venus verrucosa]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.43_FR01</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -146,7 +464,60 @@
         </Rule>
         <Rule>
           <Name>A5.51, Banc de maerl</Name>
-          <ogc:Filter />
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.51</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -156,8 +527,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.44_FR01, Gravier envasé circalittoral côtier à [Pista cristata] et [Timoclea ovata]</Name>
-          <ogc:Filter />
+          <Name>A5.44_FR01, Gravier envasÃ© circalittoral cÃŽtier Ã  [Pista cristata] et [Timoclea ovata]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.44_FR01</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -167,8 +591,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.14_FR01, Gravier circalittoral profond à [Astarte sulcata] et [Venus casina]</Name>
-          <ogc:Filter />
+          <Name>A5.14_FR01, Gravier circalittoral profond Ã  [Astarte sulcata] et [Venus casina]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.14_FR01</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -178,8 +655,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.12_FR02, Sable grossier infralittoral à [Donax politus] et [Callista chione]</Name>
-          <ogc:Filter />
+          <Name>A5.12_FR02, Sable grossier infralittoral Ã  [Donax politus] et [Callista chione]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.12_FR02</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -189,8 +719,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.135, Sédiment grossier sablo-graveleux à [Clausinella fasciata] et [Branchiostoma lanceolatum]</Name>
-          <ogc:Filter />
+          <Name>A5.135, SÃ©diment grossier sablo-graveleux Ã  [Clausinella fasciata] et [Branchiostoma lanceolatum]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.135</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -200,8 +783,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.43_FR02, Hétérogène envasé infralittoral à |Nucula nucleus]</Name>
-          <ogc:Filter />
+          <Name>A5.43_FR02, HÃ©tÃ©rogÃšne envasÃ© infralittoral Ã  |Nucula nucleus]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.43_FR02</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -211,8 +847,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.45_FR01, Sable hétérogène envasé circalittoral profond à [Nucula nucleus], [Pitar rudis] et  [Amphiura chiajei]</Name>
-          <ogc:Filter />
+          <Name>A5.45_FR01, Sable hÃ©tÃ©rogÃšne envasÃ© circalittoral profond Ã  [Nucula nucleus], [Pitar rudis] et  [Amphiura chiajei]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.45_FR01</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -222,8 +911,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.231, Sable fin à moyen mobile infralittoral à faune éparse à [Abra prismatica et opheliidae]</Name>
-          <ogc:Filter />
+          <Name>A5.231, Sable fin Ã  moyen mobile infralittoral Ã  faune Ã©parse Ã  [Abra prismatica et opheliidae]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.231</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -233,8 +975,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.27_FR01, Sable moyen mobile circalittoral profond à [Ditrupa arietina] et [Entalis entalis]</Name>
-          <ogc:Filter />
+          <Name>A5.27_FR01, Sable moyen mobile circalittoral profond Ã  [Ditrupa arietina] et [Entalis entalis]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.27_FR01</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -244,8 +1039,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.251, Sable fin mobile circalittoral à [Echinocyamus pusillus], [Ophelia borealis] et [Abra prismatica]</Name>
-          <ogc:Filter />
+          <Name>A5.251, Sable fin mobile circalittoral Ã  [Echinocyamus pusillus], [Ophelia borealis] et [Abra prismatica]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.251</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -255,8 +1103,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.25_FR01, Sable fin circalittoral à [Chamelea striatula] et [Dosinia lupina]</Name>
-          <ogc:Filter />
+          <Name>A5.25_FR01, Sable fin circalittoral Ã  [Chamelea striatula] et [Dosinia lupina]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.25_FR01</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -266,8 +1167,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.242, Sable fin envasé compact de l'infralittoral à [Fabulina fabula], [Magelona mirabilis], bivalves vénéridés et amphipodes</Name>
-          <ogc:Filter />
+          <Name>A5.242, Sable fin envasÃ© compact de l'infralittoral Ã  [Fabulina fabula], [Magelona mirabilis], bivalves vÃ©nÃ©ridÃ©s et amphipodes</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.242</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -277,8 +1231,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.24_FR01, Sable envasé infralittoral à [Amphiura brachiata] et [Euclymene oerstedii]</Name>
-          <ogc:Filter />
+          <Name>A5.24_FR01, Sable envasÃ© infralittoral Ã  [Amphiura brachiata] et [Euclymene oerstedii]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.24_FR01</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -288,8 +1295,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.26_FR01, Sable fin envasé circalittoral côtier à [Amphiura filiformis] et [Tellina serrata]</Name>
-          <ogc:Filter />
+          <Name>A5.26_FR01, Sable fin envasÃ© circalittoral cÃŽtier Ã  [Amphiura filiformis] et [Tellina serrata]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.26_FR01</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -299,8 +1359,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.27_FR02, Sable fin envasé circalittoral profond à [Amphiura chiajei]</Name>
-          <ogc:Filter />
+          <Name>A5.27_FR02, Sable fin envasÃ© circalittoral profond Ã  [Amphiura chiajei]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.27_FR02</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -311,7 +1424,60 @@
         </Rule>
         <Rule>
           <Name>A5.33, Vase sableuse infralittorale</Name>
-          <ogc:Filter />
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.33</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -321,8 +1487,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.333, Vase sableuse infralittorale à [Mysella bidentata] and [Abra] spp.</Name>
-          <ogc:Filter />
+          <Name>A5.333, Vase sableuse infralittorale Ã  [Mysella bidentata] and [Abra] spp.</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.333</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -332,8 +1551,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.35_FR01, Vase sableuse à [Maldane glebifex] et [Clymene modesta]</Name>
-          <ogc:Filter />
+          <Name>A5.35_FR01, Vase sableuse Ã  [Maldane glebifex] et [Clymene modesta]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.35_FR01</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -343,8 +1615,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.37_FR01, Vase sableuse circalittorale profonde à [Nucula sulcata] et [Brissopsis lyrifera]</Name>
-          <ogc:Filter />
+          <Name>A5.37_FR01, Vase sableuse circalittorale profonde Ã  [Nucula sulcata] et [Brissopsis lyrifera]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.37_FR01</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -355,7 +1680,60 @@
         </Rule>
         <Rule>
           <Name>A5.34, Vase infralittorale</Name>
-          <ogc:Filter />
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.34</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -365,8 +1743,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.34_FR01, Vase infralittorale à [Nucula nitidosa] et [Abra nitida]</Name>
-          <ogc:Filter />
+          <Name>A5.34_FR01, Vase infralittorale Ã  [Nucula nitidosa] et [Abra nitida]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.34_FR01</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -377,7 +1808,60 @@
         </Rule>
         <Rule>
           <Name>A5.3, Vase subtidale</Name>
-          <ogc:Filter />
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.3</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -387,8 +1871,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.361, Vase circalittorale à pennatules et mégafaune fouisseuse</Name>
-          <ogc:Filter />
+          <Name>A5.361, Vase circalittorale Ã  pennatules et mÃ©gafaune fouisseuse</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.361</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>
@@ -398,8 +1935,61 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Name>A5.37_FR02, Vase circalittorale profonde à [Ninoe armoricana]</Name>
-          <ogc:Filter />
+          <Name>A5.37_FR02, Vase circalittorale profonde Ã  [Ninoe armoricana]</Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>CODE_EUNIS</ogc:PropertyName>
+                <ogc:Literal>A5.37_FR02</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:And>
+                <ogc:PropertyIsEqualTo matchCase="true">
+                  <ogc:PropertyName>departement</ogc:PropertyName>
+                  <ogc:Literal>Ain</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>0</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>longueur</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>500</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>5000</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+                <ogc:Or>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2015-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2015-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                  <ogc:PropertyIsBetween>
+                    <ogc:PropertyName>date_renovation</ogc:PropertyName>
+                    <ogc:LowerBoundary>
+                      <ogc:Literal>2014-07-01</ogc:Literal>
+                    </ogc:LowerBoundary>
+                    <ogc:UpperBoundary>
+                      <ogc:Literal>2014-08-31</ogc:Literal>
+                    </ogc:UpperBoundary>
+                  </ogc:PropertyIsBetween>
+                </ogc:Or>
+              </ogc:And>
+            </ogc:And>
+          </ogc:Filter>
           <MinScaleDenominator>25000.000000</MinScaleDenominator>
           <MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
           <PolygonSymbolizer>

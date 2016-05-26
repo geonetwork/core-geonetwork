@@ -14,7 +14,7 @@
                 <ogc:PropertyName>LIEU_ZONEMARINEQ2</ogc:PropertyName>
                 <ogc:Literal>039 - Rade de Brest</ogc:Literal>
               </ogc:PropertyIsEqualTo>
-              <ogc:PropertyIsEqualTo>
+              <ogc:PropertyIsEqualTo matchCase="true">
                 <ogc:PropertyName>departement</ogc:PropertyName>
                 <ogc:Literal>Ain</ogc:Literal>
               </ogc:PropertyIsEqualTo>
@@ -24,8 +24,8 @@
             <sld:Graphic>
               <sld:Mark>
                 <sld:WellKnownName>circle</sld:WellKnownName>
-                <sld:Fill/>
-                <sld:Stroke/>
+                <sld:Fill />
+                <sld:Stroke />
                 <sld:Fill>
                   <sld:SvgParameter name="fill">#925f92</sld:SvgParameter>
                 </sld:Fill>
