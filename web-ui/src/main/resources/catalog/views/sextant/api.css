@@ -16927,6 +16927,10 @@ yx-axis
 .g [sxt-main-viewer] .sxt-wfsfilter-panel {
   padding: 20px;
 }
+.gn [sxt-main-viewer] .sxt-wfsfilter-panel .wfs-filter-group,
+.g [sxt-main-viewer] .sxt-wfsfilter-panel .wfs-filter-group {
+  display: flex !important;
+}
 .gn [sxt-main-viewer] .sxt-wfsfilter-panel button,
 .g [sxt-main-viewer] .sxt-wfsfilter-panel button {
   padding-left: 5px;
@@ -20688,7 +20692,6 @@ yx-axis
 .g ul.gn-resultview li.gn-grid div.gn-md-links button {
   width: 46px;
   margin: 0 3px 0 0;
-  height: 2.3em;
 }
 .gn ul.gn-resultview li.gn-grid div.gn-md-links .dropdown-menu,
 .g ul.gn-resultview li.gn-grid div.gn-md-links .dropdown-menu {
