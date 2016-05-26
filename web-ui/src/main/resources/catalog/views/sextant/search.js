@@ -611,7 +611,7 @@
             '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map', '#OGC:OWS-C');
         var downloads = md.getLinksByType(i+1, '#FILE', '#DB', '#COPYFILE',
             '#WWW:DOWNLOAD-1.0-link--download', '#WWW:OPENDAP', '#MYO:MOTU-SUB',
-            '#WWW:FTP', '#WFS', 'WCS');
+            '#WWW:FTP', '#OGC:WFS', '#OGC:WCS');
 
         if(downloads.length > 0) {
           // If only one layer, we get only one download (we bind them later)
