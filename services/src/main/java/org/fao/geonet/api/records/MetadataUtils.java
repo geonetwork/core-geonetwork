@@ -140,7 +140,7 @@ public class MetadataUtils {
         if (schemaPlugin != null && (
             listOfTypes.size() == 0 ||
                 listOfTypes.contains(RelatedItemType.datasets) ||
-                listOfTypes.contains(RelatedItemType.facts) ||
+                listOfTypes.contains(RelatedItemType.fcats) ||
                 listOfTypes.contains(RelatedItemType.sources)
         )) {
             // Get datasets related to service search
@@ -163,7 +163,7 @@ public class MetadataUtils {
             }
             // if fcat
             if (listOfTypes.size() == 0 ||
-                listOfTypes.contains(RelatedItemType.facts)) {
+                listOfTypes.contains(RelatedItemType.fcats)) {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedFeatureCatalogueUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);

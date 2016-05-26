@@ -313,14 +313,14 @@
       </ul>
 
       <!-- ******* List of datasets associated with this feature catalogs ******* -->
-      <h4 class="onlinesrc-title" data-ng-show="relations.hasfeaturecat">
+      <h4 class="onlinesrc-title" data-ng-show="relations.hasfeaturecats">
         <i class="fa fa-files-o"></i>
         <i class="icon-external-link"></i>&nbsp;
         <span data-translate="">hasFeatureCatalog</span>&nbsp;
       </h4>
       <ul class="list-group">
         <li class="list-group-item"
-            data-ng-repeat="resource in relations.hasfeaturecat | orderBy:'title'">
+            data-ng-repeat="resource in relations.hasfeaturecats | orderBy:'title'">
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">

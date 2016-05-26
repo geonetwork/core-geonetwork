@@ -50,6 +50,23 @@
     </xsl:choose>
   </xsl:function>
 
+  <!-- Convert an element gco:CharacterString
+  to the GN localized string structure -->
+  <xsl:template mode="get-iso19139-localized-string" match="*">
+    <xsl:for-each select="gco:CharacterString|
+                          gmd:PT_FreeText/*/gmd:LocalisedCharacterString">
+      <xsl:variable name="localeId"
+                    select="substring-after(@locale, '#')"/>
+      <xsl:variable name="mainLanguage"
+                    select="ancestor::gmd:MD_Metadata/gmd:language/*/@codeListValue"/>
+      <value lang="{if (@locale)
+                  then ancestor::gmd:MD_Metadata/gmd:locale/*[@id = $localeId]/gmd:languageCode/*/@codeListValue
+                  else if ($mainLanguage) then $mainLanguage else $lang}">
+        <xsl:value-of select="."/>
+      </value>
+    </xsl:for-each>
+  </xsl:template>
+
   <!-- Relation contained in the metadata record has to be returned
   It could be document or thumbnails
   -->
@@ -61,9 +78,8 @@
           <id><xsl:value-of select="gmd:fileName/gco:CharacterString"/></id>
           <url><xsl:value-of select="gmd:fileName/gco:CharacterString"/></url>
           <title>
-            <value lang="{$lang}">
-              <xsl:value-of select="gmd:fileDescription/gco:CharacterString"/>
-            </value>
+            <xsl:apply-templates mode="get-iso19139-localized-string"
+                                 select="gmd:fileDescription"/>
           </title>
         </item>
       </xsl:for-each>
@@ -90,9 +106,8 @@
           </xsl:variable>
           <id><xsl:value-of select="$url"/></id>
           <title>
-            <value lang="{$lang}">
-              <xsl:value-of select="gn-fn-rel:translate(gmd:name, $langCode)"/>
-            </value>
+            <xsl:apply-templates mode="get-iso19139-localized-string"
+                                 select="gmd:name"/>
           </title>
           <url>
             <xsl:value-of select="$url"/>
@@ -100,9 +115,8 @@
           <function><xsl:value-of select="gmd:function/*/@codeListValue"/></function>
           <applicationProfile><xsl:value-of select="gmd:applicationProfile/gco:CharacterString"/></applicationProfile>
           <description>
-            <value lang="{$lang}">
-              <xsl:value-of select="gn-fn-rel:translate(gmd:description, $langCode)"/>
-            </value>
+            <xsl:apply-templates mode="get-iso19139-localized-string"
+                                 select="gmd:description"/>
           </description>
           <protocol><xsl:value-of select="gn-fn-rel:translate(gmd:protocol, $langCode)"/></protocol>
         </item>

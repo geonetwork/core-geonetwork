@@ -221,7 +221,7 @@
       <!--<xs:enumeration value="associated"/>-->
       <!--<xs:enumeration value="SERVICE"/>-->
       <!--<xs:enumeration value="DATASET"/>-->
-      <!--<xs:enumeration value="facts"/>-->
+      <!--<xs:enumeration value="fcats"/>-->
       <!--<xs:enumeration value="sources"/>-->
       <!--<xs:enumeration value="hassources"/>-->
       <!--<xs:enumeration value="related"/>-->

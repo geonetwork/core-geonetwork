@@ -12,7 +12,7 @@ public enum RelatedItemType {
     associated,
     services,
     datasets,
-    facts,
+    fcats,
     sources,
     hassources,
     related,
