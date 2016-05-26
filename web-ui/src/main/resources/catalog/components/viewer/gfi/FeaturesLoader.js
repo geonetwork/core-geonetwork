@@ -273,8 +273,8 @@
       url: url,
       queryParams: function(p) {
         var params = {
-          rows: p.limit,
-          start: p.offset
+          rows: p.limit || 100000,
+          start: p.offset || 0
         };
         if (p.sort) {
           params.sort = p.sort + ' ' + p.order;
