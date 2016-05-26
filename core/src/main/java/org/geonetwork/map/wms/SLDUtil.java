@@ -9,10 +9,11 @@ import org.geotools.data.wms.WebMapServer;
 import org.geotools.data.wms.request.GetStylesRequest;
 import org.geotools.data.wms.response.GetStylesResponse;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.filter.v1_0.OGCConfiguration;
+import org.geotools.filter.v1_1.OGCConfiguration;
 import org.geotools.ows.ServiceException;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Encoder;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.json.JSONArray;
@@ -85,35 +86,36 @@ public class SLDUtil {
     public static void insertFilter(Element doc, Filter filter) throws JDOMException, IOException {
 
         String sFilter = SLDUtil.encodeFilter(filter);
-        Element filterElt = Xml.loadString(sFilter, false);
+        Element newFilterElt = Xml.loadString(sFilter, false);
+        List<Element> newFilterChildren = (List<Element>) newFilterElt.getChildren();
 
-        // Check rules in both se and sld namespaces
-        List<Element> rules = (List<Element>) Xml.selectNodes(doc, "*//sld:Rule", Arrays.asList(Geonet.Namespaces.SLD));
-        if(rules.size() == 0) {
-            rules = (List<Element>) Xml.selectNodes(doc, "*//se:Rule", Arrays.asList(Geonet.Namespaces.SE));
-        }
+        if(newFilterChildren.size() > 0) {
+            Content newFilterContent = newFilterChildren.get(0).detach();
 
-        for (Element rule : rules) {
-            List<Element> filters = (List<Element>) Xml.selectNodes(rule, "ogc:Filter", Arrays.asList(Geonet.Namespaces.OGC));
-            if(filters.size() == 0) {
-                rule.addContent(filterElt);
+            // Check rules in both se and sld namespaces
+            List<Element> rules = (List<Element>) Xml.selectNodes(doc, "*//sld:Rule", Arrays.asList(Geonet.Namespaces.SLD));
+            if(rules.size() == 0) {
+                rules = (List<Element>) Xml.selectNodes(doc, "*//se:Rule", Arrays.asList(Geonet.Namespaces.SE));
             }
-            else if (filters.size() == 1) {
-                Element sldFilterElt = filters.get(0);
-                Element filterContent = (Element)sldFilterElt.getChildren().get(0);
-                filterContent.detach();
-                sldFilterElt.removeContent();
-                Element andElt = new Element("And", Geonet.Namespaces.OGC);
-                andElt.addContent(filterContent);
 
-                List<Element> originFilterChildren = (List<Element>) filterElt.getChildren();
-                if(originFilterChildren.size() > 0) {
-                    andElt.addContent(originFilterChildren.get(0).detach());
+            for (Element rule : rules) {
+                List<Element> filters = (List<Element>) Xml.selectNodes(rule, "ogc:Filter", Arrays.asList(Geonet.Namespaces.OGC));
+                if(filters.size() == 0) {
+                    rule.addContent(newFilterElt);
+                }
+                else if (filters.size() == 1) {
+                    Element sldFilterElt = filters.get(0);
+                    Element filterContent = (Element)sldFilterElt.getChildren().get(0);
+                    filterContent.detach();
+                    sldFilterElt.removeContent();
+                    Element andElt = new Element("And", Geonet.Namespaces.OGC);
+                    andElt.addContent(filterContent);
+                    andElt.addContent((Content)newFilterContent.clone());
                     sldFilterElt.addContent(andElt);
                 }
-            }
-            else {
-                throw new JDOMException("A rule must have maximum one ogc:filter element");
+                else {
+                    throw new JDOMException("A rule must have maximum one ogc:filter element");
+                }
             }
         }
     }
@@ -130,7 +132,7 @@ public class SLDUtil {
 
         Configuration configuration = new OGCConfiguration();
         Encoder encoder = new Encoder(configuration);
-        encoder.encode( filter, org.geotools.filter.v1_0.OGC.Filter, outputStream);
+        encoder.encode( filter, org.geotools.filter.v1_1.OGC.Filter, outputStream);
 
         return outputStream.toString();
     }

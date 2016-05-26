@@ -52,7 +52,21 @@ public class SLDUtilTest extends XMLTestCase {
 
         HashMap<String, String> hash = SLDUtil.parseSLD(new URL(url), layers);
         assertNotNull(hash.get("content"));
-        assertEquals(hash.get("charset"), "ISO-8859-15");
+        assertEquals(hash.get("charset"), "UTF-8");
+
+        Filter customFilter = SLDUtil.generateCustomFilter(new JSONObject(this.getRessourceAsString("sld/test-sld-simplefilter.json")));
+        Element root = Xml.loadString(hash.get("content"), false);
+        SLDUtil.insertFilter(root, customFilter);
+
+        String charset = hash.get("charset");
+        Format format = Format.getPrettyFormat();
+        if(charset != null && charset != "") {
+            format.setEncoding(charset);
+        }
+        XMLOutputter outputter = new XMLOutputter(format);
+        Document doc = new Document(root);
+        String sldDoc = outputter.outputString(doc);
+
     }
 
     private void testInsertFilter (final String filePattern, final String rulePattern) throws Exception {
