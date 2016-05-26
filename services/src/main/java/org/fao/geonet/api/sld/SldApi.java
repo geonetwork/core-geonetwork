@@ -3,16 +3,23 @@ package org.fao.geonet.api.sld;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.TextFile;
 import org.fao.geonet.repository.TextFileRepository;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.utils.Xml;
 import org.geonetwork.map.wms.SLDUtil;
 import org.geotools.ows.ServiceException;
 import org.geotools.styling.SLDTransformer;
 import org.geotools.styling.Style;
 import org.geotools.styling.StyledLayerDescriptor;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.opengis.filter.Filter;
@@ -30,6 +37,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -169,23 +177,31 @@ public class SldApi {
             @ApiParam(value = "The filters in JSON",
                     required = true)
             @RequestParam("filters") String filters,
-            HttpServletRequest request) throws ServiceException, TransformerException, JSONException, ParseException, IOException {
+            HttpServletRequest request) throws ServiceException, TransformerException, JSONException, ParseException, IOException, JDOMException {
 
         try {
             ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
             TextFileRepository fileRepository = appContext.getBean(TextFileRepository.class);
 
-            Style[] originalStyles = SLDUtil.parseSLD(new URL(serverURL), layers);
+            HashMap<String, String> hash = SLDUtil.parseSLD(new URL(serverURL), layers);
 
+            Element root = Xml.loadString(hash.get("content"), false);
             Filter customFilter  = SLDUtil.generateCustomFilter(new JSONObject(filters));
-            Style[] newFilters = SLDUtil.addAndFilter(originalStyles, customFilter);
-            StyledLayerDescriptor newSLD = SLDUtil.buildSLD(newFilters, layers);
+            SLDUtil.insertFilter(root, customFilter);
 
-            SLDTransformer styleTransform = new SLDTransformer();
-            String xml = styleTransform.transform(newSLD);
+            String charset = hash.get("charset");
+            Format format = Format.getPrettyFormat();
+            if(charset != null && charset != "") {
+                format.setEncoding(charset);
+            }
+            XMLOutputter outputter = new XMLOutputter(format);
+            Document doc = new Document(root);
+            String sldDoc = outputter.outputString(doc);
+
+            XMLUnit.setIgnoreWhitespace(true);
 
             TextFile sld = new TextFile();
-            sld.setContent(xml);
+            sld.setContent(sldDoc);
             sld.setMimeType("application/xml");
             fileRepository.save(sld);
 
