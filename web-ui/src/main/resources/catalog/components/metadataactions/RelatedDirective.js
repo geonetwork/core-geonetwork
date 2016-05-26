@@ -70,11 +70,11 @@
                       ''), {cache: true})
                      .success(function(data, status, headers, config) {
                        scope.relations = data;
-                       angular.forEach(data, function (value) {
+                       angular.forEach(data, function(value) {
                          if (value) {
                            scope.relationFound = true;
                          }
-                       })
+                       });
                      });
                 }
               };

@@ -651,6 +651,18 @@
       getLinks: function() {
         return this.link;
       },
+      /**
+       * Get all links of the metadata of the given types.
+       * The types are strings in arguments.
+       * You can give the exact matching with # ('#OG:WMS') or just find an
+       * occurence for the match ('OGC').
+       * You can passe several types to find ('OGC','WFS', '#getCapabilities')
+       *
+       * If the first argument is a number, you do the search within the link
+       * group (search only onlinesrc in the given transferOptions).
+       *
+       * @return {*} an Array of links
+       */
       getLinksByType: function() {
         var ret = [];
 

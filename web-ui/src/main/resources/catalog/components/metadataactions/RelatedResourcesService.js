@@ -235,7 +235,7 @@
               siblings: 'sibling',
               fcats: 'fcat',
               hassources: 'hassource'
-            }
+            };
             return this.map[mainType || 'DEFAULT'].label +
                    (oldKey[type] ? oldKey[type] : type);
           };
