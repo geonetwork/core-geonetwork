@@ -62,12 +62,19 @@
                 }
                 scope.relations = [];
                 if (scope.uuid) {
+                  scope.relationFound = false;
                   $http.get(
                      '../api/records/' + scope.uuid + '/related?' +
-                     (scope.types ? '&type=' +
-                     scope.types : ''), {cache: true})
+                     (scope.types ?
+                     'type=' + scope.types.split('|').join('&type=') :
+                      ''), {cache: true})
                      .success(function(data, status, headers, config) {
                        scope.relations = data;
+                       angular.forEach(data, function (value) {
+                         if (value) {
+                           scope.relationFound = true;
+                         }
+                       })
                      });
                 }
               };
@@ -91,21 +98,21 @@
               scope.$watchCollection('md', function() {
                 scope.updateRelations();
               });
-
-              /**
-               * Return an array of all relations of the given types
-               * @return {Array}
-               */
-              scope.getByTypes = function() {
-                var res = [];
-                var types = Array.prototype.splice.call(arguments, 0);
-                angular.forEach(scope.relations, function(rel) {
-                  if (types.indexOf(rel['@type']) >= 0) {
-                    res.push(rel);
-                  }
-                });
-                return res;
-              };
+              //
+              // /**
+              //  * Return an array of all relations of the given types
+              //  * @return {Array}
+              //  */
+              // scope.getByTypes = function() {
+              //   var res = [];
+              //   var types = Array.prototype.splice.call(arguments, 0);
+              //   angular.forEach(scope.relations, function(rel) {
+              //     if (types.indexOf(rel['@type']) >= 0) {
+              //       res.push(rel);
+              //     }
+              //   });
+              //   return res;
+              // };
             }
           };
         }]);
