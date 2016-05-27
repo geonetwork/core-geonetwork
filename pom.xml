@@ -719,12 +719,17 @@
       <dependency>
           <groupId>org.geotools</groupId>
           <artifactId>gt-wms</artifactId>
-          <version>15-SNAPSHOT-Vampouille</version>
+          <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-main</artifactId>
-        <version>14-SNAPSHOT</version>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-brewer</artifactId>
+        <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools.jdbc</groupId>
@@ -1130,12 +1135,17 @@
       </releases>
       <id>core-maven-repo</id>
       <name>GeoNetwork remote repository</name>
-      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/gt-wms-sld</url>
+      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
     <repository>
       <id>mvnrepository.com</id>
       <name>Repository that has juniversalchardet</name>
       <url>http://mvnrepository.com/artifact</url>
+    </repository>
+    <repository>
+      <id>maven.geo-solutions.it</id>
+      <name>geo-solutions</name>
+      <url>http://maven.geo-solutions.it</url>
     </repository>
 
       <!-- seasar repo, has jsonic - used by langdetect -->
@@ -1229,7 +1239,7 @@
 
   <properties>
     <jetty.version>8.1.9.v20130131</jetty.version>
-    <geotools.version>14.0</geotools.version>
+    <geotools.version>15.0</geotools.version>
     <lucene.version>4.9.0</lucene.version>
 
     <solr.version>5.4.1</solr.version>
