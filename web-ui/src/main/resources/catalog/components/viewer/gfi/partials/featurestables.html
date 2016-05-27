@@ -7,7 +7,7 @@
         data-ng-class="{active: table == ctrl.currentTable}">
       <a role="tab" data-ng-click="ctrl.currentTable = table"
          title="{{::table.name}}">
-        <span class="layername">{{table.name}}</span>
+        <span class="layername">{{table.name}}</span>&nbsp;
         <span ng-if="table.loader.isLoading()" class="badge">
           <i class="fa fa-spin fa-spinner"></i>
         </span>

@@ -21,6 +21,7 @@
   "downloadInCurrentMapExtent": "... or only in current view",
   "downloadFeature": "Download",
   "opacity": "Opacity",
+  "filterData": "Filter data",
   "When": "When ?",
   "Where": "Where ?",
   "recordType": "Record type ?",
