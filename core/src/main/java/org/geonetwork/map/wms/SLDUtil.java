@@ -1,15 +1,21 @@
 package org.geonetwork.map.wms;
+
+import org.apache.commons.io.IOUtils;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Xml;
 import org.geotools.data.ows.Specification;
 import org.geotools.data.wms.WMS1_1_1;
 import org.geotools.data.wms.WebMapServer;
 import org.geotools.data.wms.request.GetStylesRequest;
 import org.geotools.data.wms.response.GetStylesResponse;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.filter.v1_1.OGCConfiguration;
 import org.geotools.ows.ServiceException;
-import org.geotools.styling.*;
-import org.geotools.styling.builder.NamedLayerBuilder;
-import org.geotools.styling.builder.StyleBuilder;
-import org.geotools.styling.builder.StyledLayerDescriptorBuilder;
+import org.geotools.xml.Configuration;
+import org.geotools.xml.Encoder;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,29 +24,33 @@ import org.opengis.filter.FilterFactory2;
 
 import javax.mail.internet.ContentType;
 import javax.mail.internet.ParseException;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 public class SLDUtil {
 
     /**
-     * Issue a GetStyle query on specified server for specified layers, parse XML result and construct an array of Style
+     * Issue a GetStyle query on specified server for specified layers, parse XML result and return
+     * the SLD as a String.
      *
      * @param url base url of WMS server with no parameter. ex: http://demo.boundlessgeo.com/geoserver/wms
      * @param layers comma separated list of layers
-     * @return array an array of Style corresponding to parsed SLD
+     * @return String the sld of the layers from the server url
      * @throws IOException if there is an error communicating with the server
      * @throws ServiceException if the server responds with an error
      * @throws ParseException if unable to parse content type header from server
      */
-    public static Style[] parseSLD(URL url, String layers) throws IOException, ServiceException, ParseException {
+    public static HashMap<String, String> parseSLD(URL url, String layers) throws IOException, ServiceException, ParseException {
         GetStylesResponse wmsResponse = null;
         GetStylesRequest wmsRequest = null;
-        StyleFactory styleFactory = new StyleFactoryImpl();
 
+        HashMap<String, String> hash = new HashMap<String, String>();
         WebMapServer server = new WebMapServer(url) {
             // GetStyle is only implemented in WMS 1.1.1
             protected void setupSpecifications() {
@@ -55,113 +65,76 @@ public class SLDUtil {
 
         // Set encoding of response from HTTP content-type header
         ContentType contentType = new ContentType(wmsResponse.getContentType());
-        InputStreamReader stream;
-        if(contentType.getParameter("charset") != null)
-            stream = new InputStreamReader(wmsResponse.getInputStream(), contentType.getParameter("charset"));
-        else
-            stream = new InputStreamReader(wmsResponse.getInputStream());
+        String charset = contentType.getParameter("charset");
+        hash.put("charset", charset);
+        hash.put("content", IOUtils.toString(wmsResponse.getInputStream(),charset));
 
-        return (new SLDParser(styleFactory, stream)).readXML();
-
+        return hash;
     }
 
 
     /**
-     * Construct a SLD document from list of styles and name
+     * Insert a new filter in all rules of the sld document. For each rule,
+     * the ogc:Filter ellement is added if not exist, or merge with an ogc:And
+     * tag with the giver filter.
      *
-     * @param styles list iof styles to include in SLd
-     * @param namedLayerName name of namedLayer entity
-     * @return an instance of StyledLayerDescriptor that can be used with {@link org.geotools.styling.SLDTransformer#transform(Object)}
+     * @param doc Xml docuement representing the SLD
+     * @param filter the new filter to insert
+     * @throws JDOMException
+     * @throws IOException
      */
+    public static void insertFilter(Element doc, Filter filter) throws JDOMException, IOException {
 
-    public static StyledLayerDescriptor buildSLD(Style[] styles, String namedLayerName){
+        String sFilter = SLDUtil.encodeFilter(filter);
+        Element newFilterElt = Xml.loadString(sFilter, false);
+        List<Element> newFilterChildren = (List<Element>) ((Element)newFilterElt.clone()).getChildren();
 
-        StyledLayerDescriptorBuilder SLDBuilder = new StyledLayerDescriptorBuilder();
+        if(newFilterChildren.size() > 0) {
+            Content newFilterContent = newFilterChildren.get(0).detach();
 
-        NamedLayerBuilder namedLayerBuilder = SLDBuilder.namedLayer();
-        namedLayerBuilder.name(namedLayerName);
-        StyleBuilder styleBuilder = namedLayerBuilder.style();
-
-        for(int i =0; i<styles.length; i++){
-            styleBuilder.reset(styles[i]);
-            styles[i] = styleBuilder.build();
-        }
-
-        NamedLayer namedLayer = namedLayerBuilder.build();
-
-        for(Style style: styles)
-            namedLayer.addStyle(style);
-
-        SLDTransformer styleTransform = new SLDTransformer();
-
-        StyledLayerDescriptor sld = (new StyledLayerDescriptorBuilder()).build();
-        sld.addStyledLayer(namedLayer);
-        return sld;
-
-    }
-
-
-
-    /**
-     * Merge new filter to an existing list of Style. This method add a new filter into SLD document, if there is
-     * already some filter define on a Rule then a 'And' filter will be created with new filter and the original one.
-     *
-     * @param styles original styles
-     * @param newFilter new filter to add in original styles
-     * @return originals filters merged with new filter with 'And' operator
-     */
-
-    public static Style[] addAndFilter(Style[] styles, Filter newFilter) {
-
-        StyleFactory sf = CommonFactoryFinder.getStyleFactory();
-        FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
-
-        List<Style> res = new LinkedList<Style>();
-
-        for (Style style : styles) {
-
-            Style newStyle = sf.createStyle();
-
-            // Copy name, title and abstract
-            newStyle.setName(style.getName());
-            newStyle.getDescription().setTitle(style.getDescription().getTitle());
-            newStyle.getDescription().setAbstract(style.getDescription().getAbstract());
-
-            for (FeatureTypeStyle feature : style.featureTypeStyles()) {
-                FeatureTypeStyle newFeatureTypeStyle = sf.createFeatureTypeStyle();
-
-                // Copy name, title and abstract
-                newFeatureTypeStyle.setName(feature.getName());
-                newFeatureTypeStyle.getDescription().setTitle(feature.getDescription().getTitle());
-                newFeatureTypeStyle.getDescription().setAbstract(feature.getDescription().getAbstract());
-
-                for (Rule rule : feature.rules()) {
-
-                    Rule newRule = sf.createRule();
-
-                    newRule.setName(rule.getName());
-                    newRule.getDescription().setTitle(rule.getDescription().getTitle());
-                    newRule.getDescription().setAbstract(rule.getDescription().getAbstract());
-                    newRule.setMinScaleDenominator(rule.getMinScaleDenominator());
-                    newRule.setMaxScaleDenominator(rule.getMaxScaleDenominator());
-
-                    if(rule.getFilter() != null)
-                        // merge new filter and original one with 'And' operator
-                        newRule.setFilter(ff.and(rule.getFilter(), newFilter));
-                    else
-                        // Just copy new filter if original rule have no filter
-                        newRule.setFilter(newFilter);
-                    for (Symbolizer sym : rule.getSymbolizers())
-                        newRule.symbolizers().add(sym);
-
-                    newFeatureTypeStyle.rules().add(newRule);
-                }
-
-                newStyle.featureTypeStyles().add(newFeatureTypeStyle);
+            // Check rules in both se and sld namespaces
+            List<Element> rules = (List<Element>) Xml.selectNodes(doc, "*//sld:Rule", Arrays.asList(Geonet.Namespaces.SLD));
+            if(rules.size() == 0) {
+                rules = (List<Element>) Xml.selectNodes(doc, "*//se:Rule", Arrays.asList(Geonet.Namespaces.SE));
             }
-            res.add(newStyle);
+
+            for (Element rule : rules) {
+                List<Element> filters = (List<Element>) Xml.selectNodes(rule, "ogc:Filter", Arrays.asList(Geonet.Namespaces.OGC));
+                if(filters.size() == 0) {
+                    rule.addContent((Element)newFilterElt.clone());
+                }
+                else if (filters.size() == 1) {
+                    Element sldFilterElt = filters.get(0);
+                    Element filterContent = (Element)sldFilterElt.getChildren().get(0);
+                    filterContent.detach();
+                    sldFilterElt.removeContent();
+                    Element andElt = new Element("And", Geonet.Namespaces.OGC);
+                    andElt.addContent(filterContent);
+                    andElt.addContent((Content)newFilterContent.clone());
+                    sldFilterElt.addContent(andElt);
+                }
+                else {
+                    throw new JDOMException("A rule must have maximum one ogc:filter element");
+                }
+            }
         }
-        return res.toArray(new Style[0]);
+    }
+
+    /**
+     * Encode into a string the given OGC Filter
+     *
+     * @param filter the OGC filter object
+     * @return String the filter object to String
+     * @throws IOException
+     */
+    public static String encodeFilter(Filter filter) throws IOException {
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        Configuration configuration = new OGCConfiguration();
+        Encoder encoder = new Encoder(configuration);
+        encoder.encode( filter, org.geotools.filter.v1_1.OGC.Filter, outputStream);
+
+        return outputStream.toString();
     }
 
     /**
@@ -201,7 +174,10 @@ public class SLDUtil {
         for(int i=0;i<filters.length();i++)
             res.add(SLDUtil.generateFilter(filters.getJSONObject(i)));
 
-        return ff2.and(res);
+        if(res.size() > 1)
+            return ff2.and(res);
+        else
+            return res.get(0);
 
     }
 
@@ -217,7 +193,10 @@ public class SLDUtil {
         for(int i=0;i<filters.length();i++)
             res.add(SLDUtil.generateFilter2(fieldName, filters.getJSONObject(i)));
 
-        return ff2.or(res);
+        if(res.size() > 1)
+            return ff2.or(res);
+        else
+            return  res.get(0);
     }
 
     private static Filter generateFilter2(String fieldName, JSONObject jsonObject) throws JSONException {
