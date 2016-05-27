@@ -1014,6 +1014,7 @@
     "xlinkCacheHelp": "Cache XLinks",
     "xlinkCacheCleared": "XLink cache cleared",
     "xml.relation": "Link query",
+    "system.xslt.factory": "System XSLT factory",
     "xslt.factory": "XSLT factory",
     "z3950-clearConfig": "Clear Z3950 Server Configuration",
     "z3950-clearConfigHelp": "Clear Z3950 Server Configuration",
