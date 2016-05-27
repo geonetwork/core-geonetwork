@@ -37,13 +37,11 @@
            'partials/layersGrid.html',
            scope: {
              selection: '=',
-             layers: '='
+             layers: '=',
+             selectionMode: '=gnSelectionMode'
            },
            link: function(scope, element, attrs) {
-
-
              // Manage layers selection
-             scope.selectionMode = attrs.gnSelectionMode;
              if (scope.selectionMode) {
                scope.isSelected = function(layerName) {
                  if (layerName) {
