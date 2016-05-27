@@ -25,7 +25,7 @@ package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+
 import org.apache.camel.Exchange;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jcs.access.exception.InvalidArgumentException;
@@ -36,7 +36,6 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
 import org.geotools.data.wfs.WFSDataStore;
@@ -44,7 +43,6 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
-import org.jdom.Namespace;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.opengis.feature.simple.SimpleFeature;
@@ -55,7 +53,13 @@ import org.opengis.metadata.extent.GeographicExtent;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -362,9 +366,15 @@ public class SolrWFSFeatureIndexer {
                                     token);
                             }
                         } else {
-                            document.addField(
-                                    documentFields.get(attributeName),
-                                    attributeValue);
+                            if (documentFields.get(attributeName).equals("geom")) {
+                                document.addField(
+                                        documentFields.get(attributeName),
+                                        attributeValue.toString());
+                            } else {
+                                document.addField(
+                                        documentFields.get(attributeName),
+                                        attributeValue);
+                            }
                         }
 
 
