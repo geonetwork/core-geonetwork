@@ -75,13 +75,6 @@
                         <include>jts-1.13.jar</include>
                       </includes>
                     </resource>
-                    <resource>
-                      <directory>${project.build.directory}/lib-saxon</directory>
-                      <targetPath>${project.basedir}/solr-${solr.version}/server/solr-webapp/webapp/WEB-INF/lib</targetPath>
-                      <includes>
-                        <include>saxon9he.jar</include>
-                      </includes>
-                    </resource>
                   </resources>
                 </configuration>
               </execution>
