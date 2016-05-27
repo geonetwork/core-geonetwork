@@ -898,13 +898,16 @@
                                         linkToEdit.protocol,
                                         keysuffix].join('');
 
+                    scope.OGCProtocol = checkIsOgc(linkToEdit.protocol);
 
                     var name = $filter('gnLocalized')(linkToEdit.title),
                         desc = $filter('gnLocalized')(linkToEdit.description);
 
-                    // Build name and desc based on loc IDs
+                    // For multilingual record, build
+                    // name and desc based on loc IDs
                     // and no iso3letter code.
-                    if (scope.isMdMultilingual) {
+                    // If OGC, only take into account, the first element
+                    if (scope.isMdMultilingual && scope.OGCProtocol == null) {
                       name = {};
                       desc = {};
                       $.each(scope.mdLangs, function(key, v) {
@@ -920,7 +923,8 @@
                       url: linkToEdit.url,
                       protocol: linkToEdit.protocol,
                       name: name,
-                      desc: desc
+                      desc: desc,
+                      selectedLayers: []
                     };
 
                     // scope.params.function = '';
@@ -958,7 +962,7 @@
                 };
                 var resetProtocol = function() {
                   scope.layers = [];
-                  scope.OGCProtocol = null;
+                  scope.OGCProtocol = false;
                   if (scope.params && !scope.isEditing) {
                     scope.params.name = scope.isMdMultilingual ? {} : '';
                     scope.params.desc = scope.isMdMultilingual ? {} : '';
@@ -1097,6 +1101,16 @@
                   }
                 };
 
+                function checkIsOgc(protocol) {
+                  if (protocol.indexOf('OGC:WMS') >= 0) {
+                    return 'WMS';
+                  } else if (protocol.indexOf('OGC:WFS') >= 0) {
+                    return 'WFS';
+                  } else {
+                    return null;
+                  }
+                };
+
                 /**
                  * On protocol combo Change.
                  * Update OGCProtocol values to display or hide
@@ -1105,11 +1119,7 @@
                 scope.$watch('params.protocol', function(n, o) {
                   if (!angular.isUndefined(scope.params.protocol) && o != n) {
                     resetProtocol();
-                    if (scope.params.protocol.indexOf('OGC:WMS') >= 0) {
-                      scope.OGCProtocol = 'WMS';
-                    } else if (scope.params.protocol.indexOf('OGC:WFS') >= 0) {
-                      scope.OGCProtocol = 'WFS';
-                    }
+                    scope.OGCProtocol = checkIsOgc(scope.params.protocol);
                     if (scope.OGCProtocol != null && !scope.isEditing) {
                       // Reset parameter in case of multilingual metadata
                       // Those parameters are object.
@@ -1139,23 +1149,21 @@
                  * them to the record.
                  */
                 scope.$watchCollection('params.selectedLayers', function(n, o) {
-                  if (o != n && scope.params.selectedLayers) {
+                  if (o != n &&
+                      scope.params.selectedLayers &&
+                      scope.params.selectedLayers.length > 0) {
                     var names = [],
                         descs = [];
 
-                    if (scope.isEditing) {
-                      // Do somthing
-                    } else {
-                      angular.forEach(scope.params.selectedLayers,
-                          function(layer) {
-                            names.push(layer.Name || layer.name);
-                            descs.push(layer.Title || layer.title);
-                          });
-                      angular.extend(scope.params, {
-                        name: names.join(','),
-                        desc: descs.join(',')
-                      });
-                    }
+                    angular.forEach(scope.params.selectedLayers,
+                        function(layer) {
+                          names.push(layer.Name || layer.name);
+                          descs.push(layer.Title || layer.title);
+                        });
+                    angular.extend(scope.params, {
+                      name: names.join(','),
+                      desc: descs.join(',')
+                    });
                   }
                 });
 
@@ -1279,6 +1287,7 @@
                   scope.mode = iAttrs['gnLinkServiceToDataset'];
                   scope.popupid = '#linkto' + scope.mode + '-popup';
                   scope.alertMsg = null;
+                  scope.layerSelectionMode = 'multiple';
 
                   gnOnlinesrc.register(scope.mode, function() {
                     $(scope.popupid).modal('show');
