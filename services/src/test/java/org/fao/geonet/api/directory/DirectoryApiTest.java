@@ -250,8 +250,8 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
                 String role = e.getName().equals("contact") ?
                         "shouldBePreserved" : "pointOfContact";
                 assertEquals("XLink is correct",
-                        "local://eng/subtemplate?uuid=" + contact1uuid +
-                            "&amp;process=./gmd:role/*/@codeListValue~" + role, xlink.getValue()
+                             "local://eng/subtemplate?uuid=" + contact1uuid +
+                                "&amp;process=./gmd:role/*/@codeListValue~" + role, xlink.getValue()
                 );
             }
         }
