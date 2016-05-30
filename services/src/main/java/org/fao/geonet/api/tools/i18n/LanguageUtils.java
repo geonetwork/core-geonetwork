@@ -24,6 +24,8 @@
 package org.fao.geonet.api.tools.i18n;
 
 
+import com.google.common.collect.Lists;
+
 import java.util.*;
 
 /**
@@ -61,5 +63,12 @@ public class LanguageUtils {
             }
         }
         return Locale.forLanguageTag(defaultLanguage);
+    }
+
+    public Locale parseAcceptLanguage(final Locale locale) {
+        Vector<Locale> locales = new Vector<>();
+        locales.add(locale);
+
+        return parseAcceptLanguage(locales.elements());
     }
 }

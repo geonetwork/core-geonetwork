@@ -95,4 +95,7 @@
   </bean>
   <bean id="formatterCachePublishListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCachePublishListener" />
   <bean id="formatterCacheDeletionListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCacheDeletionListener" />
+  <bean id="apiMessages" class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basename" value="org.fao.geonet.api.Messages" />
+  </bean>
 </beans>

@@ -31,9 +31,15 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,11 +48,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 /**
@@ -71,6 +80,8 @@ public class GroupApi {
         + " Modified response. If modified returns the image. If the group has "
         + "no logo then returns a transparent 1x1 px PNG image.";
 
+    /** Logger name. */
+    public static final String LOGGER = Geonet.GEONETWORK + ".api.groups";
     /** Six hours in seconds. */
     private static final int SIX_HOURS = 60 * 60 * 6;
     /** Transparent 1x1 px PNG encoded in Base64. */
@@ -78,6 +89,16 @@ public class GroupApi {
         + "42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
     /** Transparent 1x1 px PNG. */
     private static final byte[] TRANSPARENT_1_X_1_PNG = Base64.decodeBase64(TRANSPARENT_1_X_1_PNG_BASE64);
+
+    /**
+     * Message source.
+     */
+    @Autowired
+    @Qualifier("apiMessages")
+    private ResourceBundleMessageSource messages;
+    /** Language utils used to detect the requested language. */
+    @Autowired
+    private LanguageUtils languageUtils;
 
 
     /**
@@ -87,6 +108,7 @@ public class GroupApi {
      * Modified response if not changed.
      * @param groupId the group identifier.
      * @param webRequest the web request.
+     * @param request the native HTTP Request.
      * @param response the servlet response.
      * @throws ResourceNotFoundException if no group exists with groupId.
      */
@@ -98,7 +120,9 @@ public class GroupApi {
     public final void getGroupLogo(
         @ApiParam(value = "Group identifier", required = true) @PathVariable(value = "groupId") final Integer groupId,
         final WebRequest webRequest,
+        HttpServletRequest request,
         HttpServletResponse response) throws ResourceNotFoundException {
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
 
         ServiceContext context = ServiceContext.get();
         if (context == null) {
@@ -110,7 +134,8 @@ public class GroupApi {
 
         Group group = groupRepository.findOne(groupId);
         if (group == null) {
-            throw new ResourceNotFoundException(String.format("Group with ID ' %d' not found in this catalog.", groupId));
+            throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
+                Object[]{groupId}, locale));
         }
         try {
             final Path logosDir = Resources.locateLogosDir(context);
@@ -163,8 +188,9 @@ public class GroupApi {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
-            throw  new RuntimeException(e);
+            Log.error(LOGGER, String.format("There was an error accessing the logo of the group with id '%d'",
+                groupId));
+            throw new RuntimeException(e);
         }
     }
 }
