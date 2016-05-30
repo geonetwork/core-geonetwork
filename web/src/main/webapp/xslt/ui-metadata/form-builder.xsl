@@ -23,7 +23,7 @@
   -->
 
 <xsl:stylesheet version="2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
@@ -43,7 +43,7 @@
 
   <xsl:import href="menu-builder.xsl"/>
 
-  <!-- 
+  <!--
     Render an element with a label and a value
   -->
   <xsl:template name="render-element">
@@ -53,7 +53,7 @@
     <!-- cls may define custom CSS class in order to activate
     custom widgets on client side -->
     <xsl:param name="cls" required="no" as="xs:string"/>
-    <!-- XPath is added as data attribute for client side references 
+    <!-- XPath is added as data attribute for client side references
     to get help or inline editing ? -->
     <xsl:param name="xpath" required="no" as="xs:string" select="''"/>
 
@@ -69,26 +69,26 @@
     <xsl:param name="hidden" required="no" as="xs:boolean" select="false()"/>
     <xsl:param name="editInfo" required="no"/>
     <xsl:param name="parentEditInfo" required="no"/>
-    
+
     <!-- The fields matching all element attributes.
     Rendered hidden in a block below the input. -->
     <xsl:param name="attributesSnippet" required="no"/>
-    
+
     <!-- Force displaying attributes even if $isDisplayingAttributes
     global variable is not set to true. This could be useful when the attributes
     are important for the element. eg. gmx:FileName -->
     <xsl:param name="forceDisplayAttributes" required="no" as="xs:boolean" select="false()"/>
-    
+
     <!-- A list of values - could be an helper list for example. -->
     <xsl:param name="listOfValues" select="''"/>
-    
+
     <!-- Disable all form fields included in a section based on an XLink.
     It could be relevant to investigate if this check should be done on
-    only element potentially using XLink and not all of them. 
+    only element potentially using XLink and not all of them.
     This may have performance inpact? -->
     <xsl:param name="isDisabled" select="ancestor-or-self::node()[@xlink:href]"/>
-    
-    <!-- Define if the language fields should be displayed 
+
+    <!-- Define if the language fields should be displayed
     with the selector or below each other. -->
     <xsl:param name="toggleLang" required="no" as="xs:boolean" select="false()"/>
     <!-- A gn-extra-field class is added to non first element.
@@ -101,13 +101,13 @@
 
     <!-- Required status is defined in parent element for
     some profiles like ISO19139. If not set, the element
-    editing information is used. 
+    editing information is used.
     In view mode, always set to false.
     -->
     <xsl:variable name="isRequired" as="xs:boolean">
       <xsl:choose>
         <xsl:when
-          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or 
+          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
           (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
           <xsl:value-of select="true()"/>
         </xsl:when>
@@ -219,24 +219,24 @@
                 </xsl:call-template>
               </xsl:otherwise>
             </xsl:choose>
-            
-            
-            
+
+
+
             <xsl:call-template name="render-form-field-control-move">
               <xsl:with-param name="elementEditInfo" select="$parentEditInfo"/>
               <xsl:with-param name="domeElementToMoveRef" select="$editInfo/@ref"/>
             </xsl:call-template>
-            
-            
+
+
             <xsl:if test="$attributesSnippet">
               <xsl:variable name="cssDefaultClass" select="'well well-sm'"/>
-              <div class="{$cssDefaultClass} 
+              <div class="{$cssDefaultClass}
                 {if ($forceDisplayAttributes) then 'gn-attr-mandatory' else 'gn-attr'}
                 {if ($isDisplayingAttributes or $forceDisplayAttributes) then '' else 'hidden'}">
                 <xsl:copy-of select="$attributesSnippet"/>
               </div>
             </xsl:if>
-            
+
             <xsl:if test="$errors">
               <xsl:for-each select="$errors/errors/error">
                 <span class="help-block text-danger"><xsl:value-of select="."/></span>
@@ -258,18 +258,18 @@
   </xsl:template>
 
 
-  <!-- 
+  <!--
     Render a boxed element in a fieldset.
-    
-    Boxed elements are usualy complex element with children. 
+
+    Boxed elements are usualy complex element with children.
     The cardinality may be multiple. In that case the metadocument
     contains details in the genet:element child.
-    
+
     eg.
     <gmd:contact>
       ...
-      <geonet:element 
-        ref="8" parent="1" uuid="gmd:contact_4c081293-de4f-4231-abdc-88952894711d" 
+      <geonet:element
+        ref="8" parent="1" uuid="gmd:contact_4c081293-de4f-4231-abdc-88952894711d"
         min="1" max="10000" add="true"/>
   -->
   <xsl:template name="render-boxed-element">
@@ -282,7 +282,7 @@
     <!-- cls may define custom CSS class in order to activate
     custom widgets on client side -->
     <xsl:param name="cls" required="no"/>
-    <!-- XPath is added as data attribute for client side references 
+    <!-- XPath is added as data attribute for client side references
     to get help or inline editing ? -->
     <xsl:param name="xpath" required="no"/>
     <xsl:param name="attributesSnippet" required="no"><null/></xsl:param>
@@ -316,8 +316,8 @@
             <xsl:with-param name="editInfo" select="$editInfo"/>
           </xsl:call-template>
         </xsl:if>
-        
-        
+
+
         <xsl:call-template name="render-form-field-control-move">
           <xsl:with-param name="elementEditInfo" select="$editInfo"/>
           <xsl:with-param name="domeElementToMoveRef" select="$editInfo/@ref"/>
@@ -354,9 +354,9 @@
       <i class="fa fa-times text-danger"/>
     </a>
   </xsl:template>
-  
-  
-  
+
+
+
   <!-- Render element based on a template defined in config-editor.xml
   -->
   <xsl:template name="render-element-template-field">
@@ -613,33 +613,33 @@
     </div>
   </xsl:template>
 
-  <!--  
+  <!--
   Create form for an element which does not exist in the metadata record.
   childInfo parameter contains schema definition for this element. It could
   be a simple element eg.
-  <geonet:child name="hierarchyLevelName" 
-    prefix="gmd" 
-    namespace="http://www.isotc211.org/2005/gmd" 
-    uuid="child_gmd:hierarchyLevelName_051ba253-1ae2-4f88-9337-b344db9f10ff" 
+  <geonet:child name="hierarchyLevelName"
+    prefix="gmd"
+    namespace="http://www.isotc211.org/2005/gmd"
+    uuid="child_gmd:hierarchyLevelName_051ba253-1ae2-4f88-9337-b344db9f10ff"
     min="0" max="10000" action="replace">
-    
-    <geonet:child name="CharacterString" 
-      prefix="gco" 
-      namespace="http://www.isotc211.org/2005/gco" 
-      uuid="child_gco:CharacterString_cb89ca70-ae3d-4f58-898d-6fad3dac3a06" 
+
+    <geonet:child name="CharacterString"
+      prefix="gco"
+      namespace="http://www.isotc211.org/2005/gco"
+      uuid="child_gco:CharacterString_cb89ca70-ae3d-4f58-898d-6fad3dac3a06"
       min="1" max="1" action="replace"/>
   </geonet:child>
-  
+
   or a choice eg.
-  <geonet:child name="hierarchyLevel" 
-    prefix="gmd" namespace="http://www.isotc211.org/2005/gmd" 
-    uuid="child_gmd:hierarchyLevel_21fe2fcc-5e71-4c0f-ab1b-d45a94e2df25" 
+  <geonet:child name="hierarchyLevel"
+    prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+    uuid="child_gmd:hierarchyLevel_21fe2fcc-5e71-4c0f-ab1b-d45a94e2df25"
     min="0" max="10000" action="before">
-    
+
     <geonet:choose name="gmx:MX_ScopeCode"/>
     <geonet:choose name="gmd:MD_ScopeCode"/>
 </geonet:child>
-  
+
   -->
   <xsl:template name="render-element-to-add">
     <xsl:param name="label" as="xs:string?"/>
@@ -787,9 +787,9 @@
   </xsl:template>
 
   <!-- Create a form field ie. a textarea, an input, a select, ...
-    
+
     This could be a directive which take care of rendering form elements ?
-    
+
     -->
   <xsl:template name="render-form-field">
     <xsl:param name="name"/>
@@ -812,7 +812,7 @@
     <xsl:variable name="valueToEdit"
       select="if ($value/*) then $value/text() else $value"/>
 
-    <!-- If a form field has suggestion list in helper 
+    <!-- If a form field has suggestion list in helper
     then the element is hidden and the helper directive is added.
     ListOfValues could be a codelist (with entry children) or
     helper (with option).
@@ -908,20 +908,20 @@
         </xsl:choose>
       </xsl:when>
       <xsl:when test="$type = 'checkbox'">
-        <!-- Checkbox field is composed of an 
+        <!-- Checkbox field is composed of an
         hidden input to host the checked or unchecked state
-        and a checkbox which updates the hidden field. 
+        and a checkbox which updates the hidden field.
         If only a checkbox is used, unchecked state is not post
         by forms.
         -->
         <xsl:variable name="elementId" select="concat('gn-field-', $editInfo/@ref)"/>
         <input
-          id="{$elementId}" 
+          id="{$elementId}"
           name="_{$name}"
           type="hidden"
           value="{$valueToEdit}"/>
         <!-- FIXME : some JS here. Move to a directive ?-->
-        <input class="" 
+        <input class=""
           onclick="$('#{$elementId}').val(this.checked)"
           type="checkbox">
           <xsl:if test="$valueToEdit = 'true'">
@@ -933,9 +933,9 @@
         </input>
       </xsl:when>
       <xsl:otherwise>
-        
+
         <xsl:variable name="isDirective" select="starts-with($type, 'data-')"/>
-        <!-- Some directives needs to support values having cariage return in the 
+        <!-- Some directives needs to support values having cariage return in the
         value. In that case a textarea field should be used with the value in it. -->
         <xsl:variable name="isTextareaDirective" select="$isDirective and contains($type, '-textarea')"/>
 
@@ -991,9 +991,9 @@
       </xsl:otherwise>
     </xsl:choose>
 
-    <!-- 
+    <!--
         Create an helper list for the current input element.
-        Current input could be an element or an attribute (eg. uom). 
+        Current input could be an element or an attribute (eg. uom).
         -->
     <xsl:if test="$hasHelper">
       <xsl:call-template name="render-form-field-helper">
@@ -1072,7 +1072,7 @@
     <xsl:param name="tooltip" as="xs:string" required="no" select="''"/>
     <xsl:param name="multilingualField" as="xs:boolean" required="no" select="false()"/>
 
-    <!-- 
+    <!--
     The helper config to pass to the directive in JSON format
     -->
     <textarea id="{$elementRef}_config" class="hidden">
@@ -1084,31 +1084,31 @@
       data-type="{$dataType}"
       data-related-element="{if ($listOfValues/@rel != '')
       then $relatedElement else ''}"
-      data-related-attr="{if ($listOfValues/@relAtt) 
+      data-related-attr="{if ($listOfValues/@relAtt)
       then $relatedElementRef else ''}"
       data-tooltip="{$tooltip}"
       data-multilingual-field="{$multilingualField}">
     </div>
   </xsl:template>
 
-  <!-- Display the remove control 
-  if parent info is not defined and element is not 
-  mandatory. 
+  <!-- Display the remove control
+  if parent info is not defined and element is not
+  mandatory.
   -->
   <xsl:template name="render-form-field-control-remove">
     <xsl:param name="editInfo"/>
     <xsl:param name="parentEditInfo" required="no"/>
     <xsl:if
-      test="($parentEditInfo and 
-                     ($parentEditInfo/@del = 'true' or 
+      test="($parentEditInfo and
+                     ($parentEditInfo/@del = 'true' or
                      $parentEditInfo/@min != 1)
-                   ) or 
-                   (not($parentEditInfo) and ($editInfo and 
-                   ($editInfo/@del = 'true' or 
+                   ) or
+                   (not($parentEditInfo) and ($editInfo and
+                   ($editInfo/@del = 'true' or
                    $editInfo/@min != 1)
                    ))">
-      
-      <xsl:variable name="elementToRemove" select="if ($parentEditInfo) then 
+
+      <xsl:variable name="elementToRemove" select="if ($parentEditInfo) then
         $parentEditInfo else $editInfo"/>
 
       <a class="btn pull-right"
@@ -1145,15 +1145,15 @@
   <xsl:template name="render-form-field-control-move">
     <xsl:param name="elementEditInfo"/>
     <xsl:param name="domeElementToMoveRef" required="no" select="''"/>
-    
+
     <xsl:if test="not($viewConfig/@upAndDownControlHidden)">
       <div class="gn-move">
         <xsl:variable name="elementToMoveRef" select="if ($elementEditInfo) then $elementEditInfo/@ref else ''"/>
-        <a class="fa fa-angle-up {if ($elementEditInfo and $elementEditInfo/@up = 'true') then '' else 'invisible'}" 
+        <a class="fa fa-angle-up {if ($elementEditInfo and $elementEditInfo/@up = 'true') then '' else 'invisible'}"
           data-gn-editor-control-move="{$elementToMoveRef}"
           data-domelement-to-move="{$domeElementToMoveRef}"
           data-direction="up" href="" tabindex="-1"></a>
-        <a class="fa fa-angle-down {if ($elementEditInfo and $elementEditInfo/@down = 'true') then '' else 'invisible'}" 
+        <a class="fa fa-angle-down {if ($elementEditInfo and $elementEditInfo/@down = 'true') then '' else 'invisible'}"
           data-gn-editor-control-move="{$elementToMoveRef}"
           data-domelement-to-move="{$domeElementToMoveRef}"
           data-direction="down" href="" tabindex="-1"></a>
@@ -1162,24 +1162,24 @@
   </xsl:template>
 
 
-  <!-- 
-    Render attribute as select list or simple output 
+  <!--
+    Render attribute as select list or simple output
   -->
   <xsl:template mode="render-for-field-for-attribute" match="@*">
     <xsl:param name="ref"/>
-    
+
     <xsl:variable name="attributeName" select="name()"/>
     <xsl:variable name="attributeValue" select="."/>
     <xsl:variable name="attributeSpec" select="../gn:attribute[@name = $attributeName]"/>
-    
+
     <xsl:variable name="directive"
-      select="gn-fn-metadata:getFieldType($editorConfig, name(), 
+      select="gn-fn-metadata:getFieldType($editorConfig, name(),
       name(..))"/>
-    
+
     <!-- Form field name escaping ":" which will be invalid character for
     Jeeves request parameters. -->
     <xsl:variable name="fieldName" select="concat('_', $ref, '_', replace($attributeName, ':', 'COLON'))"/>
-    
+
     <div class="form-group" id="gn-attr-{$fieldName}">
       <label class="col-sm-4">
         <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels)/label"/>
@@ -1188,7 +1188,7 @@
         <xsl:if test="$directive">
           <xsl:attribute name="{$directive}"/>
         </xsl:if>
-        
+
         <xsl:choose>
           <xsl:when test="$attributeSpec/gn:text">
             <xsl:variable name="attributeCodeList" select="gn-fn-metadata:getCodeListValues($schema, $attributeName, $codelists)"/>
@@ -1196,11 +1196,11 @@
             <select class="" name="{$fieldName}">
               <xsl:for-each select="$attributeSpec/gn:text">
                 <xsl:variable name="optionValue" select="@value"/>
-                
+
                 <!-- Check if a translation is available for the attribute value -->
-                <xsl:variable name="label" 
+                <xsl:variable name="label"
                   select="$attributeCodeList/entry[code = $optionValue]/label"/>
-                
+
                 <option value="{$optionValue}">
                   <xsl:if test="$optionValue = $attributeValue">
                     <xsl:attribute name="selected"/>
@@ -1224,31 +1224,31 @@
       </div>
     </div>
   </xsl:template>
-  
-  
-  <!-- 
+
+
+  <!--
   Ignore some internal attributes and do not allow to apply this mode
   to a node (only for gn:attribute, see next template).
   -->
-  <xsl:template mode="render-for-field-for-attribute" 
+  <xsl:template mode="render-for-field-for-attribute"
     match="@gn:xsderror|@gn:addedObj|
           @min|@max|@name|@del|@add|@id|@uuid|@ref|@parent|@up|@down" priority="2"/>
-  
-  
-  <!-- 
+
+
+  <!--
     Add attribute control
-  <geonet:attribute 
+  <geonet:attribute
                   name="gco:nilReason"
                   add="true">
                   <geonet:text value="inapplicable"/>
                   <geonet:text value="missing"/>
                   ...
-                  
-                  
+
+
    TODO: externalize exception ?
   -->
-  <xsl:template mode="render-for-field-for-attribute" 
-    match="gn:attribute[not(@name = ('ref', 'parent', 'id', 'uuid', 'type', 'uuidref', 
+  <xsl:template mode="render-for-field-for-attribute"
+    match="gn:attribute[not(@name = ('ref', 'parent', 'id', 'uuid', 'type', 'uuidref',
     'xlink:show', 'xlink:actuate', 'xlink:arcrole', 'xlink:role', 'xlink:title', 'xlink:href'))]" priority="4">
     <xsl:param name="ref"/>
     <xsl:param name="insertRef" select="''"/>
@@ -1261,14 +1261,14 @@
       <xsl:value-of select="$attributeLabel/label"/>
     </button>
   </xsl:template>
-  
+
 
   <!-- Render batch process directive action -->
   <xsl:template name="render-batch-process-button">
     <xsl:param name="process-name"/>
     <xsl:param name="process-params"/>
     <!-- TODO: Could be relevant to only apply process to the current thesaurus -->
-    
+
     <div class="row form-group gn-field gn-extra-field">
       <div class="col-xs-10 col-xs-offset-2">
         <span data-gn-batch-process-button="{$process-name}"
