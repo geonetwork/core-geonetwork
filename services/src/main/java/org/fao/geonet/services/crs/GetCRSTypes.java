@@ -33,9 +33,10 @@ import java.util.Iterator;
 
 /**
  * Get all Coordinate Reference System types.
- * 
+ *
  * @author francois
  */
+@Deprecated
 public class GetCRSTypes implements Service {
 	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}

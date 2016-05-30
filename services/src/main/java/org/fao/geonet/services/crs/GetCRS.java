@@ -41,9 +41,10 @@ import java.util.Set;
 
 /**
  * Get a Coordinate Reference System and return an ISO19139 fragment.
- * 
+ *
  * @author francois
  */
+@Deprecated
 public class GetCRS implements Service {
 	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
@@ -66,7 +67,7 @@ public class GetCRS implements Service {
 
 	/**
 	 * Get CRS by code. Return the first CRS found.
-	 * 
+	 *
 	 * @param crsId
 	 *            the CRS identifier to search for.
 	 * @return XML
@@ -143,7 +144,7 @@ public class GetCRS implements Service {
 	}
 	/**
 	 * checks if all keywords in filter array are in input
-	 * 
+	 *
 	 * @param input
 	 *            test string
 	 * @param filter
