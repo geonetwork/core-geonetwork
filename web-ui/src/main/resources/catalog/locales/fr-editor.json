@@ -31,7 +31,7 @@
     "assignToCategory": "Affecter à cette catégorie",
     "assignToGroup": "Affecter à ce groupe",
     "associationType": "Type d'association",
-    "chooseContactRole": "ou choisir un rôle",
+    "chooseContactRole": "Choisir un rôle",
     "chooseEntry": "Rechercher",
     "beforeUnloadEditor": "Vous pourriez avoir des modifications non sauvées depuis la dernière sauvegarde {{timeAgo}}.",
     "batchEditing": "Édition en série",

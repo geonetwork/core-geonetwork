@@ -31,7 +31,7 @@
     "assignToCategory": "Assign to category",
     "assignToGroup": "Assign to group",
     "associationType": "Association type",
-    "chooseContactRole": "or choose role",
+    "chooseContactRole": "Select contact role",
     "chooseEntry": "Search directory",
     "beforeUnloadEditor": "You may have unsaved changes since last save {{timeAgo}}.",
     "batchEditing": "Batch editing",
