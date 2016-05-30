@@ -513,15 +513,9 @@
 
 
         <xsl:if test="codelist">
-          <xsl:message>
-            <xsl:copy-of select="codelist"/>
-          </xsl:message>
           <xsl:variable name="listOfValues"
                         select="gn-fn-metadata:getCodeListValues($schema, codelist/@name, $codelists)"/>
           <xsl:copy-of select="$listOfValues"/>
-          <xsl:message>
-            <xsl:copy-of select="$listOfValues"/>
-          </xsl:message>
         </xsl:if>
 
       </field>
