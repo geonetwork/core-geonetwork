@@ -359,7 +359,7 @@ public class SolrWFSFeatureIndexer {
                                 String token = tokenizer.nextToken();
                                 document.addField(
                                     documentFields.get(attributeName),
-                                    token);
+                                    token.trim());
                             }
                         } else {
                             document.addField(
