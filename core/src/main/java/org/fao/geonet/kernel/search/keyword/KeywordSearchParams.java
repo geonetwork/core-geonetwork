@@ -87,7 +87,11 @@ public class KeywordSearchParams {
                 }
             });
         } else if(thesauriNames.size() == 1) {
-            return executeOne(queryBuilder, finder);
+            if (comparator != null) {
+                return executeOneSorted(queryBuilder, finder);
+            } else {
+                return executeOne(queryBuilder, finder);
+            }
         } else {
             return executeSpecific(queryBuilder, finder);
         }
@@ -101,6 +105,7 @@ public class KeywordSearchParams {
         if (thesaurus == null) {
             throw new IllegalArgumentException("The thesaurus "+thesaurusName+" does not exist, there for the query cannot be executed: '"+query+"'" );
         }
+
         for (KeywordBean keywordBean : query.execute(thesaurus)) {
             if (maxResults > -1 && results.size() >= maxResults) {
                 break;
@@ -110,6 +115,27 @@ public class KeywordSearchParams {
             id++;
         }
         return results;
+    }
+
+    private List<KeywordBean> executeOneSorted(QueryBuilder<KeywordBean> queryBuilder, ThesaurusFinder finder) throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
+        TreeSet<KeywordBean> orderedResults = new TreeSet<>(this.comparator);
+        int id = 0;
+        String thesaurusName = thesauriNames.iterator().next();
+        Thesaurus thesaurus = finder.getThesaurusByName(thesaurusName);
+        Query<KeywordBean> query = queryBuilder.limit(maxResults).build();
+        if (thesaurus == null) {
+            throw new IllegalArgumentException("The thesaurus "+thesaurusName+" does not exist, there for the query cannot be executed: '"+query+"'" );
+        }
+
+        for (KeywordBean keywordBean : query.execute(thesaurus)) {
+            if (maxResults > -1 && orderedResults.size() >= maxResults) {
+                break;
+            }
+            keywordBean.setId(id);
+            orderedResults.add(keywordBean);
+            id++;
+        }
+        return TreeSetToList(orderedResults);
     }
     private List<KeywordBean> executeSpecific(QueryBuilder<KeywordBean> queryBuilder, final ThesaurusFinder finder)
             throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {

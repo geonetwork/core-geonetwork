@@ -28,6 +28,15 @@ public enum SortDirection {
     
     public final int multiplier;
 
+    public static SortDirection parse(String value) {
+        if ("ASC".equals(value)) {
+            return ASC;
+        } else if ("DESC".equals(value)) {
+            return DESC;
+        } else {
+            return DESC;
+        }
+    }
     private SortDirection(int multiplier) {
         this.multiplier = multiplier;
     }

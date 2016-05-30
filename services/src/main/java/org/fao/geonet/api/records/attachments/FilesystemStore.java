@@ -297,8 +297,6 @@ public class FilesystemStore implements Store {
 
     @Override
     public String delResource(String metadataUuid, String resourceId) throws Exception {
-        String metadataId = getAndCheckMetadataId(metadataUuid);
-
         canEdit(metadataUuid);
 
         Path filePath = getResource(metadataUuid, resourceId);

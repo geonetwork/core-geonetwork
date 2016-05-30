@@ -535,6 +535,13 @@
               var params = gnUrlUtils.parseKeyValue(
                   options.metadata.split('?')[1]);
               var uuid = params.uuid || params.id;
+              if (!uuid) {
+                var res = new RegExp(/\#\/metadata\/(.*)/g).
+                    exec(options.metadata);
+                if (angular.isArray(res) && res.length == 2) {
+                  uuid = res[1];
+                }
+              }
               if (uuid) {
                 olLayer.set('metadataUuid', uuid);
               }
@@ -751,7 +758,7 @@
               // TODO: parse better legend & attribution
               if (angular.isArray(layer.Style) && layer.Style.length > 0) {
                 var url = layer.Style[layer.Style.length - 1]
-                  .LegendURL[0];
+                    .LegendURL[0];
                 if (url) {
                   legend = url.OnlineResource;
                 }
@@ -816,7 +823,7 @@
                   $.ajax({
                     url: proxyUrl
                   })
-                    .done(function(response) {
+                      .done(function(response) {
                         // TODO: Check WFS exception
                         vectorSource.addFeatures(vectorFormat.
                             readFeatures(response));
@@ -834,7 +841,7 @@
                         map.getView().fit(extent, map.getSize());
 
                       })
-                    .then(function() {
+                      .then(function() {
                         this.loadingLayer = false;
                       });
                 },
@@ -1021,7 +1028,7 @@
                     finishCreation();
                   }
                   else {
-                    $this.feedLayerMd(olL).finally (finishCreation);
+                    $this.feedLayerMd(olL).finally(finishCreation);
                   }
                 }
 
@@ -1513,7 +1520,7 @@
 
             defer.resolve(layer);
 
-            if (layer.get('metadataUrl')) {
+            if (layer.get('metadataUrl') && layer.get('metadataUuid')) {
 
               return gnSearchManagerService.gnSearch({
                 uuid: layer.get('metadataUuid'),

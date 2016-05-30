@@ -7,8 +7,10 @@
         <span>&nbsp;</span>
       </button>
     </span>
-    <input type="text" class="form-control" placeholder="{{'searchACRS' | translate}}"
-      data-ng-model="filter"/>
+    <input type="text" class="form-control"
+           placeholder="{{'searchACRS' | translate}}"
+           data-ng-model="filter"
+           data-ng-model-options="{debounce: 500}"/>
 
     <div class="list-group gn-autocomplete-list">
       <li href="" class="list-group-item" data-ng-repeat="crs in crsResults">{{crs.description}}<span
@@ -19,6 +21,14 @@
       </li>
     </div>
 
+    <div class="input-group-btn">
+      <button class="btn btn-default" type="button"
+              data-ng-show="crsResults.length != 0"
+              data-ng-click="crsResults = []">
+        <i class="fa fa-times"></i>
+        <span>&nbsp;</span>
+      </button>
+    </div>
 
     <!-- The CRS to insert once received -->
     <div data-ng-if="snippet">

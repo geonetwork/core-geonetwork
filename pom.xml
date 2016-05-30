@@ -478,7 +478,7 @@
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
-        <version>1.3</version>
+        <version>1.3.1</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -523,7 +523,7 @@
       <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
-        <version>1.2.13</version>
+        <version>1.2.17</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
@@ -852,7 +852,7 @@
       <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
-        <version>5.1.26</version>
+        <version>5.1.38</version>
       </dependency>
       <!-- Not permitted under oracle licensing rules
       <dependency>
@@ -1153,6 +1153,12 @@
 
   <profiles>
     <profile>
+      <id>with-doc</id>
+      <modules>
+        <module>docs</module>
+      </modules>
+    </profile>
+    <profile>
       <id>all</id>
       <activation>
         <file>
@@ -1163,16 +1169,9 @@
         <module>schemas-test</module>
         <module>web-ui</module>
         <module>web-ui-docs</module>
-        <module>web-client</module>
         <module>web</module>
         <module>e2e-tests</module>
         <module>geoserver</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>with-doc</id>
-      <modules>
-        <module>docs/manuals</module>
       </modules>
     </profile>
     <profile>

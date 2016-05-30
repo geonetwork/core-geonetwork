@@ -40,6 +40,8 @@
     locale: {},
     isMapViewerEnabled: false,
     is3DModeAllowed: false,
+    docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
+    //docUrl: '../../doc/',
     modelOptions: {
       updateOn: 'default blur',
       debounce: {
@@ -57,7 +59,8 @@
       'ger': 'ge',
       'kor': 'ko',
       'spa': 'es',
-      'cze': 'cz'
+      'cze': 'cz',
+      'cat': 'ca'
     },
     getIso2Lang: function(iso3lang) {
       return this.langs[iso3lang];
@@ -111,7 +114,7 @@
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
-        'spa': 'Español', 'cze': 'Czech'};
+        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech'};
       $scope.url = '';
       $scope.base = '../../catalog/';
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;

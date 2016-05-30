@@ -73,6 +73,7 @@ public class HarvesterDataId implements Serializable {
      *
      * @return the key.
      */
+    @Column(name = "keyvalue", nullable = false, length = 255)
     public String getKey() {
         return key;
     }
@@ -81,7 +82,6 @@ public class HarvesterDataId implements Serializable {
      * Set the key identifying the data entity (within the scope of the harvester).  Max length is 255
      * @param key  identifying the data entity (within the scope of the harvester).
      */
-    @Column(nullable = false, length = 255)
     public void setKey(String key) {
         Assert.isTrue(key.length() <= 255);
         this.key = key;

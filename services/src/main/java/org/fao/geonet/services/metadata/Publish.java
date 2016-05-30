@@ -255,9 +255,7 @@ public class Publish {
             for (Integer operationId : operationIds) {
                 try {
                     if (publish) {
-                        if (!dataManager.setOperation(serviceContext, metadataId, groupId, operationId)) {
-                            return false;
-                        }
+                        dataManager.setOperation(serviceContext, metadataId, groupId, operationId);
                     } else {
                         dataManager.unsetOperation(serviceContext, metadataId, groupId, operationId);
                     }

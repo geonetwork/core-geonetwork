@@ -87,6 +87,7 @@
               return {
                 pre: function preLink(scope) {
                   scope.searchObj = {
+                    any: '',
                     params: {
                       _isTemplate: 's',
                       any: '',
@@ -132,6 +133,11 @@
                     angular.extend(scope.searchObj.params,
                         angular.fromJson(scope.filter));
                   }
+
+                  // Append * for like search
+                  scope.updateParams = function () {
+                    scope.searchObj.params.any = '*' + scope.searchObj.any + '*';
+                  };
 
                   scope.snippet = null;
                   scope.snippetRef = gnEditor.
@@ -281,7 +287,7 @@
                      _isTemplate: 's',
                      any: '',
                      from: 1,
-                     to: 2,
+                     to: 10,
                      _root: 'gmd:CI_ResponsibleParty',
                      sortBy: 'title',
                      sortOrder: 'reverse',
@@ -293,6 +299,11 @@
                  scope.stateObj = {
                    selectRecords: []
                  };
+                 if (scope.filter) {
+                   var filter = angular.fromJson(scope.filter);
+                   angular.extend(scope.searchObj.params, filter);
+                   angular.extend(scope.searchObj.defaultParams, filter);
+                 }
                  scope.modelOptions = angular.copy(
                  gnGlobalSettings.modelOptions);
                },
@@ -312,10 +323,6 @@
                      scope.closeModal();
                    });
                  };
-                 // Trigger search but for all
-                 // search form in the page
-                 // TODO: improve
-                 // scope.$broadcast('resetSearch', scope.searchObj.params);
                }
              };
            }

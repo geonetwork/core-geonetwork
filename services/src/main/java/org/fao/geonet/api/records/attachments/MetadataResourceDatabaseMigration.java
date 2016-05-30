@@ -103,6 +103,7 @@ public class MetadataResourceDatabaseMigration implements DatabaseMigrationTask 
                 while (next != null) {
                     System.err.println("Next error: ");
                     next.printStackTrace();
+                    next = e.getNextException();
                 }
 
                 throw new RuntimeException(e);
