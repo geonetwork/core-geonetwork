@@ -100,7 +100,9 @@
             var scope = $scope.$new();
             wpsLink.layer = layer;
             scope.wpsLink = wpsLink;
-            var el = angular.element('<gn-wps-process-form map="map" data-wps-link="wpsLink"></gn-wps-process-form>');
+            var el = angular.element(
+                '<gn-wps-process-form map="map" ' +
+                'data-wps-link="wpsLink"></gn-wps-process-form>');
             $compile(el)(scope);
             parent.append(el);
           };

@@ -87,6 +87,7 @@
               return {
                 pre: function preLink(scope) {
                   scope.searchObj = {
+                    any: '',
                     params: {
                       _isTemplate: 's',
                       any: '',
@@ -132,6 +133,11 @@
                     angular.extend(scope.searchObj.params,
                         angular.fromJson(scope.filter));
                   }
+
+                  // Append * for like search
+                  scope.updateParams = function() {
+                   scope.searchObj.params.any = '*' + scope.searchObj.any + '*';
+                  };
 
                   scope.snippet = null;
                   scope.snippetRef = gnEditor.

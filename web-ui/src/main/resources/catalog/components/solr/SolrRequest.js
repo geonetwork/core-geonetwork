@@ -266,7 +266,9 @@
   geonetwork.GnSolrRequest.prototype.search_ =
       function(qParams, solrParams, quiet) {
 
-    var url = this.getRequestUrl_(qParams, angular.extend({}, this.page, solrParams));
+    var url = this.getRequestUrl_(
+        qParams, angular.extend({},
+            this.page, solrParams));
 
     return this.$http.get(url).then(angular.bind(this,
         function(solrResponse) {

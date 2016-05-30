@@ -69,8 +69,10 @@
                 $(trs[i]).mouseenter(function(e) {
                   // Hackish over event from:
                   // https://github.com/wenzhixin/bootstrap-table/issues/782
-                  var row = $(e.currentTarget).parents('table')
-                  .data()['bootstrap.table'].data[$(e.currentTarget).data('index')];
+                  var row = $(e.currentTarget)
+                      .parents('table')
+                      .data()['bootstrap.table']
+                      .data[$(e.currentTarget).data('index')];
                   if (!row) { return; }
                   var feature = this.loader.getFeatureFromRow(row);
                   var source = this.featuresTablesCtrl.fOverlay.getSource();

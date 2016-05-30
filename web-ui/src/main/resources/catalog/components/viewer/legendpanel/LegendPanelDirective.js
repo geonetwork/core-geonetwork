@@ -75,7 +75,8 @@
         scope: {
           map: '=gnLayerorderPanel'
         },
-        templateUrl: '../../catalog/components/viewer/legendpanel/partials/' +
+        templateUrl: '../../catalog/components/' +
+            'viewer/legendpanel/partials/' +
             'layerorderpanel.html',
         link: function(scope, element, attrs) {
 
@@ -94,7 +95,8 @@
             var layersCollection = map.getLayers();
             var index = layersCollection.getArray().indexOf(layer);
             var group = layersCollection.item(index + delta).get('group') ?
-                layersCollection.item(index + delta).get('group').split('/')[1] :
+                layersCollection.item(index + delta)
+                    .get('group').split('/')[1] :
                 undefined;
             var i = index + delta;
             while (

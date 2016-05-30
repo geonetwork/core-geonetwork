@@ -97,7 +97,8 @@
     uri += '&FEATURE_COUNT=2147483647';
 
     this.loading = true;
-    this.promise = this.$http.get(this.proxyfyUrl(uri)).then(function(response) {
+    this.promise = this.$http.get(
+        this.proxyfyUrl(uri)).then(function(response) {
 
       this.loading = false;
       if (layer.ncInfo) {
@@ -253,7 +254,8 @@
           //5 pixels radius tolerance
           d: map.getView().getResolution() / 400,
           sfield: solr.geomField.idxName
-        }, this.solrObject.getState()) + '&fq={!geofilt sfield=' + solr.geomField.idxName + '}' :
+        }, this.solrObject.getState()) +
+        '&fq={!geofilt sfield=' + solr.geomField.idxName + '}' :
             this.solrObject.getMergedUrl({}, {}, this.solrObject.getState());
 
     url = url.replace('rows=0', '');
