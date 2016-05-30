@@ -36,20 +36,7 @@
                   <url>http://apache.crihan.fr/dist/lucene/solr/${solr.version}/solr-${solr.version}.tgz</url>
                   <unpack>true</unpack>
                   <outputDirectory>${project.basedir}</outputDirectory>
-                  <md5>7d9a623cbf1555da7e5a4cadfedf7133</md5>
-                </configuration>
-              </execution>
-              <execution>
-                <id>download-lib-saxon</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>wget</goal>
-                </goals>
-                <configuration>
-                  <url>http://downloads.sourceforge.net/project/saxon/Saxon-HE/9.6/SaxonHE9-6-0-7J.zip</url>
-                  <unpack>true</unpack>
-                  <outputDirectory>${project.build.directory}/lib-saxon</outputDirectory>
-                  <md5>2a8ab791aa2769bfa56cc519416722a6</md5>
+                  <md5>${solr.version.md5}</md5>
                 </configuration>
               </execution>
               <execution>
