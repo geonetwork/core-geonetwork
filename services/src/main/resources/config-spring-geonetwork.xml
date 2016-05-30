@@ -97,5 +97,6 @@
   <bean id="formatterCacheDeletionListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCacheDeletionListener" />
   <bean id="apiMessages" class="org.springframework.context.support.ResourceBundleMessageSource">
     <property name="basename" value="org.fao.geonet.api.Messages" />
+    <property name="useCodeAsDefaultMessage" value="true" />
   </bean>
 </beans>
