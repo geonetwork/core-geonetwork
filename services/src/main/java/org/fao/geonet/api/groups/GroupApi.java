@@ -31,6 +31,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.records.attachments.AttachmentsActionsApi;
+import org.fao.geonet.api.records.attachments.AttachmentsApi;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
@@ -146,20 +148,6 @@ public class GroupApi {
                 imagePath = Resources.findImagePath(logoUUID,
                     logosDir);
                 if (imagePath != null) {
-                    String ext;
-                    Path fileName = imagePath.getFileName();
-                    if (fileName != null) {
-                        String logoFileName = fileName.toString();
-                        int extIdx = logoFileName.lastIndexOf('.');
-                        if (extIdx > 0) {
-                            ext = logoFileName.substring(extIdx + 1);
-                        } else {
-                            ext = "png";
-                        }
-                    } else {
-                        ext = "png";
-                    }
-
                     lastModifiedTime = Files.getLastModifiedTime(imagePath);
                     if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
                         // webRequest.checkNotModified sets the right HTTP headers
@@ -167,7 +155,7 @@ public class GroupApi {
 
                         return;
                     }
-                    response.setContentType("image/" + ext);
+                    response.setContentType(AttachmentsApi.getFileContentType(imagePath));
                     response.setContentLength((int) Files.size(imagePath));
                     response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
                     response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS *  1000L);
