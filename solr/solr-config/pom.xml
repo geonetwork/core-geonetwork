@@ -36,7 +36,7 @@
                   <url>http://apache.crihan.fr/dist/lucene/solr/${solr.version}/solr-${solr.version}.tgz</url>
                   <unpack>true</unpack>
                   <outputDirectory>${project.basedir}</outputDirectory>
-                  <md5>fbb8f9e00b5995343b154ccde55ebfae</md5>
+                  <md5>${solr.version.md5}</md5>
                 </configuration>
               </execution>
               <execution>
