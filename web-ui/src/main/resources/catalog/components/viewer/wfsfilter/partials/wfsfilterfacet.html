@@ -42,22 +42,13 @@
              data-ng-change="filterFacets()"
              data-ng-model-options="{ debounce: 400 }"
              class="layerfilter form-control input-sm"
-<<<<<<< HEAD
              placeholder="{{'filter'|translate}}"/>
-      <label data-ng-show="map" data-ng-show="source.getFeatures().length > 0">
-        <input type="checkbox"
-               data-ng-model="isHeatMapVisible"/>
-        <span data-translate="">displayHeatMap</span>
-      </label>
     </div>
 
     <!--Facet count-->
     <div data-ng-if="isFeaturesIndexed" class="count"
          data-ng-if="showCount">
       {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate="">features</span>
-=======
-             placeholder="{{'filter'|translate}}..."/>
->>>>>>> 5cd65d9... wfsfilter: remove admin btn if no element
     </div>
 
     <!--Facet fields-->
@@ -108,12 +99,8 @@
         <i class="fa fa-table"></i>&nbsp;
         <span data-translate="">Table</span>
       </button>
-<<<<<<< HEAD
-      <button type="button" class="btn btn-default btn-xs dropdown-toggle"
-=======
       <button data-ng-if="::(user.canEditRecord(md) || md.isHarvested == 'y')"
               type="button" class="btn btn-default dropdown-toggle"
->>>>>>> 5cd65d9... wfsfilter: remove admin btn if no element
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-cog"></i>
         <span class="caret"></span>
