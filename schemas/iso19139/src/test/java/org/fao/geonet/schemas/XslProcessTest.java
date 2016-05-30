@@ -54,32 +54,52 @@ import static org.junit.Assert.assertThat;
  *
  * Created by francois on 26/05/16.
  */
-public class XslProcessTest {
-    protected String xslFilename;
-    protected String xmlFilename;
+public abstract class XslProcessTest {
+
+    /**
+     *
+     */
+    public XslProcessTest() {
+    }
+
+    private String xslFilename;
+    public String getXslFilename() {
+        return xslFilename;
+    }
+
+    public XslProcessTest setXslFilename(String xslFilename) {
+        this.xslFilename = xslFilename;
+        return this;
+    }
+
+    private String xmlFilename;
+
+    public String getXmlFilename() {
+        return xmlFilename;
+    }
+
+    public XslProcessTest setXmlFilename(String xmlFilename) {
+        this.xmlFilename = xmlFilename;
+        return this;
+    }
+
     protected Map<String, String> ns = new HashMap<String, String>();
     protected Path root;
     protected Path xslFile;
     protected Path xmlFile;
 
-    /**
-     *
-     * @param processXsltFile The XSL process to test
-     * @param xmlFile   The main XML file to use for main checks
-     */
-    public XslProcessTest(String processXsltFile,
-                         String xmlFile) {
-        this.xslFilename = processXsltFile;
-        this.xmlFilename = xmlFile;
-    }
 
     @Before
     public void setup() throws TransformerConfigurationException, URISyntaxException {
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
 
-        root = Paths.get(XslProcessTest.class.getResource(".").toURI());
-        xslFile = root.resolve(xslFilename);
-        xmlFile = root.resolve(xmlFilename);
+        root = Paths.get(XslProcessTest.class.getResource(XslProcessTest.class.getSimpleName() + ".class").toURI()).getParent();
+        if (xslFilename != null) {
+            xslFile = root.resolve(xslFilename);
+        }
+        if (xmlFilename != null) {
+            xmlFile = root.resolve(xmlFilename);
+        }
 
         // TODO: Register all required namespaces
         ns.put(
@@ -94,28 +114,29 @@ public class XslProcessTest {
 
     @Test
     public void testMustNotAlterARecordWhenNoParameterProvided() throws Exception {
+        if (xmlFile != null && xslFilename != null) {
+            Element controlElement = Xml.loadFile(xmlFile);
+            Element inputElement = Xml.loadFile(xmlFile);
 
-        Element controlElement = Xml.loadFile(xmlFile);
-        Element inputElement = Xml.loadFile(xmlFile);
 
+            // First, check that the process with no parameters
+            // does not alter the record
+            Element resultElement = Xml.transform(
+                inputElement,
+                root.resolve(xslFilename));
 
-        // First, check that the process with no parameters
-        // does not alter the record
-        Element resultElement = Xml.transform(
-            inputElement,
-            root.resolve(xslFilename));
+            String resultString = Xml.getString(resultElement);
+            String controlString = Xml.getString(controlElement);
+            Diff diffForNoParameter = DiffBuilder
+                .compare(Input.fromString(resultString))
+                .withTest(Input.fromString(controlString))
+                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+                .checkForSimilar()
+                .build();
 
-        String resultString = Xml.getString(resultElement);
-        String controlString = Xml.getString(controlElement);
-        Diff diffForNoParameter = DiffBuilder
-            .compare(Input.fromString(resultString))
-            .withTest(Input.fromString(controlString))
-            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
-            .checkForSimilar()
-            .build();
-
-        assertFalse(
-            "Process does not alter the document.",
-            diffForNoParameter.hasDifferences());
+            assertFalse(
+                "Process does not alter the document.",
+                diffForNoParameter.hasDifferences());
+        }
     }
 }

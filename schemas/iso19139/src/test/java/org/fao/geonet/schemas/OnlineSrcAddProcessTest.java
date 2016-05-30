@@ -41,8 +41,9 @@ import static org.xmlunit.matchers.EvaluateXPathMatcher.hasXPath;
 public class OnlineSrcAddProcessTest extends XslProcessTest {
 
     public OnlineSrcAddProcessTest() {
-        super("../../../../../../src/main/plugin/iso19139/process/onlinesrc-add.xsl",
-              "xsl/process/input.xml");
+        super();
+        this.setXslFilename("../../../../../../src/main/plugin/iso19139/process/onlinesrc-add.xsl");
+        this.setXmlFilename("xsl/process/input.xml");
     }
 
     @Test
