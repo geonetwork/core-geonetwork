@@ -335,3 +335,10 @@ div.result-metadata-modal-content div.result-metadata-modal-content table td {
 	 margin-left:-24px;
 	 margin-top:-24px;
 }
+
+.gn-metadata-view dl {
+    padding-bottom: 0px;
+}
+.gn-metadata-view dl dd ul {
+    margin-bottom: 0px;
+}
