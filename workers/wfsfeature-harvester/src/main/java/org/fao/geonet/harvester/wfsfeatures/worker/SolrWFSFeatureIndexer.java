@@ -364,7 +364,7 @@ public class SolrWFSFeatureIndexer {
                                     String token = tokenizer.nextToken();
                                     document.addField(
                                         documentFields.get(attributeName),
-                                        token);
+                                        token.trim());
                                 }
                             } else {
                                 if (documentFields.get(attributeName).equals("geom")) {
