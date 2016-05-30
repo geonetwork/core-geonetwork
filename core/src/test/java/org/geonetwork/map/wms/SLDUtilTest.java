@@ -10,6 +10,7 @@ import org.jdom.output.XMLOutputter;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.opengis.filter.Filter;
 
 import java.io.BufferedReader;
@@ -44,6 +45,7 @@ public class SLDUtilTest extends XMLTestCase {
     }
 
     @Test
+    @Ignore
     public void testParseSLD() throws Exception {
         String url = "http://sextant-test.ifremer.fr/cgi-bin/sextant/wms/bgmb";
         String layers= "SISMER_prelevements";
