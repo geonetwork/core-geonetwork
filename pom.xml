@@ -219,8 +219,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.5.1</version>
         <configuration>
-          <source>1.7</source>  <!-- The -source argument for the Java compiler. -->
-          <target>1.7</target>  <!-- The -target argument for the Java compiler. -->
+          <source>1.8</source>
+          <target>1.8</target>
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
           <compilerArgument>-proc:none</compilerArgument> <!-- disable automatic annotation processing accoring to: http://docs.jboss.org/hibernate/jpamodelgen/1.0/reference/en-US/html_single/#d0e261 -->
