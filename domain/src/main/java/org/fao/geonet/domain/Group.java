@@ -23,6 +23,7 @@
 
 package org.fao.geonet.domain;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ import org.fao.geonet.entitylistener.GroupEntityListenerManager;
 @Access(AccessType.PROPERTY)
 @EntityListeners(GroupEntityListenerManager.class)
 @SequenceGenerator(name = Group.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
-public class Group extends Localized {
+public class Group extends Localized implements Serializable {
     static final String ID_SEQ_NAME = "group_id_seq";
 
     private int _id;
@@ -304,7 +305,7 @@ public class Group extends Localized {
 
     /**
      * Return the website url for this group.
-     * 
+     *
      * @return the website url for this group or null if there is none.
      */
     @Nullable
@@ -314,7 +315,7 @@ public class Group extends Localized {
 
     /**
      * Default category for this group
-     * 
+     *
      * @return
      */
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -324,7 +325,7 @@ public class Group extends Localized {
 
     /**
      * Set the default category of this group
-     * 
+     *
      * @param defaultCategory
      * @return this group entity object
      */
@@ -335,13 +336,13 @@ public class Group extends Localized {
 
     /**
      * Get a list of allowed categories for metadata defined on this group.
-     * 
+     *
      * @return
      */
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "group_category", 
+    @JoinTable(name = "group_category",
         joinColumns = {
-           @JoinColumn(name = "GROUP_ID", nullable = false, updatable = false) }, 
+           @JoinColumn(name = "GROUP_ID", nullable = false, updatable = false) },
         inverseJoinColumns = {
            @JoinColumn(name = "CATEGORY_ID", nullable = false, updatable = false) })
     public List<MetadataCategory> getAllowedCategories() {
@@ -349,7 +350,7 @@ public class Group extends Localized {
     }
 
     /**
-     * 
+     *
      * @param allowedCategories
      */
     public void setAllowedCategories(List<MetadataCategory> allowedCategories) {
@@ -358,7 +359,7 @@ public class Group extends Localized {
 
     /**
      * Should we use the allowedCategories list on this group?
-     * 
+     *
      * @return if false, we allow all categories
      */
     @Column
@@ -373,7 +374,7 @@ public class Group extends Localized {
     /**
      * Should we use the enableAllowedCategories list on this group? If false, we allow
      * all categories.
-     * 
+     *
      * @param enableAllowedCategories
      * @return this group entity object
      */

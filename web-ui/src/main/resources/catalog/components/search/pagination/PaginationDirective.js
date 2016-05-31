@@ -98,7 +98,7 @@
 
           if (angular.isDefined(attrs.enableHotKeys)) {
             hotkeys.bindTo(scope)
-              .add({
+                .add({
                   combo: 'ctrl+left',
                   description: $translate('hotkeyFirstPage'),
                   callback: scope.first

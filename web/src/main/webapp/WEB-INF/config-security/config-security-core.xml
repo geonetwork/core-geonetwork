@@ -41,9 +41,9 @@
 			<list>
 				<sec:filter-chain pattern="/srv/swagger-resources/**" filters="" />
 				<sec:filter-chain pattern="/srv/v2/**" filters="" />
+        <sec:filter-chain pattern="/doc/**" filters="" />
         <sec:filter-chain pattern="/api-doc/**" filters="" />
         <sec:filter-chain pattern="/proxy**" filters="" />
-        <sec:filter-chain pattern="/apps/**" filters="" />
 				<sec:filter-chain pattern="/static/**" filters="" />
 			    <sec:filter-chain pattern="/catalog/**" filters="" />
 			    <sec:filter-chain pattern="/test/**" filters="" />
@@ -52,11 +52,9 @@
 				<sec:filter-chain pattern="/*.jsp" filters="" />
 				<sec:filter-chain pattern="/*.css" filters="" />
 				<sec:filter-chain pattern="/images/**" filters="" />
-				<sec:filter-chain pattern="/maps/**" filters="" />
 				<sec:filter-chain pattern="/map/**" filters="" />
 				<sec:filter-chain pattern="/wmc/**" filters="" />
 				<sec:filter-chain pattern="/htmlcache/**" filters="" />
-				<sec:filter-chain pattern="/scripts/**" filters="" />
 				<sec:filter-chain pattern="/pdf/**" filters="" />
 				<sec:filter-chain pattern="/loc/**" filters="" />
 				<sec:filter-chain pattern="/xml/csw/test/*" filters="" />

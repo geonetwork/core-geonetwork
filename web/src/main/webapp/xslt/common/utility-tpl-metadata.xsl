@@ -74,9 +74,12 @@
   -->
   <xsl:template mode="gn-merge" match="*" exclude-result-prefixes="#all">
     <xsl:param name="node-to-merge"/>
-    
+
+    <xsl:variable name="nodeName" select="name(.)"/>
+    <xsl:variable name="parentName" select="name(..)"/>
+
     <xsl:copy>
-      <xsl:copy-of select="@*"/>
+      <xsl:copy-of select="@*|$node-to-merge/descendant-or-self::node()[name() = $nodeName and name(..) = $parentName]/@*"/>
       <xsl:apply-templates mode="gn-merge" select="*">
         <xsl:with-param name="node-to-merge" select="$node-to-merge"/>
       </xsl:apply-templates>

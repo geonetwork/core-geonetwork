@@ -75,49 +75,53 @@ public class Get implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		UserSession session = context.getUserSession();
+		Element sEl = new Element(Jeeves.Elem.SESSION);
+		
+		if(session != null) {
 
-		String sUsername = session.getUsername();
-		String sName     = session.getName();
-		String sSurname  = session.getSurname();
-		Profile sProfile  = session.getProfile();
-
-		if (sUsername == null)
-			sUsername = Profile.Guest.name();
-
-		if (sName == null)
-			sName = sUsername;
-
-		if (sSurname == null)
-			sSurname = "";
-
-		if (sProfile == null)
-			sProfile = Profile.Guest;
-
-		Element userId   = new Element("userId")  .addContent(session.getUserId());
-		Element username = new Element("username").addContent(sUsername);
-		Element name     = new Element("name")    .addContent(sName);
-		Element surname  = new Element("surname") .addContent(sSurname);
-		Element profile  = new Element("profile") .addContent(sProfile.name());
-
-		Element sEl = new Element(Jeeves.Elem.SESSION)
-			.addContent(userId)
-			.addContent(username)
-			.addContent(name)
-			.addContent(surname)
-			.addContent(profile);
-
-		if (groupName != null)
-		{
-			Map<?, Element> group = (Map<?, Element>)session.getProperty(groupName);
-			if (group != null)
-			{
-				Element gEl = new Element(groupName);
-				for (Element child : group.values()) {
-					if (outFields == null || outFields.contains(child.getName()))
-						 gEl.addContent((Element)child.clone());
-				}
-				sEl.addContent(gEl);
-			}
+    		String sUsername = session.getUsername();
+    		String sName     = session.getName();
+    		String sSurname  = session.getSurname();
+    		Profile sProfile  = session.getProfile();
+    
+    		if (sUsername == null)
+    			sUsername = Profile.Guest.name();
+    
+    		if (sName == null)
+    			sName = sUsername;
+    
+    		if (sSurname == null)
+    			sSurname = "";
+    
+    		if (sProfile == null)
+    			sProfile = Profile.Guest;
+    
+    		Element userId   = new Element("userId")  .addContent(session.getUserId());
+    		Element username = new Element("username").addContent(sUsername);
+    		Element name     = new Element("name")    .addContent(sName);
+    		Element surname  = new Element("surname") .addContent(sSurname);
+    		Element profile  = new Element("profile") .addContent(sProfile.name());
+    
+    		sEl
+    			.addContent(userId)
+    			.addContent(username)
+    			.addContent(name)
+    			.addContent(surname)
+    			.addContent(profile);
+    
+    		if (groupName != null)
+    		{
+    			Map<?, Element> group = (Map<?, Element>)session.getProperty(groupName);
+    			if (group != null)
+    			{
+    				Element gEl = new Element(groupName);
+    				for (Element child : group.values()) {
+    					if (outFields == null || outFields.contains(child.getName()))
+    						 gEl.addContent((Element)child.clone());
+    				}
+    				sEl.addContent(gEl);
+    			}
+    		}
 		}
 		return sEl;
 	}

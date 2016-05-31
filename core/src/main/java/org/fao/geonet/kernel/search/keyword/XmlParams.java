@@ -71,4 +71,8 @@ public final class XmlParams {
      * If present then a search clause for the uri is included
      */
     public static final String pUri = "pUri";
+    /**
+     * Sort order
+     */
+    public static final String sort = "sort";
 }

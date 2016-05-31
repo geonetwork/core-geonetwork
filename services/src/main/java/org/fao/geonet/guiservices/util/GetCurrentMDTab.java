@@ -61,9 +61,7 @@ public class GetCurrentMDTab implements Service
 		if (currentTab == null) {
 			context.info("Creating default metadata tab");
 
-            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            String defaultView = gc.getBean(SettingManager.class).getValue("system/metadata/defaultView");
-            currentTab = (defaultView != null?defaultView:"simple");
+            currentTab = "simple";
 
             session.setProperty(sessionTabProperty, currentTab);
 		}

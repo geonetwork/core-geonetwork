@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.geonetwork-opensource</groupId>
+  <artifactId>schema-doc</artifactId>
+  <name>Schema documentation creator module</name>
+  <packaging>pom</packaging>
+  <description>
+    From the config-editor.xml generate schema documentation in english and
+    french.
+    Update the doc in the schema folders and in the manuals.
+  </description>
+  <version>3.1.0-SNAPSHOT</version>
+  <licenses>
+    <license>
+      <name>General Public License (GPL)</name>
+      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+    </license>
+  </licenses>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.soebes.maven.plugins</groupId>
+        <artifactId>iterator-maven-plugin</artifactId>
+        <version>0.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>iterator</goal>
+            </goals>
+            <configuration>
+              <items>
+                <!-- Define the schema to generate the documentation for. -->
+                <item>iso19139</item>
+                <item>iso19110</item>
+                <item>dublin-core</item>
+              </items>
+              <pluginExecutors>
+                <!-- Convert config-editor to RST format. -->
+                <pluginExecutor>
+                  <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>xml-maven-plugin</artifactId>
+                    <version>1.0.1</version>
+                    <dependencies>
+                      <dependency>
+                        <groupId>net.sf.saxon</groupId>
+                        <artifactId>saxon</artifactId>
+                        <version>8.7</version>
+                      </dependency>
+                      <dependency>
+                        <groupId>commons-codec</groupId>
+                        <artifactId>commons-codec</artifactId>
+                        <version>1.8</version>
+                      </dependency>
+                    </dependencies>
+                  </plugin>
+                  <goal>transform</goal>
+                  <configuration>
+                    <forceCreation>true</forceCreation>
+                    <transformationSets>
+                      <transformationSet>
+                        <dir>../../schemas/@item@/src/main/plugin/@item@/</dir>
+                        <stylesheet>src/main/resources/config-editor-to-rst.xsl</stylesheet>
+                        <outputDir>../../schemas/@item@/doc/en/</outputDir>
+                        <includes>
+                          <include>schema-ident.xml</include>
+                        </includes>
+                        <fileMappers>
+                          <fileMapper
+                                  implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
+                            <pattern>schema-ident\.xml$</pattern>
+                            <replacement>@item@.rst</replacement>
+                          </fileMapper>
+                        </fileMappers>
+                        <parameters>
+                          <parameter>
+                            <name>lang</name>
+                            <value>eng</value>
+                          </parameter>
+                          <parameter>
+                            <name>iso2lang</name>
+                            <value>en</value>
+                          </parameter>
+                          <parameter>
+                            <name>schema</name>
+                            <value>@item@</value>
+                          </parameter>
+                          <parameter>
+                            <name>baseDir</name>
+                            <value>${project.basedir}</value>
+                          </parameter>
+                          <parameter>
+                            <name>verbose</name>
+                            <value>${xsl.verbose}</value>
+                          </parameter>
+                        </parameters>
+                      </transformationSet>
+                      <transformationSet>
+                        <dir>../../schemas/@item@/src/main/plugin/@item@/</dir>
+                        <stylesheet>src/main/resources/config-editor-to-rst.xsl</stylesheet>
+                        <outputDir>../../schemas/@item@/doc/fr/</outputDir>
+                        <includes>
+                          <include>schema-ident.xml</include>
+                        </includes>
+                        <fileMappers>
+                          <fileMapper
+                                  implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
+                            <pattern>schema-ident\.xml$</pattern>
+                            <replacement>@item@.rst</replacement>
+                          </fileMapper>
+                        </fileMappers>
+                        <parameters>
+                          <parameter>
+                            <name>lang</name>
+                            <value>fre</value>
+                          </parameter>
+                          <parameter>
+                            <name>iso2lang</name>
+                            <value>fr</value>
+                          </parameter>
+                          <parameter>
+                            <name>schema</name>
+                            <value>@item@</value>
+                          </parameter>
+                          <parameter>
+                            <name>baseDir</name>
+                            <value>${project.basedir}</value>
+                          </parameter>
+                          <parameter>
+                            <name>verbose</name>
+                            <value>${xsl.verbose}</value>
+                          </parameter>
+                        </parameters>
+                      </transformationSet>
+                    </transformationSets>
+                  </configuration>
+                </pluginExecutor>
+                <!-- Copy the schema doc to the manual folder -->
+                <pluginExecutor>
+                  <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.5</version>
+                  </plugin>
+                  <goal>copy-resources</goal>
+                  <configuration>
+                    <outputDirectory>../manuals/</outputDirectory>
+                    <resources>
+                      <resource>
+                        <directory>../../schemas/@item@/doc/en</directory>
+                        <filtering>false</filtering>
+                        <targetPath>en/standards</targetPath>
+                      </resource>
+                    </resources>
+                    <overwrite>true</overwrite>
+                  </configuration>
+                </pluginExecutor>
+                <pluginExecutor>
+                  <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.5</version>
+                  </plugin>
+                  <goal>copy-resources</goal>
+                  <configuration>
+                    <outputDirectory>../manuals/</outputDirectory>
+                    <resources>
+                      <resource>
+                        <directory>../../schemas/@item@/doc/fr</directory>
+                        <filtering>false</filtering>
+                        <targetPath>fr/standards</targetPath>
+                      </resource>
+                    </resources>
+                    <overwrite>true</overwrite>
+                  </configuration>
+                </pluginExecutor>
+              </pluginExecutors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <properties>
+    <xsl.verbose>true</xsl.verbose>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+</project>

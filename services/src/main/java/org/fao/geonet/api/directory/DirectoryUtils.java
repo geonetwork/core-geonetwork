@@ -1,32 +1,39 @@
 package org.fao.geonet.api.directory;
 
 import com.google.common.collect.Table;
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import jeeves.xlink.XLink;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.pdfbox.util.StringUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.subtemplate.Get;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.jdom.*;
+import org.jdom.Attribute;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.Text;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.XLink;
 
 /**
  * Created by francois on 11/03/16.
@@ -36,24 +43,23 @@ public class DirectoryUtils {
 
     /**
      * Save entries and metadata
-     * @param collectResults
      */
     public static void saveEntries(CollectResults collectResults,
-                            String sourceIdentifier,
-                            Integer owner,
-                            Integer groupOwner,
-                            boolean saveRecord) {
+                                   String sourceIdentifier,
+                                   Integer owner,
+                                   Integer groupOwner,
+                                   boolean saveRecord) {
         ServiceContext context = ServiceContext.get();
         DataManager dataManager = context.getBean(DataManager.class);
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         Table<String, String, Element> entries = collectResults.getEntries();
         Iterator<String> entriesIterator =
-                entries.rowKeySet().iterator();
+            entries.rowKeySet().iterator();
         Metadata record = collectResults.getRecord();
         boolean validate = false, index = false, ufo = false,
-                notify = false, publicForGroup = true, refreshReaders = false;
+            notify = false, publicForGroup = true, refreshReaders = false;
 
-        while(entriesIterator.hasNext()) {
+        while (entriesIterator.hasNext()) {
             String identifier = entriesIterator.next();
             Map<String, Element> uuidAndEntry = entries.row(identifier);
             // Only one entry in the map expected
@@ -64,24 +70,24 @@ public class DirectoryUtils {
             if (dbSubTemplate == null) {
                 Metadata subtemplate = new Metadata().setUuid(uuid);
                 subtemplate.getDataInfo().
-                        setSchemaId(record.getDataInfo().getSchemaId()).
-                        setRoot(entry.getQualifiedName()).
-                        setType(MetadataType.SUB_TEMPLATE);
+                    setSchemaId(record.getDataInfo().getSchemaId()).
+                    setRoot(entry.getQualifiedName()).
+                    setType(MetadataType.SUB_TEMPLATE);
                 subtemplate.getSourceInfo().
-                        setSourceId(sourceIdentifier).
-                        setOwner(owner).
-                        setGroupOwner(groupOwner);
+                    setSourceId(sourceIdentifier).
+                    setOwner(owner).
+                    setGroupOwner(groupOwner);
                 try {
                     subtemplate = dataManager.insertMetadata(
-                            context,
-                            subtemplate,
-                            (Element) entry.clone(),
-                            notify, index, ufo,
-                            UpdateDatestamp.NO,
-                            publicForGroup, refreshReaders);
+                        context,
+                        subtemplate,
+                        (Element) entry.clone(),
+                        notify, index, ufo,
+                        UpdateDatestamp.NO,
+                        publicForGroup, refreshReaders);
 
                     collectResults.getEntryIdentifiers().put(
-                            uuid, subtemplate.getId());
+                        uuid, subtemplate.getId());
                     // TODO: Set categories ? privileges
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -89,23 +95,23 @@ public class DirectoryUtils {
             } else {
                 try {
                     dataManager.updateMetadata(
-                            context, "" + dbSubTemplate.getId(),
-                            (Element) entry.clone(),
-                            validate, ufo, index, context.getLanguage(),
-                            new ISODate().toString(), false);
+                        context, "" + dbSubTemplate.getId(),
+                        (Element) entry.clone(),
+                        validate, ufo, index, context.getLanguage(),
+                        new ISODate().toString(), false);
                     collectResults.getEntryIdentifiers().put(
-                            uuid, dbSubTemplate.getId());
+                        uuid, dbSubTemplate.getId());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-        if(saveRecord) {
+        if (saveRecord) {
             try {
                 dataManager.updateMetadata(
-                        context, "" + record.getId(), record.getXmlData(validate),
-                        validate, ufo, index, context.getLanguage(),
-                        new ISODate().toString(), true);
+                    context, "" + record.getId(), record.getXmlData(validate),
+                    validate, ufo, index, context.getLanguage(),
+                    new ISODate().toString(), true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -113,54 +119,38 @@ public class DirectoryUtils {
     }
 
     /**
-     * Extract all entries matching a specific XPath. If an entry is found
-     * multiple times in the record, and the identifier match,
-     * only one is reported (the last one).
-     *
-     * @param record
-     * @param xpath
-     * @param identifierXpath
-     * @return
-     * @throws Exception
+     * Extract all entries matching a specific XPath. If an entry is found multiple times in the
+     * record, and the identifier match, only one is reported (the last one).
      */
     public static CollectResults collectEntries(Metadata record,
                                                 String xpath,
-                                                String identifierXpath
-    ) throws Exception {
-        return collectEntries(record, xpath, identifierXpath, null, false, false);
+                                                String identifierXpath) throws Exception {
+        return collectEntries(record, xpath, identifierXpath, null, false, false, null);
     }
 
     /**
-     * Synchronize all entries in a record matching a specific XPath.
-     * If an entry is found in the subtemplate list, the record one is updated.
-     * To preserve properties from the record, use the propertiesToCopy
-     *
-     * @param record
-     * @param xpath
-     * @param identifierXpath
-     * @param substituteAsXLink
-     * @param propertiesToCopy
-     * @return
-     * @throws Exception
+     * Synchronize all entries in a record matching a specific XPath. If an entry is found in the
+     * subtemplate list, the record one is updated. To preserve properties from the record, use the
+     * propertiesToCopy
      */
     public static CollectResults synchronizeEntries(Metadata record,
-                                                String xpath,
-                                                String identifierXpath,
-                                                List<String> propertiesToCopy,
-                                                boolean substituteAsXLink
-    ) throws Exception {
+                                                    String xpath,
+                                                    String identifierXpath,
+                                                    List<String> propertiesToCopy,
+                                                    boolean substituteAsXLink,
+                                                    String directoryFilterQuery) throws Exception {
         return collectEntries(record, xpath, identifierXpath,
-                propertiesToCopy, substituteAsXLink, true);
+            propertiesToCopy, substituteAsXLink, true, directoryFilterQuery);
     }
 
 
     private static CollectResults collectEntries(Metadata record,
-                                                String xpath,
-                                                String identifierXpath,
-                                                List<String> propertiesToCopy,
-                                                boolean substituteAsXLink,
-                                                boolean updateFromDirectory
-    ) throws Exception {
+                                                 String xpath,
+                                                 String identifierXpath,
+                                                 List<String> propertiesToCopy,
+                                                 boolean substituteAsXLink,
+                                                 boolean updateFromDirectory,
+                                                 String directoryFilterQuery) throws Exception {
         CollectResults collectResults = new CollectResults(record);
         Map<String, List<Namespace>> namespaceList = new HashMap<String, List<Namespace>>();
         ServiceContext context = ServiceContext.get();
@@ -168,9 +158,9 @@ public class DirectoryUtils {
 
         if (Log.isDebugEnabled(LOGGER)) {
             Log.debug(LOGGER, String.format(
-                    "Collecting directory entries for record '%s' " +
+                "Collecting directory entries for record '%s' " +
                     "using XPath '%s' and identifier XPath '%s'.",
-                    record.getUuid(), xpath, identifierXpath
+                record.getUuid(), xpath, identifierXpath
             ));
         }
 
@@ -195,8 +185,8 @@ public class DirectoryUtils {
 
         if (Log.isDebugEnabled(LOGGER)) {
             Log.debug(LOGGER, String.format(
-                    "%d nodes matching XPath '%s' in record '%s'.",
-                    nodes.size(), xpath, record.getUuid()
+                "%d nodes matching XPath '%s' in record '%s'.",
+                nodes.size(), xpath, record.getUuid()
             ));
         }
 
@@ -210,8 +200,8 @@ public class DirectoryUtils {
                 Element elem = (Element) o;
                 if (Log.isDebugEnabled(LOGGER)) {
                     Log.debug(LOGGER, String.format(
-                            "#%d. Entry XML:\n%s",
-                            numberOfEntries, Xml.getString(elem)
+                        "#%d. XML entry: %s",
+                        numberOfEntries, Xml.getString(elem)
                     ));
                 }
 
@@ -219,9 +209,9 @@ public class DirectoryUtils {
                 String identifier = null;
                 if (StringUtils.isNotEmpty(identifierXpath)) {
                     Object obj = Xml.selectSingle(
-                            (Element) elem.clone(),
-                            identifierXpath,
-                            metadataNamespaces);
+                        (Element) elem.clone(),
+                        identifierXpath,
+                        metadataNamespaces);
                     if (obj instanceof Text) {
                         identifier = ((Text) obj).getTextNormalize();
                     } else if (obj instanceof Attribute) {
@@ -254,18 +244,19 @@ public class DirectoryUtils {
                 }
                 if (Log.isDebugEnabled(LOGGER)) {
                     Log.debug(LOGGER, String.format(
-                            "#%d. Entry identifier is '%s', uuid is '%s'.",
-                            numberOfEntries, identifier, uuid
+                        "#%d. Entry identifier is '%s', uuid is '%s'.",
+                        numberOfEntries, identifier, uuid
                     ));
                 }
 
-                if(updateFromDirectory) {
+                if (updateFromDirectory) {
                     if (Log.isDebugEnabled(LOGGER)) {
                         Log.debug(LOGGER, String.format(
-                                "#%d. Searching '%s' in directory ...",
-                                numberOfEntries, uuid
+                            "#%d. Searching '%s' in directory ...",
+                            numberOfEntries, uuid
                         ));
                     }
+                    // TODO: Add support for other type of subtemplate
                     String searchIndexField = "email";
                     Element subTemplateElement = null;
                     // Search in DB by UUID matching entry UUID
@@ -276,10 +267,24 @@ public class DirectoryUtils {
                         }
                     } else {
                         // or search in Lucene
-                        String id = search(searchIndexField, identifier);
+                        Map<String, String> parameters = new HashMap();
+                        if (directoryFilterQuery != null) {
+                            String[] tokens = directoryFilterQuery.split(":");
+                            if (tokens.length == 2) {
+                                parameters.put(tokens[0], tokens[1]);
+                            } else {
+                                Log.warning(LOGGER, String.format(
+                                    "Filter query for directory must be field:value format. '%s' is not.",
+                                    directoryFilterQuery
+                                ));
+                            }
+                        }
+                        parameters.put(searchIndexField, identifier);
+                        String id = search(parameters);
                         if (id != null) {
                             Metadata subTemplate = metadataRepository.findOne(id);
                             if (subTemplate != null) {
+                                uuid = subTemplate.getUuid();
                                 subTemplateElement = subTemplate.getXmlData(false);
                             }
                         }
@@ -287,12 +292,12 @@ public class DirectoryUtils {
                     // Check subtemplate is similar to
                     if (subTemplateElement == null) {
                         Log.debug(LOGGER, String.format(
-                                "#%d. Not found in directory. Next.",
-                                numberOfEntries, uuid
+                            "#%d. '%s' Not found in directory. Next.",
+                            numberOfEntries, uuid
                         ));
                     } else if (subTemplateElement.getName().equals(
-                            elem.getName()
-                    )){
+                        elem.getName()
+                    )) {
                         // Replace the matching element
                         Element parent = elem.getParentElement();
                         int iIndex = parent.indexOf(elem);
@@ -309,26 +314,26 @@ public class DirectoryUtils {
                             StringBuffer params = new StringBuffer(localXlinkUrlPrefix);
                             params.append(uuid);
                             params.append(getPropertiesAsParameters(
-                                    elem, propertiesToCopy, metadataNamespaces));
+                                elem, propertiesToCopy, metadataNamespaces));
                             parent.setAttribute("uuidref", uuid);
                             parent.setAttribute("href",
-                                    params.toString(),
-                                    XLink.NAMESPACE_XLINK);
+                                params.toString(),
+                                XLink.NAMESPACE_XLINK);
                         }
                         updated = true;
                     } else {
                         Log.debug(LOGGER, String.format(
-                                "#%d. One found in directory but with different root element name '%s'.",
-                                numberOfEntries, subTemplateElement.getName()
+                            "#%d. One found in directory but with different root element name '%s'.",
+                            numberOfEntries, subTemplateElement.getName()
                         ));
                     }
                 } else {
-                    collectResults.getEntries().put(identifier, uuid, (Element)elem.clone());
+                    collectResults.getEntries().put(identifier, uuid, (Element) elem.clone());
                 }
             } else {
                 Log.debug(LOGGER, String.format(
-                        "#%d. Only element can be directory entries. Current element is '%s'.",
-                        numberOfEntries, o.getClass()
+                    "#%d. Only element can be directory entries. Current element is '%s'.",
+                    numberOfEntries, o.getClass()
                 ));
             }
         }
@@ -339,17 +344,12 @@ public class DirectoryUtils {
     }
 
     /**
-     *
-     * @param source
-     * @param target
-     * @param propertiesXpath The text value of the matching element will be copied.
-     *                          It will not copy a snippet.
-     *                          It will not create non existing element.
-     * @return
+     * @param propertiesXpath The text value of the matching element will be copied. It will not
+     *                        copy a snippet. It will not create non existing element.
      */
     private static Element copyProperties(Element source, Element target,
-                                   List<String> propertiesXpath,
-                                   List<Namespace> ns) throws JDOMException {
+                                          List<String> propertiesXpath,
+                                          List<Namespace> ns) throws JDOMException {
         if (propertiesXpath != null) {
             for (String xpath : propertiesXpath) {
                 String value = Xml.selectString(source, xpath, ns);
@@ -372,40 +372,33 @@ public class DirectoryUtils {
     }
 
     /**
-     * Build process URL parameters containing XPath of values
-     * to be replaced in the target subtemplate.
+     * Build process URL parameters containing XPath of values to be replaced in the target
+     * subtemplate.
      *
      * xlink:href="local://eng/subtemplate?uuid=0c18725d-7884-4a09-8492-8b0626d958f2&amp;process=gmd:role/gmd:CI_RoleCode/@codeListValue~resourceProvider&amp;
-     *
-     * @param source
-     * @param propertiesXpath
-     * @param ns
-     * @return
-     * @throws JDOMException
      */
     private static String getPropertiesAsParameters(Element source,
-                                          List<String> propertiesXpath,
-                                          List<Namespace> ns) throws JDOMException {
+                                                    List<String> propertiesXpath,
+                                                    List<Namespace> ns) throws JDOMException {
         StringBuffer properties = new StringBuffer();
-        for(String xpath : propertiesXpath) {
+        for (String xpath : propertiesXpath) {
             String value = Xml.selectString(source, xpath, ns);
             if (StringUtils.isNotEmpty(value)) {
                 properties.append("&amp;").append("process=")
-                        .append(xpath)
-                        .append(Get.SEPARATOR)
-                        .append(value);
+                    .append(xpath)
+                    .append(Get.SEPARATOR)
+                    .append(value);
             }
         }
         return properties.toString();
     }
+
     /**
      * Search using Lucene a matching document
      *
-     * @param field
-     * @param value
-     * @return  The record identifier
+     * @return The record identifier
      */
-    private static String search(String field, String value) {
+    private static String search(Map<String, String> searchParameters) {
         ServiceConfig _config = new ServiceConfig();
         ServiceContext context = ServiceContext.get();
         SearchManager searchMan = context.getBean(SearchManager.class);
@@ -415,7 +408,10 @@ public class DirectoryUtils {
             Element parameters = new Element(Jeeves.Elem.REQUEST);
             parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("_isTemplate").addContent("s"));
-            parameters.addContent(new Element(field).addContent(value));
+            for (Map.Entry<String, String> e : searchParameters.entrySet()) {
+                parameters.addContent(
+                    new Element(e.getKey()).addContent(e.getValue()));
+            }
             parameters.addContent(new Element("from").addContent(1 + ""));
             parameters.addContent(new Element("to").addContent(1 + ""));
 

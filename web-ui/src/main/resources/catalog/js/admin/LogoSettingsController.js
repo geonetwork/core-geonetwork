@@ -85,14 +85,14 @@
 
         $http.get('admin.logo.update?fname=' + logoName +
             '&favicon=' + setFavicon)
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('logoUpdated'),
                 timeout: 2,
                 type: 'success'});
               $rootScope.$broadcast('loadCatalogInfo');
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('logoUpdateError'),
                 error: data,
@@ -107,14 +107,14 @@
        */
       $scope.removeLogo = function(logoName) {
         $http.get('admin.logo.remove?fname=' + logoName)
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('logoRemoved'),
                 timeout: 2,
                 type: 'success'});
               loadLogo();
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('logoRemoveError'),
                 error: data,

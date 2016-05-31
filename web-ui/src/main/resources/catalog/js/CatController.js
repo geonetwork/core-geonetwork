@@ -24,11 +24,15 @@
 (function() {
   goog.provide('gn_cat_controller');
 
+
+
+  goog.require('gn_admin_menu');
   goog.require('gn_search_manager');
   goog.require('gn_session_service');
 
+
   var module = angular.module('gn_cat_controller',
-      ['gn_search_manager', 'gn_session_service']);
+      ['gn_search_manager', 'gn_session_service', 'gn_admin_menu']);
 
 
   module.constant('gnGlobalSettings', {
@@ -36,6 +40,8 @@
     locale: {},
     isMapViewerEnabled: false,
     is3DModeAllowed: false,
+    docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
+    //docUrl: '../../doc/',
     modelOptions: {
       updateOn: 'default blur',
       debounce: {
@@ -53,7 +59,8 @@
       'ger': 'ge',
       'kor': 'ko',
       'spa': 'es',
-      'cze': 'cz'
+      'cze': 'cz',
+      'cat': 'ca'
     },
     getIso2Lang: function(iso3lang) {
       return this.langs[iso3lang];
@@ -80,12 +87,16 @@
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
-    'gnLangs',
+    'gnLangs', 'gnAdminMenu',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
             gnGlobalSettings, $location, gnUtilityService, gnSessionService,
-            gnLangs) {
+            gnLangs, gnAdminMenu) {
       $scope.version = '0.0.1';
+      //Display or not the admin menu
+      if ($location.absUrl().indexOf('/admin.console') != -1) {
+        $scope.viewMenuAdmin = true;
+      }else {$scope.viewMenuAdmin = false}
       //Update Links for social media
       $scope.socialMediaLink = $location.absUrl();
       $scope.$on('$locationChangeSuccess', function(event) {
@@ -103,7 +114,7 @@
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
-        'spa': 'Español', 'cze': 'Czech'};
+        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech'};
       $scope.url = '';
       $scope.base = '../../catalog/';
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;
@@ -271,8 +282,7 @@
               });
         });
       };
-
-
+      $scope.adminMenu = gnAdminMenu.Administrator;
       $scope.$on('loadCatalogInfo', function(event, status) {
         $scope.loadCatalogInfo();
       });

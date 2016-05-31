@@ -90,7 +90,7 @@ public class Info implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		Element result = new Element("root");
-		
+
 		String schema = org.fao.geonet.Util.getParam(params, "schema", "");
 		String serviceType = Util.getParam(params, "serviceType", "");
 
@@ -107,7 +107,7 @@ public class Info implements Service
 
 				else if (type.equals("harvesterTypes"))
 				    result.addContent(getHarvesterTypes(context));
-				
+
 				else if (type.equals("oaiPmhServer"))
 					result.addContent(getOaiPmhServer(el, context));
 
@@ -142,7 +142,7 @@ public class Info implements Service
 //					throw new BadParameterEx(name, type);
 			}
 		}
-				
+
 		return result;
 	}
 
@@ -197,9 +197,9 @@ public class Info implements Service
             if (icon == null || !Files.isRegularFile(icon))
                 return false;
 
-            if(icon != null && icon.getFileName() != null) {
+            if (icon.getFileName() != null) {
                 String name = icon.getFileName().toString();
-    
+
                 for (String ext : iconExt)
                     if (name.endsWith(ext))
                         return true;
@@ -208,7 +208,7 @@ public class Info implements Service
         }
     };
 
-	
+
 	//--------------------------------------------------------------------------
 	//--- Get Metadata fragment stylesheets from each schema
 	//--------------------------------------------------------------------------
@@ -238,7 +238,7 @@ public class Info implements Service
 	}
 
 	//--------------------------------------------------------------------------
-	//--- Get List of Schemas that contain the xslPath               
+	//--- Get List of Schemas that contain the xslPath
 	//--------------------------------------------------------------------------
 
 	private Element getSchemas(Element el, ServiceContext context, String xslPathStr) throws Exception {
@@ -249,10 +249,10 @@ public class Info implements Service
 		Element elRoot = new Element("schemas");
 
 		for (String schema : schemaMan.getSchemas()) {
-			File xslPath = new File(schemaMan.getSchemaDir(schema)+xslPathStr);	
+			File xslPath = new File(schemaMan.getSchemaDir(schema)+xslPathStr);
 			if (xslPath.exists()) {
 				Element res = new Element(Jeeves.Elem.RECORD);
-				
+
 				res.addContent(new Element(Geonet.Elem.ID)  .setText(schema));
 				res.addContent(new Element(Geonet.Elem.NAME).setText(schema));
 
@@ -287,11 +287,11 @@ public class Info implements Service
 	}
 
 	//--------------------------------------------------------------------------
-	//--- OGC GetCapabilities to iso19119 stylesheet path for OGC service type              
+	//--- OGC GetCapabilities to iso19119 stylesheet path for OGC service type
 	//--------------------------------------------------------------------------
 
 	private String getGetCapXSLPath(String serviceType) {
-		return Geonet.Path.OGC_STYLESHEETS 
+		return Geonet.Path.OGC_STYLESHEETS
 				+ "/OGC"
 				+ serviceType.substring(0,3)
 				+ "GetCapabilities-to-ISO19119_ISO19139.xsl";
@@ -405,7 +405,7 @@ public class Info implements Service
 
 	private Path oaiSchema;
 	private Path importXslPath;
-	
+
 	private static final String iconExt[] = { ".gif", ".png", ".jpg", ".jpeg" };
 }
 

@@ -290,6 +290,7 @@
     "data.dataDir": "Data map:",
     "data.formatterPath": "Formatter folder:",
     "data.resources": "Bronnen map:",
+    "data.backupDir": "Backup folder:",
     "data.schemaPluginsDir": "Standaard map:",
     "data.subversionPath": "Subversion opslag plaats:",
     "databaseStatus": "Database status",
@@ -744,6 +745,7 @@
     "system/harvesting/mail/templateWarning": "Waarschuwing sjabloon",
     "system/hidewithheldelements": "Metadata / ISO19139 / Nil reason attribuut tegengehouden",
     "system/hidewithheldelements/enable": "Verbergen Ingehouden Elements",
+    "system/hidewithheldelements/enableLogging": "Enable logging",
     "system/hidewithheldelements/keepMarkedElement": "Houd gemarkeerde element",
     "system/indexoptimizer": "Index optimalisatie",
     "system/indexoptimizer/at/hour": "Uur",
@@ -813,9 +815,6 @@
     "system/proxy/username": "Proxy gebruikersnaam",
     "system/proxy/ignorehostlist": "Negeer host lijst",
     "system/proxy/ignorehostlist-help": "To bypass specific hosts enter a specific IP address or host name such as www.mydomain.com or an address range using wildcards, such as 192.168.2.*. Use | to separate the different host values.",
-    "system/removedMetadata": "Verwijderde metadata",
-    "system/removedMetadata/dir": "Adressenboek",
-    "system/removedMetadata/dir-help": "Map die gebruikt wordt voor opslag van metadata ( in MEF formaat) wanneer ze worden verwijderd .",
     "system/requestedLanguage": "Zoeken & language",
     "system/requestedLanguage/ignorechars": "Tekens te negeren bij het analyseren van tekst",
     "system/requestedLanguage/ignored": "Negeer gewenste taal voor de zoekresultaten .",
@@ -856,6 +855,8 @@
     "system/threadedindexing/maxthreads": "Aantal threads voor indexering",
     "system/userSelfRegistration": "Zelfregistratie gebruiker",
     "system/userSelfRegistration/enable": "Zelfregistratie aanzetten",
+    "system/userFeedback": "User feedback",
+    "system/userFeedback/enable": "Enable feedback",
     "system/xlinkResolver": "Metadata XLink",
     "system/xlinkResolver/enable": "Inschakelen Xlink verwijzingen verwerken",
     "system/xlinkResolver/enable-help": "Indien ingesteld, zal XLinks metadata fragmenten in documenten verwerken.",
@@ -1049,5 +1050,7 @@
     "metadata/editor": "Metadata editor configuratie",
     "metadata/editor/schemaConfig": "Configuratie per standaard",
     "logActivity": "Activiteit",
-    "selectExistingLogo": "Kies uit bestaande logo's"
+    "selectExistingLogo": "Kies uit bestaande logo's",
+    "serviceUrlHelp": "Web service URL without GetCapabilities parameters",
+    "serviceTypeHelp": "Service type"
 }

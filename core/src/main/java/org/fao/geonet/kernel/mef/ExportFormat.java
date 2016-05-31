@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -65,11 +66,11 @@ public class ExportFormat implements GeonetworkExtension {
         SchemaPlugin schemaPlugin = metadataSchema.getSchemaPlugin();
         if (schemaPlugin instanceof ExportablePlugin) {
             Map<String, String> allFormats = ((ExportablePlugin) schemaPlugin).getExportFormats();
-            Iterator<String> allFiles = allFormats.keySet().iterator();
+
             Set<Pair<String, String>> allExports = new HashSet<>();
-            while (allFiles.hasNext()) {
-                String xslFileName = allFiles.next();
-                String outputFileName = allFormats.get(xslFileName);
+            for (Map.Entry< String, String> entry : allFormats.entrySet()) {
+                String xslFileName = entry.getKey();
+                String outputFileName = entry.getValue();
                 Path path = metadataSchema.getSchemaDir().resolve(xslFileName);
                 if (Files.isRegularFile(path)) {
                     String outputData = formatData(metadata, true, path);
@@ -78,8 +79,8 @@ public class ExportFormat implements GeonetworkExtension {
                     // A conversion that does not exist
                     if (Log.isDebugEnabled(Geonet.MEF)) {
                         Log.debug(Geonet.MEF, String.format("Exporting MEF file for '%s' schema plugin formats. File '%s' not found",
-                                metadataSchema.getName(),
-                                path.getFileName()));
+                            metadataSchema.getName(),
+                            path.getFileName()));
                     }
                 }
             }

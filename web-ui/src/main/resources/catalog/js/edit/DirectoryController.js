@@ -177,7 +177,7 @@
           // and the newly created attributes.
           // Save to not lose current edits in main field.
           gnEditor.save(false)
-            .then(function() {
+              .then(function() {
                 gnEditor.add(gnCurrentEdit.id, ref, name,
                     insertRef, position, attribute);
               });
@@ -202,7 +202,7 @@
       };
       $scope.save = function(refreshForm) {
         gnEditor.save(refreshForm)
-          .then(function(form) {
+            .then(function(form) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('saveMetadataSuccess'),
@@ -221,7 +221,7 @@
       };
       $scope.close = function() {
         gnEditor.save(false)
-          .then(function(form) {
+            .then(function(form) {
               $scope.gnCurrentEdit = '';
               $scope.selectEntry(null);
               searchEntries();
@@ -271,7 +271,7 @@
 
           $scope.gnCurrentEdit = gnCurrentEdit;
           $scope.editorFormUrl = gnEditor
-            .buildEditUrlPrefix('md.edit') +
+              .buildEditUrlPrefix('md.edit') +
               '&starteditingsession=yes&random=' + i++;
         }
       };

@@ -70,7 +70,7 @@
     'gnUtilityService', 'gnSearchSettings', 'gnGlobalSettings',
     function($scope, $http, $rootScope, $translate, $compile,
         $q, $timeout, $routeParams, $location,
-            gnSearchManagerService, 
+            gnSearchManagerService,
             gnUtilityService, gnSearchSettings, gnGlobalSettings) {
       $scope.modelOptions =
           angular.copy(gnGlobalSettings.modelOptions);
@@ -203,7 +203,7 @@
             });
 
         $http.get('admin.ownership.groups?_content_type=json&id=' + id)
-          .success(function(data) {
+            .success(function(data) {
               // If user does not have group and only one
               // target group, a simple object is returned
               // and it should be a target group ? FIXME
@@ -252,7 +252,7 @@
 
       function loadProcessConfig() {
         $http.get($scope.base + 'config/batch-process-cfg.json')
-        .success(function(data) {
+            .success(function(data) {
               $scope.batchProcesses = data.config;
 
               $timeout(initProcessByRoute);
@@ -293,14 +293,14 @@
 
       function checkLastBatchProcessReport() {
         // Check if processing
-        return $http.get('md.processing.batch.report?_content_type=json').
+        return $http.get('../api/processes').
             success(function(data, status) {
-              if (data != 'null') {
-                $scope.processReport = data;
-                $scope.numberOfRecordsProcessed = data['@processedRecords'];
-              }
+              // TODO: Assume one process is running
+              // Should use the process ID to register and retrieve a process
+              $scope.processReport = data[0];
+              $scope.numberOfRecordsProcessed = $scope.processReport.numberOfRecordsProcessed;
               if ($scope.processReport &&
-                      $scope.processReport['@running'] == 'true') {
+                      $scope.processReport.running) {
                 $timeout(checkLastBatchProcessReport, processCheckInterval);
               }
             });
@@ -314,21 +314,17 @@
 
         var formParams = $(formId).serialize();
         if (testMode != undefined) {
-          formParams += '&test=' + testMode;
+          formParams += '&isTesting=' + testMode;
         }
 
-        var service = '';
-        if (process != undefined) {
-          service = process;
-        } else {
-          service = 'md.processing.batch?_content_type=json';
-        }
+        var service = '../api/processes/' +
+                      (process != undefined ? process : $scope.data.selectedProcess.key);
 
         $scope.processing = true;
         $scope.processReport = null;
-        $http.get(service + '&' +
+        $http.post(service + '?' +
             formParams)
-          .success(function(data) {
+            .success(function(data) {
               $scope.processReport = data;
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('processFinished'),
@@ -336,24 +332,14 @@
                 type: 'success'});
               $scope.processing = false;
 
-              angular.forEach($scope.processReport.changed, function(c) {
-                if (c.change && !angular.isArray(c.change)) {
-                  c.change = [c.change];
-                  delete c.changedval;
-                  delete c.fieldid;
-                  delete c.originalval;
-                }
-              });
-
-
               // Turn off batch report checking for search and replace mode
               // AFA as report is not properly set in session
               // https://github.com/geonetwork/core-geonetwork/issues/828
-              if (service.indexOf('md.searchandreplace') === -1) {
-                checkLastBatchProcessReport();
-              }
+              // if (service.indexOf('search-and-replace') === -1) {
+              //   checkLastBatchProcessReport();
+              // }
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('processError'),
                 error: data,
@@ -362,11 +348,11 @@
               $scope.processing = false;
             });
 
-        gnUtilityService.scrollTo('#gn-batch-process-report');
+        // gnUtilityService.scrollTo('#gn-batch-process-report');
         // FIXME
-        if (service.indexOf('md.searchandreplace') === -1) {
-          $timeout(checkLastBatchProcessReport, processCheckInterval);
-        }
+        // if (service.indexOf('search-and-replace') === -1) {
+        //   $timeout(checkLastBatchProcessReport, processCheckInterval);
+        // }
       };
 
       loadGroups();
@@ -376,7 +362,7 @@
 
       // TODO: Should only do that if batch process is the current page
       loadProcessConfig();
-      checkLastBatchProcessReport();
+      // checkLastBatchProcessReport();
 
       var initProcessByRoute = function() {
         if ($routeParams.tab === 'batch') {

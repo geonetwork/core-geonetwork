@@ -37,10 +37,14 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.utils.IO;
@@ -48,6 +52,7 @@ import org.jdom.Element;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 
@@ -80,7 +85,25 @@ public class Update extends NotInReadOnlyModeService {
         if (website != null && website.length() > 0 && !website.startsWith("http://")) {
             website = "http://" + website;
         }
-
+        
+        //Check that we have privileges over this group
+        UserSession session = context.getUserSession();
+        if(!session.getProfile().equals(Profile.Administrator)) {
+            java.util.List<UserGroup> usergroups = context.getBean(UserGroupRepository.class).findAll(
+                    GroupSpecs.isEditorOrMore(session.getUserIdAsInt()));
+            boolean canEditGroup = false;
+            if (id != null && !"".equals(id)) {
+                Integer i = Integer.valueOf(id);
+                for(UserGroup ug : usergroups) {
+                    if(ug.getGroup().getId() == i) {
+                        canEditGroup = ug.getProfile().equals(Profile.UserAdmin);
+                    }
+                }
+            }
+            if(!canEditGroup) {
+                throw new SecurityException("You cannot edit this group");
+            }
+        }
         // Logo management ported/adapted from GeoNovum GeoNetwork app.
         // Original devs: Heikki Doeleman and Thijs Brentjens
         String logoFile = params.getChildText("logofile");

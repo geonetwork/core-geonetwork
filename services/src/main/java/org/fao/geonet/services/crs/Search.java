@@ -46,6 +46,7 @@ import java.util.Set;
  *
  * @author francois
  */
+@Deprecated
 public class Search implements Service {
 	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
@@ -86,7 +87,7 @@ public class Search implements Service {
 
 	/**
 	 * filters all CRS Names from all available CRS authorities
-	 * 
+	 *
 	 * @param filter
 	 *            array of keywords
 	 * @param crsTypeClass
@@ -96,7 +97,7 @@ public class Search implements Service {
 	 * @return XML with all CRS Names which contain all the filter keywords
 	 */
 	private Element filterCRS(String[] filter,
-			Class<? extends IdentifiedObject> crsTypeClass, 
+			Class<? extends IdentifiedObject> crsTypeClass,
 			int maxResults) {
 		Element crsList = new Element("crsList");
 		int i = 0;
@@ -131,7 +132,7 @@ public class Search implements Service {
 						description = "-";
 					}
 					description += " (" + authorityCodeSpace + ":" + code + ")";
-					
+
 					if (matchesFilter(description.toUpperCase(), filter)) {
 						Element crs = GetCRS.formatCRS(authorityTitle,
 								authorityEdition, authorityCodeSpace, code,
@@ -152,7 +153,7 @@ public class Search implements Service {
 
 	/**
 	 * checks if all keywords in filter array are in input
-	 * 
+	 *
 	 * @param input
 	 *            test string
 	 * @param filter
