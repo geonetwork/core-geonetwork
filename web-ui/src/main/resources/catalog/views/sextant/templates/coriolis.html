@@ -28,7 +28,6 @@
   <link href="http://projets-test.ifremer.fr/extension/coriolis/design/skin-coriolis/stylesheets/coriolis-ie6.css" rel="stylesheet" type="text/css" media="all" />
   <![endif]-->
 
-
   <script type='text/javascript' src="http://projets-test.ifremer.fr/extension/spreadnshare/design/sns-standard/javascript/jquery.js"></script>
   <script type='text/javascript' src="http://projets-test.ifremer.fr/extension/spreadnshare/design/sns-standard/javascript/jquery-ui.js"></script>
   <script type='text/javascript' src="http://projets-test.ifremer.fr/extension/coriolis/design/skin-coriolis/javascript/layer.js"></script>
@@ -76,7 +75,7 @@
          ng-controller="GnCatController"
          class="gn sxt-max-sm"
          sxt-size="auto"
-         ng-include="'../../catalog/views/sextant/templates/sxtapimain.html'">
+         ng-include="'../../catalog/views/sextant/templates/index.html'">
     </div>
 
     <script type="text/javascript">
@@ -88,7 +87,7 @@
           fromHtmlTag: true,
           regexp: '^\/([a-z]+)\/',
           lang: 'fre'
-        },    //configWhat: 'CORIOLIS',
+        },    configWhat: 'CORIOLIS',
 //    configWho: 'IFREMER',
         tabOverflow : {
           search: true,
