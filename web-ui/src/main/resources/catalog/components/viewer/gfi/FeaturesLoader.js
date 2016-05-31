@@ -233,7 +233,7 @@
         columns = [],
         solr = this.solrObject,
         map = this.map,
-        fields = solr.filteredDocTypeFieldsInfo;
+        fields = solr.indexFields || solr.filteredDocTypeFieldsInfo;
 
     fields.forEach(function(field) {
       if ($.inArray(field.idxName, this.excludeCols) === -1) {
