@@ -338,20 +338,22 @@
               }
               scope.user = controller.user;
 
-              $http.get(gnSolrWfsFilterConfig.url + '/query',  {
-                params: {
-                  rows: 1,
-                  q: gnSolrWfsFilterConfig.docTypeIdField + ':"' +
-                  gnSolrWfsFilterConfig.idDoc({
-                    wfsUrl: wfsLink.url,
-                    featureTypeName: wfsLink.name
-                  }) + '"',
-                  wt: 'json'
-                }}).success(function(data) {
-                if(data.response.numFound > 0) {
-                  scope.wfs = wfsLink;
-                }
-              });
+              if(wfsLink) {
+                $http.get(gnSolrWfsFilterConfig.url + '/query',  {
+                  params: {
+                    rows: 1,
+                    q: gnSolrWfsFilterConfig.docTypeIdField + ':"' +
+                    gnSolrWfsFilterConfig.idDoc({
+                      wfsUrl: wfsLink.url,
+                      featureTypeName: wfsLink.name
+                    }) + '"',
+                    wt: 'json'
+                  }}).success(function(data) {
+                  if(data.response.numFound > 0) {
+                    scope.wfs = wfsLink;
+                  }
+                });
+              }
 
               var processable =
                 scope.member.get('md')['geonet:info'].process == 'true';
