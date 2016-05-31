@@ -13,7 +13,7 @@
 
 
   <!-- Left buttons - Tools-->
-  <div class="tools main-tools" ng-class="{'activeTool': active.tool }">
+  <div class="tools main-tools" ng-class="{'activeTool': active.tool, 'sxt-maximize-layer-tools': active.maximized }">
 
     <div gi-btn-group gnv-close-panel data-ng-controller="toolsController" class="sxt-panel-button">
       <button sxt-tool class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" gi-btn gnv-tools-btn>
@@ -79,8 +79,8 @@
               <span translate>filter</span>
             </button>
           </div>
-          <button class="btn btn-default btn-xs" sxt-layer-tools-toggle=".main-tools">
-            <i class="fa fa-plus"></i>
+          <button class="btn btn-default btn-xs" sxt-layer-tools-toggle>
+            <i class="fa" ng-class="{ 'fa-plus': !active.maximized, 'fa-minus': active.maximized }"></i>
           </button>
           <div class="btn-group sxt-layer-tabs" ng-class="{'sxt-hidden': isSeparatedTool()}">
             <button class="btn btn-default btn-xs" ng-click="layerTabSelect('legend')" ng-class="{'active': layerTabs.legend.active}">

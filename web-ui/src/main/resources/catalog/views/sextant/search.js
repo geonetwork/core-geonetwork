@@ -503,26 +503,22 @@
       };
     }]);
 
-  module.directive('sxtLayerToolsToggle', [
-    function() {
+  module.directive('sxtLayerToolsToggle', [ '$rootScope', function($rootScope) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        scope.active.maximized = false;
+        element.on('click', function() { scope.$apply(function(){
+          scope.active.maximized = !scope.active.maximized;
+        }); });
+        $rootScope.$on('owsContextReseted', function() {
+          scope.active.maximized = false;
+          scope.active.layersTools = false;
+        });
 
-      return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-          var target = $(attrs['sxtLayerToolsToggle']);
-          var fa = element.find('.fa');
-          element.on('click', function() {
-            scope.$apply(function(){
-              element.toggleClass('active');
-              fa.toggleClass('fa-plus');
-              fa.toggleClass('fa-minus');
-              target.toggleClass('sxt-maximize-layer-tools',
-                  element.hasClass('active'));
-            });
-          });
-        }
-      };
-    }]);
+      }
+    };
+  }]);
 
     module.directive('sxtCustomScroll', [ '$window', function($window) {
     return {
