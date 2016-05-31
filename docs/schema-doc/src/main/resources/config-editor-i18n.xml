@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<i18n>
+  <eng>
+    <schema-id>Standard identifier</schema-id>
+    <schema-version>Version</schema-version>
+    <schema-location>Schema location</schema-location>
+    <schema-ns>Schema namespaces</schema-ns>
+    <schema-dm>Schema detection mode</schema-dm>
+    <schema-dme>Schema detection elements</schema-dme>
+    <schema-details>Schema technical details</schema-details>
+    <schema-url>More details: </schema-url>
+    <editor-config>Metadata editor</editor-config>
+    <glossary>Standard elements</glossary>
+    <glossary-help>List of all elements available in the standard.
+    </glossary-help>
+    <codelists>Standard codelists</codelists>
+    <codelists-help>List of all codelists available in the standard.
+    </codelists-help>
+    <disabled>Disabled</disabled>
+    <noCodelist>No codelist defined.</noCodelist>
+    <view>View:</view>
+    <nbOfTabs>This view is composed of </nbOfTabs>
+    <tabs> tab(s).</tabs>
+    <domain>Domain</domain>
+    <tab>Tab: </tab>
+    <section>Section: </section>
+    <field>Field: </field>
+    <actionName>Name</actionName>
+    <actionType>Type</actionType>
+    <nodename>Name</nodename>
+    <undefined>Undefined field: </undefined>
+    <tag>Tag: </tag>
+    <desc>Description</desc>
+    <more>More details: </more>
+    <helper>Recommended values</helper>
+    <cond>Condition</cond>
+    <codelist>Standard codelists</codelist>
+    <flatModeExceptions>This view also allows to add the following element even if
+      not in the current record:
+    </flatModeExceptions>
+    <xpath>XPath</xpath>
+    <flatMode>This tab display elements from the XML metadata record.</flatMode>
+    <notFlatMode>This tab display elements from the XML metadata record and
+      also provide controls to add all elements defined in the schema (XSD).</notFlatMode>
+    <displayIf>Displayed only if</displayIf>
+    <cf>See </cf>
+    <hiddenInEditMode>Those values are defined in the standard but hidden when editing.</hiddenInEditMode>
+    <instruction>Instruction</instruction>
+    <nbOfViews>This standard can be encoded using </nbOfViews>
+    <views> view(s).</views>
+    <context>Context</context>
+  </eng>
+  <fre>
+    <schema-id>Identifiant du standard</schema-id>
+    <schema-version>Version</schema-version>
+    <schema-location>URL du schéma</schema-location>
+    <schema-ns>Espaces de nommage</schema-ns>
+    <schema-dm>Mode de détection</schema-dm>
+    <schema-dme>Eléments détectés</schema-dme>
+    <schema-details>Informations techniques sur le schéma</schema-details>
+    <schema-url>Plus d'information : </schema-url>
+    <editor-config>Encodage des fiches</editor-config>
+    <glossary>Éléments du standard</glossary>
+    <glossary-help>Liste des descripteurs définis dans le standard de
+      métadonnées.
+    </glossary-help>
+    <codelists>Listes de valeurs du standard</codelists>
+    <codelists-help>Listes de valeurs définies dans le standard de
+      métadonnées.
+    </codelists-help>
+    <disabled>Désactivé</disabled>
+    <actionName>Nom du bouton</actionName>
+    <actionType>Type</actionType>
+    <domain>Domaine</domain>
+    <noCodelist>Aucune liste de valeurs.</noCodelist>
+    <view>Vue :</view>
+    <nodename>Nom</nodename>
+    <nbOfTabs>Cette vue est composée de </nbOfTabs>
+    <tabs> onglet(s).</tabs>
+    <tab>Onglet : </tab>
+    <section>Section : </section>
+    <field>Descripteur : </field>
+    <undefined>Non défini : </undefined>
+    <tag>Balise XML : </tag>
+    <desc>Description</desc>
+    <more>Information complémentaire : </more>
+    <helper>Valeurs recommandées : </helper>
+    <cond>Condition</cond>
+    <codelist>Liste de valeurs</codelist>
+    <flatModeExceptions>Cette vue permet la saisie des éléments suivant même
+      s'ils ne sont pas dans la fiche en cours d'édition :
+    </flatModeExceptions>
+    <xpath>XPath</xpath>
+    <flatMode>Cet onglet affiche des élements du document XML.</flatMode>
+    <notFlatMode>Cet onglet affiche des élements du document XML et permet également l'ajout d'élément définis dans le standard (Schéma XSD).</notFlatMode>
+    <displayIf>Afficher uniquement si</displayIf>
+    <cf>Cf. </cf>
+    <instruction>Instruction</instruction>
+    <hiddenInEditMode>Ces valeurs sont définies dans le standard</hiddenInEditMode>
+    <nbOfViews>Ce standard peut être encodé en utilisant </nbOfViews>
+    <views> vue(s).</views>
+    <context>Contexte de l'élément</context>
+  </fre>
+</i18n>

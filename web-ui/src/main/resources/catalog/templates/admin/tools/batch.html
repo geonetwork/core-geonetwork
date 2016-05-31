@@ -71,7 +71,7 @@
                             data-ng-model="searchObj.params.group">
                       <option></option>
                       <option data-ng-repeat="g in batchSearchGroups" value="{{g.id}}"
-                              >{{g.label[lang]}}</option>
+                              >{{g.label[lang]|empty:g.name}}</option>
                     </select>
                   </div>
                 </div>
@@ -152,7 +152,7 @@
                   data-ng-options="p.key | translate for p in batchProcesses">
           </select>
 
-          <!-- ng-options set only a index for the select value, 
+          <!-- ng-options set only a index for the select value,
           bound the process name in a hidden field -->
           <input type="hidden" name="process" value="{{selectedProcess.key}}"/>
           <fieldset data-ng-hide="!selectedProcess">
@@ -191,9 +191,9 @@
                 </div>
               </div><!-- end ng-switch-when-->
 
-              <div data-ng-switch-default class="alert alert-danger" 
+              <div data-ng-switch-default class="alert alert-danger"
                    data-translate="batchProcessTypeUnsupported"
-                   data-translate-values="{type: selectedProcess.type}">                
+                   data-translate-values="{type: selectedProcess.type}">
               </div><!-- end ng-switch-default -->
 
             </div><!-- end ng-switch -->
@@ -208,9 +208,9 @@
   <div id="gn-batch-process-report" data-ng-switch="selectedProcess.type">
     <div class="col-md-12"
          data-ng-hide="!processing && !processReport"  data-ng-switch-when="fixed-params">
-      <div class="progress progress-striped active"
-           data-ng-show="processReport.running == 'true'">
-        <div class="progress-bar" style="width: 100%"/>
+
+      <div data-ng-show="processing">
+        <i class="fa fa-spinner fa-spin"/>
       </div>
 
       <div data-gn-batch-report="processReport"/>
@@ -221,4 +221,6 @@
       </div>
     </div>
   </div>
+
+  <div data-gn-need-help="user-guide/workflow/batchupdate.html"></div>
 </div>

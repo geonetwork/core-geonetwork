@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18n>
+  <viewInGE>Toon in Google Earth</viewInGE>
+  <warning>Waarschuwing!</warning>
+  <nojs>Javascript is niet beschikbaar. Activeer javascript of klik <a
+    href="catalog.search.nojs">hier</a> voor een versie zonder javascript.</nojs>
+  <selectView>Kies view</selectView>
+  <moreTabs>Meer informatie</moreTabs>
+  <nodeChangeWarning>Node wijziging waarschuwing</nodeChangeWarning>
+  <nodeChangeInfo>Waarschuwing: U bevindt zich niet meer in de node als waar op u ingelogd was.</nodeChangeInfo>
+  <nodeChangeBack>Om terug te keren naar de node waarop u ingelogd bent:</nodeChangeBack>
+  <nodeChangeForward>Om uit te loggen en terug te keren naar de zojuist geopende url:</nodeChangeForward>
+  <serviceNotAllowedTitle>Service is niet beschikbaar</serviceNotAllowedTitle>
+  <serviceNotAllowed>De service {1} bestaat niet, of u heeft onvoldoende rechten om deze te bekijken.</serviceNotAllowed>
+  <linkToHome><span>Keer terug naar de <a href="../..">zoek pagina</a>.</span></linkToHome>
+</i18n>

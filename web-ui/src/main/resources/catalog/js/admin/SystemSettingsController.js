@@ -85,7 +85,7 @@
 
         $http.get('systeminfo/staging?newProfile=' +
             $scope.systemInfo.stagingProfile)
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('profileUpdated'),
                 timeout: 2,
@@ -112,16 +112,16 @@
       function loadSettings() {
 
         $http.get('info?type=systeminfo&_content_type=json')
-          .success(function(data) {
+            .success(function(data) {
               $scope.systemInfo = data.systemInfo;
             });
         // load log files
         $http.get('admin.logfile.list?_content_type=json')
-          .success(function(data) {
+            .success(function(data) {
               $scope.logfiles = data.logFile;
             });
         $http.get('admin.config.list?asTree=false&_content_type=json')
-          .success(function(data) {
+            .success(function(data) {
 
               var sectionsLevel1 = [];
               var sectionsLevel2 = [];
@@ -230,7 +230,7 @@
 
       $scope.testMailConfiguration = function() {
         $http.get('../api/0.1/tools/mail/test')
-          .then(function(response) {
+            .then(function(response) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: response.data});
             }, function(response) {
@@ -257,7 +257,7 @@
         $scope.saveSettings(formId);
 
         $location.path('/tools/batch/select/all/process/' + process)
-          .search(
+            .search(
             'urlPrefix=' + buildUrl($scope.initalSettings) +
             '&newUrlPrefix=' + buildUrl($scope.settings));
       };

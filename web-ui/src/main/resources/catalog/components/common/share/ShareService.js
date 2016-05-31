@@ -59,21 +59,39 @@
     function($q, $http, gnShareConstants) {
       var isAdminOrReviewer = function(userProfile, groupOwner, privileges) {
         if ($.inArray(userProfile,
-            gnShareConstants.internalGroupsProfiles) === -1) {
+                      gnShareConstants.internalGroupsProfiles) === -1) {
           return false;
         } else if (userProfile === 'Administrator') {
           return true;
         } else {
+          // Check if user is member of groupOwner
+          // or check if user is Reviewer and can edit record
           var ownerGroupInfo = $.grep(privileges, function(g) {
-            return g.id === groupOwner;
+            var canEdit = false;
+            for (var i = 0; i < g.oper.length; i++) {
+              if (g.oper[i].id === '2' && g.oper[i].on) {
+                // Editing
+                canEdit = true;
+                break;
+              }
+            }
+            return g.id === groupOwner ||
+                   (canEdit && $.inArray('Reviewer', g.userProfile) !== -1);
           });
-          var profiles = ownerGroupInfo[0].userProfile;
-          // Check profile for the group where the metadata was created
-          if (angular.isArray(profiles)) {
-            return $.inArray('Reviewer', profiles) !== -1;
-          } else {
-            return profiles === 'Reviewer';
+
+          var profiles = [];
+          for (var j = 0; j < ownerGroupInfo.length; j++) {
+            var groupProfile = ownerGroupInfo[j].userProfile;
+            if (groupProfile) {
+              if ($.isArray(groupProfile)) {
+                profiles = profiles.concat(groupProfile);
+              } else {
+                profiles.push(groupProfile);
+              }
+            }
           }
+          // Check profile for the group where the metadata was created
+          return $.inArray('Reviewer', profiles) !== -1;
         }
       };
 
@@ -119,7 +137,7 @@
               'md.privileges.batch?_content_type=json';
 
           $http.get(url)
-            .success(function(data) {
+              .success(function(data) {
                 var groups = data !== 'null' ? data.group : null;
                 if (data == null) {
                   return;
@@ -230,7 +248,7 @@
           });
           //TODO: fix service that crash with _content_type parameter
           $http.get(url, {params: params})
-            .success(function(data) {
+              .success(function(data) {
                 defer.resolve(data);
               }).error(function(data) {
                 defer.reject(data);

@@ -23,21 +23,23 @@
 package org.fao.geonet.api.records;
 
 import com.google.common.collect.Sets;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.processing.report.IProcessingReport;
+import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.BatchEditParameter;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.AddElemValue;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.services.metadata.XslProcessingReport;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -45,29 +47,37 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
+
 @RequestMapping(value = {
-        "/api/records/actions",
-        "/api/" + API.VERSION_0_1 +
-                "/records/actions"
+    "/api/records/actions",
+    "/api/" + API.VERSION_0_1 +
+        "/records/actions"
 })
 @Api(value = "records",
-        tags = "records",
-        description = "Metadata record editing operations")
+    tags = "records",
+    description = "Metadata record editing operations")
 @Controller("records/edit")
 @ReadWriteController
 public class BatchEditsApi implements ApplicationContextAware {
-    private ApplicationContext context;
-
     @Autowired
     SchemaManager _schemaManager;
-
+    private ApplicationContext context;
 
     public synchronized void setApplicationContext(ApplicationContext context) {
         this.context = context;
@@ -76,24 +86,23 @@ public class BatchEditsApi implements ApplicationContextAware {
 
     /**
      * The service edits to the current selection or a set of uuids.
-     *
      */
     @ApiOperation(value = "Edit a set of records by XPath expression",
-            nickname = "get")
+        nickname = "get")
     @RequestMapping(value = "/batchedit",
-            method = RequestMethod.PUT,
-            produces = {
-                MediaType.APPLICATION_JSON_VALUE
-            })
+        method = RequestMethod.PUT,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
     public
     @ResponseBody
-    XslProcessingReport serviceSpecificExec(
-                @ApiParam(value = "Record UUIDs. If null current selection is used.",
-                          required = false,
-                          example = "iso19139")
-                @RequestParam(required = false) String[] uuids,
-                @RequestBody BatchEditParameter[] edits)
-            throws Exception {
+    IProcessingReport serviceSpecificExec(
+        @ApiParam(value = "Record UUIDs. If null current selection is used.",
+            required = false,
+            example = "iso19139")
+        @RequestParam(required = false) String[] uuids,
+        @RequestBody BatchEditParameter[] edits)
+        throws Exception {
         Profile profile = ServiceContext.get().getUserSession().getProfile();
         if (profile == null) {
             throw new SecurityException("Only Editors can run batch edits.");
@@ -107,13 +116,13 @@ public class BatchEditsApi implements ApplicationContextAware {
 
         ServiceContext serviceContext = ServiceContext.get();
         final Set<String> setOfUuidsToEdit;
-        if(uuids == null) {
+        if (uuids == null) {
             SelectionManager selectionManager =
-                    SelectionManager.getManager(serviceContext.getUserSession());
+                SelectionManager.getManager(serviceContext.getUserSession());
 
             synchronized (
-                    selectionManager.getSelection(
-                            SelectionManager.SELECTION_METADATA)) {
+                selectionManager.getSelection(
+                    SelectionManager.SELECTION_METADATA)) {
                 final Set<String> selection = selectionManager.getSelection(SelectionManager.SELECTION_METADATA);
                 setOfUuidsToEdit = Sets.newHashSet(selection);
             }
@@ -131,11 +140,10 @@ public class BatchEditsApi implements ApplicationContextAware {
         AccessManager accessMan = context.getBean(AccessManager.class);
         final String settingId = SettingManager.CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
         boolean createXpathNodeIfNotExists =
-                context.getBean(SettingManager.class).getValueAsBool(settingId);
+            context.getBean(SettingManager.class).getValueAsBool(settingId);
 
 
-        XslProcessingReport report = new XslProcessingReport("batchediting");
-
+        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         report.setTotalRecords(setOfUuidsToEdit.size());
 
         String changeDate = null;
@@ -143,9 +151,9 @@ public class BatchEditsApi implements ApplicationContextAware {
         for (String recordUuid : setOfUuidsToEdit) {
             Metadata record = metadataRepository.findOneByUuid(recordUuid);
             if (record == null) {
-              report.incrementNullRecords();
+                report.incrementNullRecords();
             } else if (!accessMan.isOwner(serviceContext, String.valueOf(record.getId()))) {
-              // TODO
+                report.addNotEditableMetadataId(record.getId());
             } else {
                 // Processing
                 try {
@@ -157,17 +165,17 @@ public class BatchEditsApi implements ApplicationContextAware {
                     Iterator<BatchEditParameter> listOfUpdatesIterator = listOfUpdates.iterator();
                     while (listOfUpdatesIterator.hasNext()) {
                         BatchEditParameter batchEditParameter =
-                                listOfUpdatesIterator.next();
+                            listOfUpdatesIterator.next();
 
                         AddElemValue propertyValue =
-                                new AddElemValue(batchEditParameter.getValue());
+                            new AddElemValue(batchEditParameter.getValue());
 
                         metadataChanged = editLib.addElementOrFragmentFromXpath(
-                                metadata,
-                                metadataSchema,
-                                batchEditParameter.getXpath(),
-                                propertyValue,
-                                createXpathNodeIfNotExists
+                            metadata,
+                            metadataSchema,
+                            batchEditParameter.getXpath(),
+                            propertyValue,
+                            createXpathNodeIfNotExists
                         );
                     }
                     if (metadataChanged) {
@@ -175,10 +183,12 @@ public class BatchEditsApi implements ApplicationContextAware {
                         boolean ufo = false;
                         boolean index = true;
                         dataMan.updateMetadata(
-                                serviceContext, record.getId() + "", metadata,
-                                validate, ufo, index,
-                                "eng", // Not used when validate is false
-                                changeDate, false);
+                            serviceContext, record.getId() + "", metadata,
+                            validate, ufo, index,
+                            "eng", // Not used when validate is false
+                            changeDate, false);
+                        report.incrementProcessedRecords();
+                        report.addMetadataInfos(record.getId(), "Metadata updated.");
                     }
                 } catch (Exception e) {
                     report.addMetadataError(record.getId(), e);
@@ -186,6 +196,7 @@ public class BatchEditsApi implements ApplicationContextAware {
                 report.incrementProcessedRecords();
             }
         }
+        report.close();
         return report;
     }
 }

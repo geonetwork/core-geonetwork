@@ -24,7 +24,12 @@
 package org.fao.geonet.api.tools.i18n;
 
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by francois on 05/02/16.
@@ -38,7 +43,7 @@ public class LanguageUtils {
                          final String defaultLanguage) {
         iso3code = Collections.unmodifiableSet(localesToLoad);
         this.defaultLanguage = defaultLanguage;
-        for(String l : iso3code) {
+        for (String l : iso3code) {
             locales.add(Locale.forLanguageTag(l));
         }
     }

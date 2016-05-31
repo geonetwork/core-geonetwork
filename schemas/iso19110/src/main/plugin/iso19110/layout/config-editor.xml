@@ -69,7 +69,7 @@
           <field xpath="/gfc:FC_FeatureCatalogue/gmx:versionDate"/>
           <field xpath="/gfc:FC_FeatureCatalogue/gfc:producer" or="producer"
             in="/gfc:FC_FeatureCatalogue"/>
-          <field xpath="/gfc:FC_FeatureCatalogue/gmx:functionalLanguage" or="functionalLanguage"
+          <field xpath="/gfc:FC_FeatureCatalogue/gfc:functionalLanguage" or="functionalLanguage"
             in="/gfc:FC_FeatureCatalogue"/>
           <field
               xpath="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType/gfc:typeName"

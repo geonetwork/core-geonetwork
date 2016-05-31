@@ -198,7 +198,7 @@
        */
       var runService = function(service, params, scope) {
         return gnEditor.save(false, true)
-        .then(function() {
+            .then(function() {
               gnHttp.callService(service, params).success(function() {
                 refreshForm(scope);
               }).error(function(error) {

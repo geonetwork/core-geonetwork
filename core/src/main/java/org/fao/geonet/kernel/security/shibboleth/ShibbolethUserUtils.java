@@ -221,6 +221,10 @@ public class ShibbolethUserUtils {
 
 	protected static String getHeader(HttpServletRequest req, String name,
 			String defValue) {
+	    
+	    if(name == null || name.trim().isEmpty()) {
+	        return defValue;
+	    }
 
 		String value = req.getHeader(name);
 

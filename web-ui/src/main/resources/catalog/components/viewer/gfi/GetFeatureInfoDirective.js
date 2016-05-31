@@ -214,7 +214,7 @@
 
   angular.module('gfiFilters', ['ngSanitize'])
 
-  .filter('attributes', function() {
+      .filter('attributes', function() {
         return function(properties) {
           var props = {};
           var exclude = ['FID', 'boundedBy', 'the_geom', 'thegeom'];

@@ -26,7 +26,7 @@
   goog.provide('gn_formfields_directive');
 
   angular.module('gn_formfields_directive', [])
-  /**
+      /**
    * @ngdoc directive
    * @name gn_formfields.directive:gnTypeahead
    * @restrict A
@@ -37,7 +37,7 @@
    * empty.
    */
 
-  .directive('gnTypeahead', [function() {
+      .directive('gnTypeahead', [function() {
 
         /**
          * If data are prefetched, get the label from the value
@@ -197,7 +197,7 @@
               field.parent().after(triggerElt);
               var resetElt = $('<span class="close ' +
                   'tagsinput-clear">&times;</span>')
-              .on('click', function() {
+                  .on('click', function() {
                     scope.gnValues = '';
                     scope.$apply();
                   });
@@ -222,7 +222,7 @@
       }])
 
 
-    .directive('groupsCombo', ['$http', function($http) {
+      .directive('groupsCombo', ['$http', function($http) {
         return {
 
           restrict: 'A',
@@ -272,7 +272,7 @@
         };
       }])
 
-  .directive('protocolsCombo', ['$http', 'gnSchemaManagerService',
+      .directive('protocolsCombo', ['$http', 'gnSchemaManagerService',
         function($http, gnSchemaManagerService) {
           return {
             restrict: 'A',
@@ -314,7 +314,7 @@
                 searchFormCtrl.triggerSearch(true);
               };
               hotkeys.bindTo(scope)
-                .add({
+                  .add({
                     combo: 's',
                     description: $translate('hotkeySortBy'),
                     callback: function() {
@@ -419,7 +419,7 @@
    * empty.
    */
 
-  .directive('gnRegionMultiselect',
+      .directive('gnRegionMultiselect',
       ['gnRegionService',
         function(gnRegionService) {
           return {
@@ -525,7 +525,7 @@
    * The schema used to retrieve the element info is based on
    * the gnCurrentEdit object or 'iso19139' if not defined.
    */
-  .directive('schemaInfoCombo', ['$http', 'gnSchemaManagerService',
+      .directive('schemaInfoCombo', ['$http', 'gnSchemaManagerService',
         'gnCurrentEdit',
         function($http, gnSchemaManagerService,
                  gnCurrentEdit) {
@@ -647,7 +647,7 @@
    *  - metadata
    *  - subtemplate
    */
-  .directive('gnRecordtypesCombo', ['$http', function($http) {
+      .directive('gnRecordtypesCombo', ['$http', function($http) {
         return {
 
           restrict: 'A',
@@ -679,7 +679,7 @@
    * @description
    * The `gnBboxInput` directive provides an input widget for bounding boxes.
    */
-  .directive('gnBboxInput', [
+      .directive('gnBboxInput', [
         'gnMap',
         'ngeoDecorateInteraction',
         function(gnMap, goDecoI) {
@@ -759,7 +759,7 @@
                 var coordinates, geom, f;
                 coordinates = gnMap.getPolygonFromExtent(scope.extent);
                 geom = new ol.geom.Polygon(coordinates)
-              .transform(scope.crs, scope.map.getView().getProjection());
+                    .transform(scope.crs, scope.map.getView().getProjection());
                 f = new ol.Feature();
                 f.setGeometry(geom);
                 layer.getSource().addFeature(f);
@@ -769,7 +769,7 @@
                 dragboxInteraction.active = false;
                 var g = dragboxInteraction.getGeometry().clone();
                 var geom = g.clone()
-              .transform(scope.map.getView().getProjection(), scope.crs);
+                    .transform(scope.map.getView().getProjection(), scope.crs);
                 var extent = geom.getExtent();
                 scope.extent = extent.map(function(coord) {
                   return Math.round(coord * 10000) / 10000;

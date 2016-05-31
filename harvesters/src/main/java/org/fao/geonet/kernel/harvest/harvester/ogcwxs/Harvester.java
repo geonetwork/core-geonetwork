@@ -85,14 +85,14 @@ import javax.annotation.Nullable;
 
 
 //=============================================================================
-/** 
+/**
  * A OgcWxSHarvester is able to generate metadata for data and service
  * from a GetCapabilities documents. Metadata for layers are generated
  * using layer information contained in the GetCapabilities document
  * or using a xml document pointed by the metadataUrl attribute of layer
  * element.
- * 
- * OGC services supported are : 
+ *
+ * OGC services supported are :
  * <ul>
  * 	<li>WMS</li>
  * 	<li>WFS</li>
@@ -100,17 +100,17 @@ import javax.annotation.Nullable;
  * 	<li>WPS</li>
  * 	<li>SOS</li>
  * </ul>
- * 
+ *
  * Metadata produced are :
  * <ul>
  * 	<li>ISO19119 for service's metadata</li>
  * 	<li>ISO19139 for data's metadata</li>
  * </ul>
- * 
+ *
  *  Note : Layer stands for "Layer" for WMS, "FeatureType" for WFS
  *  and "Coverage" for WCS.
- *  
- * <pre>  
+ *
+ * <pre>
  * <nodes>
  *  <node type="ogcwxs" id="113">
  *    <site>
@@ -149,17 +149,17 @@ import javax.annotation.Nullable;
  *  </node>
  * </nodes>
  * </pre>
- * 
+ *
  * @author fxprunayre
- *   
+ *
  */
 class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 {
-	
-	
-	/** 
+
+
+	/**
      * Constructor
-     *  
+     *
      *
      * @param cancelMonitor
      * @param log
@@ -177,7 +177,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		this.params = params;
 
 		result = new HarvestResult();
-		
+
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getBean(DataManager.class);
 		schemaMan = gc.getBean(SchemaManager.class);
@@ -188,19 +188,19 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	//--- API methods
 	//---
 	//---------------------------------------------------------------------------
-	/** 
+	/**
      * Start the harvesting of a WMS, WFS or WCS node.
      */
 	public HarvestResult harvest(Logger log) throws Exception {
         Element xml;
-        
+
         this.log = log;
 
         log.info("Retrieving remote metadata information for : " + params.getName());
-        
+
 		// Clean all before harvest : Remove/Add mechanism
         // If harvest failed (ie. if node unreachable), metadata will be removed, and
-        // the node will not be referenced in the catalogue until next harvesting. 
+        // the node will not be referenced in the catalogue until next harvesting.
         UUIDMapper localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
 
@@ -214,7 +214,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         if(log.isDebugEnabled()) {
             log.debug("GetCapabilities document: " + this.capabilitiesUrl);
         }
-		
+
         XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest();
         req.setUrl(new URL(this.capabilitiesUrl));
         req.setMethod(XmlRequest.Method.GET);
@@ -225,11 +225,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         }
 
         xml = req.execute();
-		
+
         // Convert from GetCapabilities to ISO19119
         List<String> uuids = addMetadata (xml);
         dataMan.flush();
-        
+
         List<String> ids = Lists.transform(uuids, new Function<String, String>() {
             @Nullable
             @Override
@@ -241,30 +241,30 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 }
             }
         });
-        
+
         dataMan.batchIndexInThreadPool(context, ids);
-        
+
         result.totalMetadata = result.addedMetadata + result.layer + result.updatedMetadata;
-    
+
       //-----------------------------------------------------------------------
         //--- remove old metadata
         for (String uuid : localUuids.getUUIDs()) {
             if (cancelMonitor.get()) {
                 return this.result;
             }
-            
+
             //If it was not on the uuids added:
             if(!uuids.contains(uuid)) {
                 String id = localUuids.getID (uuid);
-    
+
                 if(log.isDebugEnabled()) log.debug ("  - Removing old metadata before update with id: " + id);
-    
+
                 //--- remove the metadata directory including the public and private directories.
                 IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id));
-    
+
                 // Remove metadata
                 dataMan.deleteMetadata(context, id);
-                
+
                 result.locallyRemoved ++;
             }
         }
@@ -273,40 +273,40 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         if (result.locallyRemoved > 0) {
             dataMan.flush();
         }
-        
+
 		return result;
 	}
-	
-	
 
-	/** 
+
+
+	/**
      * Add metadata to the node for a WxS service
-     *  
+     *
 	 *  1.Use GetCapabilities Document
 	 *  2.Transform using XSLT to iso19119
 	 *  3.Loop through layers
 	 *  4.Create md for layer
 	 *  5.Add operatesOn elem with uuid
 	 *  6.Save all
-     *	
+     *
      * @param capa      GetCapabilities document
-     *                   
+     *
      */
 	 private List<String> addMetadata (Element capa) throws Exception
 	 {
 		if (capa == null) {
 			return Collections.<String>emptyList();
 		}
-		
+
 		List<String> uuids = new LinkedList<String>();
-		
+
 		//--- Loading categories and groups
 		localCateg 	= new CategoryMapper (context);
 		localGroups = new GroupMapper (context);
 
 		// md5 the full capabilities URL
 		String uuid = Sha1Encoder.encodeString (this.capabilitiesUrl); // is the service identifier
-		
+
 		//--- Loading stylesheet
 		Path styleSheet = schemaMan.getSchemaDir(params.outputSchema).
                 resolve(Geonet.Path.CONVERT_STYLESHEETS).
@@ -314,7 +314,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 resolve("OGC" + params.ogctype.substring(0, 3) + "GetCapabilities-to-ISO19119_ISO19139.xsl");
 
          if(log.isDebugEnabled()) log.debug ("  - XSLT transformation using " + styleSheet);
-		
+
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("lang", params.lang);
 		param.put("topic", params.topic);
@@ -331,7 +331,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
              throw new IllegalStateException(message, e);
          }
 
-		String schema = dataMan.autodetectSchema (md, null); // ie. iso19139; 
+		String schema = dataMan.autodetectSchema (md, null); // ie. iso19139;
 
 		if (schema == null) {
 			log.warning("Skipping metadata with unknown schema.");
@@ -340,13 +340,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 
 		//--- Create metadata for layers only if user ask for
-		if (params.useLayer || params.useLayerMd) {			
+		if (params.useLayer || params.useLayerMd) {
 			// Load CRS
 			// TODO
-			
-			//--- Select layers, featureTypes and Coverages (for layers having no child named layer = not take group of layer into account) 
+
+			//--- Select layers, featureTypes and Coverages (for layers having no child named layer = not take group of layer into account)
 			// and add the metadata
-			XPath xp = XPath.newInstance ("//Layer[count(./*[name(.)='Layer'])=0] | " + 
+			XPath xp = XPath.newInstance ("//Layer[count(./*[name(.)='Layer'])=0] | " +
 											"//wms:Layer[count(./*[name(.)='Layer'])=0] | " +
 											"//wfs:FeatureType | " +
 											"//wcs:CoverageOfferingBrief | " +
@@ -355,25 +355,25 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			xp.addNamespace("wcs", "http://www.opengis.net/wcs");
 			xp.addNamespace("wms", "http://www.opengis.net/wms");
 			xp.addNamespace("sos", "http://www.opengis.net/sos/1.0");
-										
+
 			@SuppressWarnings("unchecked")
             List<Element> layers = xp.selectNodes(capa);
 			if (layers.size()>0) {
 				log.info("  - Number of layers, featureTypes or Coverages found : " + layers.size());
-			
+
 				for (Element layer : layers) {
 					WxSLayerRegistry s = addLayerMetadata (layer, capa);
 					if (s != null) {
 					    uuids.add(s.uuid);
 						layersRegistry.add(s);
 					}
-				}       
-				
+				}
+
 				// Update ISO19119 for data/service links creation (ie. operatesOn element)
 				// The editor will support that but it will make quite heavy XML.
 				md = addOperatesOnUuid (md, layersRegistry);
 			}
-		}	
+		}
 
         // Save iso19119 metadata in DB
 		log.info("  - Adding metadata for services with " + uuid);
@@ -403,15 +403,15 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
              result.updatedMetadata++;
              String id = dataMan.getMetadataId(uuid);
              metadata.setId(Integer.valueOf(id));
-             dataMan.updateMetadata(context, id, md, false, false, false, 
+             dataMan.updateMetadata(context, id, md, false, false, false,
                      context.getLanguage(), dataMan.extractDateModified(schema, md), false);
          }
-         
+
          String id = String.valueOf(metadata.getId());
          uuids.add(uuid);
 
          addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-		
+
 		// Add Thumbnails only after metadata insertion to avoid concurrent transaction
 		// and loaded thumbnails could eventually failed anyway.
 		if (params.ogctype.startsWith("WMS") && params.createThumbnails) {
@@ -419,25 +419,25 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 loadThumbnail (layer);
             }
         }
-		
+
 		return uuids;
 	}
-	
-	
-	
-	/** 
+
+
+
+	/**
      * Add OperatesOn elements on an ISO19119 metadata
-     *  
+     *
      *  <srv:operatesOn>
 	 *		<gmd:MD_DataIdentification uuidref=""/>
 	 *	</srv:operatesOn>
-     *	
+     *
      * @param md                    iso19119 metadata
      * @param layersRegistry		uuid to be added as an uuidref attribute
-     *                   
+     *
      */
 	 private Element addOperatesOnUuid (Element md, List<WxSLayerRegistry> layersRegistry) {
-				
+
 		Namespace gmd 	= Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
 		Namespace gco 	= Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
 		Namespace srv 	= Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
@@ -458,13 +458,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                   srv:coupledResource/srv:SV_CoupledResource/gco:ScopedName = Layer/Name
               But is this really useful in ISO19119 ?
            */
-		
+
 		if (root != null) {
             if(log.isDebugEnabled()) log.debug("  - add SV_CoupledResource and OperatesOnUuid");
-			
+
 			Element couplingType = root.getChild("couplingType", srv);
 			int coupledResourceIdx = root.indexOf(couplingType);
-			
+
 			for (WxSLayerRegistry layer : layersRegistry)
 			{
 				// Create coupled resources elements to register all layername
@@ -472,14 +472,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 				// interactive map button when viewing service metadata.
 				Element coupledResource = new Element ("coupledResource", srv);
 				Element scr = new Element ("SV_CoupledResource", srv);
-				
-				
+
+
 				// Create operation according to service type
 				Element operation = new Element ("operationName", srv);
 				Element operationValue = new Element ("CharacterString", gco);
-				
+
 				if (params.ogctype.startsWith("WMS"))
-					operationValue.setText("GetMap"); 
+					operationValue.setText("GetMap");
 				else if (params.ogctype.startsWith("WFS"))
 					operationValue.setText("GetFeature");
 				else if (params.ogctype.startsWith("WCS"))
@@ -487,28 +487,28 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 				else if (params.ogctype.startsWith("SOS"))
 					operationValue.setText("GetObservation");
 				operation.addContent(operationValue);
-				
+
 				// Create identifier (which is the metadata identifier)
 				Element id = new Element ("identifier", srv);
 				Element idValue = new Element ("CharacterString", gco);
 				idValue.setText(layer.uuid);
 				id.addContent(idValue);
-				
+
 				// Create scoped name element as defined in CSW 2.0.2 ISO profil
 				// specification to link service metadata to a layer in a service.
 				Element scopedName = new Element ("ScopedName", gco);
 				scopedName.setText(layer.name);
-				
+
 				scr.addContent(operation);
 				scr.addContent(id);
 				scr.addContent(scopedName);
 				coupledResource.addContent(scr);
-				
+
 				// Add coupled resource before coupling type element
 				root.addContent(coupledResourceIdx, coupledResource);
-				
-				
-		
+
+
+
 				// Add operatesOn element at the end of identification section.
 				Element op = new Element ("operatesOn", srv);
 				op.setAttribute("uuidref", layer.uuid);
@@ -516,34 +516,34 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 String hRefLink =  context.getBean(SettingManager.class).getSiteURL(context) + "/xml.metadata.get?uuid=" + layer.uuid;
                 op.setAttribute("href", hRefLink, xlink);
 
-				
+
 				root.addContent(op);
-				
+
 			}
 		}
 
-		
+
 		return md;
 	}
 
-	
-	/** 
+
+	/**
      * Add metadata for a Layer/FeatureType/Coverage element of a GetCapabilities document.
-     * This function search for a metadataUrl element (with @type = TC211 and format = text/xml) 
-     * and try to load the XML document. 
-     * If failed, then an XSLT is used for creating metadata from the 
+     * This function search for a metadataUrl element (with @type = TC211 and format = text/xml)
+     * and try to load the XML document.
+     * If failed, then an XSLT is used for creating metadata from the
      * Layer/FeatureType/Coverage element.
      * If loaded document contain an existing uuid, metadata will not be loaded in the catalogue.
-     *  
+     *
      * @param layer     Layer/FeatureType/Coverage element
      * @param capa		GetCapabilities document
-     *  
-     * @return          uuid 
-     *                   
+     *
+     * @return          uuid
+     *
      */
 	private WxSLayerRegistry addLayerMetadata (Element layer, Element capa) throws JDOMException
 	{
-		
+
 		WxSLayerRegistry reg= new WxSLayerRegistry ();
 		String schema;
 		String mdXml;
@@ -581,19 +581,19 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			Namespace gml = Namespace.getNamespace("http://www.opengis.net/gml");
 			reg.name 	= layer.getChild ("name", gml).getValue ();
 		}
-		
+
 		log.info ("  - Loading layer: " + reg.name);
-		
+
 		//--- md5 the full capabilities URL + the layer, coverage or feature name
 		reg.uuid = Sha1Encoder.encodeString(this.capabilitiesUrl+"#"+reg.name); // the dataset identifier
-	
+
 		if (params.useLayerMd && (
                 params.ogctype.substring(0,3).equals("WMS") ||
                 params.ogctype.substring(0,3).equals("WFS") ||
                 params.ogctype.substring(0,3).equals("WCS"))) {
-			
+
 			Namespace xlink 	= Namespace.getNamespace ("http://www.w3.org/1999/xlink");
-			
+
 			// Get metadataUrl xlink:href
             // Check if add namespace prefix to Xpath queries.  If layer.getNamespace() is:
             //    * Namespace.NO_NAMESPACE, should not be added, otherwise exception is launched
@@ -677,7 +677,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 // TODO : catch other exception
                 }catch (Exception e) {
                     log.warning(String.format(
-                            "  - Failed to load layer using metadataUrl attribute '%s'. Error is: ",
+                            "  - Failed to load layer using metadataUrl attribute '%s'. Error is: '%s'",
                             mdXml, e.getMessage()
                     ));
                     loaded = false;
@@ -689,8 +689,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		} else {
             log.info("  - MetadataUrl harvester only supported for WMS, WFS and WCS layers.");
         }
-		
-		
+
+
 		//--- using GetCapabilities document
 		if (!loaded && params.useLayer){
 			try {
@@ -700,16 +700,16 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 				param.put("Name", reg.name);
 				param.put("lang", params.lang);
 				param.put("topic", params.topic);
-				
+
 				xml = Xml.transform (capa, styleSheet, param);
                 if(log.isDebugEnabled()) log.debug("  - Layer loaded using GetCapabilities document.");
-				
+
 			} catch (Exception e) {
 				log.warning("  - Failed to do XSLT transformation on Layer element : " + e.getMessage());
 			}
 		}
-		
-		
+
+
 		// Insert in db
 		try {
 
@@ -744,10 +744,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 result.updatedMetadata++;
                 String id = dataMan.getMetadataId(reg.uuid);
                 metadata.setId(Integer.valueOf(id));
-                dataMan.updateMetadata(context, id, xml, false, false, false, 
+                dataMan.updateMetadata(context, id, xml, false, false, false,
                         context.getLanguage(), dataMan.extractDateModified(schema, xml), false);
             }
-           
+
             reg.id = String.valueOf(metadata.getId());
 
             if(log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
@@ -756,16 +756,16 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
-			
+
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)
     			Namespace gmd 	= Namespace.getNamespace("http://www.isotc211.org/2005/gmd");
     			Namespace gco 	= Namespace.getNamespace("http://www.isotc211.org/2005/gco");
-    			
+
     			ElementFilter bboxFinder = new ElementFilter("EX_GeographicBoundingBox", gmd);
                 @SuppressWarnings("unchecked")
                 Iterator<Element> bboxes = xml.getDescendants(bboxFinder);
-    			
+
     			while (bboxes.hasNext()) {
     				Element box = bboxes.next();
     				// FIXME : Could be null. Default bbox if from root layer
@@ -773,7 +773,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
     				reg.miny = Double.valueOf(box.getChild("southBoundLatitude", gmd).getChild("Decimal", gco).getText());
     				reg.maxx = Double.valueOf(box.getChild("eastBoundLongitude", gmd).getChild("Decimal", gco).getText());
     				reg.maxy = Double.valueOf(box.getChild("northBoundLatitude", gmd).getChild("Decimal", gco).getText());
-    				
+
     			}
 			}  catch (Exception e) {
 	            log.warning("  - Failed to extract layer bbox from metadata : " + e.getMessage());
@@ -781,7 +781,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 			result.layer ++;
 			log.info("  - metadata loaded with uuid: " + reg.uuid + "/internal id: " + reg.id);
-				
+
 		} catch (Exception e) {
 			log.warning(String.format(
                     "  - Failed to load metadata document for layer '%s'. Error is: '%s',",
@@ -789,47 +789,47 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			result.unretrievable ++;
 			return null;
 		}
-		
+
 		return reg;
 	}
-	
 
-	/** 
-     * Call GeoNetwork service to load thumbnails and create small and 
-     * big ones. 
-     *  
-     *  
+
+	/**
+     * Call GeoNetwork service to load thumbnails and create small and
+     * big ones.
+     *
+     *
      * @param layer   layer for which the thumbnail needs to be generated
-     *                   
+     *
      */
 	private void loadThumbnail (WxSLayerRegistry layer){
         if(log.isDebugEnabled())
             log.debug("  - Creating thumbnail for layer metadata: " + layer.name + " id: " + layer.id);
 		Set s = new org.fao.geonet.services.thumbnail.Set ();
-		
+
 		try {
 			String filename = getMapThumbnail(layer);
-			
+
 			if (filename != null) {
                 if(log.isDebugEnabled()) log.debug("  - File: " + filename);
-				
+
 				Element par = new Element ("request");
 				par.addContent(new Element ("id").setText(layer.id));
 				par.addContent(new Element ("version").setText("10"));
 				par.addContent(new Element ("type").setText("large"));
-				
+
 				Element fname = new Element ("fname").setText(filename);
 				fname.setAttribute("content-type", "image/png");
 				fname.setAttribute("type", "file");
 				fname.setAttribute("size", "");
-				
+
 				par.addContent(fname);
 				par.addContent(new Element ("add").setText("Add"));
 				par.addContent(new Element ("createSmall").setText("on"));
 				par.addContent(new Element ("smallScalingFactor").setText("180"));
 				par.addContent(new Element ("smallScalingDir").setText("width"));
-				
-				// Call the services 
+
+				// Call the services
 				s.execOnHarvest(par, context, dataMan);
 
                 dataMan.flush();
@@ -843,25 +843,25 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			e.printStackTrace();
 			result.thumbnailsFailed ++;
 		}
-		
+
 	}
-	
-	/** 
+
+	/**
      * Load thumbnails making a GetMap operation.
      * Width is 300px. Ratio is computed for height using LatLongBoundingBoxElement.
-     *  
-     *  
+     *
+     *
      * @param layer   layer for which the thumbnail needs to be generated
-     *                   
+     *
      */
 	private String getMapThumbnail (WxSLayerRegistry layer) {
 		String filename = layer.uuid + ".png";
 		Path dir = context.getUploadDir();
-		Double r = WIDTH / 
-						(layer.maxx - layer.minx) * 
+		Double r = WIDTH /
+						(layer.maxx - layer.minx) *
 						(layer.maxy - layer.miny);
-		
-		
+
+
         // Usual GetMap url tested with mapserver and geoserver
 		// http://localhost:8080/geoserver/wms?service=WMS&request=GetMap&VERSION=1.1.1&
 		// 		LAYERS=gn:world&WIDTH=200&HEIGHT=200&FORMAT=image/png&BBOX=-180,-90,180,90&STYLES=
@@ -880,16 +880,16 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                     layer.maxx + "," +
                     layer.maxy;
         }
-		String url = 
+		String url =
         		getBaseUrl(params.url) +
         		"&SERVICE=" + params.ogctype.substring(0,3) +
         		"&VERSION=" + params.ogctype.substring(3) +
-        		"&REQUEST=" + GETMAP + 
-        		"&FORMAT=" + IMAGE_FORMAT + 
+        		"&REQUEST=" + GETMAP +
+        		"&FORMAT=" + IMAGE_FORMAT +
         		"&WIDTH=" + WIDTH +
         		"&" + crsParamName + "=EPSG:4326" +
         		"&HEIGHT=" + r.intValue() +
-        		"&LAYERS=" + layer.name + 
+        		"&LAYERS=" + layer.name +
         		"&STYLES=" +
         		"&BBOX=" + bboxParamValue;
 
@@ -936,16 +936,16 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		    // Release current connection to the connection pool once you are done
 		    req.releaseConnection ();
 		}
-		
+
 		return filename;
 	}
 
-	/** 
-     * Add '?' or '&' if required to url so that parameters can just be 
-     * appended to it 
-     *   
+	/**
+     * Add '?' or '&' if required to url so that parameters can just be
+     * appended to it
+     *
      * @param url		Url to which parameters are going to be appended
-     * 
+     *
      */
 	private String getBaseUrl(String url) {
 		if (url.endsWith("?")) {
@@ -985,7 +985,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	private static final String GETMAP = "GetMap";
     private static final String IMAGE_FORMAT = "image/png";
     private List<WxSLayerRegistry> layersRegistry = new ArrayList<WxSLayerRegistry>();
-	
+
 	private static class WxSLayerRegistry {
 		public String uuid;
 		public String id;

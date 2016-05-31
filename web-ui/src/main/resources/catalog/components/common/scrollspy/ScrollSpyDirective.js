@@ -104,8 +104,8 @@
                     scope.allDepth == 'true' ?
                     $(this) : $(this).parent('fieldset');
                 var parentFieldsetId = parent
-                  .parent('fieldset').parent('fieldset')
-                  .children('legend').attr('id');
+                    .parent('fieldset').parent('fieldset')
+                    .children('legend').attr('id');
                 if (parentFieldsetId) {
                   var parentSpy = $.grep(scope.spyElems, function(spy) {
                     return spy.id === '#' + parentFieldsetId;

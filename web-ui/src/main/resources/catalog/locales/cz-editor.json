@@ -307,5 +307,9 @@
     "notEvaluated": "Nebylo vyhodnoceno",
     "notConformant": "Není v souladu",
     "capabilitiesParseError": "Error parsing WMS capabilities",
-    "conformant": "V souladu"
+    "conformant": "V souladu",
+    "currentConcept": "Current concept",
+    "parentConcept": "Parent concept",
+    "moreSpecificConcept": "More specific concepts",
+    "associatedConcept": "Associated concepts"
 }
