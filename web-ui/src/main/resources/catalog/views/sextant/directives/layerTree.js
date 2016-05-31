@@ -19,6 +19,7 @@
             'partials/layertree.html',
         controller: [ '$scope', '$compile', function($scope, $compile) {
           var $this = this;
+          this.user = $scope.user;
 
           this.setWPS = function(wpsLink, layer) {
             $scope.loadTool('wps', layer);
@@ -240,8 +241,8 @@
     }]);
 
   module.directive('sxtLayertreeElt', [
-    '$compile', '$http', 'gnMap', 'gnMdView',
-    function($compile, $http, gnMap, gnMdView) {
+    '$compile', '$http', 'gnMap', 'gnMdView', 'gnSolrWfsFilterConfig',
+    function($compile, $http, gnMap, gnMdView, gnSolrWfsFilterConfig) {
       return {
         restrict: 'E',
         replace: true,
@@ -331,10 +332,26 @@
                 scope.download = d[0];
               }
 
-              var wfs =  scope.member.get('wfs');
-              if(angular.isArray(wfs) && downloadable) {
-                scope.wfs = wfs[0];
+              var wfsLink =  scope.member.get('wfs');
+              if(angular.isArray(wfsLink) && downloadable) {
+                wfsLink = wfsLink[0];
               }
+              scope.user = controller.user;
+
+              $http.get(gnSolrWfsFilterConfig.url + '/query',  {
+                params: {
+                  rows: 1,
+                  q: gnSolrWfsFilterConfig.docTypeIdField + ':"' +
+                  gnSolrWfsFilterConfig.idDoc({
+                    wfsUrl: wfsLink.url,
+                    featureTypeName: wfsLink.name
+                  }) + '"',
+                  wt: 'json'
+                }}).success(function(data) {
+                if(data.response.numFound > 0) {
+                  scope.wfs = wfsLink;
+                }
+              });
 
               var processable =
                 scope.member.get('md')['geonet:info'].process == 'true';
@@ -358,7 +375,7 @@
           };
 
           scope.showWFSFilter = function() {
-            controller.setWFSFilter(scope.member, scope.wfs);
+            controller.setWFSFilter(scope.member, wfsLink);
           };
        }
       };
