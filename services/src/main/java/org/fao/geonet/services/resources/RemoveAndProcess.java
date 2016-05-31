@@ -24,18 +24,16 @@
 package org.fao.geonet.services.resources;
 
 import com.google.common.collect.Maps;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-import jeeves.services.ReadWriteController;
+
+import org.fao.geonet.api.processing.XslProcessUtils;
+import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.responses.IdResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.metadata.XslProcessing;
-import org.fao.geonet.services.metadata.XslProcessingReport;
 import org.fao.geonet.services.resources.handlers.IResourceRemoveHandler;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +46,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.URL;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import jeeves.services.ReadWriteController;
 
 /**
  * Delete an uploaded file from the data directory and remote its
@@ -65,7 +68,7 @@ public class RemoveAndProcess  {
     private XslProcessing xslProcessing;
     @Autowired
     private ServiceManager serviceManager;
-    
+
 	@RequestMapping(value = {"/{lang}/resource.del.and.detach"}, produces = {
 			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody IdResponse serviceSpecificExec(@PathVariable String lang,
@@ -79,13 +82,13 @@ public class RemoveAndProcess  {
             id = dm.getMetadataId(uuid);
         }
         Lib.resource.checkEditPrivilege(context, id);
-        
+
         // Analyze the URL to extract file name and private/public folder
         URL resourceURL = new URL(url);
         String[] parameters = resourceURL.getQuery().split("&");
         String filename = "";
         String access = "";
-        
+
         for (String param : parameters) {
             if (param.startsWith("fname")) {
                 String[] parts = param.split("=");
@@ -108,16 +111,16 @@ public class RemoveAndProcess  {
         allParams.put("protocol", new String[]{"WWW:DOWNLOAD-1.0-http--download"});
 
         String process = "onlinesrc-remove";
-        XslProcessingReport report = new XslProcessingReport(process);
+        XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
 
         Element processedMetadata;
         try {
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            processedMetadata = xslProcessing.process(context, id, process,
+            processedMetadata = XslProcessUtils.process(context, id, process,
                     true, report, siteURL, allParams);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
-                        + report.getNotFoundMetadataCount() + ", Not owner:" + report.getNotEditableMetadataCount()
+                        + report.getNumberOfRecordNotFound() + ", Not owner:" + report.getNumberOfRecordsNotEditable()
                         + ", No process found:" + report.getNoProcessFoundCount() + ".");
             }
         } catch (Exception e) {

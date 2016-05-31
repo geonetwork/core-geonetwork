@@ -23,20 +23,14 @@
 
 package org.fao.geonet.api.records;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
+import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.api.API;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,26 +38,34 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
+
 @RequestMapping(value = {
-        "/api/records",
-        "/api/" + API.VERSION_0_1 +
-                "/records"
+    "/api/records",
+    "/api/" + API.VERSION_0_1 +
+        "/records"
 })
 @Api(value = "records",
-        tags = "records",
-        description = "Metadata record operations")
+    tags = "records",
+    description = "Metadata record operations")
 @Controller("records")
 @ReadWriteController
 public class MetadataApi implements ApplicationContextAware {
-    private ApplicationContext context;
-
     @Autowired
     SchemaManager _schemaManager;
-
+    private ApplicationContext context;
 
     public synchronized void setApplicationContext(ApplicationContext context) {
         this.context = context;
@@ -71,30 +73,30 @@ public class MetadataApi implements ApplicationContextAware {
 
 
     @ApiOperation(value = "Get a metadata record",
-            nickname = "get")
+        nickname = "get")
     @RequestMapping(value = "/{metadataUuid}",
-            method = RequestMethod.GET,
-            produces = {
-                MediaType.APPLICATION_XML_VALUE
-            })
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_XML_VALUE
+        })
     public
     @ResponseBody
     Element serviceSpecificExec(
-                @ApiParam(value = "Record UUID.",
-                          required = true)
-                @PathVariable
-                String metadataUuid,
-                @ApiParam(value = "Add XSD schema location based on standard configuration",
-                          required = false)
-                @RequestParam(required = false, defaultValue = "true")
-                boolean addSchemaLocation,
-                @ApiParam(value = "Increase record popularity",
-                          required = false)
-                @RequestParam(required = false, defaultValue = "true")
-                boolean increasePopularity,
-                @ApiParam(hidden = true)
-                HttpServletResponse response)
-            throws Exception {
+        @ApiParam(value = "Record UUID.",
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(value = "Add XSD schema location based on standard configuration",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+            boolean addSchemaLocation,
+        @ApiParam(value = "Increase record popularity",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+            boolean increasePopularity,
+        @ApiParam(hidden = true)
+            HttpServletResponse response)
+        throws Exception {
         ServiceContext context = ServiceContext.get();
         DataManager dataManager = context.getBean(DataManager.class);
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
@@ -102,32 +104,32 @@ public class MetadataApi implements ApplicationContextAware {
         if (metadata == null) {
             // TODO: i18n
             throw new ResourceNotFoundException(String.format(
-                    "Metadata with UUID '%s' not found in this catalog.",
-                    metadataUuid
+                "Metadata with UUID '%s' not found in this catalog.",
+                metadataUuid
             ));
         }
         try {
             Lib.resource.checkPrivilege(context,
-                    metadata.getId() + "",
-                    ReservedOperation.view);
+                metadata.getId() + "",
+                ReservedOperation.view);
         } catch (Exception e) {
             // TODO: i18n
             // TODO: Report exception in JSON format
             throw new SecurityException(String.format(
-                    "Metadata with UUID '%s' not shared with you.",
-                    metadataUuid
+                "Metadata with UUID '%s' not shared with you.",
+                metadataUuid
             ));
         }
 
         Element xml = metadata.getXmlData(false);
         if (addSchemaLocation) {
             Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
-                    metadata.getDataInfo().getSchemaId(), context);
+                metadata.getDataInfo().getSchemaId(), context);
 
             if (schemaLocAtt != null) {
                 if (xml.getAttribute(
-                        schemaLocAtt.getName(),
-                        schemaLocAtt.getNamespace()) == null) {
+                    schemaLocAtt.getName(),
+                    schemaLocAtt.getNamespace()) == null) {
                     xml.setAttribute(schemaLocAtt);
                     // make sure namespace declaration for schemalocation is present -
                     // remove it first (does nothing if not there) then add it
@@ -141,8 +143,8 @@ public class MetadataApi implements ApplicationContextAware {
         }
 
         response.setHeader("Content-Disposition", String.format(
-                "inline; filename=\"%s.xml\"",
-                metadata.getUuid()
+            "inline; filename=\"%s.xml\"",
+            metadata.getUuid()
         ));
         return xml;
     }

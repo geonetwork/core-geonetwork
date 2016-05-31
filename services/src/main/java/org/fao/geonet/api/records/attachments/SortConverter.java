@@ -28,8 +28,7 @@ package org.fao.geonet.api.records.attachments;
 import java.beans.PropertyEditorSupport;
 
 /**
- * Convert {@link Sort} enumeration from request parameter
- * Created by francois on 31/12/15.
+ * Convert {@link Sort} enumeration from request parameter Created by francois on 31/12/15.
  */
 public class SortConverter extends PropertyEditorSupport {
     @Override

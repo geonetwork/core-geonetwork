@@ -23,17 +23,17 @@
 
 package org.fao.geonet.api.user;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.api.API;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.api.API;
-import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,24 +41,34 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import javax.servlet.ServletRequest;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.servlet.ServletRequest;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.server.context.ServiceContext;
+
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-        "/api/user",
-        "/api/" + API.VERSION_0_1 +
-                "/user"
+    "/api/user",
+    "/api/" + API.VERSION_0_1 +
+        "/user"
 })
 @Api(value = "user",
-        tags = "user",
-        description = "User related operations")
+    tags = "user",
+    description = "User related operations")
 public class AccountCreationApi {
 
     @Autowired
@@ -66,21 +76,21 @@ public class AccountCreationApi {
 
 
     @ApiOperation(value = "Create user account",
-            nickname = "registerUser",
-            notes = "User is created with a registered user profile. Password is sent by email. Catalog administrator is also notified.")
+        nickname = "registerUser",
+        notes = "User is created with a registered user profile. Password is sent by email. Catalog administrator is also notified.")
     @RequestMapping(
-            value = "/actions/register",
-            method = RequestMethod.PUT,
-            produces = MediaType.TEXT_PLAIN_VALUE)
+        value = "/actions/register",
+        method = RequestMethod.PUT,
+        produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<String> registerUser(
-            @ApiParam(value = "User details",
-                      required = true)
-           @RequestBody
-           User user,
-           ServletRequest request)
-            throws Exception {
+        @ApiParam(value = "User details",
+            required = true)
+        @RequestBody
+            User user,
+        ServletRequest request)
+        throws Exception {
 
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
@@ -90,15 +100,15 @@ public class AccountCreationApi {
         final UserRepository userRepository = context.getBean(UserRepository.class);
         if (userRepository.findOneByEmail(user.getEmail()) != null) {
             return new ResponseEntity<>(String.format(
-                    messages.getString("user_with_that_email_found"),
-                    user.getEmail()
+                messages.getString("user_with_that_email_found"),
+                user.getEmail()
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
 
         String password = User.getRandomPassword();
         user.getSecurity().setPassword(
-                PasswordUtil.encode(context, password)
+            PasswordUtil.encode(context, password)
         );
         user.setUsername(user.getEmail());
         Profile requestedProfile = user.getProfile();
@@ -115,46 +125,46 @@ public class AccountCreationApi {
         SettingManager sm = context.getBean(SettingManager.class);
         String catalogAdminEmail = sm.getValue("system/feedback/email");
         String subject = String.format(
-                messages.getString("register_email_admin_subject"),
-                sm.getSiteName(),
-                user.getEmail(),
-                requestedProfile
-                );
+            messages.getString("register_email_admin_subject"),
+            sm.getSiteName(),
+            user.getEmail(),
+            requestedProfile
+        );
         String message = String.format(
-                messages.getString("register_email_admin_message"),
-                user.getEmail(),
-                requestedProfile,
-                sm.getNodeURL(),
-                sm.getSiteName()
+            messages.getString("register_email_admin_message"),
+            user.getEmail(),
+            requestedProfile,
+            sm.getNodeURL(),
+            sm.getSiteName()
         );
         if (!MailUtil.sendMail(catalogAdminEmail, subject, message, sm)) {
             return new ResponseEntity<>(String.format(
-                    messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
+                messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
 
         subject = String.format(
-                messages.getString("register_email_subject"),
-                sm.getSiteName(),
-                user.getProfile()
+            messages.getString("register_email_subject"),
+            sm.getSiteName(),
+            user.getProfile()
         );
         message = String.format(
-                messages.getString("register_email_message"),
-                sm.getSiteName(),
-                user.getUsername(),
-                password,
-                Profile.RegisteredUser,
-                requestedProfile,
-                sm.getNodeURL(),
-                sm.getSiteName()
+            messages.getString("register_email_message"),
+            sm.getSiteName(),
+            user.getUsername(),
+            password,
+            Profile.RegisteredUser,
+            requestedProfile,
+            sm.getNodeURL(),
+            sm.getSiteName()
         );
         if (!MailUtil.sendMail(catalogAdminEmail, subject, message, sm)) {
             return new ResponseEntity<>(String.format(
-                    messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
+                messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
 
         return new ResponseEntity<>(String.format(
-                messages.getString("user_registered"),
-                user.getUsername()
+            messages.getString("user_registered"),
+            user.getUsername()
         ), HttpStatus.CREATED);
     }
 
