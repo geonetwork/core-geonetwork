@@ -38,6 +38,8 @@ Insert is made in first transferOptions found.
   <xsl:param name="url"/>
   <xsl:param name="name"/>
   <xsl:param name="desc"/>
+  <xsl:param name="function"/>
+  <xsl:param name="applicationProfile"/>
 
   <!-- Add an optional uuidref attribute to the onLine element created. -->
   <xsl:param name="uuidref"/>
@@ -236,6 +238,52 @@ Insert is made in first transferOptions found.
                 </gmd:protocol>
               </xsl:if>
 
+              <xsl:if test="$applicationProfile != ''">
+                <gmd:applicationProfile>
+                  <xsl:choose>
+                    <xsl:when test="contains($applicationProfile, '#')">
+                      <xsl:for-each select="tokenize($applicationProfile, $separator)">
+                        <xsl:variable name="nameLang"
+                                      select="substring-before(., '#')"></xsl:variable>
+                        <xsl:variable name="nameValue"
+                                      select="substring-after(., '#')"></xsl:variable>
+                        <xsl:if
+                          test="$useOnlyPTFreeText = 'false' and $nameLang = $mainLang">
+                          <gco:CharacterString>
+                            <xsl:value-of select="$nameValue"/>
+                          </gco:CharacterString>
+                        </xsl:if>
+                      </xsl:for-each>
+
+                      <gmd:PT_FreeText>
+                        <xsl:for-each select="tokenize($applicationProfile, $separator)">
+                          <xsl:variable name="nameLang"
+                                        select="substring-before(., '#')"></xsl:variable>
+                          <xsl:variable name="nameValue"
+                                        select="substring-after(., '#')"></xsl:variable>
+
+                          <xsl:if
+                            test="$useOnlyPTFreeText = 'true' or $nameLang != $mainLang">
+                            <gmd:textGroup>
+                              <gmd:LocalisedCharacterString
+                                locale="{concat('#', $nameLang)}">
+                                <xsl:value-of select="$nameValue"/>
+                              </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                          </xsl:if>
+
+                        </xsl:for-each>
+                      </gmd:PT_FreeText>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <gco:CharacterString>
+                        <xsl:value-of select="$applicationProfile"/>
+                      </gco:CharacterString>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </gmd:applicationProfile>
+              </xsl:if>
+
               <xsl:if test="$name != ''">
                 <gmd:name>
                   <xsl:choose>
@@ -327,7 +375,13 @@ Insert is made in first transferOptions found.
                   </xsl:choose>
                 </gmd:description>
               </xsl:if>
-              <!-- TODO may be relevant to add the function and application profile -->
+
+              <xsl:if test="$function != ''">
+                <gmd:function>
+                  <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode"
+                                             codeListValue="{$function}"/>
+                </gmd:function>
+              </xsl:if>
             </gmd:CI_OnlineResource>
           </gmd:onLine>
         </xsl:otherwise>

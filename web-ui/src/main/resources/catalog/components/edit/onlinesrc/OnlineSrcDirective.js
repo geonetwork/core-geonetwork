@@ -248,7 +248,9 @@
                         'url': {},
                         'protocol': {},
                         'name': {},
-                        'desc': {}
+                        'desc': {},
+                        'function': {},
+                        'applicationProfile': {}
                       }
                     }, {
                       label: 'addThumbnail',
@@ -271,6 +273,7 @@
                     types: [{
                       group: 'onlineDiscover',
                       label: 'onlineDiscoverThumbnail',
+                      type: 'thumbnail',
                       sources: {
                         filestore: true,
                         thumbnailMaker: true
@@ -924,6 +927,8 @@
                       protocol: linkToEdit.protocol,
                       name: name,
                       desc: desc,
+                      applicationProfile: linkToEdit.applicationProfile,
+                      function: linkToEdit.function,
                       selectedLayers: []
                     };
 
