@@ -215,6 +215,7 @@ public class MetadataApi implements ApplicationContextAware {
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
 
         // TODO PERF: ByPass XSL processing and create response directly
+        // At least for related metadata and keep XSL only for links
         Element raw = new Element("root").addContent(Arrays.asList(
             new Element("gui").addContent(Arrays.asList(
                 new Element("language").setText(language.getISO3Language()),

@@ -115,7 +115,7 @@
       </h4>
       <ul class="list-group">
         <li class="list-group-item" href=""
-            data-ng-repeat="resource in relations.onlines | orderBy:'title'">
+            data-ng-repeat="resource in relations.onlines | orderBy:sortLinks">
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">

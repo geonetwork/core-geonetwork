@@ -173,6 +173,7 @@
           </xs:element>
           <xs:element name="function" type="xs:string" minOccurs="0"/>
           <xs:element name="applicationProfile" type="xs:string" minOccurs="0"/>
+          <xs:element name="type" type="xs:string" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

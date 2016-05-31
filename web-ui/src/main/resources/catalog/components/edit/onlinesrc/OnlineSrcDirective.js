@@ -76,8 +76,8 @@
    * </ul>
    *
    */
-      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
-        function(gnOnlinesrc, gnCurrentEdit) {
+      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit', '$filter',
+        function(gnOnlinesrc, gnCurrentEdit, $filter) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -130,6 +130,9 @@
                       loadRelations();
                     }
                   });
+              scope.sortLinks = function(g) {
+                return $filter('gnLocalized')(g);
+              };
             }
           };
         }])
@@ -238,7 +241,6 @@
                     display: 'radio',
                     types: [{
                       label: 'addOnlinesrc',
-                      type: 'onlinesrc',
                       sources: {
                         filestore: true
                       },
@@ -254,7 +256,6 @@
                       }
                     }, {
                       label: 'addThumbnail',
-                      type: 'thumbnail',
                       sources: {
                         filestore: true,
                         thumbnailMaker: true
@@ -264,7 +265,7 @@
                       process: 'thumbnail-add',
                       fields: {
                         'url': {param: 'thumbnail_url'},
-                        'desc': {param: 'thumbnail_desc'}
+                        'name': {param: 'thumbnail_desc'}
                       }
                     }]
                   },
@@ -273,7 +274,6 @@
                     types: [{
                       group: 'onlineDiscover',
                       label: 'onlineDiscoverThumbnail',
-                      type: 'thumbnail',
                       sources: {
                         filestore: true,
                         thumbnailMaker: true
@@ -283,7 +283,7 @@
                       process: 'thumbnail-add',
                       fields: {
                         'url': {},
-                        'desc': {}
+                        'name': {param: 'desc'}
                       }
                     }, {
                       group: 'onlineDiscover',
@@ -823,11 +823,34 @@
                   scope.$watch('gnCurrentEdit.layerConfig', loadLayers);
                 };
 
-                function getTypeConfig(type) {
+                // Check which config to load based on the link
+                // to edit properties. A match is returned based
+                // on link type and config process prefix. If none found
+                // return the first config.
+                function getTypeConfig(link) {
                   for (var i = 0; i < scope.config.types.length; i++) {
                     var c = scope.config.types[i];
-                    if (c.type === type) {
-                      return c;
+                    if (scope.schema === 'iso19115-3') {
+                      var p = c.fields &&
+                              c.fields.protocol &&
+                              c.fields.protocol.value || '',
+                          f = c.fields &&
+                          c.fields.function &&
+                          c.fields.function.value || '',
+                          ap = c.fields &&
+                          c.fields.applicationProfile &&
+                          c.fields.applicationProfile.value || '';
+                      if (c.process.indexOf(link.type) === 0 &&
+                          p === (link.protocol || '') &&
+                          f === (link.function || '') &&
+                          ap === (link.applicationProfile || '')
+                      ) {
+                        return c;
+                      }
+                    } else {
+                      if (c.process.indexOf(link.type) === 0) {
+                        return c;
+                      }
                     }
                   }
                   return scope.config.types[0];
@@ -842,7 +865,6 @@
                       scope.schema.indexOf('iso19139') === 0) {
                     scope.config = schemaConfig['iso19139'];
                   }
-                  scope.params.linkType = scope.config.types[0];
 
                   if (gnCurrentEdit.mdOtherLanguages) {
 
@@ -913,15 +935,18 @@
                       name = {};
                       desc = {};
                       $.each(scope.mdLangs, function(key, v) {
-                        name[v] = linkToEdit.title[key] || '';
+                        name[v] =
+                            (linkToEdit.title && linkToEdit.title[key]) || '';
                       });
                       $.each(scope.mdLangs, function(key, v) {
-                        desc[v] = linkToEdit.description[key] || '';
+                        desc[v] =
+                            (linkToEdit.description &&
+                             linkToEdit.description[key]) || '';
                       });
                     }
 
                     scope.params = {
-                      linkType: getTypeConfig(linkToEdit.type),
+                      linkType: getTypeConfig(linkToEdit),
                       url: linkToEdit.url,
                       protocol: linkToEdit.protocol,
                       name: name,
@@ -929,15 +954,15 @@
                       applicationProfile: linkToEdit.applicationProfile,
                       function: linkToEdit.function,
                       selectedLayers: []
-                    };
-
-                    // scope.params.function = '';
-                    // scope.params.applicationProfile = '';
-                    // Readonly: a graphic overview can't become a link
-                  } else {
-                    scope.editingKey = null;
-                  }
-                });
+                      };
+                      } else{
+                      scope.editingKey= null;
+                      scope.params.linkType= scope.config.types[0];
+                      scope.params.protocol= null;
+                      setParameterValue(scope.params.name, '');
+                      setParameterValue(scope.params.desc, '');
+                    }
+                  });
 
                 // mode can be 'url' or 'thumbnailMaker' to init thumbnail panel
                 scope.mode = 'url';
@@ -1106,11 +1131,13 @@
                 };
 
                 function checkIsOgc(protocol) {
-                  if (protocol.indexOf('OGC:WMS') >= 0) {
+                  if (protocol && protocol.indexOf('OGC:WMS') >= 0) {
                     return 'WMS';
-                  } else if (protocol.indexOf('OGC:WFS') >= 0) {
+                  }
+                  else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
                     return 'WFS';
-                  } else {
+                  }
+                  else {
                     return null;
                   }
                 };
@@ -1181,7 +1208,7 @@
                       resetForm();
                     }
 
-                    if (newValue.sources.metadataStore) {
+                    if (newValue.sources && newValue.sources.metadataStore) {
                       scope.$broadcast('resetSearch',
                           newValue.sources.metadataStore.params);
                     }
@@ -1209,7 +1236,6 @@
                 scope.resource = null;
                 scope.$watch('resource', function() {
                   if (scope.resource && scope.resource.url) {
-                    console.log('resource');
                     scope.params.url = '';
                     setParameterValue(scope.params.name, '');
                     $timeout(function() {

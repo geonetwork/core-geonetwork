@@ -81,6 +81,7 @@
             <xsl:apply-templates mode="get-iso19139-localized-string"
                                  select="gmd:fileDescription"/>
           </title>
+          <type>thumbnail</type>
         </item>
       </xsl:for-each>
     </thumbnails>
@@ -107,6 +108,7 @@
                                  select="gmd:description"/>
           </description>
           <protocol><xsl:value-of select="gn-fn-rel:translate(gmd:protocol, $langCode)"/></protocol>
+          <type>onlinesrc</type>
         </item>
       </xsl:for-each>
     </onlines>

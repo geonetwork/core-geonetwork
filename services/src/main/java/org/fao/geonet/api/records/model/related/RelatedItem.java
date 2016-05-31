@@ -47,7 +47,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "relatedItem", propOrder = {
     "id",
     "url",
-    "title"
+    "title",
+    "type"
 })
 @XmlSeeAlso({
     RelatedThumbnailItem.class,
@@ -58,6 +59,8 @@ public abstract class RelatedItem {
 
     protected String id;
     protected String url;
+    protected String type;
+
     @XmlElement(required = true)
     protected RelatedItem.Title title;
 
@@ -107,6 +110,30 @@ public abstract class RelatedItem {
      */
     public void setUrl(String value) {
         this.url = value;
+    }
+
+    /**
+     * Gets the value of the type property.
+     *
+     * @return
+     *     possible object is
+     *     {@link String }
+     *
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Sets the value of the type property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *
+     */
+    public void setType(String value) {
+        this.type = value;
     }
 
     /**

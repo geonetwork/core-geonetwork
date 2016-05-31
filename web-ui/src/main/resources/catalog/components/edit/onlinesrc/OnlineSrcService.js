@@ -51,9 +51,10 @@
     '$http',
     '$rootScope',
     '$translate',
+    '$filter',
     'Metadata',
     function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit,
-             $q, $http, $rootScope, $translate, Metadata) {
+             $q, $http, $rootScope, $translate, $filter, Metadata) {
 
       var reload = false;
       var openCb = {};
@@ -63,8 +64,9 @@
        * TODO: Should be the same as in related resource directive
        */
       var protocolIcons = [
-        ['dq', 'fa-certificate'],
-        ['portrayal', 'fa-paint-brush'],
+        ['dq-report', 'fa-certificate'],
+        ['legend', 'fa-paint-brush'],
+        ['fcats', 'fa-table'],
         ['FILE:', 'fa-database'],
         ['OGC:OWS', 'fa-map'],
         ['OGC:WMC', 'fa-map'],
@@ -326,10 +328,10 @@
          * @return {string} icon class
          */
         getIconByProtocol: function(p) {
-          if (p['@subtype']) {
+          if (p.type) {
             for (i = 0; i < protocolIcons.length; ++i) {
-              if (p['@subtype'].indexOf(protocolIcons[i][0]) >= 0 ||
-                  p['@subtype'].indexOf(protocolIcons[i][0]) >= 0) {
+              if (p.type.indexOf(protocolIcons[i][0]) >= 0 ||
+                  p.type.indexOf(protocolIcons[i][0]) >= 0) {
                 return protocolIcons[i][1];
               }
             }
@@ -492,7 +494,7 @@
               setParams('onlinesrc-remove', {
                 id: gnCurrentEdit.id,
                 url: onlinesrc.url,
-                name: onlinesrc.name
+                name: $filter('gnLocalized')(onlinesrc.title)
               }));
         },
 

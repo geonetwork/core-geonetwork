@@ -26,8 +26,8 @@
   xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
   xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all" version="2.0">
 
-  <!-- 
-      Usage: 
+  <!--
+      Usage:
         thumbnail-from-url-add?thumbnail_url=http://geonetwork.org/thumbnails/image.png
     -->
 
@@ -36,6 +36,10 @@
   <!-- Element to use for the file name. -->
   <xsl:param name="thumbnail_desc" select="''"/>
   <xsl:param name="thumbnail_type" select="''"/>
+
+  <!-- Target element to update. The key is based on the concatenation
+  of URL+Name -->
+  <xsl:param name="updateKey"/>
 
   <xsl:template match="gmd:MD_DataIdentification|*[@gco:isoType='gmd:MD_DataIdentification']">
     <xsl:copy>
@@ -48,7 +52,9 @@
       <xsl:apply-templates select="gmd:pointOfContact"/>
       <xsl:apply-templates select="gmd:resourceMaintenance"/>
 
-      <xsl:call-template name="fill"/>
+      <xsl:if test="$updateKey = ''">
+        <xsl:call-template name="fill"/>
+      </xsl:if>
 
       <xsl:apply-templates select="gmd:graphicOverview"/>
 
@@ -65,9 +71,18 @@
       <xsl:apply-templates select="gmd:environmentDescription"/>
       <xsl:apply-templates select="gmd:extent"/>
       <xsl:apply-templates select="gmd:supplementalInformation"/>
-
     </xsl:copy>
   </xsl:template>
+
+
+
+  <xsl:template match="gmd:graphicOverview[concat(
+                          */gmd:fileName/gco:CharacterString,
+                          */gmd:fileDescription/gco:CharacterString) = normalize-space($updateKey)]">
+    <xsl:call-template name="fill"/>
+  </xsl:template>
+
+
 
   <xsl:template name="fill">
     <xsl:if test="$thumbnail_url != ''">
