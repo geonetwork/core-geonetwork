@@ -55,8 +55,6 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -66,23 +64,23 @@ import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
 
 @RequestMapping(value = {
-        "/api/records",
-        "/api/" + API.VERSION_0_1 +
-                "/records"
+    "/api/records",
+    "/api/" + API.VERSION_0_1 +
+        "/records"
 })
 @Api(value = "records",
-        tags = "records",
-        description = "Metadata record operations")
+    tags = "records",
+    description = "Metadata record operations")
 @Controller("records")
 @ReadWriteController
 public class MetadataApi implements ApplicationContextAware {
-    private ApplicationContext context;
-
     @Autowired
     SchemaManager _schemaManager;
 
     @Autowired
     LanguageUtils languageUtils;
+
+    private ApplicationContext context;
 
     public synchronized void setApplicationContext(ApplicationContext context) {
         this.context = context;
@@ -90,30 +88,30 @@ public class MetadataApi implements ApplicationContextAware {
 
 
     @ApiOperation(value = "Get a metadata record",
-            nickname = "get")
+        nickname = "get")
     @RequestMapping(value = "/{metadataUuid}",
-            method = RequestMethod.GET,
-            produces = {
-                MediaType.APPLICATION_XML_VALUE
-            })
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_XML_VALUE
+        })
     public
     @ResponseBody
     Element serviceSpecificExec(
-                @ApiParam(value = "Record UUID.",
-                          required = true)
-                @PathVariable
-                String metadataUuid,
-                @ApiParam(value = "Add XSD schema location based on standard configuration",
-                          required = false)
-                @RequestParam(required = false, defaultValue = "true")
-                boolean addSchemaLocation,
-                @ApiParam(value = "Increase record popularity",
-                          required = false)
-                @RequestParam(required = false, defaultValue = "true")
-                boolean increasePopularity,
-                @ApiParam(hidden = true)
-                HttpServletResponse response)
-            throws Exception {
+        @ApiParam(value = "Record UUID.",
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(value = "Add XSD schema location based on standard configuration",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+            boolean addSchemaLocation,
+        @ApiParam(value = "Increase record popularity",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+            boolean increasePopularity,
+        @ApiParam(hidden = true)
+            HttpServletResponse response)
+        throws Exception {
         ServiceContext context = ServiceContext.get();
         DataManager dataManager = context.getBean(DataManager.class);
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
@@ -121,32 +119,32 @@ public class MetadataApi implements ApplicationContextAware {
         if (metadata == null) {
             // TODO: i18n
             throw new ResourceNotFoundException(String.format(
-                    "Metadata with UUID '%s' not found in this catalog.",
-                    metadataUuid
+                "Metadata with UUID '%s' not found in this catalog.",
+                metadataUuid
             ));
         }
         try {
             Lib.resource.checkPrivilege(context,
-                    metadata.getId() + "",
-                    ReservedOperation.view);
+                metadata.getId() + "",
+                ReservedOperation.view);
         } catch (Exception e) {
             // TODO: i18n
             // TODO: Report exception in JSON format
             throw new SecurityException(String.format(
-                    "Metadata with UUID '%s' not shared with you.",
-                    metadataUuid
+                "Metadata with UUID '%s' not shared with you.",
+                metadataUuid
             ));
         }
 
         Element xml = metadata.getXmlData(false);
         if (addSchemaLocation) {
             Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
-                    metadata.getDataInfo().getSchemaId(), context);
+                metadata.getDataInfo().getSchemaId(), context);
 
             if (schemaLocAtt != null) {
                 if (xml.getAttribute(
-                        schemaLocAtt.getName(),
-                        schemaLocAtt.getNamespace()) == null) {
+                    schemaLocAtt.getName(),
+                    schemaLocAtt.getNamespace()) == null) {
                     xml.setAttribute(schemaLocAtt);
                     // make sure namespace declaration for schemalocation is present -
                     // remove it first (does nothing if not there) then add it
@@ -160,22 +158,18 @@ public class MetadataApi implements ApplicationContextAware {
         }
 
         response.setHeader("Content-Disposition", String.format(
-                "inline; filename=\"%s.xml\"",
-                metadata.getUuid()
+            "inline; filename=\"%s.xml\"",
+            metadata.getUuid()
         ));
         return xml;
     }
-
-
-
-
 
 
     @ApiOperation(
         value = "Get record related resources",
         nickname = "get",
         notes = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
-                "to this records.")
+            "to this records.")
     @RequestMapping(value = "/{metadataUuid}/related",
         method = RequestMethod.GET,
         produces = {
@@ -184,24 +178,24 @@ public class MetadataApi implements ApplicationContextAware {
         })
     @ResponseBody
     public RelatedResponse getRelated(
-            @ApiParam(value = "Record UUID.",
+        @ApiParam(value = "Record UUID.",
             required = true)
-            @PathVariable
+        @PathVariable
             String metadataUuid,
-            @ApiParam(value = "Type of related resource. If none, all resources are returned.",
-                      required = false
-            )
-            @RequestParam (defaultValue = "")
+        @ApiParam(value = "Type of related resource. If none, all resources are returned.",
+            required = false
+        )
+        @RequestParam(defaultValue = "")
             RelatedItemType[] type,
-            @ApiParam(value = "Start offset for paging. Default 1. Only applies to related metadata records (ie. not for thumbnails).",
-                required = false
-            )
-            @RequestParam (defaultValue = "1")
+        @ApiParam(value = "Start offset for paging. Default 1. Only applies to related metadata records (ie. not for thumbnails).",
+            required = false
+        )
+        @RequestParam(defaultValue = "1")
             int start,
-            @ApiParam(value = "Number of rows returned. Default 100.")
-            @RequestParam (defaultValue = "100")
+        @ApiParam(value = "Number of rows returned. Default 100.")
+        @RequestParam(defaultValue = "100")
             int rows,
-           HttpServletRequest request) throws Exception {
+        HttpServletRequest request) throws Exception {
 
         final ServiceContext context = ServiceContext.get();
         ServiceManager serviceManager = context.getBean(ServiceManager.class);

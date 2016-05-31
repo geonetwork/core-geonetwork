@@ -26,6 +26,7 @@
 package org.fao.geonet.api.records.attachments;
 
 import com.google.common.collect.Lists;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.constants.Geonet;
@@ -36,22 +37,27 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
- *  Replace old metadata link to uploaded file by new API
+ * Replace old metadata link to uploaded file by new API
  *
- *  http://localhost:8080/geonetwork/srv/en/resources.get?uuid=da165110-88fd-11da-a88f-000d939bc5d8&fname=basins.zip&access=private
+ * http://localhost:8080/geonetwork/srv/en/resources.get?uuid=da165110-88fd-11da-a88f-000d939bc5d8&fname=basins.zip&access=private
  *
- *  is replaced by
+ * is replaced by
  *
- *  http://localhost:8080/geonetwork/srv/api/metadata/da165110-88fd-11da-a88f-000d939bc5d8/resources/basins.zip
+ * http://localhost:8080/geonetwork/srv/api/metadata/da165110-88fd-11da-a88f-000d939bc5d8/resources/basins.zip
  *
  *
  * Created by francois on 12/01/16.
@@ -59,23 +65,55 @@ import java.util.regex.Pattern;
 public class MetadataResourceDatabaseMigration implements DatabaseMigrationTask {
 
     private static final ArrayList<Namespace> NAMESPACES =
-            Lists.newArrayList(
-                    ISO19139Namespaces.GMD,
-                    ISO19139Namespaces.GCO);
+        Lists.newArrayList(
+            ISO19139Namespaces.GMD,
+            ISO19139Namespaces.GCO);
     private static final String XPATH = "*//*[contains(text(), '/resources.get?')]";
     private static final Pattern pattern = Pattern.compile(
-            "(.*)\\/([a-zA-Z0-9_\\-]+)\\/([a-z]{2,3})\\/resources.get?.*fname=([\\p{L}\\w\\s\\.\\-]+)(&.*|$)");
+        "(.*)\\/([a-zA-Z0-9_\\-]+)\\/([a-z]{2,3})\\/resources.get?.*fname=([\\p{L}\\w\\s\\.\\-]+)(&.*|$)");
+
+    public static boolean updateMetadataResourcesLink(@Nonnull Element xml,
+                                                      @Nullable String uuid) throws JDOMException {
+        boolean changed = false;
+
+        if (uuid == null) {
+            final Element uuidElement = Xml.selectElement(
+                xml,
+                "gmd:fileIdentifier/gco:CharacterString", NAMESPACES);
+            if (uuidElement != null) {
+                uuid = uuidElement.getText();
+            }
+        }
+
+        if (StringUtils.isNotEmpty(uuid)) {
+            @SuppressWarnings("unchecked") final List<Element> links =
+                Lists.newArrayList((Iterable<? extends Element>)
+                    Xml.selectNodes(xml, XPATH));
+
+            for (Element element : links) {
+                final String url = element.getText();
+                Matcher regexMatcher = pattern.matcher(url);
+                element.setText(
+                    regexMatcher.replaceAll(
+                        "$1/$2/api/records/" + uuid + "/attachments/$4"));
+                changed = true;
+            }
+        } else {
+            throw new UnsupportedOperationException("Metadata is not supported. UUID is not defined.");
+        }
+        return changed;
+    }
 
     @Override
     public void update(Connection connection) throws SQLException {
         Log.debug(Geonet.DB, "MetadataResourceDatabaseMigration");
 
         try (PreparedStatement update = connection.prepareStatement(
-                "UPDATE metadata SET data=? WHERE id=?")
+            "UPDATE metadata SET data=? WHERE id=?")
         ) {
             try (Statement statement = connection.createStatement();
                  ResultSet resultSet = statement.executeQuery(
-                         "SELECT data,id,uuid FROM metadata WHERE isharvested = 'n'")
+                     "SELECT data,id,uuid FROM metadata WHERE isharvested = 'n'")
             ) {
                 int numInBatch = 0;
                 while (resultSet.next()) {
@@ -111,37 +149,5 @@ public class MetadataResourceDatabaseMigration implements DatabaseMigrationTask 
                 throw new Error(e);
             }
         }
-    }
-
-    public static boolean updateMetadataResourcesLink(@Nonnull Element xml,
-                                                      @Nullable String uuid) throws JDOMException {
-        boolean changed = false;
-
-        if (uuid == null) {
-            final Element uuidElement = Xml.selectElement(
-                    xml,
-                    "gmd:fileIdentifier/gco:CharacterString", NAMESPACES);
-            if (uuidElement != null) {
-                uuid = uuidElement.getText();
-            }
-        }
-
-        if (StringUtils.isNotEmpty(uuid)) {
-            @SuppressWarnings("unchecked") final List<Element> links =
-                    Lists.newArrayList((Iterable<? extends Element>)
-                            Xml.selectNodes(xml, XPATH));
-
-            for (Element element : links) {
-                final String url = element.getText();
-                Matcher regexMatcher = pattern.matcher(url);
-                element.setText(
-                        regexMatcher.replaceAll(
-                                "$1/$2/api/records/" + uuid + "/attachments/$4"));
-                changed = true;
-            }
-        } else {
-            throw new UnsupportedOperationException("Metadata is not supported. UUID is not defined.");
-        }
-        return changed;
     }
 }

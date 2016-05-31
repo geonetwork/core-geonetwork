@@ -26,8 +26,8 @@
 package org.fao.geonet.api.records.attachments;
 
 
-import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 
 /**
  * Metadata resource stored in the file system.
@@ -39,6 +39,17 @@ public class FilesystemStoreResource implements MetadataResource {
     private final String url;
     private final MetadataResourceVisibility metadataResourceVisibility;
     private double size = -1;
+
+    public FilesystemStoreResource(String id,
+                                   String baseUrl,
+                                   MetadataResourceVisibility metadataResourceVisibility,
+                                   double size) {
+        this.filename = id;
+        this.url = baseUrl + id;
+        this.metadataResourceVisibility = metadataResourceVisibility;
+        this.size = Double.isNaN(size) ? -1 : size;
+    }
+
     @Override
     public String getId() {
         return filename;
@@ -57,15 +68,6 @@ public class FilesystemStoreResource implements MetadataResource {
     @Override
     public double getSize() {
         return size;
-    }
-    public FilesystemStoreResource(String id,
-                                   String baseUrl,
-                                   MetadataResourceVisibility metadataResourceVisibility,
-                                   double size) {
-        this.filename = id;
-        this.url = baseUrl + id;
-        this.metadataResourceVisibility = metadataResourceVisibility;
-        this.size = Double.isNaN(size) ? -1 : size;
     }
 
     @Override
