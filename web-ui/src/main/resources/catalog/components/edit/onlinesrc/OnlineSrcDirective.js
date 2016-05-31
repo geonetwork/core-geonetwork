@@ -246,7 +246,7 @@
                       process: 'onlinesrc-add',
                       fields: {
                         'url': {},
-                        'protocol': {},
+                        'protocol': {value: 'WWW:LINK-1.0-http--link'},
                         'name': {},
                         'desc': {},
                         'function': {},
@@ -844,8 +844,7 @@
                   }
                   scope.params.linkType = scope.config.types[0];
 
-                  if (angular.isUndefined(scope.isMdMultilingual) &&
-                      gnCurrentEdit.mdOtherLanguages) {
+                  if (gnCurrentEdit.mdOtherLanguages) {
 
                     scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
                     scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
