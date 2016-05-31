@@ -38,7 +38,9 @@
 
             <!-- Inputs -->
             <div ng-repeat="input in processDescription.dataInputs.input" class="form-group" ng-class="{'gn-required': input.minOccurs}">
-              <label for="{{::input.identifier.value}}">{{::input.title.value}}</label>
+              <label for="{{::input.identifier.value}}">{{::input.title.value}}
+                <span class="fa fa-info-circle" data-ng-if="::input._abstract.value" title="{{::input._abstract.value}}"></span>
+              </label>
               <div ng-if="::input.literalData">
                 <div ng-if="::input.literalData.allowedValues">
                   <select id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value">
