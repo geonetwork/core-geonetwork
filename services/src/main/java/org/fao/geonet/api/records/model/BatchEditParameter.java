@@ -24,15 +24,31 @@ package org.fao.geonet.api.records.model;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 
 /**
  * Created by francois on 22/10/15.
  */
 @XmlRootElement(name = "edit")
 public class BatchEditParameter implements Serializable {
+    private String xpath;
+    private String value;
+
+    public BatchEditParameter() {
+    }
+
+    public BatchEditParameter(String xpath, String value) {
+        if (StringUtils.isEmpty(xpath)) {
+            throw new IllegalArgumentException(
+                "Parameter xpath is not set. It should be not empty and define the XPath of the element to update.");
+        }
+        this.xpath = xpath;
+        this.value = value;
+    }
+
     @XmlElement(required = true)
     public String getXpath() {
         return xpath;
@@ -48,19 +64,6 @@ public class BatchEditParameter implements Serializable {
     }
 
     public void setValue(String value) {
-        this.value = value;
-    }
-
-    private String xpath;
-    private String value;
-
-    public BatchEditParameter() {}
-    public BatchEditParameter(String xpath, String value) {
-        if (StringUtils.isEmpty(xpath)) {
-            throw new IllegalArgumentException(
-                    "Parameter xpath is not set. It should be not empty and define the XPath of the element to update.");
-        }
-        this.xpath = xpath;
         this.value = value;
     }
 

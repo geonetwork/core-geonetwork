@@ -25,9 +25,12 @@
 
 package org.fao.geonet.api.records.attachments;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataFileDownload;
+import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataFileDownloadRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
@@ -40,9 +43,10 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
 
+import jeeves.server.context.ServiceContext;
+
 /**
- * Decorate a store and record put/get/delete operations
- * in database for reporting statistics.
+ * Decorate a store and record put/get/delete operations in database for reporting statistics.
  */
 public class ResourceLoggerStore implements Store {
 
@@ -82,8 +86,8 @@ public class ResourceLoggerStore implements Store {
             if (filePath != null) {
                 // TODO: Add Requester details which may have been provided by a form ?
                 storeGetRequest(metadataUuid, resourceId,
-                        "", "", "", "",
-                        new ISODate().toString());
+                    "", "", "", "",
+                    new ISODate().toString());
             }
             return filePath;
         }
@@ -96,8 +100,8 @@ public class ResourceLoggerStore implements Store {
             MetadataResource resource = decoratedStore.putResource(metadataUuid, file, metadataResourceVisibility);
             if (resource != null) {
                 storePutRequest(metadataUuid,
-                        resource.getId(),
-                        resource.getSize());
+                    resource.getId(),
+                    resource.getSize());
             }
             return resource;
         }
@@ -150,14 +154,6 @@ public class ResourceLoggerStore implements Store {
 
     /**
      * * Stores a file download request in the MetadataFileDownloads table.
-     *
-     * @param metadataUuid
-     * @param resourceId
-     * @param requesterName
-     * @param requesterMail
-     * @param requesterOrg
-     * @param requesterComments
-     * @param downloadDate
      */
     private void storeGetRequest(final String metadataUuid,
                                  final String resourceId,
@@ -169,11 +165,11 @@ public class ResourceLoggerStore implements Store {
         ServiceContext context = ServiceContext.get();
 
         final int metadataId =
-                Integer.valueOf(context.getBean(DataManager.class).getMetadataId(metadataUuid));
+            Integer.valueOf(context.getBean(DataManager.class).getMetadataId(metadataUuid));
         final MetadataFileUploadRepository uploadRepository =
-                context.getBean(MetadataFileUploadRepository.class);
+            context.getBean(MetadataFileUploadRepository.class);
         final MetadataFileDownloadRepository repo =
-                context.getBean(MetadataFileDownloadRepository.class);
+            context.getBean(MetadataFileDownloadRepository.class);
         final String userName = context.getUserSession().getUsername();
 
         threadPool.runTask(new Runnable() {
@@ -187,8 +183,8 @@ public class ResourceLoggerStore implements Store {
 
                 } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
                     Log.debug(Geonet.RESOURCES,
-                            String.format("No references in FileNameNotDeleted repository for metadata '%s', resource id '%s'. Get request will not be saved.",
-                                    metadataUuid, resourceId));
+                        String.format("No references in FileNameNotDeleted repository for metadata '%s', resource id '%s'. Get request will not be saved.",
+                            metadataUuid, resourceId));
 
                     // No related upload is found
                     metadataFileUpload = null;
@@ -216,21 +212,18 @@ public class ResourceLoggerStore implements Store {
 
     /**
      * Stores a file upload delete request in the MetadataFileUploads table.
-     *
-     * @param metadataUuid
-     * @param fileName
      */
     private void storeDeleteRequest(final String metadataUuid,
                                     final String fileName) throws Exception {
         ServiceContext context = ServiceContext.get();
         final int metadataId =
-                Integer.valueOf(context.getBean(DataManager.class).getMetadataId(metadataUuid));
+            Integer.valueOf(context.getBean(DataManager.class).getMetadataId(metadataUuid));
 
         MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
 
         try {
             MetadataFileUpload metadataFileUpload =
-                    repo.findByMetadataIdAndFileNameNotDeleted(metadataId, fileName);
+                repo.findByMetadataIdAndFileNameNotDeleted(metadataId, fileName);
             metadataFileUpload.setDeletedDate(new ISODate().toString());
             repo.save(metadataFileUpload);
 
@@ -248,9 +241,9 @@ public class ResourceLoggerStore implements Store {
                                  final double fileSize) throws Exception {
         ServiceContext context = ServiceContext.get();
         final MetadataFileUploadRepository repo =
-                context.getBean(MetadataFileUploadRepository.class);
+            context.getBean(MetadataFileUploadRepository.class);
         final int metadataId =
-                Integer.valueOf(context.getBean(DataManager.class).getMetadataId(metadataUuid));
+            Integer.valueOf(context.getBean(DataManager.class).getMetadataId(metadataUuid));
 
         MetadataFileUpload metadataFileUpload = new MetadataFileUpload();
 
