@@ -43,17 +43,17 @@ public class SLDUtilTest extends XMLTestCase {
     public void testInsertFilterOneFilter() throws Exception {
         testInsertFilter("onefilter", "simplefilter");
     }
-
-    @Test
-    @Ignore
-    public void testParseSLD() throws Exception {
-        String url = "http://sextant-test.ifremer.fr/cgi-bin/sextant/wms/bgmb";
-        String layers= "SISMER_prelevements";
-
-        HashMap<String, String> hash = SLDUtil.parseSLD(new URL(url), layers);
-        assertNotNull(hash.get("content"));
-        assertEquals(hash.get("charset"), "UTF-8");
-    }
+//
+//    @Test
+//    @Ignore
+//    public void testParseSLD() throws Exception {
+//        String url = "http://sextant-test.ifremer.fr/cgi-bin/sextant/wms/bgmb";
+//        String layers= "SISMER_prelevements";
+//
+//        HashMap<String, String> hash = SLDUtil.parseSLD(new URL(url), layers);
+//        assertNotNull(hash.get("content"));
+//        assertEquals(hash.get("charset"), "UTF-8");
+//    }
 
     private void testInsertFilter (final String filePattern, final String rulePattern) throws Exception {
 
