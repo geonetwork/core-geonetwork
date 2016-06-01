@@ -113,7 +113,7 @@
            *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
-        copy: function(id, groupId, withFullPrivileges, 
+        copy: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, metadataUuid) {
           var url = gnUrlUtils.append('md.create',
               gnUrlUtils.toKeyValue({
@@ -221,7 +221,7 @@
            *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
-        create: function(id, groupId, withFullPrivileges, 
+        create: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, tab, metadataUuid) {
 
           return this.copy(id, groupId, withFullPrivileges,
@@ -508,7 +508,8 @@
       isFeedbackEnabled: 'system.userFeedback.enable',
       isSearchStatEnabled: 'system.searchStats.enable',
       isHideWithHelEnabled: 'system.hidewithheldelements.enable'
-    }
+    },
+    'map.is3DModeAllowed': window.location.search.indexOf('with3d') !== -1
   });
 
   /**
@@ -551,9 +552,12 @@
               }
             });
             angular.extend(gnConfig, response.data);
+
+            // Override parameter if set in URL
             if (window.location.search.indexOf('with3d') !== -1) {
               gnConfig['map.is3DModeAllowed'] = true;
             }
+
             defer.resolve(gnConfig);
           });
           return defer.promise;

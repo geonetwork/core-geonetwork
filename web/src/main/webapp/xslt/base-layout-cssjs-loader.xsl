@@ -58,6 +58,11 @@
   <xsl:template name="javascript-load">
 
     <script>var geonet = {provide:function(s){},require:function(s){}};</script>
+
+    <xsl:if test="$is3DModeAllowed">
+      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/ol3cesium/Cesium/';</script>
+    </xsl:if>
+
     <xsl:choose>
       <xsl:when test="$isDebugMode">
 
@@ -74,7 +79,6 @@
         <script src="{$uiResourcesPath}lib/angular/angular-route.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-sanitize.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-cookies.js"></script>
-
         <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
         <script src="{$uiResourcesPath}lib/angular-md5.js"></script>
         <script src="{$uiResourcesPath}lib/angular-filter.min.js"></script>
@@ -93,7 +97,16 @@
         <script src="{$uiResourcesPath}lib/style/bootstrap/dist/js/bootstrap.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js"></script>
-        <script src="{$uiResourcesPath}lib/ngeo/ngeo-debug.js"></script>
+
+        <xsl:choose>
+          <xsl:when test="$is3DModeAllowed">
+            <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js"></script>
+            <script src="{$uiResourcesPath}lib/ol3cesium/ngeool3cesium-debug.js"></script>
+          </xsl:when>
+          <xsl:otherwise>
+            <script src="{$uiResourcesPath}lib/ngeo/ngeo-debug.js"></script>
+          </xsl:otherwise>
+        </xsl:choose>
 
 
         <xsl:if test="$withD3">
@@ -141,34 +154,19 @@
             </script>
         </xsl:when>
         <xsl:otherwise>
-            <script src="{/root/gui/url}/static/lib.js"></script>
-            <script src="{/root/gui/url}/static/{$angularModule}.js{$minimizedParam}"></script>
+
+          <xsl:choose>
+            <xsl:when test="$is3DModeAllowed">
+              <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js"></script>
+              <script src="{/root/gui/url}/static/lib3d.js"></script>
+            </xsl:when>
+            <xsl:otherwise>
+              <script src="{/root/gui/url}/static/lib.js"></script>
+            </xsl:otherwise>
+          </xsl:choose>
+          <script src="{/root/gui/url}/static/{$angularModule}.js{$minimizedParam}"></script>
         </xsl:otherwise>
     </xsl:choose>
-
-
-    <!-- Load JS libs required for 3D maps when enabled
-    Those scripts are not bundle by Wro4j to avoid to increase size
-    of the bundle when 3D mode is not anabled.
-    -->
-    <xsl:if test="$is3DModeAllowed">
-      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/ol3cesium/Cesium/';</script>
-
-
-      <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js"></script>
-      <script src="{$uiResourcesPath}lib/ol3cesium/ol3cesium.js"></script>
-      <!--
-      Wro4j combining the 2 lib in one JS does not work.
-      <xsl:choose>
-        <xsl:when test="/root/request/debug">
-        </xsl:when>
-        <xsl:otherwise>
-          <script src="{/root/gui/url}/static/libcesium.js"></script>
-        </xsl:otherwise>
-      </xsl:choose>-->
-    </xsl:if>
-
-
 
 
     <xsl:variable name="mapConfig"
@@ -179,7 +177,7 @@
 	    <xsl:when test="util:getSettingValue('map/isMapViewerEnabled')"><xsl:value-of select="util:getSettingValue('map/isMapViewerEnabled')"/></xsl:when>
 	    <xsl:otherwise>true</xsl:otherwise> <!-- default value -->
 	  </xsl:choose>
-                  
+
     </xsl:variable>
 
     <xsl:if test="$angularApp = 'gn_search'">
@@ -200,7 +198,7 @@
         }]);
       </script>
     </xsl:if>
-    
+
     <xsl:if test="$angularApp = 'gn_editor'">
       <script type="text/javascript">
         var module = angular.module('gn_editor');
@@ -218,7 +216,7 @@
         }]);
       </script>
     </xsl:if>
-    
+
     <xsl:if test="$angularApp = 'gn_admin'">
       <script type="text/javascript">
         var module = angular.module('gn_admin');

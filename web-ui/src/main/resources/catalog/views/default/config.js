@@ -36,7 +36,9 @@
         'gnViewerSettings',
         'gnOwsContextService',
         'gnMap',
-        function(searchSettings, viewerSettings, gnOwsContextService, gnMap) {
+        'gnConfig',
+        function(searchSettings, viewerSettings, gnOwsContextService,
+                 gnMap, gnConfig) {
           // Load the context defined in the configuration
           viewerSettings.defaultContext =
             viewerSettings.mapConfig.viewerMap ||
@@ -55,7 +57,15 @@
             viewerSettings.mapConfig.listOfServices || {};
 
           // WMS settings
-          viewerSettings.singleTileWMS = true;
+          // TODO: Single tile WMS mode is not supported by ol3cesium
+          if (gnConfig['map.is3DModeAllowed']) {
+            viewerSettings.singleTileWMS = false;
+            // Configure Cesium to use a proxy. This is required when
+            // WMS does not have CORS headers
+            viewerSettings.cesiumProxy = true;
+          } else {
+            viewerSettings.singleTileWMS = true;
+          }
 
           var bboxStyle = new ol.style.Style({
             stroke: new ol.style.Stroke({
