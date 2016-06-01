@@ -320,8 +320,10 @@
                  in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*"
                  name="sextant-date-resource"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"
+                 del="../.."/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator"
+                 del="../../../.."/>
 
 
           <action type="add" btnLabel="sextant-add-scale" or="spatialResolution"
@@ -518,12 +520,8 @@
       </tab>
       <tab id="sextant-usage" mode="flat">
         <section name="sextantlimitationsTitle">
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"
-                 or="useLimitation"
-                 in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints"
-                   or="useConstraints"
-                   in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
         </section>
