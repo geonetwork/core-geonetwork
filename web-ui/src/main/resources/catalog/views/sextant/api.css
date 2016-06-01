@@ -44,7 +44,7 @@
  */
   /**
  * @author zhixin wen <wenzhixin2010@gmail.com>
- * version: 1.8.1
+ * version: 1.10.1
  * https://github.com/wenzhixin/bootstrap-table/
  */
   /* the same color with .active */
@@ -12038,19 +12038,19 @@ yx-axis
   border-collapse: collapse !important;
   border-radius: 1px;
 }
-.gn .bootstrap-table .table,
-.g .bootstrap-table .table,
-.gn .bootstrap-table .table > tbody > tr > th,
-.g .bootstrap-table .table > tbody > tr > th,
-.gn .bootstrap-table .table > tfoot > tr > th,
-.g .bootstrap-table .table > tfoot > tr > th,
-.gn .bootstrap-table .table > thead > tr > td,
-.g .bootstrap-table .table > thead > tr > td,
-.gn .bootstrap-table .table > tbody > tr > td,
-.g .bootstrap-table .table > tbody > tr > td,
-.gn .bootstrap-table .table > tfoot > tr > td,
-.g .bootstrap-table .table > tfoot > tr > td {
-  padding: 8px !important;
+.gn .bootstrap-table .table:not(.table-condensed),
+.g .bootstrap-table .table:not(.table-condensed),
+.gn .bootstrap-table .table:not(.table-condensed) > tbody > tr > th,
+.g .bootstrap-table .table:not(.table-condensed) > tbody > tr > th,
+.gn .bootstrap-table .table:not(.table-condensed) > tfoot > tr > th,
+.g .bootstrap-table .table:not(.table-condensed) > tfoot > tr > th,
+.gn .bootstrap-table .table:not(.table-condensed) > thead > tr > td,
+.g .bootstrap-table .table:not(.table-condensed) > thead > tr > td,
+.gn .bootstrap-table .table:not(.table-condensed) > tbody > tr > td,
+.g .bootstrap-table .table:not(.table-condensed) > tbody > tr > td,
+.gn .bootstrap-table .table:not(.table-condensed) > tfoot > tr > td,
+.g .bootstrap-table .table:not(.table-condensed) > tfoot > tr > td {
+  padding: 8px;
 }
 .gn .bootstrap-table .table.table-no-bordered > thead > tr > th,
 .g .bootstrap-table .table.table-no-bordered > thead > tr > th,
@@ -12097,6 +12097,10 @@ yx-axis
   padding: 0;
   margin: 0;
   border-left: 1px solid #dddddd;
+}
+.gn .fixed-table-container thead th:focus,
+.g .fixed-table-container thead th:focus {
+  outline: 0 solid transparent;
 }
 .gn .fixed-table-container thead th:first-child,
 .g .fixed-table-container thead th:first-child {
@@ -12313,6 +12317,7 @@ yx-axis
 .g .bootstrap-table .fixed-table-footer .table {
   border-bottom: none;
   border-radius: 0;
+  padding: 0 !important;
 }
 .gn .pull-right .dropdown-menu,
 .g .pull-right .dropdown-menu {
@@ -15863,6 +15868,28 @@ yx-axis
 .g .gn-bbox-input .col-sm-offset-3 {
   margin-left: 95px;
 }
+.gn [sxt-main-viewer] .sxt-clearfix:before,
+.g [sxt-main-viewer] .sxt-clearfix:before,
+.gn [sxt-main-viewer] .sxt-clearfix:after,
+.g [sxt-main-viewer] .sxt-clearfix:after {
+  content: " ";
+  display: table;
+}
+.gn [sxt-main-viewer] .sxt-clearfix:after,
+.g [sxt-main-viewer] .sxt-clearfix:after {
+  clear: both;
+}
+.gn [sxt-main-viewer] .sxt-clearfix:before,
+.g [sxt-main-viewer] .sxt-clearfix:before,
+.gn [sxt-main-viewer] .sxt-clearfix:after,
+.g [sxt-main-viewer] .sxt-clearfix:after {
+  content: " ";
+  display: table;
+}
+.gn [sxt-main-viewer] .sxt-clearfix:after,
+.g [sxt-main-viewer] .sxt-clearfix:after {
+  clear: both;
+}
 .gn [sxt-main-viewer] .sxt-search-btn,
 .g [sxt-main-viewer] .sxt-search-btn {
   left: 0;
@@ -16175,10 +16202,162 @@ yx-axis
 }
 .gn [sxt-main-viewer] gn-features-tables .export button,
 .g [sxt-main-viewer] gn-features-tables .export button {
-  padding: 5px 10px;
+  /* .btn-primary; */
+  /* .btn-sm; */
+  /* padding: 3px 8px; */
+  /* margin-right: .15em; */
+  display: none;
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul,
+.g [sxt-main-viewer] gn-features-tables .export ul {
+  display: block !important;
+  margin: 0;
+  padding: 0;
+  min-width: auto;
+  background: none;
+  box-shadow: none;
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul li,
+.g [sxt-main-viewer] gn-features-tables .export ul li {
+  margin: 0;
+  padding: 0;
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul a,
+.g [sxt-main-viewer] gn-features-tables .export ul a {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #ffffff;
+  background-color: #428bca;
+  border-color: #357ebd;
+  padding: 1px 5px;
   font-size: 12px;
   line-height: 1.5;
   border-radius: 3px;
+  margin: -6px 1px 0 0;
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul a:focus,
+.g [sxt-main-viewer] gn-features-tables .export ul a:focus,
+.gn [sxt-main-viewer] gn-features-tables .export ul a:active:focus,
+.g [sxt-main-viewer] gn-features-tables .export ul a:active:focus,
+.gn [sxt-main-viewer] gn-features-tables .export ul a.active:focus,
+.g [sxt-main-viewer] gn-features-tables .export ul a.active:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul a:hover,
+.g [sxt-main-viewer] gn-features-tables .export ul a:hover,
+.gn [sxt-main-viewer] gn-features-tables .export ul a:focus,
+.g [sxt-main-viewer] gn-features-tables .export ul a:focus {
+  color: #333333;
+  text-decoration: none;
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul a:active,
+.g [sxt-main-viewer] gn-features-tables .export ul a:active,
+.gn [sxt-main-viewer] gn-features-tables .export ul a.active,
+.g [sxt-main-viewer] gn-features-tables .export ul a.active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul a.disabled,
+.g [sxt-main-viewer] gn-features-tables .export ul a.disabled,
+.gn [sxt-main-viewer] gn-features-tables .export ul a[disabled],
+.g [sxt-main-viewer] gn-features-tables .export ul a[disabled],
+.gn fieldset[disabled] [sxt-main-viewer] gn-features-tables .export ul a,
+.g fieldset[disabled] [sxt-main-viewer] gn-features-tables .export ul a {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul a:focus,
+.g [sxt-main-viewer] gn-features-tables .export ul a:focus {
+  outline: none;
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul a:hover,
+.g [sxt-main-viewer] gn-features-tables .export ul a:hover,
+.gn [sxt-main-viewer] gn-features-tables .export ul a:focus,
+.g [sxt-main-viewer] gn-features-tables .export ul a:focus,
+.gn [sxt-main-viewer] gn-features-tables .export ul a:active,
+.g [sxt-main-viewer] gn-features-tables .export ul a:active,
+.gn [sxt-main-viewer] gn-features-tables .export ul a.active,
+.g [sxt-main-viewer] gn-features-tables .export ul a.active,
+.gn .open .dropdown-toggle[sxt-main-viewer] gn-features-tables .export ul a,
+.g .open .dropdown-toggle[sxt-main-viewer] gn-features-tables .export ul a {
+  color: #ffffff;
+  background-color: #3276b1;
+  border-color: #285e8e;
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul a:active,
+.g [sxt-main-viewer] gn-features-tables .export ul a:active,
+.gn [sxt-main-viewer] gn-features-tables .export ul a.active,
+.g [sxt-main-viewer] gn-features-tables .export ul a.active,
+.gn .open .dropdown-toggle[sxt-main-viewer] gn-features-tables .export ul a,
+.g .open .dropdown-toggle[sxt-main-viewer] gn-features-tables .export ul a {
+  background-image: none;
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul a.disabled,
+.g [sxt-main-viewer] gn-features-tables .export ul a.disabled,
+.gn [sxt-main-viewer] gn-features-tables .export ul a[disabled],
+.g [sxt-main-viewer] gn-features-tables .export ul a[disabled],
+.gn fieldset[disabled] [sxt-main-viewer] gn-features-tables .export ul a,
+.g fieldset[disabled] [sxt-main-viewer] gn-features-tables .export ul a,
+.gn [sxt-main-viewer] gn-features-tables .export ul a.disabled:hover,
+.g [sxt-main-viewer] gn-features-tables .export ul a.disabled:hover,
+.gn [sxt-main-viewer] gn-features-tables .export ul a[disabled]:hover,
+.g [sxt-main-viewer] gn-features-tables .export ul a[disabled]:hover,
+.gn fieldset[disabled] [sxt-main-viewer] gn-features-tables .export ul a:hover,
+.g fieldset[disabled] [sxt-main-viewer] gn-features-tables .export ul a:hover,
+.gn [sxt-main-viewer] gn-features-tables .export ul a.disabled:focus,
+.g [sxt-main-viewer] gn-features-tables .export ul a.disabled:focus,
+.gn [sxt-main-viewer] gn-features-tables .export ul a[disabled]:focus,
+.g [sxt-main-viewer] gn-features-tables .export ul a[disabled]:focus,
+.gn fieldset[disabled] [sxt-main-viewer] gn-features-tables .export ul a:focus,
+.g fieldset[disabled] [sxt-main-viewer] gn-features-tables .export ul a:focus,
+.gn [sxt-main-viewer] gn-features-tables .export ul a.disabled:active,
+.g [sxt-main-viewer] gn-features-tables .export ul a.disabled:active,
+.gn [sxt-main-viewer] gn-features-tables .export ul a[disabled]:active,
+.g [sxt-main-viewer] gn-features-tables .export ul a[disabled]:active,
+.gn fieldset[disabled] [sxt-main-viewer] gn-features-tables .export ul a:active,
+.g fieldset[disabled] [sxt-main-viewer] gn-features-tables .export ul a:active,
+.gn [sxt-main-viewer] gn-features-tables .export ul a.disabled.active,
+.g [sxt-main-viewer] gn-features-tables .export ul a.disabled.active,
+.gn [sxt-main-viewer] gn-features-tables .export ul a[disabled].active,
+.g [sxt-main-viewer] gn-features-tables .export ul a[disabled].active,
+.gn fieldset[disabled] [sxt-main-viewer] gn-features-tables .export ul a.active,
+.g fieldset[disabled] [sxt-main-viewer] gn-features-tables .export ul a.active {
+  background-color: #428bca;
+  border-color: #357ebd;
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul a .badge,
+.g [sxt-main-viewer] gn-features-tables .export ul a .badge {
+  color: #428bca;
+  background-color: #ffffff;
+}
+.gn [sxt-main-viewer] gn-features-tables .export ul a:before,
+.g [sxt-main-viewer] gn-features-tables .export ul a:before {
+  margin-right: .5em;
+  content: '\f019';
+  font-family: 'FontAwesome';
 }
 .gn [sxt-main-viewer] gn-features-tables .panel-heading,
 .g [sxt-main-viewer] gn-features-tables .panel-heading {
@@ -16219,6 +16398,7 @@ yx-axis
 .gn [sxt-main-viewer] gn-features-tables .tab-content,
 .g [sxt-main-viewer] gn-features-tables .tab-content {
   padding: 0;
+  background: white;
 }
 .gn [sxt-main-viewer] gn-features-tables .tab-content,
 .g [sxt-main-viewer] gn-features-tables .tab-content,
@@ -16229,6 +16409,7 @@ yx-axis
 .gn [sxt-main-viewer] gn-features-tables .fixed-table-container,
 .g [sxt-main-viewer] gn-features-tables .fixed-table-container {
   border-radius: 0;
+  border-width: 1px 0 0;
 }
 .gn [sxt-main-viewer] gn-features-tables .fixed-table-container thead th:last-child,
 .g [sxt-main-viewer] gn-features-tables .fixed-table-container thead th:last-child,
