@@ -311,6 +311,7 @@
           <xsl:variable name="name" select="@name"/>
           <xsl:variable name="del" select="@del"/>
           <xsl:variable name="template" select="template"/>
+          <xsl:variable name="forceLabel" select="@forceLabel"/>
           <xsl:for-each select="$nodes/*">
             <!-- Retrieve matching key values
               Only text values are supported. Separator is #.
