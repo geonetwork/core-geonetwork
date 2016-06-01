@@ -24,9 +24,9 @@
 package org.fao.geonet.services.resources;
 
 import com.google.common.collect.Maps;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
+
+import org.fao.geonet.api.processing.XslProcessUtils;
+import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.responses.IdResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -34,7 +34,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.metadata.XslProcessing;
-import org.fao.geonet.services.metadata.XslProcessingReport;
 import org.fao.geonet.services.resources.handlers.IResourceUploadHandler;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +46,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 
 /**
  * Handles the file upload and attach the uploaded service to the metadata record
  * using the onlinesrc-add XSL process.
- * 
+ *
  * Return a simple JSON response in case of success.
  */
 @Controller("resource.upload.and.link")
@@ -108,16 +112,16 @@ public class UploadAndProcess {
         allParams.put("protocol", new String[]{"WWW:DOWNLOAD-1.0-http--download"});
 
         String process = "onlinesrc-add";
-        XslProcessingReport report = new XslProcessingReport(process);
-        
+        XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
+
         Element processedMetadata;
         try {
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            processedMetadata = xslProcessing.process(context, id, process,
+            processedMetadata = XslProcessUtils.process(context, id, process,
                     true, report, siteURL, allParams);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
-                        + report.getNotFoundMetadataCount() + ", Not owner:" + report.getNotEditableMetadataCount()
+                        + report.getNumberOfRecordNotFound() + ", Not owner:" + report.getNumberOfRecordsNotEditable()
                         + ", No process found:" + report.getNoProcessFoundCount() + ".");
             }
         } catch (Exception e) {

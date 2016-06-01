@@ -23,9 +23,9 @@
 
 package org.fao.geonet.api;
 
-import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
@@ -39,7 +39,6 @@ import org.springframework.web.multipart.MultipartException;
 import java.io.FileNotFoundException;
 import java.util.LinkedHashMap;
 import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 /**
  */
@@ -49,7 +48,7 @@ public class GlobalExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({
-            SecurityException.class
+        SecurityException.class
     })
     public Object unauthorizedHandler(final Exception exception) {
         return new LinkedHashMap<String, String>() {{
@@ -62,7 +61,7 @@ public class GlobalExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-            MaxUploadSizeExceededException.class
+        MaxUploadSizeExceededException.class
     })
     public Object maxFileExceededHandler(final Exception exception) {
         return new LinkedHashMap<String, String>() {{
@@ -75,7 +74,7 @@ public class GlobalExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
-            FileNotFoundException.class})
+        FileNotFoundException.class})
     public Object fileNotFoundHandler(final Exception exception) {
         return new LinkedHashMap<String, String>() {{
             put("code", "file_not_found");
@@ -87,8 +86,8 @@ public class GlobalExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-            UserNotFoundEx.class,
-            ResourceNotFoundException.class})
+        UserNotFoundEx.class,
+        ResourceNotFoundException.class})
     public Object resourceNotFoundHandler(final Exception exception) {
         return new LinkedHashMap<String, String>() {{
             put("code", "resource_not_found");
@@ -100,7 +99,7 @@ public class GlobalExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-            ResourceAlreadyExistException.class})
+        ResourceAlreadyExistException.class})
     public Object resourceAlreadyExistHandler(final Exception exception) {
         return new LinkedHashMap<String, String>() {{
             put("code", "resource_already_exist");
@@ -123,9 +122,9 @@ public class GlobalExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-            UnsatisfiedServletRequestParameterException.class,
-            IllegalArgumentException.class,
-            MultipartException.class
+        UnsatisfiedServletRequestParameterException.class,
+        IllegalArgumentException.class,
+        MultipartException.class
     })
     public Object unsatisfiedParameterHandler(final Exception exception) {
         return new LinkedHashMap<String, String>() {{
@@ -134,10 +133,11 @@ public class GlobalExceptionController {
             put("description", exception.getMessage());
         }};
     }
+
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-            MissingResourceException.class
+        MissingResourceException.class
     })
     public Object missingResourceHandler(final Exception exception) {
         return new LinkedHashMap<String, String>() {{

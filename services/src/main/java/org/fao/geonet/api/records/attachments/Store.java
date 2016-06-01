@@ -34,30 +34,29 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * A store allows user to upload resources (eg. files) to
- * a metadata record and retrieve them.
+ * A store allows user to upload resources (eg. files) to a metadata record and retrieve them.
  */
 public interface Store {
     /**
-     * Retrieve all resources for a metadata. The list of resources
-     * depends on current user privileges.
+     * Retrieve all resources for a metadata. The list of resources depends on current user
+     * privileges.
      *
      * @param metadataUuid The metadata UUID
      * @param sort         Sort by resource name or sharing policy {@link Sort}
-     * @param filter       a {@link java.nio.file.Files#newDirectoryStream(Path)} GLOB expression} to filter resources eg. *.{png|jpg}
+     * @param filter       a {@link java.nio.file.Files#newDirectoryStream(Path)} GLOB expression}
+     *                     to filter resources eg. *.{png|jpg}
      * @return A list of resources
-     * @throws Exception
      */
     List<MetadataResource> getResources(String metadataUuid, Sort sort, String filter) throws Exception;
 
     /**
      * Retrieve all resources for a metadata having a specific sharing policy
      *
-     * @param metadataUuid The metadata UUID
+     * @param metadataUuid               The metadata UUID
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
-     * @param filter       a {@link java.nio.file.Files#newDirectoryStream(Path) GLOB expression} to filter resources eg. *.{png|jpg}
+     * @param filter                     a {@link java.nio.file.Files#newDirectoryStream(Path) GLOB
+     *                                   expression} to filter resources eg. *.{png|jpg}
      * @return A list of resources
-     * @throws Exception
      */
     List<MetadataResource> getResources(String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String filter) throws Exception;
 
@@ -65,53 +64,47 @@ public interface Store {
      * Retrieve a metadata resource path.
      *
      * @param metadataUuid The metadata UUID
-     * @param resourceId    The resource identifier
-     * @return  The resource
-     * @throws Exception
+     * @param resourceId   The resource identifier
+     * @return The resource
      */
     Path getResource(String metadataUuid, String resourceId) throws Exception;
 
     /**
      * Add a new resource from a file.
      *
-     * @param metadataUuid The metadata UUID
-     * @param file  The resource file
+     * @param metadataUuid               The metadata UUID
+     * @param file                       The resource file
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
-     * @return  The resource description
-     * @throws Exception
+     * @return The resource description
      */
     MetadataResource putResource(String metadataUuid, MultipartFile file, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
 
     /**
      * Add a new resource from a local file path.
      *
-     * @param metadataUuid The metadata UUID
-     * @param filePath  The resource local filepath
+     * @param metadataUuid               The metadata UUID
+     * @param filePath                   The resource local filepath
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
-     * @return  The resource description
-     * @throws Exception
+     * @return The resource description
      */
     MetadataResource putResource(String metadataUuid, Path filePath, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
 
     /**
      * Add a new resource from a URL.
      *
-     * @param metadataUuid The metadata UUID
-     * @param fileUrl  The resource file URL
+     * @param metadataUuid               The metadata UUID
+     * @param fileUrl                    The resource file URL
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
-     * @return  The resource description
-     * @throws Exception
+     * @return The resource description
      */
     MetadataResource putResource(String metadataUuid, URL fileUrl, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
 
     /**
      * Change the resource sharing policy
      *
-     * @param metadataUuid The metadata UUID
-     * @param resourceId    The resource identifier
+     * @param metadataUuid               The metadata UUID
+     * @param resourceId                 The resource identifier
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
-     * @return
-     * @throws Exception
      */
     MetadataResource patchResourceStatus(String metadataUuid, String resourceId, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
 
@@ -120,8 +113,6 @@ public interface Store {
      * Delete all resources for a metadata
      *
      * @param metadataUuid The metadata UUID
-     * @return
-     * @throws Exception
      */
     String delResource(String metadataUuid) throws Exception;
 
@@ -129,9 +120,7 @@ public interface Store {
      * Delete a resource from the metadata store
      *
      * @param metadataUuid The metadata UUID
-     * @param resourceId    The resource identifier
-     * @return
-     * @throws Exception
+     * @param resourceId   The resource identifier
      */
     String delResource(String metadataUuid, String resourceId) throws Exception;
 }
