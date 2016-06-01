@@ -31,9 +31,9 @@
   <temporalRef>Référence(s) temporelle(s)</temporalRef>
   <refDate>Date(s) de référence</refDate>
   <constraintInfo>Contraintes d'accès et d'utilisation</constraintInfo>
-  
-  
-  
+
+
+
   <advanced>Complète</advanced>
   <default>Simple</default>
   <simple>Simple</simple>
@@ -51,7 +51,7 @@
   <metadataConstraints>Md. contraintes</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Extension</applicationSchemaInfo>
-  
+
   <!-- XSD error translation -->
   <invalidElement>Élément invalide. Contenu invalide pour l'élément : </invalidElement>
   <onElementOf> Un des éléments suivants </onElementOf>
@@ -282,4 +282,6 @@
   <sextantrespOrgaTitle>Contacts sur la donnée</sextantrespOrgaTitle>
   <isINSPIREConform>Indiquer que la ressource est conforme à INSPIRE</isINSPIREConform>
   <isNotINSPIREConform>ou ne l'est pas</isNotINSPIREConform>
+  <sextant-add-scale>Ajouter une échelle</sextant-add-scale>
+  <sextant-add-resolution>Ajouter une résolution</sextant-add-resolution>
 </strings>

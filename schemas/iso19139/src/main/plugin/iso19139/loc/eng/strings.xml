@@ -33,7 +33,7 @@
   <constraintInfo>Access constraint information</constraintInfo>
   <xml_iso19139>Save this metadata as an ISO19139 XML file</xml_iso19139>
   <xml_iso19139Tooai_dc>Save this metadata as an OAI Dublin Core XML file</xml_iso19139Tooai_dc>
-  
+
   <!-- New strings added for the AngularJS editor -->
   <!-- View and tabs -->
   <advanced>Full</advanced>
@@ -277,4 +277,6 @@
   <sextantrespOrgaTitle>Responsible organisation</sextantrespOrgaTitle>
   <isINSPIREConform>Define this resource as an INSPIRE conform one</isINSPIREConform>
   <isNotINSPIREConform>or not</isNotINSPIREConform>
+  <sextant-add-scale>Add a scale</sextant-add-scale>
+  <sextant-add-resolution>Add a resolution</sextant-add-resolution>
 </strings>

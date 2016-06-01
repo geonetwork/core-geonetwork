@@ -321,9 +321,46 @@
                  name="sextant-date-resource"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator"
-                 or="spatialResolution"
-                 in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator"/>
+
+
+          <action type="add" btnLabel="sextant-add-scale" or="spatialResolution"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'vector']) = 1">
+            <template>
+              <snippet>
+                <gmd:spatialResolution>
+                  <gmd:MD_Resolution>
+                    <gmd:equivalentScale>
+                      <gmd:MD_RepresentativeFraction>
+                        <gmd:denominator>
+                          <gco:Integer/>
+                        </gmd:denominator>
+                      </gmd:MD_RepresentativeFraction>
+                    </gmd:equivalentScale>
+                  </gmd:MD_Resolution>
+                </gmd:spatialResolution>
+              </snippet>
+            </template>
+          </action>
+
+          <action type="add" btnLabel="sextant-add-resolution" or="spatialResolution"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'grid']) = 1">
+            <template>
+              <snippet>
+                <gmd:spatialResolution>
+                  <gmd:MD_Resolution>
+                    <gmd:distance>
+                      <gco:Distance uom=""/>
+                    </gmd:distance>
+                  </gmd:MD_Resolution>
+                </gmd:spatialResolution>
+              </snippet>
+            </template>
+          </action>
+
+
           <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:geometricObjects/*/gmd:geometricObjectType"/>
         </section>
 
@@ -600,7 +637,8 @@
       <tab id="sextant-metadata" mode="flat">
         <section name="sextantmetadataInfoTitle">
           <field xpath="/gmd:MD_Metadata/gmd:language"/>
-          <field xpath="/gmd:MD_Metadata/gmd:locale/*/gmd:languageCode" or="locale" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:locale/*/gmd:languageCode"
+                 or="locale" in="/gmd:MD_Metadata" del="../.."/>
           <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
           <!--<field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>-->
 
@@ -734,7 +772,7 @@
             xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
             /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
             del="../..">
-            <template> 
+            <template>
               <values>
                 <key label="url" xpath="gmd:URL" tooltip="gmd:linkage"/>
               </values>
