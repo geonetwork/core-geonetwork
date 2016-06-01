@@ -85,7 +85,7 @@
     <dependency>
       <groupId>org.openrdf</groupId>
       <artifactId>sesame</artifactId>
-    </dependency>	 
+    </dependency>
     <dependency>
       <groupId>org.openrdf</groupId>
       <artifactId>rio</artifactId>
@@ -134,10 +134,13 @@
       <groupId>org.geotools</groupId>
       <artifactId>gt-api</artifactId>
     </dependency>
+    <!--
+    Replace gt-xml by custom JAR due to issue to parse empty date.
+    See https://github.com/geotools/geotools/pull/1201
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-xml</artifactId>
-    </dependency>
+    </dependency>-->
     <dependency>
       <groupId>org.geotools.xsd</groupId>
       <artifactId>gt-xsd-gml3</artifactId>
@@ -202,7 +205,7 @@
     <dependency>
         <groupId>pcj</groupId>
         <artifactId>pcj</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-ext</artifactId>
@@ -285,8 +288,8 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
-    
-	            
+
+
     <dependency>
       <groupId>org.tmatesoft.svnkit</groupId>
       <artifactId>svnkit</artifactId>
@@ -298,7 +301,7 @@
       <artifactId>print-lib</artifactId>
       <version>${print-lib.version}</version>
     </dependency>
-  
+
     <!-- ====================== -->
     <!-- Generated dependencies -->
     <dependency>
@@ -568,7 +571,7 @@
 
   </dependencies>
 
-  
+
   <build>
     <plugins>
       <plugin>
@@ -591,7 +594,7 @@
             </execution>
          </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -683,24 +686,24 @@
           </execution>
          </executions>
       </plugin>
-      <plugin> 
-        <groupId>org.codehaus.mojo</groupId> 
-        <artifactId>buildnumber-maven-plugin</artifactId> 
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
         <version>1.3</version>
-        <executions> 
-          <execution> 
-            <phase>validate</phase> 
-            <goals> 
-              <goal>create</goal> 
-            </goals> 
-          </execution> 
-        </executions> 
-        <configuration> 
-          <timestampFormat>{0,date,MM/dd/yyyy hh:mm:ss a}</timestampFormat> 
-          <doCheck>false</doCheck> 
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <timestampFormat>{0,date,MM/dd/yyyy hh:mm:ss a}</timestampFormat>
+          <doCheck>false</doCheck>
           <doUpdate>false</doUpdate>
           <revisionOnScmFailure>true</revisionOnScmFailure>
-        </configuration> 
+        </configuration>
       </plugin>
 
       <plugin>
@@ -727,9 +730,9 @@
               <directory>${build.webapp.resources}</directory>
             </resource>
 
-            <!-- Remove comment tag to include documentation in the build. 
+            <!-- Remove comment tag to include documentation in the build.
             Python and Latex are required to build the documentation. -->
-            
+
             <!--
             <resource>
               <directory>${rootProjectDir}/docs/eng/users/build/html</directory>
@@ -745,7 +748,7 @@
             <resource>
             <directory>${rootProjectDir}/docs/eng/developer/build/html</directory>
               <targetPath>docs/eng/developer</targetPath>
-            </resource>  
+            </resource>
             <resource>
               <directory>${rootProjectDir}/docs</directory>
               <targetPath>docs</targetPath>
@@ -831,8 +834,8 @@
 
     </plugins>
   </build>
-  
-  <!-- Define profiles for running configuration using -Denv=profile.id parameter 
+
+  <!-- Define profiles for running configuration using -Denv=profile.id parameter
     Profiles configuration is defined in src/main/filters.
     -->
   <profiles>
@@ -903,7 +906,7 @@
         <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
       </properties>
     </profile>
-    
+
     <!-- CLS myocean ro configuration profile -->
     <profile>
       <id>cls-myocean-ro</id>
@@ -1101,7 +1104,7 @@
         <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
         <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
       </properties>
-    </profile>	
+    </profile>
     <profile>
       <id>pc55</id>
       <activation>
