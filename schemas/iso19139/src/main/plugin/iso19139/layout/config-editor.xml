@@ -774,18 +774,19 @@
               </snippet>
             </template>
           </action>
-          <!--<field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution"
-            or="spatialResolution" in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
-          </field>-->
-          <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution[gmd:MD_Resolution/gmd:equivalentScale]"/>
 
-          <action type="add"
-                  name="spatialResolution"
-                  forceLabel="true"
-                  or="spatialResolution"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+                    */gmd:spatialResolution/
+                      */gmd:equivalentScale/*/gmd:denominator"
+                 del="../../../.."/>
+
+
+          <!--
+          if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'vector']) = 1"
+          -->
+          <action type="add" btnLabel="spatialResolution" or="spatialResolution"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*">
             <template>
               <snippet>
                 <gmd:spatialResolution>
@@ -803,12 +804,17 @@
             </template>
           </action>
 
-          <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution[gmd:MD_Resolution/gmd:distance]"/>
-          <action type="add"
-                  name="spatialDistance"
-                  forceLabel="true"
-                  or="spatialResolution" in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+                    */gmd:spatialResolution/*/gmd:distance"
+                 del="../.."/>
+
+
+          <!--
+          if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'grid']) = 1"
+          -->
+          <action type="add" btnLabel="spatialDistance" or="spatialResolution"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*">
             <template>
               <snippet>
                 <gmd:spatialResolution>
@@ -821,6 +827,7 @@
               </snippet>
             </template>
           </action>
+
 
 
 
@@ -1368,7 +1375,7 @@
                                   </gmd:pass>
                               </gmd:DQ_ConformanceResult>
                           </gmd:result>
-                      </snippet>              
+                      </snippet>
                   </template>
               </field>
 
@@ -1379,7 +1386,7 @@
                       forceLabel="true"
                       or="report"
                       in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']">
-                  
+
                   <template>
                       <snippet>
                           <gmd:report>
@@ -1421,7 +1428,7 @@
 
           <!-- CONFORMITY CLASS 2 -->
           <section name="inspire_sds_cc2">
-          
+
               <section name="sds-section-crs">
                   <field xpath="gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor"
                          del="." />
@@ -1698,7 +1705,7 @@
 
               <section name="sds-section-custodian">
 
-                  <field name="pointOfContact" 
+                  <field name="pointOfContact"
                          templateModeOnly="true"
                          xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']"
                          del="." >
@@ -1786,7 +1793,7 @@
                                     <gco:CharacterString></gco:CharacterString>
                                 </srv:operationName>
                                 <srv:DCP>
-                                    <srv:DCPList 
+                                    <srv:DCPList
                                         codeList="http://inspire.ec.europa.eu/metadata-codelist/DCPList"
                                         codeListValue="webServices">Web services</srv:DCPList>
                                 </srv:DCP>

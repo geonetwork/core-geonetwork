@@ -795,7 +795,25 @@ the remove control should remove the parent element gmd:onLine.
       del="../..">
       <template>
 
-Del attribute is not used when not in template mode.
+
+
+Del attribute can be used in template mode or not. Example to remove
+spatialResolution while only editing denominator or distance. Denominator or distance
+are mandatory but as the del element point to the spatialResolution
+ancestor, there is no mandatory flag displayed and the remove control
+remove the spatialResolution element.
+
+
+.. code-block:: xml
+
+
+    <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+                    */gmd:spatialResolution/*/gmd:distance"
+           del="../.."/>
+    <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+                    */gmd:spatialResolution/
+                      */gmd:equivalentScale/*/gmd:denominator"
+           del="../../../.."/>
 
             ]]>
           </xs:documentation>
