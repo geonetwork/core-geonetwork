@@ -31,6 +31,7 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
@@ -65,12 +66,28 @@
   <xsl:template mode="mode-iso19139" priority="2000" match="*[gco:*/@uom]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="refToDelete" select="''" required="no"/>
 
     <xsl:variable name="labelConfig"
                   select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', '')"/>
     <xsl:variable name="labelMeasureType"
                   select="gn-fn-metadata:getLabel($schema, name(gco:*), $labels, name(), '', '')"/>
-    <xsl:variable name="isRequired" select="gn:element/@min = 1 and gn:element/@max = 1"/>
+
+    <xsl:variable name="parentEditInfo" select="if (exists($refToDelete)) then $refToDelete else gn:element"/>
+
+    <xsl:variable name="isRequired" as="xs:boolean">
+      <xsl:choose>
+        <xsl:when
+          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
+          (not($parentEditInfo) and gn:element/@min = 1 and gn:element/@max = 1)">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
 
     <div class="form-group gn-field gn-title {if ($isRequired) then 'gn-required' else ''}"
          id="gn-el-{*/gn:element/@ref}"
@@ -99,7 +116,7 @@
       <div class="col-sm-1 gn-control">
         <xsl:call-template name="render-form-field-control-remove">
           <xsl:with-param name="editInfo" select="*/gn:element"/>
-          <xsl:with-param name="parentEditInfo" select="gn:element"/>
+          <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
         </xsl:call-template>
       </div>
     </div>
@@ -107,11 +124,11 @@
 
 
   <!-- Duration
-      
+
        xsd:duration elements use the following format:
-       
+
        Format: PnYnMnDTnHnMnS
-       
+
        *  P indicates the period (required)
        * nY indicates the number of years
        * nM indicates the number of months
@@ -120,7 +137,7 @@
        * nH indicates the number of hours
        * nM indicates the number of minutes
        * nS indicates the number of seconds
-       
+
        A custom directive is created.
   -->
   <xsl:template mode="mode-iso19139" match="gts:TM_PeriodDuration|gml:duration" priority="200">
@@ -173,9 +190,9 @@
       <xsl:with-param name="value" select="text()"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
-      <!-- 
+      <!--
           Default field type is Date.
-          
+
           TODO : Add the capability to edit those elements as:
            * xs:time
            * xs:dateTime
@@ -190,14 +207,14 @@
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
     </xsl:call-template>
   </xsl:template>
-  
+
   <xsl:template mode="mode-iso19139" match="gmd:EX_GeographicBoundingBox" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
-    
+
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
