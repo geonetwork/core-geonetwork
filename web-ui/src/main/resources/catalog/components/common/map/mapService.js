@@ -511,7 +511,7 @@
             // layers not accessible with CORS headers
             // This is optional if the WMS provides CORS
             if (viewerSettings.cesiumProxy) {
-              source.set('olcs.proxy', function (url) {
+              source.set('olcs.proxy', function(url) {
                 return '../../proxy?url=' + encodeURIComponent(url);
               });
             }
@@ -1032,7 +1032,7 @@
                     finishCreation();
                   }
                   else {
-                    $this.feedLayerMd(olL).finally(finishCreation);
+                    $this.feedLayerMd(olL).finally (finishCreation);
                   }
                 }
 
