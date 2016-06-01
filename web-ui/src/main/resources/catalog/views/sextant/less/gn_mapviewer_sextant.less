@@ -5,6 +5,10 @@
 
 [sxt-main-viewer] {
 
+  .sxt-clearfix {
+    .clearfix;
+  }
+
   .sxt-search-btn {
     left: 0;
   }
@@ -263,9 +267,34 @@
        }
      }
    }
-   .export button {
-     .btn-sm;
-   }
+   .export {
+       button {
+         display: none;
+       }
+       ul {
+         display: block !important;
+         margin: 0;
+         padding: 0;
+         min-width: auto;
+         background: none;
+         box-shadow: none;
+         li {
+           margin: 0;
+           padding: 0;
+         }
+         a {
+           .btn;
+           .btn-primary;
+           .btn-xs;
+           margin: -6px 1px 0 0;
+           &:before {
+             margin-right: .5em;
+             content: '\f019';
+             font-family: 'FontAwesome';
+           }
+         }
+       }
+    }
 
    .panel-heading {
      position: absolute;
@@ -303,6 +332,7 @@
 
    .tab-content {
      padding: 0;
+     background: white;
      &, .nav {
        font-size        : .9em;
      }
@@ -310,6 +340,7 @@
 
    .fixed-table-container {
      border-radius: 0;
+     border-width: 1px 0 0;
      thead th:last-child,
      thead th:first-child {
        border-radius: 0;

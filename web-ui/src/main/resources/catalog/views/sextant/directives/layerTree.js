@@ -339,6 +339,7 @@
               scope.user = controller.user;
 
               if(wfsLink) {
+                scope.wfsLink = wfsLink;
                 $http.get(gnSolrWfsFilterConfig.url + '/query',  {
                   params: {
                     rows: 1,
