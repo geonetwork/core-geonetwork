@@ -135,8 +135,9 @@
                   }
 
                   // Append * for like search
-                  scope.updateParams = function () {
-                    scope.searchObj.params.any = '*' + scope.searchObj.any + '*';
+                  scope.updateParams = function() {
+                    scope.searchObj.params.any =
+                   '*' + scope.searchObj.any + '*';
                   };
 
                   scope.snippet = null;

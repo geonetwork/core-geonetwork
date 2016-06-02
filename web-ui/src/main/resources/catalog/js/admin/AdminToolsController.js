@@ -298,7 +298,8 @@
               // TODO: Assume one process is running
               // Should use the process ID to register and retrieve a process
               $scope.processReport = data[0];
-              $scope.numberOfRecordsProcessed = $scope.processReport.numberOfRecordsProcessed;
+              $scope.numberOfRecordsProcessed =
+                 $scope.processReport.numberOfRecordsProcessed;
               if ($scope.processReport &&
                       $scope.processReport.running) {
                 $timeout(checkLastBatchProcessReport, processCheckInterval);
@@ -318,7 +319,8 @@
         }
 
         var service = '../api/processes/' +
-                      (process != undefined ? process : $scope.data.selectedProcess.key);
+                      (process != undefined ?
+                        process : $scope.data.selectedProcess.key);
 
         $scope.processing = true;
         $scope.processReport = null;
@@ -498,6 +500,19 @@
                 error: data,
                 timeout: 0,
                 type: 'danger'});
+            });
+      };
+
+      $scope.clearJsCache = function() {
+        return $http.get('../../static/wroAPI/reloadModel')
+            .success(function(data) {
+              $http.get('../../static/wroAPI/reloadCache')
+                .success(function(data) {
+                  $rootScope.$broadcast('StatusUpdated', {
+                    msg: $translate('jsCacheCleared'),
+                    timeout: 2,
+                    type: 'success'});
+                })
             });
       };
 

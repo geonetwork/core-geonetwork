@@ -196,6 +196,7 @@
       -->
 
 
+      <xsl:variable name="del" select="@del"/>
 
 
       <!-- For non existing node create a XML snippet to be edited
@@ -217,16 +218,28 @@
               <xsl:message>Label not defined for field name <xsl:value-of select="$configName"/> in loc/{language}/strings.xml.</xsl:message>
             </xsl:if>
 
+
             <xsl:choose>
               <xsl:when test="count($nodes/*) = 1">
                 <xsl:variable name="originalNode"
                               select="gn-fn-metadata:getOriginalNode($metadata, $nodes/node())"/>
+
+
+                <!-- Get the reference of the element to delete if delete is allowed. -->
+                <xsl:variable name="refToDelete">
+                  <xsl:call-template name="get-ref-element-to-delete">
+                    <xsl:with-param name="node" select="$originalNode"/>
+                    <xsl:with-param name="delXpath" select="$del"/>
+                  </xsl:call-template>
+                </xsl:variable>
+
                 <saxon:call-template name="{concat('dispatch-', $schema)}">
                   <xsl:with-param name="base" select="$originalNode"/>
                   <xsl:with-param name="overrideLabel"
                                   select="if ($configName != '' and $overrideLabel != '')
                                         then $overrideLabel
                                         else ''"/>
+                  <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
                 </saxon:call-template>
               </xsl:when>
               <xsl:otherwise>
@@ -235,6 +248,13 @@
                                 select="gn-fn-metadata:getOriginalNode($metadata, .)"/>
 
 
+                  <!-- Get the reference of the element to delete if delete is allowed. -->
+                  <xsl:variable name="refToDelete">
+                    <xsl:call-template name="get-ref-element-to-delete">
+                      <xsl:with-param name="node" select="$originalNode"/>
+                      <xsl:with-param name="delXpath" select="$del"/>
+                    </xsl:call-template>
+                  </xsl:variable>
 
                   <saxon:call-template name="{concat('dispatch-', $schema)}">
                     <xsl:with-param name="base" select="$originalNode"/>
@@ -242,6 +262,7 @@
                                     select="if ($configName != '' and $overrideLabel != '')
                                         then $overrideLabel
                                         else ''"/>
+                    <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
                   </saxon:call-template>
                 </xsl:for-each>
               </xsl:otherwise>
@@ -350,27 +371,11 @@
               </xsl:call-template>
             </xsl:variable>
 
-            <!-- Get the reference of the element to delete if delete is allowed. -->
             <xsl:variable name="refToDelete">
-              <xsl:if test="$del != ''">
-                <xsl:choose>
-                  <xsl:when test="$del = '.'">
-                    <xsl:copy-of select="$currentNode/gn:element"/>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <!-- Search in the context of the metadata (current context is a node with no parent
-                due to the saxon eval selection. -->
-                    <xsl:variable name="ancestor">
-                      <saxon:call-template name="{concat('evaluate-', $schema)}">
-                        <xsl:with-param name="base" select="$base"/>
-                        <xsl:with-param name="in" select="concat('/descendant-or-self::node()[gn:element/@ref = ''', $currentNode/gn:element/@ref, ''']/', $del)"/>
-                      </saxon:call-template>
-                    </xsl:variable>
-
-                    <xsl:copy-of select="$ancestor/*/gn:element"/>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:if>
+              <xsl:call-template name="get-ref-element-to-delete">
+                <xsl:with-param name="node" select="$currentNode"/>
+                <xsl:with-param name="delXpath" select="$del"/>
+              </xsl:call-template>
             </xsl:variable>
 
 
@@ -385,7 +390,7 @@
               <xsl:with-param name="isExisting" select="true()"/>
               <xsl:with-param name="template" select="$templateCombinedWithNode"/>
               <xsl:with-param name="keyValues" select="$keyValues"/>
-              <xsl:with-param name="refToDelete" select="if ($refToDelete) then $refToDelete/gn:element else ''"/>
+              <xsl:with-param name="refToDelete" select="$refToDelete"/>
               <xsl:with-param name="isFirst" select="$forceLabel or position() = 1"/>
             </xsl:call-template>
           </xsl:for-each>
@@ -425,7 +430,6 @@
               </template>
             </xsl:variable>
 
-
             <xsl:call-template name="render-element-template-field">
               <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
               <xsl:with-param name="id" select="$id"/>
@@ -439,6 +443,38 @@
         </xsl:when>
       </xsl:choose>
     </xsl:if>
+  </xsl:template>
+
+
+  <!-- Get the reference of the element to delete if delete is allowed. -->
+  <xsl:template name="get-ref-element-to-delete">
+    <xsl:param name="node" as="node()?"/>
+    <xsl:param name="delXpath" as="xs:string?"/>
+    <xsl:choose>
+      <xsl:when test="$delXpath = '.'">
+        <xsl:copy-of select="$node/gn:element"/>
+      </xsl:when>
+      <xsl:when test="$delXpath != ''">
+        <!-- Search in the context of the metadata (current context is a node with no parent due to the saxon eval selection. -->
+        <xsl:variable name="ancestor">
+          <saxon:call-template name="{concat('evaluate-', $schema)}">
+            <xsl:with-param name="base" select="$node"/>
+            <xsl:with-param name="in" select="concat('/descendant-or-self::node()[gn:element/@ref = ''', $node/gn:element/@ref, ''']/', $delXpath)"/>
+          </saxon:call-template>
+        </xsl:variable>
+        <xsl:choose>
+          <xsl:when test="exists($ancestor/*/gn:element)">
+            <xsl:copy-of select="$ancestor/*/gn:element"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="$node/gn:element"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="$node/gn:element"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="build-key-value-configuration">
@@ -514,15 +550,9 @@
 
 
         <xsl:if test="codelist">
-          <xsl:message>
-            <xsl:copy-of select="codelist"/>
-          </xsl:message>
           <xsl:variable name="listOfValues"
                         select="gn-fn-metadata:getCodeListValues($schema, codelist/@name, $codelists)"/>
           <xsl:copy-of select="$listOfValues"/>
-          <xsl:message>
-            <xsl:copy-of select="$listOfValues"/>
-          </xsl:message>
         </xsl:if>
 
       </field>
