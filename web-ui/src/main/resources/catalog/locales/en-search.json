@@ -1,4 +1,10 @@
 {
+  "resourceType": "Resource type",
+  "creationYearForResource": "Year",
+  "series": "Series",
+  "collectionSession": "Collection",
+  "nonGeographicDataset": "Tabular data",
+  "feature": "Feature",
   "rate": "Rating",
   "clickToRate": "Click to rate",
   "source": "Catalogue(s)",

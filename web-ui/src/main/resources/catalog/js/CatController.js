@@ -226,7 +226,7 @@
             var editable = angular.isDefined(md) &&
                 angular.isDefined(md['geonet:info']) &&
                 angular.isDefined(md['geonet:info'].edit) &&
-                md['geonet:info'].edit == 'true';
+                md['geonet:info'].edit == true;
 
 
             // A second filter is for harvested record

@@ -135,9 +135,13 @@
                 keyword: doc.tag,
                 category: doc._cat,
                 isTemplate: doc._isTemplate,
+                isHarvested: doc._isHarvested[0],
+                link: doc.link,
+                lineage: doc.lineage,
                 'geonet:info':  {
                   id: doc.id,
-                  edit: 'true', // Can edit all TODO
+                  edit: doc.edit,
+                  selected: doc.selected,
                   uuid: doc._uuid,
                   schema: doc._schema
                 }

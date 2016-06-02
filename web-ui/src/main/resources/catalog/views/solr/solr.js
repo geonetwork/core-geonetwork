@@ -91,6 +91,17 @@
       });
 
       window.map = map;
+      // TODO Facet by subtypes
+      $scope.facetConfig = {resourceType: {
+        type: 'terms',
+        field: 'resourceType',
+        limit: 10
+      }, creationYearForResource: {
+        type: 'terms',
+        field: 'creationYearForResource',
+        limit: 10,  // TODO: ask more
+        sort: 'count'
+      }};
       $scope.solrObject = gnSolrRequestManager.register('Default', 'facets');
 
       $scope.solrObject.init({});
@@ -103,8 +114,8 @@
       };
 
       let solrParams = {
-        'facet'       : true,
-        'facet.field' : [ 'resourceType' ],
+        // 'facet'       : true,
+        // 'facet.field' : [ 'resourceType' ],
         start         : ($scope.pager.page - 1) * $scope.pager.itemsPerPage,
         rows          : $scope.pager.itemsPerPage
       };
@@ -131,6 +142,8 @@
           };
         }
 
+        solrParams['json.facet'] = angular.toJson($scope.facetConfig);
+
         $scope.loading = true;
         $scope.promise = $scope.solrObject.searchWithFacets(
           qParams, solrParams
@@ -154,7 +167,7 @@
         let page           = (resp.solrData.response.start / $scope.pager.itemsPerPage) + 1;
         $scope.loading     = false;
         $scope.pager.count = resp.count;
-        $scope.facets      = resp.facets;
+        $scope.facets      = resp.solrData.facets;
         $scope.results     = resp.records;
       });
 

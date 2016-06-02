@@ -1,62 +1,98 @@
-<div data-ng-controller="GnSearchSolrController" class="container">
+<div data-ng-controller="GnSearchSolrController" class="container-fluid">
 
   <div class="row">
 
-    <div class="col-md-8 col-md-offset-2 panel panel-info search">
+    <div class="col-md-6 col-md-offset-2 panel panel-info search">
       <div class="panel-heading">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search for..."
-            data-ng-keyup="$event.keyCode == 13 && search()"
-            ng-model="anyField"
-            data-ng-model-options="{debounce: 300}"
-            data-typeahead="item.value as item.label for item in getAnySuggestions($viewValue)"
-            data-typeahead-loading="anyLoading" class="form-control"
-            data-typeahead-min-length="1"
-            data-typeahead-focus-first="false">
+          <input type="text"
+                 class="form-control"
+                 placeholder="Search for..."
+                 autofocus=""
+                 data-ng-keyup="$event.keyCode == 13 && search()"
+                 ng-model="anyField"
+                 data-ng-model-options="{debounce: 300}"
+                 data-typeahead="item.value as item.label for item in getAnySuggestions($viewValue)"
+                 data-typeahead-loading="anyLoading" class="form-control"
+                 data-typeahead-min-length="1"
+                 data-typeahead-focus-first="false">
           <span class="input-group-btn">
-            <button class="btn btn-default" type="button" ng-click="search()">
+            <button alt="Reset search"
+                    class="btn btn-default"
+                    type="button"
+                    ng-click="reset()"
+                    ng-if="anyField">
+              <i class="fa fa-times"></i>
+            </button>
+            <button alt="Search"
+                    class="btn btn-primary"
+                    type="button"
+                    ng-click="search()">
               <i class="fa fa-search"></i>
             </button>
           </span>
-        </div><!-- /input-group -->
+        </div>
       </div>
-      <div class="panel-body" ng-if="anyField">
-        <a href="" ng-click="reset()">
-          <i class="glyphicon glyphicon-remove-circle"></i>
-          Reset search
-        </a>
-      </div>
-    </div><!-- /.col-lg-6 -->
-
+    </div>
   </div>
 
   <div class="row results-row">
 
     <div class="col-md-8">
-
-
-      <ul class="nav nav-tabs">
-        <li role="presentation" ng-class="{'active': !active}">
-          <a ng-click="search('all')">All</a>
-        </li>
-        <li role="presentation" ng-class="{'active': active=='dataset'}"> <a
-          ng-click="search('dataset')">Datasets</a>
-        </li>
-        <li role="presentation" ng-class="{'active': active=='feature'}">
-          <a ng-click="search('feature')">Features</a>
-        </li>
-      </ul>
-
-      <div class="results-list">
+      <div class="row">
+        <div class="col-md-offset-3">
+          <ul class="nav nav-tabs">
+            <li role="presentation" ng-class="{'active': !active}">
+              <a ng-click="search('all')">All</a>
+            </li>
+            <li role="presentation" ng-class="{'active': active=='map'}">
+              <a ng-click="search('map')">Maps</a>
+            </li>
+            <li role="presentation" ng-class="{'active': active=='dataset'}">
+              <a ng-click="search('dataset')">Datasets</a>
+            </li>
+            <li role="presentation" ng-class="{'active': active=='service'}">
+              <a ng-click="search('service')">Services</a>
+            </li>
+            <li role="presentation" ng-class="{'active': active=='feature'}">
+              <a ng-click="search('feature')">Features</a>
+            </li>
+            <li>
+              <a class="disabled btn btn-link pull-right"
+                 ng-if="pager.count"
+                 disabled="disabled">{{pager.count | number:0}} {{'results' | translate}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="results-list row">
 
         <div class="mask" ng-if="loading"></div>
 
-        <div dir-paginate="r in results | itemsPerPage: pager.itemsPerPage"
-          total-items="pager.count" currentPage="pager.page"
-          gn-solr-result record="r" collection="collection"></div>
+        <div class="col-md-3">
+          <ul class="list-group-item facets">
+            <li ng-repeat="(key, f) in facets"
+                ng-if="f.buckets"
+                class="list-group-item">
+              <strong>{{key | translate}}</strong>
+              <ul>
+                <li data-ng-repeat="v in f.buckets">
+                  <a class="btn btn-link"
+                     ng-click="addFacet(f)">
+                    <strong>{{v.val | translate}}</strong> ({{v.count | number:0}})
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-9">
+          <div dir-paginate="r in results | itemsPerPage: pager.itemsPerPage"
+            total-items="pager.count" currentPage="pager.page"
+            gn-solr-result record="r" collection="collection"></div>
 
-        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
-
+          <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+        </div>
       </div>
 
     </div>
