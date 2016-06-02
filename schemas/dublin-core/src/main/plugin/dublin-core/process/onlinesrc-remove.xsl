@@ -25,11 +25,11 @@
 <!--
 Stylesheet used to remove a reference to a parent record.
 -->
-<xsl:stylesheet version="2.0"
-                xmlns:dct="http://purl.org/dc/terms/"
-                xmlns:dc = "http://purl.org/dc/elements/1.1/"
+<xsl:stylesheet xmlns:dct="http://purl.org/dc/terms/"
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:geonet="http://www.fao.org/geonetwork">
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                version="2.0">
 
   <xsl:param name="url"/>
 

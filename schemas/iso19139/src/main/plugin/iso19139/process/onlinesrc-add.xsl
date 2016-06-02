@@ -26,10 +26,10 @@
 Processing to insert or update an online resource element.
 Insert is made in first transferOptions found.
 -->
-<xsl:stylesheet version="2.0"
-                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="2.0">
 
   <!-- Main properties for the link.
   Name and description may be multilingual eg. ENG#English name|FRE#Le français
@@ -55,7 +55,8 @@ Insert is made in first transferOptions found.
 
 
   <xsl:variable name="mainLang">
-    <xsl:value-of select="(gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata'])/gmd:language/gmd:LanguageCode/@codeListValue"/>
+    <xsl:value-of
+      select="(gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata'])/gmd:language/gmd:LanguageCode/@codeListValue"/>
   </xsl:variable>
 
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
@@ -132,8 +133,6 @@ Insert is made in first transferOptions found.
   </xsl:template>
 
 
-
-
   <!-- Updating the link matching the update key. -->
   <xsl:template match="gmd:onLine[
                         normalize-space($updateKey) = concat(
@@ -143,8 +142,6 @@ Insert is made in first transferOptions found.
                         ]">
     <xsl:call-template name="createOnlineSrc"/>
   </xsl:template>
-
-
 
 
   <xsl:template name="createOnlineSrc">
@@ -160,7 +157,6 @@ Insert is made in first transferOptions found.
         </gmd:onLine>
       </xsl:for-each>
     </xsl:if>
-
 
 
     <xsl:if test="$url">
@@ -378,8 +374,9 @@ Insert is made in first transferOptions found.
 
               <xsl:if test="$function != ''">
                 <gmd:function>
-                  <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode"
-                                             codeListValue="{$function}"/>
+                  <gmd:CI_OnLineFunctionCode
+                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode"
+                    codeListValue="{$function}"/>
                 </gmd:function>
               </xsl:if>
             </gmd:CI_OnlineResource>

@@ -82,7 +82,9 @@
             <xsl:with-param name="in" select="concat('/../', @if)"/>
           </saxon:call-template>
         </xsl:when>
-        <xsl:otherwise><xsl:value-of select="true()"/></xsl:otherwise>
+        <xsl:otherwise>
+          <xsl:value-of select="true()"/>
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
     <xsl:if test="$match = true()">
@@ -101,7 +103,9 @@
             <xsl:with-param name="in" select="concat('/../', @if)"/>
           </saxon:call-template>
         </xsl:when>
-        <xsl:otherwise><xsl:value-of select="true()"/></xsl:otherwise>
+        <xsl:otherwise>
+          <xsl:value-of select="true()"/>
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
     <xsl:if test="$match = true()">
@@ -160,12 +164,11 @@
         <xsl:if test="@or and @in">
           <saxon:call-template name="{concat('evaluate-', $schema)}">
             <xsl:with-param name="base" select="$base"/>
-            <xsl:with-param name="in" select="concat('/../', @in, '[gn:child/@name=''', @or, ''']')"/>
+            <xsl:with-param name="in"
+                            select="concat('/../', @in, '[gn:child/@name=''', @or, ''']')"/>
           </saxon:call-template>
         </xsl:if>
       </xsl:variable>
-
-
 
 
       <!-- Check if this field is controlled by a condition
@@ -215,7 +218,9 @@
 
             <xsl:variable name="overrideLabel" select="$strings/*[name() = $configName]"/>
             <xsl:if test="$configName != '' and not($overrideLabel)">
-              <xsl:message>Label not defined for field name <xsl:value-of select="$configName"/> in loc/{language}/strings.xml.</xsl:message>
+              <xsl:message>Label not defined for field name
+                <xsl:value-of select="$configName"/> in loc/{language}/strings.xml.
+              </xsl:message>
             </xsl:if>
 
 
@@ -286,10 +291,11 @@
             <xsl:for-each select="$nonExistingChildParent/*/gn:child[@name = $childName]">
               <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
 
-              <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
+              <xsl:variable name="directive"
+                            select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
               <xsl:call-template name="render-element-to-add">
                 <xsl:with-param name="label"
-                  select="if ($configName != '')
+                                select="if ($configName != '')
                           then $strings/*[name() = $configName]
                           else gn-fn-metadata:getLabel($schema, $name, $labels)/label"/>
                 <xsl:with-param name="directive" select="$directive"/>
@@ -459,7 +465,8 @@
         <xsl:variable name="ancestor">
           <saxon:call-template name="{concat('evaluate-', $schema)}">
             <xsl:with-param name="base" select="$node"/>
-            <xsl:with-param name="in" select="concat('/descendant-or-self::node()[gn:element/@ref = ''', $node/gn:element/@ref, ''']/', $delXpath)"/>
+            <xsl:with-param name="in"
+                            select="concat('/descendant-or-self::node()[gn:element/@ref = ''', $node/gn:element/@ref, ''']/', $delXpath)"/>
           </saxon:call-template>
         </xsl:variable>
         <xsl:choose>
@@ -614,7 +621,8 @@
       <xsl:variable name="childName" select="@or"/>
 
       <!-- Get label from action or from gn:child -->
-      <xsl:variable name="elementName" select="$nonExistingChildParent/*/gn:child[@name = $childName]/concat(@prefix, ':', @name)"/>
+      <xsl:variable name="elementName"
+                    select="$nonExistingChildParent/*/gn:child[@name = $childName]/concat(@prefix, ':', @name)"/>
       <xsl:variable name="btnOverrideName"
                     select="@name"/>
       <xsl:variable name="btnName"
@@ -645,11 +653,14 @@
             <xsl:with-param name="hasAddAction" select="true()"/>
             <xsl:with-param name="addDirective" select="@addDirective"/>
             <xsl:with-param name="directiveAttributes" select="directiveAttributes"/>
-            <xsl:with-param name="parentRef" select="$nonExistingChildParent/*[position() = last()]/gn:element/@ref"/>
-            <xsl:with-param name="qname" select="concat($nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, ':', @or)"/>
+            <xsl:with-param name="parentRef"
+                            select="$nonExistingChildParent/*[position() = last()]/gn:element/@ref"/>
+            <xsl:with-param name="qname"
+                            select="concat($nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, ':', @or)"/>
             <xsl:with-param name="isFirst" select="@forceLabel or count($elementOfSameKind/*) = 0"/>
             <xsl:with-param name="isAddAction" select="true()"/>
-            <xsl:with-param name="btnLabel" select="if ($btnLabelTranslation != '') then $btnLabelTranslation else $btnLabel"/>
+            <xsl:with-param name="btnLabel"
+                            select="if ($btnLabelTranslation != '') then $btnLabelTranslation else $btnLabel"/>
             <xsl:with-param name="btnClass" select="@btnClass"/>
           </xsl:call-template>
         </xsl:when>

@@ -56,7 +56,6 @@
       </xsl:when>
 
 
-
       <xsl:when test="$op='searchretrieve'">
 
         <xsl:variable name="numrec" select="response/numrec"/>
@@ -86,7 +85,7 @@
                   </zs:recordSchema>
                   <zs:recordPacking>XML</zs:recordPacking>
                   <zs:recordData>
-                    <xsl:call-template name="copyrecord"> </xsl:call-template>
+                    <xsl:call-template name="copyrecord"></xsl:call-template>
                   </zs:recordData>
                   <zs:recordPosition>
                     <xsl:value-of select="../@recordPosition"/>
@@ -126,18 +125,19 @@
         </xsl:for-each>
 
 
-
       </xsl:when>
 
       <xsl:when test="$op='explain'">
 
-        <xsl:comment><xsl:variable name="port" select="gui/env/server/port"/> </xsl:comment>
+        <xsl:comment>
+          <xsl:variable name="port" select="gui/env/server/port"/>
+        </xsl:comment>
         <xsl:variable name="port" select="80"/>
         <xsl:variable name="server" select="'85.10.219.212'"/>
         <xsl:comment>
-							<xsl:variable name="server" select="gui/env/server/host"/>
-							<xsl:variable name="server" select="response/@servername"/>
-						</xsl:comment>
+          <xsl:variable name="server" select="gui/env/server/host"/>
+          <xsl:variable name="server" select="response/@servername"/>
+        </xsl:comment>
 
         <zs:explainResponse xmlns:zs="http://www.loc.gov/zing/srw/">
           <zs:version>1.1</zs:version>
@@ -203,7 +203,7 @@
                 </indexInfo>
                 <schemaInfo>
                   <schema name="xml:meta"
-                    identifier="http://www.iso.org/iso/catalogue_detail.htm?csnumber=32557">
+                          identifier="http://www.iso.org/iso/catalogue_detail.htm?csnumber=32557">
                     <title>ISO 19139</title>
                   </schema>
                 </schemaInfo>
@@ -242,8 +242,6 @@
       </xsl:when>
 
 
-
-
       <xsl:when test="$op='testremotesearch'">
         <xsl:for-each select="response">
           <xsl:call-template name="copyrecord"/>
@@ -253,7 +251,6 @@
         <xsl:call-template name="copyrecord"/>
       </xsl:otherwise>
     </xsl:choose>
-
 
 
   </xsl:template>

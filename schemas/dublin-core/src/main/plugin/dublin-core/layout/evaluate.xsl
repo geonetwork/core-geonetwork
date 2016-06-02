@@ -22,15 +22,14 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/"
-  xmlns:gn="http://www.fao.org/geonetwork" xmlns:saxon="http://saxon.sf.net/"
-  extension-element-prefixes="saxon" exclude-result-prefixes="#all">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/"
+                version="2.0"
+                extension-element-prefixes="saxon" exclude-result-prefixes="#all">
 
-  <!-- Evaluate an expression. This is schema dependant in order to properly 
+  <!-- Evaluate an expression. This is schema dependant in order to properly
         set namespaces required for evaluate.
-        
-    "The static context for the expression includes all the in-scope namespaces, 
+
+    "The static context for the expression includes all the in-scope namespaces,
     types, and functions from the calling stylesheet or query"
     http://saxonica.com/documentation9.4-demo/html/extensions/functions/evaluate.html
     -->

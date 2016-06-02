@@ -21,8 +21,8 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.geonetwork-opensource</groupId>
@@ -93,7 +93,7 @@
                         </includes>
                         <fileMappers>
                           <fileMapper
-                                  implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
+                            implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
                             <pattern>schema-ident\.xml$</pattern>
                             <replacement>@item@.rst</replacement>
                           </fileMapper>
@@ -130,7 +130,7 @@
                         </includes>
                         <fileMappers>
                           <fileMapper
-                                  implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
+                            implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
                             <pattern>schema-ident\.xml$</pattern>
                             <replacement>@item@.rst</replacement>
                           </fileMapper>
