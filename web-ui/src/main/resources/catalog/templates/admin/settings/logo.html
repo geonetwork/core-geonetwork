@@ -17,8 +17,9 @@
         </div>
         <div class="panel-body">
           <form id="fileupload" action="admin.logo.upload?_content_type=json" method="POST"
-            enctype="multipart/form-data" data-file-upload="logoUploadOptions">
-            <span class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
+                enctype="multipart/form-data" data-file-upload="logoUploadOptions">
+            <span class="btn btn-success btn-block fileinput-button"
+                  ng-class="{disabled: disabled}">
               <i class="fa fa-plus fa-white"/>
               <span data-translate="">chooseLogos</span>
               <input type="file" name="fname" multiple="true" autofocus="" ng-disabled="disabled"/>
@@ -27,7 +28,7 @@
             <div class="col-lg-5 fade" data-ng-class="{in: active()}">
               <!-- The global progress bar -->
               <div class="progress progress-striped active" data-file-upload-progress="progress()"
-                data-file-upload-done="loadLogo()">
+                   data-file-upload-done="loadLogo()">
                 <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"/>
               </div>
               <div class="progress-extended">&nbsp;</div>
@@ -49,12 +50,12 @@
           <div class="caption">
             <p>
               <a class="btn btn-link fa fa-picture-o" title="{{'useLogoForCatalog' | translate}}"
-                data-ng-click="setCatalogLogo(l, false)"/>
+                 data-ng-click="setCatalogLogo(l, false)"/>
               <a class="btn btn-link fa fa-bookmark"
-                title="{{'useLogoForCatalogFavicon' | translate}}"
-                data-ng-click="setCatalogLogo(l, true)"/>
+                 title="{{'useLogoForCatalogFavicon' | translate}}"
+                 data-ng-click="setCatalogLogo(l, true)"/>
               <a class="btn btn-link fa fa-times" title="{{'removeLogo' | translate}}"
-                data-ng-click="removeLogo(l)"/>
+                 data-ng-click="removeLogo(l)"/>
             </p>
           </div>
           <img data-ng-src="{{logoPath}}{{l}}" alt="{{l}}"/>

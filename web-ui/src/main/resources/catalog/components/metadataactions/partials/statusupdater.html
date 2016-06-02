@@ -4,7 +4,8 @@
       <!-- TODO: Status are disabled based on profiles and
       previous values. See https://github.com/geonetwork/core-geonetwork/blob/develop/web/src/main/webapp/xsl/metadata-status.xsl#L15 -->
       <div class="radio"
-           data-ng-repeat="s in status | orderBy: 'displayorder'" data-ng-class="{disabled : cantStatus(s.id)}">
+           data-ng-repeat="s in status | orderBy: 'displayorder'"
+           data-ng-class="{disabled : cantStatus(s.id)}">
         <label>
           <input type="radio"
                  name="status"

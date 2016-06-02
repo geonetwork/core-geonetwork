@@ -33,9 +33,10 @@
     </button>
     <ul class="dropdown-menu" role="menu">
       <li role="presentation"
-          class="dropdown-header" data-translate="">hitsPerPage</li>
+          class="dropdown-header" data-translate="">hitsPerPage
+      </li>
       <li data-ng-repeat="nb in values"
-              data-ng-class="nb === config.hitsPerPage ? 'disabled' : ''">
+          data-ng-class="nb === config.hitsPerPage ? 'disabled' : ''">
         <a data-ng-click="updateSearch(nb)">{{nb}}</a>
       </li>
     </ul>

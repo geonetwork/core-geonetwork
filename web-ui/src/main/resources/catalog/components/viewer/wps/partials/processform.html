@@ -9,7 +9,9 @@
 
     <div ng-switch-when="failed">
       <h4><span translate>wpsDescribeProcessFailed</span></h4>
-      <div><span translate>wpsErrorCodeReturned</span> {{describeResponse.status}} - {{describeResponse.statusText}}</div>
+      <div><span translate>wpsErrorCodeReturned</span> {{describeResponse.status}} -
+        {{describeResponse.statusText}}
+      </div>
       <div>{{describeResponse.data}}</div>
     </div>
 
@@ -30,24 +32,29 @@
             <h5>{{::processDescription.title.value}}</h5>
 
             <!-- Inputs -->
-            <div ng-repeat="input in processDescription.dataInputs.input" class="form-group" ng-class="{'gn-required': input.minOccurs}">
+            <div ng-repeat="input in processDescription.dataInputs.input" class="form-group"
+                 ng-class="{'gn-required': input.minOccurs}">
               <label for="{{::input.identifier.value}}">{{::input.title.value}}</label>
               <div ng-if="::input.literalData">
                 <div ng-if="::input.literalData.allowedValues">
-                  <select id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value">
-                    <option ng-repeat="value in input.literalData.allowedValues.valueOrRange" value="{{::value.value}}">{{::value.value}}</option>
+                  <select id="{{::input.identifier.value}}" class="form-control input-sm"
+                          ng-model="input.value">
+                    <option ng-repeat="value in input.literalData.allowedValues.valueOrRange"
+                            value="{{::value.value}}">{{::value.value}}
+                    </option>
                   </select>
                 </div>
                 <div ng-if="::input.literalData.allowedValues == undefined">
-                  <input type="{{::input.type}}" id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value"></input>
+                  <input type="{{::input.type}}" id="{{::input.identifier.value}}"
+                         class="form-control input-sm" ng-model="input.value"></input>
                 </div>
               </div>
               <div ng-if="::input.boundingBoxData">
                 <gn-bbox-input id="{{::input.identifier.value}}"
-                    data-crs="input._default.crs"
-                    data-value="input.value"
-                    data-map="map"
-                    />
+                               data-crs="input._default.crs"
+                               data-value="input.value"
+                               data-map="map"
+                />
               </div>
               <div ng-if="input.invalid">
                 <p class="text-danger">{{input.invalid}}</p>
@@ -56,16 +63,19 @@
 
             <!-- ResponseDocument -->
             <div class="form-group">
-              <button type="submit" class="btn btn-default" data-ng-click="submit()" >
-                <span class="fa fa-gear" data-ng-class="{'fa-spin' : running}"></span>&nbsp;<span translate>wpsExecute</span>
+              <button type="submit" class="btn btn-default" data-ng-click="submit()">
+                <span class="fa fa-gear" data-ng-class="{'fa-spin' : running}"></span>&nbsp;<span
+                translate>wpsExecute</span>
               </button>
-              <button type="submit" class="btn btn-default" data-ng-click="displayOutputOpts = !displayOutputOpts"
+              <button type="submit" class="btn btn-default"
+                      data-ng-click="displayOutputOpts = !displayOutputOpts"
                       data-ng-class="{active: displayOutputOpts}">
                 <span class="caret"></span>
               </button>
               <div class="form-group output-opts" data-ng-show="displayOutputOpts">
 
-                <div class="form-group" ng-repeat="output in ::processDescription.processOutputs.output">
+                <div class="form-group"
+                     ng-repeat="output in ::processDescription.processOutputs.output">
                   <input type="radio" value="{{::output.identifier.value}}"
                          ng-model="selectedOutput.identifier">{{::output.title.value}}
 
@@ -81,7 +91,8 @@
 
             <div>
               <div class="form-group optional">
-                <label><a role="button" ng-click="toggleOptions()"><span class="caret"></span> Options</a></label>
+                <label><a role="button" ng-click="toggleOptions()"><span class="caret"></span>
+                  Options</a></label>
                 <div ng-class="{'collapse': true, 'in': optionsVisible}">
                   <div class="checkbox">
                     <label>
@@ -91,13 +102,16 @@
                   </div>
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" id="storeExecuteResponse" ng-model="responseDocument.storeExecuteResponse" ng-disabled="responseDocument.status">
+                      <input type="checkbox" id="storeExecuteResponse"
+                             ng-model="responseDocument.storeExecuteResponse"
+                             ng-disabled="responseDocument.status">
                       storeExecuteResponse
                     </label>
                   </div>
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" id="status" ng-model="responseDocument.status" ng-change="responseDocumentStatusChanged()">
+                      <input type="checkbox" id="status" ng-model="responseDocument.status"
+                             ng-change="responseDocumentStatusChanged()">
                       status
                     </label>
                   </div>
@@ -109,7 +123,7 @@
         </div>
       </div>
 
-      <hr />
+      <hr/>
 
       <div ng-switch="executeState">
 
@@ -119,7 +133,9 @@
 
         <div ng-switch-when="failed">
           <h4><span translate>wpsExecuteFailed</span></h4>
-          <div><span translate>wpsErrorCodeReturned</span> {{executeResponse.status}} - {{executeResponse.statusText}}</div>
+          <div><span translate>wpsErrorCodeReturned</span> {{executeResponse.status}} -
+            {{executeResponse.statusText}}
+          </div>
           <div>{{executeResponse.data}}</div>
         </div>
 
@@ -158,7 +174,8 @@
           <div ng-if="executeResponse.status.processFailed">
             <h4><span translate>wpsProcessFailed</span></h4>
             <div ng-if="executeResponse.status.processFailed.exceptionReport">
-              <div ng-repeat="exception in executeResponse.status.processFailed.exceptionReport.exception">
+              <div
+                ng-repeat="exception in executeResponse.status.processFailed.exceptionReport.exception">
                 <div ng-repeat="(key, value) in exception">
                   {{key}}: {{value}}
                 </div>
@@ -175,13 +192,18 @@
                 <div ng-if="::output.data.complexData">
                   <h4 class="col-sm-6">{{::output.title.value}}</h4>
                   <div class="col-sm-6">
-                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{{::output.identifier.value}}_modal-dialog">Display</button>
+                    <button type="button" class="btn btn-default" data-toggle="modal"
+                            data-target="#{{::output.identifier.value}}_modal-dialog">Display
+                    </button>
                   </div>
-                  <div class="modal fade" id="{{::output.identifier.value}}_modal-dialog" tabindex="-1" role="dialog" aria-labelledby="dialog-title" aria-hidden="true">
+                  <div class="modal fade" id="{{::output.identifier.value}}_modal-dialog"
+                       tabindex="-1" role="dialog" aria-labelledby="dialog-title"
+                       aria-hidden="true">
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <button type="button" class="close" data-dismiss="modal"
+                                  aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
                           <h4 class="modal-title" id="dialog-title">{{::output.title.value}}</h4>
@@ -190,7 +212,8 @@
 
                           <div ng-repeat="content in output.data.complexData.content">
                             <table class="table table-hover">
-                              <tr ng-repeat="line in content.split('\n') track by $index" ng-if="line.trim() != ''">
+                              <tr ng-repeat="line in content.split('\n') track by $index"
+                                  ng-if="line.trim() != ''">
                                 <td ng-repeat="text in line.split(',') track by $index">
                                   {{::text}}
                                 </td>
@@ -200,7 +223,9 @@
 
                         </div>
                         <div class="modal-footer">
-                          <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                          <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Fermer
+                          </button>
                         </div>
                       </div>
                     </div>

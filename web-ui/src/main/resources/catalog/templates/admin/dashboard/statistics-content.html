@@ -11,8 +11,9 @@
         </table>
 
         <button type="button" class="btn btn-small"
-          data-ng-click="csvExport([statistics.md.mainStatistics], $event)" data-translate=""
-          >csvExport</button>
+                data-ng-click="csvExport([statistics.md.mainStatistics], $event)" data-translate=""
+        >csvExport
+        </button>
       </div>
     </div>
   </div>
@@ -60,7 +61,7 @@
         <h2>
           <span data-translate="">recordsBy</span>
           <select class="form-control" data-ng-model="currentIndicator"
-            data-ng-options="(key | translate) for (key, value) in searchInfo.facet"> </select>
+                  data-ng-options="(key | translate) for (key, value) in searchInfo.facet"> </select>
         </h2>
 
         <svg id="gn-stat-md-by-facet" class="gn-chart"/>

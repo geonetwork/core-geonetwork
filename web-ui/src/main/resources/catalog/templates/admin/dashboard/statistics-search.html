@@ -25,9 +25,10 @@
         </table>
 
         <button type="button" class="btn btn-small"
-          data-ng-click="csvExport([statistics.search.mainSearchStatistics.q,
+                data-ng-click="csvExport([statistics.search.mainSearchStatistics.q,
                 statistics.search.mainSearchStatistics.csw], $event)"
-          data-translate="">csvExport</button>
+                data-translate="">csvExport
+        </button>
       </div>
     </div>
   </div>
@@ -72,8 +73,9 @@
         <svg id="gn-stat-search-timeline" class="gn-chart"/>
 
         <button type="button" class="btn btn-small"
-          data-ng-click="csvExport(statistics.search.temporal, $event)" data-translate=""
-          >csvExport</button>
+                data-ng-click="csvExport(statistics.search.temporal, $event)" data-translate=""
+        >csvExport
+        </button>
       </div>
     </div>
   </div>
@@ -85,8 +87,9 @@
         <svg id="gn-stat-search-by-service" class="gn-chart"/>
 
         <button type="button" class="btn btn-small"
-          data-ng-click="csvExport(statistics.search.byServiceType, $event)" data-translate=""
-          >csvExport</button>
+                data-ng-click="csvExport(statistics.search.byServiceType, $event)" data-translate=""
+        >csvExport
+        </button>
       </div>
     </div>
   </div>
@@ -97,11 +100,13 @@
       <div class="panel-body">
         <ul>
           <li data-ng-repeat="ip in statistics.search.ip"> {{ip.sumhit}} {{'requestFrom' |
-            translate}} {{ip.ip}} </li>
+            translate}} {{ip.ip}}
+          </li>
         </ul>
         <button type="button" class="btn btn-small"
-          data-ng-click="csvExport(statistics.search.ip, $event)" data-translate=""
-          >csvExport</button>
+                data-ng-click="csvExport(statistics.search.ip, $event)" data-translate=""
+        >csvExport
+        </button>
       </div>
     </div>
   </div>
@@ -114,7 +119,8 @@
         <label data-translate="">chooseAServiceType</label>
         <select data-ng-model="termsForSearchService" class="form-control">
           <option data-ng-repeat="(key, value) in statistics.search.services track by $index"
-            value="{{value}}">{{value | translate}}</option>
+                  value="{{value}}">{{value | translate}}
+          </option>
         </select>
 
 
@@ -128,15 +134,16 @@
             <td>{{field.service | translate}}</td>
             <td>
               <a href="" title="viewTermsForField"
-                data-ng-click="viewTermsForField(field.termfield, field.service)">{{field.termfield
+                 data-ng-click="viewTermsForField(field.termfield, field.service)">{{field.termfield
                 | translate}}</a>
             </td>
             <td class="text-right">{{field.total}}</td>
           </tr>
         </table>
         <button type="button" class="btn btn-small"
-          data-ng-click="csvExport(statistics.search.fields, $event)" data-translate=""
-          >csvExport</button>
+                data-ng-click="csvExport(statistics.search.fields, $event)" data-translate=""
+        >csvExport
+        </button>
 
         <h2><span data-translate="">searchTermsStatistics</span>{{currentField | translate}}</h2>
         <table class="table table-striped">
@@ -146,8 +153,9 @@
           </tr>
         </table>
         <button type="button" class="btn btn-small"
-          data-ng-click="csvExport(statistics.search.terms.any, $event)" data-translate=""
-          >csvExport</button>
+                data-ng-click="csvExport(statistics.search.terms.any, $event)" data-translate=""
+        >csvExport
+        </button>
       </div>
     </div>
   </div>
@@ -157,8 +165,9 @@
       <div class="panel-heading" data-translate="">statisticsTablesExport</div>
       <div class="panel-body">
         <button type="button" class="btn btn-small" data-ng-click="searchStatisticExport()"
-          data-ng-hide="paramsExport && requestsExport" data-translate=""
-          >searchStatisticExport</button>
+                data-ng-hide="paramsExport && requestsExport" data-translate=""
+        >searchStatisticExport
+        </button>
         <div data-ng-bind-html="requestsExport"/>
         <div data-ng-bind-html="paramsExport"/>
       </div>
