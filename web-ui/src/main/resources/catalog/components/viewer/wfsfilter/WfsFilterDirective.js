@@ -207,7 +207,9 @@
             // If an app profile is defined, then we update s
             // `olrObject.initialParams` with external config
             if (appProfile && appProfile.fields) {
-              wfsFilterService.solrMergeApplicationProfile(
+
+              solrObject.indexFields =
+                  wfsFilterService.solrMergeApplicationProfile(
                   solrObject.filteredDocTypeFieldsInfo, appProfile.fields);
               solrObject.initBaseParams();
             }

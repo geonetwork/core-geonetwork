@@ -103,7 +103,7 @@
                 this.map.getView().fit(
                   feature.getGeometry(),
                   this.map.getSize(),
-                  { maxZoom: 17 }
+                  { minResolution: 40 }
                 );
               }
 
