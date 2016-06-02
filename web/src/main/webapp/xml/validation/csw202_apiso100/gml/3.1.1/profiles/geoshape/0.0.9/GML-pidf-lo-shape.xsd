@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <xs:schema
-    targetNamespace="urn:ietf:params:xml:ns:pidf:geopriv10:geoShape"
-    xmlns:gs="urn:ietf:params:xml:ns:pidf:geopriv10:geoShape"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:gml="http://www.opengis.net/gml"
-    elementFormDefault="qualified"
-    attributeFormDefault="unqualified">
+  xmlns:gs="urn:ietf:params:xml:ns:pidf:geopriv10:geoShape"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:gml="http://www.opengis.net/gml"
+  targetNamespace="urn:ietf:params:xml:ns:pidf:geopriv10:geoShape"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified">
 
   <xs:annotation>
     <xs:appinfo
-        source="urn:ietf:params:xml:schema:pidf:geopriv10:geoShape">
+      source="urn:ietf:params:xml:schema:pidf:geopriv10:geoShape">
       GEOPRIV Geodetic Shapes
     </xs:appinfo>
     <xs:documentation source="http://www.ietf.org/rfc/rfcXXXX.txt">
-<!-- [[NOTE TO RFC-EDITOR: Please replace above URL with URL of
-                       published RFC and remove this note.]] -->
+      <!-- [[NOTE TO RFC-EDITOR: Please replace above URL with URL of
+                             published RFC and remove this note.]] -->
       This document defines geodetic shape types for PIDF-LO.
     </xs:documentation>
   </xs:annotation>

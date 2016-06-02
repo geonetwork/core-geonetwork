@@ -27,252 +27,250 @@
     <suggest name="gco:CharacterString"/>
     <suggest name="gmx:FileName"/>
   </field>
-  
-	<field name="gmd:otherCitationDetails">
-		<suggest name="gco:CharacterString"/>
-		<suggest name="gmx:FileName"/>
-		<suggest name="gmx:Anchor"/>
-	</field>
-	
-	<field name="gmd:hierarchyLevel">
-		<suggest name="gmd:MD_ScopeCode"/>
-	</field>
-	<field name="gmx:Anchor">
-		<suggest name="xlink:href"/>
-	</field>
-	
-	<field name="gmd:code">
-		<suggest name="gco:CharacterString"/>
-		<suggest name="gmx:FileName"/>
-		<suggest name="gmx:Anchor"/>
-	</field>
 
-	<field name="gmd:language">
-		<suggest name="gco:CharacterString"/>
-		<suggest name="gmd:LanguageCode"/>
-	</field>
-	
-	<field name="gmx:FileName">
-		<suggest name="src"/>
-	</field> 
-	
-	<!-- Service -->
-	<field name="srv:coupledResource">
-		<suggest name="srv:SV_CoupledResource"/>
-	</field>
-	
-	<field name="srv:parameters">
-		<suggest name="srv:SV_Parameter"/>
-	</field>
-	
-	<field name="srv:direction">
-		<suggest name="srv:SV_ParameterDirection"/>
-	</field>
-	
-	<field name="gmd:CI_OnlineResource">
-		<suggest name="gmd:protocol"/>
-		<suggest name="gmd:name"/>
-		<suggest name="gmd:description"/>
-	</field>
-	
-	<!-- Add a distribution format / INSPIRE requirement
-	<field name="gmd:distributionInfo">
-		<suggest name="gmd:MD_Distribution"/>
-	</field>
-	<field name="gmd:MD_Distribution">
-		<suggest name="gmd:distributionFormat"/>
-		<suggest name="gmd:transferOptions"/>
-	</field>
-	<field name="gmd:distributionFormat">
-		<suggest name="gmd:MD_Format"/>
-		</field> -->
+  <field name="gmd:otherCitationDetails">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="gmx:FileName"/>
+    <suggest name="gmx:Anchor"/>
+  </field>
 
-    <field name="gmd:transferOptions">
-        <suggest name="gmd:MD_DigitalTransferOptions"/>
+  <field name="gmd:hierarchyLevel">
+    <suggest name="gmd:MD_ScopeCode"/>
+  </field>
+  <field name="gmx:Anchor">
+    <suggest name="xlink:href"/>
+  </field>
+
+  <field name="gmd:code">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="gmx:FileName"/>
+    <suggest name="gmx:Anchor"/>
+  </field>
+
+  <field name="gmd:language">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="gmd:LanguageCode"/>
+  </field>
+
+  <field name="gmx:FileName">
+    <suggest name="src"/>
+  </field>
+
+  <!-- Service -->
+  <field name="srv:coupledResource">
+    <suggest name="srv:SV_CoupledResource"/>
+  </field>
+
+  <field name="srv:parameters">
+    <suggest name="srv:SV_Parameter"/>
+  </field>
+
+  <field name="srv:direction">
+    <suggest name="srv:SV_ParameterDirection"/>
+  </field>
+
+  <field name="gmd:CI_OnlineResource">
+    <suggest name="gmd:protocol"/>
+    <suggest name="gmd:name"/>
+    <suggest name="gmd:description"/>
+  </field>
+
+  <!-- Add a distribution format / INSPIRE requirement
+    <field name="gmd:distributionInfo">
+        <suggest name="gmd:MD_Distribution"/>
+    </field>
+    <field name="gmd:MD_Distribution">
+        <suggest name="gmd:distributionFormat"/>
+        <suggest name="gmd:transferOptions"/>
+    </field>
+    <field name="gmd:distributionFormat">
+        <suggest name="gmd:MD_Format"/>
+        </field> -->
+
+  <field name="gmd:transferOptions">
+    <suggest name="gmd:MD_DigitalTransferOptions"/>
+  </field>
+
+  <field name="gmd:MD_DigitalTransferOptions">
+    <suggest name="gmd:onLine"/>
+  </field>
+
+
+  <!-- Contact info: suggest all by default.
+    <field name="gmd:CI_ResponsibleParty">
+        <suggest name="gmd:individualName"/>
+        <suggest name="gmd:organisationName"/>
+        <suggest name="gmd:positionName"/>
+        <suggest name="gmd:contactInfo"/>
     </field>
 
-    <field name="gmd:MD_DigitalTransferOptions">
-        <suggest name="gmd:onLine"/>
+    <field name="gmd:CI_Contact">
+        <suggest name="gmd:phone"/>
+        <suggest name="gmd:address"/>
     </field>
-	
-	
-	<!-- Contact info: suggest all by default. 
-	<field name="gmd:CI_ResponsibleParty">
-		<suggest name="gmd:individualName"/>
-		<suggest name="gmd:organisationName"/>
-		<suggest name="gmd:positionName"/>
-		<suggest name="gmd:contactInfo"/>
-	</field>
-	
-	<field name="gmd:CI_Contact">
-		<suggest name="gmd:phone"/>
-		<suggest name="gmd:address"/>
-	</field>
-	
-	<field name="gmd:CI_Telephone">
-		<suggest name="gmd:voice"/>
-		<suggest name="gmd:facsimile"/>
-	</field>
-	
-	<field name="gmd:CI_Address">
-		<suggest name="gmd:deliveryPoint"/>
-		<suggest name="gmd:city"/>
-		<suggest name="gmd:administrativeArea"/>
-		<suggest name="gmd:postalCode"/>
-		<suggest name="gmd:country"/>
-		<suggest name="gmd:electronicMailAddress"/>
-		</field>
-	-->
-	
-	
-	<!-- INSPIRE Suggestion for contact suggest 
-		organisation name and email address as defined in metadata IR.
-		ie. less fields than in GeoNetwork default behaviour.-->
-	<field name="gmd:CI_ResponsibleParty">
-		<suggest name="gmd:organisationName"/>
-		<suggest name="gmd:contactInfo"/>
-	</field>
-	
-	<field name="gmd:CI_Contact">
-		<suggest name="gmd:address"/>
-	</field>
-	
-	<field name="gmd:CI_Address">
-		<suggest name="gmd:electronicMailAddress"/>
-	</field>
-	
-	
-	
-	<!-- Expand optional element gmd:type (gmd:keyword is mandatory and will be expanded) -->
-	<field name="gmd:MD_Keywords">
-		<suggest name="gmd:type"/>
-	</field>
-	
-	<!-- Expand optional element gmd:type and gmd:thesaurusName. gmd:thesaurusName will
-	be expanded including all its mandatory children and optional suggestion. In that
-	case, thesaurus title and date type will be expanded. Unfortunately, the date is a choice
-	between date and dateTime and will not be expanded. -->
-<!--	<field name="gmd:MD_Keywords">
-		<suggest name="gmd:type"/>
-		<suggest name="gmd:thesaurusName"/>
-	</field>-->
-	
-	<!--
-		Add a gco:date element by default to a gmd:date element
-		even if gmd:date is a choice element having gco:Date
-		or gco:DateTime. The Angular editor is taking care of
-		adding the proper tag name based on the user input. -->
+
+    <field name="gmd:CI_Telephone">
+        <suggest name="gmd:voice"/>
+        <suggest name="gmd:facsimile"/>
+    </field>
+
+    <field name="gmd:CI_Address">
+        <suggest name="gmd:deliveryPoint"/>
+        <suggest name="gmd:city"/>
+        <suggest name="gmd:administrativeArea"/>
+        <suggest name="gmd:postalCode"/>
+        <suggest name="gmd:country"/>
+        <suggest name="gmd:electronicMailAddress"/>
+        </field>
+    -->
+
+
+  <!-- INSPIRE Suggestion for contact suggest
+        organisation name and email address as defined in metadata IR.
+        ie. less fields than in GeoNetwork default behaviour.-->
+  <field name="gmd:CI_ResponsibleParty">
+    <suggest name="gmd:organisationName"/>
+    <suggest name="gmd:contactInfo"/>
+  </field>
+
+  <field name="gmd:CI_Contact">
+    <suggest name="gmd:address"/>
+  </field>
+
+  <field name="gmd:CI_Address">
+    <suggest name="gmd:electronicMailAddress"/>
+  </field>
+
+
+  <!-- Expand optional element gmd:type (gmd:keyword is mandatory and will be expanded) -->
+  <field name="gmd:MD_Keywords">
+    <suggest name="gmd:type"/>
+  </field>
+
+  <!-- Expand optional element gmd:type and gmd:thesaurusName. gmd:thesaurusName will
+    be expanded including all its mandatory children and optional suggestion. In that
+    case, thesaurus title and date type will be expanded. Unfortunately, the date is a choice
+    between date and dateTime and will not be expanded. -->
+  <!--	<field name="gmd:MD_Keywords">
+          <suggest name="gmd:type"/>
+          <suggest name="gmd:thesaurusName"/>
+      </field>-->
+
+  <!--
+        Add a gco:date element by default to a gmd:date element
+        even if gmd:date is a choice element having gco:Date
+        or gco:DateTime. The Angular editor is taking care of
+        adding the proper tag name based on the user input. -->
   <field name="gmd:date">
-		<suggest name="gco:Date"/>
-	</field>
-	
-	<!-- Control substitute of gco:CharacterString -->
-	<!-- Only propose gco:CharacterString and expand it when gmd:keyword is created. For this,
-	set no suggestion. Adding :
-	<field name="gmd:keyword">
-		<suggest name="gco:CharacterString"/>
-	</field>
-	will not change anything because gco:CharacterString is the default element.
-	-->
-	
-	<!-- Propose 2 substitutes. A selection list will be displayed to choose between the 2 elements -->
-	<!--<field name="gmd:keyword">
-		<suggest name="gco:CharacterString"/>
-		<suggest name="gmx:Anchor"/>
-	</field>-->
-	
-	
-	
-	<field name="gmd:EX_Extent">
-		<suggest name="gmd:temporalElement"/>
-		<suggest name="gmd:geographicElement"/>
-		<suggest name="gmd:verticalElement"/>
-	</field>
+    <suggest name="gco:Date"/>
+  </field>
 
-	<field name="gmd:EX_TemporalExtent">
-		<suggest name="gmd:extent"/>
-	</field>
-	
-	<field name="gmd:polygon">
-		<suggest name="gml:Polygon"/>
-	</field>
-	
-	<field name="gmd:extent">
-		<suggest name="gmd:EX_Extent"/>
-	</field>
-	
-	<field name="gml:TimePeriod">
-		<suggest name="gml:beginPosition"/>
-		<suggest name="gml:endPosition"/>	
-	</field>
-	
-	<field name="gmd:EX_GeographicBoundingBox">
-		<suggest name="gmd:westBoundLongitude"/>
-		<suggest name="gmd:eastBoundLongitude"/>	
-		<suggest name="gmd:southBoundLatitude"/>
-		<suggest name="gmd:northBoundLatitude"/>
-	</field>
+  <!-- Control substitute of gco:CharacterString -->
+  <!-- Only propose gco:CharacterString and expand it when gmd:keyword is created. For this,
+    set no suggestion. Adding :
+    <field name="gmd:keyword">
+        <suggest name="gco:CharacterString"/>
+    </field>
+    will not change anything because gco:CharacterString is the default element.
+    -->
 
-	<field name="gmd:attributes">
-		<suggest name="uuidref"/>
-	</field>
+  <!-- Propose 2 substitutes. A selection list will be displayed to choose between the 2 elements -->
+  <!--<field name="gmd:keyword">
+        <suggest name="gco:CharacterString"/>
+        <suggest name="gmx:Anchor"/>
+    </field>-->
 
-	<field name="gmd:features">
-		<suggest name="uuidref"/>
-	</field>
 
-	<field name="gmd:featureInstances">
-		<suggest name="uuidref"/>
-	</field>
+  <field name="gmd:EX_Extent">
+    <suggest name="gmd:temporalElement"/>
+    <suggest name="gmd:geographicElement"/>
+    <suggest name="gmd:verticalElement"/>
+  </field>
 
-	<field name="gmd:attributeInstances">
-		<suggest name="uuidref"/>
-	</field>
+  <field name="gmd:EX_TemporalExtent">
+    <suggest name="gmd:extent"/>
+  </field>
 
-	<field name="gmd:propertyType">
-		<suggest name="uuidref"/>
-	</field>
+  <field name="gmd:polygon">
+    <suggest name="gml:Polygon"/>
+  </field>
 
-	<field name="gmd:featureType">
-		<suggest name="uuidref"/>
-	</field>
+  <field name="gmd:extent">
+    <suggest name="gmd:EX_Extent"/>
+  </field>
 
-	<field name="gmd:featureAttribute">
-		<suggest name="uuidref"/>
-	</field>
+  <field name="gml:TimePeriod">
+    <suggest name="gml:beginPosition"/>
+    <suggest name="gml:endPosition"/>
+  </field>
 
-	<field name="srv:operatesOn">
-		<suggest name="uuidref"/>
-	</field>
+  <field name="gmd:EX_GeographicBoundingBox">
+    <suggest name="gmd:westBoundLongitude"/>
+    <suggest name="gmd:eastBoundLongitude"/>
+    <suggest name="gmd:southBoundLatitude"/>
+    <suggest name="gmd:northBoundLatitude"/>
+  </field>
 
-	<field name="gmd:source">
-		<suggest name="uuidref"/>
-	</field>
-	
-	<field name="gmd:featureCatalogueCitation">
-		<suggest name="uuidref"/>
-	</field>
-	
-	<field name="gml:Polygon">
-		<suggest name="srsName"/>
-	</field>
+  <field name="gmd:attributes">
+    <suggest name="uuidref"/>
+  </field>
 
-	<field name="gml:descriptionReference">
-		<suggest name="xlink:href"/>
-	</field>
+  <field name="gmd:features">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:featureInstances">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:attributeInstances">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:propertyType">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:featureType">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:featureAttribute">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="srv:operatesOn">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:source">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:featureCatalogueCitation">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gml:Polygon">
+    <suggest name="srsName"/>
+  </field>
+
+  <field name="gml:descriptionReference">
+    <suggest name="xlink:href"/>
+  </field>
 
 
   <field name="gmd:MD_Constraints">
     <suggest name="gmd:useLimitation"/>
   </field>
-  
+
   <field name="gmd:MD_LegalConstraints">
     <suggest name="gmd:useLimitation"/>
     <suggest name="gmd:accessConstraints"/>
     <suggest name="gmd:useConstraints"/>
     <suggest name="gmd:otherContraints"/>
   </field>
-  
+
   <field name="gmd:MD_SecurityContraints">
     <suggest name="gmd:classification"/>
     <suggest name="gmd:useLimitation"/>

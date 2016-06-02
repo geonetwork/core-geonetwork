@@ -6,252 +6,271 @@
 <!--             Autor : Dr. Uwe Voges -->
 <!--             Stand: 18.12.2007 -->
 <!--             Firma: con terra GmbH (www.conterra.de) -->
-<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.isotc211.org/2005/gmd ../../apiso.xsd">
-	<fileIdentifier>
-		<gco:CharacterString>550e8400-e29b-41d4-a716-44389665234</gco:CharacterString>
-	</fileIdentifier>
-	<language>
-		<gco:CharacterString>ger</gco:CharacterString>
-	</language>
-	<characterSet>
-		<MD_CharacterSetCode codeList="MD_CharacterSetCode" codeListValue="UTF-8"/>
-	</characterSet>
-	<parentIdentifier>
-		<gco:CharacterString>111c0076-b23f-76e5-c888-94327664111</gco:CharacterString>
-	</parentIdentifier>
-	<hierarchyLevel>
-		<MD_ScopeCode codeList="MD_ScopeCode" codeListValue="dataset"/>
-	</hierarchyLevel>
-	<contact>
-		<CI_ResponsibleParty>
-			<individualName>
-				<gco:CharacterString>Michael Burscheid</gco:CharacterString>
-			</individualName>
-			<organisationName>
-				<gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
-			</organisationName>
-			<contactInfo>
-				<CI_Contact>
-					<phone>
-						<CI_Telephone>
-							<voice>
-								<gco:CharacterString>++49 0611 4451 524 223</gco:CharacterString>
-							</voice>
-							<facsimile>
-								<gco:CharacterString>++49 0611 4451 555 100</gco:CharacterString>
-							</facsimile>
-						</CI_Telephone>
-					</phone>
-					<address>
-						<CI_Address>
-							<city>
-								<gco:CharacterString>Wiesbaden</gco:CharacterString>
-							</city>
-							<postalCode>
-								<gco:CharacterString>65203</gco:CharacterString>
-							</postalCode>
-							<country>
-								<gco:CharacterString>Deutschland</gco:CharacterString>
-							</country>
-							<electronicMailAddress>
-								<gco:CharacterString>m.burscheid@hlfK.de</gco:CharacterString>
-							</electronicMailAddress>
-						</CI_Address>
-					</address>
-					<onlineResource>
-						<CI_OnlineResource>
-							<linkage>
-								<URL>http://hlfK.hessen.de</URL>
-							</linkage>
-						</CI_OnlineResource>
-					</onlineResource>
-					<contactInstructions>
-						<gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten Informationen suchen, danach eMail- und telefonische Kontaktaufnahme</gco:CharacterString>
-					</contactInstructions>
-				</CI_Contact>
-			</contactInfo>
-			<role>
-				<CI_RoleCode codeList="CI_RoleCode" codeListValue="disributor"/>
-			</role>
-		</CI_ResponsibleParty>
-	</contact>
-	<dateStamp>
-		<gco:Date>2006-01-24</gco:Date>
-	</dateStamp>
-	<metadataStandardName>
-		<gco:CharacterString>ISO 19115 Geographic Information - Metadata</gco:CharacterString>
-	</metadataStandardName>
-	<metadataStandardVersion>
-		<gco:CharacterString>2003/Cor.1:2006</gco:CharacterString>
-	</metadataStandardVersion>
-	<referenceSystemInfo>
-		<MD_ReferenceSystem>
-			<referenceSystemIdentifier>
-				<RS_Identifier>
-					<code>
-						<gco:CharacterString>4326</gco:CharacterString>
-					</code>
-					<codeSpace>
-						<gco:CharacterString>urn:ogc:def:crs:EPSG</gco:CharacterString>
-					</codeSpace>
-					<version>
-						<gco:CharacterString>6.11.2</gco:CharacterString>
-					</version>
-				</RS_Identifier>
-			</referenceSystemIdentifier>
-		</MD_ReferenceSystem>
-	</referenceSystemInfo>
-	<identificationInfo>
-		<MD_DataIdentification>
-			<citation>
-				<CI_Citation>
-					<title>
-						<gco:CharacterString>DTK 50 - Blatt L5914-Wiesbaden</gco:CharacterString>
-					</title>
-					<alternateTitle>
-						<gco:CharacterString>Blatt L5914 der Digitalen Topographischen Karte 1:50000 von Hessen</gco:CharacterString>
-					</alternateTitle>
-					<date>
-						<CI_Date>
-							<date>
-								<gco:Date>2003-10-01</gco:Date>
-							</date>
-							<dateType>
-								<CI_DateTypeCode codeList="CI_DateTypeCode" codeListValue="creation"/>
-							</dateType>
-						</CI_Date>
-					</date>
-					<presentationForm>
-						<CI_PresentationFormCode codeList="CI_PresentationFormCode" codeListValue="mapDigital"/>
-					</presentationForm>
-					<otherCitationDetails>
-						<gco:CharacterString>emfohlene Farbdarstellung: grau</gco:CharacterString>
-					</otherCitationDetails>
-				</CI_Citation>
-			</citation>
-			<abstract>
-				<gco:CharacterString>Rasterkarten wie die Topographische Karte 1:50000 Rasterdaten eignen sich als räumliche Bezugsgrundlage für den Aufbau von Geo- und Fachinformationssystemen und als Hintergrundinformation für die Überlagerung mit fachspezifischen Daten sowie für die rechnergestützte Bearbeitung thematischer Karten. Anwendungsgebiete sind z. B. Energie-, Forst- und Landwirtschaft, Verwaltung, Demographie, Wohnungswesen, Landnutzungs-, Regional- und Streckenplanung, Straßenbewirtschaftung, Verkehrsnavigation, Transport, Bergbau, Gewässerkunde, Ökologie, Umweltschutz, Geodäsie, Geologie aber auch Kultur, Erholung und Freizeit sowie Kommunikation.</gco:CharacterString>
-			</abstract>
-			<status>
-				<MD_ProgressCode codeList="MD_ProgressCode" codeListValue="completed"/>
-			</status>
-			<pointOfContact>
-				<CI_ResponsibleParty>
-					<individualName>
-						<gco:CharacterString>Der Kartenverkäufer</gco:CharacterString>
-					</individualName>
-					<organisationName>
-						<gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
-					</organisationName>
-					<contactInfo>
-						<CI_Contact>
-							<phone>
-								<CI_Telephone>
-									<voice>
-										<gco:CharacterString>++49 0611 4451 524 229</gco:CharacterString>
-									</voice>
-									<facsimile>
-										<gco:CharacterString>++49 0611 4451 555 100</gco:CharacterString>
-									</facsimile>
-								</CI_Telephone>
-							</phone>
-							<address>
-								<CI_Address>
-									<city>
-										<gco:CharacterString>Wiesbaden</gco:CharacterString>
-									</city>
-									<postalCode>
-										<gco:CharacterString>65203</gco:CharacterString>
-									</postalCode>
-									<country>
-										<gco:CharacterString>Deutschland</gco:CharacterString>
-									</country>
-									<electronicMailAddress>
-										<gco:CharacterString>k.kartenverkaeufer@hlfK.de</gco:CharacterString>
-									</electronicMailAddress>
-								</CI_Address>
-							</address>
-							<onlineResource>
-								<CI_OnlineResource>
-									<linkage>
-										<URL>http://hlfK.hessen.de</URL>
-									</linkage>
-								</CI_OnlineResource>
-							</onlineResource>
-							<contactInstructions>
-								<gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten Informationen suchen, danach eMail- und telefonische Kontaktaufnahme</gco:CharacterString>
-							</contactInstructions>
-						</CI_Contact>
-					</contactInfo>
-					<role>
-						<CI_RoleCode codeList="CI_RoleCode" codeListValue="processor"/>
-					</role>
-				</CI_ResponsibleParty>
-			</pointOfContact>
-			<resourceMaintenance>
-				<MD_MaintenanceInformation>
-					<maintenanceAndUpdateFrequency>
-						<MD_MaintenanceFrequencyCode codeList="MD_MaintenanceFrequencyCode" codeListValue="annually"/>
-					</maintenanceAndUpdateFrequency>
-				</MD_MaintenanceInformation>
-			</resourceMaintenance>
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<keyword>
-						<gco:CharacterString>DTK50</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Wiesbaden</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Topographische Karte</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Hessen</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Geobasisdaten</gco:CharacterString>
-					</keyword>
-				</MD_Keywords>
-			</descriptiveKeywords>
-			<spatialRepresentationType>
-				<MD_SpatialRepresentationTypeCode codeList="MD_SpatialRepresentationTypeCode" codeListValue="grid"/>
-			</spatialRepresentationType>
-			<language>
-				<gco:CharacterString>ger</gco:CharacterString>
-			</language>
-			<characterSet>
-				<MD_CharacterSetCode codeList="MD_CharacterSetCode" codeListValue="UTF-8"/>
-			</characterSet>
-			<topicCategory>
-				<MD_TopicCategoryCode>imageryBaseMapsEarthCover</MD_TopicCategoryCode>
-			</topicCategory>
-			<extent>
-				<EX_Extent>
-					<geographicElement>
-						<EX_GeographicBoundingBox>
-							<extentTypeCode>
-								<gco:Boolean>1</gco:Boolean>
-							</extentTypeCode>
-							<westBoundLongitude>
-								<gco:Decimal>8.11</gco:Decimal>
-							</westBoundLongitude>
-							<eastBoundLongitude>
-								<gco:Decimal>8.38</gco:Decimal>
-							</eastBoundLongitude>
-							<southBoundLatitude>
-								<gco:Decimal>49.97</gco:Decimal>
-							</southBoundLatitude>
-							<northBoundLatitude>
-								<gco:Decimal>50.16</gco:Decimal>
-							</northBoundLatitude>
-						</EX_GeographicBoundingBox>
-					</geographicElement>
-				</EX_Extent>
-			</extent>
-			<supplementalInformation>
-				<gco:CharacterString>Scanauflösung = 508 dpi / Bildformat = TIFF4</gco:CharacterString>
-			</supplementalInformation>
-		</MD_DataIdentification>
-	</identificationInfo>
+<MD_Metadata xmlns:gco="http://www.isotc211.org/2005/gco"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.isotc211.org/2005/gmd"
+             xsi:schemaLocation="http://www.isotc211.org/2005/gmd ../../apiso.xsd">
+  <fileIdentifier>
+    <gco:CharacterString>550e8400-e29b-41d4-a716-44389665234</gco:CharacterString>
+  </fileIdentifier>
+  <language>
+    <gco:CharacterString>ger</gco:CharacterString>
+  </language>
+  <characterSet>
+    <MD_CharacterSetCode codeList="MD_CharacterSetCode" codeListValue="UTF-8"/>
+  </characterSet>
+  <parentIdentifier>
+    <gco:CharacterString>111c0076-b23f-76e5-c888-94327664111</gco:CharacterString>
+  </parentIdentifier>
+  <hierarchyLevel>
+    <MD_ScopeCode codeList="MD_ScopeCode" codeListValue="dataset"/>
+  </hierarchyLevel>
+  <contact>
+    <CI_ResponsibleParty>
+      <individualName>
+        <gco:CharacterString>Michael Burscheid</gco:CharacterString>
+      </individualName>
+      <organisationName>
+        <gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
+      </organisationName>
+      <contactInfo>
+        <CI_Contact>
+          <phone>
+            <CI_Telephone>
+              <voice>
+                <gco:CharacterString>++49 0611 4451 524 223</gco:CharacterString>
+              </voice>
+              <facsimile>
+                <gco:CharacterString>++49 0611 4451 555 100</gco:CharacterString>
+              </facsimile>
+            </CI_Telephone>
+          </phone>
+          <address>
+            <CI_Address>
+              <city>
+                <gco:CharacterString>Wiesbaden</gco:CharacterString>
+              </city>
+              <postalCode>
+                <gco:CharacterString>65203</gco:CharacterString>
+              </postalCode>
+              <country>
+                <gco:CharacterString>Deutschland</gco:CharacterString>
+              </country>
+              <electronicMailAddress>
+                <gco:CharacterString>m.burscheid@hlfK.de</gco:CharacterString>
+              </electronicMailAddress>
+            </CI_Address>
+          </address>
+          <onlineResource>
+            <CI_OnlineResource>
+              <linkage>
+                <URL>http://hlfK.hessen.de</URL>
+              </linkage>
+            </CI_OnlineResource>
+          </onlineResource>
+          <contactInstructions>
+            <gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten
+              Informationen suchen, danach eMail- und telefonische Kontaktaufnahme
+            </gco:CharacterString>
+          </contactInstructions>
+        </CI_Contact>
+      </contactInfo>
+      <role>
+        <CI_RoleCode codeList="CI_RoleCode" codeListValue="disributor"/>
+      </role>
+    </CI_ResponsibleParty>
+  </contact>
+  <dateStamp>
+    <gco:Date>2006-01-24</gco:Date>
+  </dateStamp>
+  <metadataStandardName>
+    <gco:CharacterString>ISO 19115 Geographic Information - Metadata</gco:CharacterString>
+  </metadataStandardName>
+  <metadataStandardVersion>
+    <gco:CharacterString>2003/Cor.1:2006</gco:CharacterString>
+  </metadataStandardVersion>
+  <referenceSystemInfo>
+    <MD_ReferenceSystem>
+      <referenceSystemIdentifier>
+        <RS_Identifier>
+          <code>
+            <gco:CharacterString>4326</gco:CharacterString>
+          </code>
+          <codeSpace>
+            <gco:CharacterString>urn:ogc:def:crs:EPSG</gco:CharacterString>
+          </codeSpace>
+          <version>
+            <gco:CharacterString>6.11.2</gco:CharacterString>
+          </version>
+        </RS_Identifier>
+      </referenceSystemIdentifier>
+    </MD_ReferenceSystem>
+  </referenceSystemInfo>
+  <identificationInfo>
+    <MD_DataIdentification>
+      <citation>
+        <CI_Citation>
+          <title>
+            <gco:CharacterString>DTK 50 - Blatt L5914-Wiesbaden</gco:CharacterString>
+          </title>
+          <alternateTitle>
+            <gco:CharacterString>Blatt L5914 der Digitalen Topographischen Karte 1:50000 von
+              Hessen
+            </gco:CharacterString>
+          </alternateTitle>
+          <date>
+            <CI_Date>
+              <date>
+                <gco:Date>2003-10-01</gco:Date>
+              </date>
+              <dateType>
+                <CI_DateTypeCode codeList="CI_DateTypeCode" codeListValue="creation"/>
+              </dateType>
+            </CI_Date>
+          </date>
+          <presentationForm>
+            <CI_PresentationFormCode codeList="CI_PresentationFormCode" codeListValue="mapDigital"/>
+          </presentationForm>
+          <otherCitationDetails>
+            <gco:CharacterString>emfohlene Farbdarstellung: grau</gco:CharacterString>
+          </otherCitationDetails>
+        </CI_Citation>
+      </citation>
+      <abstract>
+        <gco:CharacterString>Rasterkarten wie die Topographische Karte 1:50000 Rasterdaten eignen
+          sich als räumliche Bezugsgrundlage für den Aufbau von Geo- und Fachinformationssystemen
+          und als Hintergrundinformation für die Überlagerung mit fachspezifischen Daten sowie für
+          die rechnergestützte Bearbeitung thematischer Karten. Anwendungsgebiete sind z. B.
+          Energie-, Forst- und Landwirtschaft, Verwaltung, Demographie, Wohnungswesen,
+          Landnutzungs-, Regional- und Streckenplanung, Straßenbewirtschaftung, Verkehrsnavigation,
+          Transport, Bergbau, Gewässerkunde, Ökologie, Umweltschutz, Geodäsie, Geologie aber auch
+          Kultur, Erholung und Freizeit sowie Kommunikation.
+        </gco:CharacterString>
+      </abstract>
+      <status>
+        <MD_ProgressCode codeList="MD_ProgressCode" codeListValue="completed"/>
+      </status>
+      <pointOfContact>
+        <CI_ResponsibleParty>
+          <individualName>
+            <gco:CharacterString>Der Kartenverkäufer</gco:CharacterString>
+          </individualName>
+          <organisationName>
+            <gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
+          </organisationName>
+          <contactInfo>
+            <CI_Contact>
+              <phone>
+                <CI_Telephone>
+                  <voice>
+                    <gco:CharacterString>++49 0611 4451 524 229</gco:CharacterString>
+                  </voice>
+                  <facsimile>
+                    <gco:CharacterString>++49 0611 4451 555 100</gco:CharacterString>
+                  </facsimile>
+                </CI_Telephone>
+              </phone>
+              <address>
+                <CI_Address>
+                  <city>
+                    <gco:CharacterString>Wiesbaden</gco:CharacterString>
+                  </city>
+                  <postalCode>
+                    <gco:CharacterString>65203</gco:CharacterString>
+                  </postalCode>
+                  <country>
+                    <gco:CharacterString>Deutschland</gco:CharacterString>
+                  </country>
+                  <electronicMailAddress>
+                    <gco:CharacterString>k.kartenverkaeufer@hlfK.de</gco:CharacterString>
+                  </electronicMailAddress>
+                </CI_Address>
+              </address>
+              <onlineResource>
+                <CI_OnlineResource>
+                  <linkage>
+                    <URL>http://hlfK.hessen.de</URL>
+                  </linkage>
+                </CI_OnlineResource>
+              </onlineResource>
+              <contactInstructions>
+                <gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten
+                  Informationen suchen, danach eMail- und telefonische Kontaktaufnahme
+                </gco:CharacterString>
+              </contactInstructions>
+            </CI_Contact>
+          </contactInfo>
+          <role>
+            <CI_RoleCode codeList="CI_RoleCode" codeListValue="processor"/>
+          </role>
+        </CI_ResponsibleParty>
+      </pointOfContact>
+      <resourceMaintenance>
+        <MD_MaintenanceInformation>
+          <maintenanceAndUpdateFrequency>
+            <MD_MaintenanceFrequencyCode codeList="MD_MaintenanceFrequencyCode"
+                                         codeListValue="annually"/>
+          </maintenanceAndUpdateFrequency>
+        </MD_MaintenanceInformation>
+      </resourceMaintenance>
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <keyword>
+            <gco:CharacterString>DTK50</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Wiesbaden</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Topographische Karte</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Hessen</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Geobasisdaten</gco:CharacterString>
+          </keyword>
+        </MD_Keywords>
+      </descriptiveKeywords>
+      <spatialRepresentationType>
+        <MD_SpatialRepresentationTypeCode codeList="MD_SpatialRepresentationTypeCode"
+                                          codeListValue="grid"/>
+      </spatialRepresentationType>
+      <language>
+        <gco:CharacterString>ger</gco:CharacterString>
+      </language>
+      <characterSet>
+        <MD_CharacterSetCode codeList="MD_CharacterSetCode" codeListValue="UTF-8"/>
+      </characterSet>
+      <topicCategory>
+        <MD_TopicCategoryCode>imageryBaseMapsEarthCover</MD_TopicCategoryCode>
+      </topicCategory>
+      <extent>
+        <EX_Extent>
+          <geographicElement>
+            <EX_GeographicBoundingBox>
+              <extentTypeCode>
+                <gco:Boolean>1</gco:Boolean>
+              </extentTypeCode>
+              <westBoundLongitude>
+                <gco:Decimal>8.11</gco:Decimal>
+              </westBoundLongitude>
+              <eastBoundLongitude>
+                <gco:Decimal>8.38</gco:Decimal>
+              </eastBoundLongitude>
+              <southBoundLatitude>
+                <gco:Decimal>49.97</gco:Decimal>
+              </southBoundLatitude>
+              <northBoundLatitude>
+                <gco:Decimal>50.16</gco:Decimal>
+              </northBoundLatitude>
+            </EX_GeographicBoundingBox>
+          </geographicElement>
+        </EX_Extent>
+      </extent>
+      <supplementalInformation>
+        <gco:CharacterString>Scanauflösung = 508 dpi / Bildformat = TIFF4</gco:CharacterString>
+      </supplementalInformation>
+    </MD_DataIdentification>
+  </identificationInfo>
 </MD_Metadata>

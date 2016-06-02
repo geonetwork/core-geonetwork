@@ -22,10 +22,16 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<csw:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:ows="http://www.opengis.net/ows" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+<csw:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+                  xmlns:gml="http://www.opengis.net/gml"
+                  xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                  xmlns:ows="http://www.opengis.net/ows" xmlns:ogc="http://www.opengis.net/ogc"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2"
+                  xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <ows:ServiceIdentification>
-    <ows:Title />
-    <ows:Abstract />
+    <ows:Title/>
+    <ows:Abstract/>
     <ows:Keywords>
       <!-- Keywords are automatically added by GeoNetwork
             according to catalogue content. -->
@@ -43,30 +49,30 @@
     </ows:Keywords>
     <ows:ServiceType>CSW</ows:ServiceType>
     <ows:ServiceTypeVersion>2.0.2</ows:ServiceTypeVersion>
-    <ows:Fees />
-    <ows:AccessConstraints />
+    <ows:Fees/>
+    <ows:AccessConstraints/>
   </ows:ServiceIdentification>
   <ows:ServiceProvider>
     <ows:ProviderName>My organization</ows:ProviderName>
-    <ows:ProviderSite xlink:href="http://localhost:8080/geonetwork" />
+    <ows:ProviderSite xlink:href="http://localhost:8080/geonetwork"/>
     <ows:ServiceContact>
-      <ows:IndividualName />
-      <ows:PositionName />
+      <ows:IndividualName/>
+      <ows:PositionName/>
       <ows:ContactInfo>
         <ows:Phone>
-          <ows:Voice />
-          <ows:Facsimile />
+          <ows:Voice/>
+          <ows:Facsimile/>
         </ows:Phone>
         <ows:Address>
-          <ows:DeliveryPoint />
-          <ows:City />
-          <ows:AdministrativeArea />
-          <ows:PostalCode />
-          <ows:Country />
-          <ows:ElectronicMailAddress />
+          <ows:DeliveryPoint/>
+          <ows:City/>
+          <ows:AdministrativeArea/>
+          <ows:PostalCode/>
+          <ows:Country/>
+          <ows:ElectronicMailAddress/>
         </ows:Address>
-        <ows:HoursOfService />
-        <ows:ContactInstructions />
+        <ows:HoursOfService/>
+        <ows:ContactInstructions/>
       </ows:ContactInfo>
       <ows:Role>pointOfContact</ows:Role>
     </ows:ServiceContact>
@@ -75,8 +81,8 @@
     <ows:Operation name="GetCapabilities">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw" />
-          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw" />
+          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw"/>
+          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="sections">
@@ -93,8 +99,8 @@
     <ows:Operation name="DescribeRecord">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw" />
-          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw" />
+          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw"/>
+          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="typeName">
@@ -119,16 +125,16 @@
     <ows:Operation name="GetDomain">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw" />
-          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw" />
+          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw"/>
+          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw"/>
         </ows:HTTP>
       </ows:DCP>
     </ows:Operation>
     <ows:Operation name="GetRecords">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw" />
-          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw" />
+          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw"/>
+          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw"/>
         </ows:HTTP>
       </ows:DCP>
       <!-- FIXME : Gets it from enum or conf -->
@@ -212,8 +218,8 @@
     <ows:Operation name="GetRecordById">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw" />
-          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw" />
+          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw"/>
+          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="outputSchema">
@@ -241,16 +247,16 @@
     <ows:Operation name="Transaction">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw-publication" />
-          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw-publication" />
+          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw-publication"/>
+          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw-publication"/>
         </ows:HTTP>
       </ows:DCP>
     </ows:Operation>
     <ows:Operation name="Harvest">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw-publication" />
-          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw-publication" />
+          <ows:Get xlink:href="http://localhost:8080/geonetwork/srv/eng/csw-publication"/>
+          <ows:Post xlink:href="http://localhost:8080/geonetwork/srv/eng/csw-publication"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ResourceType">
@@ -279,15 +285,15 @@
         <ogc:GeometryOperand>gml:Polygon</ogc:GeometryOperand>
       </ogc:GeometryOperands>
       <ogc:SpatialOperators>
-        <ogc:SpatialOperator name="BBOX" />
-        <ogc:SpatialOperator name="Equals" />
-        <ogc:SpatialOperator name="Overlaps" />
-        <ogc:SpatialOperator name="Disjoint" />
-        <ogc:SpatialOperator name="Intersects" />
-        <ogc:SpatialOperator name="Touches" />
-        <ogc:SpatialOperator name="Crosses" />
-        <ogc:SpatialOperator name="Within" />
-        <ogc:SpatialOperator name="Contains" />
+        <ogc:SpatialOperator name="BBOX"/>
+        <ogc:SpatialOperator name="Equals"/>
+        <ogc:SpatialOperator name="Overlaps"/>
+        <ogc:SpatialOperator name="Disjoint"/>
+        <ogc:SpatialOperator name="Intersects"/>
+        <ogc:SpatialOperator name="Touches"/>
+        <ogc:SpatialOperator name="Crosses"/>
+        <ogc:SpatialOperator name="Within"/>
+        <ogc:SpatialOperator name="Contains"/>
         <!--
                 <ogc:SpatialOperator name="Beyond"/>
                 <ogc:SpatialOperator name="DWithin"/>
@@ -295,7 +301,7 @@
       </ogc:SpatialOperators>
     </ogc:Spatial_Capabilities>
     <ogc:Scalar_Capabilities>
-      <ogc:LogicalOperators />
+      <ogc:LogicalOperators/>
       <ogc:ComparisonOperators>
         <ogc:ComparisonOperator>EqualTo</ogc:ComparisonOperator>
         <ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
@@ -314,8 +320,8 @@
       </ogc:ComparisonOperators>
     </ogc:Scalar_Capabilities>
     <ogc:Id_Capabilities>
-      <ogc:EID />
-      <ogc:FID />
+      <ogc:EID/>
+      <ogc:FID/>
     </ogc:Id_Capabilities>
   </ogc:Filter_Capabilities>
 </csw:Capabilities>

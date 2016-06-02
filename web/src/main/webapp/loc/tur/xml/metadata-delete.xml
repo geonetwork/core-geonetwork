@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <strings>
-	<heading>Metaveri Silme Onayı</heading>
-	<message>Silinen Metaveri ID'si: </message>
+  <heading>Metaveri Silme Onayı</heading>
+  <message>Silinen Metaveri ID'si:</message>
 </strings>

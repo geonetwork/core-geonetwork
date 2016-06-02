@@ -35,7 +35,8 @@
   <element name="dc:creator">
     <label>Contact pour la métadonnée</label>
     <description>Nom de la personne, de l'organisation ou du service à l'origine de la rédaction du
-      document.</description>
+      document.
+    </description>
     <example/>
   </element>
 
@@ -48,14 +49,16 @@
   <element name="dc:description">
     <label>Description</label>
     <description>Résumé, table des matières, ou texte libre. Raffinements : table des matières,
-      résumé.</description>
+      résumé.
+    </description>
     <example/>
   </element>
 
   <element name="dc:publisher">
     <label>Contact pour la ressource</label>
     <description>Nom de la personne, de l'organisation ou du service à l'origine de la publication
-      du document.</description>
+      du document.
+    </description>
     <example/>
   </element>
 
@@ -63,7 +66,8 @@
     <label>Contributeur</label>
     <description>Nom d'une personne, d'une organisation ou d'un service qui contribue ou a contribué
       à l'élaboration du document. Chaque contributeur fait l'objet d'un élément Contributor
-      séparé.</description>
+      séparé.
+    </description>
     <example/>
   </element>
 
@@ -95,7 +99,8 @@
       <option value="application/xml">Fichier XML (application/xml)</option>
       <option value="application/dxf">Fichier DXF (application/dxf)</option>
       <option value="application/vnd.google-earth.kml+xml">Fichier KML
-        (application/vnd.google-earth.kml+xml)</option>
+        (application/vnd.google-earth.kml+xml)
+      </option>
       <option value="application/zip">Fichier ZIP (application/zip)</option>
       <option value="image/tiff">Image TIFF (image/tiff)</option>
     </helper>
@@ -105,7 +110,8 @@
     <label>Identifiant</label>
     <description>Identificateur non ambigu : il est recommandé d'utiliser un système de
       référencement précis, afin que l'identifiant soit unique au sein du site, par exemple les URI
-      ou les numéros ISBN. Raffinement : Is Available At.</description>
+      ou les numéros ISBN. Raffinement : Is Available At.
+    </description>
     <example/>
   </element>
 
@@ -113,7 +119,8 @@
     <label>Source</label>
     <description>Ressource dont dérive le document : le document peut découler en totalité ou en
       partie de la ressource en question. Il est recommandé d'utiliser une dénomination formelle des
-      ressources, par exemple leur URI.</description>
+      ressources, par exemple leur URI.
+    </description>
     <example/>
   </element>
 
@@ -126,25 +133,29 @@
   <element name="dc:relation">
     <label>Ressource associée</label>
     <description>Lien avec d'autres ressources. De nombreux raffinements permettent d'établir des
-      liens précis, par exemple de version, de chapitres, de standard, etc.</description>
+      liens précis, par exemple de version, de chapitres, de standard, etc.
+    </description>
     <example/>
   </element>
 
   <element name="dc:coverage">
     <label>Etendue géographique</label>
     <description>Couverture spatiale (point géographique, pays, régions, noms de lieux) ou
-      temporelle.</description>
+      temporelle.
+    </description>
     <example>Par exemple: "North 90, South -90, East 180, West -180. Global".</example>
     <helper>
       <option value="North 90, South -0, East 180, West -10. Global">North 90, South -0, East 180,
-        West -10. Global</option>
+        West -10. Global
+      </option>
     </helper>
   </element>
 
   <element name="dc:rights">
     <label>Droits</label>
     <description>Droits de propriété intellectuelle, Copyright, droits de propriété
-      divers.</description>
+      divers.
+    </description>
     <example/>
   </element>
 
@@ -200,14 +211,16 @@
   <element name="dct:instructionalMethod">
     <label>Usage</label>
     <description>A process, used to engender knowledge, attitudes and skills, that the resource is
-      designed to support.</description>
+      designed to support.
+    </description>
   </element>
 
   <element name="dct:provenance">
     <label>Provenance</label>
     <description>A statement of any changes in ownership and custody of the resource since its
       creation that are significant for its authenticity, integrity and
-      interpretation.</description>
+      interpretation.
+    </description>
   </element>
 
   <element name="dct:rightsHolder">
@@ -226,17 +239,23 @@
   </element>
   <element name="dct:isPartOf">
     <label>Identifiant de la fiche de métadonnées parent</label>
-    <description>Une reesource associée dans laquelle la ressource décrite est physiquement ou logiquement incluse.</description>
+    <description>Une reesource associée dans laquelle la ressource décrite est physiquement ou
+      logiquement incluse.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:references">
     <label>Related resource</label>
-    <description>A related resource that is referenced, cited, or otherwise pointed to by the described resource.</description>
+    <description>A related resource that is referenced, cited, or otherwise pointed to by the
+      described resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:accessRights">
     <label>Access Rights</label>
-    <description>Information about who can access the resource or an indication of its security status.</description>
+    <description>Information about who can access the resource or an indication of its security
+      status.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:alternative">
@@ -266,7 +285,9 @@
   <!-- ==================================================== -->
   <element name="dct:educationLevel">
     <label>Audience Education Level</label>
-    <description>A class of entity, defined in terms of progression through an educational or training context, for which the described resource is intended.</description>
+    <description>A class of entity, defined in terms of progression through an educational or
+      training context, for which the described resource is intended.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:extent">
@@ -276,42 +297,58 @@
   <!-- ==================================================== -->
   <element name="dct:hasFormat">
     <label>Has Format</label>
-    <description>A related resource that is substantially the same as the pre-existing described resource, but in another format.</description>
+    <description>A related resource that is substantially the same as the pre-existing described
+      resource, but in another format.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:hasPart">
     <label>Has Part</label>
-    <description>A related resource that is included either physically or logically in the described resource.</description>
+    <description>A related resource that is included either physically or logically in the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:hasVersion">
     <label>Has Version</label>
-    <description>A related resource that is a version, edition, or adaptation of the described resource.</description>
+    <description>A related resource that is a version, edition, or adaptation of the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isFormatOf">
     <label>Is Format Of</label>
-    <description>A related resource that is substantially the same as the described resource, but in another format.</description>
+    <description>A related resource that is substantially the same as the described resource, but in
+      another format.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isReferencedBy">
     <label>Is Referenced By</label>
-    <description>A related resource that references, cites, or otherwise points to the described resource.</description>
+    <description>A related resource that references, cites, or otherwise points to the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isReplacedBy">
     <label>Is Replaced By</label>
-    <description>A related resource that supplants, displaces, or supersedes the described resource.</description>
+    <description>A related resource that supplants, displaces, or supersedes the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isRequiredBy">
     <label>Is Required By</label>
-    <description>A related resource that requires the described resource to support its function, delivery, or coherence.</description>
+    <description>A related resource that requires the described resource to support its function,
+      delivery, or coherence.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isVersionOf">
     <label>Is Version Of</label>
-    <description>A related resource of which the described resource is a version, edition, or adaptation.</description>
+    <description>A related resource of which the described resource is a version, edition, or
+      adaptation.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:issued">
@@ -321,12 +358,15 @@
   <!-- ==================================================== -->
   <element name="dct:license">
     <label>License</label>
-    <description>A legal document giving official permission to do something with the resource.</description>
+    <description>A legal document giving official permission to do something with the resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:mediator">
     <label>Mediator</label>
-    <description>An entity that mediates access to the resource and for whom the resource is intended or useful.</description>
+    <description>An entity that mediates access to the resource and for whom the resource is
+      intended or useful.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:medium">
@@ -336,12 +376,16 @@
   <!-- ==================================================== -->
   <element name="dct:replaces">
     <label>Replaces</label>
-    <description>A related resource that is supplanted, displaced, or superseded by the described resource.</description>
+    <description>A related resource that is supplanted, displaced, or superseded by the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:requires">
     <label>Requires</label>
-    <description>A related resource that is required by the described resource to support its function, delivery, or coherence.</description>
+    <description>A related resource that is required by the described resource to support its
+      function, delivery, or coherence.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:tableOfContents">

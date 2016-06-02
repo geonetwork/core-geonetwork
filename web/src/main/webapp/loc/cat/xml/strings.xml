@@ -1,1408 +1,1715 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<ara>عربي</ara> <!-- Do not translate! -->
-	<cat>Català</cat> <!-- Do not translate! -->
-	<chi>中文</chi> <!-- Do not translate! -->
-	<dut>Nederlands</dut> <!-- Do not translate! -->
-	<eng>English</eng> <!-- Do not translate! -->
-	<fin>Suomeksi</fin> <!-- Do not translate! -->
-	<fre>Français</fre> <!-- Do not translate! -->
-	<ger>Deutsch</ger> <!-- Do not translate! -->
-	<ita>Italiano</ita> <!-- Do not translate! -->
-	<nor>Norsk</nor> <!-- Do not translate! -->
-	<por>Рortuguês</por> <!-- Do not translate! -->
-	<rus>Русский</rus> <!-- Do not translate! -->
-	<spa>Español</spa> <!-- Do not translate! -->
-	<tur>Türkçe</tur> <!-- Do not translate! -->
-	<pol>Polski</pol> <!-- Do not translate! -->
+  <ara>عربي</ara> <!-- Do not translate! -->
+  <cat>Català</cat> <!-- Do not translate! -->
+  <chi>中文</chi> <!-- Do not translate! -->
+  <dut>Nederlands</dut> <!-- Do not translate! -->
+  <eng>English</eng> <!-- Do not translate! -->
+  <fin>Suomeksi</fin> <!-- Do not translate! -->
+  <fre>Français</fre> <!-- Do not translate! -->
+  <ger>Deutsch</ger> <!-- Do not translate! -->
+  <ita>Italiano</ita> <!-- Do not translate! -->
+  <nor>Norsk</nor> <!-- Do not translate! -->
+  <por>Рortuguês</por> <!-- Do not translate! -->
+  <rus>Русский</rus> <!-- Do not translate! -->
+  <spa>Español</spa> <!-- Do not translate! -->
+  <tur>Türkçe</tur> <!-- Do not translate! -->
+  <pol>Polski</pol> <!-- Do not translate! -->
 
-	<statusTitle> / Metadata Workflow</statusTitle>
-	<statusUserEdit>GeoNetwork user %s (%s) edited metadata record #%s</statusUserEdit>
-	<statusInform>%s / Metadata Workflow / Metadata record(s) %s by %s (%s) (%s)</statusInform>
-	<!--
-        legacy UI 
+  <statusTitle>/ Metadata Workflow</statusTitle>
+  <statusUserEdit>GeoNetwork user %s (%s) edited metadata record #%s</statusUserEdit>
+  <statusInform>%s / Metadata Workflow / Metadata record(s) %s by %s (%s) (%s)</statusInform>
+  <!--
+        legacy UI
         <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
         -->
-	<statusSendEmail>Change log message: %s\r\n\r\nMetadatas concerned by the change are the following:\r\n%s\r\nRecords are available from the following URL:\r\n %scatalog.search#/search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
+  <statusSendEmail>Change log message: %s\r\n\r\nMetadatas concerned by the change are the
+    following:\r\n%s\r\nRecords are available from the following URL:\r\n
+    %scatalog.search#/search?_status=%s&amp;_statusChangeDate=%s
+  </statusSendEmail>
 
-	<otherValue>Other:</otherValue>
-	<warning>Warning</warning>
-	<isAdmin>Is administrator ?</isAdmin>
-	<anyLanguage>Qualsevol llenguatge</anyLanguage>
-	<nodata>Null</nodata>
-	<extractRegisterItems>Extract Register Items</extractRegisterItems>
-	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
-	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
-	<batchExtractSubtemplatesTitle>Extract subtemplates from selected metadata</batchExtractSubtemplatesTitle>
-	<extractSubtemplates>Extract subtemplates</extractSubtemplates>
-	<xpathToExtract>XPath to extract as subtemplate</xpathToExtract>
-	<xsltToExtractTitle>XSLT to extract title from subtemplate</xsltToExtractTitle>
-	<xpathToExtractTitle>XPath to extract title from subtemplate</xpathToExtractTitle>
-	<categoryForSubtemplate>Category for subtemplates</categoryForSubtemplate>
-	<makeChanges>I really want to do this!</makeChanges>
-	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
+  <otherValue>Other:</otherValue>
+  <warning>Warning</warning>
+  <isAdmin>Is administrator ?</isAdmin>
+  <anyLanguage>Qualsevol llenguatge</anyLanguage>
+  <nodata>Null</nodata>
+  <extractRegisterItems>Extract Register Items</extractRegisterItems>
+  <selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg.
+    /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty
+  </selectXPath>
+  <selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate
+  </selectExtractTitle>
+  <batchExtractSubtemplatesTitle>Extract subtemplates from selected metadata
+  </batchExtractSubtemplatesTitle>
+  <extractSubtemplates>Extract subtemplates</extractSubtemplates>
+  <xpathToExtract>XPath to extract as subtemplate</xpathToExtract>
+  <xsltToExtractTitle>XSLT to extract title from subtemplate</xsltToExtractTitle>
+  <xpathToExtractTitle>XPath to extract title from subtemplate</xpathToExtractTitle>
+  <categoryForSubtemplate>Category for subtemplates</categoryForSubtemplate>
+  <makeChanges>I really want to do this!</makeChanges>
+  <dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs
+    in test mode. Checking this box switches test mode off and changes will be made to the database.
+  </dontMakeChanges>
 
-	<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
-	<createThesaurus>Create/Update Thesaurus</createThesaurus>
-	<thesaurusType>Thesaurus Type</thesaurusType>
-	<changeLogMessage>Change Log Message</changeLogMessage>
-	<status>Estat</status>
-	<updateStatus>Actualitzar estat</updateStatus>
-	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
-	<startVersion>Començar versionat</startVersion>
-	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
-	<editAttributes>Afegir més detalls</editAttributes>
-	<subtemplate.admin>Gestionar directoris</subtemplate.admin>
-	<subtemplate.admin.desc>Afegir/modificar/esborrar directoris (ex. directoris de contactes)</subtemplate.admin.desc>  
-	<surnameMandatory>Cal un cognom</surnameMandatory>
-	<firstnameMandatory>Cal un nom</firstnameMandatory>
-	<emailMandatory>Cal una adreça de correu</emailMandatory>
-	<forgottenPassword>Has oblidat la teva contrasenya?</forgottenPassword>
-	<selectTemplate>Seleccionar esquemes</selectTemplate>
-	<useStopwords>Índex de Lucene usa paraules buides per aquests idiomes:</useStopwords>    
-	<rebuildIndexMessage>Si canvieu aquests valors es recomana tornar a generar índex Lucene.</rebuildIndexMessage>
-	<notificationsDes>Actualitzacions remotes</notificationsDes>
-	<metadata-templates-samples-add>Afegir plantilles i exemples</metadata-templates-samples-add>
-	<metadata-schema-select>Seleccionar un esquema per afegir plantilles o dades exemple</metadata-schema-select>
-	<templatesSamples>Gestionar plantilles i dades exemple</templatesSamples>
-	<simpleSearch>Cerca simple</simpleSearch>
-	<advancedSearch>Cerca avançada</advancedSearch>
-	<remoteSearch>Cerca remota</remoteSearch>
-	<displayRemoteHtml>Mostrar resultats usant HTML del servidor?</displayRemoteHtml>
-	<noSearchCriteria js="true">Si us plau introdueixi o seleccioni algun criteri de cerca</noSearchCriteria>
-	<noServer js="true">Si us plau, selecioni un servidor per cercar</noServer>
-	<anyWith>Amb alguna de les paraules indicades</anyWith>
-	<anyWithExactPhrase>Amb la frase exacta</anyWithExactPhrase>
-	<anyWithAllWords>Amb totes les paraules</anyWithAllWords>
-	<anyWithoutWords>Sense aquestes paraules</anyWithoutWords>
-	<dataDownload>Dades per a descarregar</dataDownload>
-	<addSchema>Afegir un esquema/perfil de metadades</addSchema>
-	<updateSchema>Actualitzar un esquema/perfil de metadades</updateSchema>
-	<deleteSchema>Esborrar un esquema/perfil de metadades</deleteSchema>
-	<selectSchema>Seleccionar un esquema/perfil de metadades</selectSchema>
-	<schemaFileName>Ruta de l'arxiu Zip de plantilla</schemaFileName>
-	<schemaUrl>URL de l'arxiu Zip de plantilla</schemaUrl>
-	<schemaUuid>UUID of local metadata record with GeoNetwork Metadata Schema Archive (URL) as online resource</schemaUuid>
-	<add>Add</add>
-	<schemaOps>Operacions de plantilles de metadades</schemaOps>
-	<enterSchema>Nom per a la plantilla a afegir</enterSchema>
-	<selectSchemaOperations>Source of schema zip archive:</selectSchemaOperations>
-	<showRemoteHTML>Mostrar HTML del servidor remot</showRemoteHTML>
-	<searchStatistics>Search statistics</searchStatistics>
-	<searchStatisticsDes>See statistics about searches performed in the application</searchStatisticsDes>
+  <defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
+  <createThesaurus>Create/Update Thesaurus</createThesaurus>
+  <thesaurusType>Thesaurus Type</thesaurusType>
+  <changeLogMessage>Change Log Message</changeLogMessage>
+  <status>Estat</status>
+  <updateStatus>Actualitzar estat</updateStatus>
+  <batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
+  <startVersion>Començar versionat</startVersion>
+  <batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
+  <editAttributes>Afegir més detalls</editAttributes>
+  <subtemplate.admin>Gestionar directoris</subtemplate.admin>
+  <subtemplate.admin.desc>Afegir/modificar/esborrar directoris (ex. directoris de contactes)
+  </subtemplate.admin.desc>
+  <surnameMandatory>Cal un cognom</surnameMandatory>
+  <firstnameMandatory>Cal un nom</firstnameMandatory>
+  <emailMandatory>Cal una adreça de correu</emailMandatory>
+  <forgottenPassword>Has oblidat la teva contrasenya?</forgottenPassword>
+  <selectTemplate>Seleccionar esquemes</selectTemplate>
+  <useStopwords>Índex de Lucene usa paraules buides per aquests idiomes:</useStopwords>
+  <rebuildIndexMessage>Si canvieu aquests valors es recomana tornar a generar índex Lucene.
+  </rebuildIndexMessage>
+  <notificationsDes>Actualitzacions remotes</notificationsDes>
+  <metadata-templates-samples-add>Afegir plantilles i exemples</metadata-templates-samples-add>
+  <metadata-schema-select>Seleccionar un esquema per afegir plantilles o dades exemple
+  </metadata-schema-select>
+  <templatesSamples>Gestionar plantilles i dades exemple</templatesSamples>
+  <simpleSearch>Cerca simple</simpleSearch>
+  <advancedSearch>Cerca avançada</advancedSearch>
+  <remoteSearch>Cerca remota</remoteSearch>
+  <displayRemoteHtml>Mostrar resultats usant HTML del servidor?</displayRemoteHtml>
+  <noSearchCriteria js="true">Si us plau introdueixi o seleccioni algun criteri de cerca
+  </noSearchCriteria>
+  <noServer js="true">Si us plau, selecioni un servidor per cercar</noServer>
+  <anyWith>Amb alguna de les paraules indicades</anyWith>
+  <anyWithExactPhrase>Amb la frase exacta</anyWithExactPhrase>
+  <anyWithAllWords>Amb totes les paraules</anyWithAllWords>
+  <anyWithoutWords>Sense aquestes paraules</anyWithoutWords>
+  <dataDownload>Dades per a descarregar</dataDownload>
+  <addSchema>Afegir un esquema/perfil de metadades</addSchema>
+  <updateSchema>Actualitzar un esquema/perfil de metadades</updateSchema>
+  <deleteSchema>Esborrar un esquema/perfil de metadades</deleteSchema>
+  <selectSchema>Seleccionar un esquema/perfil de metadades</selectSchema>
+  <schemaFileName>Ruta de l'arxiu Zip de plantilla</schemaFileName>
+  <schemaUrl>URL de l'arxiu Zip de plantilla</schemaUrl>
+  <schemaUuid>UUID of local metadata record with GeoNetwork Metadata Schema Archive (URL) as online
+    resource
+  </schemaUuid>
+  <add>Add</add>
+  <schemaOps>Operacions de plantilles de metadades</schemaOps>
+  <enterSchema>Nom per a la plantilla a afegir</enterSchema>
+  <selectSchemaOperations>Source of schema zip archive:</selectSchemaOperations>
+  <showRemoteHTML>Mostrar HTML del servidor remot</showRemoteHTML>
+  <searchStatistics>Search statistics</searchStatistics>
+  <searchStatisticsDes>See statistics about searches performed in the application
+  </searchStatisticsDes>
 
-	<stat.byDay>per Dia</stat.byDay>
-	<stat.byMonth>per Mes</stat.byMonth>
-	<stat.byWeek>per Setmana</stat.byWeek>
-	<stat.byYear>per Any</stat.byYear>
-	<stat.collapse>Collapse</stat.collapse>
-	<stat.numAutoGeneratedSearches>Nombre de cerques auto-generades (guiservice)</stat.numAutoGeneratedSearches>
-	<stat.date>Data</stat.date>
-	<stat.day>Dia</stat.day>
-	<stat.hits>Resultats</stat.hits>
-	<stat.ip>IP</stat.ip>
-	<stat.noValue>cap valor</stat.noValue>
-	<stat.language>Idioma</stat.language>
-	<stat.month>Mes</stat.month>
-	<stat.numberOfSearch>Número de cerques</stat.numberOfSearch>
-	<stat.requestDate>Data de la petició</stat.requestDate>
-	<stat.spatialFilter>Filtre espacial</stat.spatialFilter>
-	<stat.totalsearches>Total de cerques usuari </stat.totalsearches>
-	<stat.year>Any</stat.year>
-	<stat.mdSheet>Full de metadades</stat.mdSheet>
-	<stat.noTitle>cap títol</stat.noTitle>
-	<stat.csvExport>Exportació CSV</stat.csvExport>
-	<stat.tabularStats>Estadístiques tabulars</stat.tabularStats>
-	<stat.tip1begin>Feu clic al link per mostrar les estadístiques, clic a la fletxa petita </stat.tip1begin>
-	<stat.tip1end>per amagar-ho</stat.tip1end>
-	<stat.lastMonthStats>Estadístiques (últim mes)</stat.lastMonthStats>
-	<stat.userIpText>User IP durant la cerca (número de cerques per IP única)</stat.userIpText>
-	<stat.mostSearchedKeywords>Paraules més buscades</stat.mostSearchedKeywords>
-	<stat.mostSearchedCategories>Categories més buscades</stat.mostSearchedCategories>
-	<stat.simpleVsAdvanced>Cerca simple vs cerca avançada</stat.simpleVsAdvanced>
-	<stat.mdPopularity>Popularitat de les metadades</stat.mdPopularity>
-	<stat.graphicalStats>Estadístiques gràfiques</stat.graphicalStats>
-	<stat.tip2>Escull un tipus de data (any, mes, dia) i un rang de dates i fes clic per mostrar el gràfic</stat.tip2>
-	<stat.numberOfRequests>Nombre de peticions</stat.numberOfRequests>
-	<stat.chooseDateFrom>Escull la data a partir de</stat.chooseDateFrom>
-	<stat.dateFrom>Des de la data</stat.dateFrom>
-	<stat.dateTo>Fins la data</stat.dateTo>
-	<stat.md>Metadada</stat.md>
-	<stat.popularity>Popularitat</stat.popularity>
-	<stat.totalSearches>Total de cerques dels usuaris</stat.totalSearches>
-	<stat.numSearchesPerDay>Nombre de cerques dels usuaris per dia</stat.numSearchesPerDay>
-	<stat.numSearchesNoResult>Nombre de cerques dels usuaris sense resultats</stat.numSearchesNoResult>
-	<stat.simpleAdvancedSearch>Cerca simple / avançada</stat.simpleAdvancedSearch>
-	<stat.searchedTerm>Terme cercat</stat.searchedTerm>
-	<stat.count>Comptador</stat.count>
-	<stat.numSimpleSearch>Nombre de cerques simples</stat.numSimpleSearch>
-	<stat.numAdvancedSearch>Nombre de cerques avançades</stat.numAdvancedSearch>
-	<stat.></stat.>
-	<stat.exportRequests>Export Requests table (one entry per user request)</stat.exportRequests>
-	<stat.exportParams>Export Parameters table (request keywords, several entries per user request)</stat.exportParams>
-	<stat.csvSemiColumnDelimiter>Separador punt i coma</stat.csvSemiColumnDelimiter>
-	<stat.rightClickSaveAs>Clic amb el botó dret al link per salvar el fitxer CSV</stat.rightClickSaveAs>
-	<stat.searchedKeywords>Paraules clau buscades</stat.searchedKeywords>
-	<stat.popuByGroup>Popularitat de les metadades per grup</stat.popuByGroup>
-	<stat.popuByCatalog>Popularitat de les metadades per catàleg (id de node)</stat.popuByCatalog>
-	<stat.popularityByCategory>Popularitat de les metadades per categoria</stat.popularityByCategory>
-	<stat.mdType>Tipus de metadades a cercar</stat.mdType>
-	<stat.dsMsType>Metadades de conjunts de dades</stat.dsMsType>
-	<stat.serviceMdType>Metadades de servei</stat.serviceMdType>
-	<stat.basicGeodataType>Geodades bàsiques</stat.basicGeodataType>
-	<stat.allTypes>Tot</stat.allTypes>
-	<stat.seeAdminPage>Consulta la pàgina de configuració del sistema per activar la funcionalitat de log</stat.seeAdminPage>
-	<stat.logDisabled>La funcionalitat de log està desactivada</stat.logDisabled>
-	<stat.maintenance>Manteniment</stat.maintenance>
-	<stat.deleteTmpImages>Esborra fitxers temporals gràfics i arxius CSV</stat.deleteTmpImages>
-	<stat.deleteTmpFiles>Esborra els fitxers ara</stat.deleteTmpFiles>
-	<stat.filesDel> fitxers(s) esborrats.</stat.filesDel>
-	<stat.warnCsvExport>Precaució: exportar taules de log pot durar alguns minuts</stat.warnCsvExport>
-	<stat.clickToDownload>Punxa aquest enllaç per descarregar el fitxer CSV</stat.clickToDownload>
+  <stat.byDay>per Dia</stat.byDay>
+  <stat.byMonth>per Mes</stat.byMonth>
+  <stat.byWeek>per Setmana</stat.byWeek>
+  <stat.byYear>per Any</stat.byYear>
+  <stat.collapse>Collapse</stat.collapse>
+  <stat.numAutoGeneratedSearches>Nombre de cerques auto-generades (guiservice)
+  </stat.numAutoGeneratedSearches>
+  <stat.date>Data</stat.date>
+  <stat.day>Dia</stat.day>
+  <stat.hits>Resultats</stat.hits>
+  <stat.ip>IP</stat.ip>
+  <stat.noValue>cap valor</stat.noValue>
+  <stat.language>Idioma</stat.language>
+  <stat.month>Mes</stat.month>
+  <stat.numberOfSearch>Número de cerques</stat.numberOfSearch>
+  <stat.requestDate>Data de la petició</stat.requestDate>
+  <stat.spatialFilter>Filtre espacial</stat.spatialFilter>
+  <stat.totalsearches>Total de cerques usuari</stat.totalsearches>
+  <stat.year>Any</stat.year>
+  <stat.mdSheet>Full de metadades</stat.mdSheet>
+  <stat.noTitle>cap títol</stat.noTitle>
+  <stat.csvExport>Exportació CSV</stat.csvExport>
+  <stat.tabularStats>Estadístiques tabulars</stat.tabularStats>
+  <stat.tip1begin>Feu clic al link per mostrar les estadístiques, clic a la fletxa petita
+  </stat.tip1begin>
+  <stat.tip1end>per amagar-ho</stat.tip1end>
+  <stat.lastMonthStats>Estadístiques (últim mes)</stat.lastMonthStats>
+  <stat.userIpText>User IP durant la cerca (número de cerques per IP única)</stat.userIpText>
+  <stat.mostSearchedKeywords>Paraules més buscades</stat.mostSearchedKeywords>
+  <stat.mostSearchedCategories>Categories més buscades</stat.mostSearchedCategories>
+  <stat.simpleVsAdvanced>Cerca simple vs cerca avançada</stat.simpleVsAdvanced>
+  <stat.mdPopularity>Popularitat de les metadades</stat.mdPopularity>
+  <stat.graphicalStats>Estadístiques gràfiques</stat.graphicalStats>
+  <stat.tip2>Escull un tipus de data (any, mes, dia) i un rang de dates i fes clic per mostrar el
+    gràfic
+  </stat.tip2>
+  <stat.numberOfRequests>Nombre de peticions</stat.numberOfRequests>
+  <stat.chooseDateFrom>Escull la data a partir de</stat.chooseDateFrom>
+  <stat.dateFrom>Des de la data</stat.dateFrom>
+  <stat.dateTo>Fins la data</stat.dateTo>
+  <stat.md>Metadada</stat.md>
+  <stat.popularity>Popularitat</stat.popularity>
+  <stat.totalSearches>Total de cerques dels usuaris</stat.totalSearches>
+  <stat.numSearchesPerDay>Nombre de cerques dels usuaris per dia</stat.numSearchesPerDay>
+  <stat.numSearchesNoResult>Nombre de cerques dels usuaris sense resultats
+  </stat.numSearchesNoResult>
+  <stat.simpleAdvancedSearch>Cerca simple / avançada</stat.simpleAdvancedSearch>
+  <stat.searchedTerm>Terme cercat</stat.searchedTerm>
+  <stat.count>Comptador</stat.count>
+  <stat.numSimpleSearch>Nombre de cerques simples</stat.numSimpleSearch>
+  <stat.numAdvancedSearch>Nombre de cerques avançades</stat.numAdvancedSearch>
+  <stat.></stat.>
+  <stat.exportRequests>Export Requests table (one entry per user request)</stat.exportRequests>
+  <stat.exportParams>Export Parameters table (request keywords, several entries per user request)
+  </stat.exportParams>
+  <stat.csvSemiColumnDelimiter>Separador punt i coma</stat.csvSemiColumnDelimiter>
+  <stat.rightClickSaveAs>Clic amb el botó dret al link per salvar el fitxer CSV
+  </stat.rightClickSaveAs>
+  <stat.searchedKeywords>Paraules clau buscades</stat.searchedKeywords>
+  <stat.popuByGroup>Popularitat de les metadades per grup</stat.popuByGroup>
+  <stat.popuByCatalog>Popularitat de les metadades per catàleg (id de node)</stat.popuByCatalog>
+  <stat.popularityByCategory>Popularitat de les metadades per categoria</stat.popularityByCategory>
+  <stat.mdType>Tipus de metadades a cercar</stat.mdType>
+  <stat.dsMsType>Metadades de conjunts de dades</stat.dsMsType>
+  <stat.serviceMdType>Metadades de servei</stat.serviceMdType>
+  <stat.basicGeodataType>Geodades bàsiques</stat.basicGeodataType>
+  <stat.allTypes>Tot</stat.allTypes>
+  <stat.seeAdminPage>Consulta la pàgina de configuració del sistema per activar la funcionalitat de
+    log
+  </stat.seeAdminPage>
+  <stat.logDisabled>La funcionalitat de log està desactivada</stat.logDisabled>
+  <stat.maintenance>Manteniment</stat.maintenance>
+  <stat.deleteTmpImages>Esborra fitxers temporals gràfics i arxius CSV</stat.deleteTmpImages>
+  <stat.deleteTmpFiles>Esborra els fitxers ara</stat.deleteTmpFiles>
+  <stat.filesDel>fitxers(s) esborrats.</stat.filesDel>
+  <stat.warnCsvExport>Precaució: exportar taules de log pot durar alguns minuts</stat.warnCsvExport>
+  <stat.clickToDownload>Punxa aquest enllaç per descarregar el fitxer CSV</stat.clickToDownload>
 
-	<drawRectangle js="true">Dibuixar rectangle</drawRectangle>
-	<drawPolygon js="true">Dibuixar polígon</drawPolygon>
-	<drawCircle js="true">Dibuixar cercle</drawCircle>
-	<geopublisher>GeoPublisher</geopublisher>
-	<geoPublisherWindowTitle js="true">Geo-publication: </geoPublisherWindowTitle>
-	<geopublisherHelp>Publish or unpublish dataset as WMS or WFS in remote geoserver.</geopublisherHelp>
-	<publish js="true">Publicar</publish>
-	<publishTooltip js="true">Publish current dataset to remote node. If dataset is already publish in that node, it will be updated.</publishTooltip>
-	<publishError js="true">La publicació ha fallat.</publishError>
-	<publishErrorCode js="true">Codi d'error:</publishErrorCode>
-	<publishSuccess js="true">Publicació correcta.</publishSuccess>
-	<publishLayerAdded js="true"> Layer added to map preview.</publishLayerAdded>
-	<unpublish js="true">Despublicar</unpublish>
-	<unpublishTooltip js="true">Remove current dataset from remote node.</unpublishTooltip>
-	<unpublishError js="true">Despublicació errònia. </unpublishError>
-	<unpublishSuccess js="true">Despublicació correcta.</unpublishSuccess>
-	<check js="true">Comprovar</check>
-	<errorConnectionRefused js="true">Connexió rebutjada.</errorConnectionRefused>
-	<errorDatasetNotFound js="true">Conjunt de dades no trobat.</errorDatasetNotFound>
-	<datasetFound js="true">Conjunt de dades trobat i afegit a la previsualització del mapa.</datasetFound>
-	<checkFailure js="true">La comprovació del conjunt de dades en el node remot ha fallat.</checkFailure>
-	<addOnlineSource js="true">Add WMS info to online source</addOnlineSource>
-	<statusInformation js="true">Status information.</statusInformation>
-	<mapPreview js="true">Previsualització del mapa</mapPreview>
-	<selectANode js="true">Seleccionar un node ...</selectANode>
-	<publishing js="true">Publicant ...</publishing>
+  <drawRectangle js="true">Dibuixar rectangle</drawRectangle>
+  <drawPolygon js="true">Dibuixar polígon</drawPolygon>
+  <drawCircle js="true">Dibuixar cercle</drawCircle>
+  <geopublisher>GeoPublisher</geopublisher>
+  <geoPublisherWindowTitle js="true">Geo-publication:</geoPublisherWindowTitle>
+  <geopublisherHelp>Publish or unpublish dataset as WMS or WFS in remote geoserver.
+  </geopublisherHelp>
+  <publish js="true">Publicar</publish>
+  <publishTooltip js="true">Publish current dataset to remote node. If dataset is already publish in
+    that node, it will be updated.
+  </publishTooltip>
+  <publishError js="true">La publicació ha fallat.</publishError>
+  <publishErrorCode js="true">Codi d'error:</publishErrorCode>
+  <publishSuccess js="true">Publicació correcta.</publishSuccess>
+  <publishLayerAdded js="true">Layer added to map preview.</publishLayerAdded>
+  <unpublish js="true">Despublicar</unpublish>
+  <unpublishTooltip js="true">Remove current dataset from remote node.</unpublishTooltip>
+  <unpublishError js="true">Despublicació errònia.</unpublishError>
+  <unpublishSuccess js="true">Despublicació correcta.</unpublishSuccess>
+  <check js="true">Comprovar</check>
+  <errorConnectionRefused js="true">Connexió rebutjada.</errorConnectionRefused>
+  <errorDatasetNotFound js="true">Conjunt de dades no trobat.</errorDatasetNotFound>
+  <datasetFound js="true">Conjunt de dades trobat i afegit a la previsualització del mapa.
+  </datasetFound>
+  <checkFailure js="true">La comprovació del conjunt de dades en el node remot ha fallat.
+  </checkFailure>
+  <addOnlineSource js="true">Add WMS info to online source</addOnlineSource>
+  <statusInformation js="true">Status information.</statusInformation>
+  <mapPreview js="true">Previsualització del mapa</mapPreview>
+  <selectANode js="true">Seleccionar un node ...</selectANode>
+  <publishing js="true">Publicant ...</publishing>
 
-	<logo>Configuració del logo</logo>
-	<logoSelectionWindow js="true">Escull un logo</logoSelectionWindow>
-	<chooseLogo>Escull un logo</chooseLogo>
-	<orgLogo>Organisation logo</orgLogo>
-	<logoDes>Gestionar el catàleg de logos (logos de node i de recol·lecció)</logoDes>
-	<logoRegistered js="true">Logos registrats</logoRegistered>
-	<logoAdd js="true">Afegir nou logo</logoAdd>
-	<selectedLogo js="true">Logo seleccionat:</selectedLogo>
-	<logoDel js="true">Esborrar</logoDel>
-	<logoForNode js="true">Usar pel catàleg</logoForNode>
-	<logoForNodeFavicon js="true">Usar com a icona preferida</logoForNodeFavicon>
-	<logoSelect js="true">Seleccionar una imatge pel logo ...</logoSelect>
-	<url>URL</url>
-	<createChild>Crear fill</createChild>
-	<updateChildren>Actualitzar fills</updateChildren>
-	<updateChildrenOk>Fills actualitzats</updateChildrenOk>
-	<updateChildrenFailed>L'actualització dels fills ha fallat</updateChildrenFailed>
-	<batchUpdateChildrenTitle>Actualització dels fills</batchUpdateChildrenTitle>
-	<updateMode>Esculliu una estratègia per actualitzar els fills: </updateMode>
-	<addMode>Afegir seccions</addMode>
-	<replaceMode>Reemplaçar seccions</replaceMode>
-	<updateChildrenHelp>
-		<div>
-			<h2>Més detalls</h2>
-			Actualitzar els fills relacionats amb l'actual metadada. Seleccioneu 
-			l'estratègia que s'usarà per cada secció.
-			<br/>
-			<br/>
-			<b>Afegir</b> conservarà la secció corresponent del fill i afegirà la secció equivalent del pare.
-			<b>Reemplaçar </b> esborrarà la secció corresponent del fill per la del pare. 
-			<br/>
-			<br/>
-			L'identificador del fill, el conjunt de caràcters, l'idioma, l'identificador del pare,
-			la jerarquia, l'URI del conjunt de dades i l'identificador de secció (a excepció de l'extensió i les paraules clau) sempre es conserven.
-			<br/>
-			Les seccions <b> distribució i manteniment </b> sempre es reemplacen (inclús en mode afegir) atès que
-			ISO19115 només en permet una.
-		</div>
-	</updateChildrenHelp>
-	<otherActions>Altres accions</otherActions>
-	<computeExtentFromKeywords>Càlcul de l'extensió (afegir)</computeExtentFromKeywords>
-	<computeExtentFromKeywordsReplace>Càlcul de l'extensió (reemplaçar)</computeExtentFromKeywordsReplace>
-	<computeExtentFromKeywordsHelp>El càlcul de l'extensió analitza les paraules clau i busca a tots els tesaurus un concepte similar amb aquesta extensió.
-	S'afegeix una extensió per cada paraula clau coincident. En mode "afegir", les extensions existents es conserven. En mode "reemplaçar", els límits existents (BoundingBox) s'esborren (excepte temporal, vertical i polígon envoltants, que es conserven). Salveu la metadada abans de llançar l'acció.</computeExtentFromKeywordsHelp>
-	<shortcutHelp js="true">Ajuda per les dreceres?</shortcutHelp>
-	<helpShortcutsEditor>
-		<h2>Dreceres en mode edició:</h2>
-		<hr/>
-		<ul>
-			<li>ctrl+shift+s: Salvar</li>
-			<li>ctrl+shift+v: Validar el document</li>
-			<li>ctrl+shift+q: Salvar i tancar</li>
-			<li>ctrl+shift+t: Definir les vistes prèvies per la metadada actual</li>
-			<li>ctrl+shift+r: Inicialització</li>
-			<li>ctrl+shift+c: Cancel·lar</li>
-		</ul>
-	</helpShortcutsEditor>
-	<validationReport js="true">Informe de validació</validationReport>
-	<errorsOnly>Mostrar només els errors</errorsOnly>
-	<schematronReport>Conformitat amb les recomanacions de les metadades (Schematron)</schematronReport>
-	<xsdReport>Conformitat amb l'estàndard de metadades (XML Schema)</xsdReport>
-	<rules name="schematron-rules-inspire">Regles d'implementació INSPIRE</rules>
-	<rules name="schematron-rules-iso">Regles ISO 19115/19119</rules>
-	<rules name="schematron-rules-geonetwork">Recomanacions de GeoNetwork</rules>	
-	<getCapabilitiesLayer js="true">Capa de GetCapabilities</getCapabilitiesLayer>
-	<ServiceUpdateError js="true">Error durant l'actualització de la metadada</ServiceUpdateError>
-	<NotOwnerError js="true">No disposeu dels permisos suficients per fer l'actualització.</NotOwnerError>
-	<NoServiceURLError js="true">Verifiqueu que la URL del servei està definida.</NoServiceURLError>
-	<GetCapabilitiesDocumentError js="true">Error durant la recuperació de la informació del servei GetCapabilities amb l'adreça:</GetCapabilitiesDocumentError>
-	<noOperatesOn>Cap conjunt de dades relacionat</noOperatesOn>
-	<linkedDataset>Conjunts de dades relacionats:</linkedDataset>
-	<linkedFeatureCatalogue>Catàlegs d'entitats associats:</linkedFeatureCatalogue>
-	<linkedFeatureCatalogueHelp>Afegir una relació entre la metadada actual i una entitat del catàleg que compleix l'estàndard ISO19110.</linkedFeatureCatalogueHelp>
-	<createLinkedFeatureCatalogue>Associar un catàleg d'entitats</createLinkedFeatureCatalogue>
-	<layerNameHelp js="true">When linking metadata on services with one or more 
-	metadata on dataset, the coupled resource element could contains the layer 
-	name as defined in the OGC service.
-	The list of service layers could help metadata editor to add 
-	an existing value.</layerNameHelp>
+  <logo>Configuració del logo</logo>
+  <logoSelectionWindow js="true">Escull un logo</logoSelectionWindow>
+  <chooseLogo>Escull un logo</chooseLogo>
+  <orgLogo>Organisation logo</orgLogo>
+  <logoDes>Gestionar el catàleg de logos (logos de node i de recol·lecció)</logoDes>
+  <logoRegistered js="true">Logos registrats</logoRegistered>
+  <logoAdd js="true">Afegir nou logo</logoAdd>
+  <selectedLogo js="true">Logo seleccionat:</selectedLogo>
+  <logoDel js="true">Esborrar</logoDel>
+  <logoForNode js="true">Usar pel catàleg</logoForNode>
+  <logoForNodeFavicon js="true">Usar com a icona preferida</logoForNodeFavicon>
+  <logoSelect js="true">Seleccionar una imatge pel logo ...</logoSelect>
+  <url>URL</url>
+  <createChild>Crear fill</createChild>
+  <updateChildren>Actualitzar fills</updateChildren>
+  <updateChildrenOk>Fills actualitzats</updateChildrenOk>
+  <updateChildrenFailed>L'actualització dels fills ha fallat</updateChildrenFailed>
+  <batchUpdateChildrenTitle>Actualització dels fills</batchUpdateChildrenTitle>
+  <updateMode>Esculliu una estratègia per actualitzar els fills:</updateMode>
+  <addMode>Afegir seccions</addMode>
+  <replaceMode>Reemplaçar seccions</replaceMode>
+  <updateChildrenHelp>
+    <div>
+      <h2>Més detalls</h2>
+      Actualitzar els fills relacionats amb l'actual metadada. Seleccioneu
+      l'estratègia que s'usarà per cada secció.
+      <br/>
+      <br/>
+      <b>Afegir</b>
+      conservarà la secció corresponent del fill i afegirà la secció equivalent del pare.
+      <b>Reemplaçar</b>
+      esborrarà la secció corresponent del fill per la del pare.
+      <br/>
+      <br/>
+      L'identificador del fill, el conjunt de caràcters, l'idioma, l'identificador del pare,
+      la jerarquia, l'URI del conjunt de dades i l'identificador de secció (a excepció de l'extensió
+      i les paraules clau) sempre es conserven.
+      <br/>
+      Les seccions
+      <b>distribució i manteniment</b>
+      sempre es reemplacen (inclús en mode afegir) atès que
+      ISO19115 només en permet una.
+    </div>
+  </updateChildrenHelp>
+  <otherActions>Altres accions</otherActions>
+  <computeExtentFromKeywords>Càlcul de l'extensió (afegir)</computeExtentFromKeywords>
+  <computeExtentFromKeywordsReplace>Càlcul de l'extensió (reemplaçar)
+  </computeExtentFromKeywordsReplace>
+  <computeExtentFromKeywordsHelp>El càlcul de l'extensió analitza les paraules clau i busca a tots
+    els tesaurus un concepte similar amb aquesta extensió.
+    S'afegeix una extensió per cada paraula clau coincident. En mode "afegir", les extensions
+    existents es conserven. En mode "reemplaçar", els límits existents (BoundingBox) s'esborren
+    (excepte temporal, vertical i polígon envoltants, que es conserven). Salveu la metadada abans de
+    llançar l'acció.
+  </computeExtentFromKeywordsHelp>
+  <shortcutHelp js="true">Ajuda per les dreceres?</shortcutHelp>
+  <helpShortcutsEditor>
+    <h2>Dreceres en mode edició:</h2>
+    <hr/>
+    <ul>
+      <li>ctrl+shift+s: Salvar</li>
+      <li>ctrl+shift+v: Validar el document</li>
+      <li>ctrl+shift+q: Salvar i tancar</li>
+      <li>ctrl+shift+t: Definir les vistes prèvies per la metadada actual</li>
+      <li>ctrl+shift+r: Inicialització</li>
+      <li>ctrl+shift+c: Cancel·lar</li>
+    </ul>
+  </helpShortcutsEditor>
+  <validationReport js="true">Informe de validació</validationReport>
+  <errorsOnly>Mostrar només els errors</errorsOnly>
+  <schematronReport>Conformitat amb les recomanacions de les metadades (Schematron)
+  </schematronReport>
+  <xsdReport>Conformitat amb l'estàndard de metadades (XML Schema)</xsdReport>
+  <rules name="schematron-rules-inspire">Regles d'implementació INSPIRE</rules>
+  <rules name="schematron-rules-iso">Regles ISO 19115/19119</rules>
+  <rules name="schematron-rules-geonetwork">Recomanacions de GeoNetwork</rules>
+  <getCapabilitiesLayer js="true">Capa de GetCapabilities</getCapabilitiesLayer>
+  <ServiceUpdateError js="true">Error durant l'actualització de la metadada</ServiceUpdateError>
+  <NotOwnerError js="true">No disposeu dels permisos suficients per fer l'actualització.
+  </NotOwnerError>
+  <NoServiceURLError js="true">Verifiqueu que la URL del servei està definida.</NoServiceURLError>
+  <GetCapabilitiesDocumentError js="true">Error durant la recuperació de la informació del servei
+    GetCapabilities amb l'adreça:
+  </GetCapabilitiesDocumentError>
+  <noOperatesOn>Cap conjunt de dades relacionat</noOperatesOn>
+  <linkedDataset>Conjunts de dades relacionats:</linkedDataset>
+  <linkedFeatureCatalogue>Catàlegs d'entitats associats:</linkedFeatureCatalogue>
+  <linkedFeatureCatalogueHelp>Afegir una relació entre la metadada actual i una entitat del catàleg
+    que compleix l'estàndard ISO19110.
+  </linkedFeatureCatalogueHelp>
+  <createLinkedFeatureCatalogue>Associar un catàleg d'entitats</createLinkedFeatureCatalogue>
+  <layerNameHelp js="true">When linking metadata on services with one or more
+    metadata on dataset, the coupled resource element could contains the layer
+    name as defined in the OGC service.
+    The list of service layers could help metadata editor to add
+    an existing value.
+  </layerNameHelp>
 
-	<layerName js="true">Nom de la capa</layerName>
-	<createIfNotExistButton js="true">Crear un nou registre de metadades</createIfNotExistButton>
-	<associateService js="true">Link service metadata</associateService>
-	<associateDataset js="true">Link dataset metadata</associateDataset>
-	<associateServiceHelp>Per associar una relació a una metadada de servei, busqueu el servei i esculliu el nom de capa.</associateServiceHelp>
-	<associateDatasetHelp>Per associar una relació a un conjunt de dades, aneu a la vista ISO > secció Identificació i definiu l'element operates on'.</associateDatasetHelp>
+  <layerName js="true">Nom de la capa</layerName>
+  <createIfNotExistButton js="true">Crear un nou registre de metadades</createIfNotExistButton>
+  <associateService js="true">Link service metadata</associateService>
+  <associateDataset js="true">Link dataset metadata</associateDataset>
+  <associateServiceHelp>Per associar una relació a una metadada de servei, busqueu el servei i
+    esculliu el nom de capa.
+  </associateServiceHelp>
+  <associateDatasetHelp>Per associar una relació a un conjunt de dades, aneu a la vista ISO > secció
+    Identificació i definiu l'element operates on'.
+  </associateDatasetHelp>
 
-	<addParent> Afegir o actualitzar informació del pare</addParent>
-	<createAssoService>Crear relació</createAssoService>
-	<updateMdd>Actualitzar la metadada de tipus conjunt de dades</updateMdd>
-	<datasetCreate>Crear metadada de tipus conjunt de dades </datasetCreate>
-	<linkedServices> Serveis associats a la metadada:</linkedServices>
-	<linkedServiceMetadataHelp>Per associar una relació a un servei, aneu a la vista ISO &gt; pestanya Distribució.</linkedServiceMetadataHelp>
-	<linkedParentMetadata> Pare/fill :</linkedParentMetadata>
-	<linkedParentMetadataHelp>Per associar una relació a un pare, aneu a la vista ISO  &gt; pestanya Metadada.</linkedParentMetadataHelp>
-	<linkedChildrenMetadata> Fills :</linkedChildrenMetadata>
-	<linkedChildrenMetadataHelp>Llista de fills associats a la metadada actual.</linkedChildrenMetadataHelp>
-	<linkedDatasetMetadata> Conjunt de dades associades:</linkedDatasetMetadata>
-	<serviceCreate>Crear nova metadada de servei</serviceCreate>
-	<parentSearch js="true">Buscar una metadada per associar-la com a pare de la metadada actual.</parentSearch>
-	<linkedMetadataSelectionWindowTitle js="true">Selecció de les metadades associades</linkedMetadataSelectionWindowTitle>
-	<searchText js="true">Cerca de text</searchText>
-	<mdTitle js="true">Títol de la metadada</mdTitle>
-	<createRelation js="true">Crear relació</createRelation>
-	<export>Exportar (ZIP)</export>
-	<exportText>Exportar (TXT)</exportText>	
-	<addXMLFragment>Afegir d'un diccionari...</addXMLFragment>
-	<translateWithGoogle>Usar el servei de traducció Google per suggerir una traducció al llengutge seleccionat.</translateWithGoogle>
-	<translateWithGoogle.maxSize js="true">El text a traduir conté més de 5000 caràcters (vegeu http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>
-	<translateWithGoogle.emptyInput js="true">L'idioma principal és buit. Indiqueu un idioma principal abans d'usar el servei de traducció.</translateWithGoogle.emptyInput>
-	<layersAdded js="true">Les capes seleccionades han estat afegides</layersAdded>
-	<registrationFailed js="true">Error, l'enregistrament ha fallat:</registrationFailed>	
-	<tryAgain js="true">Intenteu-ho més tard </tryAgain>
-	<cannotRetrieveGroup js="true">No ha estat possible obtenir la llista de grups</cannotRetrieveGroup>
-	<selectNewOwner js="true">Seleccioneu l'usuari que serà el nou propietari</selectNewOwner>
-	<selectOwnerGroup js="true">Seleccioneu un grup on l'usuari pertanyerà</selectOwnerGroup>
-	<selectOneFileDownload js="true">Hauríeu de seleccionar com a mínim un arxiu per descarregar!</selectOneFileDownload>
-	<checkEmail js="true">Si us plau, indiqueu una adreça de correu vàlida</checkEmail>
-	<addName js="true">Si us plau, indiqueu un nom o organització</addName>
-	<noComment js="true">Sense comentaris</noComment>
-	<rateMetadataFailed js="true">Cannot rate metadata.</rateMetadataFailed>
-	<error js="true">Error</error>
-	<errors>errors</errors>
-	<northSouth js="true">Nord &lt; Sud</northSouth>
-	<north90 js="true">Nord &gt; 90 graus</north90>
-	<south90 js="true">Sud &lt; -90 graus</south90>
-	<east180 js="true">Est &gt; 180 graus</east180>
-	<west180 js="true">Oest &lt; -180 graus</west180>
-	<eastWest js="true">Est &lt; Oest</eastWest>
-	<metadataSelectionError js="true">Error en la selecció de metadades.</metadataSelectionError>
-	<closeWindow js="true">Tancar finestra</closeWindow>
-	<loseYourChange js="true">Si premeu OK podeu PERDRE tots els canvis que heu fet a la metadada!</loseYourChange>
-	<errorDeleteElement js="true">Error: No es pot esborrar l'element</errorDeleteElement>
-	<errorFromDoc js="true">del document:</errorFromDoc>
-	<errorMoveElement js="true">Error: No s'ha pogut moure l'element </errorMoveElement>
-	<errorAddElement js="true">Error: No s'ha pogut afegir l'element </errorAddElement>
-	<errorSaveFailed js="true">Error: No s'ha pogut salvar el formulari</errorSaveFailed>
-	<errorOnAction js="true">Error: No s'ha pogut realitzar l'acció </errorOnAction>
-	<errorChangeProtocol js="true">És probable que un arxiu hagi estat enviat. No podeu canviar el protocol fins que no esborreu aquest arxiu </errorChangeProtocol>
-	<selectOneFileUpload js="true">Buscar o escriure un nom d'arxiu abans de l'enviament!</selectOneFileUpload>
-	<uploadFailed js="true">Error: L'enviament ha fallat! - Informació: </uploadFailed>
-	<uploadSetFileNameFailed js="true">Error: L'arxiu ha estat enviat però no ha estat possible definir el nom d'arxiu!</uploadSetFileNameFailed>
-	<cannotGetTooltip js="true">No s'ha trobat indicadors de funció (tooltips) al servidor</cannotGetTooltip>
-	<maxResults js="true">Número de resultats</maxResults>
-	<perThesaurus js="true"> per tesaurus</perThesaurus>
-	<anyThesaurus js="true">Cap tesaurus</anyThesaurus>
-	<selectedKeywords js="true">Paraules clau seleccionades</selectedKeywords>
-	<foundKeywords js="true">Paraules clau disponibles</foundKeywords>
-	<keywordSelectionWindowTitle js="true">Selecció de paraules clau</keywordSelectionWindowTitle>
-	<crsSelectionWindowTitle js="true">Selecció de sistema de coordenades</crsSelectionWindowTitle>
-	<selectedCRS js="true">Sistema de coordenades seleccionat</selectedCRS>
-	<foundCRS js="true">Sistemes de coordenades disponibles</foundCRS>
-	
-	<about>Sobre</about>
-	<abstract>Resum</abstract>
-	<accept>Acceptar </accept>
-	<actionOnSelect>accions sobre la selecció</actionOnSelect>
-	<add js="true">afegir</add>
-	<addNewMetadata>Afegir nova Metadada</addNewMetadata>
-	<address>Adreça</address>
-	<admin>Administració</admin>
-	<Administrator>Administrador</Administrator>
-	<agrovocKeyword>Paraules del Diccionari d'Agrovoc</agrovocKeyword>
-	<all>tots</all>
-	<any>- Qualsevol -</any>
-	<anytime>Qualsevol moment</anytime>
-	<appSchInfoTab>Perfil d'aplicació</appSchInfoTab>
+  <addParent>Afegir o actualitzar informació del pare</addParent>
+  <createAssoService>Crear relació</createAssoService>
+  <updateMdd>Actualitzar la metadada de tipus conjunt de dades</updateMdd>
+  <datasetCreate>Crear metadada de tipus conjunt de dades</datasetCreate>
+  <linkedServices>Serveis associats a la metadada:</linkedServices>
+  <linkedServiceMetadataHelp>Per associar una relació a un servei, aneu a la vista ISO &gt; pestanya
+    Distribució.
+  </linkedServiceMetadataHelp>
+  <linkedParentMetadata>Pare/fill :</linkedParentMetadata>
+  <linkedParentMetadataHelp>Per associar una relació a un pare, aneu a la vista ISO &gt; pestanya
+    Metadada.
+  </linkedParentMetadataHelp>
+  <linkedChildrenMetadata>Fills :</linkedChildrenMetadata>
+  <linkedChildrenMetadataHelp>Llista de fills associats a la metadada actual.
+  </linkedChildrenMetadataHelp>
+  <linkedDatasetMetadata>Conjunt de dades associades:</linkedDatasetMetadata>
+  <serviceCreate>Crear nova metadada de servei</serviceCreate>
+  <parentSearch js="true">Buscar una metadada per associar-la com a pare de la metadada actual.
+  </parentSearch>
+  <linkedMetadataSelectionWindowTitle js="true">Selecció de les metadades associades
+  </linkedMetadataSelectionWindowTitle>
+  <searchText js="true">Cerca de text</searchText>
+  <mdTitle js="true">Títol de la metadada</mdTitle>
+  <createRelation js="true">Crear relació</createRelation>
+  <export>Exportar (ZIP)</export>
+  <exportText>Exportar (TXT)</exportText>
+  <addXMLFragment>Afegir d'un diccionari...</addXMLFragment>
+  <translateWithGoogle>Usar el servei de traducció Google per suggerir una traducció al llengutge
+    seleccionat.
+  </translateWithGoogle>
+  <translateWithGoogle.maxSize js="true">El text a traduir conté més de 5000 caràcters (vegeu
+    http://code.google.com/apis/ajaxlanguage/terms.html).
+  </translateWithGoogle.maxSize>
+  <translateWithGoogle.emptyInput js="true">L'idioma principal és buit. Indiqueu un idioma principal
+    abans d'usar el servei de traducció.
+  </translateWithGoogle.emptyInput>
+  <layersAdded js="true">Les capes seleccionades han estat afegides</layersAdded>
+  <registrationFailed js="true">Error, l'enregistrament ha fallat:</registrationFailed>
+  <tryAgain js="true">Intenteu-ho més tard</tryAgain>
+  <cannotRetrieveGroup js="true">No ha estat possible obtenir la llista de grups
+  </cannotRetrieveGroup>
+  <selectNewOwner js="true">Seleccioneu l'usuari que serà el nou propietari</selectNewOwner>
+  <selectOwnerGroup js="true">Seleccioneu un grup on l'usuari pertanyerà</selectOwnerGroup>
+  <selectOneFileDownload js="true">Hauríeu de seleccionar com a mínim un arxiu per descarregar!
+  </selectOneFileDownload>
+  <checkEmail js="true">Si us plau, indiqueu una adreça de correu vàlida</checkEmail>
+  <addName js="true">Si us plau, indiqueu un nom o organització</addName>
+  <noComment js="true">Sense comentaris</noComment>
+  <rateMetadataFailed js="true">Cannot rate metadata.</rateMetadataFailed>
+  <error js="true">Error</error>
+  <errors>errors</errors>
+  <northSouth js="true">Nord &lt; Sud</northSouth>
+  <north90 js="true">Nord &gt; 90 graus</north90>
+  <south90 js="true">Sud &lt; -90 graus</south90>
+  <east180 js="true">Est &gt; 180 graus</east180>
+  <west180 js="true">Oest &lt; -180 graus</west180>
+  <eastWest js="true">Est &lt; Oest</eastWest>
+  <metadataSelectionError js="true">Error en la selecció de metadades.</metadataSelectionError>
+  <closeWindow js="true">Tancar finestra</closeWindow>
+  <loseYourChange js="true">Si premeu OK podeu PERDRE tots els canvis que heu fet a la metadada!
+  </loseYourChange>
+  <errorDeleteElement js="true">Error: No es pot esborrar l'element</errorDeleteElement>
+  <errorFromDoc js="true">del document:</errorFromDoc>
+  <errorMoveElement js="true">Error: No s'ha pogut moure l'element</errorMoveElement>
+  <errorAddElement js="true">Error: No s'ha pogut afegir l'element</errorAddElement>
+  <errorSaveFailed js="true">Error: No s'ha pogut salvar el formulari</errorSaveFailed>
+  <errorOnAction js="true">Error: No s'ha pogut realitzar l'acció</errorOnAction>
+  <errorChangeProtocol js="true">És probable que un arxiu hagi estat enviat. No podeu canviar el
+    protocol fins que no esborreu aquest arxiu
+  </errorChangeProtocol>
+  <selectOneFileUpload js="true">Buscar o escriure un nom d'arxiu abans de l'enviament!
+  </selectOneFileUpload>
+  <uploadFailed js="true">Error: L'enviament ha fallat! - Informació:</uploadFailed>
+  <uploadSetFileNameFailed js="true">Error: L'arxiu ha estat enviat però no ha estat possible
+    definir el nom d'arxiu!
+  </uploadSetFileNameFailed>
+  <cannotGetTooltip js="true">No s'ha trobat indicadors de funció (tooltips) al servidor
+  </cannotGetTooltip>
+  <maxResults js="true">Número de resultats</maxResults>
+  <perThesaurus js="true">per tesaurus</perThesaurus>
+  <anyThesaurus js="true">Cap tesaurus</anyThesaurus>
+  <selectedKeywords js="true">Paraules clau seleccionades</selectedKeywords>
+  <foundKeywords js="true">Paraules clau disponibles</foundKeywords>
+  <keywordSelectionWindowTitle js="true">Selecció de paraules clau</keywordSelectionWindowTitle>
+  <crsSelectionWindowTitle js="true">Selecció de sistema de coordenades</crsSelectionWindowTitle>
+  <selectedCRS js="true">Sistema de coordenades seleccionat</selectedCRS>
+  <foundCRS js="true">Sistemes de coordenades disponibles</foundCRS>
 
-	<assigned>Assignat</assigned>
-	<attrlabl>Etiqueta d'atribut</attrlabl>
-	<availability>Disponibilitat</availability>
-	<back>Enrere</back>
-	<backToDescription>Tornar a la descripció de les dades</backToDescription>
-	<backToEditor>Tornar a l'editor</backToEditor>
-	<backToPreviousPage>Tornar a la pàgina anterior</backToPreviousPage>
-	<batchImport>Importar els arxius XML de metadades emmagatzemats a un directori local</batchImport>
-	<batchImportTitle>Importació batch</batchImportTitle>
-	<begdate>Data d'inici</begdate>
-	<begtime>Hora d'inici</begtime>
-	<bgFileDescChoice value="large_thumbnail">Vista prèvia gran</bgFileDescChoice>
-	<bgFileDescChoice value="thumbnail">Vista prèvia</bgFileDescChoice>
-	<bookmarkDelicious>Afegir als favorits de Delicious</bookmarkDelicious>
-	<bookmarkDigg>Afegir als favorits de Digg</bookmarkDigg>
-	<bookmarkEmail>Enviar una referència d'aquest registre per correu</bookmarkEmail>
-	<bookmarkFacebook>Afegir als favorits de Facebook</bookmarkFacebook>
-	<bookmarkPermanent>Enllaç permanent a aquesta descripció</bookmarkPermanent>
-	<bookmarkStumbleUpon>Afegir als favorits de StumbleUpon</bookmarkStumbleUpon>
-	<bounding>Coordenades dels límits (BoundingBox)</bounding>
-	<boundingRelation value="encloses">inclou</boundingRelation>
-	<boundingRelation value="equal">igual</boundingRelation>
-	<boundingRelation value="fullyOutsideOf">està totalment fora de</boundingRelation>
-	<boundingRelation value="overlaps">conté</boundingRelation>
-	<browse>Visualitza el gràfic</browse>
-	<browsed>Descripció de l'arxiu de vista prèvia</browsed>
-	<browsen>Nom de l'arxiu de la vista prèvia</browsen>
-	<browset>Tipus d'arxiu de la vista prèvia</browset>
-	<byGroup>Per grup</byGroup>
-	<byPackage>Per paquet</byPackage>
-	<cancel>Cancel·lar</cancel>
-	<categories>Categories</categories>
-	<category>Categoria</category>
-	<categoryManagement>Gestionar categories</categoryManagement>
-	<categoryManDes>Afegir/modificar/esborrar i mostrar les categories</categoryManDes>
-	<categoryNameMandatory>Cal emplenar el nom de la categoria.</categoryNameMandatory>
-	<changeDate>Data de modificació de les metadades</changeDate>
-	<checkusername>Verificar</checkusername>
-	<choose>-Escollir-</choose>
-	<chooseFile>Seleccionar la ubicació de l'arxiu a enviar</chooseFile>
-	<chooseLargeThumbnail>Escollir la ubicació de l'arxiu de vista prèvia gran</chooseLargeThumbnail>
-	<chooseThumbnail>Escollir la ubicació de l'arxiu de vista prèvia petit</chooseThumbnail>
-	<city>Ciutat</city>
-	<clear js="true">Esborrar</clear>
-	<clearAll>Esborrar tots</clearAll>
-	<close js="true">Tancar</close>
-	<completeTab>Vista avançada</completeTab>
-	<completeTabEditor>Editor avançat</completeTabEditor>
-	<confirmCancel>Esteu segurs que voleu sortir del mòdul editor? (Perdreu tots els canvis no guardats anteriorment)</confirmCancel>
-	<confirmCancelCreate>Esteu segurs que voleu desestimar la creació de les metadades?</confirmCancelCreate>
-	<confirmDelete>Esteu segurs que voleu esborrar la metadada de la base de dades?</confirmDelete>
-	<confirmBatchDelete>Esteu segurs que voleu esborrar totes les $1 Metadades seleccionades de la base de dades?</confirmBatchDelete>
-	<confirmNewPassword>Confirmar la nova contrasenya</confirmNewPassword>
-	<confirmPassword>Confirmar la contrasenya</confirmPassword>
-	<constraintsTab>Restriccions</constraintsTab>
-	<contactUs>Contacteu-nos</contactUs>
-	<contains>Conté</contains>
-	<contentInfoTab>Informació de contingut</contentInfoTab>
-	<convert>Convertir</convert>
-	<copyright1>Copyright</copyright1>
-	<copyright2><p>Tots els drets reservats.<br/></p></copyright2>
-	<country>País</country>
-	<create>Crear</create>
-	<createTip>Afegir una nova metadada usant aquesta plantilla</createTip>
-	<crs code="EPSG:4326">WGS 84</crs>
-	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
-	<crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
-	<crs code="EPSG:4258">ETRS 89</crs>
-	<crs code="EPSG:900913">Google Mercator</crs>
-	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
-	<cswTest>CSW ISO Profile test</cswTest>
-	<cswTestDesc>Testejar la interfície del perfil CSW ISO</cswTestDesc>
-	<dataQualityTab>Qualitat de les dades</dataQualityTab>
-	<datasetIssued>Extensió temporal</datasetIssued>
-	<datasetTab>Conjunt de dades</datasetTab>
-	<dateModified>Data de modificació</dateModified>
-	<dateRelChoice value="14">abans</dateRelChoice>
-	<dateRelChoice value="15">abans o durant</dateRelChoice>
-	<dateRelChoice value="16">durant</dateRelChoice>
-	<dateRelChoice value="17">durant o després</dateRelChoice>
-	<dateRelChoice value="18">després</dateRelChoice>
-	<dateRelChoice/>
-	<decline>Declinar</decline>
-	<definition>Definició</definition>
-	<del>esborrar</del>
-	<delete>Esborrar</delete>
-	<deleteCategory>Esborrar la categoria?</deleteCategory>
-	<deleteConfirmationTitle>Informe sobre l'esborrat de la metadada</deleteConfirmationTitle>	
-	<deleteGroup>Esborrar el grup?</deleteGroup>
-	<descriptionTab>Descripció</descriptionTab>
-	<desSchema>Esquema destí</desSchema>
-	<digital>Dades digitals</digital>
-	<directory>Directori</directory>
-	<dirParameter>('directori' és un paràmetre obligatori)</dirParameter>
-	<disclaimer1>Títol d'avís legal</disclaimer1>
-	<disclaimer2>Text d'avís legal</disclaimer2>
-	<distributionTab>Distribució</distributionTab>
-	<down>baixar</down>
-	<download>Descàrrega</download>
-	<downloadable>Descarregable</downloadable>
-	<downloadData>Dades per a la descàrrega</downloadData>
-	<downloadEmail>Descarregar e-mail</downloadEmail>
-	<downloadSelect>Descarregar?</downloadSelect>
-	<downloadSelected>Descarregar la selecció</downloadSelected>
-	<downloadSummary>Resum de la descàrrega</downloadSummary>
-	<downloadThemAll>Descarregar tot</downloadThemAll>
-	<dsgpoly>Conjunt de dades del G-Polygon</dsgpoly>
-	<durationDays>dia(es)</durationDays>
-	<durationHours>hora(es)</durationHours>
-	<durationMinutes>minut(s)</durationMinutes>
-	<durationMonths>mes(os)</durationMonths>
-	<durationNbDays>Número de dies:</durationNbDays>
-	<durationNbHours>Número d'hores:</durationNbHours>
-	<durationNbMinutes>Número de minuts:</durationNbMinutes>
-	<durationNbMonths>Número de mesos:</durationNbMonths>
-	<durationNbSeconds>Número de segons:</durationNbSeconds>
-	<durationNbYears>Número d'anys:</durationNbYears>
-	<durationSeconds>segon(s)</durationSeconds>
-	<durationSign>Duració negativa</durationSign>
-	<durationYears>any(s)</durationYears>
-	<dynamic>Interactiu</dynamic>
-	<eastbc>Coordenada límit est</eastbc>
-	<edit>Editar</edit>
-	<Editor>Editor</Editor>
-	<email>E-mail</email>
-	<emailAddressInvalid js="true">L'adreça de correu no és correcta</emailAddressInvalid>
-	<enclosing>Inclou</enclosing>
-	<enclosingCoordinate>Coordenades envoltants</enclosingCoordinate>
-	<enddate>Data de fi</enddate>
-	<enttypl>Etiqueta de tipus d'entitat</enttypl>
-	<exactCoordinate>Coordenades exactes</exactCoordinate>
-	<exactTerm>Terme exacte</exactTerm>
-	<extended>Experta</extended>
-	<extensionInfoTab>Ext. Info</extensionInfoTab>
-	<extent>Extensió</extent>
-	<featuredMap>Mapa vectorial</featuredMap>
-	<feedback>Retroacció</feedback>
-	<feedbackCardTitle>Retroacció i comentaris</feedbackCardTitle>
-	<feedbackComments>Retroacció / comentaris</feedbackComments>
-	<feedbackRequest>Si us plau, proporcioneu les vostres dades abans de procedir a la descàrrega</feedbackRequest>
+  <about>Sobre</about>
+  <abstract>Resum</abstract>
+  <accept>Acceptar</accept>
+  <actionOnSelect>accions sobre la selecció</actionOnSelect>
+  <add js="true">afegir</add>
+  <addNewMetadata>Afegir nova Metadada</addNewMetadata>
+  <address>Adreça</address>
+  <admin>Administració</admin>
+  <Administrator>Administrador</Administrator>
+  <agrovocKeyword>Paraules del Diccionari d'Agrovoc</agrovocKeyword>
+  <all>tots</all>
+  <any>- Qualsevol -</any>
+  <anytime>Qualsevol moment</anytime>
+  <appSchInfoTab>Perfil d'aplicació</appSchInfoTab>
+
+  <assigned>Assignat</assigned>
+  <attrlabl>Etiqueta d'atribut</attrlabl>
+  <availability>Disponibilitat</availability>
+  <back>Enrere</back>
+  <backToDescription>Tornar a la descripció de les dades</backToDescription>
+  <backToEditor>Tornar a l'editor</backToEditor>
+  <backToPreviousPage>Tornar a la pàgina anterior</backToPreviousPage>
+  <batchImport>Importar els arxius XML de metadades emmagatzemats a un directori local</batchImport>
+  <batchImportTitle>Importació batch</batchImportTitle>
+  <begdate>Data d'inici</begdate>
+  <begtime>Hora d'inici</begtime>
+  <bgFileDescChoice value="large_thumbnail">Vista prèvia gran</bgFileDescChoice>
+  <bgFileDescChoice value="thumbnail">Vista prèvia</bgFileDescChoice>
+  <bookmarkDelicious>Afegir als favorits de Delicious</bookmarkDelicious>
+  <bookmarkDigg>Afegir als favorits de Digg</bookmarkDigg>
+  <bookmarkEmail>Enviar una referència d'aquest registre per correu</bookmarkEmail>
+  <bookmarkFacebook>Afegir als favorits de Facebook</bookmarkFacebook>
+  <bookmarkPermanent>Enllaç permanent a aquesta descripció</bookmarkPermanent>
+  <bookmarkStumbleUpon>Afegir als favorits de StumbleUpon</bookmarkStumbleUpon>
+  <bounding>Coordenades dels límits (BoundingBox)</bounding>
+  <boundingRelation value="encloses">inclou</boundingRelation>
+  <boundingRelation value="equal">igual</boundingRelation>
+  <boundingRelation value="fullyOutsideOf">està totalment fora de</boundingRelation>
+  <boundingRelation value="overlaps">conté</boundingRelation>
+  <browse>Visualitza el gràfic</browse>
+  <browsed>Descripció de l'arxiu de vista prèvia</browsed>
+  <browsen>Nom de l'arxiu de la vista prèvia</browsen>
+  <browset>Tipus d'arxiu de la vista prèvia</browset>
+  <byGroup>Per grup</byGroup>
+  <byPackage>Per paquet</byPackage>
+  <cancel>Cancel·lar</cancel>
+  <categories>Categories</categories>
+  <category>Categoria</category>
+  <categoryManagement>Gestionar categories</categoryManagement>
+  <categoryManDes>Afegir/modificar/esborrar i mostrar les categories</categoryManDes>
+  <categoryNameMandatory>Cal emplenar el nom de la categoria.</categoryNameMandatory>
+  <changeDate>Data de modificació de les metadades</changeDate>
+  <checkusername>Verificar</checkusername>
+  <choose>-Escollir-</choose>
+  <chooseFile>Seleccionar la ubicació de l'arxiu a enviar</chooseFile>
+  <chooseLargeThumbnail>Escollir la ubicació de l'arxiu de vista prèvia gran</chooseLargeThumbnail>
+  <chooseThumbnail>Escollir la ubicació de l'arxiu de vista prèvia petit</chooseThumbnail>
+  <city>Ciutat</city>
+  <clear js="true">Esborrar</clear>
+  <clearAll>Esborrar tots</clearAll>
+  <close js="true">Tancar</close>
+  <completeTab>Vista avançada</completeTab>
+  <completeTabEditor>Editor avançat</completeTabEditor>
+  <confirmCancel>Esteu segurs que voleu sortir del mòdul editor? (Perdreu tots els canvis no
+    guardats anteriorment)
+  </confirmCancel>
+  <confirmCancelCreate>Esteu segurs que voleu desestimar la creació de les metadades?
+  </confirmCancelCreate>
+  <confirmDelete>Esteu segurs que voleu esborrar la metadada de la base de dades?</confirmDelete>
+  <confirmBatchDelete>Esteu segurs que voleu esborrar totes les $1 Metadades seleccionades de la
+    base de dades?
+  </confirmBatchDelete>
+  <confirmNewPassword>Confirmar la nova contrasenya</confirmNewPassword>
+  <confirmPassword>Confirmar la contrasenya</confirmPassword>
+  <constraintsTab>Restriccions</constraintsTab>
+  <contactUs>Contacteu-nos</contactUs>
+  <contains>Conté</contains>
+  <contentInfoTab>Informació de contingut</contentInfoTab>
+  <convert>Convertir</convert>
+  <copyright1>Copyright</copyright1>
+  <copyright2>
+    <p>Tots els drets reservats.
+      <br/>
+    </p>
+  </copyright2>
+  <country>País</country>
+  <create>Crear</create>
+  <createTip>Afegir una nova metadada usant aquesta plantilla</createTip>
+  <crs code="EPSG:4326">WGS 84</crs>
+  <crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
+  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
+  <crs code="EPSG:4258">ETRS 89</crs>
+  <crs code="EPSG:900913">Google Mercator</crs>
+  <crs code="EPSG:2154">RGF93 / Lambert-93</crs>
+  <cswTest>CSW ISO Profile test</cswTest>
+  <cswTestDesc>Testejar la interfície del perfil CSW ISO</cswTestDesc>
+  <dataQualityTab>Qualitat de les dades</dataQualityTab>
+  <datasetIssued>Extensió temporal</datasetIssued>
+  <datasetTab>Conjunt de dades</datasetTab>
+  <dateModified>Data de modificació</dateModified>
+  <dateRelChoice value="14">abans</dateRelChoice>
+  <dateRelChoice value="15">abans o durant</dateRelChoice>
+  <dateRelChoice value="16">durant</dateRelChoice>
+  <dateRelChoice value="17">durant o després</dateRelChoice>
+  <dateRelChoice value="18">després</dateRelChoice>
+  <dateRelChoice/>
+  <decline>Declinar</decline>
+  <definition>Definició</definition>
+  <del>esborrar</del>
+  <delete>Esborrar</delete>
+  <deleteCategory>Esborrar la categoria?</deleteCategory>
+  <deleteConfirmationTitle>Informe sobre l'esborrat de la metadada</deleteConfirmationTitle>
+  <deleteGroup>Esborrar el grup?</deleteGroup>
+  <descriptionTab>Descripció</descriptionTab>
+  <desSchema>Esquema destí</desSchema>
+  <digital>Dades digitals</digital>
+  <directory>Directori</directory>
+  <dirParameter>('directori' és un paràmetre obligatori)</dirParameter>
+  <disclaimer1>Títol d'avís legal</disclaimer1>
+  <disclaimer2>Text d'avís legal</disclaimer2>
+  <distributionTab>Distribució</distributionTab>
+  <down>baixar</down>
+  <download>Descàrrega</download>
+  <downloadable>Descarregable</downloadable>
+  <downloadData>Dades per a la descàrrega</downloadData>
+  <downloadEmail>Descarregar e-mail</downloadEmail>
+  <downloadSelect>Descarregar?</downloadSelect>
+  <downloadSelected>Descarregar la selecció</downloadSelected>
+  <downloadSummary>Resum de la descàrrega</downloadSummary>
+  <downloadThemAll>Descarregar tot</downloadThemAll>
+  <dsgpoly>Conjunt de dades del G-Polygon</dsgpoly>
+  <durationDays>dia(es)</durationDays>
+  <durationHours>hora(es)</durationHours>
+  <durationMinutes>minut(s)</durationMinutes>
+  <durationMonths>mes(os)</durationMonths>
+  <durationNbDays>Número de dies:</durationNbDays>
+  <durationNbHours>Número d'hores:</durationNbHours>
+  <durationNbMinutes>Número de minuts:</durationNbMinutes>
+  <durationNbMonths>Número de mesos:</durationNbMonths>
+  <durationNbSeconds>Número de segons:</durationNbSeconds>
+  <durationNbYears>Número d'anys:</durationNbYears>
+  <durationSeconds>segon(s)</durationSeconds>
+  <durationSign>Duració negativa</durationSign>
+  <durationYears>any(s)</durationYears>
+  <dynamic>Interactiu</dynamic>
+  <eastbc>Coordenada límit est</eastbc>
+  <edit>Editar</edit>
+  <Editor>Editor</Editor>
+  <email>E-mail</email>
+  <emailAddressInvalid js="true">L'adreça de correu no és correcta</emailAddressInvalid>
+  <enclosing>Inclou</enclosing>
+  <enclosingCoordinate>Coordenades envoltants</enclosingCoordinate>
+  <enddate>Data de fi</enddate>
+  <enttypl>Etiqueta de tipus d'entitat</enttypl>
+  <exactCoordinate>Coordenades exactes</exactCoordinate>
+  <exactTerm>Terme exacte</exactTerm>
+  <extended>Experta</extended>
+  <extensionInfoTab>Ext. Info</extensionInfoTab>
+  <extent>Extensió</extent>
+  <featuredMap>Mapa vectorial</featuredMap>
+  <feedback>Retroacció</feedback>
+  <feedbackCardTitle>Retroacció i comentaris</feedbackCardTitle>
+  <feedbackComments>Retroacció / comentaris</feedbackComments>
+  <feedbackRequest>Si us plau, proporcioneu les vostres dades abans de procedir a la descàrrega
+  </feedbackRequest>
 
 
-	<file>Arxiu</file>
-	<fileType>Tipus d'arxiu:</fileType>
-	<fileUploadSuccessful>La càrrega de l'arxiu s'ha completat amb èxit</fileUploadSuccessful>
-	<firstName>Nom</firstName>
-	<firstNameMandatory js="true">El camp Nom és obligatori</firstNameMandatory>
-	<foundWords>Número de termes trobats:</foundWords>
-	<freeKeyword>Paraules clau</freeKeyword>
-	<from>De</from>
-	<fromDateSelector>Seleccioni la data d'inici</fromDateSelector>
-	<fuzzy>Precisió de la cerca</fuzzy>
-	<fuzzyImprecise>Imprecisa</fuzzyImprecise>
-	<fuzzyPrecise>Exacte</fuzzyPrecise>
-	<fuzzySearch>Estableix la precisió de la cerca.</fuzzySearch>
-	<general>General</general>
-	<generalInfo>Informació general</generalInfo>
-	<generateUUID>Generar UUID per les metadadades inserides</generateUUID>
-	<georss>Obrir alimentació GeoRSS</georss>
-	<group>Grup</group>
-	<usergroups>User groups</usergroups>
-	<choice>Choice</choice>
-	<sequence>Sequence</sequence>
-	<groupManagement>Gestionar grups</groupManagement>
-	<groupManDes>Afegir/modificar/esborrar i mostrar grups</groupManDes>
-	<groups>Grups</groups>
-	<harvestingManagement>Administrar la recol·lecció</harvestingManagement>
-	<harvestingManDes>Afegir/modificar/esborrar/iniciar/aturar tasques de recol·lecció</harvestingManDes>
-	<help>Ajuda</help>
-	<helpLinkTooltip js="true">Ajuda</helpLinkTooltip>
-	<helpComplete>Ajuda Completa</helpComplete>
-	<helperList>Suggeriments:</helperList>
-	<hideAdvancedOptions>Amagar opcions avançades</hideAdvancedOptions>
-	<highlights>Destacats</highlights>
-	<hitsPerPage>Resultats per pàgina</hitsPerPage>
-	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
-	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
-	<hitsPerPageChoice value="20">20</hitsPerPageChoice>
-	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
-	<home>Inici</home>
-	<i18n>Testejar i18n</i18n>
-	<i18nDesc>Aquest servei ajuda als desenvolupadors de GeoNetwork a tenir actualitzats els arxius per a la interfície gràfica</i18nDesc>
-	<identificationTab>Identificació</identificationTab>
-	<identifier>Identificador</identifier>
-	<imAreaInterest>Seleccionar una àrea d'interès</imAreaInterest>
-	<imPan>Moure</imPan>
-	<import>Importar</import>
-	<imZoomFull>Zoom a l'extensió del mapa</imZoomFull>
-	<imZoomIn>Apropar</imZoomIn>
-	<imZoomOut>Allunyar</imZoomOut>
-	<imZoomToLayer>Zoom a la capa</imZoomToLayer>
-	<infoTitle>Informació</infoTitle>
-	<insert>Inserir</insert>
-	<insertFileMode js="true">Carregar arxiu</insertFileMode>
-	<insertMode>Modus d'inserció:</insertMode>
-	<insertPasteMode>Copiar/Enganxar</insertPasteMode>
-	<interactiveMap>Mapa interactiu</interactiveMap>
-	<interMapInfo><h1>Informació sobre els mapes interactius</h1><p>Podeu trobar mapes interactius buscant dades digitals a GeoNetwork o connectant-vos directament a un conjunt de servidors de mapes predefinits.</p><p>Els servidors de mapes disponibles són <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial Consortium</a> Servidors de mapes compatibles OGC o Servidors de mapes <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</p></interMapInfo>
-	<intermapSearch>Cerca geogràfica</intermapSearch>
-	<isoAll>Tot ISO</isoAll>
-	<isoCore>Nucli ISO</isoCore>
-	<isoMinimum>Mínim ISO</isoMinimum>
+  <file>Arxiu</file>
+  <fileType>Tipus d'arxiu:</fileType>
+  <fileUploadSuccessful>La càrrega de l'arxiu s'ha completat amb èxit</fileUploadSuccessful>
+  <firstName>Nom</firstName>
+  <firstNameMandatory js="true">El camp Nom és obligatori</firstNameMandatory>
+  <foundWords>Número de termes trobats:</foundWords>
+  <freeKeyword>Paraules clau</freeKeyword>
+  <from>De</from>
+  <fromDateSelector>Seleccioni la data d'inici</fromDateSelector>
+  <fuzzy>Precisió de la cerca</fuzzy>
+  <fuzzyImprecise>Imprecisa</fuzzyImprecise>
+  <fuzzyPrecise>Exacte</fuzzyPrecise>
+  <fuzzySearch>Estableix la precisió de la cerca.</fuzzySearch>
+  <general>General</general>
+  <generalInfo>Informació general</generalInfo>
+  <generateUUID>Generar UUID per les metadadades inserides</generateUUID>
+  <georss>Obrir alimentació GeoRSS</georss>
+  <group>Grup</group>
+  <usergroups>User groups</usergroups>
+  <choice>Choice</choice>
+  <sequence>Sequence</sequence>
+  <groupManagement>Gestionar grups</groupManagement>
+  <groupManDes>Afegir/modificar/esborrar i mostrar grups</groupManDes>
+  <groups>Grups</groups>
+  <harvestingManagement>Administrar la recol·lecció</harvestingManagement>
+  <harvestingManDes>Afegir/modificar/esborrar/iniciar/aturar tasques de recol·lecció
+  </harvestingManDes>
+  <help>Ajuda</help>
+  <helpLinkTooltip js="true">Ajuda</helpLinkTooltip>
+  <helpComplete>Ajuda Completa</helpComplete>
+  <helperList>Suggeriments:</helperList>
+  <hideAdvancedOptions>Amagar opcions avançades</hideAdvancedOptions>
+  <highlights>Destacats</highlights>
+  <hitsPerPage>Resultats per pàgina</hitsPerPage>
+  <hitsPerPageChoice value="10">10</hitsPerPageChoice>
+  <hitsPerPageChoice value="100">100</hitsPerPageChoice>
+  <hitsPerPageChoice value="20">20</hitsPerPageChoice>
+  <hitsPerPageChoice value="50">50</hitsPerPageChoice>
+  <home>Inici</home>
+  <i18n>Testejar i18n</i18n>
+  <i18nDesc>Aquest servei ajuda als desenvolupadors de GeoNetwork a tenir actualitzats els arxius
+    per a la interfície gràfica
+  </i18nDesc>
+  <identificationTab>Identificació</identificationTab>
+  <identifier>Identificador</identifier>
+  <imAreaInterest>Seleccionar una àrea d'interès</imAreaInterest>
+  <imPan>Moure</imPan>
+  <import>Importar</import>
+  <imZoomFull>Zoom a l'extensió del mapa</imZoomFull>
+  <imZoomIn>Apropar</imZoomIn>
+  <imZoomOut>Allunyar</imZoomOut>
+  <imZoomToLayer>Zoom a la capa</imZoomToLayer>
+  <infoTitle>Informació</infoTitle>
+  <insert>Inserir</insert>
+  <insertFileMode js="true">Carregar arxiu</insertFileMode>
+  <insertMode>Modus d'inserció:</insertMode>
+  <insertPasteMode>Copiar/Enganxar</insertPasteMode>
+  <interactiveMap>Mapa interactiu</interactiveMap>
+  <interMapInfo>
+    <h1>Informació sobre els mapes interactius</h1>
+    <p>Podeu trobar mapes interactius buscant dades digitals a GeoNetwork o connectant-vos
+      directament a un conjunt de servidors de mapes predefinits.
+    </p>
+    <p>Els servidors de mapes disponibles són
+      <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial
+        Consortium
+      </a>
+      Servidors de mapes compatibles OGC o Servidors de mapes<a href="http://www.esri.com"
+                                                                class="sm" target="_blank">ESRI®
+        ArcIMS</a>.
+    </p>
+  </interMapInfo>
+  <intermapSearch>Cerca geogràfica</intermapSearch>
+  <isoAll>Tot ISO</isoAll>
+  <isoCore>Nucli ISO</isoCore>
+  <isoMinimum>Mínim ISO</isoMinimum>
 
-	<keyword>Paraula clau</keyword>
-	<keywords js="true">Paraules clau</keywords>
-	<keywordshelp>Seleccioneu diverses paraules clau prement la tecla Ctrl mentre seleccioneu amb el ratolí</keywordshelp>
-	<kind>Tipus</kind>
-	<kindChoice value="company">Empresa privada</kindChoice>
-	<kindChoice value="consultant">Consultor independent</kindChoice>
-	<kindChoice value="gov">Govern</kindChoice>
-	<kindChoice value="int-org">Organització internacional</kindChoice>
-	<kindChoice value="ngo">NGO</kindChoice>
-	<kindChoice value="other">Altres</kindChoice>
-	<kindChoice value="uni">Centres universitaris/investigació</kindChoice>
+  <keyword>Paraula clau</keyword>
+  <keywords js="true">Paraules clau</keywords>
+  <keywordshelp>Seleccioneu diverses paraules clau prement la tecla Ctrl mentre seleccioneu amb el
+    ratolí
+  </keywordshelp>
+  <kind>Tipus</kind>
+  <kindChoice value="company">Empresa privada</kindChoice>
+  <kindChoice value="consultant">Consultor independent</kindChoice>
+  <kindChoice value="gov">Govern</kindChoice>
+  <kindChoice value="int-org">Organització internacional</kindChoice>
+  <kindChoice value="ngo">NGO</kindChoice>
+  <kindChoice value="other">Altres</kindChoice>
+  <kindChoice value="uni">Centres universitaris/investigació</kindChoice>
 
-	<label>Etiqueta</label>
-	<language>ca</language>
-	<large_thumbnail>Premeu per veure una vista prèvia més gran</large_thumbnail>
-	<lastNameMandatory js="true">El camp Cognom és obligatori</lastNameMandatory>
-	<latitude>Latitud (entre -90 i 90) en graus</latitude>
-	<latMax>lat (max)</latMax>
-	<latMin>lat (min)</latMin>
-	<legend>Llegenda</legend>
-	<link>Enllaç</link>
-	<links>Enllaços</links>
-	<loading>Carregant...</loading>
-	<local>Cerca local</local>
-	<localiz>Internacionalització</localiz>
-	<localizationHelp>Important! Aquest formulari us permet afegir una clau a la base de dades. Aquesta clau no pot tenir espais.<br/> Un cop afegides les claus, useu l'opció "Internacionalització" al panell d'Administració per indicar el nom que voleu que es mostri a la pàgina web pels diferents idiomes.</localizationHelp>
-	<localizDes>Permet canviar entitats localitzades, com grups, categories, etc...</localizDes>
-	<localType>Local</localType>
-	<location>On?</location>
-	<login>Iniciar sessió</login>
-	<loginCardTitle>Connectar / Autenticar-se</loginCardTitle>
-	<loginwarning>És necessari que us identifiqueu com a usuari per poder administrar el catàleg</loginwarning>
-	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
-	<logout>Tancar sessió</logout>
-	<logoutDes>Tancar sessió d'usuari</logoutDes>
-	<longitude>Longitud (entre -180 i 180) en graus</longitude>
-	<longMax>long (max)</longMax>
-	<longMin>long (min)</longMin>
-	<mainpageTitle>Cerca de Servidors de mapes, informació geogràfica, imatges satèl·lit i altres tipus de recursos.</mainpageTitle>
-	<maintenanceTab>Manteniment</maintenanceTab>
-	<management>Gestió</management>
-	<mandatory>Obligatori</mandatory>
-	<mandatoryIf>Obligatori si</mandatoryIf>
-	<mapType>Tipus de mapa</mapType>
-	<mapViewerClose>Tancar visualitzador de mapes</mapViewerClose>
-	<mapViewerLoading>Carregant visualitzador de mapes...</mapViewerLoading>
-	<mapViewerOpen>Obrir el visualitzador de mapes</mapViewerOpen>
-	<batchActions>Accions batchs:</batchActions>
-	<batchDeleteTitle>Operació d'esborrat massiu</batchDeleteTitle>
-	<batchNewOwnerTitle>Operació d\'assignació de propietari massiva</batchNewOwnerTitle>
-	<batchUpdateCategoriesTitle>Operació d\'actualització de categories massiva</batchUpdateCategoriesTitle>
-	<batchUpdatePrivilegesTitle>Operació d\'actualització de privilegis massiva</batchUpdatePrivilegesTitle>
+  <label>Etiqueta</label>
+  <language>ca</language>
+  <large_thumbnail>Premeu per veure una vista prèvia més gran</large_thumbnail>
+  <lastNameMandatory js="true">El camp Cognom és obligatori</lastNameMandatory>
+  <latitude>Latitud (entre -90 i 90) en graus</latitude>
+  <latMax>lat (max)</latMax>
+  <latMin>lat (min)</latMin>
+  <legend>Llegenda</legend>
+  <link>Enllaç</link>
+  <links>Enllaços</links>
+  <loading>Carregant...</loading>
+  <local>Cerca local</local>
+  <localiz>Internacionalització</localiz>
+  <localizationHelp>Important! Aquest formulari us permet afegir una clau a la base de dades.
+    Aquesta clau no pot tenir espais.
+    <br/>
+    Un cop afegides les claus, useu l'opció "Internacionalització" al panell d'Administració per
+    indicar el nom que voleu que es mostri a la pàgina web pels diferents idiomes.
+  </localizationHelp>
+  <localizDes>Permet canviar entitats localitzades, com grups, categories, etc...</localizDes>
+  <localType>Local</localType>
+  <location>On?</location>
+  <login>Iniciar sessió</login>
+  <loginCardTitle>Connectar / Autenticar-se</loginCardTitle>
+  <loginwarning>És necessari que us identifiqueu com a usuari per poder administrar el catàleg
+  </loginwarning>
+  <loginfailure>Login failed. Incorrect username or password</loginfailure>
+  <logout>Tancar sessió</logout>
+  <logoutDes>Tancar sessió d'usuari</logoutDes>
+  <longitude>Longitud (entre -180 i 180) en graus</longitude>
+  <longMax>long (max)</longMax>
+  <longMin>long (min)</longMin>
+  <mainpageTitle>Cerca de Servidors de mapes, informació geogràfica, imatges satèl·lit i altres
+    tipus de recursos.
+  </mainpageTitle>
+  <maintenanceTab>Manteniment</maintenanceTab>
+  <management>Gestió</management>
+  <mandatory>Obligatori</mandatory>
+  <mandatoryIf>Obligatori si</mandatoryIf>
+  <mapType>Tipus de mapa</mapType>
+  <mapViewerClose>Tancar visualitzador de mapes</mapViewerClose>
+  <mapViewerLoading>Carregant visualitzador de mapes...</mapViewerLoading>
+  <mapViewerOpen>Obrir el visualitzador de mapes</mapViewerOpen>
+  <batchActions>Accions batchs:</batchActions>
+  <batchDeleteTitle>Operació d'esborrat massiu</batchDeleteTitle>
+  <batchNewOwnerTitle>Operació d\'assignació de propietari massiva</batchNewOwnerTitle>
+  <batchUpdateCategoriesTitle>Operació d\'actualització de categories massiva
+  </batchUpdateCategoriesTitle>
+  <batchUpdatePrivilegesTitle>Operació d\'actualització de privilegis massiva
+  </batchUpdatePrivilegesTitle>
 
-	<max>Màxim</max>
-	<mdRating>Rànquing de metadades</mdRating>
-	<mdUpdateError>Actualitzar error</mdUpdateError>
-	<mefFile>Arxiu MEF</mefFile>
-	<message>El nom d'usuari o la contrasenya són errònies.<br/>Premeu el botó 'Enrere' i intenteu-ho una altra vegada.</message>
-	<messageChanged>La metadada ha estat modificada per un altre usuari. Si us plau, intenteu-ho de nou.</messageChanged>
-	<messageDownload>Gràcies pel vostre interès. Premeu sobre el botó de descàrrega per obtenir les dades</messageDownload>
-	<messageLargeFile>L'arxiu és massa llarg</messageLargeFile>
-	<messageMdUpdateError>Ho sentim, s'ha produït un error mentre s'actualitzaven les metadades.</messageMdUpdateError>
-	<messageNoPrivileges>No disposeu dels permisos necessaris per fer aquesta operació</messageNoPrivileges>
-	<messageNotPerformed>L'operació sol·licitada no s'ha pogut realitzar.</messageNotPerformed>
-	<metadata.admin.index.desc>Regenerar l'índex de Lucene</metadata.admin.index.desc>
-	<metadata.admin.index.failed>No s'ha pogut regenerar l'índex de Lucene.</metadata.admin.index.failed>
-	<metadata.admin.index.success>La regeneració de l'índex de Lucene s'ha completat amb èxit.</metadata.admin.index.success>
-	<metadata.admin.index.wait js="true">Index operation already in progress please wait.</metadata.admin.index.wait>
-	<metadata.admin.index.optimize.desc>Optimitzar l'índex de Lucene</metadata.admin.index.optimize.desc>
-	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
+  <max>Màxim</max>
+  <mdRating>Rànquing de metadades</mdRating>
+  <mdUpdateError>Actualitzar error</mdUpdateError>
+  <mefFile>Arxiu MEF</mefFile>
+  <message>El nom d'usuari o la contrasenya són errònies.<br/>Premeu el botó 'Enrere' i intenteu-ho
+    una altra vegada.
+  </message>
+  <messageChanged>La metadada ha estat modificada per un altre usuari. Si us plau, intenteu-ho de
+    nou.
+  </messageChanged>
+  <messageDownload>Gràcies pel vostre interès. Premeu sobre el botó de descàrrega per obtenir les
+    dades
+  </messageDownload>
+  <messageLargeFile>L'arxiu és massa llarg</messageLargeFile>
+  <messageMdUpdateError>Ho sentim, s'ha produït un error mentre s'actualitzaven les metadades.
+  </messageMdUpdateError>
+  <messageNoPrivileges>No disposeu dels permisos necessaris per fer aquesta operació
+  </messageNoPrivileges>
+  <messageNotPerformed>L'operació sol·licitada no s'ha pogut realitzar.</messageNotPerformed>
+  <metadata.admin.index.desc>Regenerar l'índex de Lucene</metadata.admin.index.desc>
+  <metadata.admin.index.failed>No s'ha pogut regenerar l'índex de Lucene.
+  </metadata.admin.index.failed>
+  <metadata.admin.index.success>La regeneració de l'índex de Lucene s'ha completat amb èxit.
+  </metadata.admin.index.success>
+  <metadata.admin.index.wait js="true">Index operation already in progress please wait.
+  </metadata.admin.index.wait>
+  <metadata.admin.index.optimize.desc>Optimitzar l'índex de Lucene
+  </metadata.admin.index.optimize.desc>
+  <metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with
+    XLinks
+  </metadata.admin.index.rebuildxlinks.desc>
 
-	<lucene.config.reload>Recarregar la configuració de Lucene</lucene.config.reload>
-	<reload>Recarregar</reload>
-	<rebuildxlinks>Rebuild XLinks</rebuildxlinks>
-	<doYouReallyWantToDoThis js="true">Aquesta operació pot ser llarga, sobretot quan els catàlegs tenen moltes metadades. És recomanable fer-la en moments de poc ús. Voleu continuar?</doYouReallyWantToDoThis>
-	<optimize>Optimitzar</optimize>
-	<metadata.admin.index>Gestió d'índex</metadata.admin.index>
-	<metadata-samples>Metadades d'exemple</metadata-samples>
-	<metadata-samples-add>Afegir metadades d'exemple</metadata-samples-add>
-	<metadata-samples-add-failed>Error afegint les metadades exemple</metadata-samples-add-failed>
-	<metadata-samples-add-success>Afegides les metadades exemple</metadata-samples-add-success>
-	<metadata-template-add-success>Metadata template added.</metadata-template-add-success>
-	<metadata-template-order>Ordenar plantilles</metadata-template-order>
-	<metadata-template-order-desc>Ordenar les plantilles</metadata-template-order-desc>
-	<metadata-template-add-default>Afegir plantilles</metadata-template-add-default>	
+  <lucene.config.reload>Recarregar la configuració de Lucene</lucene.config.reload>
+  <reload>Recarregar</reload>
+  <rebuildxlinks>Rebuild XLinks</rebuildxlinks>
+  <doYouReallyWantToDoThis js="true">Aquesta operació pot ser llarga, sobretot quan els catàlegs
+    tenen moltes metadades. És recomanable fer-la en moments de poc ús. Voleu continuar?
+  </doYouReallyWantToDoThis>
+  <optimize>Optimitzar</optimize>
+  <metadata.admin.index>Gestió d'índex</metadata.admin.index>
+  <metadata-samples>Metadades d'exemple</metadata-samples>
+  <metadata-samples-add>Afegir metadades d'exemple</metadata-samples-add>
+  <metadata-samples-add-failed>Error afegint les metadades exemple</metadata-samples-add-failed>
+  <metadata-samples-add-success>Afegides les metadades exemple</metadata-samples-add-success>
+  <metadata-template-add-success>Metadata template added.</metadata-template-add-success>
+  <metadata-template-order>Ordenar plantilles</metadata-template-order>
+  <metadata-template-order-desc>Ordenar les plantilles</metadata-template-order-desc>
+  <metadata-template-add-default>Afegir plantilles</metadata-template-add-default>
 
-	<metadata>Metadades</metadata>
-	<metadataAdded>Metadades afegides amb ID:</metadataAdded>
-	<metadataDeleted>Metadades esborrades amb ID:</metadataDeleted>
-	<metadataInsertResults>Resultats de la importació de metadades</metadataInsertResults>
-	<metadataJSForm>Metadades des d'un formulari JS</metadataJSForm>
-	<failOnError>Fail on error</failOnError>
-	<metadataRecordsProcessed>Número total de metadades processades:</metadataRecordsProcessed>
-	<metadataRecordsAdded>Número total de metadades afegides:</metadataRecordsAdded>
-	<min>Mínim</min>
-	<minor>Minor edit</minor>
-	<missing>INEXISTENT o BUIT</missing>
-	<missingSeeTab>INEXISTENT - Veure la pestanya de grups:  </missingSeeTab>
-	<more>més</more>
-	<moreinfo>Per més informació, podeu contactar-nos per correu electrònic a </moreinfo>
-	<name>Nom</name>
-	<newCategory>Afegir una nova categoria</newCategory>
-	<newGroup>Afegir un grup</newGroup>
-	<newMdDes>Afegeix una metadada copiant-la d'una plantilla</newMdDes>
-	<newMdInsert>Nova metadada inserida:</newMdInsert>
-	<newMetadata>Nova metadada</newMetadata>
-	<newOwner>Nou propietari</newOwner>
-	<newPassword>Nova contrasenya</newPassword>
-	<newUser>Afegir un usuari</newUser>
-	<next>Següent</next>
-	<noCategory>No hi ha categories disponibles.</noCategory>
-	<noHelp>Disculpeu les molèsties, no hi ha ajuda disponible</noHelp>
-	<noInfo>Disculpeu les molèsties, no hi ha informació disponible</noInfo>
-	<noLogin>No esteu autentificats com a usuari</noLogin>
-	<none>cap</none>
-	<noOwnerRights>Privilegis/Categories bloquejades: No teniu permisos de propietari</noOwnerRights>
-	<northbc>Coordenada límit nord</northbc>
-	<noSelectedMd>No hi ha metadades seleccionades! Si us plau, seleccioneu almenys una metadada.</noSelectedMd>
-	<noTemplatesAvailable>No hi ha plantilles disponibles, cal importar-les.</noTemplatesAvailable>
-	<notfound>No trobat</notfound>
-	<nothing>Cap acció amb la importació</nothing>
-	<online>Mapa Interactiu</online>
-	<onlink>Recurs en línia</onlink>
-	<opensearch>El servei GeoNetwork opensearch permet que les cerques es facin al catàleg de metadades.</opensearch>
-	<operation>Opcions</operation>
-	<options>Opcions</options>
-	<organisation>Organizació / departament</organisation>
-	<output>Sortida</output>
-	<outputType id="full">Completa</outputType>
-	<outputType id="text">Només text</outputType>
-	<overwrite>Sobreescriure les metadades amb el mateix UUID</overwrite>
-	<overwriteFile>Sobreescriure?</overwriteFile>
-	<owner>Propietari</owner>
-	<ownerRights>Esborrar/Privilegis/Categories no bloquejades: Disposeu de dret de propietari</ownerRights>
+  <metadata>Metadades</metadata>
+  <metadataAdded>Metadades afegides amb ID:</metadataAdded>
+  <metadataDeleted>Metadades esborrades amb ID:</metadataDeleted>
+  <metadataInsertResults>Resultats de la importació de metadades</metadataInsertResults>
+  <metadataJSForm>Metadades des d'un formulari JS</metadataJSForm>
+  <failOnError>Fail on error</failOnError>
+  <metadataRecordsProcessed>Número total de metadades processades:</metadataRecordsProcessed>
+  <metadataRecordsAdded>Número total de metadades afegides:</metadataRecordsAdded>
+  <min>Mínim</min>
+  <minor>Minor edit</minor>
+  <missing>INEXISTENT o BUIT</missing>
+  <missingSeeTab>INEXISTENT - Veure la pestanya de grups:</missingSeeTab>
+  <more>més</more>
+  <moreinfo>Per més informació, podeu contactar-nos per correu electrònic a</moreinfo>
+  <name>Nom</name>
+  <newCategory>Afegir una nova categoria</newCategory>
+  <newGroup>Afegir un grup</newGroup>
+  <newMdDes>Afegeix una metadada copiant-la d'una plantilla</newMdDes>
+  <newMdInsert>Nova metadada inserida:</newMdInsert>
+  <newMetadata>Nova metadada</newMetadata>
+  <newOwner>Nou propietari</newOwner>
+  <newPassword>Nova contrasenya</newPassword>
+  <newUser>Afegir un usuari</newUser>
+  <next>Següent</next>
+  <noCategory>No hi ha categories disponibles.</noCategory>
+  <noHelp>Disculpeu les molèsties, no hi ha ajuda disponible</noHelp>
+  <noInfo>Disculpeu les molèsties, no hi ha informació disponible</noInfo>
+  <noLogin>No esteu autentificats com a usuari</noLogin>
+  <none>cap</none>
+  <noOwnerRights>Privilegis/Categories bloquejades: No teniu permisos de propietari</noOwnerRights>
+  <northbc>Coordenada límit nord</northbc>
+  <noSelectedMd>No hi ha metadades seleccionades! Si us plau, seleccioneu almenys una metadada.
+  </noSelectedMd>
+  <noTemplatesAvailable>No hi ha plantilles disponibles, cal importar-les.</noTemplatesAvailable>
+  <notfound>No trobat</notfound>
+  <nothing>Cap acció amb la importació</nothing>
+  <online>Mapa Interactiu</online>
+  <onlink>Recurs en línia</onlink>
+  <opensearch>El servei GeoNetwork opensearch permet que les cerques es facin al catàleg de
+    metadades.
+  </opensearch>
+  <operation>Opcions</operation>
+  <options>Opcions</options>
+  <organisation>Organizació / departament</organisation>
+  <output>Sortida</output>
+  <outputType id="full">Completa</outputType>
+  <outputType id="text">Només text</outputType>
+  <overwrite>Sobreescriure les metadades amb el mateix UUID</overwrite>
+  <overwriteFile>Sobreescriure?</overwriteFile>
+  <owner>Propietari</owner>
+  <ownerRights>Esborrar/Privilegis/Categories no bloquejades: Disposeu de dret de propietari
+  </ownerRights>
 
-	<paper>Còpia impresa</paper>
-	<partial>Parcialment contingut</partial>
-	<partialCooordinate>Coordenades parcials </partialCooordinate>
-	<password>Contrasenya</password>
-	<passwordDoNotMatch>Les contrasenyes no coincideixen. Si us plau, reintroduïu la nova constrasenya.</passwordDoNotMatch>
-	<passwordEntry>Si us plau, introduïu la constrasenya per duplicat.</passwordEntry>
-	<passwordLength>La constrasenya ha de tenir com a mínim " + minLength + " caràcters. Intenteu-ho de nou.</passwordLength>
-	<passwordOldRequired>La contrasenya antiga és obligatòria</passwordOldRequired>
-	<passwordSpace>Disculpeu, no es permeten espais a la contrasenya.</passwordSpace>
-	<persInfo>Informació personal</persInfo>
-	<usersAndGroups>Usuaris i grups</usersAndGroups>	
-	<classification>Tesaurus i sistemes de classificació</classification>
-	<catalogueConfiguration>Configuració del catàleg</catalogueConfiguration>
-	<indexConfiguration>Configuració de l'índex</indexConfiguration>
-	<io>Importar, exportar i recol·lectar</io>
-	<placeKeyword>Paraules clau de lloc</placeKeyword>
-	<porCatInfoTab>Catàleg</porCatInfoTab>
-	<poweredBy>Programari usat: </poweredBy>
-	<previous>Anterior</previous>
-	<privileges>Privilegis</privileges>
-	<profile>Perfil</profile>
-	<profileChoice value="Administrator">Administrador</profileChoice>
-	<profileChoice value="Editor">Editor</profileChoice>
-	<profileChoice value="RegisteredUser">Usuari registrat</profileChoice>
-	<profileChoice value="Reviewer">Revisor de contingut</profileChoice>
-	<profileChoice value="UserAdmin">User Administrator</profileChoice>
-	<profileChoice value="Monitor">System Monitor</profileChoice>
-	<progress>Progrés</progress>
-	<progressChoice value="complete">completa</progressChoice>
-	<progressChoice value="in-work">en curs</progressChoice>
-	<progressChoice value="planned">planificada</progressChoice>
-	<progressChoice/>
-	<protocol>Protocol</protocol>
-	<pubdate>Data de publicació</pubdate>
-	<publicationDate>Data de publicació</publicationDate>
-	<publisher>Editor</publisher>
-	<purpose>Propòsit</purpose>
-	<rateIt>Establir rànquing</rateIt>
-	<ratingMsg>Premeu un botó per votar. Pot tardar un temps a que els nous rànquings siguin visibles.</ratingMsg>
-	<rawMetadata>Afegir metadades originals</rawMetadata>
-	<rebuild>Regenerar</rebuild>
-	<recentAdditions>Agregats recentment</recentAdditions>
-	<refSysTab>Sistema de Referència</refSysTab>
-	<region>Regió</region>
-	<register>Registrar-se</register>
-	<registerChoose>Vull </registerChoose>
-	<RegisteredUser>Usuari registrat</RegisteredUser>
-	<registerTitle>Formulari d'auto-enregistrament</registerTitle>
-	<registrationDetails>Informació sobre la inscripció: </registrationDetails>
-	<remote>Cerca remota</remote>
-	<remoteType>Remot</remoteType>
-	<remove>esborrar</remove>
-	<res>resultats</res>
-	<reset>Inicialitzar</reset>
-	<resetFeedbackForm>Buidar el formulari de suggeriments</resetFeedbackForm>
-	<resetPassword>Inicialitzar contrasenya</resetPassword>
-	<resetSearch>Buidar el formulari de cerques</resetSearch>
-	<ress>resultat</ress>
-	<restrictTo>Limitar a</restrictTo>
-	<result>Últims resultats</result>
-	<searchResult>Search results</searchResult>
-	<resources>Resources</resources>
-	<visualizationService>Visualization service URL (WMS)</visualizationService>
-	<resultsCoordinate>Resultats de la cerca per coordenades </resultsCoordinate>
-	<resultsFreeText>Resultats de la cerca per paraules clau</resultsFreeText>
-	<resultsMatching>Els resultats de la cerca són:</resultsMatching>
-	<Reviewer>Corrector de contingut</Reviewer>
-	<rss>Obrir alimentació RSS</rss>
-	<rtitle>Títol</rtitle>
-        <altTitle>Títol alternatiu</altTitle>
-	<save>Salvar</save>
-	<saveAndClose>Salvar i tancar</saveAndClose>
-	<saveAndValidate>Salvar i comprovar</saveAndValidate>
-	<savepdf>Guardar els resultats de la cerca en format PDF</savepdf>
-	<printSelection>Imprimir a PDF</printSelection>
-	<schema>Schema</schema>
-	<schematronError>Error d'Schematron</schematronError>
-	<search>Buscar</search>
-	<searchAllText>Què?</searchAllText>
-	<searchBox>Buscar dades i informació</searchBox>
-	<searchIndex>Índex de cerca</searchIndex>
-	<searching js="true">...Cerca en execució...</searching>
-	<searchPage>Pàgina de cerca</searchPage>
-	<searchPageDes>Anar a buscar metadades</searchPageDes>
-	<searchTemplates>Buscar plantilles</searchTemplates>
-	<searchText>Què?</searchText>
-	<searchUnused>Cerca de metadades buides o que mai han estat usades</searchUnused>
-	<searchUnusedTitle>Buscar no usats</searchUnusedTitle>
-	<select>Seleccionar: </select>
-	<selectAll>Seleccionar totes les metadades</selectAll>
-	<selectAllNotPossible>Massa coincidències! Ha d'haver-hi menys de </selectAllNotPossible>
-	<selected> seleccionats</selected>
-	<selectedOnly>Mostrar només els seleccionats</selectedOnly>
-	<selection>Selecció</selection>
-	<selectNone>Deseleccionar metadades seleccionades</selectNone>
-	<server>Servidor</server>
-	<setAll>Tots</setAll>
-	<setOnSave>Es posarà el valor en el moment que es salvi el registre</setOnSave>
-	<shibLogin>Shib Login</shibLogin>
-	<show>Pàgina de Metadades</show>
-	<showFileDownloadSummary>Show File Download Chooser</showFileDownloadSummary>
-	<simple>Cerca Simple</simple>
-	<simpleTab>Vista predefinida</simpleTab>
-	<simpleTabEditor>Editor per defecte</simpleTabEditor>
-	<singleFile>Arxiu (XML, SLD, WMC...)</singleFile>
-	<site>Lloc</site>
-	<siteId>Id del lloc</siteId>
-	<sizeBytes>Mida (bytes)</sizeBytes>
+  <paper>Còpia impresa</paper>
+  <partial>Parcialment contingut</partial>
+  <partialCooordinate>Coordenades parcials</partialCooordinate>
+  <password>Contrasenya</password>
+  <passwordDoNotMatch>Les contrasenyes no coincideixen. Si us plau, reintroduïu la nova
+    constrasenya.
+  </passwordDoNotMatch>
+  <passwordEntry>Si us plau, introduïu la constrasenya per duplicat.</passwordEntry>
+  <passwordLength>La constrasenya ha de tenir com a mínim " + minLength + " caràcters. Intenteu-ho
+    de nou.
+  </passwordLength>
+  <passwordOldRequired>La contrasenya antiga és obligatòria</passwordOldRequired>
+  <passwordSpace>Disculpeu, no es permeten espais a la contrasenya.</passwordSpace>
+  <persInfo>Informació personal</persInfo>
+  <usersAndGroups>Usuaris i grups</usersAndGroups>
+  <classification>Tesaurus i sistemes de classificació</classification>
+  <catalogueConfiguration>Configuració del catàleg</catalogueConfiguration>
+  <indexConfiguration>Configuració de l'índex</indexConfiguration>
+  <io>Importar, exportar i recol·lectar</io>
+  <placeKeyword>Paraules clau de lloc</placeKeyword>
+  <porCatInfoTab>Catàleg</porCatInfoTab>
+  <poweredBy>Programari usat:</poweredBy>
+  <previous>Anterior</previous>
+  <privileges>Privilegis</privileges>
+  <profile>Perfil</profile>
+  <profileChoice value="Administrator">Administrador</profileChoice>
+  <profileChoice value="Editor">Editor</profileChoice>
+  <profileChoice value="RegisteredUser">Usuari registrat</profileChoice>
+  <profileChoice value="Reviewer">Revisor de contingut</profileChoice>
+  <profileChoice value="UserAdmin">User Administrator</profileChoice>
+  <profileChoice value="Monitor">System Monitor</profileChoice>
+  <progress>Progrés</progress>
+  <progressChoice value="complete">completa</progressChoice>
+  <progressChoice value="in-work">en curs</progressChoice>
+  <progressChoice value="planned">planificada</progressChoice>
+  <progressChoice/>
+  <protocol>Protocol</protocol>
+  <pubdate>Data de publicació</pubdate>
+  <publicationDate>Data de publicació</publicationDate>
+  <publisher>Editor</publisher>
+  <purpose>Propòsit</purpose>
+  <rateIt>Establir rànquing</rateIt>
+  <ratingMsg>Premeu un botó per votar. Pot tardar un temps a que els nous rànquings siguin
+    visibles.
+  </ratingMsg>
+  <rawMetadata>Afegir metadades originals</rawMetadata>
+  <rebuild>Regenerar</rebuild>
+  <recentAdditions>Agregats recentment</recentAdditions>
+  <refSysTab>Sistema de Referència</refSysTab>
+  <region>Regió</region>
+  <register>Registrar-se</register>
+  <registerChoose>Vull</registerChoose>
+  <RegisteredUser>Usuari registrat</RegisteredUser>
+  <registerTitle>Formulari d'auto-enregistrament</registerTitle>
+  <registrationDetails>Informació sobre la inscripció:</registrationDetails>
+  <remote>Cerca remota</remote>
+  <remoteType>Remot</remoteType>
+  <remove>esborrar</remove>
+  <res>resultats</res>
+  <reset>Inicialitzar</reset>
+  <resetFeedbackForm>Buidar el formulari de suggeriments</resetFeedbackForm>
+  <resetPassword>Inicialitzar contrasenya</resetPassword>
+  <resetSearch>Buidar el formulari de cerques</resetSearch>
+  <ress>resultat</ress>
+  <restrictTo>Limitar a</restrictTo>
+  <result>Últims resultats</result>
+  <searchResult>Search results</searchResult>
+  <resources>Resources</resources>
+  <visualizationService>Visualization service URL (WMS)</visualizationService>
+  <resultsCoordinate>Resultats de la cerca per coordenades</resultsCoordinate>
+  <resultsFreeText>Resultats de la cerca per paraules clau</resultsFreeText>
+  <resultsMatching>Els resultats de la cerca són:</resultsMatching>
+  <Reviewer>Corrector de contingut</Reviewer>
+  <rss>Obrir alimentació RSS</rss>
+  <rtitle>Títol</rtitle>
+  <altTitle>Títol alternatiu</altTitle>
+  <save>Salvar</save>
+  <saveAndClose>Salvar i tancar</saveAndClose>
+  <saveAndValidate>Salvar i comprovar</saveAndValidate>
+  <savepdf>Guardar els resultats de la cerca en format PDF</savepdf>
+  <printSelection>Imprimir a PDF</printSelection>
+  <schema>Schema</schema>
+  <schematronError>Error d'Schematron</schematronError>
+  <search>Buscar</search>
+  <searchAllText>Què?</searchAllText>
+  <searchBox>Buscar dades i informació</searchBox>
+  <searchIndex>Índex de cerca</searchIndex>
+  <searching js="true">...Cerca en execució...</searching>
+  <searchPage>Pàgina de cerca</searchPage>
+  <searchPageDes>Anar a buscar metadades</searchPageDes>
+  <searchTemplates>Buscar plantilles</searchTemplates>
+  <searchText>Què?</searchText>
+  <searchUnused>Cerca de metadades buides o que mai han estat usades</searchUnused>
+  <searchUnusedTitle>Buscar no usats</searchUnusedTitle>
+  <select>Seleccionar:</select>
+  <selectAll>Seleccionar totes les metadades</selectAll>
+  <selectAllNotPossible>Massa coincidències! Ha d'haver-hi menys de</selectAllNotPossible>
+  <selected>seleccionats</selected>
+  <selectedOnly>Mostrar només els seleccionats</selectedOnly>
+  <selection>Selecció</selection>
+  <selectNone>Deseleccionar metadades seleccionades</selectNone>
+  <server>Servidor</server>
+  <setAll>Tots</setAll>
+  <setOnSave>Es posarà el valor en el moment que es salvi el registre</setOnSave>
+  <shibLogin>Shib Login</shibLogin>
+  <show>Pàgina de Metadades</show>
+  <showFileDownloadSummary>Show File Download Chooser</showFileDownloadSummary>
+  <simple>Cerca Simple</simple>
+  <simpleTab>Vista predefinida</simpleTab>
+  <simpleTabEditor>Editor per defecte</simpleTabEditor>
+  <singleFile>Arxiu (XML, SLD, WMC...)</singleFile>
+  <site>Lloc</site>
+  <siteId>Id del lloc</siteId>
+  <sizeBytes>Mida (bytes)</sizeBytes>
 
-	<sortBy>Ordenar per</sortBy>
-	<sortByType id="changeDate">Data de modificació</sortByType>
-	<sortByType id="popularity">Popularitat</sortByType>
-	<sortByType id="rating">Rànquing</sortByType>
-	<sortByType id="relevance">Rellevància</sortByType>
-	<sortByType id="title">Títol</sortByType>
+  <sortBy>Ordenar per</sortBy>
+  <sortByType id="changeDate">Data de modificació</sortByType>
+  <sortByType id="popularity">Popularitat</sortByType>
+  <sortByType id="rating">Rànquing</sortByType>
+  <sortByType id="relevance">Rellevància</sortByType>
+  <sortByType id="title">Títol</sortByType>
 
-	<southbc>Coordenada límit sud</southbc>
-	<spacesNot js="true">En aquest camp no es permeten espais</spacesNot>
-	<spatial2Tab>Representació espacial</spatial2Tab>
-	<spatialTab>Informació espacial</spatialTab>
-	<startsWith>Comença amb</startsWith>
-	<state>Estat</state>
-	<styleSheet>Full d'estil</styleSheet>
-	<submit>Enviar</submit>
-	<subtemplate>Subplantilla</subtemplate>
-	<subtemplateTitle>Títol del subtemplate</subtemplateTitle>
-	<summaryTab>Resum</summaryTab>
-	<surName>Cognom</surName>
-	<systemConfig>Configuració del sistema</systemConfig>
-	<systemConfigDes>Permet canviar alguns paràmetres del sistema</systemConfigDes>
-	<systemInfo>Informació del sistema</systemInfo>
-	<systemInfoDes>Mostra informació avançada del catàleg, índex, Java, sistema operatiu...</systemInfoDes>	
-	<template>Plantilla</template>
-	<Term>Terme</Term>
-	<thanks>Gràcies pel seu treball. L'equip GeoNetwork</thanks>
-	<theme>Tema del recurs (Categoria ISO)</theme>
+  <southbc>Coordenada límit sud</southbc>
+  <spacesNot js="true">En aquest camp no es permeten espais</spacesNot>
+  <spatial2Tab>Representació espacial</spatial2Tab>
+  <spatialTab>Informació espacial</spatialTab>
+  <startsWith>Comença amb</startsWith>
+  <state>Estat</state>
+  <styleSheet>Full d'estil</styleSheet>
+  <submit>Enviar</submit>
+  <subtemplate>Subplantilla</subtemplate>
+  <subtemplateTitle>Títol del subtemplate</subtemplateTitle>
+  <summaryTab>Resum</summaryTab>
+  <surName>Cognom</surName>
+  <systemConfig>Configuració del sistema</systemConfig>
+  <systemConfigDes>Permet canviar alguns paràmetres del sistema</systemConfigDes>
+  <systemInfo>Informació del sistema</systemInfo>
+  <systemInfoDes>Mostra informació avançada del catàleg, índex, Java, sistema operatiu...
+  </systemInfoDes>
+  <template>Plantilla</template>
+  <Term>Terme</Term>
+  <thanks>Gràcies pel seu treball. L'equip GeoNetwork</thanks>
+  <theme>Tema del recurs (Categoria ISO)</theme>
 
-	<thumbnails>Vista prèvia</thumbnails>
-	<timeout>Temps màxim d'espera a les respostes</timeout>
-	<timeoutChoice value="10">després de 10 segons</timeoutChoice>
-	<timeoutChoice value="20">després de 20 segons</timeoutChoice>
-	<timeoutChoice value="30">després de 30 segons</timeoutChoice>
-	<title>GeoNetwork- Geoportal de cerca, visualització i descàrrega d'informació i dades espacials</title>
-	<to>A</to>
-	<toDateSelector>Selector de data de fi</toDateSelector>
-	<tools>Eines</tools>
-	<topic>Tema</topic>
+  <thumbnails>Vista prèvia</thumbnails>
+  <timeout>Temps màxim d'espera a les respostes</timeout>
+  <timeoutChoice value="10">després de 10 segons</timeoutChoice>
+  <timeoutChoice value="20">després de 20 segons</timeoutChoice>
+  <timeoutChoice value="30">després de 30 segons</timeoutChoice>
+  <title>GeoNetwork- Geoportal de cerca, visualització i descàrrega d'informació i dades espacials
+  </title>
+  <to>A</to>
+  <toDateSelector>Selector de data de fi</toDateSelector>
+  <tools>Eines</tools>
+  <topic>Tema</topic>
 
-	<transferOwnership>Transferir propietat</transferOwnership>
-	<transferOwnershipDes>Transferir la propietat de les metadades a un altre usuari</transferOwnershipDes>
-	<type>Tipus</type>
-	<up>amunt</up>
-	<update>Actualitza</update>
-	<updateCategories>Actualitzar categories</updateCategories>
-	<updateCategory>Actualizar categoria</updateCategory>
-	<updateGroup>Actualizar grup</updateGroup>
-	<updatePrivileges>Actualizar privilegis</updatePrivileges>
-	<updateUserAccount>Actualizar informació d'usuari </updateUserAccount>
-	<upload>Càrrega</upload>
-	<user>Usuari </user>
-	<UserAdmin>Usuari administrador</UserAdmin>
-	<userAtLeastOneGroup js="true">Si us plau, seleccioneu almenys un grup.</userAtLeastOneGroup>	
-	<userDefined>- Definit per l'usuari -</userDefined>
-	<userInfo>Canviar la informació d'usuari</userInfo>
-	<userInfoDes>Permet a l'usuari actual canviar la informació d'usuari</userInfoDes>
-	<userManagement>Gestionar usuaris</userManagement>
-	<userManDes>Afegir/modificar/esborrar i mostrar usuaris</userManDes>
-	<username>Usuari</username>
-	<usernameMandatory>El camp Usuari és obligatori.</usernameMandatory>
-	<userPw>Canvi de contrasenya</userPw>
-	<userPwDes>Permet a l'usuari actual canviar la contrasenya</userPwDes>
-	<uuidAction>Accions d'importació:</uuidAction>
-	<validate>Validar</validate>
-	<assign>Assignar al catàleg actual</assign>
-	<validityBegins>Inici</validityBegins>
-	<validityEnds>i fi vàlids</validityEnds>
-	<view>Veure</view>
-	<viewInGE>Veure a Google Earth</viewInGE>
-	<waitGetCap js="true">Carregant les capes del servidor, si us plau espereu...</waitGetCap>
-	<westbc>Coordenada límit oest</westbc>
-	<what>Què?</what>
-	<when>Quan?</when>
-	<where>On?</where>
-	<winInfo1>Aquesta finestra mostrarà els recursos de GeoNetwork. Aquesta finestra es pot amagar en funció de com gestioni les finestres el vostre navegador En aquest cas, haureu de col·locar la finestra al fons de l'escriptori quan no la necessiteu.</winInfo1>
-	<winInfo2>Mitjançant la icona (?) podreu disposar de més informació. Quan activeu aquesta icona els resultats es mostraran a la finestra on estaba el recurs.</winInfo2>
-	<wwwlink>Enllaços web</wwwlink>
-	<xmlInsert>Importació d'un arxiu de metadades en format XML o MEF</xmlInsert>
-	<xmlInsertTitle>Inserir metadades XML</xmlInsertTitle>
-	<xmlTab>Vista XML</xmlTab>
-	<inspireTab>Vista INSPIRE</inspireTab>
-	<inspireSection>
-		<identification>
-			<title>Identificació</title>
-			<help>
-				<div>
-				Cal aportar els següents elements de metadades:
-				<ul>
-					<li>Títol del recurs:
-				És un nom característic, i sovint únic, pel qual és conegut el recurs. El domini de valors d'aquest element de metadades és text lliure.</li>
-					<li>Resum del recurs:
-						Es tracta d'un breu resum del contingut del recurs. El domini de valors d'aquest element de metadades és text lliure.</li>
-					<li>Tipus de recurs:
-						Tipus de recurs que descriuen les metadades. El domini de valors d'aquest element de metadades es defineix a la part D.1.</li>
-					<li>Localitzador del recurs:
-						Defineix l'enllaç o enllaços a informació addicional sobre el recurs. El domini de valors d'aquest element de metadades és una cadena de caràcters, expressada habitualment com un Localitzador Uniforme de Recursos (URL).</li>
-					<li>Identificador únic de recurs:
-						Valor que identifica el recurs de manera inequívoca. El domini de valors d'aquest element de metadades és un codi obligatori en forma de cadena de caràcters, generalment assignat pel propietari de les dades, i un espai de noms de cadenes de caràcters que identifica inequívocament el context del codi identificador (per exemple, el propietari de les dades).	</li>
-					<li>Recurs acoblat:
-						Si el recurs és un servei de dades espacials, aquest element de metadades identifica, si s'escau, el conjunt o conjunts de dades espacials en què es basa el servei mitjançant el seu Identificador Uniforme de Recursos (URI). El domini de valors d'aquest element de metadades és un codi obligatori en forma de cadena de caràcters, generalment assignat pel propietari de les dades, i un espai de noms de cadenes de caràcters que identifica inequívocament el context del codi identificador (per exemple, el propietari de les dades).</li>
-					<li>Idioma del recurs:
-						La llengua o llengües usades dins del recurs. El domini de valors d'aquest element de metadades es limita als llenguatges definits a ISO 639-2.</li>
-				</ul>
-				</div>
-			</help>
-		</identification>
-		<classification>
-			<title>Classificació de dades i serveis espacials</title>
-			<help>
-				<div>
-					<ul>
-						<li>Categoria temàtica:			
-						És un esquema de classificació d'alt nivell que ajuda a l'agrupació i a la cerca per temes dels recursos de dades espacials disponibles. El domini de valors d'aquest element de metadades es defineix a la part D.2.</li>
-						<li>
-							Tipus de servei de dades espacials: 
-							Consisteix en una classificació que ajuda a la cerca de serveis de dades espacials disponibles. Cada servei específic serà classificat en una única categoria. El domini de valors d'aquest element de metadades es defineix a la part D.3.
-						</li>
-					</ul>
-				</div>
-			</help>
-		</classification>
-		<keywords>
-			<title>Paraules clau i temes INSPIRE</title>
-			<help>
-				<div>
-					Segons les regles d'implementació INSPIRE per metadades, si un recurs és un conjunt de dades o una sèrie, cal proporcionar com a mínim una paraula clau del diccionari GEMET (General Environmental Multi-lingual Thesaurus) que descrigui el tema rellevant dels Annexos I, II o III de la Directiva 2007/2/EC.
-					<br/>					
-					Els títols o definicions dels 34 temes espacials INSPIRE s'han integrat al GEMET (General Environmental Multi-lingual Thesaurus) (GEMET) en les 23 llengües oficials comunitàries: http://www.eionet.europa.eu/gemet/inspire_themes.
-					<br/>
-					A més del tema INSPIRE, també es poden afegir altres paraules clau. Aquestes es poden decriure com a text lliure o poden provenir d'un vocabulari controlat. Si provenen d'un vocabulari controlat (Tesaurus, Ontologia), cal proporcionar la menció d'aquest vocabulari. 
-				</div>
-			</help>
-		</keywords>
-		<geoloc>
-			<title>Localització geogràfica</title>
-			<help>
-				<div>
-					El requisit de localització geogràfica indicat a l'Article 11(2)(e) de la Directiva 2007/2/EC s'expresarà mitjançant l'element de metadades rectangle geogràfic envoltant.
-					Aquest rectangle és l'extensió del recurs a l'espai geogràfic (Bounding Box). El rectangle s'expressarà mitjançant les longituds est i oest, i les latituds nord i sud, en graus decimals, amb una precisió d'almenys 2 decimals. 
-				</div>
-			</help>
-		</geoloc>
-		<temporal>
-			<title>Referència temporal</title>
-			<help>
-				<div>
-					Aquest element de metadades respon al requisit de disposar d'informació temporal de les dades, tal i com indica l'Article 8(2)(d) de la Directiva 2007/2/EC. Com a mínim es proporcionarà un dels elements de metadades indicats als punts 5.1 al 5.4. El domini de valors dels elements de metadades indicats als punts 5.1 al 5.4 és un conjunt de dates. Cada data es referirà a un sistema de referència temporal i s'expressarà en una forma compatible amb el sistema en qüestió. El sistema de referència per defecte serà el calendari gregorià i les dates s'expressaran conforme a la norma ISO 8601.
-					<br/>
-					L'extensió temporal defineix el període de temps cobert pel contingut del recurs.
-					
-					Aquest període de temps es pot expressar de les següents maneres:
-					<ul>					
-						<li>una data concreta</li>
-						<li>un interval de dates expressat mitjançant la data d'inici i la de finalització de l'interval</li>
-						<li>una barreja de dates i intervals</li>
-					</ul>
-				</div>
-			</help>
-		</temporal>
-		<quality>
-			<title>Qualitat i validesa</title>
-			<help>
-				<div> Els requisits establerts a l'Article 5(2) i Article 11(2) de la Directiva 2007/2/EC pel que fa a la qualitat i a la validesa de les dades espacials, es compliran mitjançant els següents elements de metadades: 
-					<ul>
-						<li>Llinatge:
-						És una declaració sobre la història del procés o la qualitat general del conjunt de dades espacials. Si s'escau, pot incloure una declaració que indiqui si el conjunt de dades ha estat validat o sotmès a control de qualitat, si es tracta de la versió oficial (en cas d'haver-hi diverses versions) i si té validesa legal. El domini de valors d'aquest element és text lliure.</li>
-						<li>
-							Resolució espacial:
-							
-							La resolució espacial es refereix al nivell de detall del conjunt de dades. S'expressarà mitjançant un conjunt que anirà de zero a moltes resolucions (distàncies) (habitual per dades ràster i productes derivats d'imatges) o escales equivalents (habitual per mapes i productes derivats de mapes). Una escala equivalent s'expressa generalment amb un valor enter que expressa el denominador de l'escala. Una resolució (distància) s'expressarà mitjançant un valor numèric associat a una unitat de longitud.			
-						</li>
-					</ul>				
-				</div>
-			</help>
-		</quality>
-		<conformity>
-			<title>Conformitat</title>
-			<help>
-				<div>
-					Els requisits establerts a l'Article 5(2)(a) i Article 11(2)(d) de la Directiva 2007/2/EC pel que fa a la conformitat i el grau de conformitat, amb les normes d'execució adoptades en virtut de l'Article 7(1) de la Directiva 2007/2/EC es compliran mitjançant els següents elements de metadada: 
-					<ul>
-						<li>Especificació:					
-							Consisteix en una menció de les normes d'execució adoptades en virtut de l'Article 7(1) de la Directiva 2007/2/EC o d'una altra especificació a la que s'ajusti el recurs.
-							La menció inclourà almenys el títol i la data de referència (data de publicació, data de l'última revisió o data de creació) de les normes d'execució adoptades en virtud de l'Article 7(1) de la Directiva 2007/2/EC o d'altres especificacions.
-						</li>
-						<li>
-							Grau:					
-							És el grau de conformitat del recurs amb les normes d'execució adoptades en virtut de l'Article 7(1) de la Directiva 2007/2/EC o amb una altra especificació. El domini de valors d'aquest element es defineix a la Part D. 							
-						</li>
-					</ul>					
-				</div>
-			</help>
-		</conformity>
-		<constraint>
-			<title>Constriccions relacionades amb l'accés i l'ús</title>
-			<help>
-				<div>
-					S'entén com a constricció relacionada amb l'accés i l'ús una de les indicades a continuació o ambdues:
-					<ul>
-						<li>
-							Condicions aplicables a l'accés i a l'ús:					
-							Aquest element de metadades defineix les condicions d'accés i ús dels conjunts de dades i serveis espacials i, si s'escau, les tarifes corresponents segons el que es disposa a l'Article 5(2)(b) i a l'Article 11(2)(f) de la Directiva 2007/2/EC. El domini de valors d'aquest element és text lliure. 
-							
-							L'element ha de tenir valors. Si no s'apliquen condicions a l'accés al recurs i al seu ús, s'usarà "cap condició a aplicar". Si no es coneixen condicions, s'usarà "condicions desconegudes". Aquest element també aportarà informació sobre qualsevol tarifa d'accés, si s'escau, o remetrà a un Localitzador Uniforme de Recursos (URL) on pugui trobar informació sobre les tarifes.							
-						</li>
-						<li>
-							Restriccions d'accés públic: 
-							Quan els Estats Membres limitin l'accés públic als conjunts i serveis de dades espacials segons el que disposa l'Article 13 de la Directiva 2007/2/EC, aquest element de metadades aportarà informació sobre les restriccions i les raons en què es basen. Si no hi ha restriccions d'accés públic, aquest element de metadades ho indicarà. El domini de valors d'aquest element és text lliure.						
-						</li>
-					</ul>					
-				</div>
-			</help>
-		</constraint>
-		<org>
-			<title>Organitzacions responsables de l'establiment, gestió, manteniment i distribució</title>
-			<help>
-				<div>
-					Als efectes de l'Article 5(2)(d) i l'Article 11(2)(g) de la Directiva 2007/2/EC, s'aportaran els dos elements de metadades següents:
-					<ul>
-						<li>
-							Part responsable:
-							Aquest element consisteix en una descripció de l'organització responsable de l'establiment, la gestió, el manteniment i la distribució del recurs. Aquesta descripció ha d'incloure: 
-							(el nom de l'organització amb text lliure i una adreça de correu del contacte.)							
-						</li>
-						<li>
-							Funció de la part responsable:					
-							Es descriu el paper de la part responsable. El domini de valors d'aquest element es defineix a la Part D.6.	
-						</li>
-					</ul>
-				</div>
-			</help>
-		</org>
-		<metadata>
-			<title>Metadades</title>
-			<help>Als efectes de l'Article 5(1) de la Directiva 2007/2/EC.</help>
-		</metadata>
-	</inspireSection>
-	<inspireAddConformity>Afegir la secció de conformitat INSPIRE</inspireAddConformity>
-	<xsdError>Error de validació XSD</xsdError>
-	<yourRegistration js="true">El vostre registre...</yourRegistration>
-	<zip>Codi postal</zip>
+  <transferOwnership>Transferir propietat</transferOwnership>
+  <transferOwnershipDes>Transferir la propietat de les metadades a un altre usuari
+  </transferOwnershipDes>
+  <type>Tipus</type>
+  <up>amunt</up>
+  <update>Actualitza</update>
+  <updateCategories>Actualitzar categories</updateCategories>
+  <updateCategory>Actualizar categoria</updateCategory>
+  <updateGroup>Actualizar grup</updateGroup>
+  <updatePrivileges>Actualizar privilegis</updatePrivileges>
+  <updateUserAccount>Actualizar informació d'usuari</updateUserAccount>
+  <upload>Càrrega</upload>
+  <user>Usuari</user>
+  <UserAdmin>Usuari administrador</UserAdmin>
+  <userAtLeastOneGroup js="true">Si us plau, seleccioneu almenys un grup.</userAtLeastOneGroup>
+  <userDefined>- Definit per l'usuari -</userDefined>
+  <userInfo>Canviar la informació d'usuari</userInfo>
+  <userInfoDes>Permet a l'usuari actual canviar la informació d'usuari</userInfoDes>
+  <userManagement>Gestionar usuaris</userManagement>
+  <userManDes>Afegir/modificar/esborrar i mostrar usuaris</userManDes>
+  <username>Usuari</username>
+  <usernameMandatory>El camp Usuari és obligatori.</usernameMandatory>
+  <userPw>Canvi de contrasenya</userPw>
+  <userPwDes>Permet a l'usuari actual canviar la contrasenya</userPwDes>
+  <uuidAction>Accions d'importació:</uuidAction>
+  <validate>Validar</validate>
+  <assign>Assignar al catàleg actual</assign>
+  <validityBegins>Inici</validityBegins>
+  <validityEnds>i fi vàlids</validityEnds>
+  <view>Veure</view>
+  <viewInGE>Veure a Google Earth</viewInGE>
+  <waitGetCap js="true">Carregant les capes del servidor, si us plau espereu...</waitGetCap>
+  <westbc>Coordenada límit oest</westbc>
+  <what>Què?</what>
+  <when>Quan?</when>
+  <where>On?</where>
+  <winInfo1>Aquesta finestra mostrarà els recursos de GeoNetwork. Aquesta finestra es pot amagar en
+    funció de com gestioni les finestres el vostre navegador En aquest cas, haureu de col·locar la
+    finestra al fons de l'escriptori quan no la necessiteu.
+  </winInfo1>
+  <winInfo2>Mitjançant la icona (?) podreu disposar de més informació. Quan activeu aquesta icona
+    els resultats es mostraran a la finestra on estaba el recurs.
+  </winInfo2>
+  <wwwlink>Enllaços web</wwwlink>
+  <xmlInsert>Importació d'un arxiu de metadades en format XML o MEF</xmlInsert>
+  <xmlInsertTitle>Inserir metadades XML</xmlInsertTitle>
+  <xmlTab>Vista XML</xmlTab>
+  <inspireTab>Vista INSPIRE</inspireTab>
+  <inspireSection>
+    <identification>
+      <title>Identificació</title>
+      <help>
+        <div>
+          Cal aportar els següents elements de metadades:
+          <ul>
+            <li>Títol del recurs:
+              És un nom característic, i sovint únic, pel qual és conegut el recurs. El domini de
+              valors d'aquest element de metadades és text lliure.
+            </li>
+            <li>Resum del recurs:
+              Es tracta d'un breu resum del contingut del recurs. El domini de valors d'aquest
+              element de metadades és text lliure.
+            </li>
+            <li>Tipus de recurs:
+              Tipus de recurs que descriuen les metadades. El domini de valors d'aquest element de
+              metadades es defineix a la part D.1.
+            </li>
+            <li>Localitzador del recurs:
+              Defineix l'enllaç o enllaços a informació addicional sobre el recurs. El domini de
+              valors d'aquest element de metadades és una cadena de caràcters, expressada
+              habitualment com un Localitzador Uniforme de Recursos (URL).
+            </li>
+            <li>Identificador únic de recurs:
+              Valor que identifica el recurs de manera inequívoca. El domini de valors d'aquest
+              element de metadades és un codi obligatori en forma de cadena de caràcters,
+              generalment assignat pel propietari de les dades, i un espai de noms de cadenes de
+              caràcters que identifica inequívocament el context del codi identificador (per
+              exemple, el propietari de les dades).
+            </li>
+            <li>Recurs acoblat:
+              Si el recurs és un servei de dades espacials, aquest element de metadades identifica,
+              si s'escau, el conjunt o conjunts de dades espacials en què es basa el servei
+              mitjançant el seu Identificador Uniforme de Recursos (URI). El domini de valors
+              d'aquest element de metadades és un codi obligatori en forma de cadena de caràcters,
+              generalment assignat pel propietari de les dades, i un espai de noms de cadenes de
+              caràcters que identifica inequívocament el context del codi identificador (per
+              exemple, el propietari de les dades).
+            </li>
+            <li>Idioma del recurs:
+              La llengua o llengües usades dins del recurs. El domini de valors d'aquest element de
+              metadades es limita als llenguatges definits a ISO 639-2.
+            </li>
+          </ul>
+        </div>
+      </help>
+    </identification>
+    <classification>
+      <title>Classificació de dades i serveis espacials</title>
+      <help>
+        <div>
+          <ul>
+            <li>Categoria temàtica:
+              És un esquema de classificació d'alt nivell que ajuda a l'agrupació i a la cerca per
+              temes dels recursos de dades espacials disponibles. El domini de valors d'aquest
+              element de metadades es defineix a la part D.2.
+            </li>
+            <li>
+              Tipus de servei de dades espacials:
+              Consisteix en una classificació que ajuda a la cerca de serveis de dades espacials
+              disponibles. Cada servei específic serà classificat en una única categoria. El domini
+              de valors d'aquest element de metadades es defineix a la part D.3.
+            </li>
+          </ul>
+        </div>
+      </help>
+    </classification>
+    <keywords>
+      <title>Paraules clau i temes INSPIRE</title>
+      <help>
+        <div>
+          Segons les regles d'implementació INSPIRE per metadades, si un recurs és un conjunt de
+          dades o una sèrie, cal proporcionar com a mínim una paraula clau del diccionari GEMET
+          (General Environmental Multi-lingual Thesaurus) que descrigui el tema rellevant dels
+          Annexos I, II o III de la Directiva 2007/2/EC.
+          <br/>
+          Els títols o definicions dels 34 temes espacials INSPIRE s'han integrat al GEMET (General
+          Environmental Multi-lingual Thesaurus) (GEMET) en les 23 llengües oficials comunitàries:
+          http://www.eionet.europa.eu/gemet/inspire_themes.
+          <br/>
+          A més del tema INSPIRE, també es poden afegir altres paraules clau. Aquestes es poden
+          decriure com a text lliure o poden provenir d'un vocabulari controlat. Si provenen d'un
+          vocabulari controlat (Tesaurus, Ontologia), cal proporcionar la menció d'aquest
+          vocabulari.
+        </div>
+      </help>
+    </keywords>
+    <geoloc>
+      <title>Localització geogràfica</title>
+      <help>
+        <div>
+          El requisit de localització geogràfica indicat a l'Article 11(2)(e) de la Directiva
+          2007/2/EC s'expresarà mitjançant l'element de metadades rectangle geogràfic envoltant.
+          Aquest rectangle és l'extensió del recurs a l'espai geogràfic (Bounding Box). El rectangle
+          s'expressarà mitjançant les longituds est i oest, i les latituds nord i sud, en graus
+          decimals, amb una precisió d'almenys 2 decimals.
+        </div>
+      </help>
+    </geoloc>
+    <temporal>
+      <title>Referència temporal</title>
+      <help>
+        <div>
+          Aquest element de metadades respon al requisit de disposar d'informació temporal de les
+          dades, tal i com indica l'Article 8(2)(d) de la Directiva 2007/2/EC. Com a mínim es
+          proporcionarà un dels elements de metadades indicats als punts 5.1 al 5.4. El domini de
+          valors dels elements de metadades indicats als punts 5.1 al 5.4 és un conjunt de dates.
+          Cada data es referirà a un sistema de referència temporal i s'expressarà en una forma
+          compatible amb el sistema en qüestió. El sistema de referència per defecte serà el
+          calendari gregorià i les dates s'expressaran conforme a la norma ISO 8601.
+          <br/>
+          L'extensió temporal defineix el període de temps cobert pel contingut del recurs.
 
-	<header_meta>
-		<meta name="keywords" content="GeoNetwork opensource metadades ISO19115 ISO19139 ISO GIS teledetecció dades shapefiles dades espacials imatges sat·tèlit mapa mapes interactius opengis geospatial CSW reference implementation mapping 19115 19139 geogràfic z39.50 catàleg clearinghouse cobertures malles raster data opensource open source network xarxa"/>
-		<meta name="description" content="GeoNetwork proporciona, a través d'Internet, accés a mapes interactius, imatges de sat·tèlit i bases de dades espacials relacionades. El propòsit és millorar l'accés i la integració de dades espacials i informació. El programari lliure GeoNetwork permet compartir fácilmente datdes espaciales entre sls usuaris"/>
-		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
-		<meta name="DC.title" lang="Catalan" content="Portal GeoNetwork per informació i dades espacials"/>
-		<meta name="DC.creator" content="Equip GeoNetwork"/>
-		<meta name="DC.subject" lang="Catalan" content="GeoNetwork metadades ISO19115 ISO19139 ISO GIS sensors remots dades shapefiles dades espacials imatges sat·tèlit mapes mapes interactius opengis 19115 19139 geogràfic z39.50 catàleg clearinghouse cobertures grid raster data opensource open source network xarxa"/>
-		<meta name="DC.description" lang="Catalan" content="GeoNetwork proporciona accés a través d'Internet a mapes interactius, imatges de sat·tèlit i a bases de dades espacials relacionades. El seu propòsit és millorar l'accés i fer ús integrat de dades espacials i informació. El programari lliure GeoNetwork permet compartir fàcilment dades espacials entre diferents usuaris"/>
-		<meta name="DC.publisher" content=""/>
-		<meta name="DC.date" content="02-07-2007"/>
-		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource" />
-		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish German Russian Chinese Dutch Portuguese"/>
-		<meta name="DC.coverage" content="Global"/>
-	</header_meta>
-	<mainpage1>
-		<h1>El propòsit de GeoNetwork és:</h1>
-		<ul>
-			<li>Millorar l'accés a les dades i facilitar-ne la integració (interoperabilitat)</li>
-			<li>Ajudar a la presa de decisions</li>
-			<li>Promocionar solucions multidisciplinàries pel que fa al desenvolupament sostenible</li>
-			<li>Emfatitzar els beneficis que proporciona la comprensió de la informació geogràfica</li>
-		</ul>
-	</mainpage1>
-	<mainpage2>
-		<p>
-		El projecte GeoNetwork opensource promou que es comparteixi la informació temàtica i georeferenciada
-		disponible a les organizacions. Si desitgeu més informació, contacteu  
-		</p>
-	</mainpage2>
-	<mainhelp1> Com buscar... </mainhelp1>
-	<mainhelp2> Amagar l'ajuda... </mainhelp2>
-	<mainhelp3>
-		<p>
-			<font size="-2"> Podeu cercar utilitzant una de les opcions proporcionades o una combinació d'elles.<br/> Només es mostraran els resultats que compleixin tots els criteris. </font>
-		</p>
-		<p>
-			<font size="-2"> La cerca per <b>text lliure (Què?)</b> cerca el text a tots els camps de les metadades emmagatzemades a GeoNetwork. <br/>
-				<i> Quan s'introdueixen diverses paraules s'interpreta com text lliure amb operació lògica AND. </i>
-			</font>
-		</p>
-		<p>
-			<font size="-2"> La cerca per <b>tema</b> cerca les correspondències del tema en qüestió. </font>
-		</p>
-		<p>
-			<font size="-2"> La cerca per <b>situació (On?)</b> trobarà mapes que coincideixen amb els límits seleccionats (Bounding Box). </font>
-		</p>
-		<p>
-			<font size="-2"> Escollint l'opció "<b>
-					<input name="demo" type="checkbox" checked="checked"/> Inclòs</b> a l'<b>àrea</b> seleccionada" podreu trobar mapes que cobreixen més territori que l'àrea seleccionada.<br/>
-				<i>Per exemple: Mapes globals o regionals que, a més de cobrir el país seleccionat, en cobreixen d'altres.</i>
-			</font>
-		</p>
-		<p>
-			<font size="-2"> Escollint l'opció "<b>
-					<input name="demo" type="checkbox" checked="checked"/> Parcialment contingut</b> a l'<b>àrea</b> seleccionada" podreu trobar mapes que cobreixin parcialment l'àrea seleccionada. </font>
-		</p>
-	</mainhelp3>
-	<savexml>
-		<dc>Guardar metadades de Dublin Core com XML</dc>
-		<fgdc>Guardar metadades FGDC com XML</fgdc>
-		<iso19115Esri>Guardar metadades ISO19115 a XML per ESRI ArcCatalog</iso19115Esri>
-		<iso19139>Guardar metadades ISO19115/19139 com XML</iso19139>
-		<iso19139fra>Guardar metadades Fra ISO19115/19139 com XML</iso19139fra>
-	</savexml>
-	<thesaurus>
-		<load>Load from GeoNetwork thesaurus repository</load>
-		<addelement>Afegir element</addelement>
-		<admin>Administrar tesaurus</admin>
-		<broader>Terme més ampli</broader>
-		<category>Categoria del tesaurus</category>
-		<consultation>Veure tesaurus</consultation>
-		<delete>Eliminar tesaurus</delete>
-		<deleteelement>Eliminar element</deleteelement>
-		<download>Descarregar tesaurus</download>
-		<edit>Editar tesaurus</edit>
-		<editelement>Editar element</editelement>
-		<edition>Editar tesaurus</edition>
-		<en>a</en>
-		<foundKeyWords>Número de termes trobats</foundKeyWords>
-		<foundKeyWordsLimit>Número màxim de termes trobats</foundKeyWordsLimit>
-		<keywordConfirm>Confirmar esborrat de la paraula clau</keywordConfirm>
-		<keywordDescription>Definició de la paraula clau:</keywordDescription>
-		<management>Gestionar tesaurus</management>
-		<manDes>Afegir/modificar/eliminar i mostrar tesaurus</manDes>
-		<narrower>Terme més acotat</narrower>
-		<related>Terme relacionat</related>
-		<thesaurus>Tesaurus</thesaurus>
-		<unknown>Tesaurus desconegut</unknown>
-		<update>Actualitzar tesaurus</update>
-		<updateelement>Actualitzar element</updateelement>
-		<upload>Carregar tesaurus</upload>
-	</thesaurus>
-	<searchhelp>
-            <altTitle>Introdueixi el títol alternatiu aquí</altTitle>
-            <searchAllText>Introdueixi un text lliure aquí</searchAllText>
-            <rtitle>Introdueixi el títol aquí</rtitle>
-            <abstract>Introdueixi el resum aquí</abstract>
-            <keywords>Seleccioni les paraules clau associades a metadades</keywords>
-            <thesaurus>Seleccioni les paraules clau del tesaurus</thesaurus>
-	</searchhelp>
+          Aquest període de temps es pot expressar de les següents maneres:
+          <ul>
+            <li>una data concreta</li>
+            <li>un interval de dates expressat mitjançant la data d'inici i la de finalització de
+              l'interval
+            </li>
+            <li>una barreja de dates i intervals</li>
+          </ul>
+        </div>
+      </help>
+    </temporal>
+    <quality>
+      <title>Qualitat i validesa</title>
+      <help>
+        <div>Els requisits establerts a l'Article 5(2) i Article 11(2) de la Directiva 2007/2/EC pel
+          que fa a la qualitat i a la validesa de les dades espacials, es compliran mitjançant els
+          següents elements de metadades:
+          <ul>
+            <li>Llinatge:
+              És una declaració sobre la història del procés o la qualitat general del conjunt de
+              dades espacials. Si s'escau, pot incloure una declaració que indiqui si el conjunt de
+              dades ha estat validat o sotmès a control de qualitat, si es tracta de la versió
+              oficial (en cas d'haver-hi diverses versions) i si té validesa legal. El domini de
+              valors d'aquest element és text lliure.
+            </li>
+            <li>
+              Resolució espacial:
 
-	<inspire>
-        <serviceType>
-            <value id="discovery">Discovery Service (discovery)</value>
-            <value id="view">View Service (view)</value>
-            <value id="download">Download Service (download)</value>
-            <value id="transformation">Transformation Service (transformation)</value>
-            <value id="invoke">Invoke Spatial Data Service (invoke)</value>
-            <value id="other">Other Services (other)</value>
-        </serviceType>
-        <spatialDataService>
-            <group label="Geographic human interaction services">
-                <value id="humanInteractionService">Geographic human interaction services</value>
-                <value id="humanCatalogueViewer">Catalogue viewer</value>
-                <value id="humanGeographicViewer">Geographic viewer</value>
-                <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
-                <value id="humanServiceEditor">Service editor</value>
-                <value id="humanChainDefinitionEditor">Chain definition editor</value>
-                <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
-                <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
-                <value id="humanGeographicSymbolEditor">Geographic symbol editor</value>
-                <value id="humanFeatureGeneralizationEditor">Feature generalisation editor</value>
-                <value id="humanGeographicDataStructureViewer">Geographic data-structure viewer</value>
-            </group>
+              La resolució espacial es refereix al nivell de detall del conjunt de dades.
+              S'expressarà mitjançant un conjunt que anirà de zero a moltes resolucions (distàncies)
+              (habitual per dades ràster i productes derivats d'imatges) o escales equivalents
+              (habitual per mapes i productes derivats de mapes). Una escala equivalent s'expressa
+              generalment amb un valor enter que expressa el denominador de l'escala. Una resolució
+              (distància) s'expressarà mitjançant un valor numèric associat a una unitat de
+              longitud.
+            </li>
+          </ul>
+        </div>
+      </help>
+    </quality>
+    <conformity>
+      <title>Conformitat</title>
+      <help>
+        <div>
+          Els requisits establerts a l'Article 5(2)(a) i Article 11(2)(d) de la Directiva 2007/2/EC
+          pel que fa a la conformitat i el grau de conformitat, amb les normes d'execució adoptades
+          en virtut de l'Article 7(1) de la Directiva 2007/2/EC es compliran mitjançant els següents
+          elements de metadada:
+          <ul>
+            <li>Especificació:
+              Consisteix en una menció de les normes d'execució adoptades en virtut de l'Article
+              7(1) de la Directiva 2007/2/EC o d'una altra especificació a la que s'ajusti el
+              recurs.
+              La menció inclourà almenys el títol i la data de referència (data de publicació, data
+              de l'última revisió o data de creació) de les normes d'execució adoptades en virtud de
+              l'Article 7(1) de la Directiva 2007/2/EC o d'altres especificacions.
+            </li>
+            <li>
+              Grau:
+              És el grau de conformitat del recurs amb les normes d'execució adoptades en virtut de
+              l'Article 7(1) de la Directiva 2007/2/EC o amb una altra especificació. El domini de
+              valors d'aquest element es defineix a la Part D.
+            </li>
+          </ul>
+        </div>
+      </help>
+    </conformity>
+    <constraint>
+      <title>Constriccions relacionades amb l'accés i l'ús</title>
+      <help>
+        <div>
+          S'entén com a constricció relacionada amb l'accés i l'ús una de les indicades a
+          continuació o ambdues:
+          <ul>
+            <li>
+              Condicions aplicables a l'accés i a l'ús:
+              Aquest element de metadades defineix les condicions d'accés i ús dels conjunts de
+              dades i serveis espacials i, si s'escau, les tarifes corresponents segons el que es
+              disposa a l'Article 5(2)(b) i a l'Article 11(2)(f) de la Directiva 2007/2/EC. El
+              domini de valors d'aquest element és text lliure.
 
-            <group label="Geographic model/information management service">
-                <value id="infoManagementService">Geographic model/information management service</value>
-                <value id="infoFeatureAccessService">Feature access service</value>
-                <value id="infoMapAccessService">Map access service</value>
-                <value id="infoCoverageAccessService">Coverage access service</value>
-                <value id="infoSensorDescriptionService">Sensor description service</value>
-                <value id="infoProductAccessService">Product access service</value>
-                <value id="infoFeatureTypeService">Feature type service</value>
-                <value id="infoCatalogueService">Catalogue service</value>
-                <value id="infoRegistryService">Registry service</value>
-                <value id="infoGazetteerService">Gazetteer service</value>
-                <value id="infoOrderHandlingService">Order handling service</value>
-                <value id="infoStandingOrderService">Standing order service</value>
-            </group>
+              L'element ha de tenir valors. Si no s'apliquen condicions a l'accés al recurs i al seu
+              ús, s'usarà "cap condició a aplicar". Si no es coneixen condicions, s'usarà
+              "condicions desconegudes". Aquest element també aportarà informació sobre qualsevol
+              tarifa d'accés, si s'escau, o remetrà a un Localitzador Uniforme de Recursos (URL) on
+              pugui trobar informació sobre les tarifes.
+            </li>
+            <li>
+              Restriccions d'accés públic:
+              Quan els Estats Membres limitin l'accés públic als conjunts i serveis de dades
+              espacials segons el que disposa l'Article 13 de la Directiva 2007/2/EC, aquest element
+              de metadades aportarà informació sobre les restriccions i les raons en què es basen.
+              Si no hi ha restriccions d'accés públic, aquest element de metadades ho indicarà. El
+              domini de valors d'aquest element és text lliure.
+            </li>
+          </ul>
+        </div>
+      </help>
+    </constraint>
+    <org>
+      <title>Organitzacions responsables de l'establiment, gestió, manteniment i distribució</title>
+      <help>
+        <div>
+          Als efectes de l'Article 5(2)(d) i l'Article 11(2)(g) de la Directiva 2007/2/EC,
+          s'aportaran els dos elements de metadades següents:
+          <ul>
+            <li>
+              Part responsable:
+              Aquest element consisteix en una descripció de l'organització responsable de
+              l'establiment, la gestió, el manteniment i la distribució del recurs. Aquesta
+              descripció ha d'incloure:
+              (el nom de l'organització amb text lliure i una adreça de correu del contacte.)
+            </li>
+            <li>
+              Funció de la part responsable:
+              Es descriu el paper de la part responsable. El domini de valors d'aquest element es
+              defineix a la Part D.6.
+            </li>
+          </ul>
+        </div>
+      </help>
+    </org>
+    <metadata>
+      <title>Metadades</title>
+      <help>Als efectes de l'Article 5(1) de la Directiva 2007/2/EC.</help>
+    </metadata>
+  </inspireSection>
+  <inspireAddConformity>Afegir la secció de conformitat INSPIRE</inspireAddConformity>
+  <xsdError>Error de validació XSD</xsdError>
+  <yourRegistration js="true">El vostre registre...</yourRegistration>
+  <zip>Codi postal</zip>
 
-            <group label="Geographic workflow/task management services">
-                <value id="taskManagementService">Geographic workflow/task management services</value>
-                <value id="chainDefinitionService">Chain definition service</value>
-                <value id="workflowEnactmentService">Workflow enactment service</value>
-                <value id="subscriptionService">Subscription service</value>
-            </group>
+  <header_meta>
+    <meta name="keywords"
+          content="GeoNetwork opensource metadades ISO19115 ISO19139 ISO GIS teledetecció dades shapefiles dades espacials imatges sat·tèlit mapa mapes interactius opengis geospatial CSW reference implementation mapping 19115 19139 geogràfic z39.50 catàleg clearinghouse cobertures malles raster data opensource open source network xarxa"/>
+    <meta name="description"
+          content="GeoNetwork proporciona, a través d'Internet, accés a mapes interactius, imatges de sat·tèlit i bases de dades espacials relacionades. El propòsit és millorar l'accés i la integració de dades espacials i informació. El programari lliure GeoNetwork permet compartir fácilmente datdes espaciales entre sls usuaris"/>
+    <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
+    <meta name="DC.title" lang="Catalan"
+          content="Portal GeoNetwork per informació i dades espacials"/>
+    <meta name="DC.creator" content="Equip GeoNetwork"/>
+    <meta name="DC.subject" lang="Catalan"
+          content="GeoNetwork metadades ISO19115 ISO19139 ISO GIS sensors remots dades shapefiles dades espacials imatges sat·tèlit mapes mapes interactius opengis 19115 19139 geogràfic z39.50 catàleg clearinghouse cobertures grid raster data opensource open source network xarxa"/>
+    <meta name="DC.description" lang="Catalan"
+          content="GeoNetwork proporciona accés a través d'Internet a mapes interactius, imatges de sat·tèlit i a bases de dades espacials relacionades. El seu propòsit és millorar l'accés i fer ús integrat de dades espacials i informació. El programari lliure GeoNetwork permet compartir fàcilment dades espacials entre diferents usuaris"/>
+    <meta name="DC.publisher" content=""/>
+    <meta name="DC.date" content="02-07-2007"/>
+    <meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
+    <meta name="DC.format" content="text/html; charset=UTF-8"/>
+    <meta name="DC.language"
+          content="English French Spanish German Russian Chinese Dutch Portuguese"/>
+    <meta name="DC.coverage" content="Global"/>
+  </header_meta>
+  <mainpage1>
+    <h1>El propòsit de GeoNetwork és:</h1>
+    <ul>
+      <li>Millorar l'accés a les dades i facilitar-ne la integració (interoperabilitat)</li>
+      <li>Ajudar a la presa de decisions</li>
+      <li>Promocionar solucions multidisciplinàries pel que fa al desenvolupament sostenible</li>
+      <li>Emfatitzar els beneficis que proporciona la comprensió de la informació geogràfica</li>
+    </ul>
+  </mainpage1>
+  <mainpage2>
+    <p>
+      El projecte GeoNetwork opensource promou que es comparteixi la informació temàtica i
+      georeferenciada
+      disponible a les organizacions. Si desitgeu més informació, contacteu
+    </p>
+  </mainpage2>
+  <mainhelp1>Com buscar...</mainhelp1>
+  <mainhelp2>Amagar l'ajuda...</mainhelp2>
+  <mainhelp3>
+    <p>
+      <font size="-2">Podeu cercar utilitzant una de les opcions proporcionades o una combinació
+        d'elles.
+        <br/>
+        Només es mostraran els resultats que compleixin tots els criteris.
+      </font>
+    </p>
+    <p>
+      <font size="-2">La cerca per
+        <b>text lliure (Què?)</b>
+        cerca el text a tots els camps de les metadades emmagatzemades a GeoNetwork.
+        <br/>
+        <i>Quan s'introdueixen diverses paraules s'interpreta com text lliure amb operació lògica
+          AND.
+        </i>
+      </font>
+    </p>
+    <p>
+      <font size="-2">La cerca per
+        <b>tema</b>
+        cerca les correspondències del tema en qüestió.
+      </font>
+    </p>
+    <p>
+      <font size="-2">La cerca per
+        <b>situació (On?)</b>
+        trobarà mapes que coincideixen amb els límits seleccionats (Bounding Box).
+      </font>
+    </p>
+    <p>
+      <font size="-2">Escollint l'opció "
+        <b>
+          <input name="demo" type="checkbox" checked="checked"/>
+          Inclòs
+        </b>
+        a l'
+        <b>àrea</b>
+        seleccionada" podreu trobar mapes que cobreixen més territori que l'àrea seleccionada.
+        <br/>
+        <i>Per exemple: Mapes globals o regionals que, a més de cobrir el país seleccionat, en
+          cobreixen d'altres.
+        </i>
+      </font>
+    </p>
+    <p>
+      <font size="-2">Escollint l'opció "
+        <b>
+          <input name="demo" type="checkbox" checked="checked"/>
+          Parcialment contingut
+        </b>
+        a l'
+        <b>àrea</b>
+        seleccionada" podreu trobar mapes que cobreixin parcialment l'àrea seleccionada.
+      </font>
+    </p>
+  </mainhelp3>
+  <savexml>
+    <dc>Guardar metadades de Dublin Core com XML</dc>
+    <fgdc>Guardar metadades FGDC com XML</fgdc>
+    <iso19115Esri>Guardar metadades ISO19115 a XML per ESRI ArcCatalog</iso19115Esri>
+    <iso19139>Guardar metadades ISO19115/19139 com XML</iso19139>
+    <iso19139fra>Guardar metadades Fra ISO19115/19139 com XML</iso19139fra>
+  </savexml>
+  <thesaurus>
+    <load>Load from GeoNetwork thesaurus repository</load>
+    <addelement>Afegir element</addelement>
+    <admin>Administrar tesaurus</admin>
+    <broader>Terme més ampli</broader>
+    <category>Categoria del tesaurus</category>
+    <consultation>Veure tesaurus</consultation>
+    <delete>Eliminar tesaurus</delete>
+    <deleteelement>Eliminar element</deleteelement>
+    <download>Descarregar tesaurus</download>
+    <edit>Editar tesaurus</edit>
+    <editelement>Editar element</editelement>
+    <edition>Editar tesaurus</edition>
+    <en>a</en>
+    <foundKeyWords>Número de termes trobats</foundKeyWords>
+    <foundKeyWordsLimit>Número màxim de termes trobats</foundKeyWordsLimit>
+    <keywordConfirm>Confirmar esborrat de la paraula clau</keywordConfirm>
+    <keywordDescription>Definició de la paraula clau:</keywordDescription>
+    <management>Gestionar tesaurus</management>
+    <manDes>Afegir/modificar/eliminar i mostrar tesaurus</manDes>
+    <narrower>Terme més acotat</narrower>
+    <related>Terme relacionat</related>
+    <thesaurus>Tesaurus</thesaurus>
+    <unknown>Tesaurus desconegut</unknown>
+    <update>Actualitzar tesaurus</update>
+    <updateelement>Actualitzar element</updateelement>
+    <upload>Carregar tesaurus</upload>
+  </thesaurus>
+  <searchhelp>
+    <altTitle>Introdueixi el títol alternatiu aquí</altTitle>
+    <searchAllText>Introdueixi un text lliure aquí</searchAllText>
+    <rtitle>Introdueixi el títol aquí</rtitle>
+    <abstract>Introdueixi el resum aquí</abstract>
+    <keywords>Seleccioni les paraules clau associades a metadades</keywords>
+    <thesaurus>Seleccioni les paraules clau del tesaurus</thesaurus>
+  </searchhelp>
 
-            <group label="Geographic processing services – spatial">
-                <value id="spatialProcessingService">Geographic processing services – spatial</value>
-                <value id="spatialCoordinateConversionService">Coordinate conversion service </value>
-                <value id="spatialCoordinateTransformationService">Coordinate transformation service </value>
-                <value id="spatialCoverageVectorConversionService">Coverage/vector conversion service </value>
-                <value id="spatialImageCoordinateConversionService">Image coordinate conversion service</value>
-                <value id="spatialRectificationService">Rectification service</value>
-                <value id="spatialOrthorectificationService">Orthorectification service</value>
-                <value id="spatialSensorGeometryModelAdjustmentService">Sensor geometry model adjustment service</value>
-                <value id="spatialImageGeometryModelConversionService">Image geometry model conversion service</value>
-                <value id="spatialSubsettingService">Subsetting service</value>
-                <value id="spatialSamplingService">Sampling service</value>
-                <value id="spatialTilingChangeService">Tiling change service</value>
-                <value id="spatialDimensionMeasurementService">Dimension measurement service</value>
-                <value id="spatialFeatureManipulationService">Feature manipulation services</value>
-                <value id="spatialFeatureMatchingService">Feature matching service</value>
-                <value id="spatialFeatureGeneralizationService">Feature generalisation service</value>
-                <value id="spatialRouteDeterminationService">Route determination service</value>
-                <value id="spatialPositioningService">Positioning service</value>
-                <value id="spatialProximityAnalysisService">Proximity analysis service</value>
-            </group>
+  <inspire>
+    <serviceType>
+      <value id="discovery">Discovery Service (discovery)</value>
+      <value id="view">View Service (view)</value>
+      <value id="download">Download Service (download)</value>
+      <value id="transformation">Transformation Service (transformation)</value>
+      <value id="invoke">Invoke Spatial Data Service (invoke)</value>
+      <value id="other">Other Services (other)</value>
+    </serviceType>
+    <spatialDataService>
+      <group label="Geographic human interaction services">
+        <value id="humanInteractionService">Geographic human interaction services</value>
+        <value id="humanCatalogueViewer">Catalogue viewer</value>
+        <value id="humanGeographicViewer">Geographic viewer</value>
+        <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+        <value id="humanServiceEditor">Service editor</value>
+        <value id="humanChainDefinitionEditor">Chain definition editor</value>
+        <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
+        <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
+        <value id="humanGeographicSymbolEditor">Geographic symbol editor</value>
+        <value id="humanFeatureGeneralizationEditor">Feature generalisation editor</value>
+        <value id="humanGeographicDataStructureViewer">Geographic data-structure viewer</value>
+      </group>
 
-            <group label="Geographic processing services – thematic">
-                <value id="thematicProcessingService">Geographic processing services – thematic</value>
-                <value id="thematicGoparameterCalculationService">Geoparameter calculation service</value>
-                <value id="thematicClassificationService">Thematic classification service</value>
-                <value id="thematicFeatureGeneralizationService">Feature generalisation service</value>
-                <value id="thematicSubsettingService">Subsetting service</value>
-                <value id="thematicSpatialCountingService">Spatial counting service</value>
-                <value id="thematicChangeDetectionService">Change detection service</value>
-                <value id="thematicGeographicInformationExtractionService">Geographic information extraction services</value>
-                <value id="thematicImageProcessingService">Image processing service</value>
-                <value id="thematicReducedResolutionGenerationService">Reduced resolution generation service</value>
-                <value id="thematicImageManipulationService">Image Manipulation Services</value>
-                <value id="thematicImageUnderstandingService">Image understanding services</value>
-                <value id="thematicImageSynthesisService">Image synthesis services</value>
-                <value id="thematicMultibandImageManipulationService">Multiband image manipulation</value>
-                <value id="thematicObjectDetectionService">Object detection service</value>
-                <value id="thematicGeoparsingService">Geoparsing service</value>
-                <value id="thematicGeocodingService">Geocoding service</value>
-            </group>
+      <group label="Geographic model/information management service">
+        <value id="infoManagementService">Geographic model/information management service</value>
+        <value id="infoFeatureAccessService">Feature access service</value>
+        <value id="infoMapAccessService">Map access service</value>
+        <value id="infoCoverageAccessService">Coverage access service</value>
+        <value id="infoSensorDescriptionService">Sensor description service</value>
+        <value id="infoProductAccessService">Product access service</value>
+        <value id="infoFeatureTypeService">Feature type service</value>
+        <value id="infoCatalogueService">Catalogue service</value>
+        <value id="infoRegistryService">Registry service</value>
+        <value id="infoGazetteerService">Gazetteer service</value>
+        <value id="infoOrderHandlingService">Order handling service</value>
+        <value id="infoStandingOrderService">Standing order service</value>
+      </group>
 
-             <group label="Geographic processing services – temporal">
-                <value id="temporalProcessingService">Geographic processing services – temporal</value>
-                <value id="temporalReferenceSystemTransformationService"> Temporal reference system transformation service</value>
-                <value id="temporalSubsettingService">Subsetting service</value>
-                <value id="temporalSamplingService">Sampling service</value>
-                <value id="temporalProximityAnalysisService">Temporal proximity analysis service</value>
-            </group>
+      <group label="Geographic workflow/task management services">
+        <value id="taskManagementService">Geographic workflow/task management services</value>
+        <value id="chainDefinitionService">Chain definition service</value>
+        <value id="workflowEnactmentService">Workflow enactment service</value>
+        <value id="subscriptionService">Subscription service</value>
+      </group>
 
-            <group label="Geographic processing services – metadata">
-                <value id="metadataProcessingService">Geographic processing services – metadata</value>
-                <value id="metadataStatisticalCalculationService">Statistical calculation service</value>
-                <value id="metadataGeographicAnnotationService">Geographic annotation services</value>
-            </group>
+      <group label="Geographic processing services – spatial">
+        <value id="spatialProcessingService">Geographic processing services – spatial</value>
+        <value id="spatialCoordinateConversionService">Coordinate conversion service</value>
+        <value id="spatialCoordinateTransformationService">Coordinate transformation service</value>
+        <value id="spatialCoverageVectorConversionService">Coverage/vector conversion service
+        </value>
+        <value id="spatialImageCoordinateConversionService">Image coordinate conversion service
+        </value>
+        <value id="spatialRectificationService">Rectification service</value>
+        <value id="spatialOrthorectificationService">Orthorectification service</value>
+        <value id="spatialSensorGeometryModelAdjustmentService">Sensor geometry model adjustment
+          service
+        </value>
+        <value id="spatialImageGeometryModelConversionService">Image geometry model conversion
+          service
+        </value>
+        <value id="spatialSubsettingService">Subsetting service</value>
+        <value id="spatialSamplingService">Sampling service</value>
+        <value id="spatialTilingChangeService">Tiling change service</value>
+        <value id="spatialDimensionMeasurementService">Dimension measurement service</value>
+        <value id="spatialFeatureManipulationService">Feature manipulation services</value>
+        <value id="spatialFeatureMatchingService">Feature matching service</value>
+        <value id="spatialFeatureGeneralizationService">Feature generalisation service</value>
+        <value id="spatialRouteDeterminationService">Route determination service</value>
+        <value id="spatialPositioningService">Positioning service</value>
+        <value id="spatialProximityAnalysisService">Proximity analysis service</value>
+      </group>
 
-            <group label="Geographic communication services">
-                <value id="comService">Geographic communication services</value>
-                <value id="comEncodingService">Encoding service</value>
-                <value id="comTransferService">Transfer service</value>
-                <value id="comGeographicCompressionService">Geographic compression service</value>
-                <value id="comGeographicFormatConversionService">Geographic format conversion service</value>
-                <value id="comMessagingService">Messaging service</value>
-                <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
-            </group>
-        </spatialDataService>
-        <conformity>
-            <value id="conformant">Conformant</value>
-            <value id="notConformant">Not Conformant</value>
-            <value id="notEvaluated">Not Evaluated</value>
-        </conformity>
+      <group label="Geographic processing services – thematic">
+        <value id="thematicProcessingService">Geographic processing services – thematic</value>
+        <value id="thematicGoparameterCalculationService">Geoparameter calculation service</value>
+        <value id="thematicClassificationService">Thematic classification service</value>
+        <value id="thematicFeatureGeneralizationService">Feature generalisation service</value>
+        <value id="thematicSubsettingService">Subsetting service</value>
+        <value id="thematicSpatialCountingService">Spatial counting service</value>
+        <value id="thematicChangeDetectionService">Change detection service</value>
+        <value id="thematicGeographicInformationExtractionService">Geographic information extraction
+          services
+        </value>
+        <value id="thematicImageProcessingService">Image processing service</value>
+        <value id="thematicReducedResolutionGenerationService">Reduced resolution generation
+          service
+        </value>
+        <value id="thematicImageManipulationService">Image Manipulation Services</value>
+        <value id="thematicImageUnderstandingService">Image understanding services</value>
+        <value id="thematicImageSynthesisService">Image synthesis services</value>
+        <value id="thematicMultibandImageManipulationService">Multiband image manipulation</value>
+        <value id="thematicObjectDetectionService">Object detection service</value>
+        <value id="thematicGeoparsingService">Geoparsing service</value>
+        <value id="thematicGeocodingService">Geocoding service</value>
+      </group>
 
-        <what>
-            <l1>Opcions de cerca d'INSPIRE </l1>
-            <l2>Metadades INSPIRE</l2>
-            <l3>Només metadades INSPIRE </l3>
-            <l4>Ocultar opcions INSPIRE</l4>
-            <l5>Mostrar opcions INSPIRE</l5>
-            <l6>Annex</l6>
-            <l7>Tipus de font</l7>
-            <l8>Tot</l8>
-            <l9>Conjunts de dades i sèries</l9>
-            <l10>Serveis</l10>
-            <l11>Organització</l11>
-            <l12>Mostra temes INSPIRE</l12>
-            <l13>Amaga temes INSPIRE</l13>
-            <l14>Tema d'INSPIRE</l14>
-            <l15>Tipus de servei</l15>
-            <l16>Classification of data services</l16>
-        </what>
-        <annex1>
-            <theme id="inspire_CoordinateRefSystems">Sistemes de coordenades de referència</theme>
-            <theme id="inspire_GeographicalGridSystems">Sistema de quadrícules geogràfiques</theme>
-            <theme id="inspire_GeographicalNames">Noms geogràfics</theme>
-            <theme id="inspire_AdministrativeUnits">Unitats administratives</theme>
-            <theme id="inspire_Addresses">Adreces</theme>
-            <theme id="inspire_CadastralParcels">Parcel·les cadastrals</theme>
-            <theme id="inspire_TransportNetworks">Xarxes de transport</theme>
-            <theme id="inspire_Hydrography">Hidrografia</theme>
-            <theme id="inspire_ProtectedSites">Llocs protegits</theme>
-        </annex1>
-        <annex2>
-            <theme id="inspire_Elevation">Elevacions</theme>
-            <theme id="inspire_LandCover">Coberta terrestre</theme>
-            <theme id="inspire_Orthoimagery">Ortoimatges</theme>
-            <theme id="inspire_Geology">Geologia</theme>
-        </annex2>
-        <annex3>
-            <theme id="inspire_StatisticalUnits">Unitats estadístiques</theme>
-            <theme id="inspire_Buildings">Edificis</theme>
-            <theme id="inspire_Soil">Sòl</theme>
-            <theme id="inspire_LandUse">Ús del sòl</theme>
-            <theme id="inspire_HumanHealthAndSafety">Salut i seguretat humanes</theme>
-            <theme id="inspire_UtilityAndGovernmentServices">Serveis d'utilitat pública i estatals</theme>
-            <theme id="inspire_EnvironmentalMonitoringFacilities">Instal·lacions d'observació del medi ambient</theme>
-            <theme id="inspire_ProductionAndIndustrialFacilities">Instal·lacions de producció i industrials</theme>
-            <theme id="inspire_AgriculturalAndAquacultureFacilities">Instal·lacions agrícoles i d'aqüicultura</theme>
-            <theme id="inspire_PopulationDistribution-Demography">Distribució de la població — demografia</theme>
-            <theme id="inspire_AreaManagementRestrictionRegulationZonesAndReportingUnits">Zones subjectes a ordenació, a restriccions o reglamentacions i unitats de notificació</theme>
-            <theme id="inspire_NaturalRiskZones">Zones de riscos naturals</theme>
-            <theme id="inspire_AtmosphericConditions">Condicions atmosfèriques</theme>
-            <theme id="inspire_MeteorologicalGeographicalFeatures">Aspectes geogràfics de caràcter meteorològic</theme>
-            <theme id="inspire_OceanographicGeographicalFeatures">Trets geogràfics oceanogràfics</theme>
-            <theme id="inspire_SeaRegions">Regions marines</theme>
-            <theme id="inspire_Bio-geographicalRegions">Regions biogeogràfiques</theme>
-            <theme id="inspire_HabitatsAndBiotopes">Hàbitats i biòtops</theme>
-            <theme id="inspire_SpeciesDistribution">Distribució de les espècies</theme>
-            <theme id="inspire_EnergyResources">Recursos energètics</theme>
-            <theme id="inspire_MineralResources">Recursos minerals</theme>
-        </annex3>
-    </inspire>
+      <group label="Geographic processing services – temporal">
+        <value id="temporalProcessingService">Geographic processing services – temporal</value>
+        <value id="temporalReferenceSystemTransformationService">Temporal reference system
+          transformation service
+        </value>
+        <value id="temporalSubsettingService">Subsetting service</value>
+        <value id="temporalSamplingService">Sampling service</value>
+        <value id="temporalProximityAnalysisService">Temporal proximity analysis service</value>
+      </group>
 
-	<selectMetadataFileAlert>Cal seleccionar el fitxer de metadades a inserir</selectMetadataFileAlert>    
-	<showMoreSearchFields>Mostrar/Ocultar més camps de cerca</showMoreSearchFields>
-	<searchEitherOfTheWords>Qualsevol de les paraules</searchEitherOfTheWords>
-	<searchExactPhrase>Frase exacta</searchExactPhrase>
-	<searchAllWords>Totes les paraules</searchAllWords>
-	<searchWithoutWords>Sense les paraules</searchWithoutWords>
+      <group label="Geographic processing services – metadata">
+        <value id="metadataProcessingService">Geographic processing services – metadata</value>
+        <value id="metadataStatisticalCalculationService">Statistical calculation service</value>
+        <value id="metadataGeographicAnnotationService">Geographic annotation services</value>
+      </group>
 
-	<showMap>Mostrar mapa</showMap>
-	<mapViewer>Mapa</mapViewer>
+      <group label="Geographic communication services">
+        <value id="comService">Geographic communication services</value>
+        <value id="comEncodingService">Encoding service</value>
+        <value id="comTransferService">Transfer service</value>
+        <value id="comGeographicCompressionService">Geographic compression service</value>
+        <value id="comGeographicFormatConversionService">Geographic format conversion service
+        </value>
+        <value id="comMessagingService">Messaging service</value>
+        <value id="comRemoteFileAndExecutableManagement">Remote file and executable management
+        </value>
+      </group>
+    </spatialDataService>
+    <conformity>
+      <value id="conformant">Conformant</value>
+      <value id="notConformant">Not Conformant</value>
+      <value id="notEvaluated">Not Evaluated</value>
+    </conformity>
 
-	<uuid>Identificador únic</uuid>    
-	<quickSearch>Quick search links</quickSearch>
-	<mymetadata>Les meves metadades</mymetadata>
-	<catalogueRecords>Catalogue metadata</catalogueRecords>
-	<harvestedRecords>Harvested metadata</harvestedRecords>
-	<catalogueTemplates>Catalogue templates</catalogueTemplates>
-	<addremove>Afegir o treure</addremove>
-	<enabled>Habilitat</enabled>
-	<notifications>Notificació als objectius remots</notifications>
+    <what>
+      <l1>Opcions de cerca d'INSPIRE</l1>
+      <l2>Metadades INSPIRE</l2>
+      <l3>Només metadades INSPIRE</l3>
+      <l4>Ocultar opcions INSPIRE</l4>
+      <l5>Mostrar opcions INSPIRE</l5>
+      <l6>Annex</l6>
+      <l7>Tipus de font</l7>
+      <l8>Tot</l8>
+      <l9>Conjunts de dades i sèries</l9>
+      <l10>Serveis</l10>
+      <l11>Organització</l11>
+      <l12>Mostra temes INSPIRE</l12>
+      <l13>Amaga temes INSPIRE</l13>
+      <l14>Tema d'INSPIRE</l14>
+      <l15>Tipus de servei</l15>
+      <l16>Classification of data services</l16>
+    </what>
+    <annex1>
+      <theme id="inspire_CoordinateRefSystems">Sistemes de coordenades de referència</theme>
+      <theme id="inspire_GeographicalGridSystems">Sistema de quadrícules geogràfiques</theme>
+      <theme id="inspire_GeographicalNames">Noms geogràfics</theme>
+      <theme id="inspire_AdministrativeUnits">Unitats administratives</theme>
+      <theme id="inspire_Addresses">Adreces</theme>
+      <theme id="inspire_CadastralParcels">Parcel·les cadastrals</theme>
+      <theme id="inspire_TransportNetworks">Xarxes de transport</theme>
+      <theme id="inspire_Hydrography">Hidrografia</theme>
+      <theme id="inspire_ProtectedSites">Llocs protegits</theme>
+    </annex1>
+    <annex2>
+      <theme id="inspire_Elevation">Elevacions</theme>
+      <theme id="inspire_LandCover">Coberta terrestre</theme>
+      <theme id="inspire_Orthoimagery">Ortoimatges</theme>
+      <theme id="inspire_Geology">Geologia</theme>
+    </annex2>
+    <annex3>
+      <theme id="inspire_StatisticalUnits">Unitats estadístiques</theme>
+      <theme id="inspire_Buildings">Edificis</theme>
+      <theme id="inspire_Soil">Sòl</theme>
+      <theme id="inspire_LandUse">Ús del sòl</theme>
+      <theme id="inspire_HumanHealthAndSafety">Salut i seguretat humanes</theme>
+      <theme id="inspire_UtilityAndGovernmentServices">Serveis d'utilitat pública i estatals</theme>
+      <theme id="inspire_EnvironmentalMonitoringFacilities">Instal·lacions d'observació del medi
+        ambient
+      </theme>
+      <theme id="inspire_ProductionAndIndustrialFacilities">Instal·lacions de producció i
+        industrials
+      </theme>
+      <theme id="inspire_AgriculturalAndAquacultureFacilities">Instal·lacions agrícoles i
+        d'aqüicultura
+      </theme>
+      <theme id="inspire_PopulationDistribution-Demography">Distribució de la població —
+        demografia
+      </theme>
+      <theme id="inspire_AreaManagementRestrictionRegulationZonesAndReportingUnits">Zones subjectes
+        a ordenació, a restriccions o reglamentacions i unitats de notificació
+      </theme>
+      <theme id="inspire_NaturalRiskZones">Zones de riscos naturals</theme>
+      <theme id="inspire_AtmosphericConditions">Condicions atmosfèriques</theme>
+      <theme id="inspire_MeteorologicalGeographicalFeatures">Aspectes geogràfics de caràcter
+        meteorològic
+      </theme>
+      <theme id="inspire_OceanographicGeographicalFeatures">Trets geogràfics oceanogràfics</theme>
+      <theme id="inspire_SeaRegions">Regions marines</theme>
+      <theme id="inspire_Bio-geographicalRegions">Regions biogeogràfiques</theme>
+      <theme id="inspire_HabitatsAndBiotopes">Hàbitats i biòtops</theme>
+      <theme id="inspire_SpeciesDistribution">Distribució de les espècies</theme>
+      <theme id="inspire_EnergyResources">Recursos energètics</theme>
+      <theme id="inspire_MineralResources">Recursos minerals</theme>
+    </annex3>
+  </inspire>
 
-	<cswServer>Servidor CSW</cswServer>
-	<cswServerDes>Configuració del servidor CSW</cswServerDes>
-	<cswServerConfig>Configuració del servidor CSW</cswServerConfig>
-	<cswServerEnable>Activar</cswServerEnable>
-	<cswServerMetadataPublic>Les metadades inserides són públiques (Transacció)</cswServerMetadataPublic>
-	<cswServerTitle>Títol</cswServerTitle>
-	<cswServerAbstract>Resum</cswServerAbstract>
-	<cswServerFees>Tarifes</cswServerFees>
-	<cswServerAccessConstraints>Restriccions d'accés</cswServerAccessConstraints>
-	<cswServerContact>Contacte</cswServerContact>
+  <selectMetadataFileAlert>Cal seleccionar el fitxer de metadades a inserir
+  </selectMetadataFileAlert>
+  <showMoreSearchFields>Mostrar/Ocultar més camps de cerca</showMoreSearchFields>
+  <searchEitherOfTheWords>Qualsevol de les paraules</searchEitherOfTheWords>
+  <searchExactPhrase>Frase exacta</searchExactPhrase>
+  <searchAllWords>Totes les paraules</searchAllWords>
+  <searchWithoutWords>Sense les paraules</searchWithoutWords>
 
-	<virtualcswServer>Configure virtual CSW access point</virtualcswServer>
-	<virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
-	<virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
-	<virtualcswInsert>Configuration of a virtual CSW server</virtualcswInsert>
-	<virtualcswServiceName>Service name</virtualcswServiceName>
-	<virtualcswServiceDescription>Service description</virtualcswServiceDescription>
-	<virtualcswClassName>Class</virtualcswClassName>
-	<virtualcswNewService>Add a service</virtualcswNewService>
-	<virtualcswParamName>Filter type</virtualcswParamName>
-	<virtualcswParamValue>Filter value</virtualcswParamValue>
-	<virtualcswServicenameMandatory>Service name is mandatory.</virtualcswServicenameMandatory>
-	<virtualcswServicenameTooLong>Service name is too long (48 characters max)</virtualcswServicenameTooLong>
-	<virtualcswServicenameSpecialChars>Service name must not contain special characters.</virtualcswServicenameSpecialChars>
-	<virtualcswClassnameMandatory>Class name is mandatory.</virtualcswClassnameMandatory>
-	<virtualcswServiceNameStartsWith>Service name must begin with \"csw-\".</virtualcswServiceNameStartsWith>
-	
-	<virtualcswUpdateService>Update a CSW virtual server</virtualcswUpdateService>
-	
-	<virtualcswAny>Free text</virtualcswAny>
-	<virtualcswTitle>Title</virtualcswTitle>
-	<virtualcswAbstract>Abstract</virtualcswAbstract>
-	<virtualcswKeywords>Keyword</virtualcswKeywords>
-	<virtualcswDenominator>Denominator</virtualcswDenominator>
-	<virtualcswCatalog>Catalog</virtualcswCatalog>
-	<virtualcswGroup>Group</virtualcswGroup>
-	<virtualcswCategory>Category</virtualcswCategory>
-	<virtualcswType>Resource type</virtualcswType>
+  <showMap>Mostrar mapa</showMap>
+  <mapViewer>Mapa</mapViewer>
 
-	<customize-elementset>Personalitzar conjunt d'elements</customize-elementset>
-	<csw-server-disabled>servidor de la CSW es desactiva.</csw-server-disabled>
-	<custom-elementset-intro>Definir els elements que s'han d'incloure en l'element personalitzat ajustat aquí. Cada element ha de ser identificat per la seva XPath total de l'arrel del document. Aquests elements i els seus descendents seran inclosos en les respostes a les sol licituds CSW GetRecord amb ElementSetName = FULL.</custom-elementset-intro>
-	<custom-elementset-revert>Per tornar a la ElementSetName default = respostes completes, eliminar tots els elements d'aquesta llista.</custom-elementset-revert>
-	<custom-elementset-add>Afegeix element</custom-elementset-add>
+  <uuid>Identificador únic</uuid>
+  <quickSearch>Quick search links</quickSearch>
+  <mymetadata>Les meves metadades</mymetadata>
+  <catalogueRecords>Catalogue metadata</catalogueRecords>
+  <harvestedRecords>Harvested metadata</harvestedRecords>
+  <catalogueTemplates>Catalogue templates</catalogueTemplates>
+  <addremove>Afegir o treure</addremove>
+  <enabled>Habilitat</enabled>
+  <notifications>Notificació als objectius remots</notifications>
 
-	<wmslayers>Capes WMS</wmslayers>
-	<formatter.admin>Metadata Formatter Admin</formatter.admin>
-	<formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
-	<monitor>Monitor</monitor>
-	<concealed>Concealed</concealed>
-	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+  <cswServer>Servidor CSW</cswServer>
+  <cswServerDes>Configuració del servidor CSW</cswServerDes>
+  <cswServerConfig>Configuració del servidor CSW</cswServerConfig>
+  <cswServerEnable>Activar</cswServerEnable>
+  <cswServerMetadataPublic>Les metadades inserides són públiques (Transacció)
+  </cswServerMetadataPublic>
+  <cswServerTitle>Títol</cswServerTitle>
+  <cswServerAbstract>Resum</cswServerAbstract>
+  <cswServerFees>Tarifes</cswServerFees>
+  <cswServerAccessConstraints>Restriccions d'accés</cswServerAccessConstraints>
+  <cswServerContact>Contacte</cswServerContact>
 
-	<advancedOptions.show>show advanced options</advancedOptions.show>
-	<advancedOptions.hide>hide advanced options</advancedOptions.hide>
-	<latestDatasets>Latest</latestDatasets>
-	<popularDatasets>Popular</popularDatasets>
-	<filter>Filter</filter>
-	<welcome.text>Welcome to GeoNetwork</welcome.text>
-	<tag_label>Tags</tag_label>
-	<map_label>Map</map_label>
-    <unknown>Unknown</unknown>
+  <virtualcswServer>Configure virtual CSW access point</virtualcswServer>
+  <virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
+  <virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
+  <virtualcswInsert>Configuration of a virtual CSW server</virtualcswInsert>
+  <virtualcswServiceName>Service name</virtualcswServiceName>
+  <virtualcswServiceDescription>Service description</virtualcswServiceDescription>
+  <virtualcswClassName>Class</virtualcswClassName>
+  <virtualcswNewService>Add a service</virtualcswNewService>
+  <virtualcswParamName>Filter type</virtualcswParamName>
+  <virtualcswParamValue>Filter value</virtualcswParamValue>
+  <virtualcswServicenameMandatory>Service name is mandatory.</virtualcswServicenameMandatory>
+  <virtualcswServicenameTooLong>Service name is too long (48 characters max)
+  </virtualcswServicenameTooLong>
+  <virtualcswServicenameSpecialChars>Service name must not contain special characters.
+  </virtualcswServicenameSpecialChars>
+  <virtualcswClassnameMandatory>Class name is mandatory.</virtualcswClassnameMandatory>
+  <virtualcswServiceNameStartsWith>Service name must begin with \"csw-\".
+  </virtualcswServiceNameStartsWith>
+
+  <virtualcswUpdateService>Update a CSW virtual server</virtualcswUpdateService>
+
+  <virtualcswAny>Free text</virtualcswAny>
+  <virtualcswTitle>Title</virtualcswTitle>
+  <virtualcswAbstract>Abstract</virtualcswAbstract>
+  <virtualcswKeywords>Keyword</virtualcswKeywords>
+  <virtualcswDenominator>Denominator</virtualcswDenominator>
+  <virtualcswCatalog>Catalog</virtualcswCatalog>
+  <virtualcswGroup>Group</virtualcswGroup>
+  <virtualcswCategory>Category</virtualcswCategory>
+  <virtualcswType>Resource type</virtualcswType>
+
+  <customize-elementset>Personalitzar conjunt d'elements</customize-elementset>
+  <csw-server-disabled>servidor de la CSW es desactiva.</csw-server-disabled>
+  <custom-elementset-intro>Definir els elements que s'han d'incloure en l'element personalitzat
+    ajustat aquí. Cada element ha de ser identificat per la seva XPath total de l'arrel del
+    document. Aquests elements i els seus descendents seran inclosos en les respostes a les sol
+    licituds CSW GetRecord amb ElementSetName = FULL.
+  </custom-elementset-intro>
+  <custom-elementset-revert>Per tornar a la ElementSetName default = respostes completes, eliminar
+    tots els elements d'aquesta llista.
+  </custom-elementset-revert>
+  <custom-elementset-add>Afegeix element</custom-elementset-add>
+
+  <wmslayers>Capes WMS</wmslayers>
+  <formatter.admin>Metadata Formatter Admin</formatter.admin>
+  <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
+  <monitor>Monitor</monitor>
+  <concealed>Concealed</concealed>
+  <serviceNotAllowed>You do not have the correct permissions to access the following service {1}
+  </serviceNotAllowed>
+
+  <advancedOptions.show>show advanced options</advancedOptions.show>
+  <advancedOptions.hide>hide advanced options</advancedOptions.hide>
+  <latestDatasets>Latest</latestDatasets>
+  <popularDatasets>Popular</popularDatasets>
+  <filter>Filter</filter>
+  <welcome.text>Welcome to GeoNetwork</welcome.text>
+  <tag_label>Tags</tag_label>
+  <map_label>Map</map_label>
+  <unknown>Unknown</unknown>
 </strings>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<heading>Error: mida excessiva</heading>
-	<message>El fitxer és massa gran</message>
-	<button>Tornar</button>
+  <heading>Error: mida excessiva</heading>
+  <message>El fitxer és massa gran</message>
+  <button>Tornar</button>
 </strings>
 

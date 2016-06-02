@@ -22,19 +22,26 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<schema xmlns="http://geonetwork-opensource.org/schemas/schema-ident" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://geonetwork-opensource.org/schemas/schema-ident http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd">
-	<name>iso19110</name>
-	<id>ae229ba0-dde3-11df-99ab-001c2346de4c</id>
-	<version>1.0</version>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://geonetwork-opensource.org/schemas/schema-ident"
+        xsi:schemaLocation="http://geonetwork-opensource.org/schemas/schema-ident http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd">
+  <name>iso19110</name>
+  <id>ae229ba0-dde3-11df-99ab-001c2346de4c</id>
+  <version>1.0</version>
   <title xml:lang="en">Geographic information -- Methodology for feature cataloguing</title>
   <title xml:lang="fr">Information géographique -- Méthodologie de catalogage des entités</title>
-  <standardUrl xml:lang="en">http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=39965</standardUrl>
-  <standardUrl xml:lang="fr">http://www.iso.org/iso/fr/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39965</standardUrl>
-	<schemaLocation>http://www.isotc211.org/2005/gfc http://www.isotc211.org/2005/gfc/gfc.xsd</schemaLocation>
-	<autodetect xmlns:gfc="http://www.isotc211.org/2005/gfc">
-		<elements type="root">
-			<gfc:FC_FeatureType/>
-			<gfc:FC_FeatureCatalogue/>
-		</elements>
-	</autodetect>
+  <standardUrl xml:lang="en">
+    http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=39965
+  </standardUrl>
+  <standardUrl xml:lang="fr">
+    http://www.iso.org/iso/fr/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39965
+  </standardUrl>
+  <schemaLocation>http://www.isotc211.org/2005/gfc http://www.isotc211.org/2005/gfc/gfc.xsd
+  </schemaLocation>
+  <autodetect xmlns:gfc="http://www.isotc211.org/2005/gfc">
+    <elements type="root">
+      <gfc:FC_FeatureType/>
+      <gfc:FC_FeatureCatalogue/>
+    </elements>
+  </autodetect>
 </schema>
