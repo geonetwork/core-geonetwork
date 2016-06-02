@@ -44,7 +44,8 @@
         <sec:filter-chain pattern="/doc/**" filters="" />
         <sec:filter-chain pattern="/api-doc/**" filters="" />
         <sec:filter-chain pattern="/proxy**" filters="" />
-				<sec:filter-chain pattern="/static/**" filters="" />
+        <!-- wroAPI is protected for admin only -->
+				<sec:filter-chain pattern="/static/(!wroAPI)" filters="" />
 			    <sec:filter-chain pattern="/catalog/**" filters="" />
 			    <sec:filter-chain pattern="/test/**" filters="" />
 				<sec:filter-chain pattern="/" filters="" />
@@ -74,7 +75,7 @@
 			</list>
 		</constructor-arg>
 	</bean>
-	
+
 	<bean id="coreFilterChain" class="org.springframework.security.web.DefaultSecurityFilterChain">
 		<constructor-arg>
 			<bean class="org.springframework.security.web.util.AntPathRequestMatcher">
@@ -128,7 +129,7 @@
 	<bean id="securityContextRepository" class='org.springframework.security.web.context.HttpSessionSecurityContextRepository'>
       <property name="allowSessionCreation" value="true" />
     </bean>
-	
+
 	<bean id="formLoginFilter"
 		class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
 		<property name="postOnly" value="true" />
@@ -153,7 +154,7 @@
 		</property>
 		<property name="sessionAuthenticationStrategy">
 			<bean class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy" />
-		</property>	
+		</property>
 	</bean>
 
 	<bean id="basicAuthenticationFilter"
@@ -170,7 +171,7 @@
 		class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
 		<property name="realmName" value="Geonetwork" />
 	</bean>
-           
+
 	<bean id="logoutFilter"
 		class="org.springframework.security.web.authentication.logout.LogoutFilter">
 		<constructor-arg ref="logoutSuccessHandler" />
@@ -210,7 +211,7 @@
 		<property name="errorPage" value="/accessDenied.jsp" />
 	</bean>
 
-<!-- TODO remember me.  
+<!-- TODO remember me.
 	<bean id="rememberMeFilter"
 		class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
 		<property name="rememberMeServices" ref="rememberMeServices" />
@@ -227,7 +228,7 @@
 	</bean>
 	 -->
 	<!-- TODO session management -->
-	
+
 	    <!-- Note: the id is critical since other components of the system will look up the encoder by its id -->
     <bean class="org.springframework.security.crypto.password.StandardPasswordEncoder" id="geonetworkEncoder">
         <constructor-arg value="${passwordSalt}"/>
@@ -236,7 +237,7 @@
     <bean class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider" id="geonetworkAuthenticationProvider">
       <property name="checkUserNameOrEmail" value="true"/>
     </bean>
-    
+
     <!-- Check if the preAuthenticationFilter has already authenticated user -->
     <bean class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider" id="preFilterAuthenticationProvider">
     	<property name="preAuthenticatedUserDetailsService">
@@ -252,7 +253,7 @@
 	    <property name="hierarchy">
 	        <value>
 	            Administrator > UserAdmin
-	            UserAdmin > Reviewer 
+	            UserAdmin > Reviewer
 	            Reviewer > Editor
 	            Editor > RegisteredUser
 	            RegisteredUser > Guest
@@ -262,7 +263,7 @@
 
     <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
 	    <property name="decisionVoters">
-	        <list> 
+	        <list>
 		<bean  class="org.springframework.security.access.vote.RoleHierarchyVoter">
 		    <constructor-arg ref="roleHierarchy" />
 		</bean>
@@ -285,7 +286,7 @@
 	<bean id="sessionMgmtFilter" class="org.springframework.security.web.session.SessionManagementFilter" >
 	    <constructor-arg ref="securityContextRepository" />
 	</bean>
-	
+
 	<!-- This bean is here to allow evaluation permissions of the current user by Geonetwork -->
 	<bean id="webPrivilegeEvaluatorCore" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
 		<constructor-arg ref="filterSecurityInterceptor"/>
