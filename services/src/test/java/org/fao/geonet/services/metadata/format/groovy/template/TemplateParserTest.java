@@ -73,9 +73,9 @@ public class TemplateParserTest extends AbstractTemplateParserTest {
         model.put("title", "Title");
 
         String expected = "<html>\n"
-            + "    <head>\n"
-            + "        <title>Title</title>\n"
-            + "    </head>\n"
+            + "<head>\n"
+            + "  <title>Title</title>\n"
+            + "</head>\n"
             + "</html>";
         final ByteArrayOutputStream result = new ByteArrayOutputStream();
         TRenderContext context = new TRenderContext(result, model);
