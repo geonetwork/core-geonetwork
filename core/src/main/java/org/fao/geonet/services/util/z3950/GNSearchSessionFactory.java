@@ -37,126 +37,123 @@ import java.util.regex.Pattern;
 
 /**
  * Overloaded JZKit Search Factory with added explain operation functionality
- * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
  *
+ * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
  */
 public class GNSearchSessionFactory extends SearchSessionFactoryImpl {
 
-       protected ApplicationContext appl_ctx;
-       
-       
-       
-       
-       public void setApplicationContext(ApplicationContext ctx) {
-               super.setApplicationContext(ctx);
-               this.appl_ctx=ctx;
-       }
-       
-       public ExplainInformationDTO explain() {
+    protected ApplicationContext appl_ctx;
 
-           ExplainInformationDTO result = new ExplainInformationDTO();
 
-           Configuration directory = (Configuration) appl_ctx.getBean("JZKitConfig");
-           try {
-             // Populate explain information
-             
-               // if we used ValidIndices we would use this code
-               
+    public void setApplicationContext(ApplicationContext ctx) {
+        super.setApplicationContext(ctx);
+        this.appl_ctx = ctx;
+    }
+
+    public ExplainInformationDTO explain() {
+
+        ExplainInformationDTO result = new ExplainInformationDTO();
+
+        Configuration directory = (Configuration) appl_ctx.getBean("JZKitConfig");
+        try {
+            // Populate explain information
+
+            // if we used ValidIndices we would use this code
+
                /*
-               
+
                CollectionDescriptionDBO cd = directory.lookupCollectionDescription("Default");
                if (cd!= null ) {
-                       
+
                        Map<String, AttrValue> mappings = cd.getSearchServiceDescription().getServiceSpecificTranslations();
                        Map<String,String> reverse_mappings = new HashMap<String, String>();
                        for (String key: mappings.keySet()) {
                                reverse_mappings.put(mappings.get(key).toString(), key);
                        }
-                       
+
                        AttributeSetDBO attrs = cd.getSearchServiceDescription().getValidAttrs().get("AccessPoint");
-                       
-                       
-                       
-                       
+
+
+
+
                        List<GNExplainInfoDTO> list = new ArrayList<GNExplainInfoDTO>();
                        for (AttrValue val: attrs.getAttrs() ) {
-                       
+
                                GNExplainInfoDTO exl = new GNExplainInfoDTO();
                                exl.addMapping(val.getValue(), val.getNamespaceIdentifier());
-                               
+
                                String reverse_key = val.getNamespaceIdentifier()+":"+val.getValue();
                                if (reverse_mappings.containsKey(reverse_key)) {
                                        String[] temp = reverse_mappings.get(reverse_key).split("\\.");
                                        if (temp.length==3) exl.addMapping(temp[1]+"."+temp[2], temp[0]);
                                        if (temp.length==2) exl.addMapping(temp[1], temp[0]);
                                }
-                               
+
                                list.add(exl);
                        }
-                       
-                       result.setDatabaseInfo(list);
-                       
-               }
-               
-               */
-               
-               // but we use Crosswalks (the info on what we actually accept is in the geo profile, but we suppose
-               // that the crosswalks will eventually lead to a valid attribute)
-               
-               // this should really be done differently but unfortunately there is
-               // no way to know if a mapping is for an attribute (can be a relation, too)
-               // we take as indicator the fact that are is a "1"
-               Pattern p = Pattern.compile(".*\\.1\\.([0-9]+)$" );
-               
-               @SuppressWarnings("unchecked")
-            Iterator<CrosswalkDBO> it = directory.enumerateCrosswalks();
-               
-               List<GNExplainInfoDTO> list = new ArrayList<GNExplainInfoDTO>();
-               while (it.hasNext()) {
-               
-                       
-                       CrosswalkDBO cw = it.next();
-                       
-                       for ( String key : cw.getMappings().keySet() ) {
-                               
-                               AttrMappingDBO attrmaping = cw.getMappings().get(key);
-                               
-                               if (attrmaping.getTargetAttrs().isEmpty() ) {
-                                       continue;
-                               }
-                               
-                               // namespace is not important, just important that it is there (for the patternmatching)
-                               String attrString = attrmaping.getTargetAttrs().iterator().next().getWithDefaultNamespace("geo");
-                               
-                               // find out which are the actual attribute mappings (this is ugly)
-                               // "geo:1.4" matches, "something:1.3443", too, but not "gagh" or "geo.2.22"
-                               Matcher m = p.matcher(attrString);
-                               
-                               if ( m.find() ) {
-                            	   		String id = m.group(1);
-                            	   
-                                       GNExplainInfoDTO exl = new GNExplainInfoDTO(id);
-                                       exl.addMapping( attrmaping.getSourceAttrValue() , cw.getSourceNamespace()  ) ;
-                                       
-                                       list.add(exl);
-                               
-                               }
-                               
-                       }
-                       
-               }
-               
-               result.setDatabaseInfo(list);
-               
-           }
-           catch ( ConfigurationException ce) {
-             ce.printStackTrace();
-           }
-       
 
-               return result;
-           
-       }
-       
-       
+                       result.setDatabaseInfo(list);
+
+               }
+
+               */
+
+            // but we use Crosswalks (the info on what we actually accept is in the geo profile, but we suppose
+            // that the crosswalks will eventually lead to a valid attribute)
+
+            // this should really be done differently but unfortunately there is
+            // no way to know if a mapping is for an attribute (can be a relation, too)
+            // we take as indicator the fact that are is a "1"
+            Pattern p = Pattern.compile(".*\\.1\\.([0-9]+)$");
+
+            @SuppressWarnings("unchecked")
+            Iterator<CrosswalkDBO> it = directory.enumerateCrosswalks();
+
+            List<GNExplainInfoDTO> list = new ArrayList<GNExplainInfoDTO>();
+            while (it.hasNext()) {
+
+
+                CrosswalkDBO cw = it.next();
+
+                for (String key : cw.getMappings().keySet()) {
+
+                    AttrMappingDBO attrmaping = cw.getMappings().get(key);
+
+                    if (attrmaping.getTargetAttrs().isEmpty()) {
+                        continue;
+                    }
+
+                    // namespace is not important, just important that it is there (for the patternmatching)
+                    String attrString = attrmaping.getTargetAttrs().iterator().next().getWithDefaultNamespace("geo");
+
+                    // find out which are the actual attribute mappings (this is ugly)
+                    // "geo:1.4" matches, "something:1.3443", too, but not "gagh" or "geo.2.22"
+                    Matcher m = p.matcher(attrString);
+
+                    if (m.find()) {
+                        String id = m.group(1);
+
+                        GNExplainInfoDTO exl = new GNExplainInfoDTO(id);
+                        exl.addMapping(attrmaping.getSourceAttrValue(), cw.getSourceNamespace());
+
+                        list.add(exl);
+
+                    }
+
+                }
+
+            }
+
+            result.setDatabaseInfo(list);
+
+        } catch (ConfigurationException ce) {
+            ce.printStackTrace();
+        }
+
+
+        return result;
+
+    }
+
+
 }

@@ -29,14 +29,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Performs no action.
- * User: jeichar
- * Date: 4/3/12
- * Time: 12:02 PM
+ * Performs no action. User: jeichar Date: 4/3/12 Time: 12:02 PM
  */
 public class DummyTimer extends Timer {
-    private static final TimeUnit TU = TimeUnit.MILLISECONDS;
     public static final Timer INSTANCE = new DummyTimer();
+    private static final TimeUnit TU = TimeUnit.MILLISECONDS;
+
     DummyTimer() {
         super(DummyExecutorService.INSTANCE, TU, TU);
     }

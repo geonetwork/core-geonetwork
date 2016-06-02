@@ -25,25 +25,23 @@ package org.fao.geonet.exceptions;
 
 //=============================================================================
 
-public class SearchExpiredEx extends OperationAbortedEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class SearchExpiredEx extends OperationAbortedEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5759127829247984311L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5759127829247984311L;
 
-	public SearchExpiredEx(String name)
-	{
-		super("Search expired", name);
+    public SearchExpiredEx(String name) {
+        super("Search expired", name);
 
-		id = "search-expired";
-	}
+        id = "search-expired";
+    }
 }
 
 //=============================================================================

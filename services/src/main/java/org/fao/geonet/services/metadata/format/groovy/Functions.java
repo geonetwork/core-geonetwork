@@ -24,10 +24,12 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.io.Closer;
+
 import groovy.lang.Closure;
 import groovy.util.IndentPrinter;
 import groovy.util.slurpersupport.GPathResult;
 import groovy.xml.MarkupBuilder;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
@@ -46,7 +48,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Contains several functions and properties which can be used when implementing view.groovy formatter files (or the helper classes).
+ * Contains several functions and properties which can be used when implementing view.groovy
+ * formatter files (or the helper classes).
  *
  * @author Jesse on 10/16/2014.
  */
@@ -65,7 +68,8 @@ public class Functions extends SchemaLocalizations {
     }
 
     /**
-     * Creates a groovy.xml.MarkupBuilder object and executes the closure with the MarkupBuilder as its parameter.
+     * Creates a groovy.xml.MarkupBuilder object and executes the closure with the MarkupBuilder as
+     * its parameter.
      *
      * The xml created with the MarkupBuilder is returned as a string.
      *
@@ -89,22 +93,26 @@ public class Functions extends SchemaLocalizations {
     }
 
     /**
-     * Obtain strings from the formatter, the formatter's schema shared translations or web/src/main/webapp/loc/???/formatter.xml .
+     * Obtain strings from the formatter, the formatter's schema shared translations or
+     * web/src/main/webapp/loc/???/formatter.xml .
      *
      * @param key the key to use for looking up the translation
      */
     public String translate(String key) throws Exception {
         return translate(key, null);
     }
+
     /**
-     * Obtain strings from the formatter, the formatter's schema shared translations or web/src/main/webapp/loc/???/formatter.xml.
+     * Obtain strings from the formatter, the formatter's schema shared translations or
+     * web/src/main/webapp/loc/???/formatter.xml.
      *
-     * @param key the key to use for looking up the translation
-     * @param file the name of the xml file to get the strings from (without the .xml).  This may be null in which case all files will
-     *             be searched. if null then for the shared translations the formatter.xml file will be used
-     *            (web/src/main/webapp/loc/???/formatter.xml) and all the formatter translation files will be searched.
-     *             If this is non-null then the formatter translation file will be used if found in the file and the method will
-     *             fallback to searching web/src/main/webapp/loc/???/&amp;file>.xml
+     * @param key  the key to use for looking up the translation
+     * @param file the name of the xml file to get the strings from (without the .xml).  This may be
+     *             null in which case all files will be searched. if null then for the shared
+     *             translations the formatter.xml file will be used (web/src/main/webapp/loc/???/formatter.xml)
+     *             and all the formatter translation files will be searched. If this is non-null
+     *             then the formatter translation file will be used if found in the file and the
+     *             method will fallback to searching web/src/main/webapp/loc/???/&amp;file>.xml
      */
     public String translate(String key, String file) throws Exception {
         String value = translateFromFormatterResources(key, file);
@@ -182,7 +190,7 @@ public class Functions extends SchemaLocalizations {
     }
 
     private Element getFormatterTranslations(Path dir) throws Exception {
-       return fparams.format.getPluginLocResources(fparams.context, dir);
+        return fparams.format.getPluginLocResources(fparams.context, dir);
     }
 
     public String getXPathFrom(GPathResult path) {

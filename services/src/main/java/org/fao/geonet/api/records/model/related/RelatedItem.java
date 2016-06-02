@@ -1,10 +1,10 @@
-
 package org.fao.geonet.api.records.model.related;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -29,7 +29,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="values" type="{}localizedString" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="values" type="{}localizedString" maxOccurs="unbounded"
+ * minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -40,8 +41,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "relatedItem", propOrder = {
@@ -67,10 +66,7 @@ public abstract class RelatedItem {
     /**
      * Gets the value of the id property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @return possible object is {@link String }
      */
     public String getId() {
         return id;
@@ -79,10 +75,7 @@ public abstract class RelatedItem {
     /**
      * Sets the value of the id property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value allowed object is {@link String }
      */
     public void setId(String value) {
         this.id = value;
@@ -91,10 +84,7 @@ public abstract class RelatedItem {
     /**
      * Gets the value of the url property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @return possible object is {@link String }
      */
     public String getUrl() {
         return url;
@@ -103,10 +93,7 @@ public abstract class RelatedItem {
     /**
      * Sets the value of the url property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value allowed object is {@link String }
      */
     public void setUrl(String value) {
         this.url = value;
@@ -115,10 +102,7 @@ public abstract class RelatedItem {
     /**
      * Gets the value of the type property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @return possible object is {@link String }
      */
     public String getType() {
         return type;
@@ -127,10 +111,7 @@ public abstract class RelatedItem {
     /**
      * Sets the value of the type property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value allowed object is {@link String }
      */
     public void setType(String value) {
         this.type = value;
@@ -139,10 +120,7 @@ public abstract class RelatedItem {
     /**
      * Gets the value of the title property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedItem.Title }
-     *
+     * @return possible object is {@link RelatedItem.Title }
      */
     public RelatedItem.Title getTitle() {
         return title;
@@ -151,10 +129,7 @@ public abstract class RelatedItem {
     /**
      * Sets the value of the title property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedItem.Title }
-     *
+     * @param value allowed object is {@link RelatedItem.Title }
      */
     public void setTitle(RelatedItem.Title value) {
         this.title = value;
@@ -171,14 +146,13 @@ public abstract class RelatedItem {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="values" type="{}localizedString" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="values" type="{}localizedString" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -191,24 +165,17 @@ public abstract class RelatedItem {
         /**
          * Gets the value of the values property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the values property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getValues().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link LocalizedString }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link LocalizedString }
          */
         public List<LocalizedString> getValue() {
             if (value == null) {

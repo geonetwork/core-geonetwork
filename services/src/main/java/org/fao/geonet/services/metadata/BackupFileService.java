@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
@@ -56,9 +57,9 @@ public abstract class BackupFileService extends NotInReadOnlyModeService {
         try {
             // When metadata records contains character not supported by filesystem
             // it may be an issue. eg. acri-st.fr/96443
-            outFile = outDir.resolve(URLEncoder.encode(uuid, Constants.ENCODING) +".mef");
+            outFile = outDir.resolve(URLEncoder.encode(uuid, Constants.ENCODING) + ".mef");
         } catch (UnsupportedEncodingException e1) {
-            outFile = outDir.resolve(uuid +".mef");
+            outFile = outDir.resolve(uuid + ".mef");
         }
 
 
@@ -69,9 +70,8 @@ public abstract class BackupFileService extends NotInReadOnlyModeService {
 
                 BinaryFile.copy(is, os);
             }
-        }
-        catch(Exception e) {
-            context.warning("Cannot backup mef file : "+e.getMessage());
+        } catch (Exception e) {
+            context.warning("Cannot backup mef file : " + e.getMessage());
             e.printStackTrace();
         }
         IO.deleteFile(file, false, Geonet.MEF);

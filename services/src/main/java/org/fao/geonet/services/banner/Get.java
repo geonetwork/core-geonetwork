@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -37,96 +38,93 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** This service returns all information needed to build the banner with XSL
-  */
+/**
+ * This service returns all information needed to build the banner with XSL
+ */
 
-public class Get implements Service
-{
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class Get implements Service {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Exec
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Exec
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Element res = new Element(Jeeves.Elem.RESPONSE)
-									.addContent(getStack(context))
-									.addContent(getUserInfo(context))
-									.addContent(getShibUse(context));
-		//--- add the invert tag if the banner must be flipped
-		//--- used for the arabic language
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        Element res = new Element(Jeeves.Elem.RESPONSE)
+            .addContent(getStack(context))
+            .addContent(getUserInfo(context))
+            .addContent(getShibUse(context));
+        //--- add the invert tag if the banner must be flipped
+        //--- used for the arabic language
 
-		if (getInvertValue(context.getLanguage()))
-			res.addContent(new Element("invert"));
+        if (getInvertValue(context.getLanguage()))
+            res.addContent(new Element("invert"));
 
-		return res;
-	}
+        return res;
+    }
 
-	//--------------------------------------------------------------------------
-	//--- Stack building
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //--- Stack building
+    //--------------------------------------------------------------------------
 
-	private Element getStack(ServiceContext srvContext)
-	{
-		Element stackElem = new Element("stack");
-		String  service   = srvContext.getService();
+    private Element getStack(ServiceContext srvContext) {
+        Element stackElem = new Element("stack");
+        String service = srvContext.getService();
 //		Element mainSearchElem = (Element) srvContext.getUserSession().getProperty(Geonet.Session.MAIN_SEARCH);
 
-		//-----------------------------------------------------------------------
-		//--- build stack according with current service
+        //-----------------------------------------------------------------------
+        //--- build stack according with current service
 
-		//--- we are in the main.search service
+        //--- we are in the main.search service
 
-		stackElem.addContent(new Element("current") .addContent(service));
-		stackElem.addContent(new Element("language").addContent(srvContext.getLanguage()));
+        stackElem.addContent(new Element("current").addContent(service));
+        stackElem.addContent(new Element("language").addContent(srvContext.getLanguage()));
 
 		/* RGFIX: should check session and modality (local/remote)
-		if (mainSearchElem != null && !mainSearchElem.getChildText(Geonet.SRV_MAIN_RESULT_TEXT).equals(""))
+        if (mainSearchElem != null && !mainSearchElem.getChildText(Geonet.SRV_MAIN_RESULT_TEXT).equals(""))
 			stackElem.addContent(new Element("result"));
 		*/
-		return stackElem;
-	}
+        return stackElem;
+    }
 
-	//--------------------------------------------------------------------------
-	//--- Buttons building
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //--- Buttons building
+    //--------------------------------------------------------------------------
 
-	private Element getUserInfo(ServiceContext srvContext)
-	{
-		UserSession session = srvContext.getUserSession();
+    private Element getUserInfo(ServiceContext srvContext) {
+        UserSession session = srvContext.getUserSession();
 
-		return new Element("user")
-							.addContent(new Element("username").setText(session.getUsername()))
-							.addContent(new Element("name")    .setText(session.getName()))
-							.addContent(new Element("surname") .setText(session.getSurname()));
-	}
+        return new Element("user")
+            .addContent(new Element("username").setText(session.getUsername()))
+            .addContent(new Element("name").setText(session.getName()))
+            .addContent(new Element("surname").setText(session.getSurname()));
+    }
 
-	/**
-	 * Create an element "shib/use" describing whether shibboleth login is being used. 
-	 * @param srvContext The Jeeves service context.
-	 * @return Shib use element.
-	 */
-	private Element getShibUse(ServiceContext srvContext)
-	{
-		GeonetContext  gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getBean(SettingManager.class);
-		String prefix = "system/shib";
+    /**
+     * Create an element "shib/use" describing whether shibboleth login is being used.
+     *
+     * @param srvContext The Jeeves service context.
+     * @return Shib use element.
+     */
+    private Element getShibUse(ServiceContext srvContext) {
+        GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
+        String prefix = "system/shib";
 
-		String use          = sm.getValue      (prefix +"/use");
+        String use = sm.getValue(prefix + "/use");
 
-		return new Element("shib")
-							.addContent(new Element("use").setText(use));
-	}
+        return new Element("shib")
+            .addContent(new Element("use").setText(use));
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private boolean getInvertValue(String lang)
-	{
-		return lang.equals("ar");
-	}
+    private boolean getInvertValue(String lang) {
+        return lang.equals("ar");
+    }
 }
 
 //=============================================================================

@@ -34,9 +34,7 @@ import java.util.Set;
 /**
  * An in memory-only directory factory.
  * <p/>
- * User: Jesse
- * Date: 10/18/13
- * Time: 1:41 PM
+ * User: Jesse Date: 10/18/13 Time: 1:41 PM
  */
 public class MemoryDirectoryFactory implements DirectoryFactory {
     @Override

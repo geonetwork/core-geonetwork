@@ -24,6 +24,7 @@
 package org.fao.geonet.services.region.metadata;
 
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.utils.Xml;

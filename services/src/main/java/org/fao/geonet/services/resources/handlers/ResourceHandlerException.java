@@ -25,9 +25,14 @@ package org.fao.geonet.services.resources.handlers;
 
 public class ResourceHandlerException extends Exception {
 
-    public ResourceHandlerException() { }
+    public ResourceHandlerException() {
+    }
 
-    public ResourceHandlerException(String message) { super(message); }
+    public ResourceHandlerException(String message) {
+        super(message);
+    }
 
-    public ResourceHandlerException(Throwable cause) { super(cause); }
+    public ResourceHandlerException(Throwable cause) {
+        super(cause);
+    }
 }

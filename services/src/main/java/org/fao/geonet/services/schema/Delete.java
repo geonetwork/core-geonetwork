@@ -26,6 +26,7 @@ package org.fao.geonet.services.schema;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -42,88 +43,89 @@ import java.util.List;
 //=============================================================================
 
 public class Delete implements Service {
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Init
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Init
+    // ---
+    // --------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SchemaManager scm = gc.getBean(SchemaManager.class);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SchemaManager scm = gc.getBean(SchemaManager.class);
 
-		String schema = Util.getParam(params, Params.SCHEMA);
+        String schema = Util.getParam(params, Params.SCHEMA);
 
-		// see if the schema to be deleted actually exists
-		Element response = new Element("response");
-		if (!scm.existsSchema(schema)) {
-			response.setAttribute("status", "error");
-			response.setAttribute("message", "Schema does not exist");
-			return response;
-		}
+        // see if the schema to be deleted actually exists
+        Element response = new Element("response");
+        if (!scm.existsSchema(schema)) {
+            response.setAttribute("status", "error");
+            response.setAttribute("message", "Schema does not exist");
+            return response;
+        }
 
-		// fast search to see if any records are present that use this schema
-		ServiceConfig config = new ServiceConfig();
+        // fast search to see if any records are present that use this schema
+        ServiceConfig config = new ServiceConfig();
 
-    SearchManager searchMan = gc.getBean(SearchManager.class);
-		Element searchParams = new Element("parameters");
-    searchParams.addContent(new Element("_schema").setText(schema));
+        SearchManager searchMan = gc.getBean(SearchManager.class);
+        Element searchParams = new Element("parameters");
+        searchParams.addContent(new Element("_schema").setText(schema));
 
-		try (MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-   		searcher.search(context, searchParams, config);
-			int results = searcher.getSize();
-			if (results == 0) { // check for templates
-    		searchParams.addContent(new Element("_isTemplate").setText("y"));
-   			searcher.search(context, searchParams, config);
-				results = searcher.getSize();
-			}
-    	if (results > 0) {
-				String errStr = "Cannot remove schema "+schema+" because there are records that belong to this schema in the catalog";
-				context.error(errStr);
-				response.setAttribute("status", "error");
-				response.setAttribute("message", errStr);
-				return response;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			String errStr = "Cannot remove schema "+schema+" because the search for records that belong to this schema FAILED ("+e.getMessage()+")";
-      context.error(errStr);
-      response.setAttribute("status", "error");
-      response.setAttribute("message", errStr);
-      return response;
-		}
+        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+            searcher.search(context, searchParams, config);
+            int results = searcher.getSize();
+            if (results == 0) { // check for templates
+                searchParams.addContent(new Element("_isTemplate").setText("y"));
+                searcher.search(context, searchParams, config);
+                results = searcher.getSize();
+            }
+            if (results > 0) {
+                String errStr = "Cannot remove schema " + schema + " because there are records that belong to this schema in the catalog";
+                context.error(errStr);
+                response.setAttribute("status", "error");
+                response.setAttribute("message", errStr);
+                return response;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errStr = "Cannot remove schema " + schema + " because the search for records that belong to this schema FAILED (" + e.getMessage() + ")";
+            context.error(errStr);
+            response.setAttribute("status", "error");
+            response.setAttribute("message", errStr);
+            return response;
+        }
 
-		// check for any schemas that may be dependent on the schema to be deleted
-		List<String> dependsOnMe = scm.getSchemasThatDependOnMe(schema);
-		if (dependsOnMe.size() > 0) {
-			String errStr = "Cannot remove schema "+schema+" because the following schemas list it as a dependency: "+dependsOnMe;
+        // check for any schemas that may be dependent on the schema to be deleted
+        List<String> dependsOnMe = scm.getSchemasThatDependOnMe(schema);
+        if (dependsOnMe.size() > 0) {
+            String errStr = "Cannot remove schema " + schema + " because the following schemas list it as a dependency: " + dependsOnMe;
 
-			context.error(errStr);
-			response.setAttribute("status", "error");
-			response.setAttribute("message", errStr);
-			return response;
-		}
+            context.error(errStr);
+            response.setAttribute("status", "error");
+            response.setAttribute("message", errStr);
+            return response;
+        }
 
-		// finally, try to delete the schema
-		try {
-			scm.deletePluginSchema(schema);
-			response.setAttribute("status", "ok");
-			response.setAttribute("message", "Schema "+schema+" deleted");
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setAttribute("status", "error");
-			response.setAttribute("message", "Could not delete schema, error if any was "+e.getMessage());
-		}
-		return response;
-	}
+        // finally, try to delete the schema
+        try {
+            scm.deletePluginSchema(schema);
+            response.setAttribute("status", "ok");
+            response.setAttribute("message", "Schema " + schema + " deleted");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setAttribute("status", "error");
+            response.setAttribute("message", "Could not delete schema, error if any was " + e.getMessage());
+        }
+        return response;
+    }
 
 }
 

@@ -29,6 +29,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.index.SpatialIndex;
 import com.vividsolutions.jts.index.strtree.STRtree;
+
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -73,52 +74,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.logging.Level;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * This class is responsible for extracting geographic information from metadata
- * and writing that information to a storage mechanism.
+ * This class is responsible for extracting geographic information from metadata and writing that
+ * information to a storage mechanism.
  *
  * @author jeichar
  */
 @SuppressWarnings("unchecked")
-public class SpatialIndexWriter implements FeatureListener
-{
+public class SpatialIndexWriter implements FeatureListener {
 
     public static final String _IDS_ATTRIBUTE_NAME = "metadataid";
     public static final String _SPATIAL_INDEX_TYPENAME = "spatialindex";
-    static final String                                          SPATIAL_FILTER_JCS        = "SpatialFilterCache";
-    public static final int                                      MAX_WRITES_IN_TRANSACTION = 1000;
-
-    private final Parser                              _parser;
-    private final Transaction                         _transaction;
-    private  int                                 _maxWrites;
-    private final Lock                                _lock;
+    public static final int MAX_WRITES_IN_TRANSACTION = 1000;
+    static final String SPATIAL_FILTER_JCS = "SpatialFilterCache";
+    private static int _writes;
+    private final Parser _parser;
+    private final Transaction _transaction;
+    private final Lock _lock;
+    private int _maxWrites;
     private FeatureStore<SimpleFeatureType, SimpleFeature> _featureStore;
-    private STRtree                                   _index;
-    private static int                                _writes;
+    private STRtree _index;
     private Map<String, String> errorMessage;
-    public Map<String, String> getErrorMessage() {
-        return errorMessage;
-    }
-
     private Name _idColumn;
     private boolean _autocommit;
-
-
     /**
      * TODO: javadoc.
      *
-     * @param parser
-     * @param transaction
-     * @param maxWrites Maximum number of writes in a transaction. If set to
-     * 1 then AUTO_COMMIT is being used.
-     * @param lock
+     * @param maxWrites Maximum number of writes in a transaction. If set to 1 then AUTO_COMMIT is
+     *                  being used.
      */
     public SpatialIndexWriter(DataStore datastore, Parser parser,
                               Transaction transaction, int maxWrites, Lock lock)
-            throws Exception
-    {
+        throws Exception {
         // Note: The Configuration takes a long time to create so it is worth
         // re-using the same Configuration
         _lock = lock;
@@ -130,7 +120,7 @@ public class SpatialIndexWriter implements FeatureListener
 
         _featureStore = createFeatureStore(datastore);
         _autocommit = maxWrites < 2;
-        if(!_autocommit) {
+        if (!_autocommit) {
             _featureStore.setTransaction(_transaction);
         }
         _featureStore.addFeatureListener(this);
@@ -138,199 +128,19 @@ public class SpatialIndexWriter implements FeatureListener
     }
 
     /**
-     * Add a metadata record to the index
-     *  @param schemaDir
-     *            the base directory that contains the different metadata
-     *            schemas
-     * @param metadata
-     */
-    public void index(Path schemaDir, String id,
-                      Element metadata) throws Exception
-    {
-        _lock.lock();
-        try {
-            _index = null;
-            errorMessage = new HashMap<>();
-            Geometry geometry = extractGeometriesFrom(
-                    schemaDir, metadata, _parser, errorMessage);
-
-            if (geometry != null && !geometry.getEnvelopeInternal().isNull()) {
-                MemoryFeatureCollection features = new MemoryFeatureCollection(_featureStore.getSchema());
-                SimpleFeatureType schema = _featureStore.getSchema();
-
-                SimpleFeature template = SimpleFeatureBuilder.template(schema,
-                        SimpleFeatureBuilder.createDefaultFeatureId());
-                template.setAttribute(schema.getGeometryDescriptor().getName(), geometry);
-                template.setAttribute(getIdColumn(), id);
-                features.add(template);
-
-                _featureStore.addFeatures(features);
-
-                _writes++;
-
-                if (!_autocommit && _writes > _maxWrites) {
-                    _transaction.commit();
-                    _writes = 0;
-                }
-            }
-        } finally {
-            _lock.unlock();
-        }
-    }
-
-    private String getIdColumn() {
-        _lock.lock();
-        try {
-            if (_idColumn == null) {
-                _idColumn = findIdColumn(_featureStore);
-            }
-            return _idColumn == null ? _IDS_ATTRIBUTE_NAME : _idColumn.toString();
-        } finally {
-            _lock.unlock();
-        }
-    }
-
-    public void close() throws IOException
-    {
-        _lock.lock();
-        try {
-            if (_writes > 0) {
-                _transaction.commit();
-                _writes = 0;
-            }
-            _transaction.close();
-            _index = null;
-            _featureStore.setTransaction(Transaction.AUTO_COMMIT);
-            SpatialFilter.getJCSCache().clear();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            _lock.unlock();
-        }
-    }
-
-    public FeatureSource<SimpleFeatureType, SimpleFeature> getFeatureSource()
-    {
-        return _featureStore;
-    }
-
-    public void delete(String id) throws IOException
-    {
-        _lock.lock();
-        try {
-            FilterFactory2 factory = CommonFactoryFinder
-                    .getFilterFactory2(GeoTools.getDefaultHints());
-            Filter filter = factory.equals(
-                    factory.property(getIdColumn()), factory.literal(id));
-
-            _index = null;
-
-            _featureStore.removeFeatures(filter);
-            try {
-                SpatialFilter.getJCSCache().clear();
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-            _writes++;
-        } finally {
-            _lock.unlock();
-        }
-    }
-
-
-    public void delete(List<String> ids) throws IOException
-    {
-        _lock.lock();
-        try {
-            FilterFactory2 factory = CommonFactoryFinder
-                    .getFilterFactory2(GeoTools.getDefaultHints());
-
-            List<Filter> filters = new LinkedList<Filter>();
-            String idColumn = getIdColumn();
-            for(String id : ids) {
-                filters.add(factory.equals(
-                        factory.property(idColumn), factory.literal(id)));
-            }
-
-            _index = null;
-
-            _featureStore.removeFeatures(factory.or(filters));
-            try {
-                SpatialFilter.getJCSCache().clear();
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-            _writes++;
-        } finally {
-            _lock.unlock();
-        }
-    }
-    public void commit() throws IOException
-    {
-        _lock.lock();
-        try {
-
-            if (!_autocommit && _writes > 0) {
-                _writes = 0;
-                _transaction.commit();
-                _index = null;
-                SpatialFilter.getJCSCache().clear();
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        } finally {
-            _lock.unlock();
-        }
-
-    }
-
-    public SpatialIndex getIndex() throws IOException
-    {
-        _lock.lock();
-        try {
-
-            if (_index==null) {
-                populateIndex();
-            }
-            return _index;
-        } finally {
-            _lock.unlock();
-        }
-    }
-
-    /**
-     * Deletes the old index and sets up an empty index file
-     * @throws Exception
-     */
-    public void reset() throws Exception
-    {
-        _lock.lock();
-        try {
-            _featureStore.setTransaction(Transaction.AUTO_COMMIT);
-            _index=null;
-            _featureStore.removeFeatures(Filter.INCLUDE);
-            _featureStore.setTransaction(_transaction);
-        }finally{
-            _lock.unlock();
-        }
-    }
-
-    /**
-     * Extracts a Geometry Collection from metadata default visibility for
-     * testing access.
+     * Extracts a Geometry Collection from metadata default visibility for testing access.
      */
     static MultiPolygon extractGeometriesFrom(Path schemaDir,
-                                              Element metadata, Parser parser, Map<String, String> errorMessage) throws Exception
-    {
+                                              Element metadata, Parser parser, Map<String, String> errorMessage) throws Exception {
         org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
-                .setLevel(Level.SEVERE);
+            .setLevel(Level.SEVERE);
         Path sSheet = schemaDir.resolve("extract-gml.xsl").toAbsolutePath();
         Element transform = Xml.transform(metadata, sSheet);
         if (transform.getChildren().size() == 0) {
             return null;
         }
         List<Polygon> allPolygons = new ArrayList<Polygon>();
-        for (Element geom : (List<Element>)transform.getChildren()) {
+        for (Element geom : (List<Element>) transform.getChildren()) {
             String srs = geom.getAttributeValue("srsName");
             CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
             String gml = Xml.getString(geom);
@@ -342,7 +152,7 @@ public class SpatialIndexWriter implements FeatureListener
                 // if we have an srs and its not WGS84 then transform to WGS84
                 if (!CRS.equalsIgnoreMetadata(sourceCRS, DefaultGeographicCRS.WGS84)) {
                     MathTransform tform = CRS.findMathTransform(sourceCRS, DefaultGeographicCRS.WGS84);
-                    jts = (MultiPolygon)JTS.transform(jts, tform);
+                    jts = (MultiPolygon) JTS.transform(jts, tform);
                 }
 
                 for (int i = 0; i < jts.getNumGeometries(); i++) {
@@ -350,15 +160,15 @@ public class SpatialIndexWriter implements FeatureListener
                 }
             } catch (Exception e) {
                 errorMessage.put("PARSE", gml + ". Error is:" + e.getMessage());
-                Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: "+gml+"\n\t"+e.getMessage());
+                Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage());
                 e.printStackTrace();
                 // continue
             }
         }
 
-        if( allPolygons.isEmpty()){
+        if (allPolygons.isEmpty()) {
             return null;
-        }else{
+        } else {
             try {
                 Polygon[] array = new Polygon[allPolygons.size()];
                 GeometryFactory geometryFactory = allPolygons.get(0).getFactory();
@@ -367,7 +177,7 @@ public class SpatialIndexWriter implements FeatureListener
 
             } catch (Exception e) {
                 errorMessage.put("BUILD", allPolygons + ". Error is:" + e.getMessage());
-                Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: "+allPolygons);
+                Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: " + allPolygons);
                 e.printStackTrace();
                 // continue
                 return null;
@@ -376,8 +186,7 @@ public class SpatialIndexWriter implements FeatureListener
     }
 
     public static MultiPolygon parseGml(Parser parser, String gml) throws IOException, SAXException,
-            ParserConfigurationException
-    {
+        ParserConfigurationException {
         Object value = parser.parse(new StringReader(gml));
         if (value instanceof HashMap) {
             @SuppressWarnings("rawtypes")
@@ -386,9 +195,9 @@ public class SpatialIndexWriter implements FeatureListener
             for (Object entry : map.values()) {
                 addToList(geoms, entry);
             }
-            if( geoms.isEmpty() ){
+            if (geoms.isEmpty()) {
                 return null;
-            } else if( geoms.size()>1 ){
+            } else if (geoms.size() > 1) {
                 GeometryFactory factory = geoms.get(0).getFactory();
                 return factory.createMultiPolygon(geoms.toArray(new Polygon[0]));
             } else {
@@ -402,8 +211,7 @@ public class SpatialIndexWriter implements FeatureListener
         }
     }
 
-    public static void addToList(List<Polygon> geoms, Object entry)
-    {
+    public static void addToList(List<Polygon> geoms, Object entry) {
         if (entry instanceof Polygon) {
             geoms.add((Polygon) entry);
         } else if (entry instanceof Collection) {
@@ -415,55 +223,6 @@ public class SpatialIndexWriter implements FeatureListener
         }
     }
 
-    private void populateIndex() throws IOException
-    {
-        try {
-            SpatialFilter.getJCSCache().clear();
-        } catch (CacheException e) {
-            e.printStackTrace();
-        }
-        _index = new STRtree();
-        FeatureIterator<SimpleFeature> features = null;
-        try {
-            features = _featureStore.getFeatures().features();
-            while (features.hasNext()) {
-                SimpleFeature feature = features.next();
-                if (_idColumn == null) {
-                    _idColumn = findIdColumn(_featureStore);
-                }
-                final Object idAtt = feature.getAttribute(_idColumn == null ? _IDS_ATTRIBUTE_NAME : _idColumn.toString()).toString();
-                Pair<FeatureId, Object> data = Pair.read(feature.getIdentifier(), idAtt);
-                Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
-                if(defaultGeometry != null) {
-                    _index.insert(defaultGeometry.getEnvelopeInternal(), data);
-                }
-            }
-
-        } finally {
-            if (features != null) {
-                features.close();
-            }
-        }
-    }
-
-    private FeatureStore<SimpleFeatureType, SimpleFeature> createFeatureStore(DataStore datastore) throws Exception {
-        Log.debug(Geonet.SPATIAL, "Configuring SpatialIndexWriter.");
-        FeatureStore<SimpleFeatureType, SimpleFeature> featureSource;
-
-        featureSource = findSpatialIndexStore(datastore);
-        if (featureSource != null) {
-            _idColumn = findIdColumn(featureSource);
-            if (_idColumn == null) {
-                throw new IllegalArgumentException(
-                        "ERROR, unable to find _idColumn!!! in \n    DataStore: " + featureSource.getDataStore() +
-                        "\n    FeatureType: " + featureSource.getSchema());
-            }
-            return featureSource;
-
-        }
-        return null;
-    }
-
     /**
      * Find the spatialindex featureStore or return null
      */
@@ -473,7 +232,7 @@ public class SpatialIndexWriter implements FeatureListener
             Log.debug(Geonet.SPATIAL, "Found FeatureType: " + name);
 
             if (_SPATIAL_INDEX_TYPENAME.equalsIgnoreCase(name)) {
-                Log.debug(Geonet.SPATIAL, "Found the spatial index FeatureType: " +  name);
+                Log.debug(Geonet.SPATIAL, "Found the spatial index FeatureType: " + name);
                 return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(name);
             }
         }
@@ -481,7 +240,7 @@ public class SpatialIndexWriter implements FeatureListener
     }
 
     private static FeatureStore<SimpleFeatureType, SimpleFeature> attemptToCreateSpatialIndexFeatureStore(DataStore datastore) throws
-            IOException {
+        IOException {
         SimpleFeatureTypeBuilder typeBuilder = new SimpleFeatureTypeBuilder();
         typeBuilder.setName(_SPATIAL_INDEX_TYPENAME);
 
@@ -512,19 +271,237 @@ public class SpatialIndexWriter implements FeatureListener
         return null;
     }
 
-    public static MultiPolygon toMultiPolygon(Geometry geometry)
-    {
+    public static MultiPolygon toMultiPolygon(Geometry geometry) {
         if (geometry instanceof Polygon) {
             Polygon polygon = (Polygon) geometry;
 
             return geometry.getFactory().createMultiPolygon(
-                    new Polygon[] { polygon });
-        }else if (geometry instanceof MultiPolygon) {
-            return  (MultiPolygon) geometry;
+                new Polygon[]{polygon});
+        } else if (geometry instanceof MultiPolygon) {
+            return (MultiPolygon) geometry;
         }
-        String message = geometry.getClass()+" cannot be converted to a polygon. Check Metadata";
+        String message = geometry.getClass() + " cannot be converted to a polygon. Check Metadata";
         Log.error(Geonet.INDEX_ENGINE, message);
         throw new IllegalArgumentException(message);
+    }
+
+    public Map<String, String> getErrorMessage() {
+        return errorMessage;
+    }
+
+    /**
+     * Add a metadata record to the index
+     *
+     * @param schemaDir the base directory that contains the different metadata schemas
+     */
+    public void index(Path schemaDir, String id,
+                      Element metadata) throws Exception {
+        _lock.lock();
+        try {
+            _index = null;
+            errorMessage = new HashMap<>();
+            Geometry geometry = extractGeometriesFrom(
+                schemaDir, metadata, _parser, errorMessage);
+
+            if (geometry != null && !geometry.getEnvelopeInternal().isNull()) {
+                MemoryFeatureCollection features = new MemoryFeatureCollection(_featureStore.getSchema());
+                SimpleFeatureType schema = _featureStore.getSchema();
+
+                SimpleFeature template = SimpleFeatureBuilder.template(schema,
+                    SimpleFeatureBuilder.createDefaultFeatureId());
+                template.setAttribute(schema.getGeometryDescriptor().getName(), geometry);
+                template.setAttribute(getIdColumn(), id);
+                features.add(template);
+
+                _featureStore.addFeatures(features);
+
+                _writes++;
+
+                if (!_autocommit && _writes > _maxWrites) {
+                    _transaction.commit();
+                    _writes = 0;
+                }
+            }
+        } finally {
+            _lock.unlock();
+        }
+    }
+
+    private String getIdColumn() {
+        _lock.lock();
+        try {
+            if (_idColumn == null) {
+                _idColumn = findIdColumn(_featureStore);
+            }
+            return _idColumn == null ? _IDS_ATTRIBUTE_NAME : _idColumn.toString();
+        } finally {
+            _lock.unlock();
+        }
+    }
+
+    public void close() throws IOException {
+        _lock.lock();
+        try {
+            if (_writes > 0) {
+                _transaction.commit();
+                _writes = 0;
+            }
+            _transaction.close();
+            _index = null;
+            _featureStore.setTransaction(Transaction.AUTO_COMMIT);
+            SpatialFilter.getJCSCache().clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            _lock.unlock();
+        }
+    }
+
+    public FeatureSource<SimpleFeatureType, SimpleFeature> getFeatureSource() {
+        return _featureStore;
+    }
+
+    public void delete(String id) throws IOException {
+        _lock.lock();
+        try {
+            FilterFactory2 factory = CommonFactoryFinder
+                .getFilterFactory2(GeoTools.getDefaultHints());
+            Filter filter = factory.equals(
+                factory.property(getIdColumn()), factory.literal(id));
+
+            _index = null;
+
+            _featureStore.removeFeatures(filter);
+            try {
+                SpatialFilter.getJCSCache().clear();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            _writes++;
+        } finally {
+            _lock.unlock();
+        }
+    }
+
+    public void delete(List<String> ids) throws IOException {
+        _lock.lock();
+        try {
+            FilterFactory2 factory = CommonFactoryFinder
+                .getFilterFactory2(GeoTools.getDefaultHints());
+
+            List<Filter> filters = new LinkedList<Filter>();
+            String idColumn = getIdColumn();
+            for (String id : ids) {
+                filters.add(factory.equals(
+                    factory.property(idColumn), factory.literal(id)));
+            }
+
+            _index = null;
+
+            _featureStore.removeFeatures(factory.or(filters));
+            try {
+                SpatialFilter.getJCSCache().clear();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            _writes++;
+        } finally {
+            _lock.unlock();
+        }
+    }
+
+    public void commit() throws IOException {
+        _lock.lock();
+        try {
+
+            if (!_autocommit && _writes > 0) {
+                _writes = 0;
+                _transaction.commit();
+                _index = null;
+                SpatialFilter.getJCSCache().clear();
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        } finally {
+            _lock.unlock();
+        }
+
+    }
+
+    public SpatialIndex getIndex() throws IOException {
+        _lock.lock();
+        try {
+
+            if (_index == null) {
+                populateIndex();
+            }
+            return _index;
+        } finally {
+            _lock.unlock();
+        }
+    }
+
+    /**
+     * Deletes the old index and sets up an empty index file
+     */
+    public void reset() throws Exception {
+        _lock.lock();
+        try {
+            _featureStore.setTransaction(Transaction.AUTO_COMMIT);
+            _index = null;
+            _featureStore.removeFeatures(Filter.INCLUDE);
+            _featureStore.setTransaction(_transaction);
+        } finally {
+            _lock.unlock();
+        }
+    }
+
+    private void populateIndex() throws IOException {
+        try {
+            SpatialFilter.getJCSCache().clear();
+        } catch (CacheException e) {
+            e.printStackTrace();
+        }
+        _index = new STRtree();
+        FeatureIterator<SimpleFeature> features = null;
+        try {
+            features = _featureStore.getFeatures().features();
+            while (features.hasNext()) {
+                SimpleFeature feature = features.next();
+                if (_idColumn == null) {
+                    _idColumn = findIdColumn(_featureStore);
+                }
+                final Object idAtt = feature.getAttribute(_idColumn == null ? _IDS_ATTRIBUTE_NAME : _idColumn.toString()).toString();
+                Pair<FeatureId, Object> data = Pair.read(feature.getIdentifier(), idAtt);
+                Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
+                if (defaultGeometry != null) {
+                    _index.insert(defaultGeometry.getEnvelopeInternal(), data);
+                }
+            }
+
+        } finally {
+            if (features != null) {
+                features.close();
+            }
+        }
+    }
+
+    private FeatureStore<SimpleFeatureType, SimpleFeature> createFeatureStore(DataStore datastore) throws Exception {
+        Log.debug(Geonet.SPATIAL, "Configuring SpatialIndexWriter.");
+        FeatureStore<SimpleFeatureType, SimpleFeature> featureSource;
+
+        featureSource = findSpatialIndexStore(datastore);
+        if (featureSource != null) {
+            _idColumn = findIdColumn(featureSource);
+            if (_idColumn == null) {
+                throw new IllegalArgumentException(
+                    "ERROR, unable to find _idColumn!!! in \n    DataStore: " + featureSource.getDataStore() +
+                        "\n    FeatureType: " + featureSource.getSchema());
+            }
+            return featureSource;
+
+        }
+        return null;
     }
 
     public void changed(FeatureEvent featureEvent) {

@@ -35,48 +35,44 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.switchuser.AuthenticationSwitchUserEvent;
 
 /**
- * 
  * This class logs the last succesful login events from the app.
- * 
+ *
  * Can be de/activated adding config-security-core(-overrides).xml
- * 
+ *
  * <bean class="org.fao.geonet.kernel.security.listener.UpdateTimestampListener"
- * id="updateTimestampListener"> <property name="activate" value="true"/>
- * </bean>
- * 
- * 
+ * id="updateTimestampListener"> <property name="activate" value="true"/> </bean>
+ *
  * @author delawen
  * @author Jose García
- * 
  */
 public class UpdateTimestampListener implements
-		ApplicationListener<AbstractAuthenticationEvent> {
+    ApplicationListener<AbstractAuthenticationEvent> {
 
-	@Override
-	/**
-	 * Depending on which type of app event we will log one or other thing.
-	 */
-	public void onApplicationEvent(AbstractAuthenticationEvent e) {
-		UserRepository userRepo = ApplicationContextHolder.get().getBean(UserRepository.class);
+    @Override
+    /**
+     * Depending on which type of app event we will log one or other thing.
+     */
+    public void onApplicationEvent(AbstractAuthenticationEvent e) {
+        UserRepository userRepo = ApplicationContextHolder.get().getBean(UserRepository.class);
 
-		if (e instanceof InteractiveAuthenticationSuccessEvent
-				|| e instanceof AuthenticationSuccessEvent
-				|| e instanceof AuthenticationSwitchUserEvent) {
+        if (e instanceof InteractiveAuthenticationSuccessEvent
+            || e instanceof AuthenticationSuccessEvent
+            || e instanceof AuthenticationSwitchUserEvent) {
 
-			try {
-				UserDetails userDetails = (UserDetails) e.getAuthentication()
-						.getPrincipal();
+            try {
+                UserDetails userDetails = (UserDetails) e.getAuthentication()
+                    .getPrincipal();
 
-				User user = userRepo.findOneByUsername(userDetails.getUsername());
-				user.setLastLoginDate(new ISODate().toString());
-				userRepo.save(user);
+                User user = userRepo.findOneByUsername(userDetails.getUsername());
+                user.setLastLoginDate(new ISODate().toString());
+                userRepo.save(user);
 
-			} catch (Exception ex) {
-				// TODO: Log exception
-				ex.printStackTrace();
-			}
+            } catch (Exception ex) {
+                // TODO: Log exception
+                ex.printStackTrace();
+            }
 
-		}
+        }
 
-	}
+    }
 }

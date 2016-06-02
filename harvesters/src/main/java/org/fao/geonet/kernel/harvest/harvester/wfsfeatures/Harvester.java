@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
+
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
@@ -65,17 +66,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.xml.stream.FactoryConfigurationError;
 
 //=============================================================================
-/** 
- * A WfsFeaturesHarvester is able to harvest metadata fragments from the 
- * GetFeature response of an OGC WFS. 
- * The fragments that are obtained from the WFS are saved into the GeoNetwork
- * database as subtemplates. The editor will offer these during the edit 
- * session for use when creating metadata records.
- * 
- * <pre>  
+
+/**
+ * A WfsFeaturesHarvester is able to harvest metadata fragments from the GetFeature response of an
+ * OGC WFS. The fragments that are obtained from the WFS are saved into the GeoNetwork database as
+ * subtemplates. The editor will offer these during the edit session for use when creating metadata
+ * records.
+ *
+ * <pre>
  * <nodes>
  *  <node type="wfsfeatures" id="300">
  *    <site>
@@ -117,153 +119,153 @@ import javax.xml.stream.FactoryConfigurationError;
  *  </node>
  * </nodes>
  * </pre>
- * 
+ *
  * @author sppigot
- *   
  */
-class Harvester implements IHarvester<HarvestResult>
-{
+class Harvester implements IHarvester<HarvestResult> {
     private final AtomicBoolean cancelMonitor;
 
 
     //---------------------------------------------------------------------------
-	/** 
+    private Logger log;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    private ServiceContext context;
+    private WfsFeaturesParams params;
+    private DataManager dataMan;
+    private SchemaManager schemaMan;
+    private HarvestResult result;
+    private UUIDMapper localUuids;
+    private String metadataGetService;
+
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    private Path stylesheetDirectory;
+    private Map<String, Object> ssParams = new HashMap<String, Object>();
+    /**
+     * Contains a list of accumulated errors during the executing of this harvest.
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
+    /**
      * Constructor
-     *  
      *
-     * @param cancelMonitor
-     * @param log
-     * @param context                                    Jeeves context
-     * @param params    harvesting configuration for the node
-     *
+     * @param context Jeeves context
+     * @param params  harvesting configuration for the node
      * @return null
      */
-	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WfsFeaturesParams params) {
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WfsFeaturesParams params) {
         this.cancelMonitor = cancelMonitor;
-		this.log    = log;
-		this.context= context;
-		this.params = params;
+        this.log = log;
+        this.context = context;
+        this.params = params;
 
-		result = new HarvestResult ();
-		
-		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
-		dataMan = gc.getBean(DataManager.class);
-		schemaMan = gc.getBean(SchemaManager.class);
-		SettingInfo si = context.getBean(SettingInfo.class);
-		String siteUrl = si.getSiteUrl() + context.getBaseUrl();
-		metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
-		ssParams.put("siteUrl", siteUrl);
-	}
+        result = new HarvestResult();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
-	/** 
-    * Start the harvesting of fragments from the WFS node.
-		*
-		*
-	 
-	<?xml version="1.0" encoding="utf-8"?>
-	<wfs:GetFeature xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" xmlns:wfs="http://www.opengis.net/wfs" outputFormat="text/xml; subtype=gml/3.1.1">
-		<wfs:Query xmlns:app="http://www.deegree.org/app" typeName="app:list_parcel_property">
-			<wfs:PropertyName>app:cadastral_id</wfs:PropertyName>
-			<wfs:PropertyName>app:property_id</wfs:PropertyName>
-		  <wfs:PropertyName>app:owner_name</wfs:PropertyName>
-			<wfs:PropertyName>app:addressline1</wfs:PropertyName>
-			<wfs:PropertyName>app:addressline2</wfs:PropertyName>
-			<wfs:PropertyName>app:addressline3</wfs:PropertyName>
-			<wfs:PropertyName>app:addressline4</wfs:PropertyName>
-			<wfs:PropertyName>app:database_access_date</wfs:PropertyName>
-			<wfs:PropertyName>app:GEOM</wfs:PropertyName>
-			<ogc:Filter>
-				<ogc:DWithin xmlns:gml='http://www.opengis.net/gml' >
-					<ogc:PropertyName xmlns:app="http://www.deegree.org/app">app:GEOM</ogc:PropertyName>
-					<gml:Polygon>
-						<gml:outerBoundaryIs>
-							<gml:LinearRing>
-								<gml:coordinates cs="," decimal="." ts=" ">506964.28,5413897.046 507051.215,5413999.211 507039.46,5414009.211 507012.503,5414032.146 506902.284,5413943.883 506964.28,5413897.046</gml:coordinates>
-							</gml:LinearRing>
-						</gml:outerBoundaryIs>
-					</gml:Polygon>
-					<ogc:Distance>500.0</ogc:Distance>
-				</ogc:DWithin>
-			</ogc:Filter>
-		</wfs:Query>
-	</wfs:GetFeature>
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        dataMan = gc.getBean(DataManager.class);
+        schemaMan = gc.getBean(SchemaManager.class);
+        SettingInfo si = context.getBean(SettingInfo.class);
+        String siteUrl = si.getSiteUrl() + context.getBaseUrl();
+        metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
+        ssParams.put("siteUrl", siteUrl);
+    }
 
-		*
-		*
-    */
-	public HarvestResult harvest(Logger log) throws Exception {
+    /**
+     * Start the harvesting of fragments from the WFS node.
+     *
+     *
+     *
+     * <?xml version="1.0" encoding="utf-8"?> <wfs:GetFeature xmlns:ogc="http://www.opengis.net/ogc"
+     * xmlns:gml="http://www.opengis.net/gml" xmlns:wfs="http://www.opengis.net/wfs"
+     * outputFormat="text/xml; subtype=gml/3.1.1"> <wfs:Query xmlns:app="http://www.deegree.org/app"
+     * typeName="app:list_parcel_property"> <wfs:PropertyName>app:cadastral_id</wfs:PropertyName>
+     * <wfs:PropertyName>app:property_id</wfs:PropertyName> <wfs:PropertyName>app:owner_name</wfs:PropertyName>
+     * <wfs:PropertyName>app:addressline1</wfs:PropertyName> <wfs:PropertyName>app:addressline2</wfs:PropertyName>
+     * <wfs:PropertyName>app:addressline3</wfs:PropertyName> <wfs:PropertyName>app:addressline4</wfs:PropertyName>
+     * <wfs:PropertyName>app:database_access_date</wfs:PropertyName> <wfs:PropertyName>app:GEOM</wfs:PropertyName>
+     * <ogc:Filter> <ogc:DWithin xmlns:gml='http://www.opengis.net/gml' > <ogc:PropertyName
+     * xmlns:app="http://www.deegree.org/app">app:GEOM</ogc:PropertyName> <gml:Polygon>
+     * <gml:outerBoundaryIs> <gml:LinearRing> <gml:coordinates cs="," decimal="." ts="
+     * ">506964.28,5413897.046 507051.215,5413999.211 507039.46,5414009.211 507012.503,5414032.146
+     * 506902.284,5413943.883 506964.28,5413897.046</gml:coordinates> </gml:LinearRing>
+     * </gml:outerBoundaryIs> </gml:Polygon> <ogc:Distance>500.0</ogc:Distance> </ogc:DWithin>
+     * </ogc:Filter> </wfs:Query> </wfs:GetFeature>
+     */
+    public HarvestResult harvest(Logger log) throws Exception {
 
-	    this.log = log;
-		log.info("Retrieving metadata fragments for : " + params.getName());
-        
-		//--- collect all existing metadata uuids before we update
+        this.log = log;
+        log.info("Retrieving metadata fragments for : " + params.getName());
+
+        //--- collect all existing metadata uuids before we update
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         localUuids = new UUIDMapper(metadataRepository, params.getUuid());
 
-		//--- parse the xml query from the string - TODO: default should be 
-		//--- get everything
-		Element wfsQuery = null;
-		
-		log.info("Parsing query :\n" + params.query);
-		try {
-			wfsQuery = Xml.loadString(params.query, false); 
-		} catch (JDOMException e) {
+        //--- parse the xml query from the string - TODO: default should be
+        //--- get everything
+        Element wfsQuery = null;
+
+        log.info("Parsing query :\n" + params.query);
+        try {
+            wfsQuery = Xml.loadString(params.query, false);
+        } catch (JDOMException e) {
             errors.add(new HarvestError(e, log));
-			throw new BadParameterEx("GetFeature Query failed to parse\n", params.query);
-		}
+            throw new BadParameterEx("GetFeature Query failed to parse\n", params.query);
+        }
 
-		//--- harvest metadata and subtemplates from fragments using generic fragment harvester
-		FragmentHarvester fragmentHarvester = new FragmentHarvester(cancelMonitor, log, context, getFragmentHarvesterParams());
+        //--- harvest metadata and subtemplates from fragments using generic fragment harvester
+        FragmentHarvester fragmentHarvester = new FragmentHarvester(cancelMonitor, log, context, getFragmentHarvesterParams());
 
-		if (params.streamFeatures) {
-			harvestFeatures(wfsQuery, fragmentHarvester);
-		} else {
-			harvestResponse(wfsQuery, fragmentHarvester);
-		}
-    
-		return result;
-	}
+        if (params.streamFeatures) {
+            harvestFeatures(wfsQuery, fragmentHarvester);
+        } else {
+            harvestResponse(wfsQuery, fragmentHarvester);
+        }
 
-	/** 
-     * Harvest fragments from the response document
-     * 
-     */
-	
-	private void harvestResponse(Element xmlQuery,
-            FragmentHarvester fragmentHarvester) throws IOException,
-            JDOMException, MalformedURLException, BadXmlResponseEx, Exception {
-
-		//--- post the query to the remote site
-	    Element xml = Xml.loadFile(new URL(params.url), xmlQuery);
-	    
-	    if (xml == null) {
-	    	throw new BadXmlResponseEx("No response or problem getting response from "+params.url+":\n"+Xml.getString(xmlQuery));
-	    }
-
-	    //--- apply stylesheet from output schema - stylesheet can be optional
-			//--- in case the server can do XSL transformations for us (eg. deegree 
-			//--- 2.2)
-			stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema).resolve(Geonet.Path.WFS_STYLESHEETS);
-	    if (!params.stylesheet.trim().equals("")) {
-	    	xml = Xml.transform(xml, stylesheetDirectory.resolve(params.stylesheet), ssParams);
-	    }
-	   
-		 	log.info("Applying "+stylesheetDirectory + "/" + params.stylesheet);
-	    harvest(xml, fragmentHarvester);
+        return result;
     }
 
-	/** 
-     * Harvest fragments by applying a stylesheet to each feature as it is received
-     * (reduces memory usage for large documents)
+    /**
+     * Harvest fragments from the response document
      */
-	
-	private void harvestFeatures(Element xmlQuery, FragmentHarvester fragmentHarvester)
-            throws FactoryConfigurationError, Exception {
+
+    private void harvestResponse(Element xmlQuery,
+                                 FragmentHarvester fragmentHarvester) throws IOException,
+        JDOMException, MalformedURLException, BadXmlResponseEx, Exception {
+
+        //--- post the query to the remote site
+        Element xml = Xml.loadFile(new URL(params.url), xmlQuery);
+
+        if (xml == null) {
+            throw new BadXmlResponseEx("No response or problem getting response from " + params.url + ":\n" + Xml.getString(xmlQuery));
+        }
+
+        //--- apply stylesheet from output schema - stylesheet can be optional
+        //--- in case the server can do XSL transformations for us (eg. deegree
+        //--- 2.2)
+        stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema).resolve(Geonet.Path.WFS_STYLESHEETS);
+        if (!params.stylesheet.trim().equals("")) {
+            xml = Xml.transform(xml, stylesheetDirectory.resolve(params.stylesheet), ssParams);
+        }
+
+        log.info("Applying " + stylesheetDirectory + "/" + params.stylesheet);
+        harvest(xml, fragmentHarvester);
+    }
+
+    /**
+     * Harvest fragments by applying a stylesheet to each feature as it is received (reduces memory
+     * usage for large documents)
+     */
+
+    private void harvestFeatures(Element xmlQuery, FragmentHarvester fragmentHarvester)
+        throws FactoryConfigurationError, Exception {
         XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.url);
         req.setRequest(xmlQuery);
         Lib.net.setupProxy(context, req);
@@ -305,12 +307,12 @@ class Harvester implements IHarvester<HarvestResult>
         }
     }
 
-	/** 
+    /**
      * Harvest fragments from the element passed
      */
-	
-	private void harvest(Element xml, FragmentHarvester fragmentHarvester)
-            throws Exception {
+
+    private void harvest(Element xml, FragmentHarvester fragmentHarvester)
+        throws Exception {
 
         HarvestSummary fragmentResult = fragmentHarvester.harvest(xml, params.url);
 
@@ -328,86 +330,64 @@ class Harvester implements IHarvester<HarvestResult>
         result.originalMetadata = result.fragmentsReturned;
     }
 
-	/** 
-     * Remove old metadata and subtemplates and uncache any subtemplates
-		 * that are left over after the update.
+    /**
+     * Remove old metadata and subtemplates and uncache any subtemplates that are left over after
+     * the update.
      */
-	
-	public void deleteOrphanedMetadata(Set<String> updatedMetadata) throws Exception {
-        if(log.isDebugEnabled()) log.debug("  - Removing orphaned metadata records and fragments after update");
-		
-		for (String uuid : localUuids.getUUIDs()) {
-		    try {
-    			String isTemplate = localUuids.getTemplate(uuid);
-    			if (isTemplate.equals("s")) {
-    					Processor.uncacheXLinkUri(metadataGetService+"?uuid=" + uuid);
-    			}
-    
-    			if (!updatedMetadata.contains(uuid)) {	
-    				String id = localUuids.getID(uuid);
-    				dataMan.deleteMetadata(context, id);
-    			
-    				if (isTemplate.equals("s")) {
-    					result.subtemplatesRemoved ++;
-    				} else {
-    					result.locallyRemoved ++;
-    				}
-    			}
-		    } catch(CacheException e) {
+
+    public void deleteOrphanedMetadata(Set<String> updatedMetadata) throws Exception {
+        if (log.isDebugEnabled())
+            log.debug("  - Removing orphaned metadata records and fragments after update");
+
+        for (String uuid : localUuids.getUUIDs()) {
+            try {
+                String isTemplate = localUuids.getTemplate(uuid);
+                if (isTemplate.equals("s")) {
+                    Processor.uncacheXLinkUri(metadataGetService + "?uuid=" + uuid);
+                }
+
+                if (!updatedMetadata.contains(uuid)) {
+                    String id = localUuids.getID(uuid);
+                    dataMan.deleteMetadata(context, id);
+
+                    if (isTemplate.equals("s")) {
+                        result.subtemplatesRemoved++;
+                    } else {
+                        result.locallyRemoved++;
+                    }
+                }
+            } catch (CacheException e) {
                 HarvestError error = new HarvestError(e, log);
                 this.errors.add(error);
-		    } catch (Exception e) {
+            } catch (Exception e) {
                 HarvestError error = new HarvestError(e, log);
                 this.errors.add(error);
             }
-		}
-		
-		if (result.subtemplatesRemoved + result.locallyRemoved > 0)  {
+        }
+
+        if (result.subtemplatesRemoved + result.locallyRemoved > 0) {
             dataMan.flush();
         }
     }
 
-	/** 
+    /**
      * Get generic fragment harvesting parameters from metadata fragment harvesting parameters
-     *   
      */
-	
-	private FragmentParams getFragmentHarvesterParams() {
-	    FragmentParams fragmentParams = new FragmentHarvester.FragmentParams();
-		fragmentParams.categories = params.getCategories();
-		fragmentParams.createSubtemplates = params.createSubtemplates;
-		fragmentParams.outputSchema = params.outputSchema;
-		fragmentParams.isoCategory = params.recordsCategory;
-		fragmentParams.privileges = params.getPrivileges();
-		fragmentParams.templateId = params.templateId;
-		fragmentParams.uuid = params.getUuid();
-		fragmentParams.owner = params.getOwnerId();
-		return fragmentParams;
+
+    private FragmentParams getFragmentHarvesterParams() {
+        FragmentParams fragmentParams = new FragmentHarvester.FragmentParams();
+        fragmentParams.categories = params.getCategories();
+        fragmentParams.createSubtemplates = params.createSubtemplates;
+        fragmentParams.outputSchema = params.outputSchema;
+        fragmentParams.isoCategory = params.recordsCategory;
+        fragmentParams.privileges = params.getPrivileges();
+        fragmentParams.templateId = params.templateId;
+        fragmentParams.uuid = params.getUuid();
+        fragmentParams.owner = params.getOwnerId();
+        return fragmentParams;
     }
 
     public List<HarvestError> getErrors() {
         return errors;
     }
-    
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private Logger         log;
-	private ServiceContext context;
-	private WfsFeaturesParams   params;
-	private DataManager    dataMan;
-	private SchemaManager  schemaMan;
-	private HarvestResult   result;
-	private UUIDMapper     localUuids;
-	private String	 		metadataGetService;
-	private Path stylesheetDirectory;
-	private Map<String,Object> ssParams = new HashMap<String,Object>();
-    /**
-     * Contains a list of accumulated errors during the executing of this harvest.
-     */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
 }

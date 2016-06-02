@@ -24,6 +24,7 @@
 package dublincore;
 
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;

@@ -26,6 +26,7 @@ package org.fao.geonet.services.category;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**

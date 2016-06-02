@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.PatternLayout;
@@ -101,22 +102,51 @@ import static org.quartz.JobKey.jobKey;
  */
 public abstract class AbstractHarvester<T extends HarvestResult> {
 
-    private static final String SCHEDULER_ID = "abstractHarvester";
     public static final String HARVESTER_GROUP_NAME = "HARVESTER_GROUP_NAME";
+    private static final String SCHEDULER_ID = "abstractHarvester";
 
     //---------------------------------------------------------------------------
     //---
     //--- Static API methods
     //---
     //---------------------------------------------------------------------------
-
+    protected volatile AtomicBoolean cancelMonitor = new AtomicBoolean(false);
+    protected ServiceContext context;
+    protected HarvesterSettingsManager settingMan;
+    protected DataManager dataMan;
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
+    protected AbstractParams params;
+    protected T result;
+    protected Logger log = Log.createLogger(Geonet.HARVESTER);
+    /**
+     * For the log name
+     */
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+    //--------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //--------------------------------------------------------------------------
+    private String id;
+    private volatile Status status;
+    /**
+     * Exception that aborted the harvesting
+     */
+    private Throwable error;
+    /**
+     * Contains all the warnings and errors that didn't abort the execution, but were thrown during
+     * harvesting
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
+    private volatile boolean running = false;
+    private Element loadedInfo;
 
     /**
      * TODO javadoc.
-     *
-     * @param type
-     * @param context
-     * @return
      */
     public static AbstractHarvester<?> create(String type, ServiceContext context) throws BadParameterEx, OperationAbortedEx {
         //--- raises an exception if type is null
@@ -134,6 +164,27 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     }
 
     /**
+     * TODO Javadoc.
+     */
+    public static Scheduler getScheduler() throws SchedulerException {
+        return QuartzSchedulerUtils.getScheduler(SCHEDULER_ID, true);
+    }
+
+    /**
+     * TODO Javadoc.
+     */
+    public static void shutdownScheduler() throws SchedulerException {
+        getScheduler().shutdown(false);
+    }
+
+    /**
+     * Get the list of registered harvester
+     */
+    public static String[] getHarvesterTypes(ServiceContext context) {
+        return context.getApplicationContext().getBeanNamesForType(AbstractHarvester.class);
+    }
+
+    /**
      * This method has to be public for CGLib proxy.
      *
      * @param context set the harvester's context.
@@ -144,11 +195,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         this.settingMan = context.getBean(HarvesterSettingsManager.class);
     }
 
-    /**
-     * For the log name
-     */
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
-
     private String initializeLog() {
 
         // configure personalized logger
@@ -157,11 +203,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         String packageType = packages[packages.length - 1];
         final String harvesterName = this.getParams().getName().replaceAll("\\W+", "_");
         log = Log.createLogger(harvesterName,
-                "geonetwork.harvester");
+            "geonetwork.harvester");
 
         String directory = log.getFileAppender();
         if (directory == null || directory.isEmpty()) {
-            directory = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir()+"/harvester_logs/";
+            directory = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir() + "/harvester_logs/";
         }
         File d = new File(directory);
         if (!d.isDirectory()) {
@@ -171,9 +217,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         DailyRollingFileAppender fa = new DailyRollingFileAppender();
         fa.setName(harvesterName);
         String logfile = directory + "harvester_" + packageType + "_"
-                         + harvesterName + "_"
-                         + dateFormat.format(new Date(System.currentTimeMillis()))
-                         + ".log";
+            + harvesterName + "_"
+            + dateFormat.format(new Date(System.currentTimeMillis()))
+            + ".log";
         fa.setFile(logfile);
         fa.setLayout(new PatternLayout("%d{ISO8601} %-5p [%c] - %m%n"));
         fa.setThreshold(log.getThreshold());
@@ -184,18 +230,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
         return logfile;
     }
-    //--------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //--------------------------------------------------------------------------
 
     /**
      * TODO javadoc.
-     *
-     * @param node
-     * @throws BadInputEx
-     * @throws SQLException
      */
     public synchronized void add(Element node) throws BadInputEx, SQLException {
         status = Status.INACTIVE;
@@ -235,10 +272,14 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
     }
 
+    //---------------------------------------------------------------------------
+    //---
+    //--- Package methods (called by Executor)
+    //---
+    //---------------------------------------------------------------------------
+
     /**
      * TODO Javadoc.
-     *
-     * @throws SchedulerException
      */
     private void doSchedule() throws SchedulerException {
         Scheduler scheduler = getScheduler();
@@ -250,63 +291,39 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * TODO Javadoc.
-     *
-     * @throws SchedulerException
      */
     private void doUnschedule() throws SchedulerException {
         getScheduler().deleteJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
     }
 
     /**
-     * TODO Javadoc.
-     *
-     * @return
-     * @throws SchedulerException
-     */
-    public static Scheduler getScheduler() throws SchedulerException {
-        return QuartzSchedulerUtils.getScheduler(SCHEDULER_ID, true);
-    }
-
-    /**
      * Called when the application is shutdown.
-     *
-     * @throws SchedulerException
      */
     public void shutdown() throws SchedulerException {
         getScheduler().deleteJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
     }
 
     /**
-     * TODO Javadoc.
-     *
-     * @throws SchedulerException
-     */
-    public static void shutdownScheduler() throws SchedulerException {
-        getScheduler().shutdown(false);
-    }
-
-    /**
-     * Called when the harvesting entry is removed from the system. It is used to remove harvested metadata.
-     *
-     * @throws Exception
+     * Called when the harvesting entry is removed from the system. It is used to remove harvested
+     * metadata.
      */
     public synchronized void destroy() throws Exception {
         doUnschedule();
 
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
-        
+
         final Specifications<Metadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
         Set<String> sources = new HashSet<String>();
         for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
             sources.add(metadataRepository.findOne(id).getSourceInfo().getSourceId());
             dataMan.deleteMetadata(context, "" + id);
         }
-        
+
         // Remove all sources related to the harvestUuid if they are not linked to any record anymore
         for (String sourceUuid : sources) {
-            Long ownedBySource = 
-                    metadataRepository.count(Specifications.where(MetadataSpecs.hasSource(sourceUuid)));
+            Long ownedBySource =
+                metadataRepository.count(Specifications.where(MetadataSpecs.hasSource(sourceUuid)));
             if (ownedBySource == 0 && !sourceUuid.equals(params.getUuid()) && sourceRepository.exists(sourceUuid)) {
                 removeIcon(sourceUuid);
                 sourceRepository.delete(sourceUuid);
@@ -317,12 +334,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     }
 
     /**
-     * Set harvester status to {@link Status#ACTIVE} and schedule the harvester to be ran
-     * at the next time according to the harvesters schedule.
+     * Set harvester status to {@link Status#ACTIVE} and schedule the harvester to be ran at the
+     * next time according to the harvesters schedule.
      *
-     * @return return {@link OperResult#ALREADY_ACTIVE} if the harvester is already active or {@link OperResult#OK}
-     * @throws SQLException
-     * @throws SchedulerException
+     * @return return {@link OperResult#ALREADY_ACTIVE} if the harvester is already active or {@link
+     * OperResult#OK}
      */
     public synchronized OperResult start() throws SQLException, SchedulerException {
         if (status != Status.INACTIVE) {
@@ -337,14 +353,17 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
         return OperResult.OK;
     }
+    //---------------------------------------------------------------------------
+    //---
+    //--- Abstract methods that must be overridden
+    //---
+    //---------------------------------------------------------------------------
 
     /**
      * Set the harvester status to {@link Status#ACTIVE} and unschedule any scheduled jobs.
      *
-     * @return {@link OperResult#ALREADY_INACTIVE} if the not currently enabled or {@link OperResult#OK}
-     * @throws SQLException
-     * @throws SchedulerException
-     * @param newStatus
+     * @return {@link OperResult#ALREADY_INACTIVE} if the not currently enabled or {@link
+     * OperResult#OK}
      */
     public OperResult stop(Status newStatus) throws SQLException, SchedulerException {
         this.cancelMonitor.set(true);
@@ -369,9 +388,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     }
 
     /**
-     * Call {@link #start()} if status is currently {@link Status#INACTIVE}.  Trigger a harvester job to run immediately.
+     * Call {@link #start()} if status is currently {@link Status#INACTIVE}.  Trigger a harvester
+     * job to run immediately.
      *
-     * @return {@link OperResult#OK} or {@link OperResult#ALREADY_RUNNING} if harvester is currently running.
+     * @return {@link OperResult#OK} or {@link OperResult#ALREADY_RUNNING} if harvester is currently
+     * running.
      */
     public synchronized OperResult run() throws SQLException, SchedulerException {
         if (status == Status.INACTIVE) {
@@ -385,7 +406,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     }
 
     /**
-     * Run the harvester in the synchronously (in the current thread) and return whether the harvest correctly completed.
+     * Run the harvester in the synchronously (in the current thread) and return whether the harvest
+     * correctly completed.
      *
      * @return {@link OperResult#OK} or {@link OperResult#ERROR}
      */
@@ -402,11 +424,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * TODO Javadoc.
-     *
-     * @param node
-     * @throws BadInputEx
-     * @throws SQLException
-     * @throws SchedulerException
      */
     public synchronized void update(Element node) throws BadInputEx, SQLException, SchedulerException {
         doUpdate(id, node);
@@ -422,8 +439,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * TODO Javadoc.
-     *
-     * @return
      */
     public String getID() {
         return id;
@@ -431,8 +446,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Adds harvesting result information to each harvesting entry.
-     *
-     * @param node
      */
     public void addInfo(Element node) {
         Element info = node.getChild("info");
@@ -450,11 +463,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     }
 
     /**
-     * Adds harvesting information to each metadata element. Some sites can generate url for thumbnails.
-     *
-     * @param info
-     * @param id
-     * @param uuid
+     * Adds harvesting information to each metadata element. Some sites can generate url for
+     * thumbnails.
      */
     public void addHarvestInfo(Element info, String id, String uuid) {
         info.addContent(new Element("type").setText(getType()));
@@ -468,39 +478,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         return status;
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Package methods (called by Executor)
-    //---
-    //---------------------------------------------------------------------------
-
     /**
-     * Nested class to handle harvesting with fast indexing.
-     */
-    public class HarvestWithIndexProcessor extends MetadataIndexerProcessor {
-        Logger logger;
-
-        /**
-         * @param dm
-         * @param logger
-         */
-        public HarvestWithIndexProcessor(DataManager dm, Logger logger) {
-            super(dm);
-            this.logger = logger;
-        }
-
-        /**
-         * @throws Exception
-         */
-        @Override
-        public void process() throws Exception {
-            doHarvest(logger);
-        }
-    }
-
-    /**
-     * Create a session for the user who created the harvester. The owner identifier is added when the harvester config
-     * is created or updated according to user session.
+     * Create a session for the user who created the harvester. The owner identifier is added when
+     * the harvester config is created or updated according to user session.
      */
     private void login() throws Exception {
 
@@ -508,13 +488,13 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         if (log.isDebugEnabled()) {
             log.debug("AbstractHarvester login: ownerId = " + ownerId);
         }
-        
+
         UserRepository repository = this.context.getBean(UserRepository.class);
         User user = null;
         if (StringUtils.isNotEmpty(ownerId)) {
             user = repository.findOne(ownerId);
         }
-        
+
         // for harvesters created before owner was added to the harvester code,
         // or harvesters belonging to a user that no longer exists
         if (user == null || StringUtils.isEmpty(ownerId) || !this.dataMan.existsUser(this.context, Integer.parseInt(ownerId))) {
@@ -535,9 +515,14 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         this.context.setIpAddress(null);
     }
 
+    //---------------------------------------------------------------------------
+    //---
+    //--- Protected storage methods
+    //---
+    //---------------------------------------------------------------------------
+
     /**
-     * Run the harvest process.
-     * This has to be protected or better for CGLib to proxy to it./
+     * Run the harvest process. This has to be protected or better for CGLib to proxy to it./
      */
     protected synchronized OperResult harvest() {
         OperResult operResult = OperResult.OK;
@@ -571,8 +556,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 }
             } catch (InvalidParameterValueEx e) {
                 logger.error("The harvester " + this.getParams().getName() + "["
-                             + this.getType()
-                             + "] didn't accept some of the parameters sent.");
+                    + this.getType()
+                    + "] didn't accept some of the parameters sent.");
 
                 errors.add(new HarvestError(e, logger));
                 error = e;
@@ -617,13 +602,13 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             result.addContent(toElement(errors));
             final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
             final HarvestHistory history = new HarvestHistory()
-                    .setHarvesterType(getType())
-                    .setHarvesterName(getParams().getName())
-                    .setHarvesterUuid(getParams().getUuid())
-                    .setElapsedTime((int) elapsedTime)
-                    .setHarvestDate(new ISODate(lastRun))
-                    .setParams(getParams().getNodeElement())
-                    .setInfo(result);
+                .setHarvesterType(getType())
+                .setHarvesterName(getParams().getName())
+                .setHarvesterUuid(getParams().getUuid())
+                .setElapsedTime((int) elapsedTime)
+                .setHarvestDate(new ISODate(lastRun))
+                .setParams(getParams().getNodeElement())
+                .setInfo(result);
             historyRepository.save(history);
 
 
@@ -643,13 +628,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
     }
 
-
     /**
-     * Convert {@link HarvestError} to an element that can be saved on the
-     * database.
-     *
-     * @param errors
-     * @return
+     * Convert {@link HarvestError} to an element that can be saved on the database.
      */
     private Element toElement(List<HarvestError> errors) {
         Element res = new Element("errors");
@@ -669,29 +649,22 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
         return res;
     }
-    //---------------------------------------------------------------------------
-    //---
-    //--- Abstract methods that must be overridden
-    //---
-    //---------------------------------------------------------------------------
 
     /**
      * Should be overriden to get a better insight on harvesting
      * <p/>
-     * Returns the list of exceptions that ocurred during the harvesting but
-     * didn't really stop and abort the harvest.
-     *
-     * @return
+     * Returns the list of exceptions that ocurred during the harvesting but didn't really stop and
+     * abort the harvest.
      */
     public synchronized List<HarvestError> getErrors() {
-       return errors;
+        return errors;
     }
 
     /**
      * @return
      */
     public final String getType() {
-        // FIXME: context is null when removing record 
+        // FIXME: context is null when removing record
         // eg. http://localhost:8080/geonetwork/node1/eng/admin.harvester.clear@json?id=585
         final String[] types = context.getApplicationContext().getBeanNamesForType(getClass());
         return types[0];
@@ -702,6 +675,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     public synchronized AbstractParams getParams() {
         return params;
+    }
+
+    public synchronized void setParams(AbstractParams params) {
+        this.params = params;
     }
 
     /**
@@ -722,7 +699,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     }
 
     private void removeIcon(String uuid) {
-        Path icon = Resources.locateLogosDir(context).resolve(uuid+ ".gif");
+        Path icon = Resources.locateLogosDir(context).resolve(uuid + ".gif");
 
         try {
             Files.deleteIfExists(icon);
@@ -766,24 +743,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Extend to do the actual harvesting.
-     *
-     * @param l
-     * @throws Exception
      */
     protected abstract void doHarvest(Logger l) throws Exception;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Protected storage methods
-    //---
-    //---------------------------------------------------------------------------
-
     /**
      * Invoked from doAdd and doUpdate in sub class implementations.
-     *
-     * @param params
-     * @param path
-     * @throws SQLException
      */
     protected void storeNode(AbstractParams params, String path) throws SQLException {
         String siteId = settingMan.add(path, "site", "");
@@ -839,10 +803,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Override this method with an empty body to avoid privileges storage.
-     *
-     * @param params
-     * @param path
-     * @throws SQLException
      */
     protected void storePrivileges(AbstractParams params, String path) throws SQLException {
         String privId = settingMan.add(path, "privileges", "");
@@ -857,10 +817,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Override this method with an empty body to avoid categories storage.
-     *
-     * @param params
-     * @param path
-     * @throws SQLException
      */
     protected void storeCategories(AbstractParams params, String path) throws SQLException {
         String categId = settingMan.add(path, "categories", "");
@@ -872,12 +828,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Override this method to store harvesting node's specific settings.
-     *
-     * @param params
-     * @param path
-     * @param siteId
-     * @param optionsId
-     * @throws SQLException
      */
     protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
     }
@@ -909,14 +859,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         el.addContent(new Element(name).setText(Integer.toString(value)));
     }
 
-    public synchronized void setParams(AbstractParams params) {
-        this.params = params;
-    }
-
     /**
      * Get the results of the last harvest.
-     *
-     * @return
      */
     public Element getResult() {
         Element res = new Element("result");
@@ -952,26 +896,14 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
         return res;
     }
+
     public void emptyResult() {
         result = null;
         this.loadedInfo = null;
     }
 
     /**
-     * Get the list of registered harvester
-     *
-     * @param context
-     * @return
-     */
-    public static String[] getHarvesterTypes(ServiceContext context) {
-        return context.getApplicationContext().getBeanNamesForType(AbstractHarvester.class);
-    }
-
-    /**
      * Who should we notify by default?
-     *
-     * @return
-     * @throws Exception
      */
     public String getOwnerEmail() throws Exception {
         String ownerId = getParams().getOwnerIdGroup();
@@ -980,34 +912,27 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         return group.getEmail();
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //--------------------------------------------------------------------------
-    private String id;
-    private volatile Status status;
     /**
-     * Exception that aborted the harvesting
+     * Nested class to handle harvesting with fast indexing.
      */
-    private Throwable error;
-    /**
-     * Contains all the warnings and errors that didn't abort the execution, but were thrown during harvesting
-     */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
-    private volatile boolean running = false;
-    protected volatile AtomicBoolean cancelMonitor = new AtomicBoolean(false);
+    public class HarvestWithIndexProcessor extends MetadataIndexerProcessor {
+        Logger logger;
 
+        /**
+         * @param dm
+         * @param logger
+         */
+        public HarvestWithIndexProcessor(DataManager dm, Logger logger) {
+            super(dm);
+            this.logger = logger;
+        }
 
-    protected ServiceContext context;
-
-    protected HarvesterSettingsManager settingMan;
-
-    protected DataManager dataMan;
-
-    protected AbstractParams params;
-    protected T result;
-    private Element loadedInfo;
-
-    protected Logger log = Log.createLogger(Geonet.HARVESTER);
+        /**
+         * @throws Exception
+         */
+        @Override
+        public void process() throws Exception {
+            doHarvest(logger);
+        }
+    }
 }

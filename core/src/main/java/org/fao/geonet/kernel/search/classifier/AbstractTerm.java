@@ -69,7 +69,7 @@ public abstract class AbstractTerm implements Classifier {
 
     private List<CategoryPath> classify(KeywordBean term) {
         List<CategoryPath> result = new ArrayList<CategoryPath>();
-    
+
         Thesaurus thesaurus = getThesaurus();
 
         if (thesaurus.hasBroader(term.getUriCode())) {
@@ -77,22 +77,22 @@ public abstract class AbstractTerm implements Classifier {
         } else {
             result.add(classifyTermWithNoBroaderTerms(term));
         }
-    
+
         return result;
     }
 
     private List<CategoryPath> classifyTermWithBroaderTerms(KeywordBean term) {
         List<CategoryPath> result = new ArrayList<CategoryPath>();
 
-        for (CategoryPath categoryPathToBroaderTerm: classifyBroaderTerms(term)) {
+        for (CategoryPath categoryPathToBroaderTerm : classifyBroaderTerms(term)) {
             CategoryPath categoryPathToTerm = addSubCategory(
                 categoryPathToBroaderTerm,
                 getCategoryToIndex(term)
             );
-    
+
             result.add(categoryPathToTerm);
         }
-    
+
         return result;
     }
 
@@ -101,7 +101,7 @@ public abstract class AbstractTerm implements Classifier {
 
         Thesaurus thesaurus = getThesaurus();
 
-        for (KeywordBean broaderTerm: thesaurus.getBroader(term.getUriCode(), getLanguages())) {
+        for (KeywordBean broaderTerm : thesaurus.getBroader(term.getUriCode(), getLanguages())) {
             result.addAll(classify(broaderTerm));
         }
 

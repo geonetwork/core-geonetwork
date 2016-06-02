@@ -42,218 +42,207 @@ import java.util.Map;
  */
 public class Schema {
 
-	private String id;
+    private String id;
+    private String version;
+    private String schemaLocation;
+    private List<Element> autodetectElements = new ArrayList<Element>();
+    private Map<String, XmlFile> schemaInfo = new HashMap<String, XmlFile>();
+    private Path dir;
+    private MetadataSchema mds;
+    private SchemaSuggestions sugg;
+    private boolean plugin = false;
+    private List<Element> conversionElements = new ArrayList<Element>();
+    private List<Element> dependElements = new ArrayList<Element>();
 
-	/**
-		* Get id of this schema.
-		*
-     * @return
+    /**
+     * Get id of this schema.
      */
-	public String getId() { return id; }
+    public String getId() {
+        return id;
+    }
 
-	/**
-		* Set id of this schema.
-		*
-		* @param id UUID of this schema
-		*
-		*/
-	public void setId(String id) { 
-		this.id = id; 
-	}
-
-	private String version;
-
-	/**
-		* Get version of this schema.
-		*
-     * @return
+    /**
+     * Set id of this schema.
+     *
+     * @param id UUID of this schema
      */
-	public String getVersion() { return version; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-		* Set version of this schema.
-		*
-		* @param version version string of this schema
-		*
-		*/
-	public void setVersion(String version) { 
-		this.version = version; 
-	}
-
-	private String schemaLocation;
-
-	/**
-		* Get schemaLocation = official URLs which locate xsds for the various namespaces used by this schema.
-		*
-     * @return
+    /**
+     * Get version of this schema.
      */
-	public String getSchemaLocation() { return schemaLocation; }
+    public String getVersion() {
+        return version;
+    }
 
-	/**
-		* Set schemaLocation = official URLs which locate xsds for the various namespaces used by this schema.
-		*
-		* @param schemaLocation namespaces and URLs of XSDs arranged in pairs
-		*
-		*/
-	public void setSchemaLocation(String schemaLocation) { 
-		this.schemaLocation = schemaLocation; 
-	}
-
-	private List<Element> autodetectElements = new ArrayList<Element>();
-
-	/**
-		* Get List of XML elements that describes how to detect metadata records that belong to this schema.
-		*
-     * @return
+    /**
+     * Set version of this schema.
+     *
+     * @param version version string of this schema
      */
-	public List<Element> getAutodetectElements() { return autodetectElements; }
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-	/**
-		* Set List of XML elements that describes how to detect metadata records that belong to this schema.
-		*
-		* @param autodetectElements List of JDOM elements
-		*
-		*/
-	public void setAutodetectElements(List<Element> autodetectElements) { 
-		this.autodetectElements = autodetectElements; 
-	}
-
-	private Map<String, XmlFile> schemaInfo = new HashMap<String, XmlFile>();
-
-	/**
-	 * Get map of localized xml files describing schema elements - at present these are labels, codelists and strings
-     * and are hashed on the name of the localized file.
-	 *
-     * @return
+    /**
+     * Get schemaLocation = official URLs which locate xsds for the various namespaces used by this
+     * schema.
      */
-	public Map<String, XmlFile> getInfo() { return schemaInfo; }
+    public String getSchemaLocation() {
+        return schemaLocation;
+    }
 
-	/**
-	 * Set map of localized xml files describing schema elements - at present these are labels, codelists and strings
-     * and are hashed on the name of the localized file.
-	 *
-	 * @param schemaInfo Map containing schema information for each file
-	 *
-	 */
-	public void setInfo(Map<String, XmlFile> schemaInfo) { 
-		this.schemaInfo = schemaInfo;
-	}
-
-	private Path dir;
-
-	/**
-	 * Get file system directory in which schema resides - used by methods that need to access xslt files in the schema
-     * directory.
-	 *
-     * @return
+    /**
+     * Set schemaLocation = official URLs which locate xsds for the various namespaces used by this
+     * schema.
+     *
+     * @param schemaLocation namespaces and URLs of XSDs arranged in pairs
      */
-	public Path getDir() { return dir; }
+    public void setSchemaLocation(String schemaLocation) {
+        this.schemaLocation = schemaLocation;
+    }
 
-	/**
-	 * Set file system directory in which schema resides.
-	 *
-	 * @param dir file system directory in which schema resides
-	 *
-	 */
-	public void setDir(Path dir) {
-		this.dir = dir; 
-	}
-
-	private MetadataSchema mds;
-
-	/**
-	 * Get MetadataSchema object that describes the XML schema for the editor.
-	 *
-     * @return
+    /**
+     * Get List of XML elements that describes how to detect metadata records that belong to this
+     * schema.
      */
-	public MetadataSchema getMetadataSchema() { return mds; }
+    public List<Element> getAutodetectElements() {
+        return autodetectElements;
+    }
 
-	/**
-	 * Set MetadataSchema object that describes the XML schema for the editor.
-	 *
-	 * @param mds the MetadataSchema object describing the XML schema
-	 *
-	 */
-	public void setMetadataSchema(MetadataSchema mds) { 
-		this.mds = mds; 
-	}
-
-	private SchemaSuggestions sugg;
-
-	/**
-	 * Get SchemaSuggestions object that describes the suggested elements for this schema (used by the editor).
-	 *
-     * @return
+    /**
+     * Set List of XML elements that describes how to detect metadata records that belong to this
+     * schema.
+     *
+     * @param autodetectElements List of JDOM elements
      */
-	public SchemaSuggestions getSuggestions() { return sugg; };
+    public void setAutodetectElements(List<Element> autodetectElements) {
+        this.autodetectElements = autodetectElements;
+    }
 
-	/**
-	 * Set SchemaSuggestions object that describes the suggested elements for this schema (used by the editor).
-	 *
-	 * @param sugg the SchemaSuggestions object describing the schema suggestions
-	 *
-	 */
-	public void setSuggestions(SchemaSuggestions sugg) { 
-		this.sugg = sugg; 
-	}
-
-	private boolean plugin = false;
-
-	/**
-	 * Get boolean which states whether the schema is a plugin schema or not.
-	 *
-     * @return
+    /**
+     * Get map of localized xml files describing schema elements - at present these are labels,
+     * codelists and strings and are hashed on the name of the localized file.
      */
-	public boolean isPluginSchema() { return plugin; }
+    public Map<String, XmlFile> getInfo() {
+        return schemaInfo;
+    }
 
-	/**
-	 * Set boolean which states whether the schema is a plugin schema or not.
-	 *
-	 * @param plugin boolean set to true if schema is a plugin schema
-	 *
-	 */
-	public void setPluginSchema(boolean plugin) {
-		this.plugin = plugin; 
-	}
-
-	private List<Element> conversionElements = new ArrayList<Element>();
-
-	/**
-	 * Get List of XML elements that describes how to convert metadata records that belong to this schema to other
-     * schemas.
-	 *
-     * @return
+    /**
+     * Set map of localized xml files describing schema elements - at present these are labels,
+     * codelists and strings and are hashed on the name of the localized file.
+     *
+     * @param schemaInfo Map containing schema information for each file
      */
-	public List<Element> getConversionElements() { return conversionElements; }
+    public void setInfo(Map<String, XmlFile> schemaInfo) {
+        this.schemaInfo = schemaInfo;
+    }
 
-	/**
-	 * Set List of XML elements that describes how to convert metadata records that belong to this schema to other
-     * schemas.
-	 *
-	 * @param conversionElements List of JDOM elements
-	 *
-	 */
-	public void setConversionElements(List<Element> conversionElements) { 
-		this.conversionElements = conversionElements; 
-	}
+    /**
+     * Get file system directory in which schema resides - used by methods that need to access xslt
+     * files in the schema directory.
+     */
+    public Path getDir() {
+        return dir;
+    }
 
-	private List<Element> dependElements = new ArrayList<Element>();
+    /**
+     * Set file system directory in which schema resides.
+     *
+     * @param dir file system directory in which schema resides
+     */
+    public void setDir(Path dir) {
+        this.dir = dir;
+    }
 
-	/**
-	 * Get List of XML elements whose text values are the names of schemas that this schema depends upon.
-	 *
-   * @return
-   */
-	public List<Element> getDependElements() { return dependElements; }
+    ;
 
-	/**
-	 * Set List of XML elements whose text values are the names of schemas that this schema depends upon.
-	 *
-	 * @param  dependElements of JDOM elements
-	 *
-	 */
-	public void setDependElements(List<Element> dependElements) { 
-		this.dependElements = dependElements; 
-	}
+    /**
+     * Get MetadataSchema object that describes the XML schema for the editor.
+     */
+    public MetadataSchema getMetadataSchema() {
+        return mds;
+    }
+
+    /**
+     * Set MetadataSchema object that describes the XML schema for the editor.
+     *
+     * @param mds the MetadataSchema object describing the XML schema
+     */
+    public void setMetadataSchema(MetadataSchema mds) {
+        this.mds = mds;
+    }
+
+    /**
+     * Get SchemaSuggestions object that describes the suggested elements for this schema (used by
+     * the editor).
+     */
+    public SchemaSuggestions getSuggestions() {
+        return sugg;
+    }
+
+    /**
+     * Set SchemaSuggestions object that describes the suggested elements for this schema (used by
+     * the editor).
+     *
+     * @param sugg the SchemaSuggestions object describing the schema suggestions
+     */
+    public void setSuggestions(SchemaSuggestions sugg) {
+        this.sugg = sugg;
+    }
+
+    /**
+     * Get boolean which states whether the schema is a plugin schema or not.
+     */
+    public boolean isPluginSchema() {
+        return plugin;
+    }
+
+    /**
+     * Set boolean which states whether the schema is a plugin schema or not.
+     *
+     * @param plugin boolean set to true if schema is a plugin schema
+     */
+    public void setPluginSchema(boolean plugin) {
+        this.plugin = plugin;
+    }
+
+    /**
+     * Get List of XML elements that describes how to convert metadata records that belong to this
+     * schema to other schemas.
+     */
+    public List<Element> getConversionElements() {
+        return conversionElements;
+    }
+
+    /**
+     * Set List of XML elements that describes how to convert metadata records that belong to this
+     * schema to other schemas.
+     *
+     * @param conversionElements List of JDOM elements
+     */
+    public void setConversionElements(List<Element> conversionElements) {
+        this.conversionElements = conversionElements;
+    }
+
+    /**
+     * Get List of XML elements whose text values are the names of schemas that this schema depends
+     * upon.
+     */
+    public List<Element> getDependElements() {
+        return dependElements;
+    }
+
+    /**
+     * Set List of XML elements whose text values are the names of schemas that this schema depends
+     * upon.
+     *
+     * @param dependElements of JDOM elements
+     */
+    public void setDependElements(List<Element> dependElements) {
+        this.dependElements = dependElements;
+    }
 
 }

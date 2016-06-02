@@ -24,14 +24,16 @@
 package org.fao.geonet.domain;
 
 import static org.junit.Assert.*;
+
 import org.fao.geonet.repository.HarvestHistoryRepositoryTest;
 import org.jdom.Element;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class HarvestHistoryTest{
+public class HarvestHistoryTest {
     AtomicInteger _inc = new AtomicInteger();
+
     @Test
     public void testAsXml() throws Exception {
         final HarvestHistory harvestHistory = HarvestHistoryRepositoryTest.createHarvestHistory(_inc);
@@ -46,13 +48,14 @@ public class HarvestHistoryTest{
         final Element params = xml.getChild("params");
         assertTrue(params.getChildren().get(0) instanceof Element);
     }
+
     @Test
     public void testAsXmlWithNulls() throws Exception {
         final HarvestHistory harvestHistory = HarvestHistoryRepositoryTest.createHarvestHistory(_inc);
         harvestHistory.setHarvestDate(new ISODate());
 
-        harvestHistory.setInfo((Element)null);
-        harvestHistory.setParams((Element)null);
+        harvestHistory.setInfo((Element) null);
+        harvestHistory.setParams((Element) null);
         final Element xml = harvestHistory.asXml();
 
         assertNull(xml.getChild("info"));

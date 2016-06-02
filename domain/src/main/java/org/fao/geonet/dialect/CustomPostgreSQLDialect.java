@@ -31,13 +31,13 @@ public class CustomPostgreSQLDialect extends PostgreSQLDialect {
     @Override
     public String getQuerySequencesString() {
         return "SELECT "
-                + "        relname "
-                + "FROM "
-                + "        pg_class "
-                + "WHERE "
-                + "        relkind='S' "
-                + "AND "
-                + "        pg_table_is_visible(oid)";
+            + "        relname "
+            + "FROM "
+            + "        pg_class "
+            + "WHERE "
+            + "        relkind='S' "
+            + "AND "
+            + "        pg_table_is_visible(oid)";
     }
 
 }

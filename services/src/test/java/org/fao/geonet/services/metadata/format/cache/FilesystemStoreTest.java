@@ -27,6 +27,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterWidth;
@@ -181,8 +182,8 @@ public class FilesystemStoreTest {
         store.put(keys[2], new StoreInfoAndData(new byte[200], 2, false));
         assertStoreContains(keys, keys[0], keys[1], keys[2], keys[3], keys[4]);
         try (
-                Statement statement = store.metadataDb.createStatement();
-                ResultSet rs = statement.executeQuery(FilesystemStore.QUERY_GETCURRENT_SIZE)) {
+            Statement statement = store.metadataDb.createStatement();
+            ResultSet rs = statement.executeQuery(FilesystemStore.QUERY_GETCURRENT_SIZE)) {
             assertTrue(rs.next());
             assertEquals(1000L, Long.parseLong(rs.getString(1)));
         }
@@ -223,11 +224,11 @@ public class FilesystemStoreTest {
     private Key[] prepareDiskSizeRestrictionTests() throws IOException, SQLException {
         this.store.setMaxSizeKb(1);
         Key[] keys = {new Key(0, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
-                new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
-                new Key(2, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
-                new Key(3, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
-                new Key(4, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
-                new Key(5, "eng", FormatType.html, "full_view", true, FormatterWidth._100)};
+            new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
+            new Key(2, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
+            new Key(3, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
+            new Key(4, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
+            new Key(5, "eng", FormatType.html, "full_view", true, FormatterWidth._100)};
 
         store.put(keys[0], new StoreInfoAndData(new byte[200], 0, false));
         assertStoreContains(keys, keys[0]);
@@ -253,10 +254,10 @@ public class FilesystemStoreTest {
         }
 
         Sets.SetView<Key> diff = Sets.difference(expectedContained, actualContained);
-        assertEquals("Some values were missing: \n"+ Joiner.on("\n").join(diff), 0, diff.size());
+        assertEquals("Some values were missing: \n" + Joiner.on("\n").join(diff), 0, diff.size());
 
         Sets.SetView<Key> diff2 = Sets.difference(actualContained, expectedContained);
-        assertEquals("Some extra values were found: \n"+ Joiner.on("\n").join(diff2), 0, diff2.size());
+        assertEquals("Some extra values were found: \n" + Joiner.on("\n").join(diff2), 0, diff2.size());
     }
 
     @Test
@@ -328,6 +329,7 @@ public class FilesystemStoreTest {
             assertNull(key.toString(), store.getPublished(key));
         }
     }
+
     private void assertPublished(Key... keys) throws IOException {
         for (Key key : keys) {
             assertNotNull(key.toString(), store.getPublished(key));

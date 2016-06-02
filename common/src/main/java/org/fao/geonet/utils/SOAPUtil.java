@@ -31,106 +31,101 @@ import java.util.List;
 
 //=============================================================================
 
-public final class SOAPUtil
-{
-	public static final Namespace NAMESPACE_ENV = Namespace.getNamespace("env", "http://www.w3.org/2003/05/soap-envelope");
+public final class SOAPUtil {
+    public static final Namespace NAMESPACE_ENV = Namespace.getNamespace("env", "http://www.w3.org/2003/05/soap-envelope");
 
-	/**
-    * Default constructor.
-    * Builds a SOAPUtil.
-    */
-   private SOAPUtil() {}
+    /**
+     * Default constructor. Builds a SOAPUtil.
+     */
+    private SOAPUtil() {
+    }
 
-	public static Element embed(Element response)
-	{
-		Element envl = new Element("Envelope", NAMESPACE_ENV);
-		Element body = new Element("Body",     NAMESPACE_ENV);
+    public static Element embed(Element response) {
+        Element envl = new Element("Envelope", NAMESPACE_ENV);
+        Element body = new Element("Body", NAMESPACE_ENV);
 
-		envl.addContent(body);
-		body.addContent(response);
+        envl.addContent(body);
+        body.addContent(response);
 
-		return envl;
-	}
+        return envl;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public static Element embedExc(Element error, boolean sender, String errorCode, String message)
-	{
-		Namespace ns = NAMESPACE_ENV;
+    public static Element embedExc(Element error, boolean sender, String errorCode, String message) {
+        Namespace ns = NAMESPACE_ENV;
 
-		Element fault = new Element("Fault", ns);
+        Element fault = new Element("Fault", ns);
 
-		//--- setup code
+        //--- setup code
 
-		Element code = new Element("Code", ns);
-		fault.addContent(code);
+        Element code = new Element("Code", ns);
+        fault.addContent(code);
 
-		String  type  = sender ? "env:Sender" : "env:Receiver";
-		Element value = new Element("Value", ns);
-		value.setText(type);
+        String type = sender ? "env:Sender" : "env:Receiver";
+        Element value = new Element("Value", ns);
+        value.setText(type);
 
-		code.addContent(value);
+        code.addContent(value);
 
-		//--- setup subcode
+        //--- setup subcode
 
-		Element subCode = new Element("Subcode", ns);
-		code.addContent(subCode);
+        Element subCode = new Element("Subcode", ns);
+        code.addContent(subCode);
 
-		value = new Element("Value", ns);
-		value.setText(errorCode);
+        value = new Element("Value", ns);
+        value.setText(errorCode);
 
-		subCode.addContent(value);
+        subCode.addContent(value);
 
-		//--- setup reason
+        //--- setup reason
 
-		Element reason = new Element("Reason", ns);
-		fault.addContent(reason);
+        Element reason = new Element("Reason", ns);
+        fault.addContent(reason);
 
-		Element text = new Element("Text", ns);
-		reason.addContent(text);
+        Element text = new Element("Text", ns);
+        reason.addContent(text);
 
-		text.setText(message);
-		text.setAttribute("lang", "en", Namespace.XML_NAMESPACE);
+        text.setText(message);
+        text.setAttribute("lang", "en", Namespace.XML_NAMESPACE);
 
-		//--- setup detail
+        //--- setup detail
 
-		Element detail = new Element("Detail", ns);
-		detail.addContent(error);
-		fault.addContent(detail);
+        Element detail = new Element("Detail", ns);
+        detail.addContent(error);
+        fault.addContent(detail);
 
-		return embed(fault);
-	}
+        return embed(fault);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
-	public static Element unembed(Element envelope) throws MissingParameterEx
-	{
-		Namespace ns   = envelope.getNamespace();
-		Element   body = envelope.getChild("Body", ns);
+    @SuppressWarnings("unchecked")
+    public static Element unembed(Element envelope) throws MissingParameterEx {
+        Namespace ns = envelope.getNamespace();
+        Element body = envelope.getChild("Body", ns);
 
-		if (body == null)
-			throw new MissingParameterEx("Body", envelope);
+        if (body == null)
+            throw new MissingParameterEx("Body", envelope);
 
-		List<Element> list = body.getChildren();
+        List<Element> list = body.getChildren();
 
-		if (list.size() == 0)
-			throw new MissingParameterEx("*request*", body);
+        if (list.size() == 0)
+            throw new MissingParameterEx("*request*", body);
 
-		return list.get(0);
-	}
+        return list.get(0);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public static boolean isEnvelope(Element elem)
-	{
-		if (!elem.getName().equals("Envelope"))
-			return false;
+    public static boolean isEnvelope(Element elem) {
+        if (!elem.getName().equals("Envelope"))
+            return false;
 
-		Namespace ns = elem.getNamespace();
+        Namespace ns = elem.getNamespace();
 
-		return (ns.getURI().equals(NAMESPACE_ENV.getURI()));
-	}
+        return (ns.getURI().equals(NAMESPACE_ENV.getURI()));
+    }
 }
 
 //=============================================================================

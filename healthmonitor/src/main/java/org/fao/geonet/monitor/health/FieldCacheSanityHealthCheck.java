@@ -55,7 +55,7 @@ public class FieldCacheSanityHealthCheck implements HealthCheckFactory {
                     b.append(insanity.getMsg());
                 }
             }
-            
+
         };
     }
 }

@@ -2,8 +2,10 @@ package org.fao.geonet.wro4j;
 
 import java.io.File;
 import java.net.URL;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+
 import ro.isdc.wro.config.Context;
 import ro.isdc.wro.model.resource.Resource;
 
@@ -16,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 public class TemplatesUriLocatorTest {
     @Test
     public void testLocate() throws Exception {
-    	Context.set(Context.standaloneContext());
+        Context.set(Context.standaloneContext());
         final TemplatesUriLocator locator = new TemplatesUriLocator();
         URL path = TemplatesUriLocatorTest.class.getResource("/partials/");
         File file = new File(path.toURI());
@@ -26,7 +28,7 @@ public class TemplatesUriLocatorTest {
         assertTrue(locator.accept(resource.getUri()));
         final String actual = IOUtils.toString(locator.locate(resource.getUri()));
         String expected = String.format("$templateCache.put('%s/template.html', '<html><div ng-class=\"test | \\'bold\\'\"></div></html>');",
-                "../.." + file.getPath().replace('\\', '/'));
+            "../.." + file.getPath().replace('\\', '/'));
         assertEquals(expected, actual);
     }
 }

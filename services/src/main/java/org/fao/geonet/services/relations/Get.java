@@ -26,6 +26,7 @@ package org.fao.geonet.services.relations;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -46,84 +47,58 @@ import java.util.Set;
 //=============================================================================
 
 public class Get implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    /**
+     * TODO : should we move relation management in DataManager or in a specific relation management
+     * class ?
+     */
+    public static Element getRelation(int id, String relation, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getBean(DataManager.class);
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+        Set<Integer> result = getRelationIds(id, relation, context);
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		int id = Integer.parseInt(Utils.getIdentifierFromParameters(params,
-                context));
-		String relation = Util.getParam(params, "relation", "normal");
+        // --- retrieve metadata and return result
+        Element response = new Element("response");
 
-		return getRelation(id, relation, context);
-	}
-
-	/**
-	 * TODO : should we move relation management in DataManager or in a specific
-	 * relation management class ?
-	 * 
-	 * @param id
-	 * @param relation
-	 * @param context
-	 * @return
-	 * @throws Exception 
-	 */
-	public static Element getRelation(int id, String relation, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dm = gc.getBean(DataManager.class);
-		
-		Set<Integer> result = getRelationIds(id, relation, context);
-		
-				// --- retrieve metadata and return result
-		Element response = new Element("response");
-
-		for (Integer mdId : result) {
+        for (Integer mdId : result) {
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-            Element md = dm.getMetadata(context,"" + mdId, forEditing, withValidationErrors, keepXlinkAttributes);
+            Element md = dm.getMetadata(context, "" + mdId, forEditing, withValidationErrors, keepXlinkAttributes);
 
-			// --- we could have a race condition so, just perform a simple check
-			if (md != null)
-				response.addContent(md);
-		}
+            // --- we could have a race condition so, just perform a simple check
+            if (md != null)
+                response.addContent(md);
+        }
 
-		return response;
-	}
+        return response;
+    }
 
-	
-	/**
-	 * Method to query Relation table and get a Set of identifiers of related
-	 * metadata
-	 * 
-	 * @param id
-	 * @param relation
-	 * @param context
-	 * @return
-	 * @throws Exception 
-	 */
-	public static Set<Integer> getRelationIds(int id, String relation, ServiceContext context) throws Exception {
-		// --- perform proper queries to retrieve the id set
-		if (relation.equals("normal") || relation.equals("full")) {
-			return retrieveIds(context, true, "relatedid", id);
-		}
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-		if (relation.equals("reverse") || relation.equals("full")) {
+    /**
+     * Method to query Relation table and get a Set of identifiers of related metadata
+     */
+    public static Set<Integer> getRelationIds(int id, String relation, ServiceContext context) throws Exception {
+        // --- perform proper queries to retrieve the id set
+        if (relation.equals("normal") || relation.equals("full")) {
+            return retrieveIds(context, true, "relatedid", id);
+        }
+
+        if (relation.equals("reverse") || relation.equals("full")) {
             return retrieveIds(context, false, "id", id);
-		}
+        }
 
-		return Collections.emptySet();
-	}
-	
-	/**
-	 * Run the query and load a Set based on query results.
-	 */
-	private static Set<Integer> retrieveIds(ServiceContext context, boolean findMetadataId,
-			String field, int id) throws SQLException {
+        return Collections.emptySet();
+    }
+
+    /**
+     * Run the query and load a Set based on query results.
+     */
+    private static Set<Integer> retrieveIds(ServiceContext context, boolean findMetadataId,
+                                            String field, int id) throws SQLException {
         final MetadataRelationRepository relationRepository = context.getBean(MetadataRelationRepository.class);
 
         Specification<MetadataRelation> spec;
@@ -142,5 +117,17 @@ public class Get implements Service {
             }
         }
         return results;
-	}
+    }
+
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
+
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
+        int id = Integer.parseInt(Utils.getIdentifierFromParameters(params,
+            context));
+        String relation = Util.getParam(params, "relation", "normal");
+
+        return getRelation(id, relation, context);
+    }
 }

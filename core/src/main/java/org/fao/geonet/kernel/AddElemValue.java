@@ -32,8 +32,7 @@ import org.jdom.JDOMException;
 import java.io.IOException;
 
 /**
- * A simple container class for some add methods in {@link EditLib}
- * Created by Jesse on 12/10/13.
+ * A simple container class for some add methods in {@link EditLib} Created by Jesse on 12/10/13.
  */
 public class AddElemValue {
     private final String stringValue;
@@ -67,6 +66,7 @@ public class AddElemValue {
     public boolean isXml() {
         return nodeValue != null;
     }
+
     public String getStringValue() {
         return stringValue;
     }

@@ -2,6 +2,7 @@ package org.fao.geonet.wro4j;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,6 +17,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -26,12 +28,20 @@ import static org.junit.Assert.assertTrue;
 /**
  * Tests that javascript dependencies are correctly parsed from javascript files.
  * <p/>
- * User: Jesse
- * Date: 11/21/13
- * Time: 11:42 AM
+ * User: Jesse Date: 11/21/13 Time: 11:42 AM
  */
 public class ClosureRequireDependencyManagerTest {
     private ClosureRequireDependencyManager _depManager;
+
+    static File getJsTestBaseDir() throws Exception {
+        final Class<ClosureRequireDependencyManagerTest> cls = ClosureRequireDependencyManagerTest
+            .class;
+        final URL resource = cls.getResource(cls.getSimpleName() + ".class");
+        if (resource == null) {
+            throw new Error("Programming error");
+        }
+        return new File(resource.toURI()).getParentFile();
+    }
 
     @Before
     public void configureTestFile() throws Exception {
@@ -47,16 +57,6 @@ public class ClosureRequireDependencyManagerTest {
             }
         }
 
-    }
-
-    static File getJsTestBaseDir() throws Exception {
-        final Class<ClosureRequireDependencyManagerTest> cls = ClosureRequireDependencyManagerTest
-                .class;
-        final URL resource = cls.getResource(cls.getSimpleName() + ".class");
-        if (resource == null) {
-            throw new Error("Programming error");
-        }
-        return new File(resource.toURI()).getParentFile();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -106,7 +106,7 @@ public class ClosureRequireDependencyManagerTest {
     @Test
     public void testAddFileRequiresUsesDoubleQuotes() throws Exception {
         final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "goog.provide('xb'); goog.require(\"3a\")",
-                Collections.<String>emptySet());
+            Collections.<String>emptySet());
         assertTrue(node.dependencyIds.contains("3a"));
     }
 
@@ -119,7 +119,7 @@ public class ClosureRequireDependencyManagerTest {
     @Test
     public void testAddFileProvidesUsesDoubleQuotes() throws Exception {
         final ClosureRequireDependencyManager.Node node = _depManager.addFile("xa", "goog.provide(\"xa\")",
-                Collections.<String>emptySet());
+            Collections.<String>emptySet());
         Assert.assertEquals("xa", node.id);
         final Set<String> allModuleIds = _depManager.getAllModuleIds();
         assertTrue(allModuleIds.toString(), allModuleIds.contains("xa"));
@@ -128,7 +128,7 @@ public class ClosureRequireDependencyManagerTest {
     @Test
     public void testAddFileProvidesCanBeDeclaredAfterRequire() throws Exception {
         final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "goog.require('3a'); goog.provide('xb');",
-                Collections.<String>emptySet());
+            Collections.<String>emptySet());
         Assert.assertEquals("xb", node.id);
         assertTrue(node.dependencyIds.contains("3a"));
 
@@ -137,7 +137,7 @@ public class ClosureRequireDependencyManagerTest {
     @Test
     public void testLineEndingInRequireAndProvide() throws Exception {
         final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "goog.\nrequire('3a'); goog.\n\rprovide('xb');",
-                Collections.<String>emptySet());
+            Collections.<String>emptySet());
         Assert.assertEquals("xb", node.id);
         assertTrue(node.dependencyIds.contains("3a"));
 
@@ -146,7 +146,7 @@ public class ClosureRequireDependencyManagerTest {
     @Test
     public void testLineEndingInRequireAndProvide2() throws Exception {
         final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "goog\n.require('3a'); goog\n.\rprovide('xb');",
-                Collections.<String>emptySet());
+            Collections.<String>emptySet());
         Assert.assertEquals("xb", node.id);
         assertTrue(node.dependencyIds.contains("3a"));
 
@@ -170,7 +170,7 @@ public class ClosureRequireDependencyManagerTest {
         List<String> a1Deps = Arrays.asList("3a", "2b", "3c", "3b", "2a");
         Collection<ClosureRequireDependencyManager.Node> depNodes = _depManager.getTransitiveDependenciesFor("1a", false);
         List<String> actualIds = Lists.transform(Lists.newArrayList(depNodes), new Function<ClosureRequireDependencyManager.Node,
-                String>() {
+            String>() {
             @Nullable
             @Override
             public String apply(@Nonnull ClosureRequireDependencyManager.Node input) {

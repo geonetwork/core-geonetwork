@@ -69,9 +69,9 @@ public class TermFieldStats {
     @Override
     public String toString() {
         return "TermFieldStats{" +
-               "service='" + service + '\'' +
-               ", termfield='" + termfield + '\'' +
-               ", total=" + total +
-               '}';
+            "service='" + service + '\'' +
+            ", termfield='" + termfield + '\'' +
+            ", total=" + total +
+            '}';
     }
 }

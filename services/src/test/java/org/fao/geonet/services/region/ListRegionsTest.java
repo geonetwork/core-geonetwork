@@ -41,6 +41,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Ignore;
 
 public class ListRegionsTest extends AbstractServiceIntegrationTest {

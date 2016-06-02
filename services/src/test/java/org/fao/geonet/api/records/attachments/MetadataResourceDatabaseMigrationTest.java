@@ -24,6 +24,7 @@
 package org.fao.geonet.api.records.attachments;
 
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -40,8 +41,8 @@ public class MetadataResourceDatabaseMigrationTest {
     public static final String XPATH = "*//*[contains(text(), '/resources.get?')]";
     public static final String XPATH_AFTER_UPDATE = "*//*[contains(text(), 'api/records')]";
     private static String resources =
-            AbstractCoreIntegrationTest.getClassFile(
-                    MetadataResourceDatabaseMigrationTest.class).getParent();
+        AbstractCoreIntegrationTest.getClassFile(
+            MetadataResourceDatabaseMigrationTest.class).getParent();
 
     @Test
     public void testMetadataResourceLinkMigration() throws Exception {
@@ -52,22 +53,22 @@ public class MetadataResourceDatabaseMigrationTest {
         int NUMBER_OF_LINKS_TO_UPDATE = 3;
 
         List<Element> links =
-                Lists.newArrayList((Iterable<? extends Element>)
-                        Xml.selectNodes(metadata, XPATH));
+            Lists.newArrayList((Iterable<? extends Element>)
+                Xml.selectNodes(metadata, XPATH));
         assertEquals("One link to old resource", links.size(), NUMBER_OF_LINKS_TO_UPDATE);
 
         boolean changed = MetadataResourceDatabaseMigration.updateMetadataResourcesLink(
-                metadata, null
+            metadata, null
         );
         assertTrue("Metadata was updated", changed);
         links =
-                Lists.newArrayList((Iterable<? extends Element>)
-                        Xml.selectNodes(metadata, XPATH));
+            Lists.newArrayList((Iterable<? extends Element>)
+                Xml.selectNodes(metadata, XPATH));
         assertEquals("Old links removed", links.size(), 0);
 
         links =
-                Lists.newArrayList((Iterable<? extends Element>)
-                        Xml.selectNodes(metadata, XPATH_AFTER_UPDATE));
+            Lists.newArrayList((Iterable<? extends Element>)
+                Xml.selectNodes(metadata, XPATH_AFTER_UPDATE));
 //        for (Element n : links) {
 //            System.out.println(n.getText());
 //        }

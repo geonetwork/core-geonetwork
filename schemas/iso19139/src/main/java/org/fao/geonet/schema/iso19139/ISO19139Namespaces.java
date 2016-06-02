@@ -32,9 +32,9 @@ import org.jdom.Namespace;
  */
 public class ISO19139Namespaces {
     public static final Namespace GCO =
-            Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
+        Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
     public static final Namespace SRV =
-            Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
+        Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
     public static final Namespace GMD =
-            Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+        Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
 }

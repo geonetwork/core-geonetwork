@@ -24,6 +24,7 @@
 package org.fao.geonet.repository;
 
 import static org.junit.Assert.*;
+
 import org.fao.geonet.domain.HarvesterData;
 import org.fao.geonet.domain.HarvesterDataId;
 import org.junit.Test;
@@ -42,6 +43,15 @@ public class HarvesterDataRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     private HarvesterDataRepository _dataRepository;
 
+    public static HarvesterData newHarvesterData(AtomicInteger inc) {
+        int id = inc.incrementAndGet();
+        final HarvesterData data = new HarvesterData();
+        data.setValue("value_" + id);
+        data.setId(new HarvesterDataId("uuid_" + id, "key_" + id));
+
+        return data;
+    }
+
     @Test
     public void testFindAllById_HarvesterUuid() throws Exception {
         final HarvesterData data1 = newHarvesterData(_inc);
@@ -59,21 +69,12 @@ public class HarvesterDataRepositoryTest extends AbstractSpringDataTest {
         for (HarvesterData harvesterData : found) {
             assertEquals(data1.getId().getHarvesterUuid(), harvesterData.getId().getHarvesterUuid());
             if (harvesterData.getId().getKey().equals(data2.getId().getKey())) {
-                fail("should not have found data2: "+data2);
+                fail("should not have found data2: " + data2);
             } else {
                 final boolean equalsData1 = data1.equals(harvesterData);
                 final boolean equalsData3 = data3.equals(harvesterData);
-                assertTrue("Expected "+harvesterData+" to equals: "+data1+" or "+data3, equalsData1 || equalsData3);
+                assertTrue("Expected " + harvesterData + " to equals: " + data1 + " or " + data3, equalsData1 || equalsData3);
             }
         }
-    }
-
-    public static HarvesterData newHarvesterData(AtomicInteger inc) {
-        int id = inc.incrementAndGet();
-        final HarvesterData data = new HarvesterData();
-        data.setValue("value_"+id);
-        data.setId(new HarvesterDataId("uuid_"+id, "key_"+id));
-
-        return data;
     }
 }

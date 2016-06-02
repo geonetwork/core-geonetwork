@@ -28,17 +28,17 @@ import org.w3c.dom.Element;
 public class BeanDefinitionParserUtils {
 
     public static void addPropertyValueUsingFind(BeanDefinitionBuilder bean,
-            Element element, String propertyName, Class<?> enumClass) {
+                                                 Element element, String propertyName, Class<?> enumClass) {
         addPropertyValueUsingMethod(bean, element, propertyName, enumClass, "find");
     }
 
     public static void addPropertyValueUsingValueOf(BeanDefinitionBuilder bean,
-            Element element, String propertyName, Class<?> enumClass) {
+                                                    Element element, String propertyName, Class<?> enumClass) {
         addPropertyValueUsingMethod(bean, element, propertyName, enumClass, "valueOf");
     }
 
     public static void addOptionalPropertyValue(Element element,
-            BeanDefinitionBuilder bean, String propertyName) {
+                                                BeanDefinitionBuilder bean, String propertyName) {
         String value = element.getAttribute(propertyName);
 
         if (!value.isEmpty()) {
@@ -47,8 +47,8 @@ public class BeanDefinitionParserUtils {
     }
 
     private static void addPropertyValueUsingMethod(BeanDefinitionBuilder bean,
-            Element element, String propertyName, Class<?> enumClass,
-            String methodName) {
+                                                    Element element, String propertyName, Class<?> enumClass,
+                                                    String methodName) {
         String enumValue = element.getAttribute(propertyName);
 
         if (!enumValue.isEmpty()) {

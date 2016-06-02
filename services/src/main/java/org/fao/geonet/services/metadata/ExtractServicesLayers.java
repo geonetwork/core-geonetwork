@@ -32,8 +32,10 @@ package org.fao.geonet.services.metadata;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
@@ -47,6 +49,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -58,9 +61,9 @@ public class ExtractServicesLayers {
     @RequestMapping(value = "/{lang}/selection.layers")
     @ResponseBody
     public JSONObject getLayersFromSelectedMetadatas(
-            @PathVariable String lang,
-            @RequestParam(value = "id", required = false) String paramId,
-            final NativeWebRequest webRequest) throws Exception {
+        @PathVariable String lang,
+        @RequestParam(value = "id", required = false) String paramId,
+        final NativeWebRequest webRequest) throws Exception {
 
         final ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
         ServiceContext context = serviceManager.createServiceContext("selection.layers", lang, webRequest.getNativeRequest(HttpServletRequest.class));
@@ -77,10 +80,10 @@ public class ExtractServicesLayers {
 
         // case #1 : #id parameter is undefined
         if (paramId == null) {
-            synchronized(sm.getSelection("metadata")) {
-                for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
+            synchronized (sm.getSelection("metadata")) {
+                for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext(); ) {
                     String uuid = (String) iter.next();
-                    String id   = dm.getMetadataId(uuid);
+                    String id = dm.getMetadataId(uuid);
                     lst.add(id);
                 }
             }
@@ -88,7 +91,7 @@ public class ExtractServicesLayers {
             lst.add(paramId);
         }
 
-        for (Iterator<String> iter = lst.iterator(); iter.hasNext();) {
+        for (Iterator<String> iter = lst.iterator(); iter.hasNext(); ) {
             String id = iter.next();
             String uuid = dm.getMetadataUuid(id);
 
@@ -96,41 +99,41 @@ public class ExtractServicesLayers {
 
             XPath xpath = XPath.newInstance("gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine");
 
-            List<Element> elems ;
+            List<Element> elems;
 
             try {
                 @SuppressWarnings("unchecked")
                 List<Element> tmp = xpath.selectNodes(curMd);
                 elems = tmp;
-            }  catch (Exception e)  {
+            } catch (Exception e) {
                 // Bad XML input ?
                 continue;
             }
 
             for (Element curnode : elems) {
-                XPath pLinkage     = XPath.newInstance("gmd:CI_OnlineResource/gmd:linkage/gmd:URL");
-                XPath pProtocol    = XPath.newInstance("gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString");
-                XPath pName        = XPath.newInstance("gmd:CI_OnlineResource/gmd:name/gco:CharacterString");
+                XPath pLinkage = XPath.newInstance("gmd:CI_OnlineResource/gmd:linkage/gmd:URL");
+                XPath pProtocol = XPath.newInstance("gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString");
+                XPath pName = XPath.newInstance("gmd:CI_OnlineResource/gmd:name/gco:CharacterString");
                 XPath pDescription = XPath.newInstance("gmd:CI_OnlineResource/gmd:description/gco:CharacterString");
 
-                Element eLinkage     = (Element) pLinkage.selectSingleNode(curnode);
-                Element eProtocol    = (Element) pProtocol.selectSingleNode(curnode);
-                Element eName        = (Element) pName.selectSingleNode(curnode);
+                Element eLinkage = (Element) pLinkage.selectSingleNode(curnode);
+                Element eProtocol = (Element) pProtocol.selectSingleNode(curnode);
+                Element eName = (Element) pName.selectSingleNode(curnode);
                 Element eDescription = (Element) pDescription.selectSingleNode(curnode);
 
-                if (eLinkage == null)  {
+                if (eLinkage == null) {
                     continue;
                 }
                 if (eProtocol == null) {
                     continue;
                 }
-                if (eName == null)  {
+                if (eName == null) {
                     continue;
                 }
 
-                String sLinkage     = eLinkage.getValue();
-                String sProtocol    = eProtocol.getValue();
-                String sName        = eName.getValue();
+                String sLinkage = eLinkage.getValue();
+                String sProtocol = eProtocol.getValue();
+                String sName = eName.getValue();
                 String sDescription = eDescription != null ? eDescription.getValue() : "";
 
                 if ((sLinkage == null) || (sLinkage.equals(""))) {
@@ -144,14 +147,11 @@ public class ExtractServicesLayers {
 
                 if (sProtocol.contains("OGC:WMS")) {
                     sProto2 = "WMS";
-                }
-                else if (sProtocol.contains("OGC:WFS")) {
+                } else if (sProtocol.contains("OGC:WFS")) {
                     sProto2 = "WFS";
-                }
-                else if (sProtocol.contains("OGC:WCS")) {
+                } else if (sProtocol.contains("OGC:WCS")) {
                     sProto2 = "WMS";
-                }
-                else {
+                } else {
                     continue;
                 }
 

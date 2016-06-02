@@ -40,9 +40,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class Get {
 
     @RequestMapping(value = "/{lang}/admin.config.virtualcsw.get", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
-    CswVirtualServiceResponse exec(@RequestParam String id)throws Exception {
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
+    CswVirtualServiceResponse exec(@RequestParam String id) throws Exception {
 
         ServiceRepository serviceRepository = ApplicationContextHolder.get().getBean(ServiceRepository.class);
         final Service service = serviceRepository.findOne(Integer.valueOf(id));

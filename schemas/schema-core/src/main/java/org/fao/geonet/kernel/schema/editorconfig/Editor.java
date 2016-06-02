@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
@@ -34,9 +33,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -52,8 +51,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -75,11 +72,8 @@ public class Editor {
 
     /**
      * Gets the value of the fields property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Fields }
-     *     
+     *
+     * @return possible object is {@link Fields }
      */
     public Fields getFields() {
         return fields;
@@ -87,11 +81,8 @@ public class Editor {
 
     /**
      * Sets the value of the fields property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Fields }
-     *     
+     *
+     * @param value allowed object is {@link Fields }
      */
     public void setFields(Fields value) {
         this.fields = value;
@@ -99,11 +90,8 @@ public class Editor {
 
     /**
      * Gets the value of the fieldsWithFieldset property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link FieldsWithFieldset }
-     *     
+     *
+     * @return possible object is {@link FieldsWithFieldset }
      */
     public FieldsWithFieldset getFieldsWithFieldset() {
         return fieldsWithFieldset;
@@ -111,11 +99,8 @@ public class Editor {
 
     /**
      * Sets the value of the fieldsWithFieldset property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link FieldsWithFieldset }
-     *     
+     *
+     * @param value allowed object is {@link FieldsWithFieldset }
      */
     public void setFieldsWithFieldset(FieldsWithFieldset value) {
         this.fieldsWithFieldset = value;
@@ -123,11 +108,8 @@ public class Editor {
 
     /**
      * Gets the value of the multilingualFields property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link MultilingualFields }
-     *     
+     *
+     * @return possible object is {@link MultilingualFields }
      */
     public MultilingualFields getMultilingualFields() {
         return multilingualFields;
@@ -135,11 +117,8 @@ public class Editor {
 
     /**
      * Sets the value of the multilingualFields property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link MultilingualFields }
-     *     
+     *
+     * @param value allowed object is {@link MultilingualFields }
      */
     public void setMultilingualFields(MultilingualFields value) {
         this.multilingualFields = value;
@@ -147,11 +126,8 @@ public class Editor {
 
     /**
      * Gets the value of the views property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Views }
-     *     
+     *
+     * @return possible object is {@link Views }
      */
     public Views getViews() {
         return views;
@@ -159,11 +135,8 @@ public class Editor {
 
     /**
      * Sets the value of the views property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Views }
-     *     
+     *
+     * @param value allowed object is {@link Views }
      */
     public void setViews(Views value) {
         this.views = value;
@@ -171,11 +144,8 @@ public class Editor {
 
     /**
      * Gets the value of the batchEditing property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BatchEditing }
-     *     
+     *
+     * @return possible object is {@link BatchEditing }
      */
     public BatchEditing getBatchEditing() {
         return batchEditing;
@@ -183,11 +153,8 @@ public class Editor {
 
     /**
      * Sets the value of the batchEditing property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BatchEditing }
-     *     
+     *
+     * @param value allowed object is {@link BatchEditing }
      */
     public void setBatchEditing(BatchEditing value) {
         this.batchEditing = value;

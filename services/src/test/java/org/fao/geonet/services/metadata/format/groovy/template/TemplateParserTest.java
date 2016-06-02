@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.utils.IO;
 import org.junit.Test;
@@ -72,10 +73,10 @@ public class TemplateParserTest extends AbstractTemplateParserTest {
         model.put("title", "Title");
 
         String expected = "<html>\n"
-                          + "    <head>\n"
-                          + "        <title>Title</title>\n"
-                          + "    </head>\n"
-                          + "</html>";
+            + "    <head>\n"
+            + "        <title>Title</title>\n"
+            + "    </head>\n"
+            + "</html>";
         final ByteArrayOutputStream result = new ByteArrayOutputStream();
         TRenderContext context = new TRenderContext(result, model);
 

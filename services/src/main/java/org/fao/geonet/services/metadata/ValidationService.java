@@ -24,8 +24,10 @@
 package org.fao.geonet.services.metadata;
 
 import com.google.common.collect.Sets;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.responses.StatusResponse;
 import org.fao.geonet.kernel.AccessManager;
@@ -61,19 +63,16 @@ public class ValidationService implements ApplicationContextAware {
 
 
     /**
-     * Validate a set of records from the selection or from the list
-     * of UUIDs provided.
+     * Validate a set of records from the selection or from the list of UUIDs provided.
      *
      * Current user MUST own the metadata record.
      *
-     * @param uuid  One or more UUIDs to validate
-     * @return
-     * @throws Exception
+     * @param uuid One or more UUIDs to validate
      */
     @RequestMapping(value = "/{lang}/md.validation",
-                    produces = {
-                        MediaType.APPLICATION_XML_VALUE,
-                        MediaType.APPLICATION_JSON_VALUE})
+        produces = {
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
     StatusResponse validateRecords(@RequestParam(required = false) String[] uuid) throws Exception {
@@ -106,14 +105,14 @@ public class ValidationService implements ApplicationContextAware {
         r.process();
 
         return new StatusResponse(String.format(
-                "%d record(s) validated. %d record(s) valid.",
-                this.report.get("records").size(),
-                this.report.get("validRecords").size()));
+            "%d record(s) validated. %d record(s) valid.",
+            this.report.get("records").size(),
+            this.report.get("validRecords").size()));
     }
 
 
     private void validateRecords(ServiceContext serviceContext,
-                                         Set<String> setOfUuidsToValidate) throws Exception {
+                                 Set<String> setOfUuidsToValidate) throws Exception {
 
 
         DataManager dataMan = context.getBean(DataManager.class);
@@ -129,9 +128,9 @@ public class ValidationService implements ApplicationContextAware {
             } else {
                 String idString = String.valueOf(record.getId());
                 boolean isValid = dataMan.doValidate(record.getDataInfo().getSchemaId(),
-                        idString,
-                        new Document(record.getXmlData(false)),
-                        serviceContext.getLanguage());
+                    idString,
+                    new Document(record.getXmlData(false)),
+                    serviceContext.getLanguage());
                 if (isValid) {
                     this.report.get("validRecords").add(record.getId());
                 }

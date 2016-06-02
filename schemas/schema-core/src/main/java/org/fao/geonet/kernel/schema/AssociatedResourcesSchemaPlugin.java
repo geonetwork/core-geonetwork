@@ -33,18 +33,12 @@ import java.util.Set;
 public interface AssociatedResourcesSchemaPlugin {
 
     /**
-     * Analyse a metadata record and extract associated
-     * resources.
-     *
-     * @return
+     * Analyse a metadata record and extract associated resources.
      */
     public abstract Set<AssociatedResource> getAssociatedResourcesUUIDs(Element metadata);
 
     /**
      * Analyze a metadata record and extract associated parents
-     *
-     * @param metadata
-     * @return
      */
     public abstract Set<String> getAssociatedParentUUIDs(Element metadata);
 

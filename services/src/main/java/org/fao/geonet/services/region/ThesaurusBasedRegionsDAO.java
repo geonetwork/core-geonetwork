@@ -25,8 +25,10 @@ package org.fao.geonet.services.region;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+
 import jeeves.JeevesCacheManager;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -49,9 +51,9 @@ import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 
 public class ThesaurusBasedRegionsDAO extends RegionsDAO {
-    
+
     private static final ResultInterpreter<String> CATEGORY_ID_READER = new ResultInterpreter<String>() {
-        
+
         @Override
         public String createFromRow(Thesaurus thesaurus, QueryResultsTable resultTable, int rowIndex) {
             Value value = resultTable.getValue(rowIndex, 0);
@@ -64,17 +66,18 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
     private WeakHashMap<String, Map<String, String>> categoryIdMap = new WeakHashMap<String, Map<String, String>>();
     private GeometryFactory factory = new GeometryFactory();
     private String thesaurusName = "external.place.regions";
+
     public ThesaurusBasedRegionsDAO(Set<String> localesToLoad) {
         this.localesToLoad = Collections.unmodifiableSet(localesToLoad);
     }
-    
+
     @Override
     public Request createSearchRequest(ServiceContext context) throws Exception {
         Thesaurus thesaurus = getThesaurus(context);
 
-        return new ThesaurusRequest(context, this.categoryIdMap , localesToLoad, thesaurus);
+        return new ThesaurusRequest(context, this.categoryIdMap, localesToLoad, thesaurus);
     }
-    
+
     public synchronized void setThesaurusName(String thesaurusName) {
         super.clearCaches();
         this.thesaurusName = thesaurusName;
@@ -83,35 +86,35 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
     private synchronized Thesaurus getThesaurus(ServiceContext context) throws Exception {
         ThesaurusManager th = context.getBean(ThesaurusManager.class);
         Thesaurus regions = th.getThesaurusByName(thesaurusName);
-        if(regions != null) {
+        if (regions != null) {
             return regions;
         }
         Set<Entry<String, Thesaurus>> all = th.getThesauriMap().entrySet();
         for (Entry<String, Thesaurus> entry : all) {
-            if(entry.getKey().contains("regions")) {
+            if (entry.getKey().contains("regions")) {
                 return entry.getValue();
             }
         }
-        
+
         return null;
     }
 
     @Override
     public Geometry getGeom(ServiceContext context, String id, boolean simplified, CoordinateReferenceSystem projection) throws Exception {
         Region region = createSearchRequest(context).id(id).get();
-        if(region == null) {
+        if (region == null) {
             return null;
         }
-       
+
         Geometry geometry = factory.toGeometry(region.getBBox(projection));
         geometry.setUserData(region.getBBox().getCoordinateReferenceSystem());
-        
+
         return geometry;
     }
 
     @Override
-	public Collection<String> getRegionCategoryIds(final ServiceContext context) throws Exception{
-	    return JeevesCacheManager.findInTenSecondCache(CATEGORY_ID_CACHE_KEY, new Callable<Collection<String>>(){
+    public Collection<String> getRegionCategoryIds(final ServiceContext context) throws Exception {
+        return JeevesCacheManager.findInTenSecondCache(CATEGORY_ID_CACHE_KEY, new Callable<Collection<String>>() {
 
             @Override
             public Collection<String> call() throws Exception {
@@ -125,13 +128,13 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
                     return null;
                 }
             }
-	        
-	    });
-	}
 
-    public java.util.List<KeywordBean> getRegionTopConcepts(final ServiceContext context) throws Exception{
+        });
+    }
+
+    public java.util.List<KeywordBean> getRegionTopConcepts(final ServiceContext context) throws Exception {
         return JeevesCacheManager.findInTenSecondCache(CATEGORY_ID_CACHE_KEY + context.getLanguage(),
-            new Callable<java.util.List<KeywordBean>>(){
+            new Callable<java.util.List<KeywordBean>>() {
 
                 @Override
                 public java.util.List<KeywordBean> call() throws Exception {

@@ -39,47 +39,83 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class SummaryComparator implements Comparator<SummaryComparator.SummaryElement>, Serializable
-{
+public class SummaryComparator implements Comparator<SummaryComparator.SummaryElement>, Serializable {
     private static final long serialVersionUID = -4668989929284491497L;
+    private final Type _type;
+    private final Element _configuration;
 
-    public static class SummaryElement {
-        public final String name;
-        public final int count;
+    // enum Aggregation {
+    // COUNT, EQUAL_INTERVAL, QUANTILE, ANNUALLY, MONTHLY, DAILY
+    // }
+    private final Locale _locale;
+    private SummaryComparator.SortOption _option;
+    public SummaryComparator(SummaryComparator.SortOption option, SummaryComparator.Type type, String langCode, Element configuration) {
+        this._option = option;
+        this._type = type;
+        this._configuration = configuration;
+        _locale = LocaleUtil.toLocale(langCode);
+    }
 
-        public SummaryElement(ObjectKeyIntMapIterator next) {
-            this.name = (String) next.getKey();
-            this.count = next.getValue();
+    public int compare(SummaryElement me1, SummaryElement me2) {
+        String key1 = me1.name;
+        String key2 = me2.name;
+        int count1 = me1.count;
+        int count2 = me2.count;
+        switch (_option) {
+            case NAME: {
+
+                int cmp = compareKeys(key1, key2);
+                if (cmp != 0)
+                    return cmp;
+                else
+                    return compareCount(count1, count2);
+            }
+            case FREQUENCY: {
+                return compareCount(count1, count2);
+            }
+            default:
+                throw new AssertionError(_option + "is not handled by this method");
         }
     }
-    public enum Type
-    {
-        STRING
-        {
+
+    private int compareCount(Integer count1, Integer count2) {
+        int cmp = count2.compareTo(count1);
+        if (cmp != 0)
+            return cmp;
+        else
+            return -1;
+    }
+
+    @SuppressWarnings("unchecked")
+    private int compareKeys(String key1, String key2) {
+        @SuppressWarnings("rawtypes")
+        Comparable value1 = _type.value(key1, _locale, _configuration);
+        @SuppressWarnings("rawtypes")
+        Comparable value2 = _type.value(key2, _locale, _configuration);
+        return value1.compareTo(value2);
+    }
+
+    public enum Type {
+        STRING {
             @Override
-            public Comparable<LocalizedStringComparable> value(String string, Locale locale, Element configuration)
-            {
+            public Comparable<LocalizedStringComparable> value(String string, Locale locale, Element configuration) {
                 return new LocalizedStringComparable(string, locale);
             }
 
         },
-        NUMBER
-        {
+        NUMBER {
             @Override
-            public Comparable<Double> value(String string, Locale locale, Element configuration)
-            {
-            	try {
-            		return Double.valueOf(string.trim());
-            	} catch (NumberFormatException e) {
-					return Double.valueOf(Integer.MAX_VALUE); // Bottom of the list
-				}
+            public Comparable<Double> value(String string, Locale locale, Element configuration) {
+                try {
+                    return Double.valueOf(string.trim());
+                } catch (NumberFormatException e) {
+                    return Double.valueOf(Integer.MAX_VALUE); // Bottom of the list
+                }
             }
         },
-        SCALE
-        {
+        SCALE {
             @Override
-            public Comparable<Double> value(String string, Locale locale, Element configuration)
-            {
+            public Comparable<Double> value(String string, Locale locale, Element configuration) {
                 String scale = string;
                 /**
                  * Check scaleDenominator value eg. 1:250000 or 1/2500000
@@ -96,17 +132,15 @@ public class SummaryComparator implements Comparator<SummaryComparator.SummaryEl
                     scale = parts[parts.length - 1];
                 }
                 try {
-                	return Double.valueOf(scale.trim());
+                    return Double.valueOf(scale.trim());
                 } catch (NullPointerException e) {
-					return Double.valueOf(Integer.MAX_VALUE);	// if scale is not a number value - Bottom of the list
-				}
+                    return Double.valueOf(Integer.MAX_VALUE);    // if scale is not a number value - Bottom of the list
+                }
             }
         },
-        DATE
-        {
+        DATE {
             @Override
-            public Comparable<java.util.Date> value(String string, Locale locale, Element configuration)
-            {
+            public Comparable<java.util.Date> value(String string, Locale locale, Element configuration) {
                 List<DateFormat> formats = new ArrayList<DateFormat>();
                 for (Object child : configuration.getChildren("dateFormat")) {
                     Element elem = (Element) child;
@@ -131,97 +165,43 @@ public class SummaryComparator implements Comparator<SummaryComparator.SummaryEl
                     }
                 }
                 throw new IllegalArgumentException(string
-                        + " is not a recognized date pattern.  Add a dateFormat element to the configuration");
+                    + " is not a recognized date pattern.  Add a dateFormat element to the configuration");
             }
         };
 
-        public abstract Comparable<? extends Object> value(String string, Locale locale, Element configuration);
-
         private static Map<Object, DateFormat> dateformats = new HashMap<Object, DateFormat>();
+
         static {
             dateformats.put(SimpleDateFormat.SHORT, SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT));
             dateformats.put(SimpleDateFormat.MEDIUM, SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM));
             dateformats.put(SimpleDateFormat.LONG, SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG));
         }
 
-        public static Type parse(String type)
-        {
+        public static Type parse(String type) {
             return valueOf(type.toUpperCase());
         }
+
+        public abstract Comparable<? extends Object> value(String string, Locale locale, Element configuration);
     }
 
-    // enum Aggregation {
-    // COUNT, EQUAL_INTERVAL, QUANTILE, ANNUALLY, MONTHLY, DAILY
-    // }
-
-    public enum SortOption
-    {
+    public enum SortOption {
         NAME, FREQUENCY;
 
-        public static SummaryComparator.SortOption parse(String order)
-        {
+        public static SummaryComparator.SortOption parse(String order) {
             if (order.equals("freq") || order.equals("frequency"))
                 return FREQUENCY;
             return valueOf(order.toUpperCase());
         }
     }
 
-    private SummaryComparator.SortOption _option;
-    private final Type                         _type;
-    private final Element                      _configuration;
-    private final Locale _locale;
+    public static class SummaryElement {
+        public final String name;
+        public final int count;
 
-    public SummaryComparator(SummaryComparator.SortOption option, SummaryComparator.Type type, String langCode, Element configuration)
-    {
-        this._option = option;
-        this._type = type;
-        this._configuration = configuration;
-        _locale = LocaleUtil.toLocale(langCode);
-    }
-
-    public int compare(SummaryElement me1, SummaryElement me2)
-    {
-        String key1 = me1.name;
-        String key2 = me2.name;
-        int count1 = me1.count;
-        int count2 = me2.count;
-        switch (_option)
-        {
-        case NAME:
-        {
-
-            int cmp = compareKeys(key1, key2);
-            if (cmp != 0)
-                return cmp;
-            else
-                return compareCount(count1, count2);
-        }
-        case FREQUENCY:
-        {
-            return compareCount(count1, count2);
-        }
-        default:
-            throw new AssertionError(_option + "is not handled by this method");
+        public SummaryElement(ObjectKeyIntMapIterator next) {
+            this.name = (String) next.getKey();
+            this.count = next.getValue();
         }
     }
 
-    private int compareCount(Integer count1, Integer count2)
-    {
-        int cmp = count2.compareTo(count1);
-        if (cmp != 0)
-            return cmp;
-        else
-            return -1;
-    }
-
-    @SuppressWarnings("unchecked")
-    private int compareKeys(String key1, String key2)
-    {
-        @SuppressWarnings("rawtypes")
-        Comparable value1 = _type.value(key1, _locale, _configuration);
-        @SuppressWarnings("rawtypes")
-        Comparable value2 = _type.value(key2, _locale, _configuration);
-        return value1.compareTo(value2);
-    }
- 
 }

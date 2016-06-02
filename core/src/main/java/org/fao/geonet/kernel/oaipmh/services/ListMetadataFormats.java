@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
@@ -47,99 +48,94 @@ import java.util.List;
 
 //=============================================================================
 
-public class ListMetadataFormats implements OaiPmhService
-{
-	public String getVerb() { return ListMetadataFormatsRequest.VERB; }
+public class ListMetadataFormats implements OaiPmhService {
+    private static final String DEFAULT_PREFIXES_FILE = "WEB-INF/config-oai-prefixes.xml";
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //---------------------------------------------------------------------------
 
-	public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception
-	{
-		ListMetadataFormatsRequest  req = (ListMetadataFormatsRequest) request;
-		ListMetadataFormatsResponse res = new ListMetadataFormatsResponse();
+    public String getVerb() {
+        return ListMetadataFormatsRequest.VERB;
+    }
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SchemaManager   sm = gc.getBean(SchemaManager.class);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-		String uuid = req.getIdentifier();
-		if (uuid != null)
-		{
+    public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception {
+        ListMetadataFormatsRequest req = (ListMetadataFormatsRequest) request;
+        ListMetadataFormatsResponse res = new ListMetadataFormatsResponse();
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SchemaManager sm = gc.getBean(SchemaManager.class);
+
+        String uuid = req.getIdentifier();
+        if (uuid != null) {
             String schema = context.getBean(MetadataRepository.class).findOneByUuid(uuid).getDataInfo().getSchemaId();
-			res.addFormat(getSchemaInfo(context, sm, schema));
-		}
-		else
-		{
-			for (String schema : sm.getSchemas())
-				res.addFormat(getSchemaInfo(context, sm, schema));
-		}
+            res.addFormat(getSchemaInfo(context, sm, schema));
+        } else {
+            for (String schema : sm.getSchemas())
+                res.addFormat(getSchemaInfo(context, sm, schema));
+        }
 
-		for (MetadataFormat mdf : getConvertFormats(context)) {
-			res.addFormat(mdf);
-		}
+        for (MetadataFormat mdf : getConvertFormats(context)) {
+            res.addFormat(mdf);
+        }
 
-		return res;
-	}
+        return res;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private MetadataFormat getSchemaInfo(ServiceContext context, SchemaManager sm, String name) throws IOException, JDOMException
-	{
-		MetadataFormat mf = new MetadataFormat();
-		mf.prefix    = name;
-		mf.schema = "";
-		mf.namespace = Namespace.NO_NAMESPACE; 
+    private MetadataFormat getSchemaInfo(ServiceContext context, SchemaManager sm, String name) throws IOException, JDOMException {
+        MetadataFormat mf = new MetadataFormat();
+        mf.prefix = name;
+        mf.schema = "";
+        mf.namespace = Namespace.NO_NAMESPACE;
 
-		Attribute schemaLoc = sm.getSchemaLocation(name, context);
-		if (schemaLoc == null) { 
-			// no schema location eg. when schema is a DTD
-		} else if (schemaLoc.getName().equals("noNamespaceSchemaLocation")) {
-			mf.schema = schemaLoc.getValue();
-		} else {
-			String sLoc = schemaLoc.getValue();
-			String[] toks = sLoc.split("\\s");
-			if (toks.length > 1) {
-				mf.namespace = Namespace.getNamespace(toks[0]);
-				mf.schema = toks[1];
-			}
-		}
-		return mf;
-	}
+        Attribute schemaLoc = sm.getSchemaLocation(name, context);
+        if (schemaLoc == null) {
+            // no schema location eg. when schema is a DTD
+        } else if (schemaLoc.getName().equals("noNamespaceSchemaLocation")) {
+            mf.schema = schemaLoc.getValue();
+        } else {
+            String sLoc = schemaLoc.getValue();
+            String[] toks = sLoc.split("\\s");
+            if (toks.length > 1) {
+                mf.namespace = Namespace.getNamespace(toks[0]);
+                mf.schema = toks[1];
+            }
+        }
+        return mf;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	private List<MetadataFormat> getConvertFormats(ServiceContext context) throws IOException, JDOMException
-	{
-	
-		Element elem = Xml.loadFile(context.getAppPath().resolve(DEFAULT_PREFIXES_FILE));
-		if (context.getServlet() != null && context.getServlet().getServletContext() != null) {
-			ConfigurationOverrides.DEFAULT.updateWithOverrides(DEFAULT_PREFIXES_FILE, context.getServlet().getServletContext(), context.getAppPath(), elem);
-		}
+    private List<MetadataFormat> getConvertFormats(ServiceContext context) throws IOException, JDOMException {
 
-		@SuppressWarnings("unchecked")
+        Element elem = Xml.loadFile(context.getAppPath().resolve(DEFAULT_PREFIXES_FILE));
+        if (context.getServlet() != null && context.getServlet().getServletContext() != null) {
+            ConfigurationOverrides.DEFAULT.updateWithOverrides(DEFAULT_PREFIXES_FILE, context.getServlet().getServletContext(), context.getAppPath(), elem);
+        }
+
+        @SuppressWarnings("unchecked")
         List<Element> defaultSchemas = elem.getChildren();
 
-		List <MetadataFormat> defMdfs = new ArrayList<MetadataFormat>();
-		for (Element schema : defaultSchemas) {
-			defMdfs.add(new MetadataFormat(schema.getAttributeValue("prefix"), schema.getAttributeValue("schemaLocation"), schema.getAttributeValue("nsUrl")));
-		}
-		return defMdfs; 
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private static final String DEFAULT_PREFIXES_FILE = "WEB-INF/config-oai-prefixes.xml";
+        List<MetadataFormat> defMdfs = new ArrayList<MetadataFormat>();
+        for (Element schema : defaultSchemas) {
+            defMdfs.add(new MetadataFormat(schema.getAttributeValue("prefix"), schema.getAttributeValue("schemaLocation"), schema.getAttributeValue("nsUrl")));
+        }
+        return defMdfs;
+    }
 }
 
 //=============================================================================

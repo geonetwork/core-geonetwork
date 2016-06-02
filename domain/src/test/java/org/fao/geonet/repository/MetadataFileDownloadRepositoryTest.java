@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
@@ -52,6 +53,18 @@ public class MetadataFileDownloadRepositoryTest extends AbstractSpringDataTest {
     EntityManager _entityManager;
 
     AtomicInteger _inc = new AtomicInteger();
+
+    public static MetadataFileDownload newMetadataFileDownload(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+        MetadataFileDownload metadataFileDownload = new MetadataFileDownload();
+
+        metadataFileDownload.setFileName("name" + val);
+        metadataFileDownload.setUserName("user" + val);
+        metadataFileDownload.setDownloadDate(new ISODate().toString());
+        metadataFileDownload.setUserName("user" + val);
+
+        return metadataFileDownload;
+    }
 
     @Test
     public void testFindOne() {
@@ -79,18 +92,6 @@ public class MetadataFileDownloadRepositoryTest extends AbstractSpringDataTest {
 
     private MetadataFileDownload newMetadataFileDownload() {
         return newMetadataFileDownload(_inc);
-    }
-
-    public static MetadataFileDownload newMetadataFileDownload(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-        MetadataFileDownload metadataFileDownload = new MetadataFileDownload();
-
-        metadataFileDownload.setFileName("name" + val);
-        metadataFileDownload.setUserName("user" + val);
-        metadataFileDownload.setDownloadDate(new ISODate().toString());
-        metadataFileDownload.setUserName("user" + val);
-
-        return metadataFileDownload;
     }
 
 }

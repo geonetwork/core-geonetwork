@@ -29,81 +29,88 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class ResumptionToken
-{
-	private String  token;
-	private ISODate expirDate;
-	private Integer listSize;
-	private Integer cursor;
-	
-	/**
-	 * Default constructor.
-	 * Builds a ResumptionToken.
-	 */
-	public ResumptionToken() {}
+public class ResumptionToken {
+    private String token;
+    private ISODate expirDate;
+    private Integer listSize;
+    private Integer cursor;
 
-	/**
-	 * Default constructor.
-	 * Builds a ResumptionToken.
-	 * @param rt
-	 */
-	public ResumptionToken(Element rt)
-	{
-		token = rt.getText();
+    /**
+     * Default constructor. Builds a ResumptionToken.
+     */
+    public ResumptionToken() {
+    }
 
-		String expDt = rt.getAttributeValue("expirationDate");
-		String listSz= rt.getAttributeValue("completeListSize");
-		String curs  = rt.getAttributeValue("cursor");
+    /**
+     * Default constructor. Builds a ResumptionToken.
+     */
+    public ResumptionToken(Element rt) {
+        token = rt.getText();
 
-		expirDate = (expDt  == null) ? null : new ISODate(expDt);
-		listSize  = (listSz == null) ? null : Integer.valueOf(listSz);
-		cursor    = (curs   == null) ? null : Integer.valueOf(curs);
-	}
+        String expDt = rt.getAttributeValue("expirationDate");
+        String listSz = rt.getAttributeValue("completeListSize");
+        String curs = rt.getAttributeValue("cursor");
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+        expirDate = (expDt == null) ? null : new ISODate(expDt);
+        listSize = (listSz == null) ? null : Integer.valueOf(listSz);
+        cursor = (curs == null) ? null : Integer.valueOf(curs);
+    }
 
-	public String  getToken()            { return token;     }
-	public ISODate getExpirDate()        { return expirDate; }
-	public Integer getCompleteListSize() { return listSize;  }
-	public Integer getCursor()           { return cursor;    }
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public boolean isTokenEmpty() { return token.length() == 0; }
-	
-	public void setExpirDate(ISODate date) {
-		this.expirDate = date;
-	}
+    public String getToken() {
+        return token;
+    }
 
-	//---------------------------------------------------------------------------
+    public void setToken(String token) {
+        this.token = token;
+    }
 
-	public void setToken(String token)
-	{
-		this.token = token;
-	}
+    public ISODate getExpirDate() {
+        return expirDate;
+    }
 
-	//---------------------------------------------------------------------------
+    public void setExpirDate(ISODate date) {
+        this.expirDate = date;
+    }
 
-	public Element toXml()
-	{
-		Element root = new Element("resumptionToken", OaiPmh.Namespaces.OAI_PMH);
+    public Integer getCompleteListSize() {
+        return listSize;
+    }
 
-		root.setText(token);
+    public Integer getCursor() {
+        return cursor;
+    }
 
-		if (expirDate != null)
-			root.setAttribute("expirationDate", expirDate.toString());
+    //---------------------------------------------------------------------------
 
-		if (listSize != null)
-			root.setAttribute("completeListSize", listSize.toString());
+    public boolean isTokenEmpty() {
+        return token.length() == 0;
+    }
 
-		if (cursor != null)
-			root.setAttribute("cursor", cursor.toString());
+    //---------------------------------------------------------------------------
 
-		return root;
-	}
-	
+    public Element toXml() {
+        Element root = new Element("resumptionToken", OaiPmh.Namespaces.OAI_PMH);
+
+        root.setText(token);
+
+        if (expirDate != null)
+            root.setAttribute("expirationDate", expirDate.toString());
+
+        if (listSize != null)
+            root.setAttribute("completeListSize", listSize.toString());
+
+        if (cursor != null)
+            root.setAttribute("cursor", cursor.toString());
+
+        return root;
+    }
+
 }
 
 //=============================================================================

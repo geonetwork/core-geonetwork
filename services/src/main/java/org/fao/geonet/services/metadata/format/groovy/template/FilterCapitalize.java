@@ -34,11 +34,6 @@ import org.springframework.stereotype.Component;
 @Component("capitalize")
 public class FilterCapitalize implements TextContentFilter {
 
-    @Override
-    public String process(TRenderContext context, String rawValue) {
-        return toTitleCase(rawValue);
-    }
-
     public static String toTitleCase(String givenString) {
         String[] arr = givenString.split(" ");
         StringBuilder sb = new StringBuilder();
@@ -50,5 +45,10 @@ public class FilterCapitalize implements TextContentFilter {
         }
 
         return sb.toString().trim();
+    }
+
+    @Override
+    public String process(TRenderContext context, String rawValue) {
+        return toTitleCase(rawValue);
     }
 }

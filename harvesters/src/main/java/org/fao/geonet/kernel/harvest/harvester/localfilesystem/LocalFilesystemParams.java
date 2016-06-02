@@ -30,72 +30,69 @@ import org.jdom.Element;
 
 /**
  * Params for local filesystem harvesting.
- * 
- * @author heikki doeleman
  *
+ * @author heikki doeleman
  */
 public class LocalFilesystemParams extends AbstractParams {
 
-	public String icon;
-	public String directoryname;
-	public boolean recurse;
+    public String icon;
+    public String directoryname;
+    public boolean recurse;
     public boolean checkFileLastModifiedForUpdate;
-	public boolean nodelete;
+    public boolean nodelete;
     public String recordType;
-	
-	public LocalFilesystemParams(DataManager dm) {
-		super(dm);
-	}
-	//---------------------------------------------------------------------------
-	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
-	//---
-	//---------------------------------------------------------------------------
 
-	public void create(Element node) throws BadInputEx {
-		super.create(node);
+    public LocalFilesystemParams(DataManager dm) {
+        super(dm);
+    }
+    //---------------------------------------------------------------------------
+    //---
+    //--- Create : called when a new entry must be added. Reads values from the
+    //---          provided entry, providing default values
+    //---
+    //---------------------------------------------------------------------------
+
+    public void create(Element node) throws BadInputEx {
+        super.create(node);
         createOrUpdate(node);
-	}
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update : called when an entry has changed and variables must be updated
+    //---
+    //---------------------------------------------------------------------------
 
-	public void update(Element node) throws BadInputEx {
-		super.update(node);
+    public void update(Element node) throws BadInputEx {
+        super.update(node);
         createOrUpdate(node);
-	}
+    }
 
     /**
      * TODO Javadoc.
-     *
-     * @param node
      */
     private void createOrUpdate(Element node) {
         Element site = node.getChild("site");
         directoryname = Util.getParam(site, "directory", "");
-        icon = Util.getParam(site, "icon",   "filesystem.gif");
+        icon = Util.getParam(site, "icon", "filesystem.gif");
         String recurseString = Util.getParam(site, "recurse", "true");
         recurse = (recurseString.equals("on") || recurseString.equals("true"));
         String nodeleteString = Util.getParam(site, "nodelete", "true");
         nodelete = (nodeleteString.equals("on") || nodeleteString.equals("true"));
         String checkFileLastModifiedForUpdateString = Util.getParam(site, "checkFileLastModifiedForUpdate", "true");
         checkFileLastModifiedForUpdate = (checkFileLastModifiedForUpdateString.equals("on") || checkFileLastModifiedForUpdateString.equals("true"));
-        recordType = Util.getParam(site, "recordType",   "n");
+        recordType = Util.getParam(site, "recordType", "n");
     }
 
-	public LocalFilesystemParams copy() {
-		LocalFilesystemParams copy = new LocalFilesystemParams(dm);
-		copyTo(copy);
-		copy.icon = icon;
-		copy.directoryname = directoryname;
-		copy.recurse = recurse;
-		copy.nodelete = nodelete;
+    public LocalFilesystemParams copy() {
+        LocalFilesystemParams copy = new LocalFilesystemParams(dm);
+        copyTo(copy);
+        copy.icon = icon;
+        copy.directoryname = directoryname;
+        copy.recurse = recurse;
+        copy.nodelete = nodelete;
         copy.checkFileLastModifiedForUpdate = checkFileLastModifiedForUpdate;
         copy.recordType = recordType;
-		return copy;
-	}
+        return copy;
+    }
 }

@@ -32,21 +32,21 @@ import java.util.Set;
 
 //==============================================================================
 
-public class MetadataAttribute
-{
-	public String  name;
-	public String  defValue;
-	public boolean required;
+public class MetadataAttribute {
+    public String name;
+    public String defValue;
+    public boolean required;
 
-	public Set<String> values = new HashSet<String>();
+    public Set<String> values = new HashSet<String>();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	MetadataAttribute() {}
+    MetadataAttribute() {
+    }
 }
 
 //==============================================================================

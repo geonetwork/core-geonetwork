@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
 import groovy.util.slurpersupport.GPathResult;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 
@@ -45,6 +46,7 @@ public class Logging {
             debug(String.format(message, objs));
         }
     }
+
     static void debug(String message, Collection<GPathResult> elem, Object... objects) {
         if (isDebugMode()) {
             Object[] objs = new Object[objects.length + 1];

@@ -24,9 +24,11 @@
 package org.fao.geonet.services.schema;
 
 import org.fao.geonet.exceptions.OperationAbortedEx;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -41,57 +43,58 @@ import java.nio.file.Path;
 //=============================================================================
 
 public class Update implements Service {
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Init
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Init
+    // ---
+    // --------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception {
+    public Element exec(Element params, ServiceContext context) throws Exception {
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SchemaManager scm = gc.getBean(SchemaManager.class);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SchemaManager scm = gc.getBean(SchemaManager.class);
 
-		String schema = Util.getParam(params, Params.SCHEMA);
-		String urlStr, uuid, fname;
-		uuid = "";
-		URL url = null;
+        String schema = Util.getParam(params, Params.SCHEMA);
+        String urlStr, uuid, fname;
+        uuid = "";
+        URL url = null;
 
-		// -- try the file name argument then the url then the uuid of a metadata 
-		// -- record to which a schema is attached
-		fname = Util.getParam(params, Params.FNAME, "");
-		if ("".equals(fname)) {
-			urlStr = Util.getParam(params, Params.URL, "");
-			if ("".equals(urlStr)) {
-				uuid = Util.getParam(params, Params.UUID, "");
-				if ("".equals(uuid)) {
-					throw new IllegalArgumentException("One of fname, url or uuid must be supplied");
-				}
-			} else {
-				try {
-					url = new URL(urlStr);
-				} catch (MalformedURLException mu) {
-     			throw new OperationAbortedEx("URL "+urlStr+" is malformed: "+mu.getMessage());
-				}
-			}
-		}
+        // -- try the file name argument then the url then the uuid of a metadata
+        // -- record to which a schema is attached
+        fname = Util.getParam(params, Params.FNAME, "");
+        if ("".equals(fname)) {
+            urlStr = Util.getParam(params, Params.URL, "");
+            if ("".equals(urlStr)) {
+                uuid = Util.getParam(params, Params.UUID, "");
+                if ("".equals(uuid)) {
+                    throw new IllegalArgumentException("One of fname, url or uuid must be supplied");
+                }
+            } else {
+                try {
+                    url = new URL(urlStr);
+                } catch (MalformedURLException mu) {
+                    throw new OperationAbortedEx("URL " + urlStr + " is malformed: " + mu.getMessage());
+                }
+            }
+        }
 
-		// -- test if schema to be updated exists, if not then chuck a fit and exit
-		if (!scm.existsSchema(schema)) {
-     throw new OperationAbortedEx("Schema doesn't exist");
-		}
+        // -- test if schema to be updated exists, if not then chuck a fit and exit
+        if (!scm.existsSchema(schema)) {
+            throw new OperationAbortedEx("Schema doesn't exist");
+        }
 
-		SchemaUtils su = new SchemaUtils();
-		return su.updateSchema(context, schema, fname, url, uuid, scm);
-	}
+        SchemaUtils su = new SchemaUtils();
+        return su.updateSchema(context, schema, fname, url, uuid, scm);
+    }
 
 }
 

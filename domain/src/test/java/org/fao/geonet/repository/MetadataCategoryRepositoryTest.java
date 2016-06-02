@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -46,6 +47,17 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
 
     @PersistenceContext
     EntityManager _entityManager;
+
+    public static MetadataCategory newMetadataCategory(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+        MetadataCategory metadataCategory = new MetadataCategory();
+        metadataCategory.setName("name" + val);
+        metadataCategory.getLabelTranslations().put("eng", "engLab" + val);
+        metadataCategory.getLabelTranslations().put("fre", "fraLab" + val);
+        metadataCategory.getLabelTranslations().put("ger", "gerLab" + val);
+
+        return metadataCategory;
+    }
 
     @Test
     public void testFindOne() {
@@ -86,7 +98,6 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
         assertEquals(category2.getName(), metadataCategory.getName());
     }
 
-
     @Test
     public void testDeleteDeletesFromMetadata() throws Exception {
 
@@ -118,17 +129,6 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
 
     private MetadataCategory newMetadataCategory() {
         return newMetadataCategory(_inc);
-    }
-
-    public static MetadataCategory newMetadataCategory(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-        MetadataCategory metadataCategory = new MetadataCategory();
-        metadataCategory.setName("name" + val);
-        metadataCategory.getLabelTranslations().put("eng", "engLab" + val);
-        metadataCategory.getLabelTranslations().put("fre", "fraLab" + val);
-        metadataCategory.getLabelTranslations().put("ger", "gerLab" + val);
-
-        return metadataCategory;
     }
 
 }

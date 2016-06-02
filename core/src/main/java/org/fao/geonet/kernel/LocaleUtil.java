@@ -26,44 +26,39 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.Locale;
 
-public final class LocaleUtil
-{
+public final class LocaleUtil {
 
     /**
-     * Attempts to match the code to a Locale.  If no match then the default Locale is returned
-     * Case is ignored
-     * 
+     * Attempts to match the code to a Locale.  If no match then the default Locale is returned Case
+     * is ignored
+     *
      * @param langCode A 2 or 3 character ISO language code
      * @return the associated Locale or the default locale if no match is founde
-     * 
      */
-    public static Locale toLocale(String langCode)
-    {
-        if(StringUtils.isEmpty(langCode)) {
+    public static Locale toLocale(String langCode) {
+        if (StringUtils.isEmpty(langCode)) {
             return Locale.getDefault();
         }
-        if( langCode.length()<2 || langCode.length()>3 ){
-            throw new AssertionError(langCode+" must be a 2 or 3 letter ISO code");
+        if (langCode.length() < 2 || langCode.length() > 3) {
+            throw new AssertionError(langCode + " must be a 2 or 3 letter ISO code");
         }
         return toLocale(langCode, Locale.getDefault());
     }
 
     /**
-     * Attempts to match the code to a Locale.  If no match then the default Locale is returned
-     * Case is ignored
-     * 
-     * @param langCode A 2 or 3 character ISO language code
+     * Attempts to match the code to a Locale.  If no match then the default Locale is returned Case
+     * is ignored
+     *
+     * @param langCode      A 2 or 3 character ISO language code
      * @param defaultLocale the local returned if not match is made
      * @return the associated Locale or the default locale if no match is founde
-     * 
      */
-    public static Locale toLocale(String langCode, Locale defaultLocale)
-    {
-        for (Locale loc: Locale.getAvailableLocales()){
-            if( loc.getISO3Language().toLowerCase().startsWith(langCode) ){
+    public static Locale toLocale(String langCode, Locale defaultLocale) {
+        for (Locale loc : Locale.getAvailableLocales()) {
+            if (loc.getISO3Language().toLowerCase().startsWith(langCode)) {
                 return loc;
             }
-    
+
         }
         return defaultLocale;
     }

@@ -28,6 +28,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
@@ -45,6 +46,7 @@ import org.jdom.Element;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 
@@ -55,7 +57,8 @@ import javax.persistence.criteria.Root;
  */
 public class Set implements Service {
     /**
-     * Reload services or not once settings are updated. Some service use DoAction as forward service.
+     * Reload services or not once settings are updated. Some service use DoAction as forward
+     * service.
      */
     private boolean reloadServices = false;
 
@@ -65,11 +68,6 @@ public class Set implements Service {
 
     /**
      * TODO javadoc.
-     *
-     * @param params
-     * @param context
-     * @return
-     * @throws Exception
      */
     public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

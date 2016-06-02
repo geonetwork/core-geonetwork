@@ -26,6 +26,7 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -39,10 +40,10 @@ import org.jdom.Element;
 import java.nio.file.Path;
 
 /**
- * Search the thesaurus for all concepts listed in the concept schema as 
- * top concepts (ie skos:hasTopConcept). Return a confected concept uri and 
- * preferred label with top concepts as narrower concepts.
- * 
+ * Search the thesaurus for all concepts listed in the concept schema as top concepts (ie
+ * skos:hasTopConcept). Return a confected concept uri and preferred label with top concepts as
+ * narrower concepts.
+ *
  * @author sppigot
  */
 public class GetTopConcept implements Service {
@@ -50,19 +51,19 @@ public class GetTopConcept implements Service {
     }
 
     public Element exec(Element params, ServiceContext context)
-            throws Exception {
+        throws Exception {
         String sThesaurusName = Util.getParam(params, "thesaurus");
         String lang = Util.getParam(params, "lang", context.getLanguage());
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
 
-				Thesaurus the = thesaurusMan.getThesaurusByName(sThesaurusName);
+        Thesaurus the = thesaurusMan.getThesaurusByName(sThesaurusName);
         String langForThesaurus = the.getIsoLanguageMapper().iso639_2_to_iso639_1(lang);
 
         KeywordsSearcher searcher = null;
-        
-       	// perform the search for the top concepts of the concept scheme
+
+        // perform the search for the top concepts of the concept scheme
         searcher = new KeywordsSearcher(context, thesaurusMan);
 
         Element response = new Element("descKeys");

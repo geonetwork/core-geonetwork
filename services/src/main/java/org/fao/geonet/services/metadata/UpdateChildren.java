@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -40,8 +41,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A simple service that returns a small report
- * about children update process. 
+ * A simple service that returns a small report about children update process.
  *
  * @author m.coudert
  */
@@ -52,8 +52,8 @@ public class UpdateChildren extends NotInReadOnlyModeService {
     //---
     //--------------------------------------------------------------------------
 
-    public void init(Path appPath, ServiceConfig params) throws Exception
-    {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
     //--------------------------------------------------------------------------
     //---
@@ -61,9 +61,8 @@ public class UpdateChildren extends NotInReadOnlyModeService {
     //---
     //--------------------------------------------------------------------------
 
-    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-    {
-        String parentUuid = Util.getParam(params,"parentUuid");
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        String parentUuid = Util.getParam(params, "parentUuid");
         String childrenIds = Util.getParam(params, "childrenIds");
 
         // Transform params element into Map<String, String> for xsl transformation
@@ -79,7 +78,7 @@ public class UpdateChildren extends NotInReadOnlyModeService {
 
         // Update children
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager   dm = gc.getBean(DataManager.class);
+        DataManager dm = gc.getBean(DataManager.class);
 
         Set<String> untreatedChildren = dm.updateChildren(context, parentUuid, children, parameters);
 

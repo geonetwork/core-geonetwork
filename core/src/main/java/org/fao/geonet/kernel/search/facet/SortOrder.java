@@ -27,7 +27,7 @@ public enum SortOrder {
 
     public static SortOrder find(String lookupName) {
         for (SortOrder sortOrder : values()) {
-            if(sortOrder.name().startsWith(lookupName.toUpperCase())) {
+            if (sortOrder.name().startsWith(lookupName.toUpperCase())) {
                 return sortOrder;
             }
         }

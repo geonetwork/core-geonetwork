@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.repository.MetadataRepository;
@@ -45,134 +46,133 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** Retrieves a particular metadata. Access is restricted
-  */
+/**
+ * Retrieves a particular metadata. Access is restricted
+ */
 
-public class Show extends ShowViewBaseService
-{
+public class Show extends ShowViewBaseService {
     //--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception{
-		super.init(appPath, params);
-		cache = "y".equalsIgnoreCase(params.getValue("cache", "n"));
-	}
+    private final static String KEY = "SHOW_METADATA";
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //--------------------------------------------------------------------------
+    private boolean cache;
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		UserSession session = context.getUserSession();
-
-		//-----------------------------------------------------------------------
-		//--- handle current tab
-
-		Element elCurrTab = params.getChild(Params.CURRTAB);
-		boolean removeSchemaLocation = Util.getParam(params, "removeSchemaLocation", "false").equals("true");
-
-		if (elCurrTab != null)
-			session.setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
-
-		//-----------------------------------------------------------------------
-		//--- check access
-
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dm = gc.getBean(DataManager.class);
-		SchemaManager sm = gc.getBean(SchemaManager.class);
-
-		String id = Utils.getIdentifierFromParameters(params, context);
-		boolean skipPopularity = this.skipPopularity;
-		if (!skipPopularity) { // skipPopularity could be a URL param as well
-			String skip = Util.getParam(params, "skipPopularity", "n");
-			skipPopularity = skip.equals("y");
-		}
-		
-		boolean witholdWithheldElements = Util.getParam(params, "hide_withheld", false);
-		if (XmlSerializer.getThreadLocal(false) != null || witholdWithheldElements) {
-		   XmlSerializer.getThreadLocal(true).setForceFilterEditOperation(witholdWithheldElements);
-		}
-		if (id == null) {
-            throw new MetadataNotFoundEx("Metadata not found.");
-        }
-		
-		Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
-
-		//-----------------------------------------------------------------------
-		//--- get metadata
-		
-		Element elMd;
-		boolean addEditing = false;
-		if (!skipInfo) {
-            boolean withValidationErrors = false, keepXlinkAttributes = false;
-            elMd = gc.getBean(DataManager.class).getMetadata(context, id, addEditing, withValidationErrors, keepXlinkAttributes);
-		} else {
-			elMd = dm.getMetadataNoInfo(context, id);
-		}
-
-		if (elMd == null) {
-            throw new MetadataNotFoundEx(id);
-        }
-
-		if (addRefs) { // metadata.show for GeoNetwork needs geonet:element 
-			elMd = dm.enumerateTree(elMd);
-		}
-
-		//
-		// setting schemaLocation - if there isn't one then use the schemaLocation 
-		// that is in the GeoNetwork schema identification and if there isn't one 
-		// of those then build one pointing to the XSD in GeoNetwork 
-
-		Metadata info = context.getBean(MetadataRepository.class).findOne(id);
-		Attribute schemaLocAtt = sm.getSchemaLocation(info.getDataInfo().getSchemaId(), context);
-
-		if (schemaLocAtt != null) {
-			if (elMd.getAttribute(schemaLocAtt.getName(), schemaLocAtt.getNamespace()) == null) {
-				elMd.setAttribute(schemaLocAtt);
-				// make sure namespace declaration for schemalocation is present -
-				// remove it first (does nothing if not there) then add it
-				elMd.removeNamespaceDeclaration(schemaLocAtt.getNamespace()); 
-				elMd.addNamespaceDeclaration(schemaLocAtt.getNamespace());
-			}
-		}
-
-		//--- increase metadata popularity
-		if (!skipPopularity)
-			dm.increasePopularity(context, id);
-
-		if(cache) {
-		    cache(context.getUserSession(), elMd, id);
-		}
-		if (removeSchemaLocation) {
-		    elMd.removeAttribute("schemaLocation", Xml.xsiNS);
-		}
-		return elMd;
-	}
-
-	private final static String KEY = "SHOW_METADATA";
-    private static void cache( UserSession userSession, Element elMd, String id ) {
-        userSession.setProperty(KEY+id, elMd);
+    private static void cache(UserSession userSession, Element elMd, String id) {
+        userSession.setProperty(KEY + id, elMd);
     }
-    
+
     public static Element getCached(UserSession userSession, String id) {
-        return (Element) userSession.getProperty(KEY+id);
+        return (Element) userSession.getProperty(KEY + id);
     }
 
     static void unCache(UserSession userSession, String id) {
-        userSession.removeProperty(KEY+id);
+        userSession.removeProperty(KEY + id);
     }
 
-    //--------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//--------------------------------------------------------------------------
-    private boolean cache;
-    
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        super.init(appPath, params);
+        cache = "y".equalsIgnoreCase(params.getValue("cache", "n"));
+    }
+
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        UserSession session = context.getUserSession();
+
+        //-----------------------------------------------------------------------
+        //--- handle current tab
+
+        Element elCurrTab = params.getChild(Params.CURRTAB);
+        boolean removeSchemaLocation = Util.getParam(params, "removeSchemaLocation", "false").equals("true");
+
+        if (elCurrTab != null)
+            session.setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
+
+        //-----------------------------------------------------------------------
+        //--- check access
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getBean(DataManager.class);
+        SchemaManager sm = gc.getBean(SchemaManager.class);
+
+        String id = Utils.getIdentifierFromParameters(params, context);
+        boolean skipPopularity = this.skipPopularity;
+        if (!skipPopularity) { // skipPopularity could be a URL param as well
+            String skip = Util.getParam(params, "skipPopularity", "n");
+            skipPopularity = skip.equals("y");
+        }
+
+        boolean witholdWithheldElements = Util.getParam(params, "hide_withheld", false);
+        if (XmlSerializer.getThreadLocal(false) != null || witholdWithheldElements) {
+            XmlSerializer.getThreadLocal(true).setForceFilterEditOperation(witholdWithheldElements);
+        }
+        if (id == null) {
+            throw new MetadataNotFoundEx("Metadata not found.");
+        }
+
+        Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
+
+        //-----------------------------------------------------------------------
+        //--- get metadata
+
+        Element elMd;
+        boolean addEditing = false;
+        if (!skipInfo) {
+            boolean withValidationErrors = false, keepXlinkAttributes = false;
+            elMd = gc.getBean(DataManager.class).getMetadata(context, id, addEditing, withValidationErrors, keepXlinkAttributes);
+        } else {
+            elMd = dm.getMetadataNoInfo(context, id);
+        }
+
+        if (elMd == null) {
+            throw new MetadataNotFoundEx(id);
+        }
+
+        if (addRefs) { // metadata.show for GeoNetwork needs geonet:element
+            elMd = dm.enumerateTree(elMd);
+        }
+
+        //
+        // setting schemaLocation - if there isn't one then use the schemaLocation
+        // that is in the GeoNetwork schema identification and if there isn't one
+        // of those then build one pointing to the XSD in GeoNetwork
+
+        Metadata info = context.getBean(MetadataRepository.class).findOne(id);
+        Attribute schemaLocAtt = sm.getSchemaLocation(info.getDataInfo().getSchemaId(), context);
+
+        if (schemaLocAtt != null) {
+            if (elMd.getAttribute(schemaLocAtt.getName(), schemaLocAtt.getNamespace()) == null) {
+                elMd.setAttribute(schemaLocAtt);
+                // make sure namespace declaration for schemalocation is present -
+                // remove it first (does nothing if not there) then add it
+                elMd.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                elMd.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+            }
+        }
+
+        //--- increase metadata popularity
+        if (!skipPopularity)
+            dm.increasePopularity(context, id);
+
+        if (cache) {
+            cache(context.getUserSession(), elMd, id);
+        }
+        if (removeSchemaLocation) {
+            elMd.removeAttribute("schemaLocation", Xml.xsiNS);
+        }
+        return elMd;
+    }
+
 }

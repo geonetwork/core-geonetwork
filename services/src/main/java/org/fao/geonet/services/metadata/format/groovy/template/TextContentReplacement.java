@@ -26,7 +26,8 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 import java.util.List;
 
 /**
- * A Text Content where the value is looked up in the Model using the key with a fallback to the key.
+ * A Text Content where the value is looked up in the Model using the key with a fallback to the
+ * key.
  *
  * @author Jesse on 11/29/2014.
  */

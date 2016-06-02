@@ -38,121 +38,110 @@ import java.util.StringTokenizer;
 
 //=============================================================================
 
-public class ElementLib
-{
-	//-----------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//-----------------------------------------------------------------------------
+public class ElementLib {
+    //-----------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //-----------------------------------------------------------------------------
 
-	public Set<String> getIds(Element elem)
-	{
-		HashSet<String> hs = new HashSet<String>();
+    public Set<String> getIds(Element elem) {
+        HashSet<String> hs = new HashSet<String>();
 
-		for (Object child : elem.getChildren())
-			hs.add(((Element) child).getChildText("id"));
+        for (Object child : elem.getChildren())
+            hs.add(((Element) child).getChildText("id"));
 
-		return hs;
-	}
+        return hs;
+    }
 
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
-	public Element pruneChildren(Element elem, Set<Integer> ids)
-	{
-		ArrayList<Element> alToPrune = new ArrayList<Element>();
+    public Element pruneChildren(Element elem, Set<Integer> ids) {
+        ArrayList<Element> alToPrune = new ArrayList<Element>();
 
-		//--- collect elements to prune
+        //--- collect elements to prune
 
-		for (Object obj : elem.getChildren())
-		{
-			Element child = (Element) obj;
-			String id = child.getChildText("id");
+        for (Object obj : elem.getChildren()) {
+            Element child = (Element) obj;
+            String id = child.getChildText("id");
 
-			if (!ids.contains(Integer.valueOf(id)))
-				alToPrune.add(child);
-		}
+            if (!ids.contains(Integer.valueOf(id)))
+                alToPrune.add(child);
+        }
 
-		//--- remove collected elements
+        //--- remove collected elements
 
-		for (Element child : alToPrune)
-			child.detach();
+        for (Element child : alToPrune)
+            child.detach();
 
-		return elem;
-	}
+        return elem;
+    }
 
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
-	public void add(Element el,String name, Object value)
-	{
-		if (value != null)
-			el.addContent(new Element(name).setText(value.toString()));
-	}
+    public void add(Element el, String name, Object value) {
+        if (value != null)
+            el.addContent(new Element(name).setText(value.toString()));
+    }
 
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
-	public String eval(Element elem, String path)
-	{
-		StringTokenizer st = new StringTokenizer(path, "/");
+    public String eval(Element elem, String path) {
+        StringTokenizer st = new StringTokenizer(path, "/");
 
-		while (st.hasMoreTokens())
-		{
-			elem = elem.getChild(st.nextToken());
+        while (st.hasMoreTokens()) {
+            elem = elem.getChild(st.nextToken());
 
-			if (elem == null)
-				return null;
-		}
+            if (elem == null)
+                return null;
+        }
 
-		return elem.getText().trim();
-	}
+        return elem.getText().trim();
+    }
 
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
-	public void substitute(Element el, Map<String, ? extends Object> vars)
-	{
-		//--- handle attributes
+    public void substitute(Element el, Map<String, ? extends Object> vars) {
+        //--- handle attributes
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Attribute> attributes = el.getAttributes();
-		for (Attribute a : attributes) {
-			String text = a.getValue();
-			text = substitute(text, vars);
-			a.setValue(text);
-		}
+        for (Attribute a : attributes) {
+            String text = a.getValue();
+            text = substitute(text, vars);
+            a.setValue(text);
+        }
 
-		//--- handle children
+        //--- handle children
 
-		for (int i=0; i<el.getContentSize(); i++)
-		{
-			Content c = el.getContent(i);
+        for (int i = 0; i < el.getContentSize(); i++) {
+            Content c = el.getContent(i);
 
-			if (c instanceof Element)
-				substitute((Element) c, vars);
+            if (c instanceof Element)
+                substitute((Element) c, vars);
 
-			else if (c instanceof Text)
-			{
-				Text t = (Text) c;
+            else if (c instanceof Text) {
+                Text t = (Text) c;
 
-				String text = t.getText();
-				text = substitute(text, vars);
-				t.setText(text);
-			}
-		}
-	}
+                String text = t.getText();
+                text = substitute(text, vars);
+                t.setText(text);
+            }
+        }
+    }
 
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
-	private String substitute(String text, Map<String, ? extends Object> vars)
-	{
-		for (Map.Entry<String, ? extends Object> entry : vars.entrySet()){
-		    String name = entry.getKey();
-		    String value = "";
-            if(entry.getValue() != null) value = entry.getValue().toString();
-			text = Util.replaceString(text, name, value);
-		}
+    private String substitute(String text, Map<String, ? extends Object> vars) {
+        for (Map.Entry<String, ? extends Object> entry : vars.entrySet()) {
+            String name = entry.getKey();
+            String value = "";
+            if (entry.getValue() != null) value = entry.getValue().toString();
+            text = Util.replaceString(text, name, value);
+        }
 
-		return text;
-	}
+        return text;
+    }
 }
 
 //=============================================================================

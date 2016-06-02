@@ -45,27 +45,6 @@ public enum Profile {
         this.parents = new HashSet<Profile>(Arrays.asList(parents));
     }
 
-    public Set<Profile> getParents() {
-        HashSet<Profile> parents = new HashSet<Profile>();
-        for (Profile profile : values()) {
-            if (profile.parents.contains(this)) {
-                parents.add(profile);
-            }
-        }
-
-        return parents;
-    }
-
-    public Set<Profile> getAll() {
-        HashSet<Profile> all = new HashSet<Profile>();
-        all.add(this);
-        for (Profile parent : getParents()) {
-            all.addAll(parent.getAll());
-        }
-
-        return all;
-    }
-
     /**
      * A case-sensitive search for profile
      *
@@ -92,6 +71,27 @@ public enum Profile {
             }
         }
         return null;
+    }
+
+    public Set<Profile> getParents() {
+        HashSet<Profile> parents = new HashSet<Profile>();
+        for (Profile profile : values()) {
+            if (profile.parents.contains(this)) {
+                parents.add(profile);
+            }
+        }
+
+        return parents;
+    }
+
+    public Set<Profile> getAll() {
+        HashSet<Profile> all = new HashSet<Profile>();
+        all.add(this);
+        for (Profile parent : getParents()) {
+            all.addAll(parent.getAll());
+        }
+
+        return all;
     }
 
     public Element asElement() {

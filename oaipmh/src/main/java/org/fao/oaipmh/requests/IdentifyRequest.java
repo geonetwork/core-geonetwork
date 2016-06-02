@@ -36,29 +36,30 @@ import org.xml.sax.SAXException;
 //=============================================================================
 
 public class IdentifyRequest extends AbstractRequest {
-	public static final String VERB = "Identify";
+    public static final String VERB = "Identify";
 
     public IdentifyRequest(GeonetHttpRequestFactory transport) {
         super(transport);
     }
 
     //---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public IdentifyResponse execute() throws 	IOException, OaiPmhException, JDOMException,
-															SAXException, Exception
-	{
-		Map<String, String> params = new HashMap<String, String>();
+    public IdentifyResponse execute() throws IOException, OaiPmhException, JDOMException,
+        SAXException, Exception {
+        Map<String, String> params = new HashMap<String, String>();
 
-		return new IdentifyResponse(sendRequest(params));
-	}
+        return new IdentifyResponse(sendRequest(params));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public String getVerb() { return VERB; }
+    public String getVerb() {
+        return VERB;
+    }
 }
 
 //=============================================================================

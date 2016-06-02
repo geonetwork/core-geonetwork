@@ -43,18 +43,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * For concurrency issues this class should not escape the confines of this package because
- * {@link LuceneIndexLanguageTracker} controls access to it and also controls concurrency and 
+ * For concurrency issues this class should not escape the confines of this package because {@link
+ * LuceneIndexLanguageTracker} controls access to it and also controls concurrency and
  * synchronization
- * 
+ *
  * @author jeichar
  */
 class TaxonomyIndexTracker {
+    private final DirectoryFactory taxonomyDir;
+    private final LuceneConfig luceneConfig;
     private DirectoryTaxonomyWriter taxonomyWriter;
     private TaxonomyReader taxonomyReader;
     private LinkedList<TaxonomyReader> expiredReaders = new LinkedList<TaxonomyReader>();
-    private final DirectoryFactory taxonomyDir;
-    private final LuceneConfig luceneConfig;
     private Directory cachedFSDir;
 
     public TaxonomyIndexTracker(DirectoryFactory taxonomyDir, LuceneConfig luceneConfig) throws Exception {
@@ -64,39 +64,39 @@ class TaxonomyIndexTracker {
     }
 
     private void init() throws Exception {
-		try {
+        try {
             cachedFSDir = taxonomyDir.createTaxonomyDirectory(luceneConfig);
-			this.taxonomyWriter = new DirectoryTaxonomyWriter(cachedFSDir);
-			taxonomyWriter.commit(); // create index if not existing yet
+            this.taxonomyWriter = new DirectoryTaxonomyWriter(cachedFSDir);
+            taxonomyWriter.commit(); // create index if not existing yet
 
-			this.taxonomyReader = null;
-			try {
-				acquire(); // just check the validity of the index
-			} finally {
-				IOUtils.closeQuietly(this.taxonomyReader);
-				this.taxonomyReader = null;
-			}
-		} catch (Exception e) {
-    		Log.error(Geonet.INDEX_ENGINE, "An error occurred while openning taxonomy readers/writers", e);
-    		ArrayList<Throwable> errors = new ArrayList<Throwable>();
-			close(errors);
+            this.taxonomyReader = null;
+            try {
+                acquire(); // just check the validity of the index
+            } finally {
+                IOUtils.closeQuietly(this.taxonomyReader);
+                this.taxonomyReader = null;
+            }
+        } catch (Exception e) {
+            Log.error(Geonet.INDEX_ENGINE, "An error occurred while openning taxonomy readers/writers", e);
+            ArrayList<Throwable> errors = new ArrayList<Throwable>();
+            close(errors);
             if (!errors.isEmpty()) {
                 for (Throwable throwable : errors) {
                     Log.error(Geonet.LUCENE, "Failure while closing luceneIndexLanguageTracker", throwable);
                 }
             }
-    		throw e;
-    	}
+            throw e;
+        }
     }
-    
+
     TaxonomyReader acquire() throws IOException {
-        if(taxonomyReader == null) {
+        if (taxonomyReader == null) {
             this.taxonomyReader = new DirectoryTaxonomyReader(taxonomyWriter);
         }
 
-        for (Iterator<TaxonomyReader> iterator = expiredReaders.iterator(); iterator.hasNext();) {
+        for (Iterator<TaxonomyReader> iterator = expiredReaders.iterator(); iterator.hasNext(); ) {
             TaxonomyReader reader = iterator.next();
-            if(reader.getRefCount() < 1) {
+            if (reader.getRefCount() < 1) {
                 IOUtils.closeQuietly(reader);
                 iterator.remove();
             }
@@ -114,14 +114,14 @@ class TaxonomyIndexTracker {
                 Log.debug(Geonet.INDEX_ENGINE, "Taxonomy writer: " + taxonomyWriter.toString());
             }
         } catch (Exception e) {
-                e.printStackTrace();
+            e.printStackTrace();
         }
         return docAfterFacetBuild;
     }
 
     void close(List<Throwable> errors) throws IOException {
         try {
-            if(taxonomyReader != null) {
+            if (taxonomyReader != null) {
                 taxonomyReader.close();
                 taxonomyReader = null;
             }
@@ -129,7 +129,7 @@ class TaxonomyIndexTracker {
             errors.add(e);
         }
 
-        for (Iterator<TaxonomyReader> iterator = expiredReaders.iterator(); iterator.hasNext();) {
+        for (Iterator<TaxonomyReader> iterator = expiredReaders.iterator(); iterator.hasNext(); ) {
             TaxonomyReader reader = iterator.next();
             IOUtils.closeQuietly(reader);
         }
@@ -153,7 +153,7 @@ class TaxonomyIndexTracker {
         }
     }
 
-    
+
     void reset() throws Exception {
         List<Throwable> errors = new ArrayList<Throwable>(5);
         close(errors);
@@ -161,7 +161,7 @@ class TaxonomyIndexTracker {
         taxonomyDir.resetTaxonomy();
         init();
 
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             for (Throwable throwable : errors) {
                 Log.error(Geonet.LUCENE, "Failure while closing luceneIndexLanguageTracker", throwable);
             }
@@ -173,11 +173,11 @@ class TaxonomyIndexTracker {
             try {
                 taxonomyWriter.commit();
             } catch (Throwable e) {
-                Log.error(Geonet.LUCENE, "Error committing taxonomy: "+taxonomyWriter, e);
+                Log.error(Geonet.LUCENE, "Error committing taxonomy: " + taxonomyWriter, e);
             }
         } catch (OutOfMemoryError e) {
             try {
-                Log.error(Geonet.LUCENE, "OOM Error committing taxonomy: "+taxonomyWriter, e);
+                Log.error(Geonet.LUCENE, "OOM Error committing taxonomy: " + taxonomyWriter, e);
                 reset();
             } catch (Exception e1) {
                 Log.error(Geonet.LUCENE, "Error resetting lucene indices", e);
@@ -185,6 +185,7 @@ class TaxonomyIndexTracker {
             throw new RuntimeException(e);
         }
     }
+
     TaxonomyWriter writer() {
         return taxonomyWriter;
     }

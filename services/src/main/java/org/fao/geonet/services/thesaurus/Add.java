@@ -26,6 +26,7 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -45,56 +46,56 @@ import java.nio.file.Path;
  * For editing : adds a tag to a thesaurus. Access is restricted
  */
 public class Add extends NotInReadOnlyModeService {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context)
-			throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element serviceSpecificExec(Element params, ServiceContext context)
+        throws Exception {
+        GeonetContext gc = (GeonetContext) context
+            .getHandlerContext(Geonet.CONTEXT_NAME);
 
-		String fname = Util.getParam(params, "fname");
-		String tname = Util.getParam(params, "tname");
-		String tnamespace = Util.getParam(params, "tns");
-		String dname = Util.getParam(params, "dname");
-		String type = Util.getParam(params, "type");
-		String activated = Util.getParam(params, "activated", "y");
+        String fname = Util.getParam(params, "fname");
+        String tname = Util.getParam(params, "tname");
+        String tnamespace = Util.getParam(params, "tns");
+        String dname = Util.getParam(params, "dname");
+        String type = Util.getParam(params, "type");
+        String activated = Util.getParam(params, "activated", "y");
 
-		fname = fname.trim().replaceAll("\\s+", "");
-		
-		if (!fname.endsWith(".rdf")){
-			fname = fname + ".rdf";
-		}
-		
-		ThesaurusManager tm = gc.getBean(ThesaurusManager.class);
+        fname = fname.trim().replaceAll("\\s+", "");
 
-		Path rdfFile = tm.buildThesaurusFilePath(fname, type, dname);
-		
+        if (!fname.endsWith(".rdf")) {
+            fname = fname + ".rdf";
+        }
+
+        ThesaurusManager tm = gc.getBean(ThesaurusManager.class);
+
+        Path rdfFile = tm.buildThesaurusFilePath(fname, type, dname);
+
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         final IsoLanguagesMapper isoLanguageMapper = context.getBean(IsoLanguagesMapper.class);
         Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, fname, tname, tnamespace, type, dname, rdfFile, siteURL, false);
-		tm.addThesaurus(thesaurus, true);
+        tm.addThesaurus(thesaurus, true);
 
-		// Save activated status in the database
+        // Save activated status in the database
         ThesaurusActivation activation = new ThesaurusActivation();
         activation.setActivated(Constants.toBoolean_fromYNChar(activated.charAt(0)));
         activation.setId(fname);
 
         context.getBean(ThesaurusActivationRepository.class).save(activation);
 
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		Element elRef = new Element("ref");		
-		elRef.addContent(thesaurus.getKey());
-		elResp.addContent(elRef);
-		Element elName = new Element("thesaName").setText(fname);
-		elResp.addContent(elName);
-		
-		return elResp;
-	}
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        Element elRef = new Element("ref");
+        elRef.addContent(thesaurus.getKey());
+        elResp.addContent(elRef);
+        Element elName = new Element("thesaName").setText(fname);
+        elResp.addContent(elName);
+
+        return elResp;
+    }
 }

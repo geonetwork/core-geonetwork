@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.search;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
@@ -108,7 +109,7 @@ public class LuceneSearcherPresentTest extends AbstractCoreIntegrationTest {
             assertEqualsText("true", info, "isPublishedToAll");
             assertEqualsText("true", info, "view");
             assertEqualsText("false", info, "notify");
-			//TODO: inverted three assertions, Check why download, dynamic and featured are no longer false.
+            //TODO: inverted three assertions, Check why download, dynamic and featured are no longer false.
             assertEqualsText("true", info, "download");
             assertEqualsText("true", info, "dynamic");
             assertEqualsText("true", info, "featured");

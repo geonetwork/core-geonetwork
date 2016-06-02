@@ -25,6 +25,7 @@ package jeeves.component;
 
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -38,62 +39,33 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterInvocation;
 
 import javax.servlet.ServletContext;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 //=============================================================================
 
-/** This class is a container for the user-profiles.xml file
-  */
-public class ProfileManager
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
-
-	public boolean exists(String profile)
-	{
-		return Profile.exists(profile);
-	}
-
-	/**
-	 * Return the case corrected version of the supplied 
-	 * profile name, or empty string if none match.
-	 * 
-	 * @param profileName The profile name to be corrected.
-	 * @return The correct profile name
-	 */
-	public Profile getCorrectCase(String profileName)
-	{
-	    return Profile.findProfileIgnoreCase(profileName);
-	}
-
-	public Profile getProfile(String profileName) {
-	    return Profile.valueOf(profileName);
-	}
-	//--------------------------------------------------------------------------
-
-	public Element getProfilesElement(Profile profile)
-	{
-	    return profile.asElement();
-	}
-
-	//--------------------------------------------------------------------------
+/**
+ * This class is a container for the user-profiles.xml file
+ */
+public class ProfileManager {
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
     /**
-     * Return the highest profile in the list by checking the number
-     * of extended profiles for each.
-     * 
+     * Return the highest profile in the list by checking the number of extended profiles for each.
+     *
      * @param profiles The list of profiles to analyze
      * @return The highest profile in the list
      */
     public static Profile getLowestProfile(String[] profiles) {
         Profile lowestProfile = null;
         int numberOfProfilesExtended = Profile.Administrator.getAll().size();
-        
+
         for (String profileName : profiles) {
             Profile p = Profile.valueOf(profileName);
             Set<Profile> currentProfileSet = p.getAll();
@@ -104,18 +76,17 @@ public class ProfileManager
         }
         return lowestProfile;
     }
-    
+
     /**
-     * Return the highest profile in the list by checking the number
-     * of extended profiles for each.
-     * 
+     * Return the highest profile in the list by checking the number of extended profiles for each.
+     *
      * @param profiles The list of profiles to analyze
      * @return The highest profile in the list
      */
     public static Profile getHighestProfile(Profile[] profiles) {
         Profile highestProfile = null;
         int numberOfProfilesExtended = 0;
-        
+
         for (Profile profile : profiles) {
             Set<Profile> all = profile.getAll();
             if (all.size() > numberOfProfilesExtended) {
@@ -126,45 +97,45 @@ public class ProfileManager
         return highestProfile;
     }
 
-    /** 
+    /**
      * Check if bean is defined in the context
-     * 
+     *
      * @param beanId id of the bean to look up
      */
     public static boolean existsBean(String beanId) {
         ServiceContext serviceContext = ServiceContext.get();
-        if(serviceContext == null) return true;
+        if (serviceContext == null) return true;
         ServletContext servletContext = serviceContext.getServlet().getServletContext();
         ConfigurableApplicationContext springContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(servletContext);
-        if(springContext == null) return true;
+        if (springContext == null) return true;
         return springContext.containsBean(beanId);
     }
+    //--------------------------------------------------------------------------
 
     /**
-     * Optimistically check if user can access a given url.  If not possible to determine then
-     * the methods will return true.  So only use to show url links, not check if a user has access
-     * for certain.  Spring security should ensure that users cannot access restricted urls though.
-     *  
-     * @param serviceName the raw services name (main.home) or (admin) 
-     * 
-     * @return true if accessible or system is unable to determine because the current
-     *              thread does not have a ServiceContext in its thread local store
+     * Optimistically check if user can access a given url.  If not possible to determine then the
+     * methods will return true.  So only use to show url links, not check if a user has access for
+     * certain.  Spring security should ensure that users cannot access restricted urls though.
+     *
+     * @param serviceName the raw services name (main.home) or (admin)
+     * @return true if accessible or system is unable to determine because the current thread does
+     * not have a ServiceContext in its thread local store
      */
     public static boolean isAccessibleService(Object serviceName) {
         ServiceContext serviceContext = ServiceContext.get();
-        if(serviceContext == null) return true;
+        if (serviceContext == null) return true;
         ServletContext servletContext = serviceContext.getServlet().getServletContext();
         ConfigurableApplicationContext springContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(servletContext);
         SecurityContext context = SecurityContextHolder.getContext();
-        if(springContext == null || context == null) return true;
-        
+        if (springContext == null || context == null) return true;
+
         Map<String, AbstractSecurityInterceptor> evals = springContext.getBeansOfType(AbstractSecurityInterceptor.class);
         Authentication authentication = context.getAuthentication();
-        
-        FilterInvocation fi = new FilterInvocation(null, "/srv/"+serviceContext.getLanguage()+"/"+serviceName, null);
-        for(AbstractSecurityInterceptor securityInterceptor: evals.values()) {
-            if(securityInterceptor == null) return true;
-            
+
+        FilterInvocation fi = new FilterInvocation(null, "/srv/" + serviceContext.getLanguage() + "/" + serviceName, null);
+        for (AbstractSecurityInterceptor securityInterceptor : evals.values()) {
+            if (securityInterceptor == null) return true;
+
 
             Collection<ConfigAttribute> attrs = securityInterceptor.obtainSecurityMetadataSource().getAttributes(fi);
 
@@ -173,7 +144,7 @@ public class ProfileManager
             }
 
             if (authentication == null) {
-               continue;
+                continue;
             }
 
             try {
@@ -190,8 +161,33 @@ public class ProfileManager
         return false;
     }
 
+    //--------------------------------------------------------------------------
+
     public static boolean isCasEnabled() {
         return existsBean("casEntryPoint");
+    }
+
+    public boolean exists(String profile) {
+        return Profile.exists(profile);
+    }
+
+    /**
+     * Return the case corrected version of the supplied profile name, or empty string if none
+     * match.
+     *
+     * @param profileName The profile name to be corrected.
+     * @return The correct profile name
+     */
+    public Profile getCorrectCase(String profileName) {
+        return Profile.findProfileIgnoreCase(profileName);
+    }
+
+    public Profile getProfile(String profileName) {
+        return Profile.valueOf(profileName);
+    }
+
+    public Element getProfilesElement(Profile profile) {
+        return profile.asElement();
     }
 }
 

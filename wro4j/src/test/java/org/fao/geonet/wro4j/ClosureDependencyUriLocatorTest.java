@@ -2,6 +2,7 @@ package org.fao.geonet.wro4j;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+
 import ro.isdc.wro.model.resource.Resource;
 
 import static org.fao.geonet.wro4j.ClosureDependencyUriLocator.PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE;

@@ -25,25 +25,23 @@ package org.fao.geonet.exceptions;
 
 //=============================================================================
 
-public class MetadataNotFoundEx extends NotFoundEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class MetadataNotFoundEx extends NotFoundEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5759127829247984309L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5759127829247984309L;
 
-	public MetadataNotFoundEx(String name)
-	{
-		super("Metadata not found", name);
+    public MetadataNotFoundEx(String name) {
+        super("Metadata not found", name);
 
-		id = "metadata-not-found";
-	}
+        id = "metadata-not-found";
+    }
 }
 
 //=============================================================================

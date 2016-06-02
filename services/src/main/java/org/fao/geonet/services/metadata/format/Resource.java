@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import javax.servlet.http.HttpServletResponse;
 
 import static com.google.common.io.Files.getFileExtension;
@@ -41,7 +42,7 @@ import static com.google.common.io.Files.getFileExtension;
 /**
  * Allows a user load a file from the identified formatter bundle. Typically used for reading images
  * or the bundle editor UI.
- * 
+ *
  * @author jeichar
  */
 @Controller("md.formatter.resource")
@@ -49,11 +50,11 @@ public class Resource extends AbstractFormatService {
 
     @RequestMapping(value = "/{lang}/md.formatter.resource")
     public void exec(
-            @RequestParam(Params.ID) String xslid,
-            @RequestParam(Params.FNAME) String fileName,
-            @RequestParam(value = Params.SCHEMA, required = false) String schema,
-            HttpServletResponse response
-            ) throws Exception {
+        @RequestParam(Params.ID) String xslid,
+        @RequestParam(Params.FNAME) String fileName,
+        @RequestParam(value = Params.SCHEMA, required = false) String schema,
+        HttpServletResponse response
+    ) throws Exception {
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         Path schemaDir = null;
         if (schema != null) {
@@ -63,16 +64,16 @@ public class Resource extends AbstractFormatService {
         Path formatDir = getAndVerifyFormatDir(applicationContext.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
         Path desiredFile = formatDir.resolve(fileName);
 
-        if(!Files.isRegularFile(desiredFile)) {
-            response.sendError(404, fileName+" does not identify a file in formatter bundle: " + xslid);
+        if (!Files.isRegularFile(desiredFile)) {
+            response.sendError(404, fileName + " does not identify a file in formatter bundle: " + xslid);
             return;
         }
 
-        if(!containsFile(formatDir, desiredFile)) {
-            response.sendError(403, fileName+" does not identify a file in the "+xslid+" format bundle");
+        if (!containsFile(formatDir, desiredFile)) {
+            response.sendError(403, fileName + " does not identify a file in the " + xslid + " format bundle");
             return;
         }
-        
+
         response.setStatus(200);
         setContentType(response, getFileExtension(desiredFile.getFileName().toString()));
 
@@ -119,7 +120,7 @@ public class Resource extends AbstractFormatService {
             case "groovy":
                 response.setContentType("text/x-groovy-source,groovy");
                 return;
-           default:
+            default:
                 response.setContentType("application/octet-stream");
         }
     }

@@ -26,6 +26,7 @@ package org.fao.geonet.services.harvesting;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
@@ -35,36 +36,32 @@ import java.nio.file.Path;
 
 /**
  * This service removes all metadata associated to one harvester
- * 
- * @author delawen
  *
+ * @author delawen
  */
-public class Clear implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Clear implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		return Util.exec(params, context, new Util.Job()
-		{
-			public OperResult execute(HarvestManager hm, String id) throws Exception
-			{
-				return hm.clearBatch(id);
-			}
-		});
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        return Util.exec(params, context, new Util.Job() {
+            public OperResult execute(HarvestManager hm, String id) throws Exception {
+                return hm.clearBatch(id);
+            }
+        });
+    }
 }
 
 //=============================================================================

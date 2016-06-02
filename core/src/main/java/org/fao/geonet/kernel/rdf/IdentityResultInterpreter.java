@@ -33,14 +33,14 @@ import com.google.common.base.Function;
 
 /**
  * Return a map of column names -> column values for each row.
- * 
+ *
  * @author jeichar
  */
-public class IdentityResultInterpreter extends ResultInterpreter<LinkedHashMap<String,Value>> {
+public class IdentityResultInterpreter extends ResultInterpreter<LinkedHashMap<String, Value>> {
 
     @Override
-    public LinkedHashMap<String,Value> createFromRow(Thesaurus thesaurus, QueryResultsTable resultTable, int rowIndex) {
-        LinkedHashMap<String, Value> map = new LinkedHashMap<String,Value>();
+    public LinkedHashMap<String, Value> createFromRow(Thesaurus thesaurus, QueryResultsTable resultTable, int rowIndex) {
+        LinkedHashMap<String, Value> map = new LinkedHashMap<String, Value>();
         for (int i = 0; i < resultTable.getColumnCount(); i++) {
             map.put(resultTable.getColumnName(i), resultTable.getValue(rowIndex, i));
         }
@@ -48,7 +48,7 @@ public class IdentityResultInterpreter extends ResultInterpreter<LinkedHashMap<S
     }
 
     public ResultInterpreter<Value> onlyColumn(final String columnName) {
-        return map(new Function<LinkedHashMap<String,Value>, Value>(){
+        return map(new Function<LinkedHashMap<String, Value>, Value>() {
 
             @Override
             public Value apply(LinkedHashMap<String, Value> input) {
@@ -56,5 +56,5 @@ public class IdentityResultInterpreter extends ResultInterpreter<LinkedHashMap<S
             }
         });
     }
-    
+
 }

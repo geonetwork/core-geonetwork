@@ -30,8 +30,8 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 
 /**
- * An Xml Entity Resolver that resolves xml files relative to a java.nio.file.Path object.  This means that
- * the xml can be loaded from any Java NIO filesystem not just the default filesystem.
+ * An Xml Entity Resolver that resolves xml files relative to a java.nio.file.Path object.  This
+ * means that the xml can be loaded from any Java NIO filesystem not just the default filesystem.
  *
  * @author Jesse on 11/4/2014.
  */

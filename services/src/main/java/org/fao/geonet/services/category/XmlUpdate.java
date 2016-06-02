@@ -24,6 +24,7 @@
 package org.fao.geonet.services.category;
 
 import jeeves.services.ReadWriteController;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
@@ -46,10 +47,10 @@ import javax.xml.bind.annotation.XmlValue;
 //=============================================================================
 @Controller("admin.category.update.labels")
 @ReadWriteController
-public class XmlUpdate{
+public class XmlUpdate {
 
     @RequestMapping(value = "/{lang}/admin.category.update.labels", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public OkResponse serviceSpecificExec(@RequestBody String request) throws Exception {
 
@@ -82,12 +83,12 @@ public class XmlUpdate{
         @XmlValue
         private String value = "ok";
 
-		public String getValue() {
-			return value;
-		}
+        public String getValue() {
+            return value;
+        }
 
-		public void setValue(String value) {
-			this.value = value;
-		}
+        public void setValue(String value) {
+            this.value = value;
+        }
     }
 }

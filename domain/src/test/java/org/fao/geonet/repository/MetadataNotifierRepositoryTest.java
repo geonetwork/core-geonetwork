@@ -38,6 +38,18 @@ public class MetadataNotifierRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     MetadataNotifierRepository _repo;
 
+    public static MetadataNotifier newMetadataNotifier(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+        MetadataNotifier metadataCategory = new MetadataNotifier();
+        metadataCategory.setName("name" + val);
+        metadataCategory.setPassword("password" + val);
+        metadataCategory.setUrl("url" + val);
+        metadataCategory.setUsername("username" + val);
+        metadataCategory.setEnabled(val % 2 == 0);
+
+        return metadataCategory;
+    }
+
     @Test
     public void testFindOne() {
         MetadataNotifier notifier1 = newMetadataNotifier();
@@ -68,18 +80,6 @@ public class MetadataNotifierRepositoryTest extends AbstractSpringDataTest {
     private MetadataNotifier newMetadataNotifier() {
         AtomicInteger inc = _inc;
         return newMetadataNotifier(inc);
-    }
-
-    public static MetadataNotifier newMetadataNotifier(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-        MetadataNotifier metadataCategory = new MetadataNotifier();
-        metadataCategory.setName("name" + val);
-        metadataCategory.setPassword("password" + val);
-        metadataCategory.setUrl("url" + val);
-        metadataCategory.setUsername("username" + val);
-        metadataCategory.setEnabled(val % 2 == 0);
-
-        return metadataCategory;
     }
 
 }

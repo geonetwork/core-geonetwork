@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -66,75 +67,94 @@ import java.util.concurrent.atomic.AtomicBoolean;
 class Harvester implements IHarvester<HarvestResult> {
     private final AtomicBoolean cancelMonitor;
     //--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    private Logger log;
 
-	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeonetParams params)
-	{
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
+    private GeonetParams params;
+    private ServiceContext context;
+
+    //---------------------------------------------------------------------------
+    /**
+     * Contains a list of accumulated errors during the executing of this harvest.
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
+
+    //---------------------------------------------------------------------------
+
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeonetParams params) {
         this.cancelMonitor = cancelMonitor;
-		this.log    = log;
-		this.context= context;
-		this.params = params;
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
-
-	public HarvestResult harvest(Logger log) throws Exception
-	{
         this.log = log;
-		XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.host));
+        this.context = context;
+        this.params = params;
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Sources update
+    //---
+    //---------------------------------------------------------------------------
+
+    public HarvestResult harvest(Logger log) throws Exception {
+        this.log = log;
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.host));
 
         Lib.net.setupProxy(context, req);
 
-		//--- login
+        //--- login
 
-		if (params.isUseAccount())
-		{
-			
-			try {
-				log.info("Login into : "+ params.getName());
-				req.setCredentials(params.getUsername(), params.getPassword());
+        if (params.isUseAccount()) {
+
+            try {
+                log.info("Login into : " + params.getName());
+                req.setCredentials(params.getUsername(), params.getPassword());
                 req.setPreemptiveBasicAuth(true);
-			req.setAddress(params.getServletPath() + "/" + params.getNode()
-					+ "/eng/xml.info");
-            req.addParam("type", "me");
+                req.setAddress(params.getServletPath() + "/" + params.getNode()
+                    + "/eng/xml.info");
+                req.addParam("type", "me");
 
-				Element response = req.execute();
-				if(!response.getName().equals("info") || response.getChild("me") == null) {
-					pre29Login(req);
-				} else if(!"true".equals(response.getChild("me").getAttributeValue("authenticated"))) {
+                Element response = req.execute();
+                if (!response.getName().equals("info") || response.getChild("me") == null) {
+                    pre29Login(req);
+                } else if (!"true".equals(response.getChild("me").getAttributeValue("authenticated"))) {
                     log.warning("Authentication failed for user: " + params.getUsername());
                     throw new UserNotFoundEx(params.getUsername());
-				}
-			} catch (Exception e) {
-				pre29Login(req);
-			}
-		}
+                }
+            } catch (Exception e) {
+                pre29Login(req);
+            }
+        }
 
-		//--- retrieve info on categories and groups
+        //--- retrieve info on categories and groups
 
-		log.info("Retrieving information from : "+ params.host);
+        log.info("Retrieving information from : " + params.host);
 
-		req.setAddress(params.getServletPath() + "/" + params.getNode()
-				+ "/en/" + Geonet.Service.XML_INFO);
-		req.clearParams();
-		req.addParam("type", "sources");
-		req.addParam("type", "groups");
+        req.setAddress(params.getServletPath() + "/" + params.getNode()
+            + "/en/" + Geonet.Service.XML_INFO);
+        req.clearParams();
+        req.addParam("type", "sources");
+        req.addParam("type", "groups");
 
-		Element remoteInfo = req.execute();
+        Element remoteInfo = req.execute();
 
-		if (!remoteInfo.getName().equals("info"))
-			throw new BadServerResponseEx(remoteInfo);
+        if (!remoteInfo.getName().equals("info"))
+            throw new BadServerResponseEx(remoteInfo);
 
-		//--- perform all searches
+        //--- perform all searches
 
-		Set<RecordInfo> records = new HashSet<RecordInfo>();
+        Set<RecordInfo> records = new HashSet<RecordInfo>();
 
         for (Search s : params.getSearches()) {
             if (cancelMonitor.get()) {
@@ -173,41 +193,39 @@ class Harvester implements IHarvester<HarvestResult> {
             }
         }
 
-		log.info("Total records processed in all searches :"+ records.size());
+        log.info("Total records processed in all searches :" + records.size());
 
-		//--- align local node
+        //--- align local node
 
-		Aligner      aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
-		HarvestResult result  = aligner.align(records, errors);
+        Aligner aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
+        HarvestResult result = aligner.align(records, errors);
 
-		Map<String, String> sources = buildSources(remoteInfo);
-		updateSources(records, sources);
+        Map<String, String> sources = buildSources(remoteInfo);
+        updateSources(records, sources);
 
-		return result;
-	}
+        return result;
+    }
 
-	private void pre29Login(XmlRequest req) throws IOException, BadXmlResponseEx, BadSoapResponseEx, UserNotFoundEx {
-		log.info("Failed to login using basic auth (geonetwork 2.9+) trying pre-geonetwork 2.9 login: "+ params.getName());
-		// try old authentication
-		req.setAddress(params.getServletPath() + "/" + params.getNode() + "/en/"+ Geonet.Service.XML_LOGIN);
-		req.addParam("username", params.getUsername());
-		req.addParam("password", params.getPassword());
-		
-		Element response = req.execute();
-		
-		if (!response.getName().equals("ok")) {
-			throw new UserNotFoundEx(params.getUsername());
-		}
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    private void pre29Login(XmlRequest req) throws IOException, BadXmlResponseEx, BadSoapResponseEx, UserNotFoundEx {
+        log.info("Failed to login using basic auth (geonetwork 2.9+) trying pre-geonetwork 2.9 login: " + params.getName());
+        // try old authentication
+        req.setAddress(params.getServletPath() + "/" + params.getNode() + "/en/" + Geonet.Service.XML_LOGIN);
+        req.addParam("username", params.getUsername());
+        req.addParam("password", params.getPassword());
 
-	private Set<RecordInfo> search(XmlRequest request, Search s) throws OperationAbortedEx
-	{
-		Set<RecordInfo> records = new HashSet<RecordInfo>();
+        Element response = req.execute();
 
-		for (Object o : doSearch(request, s).getChildren("metadata"))
-		{
+        if (!response.getName().equals("ok")) {
+            throw new UserNotFoundEx(params.getUsername());
+        }
+    }
+
+    private Set<RecordInfo> search(XmlRequest request, Search s) throws OperationAbortedEx {
+        Set<RecordInfo> records = new HashSet<RecordInfo>();
+
+        for (Object o : doSearch(request, s).getChildren("metadata")) {
 
             if (cancelMonitor.get()) {
                 return Collections.emptySet();
@@ -217,46 +235,42 @@ class Harvester implements IHarvester<HarvestResult> {
                 Element md = (Element) o;
                 Element info = md.getChild("info", Edit.NAMESPACE);
 
-			if (info == null)
-				log.warning("Missing 'geonet:info' element in 'metadata' element");
-			else
-			{
-				String uuid       = info.getChildText("uuid");
-				String schema     = info.getChildText("schema");
-				String changeDate = info.getChildText("changeDate");
-				String source     = info.getChildText("source");
+                if (info == null)
+                    log.warning("Missing 'geonet:info' element in 'metadata' element");
+                else {
+                    String uuid = info.getChildText("uuid");
+                    String schema = info.getChildText("schema");
+                    String changeDate = info.getChildText("changeDate");
+                    String source = info.getChildText("source");
 
-				records.add(new RecordInfo(uuid, changeDate, schema, source));
-			}
+                    records.add(new RecordInfo(uuid, changeDate, schema, source));
+                }
             } catch (Exception e) {
                 HarvestError harvestError = new HarvestError(e, log);
                 harvestError.setDescription("Malformed element '"
-                        + o.toString() + "'");
+                    + o.toString() + "'");
                 harvestError
-                        .setHint("It seems that there was some malformed element. Check with your administrator.");
+                    .setHint("It seems that there was some malformed element. Check with your administrator.");
                 this.errors.add(harvestError);
             }
-		}
+        }
 
-		log.info("Records added to result list : "+ records.size());
+        log.info("Records added to result list : " + records.size());
 
-		return records;
-	}
+        return records;
+    }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx {
+        request.setAddress(params.getServletPath() + "/" + params.getNode()
+            + "/eng/" + Geonet.Service.XML_SEARCH);
+        request.clearParams();
+        try {
+            log.info("Searching on : " + params.getName());
+            Element response = request.execute(s.createRequest());
+            if (log.isDebugEnabled()) log.debug("Search results:\n" + Xml.getString(response));
 
-	private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx
-	{
-		request.setAddress(params.getServletPath() + "/" + params.getNode()
-				+ "/eng/" + Geonet.Service.XML_SEARCH);
-		request.clearParams();
-		try
-		{
-			log.info("Searching on : "+ params.getName());
-			Element response = request.execute(s.createRequest());
-            if(log.isDebugEnabled()) log.debug("Search results:\n"+ Xml.getString(response));
-
-			return response;
+            return response;
         } catch (BadSoapResponseEx e) {
             log.warning("Raised exception when searching : " + e.getMessage());
             this.errors.add(new HarvestError(e, log));
@@ -264,93 +278,81 @@ class Harvester implements IHarvester<HarvestResult> {
         } catch (BadXmlResponseEx e) {
             HarvestError harvestError = new HarvestError(e, log);
             harvestError.setDescription("Error while searching on "
-                    + params.getName() + ". Excepted XML, returned: "
-                    + e.getMessage());
+                + params.getName() + ". Excepted XML, returned: "
+                + e.getMessage());
             harvestError.setHint("Check with your administrator.");
             this.errors.add(harvestError);
             throw new OperationAbortedEx("Raised exception when searching", e);
         } catch (IOException e) {
             HarvestError harvestError = new HarvestError(e, log);
             harvestError.setDescription("Error while searching on "
-                    + params.getName() + ". ");
+                + params.getName() + ". ");
             harvestError.setHint("Check with your administrator.");
             this.errors.add(harvestError);
             throw new OperationAbortedEx("Raised exception when searching", e);
-        } catch(Exception e) {
+        } catch (Exception e) {
             HarvestError harvestError = new HarvestError(e, log);
             harvestError.setDescription("Error while searching on "
-                    + params.getName() + ". ");
+                + params.getName() + ". ");
             harvestError.setHint("Check with your administrator.");
             this.errors.add(harvestError);
-            log.warning("Raised exception when searching : "+ e);
+            log.warning("Raised exception when searching : " + e);
             return new Element("response");
-		}
-	}
+        }
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Sources update
-	//---
-	//---------------------------------------------------------------------------
+    private Map<String, String> buildSources(Element info) throws BadServerResponseEx {
+        Element sources = info.getChild("sources");
 
-	private Map<String, String> buildSources(Element info) throws BadServerResponseEx
-	{
-		Element sources = info.getChild("sources");
+        if (sources == null)
+            throw new BadServerResponseEx(info);
 
-		if (sources == null)
-			throw new BadServerResponseEx(info);
+        Map<String, String> map = new HashMap<String, String>();
 
-		Map<String, String> map = new HashMap<String, String>();
+        for (Object o : sources.getChildren()) {
+            Element source = (Element) o;
 
-		for (Object o : sources.getChildren())
-		{
-			Element source = (Element) o;
+            String uuid = source.getChildText("uuid");
+            String name = source.getChildText("name");
 
-			String uuid = source.getChildText("uuid");
-			String name = source.getChildText("name");
-
-			map.put(uuid, name);
-		}
-
-		return map;
-	}
-
-	//---------------------------------------------------------------------------
-
-	private void updateSources(Set<RecordInfo> records,
-										Map<String, String> remoteSources) throws SQLException, MalformedURLException
-	{
-		log.info("Aligning source logos from for : "+ params.getName());
-
-		//--- collect all different sources that have been harvested
-
-		Set<String> sources = new HashSet<String>();
-
-		for (RecordInfo ri : records) {
-			sources.add(ri.source);
+            map.put(uuid, name);
         }
 
-		//--- update local sources and retrieve logos (if the case)
+        return map;
+    }
+
+    private void updateSources(Set<RecordInfo> records,
+                               Map<String, String> remoteSources) throws SQLException, MalformedURLException {
+        log.info("Aligning source logos from for : " + params.getName());
+
+        //--- collect all different sources that have been harvested
+
+        Set<String> sources = new HashSet<String>();
+
+        for (RecordInfo ri : records) {
+            sources.add(ri.source);
+        }
+
+        //--- update local sources and retrieve logos (if the case)
 
         String siteId = context.getBean(SettingManager.class).getSiteId();
 
-		for (String sourceUuid : sources) {
- 			if (!siteId.equals(sourceUuid)) {
-   				String sourceName = remoteSources.get(sourceUuid);
+        for (String sourceUuid : sources) {
+            if (!siteId.equals(sourceUuid)) {
+                String sourceName = remoteSources.get(sourceUuid);
 
-				if (sourceName != null) {
-					retrieveLogo(context, params.host, sourceUuid);
+                if (sourceName != null) {
+                    retrieveLogo(context, params.host, sourceUuid);
                 } else {
-					sourceName = "(unknown)";
-					Resources.copyUnknownLogo(context, sourceUuid);
-				}
+                    sourceName = "(unknown)";
+                    Resources.copyUnknownLogo(context, sourceUuid);
+                }
 
                 Source source = new Source(sourceUuid, sourceName, new HashMap<String, String>(), false);
                 context.getBean(SourceRepository.class).save(source);
             }
         }
-	}
-
+    }
 
     private void retrieveLogo(ServiceContext context, String url, String uuid) throws MalformedURLException {
         String logo = uuid + ".gif";
@@ -373,26 +375,10 @@ class Harvester implements IHarvester<HarvestResult> {
             Resources.copyUnknownLogo(context, uuid);
         }
     }
-	//---------------------------------------------------------------------------
 
-    //---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-	private Logger         log;
-	private GeonetParams   params;
-    private ServiceContext context;
     public List<HarvestError> getErrors() {
         return errors;
     }
-
-
-    /**
-     * Contains a list of accumulated errors during the executing of this
-     * harvest.
-     */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
 }
 
 //=============================================================================

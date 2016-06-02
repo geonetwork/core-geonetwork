@@ -23,6 +23,6 @@
 package org.fao.geonet.kernel.security.ldap;
 
 public class LDAPConstants {
-	public static final String LDAP_FLAG = "LDAP";
-	static final String ALL_GROUP_INDICATOR = "ALL";
+    public static final String LDAP_FLAG = "LDAP";
+    static final String ALL_GROUP_INDICATOR = "ALL";
 }

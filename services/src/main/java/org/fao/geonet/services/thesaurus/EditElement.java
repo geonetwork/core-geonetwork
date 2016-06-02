@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -51,116 +52,114 @@ import java.util.ArrayList;
  */
 
 public class EditElement implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		String ref 		= Util.getParam(params, Params.REF);
-		String id 		= Util.getParam(params, Params.ID, "");
-		String uri 		= Util.getParam(params, Params.URI, "");
-		String mode	 	= Util.getParam(params, Params.MODE, "");
-		String lang 	= context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(context.getLanguage());
-		
-		String modeType 	= "add";
-		
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		
-		if (!id.equals("") || !uri.equals("")) {
-			KeywordBean kb = null;
-			
-			if (!id.equals("")){
-				UserSession session = context.getUserSession();
-				KeywordsSearcher searcher = (KeywordsSearcher) session
-					.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-				kb = searcher.getKeywordFromResultsById(id);
-			}else{
-				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-				ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-				KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusMan);
-				
-				kb = searcher.searchById(uri, ref, lang);
-				
-			}
-			// Add info needed by thesaurus.edit
-			elResp.addContent(new Element("prefLab").setText(kb.getDefaultValue()));
-			elResp.addContent(new Element("definition").setText(kb.getDefaultDefinition()));
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
+        String ref = Util.getParam(params, Params.REF);
+        String id = Util.getParam(params, Params.ID, "");
+        String uri = Util.getParam(params, Params.URI, "");
+        String mode = Util.getParam(params, Params.MODE, "");
+        String lang = context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(context.getLanguage());
 
-			elResp.addContent(new Element("relCode").setText(kb.getRelativeCode()));
-			elResp.addContent(new Element("nsCode").setText(kb.getNameSpaceCode()));
-			if (kb.getCoordEast() != null) {
+        String modeType = "add";
+
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+
+        if (!id.equals("") || !uri.equals("")) {
+            KeywordBean kb = null;
+
+            if (!id.equals("")) {
+                UserSession session = context.getUserSession();
+                KeywordsSearcher searcher = (KeywordsSearcher) session
+                    .getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
+                kb = searcher.getKeywordFromResultsById(id);
+            } else {
+                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+                ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
+                KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusMan);
+
+                kb = searcher.searchById(uri, ref, lang);
+
+            }
+            // Add info needed by thesaurus.edit
+            elResp.addContent(new Element("prefLab").setText(kb.getDefaultValue()));
+            elResp.addContent(new Element("definition").setText(kb.getDefaultDefinition()));
+
+            elResp.addContent(new Element("relCode").setText(kb.getRelativeCode()));
+            elResp.addContent(new Element("nsCode").setText(kb.getNameSpaceCode()));
+            if (kb.getCoordEast() != null) {
                 elResp.addContent(new Element("east").setText(kb.getCoordEast()));
             }
-			if (kb.getCoordWest() != null) {
+            if (kb.getCoordWest() != null) {
                 elResp.addContent(new Element("west").setText(kb.getCoordWest()));
             }
-			if (kb.getCoordSouth() != null) {
+            if (kb.getCoordSouth() != null) {
                 elResp.addContent(new Element("south").setText(kb.getCoordSouth()));
             }
-			if (kb.getCoordNorth() != null) {
+            if (kb.getCoordNorth() != null) {
                 elResp.addContent(new Element("north").setText(kb.getCoordNorth()));
             }
-			
 
-			modeType 	= "edit";
-			uri 		= kb.getRelativeCode();
-		} else {
-			elResp.addContent(new Element("nsCode").setText("#"));
-		}
-		
-		
-		// Only if consult (ie. external thesaurus) search for related concept
-		if (mode.equals("consult")){
-			ArrayList<KeywordRelation> reqType = new ArrayList<KeywordRelation>();
-			reqType.add(KeywordRelation.BROADER);
-			reqType.add(KeywordRelation.NARROWER);
-			reqType.add(KeywordRelation.RELATED);
-			
-			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-			ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-			KeywordsSearcher searcherBNR = new KeywordsSearcher(context, thesaurusMan);
-			
-			for (int i = 0; i <= reqType.size() - 1; i++) {
-				searcherBNR.searchForRelated(uri, ref, reqType.get(i), KeywordSort.defaultLabelSorter(SortDirection.DESC), lang);
 
-				String type;
-				
-				if (reqType.get(i) == KeywordRelation.BROADER) {
-				    // If looking for broader search concept in a narrower element
-					type = "narrower";
+            modeType = "edit";
+            uri = kb.getRelativeCode();
+        } else {
+            elResp.addContent(new Element("nsCode").setText("#"));
+        }
+
+
+        // Only if consult (ie. external thesaurus) search for related concept
+        if (mode.equals("consult")) {
+            ArrayList<KeywordRelation> reqType = new ArrayList<KeywordRelation>();
+            reqType.add(KeywordRelation.BROADER);
+            reqType.add(KeywordRelation.NARROWER);
+            reqType.add(KeywordRelation.RELATED);
+
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
+            KeywordsSearcher searcherBNR = new KeywordsSearcher(context, thesaurusMan);
+
+            for (int i = 0; i <= reqType.size() - 1; i++) {
+                searcherBNR.searchForRelated(uri, ref, reqType.get(i), KeywordSort.defaultLabelSorter(SortDirection.DESC), lang);
+
+                String type;
+
+                if (reqType.get(i) == KeywordRelation.BROADER) {
+                    // If looking for broader search concept in a narrower element
+                    type = "narrower";
                 } else if (reqType.get(i) == KeywordRelation.NARROWER) {
-					type = "broader";
+                    type = "broader";
                 } else {
-                        type = "related";
+                    type = "related";
                 }
-				Element keywordType = new Element(type);
-				keywordType.addContent(searcherBNR.getResults());
-				
-				elResp.addContent(keywordType);
-			}
-		}
-		
-		String thesaType = ref;
-		thesaType = thesaType.substring(thesaType.indexOf('.')+1,thesaType.length());
-		thesaType = thesaType.substring(0, thesaType.indexOf('.'));
-		
-		elResp.addContent(new Element("thesaType").setText(thesaType));
-		elResp.addContent(new Element("thesaurus").setText(ref));
-		elResp.addContent(new Element("mode").setText(modeType));
+                Element keywordType = new Element(type);
+                keywordType.addContent(searcherBNR.getResults());
 
-		return elResp;
-	}
-	
+                elResp.addContent(keywordType);
+            }
+        }
+
+        String thesaType = ref;
+        thesaType = thesaType.substring(thesaType.indexOf('.') + 1, thesaType.length());
+        thesaType = thesaType.substring(0, thesaType.indexOf('.'));
+
+        elResp.addContent(new Element("thesaType").setText(thesaType));
+        elResp.addContent(new Element("thesaurus").setText(ref));
+        elResp.addContent(new Element("mode").setText(modeType));
+
+        return elResp;
+    }
+
 
 }
-
-
 
 
 // =============================================================================

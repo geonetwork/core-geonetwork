@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -47,52 +48,50 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 /**
- * A simple service that add all metadata templates available from schemas being
- * handled in the SchemaManager
- * 
+ * A simple service that add all metadata templates available from schemas being handled in the
+ * SchemaManager
  */
 public class AddDefault implements Service {
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	/**
-	 * 
-	 * schemaList is a list of comma separated schemas to load
-	 * 
-	 * @return A report on the template import with information about the status
-	 *         of the insertion operation (failed|loaded).
-	 */
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
+    /**
+     * schemaList is a list of comma separated schemas to load
+     *
+     * @return A report on the template import with information about the status of the insertion
+     * operation (failed|loaded).
+     */
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
 
-		String schemaList = Util.getParam(params, Params.SCHEMA);
-		String serviceStatus = "true";
+        String schemaList = Util.getParam(params, Params.SCHEMA);
+        String serviceStatus = "true";
 
-		Element result = new Element(Jeeves.Elem.RESPONSE);
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+        Element result = new Element(Jeeves.Elem.RESPONSE);
+        GeonetContext gc = (GeonetContext) context
+            .getHandlerContext(Geonet.CONTEXT_NAME);
 
-		DataManager dataMan = gc.getBean(DataManager.class);
-		SchemaManager schemaMan = gc.getBean(SchemaManager.class);
+        DataManager dataMan = gc.getBean(DataManager.class);
+        SchemaManager schemaMan = gc.getBean(SchemaManager.class);
 
         String siteId = gc.getBean(SettingManager.class).getSiteId();
-		int owner = context.getUserSession().getUserIdAsInt();
+        int owner = context.getUserSession().getUserIdAsInt();
 
-		Log.info(Geonet.DATA_MANAGER, "Loading templates for schemas "
-				+ schemaList);
-		String schemas[] = schemaList.split(",");
+        Log.info(Geonet.DATA_MANAGER, "Loading templates for schemas "
+            + schemaList);
+        String schemas[] = schemaList.split(",");
 
-		for (String schemaName : schemas) {
+        for (String schemaName : schemas) {
 
-			Element schema = new Element(schemaName);
+            Element schema = new Element(schemaName);
 
-			Path templatesDir = schemaMan.getSchemaTemplatesDir(schemaName);
-			if (templatesDir == null) {
-				Log.warning(Geonet.DATA_MANAGER,
-                        String.format("Skipping - No templates found for schema '%s'.", schemaName));
-				continue;
-			}
+            Path templatesDir = schemaMan.getSchemaTemplatesDir(schemaName);
+            if (templatesDir == null) {
+                Log.warning(Geonet.DATA_MANAGER,
+                    String.format("Skipping - No templates found for schema '%s'.", schemaName));
+                continue;
+            }
             final String prefix = "sub-";
             final int prefixLength = prefix.length();
             try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(templatesDir, "*.xml")) {
@@ -105,8 +104,8 @@ public class AddDefault implements Service {
 
                     if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                         Log.debug(Geonet.DATA_MANAGER,
-                                String.format(" - Adding %s template file %s ...",
-                                        schemaName, templateName));
+                            String.format(" - Adding %s template file %s ...",
+                                schemaName, templateName));
                     }
 
                     try {
@@ -118,20 +117,20 @@ public class AddDefault implements Service {
                         if (templateName.startsWith(prefix)) {
                             isTemplate = "s";
                             title = templateName.substring(prefixLength,
-                                    templateName.length() - prefixLength);
+                                templateName.length() - prefixLength);
                         }
                         //
                         // insert metadata
                         //
                         Metadata metadata = new Metadata().setUuid(uuid);
                         metadata.getDataInfo().
-                                setSchemaId(schemaName).
-                                setRoot(xml.getQualifiedName()).
-                                setType(MetadataType.lookup(isTemplate));
+                            setSchemaId(schemaName).
+                            setRoot(xml.getQualifiedName()).
+                            setType(MetadataType.lookup(isTemplate));
                         metadata.getSourceInfo().
-                                setSourceId(siteId).
-                                setOwner(owner).
-                                setGroupOwner(1);
+                            setSourceId(siteId).
+                            setOwner(owner).
+                            setGroupOwner(1);
 
                         dataMan.insertMetadata(context, metadata, xml, true, true, true, UpdateDatestamp.NO, false, false);
 
@@ -139,17 +138,17 @@ public class AddDefault implements Service {
                     } catch (Exception e) {
                         serviceStatus = "false";
                         Log.error(Geonet.DATA_MANAGER,
-                                String.format("Error loading %s template file %s. Error is %s.",
-                                        schemaName, temp, e.getMessage()),
-                                e);
+                            String.format("Error loading %s template file %s. Error is %s.",
+                                schemaName, temp, e.getMessage()),
+                            e);
                     }
                     template.setAttribute("status", status);
                     schema.addContent(template);
                 }
             }
-			result.addContent(schema);
-		}
-		result.setAttribute("status", serviceStatus);
-		return result;
-	}
+            result.addContent(schema);
+        }
+        result.setAttribute("status", serviceStatus);
+        return result;
+    }
 }

@@ -25,9 +25,12 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
+
 import groovy.util.slurpersupport.GPathResult;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.Constants;
 import org.fao.geonet.domain.IsoLanguage;
@@ -60,6 +63,12 @@ public class FunctionsTest {
     private Functions functions;
     private Path schemaDir;
 
+    private static IsoLanguage isoLang(String engTranslation) {
+        final IsoLanguage isoLanguage = new IsoLanguage();
+        isoLanguage.getLabelTranslations().put("eng", engTranslation);
+        return isoLanguage;
+    }
+
     @Before
     public void setUp() throws Exception {
 
@@ -70,7 +79,7 @@ public class FunctionsTest {
         Mockito.when(repository.findAllByShortCode("de")).thenReturn(Arrays.asList(isoLang("German")));
 
         this.schemaDir = IO.toPath(FunctionsTest.class.getResource("translation-test/schema-dir/formatter/config.properties").toURI())
-                .getParent().getParent();
+            .getParent().getParent();
         SchemaManager schemaManager = Mockito.mock(SchemaManager.class);
         Mockito.when(schemaManager.getSchemaDir("parent-schema")).thenReturn(schemaDir.getParent().resolve("parent-schema"));
 
@@ -115,20 +124,13 @@ public class FunctionsTest {
         Mockito.when(env.getLang3()).thenReturn("eng");
         Mockito.when(env.getLang2()).thenReturn("#EN");
 
-        functions = new Functions(fparams, env){
+        functions = new Functions(fparams, env) {
             @Override
             protected ConfigFile getConfigFile(SchemaManager schemaManager, String schema) throws IOException {
                 return Mockito.mock(ConfigFile.class);
             }
         };
     }
-
-    private static IsoLanguage isoLang(String engTranslation) {
-        final IsoLanguage isoLanguage = new IsoLanguage();
-        isoLanguage.getLabelTranslations().put("eng", engTranslation);
-        return isoLanguage;
-    }
-
 
     @Test
     public void testTranslate() throws Exception {

@@ -27,9 +27,8 @@ import org.fao.geonet.domain.Metadata;
 
 /**
  * Event launched when a metadata is removed from the database
- * 
- * @author delawen
  *
+ * @author delawen
  */
 public class MetadataRemove extends MetadataEvent {
 

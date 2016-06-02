@@ -22,7 +22,7 @@
  */
 
 /**
- * 
+ *
  */
 package org.fao.geonet.events.hooks.group;
 
@@ -38,20 +38,17 @@ import org.springframework.stereotype.Component;
 
 /**
  * Hook events to database events
- * 
+ *
  * @author delawen
- * 
- * 
  */
 @Component
 public class GroupModified implements GeonetworkEntityListener<Group>,
-        ApplicationEventPublisherAware {
+    ApplicationEventPublisherAware {
 
     private ApplicationEventPublisher eventPublisher;
 
     /**
      * @see org.fao.geonet.entitylistener.GeonetworkEntityListener#getEntityClass()
-     * @return
      */
     @Override
     public Class<Group> getEntityClass() {
@@ -60,9 +57,7 @@ public class GroupModified implements GeonetworkEntityListener<Group>,
 
     /**
      * @see org.fao.geonet.entitylistener.GeonetworkEntityListener#handleEvent(org.fao.geonet.entitylistener.PersistentEventType,
-     *      java.lang.Object)
-     * @param arg0
-     * @param arg1
+     * java.lang.Object)
      */
     @Override
     public void handleEvent(PersistentEventType type, Group entity) {
@@ -77,11 +72,10 @@ public class GroupModified implements GeonetworkEntityListener<Group>,
 
     /**
      * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
-     * @param applicationEventPublisher
      */
     @Override
     public void setApplicationEventPublisher(
-            ApplicationEventPublisher applicationEventPublisher) {
+        ApplicationEventPublisher applicationEventPublisher) {
         this.eventPublisher = applicationEventPublisher;
     }
 }

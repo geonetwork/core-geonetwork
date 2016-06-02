@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata.format;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.BinaryFile;
@@ -40,37 +41,37 @@ import java.nio.file.Path;
 
 /**
  * Allows a user to display a metadata in PDF with a particular formatters
- * 
+ *
  * @author fgravin
  */
 public class PDF implements Service {
-	
-	private static final String TMP_PDF_FILE = "Document";
-	
+
+    private static final String TMP_PDF_FILE = "Document";
+
     public Element exec(Element metadata, ServiceContext context) throws Exception {
-        
-    	Element htmlDoc = metadata.getChild("html");
+
+        Element htmlDoc = metadata.getChild("html");
         XMLOutputter printer = new XMLOutputter();
         String htmlContent = printer.outputString(htmlDoc);
         XslUtil.setNoScript();
         File tempDir = (File) context.getServlet().getServletContext().
-        	       getAttribute( "javax.servlet.context.tempdir" );
+            getAttribute("javax.servlet.context.tempdir");
 
         Path tempFile = Files.createTempFile(tempDir.toPath(), TMP_PDF_FILE, ".pdf");
 
         try (OutputStream os = Files.newOutputStream(tempFile)) {
-	        ITextRenderer renderer = new ITextRenderer();
+            ITextRenderer renderer = new ITextRenderer();
             String siteUrl = context.getBean(SettingManager.class).getSiteURL(context);
             renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext().getReplacedElementFactory()));
-	        renderer.setDocumentFromString(htmlContent, siteUrl);
-	        renderer.layout();
-	        renderer.createPDF(os);
+            renderer.setDocumentFromString(htmlContent, siteUrl);
+            renderer.layout();
+            renderer.createPDF(os);
         }
 
         return BinaryFile.encode(200, tempFile.toAbsolutePath().normalize(), true).getElement();
     }
 
-	@Override
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    @Override
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 }

@@ -50,9 +50,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 /**
  * Test class for GeonetRepository.
  * <p/>
- * User: jeichar
- * Date: 9/5/13
- * Time: 11:44 AM
+ * User: jeichar Date: 9/5/13 Time: 11:44 AM
  */
 public class GeonetRepositoryTest extends AbstractSpringDataTest {
 

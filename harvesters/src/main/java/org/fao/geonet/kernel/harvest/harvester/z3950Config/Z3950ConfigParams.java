@@ -33,131 +33,128 @@ import java.util.ArrayList;
 
 //=============================================================================
 
-public class Z3950ConfigParams extends AbstractParams
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class Z3950ConfigParams extends AbstractParams {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public Z3950ConfigParams(DataManager dm)
-	{
-		super(dm);
-	}
+    public String host;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Create : called when a new entry must be added. Reads values from the
+    //---          provided entry, providing default values
+    //---
+    //---------------------------------------------------------------------------
+    public int port;
 
-	public void create(Element node) throws BadInputEx
-	{
-		super.create(node);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update : called when an entry has changed and variables must be updated
+    //---
+    //---------------------------------------------------------------------------
+    public boolean clearConfig;
 
-		Element site     = node.getChild("site");
-		host    = Util.getParam(site, "host",    "");
-		port    = Util.getParam(site, "port",    80);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Other API methods
+    //---
+    //---------------------------------------------------------------------------
+    private ArrayList<Search> alSearches = new ArrayList<Search>();
 
-		Element options  = node.getChild("options");
-		Element searches = node.getChild("searches");
-		clearConfig      = Util.getParam(options, "clearConfig", true);
+    //---------------------------------------------------------------------------
 
-		checkPort(port);
+    public Z3950ConfigParams(DataManager dm) {
+        super(dm);
+    }
 
-		addSearches(searches);
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
-	//---------------------------------------------------------------------------
+    public void create(Element node) throws BadInputEx {
+        super.create(node);
 
-	public void update(Element node) throws BadInputEx
-	{
-		super.update(node);
+        Element site = node.getChild("site");
+        host = Util.getParam(site, "host", "");
+        port = Util.getParam(site, "port", 80);
 
-		Element site     = node.getChild("site");
-		host    = Util.getParam(site, "host",    "");
-		port    = Util.getParam(site, "port",    80);
+        Element options = node.getChild("options");
+        Element searches = node.getChild("searches");
+        clearConfig = Util.getParam(options, "clearConfig", true);
 
-		Element options  = node.getChild("options");
-		Element searches = node.getChild("searches");
-		clearConfig      = Util.getParam(options, "clearConfig", clearConfig);
+        checkPort(port);
 
-		checkPort(port);
+        addSearches(searches);
+    }
 
-		//--- if some search queries are given, we drop the previous ones and
-		//--- set these new ones
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-		if (searches != null)
-			addSearches(searches);
+    public void update(Element node) throws BadInputEx {
+        super.update(node);
 
-	}
+        Element site = node.getChild("site");
+        host = Util.getParam(site, "host", "");
+        port = Util.getParam(site, "port", 80);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
+        Element options = node.getChild("options");
+        Element searches = node.getChild("searches");
+        clearConfig = Util.getParam(options, "clearConfig", clearConfig);
 
-	public Iterable<Search> getSearches()        { return alSearches;   }
+        checkPort(port);
 
-	//---------------------------------------------------------------------------
+        //--- if some search queries are given, we drop the previous ones and
+        //--- set these new ones
 
-	public boolean isSearchEmpty() { return alSearches.isEmpty(); }
+        if (searches != null)
+            addSearches(searches);
 
-	//---------------------------------------------------------------------------
+    }
 
-	public Z3950ConfigParams copy()
-	{
-		Z3950ConfigParams copy = new Z3950ConfigParams(dm);
-		copyTo(copy);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-		copy.host    = host;
-		copy.port    = port;
+    public Iterable<Search> getSearches() {
+        return alSearches;
+    }
 
-		copy.clearConfig = clearConfig;
-		for (Search s : alSearches)
-			copy.alSearches.add(s.copy());
+    public boolean isSearchEmpty() {
+        return alSearches.isEmpty();
+    }
 
-		return copy;
-	}
+    public Z3950ConfigParams copy() {
+        Z3950ConfigParams copy = new Z3950ConfigParams(dm);
+        copyTo(copy);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+        copy.host = host;
+        copy.port = port;
 
-	private void addSearches(Element searches) throws BadInputEx
-	{
-		alSearches.clear();
+        copy.clearConfig = clearConfig;
+        for (Search s : alSearches)
+            copy.alSearches.add(s.copy());
 
-		if (searches == null)
-			return;
+        return copy;
+    }
 
-		for (Object o : searches.getChildren("search"))
-		{
-			Element search = (Element) o;
+    private void addSearches(Element searches) throws BadInputEx {
+        alSearches.clear();
 
-			alSearches.add(new Search(search));
-		}
-	}
+        if (searches == null)
+            return;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        for (Object o : searches.getChildren("search")) {
+            Element search = (Element) o;
 
-	public String  host;
-	public int     port;
-	private ArrayList<Search> alSearches   = new ArrayList<Search>();
-	public  boolean clearConfig;
+            alSearches.add(new Search(search));
+        }
+    }
 }
 
 //=============================================================================

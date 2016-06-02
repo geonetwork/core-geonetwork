@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.services.ReadWriteController;
+
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroupId_;
@@ -43,6 +44,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Arrays;
 import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
@@ -66,15 +68,17 @@ public class Remove {
     private DataManager dataMan;
 
     @RequestMapping(value = "/{lang}/admin.user.remove", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody String run(HttpSession session,
-            @RequestParam(value = Params.ID, required = false) String id)
-            throws Exception {
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
+    String run(HttpSession session,
+               @RequestParam(value = Params.ID, required = false) String id)
+        throws Exception {
 
         Profile myProfile = Profile.Guest;
         String myUserId = null;
         Object tmp = session
-                .getAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY);
+            .getAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY);
         if (tmp instanceof UserSession) {
             UserSession usrSess = (UserSession) tmp;
             myProfile = usrSess.getProfile();
@@ -83,22 +87,22 @@ public class Remove {
 
         if (myUserId == null || myUserId.equals(id)) {
             throw new IllegalArgumentException(
-                    "You cannot delete yourself from the user database");
+                "You cannot delete yourself from the user database");
         }
 
         int iId = Integer.parseInt(id);
 
         if (myProfile == Profile.Administrator
-                || myProfile == Profile.UserAdmin) {
+            || myProfile == Profile.UserAdmin) {
 
             if (myProfile == Profile.UserAdmin) {
                 final Integer iMyUserId = Integer.valueOf(myUserId);
                 final List<Integer> groupIds = userGroupRepository
-                        .findGroupIds(where(hasUserId(iMyUserId)).or(
-                                hasUserId(iId)));
+                    .findGroupIds(where(hasUserId(iMyUserId)).or(
+                        hasUserId(iId)));
                 if (groupIds.isEmpty()) {
                     throw new IllegalArgumentException(
-                            "You don't have rights to delete this user because the user is not part of your group");
+                        "You don't have rights to delete this user because the user is not part of your group");
                 }
             }
 
@@ -107,21 +111,21 @@ public class Remove {
             // this is the case
             if (dataMan.isUserMetadataOwner(iId)) {
                 throw new IllegalArgumentException(
-                        "Cannot delete a user that is also a metadata owner");
+                    "Cannot delete a user that is also a metadata owner");
             }
 
             if (dataMan.isUserMetadataStatus(iId)) {
                 throw new IllegalArgumentException(
-                        "Cannot delete a user that has set a metadata status");
+                    "Cannot delete a user that has set a metadata status");
             }
 
             userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId,
-                    Arrays.asList(iId));
+                Arrays.asList(iId));
             userRepository.delete(iId);
 
         } else {
             throw new IllegalArgumentException(
-                    "You don't have rights to delete this user");
+                "You don't have rights to delete this user");
         }
 
         return "\"" + Jeeves.Elem.RESPONSE + "\"";

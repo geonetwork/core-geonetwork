@@ -32,20 +32,21 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
 import javax.persistence.EntityManager;
+
 import java.io.Serializable;
 
 import static org.springframework.data.querydsl.QueryDslUtils.QUERY_DSL_PRESENT;
 
 /**
- * The factory that allows all Geonetwork repositories to automatically get the functionality from GeonetRepository
- * if they extend that interface.
+ * The factory that allows all Geonetwork repositories to automatically get the functionality from
+ * GeonetRepository if they extend that interface.
  *
  * @param <R> The repository type
  * @param <T> The entity type the repository returns
  * @param <I> the id type of the entity
  */
 public class GeonetRepositoryFactoryBean<R extends JpaRepository<T, I>, T, I extends Serializable>
-        extends JpaRepositoryFactoryBean<R, T, I> {
+    extends JpaRepositoryFactoryBean<R, T, I> {
 
     protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager) {
 
@@ -87,10 +88,8 @@ public class GeonetRepositoryFactoryBean<R extends JpaRepository<T, I>, T, I ext
         }
 
         /**
-         * Returns whether the given repository interface requires a QueryDsl specific implementation to be chosen.
-         *
-         * @param repositoryInterface
-         * @return
+         * Returns whether the given repository interface requires a QueryDsl specific
+         * implementation to be chosen.
          */
         private boolean isQueryDslExecutor(Class<?> repositoryInterface) {
 

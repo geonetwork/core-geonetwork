@@ -44,7 +44,7 @@ public class OperationAllowedTest extends AbstractOperationsAllowedTest {
         int opId = 20;
         int grpId = 300;
         assertEquals(new OperationAllowedId().setMetadataId(mdId).setGroupId(grpId).setOperationId(opId),
-                new OperationAllowedId(mdId, grpId, opId));
+            new OperationAllowedId(mdId, grpId, opId));
     }
 
 }

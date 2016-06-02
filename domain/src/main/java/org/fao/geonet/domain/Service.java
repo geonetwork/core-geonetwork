@@ -24,11 +24,14 @@
 package org.fao.geonet.domain;
 
 import com.google.common.collect.Lists;
+
 import net.sf.json.JSONArray;
+
 import org.fao.geonet.entitylistener.ServiceEntityListenerManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -45,8 +48,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
- * One of the entities responsible for dynamic service configuration. Entity representing a {@link jeeves.interfaces.Service}. Originally
- * they were for CSW virtual services but are generic and could in theory be any arbitrary service.
+ * One of the entities responsible for dynamic service configuration. Entity representing a {@link
+ * jeeves.interfaces.Service}. Originally they were for CSW virtual services but are generic and
+ * could in theory be any arbitrary service.
  *
  * @author Jesse
  */
@@ -54,7 +58,7 @@ import javax.persistence.Table;
 @Access(AccessType.PROPERTY)
 @Table(name = "Services")
 @EntityListeners(ServiceEntityListenerManager.class)
-@SequenceGenerator(name=Service.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = Service.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Service extends GeonetEntity {
     static final String ID_SEQ_NAME = "service_id_seq";
     private int _id;
@@ -65,20 +69,20 @@ public class Service extends GeonetEntity {
     private List<ServiceParam> _parameters = new ArrayList<>();
 
     /**
-     * Get the id of the service entity. This is a generated value and as such new instances should not have this set as it will simply be
-     * ignored and could result in reduced performance.
+     * Get the id of the service entity. This is a generated value and as such new instances should
+     * not have this set as it will simply be ignored and could result in reduced performance.
      *
      * @return the id of the service.
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
 
     /**
-     * Set the id of the service entity. This is a generated value and as such new instances should not have this set as it will simply be
-     * ignored and could result in reduced performance.
+     * Set the id of the service entity. This is a generated value and as such new instances should
+     * not have this set as it will simply be ignored and could result in reduced performance.
      *
      * @param id the id of the service entity.
      */
@@ -144,9 +148,11 @@ public class Service extends GeonetEntity {
     }
 
     /**
-     * Get the init parameters to pass to the service.  The Key is the parameter name the value is the parameter value.
+     * Get the init parameters to pass to the service.  The Key is the parameter name the value is
+     * the parameter value.
      *
-     * @return the init parameters to pass to the service.  The Key is the parameter name the value is the parameter value.
+     * @return the init parameters to pass to the service.  The Key is the parameter name the value
+     * is the parameter value.
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "service", orphanRemoval = true)
     public List<ServiceParam> getParameters() {
@@ -154,17 +160,19 @@ public class Service extends GeonetEntity {
     }
 
     /**
-     * Set the init parameters to pass to the service. The Key is the parameter name the value is the parameter value.
+     * Set the init parameters to pass to the service. The Key is the parameter name the value is
+     * the parameter value.
      *
-     * @param parameters the init parameters to pass to the service.  The Key is the parameter name the value is the parameter value.
+     * @param parameters the init parameters to pass to the service.  The Key is the parameter name
+     *                   the value is the parameter value.
      */
     public void setParameters(final List<ServiceParam> parameters) {
         this._parameters = parameters;
     }
 
     /**
-     * Add a parameter to the set of parameters.  This method sets "this" on the parameter so that when this service is saved
-     * the parameter will also be saved.
+     * Add a parameter to the set of parameters.  This method sets "this" on the parameter so that
+     * when this service is saved the parameter will also be saved.
      *
      * @param param the parameter to add.
      */
@@ -176,6 +184,7 @@ public class Service extends GeonetEntity {
         _parameters.add(param);
         return this;
     }
+
     /**
      * Remove a parameter from the service and set null on the parameter's service property.
      *
@@ -200,9 +209,10 @@ public class Service extends GeonetEntity {
     }
 
     /**
-     * Get an arbitrary query string that will be added to query created from the {@link ServiceParam}.  This allows complex queries to be
-     * constructed, which are impossible to construct only using the normal {@link ServiceParam}.  It is recommended to only use
-     * this as a last resort as it is less portable than service parameters.
+     * Get an arbitrary query string that will be added to query created from the {@link
+     * ServiceParam}.  This allows complex queries to be constructed, which are impossible to
+     * construct only using the normal {@link ServiceParam}.  It is recommended to only use this as
+     * a last resort as it is less portable than service parameters.
      */
     @Nonnull
     public String getExplicitQuery() {
@@ -210,9 +220,10 @@ public class Service extends GeonetEntity {
     }
 
     /**
-     * Set an arbitrary query string that will be 'ANDed' to the the {@link ServiceParam}.  This allows complex queries to be
-     * constructed, which are impossible to construct only using the normal {@link ServiceParam}.  It is recommended to only use
-     * this as a last resort as it is less portable than service parameters.
+     * Set an arbitrary query string that will be 'ANDed' to the the {@link ServiceParam}.  This
+     * allows complex queries to be constructed, which are impossible to construct only using the
+     * normal {@link ServiceParam}.  It is recommended to only use this as a last resort as it is
+     * less portable than service parameters.
      *
      * @param explicitQuery the lucene query
      */

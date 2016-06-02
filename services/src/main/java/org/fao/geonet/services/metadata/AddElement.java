@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.EditLib;
@@ -38,13 +39,14 @@ import java.nio.file.Path;
  * For editing : adds a tag to a metadata. Access is restricted.
  */
 public class AddElement extends NotInReadOnlyModeService {
-    public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
     /**
      *
@@ -54,37 +56,37 @@ public class AddElement extends NotInReadOnlyModeService {
      * @throws Exception
      */
     @Override
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 
-		UserSession session = context.getUserSession();
+        UserSession session = context.getUserSession();
 
-		String id    = Util.getParam(params, Params.ID);
-		String ref   = Util.getParam(params, Params.REF);
-		String name  = Util.getParam(params, Params.NAME);
-		String child = params.getChildText(Params.CHILD);
+        String id = Util.getParam(params, Params.ID);
+        String ref = Util.getParam(params, Params.REF);
+        String name = Util.getParam(params, Params.NAME);
+        String child = params.getChildText(Params.CHILD);
 
-		// -- build the element to be added
-		// -- Here we do mark the element that is added
-		// -- then we traverse up the tree to the root 
-		// -- clone from the root and return the clone
-		// -- this is done so that the style sheets have 
-		// -- access to important information like the
-		// -- document language and other locales
-		// -- this is important for multilingual editing
-		// -- 
-		// -- Note that the metadata-embedded.xsl stylesheet
-		// -- only applies the templating to the added element, not to 
-		// -- the entire metadata so performance should not be a big issue
-		Element elResp = new AjaxEditUtils(context).addElementEmbedded(session, id, ref, name, child);
+        // -- build the element to be added
+        // -- Here we do mark the element that is added
+        // -- then we traverse up the tree to the root
+        // -- clone from the root and return the clone
+        // -- this is done so that the style sheets have
+        // -- access to important information like the
+        // -- document language and other locales
+        // -- this is important for multilingual editing
+        // --
+        // -- Note that the metadata-embedded.xsl stylesheet
+        // -- only applies the templating to the added element, not to
+        // -- the entire metadata so performance should not be a big issue
+        Element elResp = new AjaxEditUtils(context).addElementEmbedded(session, id, ref, name, child);
         EditLib.tagForDisplay(elResp);
         Element md = (Element) findRoot(elResp).clone();
         EditLib.removeDisplayTag(elResp);
 
         return md;
-	}
+    }
 
-    private Element findRoot( Element element ) {
-        if(element.isRootElement() || element.getParentElement() == null) return element;
+    private Element findRoot(Element element) {
+        if (element.isRootElement() || element.getParentElement() == null) return element;
         return findRoot(element.getParentElement());
     }
 }

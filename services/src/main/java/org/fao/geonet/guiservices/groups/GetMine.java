@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group_;
 import org.fao.geonet.domain.Profile;
@@ -49,51 +50,50 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 
 //=============================================================================
 
-/** Service used to return all groups in the system
-  */
+/**
+ * Service used to return all groups in the system
+ */
 
-public class GetMine implements Service
-{
-	String profile;
-	
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-		profile = params.getValue("profile");
-	}
+public class GetMine implements Service {
+    String profile;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        profile = params.getValue("profile");
+    }
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		UserSession session = context.getUserSession();
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-		if (!session.isAuthenticated()) {
-			return new Element(Geonet.Elem.GROUPS);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        UserSession session = context.getUserSession();
+
+        if (!session.isAuthenticated()) {
+            return new Element(Geonet.Elem.GROUPS);
         }
 
-		//--- retrieve user groups
+        //--- retrieve user groups
 
-		if (Profile.Administrator == session.getProfile()) {
-			return context.getBean(GroupRepository.class).findAllAsXml(not(GroupSpecs.isReserved()));
-		} else {
+        if (Profile.Administrator == session.getProfile()) {
+            return context.getBean(GroupRepository.class).findAllAsXml(not(GroupSpecs.isReserved()));
+        } else {
 
             final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
             int userId = session.getUserIdAsInt();
             Specifications<UserGroup> spec = where(UserGroupSpecs.isReservedGroup(false)).and(UserGroupSpecs.hasUserId(userId));
 
-			if (profile != null) {
+            if (profile != null) {
                 spec = spec.and(UserGroupSpecs.hasProfile(Profile.findProfileIgnoreCase(profile)));
             }
 
             List<Integer> ids = userGroupRepository.findGroupIds(spec);
-			Element groups = context.getBean(GroupRepository.class).findAllAsXml(SortUtils.createSort(Group_.id));
+            Element groups = context.getBean(GroupRepository.class).findAllAsXml(SortUtils.createSort(Group_.id));
 
-			return Lib.element.pruneChildren(groups, new HashSet<Integer>(ids));
-		}
-	}
+            return Lib.element.pruneChildren(groups, new HashSet<Integer>(ids));
+        }
+    }
 }
 
 //=============================================================================

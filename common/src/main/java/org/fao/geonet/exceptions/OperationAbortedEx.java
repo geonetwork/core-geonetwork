@@ -26,24 +26,24 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class OperationAbortedEx extends JeevesServerEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class OperationAbortedEx extends JeevesServerEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public OperationAbortedEx(String message) { this(message, null); }
+    public OperationAbortedEx(String message) {
+        this(message, null);
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public OperationAbortedEx(String message, Object object)
-	{
-		super(message, object);
+    public OperationAbortedEx(String message, Object object) {
+        super(message, object);
 
-		id = "operation-aborted";
-	}
+        id = "operation-aborted";
+    }
 }
 
 //=============================================================================

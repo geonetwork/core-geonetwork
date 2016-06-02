@@ -39,32 +39,24 @@ import java.util.List;
 
 /**
  * Save custom element sets.
- *
  */
 @Controller("admin.config.csw.customelementset.save")
 public class Set {
     /**
      * Saves custom element sets.
-     *
-     * @param xpathList
-     * @return
-     * @throws Exception
      */
 
     @RequestMapping(value = "/{lang}/admin.config.csw.customelementset.save", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
     OkResponse exec(@RequestParam("xpath") List<String> xpathList) throws Exception {
         saveCustomElementSets(xpathList);
         return new OkResponse();
-	}
+    }
 
     /**
-     *
      * Processes parameters and saves custom element sets in database.
-     *
-     * @param xpathList
-     * @throws Exception
      */
     private void saveCustomElementSets(List<String> xpathList) throws Exception {
         CustomElementSetRepository customElementSetRepository = ApplicationContextHolder.get().getBean(CustomElementSetRepository.class);
@@ -74,7 +66,7 @@ public class Set {
 
         customElementSetRepository.deleteAll();
 
-        for(String xpath : xpathList) {
+        for (String xpath : xpathList) {
             CustomElementSet customElementSet = new CustomElementSet();
             customElementSet.setXpath(xpath);
 

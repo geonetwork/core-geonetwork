@@ -46,7 +46,7 @@ public class MetadataIdentifierTemplateSpecs {
             public Predicate toPredicate(Root<MetadataIdentifierTemplate> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 
                 Path<Character> defaultAttributePath = root.get(MetadataIdentifierTemplate_.systemProvided_JPAWorkaround);
-                Predicate systemProvidedDefaultPredicate = cb.equal(defaultAttributePath,  cb.literal(Constants.toYN_EnabledChar(isSystemProvided)));
+                Predicate systemProvidedDefaultPredicate = cb.equal(defaultAttributePath, cb.literal(Constants.toYN_EnabledChar(isSystemProvided)));
                 return systemProvidedDefaultPredicate;
             }
         };

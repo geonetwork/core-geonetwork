@@ -39,7 +39,7 @@ final class WithinOrEquals extends WithinImpl {
         boolean equals2 = leftGeom.getBoundary().norm().equalsExact(rightGeom.getBoundary().norm(), 0.01);
         return equals2 || super.evaluateInternal(leftGeom, rightGeom);
     }
-    
+
     @Override
     public String toString() {
         return super.toString().replace("within", "within or equal");

@@ -26,6 +26,7 @@ package org.fao.geonet.services.login;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -38,11 +39,11 @@ import java.nio.file.Path;
 @Deprecated
 public class Login implements Service {
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		throw new RuntimeException("user.login service is no longer supported. Use j_spring_security_check to sign in.");
-	}
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
+        throw new RuntimeException("user.login service is no longer supported. Use j_spring_security_check to sign in.");
+    }
 }

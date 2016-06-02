@@ -24,9 +24,12 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
+
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
@@ -41,41 +44,41 @@ import java.nio.file.Path;
  * Adds a metadata to the subversion repository.
  */
 public class Version extends NotInReadOnlyModeService {
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getBean(DataManager.class);
-		AccessManager accessMan = gc.getBean(AccessManager.class);
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataMan = gc.getBean(DataManager.class);
+        AccessManager accessMan = gc.getBean(AccessManager.class);
 
-		String id = Utils.getIdentifierFromParameters(params, context);
-		
-		//-----------------------------------------------------------------------
-		//--- check access
+        String id = Utils.getIdentifierFromParameters(params, context);
 
-		Element md = dataMan.getMetadataNoInfo(context, id);
+        //-----------------------------------------------------------------------
+        //--- check access
 
-		if (md == null)
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+        Element md = dataMan.getMetadataNoInfo(context, id);
 
-		if (!accessMan.canEdit(context, id))
-			throw new OperationNotAllowedEx();
+        if (md == null)
+            throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		//-----------------------------------------------------------------------
-		//--- set metadata into the subversion repo
+        if (!accessMan.canEdit(context, id))
+            throw new OperationNotAllowedEx();
 
-		dataMan.versionMetadata(context, id, md);
+        //-----------------------------------------------------------------------
+        //--- set metadata into the subversion repo
 
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+        dataMan.versionMetadata(context, id, md);
 
-		return elResp;
-	}
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+
+        return elResp;
+    }
 }

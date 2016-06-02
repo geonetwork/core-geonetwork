@@ -26,8 +26,10 @@ package org.fao.geonet.services.ownership;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.*;
 
 import com.google.common.base.Optional;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -55,7 +57,8 @@ public class Transfer extends NotInReadOnlyModeService {
      * @param params
      * @throws Exception
      */
-    public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
     /**
      *
@@ -71,7 +74,7 @@ public class Transfer extends NotInReadOnlyModeService {
         int targetGrp = Util.getParamAsInt(params, "targetGroup");
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager   dm = gc.getBean(DataManager.class);
+        DataManager dm = gc.getBean(DataManager.class);
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
         //--- transfer privileges (if case)
@@ -106,9 +109,9 @@ public class Transfer extends NotInReadOnlyModeService {
                     if (!targetPriv.contains(priv)) {
                         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                         OperationAllowedId id = new OperationAllowedId()
-                                .setGroupId(targetGrp)
-                                .setMetadataId(mdId)
-                                .setOperationId(opId);
+                            .setGroupId(targetGrp)
+                            .setMetadataId(mdId)
+                            .setOperationId(opId);
                         OperationAllowed operationAllowed = new OperationAllowed(id);
                         repository.save(operationAllowed);
                     }
@@ -123,7 +126,7 @@ public class Transfer extends NotInReadOnlyModeService {
         // assign the new owner and ownerGroup for the source
         // user records.
         final List<Integer> sourceUserRecords =
-                metadataRepository.findAllIdsBy(MetadataSpecs.hasOwner(sourceUsr));
+            metadataRepository.findAllIdsBy(MetadataSpecs.hasOwner(sourceUsr));
         metadata.addAll(sourceUserRecords);
 
         // Set owner for all records to be modified.
@@ -144,17 +147,12 @@ public class Transfer extends NotInReadOnlyModeService {
 
         //--- return summary
         return new Element("response")
-                .addContent(new Element("privileges").setText(privCount      +""))
-                .addContent(new Element("metadata")  .setText(metadata.size()+""));
+            .addContent(new Element("privileges").setText(privCount + ""))
+            .addContent(new Element("metadata").setText(metadata.size() + ""));
     }
 
     /**
-     *
-     * @param context
      * @param userId can be null
-     * @param groupId
-     * @return
-     * @throws java.sql.SQLException
      */
     private Set<String> retrievePrivileges(ServiceContext context, Integer userId, int groupId) throws SQLException {
         OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);

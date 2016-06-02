@@ -34,6 +34,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -43,10 +44,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Test LocalizedEntityRepository
- * User: Jesse
- * Date: 9/9/13
- * Time: 3:16 PM
+ * Test LocalizedEntityRepository User: Jesse Date: 9/9/13 Time: 3:16 PM
  */
 public class LocalizedEntityRepositoryTest extends AbstractSpringDataTest {
 

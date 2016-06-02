@@ -43,14 +43,14 @@ public class KeywordLabelSearchClause implements SearchClause {
 
     public void addXmlParams(Element params) {
         KeywordSearchParamsBuilder.addXmlParam(params, XmlParams.pKeyword, keyword);
-        KeywordSearchParamsBuilder.addXmlParam(params, XmlParams.pTypeSearch, ""+searchType.ordinal());            
+        KeywordSearchParamsBuilder.addXmlParam(params, XmlParams.pTypeSearch, "" + searchType.ordinal());
     }
 
     @Override
     public Where toWhere(Set<String> langs) {
         Where where = Wheres.NONE;
         for (String lang : langs) {
-            where = where.or(searchType.toWhere(lang+Selectors.LABEL_POSTFIX,this));
+            where = where.or(searchType.toWhere(lang + Selectors.LABEL_POSTFIX, this));
         }
         return where;
     }

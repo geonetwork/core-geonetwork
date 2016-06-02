@@ -41,9 +41,7 @@ import javax.persistence.criteria.Root;
 /**
  * Implementation for custom category methods.
  * <p/>
- * User: Jesse
- * Date: 9/9/13
- * Time: 8:00 PM
+ * User: Jesse Date: 9/9/13 Time: 8:00 PM
  */
 public class MetadataCategoryRepositoryImpl implements MetadataCategoryRepositoryCustom {
 
@@ -73,14 +71,14 @@ public class MetadataCategoryRepositoryImpl implements MetadataCategoryRepositor
           * At least in the unit tests.
          */
         final Query nativeQuery2 = _entityManager.createNativeQuery("Select * from " + Metadata.METADATA_CATEG_JOIN_TABLE_NAME + " WHERE "
-                                                                    + Metadata.METADATA_CATEG_JOIN_TABLE_CATEGORY_ID + "=" + id);
+            + Metadata.METADATA_CATEG_JOIN_TABLE_CATEGORY_ID + "=" + id);
 
         nativeQuery2.setMaxResults(1);
         nativeQuery2.getResultList();
         // END HACK
 
         final Query nativeQuery = _entityManager.createNativeQuery("DELETE FROM " + Metadata.METADATA_CATEG_JOIN_TABLE_NAME + " WHERE "
-                                                                   + Metadata.METADATA_CATEG_JOIN_TABLE_CATEGORY_ID + "=?");
+            + Metadata.METADATA_CATEG_JOIN_TABLE_CATEGORY_ID + "=?");
         nativeQuery.setParameter(1, id);
         nativeQuery.executeUpdate();
 

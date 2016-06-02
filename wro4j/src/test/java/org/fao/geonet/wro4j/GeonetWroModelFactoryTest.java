@@ -3,11 +3,13 @@ package org.fao.geonet.wro4j;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
 import ro.isdc.wro.config.Context;
 import ro.isdc.wro.config.ReadOnlyContext;
 import ro.isdc.wro.manager.factory.standalone.StandaloneContext;
@@ -30,6 +32,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.apache.http.client.utils.URIUtils;
 import org.eclipse.jetty.util.URIUtil;
 
@@ -52,25 +55,35 @@ import static org.junit.Assert.assertTrue;
 /**
  * Test GeonetWroModelFactory.
  * <p/>
- * User: Jesse
- * Date: 11/22/13
- * Time: 1:03 PM
+ * User: Jesse Date: 11/22/13 Time: 1:03 PM
  */
 public class GeonetWroModelFactoryTest {
 
     private static final String PATH_TO_ROOT_OF_TEST_RESOURCES = "wro4j/src/test/resources/org/fao/geonet/wro4j";
     private static final String TEMPLATE_URI_PREFIX = "template://";
+    @Rule
+    public TemporaryFolder tmpDir = new TemporaryFolder();
+
+    public static GeonetworkMavenWrojManagerFactory createManagerFactory() throws IOException {
+        final GeonetworkMavenWrojManagerFactory wrojManagerFactory = new GeonetworkMavenWrojManagerFactory();
+        File propertiesFile = File.createTempFile("abc", "properties");
+        Files.write(propertiesFile.toPath(), (WRO_SOURCES_KEY + "=\n").getBytes("UTF-8"));
+        wrojManagerFactory.setExtraConfigFile(propertiesFile);
+        Context.set(Context.standaloneContext());
+        wrojManagerFactory.initialize(new StandaloneContext());
+        return wrojManagerFactory;
+    }
 
     @Test
     public void testCreateUsingRequire() throws Exception {
 
         String sourcesXml = "<sources><" + REQUIRE_EL + "><" + JS_SOURCE_EL + " " +
-                            WEBAPP_ATT + "=\"\" " +
-                            PATH_ON_DISK_ATT + "=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES + "\"/>" +
-                            "<" + CSS_SOURCE_EL + " " +
-                            WEBAPP_ATT + "=\"\" " +
-                            PATH_ON_DISK_ATT + "=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES + "\"/>" +
-                            "</" + REQUIRE_EL + "></sources>";
+            WEBAPP_ATT + "=\"\" " +
+            PATH_ON_DISK_ATT + "=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES + "\"/>" +
+            "<" + CSS_SOURCE_EL + " " +
+            WEBAPP_ATT + "=\"\" " +
+            PATH_ON_DISK_ATT + "=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES + "\"/>" +
+            "</" + REQUIRE_EL + "></sources>";
 
         final WroModel wroModel = createRequireModel(sourcesXml);
         assertRequireModel(wroModel, false);
@@ -133,26 +146,26 @@ public class GeonetWroModelFactoryTest {
             final String deps = IOUtils.toString(instance.locate(resource.getUri()), "UTF-8");
             if (resource.getUri().contains("sampleFile1a.js")) {
                 assertEquals("goog.addDependency('" + PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE + "/" + jsTestBaseDirAsPath +
-                             "/sampleFile1a.js', ['1a'], ['2a']);\n", deps);
+                    "/sampleFile1a.js', ['1a'], ['2a']);\n", deps);
             } else if (resource.getUri().contains("sampleFile1b.js")) {
                 assertEquals("goog.addDependency('" + PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE + "/" + jsTestBaseDirAsPath +
-                             "/sampleFile1b.js', ['1b'], ['3c','1a','2a']);\n", deps);
+                    "/sampleFile1b.js', ['1b'], ['3c','1a','2a']);\n", deps);
             } else if (resource.getUri().contains("sampleFile2a.js")) {
                 assertEquals("goog.addDependency('" + PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE + "/" + jsTestBaseDirAsPath +
-                             "/jslvl2/sampleFile2a.js', ['2a'], ['3a','2b'," +
-                             "'3c','3b']);\n", deps);
+                    "/jslvl2/sampleFile2a.js', ['2a'], ['3a','2b'," +
+                    "'3c','3b']);\n", deps);
             } else if (resource.getUri().contains("sampleFile2b.js")) {
                 assertEquals("goog.addDependency('" + PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE + "/" + jsTestBaseDirAsPath +
-                             "/jslvl2/sampleFile2b.js', ['2b'], []);\n", deps);
+                    "/jslvl2/sampleFile2b.js', ['2b'], []);\n", deps);
             } else if (resource.getUri().contains("sampleFile3a.js")) {
                 assertEquals("goog.addDependency('" + PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE + "/" + jsTestBaseDirAsPath +
-                             "/jslvl2/jslvl3/sampleFile3a.js', ['3a'], []);\n", deps);
+                    "/jslvl2/jslvl3/sampleFile3a.js', ['3a'], []);\n", deps);
             } else if (resource.getUri().contains("sampleFile3b.js")) {
                 assertEquals("goog.addDependency('" + PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE + "/" + jsTestBaseDirAsPath +
-                             "/jslvl2/jslvl3/sampleFile3b.js', ['3b'], []);\n", deps);
+                    "/jslvl2/jslvl3/sampleFile3b.js', ['3b'], []);\n", deps);
             } else if (resource.getUri().contains("sampleFile3c.js")) {
                 assertEquals("goog.addDependency('" + PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE + "/" + jsTestBaseDirAsPath +
-                             "/jslvl2/jslvl3/sampleFile3c.js', ['3c'], []);\n", deps);
+                    "/jslvl2/jslvl3/sampleFile3c.js', ['3c'], []);\n", deps);
             }
         }
 
@@ -212,14 +225,14 @@ public class GeonetWroModelFactoryTest {
     @Test
     public void testCreateDeclaredGroups() throws Exception {
         String sourcesXml = "<sources>\n"
-                            + "    <declarative name=\"groupName\" pathOnDisk=\"wro4j/src/test/resources/org/fao/geonet/wro4j\">\n"
-                            + "        <jsSource webappPath=\"sampleFile1a.js\" pathOnDisk=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES + "\"/>\n"
-                            + "        <jsSource webappPath=\"jslvl2/sampleFile2a.js\" minimize=\"false\"/>\n"
-                            + "        <cssSource webappPath=\"1a.css\" minimize=\"false\"/>\n"
-                            + "        <cssSource webappPath=\"anotherCss.less\" pathOnDisk=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES +
-                            "\"/>\n"
-                            + "    </declarative>\n"
-                            + "</sources>";
+            + "    <declarative name=\"groupName\" pathOnDisk=\"wro4j/src/test/resources/org/fao/geonet/wro4j\">\n"
+            + "        <jsSource webappPath=\"sampleFile1a.js\" pathOnDisk=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES + "\"/>\n"
+            + "        <jsSource webappPath=\"jslvl2/sampleFile2a.js\" minimize=\"false\"/>\n"
+            + "        <cssSource webappPath=\"1a.css\" minimize=\"false\"/>\n"
+            + "        <cssSource webappPath=\"anotherCss.less\" pathOnDisk=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES +
+            "\"/>\n"
+            + "    </declarative>\n"
+            + "</sources>";
 
         final WroModel wroModel = createRequireModel(sourcesXml);
 
@@ -276,12 +289,12 @@ public class GeonetWroModelFactoryTest {
         managerFactory.setExtraConfigFile(configFile);
         final GeonetWroModelFactory wroModelFactory = (GeonetWroModelFactory) managerFactory.newModelFactory();
         final ReadOnlyContext context = (ReadOnlyContext) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                new Class[]{ReadOnlyContext.class}, new InvocationHandler() {
-            @Override
-            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                return null;
-            }
-        });
+            new Class[]{ReadOnlyContext.class}, new InvocationHandler() {
+                @Override
+                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                    return null;
+                }
+            });
         wroModelFactory.setContext(context);
         wroModelFactory.setGeonetworkRootDirectory(getGeonetworkRootDirectory());
         return wroModelFactory.create();
@@ -313,9 +326,6 @@ public class GeonetWroModelFactoryTest {
         }
     }
 
-    @Rule
-    public TemporaryFolder tmpDir = new TemporaryFolder();
-
     @Test(expected = IllegalArgumentException.class)
     public void testTwoCssSameName() throws Exception {
         FileUtils.write(new File(tmpDir.getRoot(), "cssA.css"), "// cssA.css");
@@ -323,9 +333,9 @@ public class GeonetWroModelFactoryTest {
         FileUtils.write(new File(subdir, "cssA.css"), "// cssA2.css");
 
         String sourcesXml = "<sources><" + REQUIRE_EL + "><" + CSS_SOURCE_EL + " " +
-                            WEBAPP_ATT + "=\"\" " +
-                            PATH_ON_DISK_ATT + "=\"" + tmpDir.getRoot().getAbsolutePath() + "\"/>" +
-                            "</" + REQUIRE_EL + "></sources>";
+            WEBAPP_ATT + "=\"\" " +
+            PATH_ON_DISK_ATT + "=\"" + tmpDir.getRoot().getAbsolutePath() + "\"/>" +
+            "</" + REQUIRE_EL + "></sources>";
 
         createRequireModel(sourcesXml);
 
@@ -359,9 +369,9 @@ public class GeonetWroModelFactoryTest {
                 assertCanLoadResource(uriLocatorFactory, resource);
 
                 if (testMinimized) {
-                    if (group.getName().equals(GROUP_NAME_CLOSURE_DEPS) || 
-                    		nonMinifiedFiles.contains(uri.substring(uri.lastIndexOf("/") + 1)) ||
-                    		resource.getUri().startsWith(TEMPLATE_URI_PREFIX)) {
+                    if (group.getName().equals(GROUP_NAME_CLOSURE_DEPS) ||
+                        nonMinifiedFiles.contains(uri.substring(uri.lastIndexOf("/") + 1)) ||
+                        resource.getUri().startsWith(TEMPLATE_URI_PREFIX)) {
                         assertFalse(resource.getUri() + " was minimized but should not be", resource.isMinimize());
                     } else {
                         assertTrue(resource.getUri() + " was not minimized but should be", resource.isMinimize());
@@ -390,37 +400,27 @@ public class GeonetWroModelFactoryTest {
         assertTrue(groupNames.contains(GROUP_NAME_CLOSURE_DEPS));
     }
 
-    public static GeonetworkMavenWrojManagerFactory createManagerFactory() throws IOException {
-        final GeonetworkMavenWrojManagerFactory wrojManagerFactory = new GeonetworkMavenWrojManagerFactory();
-        File propertiesFile = File.createTempFile("abc", "properties");
-        Files.write(propertiesFile.toPath(), (WRO_SOURCES_KEY + "=\n").getBytes("UTF-8"));
-        wrojManagerFactory.setExtraConfigFile(propertiesFile);
-        Context.set(Context.standaloneContext());
-        wrojManagerFactory.initialize(new StandaloneContext());
-        return wrojManagerFactory;
-    }
-
     private String createSourcesXmlWithPathOnGroup() {
         return createSourcesXmlWithPathOnGroup(PATH_TO_ROOT_OF_TEST_RESOURCES);
     }
 
     private String createSourcesXmlWithPathOnGroup(String pathOnDisk) {
         return "<sources xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-               + "         xsi:noNamespaceSchemaLocation=\"../../../../web/src/main/webResources/WEB-INF/wro-sources.xsd\">\n"
-               + "    <require pathOnDisk=\"" + pathOnDisk + "\">\n"
-               + "        <jsSource webappPath=\"\">\n"
-               + "            <notMinimized>\n"
-               + "                <file>sampleFile1b.js</file>\n"
-               + "                <file>jslvl2/sampleFile2a.js</file>\n"
-               + "            </notMinimized>\n"
-               + "        </jsSource>\n"
-               + "        <cssSource webappPath=\"\">\n"
-               + "            <notMinimized>\n"
-               + "                <file>1a.css</file>\n"
-               + "            </notMinimized>\n"
-               + "        </cssSource>\n"
-               + "    </require>\n"
-               + "</sources>";
+            + "         xsi:noNamespaceSchemaLocation=\"../../../../web/src/main/webResources/WEB-INF/wro-sources.xsd\">\n"
+            + "    <require pathOnDisk=\"" + pathOnDisk + "\">\n"
+            + "        <jsSource webappPath=\"\">\n"
+            + "            <notMinimized>\n"
+            + "                <file>sampleFile1b.js</file>\n"
+            + "                <file>jslvl2/sampleFile2a.js</file>\n"
+            + "            </notMinimized>\n"
+            + "        </jsSource>\n"
+            + "        <cssSource webappPath=\"\">\n"
+            + "            <notMinimized>\n"
+            + "                <file>1a.css</file>\n"
+            + "            </notMinimized>\n"
+            + "        </cssSource>\n"
+            + "    </require>\n"
+            + "</sources>";
     }
 
     public String getGeonetworkRootDirectory() throws Exception {

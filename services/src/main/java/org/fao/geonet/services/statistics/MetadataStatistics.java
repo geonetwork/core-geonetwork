@@ -24,6 +24,7 @@ package org.fao.geonet.services.statistics;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.MetadataCategory;
@@ -53,7 +54,7 @@ public class MetadataStatistics extends NotInReadOnlyModeService {
 
     @Override
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-      
+
         // FIXME: Should be able to get stats only on template
 //        String isTemplate = Util.getParam(params, "isTemplate", "n");
         String type = Util.getParam(params, "by", "group");
@@ -61,77 +62,77 @@ public class MetadataStatistics extends NotInReadOnlyModeService {
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
         if (type.equals("owner")) {
-          Map<User, Integer> statsMap = metadataRepository.getMetadataStatistics().getOwnerToStatMap(metadataCount());
-          for (Entry<User, Integer> stat : statsMap.entrySet()) {
-            Element entry = new Element("stat");
-            entry.addContent(new Element("label").setText(stat.getKey().getName()));
-            entry.addContent(new Element("total").setText(stat.getValue() + ""));
-            response.addContent(entry);
-          }
+            Map<User, Integer> statsMap = metadataRepository.getMetadataStatistics().getOwnerToStatMap(metadataCount());
+            for (Entry<User, Integer> stat : statsMap.entrySet()) {
+                Element entry = new Element("stat");
+                entry.addContent(new Element("label").setText(stat.getKey().getName()));
+                entry.addContent(new Element("total").setText(stat.getValue() + ""));
+                response.addContent(entry);
+            }
         } else if (type.equals("source")) {
-          Map<Source, Integer> statsMap = metadataRepository.getMetadataStatistics().getSourceToStatMap(metadataCount());
-          for (Entry<Source, Integer> stat : statsMap.entrySet()) {
-            Element entry = new Element("stat");
-            entry.addContent(new Element("label").setText(stat.getKey().getName()));
-            entry.addContent(new Element("total").setText(stat.getValue() + ""));
-            response.addContent(entry);
-          }
+            Map<Source, Integer> statsMap = metadataRepository.getMetadataStatistics().getSourceToStatMap(metadataCount());
+            for (Entry<Source, Integer> stat : statsMap.entrySet()) {
+                Element entry = new Element("stat");
+                entry.addContent(new Element("label").setText(stat.getKey().getName()));
+                entry.addContent(new Element("total").setText(stat.getValue() + ""));
+                response.addContent(entry);
+            }
         } else if (type.equals("schema")) {
-          Map<String, Integer> statsMap = metadataRepository.getMetadataStatistics().getSchemaToStatMap(metadataCount());
-          for (Entry<String, Integer> stat : statsMap.entrySet()) {
-            Element entry = new Element("stat");
-            entry.addContent(new Element("label").setText(stat.getKey()));
-            entry.addContent(new Element("total").setText(stat.getValue() + ""));
-            response.addContent(entry);
-          }
+            Map<String, Integer> statsMap = metadataRepository.getMetadataStatistics().getSchemaToStatMap(metadataCount());
+            for (Entry<String, Integer> stat : statsMap.entrySet()) {
+                Element entry = new Element("stat");
+                entry.addContent(new Element("label").setText(stat.getKey()));
+                entry.addContent(new Element("total").setText(stat.getValue() + ""));
+                response.addContent(entry);
+            }
         } else if (type.equals("template")) {
-          Map<MetadataType, Integer> statsMap = metadataRepository.getMetadataStatistics().getMetadataTypeToStatMap(metadataCount());
-          for (Entry<MetadataType, Integer> stat : statsMap.entrySet()) {
-            Element entry = new Element("stat");
-            entry.addContent(new Element("label").setText(stat.getKey().toString()));
-            entry.addContent(new Element("total").setText(stat.getValue() + ""));
-            response.addContent(entry);
-          }
+            Map<MetadataType, Integer> statsMap = metadataRepository.getMetadataStatistics().getMetadataTypeToStatMap(metadataCount());
+            for (Entry<MetadataType, Integer> stat : statsMap.entrySet()) {
+                Element entry = new Element("stat");
+                entry.addContent(new Element("label").setText(stat.getKey().toString()));
+                entry.addContent(new Element("total").setText(stat.getValue() + ""));
+                response.addContent(entry);
+            }
         } else if (type.equals("harvested")) {
-          Map<Boolean, Integer> statsMap = metadataRepository.getMetadataStatistics().getIsHarvestedToStatMap(metadataCount());
-          for (Entry<Boolean, Integer> stat : statsMap.entrySet()) {
-            Element entry = new Element("stat");
-            entry.addContent(new Element("label").setText(stat.getKey().toString()));
-            entry.addContent(new Element("total").setText(stat.getValue() + ""));
-            response.addContent(entry);
-          }
+            Map<Boolean, Integer> statsMap = metadataRepository.getMetadataStatistics().getIsHarvestedToStatMap(metadataCount());
+            for (Entry<Boolean, Integer> stat : statsMap.entrySet()) {
+                Element entry = new Element("stat");
+                entry.addContent(new Element("label").setText(stat.getKey().toString()));
+                entry.addContent(new Element("total").setText(stat.getValue() + ""));
+                response.addContent(entry);
+            }
         } else if (type.equals("category")) {
-          Map<MetadataCategory, Integer> statsMap = metadataRepository.getMetadataStatistics().getMetadataCategoryToStatMap(metadataCount());
-          for (Entry<MetadataCategory, Integer> stat : statsMap.entrySet()) {
-            Element entry = new Element("stat");
-            entry.addContent(new Element("label").setText(stat.getKey().getLabel(context.getLanguage())));
-            entry.addContent(new Element("total").setText(stat.getValue() + ""));
-            response.addContent(entry);
-          }
+            Map<MetadataCategory, Integer> statsMap = metadataRepository.getMetadataStatistics().getMetadataCategoryToStatMap(metadataCount());
+            for (Entry<MetadataCategory, Integer> stat : statsMap.entrySet()) {
+                Element entry = new Element("stat");
+                entry.addContent(new Element("label").setText(stat.getKey().getLabel(context.getLanguage())));
+                entry.addContent(new Element("total").setText(stat.getValue() + ""));
+                response.addContent(entry);
+            }
         } else if (type.equals("status")) {
-          Map<StatusValue, Integer> statsMap = metadataRepository.getMetadataStatistics().getStatusValueToStatMap(metadataCount());
-          for (Entry<StatusValue, Integer> stat : statsMap.entrySet()) {
-            Element entry = new Element("stat");
-            entry.addContent(new Element("label").setText(stat.getKey().getLabel(context.getLanguage())));
-            entry.addContent(new Element("total").setText(stat.getValue() + ""));
-            response.addContent(entry);
-          }
+            Map<StatusValue, Integer> statsMap = metadataRepository.getMetadataStatistics().getStatusValueToStatMap(metadataCount());
+            for (Entry<StatusValue, Integer> stat : statsMap.entrySet()) {
+                Element entry = new Element("stat");
+                entry.addContent(new Element("label").setText(stat.getKey().getLabel(context.getLanguage())));
+                entry.addContent(new Element("total").setText(stat.getValue() + ""));
+                response.addContent(entry);
+            }
         } else if (type.equals("validity")) {
-          Map<MetadataValidationStatus, Integer> statsMap = metadataRepository.getMetadataStatistics().getMetadataValidationStatusToStatMap(metadataCount());
-          for (Entry<MetadataValidationStatus, Integer> stat : statsMap.entrySet()) {
-            Element entry = new Element("stat");
-            entry.addContent(new Element("label").setText(stat.getKey().toString()));
-            entry.addContent(new Element("total").setText(stat.getValue() + ""));
-            response.addContent(entry);
-          }
+            Map<MetadataValidationStatus, Integer> statsMap = metadataRepository.getMetadataStatistics().getMetadataValidationStatusToStatMap(metadataCount());
+            for (Entry<MetadataValidationStatus, Integer> stat : statsMap.entrySet()) {
+                Element entry = new Element("stat");
+                entry.addContent(new Element("label").setText(stat.getKey().toString()));
+                entry.addContent(new Element("total").setText(stat.getValue() + ""));
+                response.addContent(entry);
+            }
         } else {
-          Map<Group, Integer> statsMap = metadataRepository.getMetadataStatistics().getGroupOwnerToStatMap(metadataCount());
-          for (Entry<Group, Integer> stat : statsMap.entrySet()) {
-            Element entry = new Element("stat");
-            entry.addContent(new Element("label").setText(stat.getKey().getLabel(context.getLanguage())));
-            entry.addContent(new Element("total").setText(stat.getValue() + ""));
-            response.addContent(entry);
-          }
+            Map<Group, Integer> statsMap = metadataRepository.getMetadataStatistics().getGroupOwnerToStatMap(metadataCount());
+            for (Entry<Group, Integer> stat : statsMap.entrySet()) {
+                Element entry = new Element("stat");
+                entry.addContent(new Element("label").setText(stat.getKey().getLabel(context.getLanguage())));
+                entry.addContent(new Element("total").setText(stat.getValue() + ""));
+                response.addContent(entry);
+            }
         }
         return response;
     }

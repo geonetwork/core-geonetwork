@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
@@ -85,7 +86,7 @@ public class Get implements Service {
 
             final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
             final List<UserGroup> userGroups = userGroupRepository.findAll(hasUserId(Integer
-                    .valueOf(id)));
+                .valueOf(id)));
 
             for (UserGroup grp : userGroups) {
                 String grpId = "" + grp.getId().getGroupId();
@@ -98,7 +99,7 @@ public class Get implements Service {
                 //--- retrieve session user groups and check to see whether this user is
                 //--- allowed to get this info
                 List<Integer> adminlist = userGroupRepository.findGroupIds(where(hasUserId(Integer.valueOf(myUserId))).or(hasUserId
-                        (Integer.valueOf(id))));
+                    (Integer.valueOf(id))));
                 if (adminlist.isEmpty()) {
                     throw new IllegalArgumentException("You don't have rights to do this because the user you want to edit is not part of your group");
                 }

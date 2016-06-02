@@ -26,6 +26,7 @@ package org.fao.geonet.guiservices.isolanguages;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.jdom.Element;
 
@@ -33,28 +34,27 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-public class Get implements Service
-{
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class Get implements Service {
+    private Element languages;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-		if (languages == null)
-			languages = context.getBean(IsoLanguageRepository.class).findAllAsXml();
+    //--------------------------------------------------------------------------
 
-		return (Element) languages.clone();
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
 
-	//--------------------------------------------------------------------------
+        if (languages == null)
+            languages = context.getBean(IsoLanguageRepository.class).findAllAsXml();
 
-	private Element languages;
+        return (Element) languages.clone();
+    }
 }
 
 //=============================================================================

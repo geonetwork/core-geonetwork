@@ -40,167 +40,161 @@ import org.fao.geonet.Constants;
 
 //=============================================================================
 
-/** Simple class used to send an e-mail
-  */
+/**
+ * Simple class used to send an e-mail
+ */
 
-public class EMail
-{
-	private String sFrom;
-	private String sTo;
-	private String sSubject;
-	private String sBody;
+public class EMail {
+    private static final int DEFAULT_PORT = 25;
+    private String sFrom;
+    private String sTo;
+    private String sSubject;
+    private String sBody;
+    private String sMailServer;
+    private int iPort;
+    private String sLastError;
+    private BufferedReader in;
+    private OutputStreamWriter out;
 
-	private String sMailServer;
-	private int    iPort;
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructors
+    //---
+    //--------------------------------------------------------------------------
 
-	private String sLastError;
+    public EMail(String mailServer) {
+        setMailServer(mailServer, DEFAULT_PORT);
+    }
 
-	private BufferedReader     in;
-	private OutputStreamWriter out;
+    //--------------------------------------------------------------------------
 
-	private static final int DEFAULT_PORT = 25;
+    public EMail(String mailServer, int port) {
+        setMailServer(mailServer, port);
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructors
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- API
+    //---
+    //--------------------------------------------------------------------------
 
-	public EMail(String mailServer)
-	{
-		setMailServer(mailServer, DEFAULT_PORT);
-	}
+    /**
+     * setup the mail server (and port) to which the e-mail will be sent
+     */
 
-	//--------------------------------------------------------------------------
+    public void setMailServer(String mailServer, int port) {
+        sMailServer = mailServer;
+        iPort = port;
+    }
 
-	public EMail(String mailServer, int port)
-	{
-		setMailServer(mailServer, port);
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API
-	//---
-	//--------------------------------------------------------------------------
+    public void setFrom(String from) {
+        sFrom = from;
+    }
 
-	/** setup the mail server (and port) to which the e-mail will be sent
-	  */
+    //--------------------------------------------------------------------------
 
-	public void setMailServer(String mailServer, int port)
-	{
-		sMailServer = mailServer;
-		iPort       = port;
-	}
+    public void setTo(String to) {
+        sTo = to;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public void setFrom(String from)
-	{
-		sFrom = from;
-	}
+    public void setSubject(String subject) {
+        sSubject = subject;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public void setTo(String to)
-	{
-		sTo = to;
-	}
+    public void setBody(String body) {
+        sBody = body;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public void setSubject(String subject)
-	{
-		sSubject = subject;
-	}
+    /**
+     * Sends the message to the mail server
+     */
 
-	//--------------------------------------------------------------------------
+    public boolean send() throws IOException {
+        Socket socket = new Socket(sMailServer, iPort);
+        try {
+            in = new BufferedReader(new InputStreamReader(new DataInputStream(socket.getInputStream()), Charset.forName(Constants.ENCODING)));
+            out = new OutputStreamWriter(new DataOutputStream(socket.getOutputStream()), "ISO-8859-1");
 
-	public void setBody(String body)
-	{
-		sBody = body;
-	}
+            if (lookMailServer())
+                if (sendData("2", "HELO " + InetAddress.getLocalHost().getHostName() + "\r\n"))
+                    if (sendData("2", "MAIL FROM: <" + sFrom + ">\r\n"))
+                        if (sendData("2", "RCPT TO: <" + sTo + ">\r\n"))
+                            if (sendData("354", "DATA\r\n"))
+                                if (sendData("2", buildContent()))
+                                    if (sendData("2", "QUIT\r\n"))
+                                        return true;
 
-	//--------------------------------------------------------------------------
-	/** Sends the message to the mail server
-	  */
+            sendData("2", "QUIT\r\n");
+        } finally {
+            IOUtils.closeQuietly(socket);
+        }
+        return false;
+    }
 
-	public boolean send() throws IOException
-	{
-		Socket socket = new Socket(sMailServer, iPort);
-		try {
-    		in  = new BufferedReader(new InputStreamReader(new DataInputStream(socket.getInputStream()), Charset.forName(Constants.ENCODING)));
-    		out = new OutputStreamWriter(new DataOutputStream(socket.getOutputStream()), "ISO-8859-1");
-    
-    		if (lookMailServer())
-    		if (sendData("2",   "HELO " + InetAddress.getLocalHost().getHostName() + "\r\n"))
-    		if (sendData("2",   "MAIL FROM: <" + sFrom + ">\r\n"))
-    		if (sendData("2",   "RCPT TO: <" + sTo + ">\r\n"))
-    		if (sendData("354", "DATA\r\n"))
-    		if (sendData("2",   buildContent()))
-    		if (sendData("2",   "QUIT\r\n"))
-    			return true;
-    
-    		sendData("2", "QUIT\r\n");
-		} finally {
-		    IOUtils.closeQuietly(socket);
-		}
-		return false;
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public String getLastError() {
+        return sLastError;
+    }
 
-	public String getLastError() { return sLastError; }
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+    private boolean lookMailServer() throws IOException {
+        sLastError = in.readLine();
+        if (sLastError != null) {
+            return sLastError.startsWith("2");
+        } else {
+            return false;
+        }
+    }
 
-	private boolean lookMailServer() throws IOException
-	{
-		sLastError = in.readLine();
-		if (sLastError != null) {
-		    return sLastError.startsWith("2");
-		} else {
-		    return false;
-		}
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	/** Sends a string to the socket
-	  */
+    /**
+     * Sends a string to the socket
+     */
 
-	private boolean sendData(String error, String data) throws IOException
-	{
-		out.write(data);
-		out.flush();
+    private boolean sendData(String error, String data) throws IOException {
+        out.write(data);
+        out.flush();
 
-		sLastError = in.readLine();
-		if (sLastError != null) {
-		    return sLastError.startsWith(error);
-		} else {
-		    return false;
-		}
-	}
+        sLastError = in.readLine();
+        if (sLastError != null) {
+            return sLastError.startsWith(error);
+        } else {
+            return false;
+        }
+    }
 
-	//--------------------------------------------------------------------------
-	/** Builds the message putting all pieces together
-	  */
+    //--------------------------------------------------------------------------
 
-	private String buildContent()
-	{
-		return   "Date: "    + new Date().toString() + "\r\n" +
-					"From: "    + sFrom                 + "\r\n" +
-					"Subject: " + sSubject              + "\r\n"+
-					"To: "      + sTo                   + "\r\n" +
-					"\r\n"+
-									  sBody                 + "\r\n" +
-					"\r\n"+
-					"." +
-					"\r\n";
-	}
+    /**
+     * Builds the message putting all pieces together
+     */
+
+    private String buildContent() {
+        return "Date: " + new Date().toString() + "\r\n" +
+            "From: " + sFrom + "\r\n" +
+            "Subject: " + sSubject + "\r\n" +
+            "To: " + sTo + "\r\n" +
+            "\r\n" +
+            sBody + "\r\n" +
+            "\r\n" +
+            "." +
+            "\r\n";
+    }
 }
 
 //=============================================================================

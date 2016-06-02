@@ -34,15 +34,16 @@ public class OrWhere extends Where {
     public OrWhere(Where... clauses) {
         this(Arrays.asList(clauses));
     }
+
     public OrWhere(List<Where> newClauses) {
         this.clauses = new ArrayList<Where>(newClauses);
     }
-    
+
     @Override
     public String getClause() {
         StringBuilder builder = new StringBuilder();
         for (Where clause : clauses) {
-            if(builder.length() > 0) {
+            if (builder.length() > 0) {
                 builder.append(" OR ");
             }
             builder.append(clause.getClause());

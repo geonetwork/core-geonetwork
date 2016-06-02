@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -34,40 +35,38 @@ import java.util.List;
 
 //=============================================================================
 
-public class Editors implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Editors implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception {}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		UserSession   us   = context.getUserSession();
-		List<Element> list = OwnershipUtils.getOwnerUsers(context, us);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        UserSession us = context.getUserSession();
+        List<Element> list = OwnershipUtils.getOwnerUsers(context, us);
 
-		Element result = new Element("root");
+        Element result = new Element("root");
 
-		for (Element user : list)
-		{
-			user = (Element) user.clone();
-			user.removeChild("password");
-			user.setName("editor");
+        for (Element user : list) {
+            user = (Element) user.clone();
+            user.removeChild("password");
+            user.setName("editor");
 
-			result.addContent(user);
-		}
+            result.addContent(user);
+        }
 
-		return result;
-	}
+        return result;
+    }
 
 }
 

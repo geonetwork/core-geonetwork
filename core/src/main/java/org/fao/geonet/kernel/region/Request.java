@@ -24,13 +24,14 @@
 package org.fao.geonet.kernel.region;
 
 import com.google.common.base.Optional;
+
 import org.jdom.Element;
 
 import java.util.Collection;
 
 /**
  * Represents a search request for regions.  All predicates will be ORed together.
- * 
+ *
  * @author jeichar
  */
 public abstract class Request {
@@ -40,48 +41,56 @@ public abstract class Request {
     /**
      * Add label search predicate to the search request.  If this method is called multiple times
      * the predicates are ORed together.  IE it will find regions that contains label1 OR label2
+     *
      * @return this
      */
     public abstract Request label(String labelParam);
 
     /**
-     * Add categoryId search predicate to the search request.  If this method is called multiple times
-     * the predicates are ORed together.  IE it will find regions that are either in label1 OR label2
+     * Add categoryId search predicate to the search request.  If this method is called multiple
+     * times the predicates are ORed together.  IE it will find regions that are either in label1 OR
+     * label2
+     *
      * @return this
      */
     public abstract Request categoryId(String categoryIdParam);
+
     /**
      * Set the max number of results that will be loaded.  A value < 0 will load all results
+     *
      * @return this
      */
     public abstract Request maxRecords(int maxRecordsParam);
 
     /**
      * Execute the request and get the matching regions
-     * 
+     *
      * @return the collection of Regions found that match the predicates
      */
     public abstract Collection<Region> execute() throws Exception;
 
     /**
-     * Add an region id search predicate to the search request.  If this method is called multiple times
-     * the predicates are ORed together.  IE it will find regions that have EITHER  id1 OR id2
+     * Add an region id search predicate to the search request.  If this method is called multiple
+     * times the predicates are ORed together.  IE it will find regions that have EITHER  id1 OR
+     * id2
+     *
      * @return this
      */
     public abstract Request id(String regionId);
 
     /**
-     * Executes query and returns the found region or null.  IllegalStateException is thrown if there is > 1 results.
-     * 
+     * Executes query and returns the found region or null.  IllegalStateException is thrown if
+     * there is > 1 results.
+     *
      * @return the region or null
      * @throws IllegalStateException if there was more than one region found
      */
     public Region get() throws Exception {
         Collection<Region> regions = execute();
-        if(regions.size() > 1) {
+        if (regions.size() > 1) {
             throw new IllegalStateException("there is more than one region found");
         }
-        if(regions.isEmpty()) {
+        if (regions.isEmpty()) {
             return null;
         } else {
             return regions.iterator().next();
@@ -105,32 +114,28 @@ public abstract class Request {
     /**
      * Given the request information attempt to determine the last modified value.
      *
-     * This should be an efficient operation if the operation takes too long to determine (for example loading many regions and
-     * determining the last modified of all of them) then {@link Long#MAX_VALUE} should be returned.  This will mean that the
-     * lastModified check will be skipped and the response will be returned to the client each time.
+     * This should be an efficient operation if the operation takes too long to determine (for
+     * example loading many regions and determining the last modified of all of them) then {@link
+     * Long#MAX_VALUE} should be returned.  This will mean that the lastModified check will be
+     * skipped and the response will be returned to the client each time.
      *
-     * {@link Long#MAX_VALUE} can also be returned if it is too difficult (implementation wise or otherwise)
+     * {@link Long#MAX_VALUE} can also be returned if it is too difficult (implementation wise or
+     * otherwise)
      *
-     * If the id or category id does not apply then Optional.absent() should be returned since this should not affect the last modified
-     * score.  This can be used as a kind of "applicable"
+     * If the id or category id does not apply then Optional.absent() should be returned since this
+     * should not affect the last modified score.  This can be used as a kind of "applicable"
      *
-     * Examples:
-     * <ul>
-     *    <li>
-     *        If the request is a category or a specific region ID it can be easily calculated what the last modified date was.
-     *    </li>
-     *    <li>
-     *        The last modified date is known for the entire data set then it can be easily calculated for any request
-     *    </li>
-     *    <li>
-     *        If each category could have a different last modified then perhaps only id and category requests can have a last modified
-     *        or the most recent last modified of all categories could be the taken
-     *    </li>
-     * </ul>
-     * @return Optional.absent() if the search parameters are not applicable to this Region implementation,
-     *         {@link Long#MAX_VALUE} if the value cannot be accurately calculated for the parameters set on the search object
-     *         otherwise the last modified value of the last modified region that would be in the response if request is executed.
+     * Examples: <ul> <li> If the request is a category or a specific region ID it can be easily
+     * calculated what the last modified date was. </li> <li> The last modified date is known for
+     * the entire data set then it can be easily calculated for any request </li> <li> If each
+     * category could have a different last modified then perhaps only id and category requests can
+     * have a last modified or the most recent last modified of all categories could be the taken
+     * </li> </ul>
      *
+     * @return Optional.absent() if the search parameters are not applicable to this Region
+     * implementation, {@link Long#MAX_VALUE} if the value cannot be accurately calculated for the
+     * parameters set on the search object otherwise the last modified value of the last modified
+     * region that would be in the response if request is executed.
      */
     public abstract Optional<Long> getLastModified() throws Exception;
 }

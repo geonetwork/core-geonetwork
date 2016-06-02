@@ -1,4 +1,3 @@
-
 package org.fao.geonet.api.records.model.related;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,8 +24,6 @@ import javax.xml.bind.annotation.XmlValue;
  *   &lt;/simpleContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "localizedString", propOrder = {
@@ -42,10 +39,7 @@ public class LocalizedString {
     /**
      * Gets the value of the value property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @return possible object is {@link String }
      */
     public String getValue() {
         return value;
@@ -54,10 +48,7 @@ public class LocalizedString {
     /**
      * Sets the value of the value property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value allowed object is {@link String }
      */
     public void setValue(String value) {
         this.value = value;
@@ -66,10 +57,7 @@ public class LocalizedString {
     /**
      * Gets the value of the lang property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @return possible object is {@link String }
      */
     public String getLang() {
         return lang;
@@ -78,10 +66,7 @@ public class LocalizedString {
     /**
      * Sets the value of the lang property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value allowed object is {@link String }
      */
     public void setLang(String value) {
         this.lang = value;

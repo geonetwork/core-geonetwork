@@ -37,7 +37,8 @@ import java.util.Observer;
 //import org.fao.geonet.services.util.z3950.GNSearchTask;
 
 /**
- * @author 'Timo Proescholdt <tproescholdt@wmo.int>' interface between JZkit and GN. not currently used
+ * @author 'Timo Proescholdt <tproescholdt@wmo.int>' interface between JZkit and GN. not currently
+ *         used
  */
 public class GNSearchable implements Searchable {
 
@@ -81,11 +82,11 @@ public class GNSearchable implements Searchable {
 
         try {
             result = new GNResultSet(new GNXMLQuery(q, ctx), userInfo, observers, cnt.getSrvctx()); // SRUResultSet(observers, base_url,
-                                                                                                    // getCQLString(q), code);
+            // getCQLString(q), code);
             result.evaluate(timeout);
             result.setStatus(IRResultSetStatus.COMPLETE);
         } catch (Exception e) {
-            if(result!=null)
+            if (result != null)
                 result.setStatus(IRResultSetStatus.FAILURE);
             e.printStackTrace();
         }
@@ -99,7 +100,7 @@ public class GNSearchable implements Searchable {
     }
 
     public void setRecordArchetypes(@SuppressWarnings("rawtypes")
-    Map recordSyntaxArchetypes) {
+                                        Map recordSyntaxArchetypes) {
         this.recordArchetypes = recordSyntaxArchetypes;
 
     }

@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -40,37 +41,37 @@ import java.nio.file.Path;
  * For editing : adds an attribute to a metadata. Access is restricted.
  */
 public class AddAttribute extends NotInReadOnlyModeService {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-		AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
 
         ajaxEditUtils.preprocessUpdate(params, context);
 
 
-		String id      = Util.getParam(params, Params.ID);
-		String ref     = Util.getParam(params, Params.REF);
-		String name    = Util.getParam(params, Params.NAME);
+        String id = Util.getParam(params, Params.ID);
+        String ref = Util.getParam(params, Params.REF);
+        String name = Util.getParam(params, Params.NAME);
 
-		//-----------------------------------------------------------------------
-		//--- add element and return status
+        //-----------------------------------------------------------------------
+        //--- add element and return status
 
-		ajaxEditUtils.updateContent(params);
+        ajaxEditUtils.updateContent(params);
 
-		// version already checked in updateContent
-		if (! ajaxEditUtils.addAttribute(id, ref, name, null))
-			throw new ConcurrentUpdateEx(id);
+        // version already checked in updateContent
+        if (!ajaxEditUtils.addAttribute(id, ref, name, null))
+            throw new ConcurrentUpdateEx(id);
 
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-		return elResp;
-	}
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+        return elResp;
+    }
 }

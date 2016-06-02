@@ -26,8 +26,10 @@ package org.fao.geonet.services.metadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadServerResponseEx;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -51,123 +53,120 @@ import java.net.URL;
 import java.nio.file.Path;
 
 /**
- * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and
- * the system setting "localrating/enable" is false (the default), the user's rating is shared
- * between GN nodes partaking in this harvesting network. If the metadata was not harvested or
- * if "localrating/enable" is true then 'local rating' is applied, counting only rating from
- * users of this node itself.
+ * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and the
+ * system setting "localrating/enable" is false (the default), the user's rating is shared between
+ * GN nodes partaking in this harvesting network. If the metadata was not harvested or if
+ * "localrating/enable" is true then 'local rating' is applied, counting only rating from users of
+ * this node itself.
  *
- * When a remote rating is applied, the local rating is not updated. It will be updated 
- * on the next harvest run (FIXME ?).
+ * When a remote rating is applied, the local rating is not updated. It will be updated on the next
+ * harvest run (FIXME ?).
  */
 public class Rate extends NotInReadOnlyModeService {
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager    dm = gc.getBean(DataManager.class);
-		HarvestManager hm = gc.getBean(HarvestManager.class);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getBean(DataManager.class);
+        HarvestManager hm = gc.getBean(HarvestManager.class);
 
-		String id = Utils.getIdentifierFromParameters(params, context);
+        String id = Utils.getIdentifierFromParameters(params, context);
 
-		String rat = Util.getParam(params, Params.RATING);
-		String ip  = context.getIpAddress();
+        String rat = Util.getParam(params, Params.RATING);
+        String ip = context.getIpAddress();
 
-		int iLocalId = Integer.parseInt(id);
-		if (!dm.existsMetadata(iLocalId))
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+        int iLocalId = Integer.parseInt(id);
+        if (!dm.existsMetadata(iLocalId))
+            throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		if (ip == null)
-			ip = "???.???.???.???";
+        if (ip == null)
+            ip = "???.???.???.???";
 
-		if (!Lib.type.isInteger(rat))
-			throw new BadParameterEx(Params.RATING, rat);
+        if (!Lib.type.isInteger(rat))
+            throw new BadParameterEx(Params.RATING, rat);
 
-		int rating = Integer.parseInt(rat);
+        int rating = Integer.parseInt(rat);
 
-		if (rating < 0 || rating > 5)
-			throw new BadParameterEx(Params.RATING, rat);
+        if (rating < 0 || rating > 5)
+            throw new BadParameterEx(Params.RATING, rat);
 
-		String harvUuid = getHarvestingUuid(context, id);
+        String harvUuid = getHarvestingUuid(context, id);
 
-		// look up value of localrating/enable
-		SettingManager settingManager = gc.getBean(SettingManager.class);
-		boolean localRating = settingManager.getValueAsBool("system/localrating/enable", false);
-		
-		if (localRating || harvUuid == null)
-			//--- metadata is local, just rate it
-			rating = dm.rateMetadata(Integer.valueOf(id), ip, rating);
-		else
-		{
-			//--- the metadata is harvested, is type=geonetwork?
+        // look up value of localrating/enable
+        SettingManager settingManager = gc.getBean(SettingManager.class);
+        boolean localRating = settingManager.getValueAsBool("system/localrating/enable", false);
 
-			AbstractHarvester ah = hm.getHarvester(harvUuid);
+        if (localRating || harvUuid == null)
+            //--- metadata is local, just rate it
+            rating = dm.rateMetadata(Integer.valueOf(id), ip, rating);
+        else {
+            //--- the metadata is harvested, is type=geonetwork?
 
-			if (ah.getType().equals(GeonetHarvester.TYPE)) {
-				String uuid = dm.getMetadataUuid(id);
-				rating = setRemoteRating(context, (GeonetParams) ah.getParams(), uuid, rating);
-			} else {
-				rating = -1;
+            AbstractHarvester ah = hm.getHarvester(harvUuid);
+
+            if (ah.getType().equals(GeonetHarvester.TYPE)) {
+                String uuid = dm.getMetadataUuid(id);
+                rating = setRemoteRating(context, (GeonetParams) ah.getParams(), uuid, rating);
+            } else {
+                rating = -1;
             }
-		}
-
-		return new Element(Params.RATING).setText(Integer.toString(rating));
-	}
-
-	//--------------------------------------------------------------------------
-
-	private String getHarvestingUuid(ServiceContext context, String id) throws Exception
-	{
-        final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
-
-		//--- if we don't have any metadata, just return
-
-		if (metadata == null) {
-			throw new MetadataNotFoundEx("id:"+ id);
         }
 
-		String harvUuid = metadata.getHarvestInfo().getUuid();
+        return new Element(Params.RATING).setText(Integer.toString(rating));
+    }
 
-		//--- metadata not harvested
+    //--------------------------------------------------------------------------
 
-		return (harvUuid == null || harvUuid.length() == 0) ? null : harvUuid;
-	}
+    private String getHarvestingUuid(ServiceContext context, String id) throws Exception {
+        final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
 
-	//--------------------------------------------------------------------------
+        //--- if we don't have any metadata, just return
 
-	private int setRemoteRating(ServiceContext context, GeonetParams params, String uuid, int rating) throws Exception
-	{
-        if(context.isDebugEnabled()) context.debug("Rating remote metadata with uuid:"+ uuid);
+        if (metadata == null) {
+            throw new MetadataNotFoundEx("id:" + id);
+        }
 
-		XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.host));
+        String harvUuid = metadata.getHarvestInfo().getUuid();
 
-		Lib.net.setupProxy(context, req);
+        //--- metadata not harvested
 
-		req.setAddress(params.getServletPath() +"/srv/eng/"+ Geonet.Service.XML_METADATA_RATE);
-		req.clearParams();
-		req.addParam("uuid",   uuid);
-		req.addParam("rating", rating);
+        return (harvUuid == null || harvUuid.length() == 0) ? null : harvUuid;
+    }
 
-		Element response = req.execute();
+    //--------------------------------------------------------------------------
 
-		if (!response.getName().equals(Params.RATING))
-			throw new BadServerResponseEx(response);
+    private int setRemoteRating(ServiceContext context, GeonetParams params, String uuid, int rating) throws Exception {
+        if (context.isDebugEnabled()) context.debug("Rating remote metadata with uuid:" + uuid);
 
-		return Integer.parseInt(response.getText());
-	}
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.host));
+
+        Lib.net.setupProxy(context, req);
+
+        req.setAddress(params.getServletPath() + "/srv/eng/" + Geonet.Service.XML_METADATA_RATE);
+        req.clearParams();
+        req.addParam("uuid", uuid);
+        req.addParam("rating", rating);
+
+        Element response = req.execute();
+
+        if (!response.getName().equals(Params.RATING))
+            throw new BadServerResponseEx(response);
+
+        return Integer.parseInt(response.getText());
+    }
 }

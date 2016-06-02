@@ -44,130 +44,44 @@ import java.util.LinkedList;
 import java.util.zip.ZipFile;
 
 /**
- * Instances of this class represent geographic files. A geographic file can be
- * a ZIP file including ESRI Shapefiles and GeoTIFF files, or an individual
- * GeoTIFF file.
+ * Instances of this class represent geographic files. A geographic file can be a ZIP file including
+ * ESRI Shapefiles and GeoTIFF files, or an individual GeoTIFF file.
  *
  * @author Éric Lemoine, Camptocamp France SAS
  * @author Francois Prunayre
  */
 public class GeoFile implements Closeable {
-	private FileSystem zipFile = null;
-	private Path file = null;
-	private boolean _containsSld = false;
-	private String _sldBody;
+    private FileSystem zipFile = null;
+    private Path file = null;
+    private boolean _containsSld = false;
+    private String _sldBody;
 
-	/**
-	 * Constructs a <code>GeoFile</code> object from a <code>File</code> object.
-	 *
-	 * @param f
-	 *            the file from wich the <code>GeoFile</code> object is
-	 *            constructed
-	 * @throws java.io.IOException
-	 *             if an input/output exception occurs while opening a ZIP file
-	 */
-	GeoFile(Path f) throws IOException {
-		file = f;
-		try {
-			zipFile = ZipUtil.openZipFs(file);
-		} catch (IOException | URISyntaxException e) {
-			zipFile = null;
-		}
+    /**
+     * Constructs a <code>GeoFile</code> object from a <code>File</code> object.
+     *
+     * @param f the file from wich the <code>GeoFile</code> object is constructed
+     * @throws java.io.IOException if an input/output exception occurs while opening a ZIP file
+     */
+    GeoFile(Path f) throws IOException {
+        file = f;
+        try {
+            zipFile = ZipUtil.openZipFs(file);
+        } catch (IOException | URISyntaxException e) {
+            zipFile = null;
+        }
     }
 
-	/**
-	 * Returns the names of the vector layers (Shapefiles) in the geographic
-	 * file.
-	 *
-	 * @param onlyOneFileAllowed
-	 *            Return exception if more than one shapefile found
-	 *
-	 * @return a collection of layer names
-	 * @throws IllegalArgumentException
-	 *             If more than on shapefile is found and onlyOneFileAllowed is
-	 *             true or if Shapefile name is not equal to zip file base name
-	 */
-	public Collection<String> getVectorLayers(final boolean onlyOneFileAllowed) throws IOException {
-		final LinkedList<String> layers = new LinkedList<String>();
-		if (zipFile != null) {
-            for (Path path : zipFile.getRootDirectories()) {
-                Files.walkFileTree(path, new SimpleFileVisitor<Path>(){
-                    @Override
-                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                        String fileName = file.getFileName().toString();
-                        if (fileIsShp(fileName)) {
-                            String base = getBase(fileName);
+    private static String getExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1,
+            fileName.length());
+    }
 
-                            if (onlyOneFileAllowed) {
-                                if (layers.size() > 1)
-                                    throw new IllegalArgumentException(
-                                            "Only one shapefile per zip is allowed. "
-                                            + layers.size()
-                                            + " shapefiles found.");
-
-                                if (base.equals(getBase(fileName))) {
-                                    layers.add(base);
-                                } else
-                                    throw new IllegalArgumentException(
-                                            "Shapefile name ("
-                                            + base
-                                            + ") is not equal to ZIP file name ("
-                                            + file.getFileName() + ").");
-                            } else {
-                                layers.add(base);
-                            }
-                        }
-                        if (fileIsSld(fileName)) {
-                            _containsSld = true;
-                            _sldBody = fileName;
-                        }
-                        return FileVisitResult.CONTINUE;
-                    }
-                });
-            }
-		if (_containsSld) {
-			ZipFile zf = new ZipFile(new File(this.file.toString()));
-			InputStream is = zf.getInputStream(zf.getEntry(_sldBody));
-			BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-			String line;
-			_sldBody = "";
-			while ((line = br.readLine()) != null) { _sldBody += line; }
-			br.close();
-			is.close();
-			zf.close();
-		}
-                        }
-
-		return layers;
-	}
-
-	/**
-	 * Returns the names of the raster layers (GeoTIFFs) in the geographic file.
-	 *
-	 * @return a collection of layer names
-	 */
-	public Collection<String> getRasterLayers() throws IOException {
-        final LinkedList<String> layers = new LinkedList<String>();
-        if (zipFile != null) {
-            for (Path path : zipFile.getRootDirectories()) {
-                Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-                    @Override
-                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                        String fileName = file.getFileName().toString();
-                        if (fileIsGeotif(fileName)) {
-                            layers.add(getBase(fileName));
-                        }
-                        return FileVisitResult.CONTINUE;
-                    }
-                });
-            }
-        } else {
-            String fileName = file.getFileName().toString();
-            if (fileIsGeotif(fileName)) {
-                layers.add(getBase(fileName));
-            }
-        }
-        return layers;
+    public static Boolean fileIsGeotif(String fileName) {
+        String extension = getExtension(fileName);
+        return extension.equalsIgnoreCase("tif")
+            || extension.equalsIgnoreCase("tiff")
+            || extension.equalsIgnoreCase("geotif")
+            || extension.equalsIgnoreCase("geotiff");
     }
 //
 //	/**
@@ -214,49 +128,130 @@ public class GeoFile implements Closeable {
 //		return f;
 //	}
 
-	private static String getExtension(String fileName) {
-		return fileName.substring(fileName.lastIndexOf(".") + 1,
-				fileName.length());
-	}
+    public static Boolean fileIsECW(String fileName) {
+        String extension = getExtension(fileName);
+        return extension.equalsIgnoreCase("ecw");
+    }
 
-	private String getBase(String fileName) {
-		return fileName.substring(0, fileName.lastIndexOf("."));
-	}
+    public static Boolean fileIsRASTER(String fileName) {
+        return fileIsGeotif(fileName) || fileIsECW(fileName);
+    }
 
-	private Boolean fileIsShp(String fileName) {
-		String extension = getExtension(fileName);
-		return extension.equalsIgnoreCase("shp");
-	}
+    /**
+     * Returns the names of the vector layers (Shapefiles) in the geographic file.
+     *
+     * @param onlyOneFileAllowed Return exception if more than one shapefile found
+     * @return a collection of layer names
+     * @throws IllegalArgumentException If more than on shapefile is found and onlyOneFileAllowed is
+     *                                  true or if Shapefile name is not equal to zip file base
+     *                                  name
+     */
+    public Collection<String> getVectorLayers(final boolean onlyOneFileAllowed) throws IOException {
+        final LinkedList<String> layers = new LinkedList<String>();
+        if (zipFile != null) {
+            for (Path path : zipFile.getRootDirectories()) {
+                Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        String fileName = file.getFileName().toString();
+                        if (fileIsShp(fileName)) {
+                            String base = getBase(fileName);
 
-	private Boolean fileIsSld(String fileName) {
-		String extension = getExtension(fileName);
-		return extension.equalsIgnoreCase("sld");
-	}
+                            if (onlyOneFileAllowed) {
+                                if (layers.size() > 1)
+                                    throw new IllegalArgumentException(
+                                        "Only one shapefile per zip is allowed. "
+                                            + layers.size()
+                                            + " shapefiles found.");
 
-	public static Boolean fileIsGeotif(String fileName) {
-		String extension = getExtension(fileName);
-		return extension.equalsIgnoreCase("tif")
-				|| extension.equalsIgnoreCase("tiff")
-				|| extension.equalsIgnoreCase("geotif")
-				|| extension.equalsIgnoreCase("geotiff");
-	}
+                                if (base.equals(getBase(fileName))) {
+                                    layers.add(base);
+                                } else
+                                    throw new IllegalArgumentException(
+                                        "Shapefile name ("
+                                            + base
+                                            + ") is not equal to ZIP file name ("
+                                            + file.getFileName() + ").");
+                            } else {
+                                layers.add(base);
+                            }
+                        }
+                        if (fileIsSld(fileName)) {
+                            _containsSld = true;
+                            _sldBody = fileName;
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            }
+            if (_containsSld) {
+                ZipFile zf = new ZipFile(new File(this.file.toString()));
+                InputStream is = zf.getInputStream(zf.getEntry(_sldBody));
+                BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+                String line;
+                _sldBody = "";
+                while ((line = br.readLine()) != null) {
+                    _sldBody += line;
+                }
+                br.close();
+                is.close();
+                zf.close();
+            }
+        }
 
-	public static Boolean fileIsECW(String fileName) {
-		String extension = getExtension(fileName);
-		return extension.equalsIgnoreCase("ecw");
-	}
+        return layers;
+    }
 
-	public static Boolean fileIsRASTER(String fileName) {
-		return fileIsGeotif(fileName) || fileIsECW(fileName);
-	}
+    /**
+     * Returns the names of the raster layers (GeoTIFFs) in the geographic file.
+     *
+     * @return a collection of layer names
+     */
+    public Collection<String> getRasterLayers() throws IOException {
+        final LinkedList<String> layers = new LinkedList<String>();
+        if (zipFile != null) {
+            for (Path path : zipFile.getRootDirectories()) {
+                Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        String fileName = file.getFileName().toString();
+                        if (fileIsGeotif(fileName)) {
+                            layers.add(getBase(fileName));
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            }
+        } else {
+            String fileName = file.getFileName().toString();
+            if (fileIsGeotif(fileName)) {
+                layers.add(getBase(fileName));
+            }
+        }
+        return layers;
+    }
 
-	public Boolean containsSld() {
-		return this._containsSld;
-	}
+    private String getBase(String fileName) {
+        return fileName.substring(0, fileName.lastIndexOf("."));
+    }
 
-	public String getSld() {
-		return this._sldBody;
-	}
+    private Boolean fileIsShp(String fileName) {
+        String extension = getExtension(fileName);
+        return extension.equalsIgnoreCase("shp");
+    }
+
+    private Boolean fileIsSld(String fileName) {
+        String extension = getExtension(fileName);
+        return extension.equalsIgnoreCase("sld");
+    }
+
+    public Boolean containsSld() {
+        return this._containsSld;
+    }
+
+    public String getSld() {
+        return this._sldBody;
+    }
 
     @Override
     public void close() throws IOException {

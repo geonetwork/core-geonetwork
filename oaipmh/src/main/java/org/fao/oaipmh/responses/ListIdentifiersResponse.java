@@ -26,6 +26,7 @@ package org.fao.oaipmh.responses;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.ListIdentifiersRequest;
@@ -37,92 +38,97 @@ import org.xml.sax.SAXException;
 
 //=============================================================================
 
-public class ListIdentifiersResponse extends ListResponse
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class ListIdentifiersResponse extends ListResponse {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public ListIdentifiersResponse() {}
+    private List<Header> headers = new ArrayList<Header>();
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public ListIdentifiersResponse(ListRequest lr, Element response)
-	{
-		super(lr, response);
-	}
+    public ListIdentifiersResponse() {
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public Header next() throws IOException, OaiPmhException, JDOMException, SAXException, Exception
-	{
-		return (Header) super.next();
-	}
+    public ListIdentifiersResponse(ListRequest lr, Element response) {
+        super(lr, response);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void clearHeaders() { headers.clear(); }
+    public Header next() throws IOException, OaiPmhException, JDOMException, SAXException, Exception {
+        return (Header) super.next();
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void addHeader(Header h)
-	{
-		headers.add(h);
-	}
+    public void clearHeaders() {
+        headers.clear();
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public int getHeadersCount() { return headers.size(); }
+    public void addHeader(Header h) {
+        headers.add(h);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public int getSize() { return getHeadersCount(); } ;
+    public int getHeadersCount() {
+        return headers.size();
+    }
 
-	//---------------------------------------------------------------------------
+    ;
 
-	public Element toXml()
-	{
-		Element root = new Element(ListIdentifiersRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
+    //---------------------------------------------------------------------------
 
-		for (Header h : headers)
-			root.addContent(h.toXml());
+    public int getSize() {
+        return getHeadersCount();
+    }
 
-		ResumptionToken token = getResumptionToken();
+    //---------------------------------------------------------------------------
+    //---
+    //--- Protected methods
+    //---
+    //---------------------------------------------------------------------------
 
-		if (token != null)
-			root.addContent(token.toXml());
+    public Element toXml() {
+        Element root = new Element(ListIdentifiersRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
 
-		return root;
-	}
+        for (Header h : headers)
+            root.addContent(h.toXml());
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Protected methods
-	//---
-	//---------------------------------------------------------------------------
+        ResumptionToken token = getResumptionToken();
 
-	protected Object createObject(Element object)
-	{
-		return new Header(object);
-	}
+        if (token != null)
+            root.addContent(token.toXml());
 
-	//---------------------------------------------------------------------------
+        return root;
+    }
 
-	protected String getListElementName() { return "header"; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+    protected Object createObject(Element object) {
+        return new Header(object);
+    }
 
-	private List<Header> headers = new ArrayList<Header>();
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+
+    protected String getListElementName() {
+        return "header";
+    }
 }
 
 //=============================================================================

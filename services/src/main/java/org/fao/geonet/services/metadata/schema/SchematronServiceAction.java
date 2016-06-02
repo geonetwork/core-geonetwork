@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.schema;
 
 import jeeves.server.ServiceConfig;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Params;

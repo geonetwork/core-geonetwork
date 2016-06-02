@@ -24,8 +24,10 @@
 package org.fao.geonet.services.resources;
 
 import org.fao.geonet.exceptions.ObjectNotFoundEx;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -45,56 +47,54 @@ import java.nio.file.Path;
  */
 @Deprecated
 public class Remove extends NotInReadOnlyModeService {
-	private Update  update = new Update();
+    private Update update = new Update();
 
-	//-----------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //-----------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception
-	{
-		update.init(appPath, params);
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        update.init(appPath, params);
+    }
 
-	//-----------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //-----------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		DataManager   dataMan   = gc.getBean(DataManager.class);
+        DataManager dataMan = gc.getBean(DataManager.class);
 
-		String id = Utils.getIdentifierFromParameters(params, context);
-		String ref    = Util.getParam(params, Params.REF);
-		String access = Util.getParam(params, Params.ACCESS);
+        String id = Utils.getIdentifierFromParameters(params, context);
+        String ref = Util.getParam(params, Params.REF);
+        String access = Util.getParam(params, Params.ACCESS);
 
-		Lib.resource.checkEditPrivilege(context, id);
+        Lib.resource.checkEditPrivilege(context, id);
 
-		// get online resource name
+        // get online resource name
         boolean forEditing = true, withValidationErrors = false, keepXlinkAttributes = false;
         Element metadata = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
-		Element elem     = dataMan.getElementByRef(metadata, ref);
+        Element elem = dataMan.getElementByRef(metadata, ref);
 
-		if (elem == null)
-			throw new ObjectNotFoundEx("element with ref='" + ref + "'");
+        if (elem == null)
+            throw new ObjectNotFoundEx("element with ref='" + ref + "'");
 
-		String fname = elem.getText();
+        String fname = elem.getText();
 
         // Remove the file and update the file upload/downloads tables
         IResourceRemoveHandler removeHook = (IResourceRemoveHandler) context.getApplicationContext().getBean("resourceRemoveHandler");
         removeHook.onDelete(context, params, Integer.parseInt(id), fname, access);
 
-		// update the metadata
-		params.addContent(new Element("_" + ref));
-		Element version = params.getChild("version");
-		version.setText((Integer.parseInt(version.getText()) + 1)  + "");
-		return update.exec(params, context);
-	}
+        // update the metadata
+        params.addContent(new Element("_" + ref));
+        Element version = params.getChild("version");
+        version.setText((Integer.parseInt(version.getText()) + 1) + "");
+        return update.exec(params, context);
+    }
 }

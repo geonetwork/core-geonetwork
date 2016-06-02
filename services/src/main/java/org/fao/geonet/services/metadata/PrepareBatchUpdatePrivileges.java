@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Operation;
@@ -42,34 +43,35 @@ import java.util.Set;
 
 //=============================================================================
 
-/** Return all groups of the current user with operations included.
-  */
+/**
+ * Return all groups of the current user with operations included.
+ */
 
 public class PrepareBatchUpdatePrivileges implements Service {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		AccessManager am = gc.getBean(AccessManager.class);
-		UserSession   us = context.getUserSession();
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        AccessManager am = gc.getBean(AccessManager.class);
+        UserSession us = context.getUserSession();
 
-		Element ownerId = new Element("ownerid").setText(us.getUserId());
-		Element hasOwner = new Element("owner").setText("true");
+        Element ownerId = new Element("ownerid").setText(us.getUserId());
+        Element hasOwner = new Element("owner").setText("true");
 
-		//--- get all operations
+        //--- get all operations
         List<Operation> operationList = context.getBean(OperationRepository.class).findAll();
 
         // elOper is for returned XML and keeps backwards compatibility
@@ -79,46 +81,45 @@ public class PrepareBatchUpdatePrivileges implements Service {
             elOper.addContent(operation.asXml());
         }
 
-		//--- retrieve groups operations
-		Set<Integer> userGroups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
+        //--- retrieve groups operations
+        Set<Integer> userGroups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
 
-		Element elGroup = context.getBean(GroupRepository.class).findAllAsXml();
+        Element elGroup = context.getBean(GroupRepository.class).findAllAsXml();
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> list = elGroup.getChildren();
 
-		for (Element el : list) {
-			el.setName(Geonet.Elem.GROUP);
+        for (Element el : list) {
+            el.setName(Geonet.Elem.GROUP);
 
-			//--- get all operations that this group can do on given metadata
-			String sGrpId = el.getChildText("id");
+            //--- get all operations that this group can do on given metadata
+            String sGrpId = el.getChildText("id");
 
-			el.setAttribute("userGroup", userGroups.contains(Integer.valueOf(sGrpId)) ? "true" : "false");
+            el.setAttribute("userGroup", userGroups.contains(Integer.valueOf(sGrpId)) ? "true" : "false");
 
-			//--- now extend the group list adding proper operations
-			@SuppressWarnings("unchecked")
+            //--- now extend the group list adding proper operations
+            @SuppressWarnings("unchecked")
             List<Element> listOper = elOper.getChildren();
 
-			for(int j=0; j<listOper.size(); j++)
-			{
-				String operId = ((Element) listOper.get(j)).getChildText("id");
-				Element elGrpOper = new Element(Geonet.Elem.OPER)
-													.addContent(new Element(Geonet.Elem.ID).setText(operId));
-				el.addContent(elGrpOper);
-			}
-		}
+            for (int j = 0; j < listOper.size(); j++) {
+                String operId = ((Element) listOper.get(j)).getChildText("id");
+                Element elGrpOper = new Element(Geonet.Elem.OPER)
+                    .addContent(new Element(Geonet.Elem.ID).setText(operId));
+                el.addContent(elGrpOper);
+            }
+        }
 
-		//-----------------------------------------------------------------------
-		//--- put all together
+        //-----------------------------------------------------------------------
+        //--- put all together
 
-		Element elRes = new Element(Jeeves.Elem.RESPONSE)
-										.addContent(elOper)
-										.addContent(elGroup)
-										.addContent(ownerId)
-										.addContent(hasOwner);
+        Element elRes = new Element(Jeeves.Elem.RESPONSE)
+            .addContent(elOper)
+            .addContent(elGroup)
+            .addContent(ownerId)
+            .addContent(hasOwner);
 
-		return elRes;
-	}
+        return elRes;
+    }
 }
 
 //=============================================================================

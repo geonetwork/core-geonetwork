@@ -29,33 +29,33 @@ import org.fao.geonet.utils.ProxyInfo;
 import org.fao.geonet.utils.ResolverWrapper;
 
 /**
-	* Singleton which handles the interface to Jeeves classes that need
-	* proxy information - classes that need proxy info must be added
-	* as observers when ProxyInfo is created in getInstance
-	*/
+ * Singleton which handles the interface to Jeeves classes that need proxy information - classes
+ * that need proxy info must be added as observers when ProxyInfo is created in getInstance
+ */
 public class JeevesProxyInfo {
 
-	private static ProxyInfo proxyInfo = null;
+    private static ProxyInfo proxyInfo = null;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor - protected as per singleton rules
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor - protected as per singleton rules
+    //---
+    //--------------------------------------------------------------------------
 
-	protected JeevesProxyInfo() {}
+    protected JeevesProxyInfo() {
+    }
 
-  //---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public synchronized static ProxyInfo getInstance() {
-	
-		if (proxyInfo == null) {
-			proxyInfo = new ProxyInfo();
-			// NOTE: Add new classes that observe ProxyInfo here
-			proxyInfo.addObserver(ResolverWrapper.getInstance());
-		}
-		return proxyInfo;
-	}
+    public synchronized static ProxyInfo getInstance() {
+
+        if (proxyInfo == null) {
+            proxyInfo = new ProxyInfo();
+            // NOTE: Add new classes that observe ProxyInfo here
+            proxyInfo.addObserver(ResolverWrapper.getInstance());
+        }
+        return proxyInfo;
+    }
 
 }
 

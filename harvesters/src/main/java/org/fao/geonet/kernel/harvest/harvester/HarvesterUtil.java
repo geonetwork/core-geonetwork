@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class HarvesterUtil {
     public static Pair<String, Map<String, Object>> parseXSLFilter(String filter,
-                                Logger log) {
+                                                                   Logger log) {
         String processName = filter;
         Map<String, Object> processParams = new HashMap<String, Object>();
 
@@ -47,18 +47,18 @@ public class HarvesterUtil {
         if (filter.contains("?")) {
             String[] filterInfo = filter.split("\\?");
             processName = filterInfo[0];
-            if(log.isDebugEnabled()) log.debug("      - XSL Filter name:" + processName);
+            if (log.isDebugEnabled()) log.debug("      - XSL Filter name:" + processName);
             if (filterInfo[1] != null) {
                 String[] filterKVP = filterInfo[1].split("&");
                 for (String kvp : filterKVP) {
                     String[] param = kvp.split("=");
                     if (param.length == 2) {
-                        if(log.isDebugEnabled()) {
+                        if (log.isDebugEnabled()) {
                             log.debug("        with param:" + param[0] + " = " + param[1]);
                         }
                         processParams.put(param[0], param[1]);
                     } else {
-                        if(log.isDebugEnabled()) {
+                        if (log.isDebugEnabled()) {
                             log.debug("        no value for param: "
                                 + param[0]);
                         }
@@ -71,14 +71,7 @@ public class HarvesterUtil {
 
 
     /**
-     * Filter the metadata if process parameter is set and
-     * corresponding XSL transformation exists.
-     *
-     * @param metadataSchema
-     * @param md
-     *
-     * @param processParams
-     * @return
+     * Filter the metadata if process parameter is set and corresponding XSL transformation exists.
      */
     public static Element processMetadata(MetadataSchema metadataSchema,
                                           Element md,
@@ -93,11 +86,11 @@ public class HarvesterUtil {
             Element processedMetadata;
             try {
                 processedMetadata = Xml.transform(md, filePath, processParams);
-                if(log.isDebugEnabled()) log.debug("     metadata filtered.");
+                if (log.isDebugEnabled()) log.debug("     metadata filtered.");
                 md = processedMetadata;
             } catch (Exception e) {
                 log.warning("     processing error (" + processName + "): "
-                        + e.getMessage());
+                    + e.getMessage());
             }
         }
         return md;

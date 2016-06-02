@@ -51,15 +51,11 @@ import org.fao.geonet.utils.Log;
 import com.google.common.annotations.VisibleForTesting;
 
 /**
- * Create filesystem based Directory objects.
- * <p>
- *     Because windows locks files the reset methods will sometime create new index directories.  That is the
- *     reason for all the strange checking for new names and the {@link #DELETE_DIR_FLAG_FILE} file names.
- * </p>
+ * Create filesystem based Directory objects. <p> Because windows locks files the reset methods will
+ * sometime create new index directories.  That is the reason for all the strange checking for new
+ * names and the {@link #DELETE_DIR_FLAG_FILE} file names. </p>
  *
- * User: Jesse
- * Date: 10/18/13
- * Time: 11:25 AM
+ * User: Jesse Date: 10/18/13 Time: 11:25 AM
  */
 public class FSDirectoryFactory implements DirectoryFactory {
 
@@ -88,10 +84,10 @@ public class FSDirectoryFactory implements DirectoryFactory {
         GeonetworkDataDirectory dataDir = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
 
         Path indexDir = null;
-        try (DirectoryStream<Path> paths = Files.newDirectoryStream(dataDir.getLuceneDir()) ){
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(dataDir.getLuceneDir())) {
             Iterator<Path> pathIter = paths.iterator();
             while (pathIter.hasNext()) {
-                Path file =  pathIter.next();
+                Path file = pathIter.next();
                 if (file.getFileName().toString().equals(baseName) && !Files.exists(file.resolve(DELETE_DIR_FLAG_FILE))) {
                     if (indexDir == null || indexDir.getFileName().compareTo(file.getFileName()) < 0) {
                         indexDir = file;
@@ -142,7 +138,7 @@ public class FSDirectoryFactory implements DirectoryFactory {
     private void cleanOldDirectoriesIfPossible() throws IOException {
         GeonetworkDataDirectory dataDir = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
 
-        try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(dataDir.getLuceneDir())) {
+        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(dataDir.getLuceneDir())) {
             for (Path path : directoryStream) {
                 Path deleteFlagFile = path.resolve(DELETE_DIR_FLAG_FILE);
                 if (Files.exists(deleteFlagFile)) {
@@ -166,7 +162,7 @@ public class FSDirectoryFactory implements DirectoryFactory {
         int i = 0;
         while (Files.exists(newFile) || Files.exists(newFile.resolve(DELETE_DIR_FLAG_FILE))) {
             i++;
-            newFile = dataDir.getLuceneDir().resolve(baseName + "_"+i);
+            newFile = dataDir.getLuceneDir().resolve(baseName + "_" + i);
         }
         return newFile;
     }
@@ -194,14 +190,14 @@ public class FSDirectoryFactory implements DirectoryFactory {
                     Files.delete(file);
                     return FileVisitResult.CONTINUE;
                 } catch (IOException e) {
-                    Log.debug(Geonet.LUCENE_TRACKING, "Unable to reset lucene index file: "+file);
+                    Log.debug(Geonet.LUCENE_TRACKING, "Unable to reset lucene index file: " + file);
                     // probably is a locked file.
                     try {
                         try (OutputStream out = Files.newOutputStream(file)) {
                             Log.debug(Geonet.LUCENE_TRACKING, "Zero'd out " + file + " with outputstream: " + out);
                         }
                     } catch (IOException e2) {
-                        Log.debug(Geonet.LUCENE_TRACKING, "Unable to zero-out file because of open file: "+file);
+                        Log.debug(Geonet.LUCENE_TRACKING, "Unable to zero-out file because of open file: " + file);
                         allReset.set(false);
                     }
                     return FileVisitResult.TERMINATE;
@@ -236,12 +232,13 @@ public class FSDirectoryFactory implements DirectoryFactory {
 
         double maxMergeSizeMD = luceneConfig.getMergeFactor();
         double maxCachedMB = luceneConfig.getRAMBufferSize();
-        return new NRTCachingDirectory(fsDir, maxMergeSizeMD,maxCachedMB);
+        return new NRTCachingDirectory(fsDir, maxMergeSizeMD, maxCachedMB);
     }
 
     public Path getIndexDir() {
         return indexFile;
     }
+
     public Path getTaxonomyDir() {
         return taxonomyFile;
     }

@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -63,45 +64,43 @@ public class Create extends NotInReadOnlyModeService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
         useEditTab = params.getValue("editTab", "false").equals("true");
     }
-    
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getBean(DataManager.class);
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-		String child = Util.getParam(params, Params.CHILD, "n");
-		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
-		String id;
-		String uuid;
-		boolean haveAllRights = Boolean.valueOf(Util.getParam(params, Params.FULL_PRIVILEGES, "false"));
-		
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getBean(DataManager.class);
+
+        String child = Util.getParam(params, Params.CHILD, "n");
+        String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
+        String id;
+        String uuid;
+        boolean haveAllRights = Boolean.valueOf(Util.getParam(params, Params.FULL_PRIVILEGES, "false"));
+
         SettingManager sm = gc.getBean(SettingManager.class);
         boolean generateUuid = sm.getValueAsBool("system/metadatacreate/generateUuid");
 
-		// does the request contain a UUID ?
-		try {
-			uuid = Util.getParam(params, Params.UUID);
-			// lookup ID by UUID
-			id = dm.getMetadataId(uuid);
-		}
-		catch(BadInputEx x) {
-			try {
-				id = Util.getParam(params, Params.ID);
-				uuid = dm.getMetadataUuid(id);
-			}
-			// request does not contain ID
-			catch(BadInputEx xx) {
-				// give up
-				throw new Exception("Request must contain a UUID or an ID");
-			}		
-		}
-		
+        // does the request contain a UUID ?
+        try {
+            uuid = Util.getParam(params, Params.UUID);
+            // lookup ID by UUID
+            id = dm.getMetadataId(uuid);
+        } catch (BadInputEx x) {
+            try {
+                id = Util.getParam(params, Params.ID);
+                uuid = dm.getMetadataUuid(id);
+            }
+            // request does not contain ID
+            catch (BadInputEx xx) {
+                // give up
+                throw new Exception("Request must contain a UUID or an ID");
+            }
+        }
+
 
         // User assigned uuid: check if already exists
         String metadataUuid;
@@ -121,53 +120,53 @@ public class Create extends NotInReadOnlyModeService {
         }
 
 
-		String groupOwner= Util.getParam(params, Params.GROUP);
-		
-		// TODO : Check user can create a metadata in that group
-		UserSession user = context.getUserSession();
-		if (user.getProfile() != Profile.Administrator) {
+        String groupOwner = Util.getParam(params, Params.GROUP);
+
+        // TODO : Check user can create a metadata in that group
+        UserSession user = context.getUserSession();
+        if (user.getProfile() != Profile.Administrator) {
             final Specifications<UserGroup> spec = where(UserGroupSpecs.hasProfile(Profile.Editor))
-                    .and(UserGroupSpecs.hasUserId(user.getUserIdAsInt()))
-                    .and(UserGroupSpecs.hasGroupId(Integer.valueOf(groupOwner)));
+                .and(UserGroupSpecs.hasUserId(user.getUserIdAsInt()))
+                .and(UserGroupSpecs.hasGroupId(Integer.valueOf(groupOwner)));
 
             final List<UserGroup> userGroups = context.getBean(UserGroupRepository.class).findAll(spec);
 
-			if (userGroups.size() == 0) {
-				throw new ServiceNotAllowedEx("Service not allowed. User needs to be Editor in group with id " + groupOwner);
-			}
-		}
-		
-		//--- query the data manager
+            if (userGroups.size() == 0) {
+                throw new ServiceNotAllowedEx("Service not allowed. User needs to be Editor in group with id " + groupOwner);
+            }
+        }
+
+        //--- query the data manager
         SettingManager settingManager = gc.getBean(SettingManager.class);
         String newId = dm.createMetadata(context, id, groupOwner,
-                settingManager.getSiteId(), context.getUserSession().getUserIdAsInt(),
-                (child.equals("n") ? null : uuid), isTemplate, haveAllRights, metadataUuid);
+            settingManager.getSiteId(), context.getUserSession().getUserIdAsInt(),
+            (child.equals("n") ? null : uuid), isTemplate, haveAllRights, metadataUuid);
 
 
         dm.activateWorkflowIfConfigured(context, newId, groupOwner);
 
 
         try {
-          copyDataDir(context, id, newId, Params.Access.PUBLIC);
-          copyDataDir(context, id, newId, Params.Access.PRIVATE);
+            copyDataDir(context, id, newId, Params.Access.PUBLIC);
+            copyDataDir(context, id, newId, Params.Access.PRIVATE);
         } catch (IOException e) {
-          Log.warning(Geonet.DATA_MANAGER, "Error while copying metadata resources. " + e.getMessage() +  
-              ". Metadata is created but without resources from record with id:" + id);
+            Log.warning(Geonet.DATA_MANAGER, "Error while copying metadata resources. " + e.getMessage() +
+                ". Metadata is created but without resources from record with id:" + id);
         }
-        
+
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
-        
+
         String sessionTabProperty = useEditTab ? Geonet.Session.METADATA_EDITING_TAB : Geonet.Session.METADATA_SHOW;
-        
+
         // Set current tab for new editing session if defined.
         Element elCurrTab = params.getChild(Params.CURRTAB);
         if (elCurrTab != null) {
             context.getUserSession().setProperty(sessionTabProperty, elCurrTab.getText());
         }
         response.addContent(new Element(Geonet.Elem.ID).setText(newId));
-		return response;
-	}
+        return response;
+    }
 
     private void copyDataDir(ServiceContext context, String oldId, String newId, String access) throws IOException {
         final Path sourceDir = Lib.resource.getDir(context, access, oldId);

@@ -80,6 +80,7 @@ public class ResourceTest extends AbstractServiceIntegrationTest {
     protected void assertCorrectExec(String fileName, int expectedCode, String expectedContentType) throws Exception {
         assertCorrectExec(RESOURCE_TEST_DIR, fileName, expectedCode, expectedContentType);
     }
+
     protected void assertCorrectExec(String base, String fileName, int expectedCode, String expectedContentType) throws Exception {
         MockHttpServletResponse response = new MockHttpServletResponse();
         resource.exec(base, fileName, null, response);
@@ -89,7 +90,7 @@ public class ResourceTest extends AbstractServiceIntegrationTest {
 
         if (expectedContentType != null) {
             assertArrayEquals(fileName + " does not return the expected data", Files.readAllBytes(getFile(fileName)),
-                    response.getContentAsByteArray());
+                response.getContentAsByteArray());
         }
     }
 }

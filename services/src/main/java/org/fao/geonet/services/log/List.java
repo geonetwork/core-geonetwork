@@ -24,6 +24,7 @@
 package org.fao.geonet.services.log;
 
 import jeeves.server.ServiceConfig;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -49,7 +50,7 @@ import java.util.regex.Pattern;
 @Controller("admin.log.list")
 public class List {
     private final String regexp = "log4j(-(.*?))?\\.xml";
-    
+
     @Autowired
     private ApplicationContext appContext;
     //--------------------------------------------------------------------------
@@ -57,7 +58,7 @@ public class List {
     // --- Init
     // ---
     // --------------------------------------------------------------------------
-    
+
     public void init(String appPath, ServiceConfig params) throws Exception {
     }
 
@@ -66,14 +67,14 @@ public class List {
     // --- Service
     // ---
     // --------------------------------------------------------------------------
-    
+
     @RequestMapping(value = "/{lang}/admin.logfile.list", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     ListLogFilesResponse exec() throws Exception {
         java.util.List<LogFileResponse> logFileList = new ArrayList<LogFileResponse>();
         final GeonetworkDataDirectory dataDirectory =
-                ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
+            ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         String classesFolder = dataDirectory.getWebappDir() + "/WEB-INF/classes";
         File folder = new File(classesFolder);
 
@@ -86,7 +87,7 @@ public class List {
                 matcher = pattern.matcher(fileName);
                 if (matcher.matches()) {
                     String key = matcher.group(2);
-                    
+
                     if (StringUtils.isEmpty(key))
                         key = "prod";
                     logFileList.add(new LogFileResponse(key.toUpperCase(), fileName));

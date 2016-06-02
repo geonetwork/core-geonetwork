@@ -30,10 +30,7 @@ import java.util.Map;
 
 public interface CSWPlugin {
     /**
-     * Return the list of typenames and corresponding
-     * namespace for the plugin.
-     *
-     * @return
+     * Return the list of typenames and corresponding namespace for the plugin.
      */
     Map<String, Namespace> getCswTypeNames();
 }

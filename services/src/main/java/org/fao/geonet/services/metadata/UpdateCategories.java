@@ -27,6 +27,7 @@ package org.fao.geonet.services.metadata;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
@@ -38,6 +39,7 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+
 import java.nio.file.Path;
 import java.util.List;
 
@@ -52,7 +54,8 @@ public class UpdateCategories extends NotInReadOnlyModeService {
      * @param params
      * @throws Exception
      */
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
     /**
      *
@@ -61,18 +64,18 @@ public class UpdateCategories extends NotInReadOnlyModeService {
      * @return
      * @throws Exception
      */
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		DataManager dataMan = gc.getBean(DataManager.class);
-		String id = Utils.getIdentifierFromParameters(params, context);
+        DataManager dataMan = gc.getBean(DataManager.class);
+        String id = Utils.getIdentifierFromParameters(params, context);
 
-		//--- check access
-		int iLocalId = Integer.parseInt(id);
-		if (!dataMan.existsMetadata(iLocalId))
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+        //--- check access
+        int iLocalId = Integer.parseInt(id);
+        if (!dataMan.existsMetadata(iLocalId))
+            throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		//--- remove old operations
+        //--- remove old operations
         context.getBean(MetadataRepository.class).update(iLocalId, new Updater<Metadata>() {
             @Override
             public void apply(@Nonnull Metadata entity) {
@@ -80,21 +83,21 @@ public class UpdateCategories extends NotInReadOnlyModeService {
             }
         });
 
-		//--- set new ones
-		@SuppressWarnings("unchecked")
+        //--- set new ones
+        @SuppressWarnings("unchecked")
         List<Element> list = params.getChildren();
 
-		for (Element el : list) {
-			String name = el.getName();
+        for (Element el : list) {
+            String name = el.getName();
 
-			if (name.startsWith("_"))
-				dataMan.setCategory(context, id, name.substring(1));
-		}
+            if (name.startsWith("_"))
+                dataMan.setCategory(context, id, name.substring(1));
+        }
 
-		//--- index metadata
+        //--- index metadata
         dataMan.indexMetadata(id, true);
 
         //--- return id for showing
-		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
-	}
+        return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
+    }
 }

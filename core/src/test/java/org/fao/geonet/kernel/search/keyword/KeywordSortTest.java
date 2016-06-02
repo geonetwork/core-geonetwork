@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.search.keyword;
 
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class KeywordSortTest {
         KeywordBean atmosphereWaterBean = new KeywordBean(new IsoLanguagesMapper()).setValue("Atmosphere Water", "eng").setDefaultLang("eng");
 
         ArrayList<KeywordBean> expected = Lists.newArrayList(waterBean, waterAgricultureBean, waterGeogBean, waterSurfaceBean,
-                atmosphereWaterBean, wasteWaterBean, wasteWaterTreatmentBean);
+            atmosphereWaterBean, wasteWaterBean, wasteWaterTreatmentBean);
         Collection<List<KeywordBean>> permutations = Collections2.permutations(expected);
 
         for (List<KeywordBean> permutation : permutations) {

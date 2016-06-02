@@ -25,6 +25,7 @@ package org.fao.geonet.services.inspireatom;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -47,20 +48,26 @@ import java.nio.file.Path;
 /**
  * Service to get a data file related to dataset.
  *
- * This service if a dataset has only 1 download format for a CRS returns the file,
- * otherwise returns a feed with downloads for the dataset.
+ * This service if a dataset has only 1 download format for a CRS returns the file, otherwise
+ * returns a feed with downloads for the dataset.
  *
  * @author Jose García
  */
 public class AtomGetData implements Service {
 
-    /** Dataset identifier param name **/
+    /**
+     * Dataset identifier param name
+     **/
     private final static String DATASET_IDENTIFIER_CODE_PARAM = "spatial_dataset_identifier_code";
 
-    /** Dataset namespace param name **/
+    /**
+     * Dataset namespace param name
+     **/
     private final static String DATASET_IDENTIFIER_NS_PARAM = "spatial_dataset_identifier_namespace";
 
-    /** Dataset crs param name **/
+    /**
+     * Dataset crs param name
+     **/
     private final static String DATASET_CRS_PARAM = "crs";
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
@@ -73,8 +80,7 @@ public class AtomGetData implements Service {
     //---
     //--------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         SettingManager sm = context.getBean(SettingManager.class);
 
         boolean inspireEnable = sm.getValueAsBool("system/inspire/enable");
@@ -85,7 +91,7 @@ public class AtomGetData implements Service {
         }
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm   = gc.getBean(DataManager.class);
+        DataManager dm = gc.getBean(DataManager.class);
         InspireAtomService service = context.getBean(InspireAtomService.class);
 
         // Get request parameters
@@ -116,19 +122,19 @@ public class AtomGetData implements Service {
 
         // No download  for the CRS specified
         if (downloadCount == 0) {
-            throw new Exception("No downloads available for dataset: " + datasetIdCode +  " and CRS: " + datasetCrs);
+            throw new Exception("No downloads available for dataset: " + datasetIdCode + " and CRS: " + datasetCrs);
 
-        // Only one download for the CRS specified
+            // Only one download for the CRS specified
         } else if (downloadCount == 1) {
 
             // Jeeves checks for <reponse redirect="true" url="...." mime-type="..." /> to manage about redirecting
             // to the provided file
             return new Element("response")
-                    .setAttribute("redirect", "true")
-                    .setAttribute("url", selectedEntry.getUrl())
-                    .setAttribute("mime-type",selectedEntry.getType());
+                .setAttribute("redirect", "true")
+                .setAttribute("url", selectedEntry.getUrl())
+                .setAttribute("mime-type", selectedEntry.getType());
 
-        // Otherwise, return a feed with the downloads for the specified CRS
+            // Otherwise, return a feed with the downloads for the specified CRS
         } else {
             // Retrieve the dataset feed
             Element feed = service.retrieveFeed(context, inspireAtomFeed);
@@ -144,14 +150,13 @@ public class AtomGetData implements Service {
     /**
      * Calculates the downloads for the specified crs.
      *
-     * @param inspireAtomFeed
-     * @param datasetCrs
-     * @return Pair of number of downloads and selected download for the crs (only used if downloads for crs = 1)
+     * @return Pair of number of downloads and selected download for the crs (only used if downloads
+     * for crs = 1)
      */
-    private Pair<Integer,InspireAtomFeedEntry> countDatasetsForCrs(InspireAtomFeed inspireAtomFeed, String datasetCrs) {
+    private Pair<Integer, InspireAtomFeedEntry> countDatasetsForCrs(InspireAtomFeed inspireAtomFeed, String datasetCrs) {
         int downloadCount = 0;
         InspireAtomFeedEntry selectedEntry = null;
-        for(InspireAtomFeedEntry entry : inspireAtomFeed.getEntryList()) {
+        for (InspireAtomFeedEntry entry : inspireAtomFeed.getEntryList()) {
             if (datasetCrs.equals(entry.getCrs())) {
                 selectedEntry = entry;
                 downloadCount++;

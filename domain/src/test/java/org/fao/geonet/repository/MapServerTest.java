@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
@@ -45,6 +46,18 @@ public class MapServerTest extends AbstractSpringDataTest {
     EntityManager _entityManager;
 
     private AtomicInteger _nextId = new AtomicInteger();
+
+    public static MapServer newMapServer(AtomicInteger nextId) {
+        int id = nextId.incrementAndGet();
+        return new MapServer()
+            .setDescription("Desc " + id)
+            .setConfigurl("http://mygeoserver.org/" + id + "/rest")
+            .setName("Name " + id)
+            .setUsername("admin")
+            .setPassword("123456")
+            .setNamespace("http://geonet.org")
+            .setNamespacePrefix("gn");
+    }
 
     @Test
     public void test_Save_Count_FindOnly_DeleteAll() throws Exception {
@@ -98,21 +111,8 @@ public class MapServerTest extends AbstractSpringDataTest {
         assertSameContents(MapServer, _repo.findOneById(MapServer.getId()));
     }
 
-
     private MapServer newMapServer() {
         return newMapServer(_nextId);
-    }
-
-    public static MapServer newMapServer(AtomicInteger nextId) {
-        int id = nextId.incrementAndGet();
-        return new MapServer()
-                .setDescription("Desc " + id)
-                .setConfigurl("http://mygeoserver.org/" + id + "/rest")
-                .setName("Name " + id)
-                .setUsername("admin")
-                .setPassword("123456")
-                .setNamespace("http://geonet.org")
-                .setNamespacePrefix("gn");
     }
 
 }

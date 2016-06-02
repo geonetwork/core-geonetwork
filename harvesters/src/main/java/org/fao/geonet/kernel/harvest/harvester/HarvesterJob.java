@@ -29,13 +29,13 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * A Quartz job that obtains the Harvester from the JobExecutionContext and executes it.
- * 
- * In Quartz a job is stateless so they can be scaled.  This is not useful for
- * Geonetwork because the harvester needs certain state like ServiceContext.  So instead a job 
- * is submitted to the Scheduler and at the same time a lister is added that listens for that Job.
- * to be executed.  When the Job is to be executed the listener puts the Harvester
- * on the JobExecutionContext.  This Job obtains the harvester from the context and executes it.
- * 
+ *
+ * In Quartz a job is stateless so they can be scaled.  This is not useful for Geonetwork because
+ * the harvester needs certain state like ServiceContext.  So instead a job is submitted to the
+ * Scheduler and at the same time a lister is added that listens for that Job. to be executed.  When
+ * the Job is to be executed the listener puts the Harvester on the JobExecutionContext.  This Job
+ * obtains the harvester from the context and executes it.
+ *
  * @author jeichar
  */
 @DisallowConcurrentExecution
@@ -57,11 +57,13 @@ public class HarvesterJob implements Job, InterruptableJob {
     public String getHarvesterId() {
         return harvesterId;
     }
-    public void setApplicationContext(ConfigurableApplicationContext applicationContext) {
-        ApplicationContextHolder.set(applicationContext);
-    }
+
     public void setHarvesterId(String harvesterId) {
         this.harvesterId = harvesterId;
+    }
+
+    public void setApplicationContext(ConfigurableApplicationContext applicationContext) {
+        ApplicationContextHolder.set(applicationContext);
     }
 
     public void setHarvester(AbstractHarvester<?> harvester) {

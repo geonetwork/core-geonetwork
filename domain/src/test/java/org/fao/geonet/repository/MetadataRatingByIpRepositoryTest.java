@@ -39,6 +39,18 @@ public class MetadataRatingByIpRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     MetadataRatingByIpRepository _repo;
 
+    public static MetadataRatingByIp newMetadataRatingByIp(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+        MetadataRatingByIp metadataRatingByIp = new MetadataRatingByIp();
+        metadataRatingByIp.setRating(1);
+        MetadataRatingByIpId id = new MetadataRatingByIpId();
+        id.setIpAddress("ip" + val);
+        id.setMetadataId(val);
+        metadataRatingByIp.setId(id);
+
+        return metadataRatingByIp;
+    }
+
     @Test
     public void testFindOne() {
         MetadataRatingByIp rating1 = newMetadataRatingByIp();
@@ -124,17 +136,6 @@ public class MetadataRatingByIpRepositoryTest extends AbstractSpringDataTest {
 
     private MetadataRatingByIp newMetadataRatingByIp() {
         return newMetadataRatingByIp(_inc);
-    }
-    public static MetadataRatingByIp newMetadataRatingByIp(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-        MetadataRatingByIp metadataRatingByIp = new MetadataRatingByIp();
-        metadataRatingByIp.setRating(1);
-        MetadataRatingByIpId id = new MetadataRatingByIpId();
-        id.setIpAddress("ip" + val);
-        id.setMetadataId(val);
-        metadataRatingByIp.setId(id);
-
-        return metadataRatingByIp;
     }
 
 }

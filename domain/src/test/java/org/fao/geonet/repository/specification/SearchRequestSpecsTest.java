@@ -40,10 +40,7 @@ import static org.fao.geonet.repository.specification.SearchRequestSpecs.*;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests for {@link SearchRequestSpecs}
- * User: Jesse
- * Date: 10/2/13
- * Time: 7:50 AM
+ * Tests for {@link SearchRequestSpecs} User: Jesse Date: 10/2/13 Time: 7:50 AM
  */
 public class SearchRequestSpecsTest extends AbstractSpringDataTest {
 
