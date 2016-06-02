@@ -52,9 +52,7 @@
             <report>
                 <id>Error</id>
                 <displayPriority>-100</displayPriority>
-                <label>
-                    <xsl:value-of select="/root/gui/strings/xsdReport" />
-                </label>
+                <label>xsdReport</label>
                 <error>1</error>
                 <success>0</success>
                 <total>1</total>

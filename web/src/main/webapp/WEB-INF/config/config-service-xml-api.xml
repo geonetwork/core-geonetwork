@@ -50,9 +50,7 @@
     <service name="xml.region.get" deprecated="true" xmlapi="true">
       <class name=".services.region.Get" />
 
-      <error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
-        <xml name="error" file="xml/file-not-found-error.xml" />
-      </error>
+      <error id="region-not-found" sheet="../xslt/error/error-xml.xsl" statusCode="404"/>
     </service>
 
     <service name="xml.regions.category.list" deprecated="true" xmlapi="true">
@@ -139,9 +137,7 @@
 
     <service name="xml.metadata.validate" deprecated="true" xmlapi="true">
       <class name=".services.metadata.Validate" />
-      <output sheet="metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
-        <xml name="validation" file="xml/metadata-validate.xml" />
-      </output>
+      <output sheet="../xslt/services/metadata/validate.xsl" contentType="text/xml; charset=UTF-8"/>
     </service>
 
     <service name="xml.metadata.batch.admin.form" deprecated="true" xmlapi="true">
@@ -171,7 +167,7 @@
 
     <service name="xml.search.keywordlink" type="xml" deprecated="true" xmlapi="true">
       <class name=".services.thesaurus.GetNarrowerBroader"/>
-      <output sheet="thesaurus/thesaurus-autosearchlist.xsl"/>
+      <output sheet="../xslt/services/thesaurus/to-ulli.xsl"/>
     </service>
 
     <service name="xml.keyword.get" type="xml" deprecated="true" xmlapi="true">
@@ -181,7 +177,7 @@
 
       </documentation>
       <class name=".services.thesaurus.GetKeywordById"/>
-      <output sheet="thesaurus/convert.xsl">
+      <output sheet="../xslt/services/thesaurus/convert.xsl">
         <call name="thesaurus" class=".services.thesaurus.GetList" />
       </output>
     </service>

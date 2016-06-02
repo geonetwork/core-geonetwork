@@ -57,8 +57,7 @@
                     <fo:block text-align="center" color="{$font-color}">
                       <xsl:value-of select="/root/response/summary/@count"/>
                       <xsl:text> </xsl:text>
-                      <xsl:value-of select="/root/gui/strings/ress"/>
-                      <xsl:if test="/root/response/summary/@count &gt; 1">s</xsl:if>
+                      record(s)
                     </fo:block>
                   </fo:table-cell>
                 </fo:table-row>

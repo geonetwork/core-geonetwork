@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
   ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
@@ -22,26 +22,24 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-						xmlns:geonet="http://www.fao.org/geonetwork" 
-						xmlns:exslt= "http://exslt.org/common"
-						xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
-						exclude-result-prefixes="xsl exslt geonet">
-    <xsl:output method="xml"/>
-    <xsl:template match="/">
-        <table>
-            <tr>
-                <td colspan="2">
-                    <i>
-                        <a>
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="root/gui/statCSV/fileURL"/>
-                            </xsl:attribute>
-                            Download <xsl:value-of select="root/gui/statCSV/exportedTable"/>
-                        </a>
-                    </i>
-                </td>
-            </tr>
-        </table>
-    </xsl:template>
-</xsl:stylesheet>
+<geonet>
+  <services package="org.fao.geonet">
+    <!-- Those services were available in old XSL interface and partially
+    used in ExtJS and would be relevant to port to Angular.
+    Service definition is preserved here but XSL may be available only
+    in 3.0.3 branch.
+    -->
+
+    <!--<service name="file.disclaimer">
+      <class name=".services.feedback.AddLimitations" />
+      <output sheet="file-download-disclaimer.xsl" />
+    </service>
+
+
+    <service name="prepare.file.download">
+      <class name=".services.metadata.PrepareFileDownload" />
+      <output sheet="file-download-list.xsl" />
+    </service>
+    -->
+  </services>
+</geonet>

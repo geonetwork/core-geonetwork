@@ -132,7 +132,7 @@ public class SchemaManager {
         System.setProperty(Constants.XML_CATALOG_FILES, catalogProp);
         Log.info(Geonet.SCHEMA_MANAGER, Constants.XML_CATALOG_FILES + " property set to " + catalogProp);
 
-        Path blankXSLFile = webappDir.resolve("xsl").resolve("blanks.xsl");
+        Path blankXSLFile = webappDir.resolve("xslt").resolve("blanks.xsl");
         System.setProperty(Constants.XML_CATALOG_BLANKXSLFILE, blankXSLFile.toUri().toASCIIString());
         Log.info(Geonet.SCHEMA_MANAGER, Constants.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
 

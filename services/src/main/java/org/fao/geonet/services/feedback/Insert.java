@@ -66,7 +66,9 @@ public class Insert implements Service
 		String org      = Util.getParam(params, Params.ORG);
 		String email    = Util.getParam(params, Params.EMAIL);
 		String comments = Util.getParam(params, Params.COMMENTS);
-		String subject  = Util.getParam(params, Params.SUBJECT, "New feedback");  // TODO : i18n
+		String subject  = Util.getParam(params, Params.SUBJECT, "New feedback");
+        // TODO : i18n
+        // TODO : Would be good to add captcha to avoid spamming catalog admin
 
 		String host = sm.getValue("system/feedback/mailServer/host");
 		String to   = sm.getValue("system/feedback/email");

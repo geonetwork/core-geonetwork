@@ -50,10 +50,13 @@ import java.util.Calendar;
  * The server response is unfortunately specifically constructed so that a client Ext Js Form knows it was a success,
  * converted to json format by extjs-feedback-response.xsl.
  *
- * TODO i18n
+ * TODO
+ * * i18n
+ * * No user interface
  *
  * @author heikki doeleman
  */
+@Deprecated
 public class Receptor implements Service {
 
     //private static final String NOREPLY = "noreply@nationaalgeoregister.nl";

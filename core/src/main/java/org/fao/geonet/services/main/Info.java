@@ -30,6 +30,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Edit;
@@ -44,6 +45,7 @@ import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.User_;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.search.MetaSearcher;
@@ -69,6 +71,7 @@ import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.util.StringUtils;
@@ -94,6 +97,7 @@ public class Info implements Service {
     public static final String AUTH = "auth";
     public static final String ME = "me";
     public static final String Z_3950_REPOSITORIES = "z3950repositories";
+    @Deprecated
     public static final String TEMPLATES = "templates";
     public static final String USERS = "users";
     public static final String SOURCES = "sources";
@@ -112,8 +116,7 @@ public class Info implements Service {
     public static final String SITE = "site";
     private static final String STAGING_PROFILE = "stagingProfile";
 
-    private Path xslPath;
-	private Path otherSheets;
+
 	private ServiceConfig _config;
 
 	//--------------------------------------------------------------------------
@@ -130,8 +133,6 @@ public class Info implements Service {
      */
 	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
-		xslPath = appPath.resolve(Geonet.Path.STYLESHEETS).resolve("xml");
-		otherSheets = appPath.resolve(Geonet.Path.STYLESHEETS);
 		_config = config;
 	}
 
@@ -248,7 +249,7 @@ public class Info implements Service {
 				result.addContent(getUsers(context));
 
             } else if (type.equals(TEMPLATES))   {
-				result.addContent(getTemplates(context));
+                throw new BadParameterEx("To search for template, use the search service.", type);
 
             } else if (type.equals(Z_3950_REPOSITORIES)) {
 				result.addContent(getZRepositories(context, sm));
@@ -278,7 +279,10 @@ public class Info implements Service {
 		}
 		
 		result.addContent(getEnv(context));
-		Element response = Xml.transform(result, xslPath.resolve("info.xsl"));
+
+        GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
+        // TODO: This XSL transformation should be removed
+		Element response = Xml.transform(result, dataDirectory.getWebappDir().resolve("xslt").resolve("services").resolve("settingscopy.xsl"));
 
         return response;
 	}
@@ -495,93 +499,6 @@ public class Info implements Service {
 
 		return response;
 	}
-
-	//--------------------------------------------------------------------------
-	//--- Templates
-	//--------------------------------------------------------------------------
-
-	private Element getTemplates(ServiceContext context) throws Exception
-	{
-		Path styleSheet = otherSheets.resolve("portal-present.xsl");
-		Element result = search(context).setName(Jeeves.Elem.RESPONSE);
-		Element root   = new Element("root");
-
-		root.addContent(result);
-
-		@SuppressWarnings("unchecked")
-        List<Element> list = Xml.transform(root, styleSheet).getChildren();
-
-		Element response = new Element("templates");
-
-		for (Element elem : list) {
-			Element info = elem.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-
-			if (!elem.getName().equals("metadata"))
-				continue;
-
-			String id       = info.getChildText(Edit.Info.Elem.ID);
-			String template = info.getChildText(Edit.Info.Elem.IS_TEMPLATE);
-			String schema   = info.getChildText(Edit.Info.Elem.SCHEMA);
-
-			if (template.equals("y"))
-				response.addContent(buildTemplateRecord(id, elem.getChildText("title"), schema));
-		}
-
-		return response;
-	}
-
-	//--------------------------------------------------------------------------
-
-	private Element search(ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		context.info("Creating searcher");
-
-		Element       params = buildParams();
-		ServiceConfig config = new ServiceConfig();
-
-		SearchManager searchMan = gc.getBean(SearchManager.class);
-		try (MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-
-            searcher.search(context, params, config);
-
-            params.addContent(new Element("from").setText("1"));
-            params.addContent(new Element("to").setText(searcher.getSize() + ""));
-
-            return searcher.present(context, params, config);
-        }
-
-	}
-
-	//--------------------------------------------------------------------------
-
-	private Element buildParams()
-	{
-		Element params = new Element(Jeeves.Elem.REQUEST);
-		String arParams[] = {
-			"extended", "off",
-			"remote",   "off",
-			"attrset",  "geo",
-			"template", "y",
-			"any",      "",
-		};
-
-		for(int i=0; i<arParams.length/2; i++)
-			params.addContent(new Element(arParams[i*2]).setText(arParams[i*2 +1]));
-
-		return params;
-	}
-
-	//--------------------------------------------------------------------------
-
-	private Element buildTemplateRecord(String id, String title, String schema)
-	{
-		return buildRecord(id, title, Collections.<String, String>emptyMap(), schema, null);
-	}
-
-
-	//--------------------------------------------------------------------------
 
 	private Element buildRecord(String id, String name, Map<String, String> labelTranslations, String code, String serverCode)
 	{

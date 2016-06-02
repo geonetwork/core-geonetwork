@@ -246,14 +246,8 @@
 
       <output sheet="../xslt/ui-metadata/edit/edit-embedded.xsl">
         <call name="currTab" class=".guiservices.util.GetCurrentMDEditingTab"/>
-        <call name="position" class=".guiservices.util.GetPositionMD"/>
         <call name="groups" class=".guiservices.groups.GetMine"/>
         <call name="sources" class=".guiservices.util.Sources"/>
-        <call name="subtemplates" class="jeeves.services.db.Select">
-          <param name="db" value="main-db"/>
-          <param name="query"
-            value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'"/>
-        </call>
       </output>
 
     </service>
@@ -309,14 +303,6 @@
             ]]></documentation>
     
       <class name=".services.schema.Info" />
-    </service>
-
-    <service name="md.thumbnail.remove">
-      <documentation><![CDATA[
-        Delete a thumbnail from the data diretory and detach 
-        it to the metadata record.
-        ]]></documentation>
-      <class name=".services.thumbnail.Unset"/>
     </service>
 
     <service name="md.relations">

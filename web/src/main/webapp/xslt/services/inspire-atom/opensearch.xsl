@@ -59,7 +59,7 @@
                 <xsl:otherwise>
                     <ShortName><xsl:value-of select="//site/name"/> (GeoNetwork)</ShortName>
                     <LongName><xsl:value-of select="//site/organization"/> | GeoNetwork opensource</LongName>
-                    <Description><xsl:value-of select="/root/gui/strings/opensearch"/></Description>
+                    <Description>Opensearch service</Description>
 
                     <!--Generic URL template for browser integration-->
                     <Url type="application/xml" rel="results">

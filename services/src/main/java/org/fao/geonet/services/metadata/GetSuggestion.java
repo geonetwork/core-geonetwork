@@ -51,7 +51,7 @@ import java.util.Map;
  * <li>
  * 1) Discover registered processes:
  * 
- * Use metadata.suggestion?id=2&action=list to retrieve the list of processes
+ * Use md.suggestion?id=2&action=list to retrieve the list of processes
  * registered for the metadata schema.
  * 
  * <pre>
@@ -66,8 +66,8 @@ import java.util.Map;
  * </li>
  * <li>
  * 2) Check if processes have suggestions for the metadata record Use
- * metadata.suggestion?id=2&action=analyze to analyze for all known processes or
- * metadata.suggestion?id=2&action=analyze&process=keywords-comma-exploder to
+ * md.suggestion?id=2&action=analyze to analyze for all known processes or
+ * md.suggestion?id=2&action=analyze&process=keywords-comma-exploder to
  * analyze for only one process.
  * </li>
  * <li>
