@@ -99,13 +99,24 @@
         <i class="fa fa-table"></i>&nbsp;
         <span data-translate="">Table</span>
       </button>
-      <button data-ng-if="::(user.canEditRecord(md) || md.isHarvested == 'y')"
-              type="button" class="btn btn-default dropdown-toggle"
+      <button data-gn-click-and-spin="resetFacets()"
+              class="btn btn-default btn-xs gn-reset-facets">
+        <i class="fa fa-eraser"></i>&nbsp;
+        <span translate>reset</span>
+      </button>
+      <button class="btn btn-default btn-xs"
+              title="{{'refresh' | translate}}"
+              data-ng-click="initSolrRequest()">
+        <i class="fa fa-refresh"></i>&nbsp;
+      </button>
+      <button data-ng-show="user.canEditRecord(md) || md.isHarvested == 'y'"
+              type="button" class="btn btn-default btn-xs dropdown-toggle"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-cog"></i>
         <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" data-ng-if="::(user.canEditRecord(md) || md.isHarvested == 'y')">
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"
+          data-ng-show="user.canEditRecord(md) || ::md.isHarvested == 'y'">
         <li>
           <a href="" data-ng-click="indexWFSFeatures()">
             <i class="fa fa-codiepie"></i>&nbsp;
@@ -119,12 +130,6 @@
           </a>
         </li>
         <li>
-          <a href="" data-ng-click="initSolrRequest()">
-            <i class="fa fa-refresh"></i>&nbsp;
-            <span data-translate="">refresh</span>
-          </a>
-        </li>
-        <li>
           <a href="" data-ng-click="dropFeatures()">
             <i class="fa fa-times"></i>&nbsp;
             <span data-translate="">removeFeatures</span>
@@ -132,20 +137,14 @@
         </li>
       </ul>
     </div>
-
-    <div data-ng-if="hmActive">
-      <label data-ng-show="map" data-ng-show="source.getFeatures().length > 0">
+    <div data-ng-show="hmActive">
+      <label data-ng-show="map"
+             data-ng-show="source.getFeatures().length > 0">
         <input type="checkbox"
-        data-ng-model="isHeatMapVisible"/>
+               data-ng-model="isHeatMapVisible"/>
         <span data-translate="">displayHeatMap</span>
       </label>
     </div>
-
-
-    <hr>
-    <button data-gn-click-and-spin="resetFacets()" class="btn btn-primary gn-reset-facets">
-      <span translate>reset</span>
-    </button>
 
   </div>
 </form>
