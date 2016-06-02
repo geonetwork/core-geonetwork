@@ -1,0 +1,30 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Data extraction from WFS</title>
+		<link rel="stylesheet" type="text/css" href="../../ext/resources/css/ext-all.css" />
+		<link rel="stylesheet" type="text/css" href="../resources/css/metadata-view.css" />
+		<style type="text/css">
+			.olMap{
+			    width:500px;
+			    height:500px;
+			}</style>
+
+		<script type="text/javascript" src="../../ext/adapter/ext/ext-base.js"></script>
+		<script type="text/javascript" src="../../ext/ext-all-debug.js"></script>
+		<script type="text/javascript" src="../../OpenLayers/lib/OpenLayers.js"></script>
+		<script type="text/javascript" src="../../GeoExt/lib/overrides/override-ext-ajax.js"></script>
+		<script type="text/javascript" src="../../GeoExt/lib/GeoExt.js"></script>
+		<script type="text/javascript" src="../lib/GeoNetwork.js"></script>
+		<script type="text/javascript" src="example.js"></script>
+		<script type="text/javascript" src="wxs-extractor.js"></script>
+	</head>
+	<body>
+		<h1>WxS extractor widget</h1>
+		<p>Simple widget which helps user define an area of interest in order to extract data 
+		from a WFS server. This example could be called with a url and version parameters.
+		Example: wxs-extractor.html?url=http://localhost:8080/geoserver/wfs</p>
+		<div id="extractor"></div>
+		<div id="map"></div>
+	</body>
+</html>

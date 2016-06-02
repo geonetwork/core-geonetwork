@@ -1,0 +1,62 @@
+div.metadata {
+    width : auto;
+    border : 0;
+    margin : 0 5%;
+    padding : 0;
+    float : none !important;
+}
+
+div#tabs {
+    display : none !important;
+}
+
+* {
+    color : black !important;
+}
+
+td.complex div h1 {
+    font-size : 110%;
+    font-weight : bold;
+    color : #016599;
+    padding : 5px 0px 4px
+}
+
+a:link,
+a:visited {
+    color : #520 !important;
+    background : transparent;
+    font-weight : bold;
+    text-decoration : underline;
+}
+
+/* Increase thumbnails size */
+.metadata * img.logo {
+    max-height:none !important;
+    max-width : 650px !important;
+    float: left;
+    clear: both;
+}
+
+/* Badly supported by browser - a small line strike through the legend element */
+.metadata * fieldset {
+    border-top : none !important;
+}
+
+/* Display link between square bracket next to the hyperlinks */
+li a:link:after,
+li a:visited:after,
+td a:link:after,
+td a:visited:after {
+    content : " [" attr(href) "] ";
+    font-size : 80%;
+}
+
+/* Do not display absolute URL or Javascripts */
+a[href^="/"]:after, a[href^="#"]:after, a[href^="#"]:after, a[href^="mailto:"]:after {
+  content: "" !important;
+}
+
+/* Always break page before map to avoid missing map parts */
+div.extentViewer {
+    page-break-before: always;
+}
