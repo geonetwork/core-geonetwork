@@ -123,7 +123,7 @@ public class VersioningTest {
 
         Get get = new Get();
         get.addTitles(metadataActions, repository.getLocation().getPath());
-        Assert.assertEquals("Template for Vector data in ISO19139 (preferred!)", metadataActions.get(0).getTitle());
+        Assert.assertEquals("Template for Vector data in ISO19139 (preferred!)", metadataActions.get(0).getTitle().trim());
         Assert.assertEquals("Modified metadata name", metadataActions.get(1).getTitle());
         Assert.assertEquals("Modified metadata name", metadataActions.get(2).getTitle());
     }

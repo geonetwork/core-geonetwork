@@ -72,11 +72,11 @@ public final class Assert extends junit.framework.TestCase {
             1, element.size());
         String text;
         if (element.get(0) instanceof Element) {
-            text = ((Element) element.get(0)).getText();
+            text = ((Element) element.get(0)).getTextTrim();
         } else if (element.get(0) instanceof Attribute) {
             text = ((Attribute) element.get(0)).getValue();
         } else if (element.get(0) instanceof Text) {
-            text = ((Text) element.get(0)).getText();
+            text = ((Text) element.get(0)).getTextTrim();
         } else {
             fail("Handling of " + element.get(0).getClass() + " is not yet implemented");
             text = "";
