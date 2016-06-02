@@ -145,7 +145,12 @@ public final class XslUtil
         if (serviceContext != null) {
             SettingManager settingsMan = serviceContext.getBean(SettingManager.class);
             if (settingsMan != null) {
-                String value = settingsMan.getValue(key);
+                String value;
+                if ("nodeUrl".equals(key)) {
+                    value = settingsMan.getNodeURL();
+                } else {
+                    value = settingsMan.getValue(key);
+                }
                 if (value != null) {
                     return value;
                 } else {
@@ -556,7 +561,7 @@ public final class XslUtil
             return "eng";
         }
     }
-    
+
     public static String encodeForJavaScript(String str) {
         return DefaultEncoder.getInstance().encodeForJavaScript(str);
     }

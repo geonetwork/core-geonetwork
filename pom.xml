@@ -825,11 +825,17 @@
         <scope>test</scope>
       </dependency>
 
-      <!-- should we had this as scope test?-->
       <dependency>
-        <groupId>xmlunit</groupId>
-        <artifactId>xmlunit</artifactId>
-        <version>1.2</version>
+        <groupId>org.xmlunit</groupId>
+        <artifactId>xmlunit-core</artifactId>
+        <version>${xmlunit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.xmlunit</groupId>
+        <artifactId>xmlunit-matchers</artifactId>
+        <version>${xmlunit.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <!-- db -->
@@ -1078,6 +1084,8 @@
       <name>Developer k-int repository</name>
       <url>http://maven.k-int.com/content/repositories/releases/</url>
     </repository>
+
+
     <repository>
       <snapshots>
         <enabled>true</enabled>
@@ -1089,6 +1097,7 @@
       <name>GeoNetwork remote repository</name>
       <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
+
     <repository>
       <id>mvnrepository.com</id>
       <name>Repository that has juniversalchardet</name>
@@ -1098,6 +1107,12 @@
       <id>maven.geo-solutions.it</id>
       <name>geo-solutions</name>
       <url>http://maven.geo-solutions.it</url>
+    </repository>
+
+    <repository>
+      <id>maven2</id>
+      <name>Repository maven2</name>
+      <url>http://repo.maven.apache.org/maven2</url>
     </repository>
 
     <!-- seasar repo, has jsonic - used by langdetect -->
@@ -1213,6 +1228,7 @@
     <wro.version>1.7.7</wro.version>
     <node.version>v0.10.24</node.version>
     <npm.version>1.3.23</npm.version>
+    <xmlunit.version>2.1.1</xmlunit.version>
     <print-lib.version>2.1.1</print-lib.version>
     <flying-saucer>9.0.7</flying-saucer>
     <camel.version>2.14.0</camel.version>

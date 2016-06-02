@@ -10,7 +10,9 @@
     <tbody>
       <tr data-ng-repeat="r in metadataResources">
         <td>
-          <a data-ng-click="setResource(r)">
+          <a href=""
+             title="{{'clickToAddResource' | translate}}"
+             data-ng-click="setResource(r)">
             {{r.id.split('/').splice(2).join('/')}}
           </a>
         </td>
