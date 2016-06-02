@@ -60,24 +60,24 @@ public class Get implements Service {
     }
 
     /**
-     * Execute the service and return the sub template. 
-     * 
+     * Execute the service and return the sub template.
+     *
      * <p>
      * Sub template are all public - no privileges check. Parameter "uuid" is mandatory.
      * </p>
-     * 
+     *
      * <p>
      * One or more "process" parameters could be added in order to alter the template extracted.
      * This parameter is composed of one XPath expression pointing to a single {@link org.jdom.Element} or {@link org.jdom.Attribute}
      * and a text value separated by "{@value #SEPARATOR}". Warning, when pointing to an element, the content
      * of the element is removed before the value added (See {@link org.jdom.Element#setText(String)}).
      * </p>
-     * 
+     *
      * <p>
-     * For example, to return a contact template with a custom role use 
+     * For example, to return a contact template with a custom role use
      * "&process=gmd:role/gmd:CI_RoleCode/@codeListValue~updatedRole".
      * </p>
-     * 
+     *
      */
     public Element exec(Element params, ServiceContext context)
             throws Exception {
@@ -91,13 +91,14 @@ public class Get implements Service {
             Log.error(Geonet.DATA_MANAGER, String.format("Subtemplate '%s' not found. Check records related to this directory entry." , uuid));
             return new Element("subtemplateNotFound");
         }
+
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
             throw new IllegalArgumentException("Metadata uuid="+uuid+" is not a subtemplate");
         }
 
         Element tpl = metadata.getXmlData(false);
-        
-        
+
+
         // Processing parameters process=xpath~value.
         // xpath must point to an Element or an Attribute.
         List<?> replaceList = params.getChildren(Params.PROCESS);
@@ -136,7 +137,7 @@ public class Get implements Service {
                 }
             }
         }
-        
+
         return tpl;
     }
 }

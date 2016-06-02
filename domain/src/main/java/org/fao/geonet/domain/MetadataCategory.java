@@ -26,6 +26,7 @@ package org.fao.geonet.domain;
 import org.fao.geonet.entitylistener.MetadataCategoryEntityListenerManager;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -39,7 +40,7 @@ import java.util.Map;
 @Table(name = "Categories")
 @EntityListeners(MetadataCategoryEntityListenerManager.class)
 @SequenceGenerator(name=MetadataCategory.ID_SEQ_NAME, initialValue=100, allocationSize=1)
-public class MetadataCategory extends Localized {
+public class MetadataCategory extends Localized implements Serializable {
     static final String ID_SEQ_NAME = "metadata_category_id_seq";
     private int _id;
     private String _name;

@@ -90,6 +90,9 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.util.JAXBSource;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -199,12 +202,12 @@ public final class Xml
 		Element result = null;
 		try {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("POST"); 
+			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Content-Type", "application/xml");
 			connection.setRequestProperty("Content-Length", "" + Integer.toString(getString(xmlQuery).getBytes(ENCODING).length));
 			connection.setRequestProperty("Content-Language", "en-US");
 			connection.setDoOutput(true);
-			PrintStream out = new PrintStream(connection.getOutputStream(), true, ENCODING); 
+			PrintStream out = new PrintStream(connection.getOutputStream(), true, ENCODING);
 			out.print(getString(xmlQuery));
 			out.close();
 
@@ -253,7 +256,7 @@ public final class Xml
 	//--------------------------------------------------------------------------
 
     /**
-     * Reads file into byte array, detects charset and converts from this  
+     * Reads file into byte array, detects charset and converts from this
 		 * charset to UTF8
      *
      * @param file file to decode and convert to UTF8
@@ -286,7 +289,7 @@ public final class Xml
 	//--------------------------------------------------------------------------
 
     /**
-     * Decode byte array as specified charset, then convert to UTF-8 
+     * Decode byte array as specified charset, then convert to UTF-8
 		 * by encoding as UTF8
      *
      * @param buf byte array to decode and convert to UTF8
@@ -311,7 +314,7 @@ public final class Xml
 		// encode as UTF-8
 		ByteBuffer outputBuffer = utf8Encoder.encode(data);
 
-		// remove any nulls from the end of the encoded data why? - this is a 
+		// remove any nulls from the end of the encoded data why? - this is a
 		// bug in the encoder???? could also be that the file has characters
 		// from more than one charset?
 		byte[] out = outputBuffer.array();
@@ -328,10 +331,10 @@ public final class Xml
 	//--------------------------------------------------------------------------
 
     /**
-     * Loads xml from a string and returns its root node 
+     * Loads xml from a string and returns its root node
 		 * (validates the xml if required).
      *
-     * @param data 
+     * @param data
      * @param validate
      * @return
      * @throws IOException
@@ -392,6 +395,13 @@ public final class Xml
         JDOMResult resXml = new JDOMResult();
         transform(xml, styleSheetPath, resXml, null);
         return (Element)resXml.getDocument().getRootElement().detach();
+    }
+
+    public static Object unmarshall(Element xml, Class clazz) throws Exception {
+        JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        Source source = new StreamSource(new StringReader(Xml.getString(xml)));
+        return jaxbUnmarshaller.unmarshal(source);
     }
 	//--------------------------------------------------------------------------
 
@@ -548,7 +558,7 @@ public final class Xml
                 e.printStackTrace();
             }
         }
-         
+
          if (Log.isDebugEnabled(Log.XML_RESOLVER) && s != null) {
              Log.debug(Log.XML_RESOLVER, "Resolved as "+s.getSystemId());
          }
@@ -630,7 +640,7 @@ public final class Xml
 
    // --------------------------------------------------------------------------
    /**
-   * Transform an xml tree to PDF using XSL-FOP 
+   * Transform an xml tree to PDF using XSL-FOP
      * putting the result to a stream (uses a stylesheet
    * on disk)
    */
@@ -642,7 +652,7 @@ public final class Xml
    // Step 1: Construct a FopFactory
    // (reuse if you plan to render multiple documents!)
    FopFactory fopFactory = FopFactory.newInstance();
-   
+
    // Step 2: Set up output stream.
    // Note: Using BufferedOutputStream for performance reasons
 
@@ -679,10 +689,10 @@ public final class Xml
 
    }
 
-       
+
        return file;
    }
-   
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- General stuff
@@ -721,10 +731,10 @@ public final class Xml
 
 	/**
      * Converts an xml element to JSON
-     * 
+     *
      * @param xml the XML element
      * @return the JSON response
-     * 
+     *
      * @throws IOException
      */
     public static String getJSON (Element xml) throws IOException {
@@ -732,16 +742,16 @@ public final class Xml
     }
     /**
      * Converts an xml string to JSON
-     * 
+     *
      * @param xml the XML element
      * @return the JSON response
-     * 
+     *
      * @throws IOException
      */
     public static String getJSON (String xml) throws IOException {
         XMLSerializer xmlSerializer = new XMLSerializer();
-        
-        // Disable type hints. When enable, a type attribute in the root 
+
+        // Disable type hints. When enable, a type attribute in the root
         // element will throw NPE.
         // http://sourceforge.net/mailarchive/message.php?msg_id=27646519
         xmlSerializer.setTypeHintsEnabled(false);
@@ -867,7 +877,7 @@ public final class Xml
 		XPath xp = prepareXPath(xml, xpath, theNSs);
 		return xp.selectNodes(xml);
 	}
-	
+
     /**
      * Evaluates an XPath expression on an document and returns Elements.
      *
@@ -884,9 +894,9 @@ public final class Xml
 		}
         xml = (Element)xml.clone();
         Document document = new Document(xml);
-        return xp.selectNodes(document);		
-	}	
-		
+        return xp.selectNodes(document);
+	}
+
 	//---------------------------------------------------------------------------
 
     /**
@@ -899,7 +909,7 @@ public final class Xml
 	public static List<?> selectNodes(Element xml, String xpath) throws JDOMException {
 		return selectNodes(xml, xpath, new ArrayList<Namespace>());
 	}
-		
+
 	//---------------------------------------------------------------------------
 
     /**
@@ -1008,10 +1018,33 @@ public final class Xml
      * @return
      */
     public static Set<String> filterElementValues(Element element,
-                                                     ElementFilter elementFilter,
-                                                     String elementName,
-                                                     Namespace elementNamespace,
-                                                     String attributeName) {
+                                                  ElementFilter elementFilter,
+                                                  String elementName,
+                                                  Namespace elementNamespace,
+                                                  String attributeName) {
+        return filterElementValues(element, elementFilter, elementName, elementNamespace, attributeName, null);
+    }
+
+    /**
+     * Search in metadata all matching element for the filter
+     * and return a list of uuid separated by or to be used in a
+     * search on uuid. Extract uuid from matched element if
+     * elementName is null or from the elementName child.
+     *
+     * @param element
+     * @param elementFilter Filter to get element descendants
+     * @param elementName   Child element to get value from. If null, filtered element value is returned
+     * @param elementNamespace
+     * @param attributeName Attribute name to get value from. If null, TODO: improve
+     * @param attributeNamespace
+     * @return
+     */
+    public static Set<String> filterElementValues(Element element,
+                                                  ElementFilter elementFilter,
+                                                  String elementName,
+                                                  Namespace elementNamespace,
+                                                  String attributeName,
+                                                  Namespace attributeNamespace) {
         @SuppressWarnings("unchecked")
         Iterator<Element> i = element.getDescendants(elementFilter);
         Set<String> values = new HashSet<String>();
@@ -1022,7 +1055,8 @@ public final class Xml
                     e.getText() :
                     (attributeName == null ?
                             e.getChildText(elementName, elementNamespace) :
-                            e.getAttributeValue(attributeName)
+                            (attributeNamespace == null)?e.getAttributeValue(attributeName):
+                                    e.getAttributeValue(attributeName, attributeNamespace)
                     );
             if (uuid != null && !uuid.isEmpty()) {
                 values.add(uuid);
@@ -1042,11 +1076,11 @@ public final class Xml
 		private Element xpaths;
 		private Namespace ns = Namespace.NO_NAMESPACE;
 		private SAXOutputter so;
-		
+
 		public void setSo(SAXOutputter so) {
 			this.so = so;
 		}
-		
+
 		public boolean errors() {
 			return errorCount > 0;
 		}
@@ -1065,7 +1099,7 @@ public final class Xml
 				String xpath = org.fao.geonet.utils.XPath.getXPath(elem);
 				//-- remove the first element to ensure XPath fits XML passed with
 				//-- root element
-				if (xpath.startsWith("/")) { 
+				if (xpath.startsWith("/")) {
 					int ind = xpath.indexOf('/',1);
 					if (ind != -1) {
 						xpath = xpath.substring(ind+1);
@@ -1090,7 +1124,7 @@ public final class Xml
 				parentName = "/";
 			}
 			message += " with parent element: " + parentName + ")";
-			
+
 			Element m = new Element("message", ns).setText(message);
 			Element errorType = new Element("typeOfError", ns).setText(typeOfError);
 			Element errorNumber = new Element("errorNumber", ns).setText(String.valueOf(errorCount));
@@ -1101,7 +1135,7 @@ public final class Xml
 			e.addContent(x);
 			xpaths.addContent(e);
 		}
-		
+
 		public void error( SAXParseException parseException ) throws SAXException {
 			addMessage( parseException, "ERROR" );
 		}
@@ -1138,8 +1172,8 @@ public final class Xml
 	public synchronized static void validate(Document doc) throws Exception {
 		if (doc.getDocType() != null) { // assume DTD validation
 			SAXBuilder builder = getSAXBuilder(true, null);
-			builder.build(new StringReader(getString(doc))); 
-		} 
+			builder.build(new StringReader(getString(doc)));
+		}
 
 		Element xml = doc.getRootElement();
 		if (xml != null) {  // try XSD validation
@@ -1269,7 +1303,7 @@ public final class Xml
 			return null;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 
     /**
@@ -1312,7 +1346,7 @@ public final class Xml
 		eh.setSo(so);
 
 		so.output(xml);
-	} 
+	}
 
 	private static SchemaFactory factory() {
 		return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);

@@ -123,8 +123,8 @@
                } else {
                  gnCurrentEdit.working = true;
                  return gnThesaurusService
-                         .getXML(thesaurusIdentifier,  null,
-                                 attrs.transformation).then(
+                 .getXML(thesaurusIdentifier,  null,
+                 attrs.transformation).then(
                          function(data) {
                    // Add the fragment to the form
                    scope.snippet = data;

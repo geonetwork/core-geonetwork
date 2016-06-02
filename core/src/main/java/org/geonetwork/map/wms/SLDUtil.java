@@ -101,7 +101,7 @@ public class SLDUtil {
             for (Element rule : rules) {
                 List<Element> filters = (List<Element>) Xml.selectNodes(rule, "ogc:Filter", Arrays.asList(Geonet.Namespaces.OGC));
                 if(filters.size() == 0) {
-                    rule.addContent(newFilterElt);
+                    rule.addContent((Element)newFilterElt.clone());
                 }
                 else if (filters.size() == 1) {
                     Element sldFilterElt = filters.get(0);

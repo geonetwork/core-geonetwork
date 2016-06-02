@@ -233,12 +233,15 @@
                * @return {*|boolean}
                */
               scope.isInSearch = function(value) {
-
                 var p = scope.searchObj.params[scope.facetConfig.key];
                 if (angular.isString(p)) {
                   p = [p];
                 }
                 return p && p.indexOf(value) >= 0;
+                //return scope.searchObj.params[scope.facetConfig.key] &&
+                //    scope.searchObj.params[scope.facetConfig.key]
+                //    .split(delimiter)
+                //    .indexOf(value) >= 0;
               };
 
               //TODO improve performance here, maybe to complex $watchers

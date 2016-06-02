@@ -38,6 +38,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -85,10 +86,12 @@ public class RdfOutputManager {
 
             try {
                 recordsFile = File.createTempFile("records-", ".rdf");
-                outputRecordsFile = new BufferedWriter(new FileWriter(recordsFile));
+                outputRecordsFile = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(recordsFile), Charset.forName("UTF-8")));
 
                 catalogFile = File.createTempFile("catalog-", ".rdf");
-                outputCatalogFile = new BufferedWriter(new FileWriter(catalogFile));
+                outputCatalogFile = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(catalogFile), Charset.forName("UTF-8")));
 
                 Path xslPath = context.getAppPath().resolve(Geonet.Path.XSLT_FOLDER).
                         resolve("services").resolve("dcat").resolve("rdf.xsl");
@@ -146,14 +149,16 @@ public class RdfOutputManager {
             BufferedReader reader1 = null, reader2 = null;
             try {
                 rdfFile = File.createTempFile("rdf-", ".rdf");
-                outputRdfFile = new BufferedWriter(new FileWriter(rdfFile));
+                outputRdfFile = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(rdfFile), Charset.forName("UTF-8")));
+
 
                 // File header
                 Log.info(Geonet.GEONETWORK, "DCAT - ... Writing file header and dcat:Catalog section");
                 writeFileHeader(outputRdfFile);
 
                 // Append catalog records
-                reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(catalogFile)));
+                reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(catalogFile), Charset.forName("UTF-8")));
                 IOUtils.copy(reader1, outputRdfFile);
 
                 // Close dcat:Catalog
@@ -162,7 +167,7 @@ public class RdfOutputManager {
 
                 // Append records file
                 Log.info(Geonet.GEONETWORK, "DCAT - ... Writing catalog records");
-                reader2 = new BufferedReader(new InputStreamReader(new FileInputStream(recordsFile)));
+                reader2 = new BufferedReader(new InputStreamReader(new FileInputStream(recordsFile), Charset.forName("UTF-8")));
                 IOUtils.copy(reader2, outputRdfFile);
 
                 // File footer

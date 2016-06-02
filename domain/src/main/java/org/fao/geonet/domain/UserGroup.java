@@ -27,6 +27,7 @@ import org.fao.geonet.entitylistener.UserGroupEntityListenerManager;
 import org.jdom.Element;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.IdentityHashMap;
 
 /**
@@ -38,7 +39,7 @@ import java.util.IdentityHashMap;
 @Access(AccessType.PROPERTY)
 @Table(name = UserGroupNamedQueries.TABLE_NAME)
 @EntityListeners(UserGroupEntityListenerManager.class)
-public class UserGroup extends GeonetEntity {
+public class UserGroup extends GeonetEntity  implements Serializable {
     private UserGroupId _id = new UserGroupId();
     private Group _group;
     private User _user;

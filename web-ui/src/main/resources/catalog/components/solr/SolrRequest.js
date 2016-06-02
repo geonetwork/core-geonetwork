@@ -492,8 +492,8 @@
     for (var fieldProp in solrData.stats.stats_fields) {
       var field = solrData.stats.stats_fields[fieldProp];
       fields['facet.range'].push(fieldProp);
-      fields['f.' + fieldProp + '.facet.range.start'] = field.min;
-      fields['f.' + fieldProp + '.facet.range.end'] = field.max;
+      fields['f.' + fieldProp + '.facet.range.start'] = field.min || 0;
+      fields['f.' + fieldProp + '.facet.range.end'] = field.max || 0;
       fields['f.' + fieldProp + '.facet.range.gap'] =
           (field.max - field.min) / FACET_RANGE_COUNT;
     }

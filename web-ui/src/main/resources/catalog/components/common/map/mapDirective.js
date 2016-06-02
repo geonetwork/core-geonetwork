@@ -28,7 +28,7 @@
   angular.module('gn_map_directive',
       ['gn_owscontext_service'])
 
-    .directive(
+      .directive(
       'gnDrawBbox',
       [
        'gnMap',
@@ -100,10 +100,10 @@
                angular.isNumber(coords[2]) &&
                angular.isNumber(coords[3])) {
                  scope.extentXml = extentTpl[scope.schema || 'iso19139']
-                   .replace('{{west}}', coords[0])
-                   .replace('{{south}}', coords[1])
-                   .replace('{{east}}', coords[2])
-                   .replace('{{north}}', coords[3]);
+                 .replace('{{west}}', coords[0])
+                 .replace('{{south}}', coords[1])
+                 .replace('{{east}}', coords[2])
+                 .replace('{{north}}', coords[3]);
                }
              };
 

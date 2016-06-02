@@ -108,7 +108,7 @@
       };
       $scope.saveGroupEdit = function() {
         gnSchematronAdminService.group
-          .update($scope.editGroup.updatedGroup, $scope.selection.group);
+            .update($scope.editGroup.updatedGroup, $scope.selection.group);
         $scope.editGroup.group = null;
         $scope.editGroup.updatedGroup = null;
       };
@@ -151,7 +151,7 @@
           var updated = angular.copy($scope.selection.group);
           updated.requirement = newRequirement;
           gnSchematronAdminService.group
-            .update(updated, $scope.selection.group);
+              .update(updated, $scope.selection.group);
         }
       };
       updateGroupCount = function(group, amount) {
@@ -183,9 +183,9 @@
             $translate('confirmDeleteSchematronCriteriaGroup');
         $scope.confirmationDialog.deleteConfirmed = function() {
           gnSchematronAdminService.group
-            .remove(group, $scope.schematronGroups, function() {
+              .remove(group, $scope.schematronGroups, function() {
                 if ($scope.schematronGroups
-                  .indexOf($scope.selection.group) < 0) {
+                .indexOf($scope.selection.group) < 0) {
                   if ($scope.schematronGroups.length === 0) {
                     $scope.selection.group = null;
                   } else {
@@ -207,14 +207,14 @@
         var idx = schema.schematron.indexOf(schematron);
         if (idx !== 0) {
           gnSchematronAdminService.schematron
-            .swapPriority(schema, schema.schematron[idx - 1], schematron);
+              .swapPriority(schema, schema.schematron[idx - 1], schematron);
         }
       };
       $scope.lowerSchematron = function(schema, schematron) {
         var idx = schema.schematron.indexOf(schematron);
         if (idx !== schema.schematron.length - 1) {
           gnSchematronAdminService.schematron
-            .swapPriority(schema, schematron, schema.schematron[idx + 1]);
+              .swapPriority(schema, schematron, schema.schematron[idx + 1]);
         }
       };
       $scope.createSchematronGroup = function(newGroup) {

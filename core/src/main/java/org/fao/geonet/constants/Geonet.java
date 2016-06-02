@@ -631,9 +631,9 @@ public final class Geonet {
         public static final Namespace OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
         public static final Namespace OGC = Namespace.getNamespace("ogc", "http://www.opengis.net/ogc");
         public static final Namespace GML = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
-		public static final Namespace SVRL = Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
-		public static final Namespace SLD = Namespace.getNamespace("sld", "http://www.opengis.net/sld");
-		public static final Namespace SE = Namespace.getNamespace("se", "http://www.opengis.net/se");
+        public static final Namespace SVRL = Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
+        public static final Namespace SLD = Namespace.getNamespace("sld", "http://www.opengis.net/sld");
+        public static final Namespace SE = Namespace.getNamespace("se", "http://www.opengis.net/se");
     }
 
     public static class IndexFieldNames {

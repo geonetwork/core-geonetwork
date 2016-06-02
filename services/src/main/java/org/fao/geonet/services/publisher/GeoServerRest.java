@@ -52,15 +52,15 @@ import javax.annotation.CheckReturnValue;
  * This class uses GeoServer's management REST APIs for creating, updating and
  * deleting data or coverage store.
  * http://docs.geoserver.org/stable/en/user/extensions/rest/rest-config-api.html
- * 
- * 
+ *
+ *
  * Similar development have been discovered at the end of that proposal patch:
  * http://code.google.com/p/gsrcj/
  * http://code.google.com/p/toolboxenvironment/source
  * /browse/trunk/ArchivingServer
  * /src/java/it/intecs/pisa/archivingserver/chain/commands
  * /PublishToGeoServer.java
- * 
+ *
  */
 public class GeoServerRest {
 
@@ -84,7 +84,7 @@ public class GeoServerRest {
 	/**
 	 * Create a GeoServerRest instance to communicate with a GeoServer node and
 	 * a default namespace
-	 * 
+	 *
 	 * @param url
 	 * @param username
 	 * @param password
@@ -130,9 +130,9 @@ public class GeoServerRest {
 	/**
 	 * Retrieve layer (feature type or coverage) information. Use @see
 	 * #getResponse() to get the message returned.
-	 * 
+	 *
 	 * TODO : Add format ?
-	 * 
+	 *
 	 * @param layer
 	 * @return
 	 * @throws java.io.IOException
@@ -585,6 +585,9 @@ public class GeoServerRest {
 			status = sendREST(GeoServerRest.METHOD_PUT, url + layer,
 					body, null, "text/xml", true);
             checkResponseCode(status);
+
+        } catch (RuntimeException e) {
+            throw e;
 
 		} catch (Exception e) {
 			if(Log.isDebugEnabled(LOGGER_NAME))

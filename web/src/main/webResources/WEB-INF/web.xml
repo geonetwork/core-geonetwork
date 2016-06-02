@@ -39,7 +39,7 @@
 	        org.springframework.web.context.request.RequestContextListener
 	    </listener-class>
     </listener>
-  
+
     <!-- shut down java cache used for xlinks and spatial index -->
     <listener>
         <listener-class>
@@ -61,7 +61,7 @@
 	<listener>
 		<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
 	</listener>
-	
+
     <!-- Spring security -->
 <!--     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
@@ -79,7 +79,7 @@
             <param-value>localhost</param-value>
         </init-param>
     </filter>
- 
+
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
@@ -215,17 +215,17 @@
         <filter-name>resources</filter-name>
         <url-pattern>/images/harvesting/*</url-pattern>
     </filter-mapping>
-    
+
     <filter-mapping>
         <filter-name>resources</filter-name>
         <url-pattern>/xml/schemas/*</url-pattern>
     </filter-mapping>
-    
+
     <filter-mapping>
         <filter-name>resources</filter-name>
         <url-pattern>/images/statTmp/*</url-pattern>
     </filter-mapping>
-    
+
     <filter-mapping>
         <filter-name>resources</filter-name>
         <url-pattern>/htmlcache/*</url-pattern>
@@ -375,6 +375,7 @@
                 application/xml,text/xml,
                 text/html,
                 text/plain,
+                image/png,
                 application/vnd.ogc.se_xml,
                 application/vnd.ogc.se+xml,
                 application/vnd.ogc.success+xml,

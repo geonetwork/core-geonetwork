@@ -113,7 +113,7 @@ public class NioPathAwareCatalogResolver extends CatalogResolver {
                 final Path basePath = IO.toPath(new URI(base));
                 Path parent = basePath.getParent();
                 if(parent == null) {
-                    throw new RuntimeException(basePath.getFileName() + 
+                    throw new RuntimeException(basePath.getFileName() +
                             " does not have parent");
                 }
                 resolvedResource = parent.resolve(href);
@@ -122,6 +122,9 @@ public class NioPathAwareCatalogResolver extends CatalogResolver {
                     return toPathInputSource(resolvedResource);
                 }
             }
+        } catch (RuntimeException e) {
+            throw e;
+
         } catch (Exception e) {
             // ignore
         }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
   Create a simple XML tree for relation description.
   <relations>
     <relation type="related|services|children">
@@ -39,7 +39,7 @@
   <xsl:template mode="relation" match="summary" priority="99"/>
 
 
-  <!-- In Lucene only mode, metadata are retrieved from 
+  <!-- In Lucene only mode, metadata are retrieved from
   the index and pass as a simple XML with one level element.
   Make a simple copy here. -->
   <xsl:template mode="superBrief" match="metadata">
@@ -61,13 +61,13 @@
     <relation type="{$type}">
 			<xsl:if test="normalize-space($subType)!=''">
 				<xsl:attribute name="subType">
-					<xsl:value-of select="$subType"/>		
+					<xsl:value-of select="$subType"/>
 				</xsl:attribute>
 			</xsl:if>
       <xsl:copy-of select="$metadata"/>
     </relation>
   </xsl:template>
-  
+
   <!-- Add the default title as title. This may happen
   when title is retrieve from index and the record is
   not available in current language. eg. iso19110 records

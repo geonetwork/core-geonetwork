@@ -23,6 +23,10 @@
 
 package org.fao.geonet.kernel.search.index;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -54,7 +58,10 @@ public class IndexingTask extends QuartzJobBean {
     private ConfigurableApplicationContext applicationContext;
     @Autowired
     private DataManager _dataManager;
-
+    @Autowired
+    private ConfigurableApplicationContext context;
+    @Autowired
+    private ServiceManager serviceManager;
 
     private void indexRecords() {
         ApplicationContextHolder.set(applicationContext);
@@ -83,7 +90,11 @@ public class IndexingTask extends QuartzJobBean {
     }
 
     @Override
-    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+    protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
+        ServiceContext serviceContext = serviceManager.createServiceContext("indexing", context);
+        serviceContext.setLanguage("eng");
+        serviceContext.setAsThreadLocal();
+
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Indexing task / Start at: "
                     + new Date() + ". Checking if any records need to be indexed ...");

@@ -44,10 +44,10 @@ public class CatalogConfiguration {
 	// GetCapabilities variables
 	private int _numberOfKeywords = 10;
 	private int _maxNumberOfRecordsForKeywords = Integer.MAX_VALUE;
-	
+
 	// GetDomain variables
 	private int _maxNumberOfRecordsForPropertyNames = Integer.MAX_VALUE;
-	
+
 	// GetRecords variables
 	private final HashMap<String, String> _fieldMapping = new HashMap<String, String>();
     private final HashMap<String, HashMap<String, String>> _fieldMappingXPath = new HashMap<String, HashMap<String, String>>();
@@ -58,12 +58,12 @@ public class CatalogConfiguration {
 	private final Set<String> _getRecordsOutputSchema = new HashSet<String>();
 	private final Set<String> _getRecordsTypenames = new HashSet<String>();
 	private final Set<String> _getRecordsRangeFields = new HashSet<String>();
-	
+
 	// DescribeRecord variables
 	private final HashMap<String, String> _describeRecordTypenames = new HashMap<String, String>();
 	private final Set<Namespace> _describeRecordNamespaces = new HashSet<Namespace>();
 	private final Set<String> _describeRecordOutputFormat = new HashSet<String>();
-	
+
 	// GetRecordById variables
 	private boolean _increasePopularity = false;
 
@@ -138,7 +138,7 @@ public class CatalogConfiguration {
             if (operationName.equals(Csw.ConfigFile.Operation.Attr.Value.DESCRIBE_RECORD)) {
                 initDescribeRecordConfig(operation);
             }
-            
+
             if (operationName.equals(Csw.ConfigFile.Operation.Attr.Value.GET_RECORD_BY_ID)) {
                 initGetRecordByIdConfig(operation);
             }
@@ -180,16 +180,16 @@ public class CatalogConfiguration {
 	private void initDescribeRecordConfig(Element operation) {
 		// Handle typename parameter list value
         Map<String, Namespace> typenames = _schemaManager.getHmSchemasTypenames();
-        Iterator<String> iterator = typenames.keySet().iterator();
-        while(iterator.hasNext()) {
-            String typeName = iterator.next();
-            Namespace ns = typenames.get(typeName);
+
+        for (Map.Entry< String, Namespace > entry : typenames.entrySet()) {
+            String typeName = entry.getKey();
+            Namespace ns = entry.getValue();
             String typename = typeName;
             // TODO: Schema plugin schema should be published in
             // /web/geonetwork/xml/validation/csw/2.0.2 for validation.
             String schema = ns.getPrefix().equals("csw") ? "record.xsd" : (
-                        ns.getPrefix().equals("gmd") ? "identification.xsd" : "unknown.xsd"
-                    );
+                ns.getPrefix().equals("gmd") ? "identification.xsd" : "unknown.xsd"
+            );
             _describeRecordNamespaces.add(ns);
             _describeRecordTypenames.put(typename, schema);
         }
@@ -204,7 +204,7 @@ public class CatalogConfiguration {
 				.getChild(Csw.ConfigFile.Operation.Child.PARAMETERS);
 		@SuppressWarnings("unchecked")
         List<Element> paramsList = params.getChildren(Csw.ConfigFile.Parameters.Child.PARAMETER);
-		
+
 		String name, field, type, range;
 		for (Element param : paramsList) {
 			name = param
@@ -253,10 +253,10 @@ public class CatalogConfiguration {
 
             _fieldMappingXPath.put(name.toLowerCase(), xpathMap);
 		}
-		
+
 		// OutputFormat parameter
 		_getRecordsOutputFormat.addAll(getOutputFormat(operation));
-		
+
 		// ConstraintLanguage parameter
 		Element constraintLanguageElt = operation.getChild(Csw.ConfigFile.Operation.Child.CONSTRAINT_LANGUAGE);
 
@@ -266,20 +266,19 @@ public class CatalogConfiguration {
             String value = constraint.getText();
             _getRecordsConstraintLanguage.add(value);
         }
-		
+
 		// Handle typenames parameter list value
         Map<String, Namespace> typenames = _schemaManager.getHmSchemasTypenames();
-        Iterator<String> iterator = typenames.keySet().iterator();
-        while(iterator.hasNext()) {
-            String typeName = iterator.next();
-            Namespace ns = typenames.get(typeName);
+        for (Map.Entry< String, Namespace > entry : typenames.entrySet()) {
+            String typeName = entry.getKey();
+            Namespace ns = entry.getValue();
             String typename = ns.getPrefix() +
-                    ":" + typeName;
+                ":" + typeName;
             _getRecordsOutputSchema.add(ns.getURI());
             _getRecordsTypenames.add(typename);
         }
 	}
-	
+
 	/**
 	 * @param operation
 	 * @return
@@ -291,7 +290,7 @@ public class CatalogConfiguration {
 
 		@SuppressWarnings("unchecked")
         List<Element> formatList = outputFormat.getChildren(Csw.ConfigFile.OutputFormat.Child.FORMAT);
-		
+
 		String format;
         for (Element currentFormat : formatList) {
             format = currentFormat.getText();
@@ -318,13 +317,13 @@ public class CatalogConfiguration {
 		else
 			return _additionalQueryables;
 	}
-	
-	
-	
+
+
+
 	// -------------
 	//   Getters
 	// -------------
-	
+
 	/**
 	 * @return the _numberOfKeywords
 	 */
@@ -356,7 +355,7 @@ public class CatalogConfiguration {
         init();
 		return _describeRecordTypenames;
 	}
-	
+
 	/**
 	 * @return the _describeRecordNamespaces
 	 */
@@ -364,7 +363,7 @@ public class CatalogConfiguration {
         init();
 		return _describeRecordNamespaces;
 	}
-	
+
 	/**
 	 * @return the _describeRecordOutputFormat
 	 */

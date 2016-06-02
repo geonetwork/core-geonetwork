@@ -332,10 +332,10 @@
         var defer = $q.defer();
         $http.get('md.group.update?id=' + metadataId +
             '&groupid=' + groupId)
-          .success(function(data) {
+            .success(function(data) {
               defer.resolve(data);
             })
-          .error(function(data) {
+            .error(function(data) {
               defer.reject(data);
             });
         return defer.promise;
@@ -347,10 +347,10 @@
           ids += '&_' + value + '=on';
         });
         $http.get('md.category.update?id=' + metadataId + ids)
-          .success(function(data) {
+            .success(function(data) {
               defer.resolve(data);
             })
-          .error(function(data) {
+            .error(function(data) {
               defer.reject(data);
             });
         return defer.promise;
@@ -359,10 +359,10 @@
       this.startVersioning = function(metadataId) {
         var defer = $q.defer();
         $http.get('md.versioning.start?id=' + metadataId)
-          .success(function(data) {
+            .success(function(data) {
               defer.resolve(data);
             })
-          .error(function(data) {
+            .error(function(data) {
               defer.reject(data);
             });
         return defer.promise;

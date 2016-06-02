@@ -98,9 +98,9 @@
                 });
                 this.map.beforeRender(pan);
                 this.map.getView().fit(
-                    feature.getGeometry(),
-                    this.map.getSize(),
-                    { minResolution: 40 }
+                  feature.getGeometry(),
+                  this.map.getSize(),
+                  { minResolution: 40 }
                 );
               }
 

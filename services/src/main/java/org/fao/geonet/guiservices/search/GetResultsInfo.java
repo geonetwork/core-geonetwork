@@ -55,11 +55,13 @@ public class GetResultsInfo implements Service
 		
 		Element results = new Element("results");
 		
-		Object searcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
-		
-		if (searcher != null)
-			if (searcher instanceof LuceneSearcher)
-				results.setText(((LuceneSearcher)searcher).getSize()+"");
+		if(session != null) {
+    		Object searcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
+    		
+    		if (searcher != null)
+    			if (searcher instanceof LuceneSearcher)
+    				results.setText(((LuceneSearcher)searcher).getSize()+"");
+		}
 		return results;
 	}
 }

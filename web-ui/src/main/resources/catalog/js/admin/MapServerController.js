@@ -47,7 +47,7 @@
       function loadMapservers() {
         $scope.mapserverSelected = null;
         $http.get('geoserver.publisher?_content_type=json&action=LIST')
-          .success(function(data) {
+            .success(function(data) {
               $scope.mapservers = data != 'null' ? data : [];
             }).error(function(data) {
               // TODO
@@ -87,14 +87,14 @@
         $http.get('geoserver.publisher?_content_type=json&action=' +
             $scope.operation +
             '&' + $(formId).serialize())
-          .success(function(data) {
+            .success(function(data) {
               loadMapservers();
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('mapserverUpdated'),
                 timeout: 2,
                 type: 'success'});
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('mapserverUpdateError'),
                 error: data,
@@ -119,7 +119,7 @@
         };
 
         $http.post('geoserver.publisher@json', null, {params: params})
-          .success(function(data) {
+            .success(function(data) {
               $scope.resetPassword = null;
               $('#passwordResetModal').modal('hide');
             }).error(function(data) {
@@ -131,10 +131,10 @@
         $http.get('geoserver.publisher?_content_type=json&action=' +
             'REMOVE_NODE&id=' +
                   $scope.mapserverSelected.id)
-          .success(function(data) {
+            .success(function(data) {
               loadMapservers();
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('mapserverDeleteError'),
                 error: data,

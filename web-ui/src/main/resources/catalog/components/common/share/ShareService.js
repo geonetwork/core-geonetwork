@@ -59,7 +59,7 @@
     function($q, $http, gnShareConstants) {
       var isAdminOrReviewer = function(userProfile, groupOwner, privileges) {
         if ($.inArray(userProfile,
-            gnShareConstants.internalGroupsProfiles) === -1) {
+                      gnShareConstants.internalGroupsProfiles) === -1) {
           return false;
         } else if (userProfile === 'Administrator') {
           return true;
@@ -137,7 +137,7 @@
               'md.privileges.batch?_content_type=json';
 
           $http.get(url)
-            .success(function(data) {
+              .success(function(data) {
                 var groups = data !== 'null' ? data.group : null;
                 if (data == null) {
                   return;
@@ -248,7 +248,7 @@
           });
           //TODO: fix service that crash with _content_type parameter
           $http.get(url, {params: params})
-            .success(function(data) {
+              .success(function(data) {
                 defer.resolve(data);
               }).error(function(data) {
                 defer.reject(data);

@@ -49,13 +49,6 @@
         </replaceXML>
 		
 	</file>
-	<file name=".*/WEB-INF/config-gui.xml">
-		<replaceAtt xpath="client" attName="widget" value="false"/>
-		<replaceAtt xpath="client" attName="url" value="main.home"/>
-		<replaceXML xpath="repository">
-			<thesaurus>http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/repository/thesaurus.xml</thesaurus>
-		</replaceXML>
-	</file>
 	<textFile name="data-db-default.sql">
 		<!-- generate server configuration updates -->
 		<update linePattern="(INSERT INTO Settings VALUES \(11,10,'name',').+?('.*)">$1My GeoNetwork catalogue$2</update>

@@ -73,7 +73,7 @@
         <to type="permanent-redirect" last="true">%{context-path}$1/fin/$2</to>
     </rule>
     <rule>
-        <from>^(.*)/fr/(.*)$</from>
+        <from>^(!doc)(.*)/fr/(.*)$</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/fre/$2</to>
     </rule>
     <rule>
@@ -97,7 +97,7 @@
         <to type="permanent-redirect" last="true">%{context-path}$1/spa/$2</to>
     </rule>
     <rule>
-        <from>^(.*)/en/(.*)$</from>
+        <from>^(!doc)(.*)/en/(.*)$</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/eng/$2</to>
     </rule>
     <rule>

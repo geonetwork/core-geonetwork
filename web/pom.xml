@@ -429,13 +429,6 @@
 	    <artifactId>jsoup</artifactId>
 	    <version>1.7.1</version>
 	</dependency>
-
-		<dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>geonetwork-client</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>web-ui</artifactId>
@@ -681,6 +674,11 @@
                   <directory>${project.basedir}/../schemas/csw-record/src/main/plugin</directory>
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
+                <!-- Copy the documentation in the webapp. -->
+                <resource>
+                  <directory>${project.basedir}/../docs/manuals/target/doc</directory>
+                  <targetPath>${basedir}/src/main/webapp/doc</targetPath>
+                </resource>
               </resources>
             </configuration>
           </execution>
@@ -729,42 +727,6 @@
             <resource>
               <directory>${build.webapp.resources}</directory>
             </resource>
-
-            <!-- Remove comment tag to include documentation in the build.
-            Python and Latex are required to build the documentation. -->
-
-            <!--
-            <resource>
-              <directory>${rootProjectDir}/docs/eng/users/build/html</directory>
-              <targetPath>docs/eng/users</targetPath>
-            </resource>
-            <resource>
-              <directory>${rootProjectDir}/docs/eng/users/build/latex</directory>
-              <targetPath>docs/eng/users</targetPath>
-               <includes>
-                <include>GeoNetworkUserManual.pdf</include>
-              </includes>
-            </resource>
-            <resource>
-            <directory>${rootProjectDir}/docs/eng/developer/build/html</directory>
-              <targetPath>docs/eng/developer</targetPath>
-            </resource>
-            <resource>
-              <directory>${rootProjectDir}/docs</directory>
-              <targetPath>docs</targetPath>
-               <includes>
-                <include>changes.txt</include>
-                <include>license*.html</include>
-                <include>readme*.html</include>
-              </includes>
-            </resource>
-            <resource>
-              <directory>${rootProjectDir}/docs/eng/developer/build/latex</directory>
-              <targetPath>docs/eng/developer</targetPath>
-                <includes>
-                  <include>GeoNetworkDeveloperManual.pdf</include>
-                </includes>
-            </resource>-->
           </webResources>
             <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
             <packagingExcludes>

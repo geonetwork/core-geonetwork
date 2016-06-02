@@ -228,6 +228,8 @@ public class Aligner extends BaseAligner
             }
         }
 
+        dataMan.forceIndexChanges();
+        
         log.info("End of alignment for : "+ params.getName());
 
         return result;
@@ -523,7 +525,7 @@ public class Aligner extends BaseAligner
         }
         context.getBean(MetadataRepository.class).save(metadata);
 
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, Math.random() < 0.01);
         result.addedMetadata++;
 
         return id;
@@ -829,7 +831,7 @@ public class Aligner extends BaseAligner
         metadataRepository.save(metadata);
 //        dataMan.flush();
 
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, Math.random() < 0.01);
     }
 
 

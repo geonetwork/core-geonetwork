@@ -62,7 +62,7 @@
       function getMainSearchStat() {
         // Get core statistics for q service
         $http.get('statistics-search?_content_type=json&service=q')
-        .success(function(data) {
+            .success(function(data) {
               $scope.statistics.search.mainSearchStatistics.q =
                   (data === 'null' ? null : data);
             }).error(function(data) {
@@ -71,7 +71,7 @@
 
         // Get core statistics for csw service
         $http.get('statistics-search?_content_type=json&service=csw')
-        .success(function(data) {
+            .success(function(data) {
               $scope.statistics.search.mainSearchStatistics.csw =
                   (data === 'null' ? null : data);
             }).error(function(data) {
@@ -79,7 +79,7 @@
             });
 
         $http.get('statistics-search-ip?_content_type=json')
-        .success(function(data) {
+            .success(function(data) {
               $scope.statistics.search.ip = data;
             }).error(function(data) {
               // TODO
@@ -179,17 +179,17 @@
 
           nv.addGraph(function() {
             var chart = nv.models.multiBarChart()
-                      .x(function(d) { return d.reqdate; })
-                      .y(function(d) { return parseInt(d.number); })
-                      .stacked(true);
+                .x(function(d) { return d.reqdate; })
+                .y(function(d) { return parseInt(d.number); })
+                .stacked(true);
             //                      .rotateLabels(-90)
 
 
             chart.reduceXTicks(false).staggerLabels(true);
 
             chart.yAxis
-                  .axisLabel('Number of requests')
-                  .tickFormat(d3.format('.f'));
+                .axisLabel('Number of requests')
+                .tickFormat(d3.format('.f'));
 
             d3.select('#gn-stat-search-timeline')
                     .datum($scope.statistics.search.temporal)
@@ -208,7 +208,7 @@
       function getSearchStatByService() {
         // Search by service type statistics
         $http.get('statistics-search-by-service-type?_content_type=json')
-        .success(function(data) {
+            .success(function(data) {
               var total = 0;
               for (var i in data) {
                 data[i].nbsearch = parseInt(data[i].nbsearch);
@@ -232,9 +232,9 @@
                          .showLabels(true);
 
                 d3.select('#gn-stat-search-by-service')
-                       .datum([data])
-                       .transition().duration(1200)
-                       .call(chart);
+                .datum([data])
+                .transition().duration(1200)
+                .call(chart);
 
                 return chart;
               });
@@ -245,7 +245,7 @@
 
       function getSearchStatForFieldsAndTerms() {
         $http.get('statistics-search-fields?_content_type=json&')
-        .success(function(data) {
+            .success(function(data) {
               $scope.statistics.search.fields = data;
 
               // Retrieve the list of search services
@@ -277,13 +277,13 @@
 
       $scope.searchStatisticExport = function() {
         $http.get('statistics-search-export?tableToExport=requests')
-        .success(function(data) {
+            .success(function(data) {
               $scope.requestsExport = $sce.trustAsHtml(data);
             }).error(function(data) {
               // TODO
             });
         $http.get('statistics-search-export?tableToExport=params')
-        .success(function(data) {
+            .success(function(data) {
               $scope.paramsExport = $sce.trustAsHtml(data);
             }).error(function(data) {
               // TODO
