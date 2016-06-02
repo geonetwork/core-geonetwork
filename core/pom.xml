@@ -496,6 +496,11 @@
 	      <artifactId>esapi</artifactId>
            <version>2.1.0</version>
 	    </dependency>
+      <dependency>
+        <groupId>org.xmlunit</groupId>
+        <artifactId>xmlunit-core</artifactId>
+        <scope>test</scope>
+      </dependency>
 
     </dependencies>
 

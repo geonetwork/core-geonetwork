@@ -1,34 +1,27 @@
 package org.geonetwork.map.wms;
 
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.json.JSONObject;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.Ignore;
 import org.opengis.filter.Filter;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.builder.Input;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.ElementSelectors;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.HashMap;
+
+import static org.junit.Assert.assertFalse;
 
 /**
  * Test SLD helpers.
  */
-public class SLDUtilTest extends XMLTestCase {
-
-    @Before
-    public void initialize() {
-        XMLUnit.setIgnoreWhitespace(true);
-    }
-
+public class SLDUtilTest {
     @Test
     public void testGenerateFullSLD() throws Exception {
         testInsertFilter("full", "customfilter");
@@ -55,7 +48,7 @@ public class SLDUtilTest extends XMLTestCase {
 //        assertEquals(hash.get("charset"), "UTF-8");
 //    }
 
-    private void testInsertFilter (final String filePattern, final String rulePattern) throws Exception {
+    private void testInsertFilter(final String filePattern, final String rulePattern) throws Exception {
 
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         Filter customFilter = SLDUtil.generateCustomFilter(new JSONObject(this.getRessourceAsString("sld/test-sld-" + rulePattern + ".json")));
@@ -67,10 +60,20 @@ public class SLDUtilTest extends XMLTestCase {
         Document doc = new Document(root);
 
         String sldDoc = outputter.outputString(doc);
-        XMLUnit.setIgnoreWhitespace(true);
 
-        Diff diff = XMLUnit.compareXML(sldDoc, this.getRessourceAsString("sld/sxt-" + filePattern + "-sld-merged.xml"));
-        assertTrue(diff.identical());
+        org.xmlunit.diff.Diff diff = DiffBuilder
+            .compare(Input.fromString(sldDoc))
+            .withTest(Input.fromString(
+                this.getRessourceAsString("sld/sxt-" + filePattern + "-sld-merged.xml")
+            ))
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+            .ignoreWhitespace()
+            .checkForSimilar()
+            .build();
+
+        assertFalse(
+            "Process does not alter the document.",
+            diff.hasDifferences());
     }
 
     private String getRessourceAsString(String name) throws IOException {
