@@ -78,7 +78,7 @@
         <script src="{$uiResourcesPath}lib/angular/angular-resource.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-route.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-sanitize.js"></script>
-        <jsSource webappPath="/catalog/lib/angular/angular-gettext.min.js"/>
+        <script src="{$uiResourcesPath}lib/angular/angular-gettext.min.js"/>
         <script src="{$uiResourcesPath}lib/angular/angular-cookies.js"></script>
         <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
         <script src="{$uiResourcesPath}lib/angular-md5.js"></script>
