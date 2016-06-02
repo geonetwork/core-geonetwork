@@ -9,10 +9,10 @@
 
   <!--WFS not indexed alert-->
   <div data-ng-show="status"
-       class="alert alert-warning">
+       class="alert alert-warning" title="{{statusTitle}}">
     <button type="button" class="close"
             data-ng-click="status = null"><i class="fa fa-times"/></button>
-    <span data-ng-bind-html="status"></span>
+    <span>{{status | translate}}</span>
   </div>
 
   <div class="btn-group"
@@ -43,11 +43,6 @@
              data-ng-model-options="{ debounce: 400 }"
              class="layerfilter form-control input-sm"
              placeholder="{{'filter'|translate}}"/>
-      <label data-ng-show="map" data-ng-show="source.getFeatures().length > 0">
-        <input type="checkbox"
-               data-ng-model="isHeatMapVisible"/>
-        <span data-translate="">displayHeatMap</span>
-      </label>
     </div>
 
     <!--Facet count-->
@@ -58,7 +53,7 @@
 
     <!--Facet fields-->
     <div class="gn-facet"
-         data-ng-repeat="field in fields">
+         data-ng-repeat="field in fields" data-ng-show="field.values.length > 0">
       <h5 gn-collapsible="field.expanded">
         <span class="fa fa-arrow-circle-right"
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !output[field.name]}"></span>
@@ -71,7 +66,7 @@
              data-ng-click="onCheckboxClick(field.name, facet.value, field.type)"
              data-ng-class="{'selected': output[field.name].values[facet.value]}">
           <i class="fa"
-             data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square' : 'fa-square-o'"></i>{{::facet.value}}&nbsp;({{::facet.count}})
+             data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square' : 'fa-square-o'"></i>{{::facet.value}}&nbsp;({{::facet.count | number:0}})
         </div>
       </div>
     </div>
@@ -81,12 +76,11 @@
       <h5 gn-collapsible="solrObject.geomField.expanded">
         <span class="fa fa-arrow-circle-right"
               data-ng-class="{'fa-rotate-90': solrObject.geomField.expanded, 'gn-field-empty': !output[solrObject.geomField.name]}"></span>
-        {{solrObject.geomField.label}}
+        {{'spatialExtent' | translate}}
       </h5>
       <div class="list-group"
            data-ng-class="{'collapse': !solrObject.geomField.expanded}">
-        <gn-bbox-input data-crs="map.getView().getProjection().getCode()"
-                       data-value="ctrl.searchGeometry"
+        <gn-bbox-input data-value="ctrl.searchGeometry"
                        data-map="map"
         />
       </div>
@@ -103,39 +97,39 @@
       <button class="btn btn-default btn-xs"
               ng-click="showTable()">
         <i class="fa fa-table"></i>&nbsp;
-        <span data-translate="">table</span>
+        <span data-translate="">Table</span>
       </button>
-      <button type="button" class="btn btn-default btn-xs dropdown-toggle"
+      <button data-gn-click-and-spin="resetFacets()"
+              class="btn btn-default btn-xs gn-reset-facets">
+        <i class="fa fa-eraser"></i>&nbsp;
+        <span translate>reset</span>
+      </button>
+      <button class="btn btn-default btn-xs"
+              title="{{'refresh' | translate}}"
+              data-ng-click="initSolrRequest()">
+        <i class="fa fa-refresh"></i>&nbsp;
+      </button>
+      <button data-ng-show="user.canEditRecord(md) || md.isHarvested == 'y'"
+              type="button" class="btn btn-default btn-xs dropdown-toggle"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-cog"></i>
         <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <li data-ng-if="isFeaturesIndexed">
-          <a href="" data-gn-click-and-spin="resetFacets()">
-            <i class="fa fa-close"></i>&nbsp;
-            <span data-translate="">reset</span>
-          </a>
-        </li>
-        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"
+          data-ng-show="user.canEditRecord(md) || ::md.isHarvested == 'y'">
+        <li>
           <a href="" data-ng-click="indexWFSFeatures()">
             <i class="fa fa-codiepie"></i>&nbsp;
             <span data-translate="">reindexWFSFeatures</span> (WFS 1.0.0)
           </a>
         </li>
-        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
+        <li>
           <a href="" data-ng-click="indexWFSFeatures('1.1.0')">
             <i class="fa fa-codiepie"></i>&nbsp;
             <span data-translate="">reindexWFSFeatures</span> (WFS 1.1.0)
           </a>
         </li>
-        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
-          <a href="" data-ng-click="initSolrRequest()">
-            <i class="fa fa-refresh"></i>&nbsp;
-            <span data-translate="">refresh</span>
-          </a>
-        </li>
-        <li data-ng-show="(user.canEditRecord(md) || md.isHarvested == 'y')">
+        <li>
           <a href="" data-ng-click="dropFeatures()">
             <i class="fa fa-times"></i>&nbsp;
             <span data-translate="">removeFeatures</span>
@@ -143,5 +137,14 @@
         </li>
       </ul>
     </div>
+    <div data-ng-show="hmActive">
+      <label data-ng-show="map"
+             data-ng-show="source.getFeatures().length > 0">
+        <input type="checkbox"
+               data-ng-model="isHeatMapVisible"/>
+        <span data-translate="">displayHeatMap</span>
+      </label>
+    </div>
+
   </div>
 </form>

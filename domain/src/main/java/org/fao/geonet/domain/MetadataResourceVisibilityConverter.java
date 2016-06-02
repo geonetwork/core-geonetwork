@@ -27,6 +27,7 @@ package org.fao.geonet.domain;
 
 import javax.persistence.AttributeConverter;
 import java.beans.PropertyEditorSupport;
+import java.util.Arrays;
 
 /**
  * Created by francois on 31/12/15.
@@ -42,8 +43,8 @@ public class MetadataResourceVisibilityConverter
         } else {
             throw new IllegalArgumentException(
                     String.format("Unsupported value '%s'. Values are %s.",
-                            visibility,
-                            MetadataResourceVisibility.values().toString()));
+                        visibility,
+                        Arrays.toString(MetadataResourceVisibility.values())));
         }
     }
 
@@ -57,8 +58,8 @@ public class MetadataResourceVisibilityConverter
             default:
                 throw new IllegalArgumentException(
                         String.format("Unsupported value '%s'. Values are %s.",
-                                visibility,
-                                MetadataResourceVisibility.values().toString()));
+                            visibility,
+                            Arrays.toString(MetadataResourceVisibility.values())));
         }
     }
 
@@ -72,8 +73,8 @@ public class MetadataResourceVisibilityConverter
             default:
                 throw new IllegalArgumentException(
                         String.format("Unsupported value '%s'. Values are %s.",
-                                s,
-                                MetadataResourceVisibility.values().toString()));
+                            s,
+                            Arrays.toString(MetadataResourceVisibility.values())));
         }
     }
 }

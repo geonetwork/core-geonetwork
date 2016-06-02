@@ -40,6 +40,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 
 import java.io.IOException;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.util.Properties;
 import java.util.regex.PatternSyntaxException;
 
@@ -216,7 +217,7 @@ public class NetLib
 					conn = url.openConnection(proxy);
 
 					if (username.trim().length() != 0) {
-						String encodedUserPwd = new Base64().encodeAsString((username + ":" + password).getBytes());
+						String encodedUserPwd = new Base64().encodeAsString((username + ":" + password).getBytes(Charset.forName("UTF-8")));
 						conn.setRequestProperty("Accept-Charset", "UTF-8");
 						conn.setRequestProperty("Proxy-Authorization", "Basic " + encodedUserPwd);
 					}

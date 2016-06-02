@@ -73,7 +73,7 @@
            */
           scope.checkWFSUrl = function() {
             return gnWfsService.getCapabilities(scope.url)
-              .then(function(capabilities) {
+                .then(function(capabilities) {
                   scope.featureType =
                      gnWfsService.getTypeName(capabilities, scope.typename);
                   if (scope.featureType) {

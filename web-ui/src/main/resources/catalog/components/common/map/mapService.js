@@ -507,6 +507,15 @@
               });
             }
 
+            // Set proxy for Cesium to load
+            // layers not accessible with CORS headers
+            // This is optional if the WMS provides CORS
+            if (viewerSettings.cesiumProxy) {
+              source.set('olcs.proxy', function(url) {
+                return '../../proxy?url=' + encodeURIComponent(url);
+              });
+            }
+
             var layerOptions = {
               url: options.url,
               type: 'WMS',
@@ -758,7 +767,7 @@
               // TODO: parse better legend & attribution
               if (angular.isArray(layer.Style) && layer.Style.length > 0) {
                 var url = layer.Style[layer.Style.length - 1]
-                  .LegendURL[0];
+                    .LegendURL[0];
                 if (url) {
                   legend = url.OnlineResource;
                 }
@@ -823,7 +832,7 @@
                   $.ajax({
                     url: proxyUrl
                   })
-                    .done(function(response) {
+                      .done(function(response) {
                         // TODO: Check WFS exception
                         vectorSource.addFeatures(vectorFormat.
                             readFeatures(response));
@@ -841,7 +850,7 @@
                         map.getView().fit(extent, map.getSize());
 
                       })
-                    .then(function() {
+                      .then(function() {
                         this.loadingLayer = false;
                       });
                 },

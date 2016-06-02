@@ -181,7 +181,6 @@
 
       $scope.templates = null;
 
-
       $scope.sortOrder = function(item) {
         return parseInt(item.displayorder, 10);
       };
@@ -282,11 +281,11 @@
           url += '&schema=' + f.schema;
         }
         $http.get(url)
-        .success(function(data) {
+            .success(function(data) {
               $scope.formatterSelected = null;
               loadFormatter();
             })
-        .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('formatterRemovalError'),
                 error: data,

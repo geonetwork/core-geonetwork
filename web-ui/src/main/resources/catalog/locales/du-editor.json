@@ -125,7 +125,7 @@
     "gmd:MD_Distribution": "Hyperlinks",
     "hasFeatureCatalog": "Met behulp van deze functie catalogus",
     "importCPResult": "1 Record geimporteerd. Record identifier is: {{id}} <br/> UUID: {{uuid}}.",
-    "importEntry": "Import Telefoonboekvermelding",
+    "importEntry": "Importeer adres",
     "importFromDir": "Importeer een set bestanden uit een folder op de server.",
     "importFromDirReport": "{{success}} / {{records}} registers record(s) succesvol geïmporteerd in {{time}} seconden.",
     "importRecords": "import",

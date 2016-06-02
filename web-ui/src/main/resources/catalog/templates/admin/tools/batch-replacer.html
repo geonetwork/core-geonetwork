@@ -123,7 +123,7 @@
         </table>
 
         <p data-ng-show="selectedProcess.key === 'massive-content-update'">
-          <input type="checkbox" id="caseinsensitive"  name="caseinsensitive" value="i" />
+          <input type="checkbox" id="caseinsensitive"  name="isCaseInsensitive" value="i" />
           <label for="caseinsensitive" data-translate="">batchreplacer-case-insensitive</label>
         </p>
         <p data-ng-show="selectedProcess.key === 'massive-search-and-replace'">
@@ -140,18 +140,15 @@
     <div class="btn-toolbar">
       <button type="button" class="btn btn-primary pull-right"
               data-ng-disabled="replacer.replacements.length == 0"
-              data-ng-click="runProcess('#gn-batch-process', 'md.searchandreplace?_content_type=json', false)">
+              data-ng-click="runProcess('#gn-batch-process', 'search-and-replace', false)">
         <span class="fa fa-play"></span> {{"runProcess"|translate}}
       </button>
 
       <button type="button" class="btn btn-default pull-right"
               data-ng-disabled="replacer.replacements.length == 0"
-              data-ng-click="runProcess('#gn-batch-process', 'md.searchandreplace?_content_type=json', true)">
+              data-ng-click="runProcess('#gn-batch-process', 'search-and-replace', true)">
         <span class="fa fa-play"></span> {{"testProcess"|translate}}
       </button>
-
-
     </div>
-
   </fieldset>
 </div>

@@ -208,12 +208,12 @@
         $http.post('thesaurus.update', xml, {
           headers: {'Content-type': 'application/xml'}
         })
-          .success(function(data) {
+            .success(function(data) {
               $scope.thesaurusSelected = null;
               $('#thesaurusModal').modal('hide');
               loadThesaurus();
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('thesaurusCreationError'),
                 error: data,
@@ -280,11 +280,11 @@
       $scope.deleteThesaurus = function() {
         $http.get('thesaurus.remove?ref=' +
                   $scope.thesaurusSelected.key)
-          .success(function(data) {
+            .success(function(data) {
               $scope.thesaurusSelected = null;
               loadThesaurus();
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('thesaurusDeleteError'),
                 error: data,
@@ -425,7 +425,7 @@
         $http.post('thesaurus.keyword.add?_content_type=json', buildKeyword(), {
           headers: {'Content-type': 'application/xml'}
         })
-          .success(function(data) {
+            .success(function(data) {
               var response = data[0];
               if (response && response['@message']) {
                 var statusConfig = {
@@ -442,7 +442,7 @@
                 creatingKeyword = false;
               }
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('keywordCreationError'),
                 error: data,
@@ -458,13 +458,13 @@
         $http.post('thesaurus.keyword.update', buildKeyword(), {
           headers: {'Content-type': 'application/xml'}
         })
-          .success(function(data) {
+            .success(function(data) {
               $scope.keywordSelected = null;
               $('#keywordModal').modal('hide');
               searchThesaurusKeyword();
               selectedKeywordOldId = null;
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('keywordUpdateError'),
                 error: data,
@@ -480,10 +480,10 @@
         $scope.keywordSelected = k;
         $http.get('thesaurus.keyword.remove?pThesaurus=' + k.thesaurus.key +
             '&id=' + encodeURIComponent(k.uri))
-          .success(function(data) {
+            .success(function(data) {
               searchThesaurusKeyword();
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('keywordDeleteError'),
                 error: data,

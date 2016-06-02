@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sld:StyledLayerDescriptor xmlns:sld="http://www.opengis.net/sld" xmlns="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" version="1.0.0" units="mm">
+  <sld:NamedLayer>
+    <sld:Name>surval_30140_all_point</sld:Name>
+    <sld:UserStyle>
+      <sld:Name>default</sld:Name>
+      <sld:FeatureTypeStyle>
+        <sld:Name>name</sld:Name>
+        <sld:Rule>
+          <sld:Name>Single symbol</sld:Name>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>LIEU_ZONEMARINEQ2</ogc:PropertyName>
+                <ogc:Literal>039 - Rade de Brest</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+              <ogc:PropertyIsEqualTo matchCase="true">
+                <ogc:PropertyName>departement</ogc:PropertyName>
+                <ogc:Literal>Ain</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+            </ogc:And>
+          </ogc:Filter>
+          <sld:PointSymbolizer>
+            <sld:Graphic>
+              <sld:Mark>
+                <sld:WellKnownName>circle</sld:WellKnownName>
+                <sld:Fill />
+                <sld:Stroke />
+                <sld:Fill>
+                  <sld:SvgParameter name="fill">#925f92</sld:SvgParameter>
+                </sld:Fill>
+                <sld:Stroke>
+                  <sld:SvgParameter name="stroke">#000000</sld:SvgParameter>
+                </sld:Stroke>
+              </sld:Mark>
+              <sld:Size>2</sld:Size>
+            </sld:Graphic>
+          </sld:PointSymbolizer>
+        </sld:Rule>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </sld:NamedLayer>
+</sld:StyledLayerDescriptor>

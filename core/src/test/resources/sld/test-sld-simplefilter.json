@@ -1,0 +1,6 @@
+{
+    "baseStyle" : "Test:MuiltiRoad",
+    "filters": [{"field_name": "departement",
+      "filter": [ { "filter_type": "PropertyIsEqualTo",
+        "params": ["Ain"]}]}]
+}

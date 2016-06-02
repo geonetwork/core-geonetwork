@@ -38,6 +38,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
 

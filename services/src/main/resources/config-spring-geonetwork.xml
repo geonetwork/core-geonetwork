@@ -95,4 +95,6 @@
   </bean>
   <bean id="formatterCachePublishListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCachePublishListener" />
   <bean id="formatterCacheDeletionListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCacheDeletionListener" />
+
+  <bean id="processingReportRegistry" class="org.fao.geonet.api.processing.report.registry.ProcessingReportRegistry"/>
 </beans>

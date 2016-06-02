@@ -109,7 +109,7 @@
            * @param {boolean} withFullPrivileges privileges to assign.
            * @param {boolean} isTemplate type of the metadata
            * @param {boolean} isChild is child of a parent metadata
-           * @param {string} metadataUuid, the uuid of the metadata to create
+           * @param {string} metadataUuid , the uuid of the metadata to create
            *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
@@ -217,7 +217,7 @@
            * @param {boolean} isTemplate type of the metadata
            * @param {boolean} isChild is child of a parent metadata
            * @param {string} tab is the metadata editor tab to open
-           * @param {string} metadataUuid, the uuid of the metadata to create
+           * @param {string} metadataUuid , the uuid of the metadata to create
            *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
@@ -311,8 +311,6 @@
    * {@link service/config-ui-metadata#services-
    * documentation-config-ui-metadataxml_-service-mdeditcancel mdEditCancel}
    * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdrelations getRelations}
-   * {@link service/config-ui-metadata#services-
    * documentation-config-ui-metadataxml_-service-mdsuggestion suggestionsList}
    * {@link service/config-ui-metadata#services-
    * documentation-config-ui-metadataxml_-service-mdvalidate getValidation}
@@ -348,7 +346,6 @@
     mdEditSaveonly: 'md.edit.saveonly?_content_type=json&',
     mdEditSaveandclose: 'md.edit.save.and.close?_content_type=json&',
     mdEditCancel: 'md.edit.cancel?_content_type=json&',
-    getRelations: 'md.relations?_content_type=json&',
     suggestionsList: 'md.suggestion?_content_type=json&',
     getValidation: 'md.validate?_content_type=json&',
 
@@ -510,7 +507,8 @@
       isFeedbackEnabled: 'system.userFeedback.enable',
       isSearchStatEnabled: 'system.searchStats.enable',
       isHideWithHelEnabled: 'system.hidewithheldelements.enable'
-    }
+    },
+    'map.is3DModeAllowed': window.location.search.indexOf('with3d') !== -1
   });
 
   /**
@@ -553,9 +551,12 @@
               }
             });
             angular.extend(gnConfig, response.data);
+
+            // Override parameter if set in URL
             if (window.location.search.indexOf('with3d') !== -1) {
               gnConfig['map.is3DModeAllowed'] = true;
             }
+
             defer.resolve(gnConfig);
           });
           return defer.promise;
@@ -663,6 +664,18 @@
           }
         }
       },
+      /**
+       * Get all links of the metadata of the given types.
+       * The types are strings in arguments.
+       * You can give the exact matching with # ('#OG:WMS') or just find an
+       * occurence for the match ('OGC').
+       * You can passe several types to find ('OGC','WFS', '#getCapabilities')
+       *
+       * If the first argument is a number, you do the search within the link
+       * group (search only onlinesrc in the given transferOptions).
+       *
+       * @return {*} an Array of links
+       */
       getLinksByType: function() {
         var ret = [];
 

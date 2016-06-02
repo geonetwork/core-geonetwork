@@ -118,7 +118,6 @@
       </xsl:choose>
     </xsl:variable>
 
-
     <!-- The form field identified by the element ref.
             This HTML element should be removed when action remove is called.
         -->
@@ -996,7 +995,6 @@
             </xsl:choose>
           </xsl:element>
         </xsl:variable>
-
         <xsl:copy-of select="$textareaOrInput"/>
 
       </xsl:otherwise>

@@ -158,6 +158,7 @@
               var delimiter = ' or ';
               var oldParams;
               var groups;
+              scope.title = attrs['gnFacetMultiselectTitle'];
 
               scope.name = attrs.gnFacetMultiselect;
               scope.contentCollapsed =
@@ -217,8 +218,8 @@
               scope.isInSearch = function(value) {
                 return scope.searchObj.params[scope.facetConfig.key] &&
                     scope.searchObj.params[scope.facetConfig.key]
-                      .split(delimiter)
-                      .indexOf(value) >= 0;
+                    .split(delimiter)
+                    .indexOf(value) >= 0;
               };
 
               //TODO improve performance here, maybe to complex $watchers

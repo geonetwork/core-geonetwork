@@ -219,8 +219,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.5.1</version>
         <configuration>
-          <source>1.8</source>  <!-- The -source argument for the Java compiler. -->
-          <target>1.8</target>  <!-- The -target argument for the Java compiler. -->
+          <source>1.8</source>
+          <target>1.8</target>
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
           <compilerArgument>-proc:none</compilerArgument> <!-- disable automatic annotation processing accoring to: http://docs.jboss.org/hibernate/jpamodelgen/1.0/reference/en-US/html_single/#d0e261 -->
@@ -478,7 +478,7 @@
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
-        <version>1.3</version>
+        <version>1.3.1</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -642,12 +642,17 @@
       <dependency>
           <groupId>org.geotools</groupId>
           <artifactId>gt-wms</artifactId>
-          <version>15-SNAPSHOT-Vampouille</version>
+          <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-main</artifactId>
-        <version>14-SNAPSHOT</version>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-brewer</artifactId>
+        <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools.jdbc</groupId>
@@ -790,11 +795,17 @@
         <scope>test</scope>
       </dependency>
 
-      <!-- should we had this as scope test?-->
       <dependency>
-        <groupId>xmlunit</groupId>
-        <artifactId>xmlunit</artifactId>
-        <version>1.2</version>
+        <groupId>org.xmlunit</groupId>
+        <artifactId>xmlunit-core</artifactId>
+        <version>${xmlunit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.xmlunit</groupId>
+        <artifactId>xmlunit-matchers</artifactId>
+        <version>${xmlunit.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <!-- db -->
@@ -817,7 +828,7 @@
       <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
-        <version>5.1.26</version>
+        <version>5.1.38</version>
       </dependency>
       <!-- Not permitted under oracle licensing rules
       <dependency>
@@ -1054,13 +1065,24 @@
       </releases>
       <id>core-maven-repo</id>
       <name>GeoNetwork remote repository</name>
-      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/gt-wms-sld</url>
+      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
 
     <repository>
       <id>mvnrepository.com</id>
       <name>Repository that has juniversalchardet</name>
       <url>http://mvnrepository.com/artifact</url>
+    </repository>
+    <repository>
+      <id>maven.geo-solutions.it</id>
+      <name>geo-solutions</name>
+      <url>http://maven.geo-solutions.it</url>
+    </repository>
+
+    <repository>
+      <id>maven2</id>
+      <name>Repository maven2</name>
+      <url>http://repo.maven.apache.org/maven2</url>
     </repository>
 
     <!-- seasar repo, has jsonic - used by langdetect -->
@@ -1155,9 +1177,10 @@
 
   <properties>
     <jetty.version>8.1.9.v20130131</jetty.version>
-    <geotools.version>14.0</geotools.version>
+    <geotools.version>15.0</geotools.version>
 
-    <solr.version>6.0.0</solr.version>
+    <solr.version>6.0.1</solr.version>
+    <solr.version.md5>fc9a4a6ee127dff21135dd4941c92c15</solr.version.md5>
     <solr.port>8984</solr.port>
     <solr.url>http://localhost:${solr.port}/solr</solr.url>
     <solr.collection>catalog_srv</solr.collection>
@@ -1174,6 +1197,7 @@
     <wro.version>1.7.7</wro.version>
     <node.version>v0.10.24</node.version>
     <npm.version>1.3.23</npm.version>
+    <xmlunit.version>2.1.1</xmlunit.version>
     <print-lib.version>2.1.1</print-lib.version>
     <flying-saucer>9.0.7</flying-saucer>
     <camel.version>2.14.0</camel.version>

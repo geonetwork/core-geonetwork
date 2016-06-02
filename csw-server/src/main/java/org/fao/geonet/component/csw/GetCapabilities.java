@@ -608,23 +608,20 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         List<Element> operations = op.getChildren("Parameter", Csw.NAMESPACE_OWS);
         for (Element operation : operations) {
             if ("typeNames".equals(operation.getAttributeValue("name"))) {
-                Iterator<String> iterator = typenames.keySet().iterator();
-                while(iterator.hasNext()) {
-                    String typeName = iterator.next();
-                    Namespace ns = typenames.get(typeName);
+                for (Map.Entry< String, Namespace > entry : typenames.entrySet()) {
+                    String typeName = entry.getKey();
+                    Namespace ns = entry.getValue();
                     String typename = typeName;
                     operation.addNamespaceDeclaration(ns);
                     operation.addContent(new Element("Value", Csw.NAMESPACE_OWS)
-                            .setText(typename));
+                        .setText(typename));
                 }
             } else if ("outputSchema".equals(operation.getAttributeValue("name"))) {
-                Iterator<String> iterator = typenames.keySet().iterator();
-                while(iterator.hasNext()) {
-                    String typeName = iterator.next();
-                    Namespace ns = typenames.get(typeName);
+                for (Map.Entry< String, Namespace > entry : typenames.entrySet()) {
+                    Namespace ns = entry.getValue();
                     operation.addNamespaceDeclaration(ns);
                     operation.addContent(new Element("Value", Csw.NAMESPACE_OWS)
-                            .setText(ns.getURI()));
+                        .setText(ns.getURI()));
                 }
             }
         }

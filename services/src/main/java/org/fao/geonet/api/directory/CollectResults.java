@@ -24,6 +24,7 @@ package org.fao.geonet.api.directory;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+
 import org.fao.geonet.domain.Metadata;
 import org.jdom.Element;
 
@@ -35,20 +36,15 @@ import java.util.Map;
  * List of entries collected in a metadata record
  */
 public class CollectResults {
+    boolean recordUpdated = false;
     private Metadata record;
     private Element updatedRecord;
-    public boolean isRecordUpdated() {
-        return recordUpdated;
-    }
-
-    boolean recordUpdated = false;
     /**
-     * Table composed of the entry identifier (extracted from the Element),
-     * the UUID and the XML Element.
+     * Table composed of the entry identifier (extracted from the Element), the UUID and the XML
+     * Element.
      */
     private Table<String, String, Element> entries =
-            HashBasedTable.create();
-
+        HashBasedTable.create();
     /**
      * Map of UUID and db identifiers if the entry is saved in the database
      */
@@ -56,6 +52,10 @@ public class CollectResults {
 
     public CollectResults(Metadata record) {
         this.record = record;
+    }
+
+    public boolean isRecordUpdated() {
+        return recordUpdated;
     }
 
     public Metadata getRecord() {

@@ -36,7 +36,7 @@
         },
         link: function(scope, element, attrs) {
           var textarea = $(element).parent()
-            .find('textarea[name=' + scope.id + ']');
+              .find('textarea[name=' + scope.id + ']');
           // Unregister this textarea to the form
           // It will be only submitted if user click the add button
           textarea.removeAttr('name');
@@ -98,7 +98,7 @@
                 xmlSnippet = xmlSnippet.replace(
                     '{{' + fieldName + '}}',
                     value.replace(/\&/g, '&amp;amp;')
-                         .replace(/\"/g, '&quot;'));
+                    .replace(/\"/g, '&quot;'));
 
                 // If one value is defined the field
                 // is defined

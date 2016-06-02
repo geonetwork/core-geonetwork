@@ -70,7 +70,7 @@
           }
           var defer = $q.defer();
           gnEditor.save(false, true)
-                .then(function() {
+              .then(function() {
                 gnHttp.callService('processMd', params).then(function(data) {
                   gnHttp.callService('edit', params).then(function(data) {
                     var snippet = $(data.data);

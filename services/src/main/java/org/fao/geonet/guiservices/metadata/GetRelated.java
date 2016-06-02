@@ -34,6 +34,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.MetadataUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -182,12 +183,9 @@ import jeeves.server.dispatchers.ServiceManager;
 @Qualifier("getRelated")
 public class GetRelated implements Service, RelatedMetadata {
 
-    private ServiceConfig _config = new ServiceConfig();
     private static int maxRecords = 1000;
-    private static boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
 
     public void init(Path appPath, ServiceConfig config) throws Exception {
-        _config = config;
     }
 
     /**
@@ -287,7 +285,6 @@ public class GetRelated implements Service, RelatedMetadata {
         int from = Util.getParam(params, "from", 1);
         int to = Util.getParam(params, "to", maxRecords);
 
-        Log.info(Geonet.SEARCH_ENGINE, "GuiService param is " + _config.getValue("guiService"));
 
         Element info = params.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
         int iId;
@@ -315,180 +312,8 @@ public class GetRelated implements Service, RelatedMetadata {
     }
 
     @Override
-    public Element getRelated(ServiceContext context, int iId, String uuid, String type, int from_, int to_, boolean fast_)
-            throws Exception {
-        final String id = String.valueOf(iId);
-        final String from = "" + from_;
-        final String to = "" + to_;
-        final String fast = "" + fast_;
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getBean(DataManager.class);
-        Element relatedRecords = new Element("relations");
-        List<String> listOfTypes = new ArrayList<String>(Arrays.asList(type.split(",|\\|")));
-        if (listOfTypes != null && listOfTypes.size() == 1 && "".equals(listOfTypes.get(0))) {
-            listOfTypes.clear();
-        }
-        // Get the cached version (use by classic GUI)
-        Element md = Show.getCached(context.getUserSession(), id);
-        if (md == null) {
-            // Get from DB
-            md = dm.getMetadata(context, id, forEditing, withValidationErrors,
-                    keepXlinkAttributes);
-        }
-
-        String schemaIdentifier = dm.getMetadataSchema(id);
-        SchemaPlugin instance = SchemaManager.getSchemaPlugin(schemaIdentifier);
-        AssociatedResourcesSchemaPlugin schemaPlugin = null;
-        if (instance instanceof AssociatedResourcesSchemaPlugin) {
-            schemaPlugin = (AssociatedResourcesSchemaPlugin) instance;
-        }
-
-        // Search for children of this record
-        if (listOfTypes.size() == 0 || listOfTypes.contains("children")) {
-            relatedRecords.addContent(search(uuid, "children", context, from, to, fast));
-        }
-
-        // Get parent record from this record
-        if (schemaPlugin != null && (listOfTypes.size() == 0 || listOfTypes.contains("parent"))) {
-            Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
-            if (listOfUUIDs.size() > 0) {
-                String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                relatedRecords.addContent(search(joinedUUIDs, "parent", context, from, to, fast));
-            }
-        }
-
-        // Get aggregates from this record
-        if (schemaPlugin != null && (listOfTypes.size() == 0 || listOfTypes.contains("siblings"))) {
-            Element response = new Element("response");
-
-            Set<AssociatedResource> listOfAssociatedResources = schemaPlugin.getAssociatedResourcesUUIDs(md);
-
-            if (listOfAssociatedResources != null) {
-                for (AssociatedResource resource : listOfAssociatedResources) {
-                    Element sibContent = getRecord(resource.getUuid(), context, dm);
-                    if (sibContent != null) {
-                        Element sibling = new Element("sibling");
-                        sibling.setAttribute("initiative", resource.getInitiativeType());
-                        sibling.setAttribute("association", resource.getAssociationType());
-                        response.addContent(sibling.addContent(sibContent));
-                    }
-                }
-            }
-            relatedRecords.addContent(new Element("siblings").addContent(response));
-        }
-
-        // Search for records where an aggregate point to this record
-        if (listOfTypes.size() == 0 || listOfTypes.contains("associated")) {
-            relatedRecords.addContent(search(uuid, "associated", context, from, to, fast));
-        }
-
-        // Search for services
-        if (listOfTypes.size() == 0 || listOfTypes.contains("service")) {
-            relatedRecords.addContent(search(uuid, "services", context, from, to, fast));
-        }
-
-        // Related record from uuiref attributes in metadata record
-        if (schemaPlugin != null && (
-                listOfTypes.size() == 0 || listOfTypes.contains("dataset") || listOfTypes.contains("fcat") || listOfTypes.contains("source")
-        )) {
-            // Get datasets related to service search
-            if (listOfTypes.size() == 0 || listOfTypes.contains("dataset")) {
-                Set<String> listOfUUIDs = schemaPlugin.getAssociatedDatasetUUIDs(md);
-                if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
-                    String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                    relatedRecords.addContent(search(joinedUUIDs, "datasets", context, from, to, fast));
-                }
-            }
-            // if source, return source datasets defined in the current record
-            if (listOfTypes.size() == 0 || listOfTypes.contains("source")) {
-                Set<String> listOfUUIDs = schemaPlugin.getAssociatedSourceUUIDs(md);
-                if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
-                    String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                    relatedRecords.addContent(search(joinedUUIDs, "sources", context, from, to, fast));
-                }
-            }
-            // if fcat
-            if (listOfTypes.size() == 0 || listOfTypes.contains("fcat")) {
-                Set<String> listOfUUIDs = schemaPlugin.getAssociatedFeatureCatalogueUUIDs(md);
-                if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
-                    String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                    relatedRecords.addContent(search(joinedUUIDs, "fcats", context, from, to, fast));
-                }
-            }
-        }
-
-        //
-        if (listOfTypes.size() == 0 || listOfTypes.contains("hassource")) {
-            // Return records where this record is a source dataset
-            relatedRecords.addContent(search(uuid, "hassource", context, from, to, fast));
-        }
-
-        // Relation table is preserved for backward compatibility but should not be used anymore.
-        if (listOfTypes.size() == 0 || listOfTypes.contains("related")) {
-            // Related records could be feature catalogue defined in relation table
-            relatedRecords.addContent(new Element("related").addContent(Get.getRelation(iId, "full", context)));
-            // Or feature catalogue define in feature catalogue citation
-            relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from, to, fast));
-        }
-
-        // XSL transformation is used on the metadata record to extract
-        // distribution information or thumbnails
-        if (md != null && (listOfTypes.size() == 0 || listOfTypes.contains("online") || listOfTypes.contains("thumbnail"))) {
-            relatedRecords.addContent(new Element("metadata").addContent((Content) md.clone()));
-        }
-
-        return relatedRecords;
-    }
-
-    private static Map<String, String> relationTypeToIndexField;
-    static {
-        relationTypeToIndexField = ImmutableMap.<String, String>builder()
-            .put("children", "parent")
-            .put("services", "recordOperateOn")
-            .put("hasfeaturecat", "hasfeaturecat")
-            .put("hassource", "hassource")
-            .put("associated", "agg_associated")
-            .put("datasets", "_uuid")
-            .put("fcats", "_uuid")
-            .put("siblings", "_uuid")
-            .put("parent", "_uuid")
-            .build();
-    }
-
-    private Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        ISearchManager searchMan = gc.getBean(ISearchManager.class);
-        Element response = new Element(type);
-        SolrDocumentList documentList = ((SolrSearchManager) searchMan).getDocsFieldValue(
-            String.format("+%s:\"%s\"",
-                relationTypeToIndexField.get(type),
-                uuid),
-            "*"
-        );
-        Element relatedElement =  new Element("response");
-        for (SolrDocument document : documentList) {
-            Element md = new Element("metadata");
-            for(String field : document.getFieldNames()) {
-                for(Object value : document.getFieldValues(field)) {
-                    md.addContent(new Element(field).setText(value.toString()));
-                }
-            }
-            relatedElement.addContent(md);
-        }
-        response.addContent(relatedElement);
-        return response;
-    }
-
-    private Element getRecord(String uuid, ServiceContext context, DataManager dm) {
-        Element content = null;
-        try {
-            String id = dm.getMetadataId(uuid);
-            Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
-            content = dm.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
-        } catch (Exception e) {
-            if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                Log.debug(Geonet.SEARCH_ENGINE, "Metadata " + uuid + " record is not visible for user.");
-        }
-        return content;
+    public Element getRelated(ServiceContext context, int iId, String uuid, String type, int from_, int to_, boolean fast_) throws Exception {
+        throw new RuntimeException("Not supported. Use /api/records/<uuid>/related.");
+//        return MetadataUtils.getRelated(context, iId, uuid, type, from_, to_, fast_);
     }
 }

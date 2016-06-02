@@ -70,7 +70,7 @@
           $timeout(function() {
             $('input[data-ng-model], select[data-ng-model]').each(function() {
               angular.element(this).controller('ngModel')
-                .$setViewValue($(this).val());
+             .$setViewValue($(this).val());
             });
           }, 300);
 
@@ -101,12 +101,12 @@
          $scope.register = function() {
            $scope.userInfo.emailAddresses[0] = $scope.userInfo.username;
            $http.put('../api/0.1/user/actions/register', $scope.userInfo)
-          .success(function(data) {
+           .success(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
                title: data
              });
            })
-          .error(function(data) {
+           .error(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
                title: data,
                timeout: 0,
@@ -158,7 +158,7 @@
 
          $scope.nodeChangeRedirect = function(redirectTo) {
            $http.get('../../j_spring_security_logout')
-              .success(function(data) {
+           .success(function(data) {
                   window.location.href = redirectTo;
            });
          };

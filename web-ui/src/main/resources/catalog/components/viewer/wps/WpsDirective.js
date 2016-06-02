@@ -128,7 +128,7 @@
               scope.wpsLink.applicationProfile;
 
           if (defaults) {
-            defaults = parseKvpParams(scope.defaults);
+            defaults = parseKvpParams(defaults);
           }
 
           scope.describeState = 'sended';
@@ -140,7 +140,7 @@
           };
 
           gnWpsService.describeProcess(uri, processId)
-          .then(
+              .then(
               function(response) {
                 scope.describeState = 'succeeded';
                 scope.describeResponse = response;
@@ -195,7 +195,7 @@
                   );
 
                   angular.forEach(
-                    scope.processDescription.processOutputs.output,
+                      scope.processDescription.processOutputs.output,
                       function(output, idx) {
                         output.asReference = true;
 

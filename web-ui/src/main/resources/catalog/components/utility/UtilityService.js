@@ -219,7 +219,7 @@
     var getUrlParameter = function(parameterName) {
       var parameterValue = null;
       angular.forEach(window.location
-                  .search.replace('?', '').split('&'),
+          .search.replace('?', '').split('&'),
           function(value) {
             if (value.indexOf(parameterName) === 0) {
               parameterValue = value.split('=')[1];
@@ -324,6 +324,19 @@
   module.filter('gnFromNow', function() {
     return function(dateString) {
       return moment(new Date(dateString)).fromNow();
+    };
+  });
+
+  /**
+   * Return the object value in requested lang or the first value.
+   */
+  module.filter('gnLocalized', function() {
+    return function(obj, lang) {
+      if (angular.isObject(obj)) {
+        return obj[lang] ? obj[lang] : (obj[Object.keys(obj)[0]] || '');
+      } else {
+        return '';
+      }
     };
   });
 

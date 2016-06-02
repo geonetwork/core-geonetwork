@@ -244,9 +244,13 @@
           }
         });
 
+        var allFields = angular.copy(fields);
+
         toRemoveIdx.forEach(function(i) {
           fields.splice(i, 1);
         });
+
+        return allFields;
       };
 
       /**
@@ -347,9 +351,7 @@
           metadataUuid: uuid
         }
         ).then(function(data) {
-          console.log(data);
         }, function(response) {
-          console.log(response);
         });
       };
     }]);

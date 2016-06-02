@@ -25,7 +25,7 @@ package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+
 import org.apache.camel.Exchange;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jcs.access.exception.InvalidArgumentException;
@@ -36,7 +36,6 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
 import org.geotools.data.wfs.WFSDataStore;
@@ -44,7 +43,6 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
-import org.jdom.Namespace;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.opengis.feature.simple.SimpleFeature;
@@ -55,7 +53,13 @@ import org.opengis.metadata.extent.GeographicExtent;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -323,63 +327,72 @@ public class SolrWFSFeatureIndexer {
             String defaultTitleAttribute = titleExpression == null ? guessFeatureTitleAttribute(featureAttributes) : null;
 
             while (features.hasNext()) {
-                SimpleFeature feature = features.next();
-                nbOfFeatures ++;
                 SolrInputDocument document = new SolrInputDocument();
+                try {
+                    SimpleFeature feature = features.next();
+                    nbOfFeatures ++;
 
-                document.addField("id", feature.getID());
-                document.addField("docType", "feature");
-                document.addField("resourceType", "feature");
-                document.addField("featureTypeId", url + "#" + typeName);
+                    document.addField("id", feature.getID());
+                    document.addField("docType", "feature");
+                    document.addField("resourceType", "feature");
+                    document.addField("featureTypeId", url + "#" + typeName);
 
-                if (titleExpression != null) {
-                    document.addField("resourceTitle",
-                            buildFeatureTitle(feature, featureAttributes, titleExpression));
-                }
+                    if (titleExpression != null) {
+                        document.addField("resourceTitle",
+                                buildFeatureTitle(feature, featureAttributes, titleExpression));
+                    }
 
-                if (state.getParameters().getMetadataUuid() != null) {
-                    document.addField("parent", state.getParameters().getMetadataUuid());
-                }
+                    if (state.getParameters().getMetadataUuid() != null) {
+                        document.addField("parent", state.getParameters().getMetadataUuid());
+                    }
 
-                for (String attributeName : featureAttributes.keySet()) {
-                    String attributeType = featureAttributes.get(attributeName);
-                    Object attributeValue = feature.getAttribute(attributeName);
+                    for (String attributeName : featureAttributes.keySet()) {
+                        String attributeType = featureAttributes.get(attributeName);
+                        Object attributeValue = feature.getAttribute(attributeName);
 
-                    if (attributeValue != null) {
-                        // Check if field has to be tokenized
-                        String separator = null;
-                        if (hasTokenizedFields) {
-                            separator = tokenizedFields.get(attributeName);
-                        }
-                        boolean isTokenized = separator != null;
-                        if (isTokenized){
-                            StringTokenizer tokenizer =
-                                    new StringTokenizer((String) attributeValue, separator);
-                            while (tokenizer.hasMoreElements()) {
-                                String token = tokenizer.nextToken();
-                                document.addField(
-                                    documentFields.get(attributeName),
-                                    token);
+                        if (attributeValue != null) {
+                            // Check if field has to be tokenized
+                            String separator = null;
+                            if (hasTokenizedFields) {
+                                separator = tokenizedFields.get(attributeName);
                             }
-                        } else {
-                            if (documentFields.get(attributeName).equals("geom")) {
-                                document.addField(
-                                    documentFields.get(attributeName),
-                                    attributeValue.toString());
+                            boolean isTokenized = separator != null;
+                            if (isTokenized){
+                                StringTokenizer tokenizer =
+                                        new StringTokenizer((String) attributeValue, separator);
+                                while (tokenizer.hasMoreElements()) {
+                                    String token = tokenizer.nextToken();
+                                    document.addField(
+                                        documentFields.get(attributeName),
+                                        token.trim());
+                                }
                             } else {
-                                document.addField(
-                                    documentFields.get(attributeName),
-                                    attributeValue);
+                                if (documentFields.get(attributeName).equals("geom")) {
+                                    document.addField(
+                                            documentFields.get(attributeName),
+                                            attributeValue.toString());
+                                } else {
+                                    document.addField(
+                                            documentFields.get(attributeName),
+                                            attributeValue);
+                                }
                             }
-                        }
 
 
-                        if (defaultTitleAttribute != null &&
-                            defaultTitleAttribute.equals(attributeName)) {
-                            document.addField("resourceTitle", attributeValue);
+                            if (defaultTitleAttribute != null &&
+                                defaultTitleAttribute.equals(attributeName)) {
+                                document.addField("resourceTitle", attributeValue);
+                            }
                         }
                     }
+                } catch (Exception ex) {
+                    state.getHarvesterReport().put("error_ss", String.format(
+                            "Error while creating document for feature %d. Exception is: %s",
+                            nbOfFeatures, ex.getMessage()
+                    ));
+                    continue;
                 }
+
 
                 docCollection.add(document);
                 numInBatch++;
@@ -389,8 +402,15 @@ public class SolrWFSFeatureIndexer {
                                 "  %d features to index.",
                                 nbOfFeatures));
                     }
-                    UpdateResponse response = solr.add(docCollection);
-                    solr.commit();
+                    try {
+                        UpdateResponse response = solr.add(docCollection);
+                        solr.commit();
+                    } catch (Exception ex) {
+                        state.getHarvesterReport().put("error_ss", String.format(
+                                "Error while indexing block of documents [%d-%d]. Exception is: %s",
+                                nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
+                        ));
+                    }
                     docCollection.clear();
                     numInBatch = 0;
                     if (logger.isDebugEnabled()) {
@@ -406,8 +426,15 @@ public class SolrWFSFeatureIndexer {
                             "  %d features to index.",
                             nbOfFeatures));
                 }
-                UpdateResponse response = solr.add(docCollection);
-                solr.commit();
+                try {
+                    UpdateResponse response = solr.add(docCollection);
+                    solr.commit();
+                } catch (Exception ex) {
+                    state.getHarvesterReport().put("error_ss", String.format(
+                            "Error while indexing block of documents [%d-%d]. Exception is: %s",
+                            nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
+                    ));
+                }
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
                             "  %d features indexed.",
@@ -419,14 +446,9 @@ public class SolrWFSFeatureIndexer {
             state.getHarvesterReport().put("totalRecords_i", nbOfFeatures);
             state.getHarvesterReport().put("endDate_dt",
                     ISODateTimeFormat.dateTime().print(new DateTime()));
-        } catch (IOException e) {
+        } catch (Exception e) {
             state.getHarvesterReport().put("status_s", "error");
-            state.getHarvesterReport().put("error_s", e.getMessage());
-            logger.error(e.getMessage());
-            throw e;
-        } catch (SolrServerException e) {
-            state.getHarvesterReport().put("status_s", "error");
-            state.getHarvesterReport().put("error_s", e.getMessage());
+            state.getHarvesterReport().put("error_ss", e.getMessage());
             logger.error(e.getMessage());
             throw e;
         } finally {

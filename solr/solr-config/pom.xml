@@ -36,7 +36,7 @@
                   <url>http://apache.crihan.fr/dist/lucene/solr/${solr.version}/solr-${solr.version}.tgz</url>
                   <unpack>true</unpack>
                   <outputDirectory>${project.basedir}</outputDirectory>
-                  <md5>fbb8f9e00b5995343b154ccde55ebfae</md5>
+                  <md5>${solr.version.md5}</md5>
                 </configuration>
               </execution>
               <execution>
@@ -73,13 +73,6 @@
                       <targetPath>${project.basedir}/solr-${solr.version}/server/solr-webapp/webapp/WEB-INF/lib</targetPath>
                       <includes>
                         <include>jts-1.13.jar</include>
-                      </includes>
-                    </resource>
-                    <resource>
-                      <directory>${project.build.directory}/lib-saxon</directory>
-                      <targetPath>${project.basedir}/solr-${solr.version}/server/solr-webapp/webapp/WEB-INF/lib</targetPath>
-                      <includes>
-                        <include>saxon9he.jar</include>
                       </includes>
                     </resource>
                   </resources>

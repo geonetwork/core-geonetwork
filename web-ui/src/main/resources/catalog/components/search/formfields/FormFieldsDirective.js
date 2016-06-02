@@ -37,7 +37,7 @@
    * empty.
    */
 
-  .directive('gnTypeahead', [function() {
+      .directive('gnTypeahead', [function() {
 
         /**
          * If data are prefetched, get the label from the value
@@ -197,7 +197,7 @@
               field.parent().after(triggerElt);
               var resetElt = $('<span class="close ' +
                   'tagsinput-clear">&times;</span>')
-              .on('click', function() {
+                  .on('click', function() {
                     scope.gnValues = '';
                     scope.$apply();
                   });
@@ -222,7 +222,7 @@
       }])
 
 
-    .directive('groupsCombo', ['$http', function($http) {
+      .directive('groupsCombo', ['$http', function($http) {
         return {
 
           restrict: 'A',
@@ -272,7 +272,7 @@
         };
       }])
 
-  .directive('protocolsCombo', ['$http', 'gnSchemaManagerService',
+      .directive('protocolsCombo', ['$http', 'gnSchemaManagerService',
         function($http, gnSchemaManagerService) {
           return {
             restrict: 'A',
@@ -314,7 +314,7 @@
                 searchFormCtrl.triggerSearch(true);
               };
               hotkeys.bindTo(scope)
-                .add({
+                  .add({
                     combo: 's',
                     description: $translate('hotkeySortBy'),
                     callback: function() {
@@ -419,7 +419,7 @@
    * empty.
    */
 
-  .directive('gnRegionMultiselect',
+      .directive('gnRegionMultiselect',
       ['gnRegionService',
         function(gnRegionService) {
           return {
@@ -525,7 +525,7 @@
    * The schema used to retrieve the element info is based on
    * the gnCurrentEdit object or 'iso19139' if not defined.
    */
-  .directive('schemaInfoCombo', ['$http', 'gnSchemaManagerService',
+      .directive('schemaInfoCombo', ['$http', 'gnSchemaManagerService',
         'gnCurrentEdit',
         function($http, gnSchemaManagerService,
                  gnCurrentEdit) {
@@ -647,7 +647,7 @@
    *  - metadata
    *  - subtemplate
    */
-  .directive('gnRecordtypesCombo', ['$http', function($http) {
+      .directive('gnRecordtypesCombo', ['$http', function($http) {
         return {
 
           restrict: 'A',
@@ -679,7 +679,7 @@
    * @description
    * The `gnBboxInput` directive provides an input widget for bounding boxes.
    */
-  .directive('gnBboxInput', [
+      .directive('gnBboxInput', [
         'gnMap',
         'ngeoDecorateInteraction',
         function(gnMap, goDecoI) {
@@ -700,7 +700,7 @@
           return {
             restrict: 'AE',
             scope: {
-              crs: '=',
+              crs: '=?',
               value: '=',
               map: '='
             },
@@ -708,7 +708,7 @@
                 'partials/bboxInput.html',
 
             link: function(scope, element, attrs) {
-              scope.crs = scope.crs || 'EPSG:4326';
+              var crs = scope.crs || 'EPSG:4326';
               scope.extent = extentFromValue(scope.value);
 
               var style = new ol.style.Style({
@@ -721,10 +721,6 @@
                 })
               });
 
-              var dragboxInteraction = new ol.interaction.DragBox({
-                style: style
-              });
-              scope.map.addInteraction(dragboxInteraction);
 
               // Create overlay to show bbox
               var layer = new ol.layer.Vector({
@@ -735,7 +731,12 @@
                 updateWhileAnimating: true,
                 updateWhileInteracting: true
               });
-              scope.map.addLayer(layer);
+
+              var dragboxInteraction = new ol.interaction.DragBox({
+                className: 'gnbbox-dragbox'
+              });
+              scope.map.addInteraction(dragboxInteraction);
+              layer.setMap(scope.map);
 
               var clearMap = function() {
                 layer.getSource().clear();
@@ -759,7 +760,7 @@
                 var coordinates, geom, f;
                 coordinates = gnMap.getPolygonFromExtent(scope.extent);
                 geom = new ol.geom.Polygon(coordinates)
-              .transform(scope.crs, scope.map.getView().getProjection());
+                    .transform(crs, scope.map.getView().getProjection());
                 f = new ol.Feature();
                 f.setGeometry(geom);
                 layer.getSource().addFeature(f);
@@ -768,8 +769,8 @@
               dragboxInteraction.on('boxend', function() {
                 dragboxInteraction.active = false;
                 var g = dragboxInteraction.getGeometry().clone();
-                var geom = g.clone()
-              .transform(scope.map.getView().getProjection(), scope.crs);
+                var geom = g.transform(scope.map.getView().getProjection(),
+                    crs);
                 var extent = geom.getExtent();
                 scope.extent = extent.map(function(coord) {
                   return Math.round(coord * 10000) / 10000;

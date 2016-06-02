@@ -40,6 +40,8 @@ import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.jdom.Element;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.owasp.esapi.errors.EncodingException;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -142,7 +144,12 @@ public final class XslUtil
         if (serviceContext != null) {
             SettingManager settingsMan = serviceContext.getBean(SettingManager.class);
             if (settingsMan != null) {
-                String value = settingsMan.getValue(key);
+                String value;
+                if ("nodeUrl".equals(key)) {
+                    value = settingsMan.getNodeURL();
+                } else {
+                    value = settingsMan.getValue(key);
+                }
                 if (value != null) {
                     return value;
                 } else {
@@ -369,6 +376,13 @@ public final class XslUtil
         if(iso3LangCode==null || iso3LangCode.length() == 0) {
     		return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
     	} else {
+            if(iso3LangCode.equalsIgnoreCase("FRA")) {
+                return "FR";
+            }
+
+            if(iso3LangCode.equalsIgnoreCase("DEU")) {
+                return "DE";
+            }
             String iso2LangCode = null;
 
             try {
@@ -386,6 +400,7 @@ public final class XslUtil
             }
 
             if(iso2LangCode == null) {
+                Log.error(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
                 return iso3LangCode.substring(0,2);
             } else {
                 return iso2LangCode;
@@ -471,9 +486,11 @@ public final class XslUtil
         String contactDetails = "";
         int contactId = Integer.parseInt((String) contactIdentifier);
         final ServiceContext serviceContext = ServiceContext.get();
-        User user= serviceContext.getBean(UserRepository.class).findOne(contactId);
-        if (user != null) {
-            contactDetails = Xml.getString(user.asXml());
+        if (serviceContext != null) {
+            User user= serviceContext.getBean(UserRepository.class).findOne(contactId);
+            if (user != null) {
+                contactDetails = Xml.getString(user.asXml());
+            }
         }
         return contactDetails;
     }
@@ -532,12 +549,32 @@ public final class XslUtil
 
     public static String getSiteUrl() {
         ServiceContext context = ServiceContext.get();
+        String baseUrl = "";
+        if (context != null) baseUrl = context.getBaseUrl();
+
         SettingInfo si = new SettingInfo();
-        return si.getSiteUrl() + "/" + context.getBaseUrl();
+        return si.getSiteUrl() + "/" + baseUrl;
     }
 
     public static String getLanguage() {
         ServiceContext context = ServiceContext.get();
-        return context.getLanguage();
+        if (context != null) {
+            return context.getLanguage();
+        } else {
+            return "eng";
+        }
+    }
+
+    public static String encodeForJavaScript(String str) {
+        return DefaultEncoder.getInstance().encodeForJavaScript(str);
+    }
+
+    public static String encodeForURL(String str) {
+        try {
+            return DefaultEncoder.getInstance().encodeForURL(str) ;
+        } catch (EncodingException ex) {
+            ex.printStackTrace();
+            return str;
+        }
     }
 }

@@ -36,10 +36,8 @@ import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.Xml;
-import org.jasig.cas.client.util.XmlUtils;
 import org.jdom.Element;
 
-import groovy.xml.XmlUtil;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -87,7 +85,6 @@ public class List implements Service {
                 Element e = (Element) o;
                 for(Object o2 : e.getChildren("id")) {
                     Element e2 = (Element) o2;
-                    System.out.println(e2.getTextTrim());
                     if(editableIds.contains(Integer.valueOf(e2.getTextTrim()))){
                         e.setAttribute("editable", "true");
                     }

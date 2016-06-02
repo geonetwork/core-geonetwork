@@ -36,7 +36,7 @@ import javax.xml.bind.JAXBContext;
  * Created by francois on 28/10/15.
  */
 public class WFSHarvesterRouteBuilder extends RouteBuilder {
-    public static final String LOGGER_NAME = "harvest.wfs.features";
+    public static final String LOGGER_NAME = "geonetwork.harvest.wfs.features";
     public static final String MESSAGE_HARVEST_WFS_FEATURES = "harvest-wfs-features";
     public static final String MESSAGE_DELETE_WFS_FEATURES = "delete-wfs-features";
 
