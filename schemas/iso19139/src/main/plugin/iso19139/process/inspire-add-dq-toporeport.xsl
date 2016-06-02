@@ -68,9 +68,6 @@
                     @rdf:about = 'http://rdfdata.eionet.europa.eu/inspirethemes/themes/7' or
                     @rdf:about = 'http://rdfdata.eionet.europa.eu/inspirethemes/themes/19'
                     )])"/>
-    <xsl:message>
-      <xsl:value-of select="$inspire-th"/>
-    </xsl:message>
 
     <!-- Check no topological consistency section -->
     <xsl:if test="$inspire-theme-found and count($root//gmd:DQ_TopologicalConsistency)=0">

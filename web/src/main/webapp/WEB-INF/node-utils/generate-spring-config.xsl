@@ -34,9 +34,7 @@
 
 
   <xsl:template match="/">
-    <xsl:message>Generate spring config for node
-      <xsl:value-of select="$nodeId"/>
-    </xsl:message>
+    <xsl:message>Generate spring config for node <xsl:value-of select="$nodeId"/></xsl:message>
 
     <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
            default-lazy-init="true"

@@ -156,9 +156,7 @@
         <xsl:variable name="name" select="@name"/>
         <xsl:choose>
           <xsl:when test="$l[@name = $name]/label = ''">
-            <xsl:message>* Missing label for
-              <xsl:value-of select="$name"/>
-            </xsl:message>
+            <xsl:message>* Missing label for <xsl:value-of select="$name"/></xsl:message>
           </xsl:when>
           <xsl:otherwise>
             <!-- TODO handle context/xpath and remove select first -->
@@ -365,9 +363,7 @@
         <!-- Section name is a custom name. Use strings.xml. -->
         <xsl:choose>
           <xsl:when test="normalize-space($s[name() = $sectionName][1]) = ''">
-            <xsl:message>* Missing section name for
-              <xsl:value-of select="$sectionName"/>
-            </xsl:message>
+            <xsl:message>* Missing section name for <xsl:value-of select="$sectionName"/></xsl:message>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="gndoc:writeln(

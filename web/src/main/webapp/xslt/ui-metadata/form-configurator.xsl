@@ -218,9 +218,7 @@
 
             <xsl:variable name="overrideLabel" select="$strings/*[name() = $configName]"/>
             <xsl:if test="$configName != '' and not($overrideLabel)">
-              <xsl:message>Label not defined for field name
-                <xsl:value-of select="$configName"/> in loc/{language}/strings.xml.
-              </xsl:message>
+              <xsl:message>Label not defined for field name <xsl:value-of select="$configName"/> in loc/{language}/strings.xml.</xsl:message>
             </xsl:if>
 
 

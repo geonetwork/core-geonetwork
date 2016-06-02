@@ -151,9 +151,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="$verbose">
-          <xsl:message>* Missing figure
-            <xsl:value-of select="concat($folder, '/', $image, '. Not added to the doc.')"/>
-          </xsl:message>
+          <xsl:message>* Missing figure <xsl:value-of select="concat($folder, '/', $image, '. Not added to the doc.')"/></xsl:message>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>

@@ -54,10 +54,6 @@
 
   <!-- Replace url prefix. -->
   <xsl:template match="*[@xlink:href]" priority="2">
-    <xsl:message>Processing:<xsl:value-of select="name(.)"/>
-    </xsl:message>
-    <xsl:message>XLink:<xsl:value-of select="@xlink:href"/>
-    </xsl:message>
     <xsl:copy>
       <xsl:apply-templates select="@*[name(.) != 'xlink:href']"/>
 

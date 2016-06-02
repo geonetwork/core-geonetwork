@@ -75,7 +75,7 @@
 
   <!-- A template to add a new line \n with no extra space. -->
   <xsl:template name="newLine">
-    <xsl:text>
+<xsl:text>
 </xsl:text>
   </xsl:template>
 
@@ -142,13 +142,8 @@
           <xsl:value-of select="$sep"/>
           <xsl:text>"uuid"</xsl:text>
           <xsl:value-of select="$sep"/>
-          <xsl:text>"id"</xsl:text>
-          <xsl:value-of select="$sep"/>
-
-          <xsl:value-of
-            select="string-join($columns/schema[@name=$currentSchema]/column,
-                            $sep)"/>
-
+          <xsl:text>"id"</xsl:text><xsl:value-of select="$sep"/><xsl:value-of
+            select="string-join($columns/schema[@name=$currentSchema]/column/normalize-space(), $sep)"/>
           <xsl:call-template name="newLine"/>
         </xsl:otherwise>
       </xsl:choose>
@@ -182,7 +177,7 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of
-            select="replace(replace(string-join($metadata/*[name(.)=$currentColumn], $internalSep), '\n|\r\n', ''), '&quot;', '\\&quot;')"
+            select="replace(replace(string-join($metadata/*[name(.)=$currentColumn]/normalize-space(), $internalSep), '\n|\r\n', ''), '&quot;', '\\&quot;')"
           />
         </xsl:otherwise>
       </xsl:choose>

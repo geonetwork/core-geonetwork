@@ -1,8 +1,18 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gco="http://www.isotc211.org/2005/gco"
+<!-- WARNING Do not remove those namespaces as
+     saxon:evaluate needs them for matching -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+                xmlns:exslt="http://exslt.org/common"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                xmlns:date="http://exslt.org/dates-and-times"
                 xmlns:saxon="http://saxon.sf.net/"
-                version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
