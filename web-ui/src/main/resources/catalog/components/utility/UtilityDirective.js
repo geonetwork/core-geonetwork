@@ -1058,7 +1058,7 @@
         });
       }
     };
-  }]);
+  });
 
   module.directive('gnPopoverDropdown', ['$timeout', function($timeout) {
     return {

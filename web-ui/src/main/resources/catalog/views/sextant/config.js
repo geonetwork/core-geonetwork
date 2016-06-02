@@ -14,10 +14,10 @@
   module.value('kmlimportTemplateURL', '../../catalog/views/sextant/templates/kmlimport.html');
 
   module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
-    'gnGlobalSettings', 'gnMap',
+    'gnGlobalSettings', 'gnMap', 'gnConfig',
 
     function(searchSettings, viewerSettings, gnPanierSettings,
-             gnGlobalSettings, gnMap) {
+             gnGlobalSettings, gnMap, gnConfig) {
 
       gnGlobalSettings.isMapViewerEnabled =
           gnGlobalSettings.isMapViewerEnabled || true;
@@ -39,7 +39,18 @@
       viewerSettings.defaultContext = '../../catalog/views/sextant/data/' +
           'defaultContext.xml';
 
-      viewerSettings.singleTileWMS = true;
+      // WMS settings
+      // If 3D mode is activated, single tile WMS mode is
+      // not supported by ol3cesium, so force tiling.
+      if (gnConfig['map.is3DModeAllowed']) {
+        viewerSettings.singleTileWMS = false;
+        // Configure Cesium to use a proxy. This is required when
+        // WMS does not have CORS headers. BTW, proxy will slow
+        // down rendering.
+        viewerSettings.cesiumProxy = true;
+      } else {
+        viewerSettings.singleTileWMS = true;
+      }
 
       viewerSettings.bingKey = 'AplOhn33DW5iCpDv0bY-CzSriFoi6GE2r' +
           '5cY94SqSi47koQ1s4XlylK8DUB7NZFZ';

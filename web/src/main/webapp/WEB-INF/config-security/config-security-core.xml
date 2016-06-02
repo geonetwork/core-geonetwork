@@ -44,6 +44,7 @@
         <sec:filter-chain pattern="/doc/**" filters="" />
         <sec:filter-chain pattern="/api-doc/**" filters="" />
         <sec:filter-chain pattern="/proxy**" filters="" />
+        <sec:filter-chain pattern="/apps/**" filters="" />
         <!-- wroAPI is protected for admin only -->
 				<sec:filter-chain pattern="/static/(!wroAPI)" filters="" />
 			    <sec:filter-chain pattern="/catalog/**" filters="" />

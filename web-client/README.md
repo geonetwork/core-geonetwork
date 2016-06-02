@@ -1,0 +1,1 @@
+The web-client module contains the javascript and html file for the geonetwork web clients.

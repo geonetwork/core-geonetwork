@@ -24,9 +24,6 @@
     <logger name="geonetwork.editor" additivity="false">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.schemamanager" additivity="false">
-        <level value="WARN" />
-    </logger>
     <logger name="geonetwork.thesaurus-man" additivity="false">
         <level value="WARN" />
     </logger>
