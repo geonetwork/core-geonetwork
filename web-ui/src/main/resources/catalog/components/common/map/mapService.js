@@ -507,6 +507,15 @@
               });
             }
 
+            // Set proxy for Cesium to load
+            // layers not accessible with CORS headers
+            // This is optional if the WMS provides CORS
+            if (viewerSettings.cesiumProxy) {
+              source.set('olcs.proxy', function(url) {
+                return '../../proxy?url=' + encodeURIComponent(url);
+              });
+            }
+
             var layerOptions = {
               url: options.url,
               type: 'WMS',

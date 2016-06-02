@@ -84,6 +84,7 @@
               scope.init3dMode = function(map) {
                 if (map) {
                   scope.ol3d = new olcs.OLCesium({map: map});
+                  scope.ol3d.enableAutoRenderLoop();
                 } else {
                   console.warning('3D mode can be only by activated' +
                       ' on a map instance.');

@@ -505,7 +505,8 @@
       isFeedbackEnabled: 'system.userFeedback.enable',
       isSearchStatEnabled: 'system.searchStats.enable',
       isHideWithHelEnabled: 'system.hidewithheldelements.enable'
-    }
+    },
+    'map.is3DModeAllowed': window.location.search.indexOf('with3d') !== -1
   });
 
   /**
@@ -548,9 +549,12 @@
               }
             });
             angular.extend(gnConfig, response.data);
+
+            // Override parameter if set in URL
             if (window.location.search.indexOf('with3d') !== -1) {
               gnConfig['map.is3DModeAllowed'] = true;
             }
+
             defer.resolve(gnConfig);
           });
           return defer.promise;

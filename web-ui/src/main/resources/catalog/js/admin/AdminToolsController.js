@@ -320,7 +320,7 @@
 
         var service = '../api/processes/' +
                       (process != undefined ?
-                       process : $scope.data.selectedProcess.key);
+                        process : $scope.data.selectedProcess.key);
 
         $scope.processing = true;
         $scope.processReport = null;
@@ -500,6 +500,19 @@
                 error: data,
                 timeout: 0,
                 type: 'danger'});
+            });
+      };
+
+      $scope.clearJsCache = function() {
+        return $http.get('../../static/wroAPI/reloadModel')
+            .success(function(data) {
+              $http.get('../../static/wroAPI/reloadCache')
+                .success(function(data) {
+                  $rootScope.$broadcast('StatusUpdated', {
+                    msg: $translate('jsCacheCleared'),
+                    timeout: 2,
+                    type: 'success'});
+                })
             });
       };
 

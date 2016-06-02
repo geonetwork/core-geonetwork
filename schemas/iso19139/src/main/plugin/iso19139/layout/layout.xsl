@@ -49,7 +49,7 @@
 
 
   <!-- Template to display non existing element ie. geonet:child element
-	of the metadocument. Display in editing mode only and if 
+	of the metadocument. Display in editing mode only and if
   the editor mode is not flat mode. -->
   <xsl:template mode="mode-iso19139" match="gn:child" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
@@ -90,15 +90,15 @@
   </xsl:template>
 
   <!-- Boxed element
-    
+
       Details about the last line :
-      * namespace-uri(.) != $gnUri: Only take into account profile's element 
+      * namespace-uri(.) != $gnUri: Only take into account profile's element
       * and $isFlatMode = false(): In flat mode, don't box any
       * and gmd:*: Match all elements having gmd child elements
       * and not(gco:CharacterString): Don't take into account those having gco:CharacterString (eg. multilingual elements)
   -->
   <xsl:template mode="mode-iso19139" priority="200"
-    match="*[name() = $editorConfig/editor/fieldsWithFieldset/name 
+    match="*[name() = $editorConfig/editor/fieldsWithFieldset/name
     or @gco:isoType = $editorConfig/editor/fieldsWithFieldset/name]|
       gmd:report/*|
       gmd:result/*|
@@ -159,6 +159,7 @@
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
+    <xsl:param name="refToDelete" select="''" required="no"/>
 
     <xsl:variable name="elementName" select="name()"/>
     <xsl:variable name="exclusionMatchesParent">
@@ -299,11 +300,11 @@
       <xsl:with-param name="xpath" select="$xpath"/>
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
       <xsl:with-param name="type"
-        select="gn-fn-metadata:getFieldType($editorConfig, name(), 
+        select="gn-fn-metadata:getFieldType($editorConfig, name(),
         name($theElement))"/>
       <xsl:with-param name="name" select="$theElement/gn:element/@ref"/>
       <xsl:with-param name="editInfo" select="$theElement/gn:element"/>
-      <xsl:with-param name="parentEditInfo" select="gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="if (exists($refToDelete)) then $refToDelete else gn:element"/>
       <!-- TODO: Handle conditional helper -->
       <xsl:with-param name="listOfValues" select="$helper"/>
       <xsl:with-param name="toggleLang" select="$isMultilingualElementExpanded"/>
@@ -366,14 +367,14 @@
 
 
   <!-- Match codelist values.
-  
-  eg. 
+
+  eg.
   <gmd:CI_RoleCode codeList="./resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact">
     <geonet:element ref="42" parent="41" uuid="gmd:CI_RoleCode_e75c8ec6-b994-4e98-b7c8-ecb48bda3725" min="1" max="1"/>
     <geonet:attribute name="codeList"/>
     <geonet:attribute name="codeListValue"/>
     <geonet:attribute name="codeSpace" add="true"/>
-  
+
   -->
   <xsl:template mode="mode-iso19139" priority="200" match="*[*/@codeList]">
     <xsl:param name="schema" select="$schema" required="no"/>
@@ -404,9 +405,9 @@
   </xsl:template>
 
 
-  <!-- 
+  <!--
     Take care of enumerations.
-    
+
     In the metadocument an enumeration provide the list of possible values:
   <gmd:topicCategory>
     <gmd:MD_TopicCategoryCode>

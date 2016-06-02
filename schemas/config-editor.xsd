@@ -795,7 +795,25 @@ the remove control should remove the parent element gmd:onLine.
       del="../..">
       <template>
 
-Del attribute is not used when not in template mode.
+
+
+Del attribute can be used in template mode or not. Example to remove
+spatialResolution while only editing denominator or distance. Denominator or distance
+are mandatory but as the del element point to the spatialResolution
+ancestor, there is no mandatory flag displayed and the remove control
+remove the spatialResolution element.
+
+
+.. code-block:: xml
+
+
+    <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+                    */gmd:spatialResolution/*/gmd:distance"
+           del="../.."/>
+    <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+                    */gmd:spatialResolution/
+                      */gmd:equivalentScale/*/gmd:denominator"
+           del="../../../.."/>
 
             ]]>
           </xs:documentation>
@@ -1044,6 +1062,16 @@ An XPath expression to evaluate. If true, the control is displayed. eg.
 will only displayed the action control if the resource identifier does not end
 with the metadata identifier.
           ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="btnLabel" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Optional label to be addded to the button.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="btnClass" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Optional CSS class to be added to the button.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>

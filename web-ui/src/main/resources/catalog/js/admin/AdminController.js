@@ -55,14 +55,15 @@
           //FIXME get a better way to get the authenticated user
           //other UIs may not have this? This is dirty
           this.scope = angular.element(
-              $('*[data-ng-controller=GnCatController]')[0]).scope();
+              $('*[data-ng-controller=GnCatController]')[0])
+                              .scope();
           if (this.scope.routelistener) {
             this.scope.routelistener();
           }
 
-          this.listener = this.scope.$watch(
-              'user.profile',
-              function(newProfile, oldProfile) {
+          this.listener = this.scope.$watch('user.profile',
+                                            function(newProfile, oldProfile) {
+
 
                 if (!newProfile) {
                   return;

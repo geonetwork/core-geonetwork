@@ -24,13 +24,6 @@
 
 <geonet>
   <services package="org.fao.geonet">
-    <service name="md.searchandreplace" deprecated="true">
-      <documentation><![CDATA[
-            Service to apply the metadata massive update process configured to the selected metadata.
-            ]]></documentation>
-      <class name=".services.metadata.replace.MassiveReplaceContent"/>
-    </service>
-
     <service name="md.delete.batch">
       <documentation><![CDATA[
             Service to delete all selected metadatas.
