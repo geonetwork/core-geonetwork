@@ -155,7 +155,7 @@
               <version>2.0</version>
           </plugin>
           <plugin>
-              <groupId>org.mortbay.jetty</groupId>
+              <groupId>org.eclipse.jetty</groupId>
               <artifactId>jetty-maven-plugin</artifactId>
               <version>${jetty.version}</version>
           </plugin>
@@ -219,8 +219,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.5.1</version>
         <configuration>
-          <source>1.7</source>  <!-- The -source argument for the Java compiler. -->
-          <target>1.7</target>  <!-- The -target argument for the Java compiler. -->
+          <source>1.8</source>
+          <target>1.8</target>
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
           <compilerArgument>-proc:none</compilerArgument> <!-- disable automatic annotation processing accoring to: http://docs.jboss.org/hibernate/jpamodelgen/1.0/reference/en-US/html_single/#d0e261 -->
@@ -772,7 +772,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>15.0</version>
+        <version>18.0</version>
       </dependency>
 
       <!-- Monitoring libraries -->
@@ -996,6 +996,11 @@
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>2.5.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
         <version>2.5.2</version>
       </dependency>
@@ -1168,7 +1173,7 @@
   </distributionManagement>
 
   <properties>
-    <jetty.version>8.1.9.v20130131</jetty.version>
+    <jetty.version>9.3.9.v20160517</jetty.version>
     <geotools.version>8.6</geotools.version>
     <lucene.version>4.9.0</lucene.version>
     <spring.version>4.2.4.RELEASE</spring.version>

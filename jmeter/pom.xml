@@ -47,7 +47,7 @@
     <admin.password>admin</admin.password>
     <base.url>/geonetwork/srv/eng</base.url>
     <base.loc.url>/geonetwork/srv/eng</base.loc.url>
-    
+
     <!-- jetty properties -->
     <geonetworkWar>${basedir}/target/geonetworkWar</geonetworkWar>
   </properties>
@@ -91,7 +91,7 @@
           <tempWebappDirectory>${basedir}/target/site-web</tempWebappDirectory>
         </configuration>
       </plugin>
-      
+
     </plugins>
   </build>
   <reporting>
@@ -158,7 +158,7 @@
           </plugin>
           <!-- start jetty before integration tests and shut it down after -->
           <plugin>
-            <groupId>org.mortbay.jetty</groupId>
+            <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>${jetty.version}</version>
             <configuration>

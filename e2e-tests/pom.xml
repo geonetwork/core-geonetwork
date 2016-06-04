@@ -276,8 +276,8 @@
                               </configuration>
                             </execution>
                             <execution>
-                                <!-- 
-                    On windows sometimes (when a build fails) files stay locked and the  
+                                <!--
+                    On windows sometimes (when a build fails) files stay locked and the
                     geonetwork won't start correctly because of this, causing the tests to fail
                     This detects locked datadir and assigns a new one for the test run. -->
                                 <id>Create Test Data Directory</id>
@@ -352,27 +352,10 @@
                         </configuration>
                     </plugin>
                     <plugin>
-                        <groupId>org.mortbay.jetty</groupId>
+                        <groupId>org.eclipse.jetty</groupId>
                         <artifactId>jetty-maven-plugin</artifactId>
                         <configuration>
                             <contextXml>${project.basedir}/../web/jetty-context.xml</contextXml>
-                            <connectors>
-                                <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
-                                    <port>${appPort}</port>
-                                    <maxIdleTime>60000</maxIdleTime>
-                                    <requestHeaderSize>20000</requestHeaderSize>
-                                </connector>
-                                <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
-                                    <port>${sslAppPort}</port>
-                                    <keystore>${project.basedir}/../web/keystore.jks</keystore>
-                                    <password>password</password>
-                                    <keyPassword>password</keyPassword>
-                                    <truststore>${project.basedir}/../web/keystore.jks</truststore>
-                                    <trustPassword>password</trustPassword>
-                                    <maxIdleTime>60000</maxIdleTime>
-                                    <requestHeaderSize>20000</requestHeaderSize>
-                                </connector>
-                            </connectors>
                             <war>${geonetworkWar}</war>
                             <webAppConfig>
                                 <contextPath>/geonetwork</contextPath>
@@ -389,7 +372,6 @@
                                 </goals>
                                 <configuration>
                                     <scanIntervalSeconds>0</scanIntervalSeconds>
-                                    <daemon>true</daemon>
                                 </configuration>
                             </execution>
                             <execution>
