@@ -79,11 +79,9 @@
 
       $scope.info = {};
 
-      $http.get($scope.url + 'xml.config.info?_content_type=json').
+      $http.get('../api/site/information').
           success(function(data) {
             $scope.info = data;
-          }).error(function(data) {
-            // TODO
           });
 
     }]);

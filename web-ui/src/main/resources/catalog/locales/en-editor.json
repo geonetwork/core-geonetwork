@@ -38,6 +38,7 @@
     "beforeUnloadEditor": "You may have unsaved changes since last save {{timeAgo}}.",
     "batchEditing": "Batch editing",
     "fieldIsRemoved": "This field will be removed",
+    "editRecords": "Edit selection",
     "removeField": "Remove this field",
     "addXpath-help": "Updating records using XPath need careful definition of the changes. A change is defined by:",
     "addXpathTitle": "an optional tile",

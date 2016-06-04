@@ -29,6 +29,11 @@ package org.fao.geonet.kernel.schema;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -64,6 +69,10 @@ import java.util.Map;
 
 //==============================================================================
 
+@JsonPropertyOrder({
+    "name", "targetNamespace", "namespaces",
+    "readwriteUUID", "schematronRules"
+})
 public class MetadataSchema
 {
 	private static final String XSL_FILE_EXTENSION = ".xsl";
@@ -132,12 +141,13 @@ public class MetadataSchema
 	}
 
 	//---------------------------------------------------------------------------
-	
+
 	public String getName()
 	{
 		return schemaName;
 	}
 
+    @JsonIgnore
     public Editor getConfigEditor() {
         Path metadataSchemaConfig =
                 getSchemaDir().resolve("layout").resolve("config-editor.xml");
@@ -156,22 +166,23 @@ public class MetadataSchema
 
 	/**
 	 * Get schema directory
-	 * 
+	 *
 	 * @return
 	 */
+    @JsonIgnore
 	public Path getSchemaDir() {
 		return schemaDir;
 	}
 
 	/**
 	 * Set schema directory
-	 * 
+	 *
 	 * @param schemaDir
 	 */
 	public void setSchemaDir(Path schemaDir) {
 		this.schemaDir = schemaDir;
 	}
-	
+
 	//---------------------------------------------------------------------------
 
 	public void setPrimeNS(String theNS)
@@ -180,14 +191,14 @@ public class MetadataSchema
 	}
 
 	//---------------------------------------------------------------------------
-	
+    @JsonProperty(value = "targetNamespace")
 	public String getPrimeNS()
 	{
 		return primeNS;
 	}
 
 	//---------------------------------------------------------------------------
-	
+
 	public MetadataType getTypeInfo(String type)
 	{
 		Logger.log();
@@ -199,19 +210,19 @@ public class MetadataSchema
 
 	public String getElementType(String elem,String parent) throws Exception
 	{
-		// two cases here - if we have just one element (or a substitute) with 
+		// two cases here - if we have just one element (or a substitute) with
 		// this name then return its type
 
 	  Logger.log();
 		List<String> childType = hmElements.get(elem);
 		if (childType == null) {
 			// Check and see whether we can substitute another element from the
-			// substitution link 
+			// substitution link
 			String oldelem = elem;
 			elem = hmSubsLink.get(elem);
 	  	Logger.log();
 			childType = hmElements.get(elem);
-			if (childType == null) { 
+			if (childType == null) {
 			    Log.warning(Geonet.SCHEMA_MANAGER, "ERROR: Mismatch between schema and xml: No type for 'element' : "
 			                    + oldelem + " with parent " + parent + ". Returning xs:string");
 			    return "xs:string";
@@ -222,7 +233,7 @@ public class MetadataSchema
 		Logger.log();
 		// OTHERWISE get the type by examining the parent:
 		// for each parent with that name parent
-		// 1. retrieve its mdt 
+		// 1. retrieve its mdt
 		List<String> exType = hmElements.get(parent);
 		if (exType == null) return "xs:string";
         for (String type : exType) {
@@ -263,7 +274,7 @@ public class MetadataSchema
 		String restricName = elem;
 		if (type != null) restricName = restricName+"+"+type;
 
-		// two cases here - if we have just one element with this name 
+		// two cases here - if we have just one element with this name
 		// then return its values
 		List<List<String>> childValues = hmRestric.get(restricName);
 		if (childValues == null) return null;
@@ -283,7 +294,7 @@ public class MetadataSchema
 
 	void addElement(String name, String type, List<String> alValues, List<String> alSubs, String subLink)
 	{
-		// first just add the subs - because these are for global elements we 
+		// first just add the subs - because these are for global elements we
 		// never have a clash because global elements are all in the same scope
 		// and are thus unique
 		if (alSubs != null && alSubs.size() > 0) hmSubs.put(name,alSubs);
@@ -292,10 +303,10 @@ public class MetadataSchema
 		List<String> exType = hmElements.get(name);
 
 		// it's already there but the type has been added already
-		if (exType != null && exType.contains(type)) return; 
+		if (exType != null && exType.contains(type)) return;
 
-		// it's already there but doesn't have this type 
-		if (exType != null && !(exType.contains(type))) { 
+		// it's already there but doesn't have this type
+		if (exType != null && !(exType.contains(type))) {
 			Logger.log();
 
 
@@ -339,7 +350,7 @@ public class MetadataSchema
 	}
 
 	//---------------------------------------------------------------------------
-
+    @JsonIgnore
 	public String getNS(String targetNSPrefix)
 	{
 		Namespace ns = hmNameSpaces.get(targetNSPrefix);
@@ -354,6 +365,7 @@ public class MetadataSchema
      * Return the list of namespaces for the schema.
      * @return
      */
+    @JsonIgnore
     public List<Namespace> getNamespaces() {
         List<Namespace> list = new ArrayList<Namespace>(hmNameSpaces.size());
         for (Namespace ns : hmNameSpaces.values()) {
@@ -375,12 +387,13 @@ public class MetadataSchema
 	}
 
 	//---------------------------------------------------------------------------
-
+    @JsonIgnore
 	public List<Namespace> getSchemaNS()
 	{
 		return new ArrayList<Namespace>(hmPrefixes.values());
 	}
 
+    @JsonProperty(value = "namespaces")
     public Map<String, String> getSchemaNSWithPrefix() {
         Map<String, String> mapNs = new HashMap<String, String>();
         List<Namespace> schemaNsList = getSchemaNS();
@@ -395,7 +408,7 @@ public class MetadataSchema
         Path schematronResourceDir = basePath.resolve("WEB-INF").resolve("classes").resolve(SCHEMATRON_DIR);
         Path schemaSchematronDir = schemaDir.resolve(SCHEMATRON_DIR);
         Path schematronCompilationFile = schematronResourceDir.resolve("iso_svrl_for_xslt2.xsl");
-        
+
         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
             Log.debug(Geonet.SCHEMA_MANAGER, "     Schematron compilation for schema " + schemaName);
             Log.debug(Geonet.SCHEMA_MANAGER, "          - compiling with " + schematronCompilationFile);
@@ -525,13 +538,14 @@ public class MetadataSchema
         return hmOperationFilters.get(operation.name());
     }
 
+    @JsonIgnore
 	public SchemaPlugin getSchemaPlugin() {
 		return schemaPlugin;
 	}
 
 	/**
 	 * Schematron rules filename is like "schematron-rules-iso.xsl
-	 * 
+	 *
 	 */
 	private static class SchematronReportRulesFilter implements DirectoryStream.Filter<Path> {
 		public boolean accept(Path entry) {
@@ -562,15 +576,16 @@ public class MetadataSchema
 	public void setRootAppInfoElements(List<Element> rootAppInfoElements) {
 		this.rootAppInfoElements = rootAppInfoElements;
 	}
-	
+
+    @JsonIgnore
 	public List<Element> getSchemaAppInfoElements() {
 		return rootAppInfoElements;
 	}
-	
+
 	/**
 	 * true if schema requires to synch the uuid column schema info
 	 * with the uuid in the metadata record (updated on editing or in UFO).
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isReadwriteUUID() {

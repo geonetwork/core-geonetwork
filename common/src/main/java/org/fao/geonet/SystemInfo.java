@@ -43,13 +43,16 @@ public class SystemInfo {
     private String buildOsInfo;
     private String buildJavaVersion;
     private String buildJavaVendor;
+    private String scmUrl;
+    private String scmRevision;
 
     public static SystemInfo createForTesting(String stagingProfile) {
-        return new SystemInfo(stagingProfile, "testing", "3.0.0", "SNAPSHOT", "testing", "testing", "testing");
+        return new SystemInfo(stagingProfile, "testing", "3.0.0", "SNAPSHOT", "testing", "testing", "testing", "", "");
     }
 
     public SystemInfo(String stagingProfile, String buildDate, String version, String subVersion,
-                      String buildOsInfo, String buildJavaVersion, String buildJavaVendor) {
+                      String buildOsInfo, String buildJavaVersion, String buildJavaVendor,
+                      String scmUrl, String scmRevision) {
         this.stagingProfile = stagingProfile;
         this.buildDate = buildDate;
         this.version = version;
@@ -57,6 +60,8 @@ public class SystemInfo {
         this.buildOsInfo = buildOsInfo;
         this.buildJavaVersion = buildJavaVersion;
         this.buildJavaVendor = buildJavaVendor;
+        this.scmUrl = scmUrl;
+        this.scmRevision = scmRevision;
     }
 
     /**
@@ -123,7 +128,8 @@ public class SystemInfo {
                 new Element("buildOsInfo").setText(this.buildOsInfo),
                 new Element("buildJavaVendor").setText(this.buildJavaVendor),
                 new Element("buildJavaVersion").setText(this.buildJavaVersion),
-                new Element("buildDate").setText(this.buildDate)
+                new Element("buildDate").setText(this.buildDate),
+                new Element("scmRevision").setText(this.scmRevision)
         ));
     }
 
@@ -138,5 +144,21 @@ public class SystemInfo {
 
 
         return actualInfo;
+    }
+
+    public String getScmRevision() {
+        return scmRevision;
+    }
+
+    public void setScmRevision(String scmRevision) {
+        this.scmRevision = scmRevision;
+    }
+
+    public String getScmUrl() {
+        return scmUrl;
+    }
+
+    public void setScmUrl(String scmUrl) {
+        this.scmUrl = scmUrl;
     }
 }

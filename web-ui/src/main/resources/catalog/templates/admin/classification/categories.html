@@ -10,7 +10,7 @@
                data-ng-show="categories.length > 1"
                autofocus=""
           placeholder="{{'filter' | translate}}"/>
-        <input type="hidden" data-ng-model="categorySelected['@id']"/>
+        <input type="hidden" data-ng-model="categorySelected.id"/>
         <div class="list-group">
           <a href="" class="list-group-item" data-ng-repeat="c in pageItems()"
             data-ng-click="selectCategory(c)">
@@ -30,11 +30,11 @@
     </div>
   </div>
 
-  <div class="col-lg-7" data-ng-hide="categorySelected['@id']==null">
+  <div class="col-lg-7" data-ng-hide="categorySelected.id==null">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span data-ng-hide="categorySelected['@id'] == ''" data-translate="">updateCategory</span>
-        <span data-ng-hide="categorySelected['@id'] != ''" data-translate="">newCategory</span>
+        <span data-ng-hide="categorySelected.id == ''" data-translate="">updateCategory</span>
+        <span data-ng-hide="categorySelected.id != ''" data-translate="">newCategory</span>
         <strong>{{categorySelected.label[lang]}}</strong>
 
         <div class="btn-toolbar">
@@ -42,16 +42,16 @@
             data-ng-disabled="!categoryUpdated" data-ng-click="saveCategory('#gn-category-edit')"
             ><span class="fa fa-save"></span> {{"saveCategory"|translate}}</button>
           <button type="button" class="btn btn-primary pull-right btn-danger"
-            data-ng-hide="categorySelected['@id'] == ''"
-            data-ng-click="deleteCategory(categorySelected['@id'])"
+            data-ng-hide="categorySelected.id == ''"
+            data-ng-click="deleteCategory(categorySelected.id)"
             ><span class="fa fa-times"></span> {{"deleteCategory"|translate}}</button>
         </div>
       </div>
       <div class="panel-body">
         <form id="gn-category-edit" class="form-horizontal" data-ng-keypress="updatingCategory()">
           <fieldset>
-            <input type="hidden" name="id" data-ng-model="categorySelected['@id']"
-              value="{{categorySelected['@id']}}"> </input>
+            <input type="hidden" name="id" data-ng-model="categorySelected.id"
+              value="{{categorySelected.id}}"> </input>
             <label data-translate="" class="col-lg-2 control-label">categoryName</label>
             <div class="col-lg-10">
               <input type="text" id="categoryname" name="name" class="form-control" autofocus=""

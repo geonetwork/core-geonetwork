@@ -62,13 +62,15 @@
             deferredInst.resolve(data);
           }).error(function() {
             // Load english locale file if not available
+            var url = buildUrl(options.prefix, 'en', value, options.suffix);
             $http({
               method: 'GET',
-              url: buildUrl(options.prefix, 'en', value, options.suffix)
+              url: url
             }).success(function(data) {
               deferredInst.resolve(data);
             }).error(function() {
-              deferredInst.reject(options.key);
+              console.warn('Error loading ' + url);
+              deferredInst.resolve({});
             });
           });
         });

@@ -366,7 +366,6 @@
     processReport: 'md.processing.batch.report',
     processXml: 'xml.metadata.processing',
 
-    info: 'info?_content_type=json',
 
     country: 'regions.list?_content_type=json&categoryId=' +
         'http://geonetwork-opensource.org/regions%23country',
@@ -521,10 +520,9 @@
    * Load the catalog config and push it to gnConfig.
    */
   module.factory('gnConfigService', [
-    '$q',
-    'gnHttp',
+    '$http',
     'gnConfig',
-    function($q, gnHttp, gnConfig) {
+    function($http, gnConfig) {
       return {
 
         /**
@@ -539,25 +537,21 @@
          * @return {HttpPromise} Future object
          */
         load: function() {
-          var defer = $q.defer();
-          gnHttp.callService('info',
-              {type: 'config'},
-              {cache: true}).then(function(response) {
-            angular.forEach(response.data, function(value, key) {
-              if (value == 'true' || value == 'false') {
-                response.data[key] = value === 'true';
+          return $http.get('../api/site/settings', {cache: true})
+            .then(function(response) {
+            angular.extend(gnConfig, response.data);
+            // Replace / by . in settings name
+            angular.forEach(gnConfig, function (value, key) {
+              if(key.indexOf('/') !== -1) {
+                gnConfig[key.replace(/\//g, '.')] = value;
+                delete gnConfig[key];
               }
             });
-            angular.extend(gnConfig, response.data);
-
             // Override parameter if set in URL
             if (window.location.search.indexOf('with3d') !== -1) {
               gnConfig['map.is3DModeAllowed'] = true;
             }
-
-            defer.resolve(gnConfig);
           });
-          return defer.promise;
         },
 
         /**

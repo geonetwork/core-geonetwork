@@ -43,23 +43,10 @@
 
          var extractNamespaces = function(data) {
            var result = {};
-           var len = data['schemas'].length;
+           var len = data.length;
             for (var i = 0; i < len; i++) {
-              var sc = data['schemas'][i];
-              var name = sc['name'];
-              var nss = sc['namespaces'];
-              var modNs = {};
-              if (typeof nss == 'string') {
-                var nssArray = nss.split(' ');
-                for (var j = 0; j < nssArray.length; j++) {
-                  var nsPair = nssArray[j].split('=');
-                  var prefix = nsPair[0].substring(6);
-                  var namespaceUri = nsPair[1].
-                 substring(1, nsPair[1].length - 1);
-                  modNs[prefix] = namespaceUri;
-                }
-              }
-              result[name] = modNs;
+              var sc = data[i];
+              result[sc.name] = sc.namespaces;
             }
             return result;
          };
@@ -95,12 +82,7 @@
              if (fromCache) {
                defer.resolve(fromCache);
              } else {
-                var url = gnUrlUtils.append('info?_content_type=json',
-                   gnUrlUtils.toKeyValue({
-                 type: 'schemas'
-                   })
-               );
-               $http.get(url, { cache: false }).
+               $http.get('../api/standards', { cache: false }).
                success(function(data) {
                  var nss = extractNamespaces(data);
                  infoCache.put('schemas', nss);

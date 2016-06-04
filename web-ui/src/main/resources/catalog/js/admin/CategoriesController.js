@@ -112,10 +112,8 @@
       };
 
       function loadCategories() {
-        $http.get('info@json?type=categories').success(function(data) {
-          $scope.categories = data.metadatacategory;
-        }).error(function(data) {
-          // TODO
+        $http.get('../api/tags').success(function(data) {
+          $scope.categories = data;
         });
       }
       loadCategories();

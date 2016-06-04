@@ -53,10 +53,11 @@ import javax.xml.transform.TransformerFactory;
  * transformer factory, Lucene index properties). Usually these properties could not
  * be set from the web interface and some of them could be updated in configuration
  * file.
- * 
+ *
  * @author francois
- * 
+ *
  */
+@Deprecated
 public class GetInfo implements Service {
 	private HashMap<String, String> catProperties = new HashMap<String, String>();
 	private HashMap<String, String> indexProperties = new HashMap<String, String>();
@@ -185,7 +186,7 @@ public class GetInfo implements Service {
 
     /**
 	 * Compute information about database.
-	 * 
+	 *
 	 * @param context
 	 */
 	private void loadDatabaseInfo(ServiceContext context) throws SQLException {
@@ -220,11 +221,11 @@ public class GetInfo implements Service {
 		databaseProperties.put("db.url", dbURL);
 
 	}
-	
-	
+
+
 	/**
 	 * Add HashMap content to an Element.
-	 * 
+	 *
 	 * @param el
 	 * @param h
 	 */

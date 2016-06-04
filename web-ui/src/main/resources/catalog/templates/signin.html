@@ -1,7 +1,7 @@
 <div class="container" data-ng-controller="GnLoginController">
   <div class="col-lg-6">
       <form class="form-horizontal" name="gnSigninForm" action="{{formAction}}"
-            method="post" role="form" data-ng-if="user['@authenticated'] != 'true'">
+            method="post" role="form" data-ng-if="::user">
       <div class="form-group">
         <label class="col-sm-3 control-label"
                for="inputUsername" data-translate="">username</label>
@@ -10,9 +10,9 @@
             placeholder="{{'username' | translate}}" data-ng-model="signinUsername" required=""/>
         </div>
       </div>
-      
+
       <div class="form-group">
-        <label class="col-sm-3 control-label" 
+        <label class="col-sm-3 control-label"
           for="inputPassword" data-translate="">password</label>
         <div class="col-sm-9">
           <input type="password" class="form-control" id="inputPassword" name="password"
@@ -20,7 +20,7 @@
             data-ng-model="signinPassword" placeholder="{{'password' | translate}}" required=""/>
         </div>
       </div>
-      
+
       <input type="hidden" name="redirectUrl" data-ng-model="redirectUrl" value="{{redirectUrl}}"/>
       <!--<div class="checkbox">
                 <label class="checkbox">

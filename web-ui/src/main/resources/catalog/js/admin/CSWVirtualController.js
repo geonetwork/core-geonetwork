@@ -85,11 +85,9 @@
             });
       }
       function loadCategories() {
-        $http.get('info?_content_type=json&type=categories').
+        $http.get('../api/tags').
             success(function(data) {
-              $scope.categories = data.metadatacategory;
-            }).error(function(data) {
-              // TODO
+              $scope.categories = data;
             });
       }
 

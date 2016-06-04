@@ -49,9 +49,9 @@
       $scope.sources = [];
       $scope.sourcesSelected = null;
       $scope.dirty = false;
-      $http.get('info?_content_type=json&type=languages', {cache: true}).
+      $http.get('../api/languages', {cache: true}).
           success(function(data) {
-            $scope.languages = data.language;
+            $scope.languages = data;
           });
 
       $scope.selectSource = function(source) {
@@ -76,9 +76,9 @@
          */
       function loadSources() {
 
-        $http.get('info?type=sources&_content_type=json')
+        $http.get('../api/sources')
             .success(function(data) {
-              $scope.sources = data.sources;
+              $scope.sources = data;
             });
 
       }

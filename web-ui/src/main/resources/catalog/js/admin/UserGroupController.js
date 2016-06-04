@@ -38,7 +38,7 @@
   module.controller('GnUserGroupController', [
     '$scope', '$routeParams', '$http', '$rootScope',
     '$translate', '$timeout',
-    function($scope, $routeParams, $http, $rootScope, 
+    function($scope, $routeParams, $http, $rootScope,
         $translate, $timeout) {
 
       $scope.searchObj = {
@@ -97,9 +97,9 @@
       $scope.isLoadingUsers = false;
       $scope.isLoadingGroups = false;
 
-      $http.get('info?type=categories&_content_type=json').
+      $http.get('../api/tags').
           success(function(data) {
-            $scope.categories = data.metadatacategory;
+            $scope.categories = data;
           });
 
 

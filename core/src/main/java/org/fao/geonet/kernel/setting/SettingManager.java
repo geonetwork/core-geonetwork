@@ -39,6 +39,7 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +93,11 @@ public class SettingManager {
     @PostConstruct
     private void init() {
         this.pathFinder = new ServletPathFinder(servletContext);
+    }
+
+    public List<Setting> getAll() {
+        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
+        return repo.findAll(SortUtils.createSort(Setting_.name));
     }
 
     /**
@@ -167,7 +173,7 @@ public class SettingManager {
 
     /**
      * Return a setting by its key
-     * 
+     *
      * @param path eg. system/site/name
      */
     public String getValue(String path) {
@@ -193,8 +199,29 @@ public class SettingManager {
     }
 
     /**
+     * Return a set of values
+     *
+     * @param keys A list of setting's key to retrieve
+     */
+    public List<Setting> getSettings(String[] keys) {
+        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
+
+        List<Setting> settings = new ArrayList<>();
+        for (int i = 0; i < keys.length; i++) {
+            String key = keys[i];
+            Setting se = repo.findOne(key);
+            if (se == null) {
+                Log.warning(Geonet.SETTINGS, "  Requested setting with name: " + key + " not found. Add it to the settings table.");
+            } else {
+                settings.add(se);
+            }
+        }
+        return settings;
+    }
+
+    /**
      * Return a set of values as XML
-     * 
+     *
      * @param keys A list of setting's key to retrieve
      */
     public Element getValues(String[] keys) {
@@ -220,7 +247,7 @@ public class SettingManager {
 
     /**
      * Get value of a setting as boolean
-     * 
+     *
      * @param key The setting key
      * @return The setting valueThe setting key
      */
@@ -233,7 +260,7 @@ public class SettingManager {
 
     /**
      * Get value of a setting as boolean
-     * 
+     *
      * @param key The setting key
      * @param defaultValue The default value
      * @return The setting value as boolean
@@ -249,7 +276,7 @@ public class SettingManager {
 
     /**
      * Get value of a setting as integer
-     * 
+     *
      * @param key The setting key
      * @return The integer value of the setting or null
      */
@@ -262,10 +289,10 @@ public class SettingManager {
 
     /**
      * Set the value of a Setting entity
-     * 
+     *
      * @param key the path/name/key of the setting.
      * @param value the new value
-     * 
+     *
      * @return true if the types are correct and the setting is found.
      */
     public boolean setValue(String key, String value) {
@@ -290,7 +317,7 @@ public class SettingManager {
 
     /**
      * Set the setting value by key to the boolean value.
-     * 
+     *
      * @param key the key/path/name of the setting.
      * @param value the new boolean value
      */
@@ -300,10 +327,10 @@ public class SettingManager {
 
     /**
      * Set a list of settings.
-     * 
+     *
      * @param values The settings to update
      * @return true if the types are correct and the setting is found.
-     * 
+     *
      * @throws SQLException
      */
     public final boolean setValues(final Map<String, String> values) {

@@ -50,6 +50,7 @@
       $scope.file_type = 'single';
       $scope.uuidAction = 'nothing';
       $scope.importing = false;
+      $scope.template = 'n';
 
       /** Upload management */
       $scope.action = 'xml.mef.import.ui';

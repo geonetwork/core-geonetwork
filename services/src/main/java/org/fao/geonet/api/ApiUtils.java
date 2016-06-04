@@ -27,6 +27,12 @@ import com.google.common.collect.Sets;
 
 import org.fao.geonet.kernel.SelectionManager;
 
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -59,5 +65,18 @@ public class ApiUtils {
                 "At least one record should be defined or selected for analysis.");
         }
         return setOfUuidsToEdit;
+    }
+
+    public static long sizeOfDirectory(Path lDir) throws IOException {
+        final long[] size = new long[]{0};
+        Files.walkFileTree(lDir, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                size[0] += Files.size(file);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+
+        return size[0] / 1024;
     }
 }

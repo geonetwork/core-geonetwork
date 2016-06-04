@@ -144,15 +144,13 @@
           });
 
           var init = function() {
-            return $http.get('info?type=categories&' +
-                '_content_type=json', {cache: true}).
+            return $http.get('../api/tags', {cache: true}).
                 success(function(data) {
-                  scope.categories =
-                     data !== 'null' ? data.metadatacategory : null;
+                  scope.categories = data;
                   if (angular.isDefined(scope.currentCategories)) {
                     angular.forEach(scope.categories, function(c) {
                       if (scope.currentCategories.indexOf(c.name) !== -1) {
-                        scope.ids.push(c['@id']);
+                        scope.ids.push(c.id);
                       }
                     });
                   }
@@ -166,9 +164,9 @@
           // Remove or add category to the set of ids
           scope.assign = function(c, event) {
             event.stopPropagation();
-            var existIndex = scope.ids.indexOf(c['@id']);
+            var existIndex = scope.ids.indexOf(c.id);
             if (existIndex === -1) {
-              scope.ids.push(c['@id']);
+              scope.ids.push(c.id);
             } else {
               scope.ids.splice(existIndex, 1);
             }
@@ -218,11 +216,10 @@
           scope.groups = null;
 
           scope.init = function(event) {
-            return $http.get('info?_content_type=json&' +
-                'type=groups&profile=Editor', {cache: true}).
-                success(function(data) {
-                  scope.groups = data !== 'null' ? data.group : null;
-                });
+            return $http.get('../api/groups?profile=Editor', {cache: true}).
+            success(function(groups) {
+              scope.groups = groups;
+            });
           };
 
           scope.sortByLabel = function(group) {
@@ -231,9 +228,9 @@
 
           scope.assignGroup = function(g, event) {
             event.stopPropagation();
-            gnMetadataActions.assignGroup(scope.metadataId, g['@id'])
+            gnMetadataActions.assignGroup(scope.metadataId, g.id)
                 .then(function() {
-                  scope.groupOwner = g['@id'];
+                  scope.groupOwner = g.id;
                 }, function(error) {
                   $rootScope.$broadcast('StatusUpdated', {
                     title: $translate('changeCategoryError'),

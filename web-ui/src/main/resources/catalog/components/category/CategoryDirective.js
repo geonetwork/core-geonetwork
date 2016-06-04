@@ -46,11 +46,9 @@
         templateUrl: '../../catalog/components/category/partials/' +
             'category.html',
         link: function(scope, element, attrs) {
-          $http.get('info?_content_type=json&type=categories', {cache: true}).
+          $http.get('../api/tags', {cache: true}).
               success(function(data) {
-                scope.categories = data.metadatacategory;
-              }).error(function(data) {
-                // TODO
+                scope.categories = data;
               });
         }
       };
@@ -69,11 +67,9 @@
         link: function(scope, element, attrs) {
           scope.report = null;
 
-          $http.get('info?_content_type=json&type=categories', {cache: true}).
+          $http.get('../api/tags', {cache: true}).
               success(function(data) {
-                scope.categories = data.metadatacategory;
-              }).error(function(data) {
-                // TODO
+                scope.categories = data;
               });
 
           scope.save = function(replace) {
@@ -88,7 +84,7 @@
 
             angular.forEach(scope.categories, function(c) {
               if (c.checked === true) {
-                params['_' + c['@id']] = 'on';
+                params['_' + c.id] = 'on';
               }
             });
             $http.get(url, {params: params})

@@ -67,9 +67,9 @@
               });
           // $http.get('admin.usergroups.list@json?id=' + 1)
           //          .success(function(data) {
-          $http.get('info?_content_type=json&type=languages', {cache: true})
+          $http.get('../api/languages', {cache: true})
               .success(function(data) {
-                scope.languages = data.language;
+                scope.languages = data;
               });
           $http.get('admin.group.list@json', {cache: true})
               .success(function(data) {
@@ -182,21 +182,19 @@
                } else if (who == 'allGroup') {
                  scope.allGroup = !scope.allGroup;
                  angular.forEach(scope.groups, function(g) {
-                   scope.selectedPrivileges[g['@id']] = scope.allGroup;
+                   scope.selectedPrivileges[g.id] = scope.allGroup;
                  });
                }
              };
              function loadGroups() {
-               $http.get('info?_content_type=json&' +
-               'type=groupsIncludingSystemGroups',
+               $http.get('../api/groups?withReservedGroup=true',
                {cache: true})
                .success(function(data) {
-                 scope.groups = data !== 'null' ? data.group : null;
+                 scope.groups = data;
                });
              }
 
              var initHarvesterPrivileges = function() {
-
                angular.forEach(scope.harvester.privileges, function(g) {
                  scope.selectedPrivileges[g['@id']] = true;
                });

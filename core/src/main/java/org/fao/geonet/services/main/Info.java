@@ -85,6 +85,7 @@ import java.util.Set;
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 import static org.fao.geonet.kernel.setting.SettingManager.SYSTEM_SITE_LABEL_PREFIX;
 
+@Deprecated
 public class Info implements Service {
     private static final String READ_ONLY = "readonly";
     private static final String INDEX = "index";
@@ -156,7 +157,7 @@ public class Info implements Service {
 		Element params = (Element)inParams.clone();
 
 		// --- if we have a parameter specified in the config then use it instead
-		// --- of the usual params 
+		// --- of the usual params
 		String ptype = _config.getValue("type");
 		if (ptype != null) {
 			params.removeContent();
@@ -174,7 +175,7 @@ public class Info implements Service {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
                         new String[]{
                                 SettingManager.SYSTEM_SITE_NAME_PATH,
-                                "system/site/organization", 
+                                "system/site/organization",
                                 SettingManager.SYSTEM_SITE_SITE_ID_PATH,
                                 "system/platform/version",
                                 "system/platform/subVersion"
@@ -201,13 +202,13 @@ public class Info implements Service {
             } else if (type.equals(INSPIRE)) {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
 				            new String[]{
-				                         "system/inspire/enableSearchPanel", 
+				                         "system/inspire/enableSearchPanel",
 				                         "system/inspire/enable"
 				                         }));
             } else if (type.equals(HARVESTER)) {
 			    result.addContent(gc.getBean(SettingManager.class).getValues(
                         new String[]{ "system/harvester/enableEditing"}));
-			
+
 			} else if (type.equals(USER_GROUP_ONLY)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(
                         new String[]{"system/metadataprivs/usergrouponly"}));
@@ -255,7 +256,7 @@ public class Info implements Service {
 
             } else if (type.equals(ME)) {
 				result.addContent(getMyInfo(context));
-			
+
             } else if (type.equals(AUTH)) {
 				result.addContent(getAuth(context));
 
@@ -276,7 +277,7 @@ public class Info implements Service {
 				throw new BadParameterEx("Unknown type parameter value.", type);
             }
 		}
-		
+
 		result.addContent(getEnv(context));
 		Element response = Xml.transform(result, xslPath.resolve("info.xsl"));
 
@@ -284,16 +285,16 @@ public class Info implements Service {
 	}
 
    /**
-    * Returns whether GN is in indexing (true or false). 
-    * @param gc 
-    * @return 
-    */ 
-    private Element getIndex(GeonetContext gc) { 
-        Element isIndexing = new Element(INDEX); 
-        isIndexing.setText(Boolean.toString(gc.getBean(DataManager.class).isIndexing())); 
-        return isIndexing; 
+    * Returns whether GN is in indexing (true or false).
+    * @param gc
+    * @return
+    */
+    private Element getIndex(GeonetContext gc) {
+        Element isIndexing = new Element(INDEX);
+        isIndexing.setText(Boolean.toString(gc.getBean(DataManager.class).isIndexing()));
+        return isIndexing;
     }
-    
+
     /**
      * Returns whether GN is in read-only mode (true or false).
      * @param gc
@@ -318,7 +319,7 @@ public class Info implements Service {
 		return auth;
 	}
 
-	
+
 
 	//--------------------------------------------------------------------------
 	//---
@@ -385,7 +386,7 @@ public class Info implements Service {
       response.addContent(elem);
     }
 
-    return response;	
+    return response;
 	}
 
     /**

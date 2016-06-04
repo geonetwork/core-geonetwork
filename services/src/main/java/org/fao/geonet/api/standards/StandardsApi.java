@@ -21,11 +21,12 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.api.schema;
+package org.fao.geonet.api.standards;
 
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.kernel.Schema;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.editorconfig.BatchEditing;
@@ -66,15 +67,15 @@ import jeeves.server.context.ServiceContext;
  */
 
 @RequestMapping(value = {
-    "/api/standard",
+    "/api/standards",
     "/api/" + API.VERSION_0_1 +
-        "/standard"
+        "/standards"
 })
-@Api(value = "standard",
-    tags = "standard",
+@Api(value = "standards",
+    tags = "standards",
     description = "Standard related operations")
-@Controller("standard")
-public class StandardApi implements ApplicationContextAware {
+@Controller("standards")
+public class StandardsApi implements ApplicationContextAware {
 
     @Autowired
     SchemaManager schemaManager;
@@ -88,6 +89,23 @@ public class StandardApi implements ApplicationContextAware {
         this.context = context;
     }
 
+
+    @ApiOperation(value = "Get standards",
+        nickname = "getStandards")
+    @RequestMapping(
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    public
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    List<MetadataSchema> getConfigurations() throws Exception {
+        Set<String> schemaIds = schemaManager.getSchemas();
+        List<MetadataSchema> schemaList = new ArrayList<>(schemaIds.size());
+        schemaIds.stream().forEach(id -> schemaList.add(schemaManager.getSchema(id)));
+        return schemaList;
+    }
 
     @ApiOperation(value = "Get batch editor configuration for standards",
         nickname = "getBatchConfigurations")

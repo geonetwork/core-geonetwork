@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.api.user;
+package org.fao.geonet.api.users;
 
 /**
  * Created by francois on 09/02/16.

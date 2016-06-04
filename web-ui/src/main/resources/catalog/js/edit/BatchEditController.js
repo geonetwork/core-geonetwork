@@ -403,7 +403,7 @@
 
 
       function init() {
-        $http.get('../api/standard/actions/batchconfiguration').
+        $http.get('../api/standards/actions/batchconfiguration').
             success(function(data) {
               $scope.fieldConfig = data;
               gnSchemaManagerService.getNamespaces();

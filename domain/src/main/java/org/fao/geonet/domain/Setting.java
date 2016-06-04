@@ -23,6 +23,8 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.fao.geonet.entitylistener.SettingEntityListenerManager;
 import org.hibernate.annotations.Type;
 
@@ -92,7 +94,7 @@ public class Setting extends GeonetEntity {
     }
 
     /**
-     * For backwards compatibility we need the activated column to be either 'n' or 'y'. 
+     * For backwards compatibility we need the activated column to be either 'n' or 'y'.
      * This is a workaround to allow this until future
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */

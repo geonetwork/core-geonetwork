@@ -277,9 +277,9 @@
       }
 
       function loadCategories() {
-        $http.get('info?_content_type=json&type=categories').
+        $http.get('../api/tags').
             success(function(data) {
-              $scope.batchSearchCategories = data.metadatacategory;
+              $scope.batchSearchCategories = data;
             }).error(function(data) {
               // TODO
             });
@@ -419,9 +419,9 @@
        */
       function checkIsIndexing() {
         // Check if indexing
-        return $http.get('info?_content_type=json&type=index').
+        return $http.get('../api/site/indexing').
             success(function(data, status) {
-              $scope.isIndexing = data.index == 'true';
+              $scope.isIndexing = data;
               if ($scope.isIndexing) {
                 $timeout(checkIsIndexing, indexCheckInterval);
               }
@@ -508,11 +508,11 @@
             .success(function(data) {
               $http.get('../../static/wroAPI/reloadCache')
                 .success(function(data) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    msg: $translate('jsCacheCleared'),
-                    timeout: 2,
-                    type: 'success'});
-                })
+                   $rootScope.$broadcast('StatusUpdated', {
+                     msg: $translate('jsCacheCleared'),
+                     timeout: 2,
+                     type: 'success'});
+                 });
             });
       };
 

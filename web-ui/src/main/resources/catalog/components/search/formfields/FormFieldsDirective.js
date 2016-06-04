@@ -236,36 +236,30 @@
           },
 
           link: function(scope, element, attrs) {
-            var url = 'info?_content_type=json' +
-                '&type=groupsIncludingSystemGroups';
+            var url = '../api/groups?withReservedGroup=true';
             if (attrs.profile) {
-              url = 'info?_content_type=json' +
-                  '&type=groups&profile=' + attrs.profile;
+              url = '../api/groups?profile=' + attrs.profile;
             }
             $http.get(url, {cache: true}).
                 success(function(data) {
-
                   //data-ng-if is not correctly updating groups.
                   //So we do the filter here
                   if (scope.excludeSpecialGroups) {
                     scope.groups = [];
-                    angular.forEach(data.group, function(g) {
-                      if (g['@id'] > 1) {
+                    angular.forEach(data, function(g) {
+                      if (g.id > 1) {
                         scope.groups.push(g);
                       }
                     });
                   } else {
-                    scope.groups = data !== 'null' ? data.group : null;
+                    scope.groups = data;
                   }
 
                   // Select by default the first group.
                   if ((angular.isUndefined(scope.ownerGroup) ||
-                      scope.ownerGroup === '') && data.group) {
-                    scope.ownerGroup = data.group[0]['@id'];
+                      scope.ownerGroup === '') && data) {
+                    scope.ownerGroup = data[0].id;
                   }
-
-
-
                 });
           }
 
@@ -663,7 +657,6 @@
               {key: 'TEMPLATE', value: 'y'},
               {key: 'SUB_TEMPLATE', value: 's'}
             ];
-
           }
         };
       }])

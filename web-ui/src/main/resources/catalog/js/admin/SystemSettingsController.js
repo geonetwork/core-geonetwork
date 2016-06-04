@@ -67,7 +67,7 @@
   module.controller('GnSystemSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', '$location',
     'gnUtilityService',
-    function($scope, $http, $rootScope, $translate, $location, 
+    function($scope, $http, $rootScope, $translate, $location,
         gnUtilityService) {
 
       $scope.settings = [];
@@ -111,9 +111,9 @@
          */
       function loadSettings() {
 
-        $http.get('info?type=systeminfo&_content_type=json')
+        $http.get('../api/site/buildinfo')
             .success(function(data) {
-              $scope.systemInfo = data.systemInfo;
+              $scope.systemInfo = data;
             });
         // load log files
         $http.get('admin.logfile.list?_content_type=json')

@@ -21,7 +21,7 @@
 //===   Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.api.user;
+package org.fao.geonet.api.users;
 
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -66,9 +66,9 @@ import jeeves.server.context.ServiceContext;
     "/api/" + API.VERSION_0_1 +
         "/user"
 })
-@Api(value = "user",
-    tags = "user",
-    description = "User related operations")
+@Api(value = "users",
+    tags = "users",
+    description = "User operations")
 public class AccountCreationApi {
 
     @Autowired
