@@ -23,24 +23,36 @@
 
 package org.fao.geonet.api.languages;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
-import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.domain.Language;
-import org.fao.geonet.repository.IsoLanguageRepository;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.exceptions.ResourceNotFoundEx;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.LanguageRepository;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jeeves.server.UserSession;
+import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 
 @RequestMapping(value = {
@@ -50,13 +62,13 @@ import jeeves.server.context.ServiceContext;
 })
 @Api(value = "languages",
     tags = "languages",
-    description = "Privileges languages")
+    description = "Languages operations")
 @Controller("languages")
 public class LanguagesApi {
 
     @ApiOperation(
         value = "Get languages",
-        notes = "",
+        notes = "Languages for the application (having translations in the database.",
         nickname = "getLanguages")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -68,18 +80,110 @@ public class LanguagesApi {
         return context.getBean(LanguageRepository.class).findAll();
     }
 
+
     @ApiOperation(
-        value = "Get ISO languages",
-        notes = "",
-        nickname = "getIsoLanguages")
+        value = "Add a language",
+        notes = "Add all translations from all *Desc tables in the database.",
+        nickname = "deleteLanguage")
     @RequestMapping(
-        path = "/iso",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
+        value = "/{langCode}",
+        method = RequestMethod.PUT)
     @ResponseBody
-    public List<IsoLanguage> getIsoLanguages() throws Exception {
+    public ResponseEntity deleteLanguages(
+        @ApiParam(value = "ISO 3 letter code",
+            required = true)
+        @PathVariable
+            String langCode
+    ) throws ResourceNotFoundEx, IOException {
+        // TODO: null context
         ServiceContext context = ServiceContext.get();
-        return context.getBean(IsoLanguageRepository.class).findAll();
+        if (context.getUserSession().getProfile() != Profile.Administrator) {
+            throw new SecurityException("Only administrator can add languages.");
+        }
+
+        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+
+        LanguageRepository languageRepository = applicationContext.getBean(LanguageRepository.class);
+        Language lang = languageRepository.findOne(langCode);
+        if (lang == null) {
+            GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
+            String languageDataFile = "loc-" + langCode + "-default.sql";
+            Path templateFile = dataDirectory.getWebappDir().resolve("WEB-INF")
+                .resolve("classes").resolve("setup").resolve("sql").resolve("data")
+                .resolve(languageDataFile);
+            if (Files.exists(templateFile)) {
+                List<String> data = new ArrayList<>();
+                try (BufferedReader br = new BufferedReader(new FileReader(templateFile.toFile()))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        data.add(line);
+                    }
+                }
+                if (data.size() > 0) {
+                    Lib.db.runSQL(context, data);
+                    return new ResponseEntity(HttpStatus.CREATED);
+                }
+            }
+            throw new ResourceNotFoundEx(String.format(
+                "Language data file '%s' not found in classes/setup/sql/data.", languageDataFile
+            ));
+        } else {
+            throw new RuntimeException(String.format(
+                "Language '%s' already available.", lang.getId()
+            ));
+        }
+    }
+
+    @ApiOperation(
+        value = "Delete a language",
+        notes = "Delete all translations from all *Desc tables in the database.",
+        nickname = "addLanguage")
+    @RequestMapping(
+        value = "/{langCode}",
+        method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResponseEntity addLanguages(
+        @ApiParam(value = "ISO 3 letter code",
+            required = true)
+        @PathVariable
+            String langCode
+    ) throws ResourceNotFoundEx, IOException {
+        // TODO: null context
+        ServiceContext context = ServiceContext.get();
+        if (context.getUserSession().getProfile() != Profile.Administrator) {
+            throw new SecurityException("Only administrator can remove languages.");
+        }
+
+        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+
+        LanguageRepository languageRepository = applicationContext.getBean(LanguageRepository.class);
+        Language lang = languageRepository.findOne(langCode);
+        if (lang == null) {
+            throw new ResourceNotFoundEx(String.format("Language '%s' not found.", langCode));
+        } else {
+            GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
+
+            final String LANGUAGE_DELETE_SQL = "language-delete.sql";
+
+            Path templateFile = dataDirectory.getWebappDir().resolve("WEB-INF")
+                .resolve("classes").resolve("setup").resolve("sql").resolve("template")
+                .resolve(LANGUAGE_DELETE_SQL);
+            if (Files.exists(templateFile)) {
+                List<String> data = new ArrayList<>();
+                try (BufferedReader br = new BufferedReader(new FileReader(templateFile.toFile()))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        data.add(String.format(line, lang.getId()));
+                    }
+                }
+                if (data.size() > 0) {
+                    Lib.db.runSQL(context, data);
+                    return new ResponseEntity(HttpStatus.NO_CONTENT);
+                }
+            }
+            throw new ResourceNotFoundEx(String.format(
+                "Template file '%s' not found in classes/setup/sql/template.", LANGUAGE_DELETE_SQL
+            ));
+        }
     }
 }
