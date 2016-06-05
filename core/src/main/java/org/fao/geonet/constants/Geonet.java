@@ -28,6 +28,7 @@ import javax.xml.XMLConstants;
 import jeeves.constants.Jeeves;
 
 import org.apache.lucene.util.Version;
+import org.fao.geonet.kernel.setting.Settings;
 import org.jdom.Namespace;
 
 import java.util.List;
@@ -36,14 +37,14 @@ import java.util.List;
  * TODO javadoc.
  */
 public final class Geonet {
-	
+
 	//FIXME When we migrate everything and get rid of Jeeves, just use this one
 	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
-	
+
 	public static final String CONTEXT_NAME = "contextName";
     // TODO make this configurable
 	public static final String DEFAULT_LANGUAGE = "eng";
-	
+
 	public static final String CC_API_REST_URL = "http://api.creativecommons.org/rest/1.5/simple/chooser";
     public static final String LUCENE_LOCALE_KEY = "_locale";
 
@@ -78,7 +79,7 @@ public final class Geonet {
 		public static final String SORT_HARVESTERS     = "sort-harvesters.xsl";
 		public static final String JZKITCONFIG_TEMPLATE= "JZKitConfig.xml.tem";
 		public static final String JZKITAPPLICATIONCONTEXT= "JZkitApplicationContext.xml";
-		
+
 		/**
 		 * Stylesheet to convert a CQL parameter to a filter.
 		 */
@@ -169,7 +170,7 @@ public final class Geonet {
 		public static final String SEARCH_RESULT			= "search.result";
 		public static final String SEARCH_REQUEST = "search.request";
 		public static final String LAST_SEARCH_RESULT = "last.search.result";
-		public static final String SEARCH_REQUEST_ID 		= "search_request_id";		
+		public static final String SEARCH_REQUEST_ID 		= "search_request_id";
 		public static final String METADATA_SHOW			= "metadata.show";
 		public static final String METADATA_EDITING		= "metadata.editing";
 		public static final String METADATA_BEFORE_ANY_CHANGES = "metadata.before.any.changes";
@@ -182,22 +183,13 @@ public final class Geonet {
 		public static final String FC_ISO19110		        = "fc.iso19110";
 		public static final String FILE_DISCLAIMER    = "file.disclaimer";
 		public static final String BATCH_PROCESSING_REPORT = "BATCH_PROCESSING_REPORT";
-		
+
         /**
          * Contains the uuids of metadatas that have to be shown
          */
         public static final String METADATA_UUIDS    = "metadata.uuids";
 
 	}
-    
-    public static final class Settings {
-        public static final String SERVER_HOST = "system/server/host";
-        public static final String SERVER_PORT = "system/server/port";
-        public static final String SERVER_SECURE_PORT = "system/server/securePort";
-        public static final String SERVER_PROTOCOL = "system/server/protocol";
-        public static final String VERSION = "system/platform/version";
-        public static final String SUBVERSION = "system/platform/subVersion";
-    }
 
     /**
      * Resource names.
@@ -207,7 +199,7 @@ public final class Geonet {
 	}
 
 	/**
-	 * Parameters that can be used in searches. 
+	 * Parameters that can be used in searches.
 	 * See the parameters for a more complete description.
 	 * @see ../services.util.MainUtil.getDefaultSearch for
 	 * default values.
@@ -216,11 +208,11 @@ public final class Geonet {
         /** Parameter name: {@value #TITLE} - Free text field that searches
          * in the title */
 		public static final String TITLE         = "title";
-		
+
 		/** Parameter name: {@value #ABSTRACT} - Free text field that searches
 		 * in the abstract */
 		public static final String ABSTRACT      = "abstract";
-        
+
 		/** Parameter name: {@value #ANY} - Free text field that searches
          * in all the text fields of a metadata record */
 		public static final String ANY           = "any";
@@ -228,28 +220,28 @@ public final class Geonet {
 		public static final String OR            = "or";
 		public static final String WITHOUT       = "without";
         public static final String ALL           = "all";
-        
-		/** Parameter name: {@value #REGION} - Index value of a region. 
+
+		/** Parameter name: {@value #REGION} - Index value of a region.
 		 * Used to retrieve the name and bounding box of the selected region */
         public static final String REGION        = "region";
-        
-        /** Parameter name: {@value #SOUTH_BL} - Lowest Latitude value in 
-         * floating point format (geographic coordinate) 
+
+        /** Parameter name: {@value #SOUTH_BL} - Lowest Latitude value in
+         * floating point format (geographic coordinate)
          * Default value is {@code -90} */
 		public static final String SOUTH_BL      = "southBL";
-        
-		/** Parameter name: {@value #NORTH_BL} - Highest Latitude value in 
-         * floating point format (geographic coordinate) 
+
+		/** Parameter name: {@value #NORTH_BL} - Highest Latitude value in
+         * floating point format (geographic coordinate)
          * Default value is {@code 90} */
 		public static final String NORTH_BL      = "northBL";
-        
-		/** Parameter name: {@value #EAST_BL} - Highest Longitude value in 
-         * floating point format (geographic coordinate) 
+
+		/** Parameter name: {@value #EAST_BL} - Highest Longitude value in
+         * floating point format (geographic coordinate)
          * Default value is {@code 180} */
 		public static final String EAST_BL       = "eastBL";
-        
-		/** Parameter name: {@value #WEST_BL} - Lowest Longitude value in 
-         * floating point format (geographic coordinate) 
+
+		/** Parameter name: {@value #WEST_BL} - Lowest Longitude value in
+         * floating point format (geographic coordinate)
          * Default value is {@code -180} */
 		public static final String WEST_BL       = "westBL";
 
@@ -258,21 +250,21 @@ public final class Geonet {
 		 * A compact alternative to the four westBL, southBL, eastBL and northBL
 		 * parameters. */
 		public static final String BBOX          = "bbox";
-		
+
         /** Parameter name: {@value #RELATION} - Defines the type of spatial
          * query matching used
-         * See {@link Relation} for possible values 
+         * See {@link Relation} for possible values
          * Default value is {@code {@value Relation#OVERLAPS}} */
 		public static final String RELATION      = "relation";
-		
-        /** Parameter name: {@value #DATE_FROM} - Start date from when the 
-         * referenced resource was updated. 
+
+        /** Parameter name: {@value #DATE_FROM} - Start date from when the
+         * referenced resource was updated.
          * Formatted as <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a>.
          * For example 1970-08-19T06:01:00 or 1970-08-19 */
 		public static final String DATE_FROM     = "dateFrom";
 
-        /** Parameter name: {@value #DATE_TO} - End date until when the 
-         * referenced resource was updated. 
+        /** Parameter name: {@value #DATE_TO} - End date until when the
+         * referenced resource was updated.
          * Formatted as <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a>.
          * For example 2008-01-23T10:05:00 or 2008-01-23 */
 		public static final String DATE_TO       = "dateTo";
@@ -283,75 +275,75 @@ public final class Geonet {
         /** Parameter name: {@value #TOPIC_CAT} - Restrict search to resources
          * that have the requested Topic Category set (ISO19115) */
         public static final String TOPIC_CAT     = "topicCat";
-        
-        /** Parameter name: {@value #PROTOCOL} - Searches the protocol field 
+
+        /** Parameter name: {@value #PROTOCOL} - Searches the protocol field
          * that's part of the online resources in ISO19115. Suggested values
          * are those listed in the localized strings.xml files at
          * /strings/protocolChoice/@value */
         public static final String PROTOCOL      = "protocol";
-        
-        /** Parameter name: {@value #DOWNLOAD} - Boolean that restricts results 
-         * to those resources that have a files for download based on 
-         * protocol values as defined in the Lucene indexing stylesheets. 
-         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or 
+
+        /** Parameter name: {@value #DOWNLOAD} - Boolean that restricts results
+         * to those resources that have a files for download based on
+         * protocol values as defined in the Lucene indexing stylesheets.
+         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or
          * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
         public static final String DOWNLOAD      = "download";
 
-        /** Parameter name: {@value #DYNAMIC} - Boolean that restricts results 
+        /** Parameter name: {@value #DYNAMIC} - Boolean that restricts results
          * to those resources that have an interactive resource associated based
-         * on protocol values as defined in the Lucene indexing stylesheets. 
-         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or 
+         * on protocol values as defined in the Lucene indexing stylesheets.
+         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or
          * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
 		public static final String DYNAMIC       = "dynamic";
-		
-        /** Parameter name: {@value #DIGITAL} - Boolean that restricts results 
+
+        /** Parameter name: {@value #DIGITAL} - Boolean that restricts results
          * to those resources that describe digital data based on ISO19115
          * CI_PresentationFormCode codes
-         * Exact values indexed are defined in the Lucene indexing stylesheets. 
-         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or 
+         * Exact values indexed are defined in the Lucene indexing stylesheets.
+         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or
          * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
 		public static final String DIGITAL       = "digital";
-		
-        /** Parameter name: {@value #PAPER} - Boolean that restricts results 
+
+        /** Parameter name: {@value #PAPER} - Boolean that restricts results
          * to those resources that describe Hardcopy data based on ISO19115
          * CI_PresentationFormCode codes
-         * Exact values indexed are defined in the Lucene indexing stylesheets. 
-         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or 
+         * Exact values indexed are defined in the Lucene indexing stylesheets.
+         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or
          * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
 		public static final String PAPER         = "paper";
-		
-        /** Parameter name: {@value #SITE_ID} - Limit search results to resources 
-         * that originate from the selected catalog. The Site's short name 
+
+        /** Parameter name: {@value #SITE_ID} - Limit search results to resources
+         * that originate from the selected catalog. The Site's short name
          * should be used as value */
 		public static final String SITE_ID       = "siteId";
-        
-		/** Parameter name: {@value #GROUP} - Limit search results to resources 
-		 * that are administered by the selected group. The group ID should be 
+
+		/** Parameter name: {@value #GROUP} - Limit search results to resources
+		 * that are administered by the selected group. The group ID should be
 		 * used as value */
         public static final String GROUP         = "group";
-        
+
         public static final String PROFILE       = "profile";
         public static final String SERVER        = "server";
         public static final String SERVERS       = "servers";
-		
-        /** Parameter name: {@value #TEMPLATE} - Boolean that defines if 
+
+        /** Parameter name: {@value #TEMPLATE} - Boolean that defines if
          * normal resources are searched or templates are searched
          * Values are {@code y} or {@code n} */
         public static final String TEMPLATE      = "template";
-        
-        /** Parameter name: {@value #EXTENDED} - Boolean that indicates if 
+
+        /** Parameter name: {@value #EXTENDED} - Boolean that indicates if
          * search is done in simple or Advanced mode.
-         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or 
+         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or
          * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
         public static final String EXTENDED      = "extended";
 
-        /** Parameter name: {@value #REMOTE} - Boolean that indicates if 
-         * search is done on the local repository or using Z39.50 for on the 
-         * fly searches in remote catalogs. Values are 
-         * {@value org.fao.geonet.constants.Geonet.Text#ON} or 
+        /** Parameter name: {@value #REMOTE} - Boolean that indicates if
+         * search is done on the local repository or using Z39.50 for on the
+         * fly searches in remote catalogs. Values are
+         * {@value org.fao.geonet.constants.Geonet.Text#ON} or
          * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
         public static final String REMOTE        = "remote";
-        
+
         /** Parameter name: {@value #TIMEOUT} - Time in seconds the Z39.50
          * search waits for responses from remote servers before timing out.
          * Default is 20 seconds */
@@ -366,25 +358,25 @@ public final class Geonet {
 	    /** Parameter name: {@value #HITS_PER_PAGE} - Number of results
 	     * returned by the search engine. Default is 10 results */
 		public static final String HITS_PER_PAGE = "hitsPerPage";
-		
+
 		/** Parameter name: {@value #SIMILARITY} - Use the Lucene FuzzyQuery.
 		 * Values range from 0.0 to 1.0 and defaults to 0.8 */
         public static final String SIMILARITY    = "similarity";
-		
-		/** Parameter name: {@value #OUTPUT} - Display results as text only 
+
+		/** Parameter name: {@value #OUTPUT} - Display results as text only
 		 * {@value #TEXT} or with graphic overviews {@value #FULL} (default) */
         public static final String OUTPUT        = "output";
 
-        /** Parameter name: {@value #SORT_BY} - Order results by 
-         * {@value SortBy#RELEVANCE} (default), {@value SortBy#RATING}, 
+        /** Parameter name: {@value #SORT_BY} - Order results by
+         * {@value SortBy#RELEVANCE} (default), {@value SortBy#RATING},
          * {@value SortBy#POPULARITY} or by {@value SortBy#DATE} */
         public static final String SORT_BY       = "sortBy";
 
-        /** Parameter name: {@value #SORT_ORDER} - Order results in reverse order or not 
+        /** Parameter name: {@value #SORT_ORDER} - Order results in reverse order or not
          * false (default) */
         public static final String SORT_ORDER       = "sortOrder";
 
-		/** Parameter name: {@value #INTERMAP} - Boolean that indicates if 
+		/** Parameter name: {@value #INTERMAP} - Boolean that indicates if
          * GUI shows the embedded InterMap (on) or defaults to the old GUI (off).
          * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} (default)
          * or {@value org.fao.geonet.constants.Geonet.Text#OFF} */
@@ -393,21 +385,21 @@ public final class Geonet {
 		/** Parameter name: {@value #RESTORELASTSEARCH} - Text field that
 		 *  specified whether the last search result should be restored */
 		 		public static final String RESTORELASTSEARCH = "restorelastsearch";
-        
+
         /** Parameter name: {@value #GEOMETRY} - Used to filter results of query based on geometry
          * Currently intersection is used to do the filtering
-         * 
+         *
          * The geometry values a geometry expressed in WKT*/
         public static final String GEOMETRY = "geometry";
-        
-        /** Parameter name: {@value #UUID} - Text field that search 
+
+        /** Parameter name: {@value #UUID} - Text field that search
          * for specific uuid given */
         public static final String UUID = "uuid";
 		/**
 			* Attrset used in Z39.50 search
 			*/
 				public static final String ATTRSET = "attrset";
-		/** Parameter name: {@value #ZQUERY} - A Z3950 query as specified in the 
+		/** Parameter name: {@value #ZQUERY} - A Z3950 query as specified in the
 		  * Z3950 harvester */
 				public static final String ZQUERY	= "zquery";
 
@@ -431,7 +423,7 @@ public final class Geonet {
             public static final String VALIDATE                 = "validate";
             /**
              * Contains CSW results response with a GeoNetwork summary
-             * of the current search. 
+             * of the current search.
              */
             public static final String RESULTS_WITH_SUMMARY     = "results_with_summary";
             public static final String SUGGESTIONS = "suggestions";

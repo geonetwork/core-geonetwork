@@ -29,19 +29,20 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.util.MailUtil;
 import org.jdom.Element;
 
 /**
  * This class send an email after a harvester has been run
- * 
+ *
  * @author Maria Arias de Reyna
  */
 public class SendNotification {
 
 	/**
 	 * Launches the notification manager
-	 * 
+	 *
 	 * @param context
 	 * @param abstractHarvester
 	 * @param dbms
@@ -61,7 +62,7 @@ public class SendNotification {
 
 	/**
 	 * Send the mail
-	 * 
+	 *
 	 * @param settings
 	 * @param element
 	 * @param ah
@@ -71,11 +72,11 @@ public class SendNotification {
 			@SuppressWarnings("rawtypes") AbstractHarvester ah)
 			throws EmailException {
 
-		if (!settings.getValueAsBool("system/harvesting/mail/enabled")) {
+		if (!settings.getValueAsBool(Settings.SYSTEM_HARVESTING_MAIL_ENABLED)) {
 			return;
 		}
 
-		String receiver = settings.getValue("system/harvesting/mail/recipient");
+		String receiver = settings.getValue(Settings.SYSTEM_HARVESTING_MAIL_RECIPIENT);
 		List<String> toAddress = new ArrayList<String>();
 
 		// If no email to send, take the email of the owner of the harvester
@@ -89,10 +90,10 @@ public class SendNotification {
 
 		toAddress.add(receiver);
 
-		String subject = settings.getValue("system/harvesting/mail/subject");
+		String subject = settings.getValue(Settings.SYSTEM_HARVESTING_MAIL_SUBJECT);
 
 		String htmlMessage = settings
-				.getValue("system/harvesting/mail/template");
+				.getValue(Settings.SYSTEM_HARVESTING_MAIL_TEMPLATE);
 
 		Element lastHarvest = (Element) element.getChildren().get(0);
 
@@ -106,70 +107,70 @@ public class SendNotification {
 				break;
 			}
 		}
-		
+
 		// We should always get a info report BTW
 		if (info != null) {
     		// Success, but with warnings or clean?
     		Element result = (Element) info.getChildren().get(0);
-    
+
     		// switch between normal and error template
     		if (info.getChildren("error").size() > 0) {
     			// Error, Level 3, let's check it:
-    			if (!settings.getValueAsBool("system/harvesting/mail/level3")) {
+    			if (!settings.getValueAsBool(Settings.SYSTEM_HARVESTING_MAIL_LEVEL3)) {
     				return;
     			}
     			htmlMessage = settings
-    					.getValue("system/harvesting/mail/templateError");
+    					.getValue(Settings.SYSTEM_HARVESTING_MAIL_TEMPLATE_ERROR);
     			Element error = (Element) info.getChildren("error").get(0);
     			String errorMsg = error.getChildText("message");
     			// do not convert it to html, dangerous!
     			errorMsg = errorMsg.replace("<", " ");
-    
+
     			errorMsg += extractWarningsTrace(info);
-    
+
     			htmlMessage = htmlMessage.replace("$$errorMsg$$", errorMsg);
-    
+
     			String[] values = new String[] { "total", "added", "updated",
     					"removed", "unchanged", "unretrievable", "doesNotValidate" };
-    
+
     			for (String value : values) {
     				htmlMessage = replace(result, htmlMessage, value);
     				subject = replace(result, subject, value);
     			}
-    
+
     		} else {
-    
+
     			if (result.getChildren("errors").size() > 0) {
     				// Success with warnings, Level 2, let's check it:
-    				if (!settings.getValueAsBool("system/harvesting/mail/level2")) {
+    				if (!settings.getValueAsBool(Settings.SYSTEM_HARVESTING_MAIL_LEVEL2)) {
     					return;
     				}
-    
+
     				htmlMessage = settings
-    						.getValue("system/harvesting/mail/templateWarning");
-    
+    						.getValue(Settings.SYSTEM_HARVESTING_MAIL_TEMPLATE_WARNING);
+
     				String errorMsg = extractWarningsTrace(result);
-    
+
     				htmlMessage = htmlMessage.replace("$$errorMsg$$", errorMsg);
-    
+
     				String[] values = new String[] { "total", "added", "updated",
     						"removed", "unchanged", "unretrievable",
     						"doesNotValidate" };
-    
+
     				for (String value : values) {
     					htmlMessage = replace(result, htmlMessage, value);
     					subject = replace(result, subject, value);
     				}
     			} else {
     				// Success!! Level 1, let's check it:
-    				if (!settings.getValueAsBool("system/harvesting/mail/level1")) {
+    				if (!settings.getValueAsBool(Settings.SYSTEM_HARVESTING_MAIL_LEVEL1)) {
     					return;
     				}
-    
+
     				String[] values = new String[] { "total", "added", "updated",
     						"removed", "unchanged", "unretrievable",
     						"doesNotValidate" };
-    
+
     				for (String value : values) {
     					htmlMessage = replace(result, htmlMessage, value);
     					subject = replace(result, subject, value);
@@ -232,7 +233,7 @@ public class SendNotification {
 
 	/**
 	 * Helps in the transformation of template to message
-	 * 
+	 *
 	 * @param element
 	 * @param htmlMessage
 	 * @param value

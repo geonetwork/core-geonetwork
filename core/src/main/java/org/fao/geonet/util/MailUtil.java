@@ -36,20 +36,21 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.commons.mail.SimpleEmail;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 
 /**
  * Utility class to send mails. Supports both html and plain text. It usually
  * takes the settings from the database, but you can also indicate all params.
- * 
+ *
  * @author delawen
- * 
+ *
  */
 public class MailUtil {
 
     /**
      * Send an html mail. Will look on the settings directly to know the
      * remitent
-     * 
+     *
      * @param toAddress
      * @param subject
      * @param htmlMessage
@@ -86,7 +87,7 @@ public class MailUtil {
     /**
      * Send a plain text mail. Will look on the settings directly to know the
      * remitent
-     * 
+     *
      * @param toAddress
      * @param subject
      * @param message
@@ -122,7 +123,7 @@ public class MailUtil {
     /**
      * Send a plain text mail. Will look on the settings directly to know the
      * remitent
-     * 
+     *
      * @param toAddress
      * @param subject
      * @param message
@@ -172,7 +173,7 @@ public class MailUtil {
 
     /**
      * Send an html mail with atachments
-     * 
+     *
      * @param toAddress
      * @param hostName
      * @param smtpPort
@@ -256,7 +257,7 @@ public class MailUtil {
 
     /**
      * Send a plain text mail
-     * 
+     *
      * @param toAddress
      * @param hostName
      * @param smtpPort
@@ -297,14 +298,14 @@ public class MailUtil {
 
     /**
      * Create data information to compose the mail
-     * 
+     *
      * @param hostName
      * @param smtpPort
      * @param from
      * @param username
      * @param password
      * @param email
-     * @param ssl 
+     * @param ssl
      * @param tls
      */
     private static void configureBasics(String hostName, Integer smtpPort,
@@ -324,7 +325,7 @@ public class MailUtil {
         if (username != null) {
             email.setAuthenticator(new DefaultAuthenticator(username, password));
         }
-        
+
 
         if (tls != null) {
             email.setStartTLSEnabled(tls);
@@ -335,7 +336,7 @@ public class MailUtil {
             email.setSSLOnConnect(ssl);
             if (ssl) email.setSslSmtpPort(smtpPort + "");
         }
-        
+
         if (from != null && !from.isEmpty()) {
             try {
                 email.setFrom(from);
@@ -350,25 +351,25 @@ public class MailUtil {
 
     /**
      * Configure the basics (hostname, port, username, password,...)
-     * 
+     *
      * @param settings
      * @param email
      */
     private static void configureBasics(SettingManager settings, Email email) {
         String username = settings
-                .getValue("system/feedback/mailServer/username");
+                .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME);
         String password = settings
-                .getValue("system/feedback/mailServer/password");
+                .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD);
         Boolean ssl = settings
-                .getValueAsBool("system/feedback/mailServer/ssl");
+                .getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL);
         Boolean tls = settings
-                .getValueAsBool("system/feedback/mailServer/tls");
+                .getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS);
 
-        String hostName = settings.getValue("system/feedback/mailServer/host");
+        String hostName = settings.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
         Integer smtpPort = Integer.valueOf(settings
-                .getValue("system/feedback/mailServer/port"));
+                .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT));
 
-        String from = settings.getValue("system/feedback/email");
+        String from = settings.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
         configureBasics(hostName, smtpPort, from, username, password, email, ssl, tls);
     }

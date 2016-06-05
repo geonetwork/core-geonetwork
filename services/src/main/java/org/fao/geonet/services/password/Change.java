@@ -33,6 +33,7 @@ import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
@@ -78,20 +79,20 @@ public class Change extends NotInReadOnlyModeService {
 		String password = Util.getParam(params, Params.PASSWORD);
 		String changeKey = Util.getParam(params, CHANGE_KEY);
 		String template = Util.getParam(params, Params.TEMPLATE, PWD_CHANGED_XSLT);
-		
-		// check valid user 
+
+		// check valid user
         final UserRepository userRepository = context.getBean(UserRepository.class);
         User elUser = userRepository.findOneByUsername(username);
 		if (elUser == null) {
 			throw new UserNotFoundEx(username);
         }
 
-		// only let registered users change their password this way  
+		// only let registered users change their password this way
 		if ( elUser.getProfile() != Profile.RegisteredUser) {
 			throw new OperationNotAllowedEx("Only users with profile RegisteredUser can change their password using this option");
         }
-		
-		// construct expected change key - only valid today 
+
+		// construct expected change key - only valid today
 		String scrambledPassword = elUser.getPassword();
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
@@ -101,11 +102,11 @@ public class Change extends NotInReadOnlyModeService {
 		//check change key
 		if (!passwordMatches)
 			throw new BadParameterEx("Change key invalid or expired", changeKey);
-		
+
 		// get mail details
 		SettingManager sm = context.getBean(SettingManager.class);
 
-		String adminEmail = sm.getValue("system/feedback/email");
+		String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 		String thisSite = sm.getSiteName();
 
 		// get site URL
@@ -123,14 +124,14 @@ public class Change extends NotInReadOnlyModeService {
 		root.addContent(new Element("siteURL").setText(siteURL));
 		root.addContent(new Element("adminEmail").setText(adminEmail));
 		root.addContent(new Element("password").setText(password));
-		
+
 		Path emailXslt = stylePath.resolve(template);
 		Element elEmail = Xml.transform(root, emailXslt);
 
 		String subject = elEmail.getChildText("subject");
 		String to      = elEmail.getChildText("to");
 		String content = elEmail.getChildText("content");
-		
+
 		// send password changed email
         if (!MailUtil.sendMail(to, subject, content, sm, adminEmail, "")) {
             throw new OperationAbortedEx("Could not send email");

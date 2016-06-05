@@ -50,6 +50,7 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -108,7 +109,7 @@ public class MailApi {
 
         ApplicationContext appContext = ApplicationContextHolder.get();
         SettingManager sm = appContext.getBean(SettingManager.class);
-        String to = sm.getValue("system/feedback/email");
+        String to = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         String subject = String.format(messages.getString(
             "mail_config_test_subject"),
             sm.getSiteName(),

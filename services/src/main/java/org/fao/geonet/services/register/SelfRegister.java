@@ -44,6 +44,7 @@ import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -108,8 +109,8 @@ public class SelfRegister extends NotInReadOnlyModeService {
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
-		
-		String catalogAdminEmail = sm.getValue("system/feedback/email");
+
+		String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 		String thisSite = sm.getSiteName();
 
 
@@ -165,7 +166,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 
 	/**
 	 * Send the mail to the registering user.
-	 * 
+	 *
 	 * @param params
 	 * @param password
 	 * @param host
@@ -178,20 +179,20 @@ public class SelfRegister extends NotInReadOnlyModeService {
 	private boolean sendRegistrationEmail(Element params, String password,
             String from, String thisSite,
             String siteURL, SettingManager sm) throws Exception, SQLException {
-		
+
 	    //TODO: allow internationalised emails
-		
+
 		Element root = new Element("root");
-	    
+
 	    root.addContent(new Element("site").setText(thisSite));
 	    root.addContent(new Element("siteURL").setText(siteURL));
 	    root.addContent((Element)params.clone());
 	    root.addContent(new Element("password").setText(password));
-	    
+
 		String template = Util.getParam(params, Params.TEMPLATE, PASSWORD_EMAIL_XSLT);
 	    Path emailXslt = stylePath.resolve(template);
 	    Element elEmail = Xml.transform(root, emailXslt);
-	    
+
 		String email = Util.getParam(params, Params.EMAIL);
 	    String subject = elEmail.getChildText("subject");
 	    String message = elEmail.getChildText("content");
@@ -201,7 +202,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 
 	/**
 	 * Send the profile request to the catalog administrator.
-	 * 
+	 *
 	 * @param params
 	 * @param from
 	 * @param thisSite
@@ -210,19 +211,19 @@ public class SelfRegister extends NotInReadOnlyModeService {
 	 */
 	private boolean sendProfileRequest(Element params, String from, String thisSite, String siteURL,
 			SettingManager sm) throws Exception {
-		
+
 	    //TODO: allow internationalised emails
-		
+
 	    Element root = new Element("root");
-	    
+
 	    root.addContent(new Element("site").setText(thisSite));
 	    root.addContent(new Element("siteURL").setText(siteURL));
 	    root.addContent((Element)params.clone());
-	    
+
 		String profileTemplate = Util.getParam(params, PROFILE_TEMPLATE, PROFILE_EMAIL_XSLT);
 	    Path emailXslt = stylePath.resolve(profileTemplate);
 	    Element elEmail = Xml.transform(root, emailXslt);
-	    
+
 	    String subject = elEmail.getChildText("subject");
 	    String message = elEmail.getChildText("content");
 
@@ -244,7 +245,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 	}
 
 	// --------------------------------------------------------------------------
-		
+
 	/**
 	 * Get initial password - a randomly generated string.
 	 */

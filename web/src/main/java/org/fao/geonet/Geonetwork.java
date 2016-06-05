@@ -57,6 +57,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.lib.DbLib;
@@ -230,8 +231,8 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Z39.50...");
 
-        boolean z3950Enable = settingMan.getValueAsBool("system/z3950/enable", false);
-        String z3950port = settingMan.getValue("system/z3950/port");
+        boolean z3950Enable = settingMan.getValueAsBool(Settings.SYSTEM_Z3950_ENABLE, false);
+        String z3950port = settingMan.getValue(Settings.SYSTEM_Z3950_PORT);
 
         logger.info("     - Z39.50 is enabled: " + z3950Enable);
         if (z3950Enable) {
@@ -248,7 +249,7 @@ public class Geonetwork implements ApplicationHandler {
                     ContextContainer cc = (ContextContainer) appContext.getBean("ContextGateway");
                     cc.setSrvctx(context);
                     Server.init(z3950port, appContext);
-                    
+
                 } catch (Exception e) {
                     logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
                                  "harvesting) may not work. Error is:" + e.getMessage());
@@ -407,22 +408,22 @@ public class Geonetwork implements ApplicationHandler {
         //--- load proxy information from settings into Jeeves for observers such
         //--- as jeeves.utils.XmlResolver to use
         ProxyInfo pi = JeevesProxyInfo.getInstance();
-        boolean useProxy = settingMan.getValueAsBool("system/proxy/use", false);
+        boolean useProxy = settingMan.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
         if (useProxy) {
-            String proxyHost = settingMan.getValue("system/proxy/host");
-            String proxyPort = settingMan.getValue("system/proxy/port");
-            String username = settingMan.getValue("system/proxy/username");
-            String password = settingMan.getValue("system/proxy/password");
+            String proxyHost = settingMan.getValue(Settings.SYSTEM_PROXY_HOST);
+            String proxyPort = settingMan.getValue(Settings.SYSTEM_PROXY_PORT);
+            String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
+            String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
             pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
         }
 
 
-        boolean inspireEnable = settingMan.getValueAsBool("system/inspire/enable", false);
+        boolean inspireEnable = settingMan.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE, false);
 
         if (inspireEnable) {
 
-            String atomType = settingMan.getValue("system/inspire/atom");
-            String atomSchedule = settingMan.getValue("system/inspire/atomSchedule");
+            String atomType = settingMan.getValue(Settings.SYSTEM_INSPIRE_ATOM);
+            String atomSchedule = settingMan.getValue(Settings.SYSTEM_INSPIRE_ATOM_SCHEDULE);
 
 
             if (StringUtils.isNotEmpty(atomType) && StringUtils.isNotEmpty(atomSchedule)

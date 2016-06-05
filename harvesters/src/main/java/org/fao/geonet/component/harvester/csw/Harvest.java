@@ -50,6 +50,7 @@ import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.harvesting.Util;
 import org.fao.geonet.util.ISOPeriod;
@@ -86,7 +87,7 @@ import java.util.concurrent.*;
  * that data, and process it into the catalogue."
  *
  * @author heikki doeleman
- * 
+ *
  */
 public class Harvest extends AbstractOperation implements CatalogService {
 
@@ -108,7 +109,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
 	/**
 	 * Executes a CSW Harvest request, see OGC 07-006 section 10 dot 12.
-	 * 
+	 *
 	 * @param request - the request
 	 * @param serviceContext - used everywhere in GeoNetwork
 	 * @return response xml
@@ -325,15 +326,15 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
 	/**
      * Creates request from KVP GET request parameters.
-	 * 
+	 *
      * See OGC 07-006 10.12.2.
      *
      * @param params - params
      * @return adapted getrequest
 	 */
-    
+
 	public Element adaptGetRequest(Map<String, String> params) {
-		
+
         String service = params.get("service");
 		String version = params.get("version");
         String source = params.get("Source");
@@ -364,14 +365,14 @@ public class Harvest extends AbstractOperation implements CatalogService {
      * @return parameter values
      * @throws CatalogException hmm
      */
-    
+
 	public Element retrieveValues(String parameterName) throws CatalogException {
 		return null;
 	}
 
 	/**
 	 * Creates a CSW Harvester configuration and saves it do database.
-	 * 
+	 *
 	 * @param request - the request
      * @param resourceType - type of resource to harvest
      * @param source - where to harvest from
@@ -445,7 +446,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
         // no privileges settings supported in csw harvest; use GN-specific setting (if enabled, make metadata public)
         GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = geonetContext.getBean(SettingManager.class);
-        boolean metadataPublic = sm.getValueAsBool("system/csw/metadataPublic", false);
+        boolean metadataPublic = sm.getValueAsBool(Settings.SYSTEM_CSW_METADATA_PUBLIC, false);
         if(metadataPublic) {
             // <privileges>
             //   <group id="1">
@@ -472,16 +473,16 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
         /*
          heikki: not so easy as we can't identify harvesters from their target url or anything else
-		
+
          for the moment, no updates take place, the harvester is simply saved
 
         // Check if harvester already exist
         // FIXME : Unable to find the getHarvesterID method from patch provided for now id is null
         // String id = hm.getHarvesterID(source);
 		// Here we should do an update of an existing node if exist.
-		
+
 //		if (id == null) {
-//			
+//
 //		} else {
 //			node.setAttribute("id", id);
 //			if (!hm.update(dbms, node))
@@ -506,7 +507,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
 	/**
      * Creates a HarvestResponse containing results from harvester.
-	 * 
+	 *
      * @param harvester - the harvester
      * @param context - here, there and everywhere
      * @return - response
@@ -639,7 +640,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
 	/**
      * Runs the harvester. In synchronous mode, waits for it to finish.
-	 * 
+	 *
 	 * @param harvester - the harvester
 	 * @param context - everywhere in GN !
 	 * @param mode - sync or async
@@ -659,7 +660,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
 		// run
         Element response = Util.exec(activeParams, context, new Util.Job() {
-            
+
             public OperResult execute(HarvestManager hm, String id) throws Exception {
                 if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
                     Log.debug(Geonet.CSW_HARVEST, "doHarvest starting harvester job");
@@ -767,7 +768,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * File Transfer Protocol.
          */
         FTP {
-            
+
             public String toString() {
                 return "ftp://";
             }
@@ -776,7 +777,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * Hypertext Transfer Protocol.
          */
         HTTP {
-            
+
             public String toString() {
                 return "http://";
             }
@@ -785,7 +786,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * Electronic mail.
          */
         EMAIL {
-            
+
             public String toString() {
                 return "mailto:";
             }
@@ -845,15 +846,15 @@ public class Harvest extends AbstractOperation implements CatalogService {
         private void sendByEmail(String harvestResponse) {
             GeonetContext geonetContext = (GeonetContext) serviceContext.getHandlerContext(Geonet.CONTEXT_NAME);
             SettingManager settingManager = geonetContext.getBean(SettingManager.class);
-            String host = settingManager.getValue("system/feedback/mailServer/host");
-            String port = settingManager.getValue("system/feedback/mailServer/port");
+            String host = settingManager.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+            String port = settingManager.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
             String to = responseHandler.substring(Protocol.EMAIL.toString().length());
             MailSender sender = new MailSender(serviceContext);
-            sender.send(host, Integer.parseInt(port), 
-                    settingManager.getValue("system/feedback/mailServer/username"), 
-                    settingManager.getValue("system/feedback/mailServer/password"), 
-                    settingManager.getValueAsBool("system/feedback/mailServer/ssl"), 
-                    settingManager.getValueAsBool("system/feedback/mailServer/tls"),
+            sender.send(host, Integer.parseInt(port),
+                    settingManager.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME),
+                    settingManager.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD),
+                    settingManager.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL),
+                    settingManager.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS),
                     "noreply@geonetwork.org",
                     "GeoNetwork CSW Server", to, null, "Asynchronous CSW Harvest results delivery", harvestResponse);
         }
@@ -1026,7 +1027,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * Polls periodically wether this harvester is still running and when it has finished creates a HarvestResponse
          * and sends it to the url in responseHandler.
          */
-        
+
         public void run() {
             try {
                 if(Log.isDebugEnabled(Geonet.CSW_HARVEST)) {
@@ -1067,7 +1068,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          *         typically because it has already completed normally;
          *         <tt>true</tt> otherwise
          */
-        
+
         public boolean cancel(boolean mayInterruptIfRunning) {
             return false;
         }
@@ -1078,7 +1079,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          *
          * @return <tt>true</tt> if this task was cancelled before it completed
          */
-        
+
         public boolean isCancelled() {
             return false;
         }
@@ -1092,7 +1093,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          *
          * @return <tt>true</tt> if this task completed
          */
-        
+
         public boolean isDone() {
             return false;
         }
@@ -1110,7 +1111,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * @throws InterruptedException if the current thread was interrupted
          *                              while waiting
          */
-        
+
         public Object get() throws InterruptedException, ExecutionException {
             return null;
         }
@@ -1132,7 +1133,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * @throws java.util.concurrent.TimeoutException
          *                              if the wait timed out
          */
-        
+
         public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
             return null;
         }

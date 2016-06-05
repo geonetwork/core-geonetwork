@@ -37,6 +37,7 @@ import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -63,7 +64,7 @@ public class Create extends NotInReadOnlyModeService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
         useEditTab = params.getValue("editTab", "false").equals("true");
     }
-    
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Service
@@ -80,9 +81,9 @@ public class Create extends NotInReadOnlyModeService {
 		String id;
 		String uuid;
 		boolean haveAllRights = Boolean.valueOf(Util.getParam(params, Params.FULL_PRIVILEGES, "false"));
-		
+
         SettingManager sm = gc.getBean(SettingManager.class);
-        boolean generateUuid = sm.getValueAsBool("system/metadatacreate/generateUuid");
+        boolean generateUuid = sm.getValueAsBool(Settings.SYSTEM_METADATACREATE_GENERATE_UUID);
 
 		// does the request contain a UUID ?
 		try {
@@ -99,9 +100,9 @@ public class Create extends NotInReadOnlyModeService {
 			catch(BadInputEx xx) {
 				// give up
 				throw new Exception("Request must contain a UUID or an ID");
-			}		
+			}
 		}
-		
+
 
         // User assigned uuid: check if already exists
         String metadataUuid;
@@ -122,7 +123,7 @@ public class Create extends NotInReadOnlyModeService {
 
 
 		String groupOwner= Util.getParam(params, Params.GROUP);
-		
+
 		// TODO : Check user can create a metadata in that group
 		UserSession user = context.getUserSession();
 		if (user.getProfile() != Profile.Administrator) {
@@ -136,7 +137,7 @@ public class Create extends NotInReadOnlyModeService {
 				throw new ServiceNotAllowedEx("Service not allowed. User needs to be Editor in group with id " + groupOwner);
 			}
 		}
-		
+
 		//--- query the data manager
         SettingManager settingManager = gc.getBean(SettingManager.class);
         String newId = dm.createMetadata(context, id, groupOwner,
@@ -151,15 +152,15 @@ public class Create extends NotInReadOnlyModeService {
           copyDataDir(context, id, newId, Params.Access.PUBLIC);
           copyDataDir(context, id, newId, Params.Access.PRIVATE);
         } catch (IOException e) {
-          Log.warning(Geonet.DATA_MANAGER, "Error while copying metadata resources. " + e.getMessage() +  
+          Log.warning(Geonet.DATA_MANAGER, "Error while copying metadata resources. " + e.getMessage() +
               ". Metadata is created but without resources from record with id:" + id);
         }
-        
+
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
-        
+
         String sessionTabProperty = useEditTab ? Geonet.Session.METADATA_EDITING_TAB : Geonet.Session.METADATA_SHOW;
-        
+
         // Set current tab for new editing session if defined.
         Element elCurrTab = params.getChild(Params.CURRTAB);
         if (elCurrTab != null) {

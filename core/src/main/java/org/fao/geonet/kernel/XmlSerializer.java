@@ -33,6 +33,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -46,11 +47,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is responsible of reading and writing xml on the database. 
+ * This class is responsible of reading and writing xml on the database.
  * It works on tables like (id, data, lastChangeDate).
  */
 public abstract class XmlSerializer {
-	public static class ThreadLocalConfiguration {
+
+    public static class ThreadLocalConfiguration {
 	    private boolean forceFilterEditOperation = false;
 
         public boolean isForceFilterEditOperation() {
@@ -68,7 +70,7 @@ public abstract class XmlSerializer {
 	        config = new ThreadLocalConfiguration();
 	        configThreadLocal.set(config);
 	    }
-	    
+
 	    return config;
 	}
 	public static void clearThreadLocal() {
@@ -84,15 +86,15 @@ public abstract class XmlSerializer {
 
         if (_settingManager == null) { // no initialization, no XLinks
 			Log.error(Geonet.DATA_MANAGER,"No settingManager in XmlSerializer, XLink Resolver disabled.");
-			return false; 
+			return false;
 		}
 
-		String xlR = _settingManager.getValue("system/xlinkResolver/enable");
+		String xlR = _settingManager.getValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE);
 		if (xlR != null) {
 			boolean isEnabled = xlR.equals("true");
 			if (isEnabled) Log.debug(Geonet.DATA_MANAGER,"XLink Resolver enabled.");
 			else Log.debug(Geonet.DATA_MANAGER,"XLink Resolver disabled.");
-			return isEnabled; 
+			return isEnabled;
 		} else {
 			Log.error(Geonet.DATA_MANAGER,"XLink resolver setting does not exist! XLink Resolver disabled.");
 			return false;
@@ -106,7 +108,7 @@ public abstract class XmlSerializer {
             return false;
         }
 
-        String enableLogging = _settingManager.getValue("system/hidewithheldelements/enableLogging");
+        String enableLogging = _settingManager.getValue(Settings.SYSTEM_HIDEWITHHELDELEMENTS_ENABLE_LOGGING);
         if (enableLogging != null) {
             return enableLogging.equals("true");
         } else {
@@ -316,4 +318,4 @@ public abstract class XmlSerializer {
 	public abstract Element select(ServiceContext context, String id) throws Exception;
 	public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask)
 			 throws Exception;
-} 
+}

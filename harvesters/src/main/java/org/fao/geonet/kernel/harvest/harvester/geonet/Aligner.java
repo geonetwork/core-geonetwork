@@ -51,6 +51,7 @@ import org.fao.geonet.kernel.mef.MEF2Visitor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -159,7 +160,7 @@ public class Aligner extends BaseAligner
                 HarvesterUtil.parseXSLFilter(params.xslfilter, log);
         processName = filter.one();
         processParams = filter.two();
-        
+
         //-----------------------------------------------------------------------
         //--- remove old metadata
 
@@ -171,10 +172,10 @@ public class Aligner extends BaseAligner
             try{
                 if (!exists(records, uuid)) {
                     String id = localUuids.getID(uuid);
-    
+
                     if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id:" + id);
                     dataMan.deleteMetadata(context, id);
-    
+
                     result.locallyRemoved++;
                 }
             }catch (Throwable t) {
@@ -195,11 +196,11 @@ public class Aligner extends BaseAligner
             if (cancelMonitor.get()) {
                 return this.result;
             }
-            
+
             try{
 
                 result.totalMetadata++;
-    
+
                 // Mef full format provides ISO19139 records in both the profile
                 // and ISO19139 so we could be able to import them as far as
                 // ISO19139 schema is installed by default.
@@ -210,11 +211,11 @@ public class Aligner extends BaseAligner
                     result.unknownSchema++;
                 } else {
                     String id = dataMan.getMetadataId(ri.uuid);
-    
+
                     // look up value of localrating/enable
                     SettingManager settingManager = context.getBean(SettingManager.class);
-                    boolean localRating = settingManager.getValueAsBool("system/localrating/enable", false);
-                    
+                    boolean localRating = settingManager.getValueAsBool(Settings.SYSTEM_LOCALRATING_ENABLE, false);
+
                     if (id == null) {
                         addMetadata(ri, localRating);
                     } else {
@@ -229,7 +230,7 @@ public class Aligner extends BaseAligner
         }
 
         dataMan.forceIndexChanges();
-        
+
         log.info("End of alignment for : "+ params.getName());
 
         return result;
@@ -356,16 +357,16 @@ public class Aligner extends BaseAligner
                 }
 
                 //--------------------------------------------------------------------
-                
+
                 public void handleMetadataFiles(DirectoryStream<Path> files, Element info, int index) throws Exception {
                     // Import valid metadata
                     Element metadataValidForImport = extractValidMetadataForImport(files, info);
-                
+
                     if (metadataValidForImport != null) {
                         handleMetadata(metadataValidForImport, index);
                     }
                 }
-                
+
                 //--------------------------------------------------------------------
 
                 public void handleInfo(Element info, int index) throws Exception
@@ -384,7 +385,7 @@ public class Aligner extends BaseAligner
                     }
                     if(info != null) {
                         id[index] = addMetadata(ri, md[index], info, localRating);
-                    }   
+                    }
                 }
 
                 //--------------------------------------------------------------------
@@ -402,7 +403,7 @@ public class Aligner extends BaseAligner
                         IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
                     }
                 }
-                
+
                 public void handleFeatureCat(Element md, int index)
                         throws Exception {
                     // Feature Catalog not managed for harvesting
@@ -659,7 +660,7 @@ public class Aligner extends BaseAligner
     //---
     //--------------------------------------------------------------------------
 
-    private void updateMetadata(final RecordInfo ri, final String id, final boolean localRating, 
+    private void updateMetadata(final RecordInfo ri, final String id, final boolean localRating,
             final boolean useChangeDate, String localChangeDate) throws Exception
     {
         final Element md[]     = { null };
@@ -672,7 +673,7 @@ public class Aligner extends BaseAligner
         } else {
             if(!useChangeDate || ri.isMoreRecentThan(localChangeDate)) {
                 Path mefFile = retrieveMEF(ri.uuid);
-    
+
                 try
                 {
                     String fileType = "mef";
@@ -680,53 +681,53 @@ public class Aligner extends BaseAligner
                     if (version != null && version.equals(MEFLib.Version.V2)) {
                         fileType = "mef2";
                     }
-    
+
                     IVisitor visitor = fileType.equals("mef2") ? new MEF2Visitor() : new MEFVisitor();
-    
+
                     MEFLib.visit(mefFile, visitor, new IMEFVisitor()
                     {
                         public void handleMetadata(Element mdata, int index) throws Exception
                         {
                             md[index] = mdata;
                         }
-    
+
                         //-----------------------------------------------------------------
-                        
+
                         public void handleMetadataFiles(DirectoryStream<Path> files, Element info, int index) throws Exception
                         {
                             // Import valid metadata
                             Element metadataValidForImport = extractValidMetadataForImport(files, info);
-    
+
                             if (metadataValidForImport != null) {
                                 handleMetadata(metadataValidForImport, index);
                         }
                         }
-                        
+
                         public void handleInfo(Element info, int index) throws Exception
                         {
                             updateMetadata(ri, id, md[index], info, localRating);
                             publicFiles[index] = info.getChild("public");
                             privateFiles[index] = info.getChild("private");
                         }
-    
+
                         //-----------------------------------------------------------------
-    
+
                         public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws IOException
                         {
                             updateFile(id, file, "public", changeDate, is, publicFiles[index]);
                         }
-    
+
                         public void handleFeatureCat(Element md, int index)
                                 throws Exception {
                             // Feature Catalog not managed for harvesting
                         }
-    
+
                         public void handlePrivateFile(String file,
                                 String changeDate, InputStream is, int index)
                                 throws IOException {
                                updateFile(id, file, "private", changeDate, is, privateFiles[index]);
                         }
-                        
+
                     });
                 }
                 catch(Exception e)
@@ -741,7 +742,7 @@ public class Aligner extends BaseAligner
                     } catch (IOException e) {
                          log.warning("Unable to delete mefFile: "+mefFile);
                      }
-    
+
                 }
             } else {
                 result.unchangedMetadata++;
@@ -808,7 +809,7 @@ public class Aligner extends BaseAligner
                 metadata.getDataInfo().setRating(Integer.valueOf(rating));
             }
         }
-        
+
         if (popularity != null) {
             metadata.getDataInfo().setPopularity(Integer.valueOf(popularity));
         }
@@ -819,7 +820,7 @@ public class Aligner extends BaseAligner
                 Importer.addCategoriesToMetadata(metadata, categs, context);
             }
         }
-        
+
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
         if (((ArrayList<Group>)params.getGroupCopyPolicy()).size() == 0) {
@@ -861,9 +862,9 @@ public class Aligner extends BaseAligner
 
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(resourcesDir)) {
             for (Path file : paths) {
-                if (file != null && 
+                if (file != null &&
                         file.getFileName() != null &&
-                        infoFiles != null && 
+                        infoFiles != null &&
                         !existsFile(file.getFileName().toString(), infoFiles)) {
                     if (log.isDebugEnabled()) {
                         log.debug("  - Removing old " + dir + " file with name=" + file.getFileName());
@@ -978,7 +979,7 @@ public class Aligner extends BaseAligner
     private CategoryMapper localCateg;
     private GroupMapper    localGroups;
     private UUIDMapper     localUuids;
-    
+
     private String processName;
     private String preferredSchema;
     private Map<String, Object> processParams = new HashMap<String, Object>();

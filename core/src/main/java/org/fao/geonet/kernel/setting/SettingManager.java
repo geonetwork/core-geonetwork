@@ -59,30 +59,6 @@ import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
  */
 public class SettingManager {
 
-    public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
-    public static final String SYSTEM_SITE_NAME_PATH = "system/site/name";
-    public static final String SYSTEM_SITE_LABEL_PREFIX = "system/site/labels/";
-    public static final String CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS = "system/csw/transactionUpdateCreateXPath";
-
-    public static final String SYSTEM_PROXY_USE = "system/proxy/use";
-    public static final String SYSTEM_PROXY_HOST = "system/proxy/host";
-    public static final String SYSTEM_PROXY_PORT = "system/proxy/port";
-    public static final String SYSTEM_PROXY_USERNAME = "system/proxy/username";
-    public static final String SYSTEM_PROXY_PASSWORD = "system/proxy/password";
-
-    public static final String SYSTEM_LUCENE_IGNORECHARS = "system/requestedLanguage/ignorechars";
-    public static final String SYSTEM_REQUESTED_LANGUAGE_SORTED = "system/requestedLanguage/sorted";
-    public static final String SYSTEM_REQUESTED_LANGUAGE_ONLY = "system/requestedLanguage/only";
-    public static final String SYSTEM_AUTODETECT_ENABLE = "system/autodetect/enable";
-    public static final String SYSTEM_XLINKRESOLVER_ENABLE = "system/xlinkResolver/enable";
-	public static final String SYSTEM_SERVER_LOG = "system/server/log";
-
-    public static final String SYSTEM_INSPIRE_ENABLE = "system/inspire/enable";
-    public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
-    public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
-    public static final String SYSTEM_PREFER_GROUP_LOGO = "system/metadata/prefergrouplogo";
-    public static final String ENABLE_ALL_THESAURUS = "system/metadata/allThesaurus";
-
     @PersistenceContext
     private EntityManager _entityManager;
     @Autowired
@@ -353,15 +329,15 @@ public class SettingManager {
     }
 
     public final String getSiteId() {
-        return getValue(SYSTEM_SITE_SITE_ID_PATH);
+        return getValue(Settings.SYSTEM_SITE_SITE_ID_PATH);
     }
 
     public final String getSiteName() {
-        return getValue(SYSTEM_SITE_NAME_PATH);
+        return getValue(Settings.SYSTEM_SITE_NAME_PATH);
     }
 
     public void setSiteUuid(String siteUuid) {
-       setValue(SYSTEM_SITE_SITE_ID_PATH, siteUuid);
+       setValue(Settings.SYSTEM_SITE_SITE_ID_PATH, siteUuid);
     }
 
     /**
@@ -399,9 +375,9 @@ public class SettingManager {
         NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
 
         String baseURL = pathFinder.getBaseUrl();
-        String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
-        String host    = getValue(Geonet.Settings.SERVER_HOST);
-        String port    = getValue(Geonet.Settings.SERVER_PORT);
+        String protocol = getValue(Settings.SYSTEM_SERVER_PROTOCOL);
+        String host    = getValue(Settings.SYSTEM_SERVER_HOST);
+        String port    = getValue(Settings.SYSTEM_SERVER_PORT);
         String locServ = baseURL +"/"+ nodeInfo.getId() +"/";
 
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;

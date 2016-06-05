@@ -33,10 +33,11 @@ import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.setting.Setting;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SettingRepository;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -51,12 +52,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jeeves.component.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 
 /**
  *
@@ -89,11 +94,11 @@ public class SiteApi {
 
         SettingsListResponse response = new SettingsListResponse();
         response.setSettings(sm.getSettings(new String[]{
-            SettingManager.SYSTEM_SITE_NAME_PATH,
-            Setting.SYSTEM_SITE_ORGANIZATION.key,
-            SettingManager.SYSTEM_SITE_SITE_ID_PATH,
-            "system/platform/version",
-            "system/platform/subVersion"
+            Settings.SYSTEM_SITE_NAME_PATH,
+            Settings.SYSTEM_SITE_ORGANIZATION,
+            Settings.SYSTEM_SITE_SITE_ID_PATH,
+            Settings.SYSTEM_PLATFORM_VERSION,
+            Settings.SYSTEM_PLATFORM_SUBVERSION
         }));
         return response;
     }
@@ -124,14 +129,16 @@ public class SiteApi {
         @RequestParam(
             required = false
         )
-        String[] key
+        String[] key,
+        HttpServletRequest request,
+        HttpSession httpSession
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         SettingManager sm = appContext.getBean(SettingManager.class);
 
         ServiceContext context = ServiceContext.get();
         UserSession session = context.getUserSession();
-        Profile profile = session.getProfile();
+        Profile profile = session == null ? null : session.getProfile();
 
         List<String> settingList = new ArrayList<>();
         if (set == null && key == null) {

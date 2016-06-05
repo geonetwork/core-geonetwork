@@ -32,6 +32,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.ThesaurusActivationRepository;
@@ -108,9 +109,9 @@ public class ThesaurusManager implements ThesaurusFinder {
 
         batchBuildTable(isTest, context, thesauriDir);
     }
-	
+
   /**
-   * Start task to build thesaurus table once the servlet is up. 
+   * Start task to build thesaurus table once the servlet is up.
    *
    * @param synchRun if false, run the initialization asynchronally
    * @param context ServiceContext used to check when servlet is up only
@@ -314,7 +315,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         }
 
     }
-	
+
     /**
      *
      * @param name
@@ -356,10 +357,10 @@ public class ThesaurusManager implements ThesaurusFinder {
     public Path getThesauriDirectory() {
         return thesauriDirectory;
     }
-	
+
     @Override
     public Map<String, Thesaurus> getThesauriMap() {
-        if (this.settingManager.getValueAsBool(SettingManager.ENABLE_ALL_THESAURUS)) {
+        if (this.settingManager.getValueAsBool(Settings.SYSTEM_ENABLE_ALL_THESAURUS)) {
             final HashMap<String, Thesaurus> all = Maps.newHashMap(this.thesauriMap);
             all.put(this.allThesaurus.getKey(), this.allThesaurus);
             return all;
@@ -403,7 +404,7 @@ public class ThesaurusManager implements ThesaurusFinder {
     }
 
 	/**
-	 * Create (or update an existing) rdf thesaurus from the specified ISO19135 
+	 * Create (or update an existing) rdf thesaurus from the specified ISO19135
 	 * register record.
 	 *
 	 * @param uuid Uuid of iso19135 register metadata record to update thesaurus

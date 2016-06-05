@@ -32,6 +32,7 @@ import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.HarvesterSettingRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -75,7 +76,7 @@ public class SourcesController {
             @PathVariable String lang,
             @PathVariable String uuid,
             final HttpServletRequest request) {
-        if (settingRepository.findOne(SettingManager.SYSTEM_SITE_SITE_ID_PATH).getValue().equals(uuid)) {
+        if (settingRepository.findOne(Settings.SYSTEM_SITE_SITE_ID_PATH).getValue().equals(uuid)) {
             updateSite(request);
         }
 
@@ -86,7 +87,7 @@ public class SourcesController {
     }
 
     private void updateSite(HttpServletRequest request) {
-        settingRepository.deleteAll(SettingSpec.nameStartsWith(SettingManager.SYSTEM_SITE_LABEL_PREFIX));
+        settingRepository.deleteAll(SettingSpec.nameStartsWith(Settings.SYSTEM_SITE_LABEL_PREFIX));
 
         List<Setting> translationSettings = Lists.newArrayList();
         for (Map.Entry<String, String[]> stringEntry : request.getParameterMap().entrySet()) {
@@ -98,7 +99,7 @@ public class SourcesController {
                     Setting setting = new Setting().
                             setDataType(SettingDataType.STRING).
                             setInternal(true).
-                            setName(SettingManager.SYSTEM_SITE_LABEL_PREFIX + lang).
+                            setName(Settings.SYSTEM_SITE_LABEL_PREFIX + lang).
                             setValue(values[0]);
                     translationSettings.add(setting);
                 }

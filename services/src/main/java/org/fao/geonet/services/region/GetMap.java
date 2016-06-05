@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.region.RegionNotFoundEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
@@ -84,18 +85,18 @@ import static java.lang.Math.sqrt;
  * Return an image of the region as a polygon against an optional background. If
  * the background is provided it is assumed to be a url with placeholders for
  * width, height, srs, minx,maxx,miny and maxy. For example:
- * 
+ *
  * http://www2.demis.nl/wms/wms.ashx?WMS=BlueMarble&LAYERS=Earth%20Image%2
  * CBorders
  * %2CCoastlines&FORMAT=image%2Fjpeg&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap
  * &STYLES
  * =&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A4326&BBOX={MINX
  * },{MINY},{MAXX},{MAXY}&WIDTH={WIDTH}&HEIGHT={HEIGHT}
- * 
+ *
  * the placeholders must either be all uppercase or all lowercase
- * 
+ *
  * The parameters to the service are:
- * 
+ *
  * id - id of the region to render srs - (optional) default is EPSG:4326
  * otherwise it is the project to use when rendering the image width -
  * (optional) width of the image that is created. Only one of width and height
@@ -104,7 +105,7 @@ import static java.lang.Math.sqrt;
  * background image for regions. A WMS Getmap request is the typical example.
  * the URL must be parameterized with the following parameters: minx, maxx,
  * miny, maxy, width, height and optionally srs
- * 
+ *
  */
 @Controller
 public class GetMap{
@@ -118,10 +119,6 @@ public class GetMap{
     public static final String OUTPUT_FILE_NAME = "outputFileName";
 	private static final double WGS_DIAG = sqrt(pow(360, 2) + pow(180, 2));
     public static final String SETTING_BACKGROUND = "settings";
-    public static final String REGION_GETMAP_BACKGROUND = "region/getmap/background";
-    public static final String REGION_GETMAP_MAPPROJ = "region/getmap/mapproj";
-    public static final String REGION_GETMAP_WIDTH = "region/getmap/width";
-    public static final String REGION_GETMAP_SUMMARY_WIDTH = "region/getmap/summaryWidth";
 
     @Autowired
     private ServiceManager serviceManager;
@@ -253,8 +250,8 @@ public class GetMap{
         if (background != null) {
 
             if (background.equalsIgnoreCase(SETTING_BACKGROUND) &&
-                settingManager.getValue(REGION_GETMAP_BACKGROUND).startsWith("http://")) {
-                background = settingManager.getValue(REGION_GETMAP_BACKGROUND);
+                settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND).startsWith("http://")) {
+                background = settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND);
             } else if (this.regionGetMapBackgroundLayers.containsKey(background)) {
                 background = this.regionGetMapBackgroundLayers.get(background);
             }
@@ -373,11 +370,11 @@ public class GetMap{
     	CoordinateReferenceSystem crs = Region.decodeCRS(srs);
     	ReferencedEnvelope env = new ReferencedEnvelope(bboxOfImage, crs);
     	env = env.transform(Region.WGS84, true);
-    	
+
     	double diag = sqrt( pow(env.getWidth(), 2) + pow(env.getHeight(), 2));
-    	
+
     	double scale = diag/WGS_DIAG;
-    	
+
     	for (ExpandFactor factor : regionGetMapExpandFactors) {
 			if(scale < factor.proportion) {
 				return factor.factor;

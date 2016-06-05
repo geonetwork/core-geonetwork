@@ -31,6 +31,7 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -123,7 +124,7 @@ public class AccountCreationApi {
 
 
         SettingManager sm = context.getBean(SettingManager.class);
-        String catalogAdminEmail = sm.getValue("system/feedback/email");
+        String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         String subject = String.format(
             messages.getString("register_email_admin_subject"),
             sm.getSiteName(),

@@ -29,6 +29,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.inspireatom.InspireAtomService;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.apache.commons.lang.StringUtils;
@@ -72,7 +73,7 @@ public class AtomDescribe implements Service {
     {
         SettingManager sm = context.getBean(SettingManager.class);
 
-        boolean inspireEnable = sm.getValueAsBool("system/inspire/enable");
+        boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
 
         if (!inspireEnable) {
             Log.info(Geonet.ATOM, "Inspire is disabled");

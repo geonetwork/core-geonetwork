@@ -24,6 +24,8 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
@@ -50,15 +52,15 @@ import java.util.List;
 
 public abstract class AbstractTokenLister implements OaiPmhService {
 
-	protected ResumptionTokenCache cache;
+    protected ResumptionTokenCache cache;
 	private SettingManager settingMan;
 	private SchemaManager schemaMan;
-	
+
 	/**
 	 * @return the mode
 	 */
 	public int getMode() {
-		return settingMan.getValueAsInt("system/oai/mdmode");
+		return settingMan.getValueAsInt(Settings.SYSTEM_OAI_MDMODE);
 	}
 
 	/**
@@ -66,7 +68,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 	 * @return
 	 */
 	public int getMaxRecords() {
-		return settingMan.getValueAsInt("system/oai/maxrecords");
+		return settingMan.getValueAsInt(Settings.SYSTEM_OAI_MAXRECORDS);
 	}
 
 	/**
@@ -96,20 +98,20 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 		}
 		return dateUntil;
 	}
-	
+
 	public AbstractTokenLister(ResumptionTokenCache cache, SettingManager sm, SchemaManager scm) {
 		this.cache=cache;
 		this.settingMan = sm;
 		this.schemaMan = scm;
 	}
-	
-	
+
+
 	public AbstractResponse execute(AbstractRequest request,
 			ServiceContext context) throws Exception {
 
         if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
             Log.debug(Geonet.OAI_HARVESTER,"OAI " +this.getClass().getSimpleName()+ " execute: ");
-		
+
 		TokenListRequest  req = (TokenListRequest)  request;
 
 		//UserSession  session = context.getUserSession();
@@ -118,9 +120,9 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 		//String token = req.getResumptionToken();
 		String strToken = req.getResumptionToken();
 		GeonetworkResumptionToken token = null;
-		
 
-		
+
+
 		int pos = 0;
 
 		if ( strToken == null )
@@ -160,7 +162,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 				result.setIds(Lib.search(context, params));
 			} else {
 				// collect up all the schemas that we can convert to create prefix,
-				// search ids and add to the result set 
+				// search ids and add to the result set
 				List<String> schemas = getSchemasThatCanConvertTo(prefix);
 				for (String schema : schemas) {
 					params.removeChild("_schema");
@@ -178,7 +180,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 				token = new GeonetworkResumptionToken(req,result);
 				cache.storeResumptionToken(token);
 			}
-			
+
 		}
 		else
 		{
@@ -186,29 +188,29 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 			token = cache.getResumptionToken( GeonetworkResumptionToken.buildKey(req)  );
             if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
                 Log.debug(Geonet.OAI_HARVESTER,"OAI ListRecords : using ResumptionToken :"+GeonetworkResumptionToken.buildKey(req));
-			
+
 			if (token  == null)
 				throw new BadResumptionTokenException("No session for token : "+ GeonetworkResumptionToken.buildKey(req));
 
 			result = token.getRes();
-			
+
 			//pos = result.parseToken(token);
 			pos = GeonetworkResumptionToken.getPos(req);
 		}
 
 		ListResponse res = processRequest(req,pos,result,context);
 		pos = pos + res.getSize();
-		
+
 		if (token == null && res.getSize() == 0)
 			throw new NoRecordsMatchException("No results");
-		
+
 		//result.setupToken(res, pos);
 		if (token != null) token.setupToken(pos);
 		res.setResumptionToken(token);
 
 		return res;
-		
-		
+
+
 	}
 
 	//---------------------------------------------------------------------------
@@ -224,7 +226,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 		return result;
 	}
 
-	public abstract String getVerb(); 
+	public abstract String getVerb();
 	public abstract ListResponse processRequest(TokenListRequest req, int pos, SearchResult result, ServiceContext context) throws Exception ;
 
 }

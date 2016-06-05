@@ -29,6 +29,7 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.security.ldap.LDAPConstants;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.PasswordUtil;
@@ -136,7 +137,7 @@ public class PasswordApi {
 
 
         SettingManager sm = context.getBean(SettingManager.class);
-        String adminEmail = sm.getValue("system/feedback/email");
+        String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         String subject = String.format(
             messages.getString("password_change_subject"),
             sm.getSiteName());
@@ -209,7 +210,7 @@ public class PasswordApi {
 
         // get mail settings
         SettingManager sm = appContext.getBean(SettingManager.class);
-        String adminEmail = sm.getValue("system/feedback/email");
+        String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
         // construct change key - only valid today
         String scrambledPassword = user.getPassword();

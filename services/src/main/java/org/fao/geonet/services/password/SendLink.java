@@ -31,6 +31,7 @@ import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -83,23 +84,23 @@ public class SendLink extends MailSendingService {
 			throw new UserNotFoundEx(username);
         }
 
-		// only let registered users change their password  
+		// only let registered users change their password
 		if (user.getProfile() != Profile.RegisteredUser) {
 			// Don't throw OperationNotAllowedEx because it is not related to not having enough priviledges
 			throw new IllegalArgumentException("Only users with profile RegisteredUser can change their password using this option");
         }
 
-		// get mail settings		
+		// get mail settings
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
 
-		String adminEmail = sm.getValue("system/feedback/email");
+		String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 		String thisSite = sm.getSiteName();
 
 		SettingInfo si = context.getBean(SettingInfo.class);
 		String siteURL = si.getSiteUrl() + context.getBaseUrl();
 
-		// construct change key - only valid today 
+		// construct change key - only valid today
 		String scrambledPassword = user.getPassword();
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
@@ -116,14 +117,14 @@ public class SendLink extends MailSendingService {
 		root.addContent(new Element("site").setText(thisSite));
 		root.addContent(new Element("siteURL").setText(siteURL));
 		root.addContent(new Element("changeKey").setText(changeKey));
-		
+
 		Path emailXslt = stylePath.resolve(template);
 		Element elEmail = Xml.transform(root, emailXslt);
 
 		String subject = elEmail.getChildText("subject");
 		String to      = elEmail.getChildText("to");
 		String content = elEmail.getChildText("content");
-		
+
 		// send change link via email
         if (!MailUtil.sendMail(to, subject, content, sm, adminEmail, "")) {
             throw new OperationAbortedEx("Could not send email");

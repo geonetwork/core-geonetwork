@@ -32,6 +32,7 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -312,13 +313,13 @@ public class RdfOutputManager {
         Element modelEl = new Element("root");
 
         Element serverEl = new Element("server");
-        serverEl.addContent(new Element("port").setText(sm.getValue("system/server/port")));
-        serverEl.addContent(new Element("host").setText(sm.getValue("system/server/host")));
-        serverEl.addContent(new Element("protocol").setText(sm.getValue("system/server/protocol")));
+        serverEl.addContent(new Element("port").setText(sm.getValue(Settings.SYSTEM_SERVER_PORT)));
+        serverEl.addContent(new Element("host").setText(sm.getValue(Settings.SYSTEM_SERVER_HOST)));
+        serverEl.addContent(new Element("protocol").setText(sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL)));
 
         Element siteEl = new Element("site");
-        siteEl.addContent(new Element("name").setText(sm.getValue("system/site/name")));
-        siteEl.addContent(new Element("organization").setText(sm.getValue("system/site/organization")));
+        siteEl.addContent(new Element("name").setText(sm.getValue(Settings.SYSTEM_SITE_NAME_PATH)));
+        siteEl.addContent(new Element("organization").setText(sm.getValue(Settings.SYSTEM_SITE_ORGANIZATION)));
 
         Element guiEl = new Element("gui");
         Element systemConfigEl = new Element("systemConfig");

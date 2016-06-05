@@ -27,16 +27,15 @@
 
 package org.fao.geonet.util;
 
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 
-import java.util.Map;
-
 public class ThreadUtils {
 
-	private static SettingManager settingMan;
+    private static SettingManager settingMan;
 	private static boolean dbCanUseMultipleThreads = false;
 
 	// -- No public constructor - static methods class
@@ -47,8 +46,8 @@ public class ThreadUtils {
 	 * @return threadCount
    */
 	private static int setCountFromSettings() {
-   	int threadCount = 1; 
-		String nrThreadsStr = settingMan.getValue("system/threadedindexing/maxthreads");
+   	int threadCount = 1;
+		String nrThreadsStr = settingMan.getValue(Settings.SYSTEM_THREADEDINDEXING_MAXTHREADS);
 		if (nrThreadsStr == null) {
 			Log.error(Geonet.GEONETWORK,"Number of Threads for indexing setting is missing from settings table. Using *one* thread");
 			nrThreadsStr = "1";
@@ -84,7 +83,7 @@ public class ThreadUtils {
     /** Get number of threads calc'd from runtime or settings and
 	 * restrict if not using capable database or threaded processing
 	 * not available.
-	 * 
+	 *
 	 * @return threadCount
 	 */
 	public static int getNumberOfThreads() {
@@ -99,7 +98,7 @@ public class ThreadUtils {
 	}
 
  /** Get thread priority calc'd from runtime or settings.
-	 * 
+	 *
 	 * @return threadPriority
 	 */
 	public static int getPriority() {
@@ -107,8 +106,8 @@ public class ThreadUtils {
 	}
 
  /** Get number of processors allocated to JVM if the database supports
-   * threaded access. 
-	 * 
+   * threaded access.
+	 *
 	 * @return number of processors allocated to JVM.
 	 */
 	public static String getNumberOfProcessors() {

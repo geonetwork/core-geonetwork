@@ -31,6 +31,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -98,14 +100,14 @@ public class DownloadArchive implements Service
 		String access = Util.getParam(params, Params.ACCESS, Params.Access.PUBLIC);
 
 		//--- resource required is public (thumbnails)
-		if (access.equals(Params.Access.PUBLIC)) { 
+		if (access.equals(Params.Access.PUBLIC)) {
 			Path dir = Lib.resource.getDir(context, access, id);
 			String fname = Util.getParam(params, Params.FNAME);
 
 			if (fname.contains("..")) {
 				throw new BadParameterEx("Invalid character found in resource name.", fname);
 			}
-			
+
 			Path file = dir.resolve(fname);
 			return BinaryFile.encode(200, file, false).getElement();
 		}
@@ -139,7 +141,7 @@ public class DownloadArchive implements Service
 //		String email    = Util.getParam(params, Params.EMAIL);
 //		String comments = Util.getParam(params, Params.COMMENTS);
 		Element entered = new Element("entered").addContent(params.cloneContent());
-	
+
 		//--- get logged in user details & record in 'userdetails'
 		Element userDetails = new Element("userdetails");
 		if (!username.equals("internet")) {
@@ -148,7 +150,7 @@ public class DownloadArchive implements Service
 				userDetails.addContent(user.asXml());
 			}
 		}
-	
+
 		//--- get metadata info
 		Metadata info = context.getBean(MetadataRepository.class).findOne(id);
 
@@ -260,7 +262,7 @@ public class DownloadArchive implements Service
 	//--- Private Methods
 	//---
 	//----------------------------------------------------------------------------
-	
+
 	private void includeLicenseFiles(ServiceContext context,
 								FileSystem zipFs, Element root) throws Exception,
 								MalformedURLException, FileNotFoundException, IOException {
@@ -288,7 +290,7 @@ public class DownloadArchive implements Service
 	}
 
 	//----------------------------------------------------------------------------
-	
+
 	private Path getLicenseFilesPath(String licenseURL, ServiceContext context) throws MalformedURLException {
 		// TODO: Ideally this method should probably read an xml file to map
 		// license url's to the sub-directory containing mirrored files
@@ -320,7 +322,7 @@ public class DownloadArchive implements Service
 	}
 
     //----------------------------------------------------------------------------
-	
+
 	private static String now() {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -328,8 +330,8 @@ public class DownloadArchive implements Service
 	}
 
 	//----------------------------------------------------------------------------
-	
-	private void notifyAndLog(boolean doNotify, String id, String uuid, String access, String username, String theFile, ServiceContext context) throws Exception { 
+
+	private void notifyAndLog(boolean doNotify, String id, String uuid, String access, String username, String theFile, ServiceContext context) throws Exception {
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
@@ -342,11 +344,11 @@ public class DownloadArchive implements Service
 
 		//--- send email notification
 		if (doNotify) {
-			
+
 			String site = sm.getSiteId();
-			String host = sm.getValue("system/feedback/mailServer/host");
-			String port = sm.getValue("system/feedback/mailServer/port");
-			String from = sm.getValue("system/feedback/email");
+			String host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+			String port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
+			String from = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
 			String fromDescr = "GeoNetwork administrator";
 
@@ -375,20 +377,20 @@ public class DownloadArchive implements Service
 					if (email.trim().length() != 0) {
 						String subject = "File " + theFile + " has been downloaded at "+dateTime;
 						String message = "GeoNetwork (site: "+site+") notifies you, as supervisor of group "+ name
-							+ " that data file "+ theFile 
+							+ " that data file "+ theFile
 							+ " attached to metadata record with id number "+ id
 							+ " (uuid: "+uuid+")"
-							+ " has been downloaded from address " + context.getIpAddress() 
+							+ " has been downloaded from address " + context.getIpAddress()
 							+ " by user " + username
 							+ ".";
 
 						try {
 							MailSender sender = new MailSender(context);
-							sender.send(host, Integer.parseInt(port), 
-							        sm.getValue("system/feedback/mailServer/username"), 
-							        sm.getValue("system/feedback/mailServer/password"), 
-							        sm.getValueAsBool("system/feedback/mailServer/ssl"), 
-								sm.getValueAsBool("system/feedback/mailServer/tls"),
+							sender.send(host, Integer.parseInt(port),
+							        sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME),
+							        sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD),
+							        sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL),
+								sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS),
 							        from, fromDescr, email, null, subject, message);
 						} catch (Exception e) {
 							e.printStackTrace();

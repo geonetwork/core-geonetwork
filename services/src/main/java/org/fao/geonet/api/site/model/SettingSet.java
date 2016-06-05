@@ -23,19 +23,21 @@
 
 package org.fao.geonet.api.site.model;
 
+import org.fao.geonet.kernel.setting.Settings;
+
 /**
  * Created by francois on 03/06/16.
  */
 public enum SettingSet {
     INSPIRE(new String[]{
-        "system/inspire/enableSearchPanel",
-        "system/inspire/enable"
+        Settings.SYSTEM_INSPIRE_ENABLE_SEARCH_PANEL,
+        Settings.SYSTEM_INSPIRE_ENABLE
     }),
     HARVESTER(new String[]{
-        "system/harvester/enableEditing"
+        Settings.SYSTEM_HARVESTER_ENABLE_EDITING
     }),
     USER_GROUP_ONLY(
-        new String[]{"system/metadataprivs/usergrouponly"}),
+        new String[]{Settings.SYSTEM_METADATAPRIVS_USERGROUPONLY}),
     AUTH,READ_ONLY,INDEX,SYSTEMINFO,STAGING_PROFILE,TYPE;
 
     private String[] listOfSettings;

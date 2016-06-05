@@ -37,6 +37,7 @@ import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.ProxyInfo;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -44,7 +45,7 @@ import org.jdom.Element;
 //=============================================================================
 
 /**
- * do any immediate actions resulting from changes to settings  
+ * do any immediate actions resulting from changes to settings
  */
 public class DoActions implements Service
 {
@@ -91,18 +92,18 @@ public class DoActions implements Service
             e.printStackTrace();
             throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: "+e.getMessage());
         }
-        
+
         LogUtils.refreshLogConfiguration();
 
         try {
             // Load proxy information into Jeeves
             ProxyInfo pi = JeevesProxyInfo.getInstance();
-            boolean useProxy = settingMan.getValueAsBool(SettingManager.SYSTEM_PROXY_USE, false);
+            boolean useProxy = settingMan.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
             if (useProxy) {
-                String  proxyHost      = settingMan.getValue(SettingManager.SYSTEM_PROXY_HOST);
-                String  proxyPort      = settingMan.getValue(SettingManager.SYSTEM_PROXY_PORT);
-                String  username       = settingMan.getValue(SettingManager.SYSTEM_PROXY_USERNAME);
-                String  password       = settingMan.getValue(SettingManager.SYSTEM_PROXY_PASSWORD);
+                String  proxyHost      = settingMan.getValue(Settings.SYSTEM_PROXY_HOST);
+                String  proxyPort      = settingMan.getValue(Settings.SYSTEM_PROXY_PORT);
+                String  username       = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
+                String  password       = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
                 pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
             }
         } catch (Exception e) {

@@ -34,6 +34,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SettingRepository;
 
 /**
@@ -52,7 +53,7 @@ public class LogUtils {
     public static void refreshLogConfiguration() {
         SettingRepository repository =
                 ApplicationContextHolder.get().getBean(SettingRepository.class);
-        Setting setting = repository.findOne(SettingManager.SYSTEM_SERVER_LOG);
+        Setting setting = repository.findOne(Settings.SYSTEM_SERVER_LOG);
 
         // get log config from db settings
         String log4jProp = setting != null ? setting.getValue() : DEFAULT_LOG_FILE;

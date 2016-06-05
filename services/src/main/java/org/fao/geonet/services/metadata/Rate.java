@@ -50,6 +50,8 @@ import org.jdom.Element;
 import java.net.URL;
 import java.nio.file.Path;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
+
 /**
  * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and
  * the system setting "localrating/enable" is false (the default), the user's rating is shared
@@ -57,7 +59,7 @@ import java.nio.file.Path;
  * if "localrating/enable" is true then 'local rating' is applied, counting only rating from
  * users of this node itself.
  *
- * When a remote rating is applied, the local rating is not updated. It will be updated 
+ * When a remote rating is applied, the local rating is not updated. It will be updated
  * on the next harvest run (FIXME ?).
  */
 public class Rate extends NotInReadOnlyModeService {
@@ -107,8 +109,8 @@ public class Rate extends NotInReadOnlyModeService {
 
 		// look up value of localrating/enable
 		SettingManager settingManager = gc.getBean(SettingManager.class);
-		boolean localRating = settingManager.getValueAsBool("system/localrating/enable", false);
-		
+		boolean localRating = settingManager.getValueAsBool(SYSTEM_LOCALRATING_ENABLE, false);
+
 		if (localRating || harvUuid == null)
 			//--- metadata is local, just rate it
 			rating = dm.rateMetadata(Integer.valueOf(id), ip, rating);

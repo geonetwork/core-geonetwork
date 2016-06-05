@@ -31,6 +31,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
 
@@ -68,16 +69,16 @@ public class Insert implements Service
 		String comments = Util.getParam(params, Params.COMMENTS);
 		String subject  = Util.getParam(params, Params.SUBJECT, "New feedback");  // TODO : i18n
 
-		String host = sm.getValue("system/feedback/mailServer/host");
-		String to   = sm.getValue("system/feedback/email");
+		String host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+		String to   = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
 		MailSender sender = new MailSender(context);
-		sender.send(host, 
-		        sm.getValueAsInt("system/feedback/mailServer/port"), 
-		        sm.getValue("system/feedback/mailServer/username"), 
-		        sm.getValue("system/feedback/mailServer/password"), 
-		        sm.getValueAsBool("system/feedback/mailServer/ssl"), 
-				sm.getValueAsBool("system/feedback/mailServer/tls"),
+		sender.send(host,
+		        sm.getValueAsInt(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT),
+		        sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME),
+		        sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD),
+		        sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL),
+				sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS),
 		        email, name +" ("+org+")", to, null, subject, comments);
 
 		return new Element("response").addContent(params.cloneContent());

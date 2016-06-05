@@ -95,6 +95,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.GroupRepository;
@@ -576,7 +577,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 final Group group = groupRepository.findOne(groupOwner);
                 if (group != null) {
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner), true, true));
-                    final boolean preferGroup = getSettingManager().getValueAsBool(SettingManager.SYSTEM_PREFER_GROUP_LOGO, true);
+                    final boolean preferGroup = getSettingManager().getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true);
                     if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
                         moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite(), true, false));
                     }
@@ -870,13 +871,13 @@ public class DataManager implements ApplicationEventPublisherAware {
      * Start an editing session. This will record the original metadata record
      * in the session under the {@link org.fao.geonet.constants.Geonet.Session#METADATA_BEFORE_ANY_CHANGES} + id
      * session property.
-     * 
+     *
      * The record contains geonet:info element.
-     * 
+     *
      * Note: Only the metadata record is stored in session. If the editing
      * session upload new documents or thumbnails, those documents will not
      * be cancelled. This needs improvements.
-     * 
+     *
      * @param context
      * @param id
      * @throws Exception
@@ -886,7 +887,7 @@ public class DataManager implements ApplicationEventPublisherAware {
       if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
         Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
       }
-      
+
       boolean keepXlinkAttributes = true;
       boolean forEditing = false;
       boolean withValidationErrors = false;
@@ -897,7 +898,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     /**
      * Rollback to the record in the state it was when the editing session started
      * (See {@link #startEditingSession(ServiceContext, String)}).
-     * 
+     *
      * @param context
      * @param id
      * @throws Exception
@@ -906,13 +907,13 @@ public class DataManager implements ApplicationEventPublisherAware {
         String id) throws Exception {
         UserSession session = context.getUserSession();
         Element metadataBeforeAnyChanges = (Element) session.getProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
-        
+
         if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-              Log.debug(Geonet.EDITOR_SESSION, 
-                  "Editing session end. Cancel changes. Restore record " + id + 
+              Log.debug(Geonet.EDITOR_SESSION,
+                  "Editing session end. Cancel changes. Restore record " + id +
                   ". Replace by original record which was: ");
         }
-        
+
         if (metadataBeforeAnyChanges != null) {
             if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
               Log.debug(Geonet.EDITOR_SESSION, " > restoring record: ");
@@ -923,14 +924,14 @@ public class DataManager implements ApplicationEventPublisherAware {
             boolean ufo = false;
                 boolean index = true;
                 metadataBeforeAnyChanges.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-                updateMetadata(context, id, metadataBeforeAnyChanges, 
-                    validate, ufo, index, 
+                updateMetadata(context, id, metadataBeforeAnyChanges,
+                    validate, ufo, index,
                     context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), false);
                 endEditingSession(id, session);
         } else {
             if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-              Log.debug(Geonet.EDITOR_SESSION, 
-                  " > nothing to cancel for record " + id + 
+              Log.debug(Geonet.EDITOR_SESSION,
+                  " > nothing to cancel for record " + id +
                   ". Original record was null. Use starteditingsession to.");
             }
         }
@@ -938,7 +939,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
     /**
      * Remove the original record stored in session.
-     * 
+     *
      * @param id
      * @param session
      */
@@ -1554,7 +1555,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 .setGroupOwner(Integer.valueOf(groupOwner))
                 .setOwner(owner)
                 .setSourceId(source);
-        
+
         //If there is a default category for the group, use it:
         Group group = getApplicationContext()
                 .getBean(GroupRepository.class)
@@ -2209,9 +2210,9 @@ public class DataManager implements ApplicationEventPublisherAware {
         Metadata findOne = getMetadataRepository().findOne(metadataId);
         if(findOne != null) {
             boolean isMetadata = findOne.getDataInfo().getType() == MetadataType.METADATA;
-    
+
             deleteMetadataFromDB(context, metadataId);
-    
+
             // Notifies the metadata change to metatada notifier service
             if (isMetadata) {
                 context.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, uuid, context);
@@ -2244,7 +2245,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      */
     public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllIntranet) throws Exception {
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        
+
         if (skipAllIntranet) {
             operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), ReservedGroup.intranet.getId());
         } else {
@@ -2299,8 +2300,8 @@ public class DataManager implements ApplicationEventPublisherAware {
         env.addContent(new Element("file").setText(file));
         env.addContent(new Element("ext").setText(ext));
 
-        String host    = getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
-        String port    = getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
+        String host    = getSettingManager().getValue(Settings.SYSTEM_SERVER_HOST);
+        String port    = getSettingManager().getValue(Settings.SYSTEM_SERVER_PORT);
         String baseUrl = context.getBaseUrl();
 
         env.addContent(new Element("host").setText(host));
@@ -2369,8 +2370,8 @@ public class DataManager implements ApplicationEventPublisherAware {
     private void transformMd(ServiceContext context, String metadataId, Element md, Element env, String schema, String styleSheet, boolean indexAfterChange) throws Exception {
 
         if(env.getChild("host")==null){
-            String host    = getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
-            String port    = getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
+            String host    = getSettingManager().getValue(Settings.SYSTEM_SERVER_HOST);
+            String port    = getSettingManager().getValue(Settings.SYSTEM_SERVER_PORT);
 
             env.addContent(new Element("host").setText(host));
             env.addContent(new Element("port").setText(port));
@@ -2469,7 +2470,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     //--- Privileges API
     //---
     //--------------------------------------------------------------------------
-    
+
     /**
      *  Adds a permission to a group. Metadata is not reindexed.
      *
@@ -2582,7 +2583,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                                                       + "Reviewer of any group.");
                     }
                 } else {
-                    String userGroupsOnly = getSettingManager().getValue("system/metadataprivs/usergrouponly");
+                    String userGroupsOnly = getSettingManager().getValue(Settings.SYSTEM_METADATAPRIVS_USERGROUPONLY);
                     if (userGroupsOnly.equals("true")) {
                         // If user is member of the group, user can set operation
 
@@ -2815,7 +2816,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
         String groupMatchingRegex =
                 getApplicationContext().getBean(SettingManager.class).
-                        getValue("metadata/workflow/draftWhenInGroup");
+                        getValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP);
         if (!StringUtils.isEmpty(groupMatchingRegex)) {
             final Group group = getApplicationContext().getBean(GroupRepository.class)
                     .findOne(Integer.valueOf(groupOwner));
@@ -2944,7 +2945,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @throws Exception
      */
     public Element updateFixedInfo(String schema, Optional<Integer> metadataId, String uuid, Element md, String parentUuid, UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
-        boolean autoFixing = getSettingManager().getValueAsBool("system/autofixing/enable", true);
+        boolean autoFixing = getSettingManager().getValueAsBool(Settings.SYSTEM_AUTOFIXING_ENABLE, true);
         if(autoFixing) {
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, trying update-fixed-info (updateDatestamp: " + updateDatestamp.name() + ")");
@@ -3214,9 +3215,9 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
 
         // add baseUrl of this site (from settings)
-        String protocol = getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL);
-        String host = getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
-        String port = getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
+        String protocol = getSettingManager().getValue(Settings.SYSTEM_SERVER_PROTOCOL);
+        String host = getSettingManager().getValue(Settings.SYSTEM_SERVER_HOST);
+        String port = getSettingManager().getValue(Settings.SYSTEM_SERVER_PORT);
         if (port.equals("80")) {
             port = "";
         } else {
@@ -3229,7 +3230,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
     /**
      * Add privileges information about metadata record
-     * which depends on context and usually could not be stored in db 
+     * which depends on context and usually could not be stored in db
      * or Lucene index because depending on the current user
      * or current client IP address.
      *

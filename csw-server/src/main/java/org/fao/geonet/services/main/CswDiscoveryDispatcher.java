@@ -32,6 +32,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.component.csw.CatalogDispatcher;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -42,7 +43,7 @@ import java.util.Map;
  * Accepts CSW Discovery operations.
  */
 public class CswDiscoveryDispatcher implements Service {
-	private Logger logger;
+    private Logger logger;
 
     /**
      * The "filter" parameter value is the filter to apply to Lucene query using Lucene query syntax
@@ -65,11 +66,11 @@ public class CswDiscoveryDispatcher implements Service {
 
 	public Element exec(Element params, ServiceContext context) throws Exception {
 		logger = context.getLogger();
-		
+
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager settingMan = gc.getBean(SettingManager.class);
-		boolean cswEnable    = settingMan.getValueAsBool("system/csw/enable", false);
-		
+		boolean cswEnable    = settingMan.getValueAsBool(Settings.SYSTEM_CSW_ENABLE, false);
+
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 
         String operation;

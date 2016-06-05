@@ -31,6 +31,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.component.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -68,10 +69,10 @@ public class CswPublicationDispatcher extends NotInReadOnlyModeService {
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 		logger = context.getLogger();
-		
+
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager settingMan = gc.getBean(SettingManager.class);
-		boolean cswEnable    = settingMan.getValueAsBool("system/csw/enable", false);
+		boolean cswEnable    = settingMan.getValueAsBool(Settings.SYSTEM_CSW_ENABLE, false);
 
         Element response = new Element(Jeeves.Elem.RESPONSE);
 

@@ -40,6 +40,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
@@ -81,7 +82,7 @@ public class DefaultStatusActions implements StatusActions {
 
     /**
      * Initializes the StatusActions class with external info from GeoNetwork.
-     * 
+     *
      *
      * @param context
      * @throws IOException
@@ -97,14 +98,14 @@ public class DefaultStatusActions implements StatusActions {
         SettingManager sm = gc.getBean(SettingManager.class);
 
         siteName = sm.getSiteName();
-        host = sm.getValue("system/feedback/mailServer/host");
-        port = sm.getValue("system/feedback/mailServer/port");
-        from = sm.getValue("system/feedback/email");
-        username = sm.getValue("system/feedback/mailServer/username");
-        password = sm.getValue("system/feedback/mailServer/password");
-        useSSL = sm.getValueAsBool("system/feedback/mailServer/ssl");
-        useTLS = sm.getValueAsBool("system/feedback/mailServer/tls");
-        
+        host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+        port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
+        from = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+        username = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME);
+        password = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD);
+        useSSL = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL);
+        useTLS = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS);
+
         if (host == null || host.length() == 0) {
             context.error("Mail server host not configure");
             emailNotes = false;
@@ -137,7 +138,7 @@ public class DefaultStatusActions implements StatusActions {
 
     /**
      * Called when a record is edited to set/reset status.
-     * 
+     *
      * @param id The metadata id that has been edited.
      * @param minorEdit If true then the edit was a minor edit.
      */
@@ -154,7 +155,7 @@ public class DefaultStatusActions implements StatusActions {
 
     /**
      * Called when need to set status on a set of metadata records.
-     * 
+     *
      * @param status The status to set.
      * @param metadataIds The set of metadata ids to set status on.
      * @param changeDate The date the status was changed.
@@ -201,7 +202,7 @@ public class DefaultStatusActions implements StatusActions {
     // -------------------------------------------------------------------------
 
   /**
-    * Unset all operations on 'All' Group. Used when status changes from approved to something else. 
+    * Unset all operations on 'All' Group. Used when status changes from approved to something else.
     *
     * @param mdId The metadata id to unset privileges on
     */
@@ -214,7 +215,7 @@ public class DefaultStatusActions implements StatusActions {
 
     /**
      * Inform content reviewers of metadata records in list that they need to review the record.
-     * 
+     *
      * @param metadata The selected set of metadata records
      * @param changeDate The date that of the change in status
      * @param changeMessage Message supplied by the user that set the status
@@ -243,11 +244,11 @@ public class DefaultStatusActions implements StatusActions {
     }
 
     public static final Pattern metadataLuceneField = Pattern.compile("\\{\\{index:([^\\}]+)\\}\\}");
-    
+
     private String buildMetadataChangedMessage(Set<Integer> metadata) {
     	String statusMetadataDetails = null;
     	String message = "";
- 
+
     	try {
     		statusMetadataDetails = LangUtils.translate(context.getApplicationContext(), "statusMetadataDetails").get(this.language);
 		} catch (Exception e) {}
@@ -255,21 +256,21 @@ public class DefaultStatusActions implements StatusActions {
     	if (statusMetadataDetails == null) {
     		statusMetadataDetails = "* {{index:title}} ({{serverurl}}/catalog.search#/metadata/{{index:_uuid}})";
     	}
-    	
+
     	ArrayList<String> fields = new ArrayList<String>();
-    	
+
     	Matcher m = metadataLuceneField.matcher(statusMetadataDetails);
         Iterable<Metadata> mds = this.context.getBean(MetadataRepository.class).findAll(metadata);
-        
+
     	while (m.find()) {
     		fields.add(m.group(1));
     	}
-    	
+
     	for (Metadata md : mds) {
     		String curMdDetails = statusMetadataDetails;
     		// First substitution for variables not stored in the index
     		curMdDetails = curMdDetails.replace("{{serverurl}}", siteUrl);
-    		
+
     		for (String f: fields) {
     			String mdf = XslUtil.getIndexField(null, md.getUuid(), f, this.language);
     			curMdDetails = curMdDetails.replace("{{index:" + f + "}}", mdf);
@@ -292,7 +293,7 @@ public class DefaultStatusActions implements StatusActions {
 
     /**
      * Inform owners of metadata records that the records have approved or rejected.
-     * 
+     *
      * @param metadataIds The selected set of metadata records
      * @param changeDate The date that of the change in status
      * @param changeMessage Message supplied by the user that set the status
@@ -305,7 +306,7 @@ public class DefaultStatusActions implements StatusActions {
         String subject = String.format(LangUtils.translate(context.getApplicationContext(), "statusInform").get(this.language), siteName,
                 translatedStatusName, replyToDescr, replyTo, changeDate);
         String mdChanged = buildMetadataChangedMessage(metadataIds);
-        
+
         Iterable<Metadata> metadata = this.context.getBean(MetadataRepository.class).findAll(metadataIds);
         List<User> owners = new ArrayList<User>();
         UserRepository userRepo = this.context.getBean(UserRepository.class);
@@ -321,7 +322,7 @@ public class DefaultStatusActions implements StatusActions {
 
     /**
      * Process the users and metadata records for emailing notices.
-     * 
+     *
      * @param users The selected set of users
      * @param subject Subject to be used for email notices
      * @param status The status being set
@@ -338,7 +339,7 @@ public class DefaultStatusActions implements StatusActions {
 
     /**
      * Send the email message about change of status on a group of metadata records.
-     * 
+     *
      * @param sendTo The recipient email address
      * @param subject Subject to be used for email notices
      * @param status The status being set on the records

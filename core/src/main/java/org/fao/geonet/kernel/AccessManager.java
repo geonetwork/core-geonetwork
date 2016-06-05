@@ -39,6 +39,7 @@ import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.User_;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.GroupRepositoryCustom;
 import org.fao.geonet.repository.MetadataRepository;
@@ -121,20 +122,20 @@ public class AccessManager {
                 results.add(_opRepository.findReservedOperation(ReservedOperation.view));
             }
 		}
-		
+
 		return results;
 	}
 
     public Set<String> getOperationNames(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
         Set<String> names = new HashSet<String>();
-        
+
         for (Operation op : getOperations(context, mdId, ip, operations)) {
             names.add(op.getName());
         }
-        
+
         return names;
     }
-	
+
     /**
      * Returns all operations permitted by the user on a particular metadata.
      *
@@ -174,7 +175,7 @@ public class AccessManager {
         UserGroupRepository _userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
 
         Set<Integer> hs = new HashSet<Integer>();
-		
+
 		// add All (1) network group
 		hs.add(ReservedGroup.all.getId());
 
@@ -183,7 +184,7 @@ public class AccessManager {
 
 		// get other groups
 		if (usrSess.isAuthenticated()) {
-			// add (-1) GUEST group 
+			// add (-1) GUEST group
 			hs.add(ReservedGroup.guest.getId());
 
 			if (Profile.Administrator == usrSess.getProfile()) {
@@ -358,7 +359,7 @@ public class AccessManager {
     	String loopDelim = "";
     	for(Integer s : set) {
         sb.append(loopDelim);
-        sb.append(s+"");            
+        sb.append(s+"");
         loopDelim = delim;
     	}
     	return sb.toString();
@@ -486,14 +487,14 @@ public class AccessManager {
         	opAlloweds.add(opAllowed.getId().getGroupId());
         }
         spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
-        
+
         return (! userGroupRepository.findAll(spec).isEmpty());
     }
 
     /**
      * TODO javadoc.
      *
-     * @param name 
+     * @param name
      * @return
      */
 	public int getPrivilegeId(final String name) {
@@ -547,8 +548,8 @@ public class AccessManager {
         // IPv4
 
         SettingRepository settingRepository= ApplicationContextHolder.get().getBean(SettingRepository.class);
-		Setting network = settingRepository.findOne("system/intranet/network");
-        Setting netmask = settingRepository.findOne("system/intranet/netmask");
+		Setting network = settingRepository.findOne(Settings.SYSTEM_INTRANET_NETWORK);
+        Setting netmask = settingRepository.findOne(Settings.SYSTEM_INTRANET_NETWORK);
 
         try {
             if (network != null && netmask != null) {

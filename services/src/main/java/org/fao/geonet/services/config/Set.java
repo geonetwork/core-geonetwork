@@ -37,6 +37,7 @@ import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -89,7 +90,7 @@ public class Set implements Service {
             throw new OperationAbortedEx("Cannot set all values");
 
         // And reload services
-        String newUuid = values.get(SettingManager.SYSTEM_SITE_SITE_ID_PATH);
+        String newUuid = values.get(Settings.SYSTEM_SITE_SITE_ID_PATH);
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
             final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);

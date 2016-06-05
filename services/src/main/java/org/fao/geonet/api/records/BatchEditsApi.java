@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,7 +139,7 @@ public class BatchEditsApi implements ApplicationContextAware {
         DataManager dataMan = appContext.getBean(DataManager.class);
         SchemaManager _schemaManager = context.getBean(SchemaManager.class);
         AccessManager accessMan = context.getBean(AccessManager.class);
-        final String settingId = SettingManager.CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
+        final String settingId = Settings.SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
         boolean createXpathNodeIfNotExists =
             context.getBean(SettingManager.class).getValueAsBool(settingId);
 
