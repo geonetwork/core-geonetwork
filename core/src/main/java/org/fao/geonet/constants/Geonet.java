@@ -56,6 +56,7 @@ public final class Geonet {
 		public static final String SCHEMATRON_XML      = "schematron_xml.xsl";
 		public static final String SCHEMATRON_VERBID   = "schematron_verbid.xsl";
 		public static final String SEARCH_LUCENE       = "lucene.xsl";
+		public static final String SEARCH_Z3950_SERVER = "z3950Server.xsl";
 		public static final String UPDATE_FIXED_INFO   = "update-fixed-info.xsl";
 		public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
 		public static final String EXTRACT_UUID        = "extract-uuid.xsl";
@@ -74,8 +75,7 @@ public final class Geonet {
 		public static final String SCHEMA_OASIS        = "oasis-catalog.xml";
 		public static final String SCHEMA_PLUGINS_CATALOG = "schemaplugin-uri-catalog.xml";
 		public static final String SORT_HARVESTERS     = "sort-harvesters.xsl";
-        public static final String JZKITCONFIG_TEMPLATE= "JZKitConfig.xml.tem";
-        public static final String JZKITAPPLICATIONCONTEXT= "JZkitApplicationContext.xml";
+    public static final String JZKITAPPLICATIONCONTEXT= "JZkitApplicationContext.xml";
 
 		/**
 		 * Stylesheet to convert a CQL parameter to a filter.

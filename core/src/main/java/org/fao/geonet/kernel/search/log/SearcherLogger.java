@@ -67,8 +67,10 @@ public class SearcherLogger {
 		if (srvContext == null) { // todo: handle exception/errors
 			Log.warning(Geonet.SEARCH_LOGGER, "null serviceContext object. will not be able to log queries...");
 			this.isEnabled = false;
-		}
-        else {
+		} else if (this.srvContext.getService().equals("AppHandler")) {  // SRU search is not logged
+			Log.warning(Geonet.SEARCH_LOGGER, "SRU queries are not logged...");
+			this.isEnabled = false;
+    } else {
 			this.isEnabled = true;
 		}
 
