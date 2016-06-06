@@ -3205,26 +3205,31 @@ public class DataManager {
      */
     public void buildExtraMetadataInfo(ServiceContext context, String id,
                                        Element info) throws Exception {
-        if (accessMan.canEdit(context, id))
+
+				Set<String> hsOper = null;
+
+				boolean isOwner = accessMan.isOwner(context, id);
+				if (isOwner) {
+					hsOper = accessMan.getAllOperationsForOwner();
+          addElement(info, Edit.Info.Elem.OWNER, "true");
+				} else {
+        	Element operations = accessMan.getAllOperations(context, id, context.getIpAddress());
+        	hsOper = accessMan.getOperationsNotOwner(context, id, context.getIpAddress(), operations);
+        	if (!hsOper.contains(AccessManager.OPER_DOWNLOAD)) {
+            boolean gDownload = Xml.selectNodes(operations, "guestoperations/record[operationid="+AccessManager.OPER_DOWNLOAD+" and groupid='-1']").size() == 1;
+            addElement(info, Edit.Info.Elem.GUEST_DOWNLOAD, gDownload+"");
+        	}
+				}
+				
+        if (isOwner || hsOper.contains(AccessManager.OPER_EDITING)) {
             addElement(info, Edit.Info.Elem.EDIT, "true");
-
-        if (accessMan.isOwner(context, id)) {
-            addElement(info, Edit.Info.Elem.OWNER, "true");
-        }
-
-        Element operations = accessMan.getAllOperations(context, id, context.getIpAddress());
-        Set<String> hsOper = accessMan.getOperations(context, id, context.getIpAddress(), operations);
+				}
 
         addElement(info, Edit.Info.Elem.VIEW,     			String.valueOf(hsOper.contains(AccessManager.OPER_VIEW)));
         addElement(info, Edit.Info.Elem.NOTIFY,   			String.valueOf(hsOper.contains(AccessManager.OPER_NOTIFY)));
         addElement(info, Edit.Info.Elem.DOWNLOAD, 			String.valueOf(hsOper.contains(AccessManager.OPER_DOWNLOAD)));
         addElement(info, Edit.Info.Elem.DYNAMIC,  			String.valueOf(hsOper.contains(AccessManager.OPER_DYNAMIC)));
         addElement(info, Edit.Info.Elem.FEATURED, 			String.valueOf(hsOper.contains(AccessManager.OPER_FEATURED)));
-
-        if (!hsOper.contains(AccessManager.OPER_DOWNLOAD)) {
-            boolean gDownload = Xml.selectNodes(operations, "guestoperations/record[operationid="+AccessManager.OPER_DOWNLOAD+" and groupid='-1']").size() == 1;
-            addElement(info, Edit.Info.Elem.GUEST_DOWNLOAD, gDownload+"");
-        }
 
     }
 

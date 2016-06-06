@@ -127,11 +127,20 @@ public class AccessManager {
      * @throws Exception
      */
 	public Set<String> getOperations(ServiceContext context, String mdId, String ip, Element operations) throws Exception {
-		UserSession us = context.getUserSession();
         // if user is an administrator OR is the owner of the record then allow all operations
 		if (isOwner(context,mdId)) {
 			return hsAllOps;
 		}
+
+		return getOperationsNotOwner(context, mdId, ip, operations);
+	}
+
+	public Set<String> getAllOperationsForOwner() {
+			return hsAllOps;
+	}
+
+	public Set<String> getOperationsNotOwner(ServiceContext context, String mdId, String ip, Element operations) throws Exception {
+		UserSession us = context.getUserSession();
 
 		// otherwise build result
 		Set<String> out = new HashSet<String>();
@@ -354,37 +363,44 @@ public class AccessManager {
 		//--- retrieve metadata info
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		MdInfo info = dm.getMetadataInfo(dbms, id);
+		Dbms dbms = null;
+		
+		try {
+			dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
 
-		//--- harvested metadata cannot be edited
+			MdInfo info = dm.getMetadataInfo(dbms, id);
 
-//		if (info == null || info.isHarvested)
-		if (info == null)
-			return false;
+			//--- harvested metadata cannot be edited
 
-		//--- check if the user is an administrator
-		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
-			return true;
+	//		if (info == null || info.isHarvested)
+			if (info == null)
+				return false;
 
-		//--- check if the user is the metadata owner
-		//
-		if (us.getUserId().equals(info.owner))
-			return true;
-
-		//--- check if the user is a reviewer or useradmin
-		if (!us.getProfile().equals(Geonet.Profile.REVIEWER) && !us.getProfile().equals(Geonet.Profile.USER_ADMIN))
-			return false;
-
-		//--- if there is no group owner then the reviewer cannot review and the useradmin cannot administer
-		if (info.groupOwner == null)
-			return false;
-
-		for (String userGroup : getUserGroups(dbms, us, null, true)) {
-			if (userGroup.equals(info.groupOwner))
+			//--- check if the user is an administrator
+			if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
 				return true;
+	
+			//--- check if the user is the metadata owner
+			//
+			if (us.getUserId().equals(info.owner))
+				return true;
+	
+			//--- check if the user is a reviewer or useradmin
+			if (!us.getProfile().equals(Geonet.Profile.REVIEWER) && !us.getProfile().equals(Geonet.Profile.USER_ADMIN))
+				return false;
+	
+			//--- if there is no group owner then the reviewer cannot review and the useradmin cannot administer
+			if (info.groupOwner == null)
+				return false;
+	
+			for (String userGroup : getUserGroups(dbms, us, null, true)) {
+				if (userGroup.equals(info.groupOwner))
+					return true;
+			}
+			return false;
+		} finally {
+			if (dbms != null) context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);	
 		}
-		return false;
 	}
 
     /**
