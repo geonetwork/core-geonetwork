@@ -100,12 +100,6 @@
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-    <service name="xml.metadata.insert" deprecated="true" xmlapi="true">
-      <class name=".services.metadata.Insert" />
-    </service>
-
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
     <service name="xml.metadata.delete" deprecated="true" xmlapi="true">
       <class name=".services.metadata.Delete" />
     </service>
@@ -129,12 +123,6 @@
 
     <service name="xml.relation.delete" xmlapi="true">
       <class name=".services.relations.Remove" />
-    </service>
-
-
-    <service name="xml.metadata.insert.paste" xmlapi="true">
-      <class name=".services.metadata.Insert" />
-      <error sheet="error-xml.xsl" />
     </service>
 
     <service name="xml.metadata.validate" deprecated="true" xmlapi="true">
