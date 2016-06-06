@@ -102,7 +102,7 @@
           if (angular.isFunction(deregister[i])) {
             deregister[i]();
           } else {
-            deregister[i].src.unByKey(deregister[i]);
+            deregister[i].target.unByKey(deregister[i]);
           }
         }
       }

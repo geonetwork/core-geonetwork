@@ -219,8 +219,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.5.1</version>
         <configuration>
-          <source>1.7</source>  <!-- The -source argument for the Java compiler. -->
-          <target>1.7</target>  <!-- The -target argument for the Java compiler. -->
+          <source>1.8</source>
+          <target>1.8</target>
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
           <compilerArgument>-proc:none</compilerArgument> <!-- disable automatic annotation processing accoring to: http://docs.jboss.org/hibernate/jpamodelgen/1.0/reference/en-US/html_single/#d0e261 -->
@@ -670,6 +670,21 @@
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
+          <groupId>org.geotools</groupId>
+          <artifactId>gt-wms</artifactId>
+          <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-main</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-brewer</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.geotools.jdbc</groupId>
         <artifactId>gt-jdbc-postgis</artifactId>
         <version>${geotools.version}</version>
@@ -943,6 +958,11 @@
 		<artifactId>spring-aspects</artifactId>
 		<version>${spring.version}</version>
 	  </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+      <version>2.3.1</version>
+    </dependency>
 
 	  <!-- Persistence dependencies -->
     <dependency>
@@ -1083,6 +1103,11 @@
       <name>Repository that has juniversalchardet</name>
       <url>http://mvnrepository.com/artifact</url>
     </repository>
+    <repository>
+      <id>maven.geo-solutions.it</id>
+      <name>geo-solutions</name>
+      <url>http://maven.geo-solutions.it</url>
+    </repository>
 
     <repository>
       <id>maven2</id>
@@ -1106,6 +1131,16 @@
       <id>oss.sonatype.org-github-releases</id>
       <url>https://oss.sonatype.org/content/repositories/github-releases</url>
     </pluginRepository>
+    <pluginRepository>
+      <id>sonatype-public-repository</id>
+      <url>https://oss.sonatype.org/content/groups/public</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
   </pluginRepositories>
 
   <!-- =========================================================== -->
@@ -1126,6 +1161,9 @@
     <module>services</module>
     <module>wro4j</module>
     <module>inspire-atom</module>
+    <module>solr</module>
+    <module>workers</module>
+    <module>messaging</module>
   </modules>
 
   <profiles>
@@ -1169,8 +1207,18 @@
 
   <properties>
     <jetty.version>8.1.9.v20130131</jetty.version>
-    <geotools.version>8.6</geotools.version>
+    <geotools.version>15.0</geotools.version>
     <lucene.version>4.9.0</lucene.version>
+
+    <solr.version>6.0.1</solr.version>
+    <solr.version.md5>fc9a4a6ee127dff21135dd4941c92c15</solr.version.md5>
+    <solr.port>8984</solr.port>
+    <solr.url>http://localhost:${solr.port}/solr</solr.url>
+    <solr.collection>catalog_srv</solr.collection>
+
+    <jms.url>tcp://localhost:61616</jms.url>
+    <activemq.version>5.6.0</activemq.version>
+
     <spring.version>4.2.4.RELEASE</spring.version>
     <spring.security.version>3.2.0.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
@@ -1183,5 +1231,9 @@
     <xmlunit.version>2.1.1</xmlunit.version>
     <print-lib.version>2.1.1</print-lib.version>
     <flying-saucer>9.0.7</flying-saucer>
+    <camel.version>2.14.0</camel.version>
+    <log4j.version>1.2.17</log4j.version>
+    <slf4j.version>1.7.7</slf4j.version>
+    <xbean.version>3.18</xbean.version>
   </properties>
 </project>

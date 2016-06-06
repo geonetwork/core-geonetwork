@@ -136,6 +136,7 @@ public class GetInfo implements Service {
 		try {
             TransformerFactory transFact = TransformerFactoryFactory.getTransformerFactory();
             systemProperties.put("xslt.factory", transFact.getClass().getName());
+            systemProperties.put("system.xslt.factory", System.getProperty("javax.xml.transform.TransformerFactory"));
 		} catch (Exception e) {
 			systemProperties.put("xslt.factory", "Exception:" + e.getMessage());
 		}

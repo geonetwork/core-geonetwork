@@ -74,7 +74,7 @@ public class ISO19139SchemaPlugin
     }
 
     public ISO19139SchemaPlugin() {
-        super(IDENTIFIER);
+        super(IDENTIFIER, allNamespaces);
     }
 
 
@@ -91,6 +91,7 @@ public class ISO19139SchemaPlugin
                 "and gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue!='']";
         Set<AssociatedResource> listOfResources = new HashSet<AssociatedResource>();
         List<?> sibs = null;
+
         try {
             sibs = Xml.selectNodes(
                             metadata,

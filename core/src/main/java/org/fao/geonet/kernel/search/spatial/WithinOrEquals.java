@@ -31,7 +31,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 final class WithinOrEquals extends WithinImpl {
     WithinOrEquals(FilterFactory factory, Expression e1, Expression e2) {
-        super(factory, e1, e2);
+        super(e1, e2);
     }
 
     @Override
@@ -39,7 +39,7 @@ final class WithinOrEquals extends WithinImpl {
         boolean equals2 = leftGeom.getBoundary().norm().equalsExact(rightGeom.getBoundary().norm(), 0.01);
         return equals2 || super.evaluateInternal(leftGeom, rightGeom);
     }
-    
+
     @Override
     public String toString() {
         return super.toString().replace("within", "within or equal");

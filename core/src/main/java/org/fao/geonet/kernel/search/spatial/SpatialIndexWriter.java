@@ -484,14 +484,13 @@ public class SpatialIndexWriter implements FeatureListener
             IOException {
         SimpleFeatureTypeBuilder typeBuilder = new SimpleFeatureTypeBuilder();
         typeBuilder.setName(_SPATIAL_INDEX_TYPENAME);
-
         typeBuilder.setCRS(DefaultGeographicCRS.WGS84);
         typeBuilder.add("geom", MultiPolygon.class);
         typeBuilder.add(_IDS_ATTRIBUTE_NAME, String.class);
 
         SimpleFeatureType type = typeBuilder.buildFeatureType();
         datastore.createSchema(type);
-        return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(type.getName());
+        return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(type.getTypeName());
     }
 
     public static Name findIdColumn(FeatureSource<SimpleFeatureType, SimpleFeature> featureSource) {

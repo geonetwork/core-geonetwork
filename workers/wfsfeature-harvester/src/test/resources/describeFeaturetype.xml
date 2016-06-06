@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding="ISO-8859-1" ?>
+<schema
+    targetNamespace="http://mapserver.gis.umn.edu/mapserver"
+    xmlns:ms="http://mapserver.gis.umn.edu/mapserver"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:gml="http://www.opengis.net/gml"
+    elementFormDefault="qualified" version="0.1" >
+
+  <import namespace="http://www.opengis.net/gml"
+          schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd" />
+
+  <element name="SISMER_mesures"
+           type="ms:SISMER_mesuresType"
+           substitutionGroup="gml:_Feature" />
+
+  <complexType name="SISMER_mesuresType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="msGeometry" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1"/>
+          <element name="OPE_COPE" type="Integer"/>
+          <element name="OPE_NOM" type="Character"/>
+          <element name="EQU_CATEGORIE" type="Character"/>
+          <element name="EQU_NOMEQU" type="Character"/>
+          <element name="CAM_CRNOM" type="Character"/>
+          <element name="NAV_NOMNAV" type="Character"/>
+          <element name="PLO_NAVIRE" type="Character"/>
+          <element name="PNT_DATE" type="Date"/>
+          <element name="PNT_PROF" type="Real"/>
+          <element name="PNT_LAT" type="Real"/>
+          <element name="PNT_LON" type="Real"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+</schema>

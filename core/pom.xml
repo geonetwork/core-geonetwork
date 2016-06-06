@@ -199,6 +199,15 @@
             <groupId>org.geotools</groupId>
             <artifactId>gt-epsg-hsql</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-wms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-brewer</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>com.vividsolutions</groupId>
@@ -487,6 +496,11 @@
 	      <artifactId>esapi</artifactId>
            <version>2.1.0</version>
 	    </dependency>
+      <dependency>
+        <groupId>org.xmlunit</groupId>
+        <artifactId>xmlunit-core</artifactId>
+        <scope>test</scope>
+      </dependency>
 
     </dependencies>
 

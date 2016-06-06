@@ -117,6 +117,12 @@
     <logger name="geonetwork.wro4j">
         <level value="WARN" />
     </logger>
+    <logger name="geonetwork.camel-harvester">
+        <level value="DEBUG"/>
+    </logger>
+    <logger name="geonetwork.harvest.wfs.features">
+        <level value="DEBUG"/>
+    </logger>
 
     <!--  Jeeves module and submodule logger configuration -->
     <logger name="jeeves" additivity="false">
@@ -151,6 +157,7 @@
     <logger name="jeeves.xmlresolver">
         <level value="WARN" />
     </logger>
+
 
 
 
@@ -215,8 +222,14 @@
         <appender-ref ref="fileAppender" />
     </logger>
 
+    <logger name="org.apache.camel" additivity="true">
+      <level value="WARN"/>
+      <appender-ref ref="consoleAppender" />
+      <appender-ref ref="fileAppender" />
+    </logger>
 
-    <!-- Turn off logging except when explicitly declared below -->
+
+  <!-- Turn off logging except when explicitly declared below -->
     <root>
         <level value="OFF"></level>
         <appender-ref ref="consoleAppender"/>

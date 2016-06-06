@@ -85,7 +85,7 @@
           };
 
 
-          var addWMTSToMap = function(link, md) {
+          function addWMTSToMap(link, md) {
 
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
@@ -113,13 +113,13 @@
             }
           };
 
-          var addKMLToMap = function(record, md) {
+          function addKMLToMap(record, md) {
             gnMap.addKmlToMap(record.name, record.url,
                gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();
           };
 
-          var addMapToMap = function(record, md) {
+          function addMapToMap(record, md) {
             gnOwsContextService.loadContextFromUrl(record.url,
                 gnSearchSettings.viewerMap);
 
@@ -152,7 +152,7 @@
             },
             'WFS' : {
               iconClass: 'fa-globe',
-              label: 'webserviceLink',
+              label: 'addToMap',
               action: addWFSToMap
             },
             'WCS' : {
