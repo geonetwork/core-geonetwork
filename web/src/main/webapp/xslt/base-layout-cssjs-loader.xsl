@@ -61,7 +61,6 @@
 
   <xsl:template name="javascript-load">
 
-    <script>var geonet = {provide:function(s){},require:function(s){}};</script>
 
     <xsl:if test="$is3DModeAllowed">
       <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/ol3cesium/Cesium/';
@@ -115,7 +114,8 @@
           </xsl:otherwise>
         </xsl:choose>
 
-
+        <script src="{$uiResourcesPath}lib/FileSaver/FileSaver.min.js"></script>
+        <script src="{$uiResourcesPath}lib/tableExport/tableExport.min.js"></script>
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
@@ -146,6 +146,7 @@
         <script
           src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"></script>
         <script src="{$uiResourcesPath}/lib/bootstrap-table/dist/bootstrap-table.js"></script>
+        <script src="{$uiResourcesPath}/lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js"></script>
         <!--</xsl:if>-->
 
       </xsl:when>

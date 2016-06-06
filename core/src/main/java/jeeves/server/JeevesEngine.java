@@ -83,7 +83,6 @@ import jeeves.server.sources.http.JeevesServlet;
  * This is the main class. It handles http connections and inits the system
  */
 public class JeevesEngine {
-    private static final String TRANSFORMER_PATH = "/WEB-INF/classes/META-INF/services/javax.xml.transform.TransformerFactory";
     private static final int DEFAULT_MAX_UPLOAD_SIZE_MD = 50;
     private static final int BYTES_PER_KB = 1024;
 
@@ -226,10 +225,10 @@ public class JeevesEngine {
         // In debug mode, Jeeves may load a different file
         // Load javax.xml.transform.TransformerFactory from application path instead
         if (servlet != null) {
-            in = servlet.getServletContext().getResourceAsStream(TRANSFORMER_PATH);
+            in = servlet.getServletContext().getResourceAsStream(TransformerFactoryFactory.TRANSFORMER_PATH);
         }
         if (in == null) {
-            File f = new File(_appPath + TRANSFORMER_PATH);
+            File f = new File(_appPath + TransformerFactoryFactory.TRANSFORMER_PATH);
             in = new FileInputStream(f);
         }
         try {
@@ -246,9 +245,10 @@ public class JeevesEngine {
                 }
             }
         } catch (IOException x) {
-            String msg = "Definition of XSLT transformer not found (tried: " + new File(_appPath + TRANSFORMER_PATH).getCanonicalPath() + ")";
+            String msg = "Definition of XSLT transformer not found (tried: " + new File(_appPath +
+                TransformerFactoryFactory.TRANSFORMER_PATH).getCanonicalPath() + ")";
             if (servlet != null) {
-                msg += " and servlet.getServletContext().getResourceAsStream(" + TRANSFORMER_PATH + ")";
+                msg += " and servlet.getServletContext().getResourceAsStream(" + TransformerFactoryFactory.TRANSFORMER_PATH + ")";
             }
             warning(msg);
             error(x.getMessage());

@@ -36,9 +36,10 @@
         'gnViewerSettings',
         'gnOwsContextService',
         'gnMap',
+        'gnNcWms',
         'gnConfig',
         function(searchSettings, viewerSettings, gnOwsContextService,
-                 gnMap, gnConfig) {
+                 gnMap, gnNcWms, gnConfig) {
           // Load the context defined in the configuration
           viewerSettings.defaultContext =
             viewerSettings.mapConfig.viewerMap ||
@@ -220,5 +221,13 @@
             viewerMap: viewerMap,
             searchMap: searchMap
           });
+
+          viewerMap.getLayers().on('add', function(e) {
+            var layer = e.element;
+            if (layer.get('advanced')) {
+              gnNcWms.feedOlLayer(layer);
+            }
+          });
+
         }]);
 })();

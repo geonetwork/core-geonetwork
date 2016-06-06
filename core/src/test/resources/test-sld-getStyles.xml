@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<StyledLayerDescriptor version="1.0.0" xmlns="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
+<NamedLayer>
+<Name>IFR_RBT_PEUPL_GGASC_P</Name>
+<UserStyle>
+<FeatureTypeStyle>
+<Rule>
+<Name>A3 ou A4, Roche et autres substrats durs infralittoraux ou circalittoraux</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A3 ou A4</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#666666</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A2 x A1, Sédiment et/ou Roche et autres substrats durs intertidaux</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A2 x A1</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#ffebaf</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#9c9c9c</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A2, Sédiment intertidal</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A2</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#ffebaf</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5, Sédiment subtidal</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#ffd37f</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A2 ou A5, Sédiment intertidal ou subtidal</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A2 ou A5</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#ffebaf</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#897044</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.12_FR01, Gravier propre infralittoral à [Dosinia exoleta]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.12_FR01</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#ff7f7f</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.43_FR01, Gravier envasé infralittoral à [Dosinia exoleta] et [Venus verrucosa]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.43_FR01</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#ffa37f</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.51, Banc de maerl</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.51</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#a900e6</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.44_FR01, Gravier envasé circalittoral côtier à [Pista cristata] et [Timoclea ovata]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.44_FR01</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#e59185</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.14_FR01, Gravier circalittoral profond à [Astarte sulcata] et [Venus casina]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.14_FR01</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#b87f7f</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.12_FR02, Sable grossier infralittoral à [Donax politus] et [Callista chione]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.12_FR02</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#ffd200</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.135, Sédiment grossier sablo-graveleux à [Clausinella fasciata] et [Branchiostoma lanceolatum]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.135</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#fcef07</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.43_FR02, Hétérogène envasé infralittoral à |Nucula nucleus]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.43_FR02</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#ffaa00</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.45_FR01, Sable hétérogène envasé circalittoral profond à [Nucula nucleus], [Pitar rudis] et  [Amphiura chiajei]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.45_FR01</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#e69800</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.231, Sable fin à moyen mobile infralittoral à faune éparse à [Abra prismatica et opheliidae]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.231</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#ffff73</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.27_FR01, Sable moyen mobile circalittoral profond à [Ditrupa arietina] et [Entalis entalis]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.27_FR01</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#ffea00</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.251, Sable fin mobile circalittoral à [Echinocyamus pusillus], [Ophelia borealis] et [Abra prismatica]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.251</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#ffff00</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.25_FR01, Sable fin circalittoral à [Chamelea striatula] et [Dosinia lupina]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.25_FR01</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#ffffbe</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.242, Sable fin envasé compact de l&#39;infralittoral à [Fabulina fabula], [Magelona mirabilis], bivalves vénéridés et amphipodes</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.242</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#e0ffc2</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.24_FR01, Sable envasé infralittoral à [Amphiura brachiata] et [Euclymene oerstedii]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.24_FR01</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#e6e600</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.26_FR01, Sable fin envasé circalittoral côtier à [Amphiura filiformis] et [Tellina serrata]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.26_FR01</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#c9e600</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.27_FR02, Sable fin envasé circalittoral profond à [Amphiura chiajei]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.27_FR02</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#a8a800</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.33, Vase sableuse infralittorale</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.33</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#8f8944</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.333, Vase sableuse infralittorale à [Mysella bidentata] and [Abra] spp.</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.333</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#8f8944</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.35_FR01, Vase sableuse à [Maldane glebifex] et [Clymene modesta]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.35_FR01</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#b88200</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.37_FR01, Vase sableuse circalittorale profonde à [Nucula sulcata] et [Brissopsis lyrifera]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.37_FR01</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#734c00</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.34, Vase infralittorale</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.34</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#38a800</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.34_FR01, Vase infralittorale à [Nucula nitidosa] et [Abra nitida]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.34_FR01</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#38a800</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.3, Vase subtidale</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.3</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#99d594</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.361, Vase circalittorale à pennatules et mégafaune fouisseuse</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.361</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#267300</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<Name>A5.37_FR02, Vase circalittorale profonde à [Ninoe armoricana]</Name>
+<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>CODE_EUNIS</ogc:PropertyName><ogc:Literal>A5.37_FR02</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>
+<MinScaleDenominator>25000.000000</MinScaleDenominator>
+<MaxScaleDenominator>10000000.000000</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill">#448970</CssParameter>
+</Fill>
+</PolygonSymbolizer>
+</Rule>
+</FeatureTypeStyle>
+</UserStyle>
+</NamedLayer>
+</StyledLayerDescriptor>
+

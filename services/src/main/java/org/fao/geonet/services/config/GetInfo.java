@@ -22,10 +22,6 @@
 //==============================================================================
 package org.fao.geonet.services.config;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.dbcp.BasicDataSource;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -49,6 +45,10 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 import javax.xml.transform.TransformerFactory;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Retrieve various type of information about the system (eg. Java version, XSLT transformer
@@ -135,6 +135,7 @@ public class GetInfo implements Service {
         try {
             TransformerFactory transFact = TransformerFactoryFactory.getTransformerFactory();
             systemProperties.put("xslt.factory", transFact.getClass().getName());
+            systemProperties.put("system.xslt.factory", System.getProperty("javax.xml.transform.TransformerFactory"));
         } catch (Exception e) {
             systemProperties.put("xslt.factory", "Exception:" + e.getMessage());
         }

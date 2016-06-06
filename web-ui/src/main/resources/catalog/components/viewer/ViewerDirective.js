@@ -24,11 +24,7 @@
 (function() {
   goog.provide('gn_viewer_directive');
 
-  goog.require('gn_gfi_directive');
-
-  var module = angular.module('gn_viewer_directive', [
-    'gn_gfi_directive', 'gfiFilters'
-  ]);
+  var module = angular.module('gn_viewer_directive', []);
 
   /**
    * @ngdoc directive

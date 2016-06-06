@@ -121,10 +121,6 @@ public class XsltFormatter implements FormatterImpl {
             requestParameters.put(key, fparams.webRequest.getParameterMap().get(key));
         }
         Element transformed = Xml.transform(root, fparams.viewFile, requestParameters);
-
-        Element response = new Element("metadata");
-        response.addContent(transformed);
-        return Xml.getString(response);
+        return Xml.getString(transformed);
     }
-
 }

@@ -100,6 +100,7 @@ public class SpatialIndexWriter implements FeatureListener {
     private Map<String, String> errorMessage;
     private Name _idColumn;
     private boolean _autocommit;
+
     /**
      * TODO: javadoc.
      *
@@ -223,67 +224,6 @@ public class SpatialIndexWriter implements FeatureListener {
         }
     }
 
-    /**
-     * Find the spatialindex featureStore or return null
-     */
-    public static FeatureStore<SimpleFeatureType, SimpleFeature> findSpatialIndexStore(DataStore datastore) throws IOException {
-        Log.debug(Geonet.SPATIAL, "Attempting to find FeatureType");
-        for (String name : datastore.getTypeNames()) {
-            Log.debug(Geonet.SPATIAL, "Found FeatureType: " + name);
-
-            if (_SPATIAL_INDEX_TYPENAME.equalsIgnoreCase(name)) {
-                Log.debug(Geonet.SPATIAL, "Found the spatial index FeatureType: " + name);
-                return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(name);
-            }
-        }
-        return attemptToCreateSpatialIndexFeatureStore(datastore);
-    }
-
-    private static FeatureStore<SimpleFeatureType, SimpleFeature> attemptToCreateSpatialIndexFeatureStore(DataStore datastore) throws
-        IOException {
-        SimpleFeatureTypeBuilder typeBuilder = new SimpleFeatureTypeBuilder();
-        typeBuilder.setName(_SPATIAL_INDEX_TYPENAME);
-
-        typeBuilder.setCRS(DefaultGeographicCRS.WGS84);
-        typeBuilder.add("geom", MultiPolygon.class);
-        typeBuilder.add(_IDS_ATTRIBUTE_NAME, String.class);
-
-        SimpleFeatureType type = typeBuilder.buildFeatureType();
-        datastore.createSchema(type);
-        return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(type.getName());
-    }
-
-    public static Name findIdColumn(FeatureSource<SimpleFeatureType, SimpleFeature> featureSource) {
-
-        Log.debug(Geonet.SPATIAL, "Trying to find " + _IDS_ATTRIBUTE_NAME + " attribute in " + featureSource.getSchema());
-        for (AttributeDescriptor descriptor : featureSource.getSchema().getAttributeDescriptors()) {
-            Log.debug(Geonet.SPATIAL, "Found attribute " + descriptor.getLocalName());
-
-            if (_IDS_ATTRIBUTE_NAME.equalsIgnoreCase(descriptor.getLocalName())) {
-                Log.debug(Geonet.SPATIAL, "Found the id attribute of the spatial index: " + descriptor.getLocalName());
-                return descriptor.getName();
-            }
-        }
-
-        if (featureSource.getSchema().getDescriptor("fid") != null) {
-            return featureSource.getSchema().getDescriptor("fid").getName();
-        }
-        return null;
-    }
-
-    public static MultiPolygon toMultiPolygon(Geometry geometry) {
-        if (geometry instanceof Polygon) {
-            Polygon polygon = (Polygon) geometry;
-
-            return geometry.getFactory().createMultiPolygon(
-                new Polygon[]{polygon});
-        } else if (geometry instanceof MultiPolygon) {
-            return (MultiPolygon) geometry;
-        }
-        String message = geometry.getClass() + " cannot be converted to a polygon. Check Metadata";
-        Log.error(Geonet.INDEX_ENGINE, message);
-        throw new IllegalArgumentException(message);
-    }
 
     public Map<String, String> getErrorMessage() {
         return errorMessage;
@@ -504,6 +444,67 @@ public class SpatialIndexWriter implements FeatureListener {
         return null;
     }
 
+    /**
+     * Find the spatialindex featureStore or return null
+     */
+    public static FeatureStore<SimpleFeatureType, SimpleFeature> findSpatialIndexStore(DataStore datastore) throws IOException {
+        Log.debug(Geonet.SPATIAL, "Attempting to find FeatureType");
+        for (String name : datastore.getTypeNames()) {
+            Log.debug(Geonet.SPATIAL, "Found FeatureType: " + name);
+
+            if (_SPATIAL_INDEX_TYPENAME.equalsIgnoreCase(name)) {
+                Log.debug(Geonet.SPATIAL, "Found the spatial index FeatureType: " + name);
+                return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(name);
+            }
+        }
+        return attemptToCreateSpatialIndexFeatureStore(datastore);
+    }
+
+    private static FeatureStore<SimpleFeatureType, SimpleFeature> attemptToCreateSpatialIndexFeatureStore(DataStore datastore) throws
+        IOException {
+        SimpleFeatureTypeBuilder typeBuilder = new SimpleFeatureTypeBuilder();
+        typeBuilder.setName(_SPATIAL_INDEX_TYPENAME);
+        typeBuilder.setCRS(DefaultGeographicCRS.WGS84);
+        typeBuilder.add("geom", MultiPolygon.class);
+        typeBuilder.add(_IDS_ATTRIBUTE_NAME, String.class);
+
+        SimpleFeatureType type = typeBuilder.buildFeatureType();
+        datastore.createSchema(type);
+        return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(type.getTypeName());
+    }
+
+    public static Name findIdColumn(FeatureSource<SimpleFeatureType, SimpleFeature> featureSource) {
+
+        Log.debug(Geonet.SPATIAL, "Trying to find " + _IDS_ATTRIBUTE_NAME + " attribute in " + featureSource.getSchema());
+        for (AttributeDescriptor descriptor : featureSource.getSchema().getAttributeDescriptors()) {
+            Log.debug(Geonet.SPATIAL, "Found attribute " + descriptor.getLocalName());
+
+            if (_IDS_ATTRIBUTE_NAME.equalsIgnoreCase(descriptor.getLocalName())) {
+                Log.debug(Geonet.SPATIAL, "Found the id attribute of the spatial index: " + descriptor.getLocalName());
+                return descriptor.getName();
+            }
+        }
+
+        if (featureSource.getSchema().getDescriptor("fid") != null) {
+            return featureSource.getSchema().getDescriptor("fid").getName();
+        }
+        return null;
+    }
+
+    public static MultiPolygon toMultiPolygon(Geometry geometry) {
+        if (geometry instanceof Polygon) {
+            Polygon polygon = (Polygon) geometry;
+
+            return geometry.getFactory().createMultiPolygon(
+                new Polygon[]{polygon});
+        } else if (geometry instanceof MultiPolygon) {
+            return (MultiPolygon) geometry;
+        }
+        String message = geometry.getClass() + " cannot be converted to a polygon. Check Metadata";
+        Log.error(Geonet.INDEX_ENGINE, message);
+        throw new IllegalArgumentException(message);
+    }
+
     public void changed(FeatureEvent featureEvent) {
         try {
             switch (featureEvent.getType()) {
@@ -528,7 +529,5 @@ public class SpatialIndexWriter implements FeatureListener {
         } catch (CacheException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }

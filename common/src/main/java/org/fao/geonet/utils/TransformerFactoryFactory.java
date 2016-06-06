@@ -40,8 +40,9 @@ import java.util.Properties;
  * @author heikki doeleman
  */
 public class TransformerFactoryFactory {
+    public final static String SYSTEM_PROPERTY_NAME = "javax.xml.transform.TransformerFactory";
+    public static final String TRANSFORMER_PATH = "/WEB-INF/classes/META-INF/services/" + SYSTEM_PROPERTY_NAME;
 
-    private final static String SYSTEM_PROPERTY_NAME = "javax.xml.transform.TransformerFactory";
     private static TransformerFactory factory;
 
     public static void init(String implementationName) {

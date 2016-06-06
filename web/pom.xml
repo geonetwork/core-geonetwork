@@ -486,6 +486,19 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>solr-bridge</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>wfsfeature-harvester</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+
   </dependencies>
 
 

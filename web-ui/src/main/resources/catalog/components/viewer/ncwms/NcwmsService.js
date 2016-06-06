@@ -227,8 +227,7 @@
           item: 'layerDetails',
           layerName: layer.getSource().getParams().LAYERS
         };
-        return gnUrlUtils.append(layer.getSource().getUrls(),
-            gnUrlUtils.toKeyValue(p));
+        return gnUrlUtils.append(layer.get('url'), gnUrlUtils.toKeyValue(p));
       };
 
       /**
