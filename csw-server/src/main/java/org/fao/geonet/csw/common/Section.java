@@ -23,9 +23,9 @@
 
 package org.fao.geonet.csw.common;
 
-public enum Section { 
+public enum Section {
 
-	ServiceIdentification, ServiceProvider, OperationsMetadata, Filter_Capabilities 
+    ServiceIdentification, ServiceProvider, OperationsMetadata, Filter_Capabilities
 
 }
 

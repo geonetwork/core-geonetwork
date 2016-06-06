@@ -28,30 +28,26 @@ import org.apache.lucene.search.BooleanClause;
  * Utilities for the Lucene library.
  */
 public class LuceneUtils {
-	
-	/**
-	 * As of Lucene 1.9, the use of <code>BooleanQuery.add(Query, boolean, boolean)</code> was deprecated 
-	 * and replaced by <code>BooleanQuery.add(Query, BooleanClause.Occur)</code>. This utility method 
-	 * converts the old pair of booleans to the corresponding <code>BooleanClause.Occur</code> value.
-	 * 
-	 * @TODO throw exception if both booleans are true
-	 * 
-	 * @param required
-	 * @param prohibited
-	 * @return BooleanClause.Occur
-	 */
-	public static BooleanClause.Occur convertRequiredAndProhibitedToOccur(boolean required, boolean prohibited) {
-		BooleanClause.Occur occur = null;
-		if(required && !prohibited) {
-			occur = BooleanClause.Occur.MUST;
-		}
-		else if(!required && !prohibited) {
-			occur = BooleanClause.Occur.SHOULD;					
-		}
-		else if(!required && prohibited) {
-			occur = BooleanClause.Occur.MUST_NOT;					
-		}
-		return occur;
-	}
+
+    /**
+     * As of Lucene 1.9, the use of <code>BooleanQuery.add(Query, boolean, boolean)</code> was
+     * deprecated and replaced by <code>BooleanQuery.add(Query, BooleanClause.Occur)</code>. This
+     * utility method converts the old pair of booleans to the corresponding
+     * <code>BooleanClause.Occur</code> value.
+     *
+     * @return BooleanClause.Occur
+     * @TODO throw exception if both booleans are true
+     */
+    public static BooleanClause.Occur convertRequiredAndProhibitedToOccur(boolean required, boolean prohibited) {
+        BooleanClause.Occur occur = null;
+        if (required && !prohibited) {
+            occur = BooleanClause.Occur.MUST;
+        } else if (!required && !prohibited) {
+            occur = BooleanClause.Occur.SHOULD;
+        } else if (!required && prohibited) {
+            occur = BooleanClause.Occur.MUST_NOT;
+        }
+        return occur;
+    }
 
 }

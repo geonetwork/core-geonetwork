@@ -31,112 +31,99 @@ import org.jdom.Element;
 
 //=============================================================================
 
-class Search
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+class Search {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	private Search() {}
+    public String from;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    public String until;
 
-	public Search(Element search) throws BadInputEx
-	{
-		from       = Util.getParam(search, "from",       "");
-		until      = Util.getParam(search, "until",      "");
-		set        = Util.getParam(search, "set",        "");
-		prefix     = Util.getParam(search, "prefix",     "oai_dc");
-		stylesheet = Util.getParam(search, "stylesheet", "");
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    public String set;
 
-		//--- check from parameter
+    //---------------------------------------------------------------------------
+    public String prefix;
 
-		ISODate fromDate = null;
-		ISODate untilDate= null;
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    public String stylesheet;
+    private Search() {
+    }
+    public Search(Element search) throws BadInputEx {
+        from = Util.getParam(search, "from", "");
+        until = Util.getParam(search, "until", "");
+        set = Util.getParam(search, "set", "");
+        prefix = Util.getParam(search, "prefix", "oai_dc");
+        stylesheet = Util.getParam(search, "stylesheet", "");
 
-		try
-		{
-			if (!from.equals(""))
-			{
-				fromDate = new ISODate(from);
-				from     = fromDate.getDateAsString();
-			}
+        //--- check from parameter
 
-		}
-		catch(Exception e)
-		{
-			throw new BadParameterEx("from", from);
-		}
+        ISODate fromDate = null;
+        ISODate untilDate = null;
 
-		//--- check until parameter
+        try {
+            if (!from.equals("")) {
+                fromDate = new ISODate(from);
+                from = fromDate.getDateAsString();
+            }
 
-		try
-		{
-			if (!until.equals(""))
-			{
-				untilDate = new ISODate(until);
-				until     = untilDate.getDateAsString();
-			}
-		}
-		catch(Exception e)
-		{
-			throw new BadParameterEx("until", until);
-		}
+        } catch (Exception e) {
+            throw new BadParameterEx("from", from);
+        }
 
-		//--- check from <= until
+        //--- check until parameter
 
-		if (fromDate != null && untilDate != null)
-			if (fromDate.timeDifferenceInSeconds(untilDate) > 0)
-				throw new BadParameterEx("from greater than until", from +">"+ until);
-	}
+        try {
+            if (!until.equals("")) {
+                untilDate = new ISODate(until);
+                until = untilDate.getDateAsString();
+            }
+        } catch (Exception e) {
+            throw new BadParameterEx("until", until);
+        }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+        //--- check from <= until
 
-	public Search copy()
-	{
-		Search s = new Search();
+        if (fromDate != null && untilDate != null)
+            if (fromDate.timeDifferenceInSeconds(untilDate) > 0)
+                throw new BadParameterEx("from greater than until", from + ">" + until);
+    }
 
-		s.from       = from;
-		s.until      = until;
-		s.set        = set;
-		s.prefix     = prefix;
-		s.stylesheet = stylesheet;
+    public static Search createEmptySearch() throws BadInputEx {
+        Search s = new Search();
 
-		return s;
-	}
+        s.from = "";
+        s.until = "";
+        s.set = "";
+        s.prefix = "oai_dc";
+        s.stylesheet = "";
 
-	//---------------------------------------------------------------------------
+        return s;
+    }
 
-	public static Search createEmptySearch() throws BadInputEx
-	{
-		Search s = new Search();
+    public Search copy() {
+        Search s = new Search();
 
-		s.from       = "";
-		s.until      = "";
-		s.set        = "";
-		s.prefix     = "oai_dc";
-		s.stylesheet = "";
+        s.from = from;
+        s.until = until;
+        s.set = set;
+        s.prefix = prefix;
+        s.stylesheet = stylesheet;
 
-		return s;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String from;
-	public String until;
-	public String set;
-	public String prefix;
-	public String stylesheet;
+        return s;
+    }
 }
 
 //=============================================================================

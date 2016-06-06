@@ -24,6 +24,7 @@ package org.fao.geonet.kernel.search;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 
 import org.fao.geonet.GeonetContext;
@@ -46,44 +47,43 @@ import java.util.List;
 
 //==============================================================================
 
-class UnusedSearcher extends MetaSearcher
-{
-	private ArrayList<String> alResult;
-	private Element   elSummary;
+class UnusedSearcher extends MetaSearcher {
+    private ArrayList<String> alResult;
+    private Element elSummary;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public UnusedSearcher() {}
+    public UnusedSearcher() {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- MetaSearcher Interface
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- MetaSearcher Interface
+    //---
+    //--------------------------------------------------------------------------
 
-	public void search(ServiceContext context, Element request,
-							 ServiceConfig config) throws Exception
-	{
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getBean(SettingManager.class);
+    public void search(ServiceContext context, Element request,
+                       ServiceConfig config) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
 
-		String siteId = sm.getSiteId();
+        String siteId = sm.getSiteId();
 
-		alResult = new ArrayList<String>();
+        alResult = new ArrayList<String>();
 
-		//--- get maximun delta in minutes
+        //--- get maximun delta in minutes
 
-		int maxDiff = Integer.parseInt(Util.getParam(request, "maxDiff", "5"));
+        int maxDiff = Integer.parseInt(Util.getParam(request, "maxDiff", "5"));
 
-		context.info("UnusedSearcher : using maxDiff="+maxDiff);
+        context.info("UnusedSearcher : using maxDiff=" + maxDiff);
 
-		//--- proper search
+        //--- proper search
         final Specifications<Metadata> spec = Specifications.where(MetadataSpecs.isType(MetadataType.TEMPLATE)).and(MetadataSpecs.isHarvested(false))
-                .and(MetadataSpecs.hasSource(siteId));
+            .and(MetadataSpecs.hasSource(siteId));
 
         final List<Metadata> list = context.getBean(MetadataRepository.class).findAll(spec);
 
@@ -100,101 +100,97 @@ class UnusedSearcher extends MetaSearcher
             }
         }
 
-		//--- build summary
+        //--- build summary
 
-		makeSummary();
+        makeSummary();
 
-		initSearchRange(context);
-	}
+        initSearchRange(context);
+    }
 
-	//--------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------
 
-	public List<Document> presentDocuments(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
-		throw new UnsupportedOperationException("Not supported by Unused searcher");
-	}
+    public List<Document> presentDocuments(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
+        throw new UnsupportedOperationException("Not supported by Unused searcher");
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public Element present(ServiceContext srvContext, Element request,
-								  ServiceConfig config) throws Exception
-	{
-		updateSearchRange(request);
+    public Element present(ServiceContext srvContext, Element request,
+                           ServiceConfig config) throws Exception {
+        updateSearchRange(request);
 
-		GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+        GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		//--- build response
+        //--- build response
 
-		Element response =  new Element("response");
-		response.setAttribute("from",  getFrom()+"");
-		response.setAttribute("to",    getTo()+"");
+        Element response = new Element("response");
+        response.setAttribute("from", getFrom() + "");
+        response.setAttribute("to", getTo() + "");
 
-		response.addContent((Element) elSummary.clone());
+        response.addContent((Element) elSummary.clone());
 
-		if (getTo() > 0) {
-			for(int i = getFrom() -1; i < getTo(); i++) {
-				String  id = alResult.get(i);
+        if (getTo() > 0) {
+            for (int i = getFrom() - 1; i < getTo(); i++) {
+                String id = alResult.get(i);
                 boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
                 Element md = gc.getBean(DataManager.class).getMetadata(srvContext, id, forEditing, withValidationErrors, keepXlinkAttributes);
-				response.addContent(md);
-			}
-		}
+                response.addContent(md);
+            }
+        }
 
-		return response;
-	}
+        return response;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public int getSize()
-	{
-		return alResult.size();
-	}
+    public int getSize() {
+        return alResult.size();
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public Element getSummary() throws Exception
-	{
-		Element response =  new Element("response");
-		response.addContent((Element) elSummary.clone());
+    public Element getSummary() throws Exception {
+        Element response = new Element("response");
+        response.addContent((Element) elSummary.clone());
 
-		return response;
-	}
+        return response;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public void close() {}
+    public void close() {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //--------------------------------------------------------------------------
 
-	private boolean hasInternetGroup(ServiceContext context, int id) throws SQLException
-	{
-	    OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+    private boolean hasInternetGroup(ServiceContext context, int id) throws SQLException {
+        OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
 
         final Specification<OperationAllowed> hasGroupId = OperationAllowedSpecs.hasGroupId(ReservedGroup.all.getId());
         final Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataId(id);
         final Specifications<OperationAllowed> spec = Specifications.where(hasGroupId).and(hasMetadataId);
         List<OperationAllowed> opsAllowed = operationAllowedRepository.findAll(spec);
-		return !opsAllowed.isEmpty();
-	}
+        return !opsAllowed.isEmpty();
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private void makeSummary() throws Exception
-	{
-		elSummary = new Element("summary");
+    private void makeSummary() throws Exception {
+        elSummary = new Element("summary");
 
-		elSummary.setAttribute("count", getSize()+"");
-		elSummary.setAttribute("type", "local");
+        elSummary.setAttribute("count", getSize() + "");
+        elSummary.setAttribute("type", "local");
 
-		Element elKeywords = new Element("keywords");
-		elSummary.addContent(elKeywords);
+        Element elKeywords = new Element("keywords");
+        elSummary.addContent(elKeywords);
 
-		Element elCategories = new Element("categories");
-		elSummary.addContent(elCategories);
-	}
+        Element elCategories = new Element("categories");
+        elSummary.addContent(elCategories);
+    }
 }
 
 //==============================================================================

@@ -24,7 +24,9 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.collect.Maps;
+
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.GeonetContext;
@@ -56,6 +58,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
+    private static final String OWNER_ID = "1234";
+    private static final String XPATH_WITHHELD = "*//*[@gco:nilReason = 'withheld']";
+    private static final String XPATH_DOWNLOAD = "*//gmd:onLine[*/gmd:protocol/gco:CharacterString = 'WWW:DOWNLOAD-1.0-http--download']";
+    private static final String XPATH_DYNAMIC = "*//gmd:onLine[starts-with(*/gmd:protocol/gco:CharacterString, 'OGC:WMS')]";
+    private static final List<Namespace> XML_SELECT_NAMESPACE =
+        Arrays.asList(
+            Geonet.Namespaces.GCO,
+            Geonet.Namespaces.GMD);
+    final Metadata metadata = new Metadata();
     @Autowired
     XmlSerializer _xmlSerializer;
     @Autowired
@@ -64,31 +75,21 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     MetadataRepository _metadataRepo;
     @Autowired
     ConfigurableApplicationContext applicationContext;
-
-    private static final String OWNER_ID = "1234";
-    private static final String XPATH_WITHHELD = "*//*[@gco:nilReason = 'withheld']";
-    private static final String XPATH_DOWNLOAD = "*//gmd:onLine[*/gmd:protocol/gco:CharacterString = 'WWW:DOWNLOAD-1.0-http--download']";
-    private static final String XPATH_DYNAMIC = "*//gmd:onLine[starts-with(*/gmd:protocol/gco:CharacterString, 'OGC:WMS')]";
-    private static final List<Namespace> XML_SELECT_NAMESPACE =
-            Arrays.asList(
-                    Geonet.Namespaces.GCO,
-                    Geonet.Namespaces.GMD);
-
-    final Metadata metadata = new Metadata();
+    private int _mdId;
 
     {
         InputStream in = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml");
         try {
             String data = IOUtils.toString(in);
             metadata.setData(data)
-                    .setUuid("uuid");
+                .setUuid("uuid");
 
             metadata.getDataInfo()
-                    .setSchemaId("iso19139");
+                .setSchemaId("iso19139");
 
             metadata.getSourceInfo()
-                    .setSourceId("sourceid")
-                    .setOwner(1);
+                .setSourceId("sourceid")
+                .setOwner(1);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -96,8 +97,6 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
             IOUtils.closeQuietly(in);
         }
     }
-
-    private int _mdId;
 
     public void setSchemaFilters(boolean withHeld, boolean keepMarkedElement) {
         MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
@@ -107,17 +106,17 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
                 Element mark = new Element("keepMarkedElement");
                 mark.setAttribute("nilReason", "withheld", Geonet.Namespaces.GCO);
                 filters.put("editing",
-                        Pair.read(XPATH_WITHHELD, mark));
+                    Pair.read(XPATH_WITHHELD, mark));
             } else {
                 filters.put("editing",
-                        Pair.<String, Element>read(XPATH_WITHHELD, null));
+                    Pair.<String, Element>read(XPATH_WITHHELD, null));
             }
         }
 
         filters.put("download",
-                Pair.<String, Element>read(XPATH_DOWNLOAD, null));
+            Pair.<String, Element>read(XPATH_DOWNLOAD, null));
         filters.put("dynamic",
-                Pair.<String, Element>read(XPATH_DYNAMIC, null));
+            Pair.<String, Element>read(XPATH_DYNAMIC, null));
 
         mds.setOperationFilters(filters);
     }
@@ -208,11 +207,11 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
         }
 
         when(accessManager.canEdit(any(ServiceContext.class), anyString()))
-                .thenReturn(canEdit);
+            .thenReturn(canEdit);
         when(accessManager.canDownload(any(ServiceContext.class), anyString()))
-                .thenReturn(canDownload);
+            .thenReturn(canDownload);
         when(accessManager.canDynamic(any(ServiceContext.class), anyString()))
-                .thenReturn(canDynamic);
+            .thenReturn(canDynamic);
 
         GeonetContext gc = mock(GeonetContext.class);
         when(gc.getBean(AccessManager.class)).thenReturn(accessManager);
@@ -248,13 +247,13 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
 
         Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false);
         List<?> resolutionElem = Xml.selectNodes(loadedMetadata,
-                "*//gmd:MD_Resolution",
-                XML_SELECT_NAMESPACE);
+            "*//gmd:MD_Resolution",
+            XML_SELECT_NAMESPACE);
         assertEquals(numberMdResolution, resolutionElem.size());
 
         @SuppressWarnings("unchecked")
         List<Element> withheld = (List<Element>) Xml.selectNodes(loadedMetadata,
-                XPATH_WITHHELD, Arrays.asList(Geonet.Namespaces.GCO));
+            XPATH_WITHHELD, Arrays.asList(Geonet.Namespaces.GCO));
         assertEquals(1, withheld.size());
         assertEquals(numberAttributes, withheld.get(0).getAttributes().size());
         assertEquals("withheld", withheld.get(0).getAttributeValue("nilReason", Geonet.Namespaces.GCO));
@@ -277,8 +276,8 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
         Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false);
         @SuppressWarnings("unchecked")
         List<Element> withheld = (List<Element>) Xml.selectNodes(loadedMetadata,
-                XPATH_DOWNLOAD,
-                XML_SELECT_NAMESPACE);
+            XPATH_DOWNLOAD,
+            XML_SELECT_NAMESPACE);
         assertEquals(numberDownload, withheld.size());
     }
 
@@ -287,8 +286,8 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
         Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false);
         @SuppressWarnings("unchecked")
         List<Element> withheld = (List<Element>) Xml.selectNodes(loadedMetadata,
-                XPATH_DYNAMIC,
-                XML_SELECT_NAMESPACE);
+            XPATH_DYNAMIC,
+            XML_SELECT_NAMESPACE);
         assertEquals(numberDownload, withheld.size());
     }
 }

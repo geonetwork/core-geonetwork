@@ -24,8 +24,11 @@
 package org.fao.geonet.services.region;
 
 import com.google.common.collect.Lists;
+
 import com.vividsolutions.jts.geom.Geometry;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
@@ -51,7 +54,7 @@ import static org.junit.Assert.assertNull;
 public class MetadataRegionDAOTest extends AbstractServiceIntegrationTest {
 
     public static final ArrayList<Namespace> NAMESPACES = Lists.newArrayList(ISO19139Namespaces.GMD, Geonet.Namespaces.GML,
-            Geonet.Namespaces.GEONET);
+        Geonet.Namespaces.GEONET);
     private int metadataId;
     @Autowired
     private DataManager dataManager;
@@ -69,25 +72,25 @@ public class MetadataRegionDAOTest extends AbstractServiceIntegrationTest {
         final Element bbox = Xml.selectElement(xml, "*//gmd:EX_GeographicBoundingBox", NAMESPACES);
         final int i = bbox.getParentElement().indexOf(bbox);
         String polygonXmlString = "<gmd:EX_BoundingPolygon xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:xsi=\"http://www.w3"
-                                  + ".org/2001/XMLSchema-instance\" xmlns:gml=\"http://www"
-                                  + ".opengis.net/gml\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" >\n"
-                           + "<gmd:extentTypeCode>\n"
-                           + "<gco:Boolean>1</gco:Boolean>\n"
-                           + "</gmd:extentTypeCode>\n"
-                           + "<gmd:polygon>\n"
-                           + "<gml:MultiSurface gml:id=\"N65ca5245da064e9bbeecc4c99f0eb54f\">\n"
-                           + "<gml:surfaceMember>\n"
-                           + "<gml:Polygon gml:id=\"N65ca5245da064e9bbeecc4c99f0eb54f.1\">\n"
-                           + "<gml:exterior>\n"
-                           + "<gml:LinearRing>\n"
-                           + "<gml:posList>5.5 45.5 5.5 48.0 10.5 48.0 10.5 45.5 5.5 45.5</gml:posList>\n"
-                           + "</gml:LinearRing>\n"
-                           + "</gml:exterior>\n"
-                           + "</gml:Polygon>\n"
-                           + "</gml:surfaceMember>\n"
-                           + "</gml:MultiSurface>\n"
-                           + "</gmd:polygon>\n"
-                           + "</gmd:EX_BoundingPolygon>";
+            + ".org/2001/XMLSchema-instance\" xmlns:gml=\"http://www"
+            + ".opengis.net/gml\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" >\n"
+            + "<gmd:extentTypeCode>\n"
+            + "<gco:Boolean>1</gco:Boolean>\n"
+            + "</gmd:extentTypeCode>\n"
+            + "<gmd:polygon>\n"
+            + "<gml:MultiSurface gml:id=\"N65ca5245da064e9bbeecc4c99f0eb54f\">\n"
+            + "<gml:surfaceMember>\n"
+            + "<gml:Polygon gml:id=\"N65ca5245da064e9bbeecc4c99f0eb54f.1\">\n"
+            + "<gml:exterior>\n"
+            + "<gml:LinearRing>\n"
+            + "<gml:posList>5.5 45.5 5.5 48.0 10.5 48.0 10.5 45.5 5.5 45.5</gml:posList>\n"
+            + "</gml:LinearRing>\n"
+            + "</gml:exterior>\n"
+            + "</gml:Polygon>\n"
+            + "</gml:surfaceMember>\n"
+            + "</gml:MultiSurface>\n"
+            + "</gmd:polygon>\n"
+            + "</gmd:EX_BoundingPolygon>";
         bbox.getParentElement().addContent(i, Xml.loadString(polygonXmlString, false));
         bbox.detach();
 

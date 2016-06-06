@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -42,59 +43,58 @@ import java.util.List;
 
 //=============================================================================
 
-/** Given a metadata id returns all associated categories. Called by the
-  * metadata.category service
-  */
+/**
+ * Given a metadata id returns all associated categories. Called by the metadata.category service
+ */
 
-public class GetCategories implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class GetCategories implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		AccessManager am = context.getBean(AccessManager.class);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        AccessManager am = context.getBean(AccessManager.class);
 
-		String id = Utils.getIdentifierFromParameters(params, context);
+        String id = Utils.getIdentifierFromParameters(params, context);
 
-		//-----------------------------------------------------------------------
-		//--- check access
-		int iLocalId = Integer.parseInt(id);
+        //-----------------------------------------------------------------------
+        //--- check access
+        int iLocalId = Integer.parseInt(id);
 
         final Metadata metadata = context.getBean(MetadataRepository.class).findOne(iLocalId);
         if (metadata == null) {
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+            throw new IllegalArgumentException("Metadata not found --> " + id);
         }
 
-		Element isOwner = new Element("owner");
-		if (am.isOwner(context, id)) {
-			isOwner.setText("true");
+        Element isOwner = new Element("owner");
+        if (am.isOwner(context, id)) {
+            isOwner.setText("true");
         } else {
-			isOwner.setText("false");
+            isOwner.setText("false");
         }
 
-		//-----------------------------------------------------------------------
-		//--- retrieve metadata categories
+        //-----------------------------------------------------------------------
+        //--- retrieve metadata categories
 
-		HashSet<String> hsMetadataCat = new HashSet<String>();
+        HashSet<String> hsMetadataCat = new HashSet<String>();
 
-		for (MetadataCategory cat : metadata.getCategories()) {
-			hsMetadataCat.add(cat.getId() + "");
-		}
+        for (MetadataCategory cat : metadata.getCategories()) {
+            hsMetadataCat.add(cat.getId() + "");
+        }
 
-		//-----------------------------------------------------------------------
-		//--- retrieve groups operations
+        //-----------------------------------------------------------------------
+        //--- retrieve groups operations
         final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
 
         Element elCateg = categoryRepository.findAllAsXml();
@@ -103,24 +103,24 @@ public class GetCategories implements Service
         List<Element> list = elCateg.getChildren();
         for (Element el : list) {
 
-			el.setName(Geonet.Elem.CATEGORY);
+            el.setName(Geonet.Elem.CATEGORY);
 
-			//--- get all operations that this group can do on given metadata
+            //--- get all operations that this group can do on given metadata
 
-			if (hsMetadataCat.contains(el.getChildText("id")))
-				el.addContent(new Element("on"));
-		}
+            if (hsMetadataCat.contains(el.getChildText("id")))
+                el.addContent(new Element("on"));
+        }
 
-		//-----------------------------------------------------------------------
-		//--- put all together
+        //-----------------------------------------------------------------------
+        //--- put all together
 
-		Element elRes = new Element(Jeeves.Elem.RESPONSE)
-										.addContent(new Element(Geonet.Elem.ID).setText(id))
-										.addContent(elCateg)
-										.addContent(isOwner);
+        Element elRes = new Element(Jeeves.Elem.RESPONSE)
+            .addContent(new Element(Geonet.Elem.ID).setText(id))
+            .addContent(elCateg)
+            .addContent(isOwner);
 
-		return elRes;
-	}
+        return elRes;
+    }
 }
 
 //=============================================================================

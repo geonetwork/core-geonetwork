@@ -48,7 +48,6 @@ public class ZipUtil {
      *
      * @param zipFile the zip file to extract
      * @param toDir   the target directory
-     * @throws java.io.IOException
      */
     public static void extract(FileSystem zipFile, Path toDir) throws IOException {
         Files.createDirectories(toDir);
@@ -66,7 +65,8 @@ public class ZipUtil {
     }
 
     /**
-     * FileSystem must be closed when done.  This method should always be called in a try (resource) {} block
+     * FileSystem must be closed when done.  This method should always be called in a try (resource)
+     * {} block
      */
     public static FileSystem openZipFs(Path path) throws IOException, URISyntaxException {
         try {

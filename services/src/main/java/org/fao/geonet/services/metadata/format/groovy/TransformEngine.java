@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
 import groovy.util.slurpersupport.GPathResult;
 
 import java.io.IOException;

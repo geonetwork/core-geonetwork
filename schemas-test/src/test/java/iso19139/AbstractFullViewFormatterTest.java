@@ -24,7 +24,9 @@
 package iso19139;
 
 import com.google.common.collect.Lists;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.guiservices.metadata.GetRelated;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
@@ -126,14 +128,15 @@ public abstract class AbstractFullViewFormatterTest extends AbstractFormatterTes
         private FormatType formatType;
         private Functions functions;
         private String view;
-        private String requestLanguage = "eng";;
+        private String requestLanguage = "eng";
+        ;
 
         public Format(FormatType formatType) throws Exception {
             this.formatType = formatType;
             GetRelated related = Mockito.mock(GetRelated.class);
             Element relatedXml = Xml.loadFile(AbstractFullViewFormatterTest.class.getResource("relations.xml"));
             Mockito.when(related.getRelated(Mockito.<ServiceContext>any(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString(),
-                    Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(relatedXml);
+                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(relatedXml);
             _applicationContext.getBeanFactory().registerSingleton("getRelated", related);
 
 
@@ -160,7 +163,7 @@ public abstract class AbstractFullViewFormatterTest extends AbstractFormatterTes
 
 //            formatService.exec("eng", FormatType.html.name(), "" + id, null, formatterId, "true", false, request, response);
             formatService.exec(getRequestLanguage(), formatType.name(), "" + id, null, formatterId, "true", false, _100,
-                    new ServletWebRequest(request, response));
+                new ServletWebRequest(request, response));
             view = response.getContentAsString();
 //            Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
 

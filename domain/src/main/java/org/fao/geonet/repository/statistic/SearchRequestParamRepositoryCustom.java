@@ -30,14 +30,13 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.List;
 
 /**
  * Custom query methods for querying the SearchRequestParam enities.
  * <p/>
- * User: Jesse
- * Date: 9/29/13
- * Time: 7:39 PM
+ * User: Jesse Date: 9/29/13 Time: 7:39 PM
  */
 public interface SearchRequestParamRepositoryCustom {
     /**

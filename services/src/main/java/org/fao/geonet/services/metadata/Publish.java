@@ -28,9 +28,11 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
@@ -57,6 +59,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -66,8 +69,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
 
 /**
- * Service to publish and unpublish one or more metadata.  This service only modifies guest, all and intranet privileges all others
- * are left unmodified.
+ * Service to publish and unpublish one or more metadata.  This service only modifies guest, all and
+ * intranet privileges all others are left unmodified.
  *
  * @author Jesse on 1/16/2015.
  */
@@ -79,13 +82,13 @@ public class Publish {
 
 
     @RequestMapping(value = "/{lang}/md.publish", produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+        MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseBody
     public PublishReport publish(
-            @PathVariable String lang,
-            HttpServletRequest request,
-            @RequestParam(value = "ids", required = false) String commaSeparatedIds,
-            @RequestParam(value = "skipIntranet", defaultValue = "false") boolean skipIntranet) throws Exception {
+        @PathVariable String lang,
+        HttpServletRequest request,
+        @RequestParam(value = "ids", required = false) String commaSeparatedIds,
+        @RequestParam(value = "skipIntranet", defaultValue = "false") boolean skipIntranet) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
         final ServiceContext serviceContext = serviceManager.createServiceContext("md.publish", lang, request);
@@ -95,13 +98,13 @@ public class Publish {
 
 
     @RequestMapping(value = "/{lang}/md.unpublish", produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+        MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseBody
     public PublishReport unpublish(
-            @PathVariable String lang,
-            HttpServletRequest request,
-            @RequestParam(value = "ids", required = false) String commaSeparatedIds,
-            @RequestParam(value = "skipIntranet", defaultValue = "false") boolean skipIntranet) throws Exception {
+        @PathVariable String lang,
+        HttpServletRequest request,
+        @RequestParam(value = "ids", required = false) String commaSeparatedIds,
+        @RequestParam(value = "skipIntranet", defaultValue = "false") boolean skipIntranet) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
         final ServiceContext serviceContext = serviceManager.createServiceContext("md.publish", lang, request);
@@ -110,14 +113,15 @@ public class Publish {
     }
 
     /**
-     * publish or unpublish the metadata identified by the commaSeparatedIds or the selection if ids is empty.
+     * publish or unpublish the metadata identified by the commaSeparatedIds or the selection if ids
+     * is empty.
      *
      * @param commaSeparatedIds the ids of the metadata to publish/unpublish.
-     * @param publish if true the metadata will be published otherwise unpublished
-     * @param skipIntranet if true then metadata only the all group will be affected
+     * @param publish           if true the metadata will be published otherwise unpublished
+     * @param skipIntranet      if true then metadata only the all group will be affected
      */
     private PublishReport exec(String commaSeparatedIds, boolean publish, boolean skipIntranet, ServiceContext serviceContext) throws
-            Exception {
+        Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataManager = appContext.getBean(DataManager.class);
         OperationAllowedRepository operationAllowedRepository = appContext.getBean(OperationAllowedRepository.class);
@@ -135,7 +139,7 @@ public class Publish {
 
         final Specification<OperationAllowed> hasGroupIdIn = OperationAllowedSpecs.hasGroupIdIn(groupIds);
         Collection<Integer> operationIds = Lists.newArrayList(ReservedOperation.download.getId(), ReservedOperation.view.getId(),
-                ReservedOperation.dynamic.getId(), ReservedOperation.featured.getId(), ReservedOperation.notify.getId());
+            ReservedOperation.dynamic.getId(), ReservedOperation.featured.getId(), ReservedOperation.notify.getId());
         final Specification<OperationAllowed> hasOperationIdIn = OperationAllowedSpecs.hasOperationIdIn(operationIds);
         while (iter.hasNext()) {
             String nextId = iter.next();
@@ -145,7 +149,7 @@ public class Publish {
 
             int mdId = Integer.parseInt(nextId);
             final Specifications<OperationAllowed> allOpsSpec = Specifications.where(hasMetadataId(nextId)).and
-                    (hasGroupIdIn).and(hasOperationIdIn);
+                (hasGroupIdIn).and(hasOperationIdIn);
 
             List<OperationAllowed> operationAllowed = operationAllowedRepository.findAll(allOpsSpec);
             if (publish) {
@@ -231,7 +235,7 @@ public class Publish {
                            List<OperationAllowed> operationAllowed) throws Exception {
         OperationAllowedRepository operationAllowedRepository = serviceContext.getBean(OperationAllowedRepository.class);
         long count = operationAllowedRepository.count(Specifications.where(hasMetadataId(mdId)).and
-                (OperationAllowedSpecs.isPublic(ReservedOperation.view)));
+            (OperationAllowedSpecs.isPublic(ReservedOperation.view)));
         if (count == 1) {
             report.incUnmodified();
         } else {
@@ -248,7 +252,7 @@ public class Publish {
     }
 
     private boolean updateOps(ServiceContext serviceContext, boolean publish, ArrayList<Integer> groupIds, Collection<Integer>
-            operationIds, int metadataId) throws Exception {
+        operationIds, int metadataId) throws Exception {
         final DataManager dataManager = serviceContext.getBean(DataManager.class);
 
         for (Integer groupId : groupIds) {
@@ -309,11 +313,11 @@ public class Publish {
         @Override
         public String toString() {
             return "PublishReport{" +
-                   "published=" + published +
-                   ", unpublished=" + unpublished +
-                   ", unmodified=" + unmodified +
-                   ", disallowed=" + disallowed +
-                   '}';
+                "published=" + published +
+                ", unpublished=" + unpublished +
+                ", unmodified=" + unmodified +
+                ", disallowed=" + disallowed +
+                '}';
         }
     }
 }

@@ -23,8 +23,8 @@
   -->
 
 <geonet>
-    <services package="org.fao.geonet">
+  <services package="org.fao.geonet">
 
 
-    </services>
+  </services>
 </geonet>

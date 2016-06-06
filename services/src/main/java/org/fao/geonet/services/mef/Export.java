@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
@@ -48,59 +49,52 @@ import java.nio.file.Path;
 import java.util.*;
 
 /**
- * Export one or more metadata records in Metadata Exchange Format (MEF) file
- * format. See http ://trac.osgeo.org/geonetwork/wiki/MEF for more details.
+ * Export one or more metadata records in Metadata Exchange Format (MEF) file format. See http
+ * ://trac.osgeo.org/geonetwork/wiki/MEF for more details.
  */
 public class Export implements Service {
-	private Path stylePath;
-	private ServiceConfig _config;
+    private Path stylePath;
+    private ServiceConfig _config;
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-		this.stylePath = appPath.resolve(Geonet.Path.SCHEMAS);
-		this._config = params;
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        this.stylePath = appPath.resolve(Geonet.Path.SCHEMAS);
+        this._config = params;
+    }
 
-	/**
-	 * Service to do a MEF export.
-	 *
-	 * @param params
-	 *            Service input parameters:
-	 *            <ul>
-	 *            <li>uuid: Required for MEF1. Optional for MEF2, Current
-	 *            selection is used</li>
-	 *            <li>format: One of {@link Format}</li>
-	 *            <li>skipUuid: Does not add uuid and site information for
-	 *            information file.
-	 *            <li>version: If {@link Version} parameter not set, return MEF
-	 *            version 1 file (ie. need an UUID parameter).</li>
-	 *            <li>relation: export related metadata or not. True by default.
-	 *            Related metadata is : child metadata (Using parentUuid search
-	 *            field), service metadata (Using operatesOn search field),
-	 *            related metadata (Using xml.relation.get service).</li>
-	 *            </ul>
-	 */
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
+    /**
+     * Service to do a MEF export.
+     *
+     * @param params Service input parameters: <ul> <li>uuid: Required for MEF1. Optional for MEF2,
+     *               Current selection is used</li> <li>format: One of {@link Format}</li>
+     *               <li>skipUuid: Does not add uuid and site information for information file.
+     *               <li>version: If {@link Version} parameter not set, return MEF version 1 file
+     *               (ie. need an UUID parameter).</li> <li>relation: export related metadata or
+     *               not. True by default. Related metadata is : child metadata (Using parentUuid
+     *               search field), service metadata (Using operatesOn search field), related
+     *               metadata (Using xml.relation.get service).</li> </ul>
+     */
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
 
-		// Get parameters
-		Path file = null;
-		String uuid = Util.getParam(params, "uuid", null);
-		String format = Util.getParam(params, "format", "full");
-		String version = Util.getParam(params, "version", null);
-		boolean skipUUID = Boolean.parseBoolean(Util.getParam(params, "skipUuid", "false"));
+        // Get parameters
+        Path file = null;
+        String uuid = Util.getParam(params, "uuid", null);
+        String format = Util.getParam(params, "format", "full");
+        String version = Util.getParam(params, "version", null);
+        boolean skipUUID = Boolean.parseBoolean(Util.getParam(params, "skipUuid", "false"));
         boolean resolveXlink = Boolean.parseBoolean(Util.getParam(params, "resolveXlink", "true"));
         boolean removeXlinkAttribute = Boolean.parseBoolean(Util.getParam(params, "removeXlinkAttribute", "true"));
-		String relatedMetadataRecord = Util
-				.getParam(params, "relation", "true");
+        String relatedMetadataRecord = Util
+            .getParam(params, "relation", "true");
 
-		UserSession session = context.getUserSession();
+        UserSession session = context.getUserSession();
 
-		Log.info(Geonet.MEF, "Create export task for selected metadata(s).");
-		SelectionManager selectionManger = SelectionManager.getManager(session);
-		Set<String> uuids = selectionManger
-				.getSelection(SelectionManager.SELECTION_METADATA);
-		Set<String> uuidsBeforeExp = Collections
-				.synchronizedSet(new HashSet<String>(0));
+        Log.info(Geonet.MEF, "Create export task for selected metadata(s).");
+        SelectionManager selectionManger = SelectionManager.getManager(session);
+        Set<String> uuids = selectionManger
+            .getSelection(SelectionManager.SELECTION_METADATA);
+        Set<String> uuidsBeforeExp = Collections
+            .synchronizedSet(new HashSet<String>(0));
         Log.info(Geonet.MEF, "Current record(s) in selection: " + uuids.size());
         uuidsBeforeExp.addAll(uuids);
 
@@ -109,10 +103,10 @@ public class Export implements Service {
             SelectionManager.getManager(session).close(SelectionManager.SELECTION_METADATA);
 
             SelectionManager.getManager(session).addSelection(
-                    SelectionManager.SELECTION_METADATA, uuid);
+                SelectionManager.SELECTION_METADATA, uuid);
 
             uuids = selectionManger
-                    .getSelection(SelectionManager.SELECTION_METADATA);
+                .getSelection(SelectionManager.SELECTION_METADATA);
         }
 
 
@@ -121,100 +115,95 @@ public class Export implements Service {
             SelectionManager.getManager(session).close(SelectionManager.SELECTION_METADATA);
 
             SelectionManager.getManager(session).addSelection(
-                    SelectionManager.SELECTION_METADATA, uuid);
+                SelectionManager.SELECTION_METADATA, uuid);
 
             uuids = selectionManger
-                    .getSelection(SelectionManager.SELECTION_METADATA);
+                .getSelection(SelectionManager.SELECTION_METADATA);
         }
 
-		// MEF version 1 only support one metadata record by file.
-		// Uuid parameter MUST be set and add to selection manager before
-		// export.
-		if (version == null) {
-			file = MEFLib.doExport(context, uuid, format, skipUUID, resolveXlink, removeXlinkAttribute);
-		} else {
-			// MEF version 2 support multiple metadata record by file.
+        // MEF version 1 only support one metadata record by file.
+        // Uuid parameter MUST be set and add to selection manager before
+        // export.
+        if (version == null) {
+            file = MEFLib.doExport(context, uuid, format, skipUUID, resolveXlink, removeXlinkAttribute);
+        } else {
+            // MEF version 2 support multiple metadata record by file.
 
-			if (relatedMetadataRecord.equals("true")) {
-				// Adding children in MEF file
-				Set<String> tmpUuid = new HashSet<String>();
-				for (Iterator<String> iter = uuids.iterator(); iter.hasNext();) {
-					String _uuid = (String) iter.next();
+            if (relatedMetadataRecord.equals("true")) {
+                // Adding children in MEF file
+                Set<String> tmpUuid = new HashSet<String>();
+                for (Iterator<String> iter = uuids.iterator(); iter.hasNext(); ) {
+                    String _uuid = (String) iter.next();
 
-					// Creating request for services search
-					Element childRequest = new Element("request");
-					childRequest.addContent(new Element("parentUuid")
-							.setText(_uuid));
-					childRequest.addContent(new Element("to").setText("1000"));
+                    // Creating request for services search
+                    Element childRequest = new Element("request");
+                    childRequest.addContent(new Element("parentUuid")
+                        .setText(_uuid));
+                    childRequest.addContent(new Element("to").setText("1000"));
 
-					// Get children to export - It could be better to use GetRelated service TODO
-					Set<String> childs = getUuidsToExport(_uuid, context,
-							childRequest);
-					if (childs.size() != 0) {
-						tmpUuid.addAll(childs);
-					}
+                    // Get children to export - It could be better to use GetRelated service TODO
+                    Set<String> childs = getUuidsToExport(_uuid, context,
+                        childRequest);
+                    if (childs.size() != 0) {
+                        tmpUuid.addAll(childs);
+                    }
 
-					// Creating request for services search
-					Element servicesRequest = new Element(Jeeves.Elem.REQUEST);
-					servicesRequest.addContent(new Element(
-							org.fao.geonet.constants.Params.OPERATES_ON)
-							.setText(_uuid));
-					servicesRequest.addContent(new Element(
-							org.fao.geonet.constants.Params.TYPE)
-							.setText("service"));
+                    // Creating request for services search
+                    Element servicesRequest = new Element(Jeeves.Elem.REQUEST);
+                    servicesRequest.addContent(new Element(
+                        org.fao.geonet.constants.Params.OPERATES_ON)
+                        .setText(_uuid));
+                    servicesRequest.addContent(new Element(
+                        org.fao.geonet.constants.Params.TYPE)
+                        .setText("service"));
 
-					// Get linked services for export
-					Set<String> services = getUuidsToExport(_uuid, context,
-							servicesRequest);
-					if (services.size() != 0) {
-						tmpUuid.addAll(services);
-					}
-				}
+                    // Get linked services for export
+                    Set<String> services = getUuidsToExport(_uuid, context,
+                        servicesRequest);
+                    if (services.size() != 0) {
+                        tmpUuid.addAll(services);
+                    }
+                }
 
-				if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {
+                if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {
                     Log.info(Geonet.MEF, "Child and services added into the selection");
                 }
-			}
+            }
 
-			uuids = selectionManger.getSelection(SelectionManager.SELECTION_METADATA);
-			Log.info(Geonet.MEF, "Building MEF2 file with " + uuids.size()
-                                 + " records.");
+            uuids = selectionManger.getSelection(SelectionManager.SELECTION_METADATA);
+            Log.info(Geonet.MEF, "Building MEF2 file with " + uuids.size()
+                + " records.");
 
-			file = MEFLib.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute);
-		}
+            file = MEFLib.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute);
+        }
 
-		// -- Reset selection manager
-		selectionManger.close();
-		selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA,
-				uuidsBeforeExp);
+        // -- Reset selection manager
+        selectionManger.close();
+        selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA,
+            uuidsBeforeExp);
 
-		String fname = String.valueOf(Calendar.getInstance().getTimeInMillis());
+        String fname = String.valueOf(Calendar.getInstance().getTimeInMillis());
 
-		return BinaryFile.encode(200, file, "export-" + format + "-" + fname + ".zip", true).getElement();
-	}
+        return BinaryFile.encode(200, file, "export-" + format + "-" + fname + ".zip", true).getElement();
+    }
 
-	/**
-	 * Run an XML query and return a list of UUIDs.
-	 * 
-	 * @param uuid
-	 *            Metadata identifier
-	 * @param context
-	 *            Current context
-	 * @param request
-	 *            XML Request to run which will search for related metadata
-	 *            records to export
-	 * @return List of related UUIDs to export
-	 * @throws Exception
-	 */
-	private Set<String> getUuidsToExport(String uuid, ServiceContext context,
-			Element request) throws Exception {
-        if(Log.isDebugEnabled(Geonet.MEF))
+    /**
+     * Run an XML query and return a list of UUIDs.
+     *
+     * @param uuid    Metadata identifier
+     * @param context Current context
+     * @param request XML Request to run which will search for related metadata records to export
+     * @return List of related UUIDs to export
+     */
+    private Set<String> getUuidsToExport(String uuid, ServiceContext context,
+                                         Element request) throws Exception {
+        if (Log.isDebugEnabled(Geonet.MEF))
             Log.debug(Geonet.MEF, "Creating searcher to run request: " + Xml.getString(request));
 
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		SearchManager searchMan = gc.getBean(SearchManager.class);
-		try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+        GeonetContext gc = (GeonetContext) context
+            .getHandlerContext(Geonet.CONTEXT_NAME);
+        SearchManager searchMan = gc.getBean(SearchManager.class);
+        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
             Set<String> uuids = new HashSet<>();
 
@@ -234,8 +223,9 @@ public class Export implements Service {
                     // -- Only metadata record should be processed
                     if (!md.getName().equals("summary")) {
                         String mdUuid = md.getChild(Edit.RootChild.INFO,
-                                Edit.NAMESPACE).getChildText(Edit.Info.Elem.UUID);
-                        if (Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "    Adding: " + mdUuid);
+                            Edit.NAMESPACE).getChildText(Edit.Info.Elem.UUID);
+                        if (Log.isDebugEnabled(Geonet.MEF))
+                            Log.debug(Geonet.MEF, "    Adding: " + mdUuid);
                         uuids.add(mdUuid);
                     }
                 }
@@ -244,5 +234,5 @@ public class Export implements Service {
 
             return uuids;
         }
-	}
+    }
 }

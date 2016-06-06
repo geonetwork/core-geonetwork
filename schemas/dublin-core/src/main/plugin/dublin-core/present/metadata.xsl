@@ -22,112 +22,114 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:dc = "http://purl.org/dc/elements/1.1/"
-	xmlns:dct = "http://purl.org/dc/terms/"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:ows="http://www.opengis.net/ows"
-	xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
-	xmlns:geonet="http://www.fao.org/geonetwork">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns:dct="http://purl.org/dc/terms/"
+                xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                version="1.0">
 
   <xsl:include href="metadata-fop.xsl"/>
-  
-	<!-- main template - the way into processing dublin-core -->
-  <xsl:template name="metadata-dublin-core">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit" select="false()"/>
-		<xsl:param name="embedded"/>
 
-    <xsl:apply-templates mode="dublin-core" select="." >
-    	<xsl:with-param name="schema" select="$schema"/>
-     	<xsl:with-param name="edit"   select="$edit"/>
-     	<xsl:with-param name="embedded" select="$embedded" />
+  <!-- main template - the way into processing dublin-core -->
+  <xsl:template name="metadata-dublin-core">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit" select="false()"/>
+    <xsl:param name="embedded"/>
+
+    <xsl:apply-templates mode="dublin-core" select=".">
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit" select="$edit"/>
+      <xsl:with-param name="embedded" select="$embedded"/>
     </xsl:apply-templates>
   </xsl:template>
 
-	<!-- CompleteTab template - dc just calls completeTab from 
-	     metadata-utils.xsl -->
-	<xsl:template name="dublin-coreCompleteTab">
-		<xsl:param name="tabLink"/>
+  <!-- CompleteTab template - dc just calls completeTab from
+         metadata-utils.xsl -->
+  <xsl:template name="dublin-coreCompleteTab">
+    <xsl:param name="tabLink"/>
 
-		<xsl:call-template name="completeTab">
-			<xsl:with-param name="tabLink" select="$tabLink"/>
-		</xsl:call-template>
-	</xsl:template>
+    <xsl:call-template name="completeTab">
+      <xsl:with-param name="tabLink" select="$tabLink"/>
+    </xsl:call-template>
+  </xsl:template>
 
-	<!--
-	default: in simple mode just a flat list
-	-->
-	<xsl:template mode="dublin-core" match="*|@*">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
-		
-		<xsl:apply-templates mode="element" select=".">
-			<xsl:with-param name="schema" select="$schema"/>
-			<xsl:with-param name="edit"   select="$edit"/>
-			<xsl:with-param name="flat"   select="$currTab='simple'"/>
-		</xsl:apply-templates>
-	</xsl:template>
-	
-	<!--
-	these elements should be boxed
-	-->
-	<xsl:template mode="dublin-core" match="simpledc|csw:Record">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
+  <!--
+    default: in simple mode just a flat list
+    -->
+  <xsl:template mode="dublin-core" match="*|@*">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+
+    <xsl:apply-templates mode="element" select=".">
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit" select="$edit"/>
+      <xsl:with-param name="flat" select="$currTab='simple'"/>
+    </xsl:apply-templates>
+  </xsl:template>
+
+  <!--
+    these elements should be boxed
+    -->
+  <xsl:template mode="dublin-core" match="simpledc|csw:Record">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
 
     <xsl:apply-templates mode="elementEP" select="*">
-    	<xsl:with-param name="schema" select="$schema"/>
-    	<xsl:with-param name="edit"   select="$edit"/>
-    </xsl:apply-templates>
-	</xsl:template>
-
-	<xsl:template mode="dublin-core" match="dc:anyCHOICE_ELEMENT0">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
-
-		<xsl:apply-templates mode="elementEP" select="dc:*|geonet:child[string(@prefix)='dc']">
       <xsl:with-param name="schema" select="$schema"/>
-      <xsl:with-param name="edit"   select="$edit"/>
+      <xsl:with-param name="edit" select="$edit"/>
     </xsl:apply-templates>
+  </xsl:template>
 
-    <xsl:apply-templates mode="elementEP" select="dct:modified|geonet:child[string(@name)='modified']">
+  <xsl:template mode="dublin-core" match="dc:anyCHOICE_ELEMENT0">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+
+    <xsl:apply-templates mode="elementEP" select="dc:*|geonet:child[string(@prefix)='dc']">
       <xsl:with-param name="schema" select="$schema"/>
-      <xsl:with-param name="edit"   select="$edit"/>
+      <xsl:with-param name="edit" select="$edit"/>
     </xsl:apply-templates>
 
-    <xsl:apply-templates mode="elementEP" select="dct:*[name(.)!='dct:modified']|geonet:child[string(@prefix)='dct' and name(.)!='modified']">
+    <xsl:apply-templates mode="elementEP"
+                         select="dct:modified|geonet:child[string(@name)='modified']">
       <xsl:with-param name="schema" select="$schema"/>
-      <xsl:with-param name="edit"   select="$edit"/>
+      <xsl:with-param name="edit" select="$edit"/>
     </xsl:apply-templates>
 
-	</xsl:template>
+    <xsl:apply-templates mode="elementEP"
+                         select="dct:*[name(.)!='dct:modified']|geonet:child[string(@prefix)='dct' and name(.)!='modified']">
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit" select="$edit"/>
+    </xsl:apply-templates>
 
-	<!--
-	identifier
-	-->
-	<xsl:template mode="dublin-core" match="dc:identifier">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
+  </xsl:template>
 
-		<xsl:apply-templates mode="simpleElement" select=".">
-			<xsl:with-param name="schema" select="$schema"/>
-			<xsl:with-param name="edit"   select="$edit"/>
-			<xsl:with-param name="text"><xsl:value-of select="."/></xsl:with-param>
-		</xsl:apply-templates>
-	</xsl:template>
+  <!--
+    identifier
+    -->
+  <xsl:template mode="dublin-core" match="dc:identifier">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+
+    <xsl:apply-templates mode="simpleElement" select=".">
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit" select="$edit"/>
+      <xsl:with-param name="text">
+        <xsl:value-of select="."/>
+      </xsl:with-param>
+    </xsl:apply-templates>
+  </xsl:template>
 
   <!--
     references
     Add file upload support
     -->
-  <xsl:template mode="dublin-core"  match="dct:references">
+  <xsl:template mode="dublin-core" match="dct:references">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
 
     <xsl:apply-templates mode="complexElement" select=".">
-      <xsl:with-param name="schema"   select="$schema"/>
-      <xsl:with-param name="edit"   	select="$edit"/>
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit" select="$edit"/>
       <xsl:with-param name="content">
         <xsl:variable name="value" select="."/>
         <xsl:choose>
@@ -136,13 +138,14 @@
             <div id="{$id}"/>
             <xsl:variable name="ref" select="geonet:element/@ref"/>
             <!--<xsl:variable name="button" select="normalize-space(.)!=''"/>-->
-            <xsl:variable name="button" select="contains($value, 'fname=')" />
+            <xsl:variable name="button" select="contains($value, 'fname=')"/>
             <xsl:call-template name="simpleElementGui">
               <xsl:with-param name="schema" select="$schema"/>
               <xsl:with-param name="edit" select="$edit"/>
               <xsl:with-param name="title" select="/root/gui/strings/file"/>
               <xsl:with-param name="text">
-                <button class="content" onclick="startFileUpload({//geonet:info/id}, '{$ref}');" type="button">
+                <button class="content" onclick="startFileUpload({//geonet:info/id}, '{$ref}');"
+                        type="button">
                   <xsl:value-of select="/root/gui/strings/insertFileMode"/>
                 </button>
               </xsl:with-param>
@@ -164,7 +167,7 @@
               <xsl:with-param name="edit" select="$edit"/>
               <xsl:with-param name="title">
                 <xsl:call-template name="getTitle">
-                  <xsl:with-param name="name"   select="name(.)"/>
+                  <xsl:with-param name="name" select="name(.)"/>
                   <xsl:with-param name="schema" select="$schema"/>
                 </xsl:call-template>
               </xsl:with-param>
@@ -172,8 +175,10 @@
                 <xsl:choose>
                   <!-- Check if uploaded resource to display read-only value and Remove button to remove the uploaded resource -->
                   <xsl:when test="contains($value, 'fname=')">
-                    <xsl:variable name="fileName" select="substring-before(substring-after($value, 'fname='), '&amp;')" />
-                    <input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{$fileName}" size="40">
+                    <xsl:variable name="fileName"
+                                  select="substring-before(substring-after($value, 'fname='), '&amp;')"/>
+                    <input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{$fileName}"
+                           size="40">
                       <xsl:if test="$button">
                         <xsl:attribute name="disabled">disabled</xsl:attribute>
                       </xsl:if>
@@ -181,12 +186,13 @@
                   </xsl:when>
                   <!-- If NOT uploaded resource display normal edit field -->
                   <xsl:otherwise>
-                    <input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{$value}" size="40" />
+                    <input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{$value}"
+                           size="40"/>
                   </xsl:otherwise>
                 </xsl:choose>
 
                 <!-- Field checked in metadata-editor.js (doFileUploadSubmit), to execute custom code for Dublin core metadata editor -->
-                <input id="dc_{$ref}" class="md" type="hidden" name="dc_{$ref}" />
+                <input id="dc_{$ref}" class="md" type="hidden" name="dc_{$ref}"/>
               </xsl:with-param>
               <xsl:with-param name="id" select="concat('di_',$ref)"/>
             </xsl:call-template>
@@ -200,7 +206,7 @@
                 <xsl:with-param name="edit" select="$edit"/>
                 <xsl:with-param name="title">
                   <xsl:call-template name="getTitle">
-                    <xsl:with-param name="name"   select="name(.)"/>
+                    <xsl:with-param name="name" select="name(.)"/>
                     <xsl:with-param name="schema" select="$schema"/>
                   </xsl:call-template>
                 </xsl:with-param>
@@ -208,18 +214,27 @@
                   <xsl:choose>
                     <!-- Internal url to uploaded resource -->
                     <xsl:when test="starts-with($value, 'http') and contains($value, 'fname=')">
-                      <xsl:variable name="fileName" select="substring-before(substring-after($value, 'fname='), '&amp;')" />
-                      <a href="{$value}" title="{$fileName}" onclick="runFileDownload(this.href, 'Order Confirmation: ' + this.title); return false;"><xsl:value-of select="$fileName"/></a>
+                      <xsl:variable name="fileName"
+                                    select="substring-before(substring-after($value, 'fname='), '&amp;')"/>
+                      <a href="{$value}" title="{$fileName}"
+                         onclick="runFileDownload(this.href, 'Order Confirmation: ' + this.title); return false;">
+                        <xsl:value-of select="$fileName"/>
+                      </a>
                     </xsl:when>
 
                     <!-- External url: keep link -->
                     <xsl:when test="starts-with($value, 'http')">
-                      bbb<a href="{$value}"><xsl:value-of select="."/></a>
+                      bbb
+                      <a href="{$value}">
+                        <xsl:value-of select="."/>
+                      </a>
                     </xsl:when>
 
                     <!-- Other values -->
                     <xsl:otherwise>
-                      <p><xsl:value-of select="."/></p>
+                      <p>
+                        <xsl:value-of select="."/>
+                      </p>
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:with-param>
@@ -231,52 +246,68 @@
     </xsl:apply-templates>
   </xsl:template>
 
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<!-- dublin-core brief formatting -->
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<xsl:template name="dublin-coreBrief">
-		<metadata>
-			<xsl:if test="dc:title">
-				<title><xsl:value-of select="dc:title"/></title>
-			</xsl:if>
-			<xsl:if test="dc:description">
-				<abstract><xsl:value-of select="dc:description"/></abstract>
-			</xsl:if>
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- dublin-core brief formatting -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-			<xsl:for-each select="dc:subject[text()]">
-				<keyword><xsl:value-of select="."/></keyword>
-			</xsl:for-each>
-			<xsl:for-each select="dc:identifier[text()]">
-				<link type="url"><xsl:value-of select="."/></link>
-			</xsl:for-each>
-			<!-- FIXME
-			<image>IMAGE</image>
-			-->
-			<!-- TODO : ows:BoundingBox -->
-			<xsl:variable name="coverage" select="dc:coverage"/>
-			<xsl:variable name="n" select="substring-after($coverage,'North ')"/>
-			<xsl:variable name="north" select="substring-before($n,',')"/>
-			<xsl:variable name="s" select="substring-after($coverage,'South ')"/>
-			<xsl:variable name="south" select="substring-before($s,',')"/>
-			<xsl:variable name="e" select="substring-after($coverage,'East ')"/>
-			<xsl:variable name="east" select="substring-before($e,',')"/>
-			<xsl:variable name="w" select="substring-after($coverage,'West ')"/>
-			<xsl:variable name="west" select="substring-before($w,'. ')"/>
-			<xsl:variable name="p" select="substring-after($coverage,'(')"/>
-			<xsl:variable name="place" select="substring-before($p,')')"/>
-			<xsl:if test="$n!=''">
-				<geoBox>
-					<westBL><xsl:value-of select="$west"/></westBL>
-					<eastBL><xsl:value-of select="$east"/></eastBL>
-					<southBL><xsl:value-of select="$south"/></southBL>
-					<northBL><xsl:value-of select="$north"/></northBL>
-				</geoBox>
-			</xsl:if>
-		
-			<xsl:copy-of select="geonet:*"/>
-		</metadata>
-	</xsl:template>
+  <xsl:template name="dublin-coreBrief">
+    <metadata>
+      <xsl:if test="dc:title">
+        <title>
+          <xsl:value-of select="dc:title"/>
+        </title>
+      </xsl:if>
+      <xsl:if test="dc:description">
+        <abstract>
+          <xsl:value-of select="dc:description"/>
+        </abstract>
+      </xsl:if>
+
+      <xsl:for-each select="dc:subject[text()]">
+        <keyword>
+          <xsl:value-of select="."/>
+        </keyword>
+      </xsl:for-each>
+      <xsl:for-each select="dc:identifier[text()]">
+        <link type="url">
+          <xsl:value-of select="."/>
+        </link>
+      </xsl:for-each>
+      <!-- FIXME
+            <image>IMAGE</image>
+            -->
+      <!-- TODO : ows:BoundingBox -->
+      <xsl:variable name="coverage" select="dc:coverage"/>
+      <xsl:variable name="n" select="substring-after($coverage,'North ')"/>
+      <xsl:variable name="north" select="substring-before($n,',')"/>
+      <xsl:variable name="s" select="substring-after($coverage,'South ')"/>
+      <xsl:variable name="south" select="substring-before($s,',')"/>
+      <xsl:variable name="e" select="substring-after($coverage,'East ')"/>
+      <xsl:variable name="east" select="substring-before($e,',')"/>
+      <xsl:variable name="w" select="substring-after($coverage,'West ')"/>
+      <xsl:variable name="west" select="substring-before($w,'. ')"/>
+      <xsl:variable name="p" select="substring-after($coverage,'(')"/>
+      <xsl:variable name="place" select="substring-before($p,')')"/>
+      <xsl:if test="$n!=''">
+        <geoBox>
+          <westBL>
+            <xsl:value-of select="$west"/>
+          </westBL>
+          <eastBL>
+            <xsl:value-of select="$east"/>
+          </eastBL>
+          <southBL>
+            <xsl:value-of select="$south"/>
+          </southBL>
+          <northBL>
+            <xsl:value-of select="$north"/>
+          </northBL>
+        </geoBox>
+      </xsl:if>
+
+      <xsl:copy-of select="geonet:*"/>
+    </metadata>
+  </xsl:template>
 
   <!-- ============================================================================= -->
 
@@ -286,25 +317,37 @@
     <xsl:call-template name="simpleElementGui">
       <xsl:with-param name="title" select="/root/gui/strings/file"/>
       <xsl:with-param name="text">
-        <table width="100%"><tr>
-          <xsl:variable name="ref" select="geonet:element/@ref"/>
-          <td width="70%">
-            <xsl:choose>
-              <xsl:when test="contains(., 'fname=')">
-                <xsl:variable name="fileName" select="substring-before(substring-after(., 'fname='), '&amp;')" />
-                <a href="{.}"><xsl:value-of select="$fileName"/></a>
-              </xsl:when>
-              <xsl:otherwise>
-                <a href="{.}"><xsl:value-of select="."/></a>
-              </xsl:otherwise>
-            </xsl:choose>
-          </td>
-          <td align="right"><button class="content" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}','{$id}')"><xsl:value-of select="/root/gui/strings/remove"/></button></td>
-        </tr></table>
+        <table width="100%">
+          <tr>
+            <xsl:variable name="ref" select="geonet:element/@ref"/>
+            <td width="70%">
+              <xsl:choose>
+                <xsl:when test="contains(., 'fname=')">
+                  <xsl:variable name="fileName"
+                                select="substring-before(substring-after(., 'fname='), '&amp;')"/>
+                  <a href="{.}">
+                    <xsl:value-of select="$fileName"/>
+                  </a>
+                </xsl:when>
+                <xsl:otherwise>
+                  <a href="{.}">
+                    <xsl:value-of select="."/>
+                  </a>
+                </xsl:otherwise>
+              </xsl:choose>
+            </td>
+            <td align="right">
+              <button class="content"
+                      onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}','{$id}')">
+                <xsl:value-of select="/root/gui/strings/remove"/>
+              </button>
+            </td>
+          </tr>
+        </table>
       </xsl:with-param>
       <xsl:with-param name="schema"/>
     </xsl:call-template>
   </xsl:template>
 
-	<xsl:template name="dublin-core-javascript"/>
+  <xsl:template name="dublin-core-javascript"/>
 </xsl:stylesheet>

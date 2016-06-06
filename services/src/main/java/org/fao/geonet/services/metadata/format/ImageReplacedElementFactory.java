@@ -25,7 +25,9 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
+
 import com.itextpdf.text.Image;
+
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
@@ -44,6 +46,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Set;
+
 import javax.imageio.ImageIO;
 
 public class ImageReplacedElementFactory implements ReplacedElementFactory {
@@ -56,9 +59,24 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
         this.baseURL = baseURL;
     }
 
+    private static Set<String> getSupportedExts() {
+        if (imgFormatExts == null) {
+            synchronized (ImageReplacedElementFactory.class) {
+                if (imgFormatExts == null) {
+                    imgFormatExts = Sets.newHashSet();
+                    for (String ext : ImageIO.getReaderFileSuffixes()) {
+                        imgFormatExts.add(ext.toLowerCase());
+                    }
+                }
+            }
+        }
+
+        return imgFormatExts;
+    }
+
     @Override
     public ReplacedElement createReplacedElement(LayoutContext layoutContext, BlockBox box,
-            UserAgentCallback userAgentCallback, int cssWidth, int cssHeight) {
+                                                 UserAgentCallback userAgentCallback, int cssWidth, int cssHeight) {
         org.w3c.dom.Element element = box.getElement();
         if (element == null) {
             return null;
@@ -72,8 +90,8 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
                 String[] parts = src.split("\\?|&");
                 builder.append(parts[0]);
                 builder.append('?');
-                for (int i = 1; i < parts.length ; i++) {
-                    if(i>1) {
+                for (int i = 1; i < parts.length; i++) {
+                    if (i > 1) {
                         builder.append('&');
                     }
                     String[] param = parts[i].split("=");
@@ -103,21 +121,6 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
         return ext.trim().isEmpty() || getSupportedExts().contains(ext);
     }
 
-    private static Set<String> getSupportedExts() {
-        if (imgFormatExts == null) {
-            synchronized (ImageReplacedElementFactory.class) {
-                if (imgFormatExts == null) {
-                    imgFormatExts = Sets.newHashSet();
-                    for (String ext : ImageIO.getReaderFileSuffixes()) {
-                        imgFormatExts.add(ext.toLowerCase());
-                    }
-                }
-            }
-        }
-
-        return imgFormatExts;
-    }
-
     private ReplacedElement loadImage(LayoutContext layoutContext, BlockBox box, UserAgentCallback userAgentCallback,
                                       int cssWidth, int cssHeight, String url, float scaleFactor) {
         InputStream input = null;
@@ -129,7 +132,7 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
             image.scaleAbsolute(image.getPlainWidth() * scaleFactor, image.getPlainHeight() * scaleFactor);
             FSImage fsImage = new ITextFSImage(image);
 
-            if(cssHeight > -1 && cssWidth > -1) {
+            if (cssHeight > -1 && cssWidth > -1) {
                 fsImage.scale(cssWidth, cssHeight);
             }
             int maxWidth = (int) (900 * scaleFactor);

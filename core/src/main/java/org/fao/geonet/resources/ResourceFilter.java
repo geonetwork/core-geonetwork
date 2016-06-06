@@ -24,7 +24,9 @@
 package org.fao.geonet.resources;
 
 import com.google.common.collect.Maps;
+
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
+
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -36,6 +38,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
@@ -44,20 +47,18 @@ import java.util.concurrent.ConcurrentMap;
 import static org.fao.geonet.resources.Resources.loadResource;
 
 /**
- * Servlet for serving up resources located in GeoNetwork data directory.  
- * For example, this solves a largely historical issue because
- * logos are hardcoded across the application to be in /images/logos.  However this
- * is often not desirable.  They would be better to be in the data directory and thus
- * possibly outside of geonetwork (allowing easier upgrading of geonetwork etc...)
+ * Servlet for serving up resources located in GeoNetwork data directory. For example, this solves a
+ * largely historical issue because logos are hardcoded across the application to be in
+ * /images/logos.  However this is often not desirable.  They would be better to be in the data
+ * directory and thus possibly outside of geonetwork (allowing easier upgrading of geonetwork
+ * etc...)
  *
- * User: jeichar
- * Date: 1/17/12
- * Time: 4:03 PM
+ * User: jeichar Date: 1/17/12 Time: 4:03 PM
  */
 public class ResourceFilter implements Filter {
     private static final int CONTEXT_PATH_PREFIX = "/".length();
-    private static final int FIVE_DAYS = 60*60*24*5;
-    private static final int SIX_HOURS = 60*60*6;
+    private static final int FIVE_DAYS = 60 * 60 * 24 * 5;
+    private static final int SIX_HOURS = 60 * 60 * 6;
     private FilterConfig config;
     private ServletContext servletContext;
     private volatile Pair<byte[], Long> defaultImage;
@@ -70,6 +71,12 @@ public class ResourceFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         new Instance(this.config, request, response, chain).execute();
+    }
+
+    public synchronized void destroy() {
+        servletContext = null;
+        defaultImage = null;
+        faviconMap = null;
     }
 
     public class Instance {
@@ -106,7 +113,7 @@ public class ResourceFilter implements Filter {
         }
 
         public void execute() throws IOException {
-            if(isGet(request)) {
+            if (isGet(request)) {
                 String servletPath = ((HttpServletRequest) request).getServletPath();
 
                 Log.info(Geonet.RESOURCES, "Handling resource request: " + servletPath);
@@ -138,18 +145,18 @@ public class ResourceFilter implements Filter {
                     response.getOutputStream().write(favicon.one());
                 } else {
                     Pair<byte[], Long> loadResource = loadResource(resourcesDir, servletContext, appPath, filename, defaultImage
-                            .one(), -1);
+                        .one(), -1);
                     if (loadResource.two() == -1) {
 
                         synchronized (this) {
                             defaultImage = loadResource(resourcesDir,
-                                    config.getServletContext(), appPath, "images/logos/GN3.ico",
-                                    defaultImage.one(), defaultImage.two());
+                                config.getServletContext(), appPath, "images/logos/GN3.ico",
+                                defaultImage.one(), defaultImage.two());
                         }
 
                         // Return HTTP 404 ? TODO
                         Log.warning(Geonet.RESOURCES, "Resource not found " + filename +
-                                                      ", default resource returned: " + servletPath);
+                            ", default resource returned: " + servletPath);
                         httpServletResponse.setContentType("image/png");
                         httpServletResponse.setHeader("Cache-Control", "no-cache");
                     }
@@ -162,15 +169,9 @@ public class ResourceFilter implements Filter {
         private synchronized void AddFavIcon(String nodeId, Pair<byte[], Long> favicon) {
             if (faviconMap.containsKey(nodeId)) {
                 faviconMap.replace(nodeId, favicon);
-            }
-            else {
+            } else {
                 faviconMap.putIfAbsent(nodeId, favicon);
             }
         }
-    }
-    public synchronized void destroy() {
-        servletContext = null;
-        defaultImage = null;
-        faviconMap = null;
     }
 }

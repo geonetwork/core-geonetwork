@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- 
+<!--
   Metadata tabs layout utility.
   Tabs are defined using 2 levels :
    * level 1 is mode (eg. simple, advanced, inspire, ...)
-   * level 2 is section or currTab. Simple mode as one sub level which is the default. 
+   * level 2 is section or currTab. Simple mode as one sub level which is the default.
    Id attribute indicate the default tab to open.
-   
+
    Layout and behavior is set using CSS and JS.
-  
+
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-  xmlns:geonet="http://www.fao.org/geonetwork" 
-  xmlns:exslt="http://exslt.org/common"
-  xmlns:saxon="http://saxon.sf.net/"
-  extension-element-prefixes="saxon"
-  exclude-result-prefixes="exslt geonet saxon">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:exslt="http://exslt.org/common"
+                xmlns:saxon="http://saxon.sf.net/"
+                version="2.0"
+                extension-element-prefixes="saxon"
+                exclude-result-prefixes="exslt geonet saxon">
 
   <!--
-	editor left tab
-	-->
+  editor left tab
+  -->
   <xsl:template name="tab">
     <xsl:param name="schema"/>
     <xsl:param name="tabLink"/>
@@ -73,9 +73,9 @@
   </xsl:template>
 
   <!--
-	default complete tab template - schemas that don't provide a set of
-	tabs can call this from their CompleteTab callback
-	-->
+  default complete tab template - schemas that don't provide a set of
+  tabs can call this from their CompleteTab callback
+  -->
   <xsl:template name="completeTab">
     <xsl:param name="tabLink"/>
 
@@ -93,7 +93,9 @@
     <xsl:param name="default"/>
     <ul>
       <li>
-        <span class="mode" id="{$default}"><xsl:value-of select="$title"/></span>
+        <span class="mode" id="{$default}">
+          <xsl:value-of select="$title"/>
+        </span>
         <ul>
           <xsl:variable name="loc" select="/root/gui"/>
           <xsl:for-each select="$menu/*">
@@ -107,7 +109,8 @@
               <xsl:with-param name="tab">
                 <xsl:value-of select="."/>
               </xsl:with-param>
-              <xsl:with-param name="text" select="if ($labelText != '') then $labelText else $labelId"/>
+              <xsl:with-param name="text"
+                              select="if ($labelText != '') then $labelText else $labelId"/>
               <xsl:with-param name="tabLink"/>
             </xsl:call-template>
           </xsl:for-each>
@@ -117,8 +120,8 @@
   </xsl:template>
 
   <!--
-	shows a tab
-	-->
+  shows a tab
+  -->
   <xsl:template name="displayTab">
     <xsl:param name="tab"/>
     <xsl:param name="text"/>

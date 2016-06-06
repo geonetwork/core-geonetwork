@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<heading>Feil størrelse</heading>
-	<message>Filen er for stor</message>
-	<button>Tilbake</button>
+  <heading>Feil størrelse</heading>
+  <message>Filen er for stor</message>
+  <button>Tilbake</button>
 </strings>

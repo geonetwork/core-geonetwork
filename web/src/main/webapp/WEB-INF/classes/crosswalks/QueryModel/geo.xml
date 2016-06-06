@@ -1,9 +1,9 @@
 <Crosswalk scope="Global" sourceNamespace="geo">
 
 
-<!-- attributes  -->
+  <!-- attributes  -->
 
-<SourceAttr sourceAttrValue="any">
+  <SourceAttr sourceAttrValue="any">
     <MapsTo targetNamespace="geo">1.1016</MapsTo>
   </SourceAttr>
   <SourceAttr sourceAttrValue="anywhere">
@@ -94,27 +94,27 @@
     <MapsTo targetNamespace="geo">1.1034</MapsTo>
   </SourceAttr>
 
- <!--  structures. Mapping does not yet work -->
+  <!--  structures. Mapping does not yet work -->
 
   <SourceAttr sourceAttrValue="*">
     <MapsTo targetNamespace="geo">4.1</MapsTo>
   </SourceAttr>
-    <SourceAttr sourceAttrValue="any">
+  <SourceAttr sourceAttrValue="any">
     <MapsTo targetNamespace="geo">4.2</MapsTo>
   </SourceAttr>
-    <SourceAttr sourceAttrValue="exact">
+  <SourceAttr sourceAttrValue="exact">
     <MapsTo targetNamespace="geo">4.108</MapsTo>
   </SourceAttr>
-    <SourceAttr sourceAttrValue="coordinate">
+  <SourceAttr sourceAttrValue="coordinate">
     <MapsTo targetNamespace="geo">4.108</MapsTo>
   </SourceAttr>
-    <SourceAttr sourceAttrValue="nwse">
+  <SourceAttr sourceAttrValue="nwse">
     <MapsTo targetNamespace="geo">4.201</MapsTo>
   </SourceAttr>
-    <SourceAttr sourceAttrValue="date">
+  <SourceAttr sourceAttrValue="date">
     <MapsTo targetNamespace="geo">4.210</MapsTo>
   </SourceAttr>
-    <SourceAttr sourceAttrValue="isodate">
+  <SourceAttr sourceAttrValue="isodate">
     <MapsTo targetNamespace="geo">4.210</MapsTo>
   </SourceAttr>
 </Crosswalk>

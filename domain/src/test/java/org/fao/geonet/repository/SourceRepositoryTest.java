@@ -35,13 +35,25 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Tests for the SourceRepository repository.
  * <p/>
- * User: Jesse
- * Date: 9/10/13
- * Time: 12:04 PM
+ * User: Jesse Date: 9/10/13 Time: 12:04 PM
  */
 public class SourceRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     private SourceRepository _repo;
+
+    public static Source newSource(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+
+        Source source = new Source();
+        source.setName("name" + val);
+        source.setLocal(val % 2 == 0);
+        source.setUuid("uuid" + val);
+
+        source.getLabelTranslations().put("eng", "enlabel" + val);
+        source.getLabelTranslations().put("fre", "frlabel" + val);
+
+        return source;
+    }
 
     @Test
     public void testFindOneByName() throws Exception {
@@ -67,19 +79,5 @@ public class SourceRepositoryTest extends AbstractSpringDataTest {
 
     public Source newSource() {
         return newSource(_inc);
-    }
-
-    public static Source newSource(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-
-        Source source = new Source();
-        source.setName("name" + val);
-        source.setLocal(val % 2 == 0);
-        source.setUuid("uuid" + val);
-
-        source.getLabelTranslations().put("eng", "enlabel" + val);
-        source.getLabelTranslations().put("fre", "frlabel" + val);
-
-        return source;
     }
 }

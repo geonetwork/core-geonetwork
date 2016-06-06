@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.base.Optional;
+
 import org.fao.geonet.SystemInfo;
 
 import java.io.IOException;

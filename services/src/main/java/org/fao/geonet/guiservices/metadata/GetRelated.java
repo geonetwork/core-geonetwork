@@ -26,11 +26,13 @@ package org.fao.geonet.guiservices.metadata;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
@@ -76,103 +78,75 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * Perform a search and return all children metadata record for current record.
  *
- * In some cases, related records found :
- * <ul>
- * <li>could not be readable by current user.</li>
- * <li>could not be visible by current user.</li>
- * </ul>
- * so results depend on user privileges for related records.
+ * In some cases, related records found : <ul> <li>could not be readable by current user.</li>
+ * <li>could not be visible by current user.</li> </ul> so results depend on user privileges for
+ * related records.
  *
- * Parameters:
- * <ul>
- * <li>type: online|thumbnail|service|dataset|parent|children|source|fcat|siblings|associated|related|null (ie. all)</li>
- * <li>from: start record</li>
- * <li>to: end record (default 1000)</li>
- * <li>id or uuid: could be optional if call in Jeeves service forward call.
- *  In that case geonet:info/uuid is used.</li>
- * </ul>
+ * Parameters: <ul> <li>type: online|thumbnail|service|dataset|parent|children|source|fcat|siblings|associated|related|null
+ * (ie. all)</li> <li>from: start record</li> <li>to: end record (default 1000)</li> <li>id or uuid:
+ * could be optional if call in Jeeves service forward call. In that case geonet:info/uuid is
+ * used.</li> </ul>
  *
- * Relations are usually defined in records using ISO19139 or ISO19115-3 standards
- * or profiles. Therefore, some other schema plugin may also support association
- * of resources like Dublin Core using isPartOf element. In all types of
- * association, the target document may be in a different schema
- * (eg. ISO19110 for feature catalog, Dublin core for cross reference
- * to a document, SensorML for a sensor description, ...).
+ * Relations are usually defined in records using ISO19139 or ISO19115-3 standards or profiles.
+ * Therefore, some other schema plugin may also support association of resources like Dublin Core
+ * using isPartOf element. In all types of association, the target document may be in a different
+ * schema (eg. ISO19110 for feature catalog, Dublin core for cross reference to a document, SensorML
+ * for a sensor description, ...).
  *
- * 3 types of relations may be used:
- * <ul>
- *     <li>Relation to a metadata record stored in the metadata document to be analyzed.
- *     In that case, the XML document is filtered by method defined
- *     in the SchemaPlugin specific bean. eg. parent/child relation.</li>
- *     <li>Relation to specific resources (eg. online source) stored in the metadata document.
- *     In that case, the XML document is filtered by the schema/process/extract-relation.xsl.</li>
- *     <li>References stored in the target document. eg. the link to a dataset
- *     is defined in the service metadata record. In that case, the search
- *     is made in the index.</li>
- * </ul>
+ * 3 types of relations may be used: <ul> <li>Relation to a metadata record stored in the metadata
+ * document to be analyzed. In that case, the XML document is filtered by method defined in the
+ * SchemaPlugin specific bean. eg. parent/child relation.</li> <li>Relation to specific resources
+ * (eg. online source) stored in the metadata document. In that case, the XML document is filtered
+ * by the schema/process/extract-relation.xsl.</li> <li>References stored in the target document.
+ * eg. the link to a dataset is defined in the service metadata record. In that case, the search is
+ * made in the index.</li> </ul>
  *
- * Note about each type of associations:
- * <h3>online</h3>
- * List of online resources (see <schema>/process/extract-relations.xsl for details).
+ * Note about each type of associations: <h3>online</h3> List of online resources (see
+ * <schema>/process/extract-relations.xsl for details).
  *
- * <h3>thumbnail</h3>
- * List of thumbnails (see <schema>/process/extract-relations.xsl for details).
+ * <h3>thumbnail</h3> List of thumbnails (see <schema>/process/extract-relations.xsl for details).
  *
- * <h3>service</h3>
- * Only apply to ISO19139, ISO19115-3 and ISO profiles.
- * Search for all records having an operatesOn element pointing to the requested
- * metadata record UUID (see indexing to know how operatesOn element is indexed).
+ * <h3>service</h3> Only apply to ISO19139, ISO19115-3 and ISO profiles. Search for all records
+ * having an operatesOn element pointing to the requested metadata record UUID (see indexing to know
+ * how operatesOn element is indexed).
  *
- * <h3>parent</h3>
- * Only apply to ISO19139, ISO19115-3 and ISO profiles.
- * Get the parentIdentifier from the requested
- * metadata record
+ * <h3>parent</h3> Only apply to ISO19139, ISO19115-3 and ISO profiles. Get the parentIdentifier
+ * from the requested metadata record
  *
- * <h3>children</h3>
- * Only apply to ISO19139, ISO19115-3 and ISO profiles.
- * Search for all records having an parentUuid element pointing to the requested
- * metadata record UUID (see indexing to know how parent/child relation is indexed).
+ * <h3>children</h3> Only apply to ISO19139, ISO19115-3 and ISO profiles. Search for all records
+ * having an parentUuid element pointing to the requested metadata record UUID (see indexing to know
+ * how parent/child relation is indexed).
  *
  *
- * <h3>dataset</h3>
- * Only apply to ISO19139, ISO19115-3 and ISO profiles.
- * Get all records defined in operatesOn element (the current metadata is supposed
- * to be a service metadata in that case).
+ * <h3>dataset</h3> Only apply to ISO19139, ISO19115-3 and ISO profiles. Get all records defined in
+ * operatesOn element (the current metadata is supposed to be a service metadata in that case).
  *
- * <h3>source</h3>
- * Only apply to ISO19139, ISO19115-3 and ISO profiles.
- * Get all records defined in source element (in data quality section).
+ * <h3>source</h3> Only apply to ISO19139, ISO19115-3 and ISO profiles. Get all records defined in
+ * source element (in data quality section).
  *
- * <h3>hassource</h3>
- * Only apply to ISO19139, ISO19115-3 and ISO profiles.
- * Get all records where this record is defined has source (in data quality section).
+ * <h3>hassource</h3> Only apply to ISO19139, ISO19115-3 and ISO profiles. Get all records where
+ * this record is defined has source (in data quality section).
  *
- * <h3>fcat</h3>
- * Only apply to ISO19110, ISO19139, ISO19115-3 and ISO profiles.
- * Get all records defined in featureCatalogueCitation.
+ * <h3>fcat</h3> Only apply to ISO19110, ISO19139, ISO19115-3 and ISO profiles. Get all records
+ * defined in featureCatalogueCitation.
  *
- * <h3>siblings</h3>
- * Only apply to ISO19139, ISO19115-3 and ISO profiles.
- * Get all aggregationInfo records. This relation provides
- * information about association type and initiative type.
+ * <h3>siblings</h3> Only apply to ISO19139, ISO19115-3 and ISO profiles. Get all aggregationInfo
+ * records. This relation provides information about association type and initiative type.
  *
- * <h3>associated</h3>
- * Only apply to ISO19139, ISO19115-3 and ISO profiles.
- * Search for all records having an agg_associated field pointing to the requested
- * metadata record (inverse direction of siblings). This relation does not
- * inform about association type and initiative type.
+ * <h3>associated</h3> Only apply to ISO19139, ISO19115-3 and ISO profiles. Search for all records
+ * having an agg_associated field pointing to the requested metadata record (inverse direction of
+ * siblings). This relation does not inform about association type and initiative type.
  *
- * <h3>related</h3>
- * (deprecated) Use to link ISO19110 and ISO19139 record using database table.
+ * <h3>related</h3> (deprecated) Use to link ISO19110 and ISO19139 record using database table.
  *
- * @see org.fao.geonet.kernel.schema.SchemaPlugin for more details
- * on how specific schema plugin implement relations extraction.
- *
+ * @see org.fao.geonet.kernel.schema.SchemaPlugin for more details on how specific schema plugin
+ * implement relations extraction.
  */
 @Controller
 @Qualifier("getRelated")
@@ -184,27 +158,17 @@ public class GetRelated implements Service, RelatedMetadata {
     }
 
     /**
-     *
-     * @param lang
-     * @param id
-     * @param uuid
      * @param type List of comma or "|" separated types
-     * @param from
-     * @param to
-     * @param fast
-     * @param request
-     * @return
-     * @throws Exception
      */
-    @RequestMapping(value="/{lang}/xml.relation")
+    @RequestMapping(value = "/{lang}/xml.relation")
     public HttpEntity<byte[]> exec(@PathVariable String lang,
-                       @RequestParam (required = false) Integer id,
-                       @RequestParam (required = false) String uuid,
-                       @RequestParam (defaultValue = "") String type,
-                       @RequestParam (defaultValue = "1") int from,
-                       @RequestParam (defaultValue = "-1") int to,
-                       boolean fast,
-                       HttpServletRequest request) throws Exception {
+                                   @RequestParam(required = false) Integer id,
+                                   @RequestParam(required = false) String uuid,
+                                   @RequestParam(defaultValue = "") String type,
+                                   @RequestParam(defaultValue = "1") int from,
+                                   @RequestParam(defaultValue = "-1") int to,
+                                   boolean fast,
+                                   HttpServletRequest request) throws Exception {
         if (to < 0) {
             to = maxRecords;
         }
@@ -217,7 +181,7 @@ public class GetRelated implements Service, RelatedMetadata {
 
         Metadata md;
         if (id != null) {
-             md = metadataRepository.findOne(id);
+            md = metadataRepository.findOne(id);
 
             if (md == null) {
                 throw new IllegalArgumentException("No Metadata found with id " + id);
@@ -233,11 +197,11 @@ public class GetRelated implements Service, RelatedMetadata {
         uuid = md.getUuid();
 
         Element raw = new Element("root").addContent(Arrays.asList(
-                new Element("gui").addContent(Arrays.asList(
-                    new Element("language").setText(lang),
-                    new Element("url").setText(context.getBaseUrl())
-                )),
-                getRelated(context, id, uuid, type, from, to, fast)
+            new Element("gui").addContent(Arrays.asList(
+                new Element("language").setText(lang),
+                new Element("url").setText(context.getBaseUrl())
+            )),
+            getRelated(context, id, uuid, type, from, to, fast)
         ));
         Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
 
@@ -251,7 +215,7 @@ public class GetRelated implements Service, RelatedMetadata {
             contentType = "application/json";
         } else if (acceptContentType.isEmpty() ||
             acceptsType(acceptContentType, "xml") ||
-            acceptContentType.contains("*/*")||
+            acceptContentType.contains("*/*") ||
             acceptContentType.contains("text/plain")) {
             response = Xml.getString(transform).getBytes(Constants.CHARSET);
             contentType = "application/xml";

@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -42,98 +43,94 @@ import java.util.Iterator;
 
 //=============================================================================
 
-public class SelectionSearch implements Service
-{
-	private ServiceConfig _config;
+public class SelectionSearch implements Service {
+    private ServiceConfig _config;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception
-	{
-		_config = config;
-	}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+        _config = config;
+    }
 
-	/*
-	 * Get the current search and add an uuid params
-	 * with the list of records contain in the 
-	 * selection manager. 
-	 * 
-	 */
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		
-		SearchManager searchMan = gc.getBean(SearchManager.class);
+    /*
+     * Get the current search and add an uuid params
+     * with the list of records contain in the
+     * selection manager.
+     *
+     */
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		String restoreLastSearch = _config.getValue("restoreLastSearch","no");
+        SearchManager searchMan = gc.getBean(SearchManager.class);
 
-		// store or possibly close old searcher
-		UserSession  session     = context.getUserSession();
-		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
+        String restoreLastSearch = _config.getValue("restoreLastSearch", "no");
 
-		if (oldSearcher != null) {
-			if (restoreLastSearch.equals("yes")) {
-				session.setProperty(Geonet.Session.LAST_SEARCH_RESULT, oldSearcher);
-			} else {
-				if (oldSearcher instanceof LuceneSearcher) ((LuceneSearcher)oldSearcher).close();
-			}
-		}
+        // store or possibly close old searcher
+        UserSession session = context.getUserSession();
+        Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
 
-		context.info("Get selected metadata");
-		SelectionManager sm = SelectionManager.getManager(session) ;
+        if (oldSearcher != null) {
+            if (restoreLastSearch.equals("yes")) {
+                session.setProperty(Geonet.Session.LAST_SEARCH_RESULT, oldSearcher);
+            } else {
+                if (oldSearcher instanceof LuceneSearcher) ((LuceneSearcher) oldSearcher).close();
+            }
+        }
 
-		// Get the sortBy params in order to apply on new result list.
-        if (StringUtils.isNotEmpty(params.getChildText(Geonet.SearchResult.SORT_BY)) ) {
+        context.info("Get selected metadata");
+        SelectionManager sm = SelectionManager.getManager(session);
+
+        // Get the sortBy params in order to apply on new result list.
+        if (StringUtils.isNotEmpty(params.getChildText(Geonet.SearchResult.SORT_BY))) {
             params.addContent(new Element(Geonet.SearchResult.SORT_BY).setText(params.getChildText(Geonet.SearchResult.SORT_BY)));
         }
 
         if (StringUtils.isNotEmpty(params.getChildText(Geonet.SearchResult.SORT_ORDER))) {
             params.addContent(new Element(Geonet.SearchResult.SORT_ORDER).setText(params.getChildText(Geonet.SearchResult.SORT_ORDER)));
         }
-        
-		if (sm != null) {
-			String uuids= "";
-			boolean first = true;
-			synchronized(sm.getSelection("metadata")) {
-				for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
-					String uuid = (String) iter.next();
-					if (first) {
-						uuids = (String) uuid;
-						first = false;
-					}
-					else 
-						uuids = uuids +" or "+ uuid;
-				}
-			}
-            if(context.isDebugEnabled())
+
+        if (sm != null) {
+            String uuids = "";
+            boolean first = true;
+            synchronized (sm.getSelection("metadata")) {
+                for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext(); ) {
+                    String uuid = (String) iter.next();
+                    if (first) {
+                        uuids = (String) uuid;
+                        first = false;
+                    } else
+                        uuids = uuids + " or " + uuid;
+                }
+            }
+            if (context.isDebugEnabled())
                 context.debug("List of selected uuids: " + uuids);
-			params.addContent(new Element(Geonet.SearchResult.UUID).setText(uuids));
+            params.addContent(new Element(Geonet.SearchResult.UUID).setText(uuids));
 
-		} 
-		
-		// perform the search and save search result into session
-		MetaSearcher searcher;
+        }
 
-		context.info("Creating searchers");
+        // perform the search and save search result into session
+        MetaSearcher searcher;
 
-		searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+        context.info("Creating searchers");
 
-		searcher.search(context, params, _config);
+        searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 
-		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
+        searcher.search(context, params, _config);
 
-		context.info("Getting summary");
-		
-		Element summary = searcher.getSummary();
-		summary.addContent(new Element(Geonet.SearchResult.RESTORELASTSEARCH).setText(restoreLastSearch));
+        session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 
-		return summary;	
-		
-	}
+        context.info("Getting summary");
+
+        Element summary = searcher.getSummary();
+        summary.addContent(new Element(Geonet.SearchResult.RESTORELASTSEARCH).setText(restoreLastSearch));
+
+        return summary;
+
+    }
 }
 
 //=============================================================================

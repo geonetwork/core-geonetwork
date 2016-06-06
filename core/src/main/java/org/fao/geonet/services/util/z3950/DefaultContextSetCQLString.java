@@ -30,62 +30,57 @@ import org.z3950.zing.cql.CQLTermNode;
 
 
 /**
- * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
- * adds default namespaces to Attributes, Relations and Structures
- * FIXME: this is a huge mess that just tries to address some of the inconsistencies of
- * JZKit. Should better be addressed by re-implementing the CQLString in JZKit.
+ * @author 'Timo Proescholdt <tproescholdt@wmo.int>' adds default namespaces to Attributes,
+ *         Relations and Structures FIXME: this is a huge mess that just tries to address some of
+ *         the inconsistencies of JZKit. Should better be addressed by re-implementing the CQLString
+ *         in JZKit.
  */
 public class DefaultContextSetCQLString extends GNCQLString {
 
     private static final long serialVersionUID = 1L;
     private String default_attr_namespace;
-       private String default_rel_namespace;
-       private String default_struct_namespace;
-       private boolean force_def = false;
+    private String default_rel_namespace;
+    private String default_struct_namespace;
+    private boolean force_def = false;
 
-       /**
-        * @param cqlRoot
-        */
-       /**
-        * @param cqlRoot
-        * @param default_attr_namespace
-        * @param default_rel_namespace
-        * @param default_struct_namespace
-        */
-       public DefaultContextSetCQLString(CQLNode cqlRoot, String default_attr_namespace, String default_rel_namespace, String default_struct_namespace) {
-               super(cqlRoot);
-               this.default_attr_namespace=default_attr_namespace;
-               this.default_rel_namespace=default_rel_namespace;
-               this.default_struct_namespace = default_struct_namespace;
-       }
+    /**
+     * @param cqlRoot
+     */
+    /**
+     * @param cqlRoot
+     * @param default_attr_namespace
+     * @param default_rel_namespace
+     * @param default_struct_namespace
+     */
+    public DefaultContextSetCQLString(CQLNode cqlRoot, String default_attr_namespace, String default_rel_namespace, String default_struct_namespace) {
+        super(cqlRoot);
+        this.default_attr_namespace = default_attr_namespace;
+        this.default_rel_namespace = default_rel_namespace;
+        this.default_struct_namespace = default_struct_namespace;
+    }
 
-       /**
-        * parse SQL string and set default context sets of attributes,relations and structures
-        * @param cqlString
-        * @param default_attr_namespace
-        * @param default_rel_namespace
-        * @param default_struct_namespace
-        */
-       public DefaultContextSetCQLString(String cqlString, String default_attr_namespace, String default_rel_namespace, String default_struct_namespace) {
-               super(cqlString);
-               this.default_attr_namespace=default_attr_namespace;
-               this.default_rel_namespace=default_rel_namespace;
-               this.default_struct_namespace = default_struct_namespace;
-       }
+    /**
+     * parse SQL string and set default context sets of attributes,relations and structures
+     */
+    public DefaultContextSetCQLString(String cqlString, String default_attr_namespace, String default_rel_namespace, String default_struct_namespace) {
+        super(cqlString);
+        this.default_attr_namespace = default_attr_namespace;
+        this.default_rel_namespace = default_rel_namespace;
+        this.default_struct_namespace = default_struct_namespace;
+    }
 
-       
-       /**
-        * @param force
-        * force the overwriting of attribute and relation default context sets
-        */
-       public void setForceContextSet(boolean force) {
-               this.force_def = force;
-       }
+
+    /**
+     * @param force force the overwriting of attribute and relation default context sets
+     */
+    public void setForceContextSet(boolean force) {
+        this.force_def = force;
+    }
 
        /*
        public InternalModelRootNode toInternalQueryModel(ApplicationContext ctx) throws InvalidQueryException {
 
-               
+
 
                InternalModelRootNode result = super.toInternalQueryModel(ctx);
 
@@ -98,63 +93,64 @@ public class DefaultContextSetCQLString extends GNCQLString {
                return result;
        } */
 
-       
-       protected void processCQLTermNode(AttrPlusTermNode aptn, CQLTermNode  cql_term_node) {
-       
-               super.processCQLTermNode(aptn,cql_term_node);
 
-           if(Log.isDebugEnabled(Geonet.SRU_SEARCH)) Log.debug(Geonet.SRU_SEARCH,"Processing attrplustermnode:"+aptn);
-               // Look up conversion information for source node
+    protected void processCQLTermNode(AttrPlusTermNode aptn, CQLTermNode cql_term_node) {
 
-               // set default relation context set
-               if ( aptn.getRelation() != null ) {
-                       AttrValue relation = (AttrValue)aptn.getRelation();
+        super.processCQLTermNode(aptn, cql_term_node);
 
-                       if ( relation !=null && (relation.getNamespaceIdentifier() == null || force_def  )) {
-                               relation.setNamespaceIdentifier(this.default_rel_namespace);
-                           if(Log.isDebugEnabled(Geonet.SRU_SEARCH))
-                               Log.debug(Geonet.SRU_SEARCH,"Processing relation :"+relation);
-                       }
-               }
+        if (Log.isDebugEnabled(Geonet.SRU_SEARCH))
+            Log.debug(Geonet.SRU_SEARCH, "Processing attrplustermnode:" + aptn);
+        // Look up conversion information for source node
 
-               // set default attribute context set
+        // set default relation context set
+        if (aptn.getRelation() != null) {
+            AttrValue relation = (AttrValue) aptn.getRelation();
 
-               Object ap_node = aptn.getAccessPoint();
-               if ( ap_node != null ) {
-                       AttrValue qualifier = (AttrValue)ap_node;
+            if (relation != null && (relation.getNamespaceIdentifier() == null || force_def)) {
+                relation.setNamespaceIdentifier(this.default_rel_namespace);
+                if (Log.isDebugEnabled(Geonet.SRU_SEARCH))
+                    Log.debug(Geonet.SRU_SEARCH, "Processing relation :" + relation);
+            }
+        }
 
-                       if ( qualifier != null && ( qualifier.getNamespaceIdentifier() == null || force_def )) {
-                               qualifier.setNamespaceIdentifier(this.default_attr_namespace);
-                           if(Log.isDebugEnabled(Geonet.SRU_SEARCH))
-                               Log.debug(Geonet.SRU_SEARCH,"Processing AccessPoint :"+qualifier);
-                       
-                       }
+        // set default attribute context set
 
-                       // FIX incorrect behavior of very old CQL (0.0.7) library
-                       if (  qualifier != null &&
-                                       qualifier.getNamespaceIdentifier().equalsIgnoreCase("srw") &&
-                                       qualifier.getValue().equalsIgnoreCase("serverChoice")) {
-                           if(Log.isDebugEnabled(Geonet.SRU_SEARCH))
-                               Log.debug(Geonet.SRU_SEARCH,"Setting srw context set to cql for serverChoice");
-                               qualifier.setNamespaceIdentifier("cql");
-                       }
-                       
-                       
-               }
-               
-               // set default structure context set
-               if ( aptn.getStructure() != null ) {
-                       AttrValue structure = (AttrValue)aptn.getStructure();
+        Object ap_node = aptn.getAccessPoint();
+        if (ap_node != null) {
+            AttrValue qualifier = (AttrValue) ap_node;
 
-                       if ( structure !=null && (structure.getNamespaceIdentifier() == null || force_def  )) {
-                               structure.setNamespaceIdentifier(this.default_struct_namespace);
-                           if(Log.isDebugEnabled(Geonet.SRU_SEARCH))
-                               Log.debug(Geonet.SRU_SEARCH,"Processing structure :"+structure);
-                       }
-               }
-               
-               
-       }
+            if (qualifier != null && (qualifier.getNamespaceIdentifier() == null || force_def)) {
+                qualifier.setNamespaceIdentifier(this.default_attr_namespace);
+                if (Log.isDebugEnabled(Geonet.SRU_SEARCH))
+                    Log.debug(Geonet.SRU_SEARCH, "Processing AccessPoint :" + qualifier);
+
+            }
+
+            // FIX incorrect behavior of very old CQL (0.0.7) library
+            if (qualifier != null &&
+                qualifier.getNamespaceIdentifier().equalsIgnoreCase("srw") &&
+                qualifier.getValue().equalsIgnoreCase("serverChoice")) {
+                if (Log.isDebugEnabled(Geonet.SRU_SEARCH))
+                    Log.debug(Geonet.SRU_SEARCH, "Setting srw context set to cql for serverChoice");
+                qualifier.setNamespaceIdentifier("cql");
+            }
+
+
+        }
+
+        // set default structure context set
+        if (aptn.getStructure() != null) {
+            AttrValue structure = (AttrValue) aptn.getStructure();
+
+            if (structure != null && (structure.getNamespaceIdentifier() == null || force_def)) {
+                structure.setNamespaceIdentifier(this.default_struct_namespace);
+                if (Log.isDebugEnabled(Geonet.SRU_SEARCH))
+                    Log.debug(Geonet.SRU_SEARCH, "Processing structure :" + structure);
+            }
+        }
+
+
+    }
 
        /*
        public void visitNode(QueryNode node, String source_ns, String target_ns) {
@@ -168,9 +164,9 @@ public class DefaultContextSetCQLString extends GNCQLString {
                else if ( node instanceof InternalModelNamespaceNode ) {
                        if(Log.isDebugEnabled(Geonet.SRU_SEARCH)) Log.debug(Geonet.SRU_SEARCH,"Processing namespace: "+node);
                        InternalModelNamespaceNode ns_node = (InternalModelNamespaceNode)node;
-                       
+
                                visitNode(ns_node.getChild(), ns_node.getAttrset(), target_ns);
-       
+
                }
                else if ( node instanceof ComplexNode ) {
                        if(Log.isDebugEnabled(Geonet.SRU_SEARCH)) Log.debug(Geonet.SRU_SEARCH,"Processing complex");
@@ -181,10 +177,10 @@ public class DefaultContextSetCQLString extends GNCQLString {
                else if ( node instanceof AttrPlusTermNode ) {
                        AttrPlusTermNode aptn = (AttrPlusTermNode)node;
 
-       
-                       
-                       
-                       
+
+
+
+
                }
 
                if(Log.isDebugEnabled(Geonet.SRU_SEARCH)) Log.debug(Geonet.SRU_SEARCH,"visitNode");

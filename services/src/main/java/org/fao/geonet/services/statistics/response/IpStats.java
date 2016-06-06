@@ -60,8 +60,8 @@ public class IpStats {
     @Override
     public String toString() {
         return "IpStats{" +
-               "ip='" + ip + '\'' +
-               ", sumhit=" + sumhit +
-               '}';
+            "ip='" + ip + '\'' +
+            ", sumhit=" + sumhit +
+            '}';
     }
 }

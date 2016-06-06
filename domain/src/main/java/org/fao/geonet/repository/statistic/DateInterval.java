@@ -28,9 +28,7 @@ import org.fao.geonet.domain.ISODate;
 /**
  * Represents a date at a certain granularity like year, month, day.
  * <p/>
- * User: Jesse
- * Date: 10/1/13
- * Time: 8:32 AM
+ * User: Jesse Date: 10/1/13 Time: 8:32 AM
  */
 public abstract class DateInterval {
     private final int _substringEnd;
@@ -62,10 +60,8 @@ public abstract class DateInterval {
     }
 
     /**
-     * Get the end of the substring of {@link ISODate} that makes up this type.
-     * <p>
-     * For example Year would be 4 because ISODate format has yyyy-mm-dd.
-     * </p>
+     * Get the end of the substring of {@link ISODate} that makes up this type. <p> For example Year
+     * would be 4 because ISODate format has yyyy-mm-dd. </p>
      */
     public final int getSubstringEnd() {
         return _substringEnd;
@@ -151,18 +147,21 @@ public abstract class DateInterval {
             return new Year(dateInterval);
         }
     }
+
     /**
      * Represents a month interval.
      */
     public static class Month extends DateInterval {
 
         private static final int SUBSTRING_END = 7;
+
         /**
          * default constructor.
          */
         public Month() {
             super(new ISODate(), SUBSTRING_END);
         }
+
         /**
          * constructor.
          *
@@ -171,6 +170,7 @@ public abstract class DateInterval {
         public Month(final String date) {
             super(date, SUBSTRING_END);
         }
+
         /**
          * constructor.
          *
@@ -185,18 +185,21 @@ public abstract class DateInterval {
             return new Month(dateInterval);
         }
     }
+
     /**
      * Represents a day interval.
      */
     public static class Day extends DateInterval {
 
         private static final int SUBSTRING_END = 10;
+
         /**
          * default constructor.
          */
         public Day() {
             super(new ISODate(), SUBSTRING_END);
         }
+
         /**
          * constructor.
          *
@@ -205,6 +208,7 @@ public abstract class DateInterval {
         public Day(final ISODate date) {
             super(date, SUBSTRING_END);
         }
+
         /**
          * constructor.
          *
@@ -219,18 +223,21 @@ public abstract class DateInterval {
             return new Day(dateInterval);
         }
     }
+
     /**
      * Represents a hour interval.
      */
     public static class Hour extends DateInterval {
 
         private static final int SUBSTRING_END = 13;
+
         /**
          * default constructor.
          */
         public Hour() {
             super(new ISODate(), SUBSTRING_END);
         }
+
         /**
          * constructor.
          *
@@ -239,6 +246,7 @@ public abstract class DateInterval {
         public Hour(final ISODate date) {
             super(date, SUBSTRING_END);
         }
+
         /**
          * constructor.
          *
@@ -253,18 +261,21 @@ public abstract class DateInterval {
             return new Hour(dateInterval);
         }
     }
+
     /**
      * Represents a minute interval.
      */
     public static class Minute extends DateInterval {
 
         private static final int SUBSTRING_END = 16;
+
         /**
          * default constructor.
          */
         public Minute() {
             super(new ISODate(), SUBSTRING_END);
         }
+
         /**
          * constructor.
          *
@@ -273,6 +284,7 @@ public abstract class DateInterval {
         public Minute(final ISODate date) {
             super(date, SUBSTRING_END);
         }
+
         /**
          * constructor.
          *
@@ -287,18 +299,21 @@ public abstract class DateInterval {
             return new Minute(dateInterval);
         }
     }
+
     /**
      * Represents a second interval.
      */
     public static class Second extends DateInterval {
 
         private static final int SUBSTRING_END = 19;
+
         /**
          * default constructor.
          */
         public Second() {
             super(new ISODate(), SUBSTRING_END);
         }
+
         /**
          * constructor.
          *
@@ -307,6 +322,7 @@ public abstract class DateInterval {
         public Second(final ISODate date) {
             super(date, SUBSTRING_END);
         }
+
         /**
          * constructor.
          *

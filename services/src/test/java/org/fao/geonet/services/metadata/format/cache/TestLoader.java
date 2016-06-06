@@ -26,8 +26,8 @@ package org.fao.geonet.services.metadata.format.cache;
 import java.util.concurrent.Callable;
 
 /**
-* @author Jesse on 3/6/2015.
-*/
+ * @author Jesse on 3/6/2015.
+ */
 public class TestLoader implements Callable<StoreInfoAndDataLoadResult> {
     private final String resultToStore;
     private final long changeDate;

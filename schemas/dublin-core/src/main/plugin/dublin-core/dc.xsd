@@ -42,24 +42,24 @@
              schemaLocation="xml.xsd"/>
 
   <xs:import namespace="http://purl.org/dc/terms/"
-              schemaLocation="dcterms.xsd"/>
+             schemaLocation="dcterms.xsd"/>
 
 
   <xs:complexType name="SimpleLiteral">
     <xs:annotation>
       <xs:documentation xml:lang="en">
-      This is the default type for all of the DC elements.
-      It permits text content only with optional
-      xml:lang attribute.
-      Text is allowed because mixed="true", but sub-elements
-      are disallowed because minOccurs="0" and maxOccurs="0"
-      are on the xs:any tag.
+        This is the default type for all of the DC elements.
+        It permits text content only with optional
+        xml:lang attribute.
+        Text is allowed because mixed="true", but sub-elements
+        are disallowed because minOccurs="0" and maxOccurs="0"
+        are on the xs:any tag.
 
-      This complexType allows for restriction or extension permitting
-      child elements.
+        This complexType allows for restriction or extension permitting
+        child elements.
       </xs:documentation>
     </xs:annotation>
-  
+
     <!--
     RGFIX: commented by RG/AC
     <xs:complexContent mixed="true">
@@ -71,10 +71,10 @@
       </xs:restriction>
     </xs:complexContent>
     -->
-    
-  <xs:simpleContent>
-    <xs:extension base="xs:string"/>
-  </xs:simpleContent>
+
+    <xs:simpleContent>
+      <xs:extension base="xs:string"/>
+    </xs:simpleContent>
 
   </xs:complexType>
 
@@ -97,28 +97,28 @@
   <xs:element name="rights" substitutionGroup="dc:any"/>
 
   <xs:group name="elementsGroup">
-  	<xs:annotation>
-    	<xs:documentation xml:lang="en">
-    	    This group is included as a convenience for schema authors
-            who need to refer to all the elements in the
-            http://purl.org/dc/elements/1.1/ namespace.
-    	</xs:documentation>
-  	</xs:annotation>
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        This group is included as a convenience for schema authors
+        who need to refer to all the elements in the
+        http://purl.org/dc/elements/1.1/ namespace.
+      </xs:documentation>
+    </xs:annotation>
 
-  <xs:sequence>
-    <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:element ref="dc:any"/>
-    </xs:choice>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="dc:any"/>
+      </xs:choice>
     </xs:sequence>
   </xs:group>
 
   <xs:complexType name="elementContainer">
-  	<xs:annotation>
-    	<xs:documentation xml:lang="en">
-    		This complexType is included as a convenience for schema authors who need to define a root
-    		or container element for all of the DC elements.
-    	</xs:documentation>
-  	</xs:annotation>
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        This complexType is included as a convenience for schema authors who need to define a root
+        or container element for all of the DC elements.
+      </xs:documentation>
+    </xs:annotation>
 
     <xs:choice>
       <xs:group ref="dc:elementsGroup"/>

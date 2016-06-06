@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format.groovy.util;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.lib.Lib;
@@ -41,14 +42,16 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Represents the summary of a metadata element.  It is often the top section of a metadata view and summarizes the critical part
- * of the metadata to most users.
+ * Represents the summary of a metadata element.  It is often the top section of a metadata view and
+ * summarizes the critical part of the metadata to most users.
  * <p/>
- * The purpose of this class is to provide consistent way to display a summary of a metadata for all schemas.  The formatter/view only
- * needs to populate the fields of this class (or subclass) and the class can take care of presentation.
+ * The purpose of this class is to provide consistent way to display a summary of a metadata for all
+ * schemas.  The formatter/view only needs to populate the fields of this class (or subclass) and
+ * the class can take care of presentation.
  * <p/>
- * This implementation includes logo, thumbnail, title, abstract, navigation bar and the content (view).  Any of the fields can be
- * left with their default values and they will not be displayed in the Summary.
+ * This implementation includes logo, thumbnail, title, abstract, navigation bar and the content
+ * (view).  Any of the fields can be left with their default values and they will not be displayed
+ * in the Summary.
  * <p/>
  * The data is rendered with the view-header.html template.
  */
@@ -56,7 +59,8 @@ public class Summary {
     protected final Handlers handlers;
     protected final Environment env;
     protected final Functions functions;
-
+    public List<LinkBlock> links = Lists.newArrayList();
+    public List<LinkBlock> associated = Lists.newArrayList();
     private String logo;
     private List<String> thumbnails = Lists.newArrayList();
     private String title = "";
@@ -69,9 +73,6 @@ public class Summary {
     private String keywords = "";
     private String extent = "";
     private String formats = "";
-
-    public List<LinkBlock> links = Lists.newArrayList();
-    public List<LinkBlock> associated = Lists.newArrayList();
 
     public Summary(Handlers handlers, Environment env, Functions functions) throws Exception {
         this.handlers = handlers;

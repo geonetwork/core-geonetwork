@@ -32,7 +32,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @author Jesse
  */
 public interface MetadataCategoryRepository extends GeonetRepository<MetadataCategory, Integer>, MetadataCategoryRepositoryCustom,
-        JpaSpecificationExecutor<MetadataCategory> {
+    JpaSpecificationExecutor<MetadataCategory> {
     /**
      * Find the category with the given name.
      *

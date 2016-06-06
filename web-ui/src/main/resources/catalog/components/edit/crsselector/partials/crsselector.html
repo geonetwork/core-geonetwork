@@ -2,7 +2,7 @@
   <div class="input-group">
     <span class="input-group-btn">
       <button class="btn btn-default" type="button" title="{{'add' | translate}}"
-        data-ng-click="add();">
+              data-ng-click="add();">
         <i class="fa fa-plus"/>
         <span>&nbsp;</span>
       </button>
@@ -13,10 +13,11 @@
            data-ng-model-options="{debounce: 500}"/>
 
     <div class="list-group gn-autocomplete-list">
-      <li href="" class="list-group-item" data-ng-repeat="crs in crsResults">{{crs.description}}<span
-          class="pull-right">
+      <li href="" class="list-group-item"
+          data-ng-repeat="crs in crsResults">{{crs.description}}<span
+        class="pull-right">
           <a href="" data-ng-click="addCRS(crs)" class="fa fa-plus pull-right"
-            title="{{'addCRS-help' | translate}}"/>
+             title="{{'addCRS-help' | translate}}"/>
         </span>
       </li>
     </div>

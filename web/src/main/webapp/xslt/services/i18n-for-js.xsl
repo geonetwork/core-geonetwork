@@ -22,8 +22,8 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <!-- 
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+  <!--
     Copy all strings from i18n having a js attribute to be used by the client side.
   -->
   <xsl:template match="/">
@@ -31,9 +31,11 @@
       <xsl:apply-templates select="/root/gui/i18n/*[@js]"/>
     </lang>
   </xsl:template>
-  
+
   <xsl:template match="*">
-    <xsl:copy><xsl:value-of select="text()"/></xsl:copy>
+    <xsl:copy>
+      <xsl:value-of select="text()"/>
+    </xsl:copy>
   </xsl:template>
-  
+
 </xsl:stylesheet>

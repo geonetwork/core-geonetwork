@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Maps;
+
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.groovy.Environment;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
@@ -67,8 +68,8 @@ public class TNodeIncludeTest extends AbstractTemplateParserTest {
 
         Map<String, Object> model = Maps.newHashMap();
         String expected = "<html>\n"
-                          + "    <div><div>included</div></div>\n"
-                          + "</html>";
+            + "    <div><div>included</div></div>\n"
+            + "</html>";
         assertCorrectRender(parseTree, model, expected);
     }
 
@@ -80,8 +81,8 @@ public class TNodeIncludeTest extends AbstractTemplateParserTest {
 
         Map<String, Object> model = Maps.newHashMap();
         String expected = "<html>\n"
-                          + "    <div>included</div>\n"
-                          + "</html>";
+            + "    <div>included</div>\n"
+            + "</html>";
         assertCorrectRender(parseTree, model, expected);
     }
 }

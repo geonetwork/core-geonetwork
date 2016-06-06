@@ -55,10 +55,8 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 /**
- * TODO:
- * * If only URL provided and no map as string, download context
- * * Create map preview
- * * Save map and attached document to metadata record
+ * TODO: * If only URL provided and no map as string, download context * Create map preview * Save
+ * map and attached document to metadata record
  */
 public class ImportWebMap extends NotInReadOnlyModeService {
 
@@ -72,7 +70,7 @@ public class ImportWebMap extends NotInReadOnlyModeService {
 
 
     @Override
-    public Element serviceSpecificExec(Element params, ServiceContext context)  throws Exception {
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         String mapString = Util.getParam(params, "map_string");
         String mapUrl = Util.getParam(params, "map_url", "");
         String viewerUrl = Util.getParam(params, "map_viewer_url", "");
@@ -82,18 +80,18 @@ public class ImportWebMap extends NotInReadOnlyModeService {
         String mapFileName = Util.getParam(params, "map_filename", "map-context.ows");
         if (mapFileName.contains("..")) {
             throw new BadParameterEx(
-                    "Invalid character '..' found in resource name.",
-                    mapFileName);
+                "Invalid character '..' found in resource name.",
+                mapFileName);
         }
         String topic = Util.getParam(params, "topic", "");
 
-        
-        Map<String,Object> xslParams = new HashMap<String,Object>();
+
+        Map<String, Object> xslParams = new HashMap<String, Object>();
         xslParams.put("viewer_url", viewerUrl);
         xslParams.put("map_url", mapUrl);
         xslParams.put("topic", topic);
         xslParams.put("title", title);
-        xslParams.put("abstract", mapAbstract);        
+        xslParams.put("abstract", mapAbstract);
         xslParams.put("lang", context.getLanguage());
 
         UserSession us = context.getUserSession();
@@ -129,8 +127,8 @@ public class ImportWebMap extends NotInReadOnlyModeService {
 
         // Import record
         Importer.importRecord(uuid, uuidAction, md, "iso19139", 0, sm.getSiteId(),
-                sm.getSiteName(), null, context,  id,  date, date,  groupId, 
-                MetadataType.METADATA);
+            sm.getSiteName(), null, context, id, date, date, groupId,
+            MetadataType.METADATA);
 
         // Save the context if no context-url provided
         if (StringUtils.isEmpty(mapUrl)) {

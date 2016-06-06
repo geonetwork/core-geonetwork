@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format;
 
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -43,6 +44,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -60,7 +62,7 @@ public class ListFormatters extends AbstractFormatService {
 
     private void addFormatters(String schema, FormatterDataResponse response, Path root, Path file, boolean isSchemaPluginFormatter,
                                boolean publishedOnly)
-            throws IOException {
+        throws IOException {
         if (!Files.exists(file)) {
             return;
         }
@@ -99,6 +101,47 @@ public class ListFormatters extends AbstractFormatService {
                 }
             }
         }
+    }
+
+    @RequestMapping(value = "/{lang}/md.formatter.list", produces = {
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    public FormatterDataResponse exec(
+        @RequestParam(required = false) final String id,
+        @RequestParam(required = false) final String uuid,
+        @RequestParam(defaultValue = "all") String schema,
+        @RequestParam(defaultValue = "false") boolean pluginOnly,
+        @RequestParam(defaultValue = "true") boolean publishedOnly
+    ) throws Exception {
+        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        if (id != null || uuid != null) {
+            try {
+                loadMetadata(applicationContext.getBean(MetadataRepository.class), Integer.parseInt(resolveId(id, uuid)));
+            } catch (Throwable e) {
+                // its ok.  just can't use metadata
+            }
+        }
+
+        if (schema == null)
+            schema = "all";
+
+        schema = schema.trim();
+
+        FormatterDataResponse response = new FormatterDataResponse();
+        if (!pluginOnly) {
+            Path userXslDir = applicationContext.getBean(GeonetworkDataDirectory.class).getFormatterDir();
+            addFormatters(schema, response, userXslDir, userXslDir, false, publishedOnly);
+        }
+
+        final Set<String> schemas = applicationContext.getBean(SchemaManager.class).getSchemas();
+        for (String schemaName : schemas) {
+            if (schema.equals("all") || schema.equals(schemaName)) {
+                final Path schemaDir = applicationContext.getBean(SchemaManager.class).getSchemaDir(schemaName);
+                final Path formatterDir = schemaDir.resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
+                addFormatters(schemaName, response, formatterDir, formatterDir, true, publishedOnly);
+            }
+        }
+        return response;
     }
 
     @XmlRootElement(name = "formatters")
@@ -149,47 +192,6 @@ public class ListFormatters extends AbstractFormatService {
         public String getId() {
             return id;
         }
-    }
-
-    @RequestMapping(value = "/{lang}/md.formatter.list", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    public FormatterDataResponse exec(
-            @RequestParam(required = false) final String id,
-            @RequestParam(required = false) final String uuid,
-            @RequestParam(defaultValue = "all") String schema,
-            @RequestParam(defaultValue = "false") boolean pluginOnly,
-            @RequestParam(defaultValue = "true") boolean publishedOnly
-    ) throws Exception {
-        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        if (id != null || uuid != null) {
-            try {
-                loadMetadata(applicationContext.getBean(MetadataRepository.class), Integer.parseInt(resolveId(id, uuid)));
-            } catch (Throwable e) {
-                // its ok.  just can't use metadata
-            }
-        }
-
-        if (schema == null)
-            schema = "all";
-
-        schema = schema.trim();
-
-        FormatterDataResponse response = new FormatterDataResponse();
-        if (!pluginOnly) {
-            Path userXslDir = applicationContext.getBean(GeonetworkDataDirectory.class).getFormatterDir();
-            addFormatters(schema, response, userXslDir, userXslDir, false, publishedOnly);
-        }
-
-        final Set<String> schemas = applicationContext.getBean(SchemaManager.class).getSchemas();
-        for (String schemaName : schemas) {
-            if (schema.equals("all") || schema.equals(schemaName)) {
-                final Path schemaDir = applicationContext.getBean(SchemaManager.class).getSchemaDir(schemaName);
-                final Path formatterDir = schemaDir.resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
-                addFormatters(schemaName, response, formatterDir, formatterDir, true, publishedOnly);
-            }
-        }
-        return response;
     }
 
 }

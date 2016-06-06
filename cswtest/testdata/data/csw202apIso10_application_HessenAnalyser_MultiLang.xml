@@ -6,443 +6,470 @@
 <!--             Autor : Dr. Uwe Voges -->
 <!--             Stand: 18.12.2007 -->
 <!--             Firma: con terra GmbH (www.conterra.de) -->
-<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.isotc211.org/2005/gmd ../../apiso.xsd">
-	<fileIdentifier>
-		<gco:CharacterString>655e5998-a20e-66b5-c888-00005553421</gco:CharacterString>
-	</fileIdentifier>
-	<language>
-		<gco:CharacterString>ger</gco:CharacterString>
-	</language>
-	<characterSet>
-		<MD_CharacterSetCode codeList="MD_CharacterSetCode" codeListValue="UTF-8"/>
-	</characterSet>
-	<hierarchyLevel>
-		<MD_ScopeCode codeList="MD_ScopeCode" codeListValue="application"/>
-	</hierarchyLevel>
-	<contact>
-		<CI_ResponsibleParty>
-			<individualName>
-				<gco:CharacterString>Michael Burscheid</gco:CharacterString>
-			</individualName>
-			<organisationName>
-				<gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
-			</organisationName>
-			<contactInfo>
-				<CI_Contact>
-					<phone>
-						<CI_Telephone>
-							<voice>
-								<gco:CharacterString>++49 0611 4451 524 223</gco:CharacterString>
-							</voice>
-							<facsimile>
-								<gco:CharacterString>++49 0611 4451 555 100</gco:CharacterString>
-							</facsimile>
-						</CI_Telephone>
-					</phone>
-					<address>
-						<CI_Address>
-							<city>
-								<gco:CharacterString>Wiesbaden</gco:CharacterString>
-							</city>
-							<postalCode>
-								<gco:CharacterString>65203</gco:CharacterString>
-							</postalCode>
-							<country>
-								<gco:CharacterString>Deutschland</gco:CharacterString>
-							</country>
-							<electronicMailAddress>
-								<gco:CharacterString>m.burscheid@hlfK.de</gco:CharacterString>
-							</electronicMailAddress>
-						</CI_Address>
-					</address>
-					<onlineResource>
-						<CI_OnlineResource>
-							<linkage>
-								<URL>http://hlfK.hessen.de</URL>
-							</linkage>
-						</CI_OnlineResource>
-					</onlineResource>
-					<contactInstructions>
-						<gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten Informationen suchen, danach eMail- und telefonische Kontaktaufnahme</gco:CharacterString>
-					</contactInstructions>
-				</CI_Contact>
-			</contactInfo>
-			<role>
-				<CI_RoleCode codeList="CI_RoleCode" codeListValue="disributor"/>
-			</role>
-		</CI_ResponsibleParty>
-	</contact>
-	<dateStamp>
-		<gco:Date>2007-12-18</gco:Date>
-	</dateStamp>
-	<metadataStandardName>
-		<gco:CharacterString>ISO 19115 Geographic Information - Metadata</gco:CharacterString>
-	</metadataStandardName>
-	<metadataStandardVersion>
-		<gco:CharacterString>2003/Cor.1:2006</gco:CharacterString>
-	</metadataStandardVersion>
-	<referenceSystemInfo>
-		<MD_ReferenceSystem>
-			<referenceSystemIdentifier>
-				<RS_Identifier>
-					<code>
-						<gco:CharacterString>4326</gco:CharacterString>
-					</code>
-					<codeSpace>
-						<gco:CharacterString>urn:ogc:def:crs:EPSG</gco:CharacterString>
-					</codeSpace>
-					<version>
-						<gco:CharacterString>6.11.2</gco:CharacterString>
-					</version>
-				</RS_Identifier>
-			</referenceSystemIdentifier>
-		</MD_ReferenceSystem>
-	</referenceSystemInfo>
-	<identificationInfo>
-		<MD_DataIdentification>
-			<citation>
-				<CI_Citation>
-					<title>
-						<gco:CharacterString>Hessen Wasser Analyser</gco:CharacterString>
-					</title>
-					<alternateTitle>
-						<gco:CharacterString>Analysewerkzeug für Wasserschutzgebiete in Hessen</gco:CharacterString>
-					</alternateTitle>
-					<date>
-						<CI_Date>
-							<date>
-								<gco:Date>2007-12-15</gco:Date>
-							</date>
-							<dateType>
-								<CI_DateTypeCode codeList="CI_DateTypeCode" codeListValue="creation"/>
-							</dateType>
-						</CI_Date>
-					</date>
-					<presentationForm>
-						<CI_PresentationFormCode codeList="CI_PresentationFormCode" codeListValue="mapDigital"/>
-					</presentationForm>
-					<otherCitationDetails>
-						<gco:CharacterString>emfohlene Farbdarstellung: grau</gco:CharacterString>
-					</otherCitationDetails>
-				</CI_Citation>
-			</citation>
-			<abstract xsi:type="gmd:PT_FreeText_PropertyType">
-				<gco:CharacterString>Analysewerkzeug für Wasserschutz- und Überschwemmungsgebiete in Hessen. Nutzt als Geo- und Fachinformationssystem Rasterdaten der Topographische Karte 1:50000 als Hintergrund.</gco:CharacterString>
-				<!--== Alternative value ==-->
-				<PT_FreeText>
-					<textGroup>
-						<LocalisedCharacterString locale="#locale-en">Analysis tool for water protection and flooding areas. Uss as geoinformationssystem the raster data of the topographic map 1:50000 as background.</LocalisedCharacterString>
-					</textGroup>
-				</PT_FreeText>
-			</abstract>
-			<status>
-				<MD_ProgressCode codeList="MD_ProgressCode" codeListValue="completed"/>
-			</status>
-			<pointOfContact>
-				<CI_ResponsibleParty>
-					<individualName>
-						<gco:CharacterString>Der Kartenverkäufer</gco:CharacterString>
-					</individualName>
-					<organisationName>
-						<gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
-					</organisationName>
-					<contactInfo>
-						<CI_Contact>
-							<phone>
-								<CI_Telephone>
-									<voice>
-										<gco:CharacterString>++49 0611 4451 524 229</gco:CharacterString>
-									</voice>
-									<facsimile>
-										<gco:CharacterString>++49 0611 4451 555 100</gco:CharacterString>
-									</facsimile>
-								</CI_Telephone>
-							</phone>
-							<address>
-								<CI_Address>
-									<city>
-										<gco:CharacterString>Wiesbaden</gco:CharacterString>
-									</city>
-									<postalCode>
-										<gco:CharacterString>65203</gco:CharacterString>
-									</postalCode>
-									<country>
-										<gco:CharacterString>Deutschland</gco:CharacterString>
-									</country>
-									<electronicMailAddress>
-										<gco:CharacterString>k.kartenverkaeufer@hlfK.de</gco:CharacterString>
-									</electronicMailAddress>
-								</CI_Address>
-							</address>
-							<onlineResource>
-								<CI_OnlineResource>
-									<linkage>
-										<URL>http://hlfK.hessen.de</URL>
-									</linkage>
-								</CI_OnlineResource>
-							</onlineResource>
-							<contactInstructions>
-								<gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten Informationen suchen, danach eMail- und telefonische Kontaktaufnahme</gco:CharacterString>
-							</contactInstructions>
-						</CI_Contact>
-					</contactInfo>
-					<role>
-						<CI_RoleCode codeList="CI_RoleCode" codeListValue="processor"/>
-					</role>
-				</CI_ResponsibleParty>
-			</pointOfContact>
-			<resourceMaintenance>
-				<MD_MaintenanceInformation>
-					<maintenanceAndUpdateFrequency>
-						<MD_MaintenanceFrequencyCode codeList="MD_MaintenanceFrequencyCode" codeListValue="continual"/>
-					</maintenanceAndUpdateFrequency>
-				</MD_MaintenanceInformation>
-			</resourceMaintenance>
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<keyword>
-						<gco:CharacterString>DTK50</gco:CharacterString>
-					</keyword>
-					<keyword xsi:type="gmd:PT_FreeText_PropertyType">
-						<gco:CharacterString>Topographische Karte</gco:CharacterString>
-						<PT_FreeText>
-							<textGroup>
-								<LocalisedCharacterString locale="#locale-en">Topographic Map</LocalisedCharacterString>
-							</textGroup>
-						</PT_FreeText>
-					</keyword>
-					<keyword xsi:type="gmd:PT_FreeText_PropertyType">
-						<gco:CharacterString>Geobasisdaten</gco:CharacterString>
-						<PT_FreeText>
-							<textGroup>
-								<LocalisedCharacterString locale="#locale-en">Base maps</LocalisedCharacterString>
-							</textGroup>
-						</PT_FreeText>
-					</keyword>
-					<keyword xsi:type="gmd:PT_FreeText_PropertyType">
-						<gco:CharacterString>Überschwemmungsgebiet</gco:CharacterString>
-						<PT_FreeText>
-							<textGroup>
-								<LocalisedCharacterString locale="#locale-en">flood area</LocalisedCharacterString>
-							</textGroup>
-						</PT_FreeText>
-					</keyword>
-					<keyword xsi:type="gmd:PT_FreeText_PropertyType">
-						<gco:CharacterString>Überschwemmung</gco:CharacterString>
-						<PT_FreeText>
-							<textGroup>
-								<LocalisedCharacterString locale="#locale-en">flooding</LocalisedCharacterString>
-							</textGroup>
-						</PT_FreeText>
-					</keyword>
-					<keyword xsi:type="gmd:PT_FreeText_PropertyType">
-						<gco:CharacterString>Hochwasser</gco:CharacterString>
-						<PT_FreeText>
-							<textGroup>
-								<LocalisedCharacterString locale="#locale-en">flood</LocalisedCharacterString>
-							</textGroup>
-						</PT_FreeText>
-					</keyword>
-					<keyword xsi:type="gmd:PT_FreeText_PropertyType">
-						<gco:CharacterString>Gewässer</gco:CharacterString>
-						<PT_FreeText>
-							<textGroup>
-								<LocalisedCharacterString locale="#locale-en">waterbodies</LocalisedCharacterString>
-							</textGroup>
-						</PT_FreeText>
-					</keyword>
-					<keyword xsi:type="gmd:PT_FreeText_PropertyType">
-						<gco:CharacterString>Grundwasser</gco:CharacterString>
-						<PT_FreeText>
-							<textGroup>
-								<LocalisedCharacterString locale="#locale-en">groundwater</LocalisedCharacterString>
-							</textGroup>
-						</PT_FreeText>
-					</keyword>
-					<keyword xsi:type="gmd:PT_FreeText_PropertyType">
-						<gco:CharacterString>Trinkwasserversorgung</gco:CharacterString>
-						<PT_FreeText>
-							<textGroup>
-								<LocalisedCharacterString locale="#locale-en">drinking water supply</LocalisedCharacterString>
-							</textGroup>
-						</PT_FreeText>
-					</keyword>
-					<keyword xsi:type="gmd:PT_FreeText_PropertyType">
-						<gco:CharacterString>Verwaltungsverfahren</gco:CharacterString>
-						<PT_FreeText>
-							<textGroup>
-								<LocalisedCharacterString locale="#locale-en">administrative procedure</LocalisedCharacterString>
-							</textGroup>
-						</PT_FreeText>
-					</keyword>
-					<keyword xsi:type="gmd:PT_FreeText_PropertyType">
-						<gco:CharacterString>Wasserversorgung</gco:CharacterString>
-						<PT_FreeText>
-							<textGroup>
-								<LocalisedCharacterString locale="#locale-en">water supply</LocalisedCharacterString>
-							</textGroup>
-						</PT_FreeText>
-					</keyword>
-					<keyword xsi:type="gmd:PT_FreeText_PropertyType">
-						<gco:CharacterString>Wasserschutzgebiet</gco:CharacterString>
-						<PT_FreeText>
-							<textGroup>
-								<LocalisedCharacterString locale="#locale-en">water protection area</LocalisedCharacterString>
-							</textGroup>
-						</PT_FreeText>
-					</keyword>
-					<keyword xsi:type="gmd:PT_FreeText_PropertyType">
-						<gco:CharacterString>Wassergefährdung</gco:CharacterString>
-					</keyword>
-					<type>
-						<MD_KeywordTypeCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_KeywordTypeCode" codeListValue="theme"/>
-					</type>
-				</MD_Keywords>
-			</descriptiveKeywords>
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<keyword>
-						<gco:CharacterString>Frankfurt am Main West</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Wiesbaden</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Hessen</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Bieber</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Nidder</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Nuhne</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Orpe</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Ulfe</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Wisper</gco:CharacterString>
-					</keyword>
-					<type>
-						<MD_KeywordTypeCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_KeywordTypeCode" codeListValue="theme"/>
-					</type>
-				</MD_Keywords>
-			</descriptiveKeywords>
-			<spatialRepresentationType>
-				<MD_SpatialRepresentationTypeCode codeList="MD_SpatialRepresentationTypeCode" codeListValue="grid"/>
-			</spatialRepresentationType>
-			<language>
-				<gco:CharacterString>ger</gco:CharacterString>
-			</language>
-			<characterSet>
-				<MD_CharacterSetCode codeList="MD_CharacterSetCode" codeListValue="UTF-8"/>
-			</characterSet>
-			<topicCategory>
-				<MD_TopicCategoryCode>imageryBaseMapsEarthCover</MD_TopicCategoryCode>
-			</topicCategory>
-			<topicCategory>
-				<MD_TopicCategoryCode>environment</MD_TopicCategoryCode>
-			</topicCategory>
-			<topicCategory>
-				<MD_TopicCategoryCode>inlandWaters</MD_TopicCategoryCode>
-			</topicCategory>
-			<extent>
-				<EX_Extent>
-					<geographicElement>
-						<EX_GeographicBoundingBox>
-							<extentTypeCode>
-								<gco:Boolean>1</gco:Boolean>
-							</extentTypeCode>
-							<westBoundLongitude>
-								<gco:Decimal>7.36</gco:Decimal>
-							</westBoundLongitude>
-							<eastBoundLongitude>
-								<gco:Decimal>10.67</gco:Decimal>
-							</eastBoundLongitude>
-							<southBoundLatitude>
-								<gco:Decimal>49.34</gco:Decimal>
-							</southBoundLatitude>
-							<northBoundLatitude>
-								<gco:Decimal>51.64</gco:Decimal>
-							</northBoundLatitude>
-						</EX_GeographicBoundingBox>
-					</geographicElement>
-				</EX_Extent>
-			</extent>
-		</MD_DataIdentification>
-	</identificationInfo>
-	<distributionInfo>
-		<MD_Distribution>
-			<distributor>
-				<MD_Distributor>
-					<distributorContact>
-						<CI_ResponsibleParty>
-							<organisationName>
-								<gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
-							</organisationName>
-							<contactInfo>
-								<CI_Contact>
-									<phone>
-										<CI_Telephone>
-											<voice>
-												<gco:CharacterString>++49 0611 4451 524 445</gco:CharacterString>
-											</voice>
-											<facsimile>
-												<gco:CharacterString>++49 0611 4451 555 102</gco:CharacterString>
-											</facsimile>
-										</CI_Telephone>
-									</phone>
-									<address>
-										<CI_Address>
-											<city>
-												<gco:CharacterString>Wiesbaden</gco:CharacterString>
-											</city>
-											<postalCode>
-												<gco:CharacterString>65203</gco:CharacterString>
-											</postalCode>
-											<country>
-												<gco:CharacterString>Deutschland</gco:CharacterString>
-											</country>
-											<electronicMailAddress>
-												<gco:CharacterString>v.verkaeufer@hlfK.de</gco:CharacterString>
-											</electronicMailAddress>
-										</CI_Address>
-									</address>
-									<onlineResource>
-										<CI_OnlineResource>
-											<linkage>
-												<URL>http://hlfK.hessen.de</URL>
-											</linkage>
-										</CI_OnlineResource>
-									</onlineResource>
-									<contactInstructions>
-										<gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten Informationen suchen, danach eMail- und telefonische Kontaktaufnahme</gco:CharacterString>
-									</contactInstructions>
-								</CI_Contact>
-							</contactInfo>
-							<role>
-								<CI_RoleCode codeList="CI_RoleCode" codeListValue="disributor"/>
-							</role>
-						</CI_ResponsibleParty>
-					</distributorContact>
-				</MD_Distributor>
-			</distributor>
-			<transferOptions>
-				<MD_DigitalTransferOptions>
-					<onLine>
-						<CI_OnlineResource>
-							<linkage>
-								<URL>http://www...</URL>
-							</linkage>
-						</CI_OnlineResource>
-					</onLine>
-				</MD_DigitalTransferOptions>
-			</transferOptions>
-		</MD_Distribution>
-	</distributionInfo>
+<MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.isotc211.org/2005/gmd"
+             xsi:schemaLocation="http://www.isotc211.org/2005/gmd ../../apiso.xsd">
+  <fileIdentifier>
+    <gco:CharacterString>655e5998-a20e-66b5-c888-00005553421</gco:CharacterString>
+  </fileIdentifier>
+  <language>
+    <gco:CharacterString>ger</gco:CharacterString>
+  </language>
+  <characterSet>
+    <MD_CharacterSetCode codeList="MD_CharacterSetCode" codeListValue="UTF-8"/>
+  </characterSet>
+  <hierarchyLevel>
+    <MD_ScopeCode codeList="MD_ScopeCode" codeListValue="application"/>
+  </hierarchyLevel>
+  <contact>
+    <CI_ResponsibleParty>
+      <individualName>
+        <gco:CharacterString>Michael Burscheid</gco:CharacterString>
+      </individualName>
+      <organisationName>
+        <gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
+      </organisationName>
+      <contactInfo>
+        <CI_Contact>
+          <phone>
+            <CI_Telephone>
+              <voice>
+                <gco:CharacterString>++49 0611 4451 524 223</gco:CharacterString>
+              </voice>
+              <facsimile>
+                <gco:CharacterString>++49 0611 4451 555 100</gco:CharacterString>
+              </facsimile>
+            </CI_Telephone>
+          </phone>
+          <address>
+            <CI_Address>
+              <city>
+                <gco:CharacterString>Wiesbaden</gco:CharacterString>
+              </city>
+              <postalCode>
+                <gco:CharacterString>65203</gco:CharacterString>
+              </postalCode>
+              <country>
+                <gco:CharacterString>Deutschland</gco:CharacterString>
+              </country>
+              <electronicMailAddress>
+                <gco:CharacterString>m.burscheid@hlfK.de</gco:CharacterString>
+              </electronicMailAddress>
+            </CI_Address>
+          </address>
+          <onlineResource>
+            <CI_OnlineResource>
+              <linkage>
+                <URL>http://hlfK.hessen.de</URL>
+              </linkage>
+            </CI_OnlineResource>
+          </onlineResource>
+          <contactInstructions>
+            <gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten
+              Informationen suchen, danach eMail- und telefonische Kontaktaufnahme
+            </gco:CharacterString>
+          </contactInstructions>
+        </CI_Contact>
+      </contactInfo>
+      <role>
+        <CI_RoleCode codeList="CI_RoleCode" codeListValue="disributor"/>
+      </role>
+    </CI_ResponsibleParty>
+  </contact>
+  <dateStamp>
+    <gco:Date>2007-12-18</gco:Date>
+  </dateStamp>
+  <metadataStandardName>
+    <gco:CharacterString>ISO 19115 Geographic Information - Metadata</gco:CharacterString>
+  </metadataStandardName>
+  <metadataStandardVersion>
+    <gco:CharacterString>2003/Cor.1:2006</gco:CharacterString>
+  </metadataStandardVersion>
+  <referenceSystemInfo>
+    <MD_ReferenceSystem>
+      <referenceSystemIdentifier>
+        <RS_Identifier>
+          <code>
+            <gco:CharacterString>4326</gco:CharacterString>
+          </code>
+          <codeSpace>
+            <gco:CharacterString>urn:ogc:def:crs:EPSG</gco:CharacterString>
+          </codeSpace>
+          <version>
+            <gco:CharacterString>6.11.2</gco:CharacterString>
+          </version>
+        </RS_Identifier>
+      </referenceSystemIdentifier>
+    </MD_ReferenceSystem>
+  </referenceSystemInfo>
+  <identificationInfo>
+    <MD_DataIdentification>
+      <citation>
+        <CI_Citation>
+          <title>
+            <gco:CharacterString>Hessen Wasser Analyser</gco:CharacterString>
+          </title>
+          <alternateTitle>
+            <gco:CharacterString>Analysewerkzeug für Wasserschutzgebiete in Hessen
+            </gco:CharacterString>
+          </alternateTitle>
+          <date>
+            <CI_Date>
+              <date>
+                <gco:Date>2007-12-15</gco:Date>
+              </date>
+              <dateType>
+                <CI_DateTypeCode codeList="CI_DateTypeCode" codeListValue="creation"/>
+              </dateType>
+            </CI_Date>
+          </date>
+          <presentationForm>
+            <CI_PresentationFormCode codeList="CI_PresentationFormCode" codeListValue="mapDigital"/>
+          </presentationForm>
+          <otherCitationDetails>
+            <gco:CharacterString>emfohlene Farbdarstellung: grau</gco:CharacterString>
+          </otherCitationDetails>
+        </CI_Citation>
+      </citation>
+      <abstract xsi:type="gmd:PT_FreeText_PropertyType">
+        <gco:CharacterString>Analysewerkzeug für Wasserschutz- und Überschwemmungsgebiete in Hessen.
+          Nutzt als Geo- und Fachinformationssystem Rasterdaten der Topographische Karte 1:50000 als
+          Hintergrund.
+        </gco:CharacterString>
+        <!--== Alternative value ==-->
+        <PT_FreeText>
+          <textGroup>
+            <LocalisedCharacterString locale="#locale-en">Analysis tool for water protection and
+              flooding areas. Uss as geoinformationssystem the raster data of the topographic map
+              1:50000 as background.
+            </LocalisedCharacterString>
+          </textGroup>
+        </PT_FreeText>
+      </abstract>
+      <status>
+        <MD_ProgressCode codeList="MD_ProgressCode" codeListValue="completed"/>
+      </status>
+      <pointOfContact>
+        <CI_ResponsibleParty>
+          <individualName>
+            <gco:CharacterString>Der Kartenverkäufer</gco:CharacterString>
+          </individualName>
+          <organisationName>
+            <gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
+          </organisationName>
+          <contactInfo>
+            <CI_Contact>
+              <phone>
+                <CI_Telephone>
+                  <voice>
+                    <gco:CharacterString>++49 0611 4451 524 229</gco:CharacterString>
+                  </voice>
+                  <facsimile>
+                    <gco:CharacterString>++49 0611 4451 555 100</gco:CharacterString>
+                  </facsimile>
+                </CI_Telephone>
+              </phone>
+              <address>
+                <CI_Address>
+                  <city>
+                    <gco:CharacterString>Wiesbaden</gco:CharacterString>
+                  </city>
+                  <postalCode>
+                    <gco:CharacterString>65203</gco:CharacterString>
+                  </postalCode>
+                  <country>
+                    <gco:CharacterString>Deutschland</gco:CharacterString>
+                  </country>
+                  <electronicMailAddress>
+                    <gco:CharacterString>k.kartenverkaeufer@hlfK.de</gco:CharacterString>
+                  </electronicMailAddress>
+                </CI_Address>
+              </address>
+              <onlineResource>
+                <CI_OnlineResource>
+                  <linkage>
+                    <URL>http://hlfK.hessen.de</URL>
+                  </linkage>
+                </CI_OnlineResource>
+              </onlineResource>
+              <contactInstructions>
+                <gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten
+                  Informationen suchen, danach eMail- und telefonische Kontaktaufnahme
+                </gco:CharacterString>
+              </contactInstructions>
+            </CI_Contact>
+          </contactInfo>
+          <role>
+            <CI_RoleCode codeList="CI_RoleCode" codeListValue="processor"/>
+          </role>
+        </CI_ResponsibleParty>
+      </pointOfContact>
+      <resourceMaintenance>
+        <MD_MaintenanceInformation>
+          <maintenanceAndUpdateFrequency>
+            <MD_MaintenanceFrequencyCode codeList="MD_MaintenanceFrequencyCode"
+                                         codeListValue="continual"/>
+          </maintenanceAndUpdateFrequency>
+        </MD_MaintenanceInformation>
+      </resourceMaintenance>
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <keyword>
+            <gco:CharacterString>DTK50</gco:CharacterString>
+          </keyword>
+          <keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Topographische Karte</gco:CharacterString>
+            <PT_FreeText>
+              <textGroup>
+                <LocalisedCharacterString locale="#locale-en">Topographic Map
+                </LocalisedCharacterString>
+              </textGroup>
+            </PT_FreeText>
+          </keyword>
+          <keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Geobasisdaten</gco:CharacterString>
+            <PT_FreeText>
+              <textGroup>
+                <LocalisedCharacterString locale="#locale-en">Base maps</LocalisedCharacterString>
+              </textGroup>
+            </PT_FreeText>
+          </keyword>
+          <keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Überschwemmungsgebiet</gco:CharacterString>
+            <PT_FreeText>
+              <textGroup>
+                <LocalisedCharacterString locale="#locale-en">flood area</LocalisedCharacterString>
+              </textGroup>
+            </PT_FreeText>
+          </keyword>
+          <keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Überschwemmung</gco:CharacterString>
+            <PT_FreeText>
+              <textGroup>
+                <LocalisedCharacterString locale="#locale-en">flooding</LocalisedCharacterString>
+              </textGroup>
+            </PT_FreeText>
+          </keyword>
+          <keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Hochwasser</gco:CharacterString>
+            <PT_FreeText>
+              <textGroup>
+                <LocalisedCharacterString locale="#locale-en">flood</LocalisedCharacterString>
+              </textGroup>
+            </PT_FreeText>
+          </keyword>
+          <keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Gewässer</gco:CharacterString>
+            <PT_FreeText>
+              <textGroup>
+                <LocalisedCharacterString locale="#locale-en">waterbodies</LocalisedCharacterString>
+              </textGroup>
+            </PT_FreeText>
+          </keyword>
+          <keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Grundwasser</gco:CharacterString>
+            <PT_FreeText>
+              <textGroup>
+                <LocalisedCharacterString locale="#locale-en">groundwater</LocalisedCharacterString>
+              </textGroup>
+            </PT_FreeText>
+          </keyword>
+          <keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Trinkwasserversorgung</gco:CharacterString>
+            <PT_FreeText>
+              <textGroup>
+                <LocalisedCharacterString locale="#locale-en">drinking water supply
+                </LocalisedCharacterString>
+              </textGroup>
+            </PT_FreeText>
+          </keyword>
+          <keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Verwaltungsverfahren</gco:CharacterString>
+            <PT_FreeText>
+              <textGroup>
+                <LocalisedCharacterString locale="#locale-en">administrative procedure
+                </LocalisedCharacterString>
+              </textGroup>
+            </PT_FreeText>
+          </keyword>
+          <keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Wasserversorgung</gco:CharacterString>
+            <PT_FreeText>
+              <textGroup>
+                <LocalisedCharacterString locale="#locale-en">water supply
+                </LocalisedCharacterString>
+              </textGroup>
+            </PT_FreeText>
+          </keyword>
+          <keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Wasserschutzgebiet</gco:CharacterString>
+            <PT_FreeText>
+              <textGroup>
+                <LocalisedCharacterString locale="#locale-en">water protection area
+                </LocalisedCharacterString>
+              </textGroup>
+            </PT_FreeText>
+          </keyword>
+          <keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Wassergefährdung</gco:CharacterString>
+          </keyword>
+          <type>
+            <MD_KeywordTypeCode
+              codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_KeywordTypeCode"
+              codeListValue="theme"/>
+          </type>
+        </MD_Keywords>
+      </descriptiveKeywords>
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <keyword>
+            <gco:CharacterString>Frankfurt am Main West</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Wiesbaden</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Hessen</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Bieber</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Nidder</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Nuhne</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Orpe</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Ulfe</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Wisper</gco:CharacterString>
+          </keyword>
+          <type>
+            <MD_KeywordTypeCode
+              codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_KeywordTypeCode"
+              codeListValue="theme"/>
+          </type>
+        </MD_Keywords>
+      </descriptiveKeywords>
+      <spatialRepresentationType>
+        <MD_SpatialRepresentationTypeCode codeList="MD_SpatialRepresentationTypeCode"
+                                          codeListValue="grid"/>
+      </spatialRepresentationType>
+      <language>
+        <gco:CharacterString>ger</gco:CharacterString>
+      </language>
+      <characterSet>
+        <MD_CharacterSetCode codeList="MD_CharacterSetCode" codeListValue="UTF-8"/>
+      </characterSet>
+      <topicCategory>
+        <MD_TopicCategoryCode>imageryBaseMapsEarthCover</MD_TopicCategoryCode>
+      </topicCategory>
+      <topicCategory>
+        <MD_TopicCategoryCode>environment</MD_TopicCategoryCode>
+      </topicCategory>
+      <topicCategory>
+        <MD_TopicCategoryCode>inlandWaters</MD_TopicCategoryCode>
+      </topicCategory>
+      <extent>
+        <EX_Extent>
+          <geographicElement>
+            <EX_GeographicBoundingBox>
+              <extentTypeCode>
+                <gco:Boolean>1</gco:Boolean>
+              </extentTypeCode>
+              <westBoundLongitude>
+                <gco:Decimal>7.36</gco:Decimal>
+              </westBoundLongitude>
+              <eastBoundLongitude>
+                <gco:Decimal>10.67</gco:Decimal>
+              </eastBoundLongitude>
+              <southBoundLatitude>
+                <gco:Decimal>49.34</gco:Decimal>
+              </southBoundLatitude>
+              <northBoundLatitude>
+                <gco:Decimal>51.64</gco:Decimal>
+              </northBoundLatitude>
+            </EX_GeographicBoundingBox>
+          </geographicElement>
+        </EX_Extent>
+      </extent>
+    </MD_DataIdentification>
+  </identificationInfo>
+  <distributionInfo>
+    <MD_Distribution>
+      <distributor>
+        <MD_Distributor>
+          <distributorContact>
+            <CI_ResponsibleParty>
+              <organisationName>
+                <gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
+              </organisationName>
+              <contactInfo>
+                <CI_Contact>
+                  <phone>
+                    <CI_Telephone>
+                      <voice>
+                        <gco:CharacterString>++49 0611 4451 524 445</gco:CharacterString>
+                      </voice>
+                      <facsimile>
+                        <gco:CharacterString>++49 0611 4451 555 102</gco:CharacterString>
+                      </facsimile>
+                    </CI_Telephone>
+                  </phone>
+                  <address>
+                    <CI_Address>
+                      <city>
+                        <gco:CharacterString>Wiesbaden</gco:CharacterString>
+                      </city>
+                      <postalCode>
+                        <gco:CharacterString>65203</gco:CharacterString>
+                      </postalCode>
+                      <country>
+                        <gco:CharacterString>Deutschland</gco:CharacterString>
+                      </country>
+                      <electronicMailAddress>
+                        <gco:CharacterString>v.verkaeufer@hlfK.de</gco:CharacterString>
+                      </electronicMailAddress>
+                    </CI_Address>
+                  </address>
+                  <onlineResource>
+                    <CI_OnlineResource>
+                      <linkage>
+                        <URL>http://hlfK.hessen.de</URL>
+                      </linkage>
+                    </CI_OnlineResource>
+                  </onlineResource>
+                  <contactInstructions>
+                    <gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten
+                      Informationen suchen, danach eMail- und telefonische Kontaktaufnahme
+                    </gco:CharacterString>
+                  </contactInstructions>
+                </CI_Contact>
+              </contactInfo>
+              <role>
+                <CI_RoleCode codeList="CI_RoleCode" codeListValue="disributor"/>
+              </role>
+            </CI_ResponsibleParty>
+          </distributorContact>
+        </MD_Distributor>
+      </distributor>
+      <transferOptions>
+        <MD_DigitalTransferOptions>
+          <onLine>
+            <CI_OnlineResource>
+              <linkage>
+                <URL>http://www...</URL>
+              </linkage>
+            </CI_OnlineResource>
+          </onLine>
+        </MD_DigitalTransferOptions>
+      </transferOptions>
+    </MD_Distribution>
+  </distributionInfo>
 </MD_Metadata>

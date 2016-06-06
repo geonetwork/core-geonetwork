@@ -29,9 +29,9 @@ import java.util.List;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
 
 public class Split implements Classifier {
-    
+
     private String regex;
-    
+
     public Split(String regex) {
         this.regex = regex;
     }

@@ -27,9 +27,8 @@ import org.fao.geonet.domain.Metadata;
 
 /**
  * Event launched when a metadata is created on the database
- * 
- * @author delawen
  *
+ * @author delawen
  */
 public class MetadataAdd extends MetadataEvent {
 

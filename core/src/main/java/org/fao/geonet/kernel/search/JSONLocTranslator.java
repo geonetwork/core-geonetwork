@@ -24,13 +24,13 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.JeevesCacheManager;
+
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.Map;
 
 /**
- * Translates JSON localization files
- * keys into a language.
+ * Translates JSON localization files keys into a language.
  */
 public class JSONLocTranslator implements Translator {
     private static final long serialVersionUID = 1L;
@@ -38,23 +38,20 @@ public class JSONLocTranslator implements Translator {
     private String keyPrefix = "";
 
     /**
-     *
      * @param context   Context used to get the application files
      * @param langCode  The language code
-     * @param keyPrefix The optional key prefix which could be used to make
-     *                  distinction between facet values. eg. y for isHarvested
-     *                  means Yes, y for metadataTypes means Template. Add a prefix
-     *                  and add custom translation to JSON translations files
+     * @param keyPrefix The optional key prefix which could be used to make distinction between
+     *                  facet values. eg. y for isHarvested means Yes, y for metadataTypes means
+     *                  Template. Add a prefix and add custom translation to JSON translations files
      *                  if needed.
-     * @throws Exception
      */
     public JSONLocTranslator(final ConfigurableApplicationContext context,
                              final String langCode,
                              final String keyPrefix) throws Exception {
         this.keyPrefix = keyPrefix == null ? "" : keyPrefix;
         translations = JeevesCacheManager.findInEternalCache(
-                        JSONLocCacheLoader.cacheKey(langCode),
-                        new JSONLocCacheLoader(context, langCode));
+            JSONLocCacheLoader.cacheKey(langCode),
+            new JSONLocCacheLoader(context, langCode));
     }
 
     public String translate(String key) {
@@ -64,7 +61,7 @@ public class JSONLocTranslator implements Translator {
 
         // Prepend the prefix if needed
         String value = translations.get(keyPrefix + key);
-        if(value != null && !value.trim().isEmpty()) {
+        if (value != null && !value.trim().isEmpty()) {
             return value;
         } else {
             return key;

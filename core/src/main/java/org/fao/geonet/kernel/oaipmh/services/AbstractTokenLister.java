@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
@@ -50,181 +51,178 @@ import java.util.List;
 
 public abstract class AbstractTokenLister implements OaiPmhService {
 
-	protected ResumptionTokenCache cache;
-	private SettingManager settingMan;
-	private SchemaManager schemaMan;
-	
-	/**
-	 * @return the mode
-	 */
-	public int getMode() {
-		return settingMan.getValueAsInt("system/oai/mdmode");
-	}
+    protected ResumptionTokenCache cache;
+    private SettingManager settingMan;
+    private SchemaManager schemaMan;
 
-	/**
-	 *
-	 * @return
-	 */
-	public int getMaxRecords() {
-		return settingMan.getValueAsInt("system/oai/maxrecords");
-	}
+    public AbstractTokenLister(ResumptionTokenCache cache, SettingManager sm, SchemaManager scm) {
+        this.cache = cache;
+        this.settingMan = sm;
+        this.schemaMan = scm;
+    }
 
-	/**
-	 * Get the dateFrom
-	 * Possible values are taken from the LuceneQueryBuilder class (hard coding)
-	 * @return the dateFrom
-	 */
-	public String getDateFrom() {
-		// Default mode is set to OaiPmhDispatcher.MODE_MODIFIDATE
-		String dateFrom = "dateFrom";
-		if (getMode() == OaiPmhDispatcher.MODE_TEMPEXTEND) {
-			dateFrom = "extFrom";
-		}
-		return dateFrom;
-	}
+    /**
+     * @return the mode
+     */
+    public int getMode() {
+        return settingMan.getValueAsInt("system/oai/mdmode");
+    }
 
-	/**
-	 * Get the dateUntil
-	 * Possible values are taken from the LuceneQueryBuilder class (hard coding)
-	 * @return the dateUntil
-	 */
-	public String getDateUntil() {
-		// Default mode is set to OaiPmhDispatcher.MODE_MODIFIDATE
-		String dateUntil = "dateTo";
-		if (getMode() == OaiPmhDispatcher.MODE_TEMPEXTEND) {
-			dateUntil = "extTo";
-		}
-		return dateUntil;
-	}
-	
-	public AbstractTokenLister(ResumptionTokenCache cache, SettingManager sm, SchemaManager scm) {
-		this.cache=cache;
-		this.settingMan = sm;
-		this.schemaMan = scm;
-	}
-	
-	
-	public AbstractResponse execute(AbstractRequest request,
-			ServiceContext context) throws Exception {
+    /**
+     *
+     * @return
+     */
+    public int getMaxRecords() {
+        return settingMan.getValueAsInt("system/oai/maxrecords");
+    }
 
-        if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
-            Log.debug(Geonet.OAI_HARVESTER,"OAI " +this.getClass().getSimpleName()+ " execute: ");
-		
-		TokenListRequest  req = (TokenListRequest)  request;
+    /**
+     * Get the dateFrom Possible values are taken from the LuceneQueryBuilder class (hard coding)
+     *
+     * @return the dateFrom
+     */
+    public String getDateFrom() {
+        // Default mode is set to OaiPmhDispatcher.MODE_MODIFIDATE
+        String dateFrom = "dateFrom";
+        if (getMode() == OaiPmhDispatcher.MODE_TEMPEXTEND) {
+            dateFrom = "extFrom";
+        }
+        return dateFrom;
+    }
 
-		//UserSession  session = context.getUserSession();
-		SearchResult result;
+    /**
+     * Get the dateUntil Possible values are taken from the LuceneQueryBuilder class (hard coding)
+     *
+     * @return the dateUntil
+     */
+    public String getDateUntil() {
+        // Default mode is set to OaiPmhDispatcher.MODE_MODIFIDATE
+        String dateUntil = "dateTo";
+        if (getMode() == OaiPmhDispatcher.MODE_TEMPEXTEND) {
+            dateUntil = "extTo";
+        }
+        return dateUntil;
+    }
 
-		//String token = req.getResumptionToken();
-		String strToken = req.getResumptionToken();
-		GeonetworkResumptionToken token = null;
-		
+    public AbstractResponse execute(AbstractRequest request,
+                                    ServiceContext context) throws Exception {
 
-		
-		int pos = 0;
+        if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
+            Log.debug(Geonet.OAI_HARVESTER, "OAI " + this.getClass().getSimpleName() + " execute: ");
 
-		if ( strToken == null )
-		{
-            if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
-                Log.debug(Geonet.OAI_HARVESTER,"OAI " +this.getClass().getSimpleName()+ " : new request (no resumptionToken)");
-			Element params = new Element("request");
+        TokenListRequest req = (TokenListRequest) request;
 
-			ISODate from   = req.getFrom();
-			ISODate until  = req.getUntil();
-			String  set    = req.getSet();
-			String  prefix = req.getMetadataPrefix();
+        //UserSession  session = context.getUserSession();
+        SearchResult result;
 
-			if (from != null)
-			{
-				String sFrom = from.isDateOnly() ? from.getDateAsString() : from.toString();
-				params.addContent(new Element(getDateFrom()).setText(sFrom));
-			}
+        //String token = req.getResumptionToken();
+        String strToken = req.getResumptionToken();
+        GeonetworkResumptionToken token = null;
 
-			if (until != null)
-			{
-				String sTo = until.isDateOnly() ? until.getDateAsString() : until.toString();
-				params.addContent(new Element(getDateUntil()).setText(sTo));
-			}
 
-			if (from != null && until != null && from.timeDifferenceInSeconds(until) > 0)
-				throw new BadArgumentException("From is greater than until");
+        int pos = 0;
 
-			if (set != null)
-				params.addContent(new Element("category").setText(set));
+        if (strToken == null) {
+            if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
+                Log.debug(Geonet.OAI_HARVESTER, "OAI " + this.getClass().getSimpleName() + " : new request (no resumptionToken)");
+            Element params = new Element("request");
 
-			params.addContent(new Element("_schema").setText(prefix));
+            ISODate from = req.getFrom();
+            ISODate until = req.getUntil();
+            String set = req.getSet();
+            String prefix = req.getMetadataPrefix();
 
-			// now do the search
-			result     = new SearchResult(prefix);
-			if (schemaMan.existsSchema(prefix)) {
-				result.setIds(Lib.search(context, params));
-			} else {
-				// collect up all the schemas that we can convert to create prefix,
-				// search ids and add to the result set 
-				List<String> schemas = getSchemasThatCanConvertTo(prefix);
-				for (String schema : schemas) {
-					params.removeChild("_schema");
-					params.addContent(new Element("_schema").setText(schema));
-					result.addIds(Lib.search(context, (Element)params.clone()));
-				}
-				if (schemas.size() == 0) result.setIds(new ArrayList<Integer>());
-			}
+            if (from != null) {
+                String sFrom = from.isDateOnly() ? from.getDateAsString() : from.toString();
+                params.addContent(new Element(getDateFrom()).setText(sFrom));
+            }
 
-			if (result.getIds().size() == 0)
-				throw new NoRecordsMatchException("No results");
+            if (until != null) {
+                String sTo = until.isDateOnly() ? until.getDateAsString() : until.toString();
+                params.addContent(new Element(getDateUntil()).setText(sTo));
+            }
 
-			// we only need a new token if the result set is big enough
-			if (result.getIds().size() > getMaxRecords() ) {
-				token = new GeonetworkResumptionToken(req,result);
-				cache.storeResumptionToken(token);
-			}
-			
-		}
-		else
-		{
-			//result = (SearchResult) session.getProperty(Lib.SESSION_OBJECT);
-			token = cache.getResumptionToken( GeonetworkResumptionToken.buildKey(req)  );
-            if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
-                Log.debug(Geonet.OAI_HARVESTER,"OAI ListRecords : using ResumptionToken :"+GeonetworkResumptionToken.buildKey(req));
-			
-			if (token  == null)
-				throw new BadResumptionTokenException("No session for token : "+ GeonetworkResumptionToken.buildKey(req));
+            if (from != null && until != null && from.timeDifferenceInSeconds(until) > 0)
+                throw new BadArgumentException("From is greater than until");
 
-			result = token.getRes();
-			
-			//pos = result.parseToken(token);
-			pos = GeonetworkResumptionToken.getPos(req);
-		}
+            if (set != null)
+                params.addContent(new Element("category").setText(set));
 
-		ListResponse res = processRequest(req,pos,result,context);
-		pos = pos + res.getSize();
-		
-		if (token == null && res.getSize() == 0)
-			throw new NoRecordsMatchException("No results");
-		
-		//result.setupToken(res, pos);
-		if (token != null) token.setupToken(pos);
-		res.setResumptionToken(token);
+            params.addContent(new Element("_schema").setText(prefix));
 
-		return res;
-		
-		
-	}
+            // now do the search
+            result = new SearchResult(prefix);
+            if (schemaMan.existsSchema(prefix)) {
+                result.setIds(Lib.search(context, params));
+            } else {
+                // collect up all the schemas that we can convert to create prefix,
+                // search ids and add to the result set
+                List<String> schemas = getSchemasThatCanConvertTo(prefix);
+                for (String schema : schemas) {
+                    params.removeChild("_schema");
+                    params.addContent(new Element("_schema").setText(schema));
+                    result.addIds(Lib.search(context, (Element) params.clone()));
+                }
+                if (schemas.size() == 0) result.setIds(new ArrayList<Integer>());
+            }
 
-	//---------------------------------------------------------------------------
-	/** Get list of schemas that can convert to the prefix */
+            if (result.getIds().size() == 0)
+                throw new NoRecordsMatchException("No results");
 
-	private List<String> getSchemasThatCanConvertTo(String prefix) {
-		List<String> result = new ArrayList<String>();
-		for (String schema : schemaMan.getSchemas()) {
-			if (Lib.existsConverter(schemaMan.getSchemaDir(schema), prefix)) {
-				result.add(schema);
-			}
-		}
-		return result;
-	}
+            // we only need a new token if the result set is big enough
+            if (result.getIds().size() > getMaxRecords()) {
+                token = new GeonetworkResumptionToken(req, result);
+                cache.storeResumptionToken(token);
+            }
 
-	public abstract String getVerb(); 
-	public abstract ListResponse processRequest(TokenListRequest req, int pos, SearchResult result, ServiceContext context) throws Exception ;
+        } else {
+            //result = (SearchResult) session.getProperty(Lib.SESSION_OBJECT);
+            token = cache.getResumptionToken(GeonetworkResumptionToken.buildKey(req));
+            if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
+                Log.debug(Geonet.OAI_HARVESTER, "OAI ListRecords : using ResumptionToken :" + GeonetworkResumptionToken.buildKey(req));
+
+            if (token == null)
+                throw new BadResumptionTokenException("No session for token : " + GeonetworkResumptionToken.buildKey(req));
+
+            result = token.getRes();
+
+            //pos = result.parseToken(token);
+            pos = GeonetworkResumptionToken.getPos(req);
+        }
+
+        ListResponse res = processRequest(req, pos, result, context);
+        pos = pos + res.getSize();
+
+        if (token == null && res.getSize() == 0)
+            throw new NoRecordsMatchException("No results");
+
+        //result.setupToken(res, pos);
+        if (token != null) token.setupToken(pos);
+        res.setResumptionToken(token);
+
+        return res;
+
+
+    }
+
+    //---------------------------------------------------------------------------
+
+    /**
+     * Get list of schemas that can convert to the prefix
+     */
+
+    private List<String> getSchemasThatCanConvertTo(String prefix) {
+        List<String> result = new ArrayList<String>();
+        for (String schema : schemaMan.getSchemas()) {
+            if (Lib.existsConverter(schemaMan.getSchemaDir(schema), prefix)) {
+                result.add(schema);
+            }
+        }
+        return result;
+    }
+
+    public abstract String getVerb();
+
+    public abstract ListResponse processRequest(TokenListRequest req, int pos, SearchResult result, ServiceContext context) throws Exception;
 
 }

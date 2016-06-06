@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -34,12 +35,12 @@ import org.jdom.Element;
 import java.nio.file.Path;
 
 /**
- * For editing : removes an attribute from a metadata. Access is restricted
- * Metadata must be in current user session in edit mode.
+ * For editing : removes an attribute from a metadata. Access is restricted Metadata must be in
+ * current user session in edit mode.
  */
 public class DeleteAttribute extends NotInReadOnlyModeService {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
     /**
      *
@@ -48,14 +49,14 @@ public class DeleteAttribute extends NotInReadOnlyModeService {
      * @return
      * @throws Exception
      */
-	public Element serviceSpecificExec(Element params, ServiceContext context)
-			throws Exception {
-		UserSession session = context.getUserSession();
-		String id = Util.getParam(params, Params.ID);
-		String ref = Util.getParam(params, Params.REF);
+    public Element serviceSpecificExec(Element params, ServiceContext context)
+        throws Exception {
+        UserSession session = context.getUserSession();
+        String id = Util.getParam(params, Params.ID);
+        String ref = Util.getParam(params, Params.REF);
 
-		Element child = new AjaxEditUtils(context).deleteAttributeEmbedded(session, id, ref);
+        Element child = new AjaxEditUtils(context).deleteAttributeEmbedded(session, id, ref);
 
-		return child;
-	}
+        return child;
+    }
 }

@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Lists;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 
@@ -41,6 +42,7 @@ public abstract class TNodeFactory {
 
     @Autowired
     protected TextContentParser textContentParser;
+
     /**
      * Test if this node factory can process the current node.
      */
@@ -77,7 +79,7 @@ public abstract class TNodeFactory {
 
         if (replaceAtt != null) {
             value = replaceAtt.isEmpty() || replaceAtt.equalsIgnoreCase("y") || replaceAtt.equalsIgnoreCase("true")
-                      || replaceAtt.equalsIgnoreCase("yes");
+                || replaceAtt.equalsIgnoreCase("yes");
         }
 
         return value;

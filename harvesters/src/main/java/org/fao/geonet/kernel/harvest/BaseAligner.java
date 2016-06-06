@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -40,14 +41,13 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * 
- * This class helps {@link AbstractHarvester} instances to
- * process all metadata collected on the harvest.
- * 
+ * This class helps {@link AbstractHarvester} instances to process all metadata collected on the
+ * harvest.
+ *
  * Takes care of common properties like categories or privileges.
- * 
+ *
  * Not all harvesters use this. They should. But don't. //FIXME?
- * 
+ *
  * @author heikki doeleman
  */
 public abstract class BaseAligner {
@@ -61,12 +61,6 @@ public abstract class BaseAligner {
 
     /**
      * TODO Javadoc.
-     *
-     * @param categories
-     * @param localCateg
-     * @param log
-     * @param saveMetadata
-     * @throws Exception
      */
     public void addCategories(Metadata metadata, Iterable<String> categories, CategoryMapper localCateg, ServiceContext context,
                               Logger log, String serverCategory, boolean saveMetadata) {
@@ -74,25 +68,24 @@ public abstract class BaseAligner {
         final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
         Map<String, MetadataCategory> nameToCategoryMap = new HashMap<String, MetadataCategory>();
         for (MetadataCategory metadataCategory : categoryRepository.findAll()) {
-            nameToCategoryMap.put(""+metadataCategory.getId(), metadataCategory);
+            nameToCategoryMap.put("" + metadataCategory.getId(), metadataCategory);
         }
-        for(String catId : categories)  {
+        for (String catId : categories) {
             String name = localCateg.getName(catId);
 
             if (name == null) {
-                if(log.isDebugEnabled()) {
-                    log.debug("    - Skipping removed category with id:"+ catId);
+                if (log.isDebugEnabled()) {
+                    log.debug("    - Skipping removed category with id:" + catId);
                 }
-            }
-            else {
-                if(log.isDebugEnabled()) {
-                    log.debug("    - Setting category : "+ name);
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("    - Setting category : " + name);
                 }
                 final MetadataCategory metadataCategory = nameToCategoryMap.get(catId);
                 if (metadataCategory != null) {
                     metadata.getCategories().add(metadataCategory);
                 } else {
-                    log.warning("Unable to map category: "+catId+" ("+name+") to a category in Geonetwork");
+                    log.warning("Unable to map category: " + catId + " (" + name + ") to a category in Geonetwork");
                 }
             }
         }
@@ -100,13 +93,14 @@ public abstract class BaseAligner {
         if (serverCategory != null) {
             String catId = localCateg.getID(serverCategory);
             if (catId == null) {
-                if(log.isDebugEnabled()) log.debug("    - Skipping removed category :" + serverCategory);
+                if (log.isDebugEnabled())
+                    log.debug("    - Skipping removed category :" + serverCategory);
             } else {
                 final MetadataCategory metadataCategory = nameToCategoryMap.get(catId);
                 if (metadataCategory != null) {
                     metadata.getCategories().add(metadataCategory);
                 } else {
-                    log.warning("Unable to map category: "+catId+" to a category in Geonetwork");
+                    log.warning("Unable to map category: " + catId + " to a category in Geonetwork");
                 }
             }
         }
@@ -130,24 +124,23 @@ public abstract class BaseAligner {
             String name = localGroups.getName(priv.getGroupId());
 
             if (name == null) {
-                if(log.isDebugEnabled()) {
-                    log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
+                if (log.isDebugEnabled()) {
+                    log.debug("    - Skipping removed group with id:" + priv.getGroupId());
                 }
-            }
-            else {
-                if(log.isDebugEnabled()) {
-                    log.debug("    - Setting privileges for group : "+ name);
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("    - Setting privileges for group : " + name);
                 }
 
-                for (int opId: priv.getOperations()) {
+                for (int opId : priv.getOperations()) {
                     name = dataMan.getAccessManager().getPrivilegeName(opId);
 
                     //--- all existing operation
                     if (name != null) {
-                        if(log.isDebugEnabled()) {
-                            log.debug("       --> Operation: "+ name);
+                        if (log.isDebugEnabled()) {
+                            log.debug("       --> Operation: " + name);
                         }
-                        dataMan.setOperation(context, id, priv.getGroupId(), opId +"");
+                        dataMan.setOperation(context, id, priv.getGroupId(), opId + "");
                     }
                 }
             }

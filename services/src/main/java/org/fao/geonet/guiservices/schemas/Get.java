@@ -26,59 +26,60 @@ package org.fao.geonet.guiservices.schemas;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
 //=============================================================================
 
-public class Get implements Service
-{
-	private String   FS         = File.separator;
+public class Get implements Service {
+    private String FS = File.separator;
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		SchemaManager schemaMan = gc.getBean(SchemaManager.class);
+        SchemaManager schemaMan = gc.getBean(SchemaManager.class);
 
-		Element schemas = new Element("schemalist");
+        Element schemas = new Element("schemalist");
 
-		for (String schema : schemaMan.getSchemas()) {
-			Element elem = new Element("name").setText(schema);
-			elem.setAttribute("plugin","true"); // all schemas are plugins
-			elem.setAttribute("schemaConvertDirectory",schemaMan.getSchemaDir(schema)+"convert"+FS);
-			elem.setAttribute("namespaces",schemaMan.getNamespaceString(schema));
-			// is it editable?
-			if (schemaMan.getSchema(schema).canEdit()) {
-				elem.setAttribute("edit","true");
-			} else {
-				elem.setAttribute("edit","false");
-			}
-			// get the conversion information and add it too
-			List<Element> convElems = schemaMan.getConversionElements(schema);
-			if (convElems.size() > 0) {
-				Element conv = new Element("conversions");
-				conv.addContent(convElems);
-				elem.addContent(conv);
-			}
-			schemas.addContent(elem);
-		}
+        for (String schema : schemaMan.getSchemas()) {
+            Element elem = new Element("name").setText(schema);
+            elem.setAttribute("plugin", "true"); // all schemas are plugins
+            elem.setAttribute("schemaConvertDirectory", schemaMan.getSchemaDir(schema) + "convert" + FS);
+            elem.setAttribute("namespaces", schemaMan.getNamespaceString(schema));
+            // is it editable?
+            if (schemaMan.getSchema(schema).canEdit()) {
+                elem.setAttribute("edit", "true");
+            } else {
+                elem.setAttribute("edit", "false");
+            }
+            // get the conversion information and add it too
+            List<Element> convElems = schemaMan.getConversionElements(schema);
+            if (convElems.size() > 0) {
+                Element conv = new Element("conversions");
+                conv.addContent(convElems);
+                elem.addContent(conv);
+            }
+            schemas.addContent(elem);
+        }
 
-		return schemas;
-	}
+        return schemas;
+    }
 }
 
 //=============================================================================

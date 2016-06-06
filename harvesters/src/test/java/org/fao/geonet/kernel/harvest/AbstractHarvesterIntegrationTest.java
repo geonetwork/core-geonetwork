@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.MockRequestFactoryGeonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -41,13 +42,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * test base class for testing harvesters.
- * User: Jesse
- * Date: 10/18/13
- * Time: 4:02 PM
+ * test base class for testing harvesters. User: Jesse Date: 10/18/13 Time: 4:02 PM
  */
 @ContextConfiguration(inheritLocations = true, locations = "classpath:harvesters-repository-test-context.xml")
 public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvesterServiceIntegrationTest {
+    private final String _harvesterType;
     @Autowired
     protected MockRequestFactoryGeonet requestFactory;
     @Autowired
@@ -55,12 +54,10 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
     @Autowired
     protected MetadataRepository metadataRepository;
 
-
-    private final String _harvesterType;
-
     public AbstractHarvesterIntegrationTest(String harvesterType) {
         this._harvesterType = harvesterType;
     }
+
     @Before
     public void clearRequestFactory() {
         requestFactory.clear();
@@ -82,12 +79,12 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
 
         _harvester.invoke();
         final Element result = _harvester.getResult();
-        assertEqualsText(""+getExpectedAdded(), result, "added");
-        assertEqualsText(""+ getExpectedTotalFound(), result, "total");
-        assertEqualsText(""+ getExpectedBadFormat(), result, "badFormat");
-        assertEqualsText(""+ getExpectedDoesNotValidate(), result, "doesNotValidate");
-        assertEqualsText(""+ getExpectedUnknownSchema(), result, "unknownSchema");
-        assertEqualsText(""+ getExpectedUpdated(), result, "updated");
+        assertEqualsText("" + getExpectedAdded(), result, "added");
+        assertEqualsText("" + getExpectedTotalFound(), result, "total");
+        assertEqualsText("" + getExpectedBadFormat(), result, "badFormat");
+        assertEqualsText("" + getExpectedDoesNotValidate(), result, "doesNotValidate");
+        assertEqualsText("" + getExpectedUnknownSchema(), result, "unknownSchema");
+        assertEqualsText("" + getExpectedUpdated(), result, "updated");
         assertEqualsText("" + getExpectedRemoved(), result, "removed");
 
         assertExpectedErrors(_harvester.getErrors());
@@ -109,19 +106,40 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
         // no extras by default
     }
 
-    protected int getExpectedTotalFound() { return 0; }
-    protected int getExpectedAdded() { return 0; }
-    protected int getExpectedBadFormat() { return 0; }
-    protected int getExpectedDoesNotValidate() { return 0; }
-    protected int getExpectedUnknownSchema() { return 0; }
-    protected int getExpectedUpdated() { return 0; }
-    protected int getExpectedRemoved() { return 0; }
+    protected int getExpectedTotalFound() {
+        return 0;
+    }
+
+    protected int getExpectedAdded() {
+        return 0;
+    }
+
+    protected int getExpectedBadFormat() {
+        return 0;
+    }
+
+    protected int getExpectedDoesNotValidate() {
+        return 0;
+    }
+
+    protected int getExpectedUnknownSchema() {
+        return 0;
+    }
+
+    protected int getExpectedUpdated() {
+        return 0;
+    }
+
+    protected int getExpectedRemoved() {
+        return 0;
+    }
 
     protected void assertExpectedErrors(List errors) {
-        assertEquals (0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     protected abstract void mockHttpRequests(MockRequestFactoryGeonet bean) throws Exception;
+
     protected abstract void customizeParams(Element params);
 
 

@@ -27,6 +27,7 @@ import org.fao.geonet.Constants;
 
 /**
  * Encapsulates the information when a formatter is executed.
+ *
  * @author Jesse on 3/5/2015.
  */
 public class StoreInfoAndData extends StoreInfo {
@@ -35,6 +36,7 @@ public class StoreInfoAndData extends StoreInfo {
     public StoreInfoAndData(String data, long changeDate, boolean published) {
         this(data == null ? null : data.getBytes(Constants.CHARSET), changeDate, published);
     }
+
     public StoreInfoAndData(byte[] data, long changeDate, boolean published) {
         super(changeDate, published);
         this.data = data;

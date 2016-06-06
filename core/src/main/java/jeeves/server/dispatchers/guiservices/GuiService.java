@@ -24,13 +24,13 @@
 package jeeves.server.dispatchers.guiservices;
 
 import jeeves.server.context.ServiceContext;
+
 import org.jdom.Element;
 
 //=============================================================================
 
-public interface GuiService
-{
-	public Element exec(Element response, ServiceContext context) throws Exception;
+public interface GuiService {
+    public Element exec(Element response, ServiceContext context) throws Exception;
 }
 
 //=============================================================================

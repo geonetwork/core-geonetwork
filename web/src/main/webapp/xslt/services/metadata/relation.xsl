@@ -26,9 +26,9 @@
   Create XML document containing all related items
   following relatedResponse.xsd.
 -->
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:geonet="http://www.fao.org/geonetwork"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
+                version="2.0"
                 exclude-result-prefixes="#all">
 
   <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
@@ -57,7 +57,6 @@
   </xsl:template>
 
 
-
   <xsl:template mode="relation" match="related|services|datasets|children|
                        parent|sources|fcats|hasfeaturecats|
                        siblings|associated|sources|hassources">
@@ -76,18 +75,31 @@
                         select="if ($metadata/uuid != '') then $metadata/uuid else geonet:info/uuid"/>
 
           <item>
-            <id><xsl:value-of select="$uuid"/></id>
+            <id>
+              <xsl:value-of select="$uuid"/>
+            </id>
             <title>
-              <value lang="{$lang}"><xsl:value-of select="$metadata/title"/></value>
+              <value lang="{$lang}">
+                <xsl:value-of select="$metadata/title"/>
+              </value>
             </title>
-            <url><xsl:value-of select="concat(util:getSettingValue('nodeUrl'), 'api/records/', $uuid)"/></url>
+            <url>
+              <xsl:value-of
+                select="concat(util:getSettingValue('nodeUrl'), 'api/records/', $uuid)"/>
+            </url>
             <description>
-              <value lang="{$lang}"><xsl:value-of select="$metadata/abstract"/></value>
+              <value lang="{$lang}">
+                <xsl:value-of select="$metadata/abstract"/>
+              </value>
             </description>
 
             <xsl:if test="$type = 'siblings'">
-              <associationType><xsl:value-of select="../@initiative"/></associationType>
-              <initiativeType><xsl:value-of select="../@association"/></initiativeType>
+              <associationType>
+                <xsl:value-of select="../@initiative"/>
+              </associationType>
+              <initiativeType>
+                <xsl:value-of select="../@association"/>
+              </initiativeType>
             </xsl:if>
           </item>
         </xsl:for-each>

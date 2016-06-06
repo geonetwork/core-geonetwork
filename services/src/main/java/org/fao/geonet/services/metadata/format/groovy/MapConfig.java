@@ -26,9 +26,11 @@ package org.fao.geonet.services.metadata.format.groovy;
 import org.fao.geonet.services.region.GetMap;
 
 /**
- * Encapsulates the map parameters used when making {@link org.fao.geonet.services.region.GetMap} requests.
+ * Encapsulates the map parameters used when making {@link org.fao.geonet.services.region.GetMap}
+ * requests.
  *
- * The parameters are read from the setting (background, width and mapproj) and are to be used when displaying geometries and extents.
+ * The parameters are read from the setting (background, width and mapproj) and are to be used when
+ * displaying geometries and extents.
  *
  * @author Jesse on 12/19/2014.
  */
@@ -44,8 +46,8 @@ public class MapConfig {
     }
 
     /**
-     * The value to pass as the <em>background</em> parameter when making a request to {@link org.fao.geonet.services.region.GetMap}
-     * when rendering extents and geometries.
+     * The value to pass as the <em>background</em> parameter when making a request to {@link
+     * org.fao.geonet.services.region.GetMap} when rendering extents and geometries.
      */
     public String getBackground() {
         return background.toLowerCase().startsWith("http://") ? GetMap.SETTING_BACKGROUND : background;

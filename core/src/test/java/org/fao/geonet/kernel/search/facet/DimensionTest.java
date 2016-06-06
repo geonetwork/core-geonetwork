@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.search.facet;
 
 import com.google.common.collect.Sets;
+
 import org.fao.geonet.kernel.search.classifier.Split;
 import org.fao.geonet.kernel.search.classifier.Value;
 import org.jdom.JDOMException;

@@ -30,108 +30,110 @@ import org.jdom.Element;
 
 //=============================================================================
 
-class Group
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+class Group {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	Group() {}
+    public String name;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    public CopyPolicy policy;
 
-	public Group(Element group) throws BadInputEx
-	{
-		name = group.getAttributeValue("name");
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-		if (name == null)
-			throw new MissingParameterEx("attribute:name", group);
+    Group() {
+    }
 
-		String t = group.getAttributeValue("policy");
+    //---------------------------------------------------------------------------
 
-		if (t == null)
-			throw new MissingParameterEx("attribute:policy", group);
+    public Group(Element group) throws BadInputEx {
+        name = group.getAttributeValue("name");
 
-		policy = CopyPolicy.parse(t);
+        if (name == null)
+            throw new MissingParameterEx("attribute:name", group);
 
-		if (policy == null)
-			throw new BadParameterEx("attribute:policy", policy);
+        String t = group.getAttributeValue("policy");
 
-		//--- '1' is the 'All' group
+        if (t == null)
+            throw new MissingParameterEx("attribute:policy", group);
 
-		if (policy == CopyPolicy.COPY_TO_INTRANET && !isAllGroup())
-			throw new BadParameterEx("attribute:policy", policy);
+        policy = CopyPolicy.parse(t);
 
-		if (policy == CopyPolicy.CREATE_AND_COPY && isAllGroup())
-			throw new BadParameterEx("attribute:policy", policy);
-	}
+        if (policy == null)
+            throw new BadParameterEx("attribute:policy", policy);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+        //--- '1' is the 'All' group
 
-	public Group copy()
-	{
-		Group m = new Group();
+        if (policy == CopyPolicy.COPY_TO_INTRANET && !isAllGroup())
+            throw new BadParameterEx("attribute:policy", policy);
 
-		m.name   = name;
-		m.policy = policy;
+        if (policy == CopyPolicy.CREATE_AND_COPY && isAllGroup())
+            throw new BadParameterEx("attribute:policy", policy);
+    }
 
-		return m;
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public Group copy() {
+        Group m = new Group();
 
-	public boolean isAllGroup() { return name.equals("all"); }
+        m.name = name;
+        m.policy = policy;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        return m;
+    }
 
-	public String     name;
-	public CopyPolicy policy;
+    public boolean isAllGroup() {
+        return name.equals("all");
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- CopyType
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- CopyType
+    //---
+    //---------------------------------------------------------------------------
 
-	public enum CopyPolicy
-	{
-		COPY("copy"),
-		CREATE_AND_COPY("createAndCopy"),
-		COPY_TO_INTRANET("copyToIntranet");
+    public enum CopyPolicy {
+        COPY("copy"),
+        CREATE_AND_COPY("createAndCopy"),
+        COPY_TO_INTRANET("copyToIntranet");
 
-		//------------------------------------------------------------------------
+        //------------------------------------------------------------------------
 
-		private CopyPolicy(String policy) { this.policy = policy; }
+        private String policy;
 
-		//------------------------------------------------------------------------
+        //------------------------------------------------------------------------
 
-		public String toString() { return policy; }
+        private CopyPolicy(String policy) {
+            this.policy = policy;
+        }
 
-		//------------------------------------------------------------------------
+        //------------------------------------------------------------------------
 
-		public static CopyPolicy parse(String policy)
-		{
-			if (policy.equals(COPY            .toString())) return COPY;
-			if (policy.equals(CREATE_AND_COPY .toString())) return CREATE_AND_COPY;
-			if (policy.equals(COPY_TO_INTRANET.toString())) return COPY_TO_INTRANET;
+        public static CopyPolicy parse(String policy) {
+            if (policy.equals(COPY.toString())) return COPY;
+            if (policy.equals(CREATE_AND_COPY.toString())) return CREATE_AND_COPY;
+            if (policy.equals(COPY_TO_INTRANET.toString())) return COPY_TO_INTRANET;
 
-			return null;
-		}
+            return null;
+        }
 
-		//------------------------------------------------------------------------
+        //------------------------------------------------------------------------
 
-		private String policy;
-	}
+        public String toString() {
+            return policy;
+        }
+    }
 }
 
 //=============================================================================

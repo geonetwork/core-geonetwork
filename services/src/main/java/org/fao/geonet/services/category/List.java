@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.jdom.Element;
 
@@ -34,23 +35,23 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** Retrieves all categories in the system
-  */
+/**
+ * Retrieves all categories in the system
+ */
 
-public class List implements Service
-{
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class List implements Service {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		return context.getBean(MetadataCategoryRepository.class).findAllAsXml().setName(Jeeves.Elem.RESPONSE);
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        return context.getBean(MetadataCategoryRepository.class).findAllAsXml().setName(Jeeves.Elem.RESPONSE);
+    }
 }
 
 //=============================================================================

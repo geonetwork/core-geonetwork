@@ -42,41 +42,39 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class ECasUserDetailAuthenticationProvider extends
-        AbstractUserDetailsAuthenticationProvider implements
-        ApplicationContextAware, UserDetailsService {
+    AbstractUserDetailsAuthenticationProvider implements
+    ApplicationContextAware, UserDetailsService {
 
-    private PasswordEncoder encoder;
     private static final org.apache.commons.logging.Log logger = LogFactory
-            .getLog(ECasUserDetailAuthenticationProvider.class);
-
+        .getLog(ECasUserDetailAuthenticationProvider.class);
+    private static final String CAS_STATEFUL = "_cas_stateful_";
+    private static final String CAS_FLAG = "ECAS";
+    private PasswordEncoder encoder;
     @Autowired
     private UserRepository userRepo;
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails,
-            UsernamePasswordAuthenticationToken authentication)
-            throws AuthenticationException {
+                                                  UsernamePasswordAuthenticationToken authentication)
+        throws AuthenticationException {
         User gnDetails = userRepo.findOneByUsername(userDetails.getUsername());
         if (authentication.getCredentials() == null) {
             logger.error("Authentication failed: no credentials provided");
             throw new BadCredentialsException(
-                    "Authentication failed: no credentials provided");
+                "Authentication failed: no credentials provided");
         }
         if (!encoder.matches(authentication.getCredentials().toString(),
-                gnDetails.getPassword())) {
+            gnDetails.getPassword())) {
             logger.warn("Authentication failed: wrong password provided");
             throw new BadCredentialsException(
-                    "Authentication failed: wrong password provided");
+                "Authentication failed: wrong password provided");
         }
     }
 
-    private static final String CAS_STATEFUL = "_cas_stateful_";
-    private static final String CAS_FLAG = "ECAS";
-
     @Override
     protected UserDetails retrieveUser(String username,
-            UsernamePasswordAuthenticationToken authentication)
-            throws AuthenticationException {
+                                       UsernamePasswordAuthenticationToken authentication)
+        throws AuthenticationException {
         if (CAS_STATEFUL.equalsIgnoreCase(username)) {
             // cas failed
             logger.error("_cas_stateful_ detected in retrieveUser");
@@ -86,7 +84,7 @@ public class ECasUserDetailAuthenticationProvider extends
             User user = userRepo.findOneByUsername(username);
             if (user != null && !user.getSecurity().getAuthType().equalsIgnoreCase(CAS_FLAG)) {
                 throw new AuthenticationServiceException(
-                        "Trying to authenticate through ECAS a user that is not ECAS");
+                    "Trying to authenticate through ECAS a user that is not ECAS");
             }
 
             if (user == null) // if user does not exists, add one as guest
@@ -103,20 +101,20 @@ public class ECasUserDetailAuthenticationProvider extends
 
         } catch (Throwable e) {
             throw new AuthenticationServiceException(
-                    "Unexpected error while loading user", e);
+                "Unexpected error while loading user", e);
         }
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext)
-            throws BeansException {
+        throws BeansException {
         this.encoder = (PasswordEncoder) applicationContext
-                .getBean(PasswordUtil.ENCODER_ID);
+            .getBean(PasswordUtil.ENCODER_ID);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
+        throws UsernameNotFoundException {
         return retrieveUser(username, null);
     }
 

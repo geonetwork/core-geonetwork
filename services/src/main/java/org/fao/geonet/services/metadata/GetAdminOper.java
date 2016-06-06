@@ -29,6 +29,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Operation;
@@ -50,39 +51,38 @@ import java.util.Set;
 
 //=============================================================================
 
-/** Given a metadata id returns all operation allowed on it. Called by the
-  * metadata.admin service
-  */
+/**
+ * Given a metadata id returns all operation allowed on it. Called by the metadata.admin service
+ */
 
-public class GetAdminOper implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class GetAdminOper implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		AccessManager am = context.getBean(AccessManager.class);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        AccessManager am = context.getBean(AccessManager.class);
 
-		String metadataId = Utils.getIdentifierFromParameters(params, context);
+        String metadataId = Utils.getIdentifierFromParameters(params, context);
 
-		//-----------------------------------------------------------------------
-		//--- check access
+        //-----------------------------------------------------------------------
+        //--- check access
 
-		Metadata info = context.getBean(MetadataRepository.class).findOne(metadataId);
+        Metadata info = context.getBean(MetadataRepository.class).findOne(metadataId);
 
-		if (info == null)
-			throw new MetadataNotFoundEx(metadataId);
+        if (info == null)
+            throw new MetadataNotFoundEx(metadataId);
 
         Element ownerId = new Element("ownerid").setText(info.getSourceInfo().getOwner() + "");
         Element groupOwner = new Element("groupOwner").setText(info.getSourceInfo().getGroupOwner() + "");
@@ -90,9 +90,9 @@ public class GetAdminOper implements Service
         if (am.isOwner(context, metadataId))
             hasOwner.setText("true");
         else
-			hasOwner.setText("false");
+            hasOwner.setText("false");
 
-		//--- get all operations
+        //--- get all operations
 
         OperationRepository opRepository = context.getBean(OperationRepository.class);
         List<Operation> operationList = opRepository.findAll();
@@ -106,75 +106,75 @@ public class GetAdminOper implements Service
         }
 
         //-----------------------------------------------------------------------
-		//--- retrieve groups operations
+        //--- retrieve groups operations
 
-		Set<Integer> userGroups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
+        Set<Integer> userGroups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
 
-		Element elGroup = context.getBean(GroupRepository.class).findAllAsXml();
+        Element elGroup = context.getBean(GroupRepository.class).findAllAsXml();
 
         final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
         OperationAllowedRepository opAllowRepository = context.getBean(OperationAllowedRepository.class);
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> list = elGroup.getChildren();
-		for (Element el : list) {
-			el.setName(Geonet.Elem.GROUP);
-			String sGrpId = el.getChildText("id");
-			int grpId = Integer.parseInt(sGrpId);
+        for (Element el : list) {
+            el.setName(Geonet.Elem.GROUP);
+            String sGrpId = el.getChildText("id");
+            int grpId = Integer.parseInt(sGrpId);
 
-			//--- get all group informations (user member and user profile)
-			
-			el.setAttribute("userGroup", userGroups.contains(grpId) ? "true" : "false");
+            //--- get all group informations (user member and user profile)
+
+            el.setAttribute("userGroup", userGroups.contains(grpId) ? "true" : "false");
 
             final Specification<UserGroup> hasGroupId = UserGroupSpecs.hasGroupId(grpId);
             final Specification<UserGroup> hasUserId = UserGroupSpecs.hasUserId(context.getUserSession().getUserIdAsInt());
             final Specifications<UserGroup> hasUserIdAndGroupId = where(hasGroupId).and(hasUserId);
             List<UserGroup> userGroupEntities = userGroupRepository.findAll(hasUserIdAndGroupId);
-			for (UserGroup ug : userGroupEntities) {
-				el.addContent(new Element("userProfile").setText(ug.getProfile().toString()));
-			}
+            for (UserGroup ug : userGroupEntities) {
+                el.addContent(new Element("userProfile").setText(ug.getProfile().toString()));
+            }
 
             //--- get all operations that this group can do on given metadata
             Specifications<OperationAllowed> hasGroupIdAndMetadataId = where(OperationAllowedSpecs.hasGroupId(grpId)).and
-                    (OperationAllowedSpecs.hasMetadataId(metadataId));
+                (OperationAllowedSpecs.hasMetadataId(metadataId));
             List<OperationAllowed> opAllowList = opAllowRepository.findAll(hasGroupIdAndMetadataId);
 
-			for (Operation operation : operationList) {
-				String operId = Integer.toString(operation.getId());
+            for (Operation operation : operationList) {
+                String operId = Integer.toString(operation.getId());
 
-				Element elGrpOper = new Element(Geonet.Elem.OPER)
-													.addContent(new Element(Geonet.Elem.ID).setText(operId));
+                Element elGrpOper = new Element(Geonet.Elem.OPER)
+                    .addContent(new Element(Geonet.Elem.ID).setText(operId));
 
-				boolean bFound = false;
+                boolean bFound = false;
 
-				for (OperationAllowed operationAllowed : opAllowList) {
-					if (operation.getId() == operationAllowed.getId().getOperationId()) {
-						bFound = true;
-						break;
-					}
-				}
-
-				if (bFound) {
-					elGrpOper.addContent(new Element(Geonet.Elem.ON));
+                for (OperationAllowed operationAllowed : opAllowList) {
+                    if (operation.getId() == operationAllowed.getId().getOperationId()) {
+                        bFound = true;
+                        break;
+                    }
                 }
 
-				el.addContent(elGrpOper);
-			}
-		}
+                if (bFound) {
+                    elGrpOper.addContent(new Element(Geonet.Elem.ON));
+                }
 
-		//-----------------------------------------------------------------------
-		//--- put all together
+                el.addContent(elGrpOper);
+            }
+        }
 
-		Element elRes = new Element(Jeeves.Elem.RESPONSE)
-										.addContent(new Element(Geonet.Elem.ID).setText(metadataId))
-										.addContent(elOper)
-										.addContent(elGroup)
-										.addContent(ownerId)
-										.addContent(hasOwner)
-										.addContent(groupOwner);
+        //-----------------------------------------------------------------------
+        //--- put all together
 
-		return elRes;
-	}
+        Element elRes = new Element(Jeeves.Elem.RESPONSE)
+            .addContent(new Element(Geonet.Elem.ID).setText(metadataId))
+            .addContent(elOper)
+            .addContent(elGroup)
+            .addContent(ownerId)
+            .addContent(hasOwner)
+            .addContent(groupOwner);
+
+        return elRes;
+    }
 }
 
 //=============================================================================

@@ -84,11 +84,10 @@ public class Sitemap implements Service {
         }
     }
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         String format = Util.getParam(params, "format", FORMAT_XML);
         if (!((format.equalsIgnoreCase(FORMAT_HTML)) ||
-           (format.equalsIgnoreCase(FORMAT_XML)))) {
+            (format.equalsIgnoreCase(FORMAT_XML)))) {
 
             format = FORMAT_XML;
         }
@@ -96,20 +95,20 @@ public class Sitemap implements Service {
         Integer allgroup = 1;
 
         Specifications<OperationAllowed> spec = Specifications.where(
-                OperationAllowedSpecs.hasOperation(ReservedOperation.view));
+            OperationAllowedSpecs.hasOperation(ReservedOperation.view));
         spec = spec.and(OperationAllowedSpecs.hasGroupId(allgroup));
-        
-        OperationAllowedRepository operationAllowedRepository = 
-                context.getBean(OperationAllowedRepository.class);
-        MetadataRepository metadataRepository = 
-                context.getBean(MetadataRepository.class);
+
+        OperationAllowedRepository operationAllowedRepository =
+            context.getBean(OperationAllowedRepository.class);
+        MetadataRepository metadataRepository =
+            context.getBean(MetadataRepository.class);
 
         final List<Integer> list = operationAllowedRepository.findAllIds(spec,
-                OperationAllowedId_.metadataId);
+            OperationAllowedId_.metadataId);
         Sort sortByChangeDateDesc = new Sort(Sort.Direction.DESC, Metadata_.dataInfo.getName() + "." + MetadataDataInfo_.changeDate.getName());
 
         long metadatataCount = metadataRepository.count(MetadataSpecs.hasMetadataIdIn(list));
-        long pages = (long) Math.ceil((double)metadatataCount / _maxItemsPage);
+        long pages = (long) Math.ceil((double) metadatataCount / _maxItemsPage);
 
         int doc = Util.getParam(params, "doc", 0);
 
@@ -151,7 +150,7 @@ public class Sitemap implements Service {
                 result.addContent(changeDate);
             }
         }
-        
+
         return result;
     }
 }

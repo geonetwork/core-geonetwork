@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.cache;
 
 import com.google.common.annotations.VisibleForTesting;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.utils.Log;
@@ -34,7 +35,8 @@ import java.sql.SQLException;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * Runnable responsible for monitoring the FormatterCache storeRequest queue and pushing the requests to the persistent store.
+ * Runnable responsible for monitoring the FormatterCache storeRequest queue and pushing the
+ * requests to the persistent store.
  *
  * @author Jesse on 3/5/2015.
  */

@@ -1,6 +1,7 @@
 package org.fao.geonet.wro4j;
 
 import org.fao.geonet.utils.IO;
+
 import ro.isdc.wro.model.resource.Resource;
 import ro.isdc.wro.model.resource.ResourceType;
 import ro.isdc.wro.model.resource.locator.UriLocator;
@@ -26,7 +27,7 @@ public class ClosureDependencyUriLocator implements UriLocator {
         resource.setMinimize(false);
         resource.setType(ResourceType.JS);
 
-        if (Files.exists(IO.toPath(dep.path.replace("file:/D:","/D")))) {
+        if (Files.exists(IO.toPath(dep.path.replace("file:/D:", "/D")))) {
             resource.setUri(IO.toPath(dep.path).toUri().toString());
         } else {
             StringBuilder path = new StringBuilder();

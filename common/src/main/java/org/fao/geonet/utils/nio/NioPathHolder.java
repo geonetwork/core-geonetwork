@@ -34,8 +34,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Holder the information required by {@link NioPathAwareCatalogResolver}
- * and {@link NioPathAwareEntityResolver} for resolving paths.
+ * Holder the information required by {@link NioPathAwareCatalogResolver} and {@link
+ * NioPathAwareEntityResolver} for resolving paths.
  *
  * @author Jesse on 11/4/2014.
  */

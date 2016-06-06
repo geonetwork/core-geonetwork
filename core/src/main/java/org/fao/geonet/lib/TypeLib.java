@@ -25,33 +25,27 @@ package org.fao.geonet.lib;
 
 //=============================================================================
 
-public class TypeLib
-{
-	//-----------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//-----------------------------------------------------------------------------
+public class TypeLib {
+    //-----------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //-----------------------------------------------------------------------------
 
-	public boolean isInteger(String value)
-	{
-		try
-		{
-			Integer.parseInt(value);
-			return true;
-		}
-		catch(Exception e)
-		{
-			return false;
-		}
-	}
+    public boolean isInteger(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public boolean isBoolean(String value)
-	{
-		return value.equals("true") || value.equals("false");
-	}
+    public boolean isBoolean(String value) {
+        return value.equals("true") || value.equals("false");
+    }
 }
 
 //=============================================================================

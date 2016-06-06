@@ -41,12 +41,12 @@ public class SkipElementClosure extends SkipElement {
     public boolean select(TransformationContext context, GPathResult elem) {
         final int maximumNumberOfParameters = this.closure.getMaximumNumberOfParameters();
         switch (maximumNumberOfParameters) {
-        case 0:
-            return (boolean) this.closure.call();
-        case 1:
-            return (boolean) this.closure.call(elem);
-        default:
-            throw new IllegalArgumentException("Closure has too many parameters");
+            case 0:
+                return (boolean) this.closure.call();
+            case 1:
+                return (boolean) this.closure.call(elem);
+            default:
+                throw new IllegalArgumentException("Closure has too many parameters");
         }
     }
 }

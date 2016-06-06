@@ -1,10 +1,10 @@
-
 package org.fao.geonet.api.records.model.related;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -26,7 +26,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ * minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -37,7 +38,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ * minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -48,7 +50,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedSiblingMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="item" type="{}relatedSiblingMetadataItem"
+ * maxOccurs="unbounded" minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -59,7 +62,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ * minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -70,7 +74,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ * minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -81,7 +86,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ * minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -92,7 +98,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ * minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -103,7 +110,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ * minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -114,7 +122,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ * minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -125,7 +134,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ * minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -136,7 +146,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedLinkItem" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="item" type="{}relatedLinkItem" maxOccurs="unbounded"
+ * minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -147,7 +158,8 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedThumbnailItem" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="item" type="{}relatedThumbnailItem" maxOccurs="unbounded"
+ * minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -158,12 +170,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "relatedResponse")
-@XmlRootElement(name="related")
+@XmlRootElement(name = "related")
 public class RelatedResponse {
 
     protected RelatedResponse.Children children;
@@ -182,10 +192,7 @@ public class RelatedResponse {
     /**
      * Gets the value of the children property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedResponse.Children }
-     *
+     * @return possible object is {@link RelatedResponse.Children }
      */
     public RelatedResponse.Children getChildren() {
         return children;
@@ -194,10 +201,7 @@ public class RelatedResponse {
     /**
      * Sets the value of the children property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedResponse.Children }
-     *
+     * @param value allowed object is {@link RelatedResponse.Children }
      */
     public void setChildren(RelatedResponse.Children value) {
         this.children = value;
@@ -206,10 +210,7 @@ public class RelatedResponse {
     /**
      * Gets the value of the parent property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedResponse.Parent }
-     *
+     * @return possible object is {@link RelatedResponse.Parent }
      */
     public RelatedResponse.Parent getParent() {
         return parent;
@@ -218,10 +219,7 @@ public class RelatedResponse {
     /**
      * Sets the value of the parent property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedResponse.Parent }
-     *
+     * @param value allowed object is {@link RelatedResponse.Parent }
      */
     public void setParent(RelatedResponse.Parent value) {
         this.parent = value;
@@ -230,10 +228,7 @@ public class RelatedResponse {
     /**
      * Gets the value of the siblings property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedResponse.Siblings }
-     *
+     * @return possible object is {@link RelatedResponse.Siblings }
      */
     public RelatedResponse.Siblings getSiblings() {
         return siblings;
@@ -242,10 +237,7 @@ public class RelatedResponse {
     /**
      * Sets the value of the siblings property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedResponse.Siblings }
-     *
+     * @param value allowed object is {@link RelatedResponse.Siblings }
      */
     public void setSiblings(RelatedResponse.Siblings value) {
         this.siblings = value;
@@ -254,10 +246,7 @@ public class RelatedResponse {
     /**
      * Gets the value of the associated property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedResponse.Associated }
-     *
+     * @return possible object is {@link RelatedResponse.Associated }
      */
     public RelatedResponse.Associated getAssociated() {
         return associated;
@@ -266,10 +255,7 @@ public class RelatedResponse {
     /**
      * Sets the value of the associated property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedResponse.Associated }
-     *
+     * @param value allowed object is {@link RelatedResponse.Associated }
      */
     public void setAssociated(RelatedResponse.Associated value) {
         this.associated = value;
@@ -278,10 +264,7 @@ public class RelatedResponse {
     /**
      * Gets the value of the service property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedResponse.Service }
-     *
+     * @return possible object is {@link RelatedResponse.Service }
      */
     public RelatedResponse.Service getServices() {
         return services;
@@ -290,10 +273,7 @@ public class RelatedResponse {
     /**
      * Sets the value of the service property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedResponse.Service }
-     *
+     * @param value allowed object is {@link RelatedResponse.Service }
      */
     public void setServices(RelatedResponse.Service value) {
         this.services = value;
@@ -302,10 +282,7 @@ public class RelatedResponse {
     /**
      * Gets the value of the dataset property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedResponse.Dataset }
-     *
+     * @return possible object is {@link RelatedResponse.Dataset }
      */
     public RelatedResponse.Dataset getDatasets() {
         return datasets;
@@ -314,10 +291,7 @@ public class RelatedResponse {
     /**
      * Sets the value of the dataset property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedResponse.Dataset }
-     *
+     * @param value allowed object is {@link RelatedResponse.Dataset }
      */
     public void setDatasets(RelatedResponse.Dataset value) {
         this.datasets = value;
@@ -326,10 +300,7 @@ public class RelatedResponse {
     /**
      * Gets the value of the fcat property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedResponse.Fcat }
-     *
+     * @return possible object is {@link RelatedResponse.Fcat }
      */
     public RelatedResponse.Fcat getFcats() {
         return fcats;
@@ -338,10 +309,7 @@ public class RelatedResponse {
     /**
      * Sets the value of the fcat property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedResponse.Fcat }
-     *
+     * @param value allowed object is {@link RelatedResponse.Fcat }
      */
     public void setFcats(RelatedResponse.Fcat value) {
         this.fcats = value;
@@ -350,10 +318,7 @@ public class RelatedResponse {
     /**
      * Gets the value of the source property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedResponse.Source }
-     *
+     * @return possible object is {@link RelatedResponse.Source }
      */
     public RelatedResponse.Source getSources() {
         return sources;
@@ -362,10 +327,7 @@ public class RelatedResponse {
     /**
      * Sets the value of the source property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedResponse.Source }
-     *
+     * @param value allowed object is {@link RelatedResponse.Source }
      */
     public void setSources(RelatedResponse.Source value) {
         this.sources = value;
@@ -374,10 +336,7 @@ public class RelatedResponse {
     /**
      * Gets the value of the hassource property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedResponse.Hassource }
-     *
+     * @return possible object is {@link RelatedResponse.Hassource }
      */
     public RelatedResponse.Hassource getHassources() {
         return hassources;
@@ -386,10 +345,7 @@ public class RelatedResponse {
     /**
      * Sets the value of the hassource property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedResponse.Hassource }
-     *
+     * @param value allowed object is {@link RelatedResponse.Hassource }
      */
     public void setHassources(RelatedResponse.Hassource value) {
         this.hassources = value;
@@ -398,10 +354,7 @@ public class RelatedResponse {
     /**
      * Gets the value of the related property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedResponse.Related }
-     *
+     * @return possible object is {@link RelatedResponse.Related }
      */
     public RelatedResponse.Related getRelated() {
         return related;
@@ -410,10 +363,7 @@ public class RelatedResponse {
     /**
      * Sets the value of the related property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedResponse.Related }
-     *
+     * @param value allowed object is {@link RelatedResponse.Related }
      */
     public void setRelated(RelatedResponse.Related value) {
         this.related = value;
@@ -422,10 +372,7 @@ public class RelatedResponse {
     /**
      * Gets the value of the online property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedResponse.Online }
-     *
+     * @return possible object is {@link RelatedResponse.Online }
      */
     public RelatedResponse.Online getOnlines() {
         return onlines;
@@ -434,10 +381,7 @@ public class RelatedResponse {
     /**
      * Sets the value of the online property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedResponse.Online }
-     *
+     * @param value allowed object is {@link RelatedResponse.Online }
      */
     public void setOnlines(RelatedResponse.Online value) {
         this.onlines = value;
@@ -446,10 +390,7 @@ public class RelatedResponse {
     /**
      * Gets the value of the thumbnail property.
      *
-     * @return
-     *     possible object is
-     *     {@link RelatedResponse.Thumbnail }
-     *
+     * @return possible object is {@link RelatedResponse.Thumbnail }
      */
     public RelatedResponse.Thumbnail getThumbnails() {
         return thumbnails;
@@ -458,10 +399,7 @@ public class RelatedResponse {
     /**
      * Sets the value of the thumbnail property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link RelatedResponse.Thumbnail }
-     *
+     * @param value allowed object is {@link RelatedResponse.Thumbnail }
      */
     public void setThumbnails(RelatedResponse.Thumbnail value) {
         this.thumbnails = value;
@@ -478,14 +416,13 @@ public class RelatedResponse {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -498,24 +435,18 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getItem().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link RelatedMetadataItem }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link RelatedMetadataItem
+         * }
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
@@ -537,14 +468,13 @@ public class RelatedResponse {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -558,24 +488,18 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getItem().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link RelatedMetadataItem }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link RelatedMetadataItem
+         * }
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
@@ -597,14 +521,13 @@ public class RelatedResponse {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -617,24 +540,18 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getItem().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link RelatedMetadataItem }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link RelatedMetadataItem
+         * }
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
@@ -656,14 +573,13 @@ public class RelatedResponse {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -676,24 +592,18 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getItem().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link RelatedMetadataItem }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link RelatedMetadataItem
+         * }
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
@@ -715,14 +625,13 @@ public class RelatedResponse {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -735,24 +644,18 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getItem().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link RelatedMetadataItem }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link RelatedMetadataItem
+         * }
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
@@ -774,14 +677,13 @@ public class RelatedResponse {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedLinkItem" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="item" type="{}relatedLinkItem" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -794,24 +696,17 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getItem().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link RelatedLinkItem }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link RelatedLinkItem }
          */
         public List<RelatedLinkItem> getItem() {
             if (item == null) {
@@ -833,14 +728,13 @@ public class RelatedResponse {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -853,24 +747,18 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getItem().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link RelatedMetadataItem }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link RelatedMetadataItem
+         * }
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
@@ -892,14 +780,13 @@ public class RelatedResponse {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -912,24 +799,18 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getItem().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link RelatedMetadataItem }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link RelatedMetadataItem
+         * }
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
@@ -951,14 +832,13 @@ public class RelatedResponse {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -971,24 +851,18 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getItem().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link RelatedMetadataItem }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link RelatedMetadataItem
+         * }
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
@@ -1010,14 +884,13 @@ public class RelatedResponse {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedSiblingMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="item" type="{}relatedSiblingMetadataItem" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -1030,24 +903,18 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getItem().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link RelatedSiblingMetadataItem }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link
+         * RelatedSiblingMetadataItem }
          */
         public List<RelatedSiblingMetadataItem> getItem() {
             if (item == null) {
@@ -1069,14 +936,13 @@ public class RelatedResponse {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -1089,24 +955,18 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getItem().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link RelatedMetadataItem }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link RelatedMetadataItem
+         * }
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
@@ -1128,14 +988,13 @@ public class RelatedResponse {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedThumbnailItem" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="item" type="{}relatedThumbnailItem" maxOccurs="unbounded"
+     * minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     *
-     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -1148,24 +1007,18 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
-         * <p>
-         * For example, to add a new item, do as follows:
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getItem().add(newItem);
          * </pre>
          *
          *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link RelatedThumbnailItem }
-         *
-         *
+         * <p> Objects of the following type(s) are allowed in the list {@link RelatedThumbnailItem
+         * }
          */
         public List<RelatedThumbnailItem> getItem() {
             if (item == null) {

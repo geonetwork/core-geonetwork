@@ -25,6 +25,7 @@ package org.fao.geonet.repository.specification;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.AbstractSpringDataTest;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,10 +48,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test UserSpecs class
- * User: Jesse
- * Date: 9/12/13
- * Time: 7:32 PM
+ * Test UserSpecs class User: Jesse Date: 9/12/13 Time: 7:32 PM
  */
 public class UserSpecsTest extends AbstractSpringDataTest {
     @Autowired
@@ -156,9 +155,9 @@ public class UserSpecsTest extends AbstractSpringDataTest {
 
         assertEquals(0, _userRepo.findAll(userIsNameNotOneOf(Arrays.asList(new String[]{"1", "2"}))).size());
         assertEquals(2, _userRepo.findAll(userIsNameNotOneOf(Arrays.asList(new String[]{user1.getUsername(),
-                user2.getUsername()}))).size());
+            user2.getUsername()}))).size());
         assertEquals(1, _userRepo.findAll(userIsNameNotOneOf(Arrays.asList(new String[]{user1.getUsername(),
-                user1.getUsername()}))).size());
+            user1.getUsername()}))).size());
 
     }
 

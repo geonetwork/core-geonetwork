@@ -133,8 +133,8 @@
 
     <!-- Update the properties file -->
     <propertyfile
-            file="../web/src/main/webapp/WEB-INF/server.prop"
-            comment="GeoNetwork opensource properties. These are also used by geonetwork at runtime">
+      file="../web/src/main/webapp/WEB-INF/server.prop"
+      comment="GeoNetwork opensource properties. These are also used by geonetwork at runtime">
       <!-- These are used by geonetwork at runtime -->
       <!-- Do not remove !! -->
       <entry key="version" value="${version}"/>
@@ -228,7 +228,7 @@
             basedir="${basedir}"/>
 
     <checksum
-            file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar"
-            forceOverwrite="yes"/>
+      file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar"
+      forceOverwrite="yes"/>
   </target>
 </project>

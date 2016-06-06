@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
@@ -30,14 +29,15 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
 import org.w3c.dom.Element;
 
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -49,8 +49,6 @@ import org.w3c.dom.Element;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -64,11 +62,8 @@ public class Snippet {
 
     /**
      * Gets the value of the any property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Element }
-     *     
+     *
+     * @return possible object is {@link Element }
      */
     public Element getAny() {
         return any;
@@ -76,11 +71,8 @@ public class Snippet {
 
     /**
      * Sets the value of the any property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Element }
-     *     
+     *
+     * @param value allowed object is {@link Element }
      */
     public void setAny(Element value) {
         this.any = value;

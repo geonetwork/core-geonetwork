@@ -46,8 +46,8 @@ public abstract class AbstractRequest {
     //---
     //---------------------------------------------------------------------------
 
-    private Path schemaPath;
     private final XmlRequest transport;
+    private Path schemaPath;
 
     public AbstractRequest(GeonetHttpRequestFactory transport) {
         this.transport = transport.createXmlRequest();
@@ -115,7 +115,7 @@ public abstract class AbstractRequest {
         try {
             Xml.validate(response);
         } catch (XSDValidationErrorEx e) {
-            response.addContent(new Element ("error").setText(e.getMessage()));
+            response.addContent(new Element("error").setText(e.getMessage()));
         }
 
         //--- raises an exception if the case

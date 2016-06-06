@@ -35,7 +35,7 @@ public class AndWhere extends Where {
         clauses.add(where1);
         clauses.add(where2);
     }
-    
+
     public AndWhere(Where... clauses) {
         this.clauses.addAll(Arrays.asList(clauses));
     }
@@ -44,7 +44,7 @@ public class AndWhere extends Where {
     public String getClause() {
         StringBuilder builder = new StringBuilder();
         for (Where clause : clauses) {
-            if(builder.length() > 0) {
+            if (builder.length() > 0) {
                 builder.append(" AND ");
             }
             builder.append(clause.getClause());

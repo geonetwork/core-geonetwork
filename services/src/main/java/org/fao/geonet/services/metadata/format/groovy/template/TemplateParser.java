@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.annotations.VisibleForTesting;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Stack;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -46,9 +48,9 @@ import javax.xml.parsers.SAXParserFactory;
 /**
  * This class parses a XML Template file into a tree data structure representing the template.
  * <p/>
- * Nodes in the tree can have custom behaviour that is determined according to the attributes on the template XML.  For example
- * a node might be an nonEmpty node where the node will only be rendered if the attribute is nonEmpty
- * (non-empty/non-null string or collection)
+ * Nodes in the tree can have custom behaviour that is determined according to the attributes on the
+ * template XML.  For example a node might be an nonEmpty node where the node will only be rendered
+ * if the attribute is nonEmpty (non-empty/non-null string or collection)
  *
  * @author Jesse on 11/29/2014.
  */
@@ -70,7 +72,7 @@ public class TemplateParser {
         } catch (IOException e) {
             throw new TemplateException(e);
         } catch (TemplateException e) {
-            if (e.getCause()!=null) {
+            if (e.getCause() != null) {
                 throw new TemplateException("Error when parsing " + path + ":" + e.getCause().getMessage(), e.getCause());
             } else {
                 throw new TemplateException("Error when parsing " + path + ":" + e.getMessage(), e);
@@ -124,7 +126,7 @@ public class TemplateParser {
                     if (factory.applicable(localName, qName, attributes)) {
                         if (found != null) {
                             throw new TemplateException(
-                                    "More than one directive attribute was found on " + qName + "\nFound: " +
+                                "More than one directive attribute was found on " + qName + "\nFound: " +
                                     found.getClass().getSimpleName() + " and " + factory.getClass().getSimpleName());
                         }
                         setCurrentNode(factory.create(localName, qName, attributes));

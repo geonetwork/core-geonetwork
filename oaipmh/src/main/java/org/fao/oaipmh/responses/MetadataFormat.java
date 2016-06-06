@@ -30,63 +30,59 @@ import org.jdom.Namespace;
 
 //=============================================================================
 
-public class MetadataFormat
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class MetadataFormat {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public MetadataFormat() {}
+    public String prefix;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    public String schema;
 
-	public MetadataFormat(Element mdForm)
-	{
-		prefix = mdForm.getChildText("metadataPrefix", OaiPmh.Namespaces.OAI_PMH);
-		schema = mdForm.getChildText("schema",         OaiPmh.Namespaces.OAI_PMH);
+    //---------------------------------------------------------------------------
+    public Namespace namespace;
 
-		String ns = mdForm.getChildText("metadataNamespace", OaiPmh.Namespaces.OAI_PMH);
-		namespace = Namespace.getNamespace(ns);
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public MetadataFormat() {
+    }
 
-	public MetadataFormat(String prefix, String schema, String ns)
-	{
-		this.prefix = prefix;
-		this.schema = schema;
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-		namespace = Namespace.getNamespace(ns);
-	}
+    public MetadataFormat(Element mdForm) {
+        prefix = mdForm.getChildText("metadataPrefix", OaiPmh.Namespaces.OAI_PMH);
+        schema = mdForm.getChildText("schema", OaiPmh.Namespaces.OAI_PMH);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+        String ns = mdForm.getChildText("metadataNamespace", OaiPmh.Namespaces.OAI_PMH);
+        namespace = Namespace.getNamespace(ns);
+    }
+    public MetadataFormat(String prefix, String schema, String ns) {
+        this.prefix = prefix;
+        this.schema = schema;
 
-	public Element toXml()
-	{
-		Element root = new Element("metadataFormat", OaiPmh.Namespaces.OAI_PMH);
+        namespace = Namespace.getNamespace(ns);
+    }
 
-		Lib.add(root, "metadataPrefix",    prefix);
-		Lib.add(root, "schema",            schema);
-		Lib.add(root, "metadataNamespace", namespace.getURI());
+    public Element toXml() {
+        Element root = new Element("metadataFormat", OaiPmh.Namespaces.OAI_PMH);
 
-		return root;
-	}
+        Lib.add(root, "metadataPrefix", prefix);
+        Lib.add(root, "schema", schema);
+        Lib.add(root, "metadataNamespace", namespace.getURI());
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String    prefix;
-	public String    schema;
-	public Namespace namespace;
+        return root;
+    }
 }
 
 //=============================================================================

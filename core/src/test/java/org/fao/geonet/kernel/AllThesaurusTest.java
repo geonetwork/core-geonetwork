@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.collect.Maps;
+
 import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
@@ -67,13 +68,13 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
 
         Path gcThesaurusFile = directory.resolve("secondThesaurus.rdf");
         this.secondThesaurus = new Thesaurus(isoLangMapper, gcThesaurusFile.getFileName().toString(), null, null, "external",
-                "local", gcThesaurusFile, "http://org.fao.geonet", true);
+            "local", gcThesaurusFile, "http://org.fao.geonet", true);
         final boolean thesauriExist = Files.exists(gcThesaurusFile);
         if (!thesauriExist) {
             String thesaurusName = "secondThesaurus";
             secondThesaurus.initRepository();
             populateThesaurus(secondThesaurus, SECOND_THES_WORDS, secondThesaurus.getDefaultNamespace(), thesaurusName, thesaurusName,
-                    "eng", "fre", "ger", "ita");
+                "eng", "fre", "ger", "ita");
         } else {
             secondThesaurus.initRepository();
         }
@@ -125,7 +126,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         assertEquals(AllThesaurus.FNAME, this.allThesaurus.getFname());
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testGetFile() throws Exception {
         this.allThesaurus.getFile();
     }
@@ -161,12 +162,12 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         this.allThesaurus.retrieveThesaurusTitle(); // does nothing, assure there is no error
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testGetRepository() throws Exception {
         this.allThesaurus.getRepository();
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testSetRepository() throws Exception {
         this.allThesaurus.setRepository(Mockito.mock(LocalRepository.class));
     }
@@ -195,28 +196,28 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         assertFalse(this.allThesaurus.hasConceptScheme("any"));
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testAddElement() throws Exception {
         this.allThesaurus.addElement(new KeywordBean(isoLangMapper));
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testRemoveElement() throws Exception {
         this.allThesaurus.removeElement(new KeywordBean(isoLangMapper));
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testRemoveElement1() throws Exception {
         this.allThesaurus.removeElement("namespace", "code");
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testRemoveElement2() throws Exception {
         this.allThesaurus.removeElement("uri");
 
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testUpdateElement() throws Exception {
         this.allThesaurus.updateElement(new KeywordBean(isoLangMapper), false);
     }
@@ -229,22 +230,22 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         assertTrue(this.allThesaurus.isFreeCode("non existant", "non existant"));
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testUpdateCode() throws Exception {
         this.allThesaurus.updateCode(new KeywordBean(isoLangMapper), "newcode");
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testUpdateCode1() throws Exception {
         this.allThesaurus.updateCode("oldns", "oldcode", "newcode");
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testUpdateCodeByURI() throws Exception {
         this.allThesaurus.updateCodeByURI("olduri", "newuri");
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testAddTitleElement() throws Exception {
         this.allThesaurus.addTitleElement("newTitle");
     }
@@ -254,7 +255,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         assertSame(isoLangMapper, this.allThesaurus.getIsoLanguageMapper());
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testAddRelation() throws Exception {
         this.allThesaurus.addRelation("subject", KeywordRelation.RELATED, "relatedSubject");
     }
@@ -280,7 +281,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         final String regionsPath = "/org/fao/geonet/services/region/external/thesauri/place/regions.rdf";
         Path regionsFile = Paths.get(AllThesaurusTest.class.getResource(regionsPath).toURI());
         final Thesaurus regionsThesaurus = new Thesaurus(isoLangMapper, regionsFile.getFileName().toString(), null, null, "external",
-                "place", regionsFile, "http://org.fao.geonet", false);
+            "place", regionsFile, "http://org.fao.geonet", false);
         regionsThesaurus.initRepository();
         final HashMap<String, Thesaurus> thesauri = Maps.newHashMap();
         thesauri.put(regionsThesaurus.getKey(), regionsThesaurus);
@@ -330,39 +331,40 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         final KeywordBean found = this.allThesaurus.getKeywordWithLabel(existingKeywordBean.getPreferredLabel("eng"), "eng");
         assertAllKeywordBean(found);
     }
-    @Test (expected = TermNotFoundException.class)
+
+    @Test(expected = TermNotFoundException.class)
     public void testGetKeywordWithLabelCantFind() throws Exception {
         this.allThesaurus.getKeywordWithLabel("jkdjfdklsdj", "eng");
     }
 
     @SuppressWarnings("deprecation")
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testAddElement1() throws Exception {
         this.allThesaurus.addElement("code", "prefLab", "note", "lang");
     }
 
     @SuppressWarnings("deprecation")
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testAddElement2() throws Exception {
         this.allThesaurus.addElement("code", "prefLab", "note", "east", "west", "south", "north", "lang");
 
     }
 
     @SuppressWarnings("deprecation")
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testUpdateElement1() throws Exception {
         this.allThesaurus.updateElement("namespace", "id", "prefLab", "note", "lang");
     }
 
     @SuppressWarnings("deprecation")
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testUpdateElement2() throws Exception {
         this.allThesaurus.updateElement("namespace", "id", "prefLab", "note", "east", "west",
-                "south", "north", "lang");
+            "south", "north", "lang");
 
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testClear() throws Exception {
         this.allThesaurus.clear();
     }
@@ -414,6 +416,6 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         assertNotNull(keyword);
 
         assertEquals(keywordBean.getUriCode(),
-                this.allThesaurus.getKeyword(keywordBean.getUriCode(), "eng", "fre").getUriCode());
+            this.allThesaurus.getKeyword(keywordBean.getUriCode(), "eng", "fre").getUriCode());
     }
 }

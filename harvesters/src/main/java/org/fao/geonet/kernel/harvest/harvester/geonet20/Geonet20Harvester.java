@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Source;
@@ -48,73 +49,87 @@ import java.util.UUID;
 
 //=============================================================================
 
-public class Geonet20Harvester extends AbstractHarvester
-{
+public class Geonet20Harvester extends AbstractHarvester {
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	protected void doInit(Element node, ServiceContext context) throws BadInputEx
-	{
-		params = new GeonetParams(dataMan);
+    private GeonetParams params;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Add
+    //---
+    //---------------------------------------------------------------------------
+    private GeonetResult result;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update
+    //---
+    //---------------------------------------------------------------------------
+    private String servletName;
+
+    //---------------------------------------------------------------------------
+
+    protected void doInit(Element node, ServiceContext context) throws BadInputEx {
+        params = new GeonetParams(dataMan);
         super.setParams(params);
         params.create(node);
-	}
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Add
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- addHarvestInfo
+    //---
+    //---------------------------------------------------------------------------
 
-	protected String doAdd(Element node) throws BadInputEx, SQLException
-	{
-		params = new GeonetParams(dataMan);
+    protected String doAdd(Element node) throws BadInputEx, SQLException {
+        params = new GeonetParams(dataMan);
         super.setParams(params);
 
         //--- retrieve/initialize information
-		params.create(node);
+        params.create(node);
 
-		//--- force the creation of a new uuid
-		params.setUuid(UUID.randomUUID().toString());
+        //--- force the creation of a new uuid
+        params.setUuid(UUID.randomUUID().toString());
 
-		String id = settingMan.add("harvesting", "node", getType());
+        String id = settingMan.add("harvesting", "node", getType());
 
-		storeNode(params, "id:"+id);
+        storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + "gn20.gif", params.getUuid());
-        
-		return id;
-	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update
-	//---
-	//---------------------------------------------------------------------------
+        return id;
+    }
 
-	protected void doUpdate(String id, Element node) throws BadInputEx, SQLException
-	{
-		//--- update variables
+    //---------------------------------------------------------------------------
+    //---
+    //--- AddInfo
+    //---
+    //---------------------------------------------------------------------------
 
-		GeonetParams copy = params.copy();
+    protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
+        //--- update variables
+
+        GeonetParams copy = params.copy();
 
         //--- update variables
-		copy.update(node);
+        copy.update(node);
 
-		String path = "harvesting/id:"+ id;
+        String path = "harvesting/id:" + id;
 
-		settingMan.removeChildren(path);
+        settingMan.removeChildren(path);
 
-		//--- update database
-		storeNode(copy, path);
+        //--- update database
+        storeNode(copy, path);
 
-		//--- we update a copy first because if there is an exception GeonetParams
-		//--- could be half updated and so it could be in an inconsistent state
+        //--- we update a copy first because if there is an exception GeonetParams
+        //--- could be half updated and so it could be in an inconsistent state
 
         Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
@@ -124,186 +139,157 @@ public class Geonet20Harvester extends AbstractHarvester
 
     }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- GetResult
+    //---
+    //---------------------------------------------------------------------------
 
-	protected void storeNodeExtra(AbstractParams p, String path,
-											String siteId, String optionsId) throws SQLException
-	{
-		GeonetParams params = (GeonetParams) p;
+    protected void storeNodeExtra(AbstractParams p, String path,
+                                  String siteId, String optionsId) throws SQLException {
+        GeonetParams params = (GeonetParams) p;
         super.setParams(params);
 
-        settingMan.add("id:"+siteId, "host",    params.host);
+        settingMan.add("id:" + siteId, "host", params.host);
 
-		//--- store search nodes
+        //--- store search nodes
 
-		for (Search s : params.getSearches())
-		{
-			String  searchID = settingMan.add(path, "search", "");
+        for (Search s : params.getSearches()) {
+            String searchID = settingMan.add(path, "search", "");
 
-			settingMan.add("id:"+searchID, "freeText", s.freeText);
-			settingMan.add("id:"+searchID, "title",    s.title);
-			settingMan.add("id:"+searchID, "abstract", s.abstrac);
-			settingMan.add("id:"+searchID, "keywords", s.keywords);
-			settingMan.add("id:"+searchID, "digital",  s.digital);
-			settingMan.add("id:"+searchID, "hardcopy", s.hardcopy);
-			settingMan.add("id:"+searchID, "siteId",   s.siteId);
-		}
-	}
+            settingMan.add("id:" + searchID, "freeText", s.freeText);
+            settingMan.add("id:" + searchID, "title", s.title);
+            settingMan.add("id:" + searchID, "abstract", s.abstrac);
+            settingMan.add("id:" + searchID, "keywords", s.keywords);
+            settingMan.add("id:" + searchID, "digital", s.digital);
+            settingMan.add("id:" + searchID, "hardcopy", s.hardcopy);
+            settingMan.add("id:" + searchID, "siteId", s.siteId);
+        }
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- addHarvestInfo
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Harvest
+    //---
+    //---------------------------------------------------------------------------
 
-	public void addHarvestInfo(Element info, String id, String uuid)
-	{
-		super.addHarvestInfo(info, id, uuid);
+    public void addHarvestInfo(Element info, String id, String uuid) {
+        super.addHarvestInfo(info, id, uuid);
 
-		String small = params.host +
-							"/srv/en/resources.get2?access=public&uuid="+uuid+"&fname=";
+        String small = params.host +
+            "/srv/en/resources.get2?access=public&uuid=" + uuid + "&fname=";
 
-		info.addContent(new Element("smallThumbnail").setText(small));
-	}
+        info.addContent(new Element("smallThumbnail").setText(small));
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	protected void doAddInfo(Element node)
-	{
-		//--- if the harvesting is not started yet, we don't have any info
+    protected void doAddInfo(Element node) {
+        //--- if the harvesting is not started yet, we don't have any info
 
-		if (result == null)
-			return;
+        if (result == null)
+            return;
 
-		//--- ok, add proper info
+        //--- ok, add proper info
 
-		Element info = node.getChild("info");
+        Element info = node.getChild("info");
 
-		for (HarvestResult ar : result.alResult)
-		{
-			Element site = new Element("search");
-			site.setAttribute("siteId", ar.siteId);
+        for (HarvestResult ar : result.alResult) {
+            Element site = new Element("search");
+            site.setAttribute("siteId", ar.siteId);
 
-			add(site, "total",     ar.totalMetadata);
-			add(site, "added",     ar.addedMetadata);
-			add(site, "updated",   ar.updatedMetadata);
-			add(site, "unchanged", ar.unchangedMetadata);
-			add(site, "skipped",   ar.schemaSkipped+ ar.uuidSkipped);
-			add(site, "removed",   ar.locallyRemoved);
-            add(site, "doesNotValidate",ar.doesNotValidate);
+            add(site, "total", ar.totalMetadata);
+            add(site, "added", ar.addedMetadata);
+            add(site, "updated", ar.updatedMetadata);
+            add(site, "unchanged", ar.unchangedMetadata);
+            add(site, "skipped", ar.schemaSkipped + ar.uuidSkipped);
+            add(site, "removed", ar.locallyRemoved);
+            add(site, "doesNotValidate", ar.doesNotValidate);
 
-			info.addContent(site);
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
+            info.addContent(site);
+        }
+    }
 
     public Element getResult() {
-		return new Element("result"); // HarvestHistory not supported for this 
-		                              // old harvester
-	}
+        return new Element("result"); // HarvestHistory not supported for this
+        // old harvester
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Harvest
-	//---
-	//---------------------------------------------------------------------------
-
-	public void doHarvest(Logger log) throws Exception
-	{
-		CategoryMapper localCateg = new CategoryMapper(context);
+    public void doHarvest(Logger log) throws Exception {
+        CategoryMapper localCateg = new CategoryMapper(context);
 
         XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.host);
 
         servletName = req.getAddress();
 
-		Lib.net.setupProxy(context, req);
+        Lib.net.setupProxy(context, req);
 
-		String name = getParams().getName();
+        String name = getParams().getName();
 
-		//--- login
+        //--- login
 
-		if (params.isUseAccount())
-		{
-			log.info("Login into : "+ name);
+        if (params.isUseAccount()) {
+            log.info("Login into : " + name);
 
-			req.setAddress(servletName +"/srv/en/"+ Geonet.Service.XML_LOGIN);
-			req.addParam("username", params.getUsername());
-			req.addParam("password", params.getPassword());
+            req.setAddress(servletName + "/srv/en/" + Geonet.Service.XML_LOGIN);
+            req.addParam("username", params.getUsername());
+            req.addParam("password", params.getPassword());
 
-			Element response = req.execute();
+            Element response = req.execute();
 
-			if (!response.getName().equals("ok"))
-				throw new UserNotFoundEx(params.getUsername());
-		}
+            if (!response.getName().equals("ok"))
+                throw new UserNotFoundEx(params.getUsername());
+        }
         if (cancelMonitor.get()) {
-            return ;
+            return;
         }
 
         //--- search
 
-		result = new GeonetResult();
+        result = new GeonetResult();
 
-		Aligner aligner = new Aligner(cancelMonitor, log, req, params, dataMan, context,
-												localCateg);
+        Aligner aligner = new Aligner(cancelMonitor, log, req, params, dataMan, context,
+            localCateg);
 
-		for(Search s : params.getSearches())
-		{
+        for (Search s : params.getSearches()) {
             if (cancelMonitor.get()) {
                 return;
             }
 
-            log.info("Searching on : "+ name +"/"+ s.siteId);
+            log.info("Searching on : " + name + "/" + s.siteId);
 
-			req.setAddress(servletName +"/srv/en/"+ Geonet.Service.XML_SEARCH);
+            req.setAddress(servletName + "/srv/en/" + Geonet.Service.XML_SEARCH);
 
-			Element searchResult = req.execute(s.createRequest());
+            Element searchResult = req.execute(s.createRequest());
 
-            if(log.isDebugEnabled()) log.debug("Obtained:\n"+Xml.getString(searchResult));
+            if (log.isDebugEnabled()) log.debug("Obtained:\n" + Xml.getString(searchResult));
 
-			//--- site alignment
-			HarvestResult ar = aligner.align(searchResult, s.siteId);
+            //--- site alignment
+            HarvestResult ar = aligner.align(searchResult, s.siteId);
 
-			//--- collect some stats
-			result.alResult.add(ar);
-		}
+            //--- collect some stats
+            result.alResult.add(ar);
+        }
 
-		//--- logout
+        //--- logout
 
-		if (params.isUseAccount())
-		{
-			log.info("Logout from : "+ name);
+        if (params.isUseAccount()) {
+            log.info("Logout from : " + name);
 
-			req.clearParams();
-			req.setAddress("/"+ params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_LOGOUT);
-		}
+            req.clearParams();
+            req.setAddress("/" + params.getServletPath() + "/srv/en/" + Geonet.Service.XML_LOGOUT);
+        }
 
         dataMan.flush();
     }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private GeonetParams params;
-	private GeonetResult result;
-
-    private String servletName;
 }
 
 //=============================================================================
 
-class GeonetResult
-{
-	public ArrayList<HarvestResult> alResult = new ArrayList<HarvestResult>();
+class GeonetResult {
+    public ArrayList<HarvestResult> alResult = new ArrayList<HarvestResult>();
 }

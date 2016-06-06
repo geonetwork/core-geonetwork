@@ -1,7 +1,9 @@
 package org.fao.geonet.csw;
 
 import com.occamlab.te.TECore;
+
 import net.sf.saxon.dom.DocumentBuilderImpl;
+
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -38,20 +40,20 @@ public class TestResultParser {
     }
 
     public void processLog(File logdir,
-                          String path) throws Exception {
+                           String path) throws Exception {
 
         DocumentBuilderImpl DB;
         DB = new DocumentBuilderImpl();
 
         DocumentBuilder db3 = DocumentBuilderFactory.newInstance()
-                      .newDocumentBuilder();
+            .newDocumentBuilder();
         Document owner = db3.newDocument();
 
         parse_log(DB, owner, logdir, path);
     }
 
-    public Element parse_log(DocumentBuilderImpl db,  Document owner, File logdir,
-                          String path) throws Exception {
+    public Element parse_log(DocumentBuilderImpl db, Document owner, File logdir,
+                             String path) throws Exception {
 
 
         File log = new File(new File(logdir, path), "log.xml");
@@ -67,7 +69,7 @@ public class TestResultParser {
                     NamedNodeMap atts = e.getAttributes();
                     for (int j = 0; j < atts.getLength(); j++) {
                         test.setAttribute(atts.item(j).getNodeName(), atts
-                                .item(j).getNodeValue());
+                            .item(j).getNodeValue());
                     }
                 } else if (e.getNodeName().equals("endtest")) {
                     complete = true;
@@ -87,7 +89,7 @@ public class TestResultParser {
                     }
                 } else if (e.getNodeName().equals("testcall")) {
                     test.appendChild(parse_log(db, owner, logdir, e
-                            .getAttribute("path")));
+                        .getAttribute("path")));
                 }
             }
         }

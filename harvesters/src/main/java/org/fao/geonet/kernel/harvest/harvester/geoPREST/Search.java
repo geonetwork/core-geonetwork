@@ -28,21 +28,18 @@ import org.jdom.Element;
 
 //=============================================================================
 
-class Search
-{
+class Search {
     //---------------------------------------------------------------------------
     //---
     //--- Constructor
     //---
     //---------------------------------------------------------------------------
 
-    public Search() {}
+    public String freeText;
 
     //---------------------------------------------------------------------------
 
-    public Search(Element search)
-    {
-        freeText = Util.getParam(search, "freeText", "").trim();
+    public Search() {
     }
 
     //---------------------------------------------------------------------------
@@ -51,19 +48,13 @@ class Search
     //---
     //---------------------------------------------------------------------------
 
-    public Search copy()
-    {
-        Search s = new Search();
-
-        s.freeText = freeText;
-
-        return s;
+    public Search(Element search) {
+        freeText = Util.getParam(search, "freeText", "").trim();
     }
 
     //---------------------------------------------------------------------------
 
-    public static Search createEmptySearch()
-    {
+    public static Search createEmptySearch() {
         return new Search(new Element("search"));
     }
 
@@ -73,7 +64,13 @@ class Search
     //---
     //---------------------------------------------------------------------------
 
-    public String freeText;
+    public Search copy() {
+        Search s = new Search();
+
+        s.freeText = freeText;
+
+        return s;
+    }
 }
 
 //=============================================================================

@@ -22,14 +22,14 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-  xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="xsl geonet">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
+                version="2.0" exclude-result-prefixes="xsl geonet">
 
 
   <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
   <xsl:include href="metadata-fop.xsl"/>
 
-  <!-- 
+  <!--
     Start FOP layout
   -->
   <xsl:template match="/root">

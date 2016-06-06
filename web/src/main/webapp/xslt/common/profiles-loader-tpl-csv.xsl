@@ -22,17 +22,16 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:gn="http://www.fao.org/geonetwork"
-  xmlns:saxon="http://saxon.sf.net/"
-  extension-element-prefixes="saxon">
-  <!-- 
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/"
+                version="2.0"
+                extension-element-prefixes="saxon">
+  <!--
     Load the csv templates for each schemas
-    
+
     The profile loader using the oasis-catalog to load
   <schema>/layout/tpl-csv.xsl in each activated schema plugins.
   -->
-  
+
   <xsl:include href="blanks/metadata-schema01/layout/tpl-csv.xsl"/>
   <xsl:include href="blanks/metadata-schema02/layout/tpl-csv.xsl"/>
   <xsl:include href="blanks/metadata-schema03/layout/tpl-csv.xsl"/>
@@ -53,5 +52,5 @@
   <xsl:include href="blanks/metadata-schema18/layout/tpl-csv.xsl"/>
   <xsl:include href="blanks/metadata-schema19/layout/tpl-csv.xsl"/>
   <xsl:include href="blanks/metadata-schema20/layout/tpl-csv.xsl"/>
-  
+
 </xsl:stylesheet>

@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.kernel.SchemaManager;
@@ -44,8 +45,8 @@ import java.util.Set;
 import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 
 /**
- * A Cache for the template files that are loaded by FileResult objects.  This is intended to reduce the number of files that
- * need to be loaded.
+ * A Cache for the template files that are loaded by FileResult objects.  This is intended to reduce
+ * the number of files that need to be loaded.
  *
  * @author Jesse on 10/20/2014.
  */
@@ -54,17 +55,17 @@ public class TemplateCache {
 
 
     @VisibleForTesting
-    @Autowired
-    TemplateParser xmlTemplateParser;
-
-    @VisibleForTesting
     final Map<Path, TNode> canonicalFileNameToText = Maps.newHashMap();
     private final Set<Path> filesKnownToNotExist = Sets.newHashSet();
+    @VisibleForTesting
+    @Autowired
+    TemplateParser xmlTemplateParser;
 
     public synchronized FileResult createFileResult(Path formatterDir, Path schemaDir, Path rootFormatterDir, String path,
                                                     Map<String, Object> model) throws IOException {
         return new Request().createFileResult(formatterDir, schemaDir, rootFormatterDir, path, model);
     }
+
     private class Request {
 
         private final SystemInfo systemInfo;
@@ -127,10 +128,10 @@ public class TemplateCache {
             }
             if (!exists(file)) {
                 throw new IllegalArgumentException("There is no file: " + path + " in any of: \n" +
-                                                   "\t * " + formatterDir + "\n" +
-                                                   "\t * " + schemaDir + "\n" +
-                                                   "\t * if parent exists: " + fromParentSchema + "\n" +
-                                                   "\t * " + rootFormatterDir);
+                    "\t * " + formatterDir + "\n" +
+                    "\t * " + schemaDir + "\n" +
+                    "\t * if parent exists: " + fromParentSchema + "\n" +
+                    "\t * " + rootFormatterDir);
             }
 
             template = xmlTemplateParser.parse(file);

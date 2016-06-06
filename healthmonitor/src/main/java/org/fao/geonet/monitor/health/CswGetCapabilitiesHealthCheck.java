@@ -27,6 +27,7 @@ import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
+
 import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
@@ -37,9 +38,7 @@ import com.yammer.metrics.core.HealthCheck;
 /**
  * Checks to ensure that the CSW subsystem is accessible and functioning
  * <p/>
- * User: jeichar
- * Date: 3/26/12
- * Time: 9:01 AM
+ * User: jeichar Date: 3/26/12 Time: 9:01 AM
  */
 public class CswGetCapabilitiesHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
@@ -47,11 +46,11 @@ public class CswGetCapabilitiesHealthCheck implements HealthCheckFactory {
             @Override
             protected Result check() throws Exception {
                 try {
-					LocalServiceRequest request = LocalServiceRequest.create("local://csw?request=GetCapabilities&service=CSW");
-					request.setDebug(false);
-					request.setLanguage("eng");
-					request.setInputMethod(InputMethod.GET);
-					Element result = context.execute(request);
+                    LocalServiceRequest request = LocalServiceRequest.create("local://csw?request=GetCapabilities&service=CSW");
+                    request.setDebug(false);
+                    request.setLanguage("eng");
+                    request.setInputMethod(InputMethod.GET);
+                    Element result = context.execute(request);
 
                     if (result.getChild("ServiceIdentification", Geonet.Namespaces.OWS) == null)
                         return Result.unhealthy("Capabilities did not have a 'ServiceIdentification' element as expected.  Xml: " + Xml.getString(result));

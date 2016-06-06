@@ -29,10 +29,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Sets;
+
 import groovy.lang.Closure;
 import groovy.lang.GString;
 import groovy.util.ClosureComparator;
 import groovy.util.slurpersupport.GPathResult;
+
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.fao.geonet.services.metadata.format.groovy.template.FileResult;
 import org.fao.geonet.services.metadata.format.groovy.template.TemplateCache;
@@ -59,27 +61,24 @@ public class Handlers {
     private final Path schemaDir;
     private final Path rootFormatterDir;
     private final TemplateCache templateCache;
+    TransformEngine transformationEngine = new TransformEngine(this);
+    StartEndHandler startHandler = new StartEndHandler(null);
+    StartEndHandler endHandler = new StartEndHandler(null);
     private Set<String> roots = Sets.newHashSet();
     private List<SkipElement> skipElements = Lists.newArrayList();
     private Callable<Iterable<Object>> functionRoots = null;
-    TransformEngine transformationEngine = new TransformEngine(this);
     /**
      * ModeId -> Mode mapping
      */
     private Map<String, Mode> modes = Maps.newHashMap();
-
     /**
      * ModeId -> Sorter mapping
      */
     private ListMultimap<String, Sorter> sorters = ArrayListMultimap.create();
-
     /**
      * ModeId -> Handler mapping
      */
     private ListMultimap<String, Handler> handlers = ArrayListMultimap.create();
-
-    StartEndHandler startHandler = new StartEndHandler(null);
-    StartEndHandler endHandler = new StartEndHandler(null);
 
     public Handlers(FormatterParams fparams, Path schemaDir, Path rootFormatterDir,
                     TemplateCache templateCache) {
@@ -90,7 +89,8 @@ public class Handlers {
     }
 
     /**
-     * Executed once when transformer is created.  This locks down the handler configuration so that it is not modifiable any more.
+     * Executed once when transformer is created.  This locks down the handler configuration so that
+     * it is not modifiable any more.
      */
     public void prepareForTransformer() {
         for (String id : this.handlers.keySet()) {
@@ -108,8 +108,8 @@ public class Handlers {
     /**
      * Set the xpaths for selecting the roots for processing the metadata.
      * <p/>
-     * Each xpath should be the type of xpath used when calling {@link org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element, String,
-     * java.util.List)}
+     * Each xpath should be the type of xpath used when calling {@link
+     * org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element, String, java.util.List)}
      */
     public void roots(Object... xpaths) {
         this.roots.clear();
@@ -123,8 +123,8 @@ public class Handlers {
     /**
      * Set the xpaths for selecting the roots for processing the metadata.
      * <p/>
-     * Each xpath should be the type of xpath used when calling {@link org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element, String,
-     * java.util.List)}
+     * Each xpath should be the type of xpath used when calling {@link
+     * org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element, String, java.util.List)}
      */
     @SuppressWarnings("unchecked")
     public void roots(Closure rootFunction) {
@@ -146,36 +146,38 @@ public class Handlers {
     /**
      * Add a root xpath selector to the set of roots.
      * <p/>
-     * The xpath should be the type of xpath used when calling {@link org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element, String,
-     * java.util.List)}
+     * The xpath should be the type of xpath used when calling {@link org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element,
+     * String, java.util.List)}
      */
     public void root(Object xpath) {
         this.roots.add(xpath.toString());
     }
 
     /**
-     * Add an "skip element".  A skip element is an element that shouldn't be processed but some of its children should be.  For
-     * example a formatter for iso19139 may not want to show the informationInfo elements but does want to display its children.
-     * The match can be gmd:informationInfo and the childSelector can be the closure {it.children()}
+     * Add an "skip element".  A skip element is an element that shouldn't be processed but some of
+     * its children should be.  For example a formatter for iso19139 may not want to show the
+     * informationInfo elements but does want to display its children. The match can be
+     * gmd:informationInfo and the childSelector can be the closure {it.children()}
      *
-     * @param select        a string which is the element name of the element to skip or a closure that takes an element and returns
-     *                      boolean
-     * @param childSelector a closure that returns the children to process.  The element selected by 'select' will be passed to the
-     *                      closure
+     * @param select        a string which is the element name of the element to skip or a closure
+     *                      that takes an element and returns boolean
+     * @param childSelector a closure that returns the children to process.  The element selected by
+     *                      'select' will be passed to the closure
      */
     public SkipElement skip(Object select, Closure childSelector) {
         return skip(select, childSelector, 0);
     }
 
     /**
-     * Add an "skip element".  A skip element is an element that shouldn't be processed but some of its children should be.  For
-     * example a formatter for iso19139 may not want to show the informationInfo elements but does want to display its children.
-     * The match can be gmd:informationInfo and the childSelector can be the closure {it.children()}
+     * Add an "skip element".  A skip element is an element that shouldn't be processed but some of
+     * its children should be.  For example a formatter for iso19139 may not want to show the
+     * informationInfo elements but does want to display its children. The match can be
+     * gmd:informationInfo and the childSelector can be the closure {it.children()}
      *
-     * @param select        a string which is the element name of the element to skip or a closure that takes an element and returns
-     *                      boolean
-     * @param childSelector a closure that returns the children to process.  The element selected by 'select' will be passed to the
-     *                      closure
+     * @param select        a string which is the element name of the element to skip or a closure
+     *                      that takes an element and returns boolean
+     * @param childSelector a closure that returns the children to process.  The element selected by
+     *                      'select' will be passed to the closure
      * @param priority      priority of the skipElement
      */
     public SkipElement skip(Object select, Closure childSelector, int priority) {
@@ -199,15 +201,13 @@ public class Handlers {
     }
 
     /**
-     * Create a handler from a map of properties to values.  There must be a 'select' attribute which can be:
-     * <ul>
-     * <li>a function for determining if this handler should be applied</li>
-     * <li>a string for matching against the name</li>
-     * <li>a regular expression for matching against the path</li>
-     * </ul>
+     * Create a handler from a map of properties to values.  There must be a 'select' attribute
+     * which can be: <ul> <li>a function for determining if this handler should be applied</li>
+     * <li>a string for matching against the name</li> <li>a regular expression for matching against
+     * the path</li> </ul>
      * <p/>
-     * In addition any JavaBean properties on the handler maybe set using the correct JavaBean semantics.
-     * For example: priority, processChildren
+     * In addition any JavaBean properties on the handler maybe set using the correct JavaBean
+     * semantics. For example: priority, processChildren
      */
     public SkipElement skip(Map<String, Object> properties, Closure handlerFunction) {
         Object select = properties.get(HANDLER_SELECT);
@@ -225,13 +225,14 @@ public class Handlers {
             handler = skip(select, handlerFunction);
         } else {
             throw new IllegalArgumentException(
-                    "The property " + HANDLER_SELECT + " is not a legal type.  Legal types are: Closure/function or String or " +
+                "The property " + HANDLER_SELECT + " is not a legal type.  Legal types are: Closure/function or String or " +
                     "Regular Expression(Pattern) but was " + select.getClass());
         }
         handler.configure(properties);
 
         return handler;
     }
+
     /**
      * Add a handler with the priority 1 which will exactly match element name and prefix.
      *
@@ -245,8 +246,8 @@ public class Handlers {
     }
 
     /**
-     * Add a handler with priority 0 which will do a regular expression match against the qualified element name to see if it applies
-     * to the element.
+     * Add a handler with priority 0 which will do a regular expression match against the qualified
+     * element name to see if it applies to the element.
      *
      * @param namePattern the regular expression to match.
      * @param function    the handler closure/function
@@ -258,8 +259,8 @@ public class Handlers {
     }
 
     /**
-     * Add a handler with priority 0 which will do a regular expression match against full path from root to see if it applies
-     * to the element.  Each segment of path will be separated by >
+     * Add a handler with priority 0 which will do a regular expression match against full path from
+     * root to see if it applies to the element.  Each segment of path will be separated by >
      *
      * @param pathPattern the regular expression to match.
      * @param function    the handler closure/function
@@ -271,8 +272,8 @@ public class Handlers {
     }
 
     /**
-     * Add a handler with priority 0 which will do a execute the matcher function with the current element to see if it the handler
-     * should be applied to the element.
+     * Add a handler with priority 0 which will do a execute the matcher function with the current
+     * element to see if it the handler should be applied to the element.
      *
      * @param select   the regular expression to match.
      * @param function the handler closure/function
@@ -284,15 +285,13 @@ public class Handlers {
     }
 
     /**
-     * Create a handler from a map of properties to values.  There must be a 'select' attribute which can be:
-     * <ul>
-     * <li>a function for determining if this handler should be applied</li>
-     * <li>a string for matching against the name</li>
-     * <li>a regular expression for matching against the path</li>
-     * </ul>
+     * Create a handler from a map of properties to values.  There must be a 'select' attribute
+     * which can be: <ul> <li>a function for determining if this handler should be applied</li>
+     * <li>a string for matching against the name</li> <li>a regular expression for matching against
+     * the path</li> </ul>
      * <p/>
-     * In addition any JavaBean properties on the handler maybe set using the correct JavaBean semantics.
-     * For example: priority, processChildren
+     * In addition any JavaBean properties on the handler maybe set using the correct JavaBean
+     * semantics. For example: priority, processChildren
      */
     public Handler add(Map<String, Object> properties, Closure handlerFunction) {
         Object select = properties.get(HANDLER_SELECT);
@@ -310,7 +309,7 @@ public class Handlers {
             handler = withPath((Pattern) select, handlerFunction);
         } else {
             throw new IllegalArgumentException(
-                    "The property " + HANDLER_SELECT + " is not a legal type.  Legal types are: Closure/function or String or " +
+                "The property " + HANDLER_SELECT + " is not a legal type.  Legal types are: Closure/function or String or " +
                     "Regular Expression(Pattern) but was " + select.getClass());
         }
         handler.configure(properties);
@@ -364,15 +363,11 @@ public class Handlers {
     }
 
     /**
-     * Create a FileResult object as a result from a handler function.
-     * See {@link org.fao.geonet.services.metadata.format.groovy.template.FileResult}
+     * Create a FileResult object as a result from a handler function. See {@link
+     * org.fao.geonet.services.metadata.format.groovy.template.FileResult}
      * <p/>
-     * File resolution is done by searching:
-     * <ul>
-     * <li>formatterDir/path</li>
-     * <li>schemaFormatterDir/path</li>
-     * <li>rootFormatterDir/path</li>
-     * </ul>
+     * File resolution is done by searching: <ul> <li>formatterDir/path</li>
+     * <li>schemaFormatterDir/path</li> <li>rootFormatterDir/path</li> </ul>
      *
      * @param path  The relative path to the file to load.
      * @param model A map representing the data model to use when rendering the fileResult file.
@@ -404,11 +399,13 @@ public class Handlers {
     /**
      * Add a strategy for sorting the children of a node.
      *
-     * @param select       a closure for selecting if the sorter should be applied to a given node.  If there is a match
-     *                     then the sorter will sort the children of the node and add the data resulting in processing the children
-     *                     in the sorted order.
-     * @param sortFunction a function that compares two elements and the data produced by processing/transforming them.  The function
-     *                     must return a negative, 0 or positive number in the same way as a Comparator class.
+     * @param select       a closure for selecting if the sorter should be applied to a given node.
+     *                     If there is a match then the sorter will sort the children of the node
+     *                     and add the data resulting in processing the children in the sorted
+     *                     order.
+     * @param sortFunction a function that compares two elements and the data produced by
+     *                     processing/transforming them.  The function must return a negative, 0 or
+     *                     positive number in the same way as a Comparator class.
      */
     public Sorter sort(Closure select, Closure sortFunction) {
         final SorterFunctionSelect sorter = new SorterFunctionSelect(0, select, new ClosureComparator(sortFunction));
@@ -420,12 +417,13 @@ public class Handlers {
      * Add a strategy for sorting the children of a node.
      *
      * @param elemName     The name of the element this applies to
-     * @param sortFunction a function that compares two elements and the data produced by processing/transforming them.  The function
-     *                     must return a negative, 0 or positive number in the same way as a Comparator class.
+     * @param sortFunction a function that compares two elements and the data produced by
+     *                     processing/transforming them.  The function must return a negative, 0 or
+     *                     positive number in the same way as a Comparator class.
      */
     public Sorter sort(String elemName, Closure sortFunction) {
         final Sorter sorter = new SorterNameSelect(1, Pattern.compile(Pattern.quote(elemName)),
-                new ClosureComparator(sortFunction));
+            new ClosureComparator(sortFunction));
         addSorter(sorter);
         return sorter;
     }
@@ -433,13 +431,15 @@ public class Handlers {
     /**
      * Add a strategy for sorting the children of a node.
      *
-     * @param namePattern  A pattern to use for matching the name of the element to apply the sorter to.
-     * @param sortFunction a function that compares two elements and the data produced by processing/transforming them.  The function
-     *                     must return a negative, 0 or positive number in the same way as a Comparator class.
+     * @param namePattern  A pattern to use for matching the name of the element to apply the sorter
+     *                     to.
+     * @param sortFunction a function that compares two elements and the data produced by
+     *                     processing/transforming them.  The function must return a negative, 0 or
+     *                     positive number in the same way as a Comparator class.
      */
     public Sorter sort(Pattern namePattern, Closure sortFunction) {
         final Sorter sorter = new SorterNameSelect(0, namePattern,
-                new ClosureComparator(sortFunction));
+            new ClosureComparator(sortFunction));
         addSorter(sorter);
         return sorter;
     }
@@ -447,13 +447,15 @@ public class Handlers {
     /**
      * Add a strategy for sorting the children of a node.
      *
-     * @param pathSelect   A pattern to use for matching the path of the element to apply the sorter to.
-     * @param sortFunction a function that compares two elements and the data produced by processing/transforming them.  The function
-     *                     must return a negative, 0 or positive number in the same way as a Comparator class.
+     * @param pathSelect   A pattern to use for matching the path of the element to apply the sorter
+     *                     to.
+     * @param sortFunction a function that compares two elements and the data produced by
+     *                     processing/transforming them.  The function must return a negative, 0 or
+     *                     positive number in the same way as a Comparator class.
      */
     public Sorter sortPathMatcher(Pattern pathSelect, Closure sortFunction) {
         final Sorter sorter = new SorterPathSelect(0, pathSelect,
-                new ClosureComparator(sortFunction));
+            new ClosureComparator(sortFunction));
         addSorter(sorter);
         return sorter;
     }
@@ -474,7 +476,7 @@ public class Handlers {
             sorter = sortPathMatcher((Pattern) select, handlerFunction);
         } else {
             throw new IllegalArgumentException(
-                    "The property " + HANDLER_SELECT + " is not a legal type.  Legal types are: Closure/function or String or " +
+                "The property " + HANDLER_SELECT + " is not a legal type.  Legal types are: Closure/function or String or " +
                     "Regular Expression(Pattern) but was " + select.getClass());
         }
         sorter.configure(properties);
@@ -503,12 +505,12 @@ public class Handlers {
     }
 
     /**
-     * Add a new mode with the given id.  If the mode already exists and has no fallback this is a no-op.  if the mode
-     * exists and has a fallback then an exception is thrown.  To change the fallback to null the 2 argument mode method
-     * must be called.
+     * Add a new mode with the given id.  If the mode already exists and has no fallback this is a
+     * no-op.  if the mode exists and has a fallback then an exception is thrown.  To change the
+     * fallback to null the 2 argument mode method must be called.
      * <p/>
-     * Note: This methods is not normally required because you can simply configure the mode on a handler or a sorter and
-     * a mode will automatically be created.
+     * Note: This methods is not normally required because you can simply configure the mode on a
+     * handler or a sorter and a mode will automatically be created.
      *
      * @param id the id of the mode to create
      */
@@ -520,16 +522,16 @@ public class Handlers {
         } else {
             if (mode.getFallback() != null) {
                 throw new IllegalArgumentException("The mode with id: " + id + " already exists and has a non-null fallback id.  " +
-                                                   "If you want to replace the fallback to null then explicitly call the 2 parameter " +
-                                                   "mode method");
+                    "If you want to replace the fallback to null then explicitly call the 2 parameter " +
+                    "mode method");
             }
         }
         return mode;
     }
 
     /**
-     * Add a new mode with the given id and fallback.  If the mode exists then the fallback of the mode will be updated
-     * with the new fallback id.
+     * Add a new mode with the given id and fallback.  If the mode exists then the fallback of the
+     * mode will be updated with the new fallback id.
      *
      * @param id the id of the mode to create
      */
@@ -553,8 +555,9 @@ public class Handlers {
     }
 
     /**
-     * Process/Transform all GPathResult objects in the selection.  Since a GPathResult can contain multiple elements, the selection
-     * will be iterated over and each element in each GPathResult will be iterated over.
+     * Process/Transform all GPathResult objects in the selection.  Since a GPathResult can contain
+     * multiple elements, the selection will be iterated over and each element in each GPathResult
+     * will be iterated over.
      * <p/>
      * This version will not sort the element and will use the current transformation mode.
      *
@@ -566,14 +569,15 @@ public class Handlers {
     }
 
     /**
-     * Process/Transform all GPathResult objects in the selection.  Since a GPathResult can contain multiple elements, the selection
-     * will be iterated over and each element in each GPathResult will be iterated over.
+     * Process/Transform all GPathResult objects in the selection.  Since a GPathResult can contain
+     * multiple elements, the selection will be iterated over and each element in each GPathResult
+     * will be iterated over.
      * <p/>
      * This version will not sort the element and will use the current transformation mode.
      *
      * @param selection     a iterable of GPathResult objects
-     * @param sortByElement a GPathResult representing a single element which is used to look up a sorter.
-     *                      If null no sorting will be done
+     * @param sortByElement a GPathResult representing a single element which is used to look up a
+     *                      sorter. If null no sorting will be done
      */
     public String processElements(Iterable selection, GPathResult sortByElement) throws IOException {
         final TransformationContext context = TransformationContext.getContext();
@@ -581,8 +585,9 @@ public class Handlers {
     }
 
     /**
-     * Process/Transform all GPathResult objects in the selection.  Since a GPathResult can contain multiple elements, the selection
-     * will be iterated over and each element in each GPathResult will be iterated over.
+     * Process/Transform all GPathResult objects in the selection.  Since a GPathResult can contain
+     * multiple elements, the selection will be iterated over and each element in each GPathResult
+     * will be iterated over.
      * <p/>
      * This version will not sort the element and will use the declared mode transformation mode.
      *
@@ -594,16 +599,17 @@ public class Handlers {
     }
 
     /**
-     * Process/Transform all GPathResult objects in the selection.  Since a GPathResult can contain multiple elements, the selection
-     * will be iterated over and each element in each GPathResult will be iterated over.
+     * Process/Transform all GPathResult objects in the selection.  Since a GPathResult can contain
+     * multiple elements, the selection will be iterated over and each element in each GPathResult
+     * will be iterated over.
      * <p/>
-     * This version will sort the element using the sorter that applies to the sortByElement.
-     * will use the declared mode transformation mode.
+     * This version will sort the element using the sorter that applies to the sortByElement. will
+     * use the declared mode transformation mode.
      *
      * @param mode          the transformation mode to use
      * @param selection     a iterable of GPathResult objects
-     * @param sortByElement a GPathResult representing a single element which is used to look up a sorter.
-     *                      If null no sorting will be done
+     * @param sortByElement a GPathResult representing a single element which is used to look up a
+     *                      sorter. If null no sorting will be done
      */
     public String processElementsInMode(String mode, Iterable selection, GPathResult sortByElement) throws IOException {
         return transformationEngine.processElementsInMode(mode, selection, sortByElement);

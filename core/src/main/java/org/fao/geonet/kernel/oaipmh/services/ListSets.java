@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
@@ -40,38 +41,37 @@ import java.util.List;
 
 //=============================================================================
 
-public class ListSets implements OaiPmhService
-{
-	public String getVerb() { return ListSetsRequest.VERB; }
+public class ListSets implements OaiPmhService {
+    public String getVerb() {
+        return ListSetsRequest.VERB;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //---------------------------------------------------------------------------
 
-	public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception
-	{
-		ListSetsRequest  req = (ListSetsRequest) request;
-		ListSetsResponse res = new ListSetsResponse();
+    public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception {
+        ListSetsRequest req = (ListSetsRequest) request;
+        ListSetsResponse res = new ListSetsResponse();
 
-		//--- we don't provide streaming for sets
+        //--- we don't provide streaming for sets
 
-		if (req.getResumptionToken() != null)
-			throw new BadResumptionTokenException(req.getResumptionToken());
+        if (req.getResumptionToken() != null)
+            throw new BadResumptionTokenException(req.getResumptionToken());
 
         final List<MetadataCategory> metadataCategories = context.getBean(MetadataCategoryRepository.class).findAll();
 
-		for (MetadataCategory rec : metadataCategories)
-		{
-			String name  = rec.getName();
-			String label = rec.getLabel(context.getLanguage());
+        for (MetadataCategory rec : metadataCategories) {
+            String name = rec.getName();
+            String label = rec.getLabel(context.getLanguage());
 
-			res.addSet(new SetInfo(name, label));
-		}
+            res.addSet(new SetInfo(name, label));
+        }
 
-		return res;
-	}
+        return res;
+    }
 }
 
 //=============================================================================

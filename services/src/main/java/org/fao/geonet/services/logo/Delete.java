@@ -26,6 +26,7 @@ package org.fao.geonet.services.logo;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -42,7 +43,7 @@ public class Delete implements Service {
     }
 
     public Element exec(Element params, ServiceContext context)
-            throws Exception {
+        throws Exception {
 
         if (logoDirectory == null) {
             synchronized (this) {
@@ -67,7 +68,7 @@ public class Delete implements Service {
         Element response = new Element("response");
         Files.delete(logoFile);
         response.addContent(new Element("status")
-                .setText("Logo removed."));
+            .setText("Logo removed."));
         return response;
     }
 }

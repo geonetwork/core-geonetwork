@@ -22,19 +22,13 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:gts="http://www.isotc211.org/2005/gts"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                xmlns:srv="http://www.isotc211.org/2005/srv"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-                xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
+                version="2.0"
                 exclude-result-prefixes="#all">
 
   <!--
@@ -108,11 +102,14 @@
           <xsl:with-param name="listOfValues" select="$codelist"/>
           <xsl:with-param name="lang" select="$lang"/>
           <xsl:with-param name="isDisabled" select="ancestor-or-self::node()[@xlink:href]"/>
-          <xsl:with-param name="elementRef" select="../gmd:dateType/gmd:CI_DateTypeCode/gn:element/@ref"/>
+          <xsl:with-param name="elementRef"
+                          select="../gmd:dateType/gmd:CI_DateTypeCode/gn:element/@ref"/>
           <xsl:with-param name="isRequired" select="true()"/>
           <xsl:with-param name="hidden" select="false()"/>
-          <xsl:with-param name="valueToEdit" select="../gmd:dateType/gmd:CI_DateTypeCode/@codeListValue"/>
-          <xsl:with-param name="name" select="concat(../gmd:dateType/gmd:CI_DateTypeCode/gn:element/@ref, '_codeListValue')"/>
+          <xsl:with-param name="valueToEdit"
+                          select="../gmd:dateType/gmd:CI_DateTypeCode/@codeListValue"/>
+          <xsl:with-param name="name"
+                          select="concat(../gmd:dateType/gmd:CI_DateTypeCode/gn:element/@ref, '_codeListValue')"/>
         </xsl:call-template>
 
 

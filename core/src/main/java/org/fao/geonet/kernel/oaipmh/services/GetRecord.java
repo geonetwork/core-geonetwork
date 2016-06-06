@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -55,36 +56,6 @@ import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataU
 //=============================================================================
 
 public class GetRecord implements OaiPmhService {
-    public String getVerb() {
-        return GetRecordRequest.VERB;
-    }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //---------------------------------------------------------------------------
-
-    public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception {
-        GetRecordRequest req = (GetRecordRequest) request;
-        GetRecordResponse res = new GetRecordResponse();
-
-        String uuid = req.getIdentifier();
-        String prefix = req.getMetadataPrefix();
-
-        res.setRecord(buildRecord(context, uuid, prefix));
-
-        return res;
-    }
-
-    //---------------------------------------------------------------------------
-
-    private Record buildRecord(ServiceContext context, String uuid, String prefix) throws Exception {
-        return buildRecordStat(context, hasMetadataUuid(uuid), prefix);
-    }
-
-    //---------------------------------------------------------------------------
-
     // function builds a OAI records from a metadata record, according to the arguments select and selectVal
     public static Record buildRecordStat(ServiceContext context, Specification<Metadata> spec/*String select, Object selectVal*/,
                                          String prefix) throws Exception {
@@ -121,7 +92,7 @@ public class GetRecord implements OaiPmhService {
             if (Lib.existsConverter(schemaDir, prefix)) {
                 final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
                 Element env = Lib.prepareTransformEnv(uuid, changeDate, context.getBaseUrl(), siteURL, gc.getBean(SettingManager.class)
-                        .getSiteName());
+                    .getSiteName());
                 md = Lib.transform(schemaDir, env, md, prefix + ".xsl");
             } else {
                 throw new CannotDisseminateFormatException("Unknown prefix : " + prefix);
@@ -147,6 +118,36 @@ public class GetRecord implements OaiPmhService {
         r.setMetadata(md);
 
         return r;
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //---------------------------------------------------------------------------
+
+    public String getVerb() {
+        return GetRecordRequest.VERB;
+    }
+
+    //---------------------------------------------------------------------------
+
+    public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception {
+        GetRecordRequest req = (GetRecordRequest) request;
+        GetRecordResponse res = new GetRecordResponse();
+
+        String uuid = req.getIdentifier();
+        String prefix = req.getMetadataPrefix();
+
+        res.setRecord(buildRecord(context, uuid, prefix));
+
+        return res;
+    }
+
+    //---------------------------------------------------------------------------
+
+    private Record buildRecord(ServiceContext context, String uuid, String prefix) throws Exception {
+        return buildRecordStat(context, hasMetadataUuid(uuid), prefix);
     }
 }
 

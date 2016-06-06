@@ -29,13 +29,15 @@ import org.quartz.JobListener;
 /**
  * Job listener class, used to configure the atom harvester in InspireAtomHarvesterJob.
  *
- *  @author Jose García
+ * @author Jose García
  */
 public class InspireAtomHarvesterJobListener implements JobListener {
 
     public static final String ATOM_HARVESTER_JOB_CONFIGURATION_LISTENER = "Atom Harvester Job configuration listener";
 
-    /** InspireAtomHarvester instance **/
+    /**
+     * InspireAtomHarvester instance
+     **/
     private InspireAtomHarvester ah;
 
     public InspireAtomHarvesterJobListener(final InspireAtomHarvester inspireAtomHarvester) {
@@ -44,7 +46,7 @@ public class InspireAtomHarvesterJobListener implements JobListener {
 
     @Override
     public String getName() {
-        return  ATOM_HARVESTER_JOB_CONFIGURATION_LISTENER;
+        return ATOM_HARVESTER_JOB_CONFIGURATION_LISTENER;
     }
 
     @Override

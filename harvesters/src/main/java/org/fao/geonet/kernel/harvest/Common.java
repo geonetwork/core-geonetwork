@@ -28,27 +28,27 @@ import org.fao.geonet.exceptions.BadParameterEx;
 //=============================================================================
 
 public class Common {
-	
-	//---------------------------------------------------------------------------
-	//--- Status
-	//---------------------------------------------------------------------------
 
-	public enum Status
-	{
-		ACTIVE("active"), INACTIVE("inactive");
+    //---------------------------------------------------------------------------
+    //--- Status
+    //---------------------------------------------------------------------------
 
-		//------------------------------------------------------------------------
+    public enum Status {
+        ACTIVE("active"), INACTIVE("inactive");
 
-		private Status(String status) { this.status = status; }
+        //------------------------------------------------------------------------
 
-		//------------------------------------------------------------------------
+        private String status;
 
-		public String toString() { return status; }
+        //------------------------------------------------------------------------
 
-		//------------------------------------------------------------------------
+        private Status(String status) {
+            this.status = status;
+        }
 
-		public static Status parse(String status) throws BadParameterEx
-		{
+        //------------------------------------------------------------------------
+
+        public static Status parse(String status) throws BadParameterEx {
 
             for (Status next : values()) {
                 if (next.name().equalsIgnoreCase(status)) {
@@ -56,39 +56,44 @@ public class Common {
                 }
             }
 
-			throw new BadParameterEx("type", status);
-		}
+            throw new BadParameterEx("type", status);
+        }
 
-		//------------------------------------------------------------------------
+        //------------------------------------------------------------------------
 
-		private String status;
-	}
+        public String toString() {
+            return status;
+        }
+    }
 
-	//---------------------------------------------------------------------------
-	//--- Result
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //--- Result
+    //---------------------------------------------------------------------------
 
-	public enum OperResult
-	{
-		OK("ok"),
-		NOT_FOUND("not-found"),
+    public enum OperResult {
+        OK("ok"),
+        NOT_FOUND("not-found"),
         ALREADY_ACTIVE("already-active"),
-		ALREADY_INACTIVE("already-inactive"),
-		ALREADY_RUNNING("already-running"),
-		ERROR("error");
+        ALREADY_INACTIVE("already-inactive"),
+        ALREADY_RUNNING("already-running"),
+        ERROR("error");
 
-		//------------------------------------------------------------------------
+        //------------------------------------------------------------------------
 
-		private OperResult(String result) { this.result = result; }
+        private String result;
 
-		//------------------------------------------------------------------------
+        //------------------------------------------------------------------------
 
-		public String toString() { return result; }
+        private OperResult(String result) {
+            this.result = result;
+        }
 
-		//------------------------------------------------------------------------
+        //------------------------------------------------------------------------
 
-		private String result;
-	}
+        public String toString() {
+            return result;
+        }
+    }
 }
 
 //=============================================================================

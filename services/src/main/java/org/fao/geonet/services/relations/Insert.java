@@ -26,9 +26,11 @@ package org.fao.geonet.services.relations;
 import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasMetadataId;
 import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasRelatedId;
 import static org.springframework.data.jpa.domain.Specifications.where;
+
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.domain.MetadataRelationId;
@@ -43,53 +45,51 @@ import java.nio.file.Path;
 //=============================================================================
 
 /**
- * Insert the relation between two metadata records. Input parameters could be
- * UUID or internal id.
- * 
- * TODO : Should we add a relation type to store different kind of relation. For
- * the time being, relation table is used to store link between iso19139 and
- * iso19110 metadata records.
+ * Insert the relation between two metadata records. Input parameters could be UUID or internal id.
+ *
+ * TODO : Should we add a relation type to store different kind of relation. For the time being,
+ * relation table is used to store link between iso19139 and iso19110 metadata records.
  */
 public class Insert extends NotInReadOnlyModeService {
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	/*
-	 * Insert the relation between two metadata records.
-	 * If it already exist, bypass insert statement and an alreadyExist flag.
-	 * 
-	 * @see jeeves.interfaces.Service#exec(org.jdom.Element,
-	 * jeeves.server.context.ServiceContext) Parameter name: parentId - Parent
-	 * metadata identifier Parameter name: childId - Child metadata identifier
-	 */
-	public Element serviceSpecificExec(Element params, ServiceContext context)
-			throws Exception {
-		int parentId = Integer.parseInt(Utils.getIdentifierFromParameters(
-                params, context, Params.PARENT_UUID, Params.PARENT_ID));
-		int childId = Integer.parseInt(Utils.getIdentifierFromParameters(
-				params, context, Params.CHILD_UUID, Params.CHILD_ID));
+    /*
+     * Insert the relation between two metadata records.
+     * If it already exist, bypass insert statement and an alreadyExist flag.
+     *
+     * @see jeeves.interfaces.Service#exec(org.jdom.Element,
+     * jeeves.server.context.ServiceContext) Parameter name: parentId - Parent
+     * metadata identifier Parameter name: childId - Child metadata identifier
+     */
+    public Element serviceSpecificExec(Element params, ServiceContext context)
+        throws Exception {
+        int parentId = Integer.parseInt(Utils.getIdentifierFromParameters(
+            params, context, Params.PARENT_UUID, Params.PARENT_ID));
+        int childId = Integer.parseInt(Utils.getIdentifierFromParameters(
+            params, context, Params.CHILD_UUID, Params.CHILD_ID));
 
         final Specifications<MetadataRelation> spec = where(hasMetadataId(parentId)).and(hasRelatedId(childId));
         final MetadataRelationRepository metadataRelationRepository = context.getBean(MetadataRelationRepository.class);
         final long count = metadataRelationRepository.count(spec);
 
         boolean exist = false;
-		if (count == 1) {
-			exist = true;
-		} else {
+        if (count == 1) {
+            exist = true;
+        } else {
             MetadataRelation entity = new MetadataRelation().setId(new MetadataRelationId(parentId, childId));
             metadataRelationRepository.save(entity);
-		}
-		
-		Element response = new Element(Jeeves.Elem.RESPONSE)
-				.setAttribute("alreadyExist", String.valueOf(exist))
-				.addContent(
-						new Element("parentId").setText(String
-								.valueOf(parentId)))
-				.addContent(
-						new Element("childId").setText(String.valueOf(childId)));
+        }
 
-		return response;
-	}
+        Element response = new Element(Jeeves.Elem.RESPONSE)
+            .setAttribute("alreadyExist", String.valueOf(exist))
+            .addContent(
+                new Element("parentId").setText(String
+                    .valueOf(parentId)))
+            .addContent(
+                new Element("childId").setText(String.valueOf(childId)));
+
+        return response;
+    }
 }

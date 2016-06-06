@@ -36,7 +36,7 @@ import org.junit.Test;
 
 public class FacetNameFormatterTest {
 
-    private FacetNameFormatter formatter; 
+    private FacetNameFormatter formatter;
 
     @Before
     public void loadTestData() throws IOException, JDOMException {

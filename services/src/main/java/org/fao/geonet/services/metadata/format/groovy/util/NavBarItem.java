@@ -38,19 +38,26 @@ public class NavBarItem {
 
     /**
      * Constructor.
-     * @param name the translated full name of the group represented by this item.  This will be displayed as a tool tip (see view-header.html)
-     * @param abbrName a shorter translated name to use in the display to keep the size of the items reasonable.
-     * @param rel the value of the rel attribute
+     *
+     * @param name     the translated full name of the group represented by this item.  This will be
+     *                 displayed as a tool tip (see view-header.html)
+     * @param abbrName a shorter translated name to use in the display to keep the size of the items
+     *                 reasonable.
+     * @param rel      the value of the rel attribute
      */
     public NavBarItem(String name, String abbrName, String rel) {
         this(name, abbrName, rel, "");
     }
+
     /**
      * Constructor.
-     * @param name the translated full name of the group represented by this item.  This will be displayed as a tool tip (see view-header.html)
-     * @param abbrName a shorter translated name to use in the display to keep the size of the items reasonable.
-     * @param rel the value of the rel attribute
-     * @param href the value of the href attribute
+     *
+     * @param name     the translated full name of the group represented by this item.  This will be
+     *                 displayed as a tool tip (see view-header.html)
+     * @param abbrName a shorter translated name to use in the display to keep the size of the items
+     *                 reasonable.
+     * @param rel      the value of the rel attribute
+     * @param href     the value of the href attribute
      */
     public NavBarItem(String name, String abbrName, String rel, String href) {
         this.name = name;

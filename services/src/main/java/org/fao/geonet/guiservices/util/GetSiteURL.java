@@ -26,6 +26,7 @@ package org.fao.geonet.guiservices.util;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
@@ -34,27 +35,27 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** This service returns some usefull information about GeoNetwork
-  */
+/**
+ * This service returns some usefull information about GeoNetwork
+ */
 
-public class GetSiteURL implements Service
-{
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class GetSiteURL implements Service {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Element root = new Element("a");
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        Element root = new Element("a");
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         root.addContent(new Element(Geonet.Elem.SITE_URL).setText(siteURL));
 
-		return root;
-	}
+        return root;
+    }
 }
 
 //=============================================================================

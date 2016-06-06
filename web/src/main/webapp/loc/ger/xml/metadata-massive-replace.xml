@@ -12,7 +12,10 @@
         <li>Specify the text content to replace.</li>
         <li>Specify the new text content.</li>
       </ol>
-      <p style="padding: 5px">Note that multiple replacements can be specified and the process will replace any occurrence of the text indicated in (3) with the text indicated in (4) for the metadata element indicated in (2)</p>
+      <p style="padding: 5px">Note that multiple replacements can be specified and the process will
+        replace any occurrence of the text indicated in (3) with the text indicated in (4) for the
+        metadata element indicated in (2)
+      </p>
     </description>
     <caseInsensitive>Case insensitive search</caseInsensitive>
     <package>Package</package>
@@ -91,10 +94,18 @@
       <field key="id.dataid.poc.hoursOfService">Point Of Contact > Hours of service</field>
       <field key="id.dataid.poc.contactInstructions">Point Of Contact > Contact Instructions</field>
 
-      <field key="id.dataid.resc.gc.useLimitation">Resource Constraints > General Constraint > Use Limitation</field>
-      <field key="id.dataid.resc.lc.useLimitation">Resource Constraints > Legal Constraints > Use Limitation</field>
-      <field key="id.dataid.resc.lc.otherConstraints">Resource Constraints > Security Constraint > Use Limitation</field>
-      <field key="id.dataid.resc.sc.useLimitation">Resource Constraints > General Constraint > Use Limitation</field>
+      <field key="id.dataid.resc.gc.useLimitation">Resource Constraints > General Constraint > Use
+        Limitation
+      </field>
+      <field key="id.dataid.resc.lc.useLimitation">Resource Constraints > Legal Constraints > Use
+        Limitation
+      </field>
+      <field key="id.dataid.resc.lc.otherConstraints">Resource Constraints > Security Constraint >
+        Use Limitation
+      </field>
+      <field key="id.dataid.resc.sc.useLimitation">Resource Constraints > General Constraint > Use
+        Limitation
+      </field>
       <field key="id.dataid.resc.otherConstraints">Resource Constraints > Other Constraints</field>
     </section>
 
@@ -126,16 +137,19 @@
       <field key="id.serviceid.poc.faxPhone">Point Of Contact > Fax phone</field>
       <field key="id.serviceid.poc.address">Point Of Contact > Delivery Point</field>
       <field key="id.serviceid.poc.city">Point Of Contact > City</field>
-      <field key="id.serviceid.poc.province">Point Of Contact > Administrative Area (Province)</field>
+      <field key="id.serviceid.poc.province">Point Of Contact > Administrative Area (Province)
+      </field>
       <field key="id.serviceid.poc.postalCode">Point Of Contact > Postal code</field>
       <field key="id.serviceid.poc.country">Point Of Contact > Country</field>
       <field key="id.serviceid.poc.email">Point Of Contact > Email</field>
       <field key="id.serviceid.poc.or.url">Point Of Contact > OnlineRes > URL</field>
       <field key="id.serviceid.poc.or.ap">Point Of Contact > OnlineRes > Application Profile</field>
       <field key="id.serviceid.poc.or.name">Point Of Contact > OnlineRes > Name</field>
-      <field key="id.serviceid.poc.or.description">Point Of Contact > OnlineRes > Description</field>
+      <field key="id.serviceid.poc.or.description">Point Of Contact > OnlineRes > Description
+      </field>
       <field key="id.serviceid.poc.hoursOfService">Point Of Contact > Hours of service</field>
-      <field key="id.serviceid.poc.contactInstructions">Point Of Contact > Contact Instructions</field>
+      <field key="id.serviceid.poc.contactInstructions">Point Of Contact > Contact Instructions
+      </field>
 
       <field key="id.serviceid.connectpoint.url">Connect Point > URL</field>
       <field key="id.serviceid.connectpoint.ap">Connect Point > Application Profile</field>
@@ -166,21 +180,28 @@
 
     <section id="contentInformation" label="Content Information">
       <field key="ci.citation.individualName">Feature Catalogue Citation > Individual Name</field>
-      <field key="ci.citation.organisationName">Feature Catalogue Citation > Organization Name</field>
+      <field key="ci.citation.organisationName">Feature Catalogue Citation > Organization Name
+      </field>
       <field key="ci.citation.voicePhone">Feature Catalogue Citation > Voice phone</field>
       <field key="ci.citation.faxPhone">Feature Catalogue Citation > Fax phone</field>
       <field key="ci.citation.address">Feature Catalogue Citation > Delivery Point</field>
       <field key="ci.citation.city">Feature Catalogue Citation > City</field>
-      <field key="ci.citation.province">Feature Catalogue Citation > Administrative Area (Province)</field>
+      <field key="ci.citation.province">Feature Catalogue Citation > Administrative Area
+        (Province)
+      </field>
       <field key="ci.citation.postalCode">Feature Catalogue Citation > Postal code</field>
       <field key="ci.citation.country">Feature Catalogue Citation > Country</field>
       <field key="ci.citation.email">Feature Catalogue Citation > Email</field>
       <field key="ci.citation.or.url">Feature Catalogue Citation > OnlineRes > URL</field>
-      <field key="ci.citation.or.ap">Feature Catalogue Citation > OnlineRes > Application Profile</field>
+      <field key="ci.citation.or.ap">Feature Catalogue Citation > OnlineRes > Application Profile
+      </field>
       <field key="ci.citation.or.name">Feature Catalogue Citation > OnlineRes > Name</field>
-      <field key="ci.citation.or.description">Feature Catalogue Citation > OnlineRes > Description</field>
+      <field key="ci.citation.or.description">Feature Catalogue Citation > OnlineRes > Description
+      </field>
       <field key="ci.citation.hoursOfService">Feature Catalogue Citation > Hours of service</field>
-      <field key="ci.citation.contactInstructions">Feature Catalogue Citation > Contact Instructions</field>
+      <field key="ci.citation.contactInstructions">Feature Catalogue Citation > Contact
+        Instructions
+      </field>
     </section>
 
     <section id="distributionInformation" label="Distribution Information">

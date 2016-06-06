@@ -23,12 +23,14 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:gfc="http://www.isotc211.org/2005/gfc"
-    xmlns:gco="http://www.isotc211.org/2005/gco">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gfc="http://www.isotc211.org/2005/gfc"
+                version="1.0"
+>
 
-    <xsl:template match="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType">
-         <uuid><xsl:value-of select="@uuid"/></uuid>
-	</xsl:template>
+  <xsl:template match="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType">
+    <uuid>
+      <xsl:value-of select="@uuid"/>
+    </uuid>
+  </xsl:template>
 
 </xsl:stylesheet>

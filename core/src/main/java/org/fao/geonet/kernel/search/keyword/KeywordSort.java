@@ -28,17 +28,19 @@ import org.fao.geonet.kernel.KeywordBean;
 import java.util.Comparator;
 
 /**
- * Contains factory methods for creating comparators for sorting collections of {@link KeywordBean} objects
+ * Contains factory methods for creating comparators for sorting collections of {@link KeywordBean}
+ * objects
+ *
  * @author jeichar
  */
 public final class KeywordSort {
-    private KeywordSort() { }
-    
+    private KeywordSort() {
+    }
+
     /**
      * Sort keywords based on the default label of the keywords
-     * 
+     *
      * @param direction if DESC then sort a-z otherwise z-a
-     * 
      * @return a comparator for sorting by label
      */
     public static Comparator<KeywordBean> defaultLabelSorter(final SortDirection direction) {
@@ -46,25 +48,27 @@ public final class KeywordSort {
             public int compare(final KeywordBean kw1, final KeywordBean kw2) {
                 return direction.multiplier * normalizeDesc(kw1.getDefaultValue()).compareTo(normalizeDesc(kw2.getDefaultValue()));
             }
+
             @Override
             public String toString() {
                 return "Sort by Value " + direction;
             }
         };
     }
+
     /**
      * Sort keywords based on the default definition of the keywords
-     * 
+     *
      * @param direction if DESC then sort a-z otherwise z-a
-     * 
      * @return a comparator for sorting by definition
      */
     public static Comparator<KeywordBean> defaultDefinitionSorter(final SortDirection direction) {
         return new Comparator<KeywordBean>() {
             public int compare(final KeywordBean kw1, final KeywordBean kw2) {
                 return direction.multiplier * normalizeDesc(kw1.getDefaultDefinition()).compareToIgnoreCase(
-                        normalizeDesc(kw2.getDefaultDefinition()));
+                    normalizeDesc(kw2.getDefaultDefinition()));
             }
+
             @Override
             public String toString() {
                 return "Sort by Definition " + direction;

@@ -52,16 +52,16 @@ public class SummaryType {
         return items;
     }
 
-    public void setFormat(Format format) {
-        this.format = format;
-    }
-
     public Format getFormat() {
         return format;
     }
 
-   public ItemConfig get(String name) {
-        for (ItemConfig item: items) {
+    public void setFormat(Format format) {
+        this.format = format;
+    }
+
+    public ItemConfig get(String name) {
+        for (ItemConfig item : items) {
             if (item.getDimension().getName().equals(name)) {
                 return item;
             }
@@ -76,7 +76,7 @@ public class SummaryType {
     private List<String> getDimensionNames() {
         List<String> result = new ArrayList<String>();
 
-        for (ItemConfig item: items) {
+        for (ItemConfig item : items) {
             result.add(item.getDimension().getName());
         }
 
@@ -88,7 +88,7 @@ public class SummaryType {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format(TEMPLATE, name, format));
 
-        for (ItemConfig item: items) {
+        for (ItemConfig item : items) {
             sb.append(item);
         }
 

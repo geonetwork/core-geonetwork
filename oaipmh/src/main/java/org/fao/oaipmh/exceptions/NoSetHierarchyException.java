@@ -27,30 +27,27 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class NoSetHierarchyException extends OaiPmhException
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class NoSetHierarchyException extends OaiPmhException {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -681831707621319991L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -681831707621319991L;
 
-	public NoSetHierarchyException(String message)
-	{
-		this(message, null);
-	}
+    public NoSetHierarchyException(String message) {
+        this(message, null);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public NoSetHierarchyException(String message, Element response)
-	{
-		super(NO_SET_HIERARCHY, message, response);
-	}
+    public NoSetHierarchyException(String message, Element response) {
+        super(NO_SET_HIERARCHY, message, response);
+    }
 }
 
 //=============================================================================

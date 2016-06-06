@@ -54,25 +54,21 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
 
 /**
- * This filter filters out all documents that do not intersect the requested
- * geometry.
- * 
+ * This filter filters out all documents that do not intersect the requested geometry.
+ *
  * @author jeichar
  */
-public class FullScanFilter extends SpatialFilter
-{
+public class FullScanFilter extends SpatialFilter {
 
-    private Set<String>       _matches;
+    private Set<String> _matches;
 
     public FullScanFilter(Query query, int numHits, Geometry geom,
-            Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
-    {
+                          Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException {
         super(query, numHits, geom, sourceAccessor);
     }
 
     protected FullScanFilter(Query query, int numHits, Envelope bounds,
-            Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
-    {
+                             Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException {
         super(query, numHits, bounds, sourceAccessor);
     }
 
@@ -117,19 +113,16 @@ public class FullScanFilter extends SpatialFilter
 
     /**
      * Default for testing purposes
-     * 
+     *
+     * @return the set of ids of the metadata objects that match the geometry of this filter
      * @see #createFilter(FeatureSource)
-     * @return the set of ids of the metadata objects that match the geometry of
-     *         this filter
-     * @throws IOException
      */
-    protected synchronized Set<String> loadMatches() throws IOException
-    {
+    protected synchronized Set<String> loadMatches() throws IOException {
         if (_matches == null) {
 
             FeatureSource<SimpleFeatureType, SimpleFeature> _featureSource = sourceAccessor.one();
-            FeatureCollection<SimpleFeatureType, SimpleFeature> features = _featureSource 
-                    .getFeatures(createFilter(_featureSource));
+            FeatureCollection<SimpleFeatureType, SimpleFeature> features = _featureSource
+                .getFeatures(createFilter(_featureSource));
             FeatureIterator<SimpleFeature> iterator = features.features();
 
             HashSet<String> matches = new HashSet<String>();
@@ -138,8 +131,8 @@ public class FullScanFilter extends SpatialFilter
                 while (iterator.hasNext()) {
                     SimpleFeature feature = iterator.next();
                     matches
-                            .add((String) feature
-                                    .getAttribute(idColumn));
+                        .add((String) feature
+                            .getAttribute(idColumn));
                 }
             } finally {
                 iterator.close();
@@ -150,8 +143,7 @@ public class FullScanFilter extends SpatialFilter
     }
 
     public SpatialOperator createGeomFilter(FilterFactory2 filterFactory,
-            PropertyName geomPropertyName, Literal geomExpression)
-    {
+                                            PropertyName geomPropertyName, Literal geomExpression) {
         return filterFactory.disjoint(geomPropertyName, geomExpression);
     }
 

@@ -46,23 +46,14 @@ import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
 
 /**
- * Process a metadata with an XSL transformation declared for the metadata
- * schema. All parameters sent to the service are forwarded to XSL process.
- * <br/>
- * Parameters are:
- * <ul>
- * <li>process: the process identifier (aka. file name without extension)</li>
- * <li>save: (optional) 1 to save the results (default), 0 to only process and return the processed record</li>
- * </ul>
- * <br/>
+ * Process a metadata with an XSL transformation declared for the metadata schema. All parameters
+ * sent to the service are forwarded to XSL process. <br/> Parameters are: <ul> <li>process: the
+ * process identifier (aka. file name without extension)</li> <li>save: (optional) 1 to save the
+ * results (default), 0 to only process and return the processed record</li> </ul> <br/>
  *
- * In each xml/schemas/schemaId directory, a process could be added in a
- * directory called process. Then the process could be called using the
- * following URL :
- * http://localhost:8080/geonetwork/srv/en/metadata.processing?process
- * =keywords-comma-exploder&url=http://xyz
- * <br/>
- * <br/>
+ * In each xml/schemas/schemaId directory, a process could be added in a directory called process.
+ * Then the process could be called using the following URL : http://localhost:8080/geonetwork/srv/en/metadata.processing?process
+ * =keywords-comma-exploder&url=http://xyz <br/> <br/>
  *
  * In that example the process has to be named keywords-comma-exploder.xsl.
  *
@@ -74,8 +65,8 @@ import jeeves.services.ReadWriteController;
  * </pre>
  *
  *
- *  TODO : it could be nice to add an option to return a diff
- *  so we could preview the change before applying them.
+ * TODO : it could be nice to add an option to return a diff so we could preview the change before
+ * applying them.
  *
  * @author fxprunayre
  */
@@ -84,15 +75,15 @@ import jeeves.services.ReadWriteController;
 public class XslProcessing {
 
     @RequestMapping(value = {"/{lang}/md.processing", "/{lang}/xml.metadata.processing", "/{lang}/metadata.processing.new"}, produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public XsltMetadataProcessingReport xmlProcessing(@RequestParam(value = Params.PROCESS) String process,
-                                  @PathVariable String lang,
-                                  @RequestParam(value = Params.SAVE, defaultValue = "1") String saveParam,
-                                  @RequestParam(defaultValue = "") String id,
-                                  @RequestParam(defaultValue = "") String uuid,
-                                  HttpServletRequest request)
-            throws Exception {
+                                                      @PathVariable String lang,
+                                                      @RequestParam(value = Params.SAVE, defaultValue = "1") String saveParam,
+                                                      @RequestParam(defaultValue = "") String id,
+                                                      @RequestParam(defaultValue = "") String uuid,
+                                                      HttpServletRequest request)
+        throws Exception {
 
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
 
@@ -113,9 +104,9 @@ public class XslProcessing {
             processedMetadata = XslProcessUtils.process(context, id, process, save, report, siteURL, request.getParameterMap());
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
-                                                              + report.getNumberOfRecordNotFound() +
-                                                              ", Not owner:" + report.getNumberOfRecordsNotEditable() +
-                                                              ", No process found:" + report.getNoProcessFoundCount() + ".");
+                    + report.getNumberOfRecordNotFound() +
+                    ", Not owner:" + report.getNumberOfRecordsNotEditable() +
+                    ", No process found:" + report.getNoProcessFoundCount() + ".");
             }
         } catch (Exception e) {
             throw e;

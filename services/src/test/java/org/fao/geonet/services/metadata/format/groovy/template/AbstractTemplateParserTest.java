@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.SystemInfo;
 
 import java.io.ByteArrayOutputStream;
@@ -49,8 +50,8 @@ public abstract class AbstractTemplateParserTest {
         final TextContentParser contentParser = TextContentParserTest.createTestTextContentParser();
         parser.textContentParser = contentParser;
         parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(
-                new TNodeFactoryIf(info, contentParser), new TNodeFactoryRepeat(info, contentParser), new TNodeFactoryTranslate(info, contentParser),
-                new TNodeFactoryInclude(info, contentParser), new TNodeFactoryTransclude(info, contentParser));
+            new TNodeFactoryIf(info, contentParser), new TNodeFactoryRepeat(info, contentParser), new TNodeFactoryTranslate(info, contentParser),
+            new TNodeFactoryInclude(info, contentParser), new TNodeFactoryTransclude(info, contentParser));
         return parser;
     }
 }

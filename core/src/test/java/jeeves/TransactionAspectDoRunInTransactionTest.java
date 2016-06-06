@@ -25,6 +25,7 @@ package jeeves;
 
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
+
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.SettingDataType;
 import org.fao.geonet.repository.AbstractSpringDataTest;
@@ -38,6 +39,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.UUID;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.TransactionalException;
@@ -78,19 +80,19 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 try {
                     final TransactionInformation info = new TransactionInformation();
                     TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW, ALWAYS_COMMIT,
-                            false,
-                            new TransactionTask<Object>() {
-                                @Override
-                                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                    info.set();
-                                    Setting setting = new Setting().setValue("value").setName(name).
-                                            setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                        false,
+                        new TransactionTask<Object>() {
+                            @Override
+                            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                                info.set();
+                                Setting setting = new Setting().setValue("value").setName(name).
+                                    setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
 
-                                    _entityManager.persist(setting);
-                                    _entityManager.flush();
-                                    return null;
-                                }
-                            });
+                                _entityManager.persist(setting);
+                                _entityManager.flush();
+                                return null;
+                            }
+                        });
 
                     info.assertNotSameTransaction(transaction);
                     info.assertIsNew();
@@ -109,18 +111,18 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 final String name = UUID.randomUUID().toString();
                 final TransactionInformation info = new TransactionInformation();
                 TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW, ALWAYS_COMMIT,
-                        false,
-                        new TransactionTask<Object>() {
-                            @Override
-                            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                info.set();
-                                Setting setting = new Setting().setValue("value").setName(name).
-                                        setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
-                                _entityManager.persist(setting);
-                                _entityManager.flush();
-                                return null;
-                            }
-                        });
+                    false,
+                    new TransactionTask<Object>() {
+                        @Override
+                        public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                            info.set();
+                            Setting setting = new Setting().setValue("value").setName(name).
+                                setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                            _entityManager.persist(setting);
+                            _entityManager.flush();
+                            return null;
+                        }
+                    });
 
                 assertTrue(_entityManager.getReference(Setting.class, name) != null);
                 info.assertIsCompleted();
@@ -140,20 +142,20 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                     final TransactionInformation info = new TransactionInformation();
 
                     TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW,
-                            ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS,
-                            false,
-                            new TransactionTask<Object>() {
-                                @Override
-                                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                    info.set();
-                                    Setting setting = new Setting().setValue("value").setName(name).
-                                            setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                        ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS,
+                        false,
+                        new TransactionTask<Object>() {
+                            @Override
+                            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                                info.set();
+                                Setting setting = new Setting().setValue("value").setName(name).
+                                    setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
 
-                                    _entityManager.persist(setting);
-                                    _entityManager.flush();
-                                    return null;
-                                }
-                            });
+                                _entityManager.persist(setting);
+                                _entityManager.flush();
+                                return null;
+                            }
+                        });
 
                     info.assertNotSameTransaction(transaction);
                     info.assertIsNew();
@@ -174,18 +176,18 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 final TransactionInformation info = new TransactionInformation();
 
                 TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW,
-                        ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
-                        new TransactionTask<Object>() {
-                            @Override
-                            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                info.set();
-                                Setting setting = new Setting().setValue("value").setName(name).
-                                        setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
-                                _entityManager.persist(setting);
-                                _entityManager.flush();
-                                return null;
-                            }
-                        });
+                    ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
+                    new TransactionTask<Object>() {
+                        @Override
+                        public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                            info.set();
+                            Setting setting = new Setting().setValue("value").setName(name).
+                                setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                            _entityManager.persist(setting);
+                            _entityManager.flush();
+                            return null;
+                        }
+                    });
 
                 info.assertIsNew();
                 info.assertIsCompleted();
@@ -205,18 +207,18 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                     final TransactionInformation info = new TransactionInformation();
                     final String name = UUID.randomUUID().toString();
                     TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW, ALWAYS_COMMIT,
-                            true,
-                            new TransactionTask<Object>() {
-                                @Override
-                                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                    info.set();
-                                    Setting setting = new Setting().setValue("value").setName(name).
-                                            setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
-                                    _entityManager.persist(setting);
-                                    _entityManager.flush();
-                                    return null;
-                                }
-                            });
+                        true,
+                        new TransactionTask<Object>() {
+                            @Override
+                            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                                info.set();
+                                Setting setting = new Setting().setValue("value").setName(name).
+                                    setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                                _entityManager.persist(setting);
+                                _entityManager.flush();
+                                return null;
+                            }
+                        });
 
                     info.assertNotSameTransaction(transaction);
                     info.assertIsNew();
@@ -239,18 +241,18 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                     final TransactionInformation info = new TransactionInformation();
 
                     TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_ONLY_WHEN_NEEDED,
-                            ALWAYS_COMMIT, false,
-                            new TransactionTask<Object>() {
-                                @Override
-                                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                    info.set();
-                                    Setting setting = new Setting().setValue("value").setName(name).
-                                            setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
-                                    _entityManager.persist(setting);
-                                    _entityManager.flush();
-                                    return null;
-                                }
-                            });
+                        ALWAYS_COMMIT, false,
+                        new TransactionTask<Object>() {
+                            @Override
+                            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                                info.set();
+                                Setting setting = new Setting().setValue("value").setName(name).
+                                    setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                                _entityManager.persist(setting);
+                                _entityManager.flush();
+                                return null;
+                            }
+                        });
 
                     info.assertIsSameTransaction(transaction);
                     info.assertNotNew();
@@ -271,18 +273,18 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 final TransactionInformation info = new TransactionInformation();
 
                 TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_ONLY_WHEN_NEEDED,
-                        ALWAYS_COMMIT, false,
-                        new TransactionTask<Object>() {
-                            @Override
-                            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                info.set();
-                                Setting setting = new Setting().setValue("value").setName(name).
-                                        setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
-                                _entityManager.persist(setting);
-                                _entityManager.flush();
-                                return null;
-                            }
-                        });
+                    ALWAYS_COMMIT, false,
+                    new TransactionTask<Object>() {
+                        @Override
+                        public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                            info.set();
+                            Setting setting = new Setting().setValue("value").setName(name).
+                                setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                            _entityManager.persist(setting);
+                            _entityManager.flush();
+                            return null;
+                        }
+                    });
 
                 info.assertIsNew();
                 info.assertIsCompleted();
@@ -302,18 +304,18 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 try {
                     final TransactionInformation info = new TransactionInformation();
                     TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_ONLY_WHEN_NEEDED,
-                            ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
-                            new TransactionTask<Object>() {
-                                @Override
-                                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                    info.set();
-                                    Setting setting = new Setting().setValue("value").setName(name).
-                                            setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
-                                    _entityManager.persist(setting);
-                                    _entityManager.flush();
-                                    return null;
-                                }
-                            });
+                        ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
+                        new TransactionTask<Object>() {
+                            @Override
+                            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                                info.set();
+                                Setting setting = new Setting().setValue("value").setName(name).
+                                    setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                                _entityManager.persist(setting);
+                                _entityManager.flush();
+                                return null;
+                            }
+                        });
 
                     info.assertIsSameTransaction(transaction);
                     info.assertNotNew();
@@ -333,18 +335,18 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 final TransactionInformation info = new TransactionInformation();
 
                 TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_ONLY_WHEN_NEEDED,
-                        ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
-                        new TransactionTask<Object>() {
-                            @Override
-                            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                info.set();
-                                Setting setting = new Setting().setValue("value").setName(name).
-                                        setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
-                                _entityManager.persist(setting);
-                                _entityManager.flush();
-                                return null;
-                            }
-                        });
+                    ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
+                    new TransactionTask<Object>() {
+                        @Override
+                        public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                            info.set();
+                            Setting setting = new Setting().setValue("value").setName(name).
+                                setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                            _entityManager.persist(setting);
+                            _entityManager.flush();
+                            return null;
+                        }
+                    });
 
                 info.assertIsCompleted();
                 info.assertIsNotRollbackOnly();
@@ -364,19 +366,19 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                     final TransactionInformation info = new TransactionInformation();
                     try {
                         TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext,
-                                CREATE_ONLY_WHEN_NEEDED,
-                                ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
-                                new TransactionTask<Object>() {
-                                    @Override
-                                    public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                        info.set();
-                                        Setting setting = new Setting().setValue("value").setName(name).
-                                                setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
-                                        _entityManager.persist(setting);
-                                        _entityManager.flush();
-                                        return null;
-                                    }
-                                });
+                            CREATE_ONLY_WHEN_NEEDED,
+                            ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
+                            new TransactionTask<Object>() {
+                                @Override
+                                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                                    info.set();
+                                    Setting setting = new Setting().setValue("value").setName(name).
+                                        setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                                    _entityManager.persist(setting);
+                                    _entityManager.flush();
+                                    return null;
+                                }
+                            });
                     } catch (Exception e) {
                         info.assertIsCompleted();
                         info.assertIsRollbackOnly();
@@ -396,18 +398,18 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
             public void run() throws Exception {
                 final String name = UUID.randomUUID().toString();
                 TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext,
-                        THROW_EXCEPTION_IF_NOT_PRESENT,
-                        ALWAYS_COMMIT, false,
-                        new TransactionTask<Object>() {
-                            @Override
-                            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                Setting setting = new Setting().setValue("value").setName(name).
-                                        setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
-                                _entityManager.persist(setting);
-                                _entityManager.flush();
-                                return null;
-                            }
-                        });
+                    THROW_EXCEPTION_IF_NOT_PRESENT,
+                    ALWAYS_COMMIT, false,
+                    new TransactionTask<Object>() {
+                        @Override
+                        public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                            Setting setting = new Setting().setValue("value").setName(name).
+                                setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                            _entityManager.persist(setting);
+                            _entityManager.flush();
+                            return null;
+                        }
+                    });
             }
         });
     }
@@ -422,19 +424,19 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 try {
                     final TransactionInformation info = new TransactionInformation();
                     TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext,
-                            THROW_EXCEPTION_IF_NOT_PRESENT,
-                            ALWAYS_COMMIT, false,
-                            new TransactionTask<Object>() {
-                                @Override
-                                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                    info.set();
-                                    Setting setting = new Setting().setValue("value").setName(name).
-                                            setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
-                                    _entityManager.persist(setting);
-                                    _entityManager.flush();
-                                    return null;
-                                }
-                            });
+                        THROW_EXCEPTION_IF_NOT_PRESENT,
+                        ALWAYS_COMMIT, false,
+                        new TransactionTask<Object>() {
+                            @Override
+                            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                                info.set();
+                                Setting setting = new Setting().setValue("value").setName(name).
+                                    setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                                _entityManager.persist(setting);
+                                _entityManager.flush();
+                                return null;
+                            }
+                        });
 
                     info.assertIsSameTransaction(transaction);
                     info.assertNotNew();
@@ -461,19 +463,19 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 final TransactionInformation info = new TransactionInformation();
                 try {
                     TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext,
-                            THROW_EXCEPTION_IF_NOT_PRESENT,
-                            ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
-                            new TransactionTask<Object>() {
-                                @Override
-                                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                    info.set();
-                                    Setting setting = new Setting().setValue("value").setName(name).
-                                            setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
-                                    _entityManager.persist(setting);
-                                    _entityManager.flush();
-                                    return null;
-                                }
-                            });
+                        THROW_EXCEPTION_IF_NOT_PRESENT,
+                        ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
+                        new TransactionTask<Object>() {
+                            @Override
+                            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                                info.set();
+                                Setting setting = new Setting().setValue("value").setName(name).
+                                    setDataType(SettingDataType.STRING).setInternal(false).setPosition(1);
+                                _entityManager.persist(setting);
+                                _entityManager.flush();
+                                return null;
+                            }
+                        });
 
                     info.assertIsSameTransaction(transaction);
                     info.assertNotNew();

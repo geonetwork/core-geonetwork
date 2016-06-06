@@ -27,7 +27,9 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -49,51 +51,93 @@ import org.jdom.Element;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 //=============================================================================
 
-public class Aligner
-{
+public class Aligner {
     //--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public Aligner(AtomicBoolean cancelMonitor, Logger log, XmlRequest req, GeonetParams params, DataManager dm,
-                   ServiceContext sc, CategoryMapper cm)
-	{
+    private final AtomicBoolean cancelMonitor;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Alignment method
+    //---
+    //--------------------------------------------------------------------------
+    private Logger log;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods : addMetadata
+    //---
+    //--------------------------------------------------------------------------
+    private XmlRequest req;
+
+    //--------------------------------------------------------------------------
+    //--- Categories
+    //--------------------------------------------------------------------------
+    private GeonetParams params;
+
+    //--------------------------------------------------------------------------
+    //--- Privileges
+    //--------------------------------------------------------------------------
+    private DataManager dataMan;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods : updateMetadata
+    //---
+    //--------------------------------------------------------------------------
+    private ServiceContext context;
+
+    //--------------------------------------------------------------------------
+    private CategoryMapper localCateg;
+
+    //--------------------------------------------------------------------------
+    private UUIDMapper localUuids;
+
+    //--------------------------------------------------------------------------
+    private HarvestResult result;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //--------------------------------------------------------------------------
+
+    public Aligner(AtomicBoolean cancelMonitor, Logger log, XmlRequest req, GeonetParams params, DataManager dm,
+                   ServiceContext sc, CategoryMapper cm) {
         this.cancelMonitor = cancelMonitor;
-		this.log        = log;
-		this.req        = req;
-		this.params     = params;
-		this.dataMan    = dm;
-		this.context    = sc;
-		this.localCateg = cm;
+        this.log = log;
+        this.req = req;
+        this.params = params;
+        this.dataMan = dm;
+        this.context = sc;
+        this.localCateg = cm;
     }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Alignment method
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public HarvestResult align(Element result, String siteId) throws Exception
-	{
-		log.info("Start of alignment for site-id="+ siteId);
+    public HarvestResult align(Element result, String siteId) throws Exception {
+        log.info("Start of alignment for site-id=" + siteId);
 
-		this.result = new HarvestResult();
-		this.result.siteId = siteId;
+        this.result = new HarvestResult();
+        this.result.siteId = siteId;
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> mdList = result.getChildren("metadata");
 
-		//-----------------------------------------------------------------------
-		//--- retrieve local uuids for given site-id
+        //-----------------------------------------------------------------------
+        //--- retrieve local uuids for given site-id
 
-		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), siteId);
+        localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), siteId);
 
         //-----------------------------------------------------------------------
         //--- remove old metadata
@@ -113,8 +157,8 @@ public class Aligner
                 this.result.locallyRemoved++;
             }
         }
-		//-----------------------------------------------------------------------
-		//--- insert/update new metadata
+        //-----------------------------------------------------------------------
+        //--- insert/update new metadata
 
         for (Element aMdList : mdList) {
             if (cancelMonitor.get()) {
@@ -130,10 +174,11 @@ public class Aligner
 
             this.result.totalMetadata++;
 
-            if(log.isDebugEnabled()) log.debug("Obtained remote id=" + remoteId + ", changeDate=" + changeDate);
+            if (log.isDebugEnabled())
+                log.debug("Obtained remote id=" + remoteId + ", changeDate=" + changeDate);
 
             if (!dataMan.existsSchema(schema)) {
-                if(log.isDebugEnabled()) log.debug("  - Skipping unsupported schema : " + schema);
+                if (log.isDebugEnabled()) log.debug("  - Skipping unsupported schema : " + schema);
                 this.result.schemaSkipped++;
             } else {
                 String id = dataMan.getMetadataId(remoteUuid);
@@ -147,7 +192,6 @@ public class Aligner
                 dataMan.flush();
 
 
-
                 //--- maybe the metadata was unretrievable
 
                 if (id != null) {
@@ -156,19 +200,14 @@ public class Aligner
             }
         }
 
-		log.info("End of alignment for site-id="+ siteId);
+        log.info("End of alignment for site-id=" + siteId);
 
-		return this.result;
-	}
+        return this.result;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods : addMetadata
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private String addMetadata(Element info) throws Exception
-	{
+    private String addMetadata(Element info) throws Exception {
         String remoteId = info.getChildText("id");
         String remoteUuid = info.getChildText("uuid");
         String schema = info.getChildText("schema");
@@ -189,17 +228,17 @@ public class Aligner
         //
         Metadata metadata = new Metadata().setUuid(remoteUuid);
         metadata.getDataInfo().
-                setSchemaId(schema).
-                setRoot(md.getQualifiedName()).
-                setType(MetadataType.METADATA).
-                setChangeDate(new ISODate(changeDate)).
-                setCreateDate(new ISODate(createDate));
+            setSchemaId(schema).
+            setRoot(md.getQualifiedName()).
+            setType(MetadataType.METADATA).
+            setChangeDate(new ISODate(changeDate)).
+            setCreateDate(new ISODate(createDate));
         metadata.getSourceInfo().
-                setSourceId(params.getUuid()).
-                setOwner(Integer.parseInt(params.getOwnerId()));
+            setSourceId(params.getUuid()).
+            setOwner(Integer.parseInt(params.getOwnerId()));
         metadata.getHarvestInfo().
-                setHarvested(true).
-                setUuid(params.getUuid());
+            setHarvested(true).
+            setUuid(params.getUuid());
 
         @SuppressWarnings("unchecked")
         List<Element> categories = info.getChildren("category");
@@ -209,18 +248,20 @@ public class Aligner
 
         String id = String.valueOf(metadata.getId());
 
-		result.addedMetadata++;
+        result.addedMetadata++;
 
         addPrivileges(id);
 
-		return id;
-	}
+        return id;
+    }
 
-	//--------------------------------------------------------------------------
-	//--- Categories
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //--------------------------------------------------------------------------
 
-	private void addCategories(Metadata metadata, List<Element> categ) throws Exception {
+    private void addCategories(Metadata metadata, List<Element> categ) throws Exception {
         final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
         Collection<String> catNames = Lists.transform(categ, new Function<Element, String>() {
             @Nullable
@@ -238,67 +279,50 @@ public class Aligner
         });
         final List<MetadataCategory> categories = categoryRepository.findAll(MetadataCategorySpecs.hasCategoryNameIn(catNames));
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("    - Setting categories : " + categories);
         }
 
         metadata.getCategories().addAll(categories);
-	}
+    }
 
-	//--------------------------------------------------------------------------
-	//--- Privileges
-	//--------------------------------------------------------------------------
+    private void addPrivileges(String id) throws Exception {
+        //--- set view privilege for both groups 'intranet' and 'all'
+        dataMan.setOperation(context, id, "0", "0");
+        dataMan.setOperation(context, id, "1", "0");
+    }
 
-	private void addPrivileges(String id) throws Exception
-	{
-		//--- set view privilege for both groups 'intranet' and 'all'
-		dataMan.setOperation(context, id, "0", "0");
-		dataMan.setOperation(context, id, "1", "0");
-	}
+    private void updateMetadata(String siteId, Element info, String id) throws Exception {
+        String remoteId = info.getChildText("id");
+        String remoteUuid = info.getChildText("uuid");
+        String changeDate = info.getChildText("changeDate");
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods : updateMetadata
-	//---
-	//--------------------------------------------------------------------------
+        if (localUuids.getID(remoteUuid) == null) {
+            log.error("  - Warning! The remote uuid '" + remoteUuid + "' does not belong to site '" + siteId + "'");
+            log.error("     - The site id of this metadata has been changed.");
+            log.error("     - The metadata update will be skipped.");
 
-	private void updateMetadata(String siteId, Element info, String id) throws Exception
-	{
-		String remoteId  = info.getChildText("id");
-		String remoteUuid= info.getChildText("uuid");
-		String changeDate= info.getChildText("changeDate");
+            result.uuidSkipped++;
+        } else {
+            updateMetadata(id, remoteId, remoteUuid, changeDate);
+            updateCategories(id, info);
+        }
+    }
 
-		if (localUuids.getID(remoteUuid) == null)
-		{
-			log.error("  - Warning! The remote uuid '"+ remoteUuid +"' does not belong to site '"+ siteId+"'");
-			log.error("     - The site id of this metadata has been changed.");
-			log.error("     - The metadata update will be skipped.");
+    private void updateMetadata(String id, String remoteId, String remoteUuid, String changeDate) throws Exception {
+        String date = localUuids.getChangeDate(remoteUuid);
 
-			result.uuidSkipped++;
-		}
-		else
-		{
-			updateMetadata(id, remoteId, remoteUuid, changeDate);
-			updateCategories(id, info);
-		}
-	}
+        if (!updateCondition(date, changeDate)) {
+            if (log.isDebugEnabled())
+                log.debug("  - XML not changed to local metadata with id=" + id);
+            result.unchangedMetadata++;
+        } else {
+            if (log.isDebugEnabled()) log.debug("  - Updating local metadata with id=" + id);
 
-	//--------------------------------------------------------------------------
+            Element md = getRemoteMetadata(req, remoteId);
 
-	private void updateMetadata(String id, String remoteId, String remoteUuid, String changeDate) throws Exception
-	{
-		String date = localUuids.getChangeDate(remoteUuid);
-
-		if (!updateCondition(date, changeDate)) {
-            if(log.isDebugEnabled()) log.debug("  - XML not changed to local metadata with id="+ id);
-			result.unchangedMetadata++;
-		} else {
-            if(log.isDebugEnabled()) log.debug("  - Updating local metadata with id="+ id);
-
-			Element md = getRemoteMetadata(req, remoteId);
-
-			if (md == null) {
-				log.warning("  - Cannot get metadata (possibly bad XML) with remote id="+ remoteId);
+            if (md == null) {
+                log.warning("  - Cannot get metadata (possibly bad XML) with remote id=" + remoteId);
             } else {
                 //
                 // update metadata
@@ -309,21 +333,18 @@ public class Aligner
                 String language = context.getLanguage();
                 dataMan.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false);
 
-				result.updatedMetadata++;
-			}
-		}
-	}
+                result.updatedMetadata++;
+            }
+        }
+    }
 
-	//--------------------------------------------------------------------------
-
-	private void updateCategories(String id, Element info) throws Exception
-	{
-		@SuppressWarnings("unchecked")
+    private void updateCategories(String id, Element info) throws Exception {
+        @SuppressWarnings("unchecked")
         List<Element> catList = info.getChildren("category");
 
-		//--- remove old categories
+        //--- remove old categories
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         Collection<MetadataCategory> locCateg = dataMan.getCategories(id);
 
         for (MetadataCategory el : locCateg) {
@@ -331,14 +352,14 @@ public class Aligner
             String catName = el.getName();
 
             if (!existsCategory(catList, catName)) {
-                if(log.isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
                     log.debug("  - Unsetting category : " + catName);
                 }
                 dataMan.unsetCategory(context, id, catId);
             }
         }
 
-		//--- add new categories
+        //--- add new categories
 
         for (Element categ : catList) {
             String catName = categ.getAttributeValue("name");
@@ -354,12 +375,9 @@ public class Aligner
                 }
             }
         }
-	}
+    }
 
-	//--------------------------------------------------------------------------
-
-	private boolean existsCategory(List<Element> catList, String name)
-	{
+    private boolean existsCategory(List<Element> catList, String name) {
         for (Object aCatList : catList) {
             Element categ = (Element) aCatList;
             String catName = categ.getText();
@@ -369,36 +387,24 @@ public class Aligner
             }
         }
 
-		return false;
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+        return false;
+    }
 
     /**
-     * Retrieves remote metadata. If validation is requested and the metadata does not validate, returns null.
-     *
-     * @param req
-     * @param id
-     * @return
-     * @throws Exception
+     * Retrieves remote metadata. If validation is requested and the metadata does not validate,
+     * returns null.
      */
-	private Element getRemoteMetadata(XmlRequest req, String id) throws Exception
-	{
-		req.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_METADATA_GET);
-		req.clearParams();
-		req.addParam("id", id);
+    private Element getRemoteMetadata(XmlRequest req, String id) throws Exception {
+        req.setAddress(params.getServletPath() + "/srv/en/" + Geonet.Service.XML_METADATA_GET);
+        req.clearParams();
+        req.addParam("id", id);
 
-		try
-		{
-			Element md   = req.execute();
-			Element info = md.getChild("info", Edit.NAMESPACE);
+        try {
+            Element md = req.execute();
+            Element info = md.getChild("info", Edit.NAMESPACE);
 
-			if (info != null)
-				info.detach();
+            if (info != null)
+                info.detach();
 
             try {
                 params.getValidate().validate(dataMan, context, md);
@@ -408,22 +414,20 @@ public class Aligner
                 result.doesNotValidate++;
             }
 
-			return md;
-		}
-		catch(Exception e)
-		{
-			log.warning("Cannot retrieve remote metadata with id:"+id);
-			log.warning(" (C) Error is : "+e.getMessage());
+            return md;
+        } catch (Exception e) {
+            log.warning("Cannot retrieve remote metadata with id:" + id);
+            log.warning(" (C) Error is : " + e.getMessage());
 
-			return null;
-		}
-	}
+            return null;
+        }
+    }
 
-	//--------------------------------------------------------------------------
-	/** Return true if the sourceId is present in the remote site */
+    /**
+     * Return true if the sourceId is present in the remote site
+     */
 
-	private boolean exists(List<Element> mdList, String uuid)
-	{
+    private boolean exists(List<Element> mdList, String uuid) {
         for (Element aMdList : mdList) {
             Element elInfo = aMdList.getChild("info", Edit.NAMESPACE);
 
@@ -432,34 +436,15 @@ public class Aligner
             }
         }
 
-		return false;
-	}
+        return false;
+    }
 
-	//--------------------------------------------------------------------------
+    private boolean updateCondition(String localDate, String remoteDate) {
+        ISODate local = new ISODate(localDate);
+        ISODate remote = new ISODate(remoteDate);
 
-	private boolean updateCondition(String localDate, String remoteDate)
-	{
-		ISODate local = new ISODate(localDate);
-		ISODate remote= new ISODate(remoteDate);
+        //--- accept if remote date is greater than local date
 
-		//--- accept if remote date is greater than local date
-
-		return (remote.timeDifferenceInSeconds(local) > 0);
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//--------------------------------------------------------------------------
-
-	private Logger         log;
-	private XmlRequest     req;
-	private GeonetParams   params;
-	private DataManager    dataMan;
-	private ServiceContext context;
-	private CategoryMapper localCateg;
-    private UUIDMapper     localUuids;
-	private HarvestResult result;
-    private final AtomicBoolean cancelMonitor;
+        return (remote.timeDifferenceInSeconds(local) > 0);
+    }
 }

@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -40,125 +41,119 @@ import java.util.UUID;
 
 //=============================================================================
 
-public class OaiPmhHarvester extends AbstractHarvester<HarvestResult>
-{
+public class OaiPmhHarvester extends AbstractHarvester<HarvestResult> {
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	protected void doInit(Element node, ServiceContext context) throws BadInputEx
-	{
-		params = new OaiPmhParams(dataMan);
+    private OaiPmhParams params;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Add
+    //---
+    //---------------------------------------------------------------------------
+
+    protected void doInit(Element node, ServiceContext context) throws BadInputEx {
+        params = new OaiPmhParams(dataMan);
         super.setParams(params);
 
         params.create(node);
-	}
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Add
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update
+    //---
+    //---------------------------------------------------------------------------
 
-	protected String doAdd(Element node) throws BadInputEx, SQLException
-	{
-		params = new OaiPmhParams(dataMan);
+    protected String doAdd(Element node) throws BadInputEx, SQLException {
+        params = new OaiPmhParams(dataMan);
         super.setParams(params);
 
-		//--- retrieve/initialize information
-		params.create(node);
+        //--- retrieve/initialize information
+        params.create(node);
 
-		//--- force the creation of a new uuid
-		params.setUuid(UUID.randomUUID().toString());
+        //--- force the creation of a new uuid
+        params.setUuid(UUID.randomUUID().toString());
 
-		String id = settingMan.add("harvesting", "node", getType());
+        String id = settingMan.add("harvesting", "node", getType());
 
-		storeNode(params, "id:"+id);
+        storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
-		
-		return id;
-	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update
-	//---
-	//---------------------------------------------------------------------------
+        return id;
+    }
 
-	protected void doUpdate(String id, Element node)
-									throws BadInputEx, SQLException
-	{
-		OaiPmhParams copy = params.copy();
+    //---------------------------------------------------------------------------
 
-		//--- update variables
-		copy.update(node);
+    protected void doUpdate(String id, Element node)
+        throws BadInputEx, SQLException {
+        OaiPmhParams copy = params.copy();
 
-		String path = "harvesting/id:"+ id;
+        //--- update variables
+        copy.update(node);
 
-		settingMan.removeChildren(path);
+        String path = "harvesting/id:" + id;
 
-		//--- update database
-		storeNode(copy, path);
+        settingMan.removeChildren(path);
 
-		//--- we update a copy first because if there is an exception CswParams
-		//--- could be half updated and so it could be in an inconsistent state
+        //--- update database
+        storeNode(copy, path);
+
+        //--- we update a copy first because if there is an exception CswParams
+        //--- could be half updated and so it could be in an inconsistent state
 
         Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
 
-		params = copy;
+        params = copy;
         super.setParams(params);
 
     }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Harvest
+    //---
+    //---------------------------------------------------------------------------
 
-	protected void storeNodeExtra(AbstractParams p, String path,
-											String siteId, String optionsId) throws SQLException
-	{
-		OaiPmhParams params = (OaiPmhParams) p;
+    protected void storeNodeExtra(AbstractParams p, String path,
+                                  String siteId, String optionsId) throws SQLException {
+        OaiPmhParams params = (OaiPmhParams) p;
 
-		settingMan.add("id:"+siteId, "url",  params.url);
-		settingMan.add("id:"+siteId, "icon", params.icon);
+        settingMan.add("id:" + siteId, "url", params.url);
+        settingMan.add("id:" + siteId, "icon", params.icon);
 
-		settingMan.add("id:"+optionsId, "validate", params.getValidate());
+        settingMan.add("id:" + optionsId, "validate", params.getValidate());
 
-		//--- store search nodes
+        //--- store search nodes
 
-		for (Search s : params.getSearches())
-		{
-			String  searchID = settingMan.add(path, "search", "");
+        for (Search s : params.getSearches()) {
+            String searchID = settingMan.add(path, "search", "");
 
-			settingMan.add("id:"+searchID, "from",       s.from);
-			settingMan.add("id:"+searchID, "until",      s.until);
-			settingMan.add("id:"+searchID, "set",        s.set);
-			settingMan.add("id:"+searchID, "prefix",     s.prefix);
-			settingMan.add("id:"+searchID, "stylesheet", s.stylesheet);
-		}
-	}
+            settingMan.add("id:" + searchID, "from", s.from);
+            settingMan.add("id:" + searchID, "until", s.until);
+            settingMan.add("id:" + searchID, "set", s.set);
+            settingMan.add("id:" + searchID, "prefix", s.prefix);
+            settingMan.add("id:" + searchID, "stylesheet", s.stylesheet);
+        }
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Harvest
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public void doHarvest(Logger log) throws Exception {
-		Harvester h = new Harvester(cancelMonitor, log, context, params);
-		result = h.harvest(log);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private OaiPmhParams params;
+    public void doHarvest(Logger log) throws Exception {
+        Harvester h = new Harvester(cancelMonitor, log, context, params);
+        result = h.harvest(log);
+    }
 }

@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
@@ -87,30 +86,29 @@ public class Get implements Service {
     //--------------------------------------------------------------------------
 
     /**
-     * Parses the contents of the local SVN repository and returns an xml
-     * Element with the relevant data about what kind of changes were made per metadata.
+     * Parses the contents of the local SVN repository and returns an xml Element with the relevant
+     * data about what kind of changes were made per metadata.
      *
-     * @param params POST request parameters. Will accept (type, name): boolean 'refresh', integer 'start', integer 'limit',
-     *               text 'sort', text 'dir'. <br>
-     *               - refresh - if a search for new changes will be attempted <br>
-     *               - start - the start position of the first entry element to be returned from the sorted collection of entries <br>
-     *               - limit - how many entries to return <br>
-     *               - sort - by which field to sort. The fields names are date, user, ip, action, subject, id, title <br>
-     *               - dir - in which direction to sort. The values can be ASC or DESC <br>
-     *               If no parameters are given, defaults to refresh: true, start: 0, limit: 30, sort: date, dir: DESC.
-     *
-     * @param context the context for service excecution is needed to get the path of the repository
-     *
-     * @return {@link org.jdom.Element} that contains relevant info about the metadata
-     *         {@code <date>} is the NB! server-local NB! date when the change was done
-     *         {@code <user>} name of the user in geonetwork who triggered the change
-     *         {@code <ip>} The IP address, from where the change was triggered
-     *         {@code <action>} can be either Added, Modified or Deleted
-     *         {@code <subject>} can be either All, Metadata, Owner, Privileges, Categories or Status.
-     *         {@code <id>} the geonetwork-local id (not the global id) of the metadata involved
-     *         {@code <title>} the title of the the metadata involved right after the change occurred
-     *         An example of two entries:
-     *         <pre>
+     * @param params  POST request parameters. Will accept (type, name): boolean 'refresh', integer
+     *                'start', integer 'limit', text 'sort', text 'dir'. <br> - refresh - if a
+     *                search for new changes will be attempted <br> - start - the start position of
+     *                the first entry element to be returned from the sorted collection of entries
+     *                <br> - limit - how many entries to return <br> - sort - by which field to
+     *                sort. The fields names are date, user, ip, action, subject, id, title <br> -
+     *                dir - in which direction to sort. The values can be ASC or DESC <br> If no
+     *                parameters are given, defaults to refresh: true, start: 0, limit: 30, sort:
+     *                date, dir: DESC.
+     * @param context the context for service excecution is needed to get the path of the
+     *                repository
+     * @return {@link org.jdom.Element} that contains relevant info about the metadata {@code
+     * <date>} is the NB! server-local NB! date when the change was done {@code <user>} name of the
+     * user in geonetwork who triggered the change {@code <ip>} The IP address, from where the
+     * change was triggered {@code <action>} can be either Added, Modified or Deleted {@code
+     * <subject>} can be either All, Metadata, Owner, Privileges, Categories or Status. {@code <id>}
+     * the geonetwork-local id (not the global id) of the metadata involved {@code <title>} the
+     * title of the the metadata involved right after the change occurred An example of two
+     * entries:
+     * <pre>
      *         {@code   <logentries>
      *          <totalcount>2</totalcount>
      *          <entry>
@@ -134,20 +132,22 @@ public class Get implements Service {
      *         </logentries>
      *         }
      *         </pre>
-     *
-     * @throws java.io.IOException when cannot acquire metadata file from repository
-     * @throws jeeves.exceptions.BadParameterEx in case of badly formed parameter
-     * @throws org.jdom.JDOMException when parsing file into jdom.Document or running xpath on the document fails.
-     * @throws org.tmatesoft.svn.core.SVNException when a failure occurs while connecting to repository
+     * @throws java.io.IOException                 when cannot acquire metadata file from
+     *                                             repository
+     * @throws jeeves.exceptions.BadParameterEx    in case of badly formed parameter
+     * @throws org.jdom.JDOMException              when parsing file into jdom.Document or running
+     *                                             xpath on the document fails.
+     * @throws org.tmatesoft.svn.core.SVNException when a failure occurs while connecting to
+     *                                             repository
      */
     public final Element exec(final Element params, final ServiceContext context) throws BadParameterEx, SVNException, IOException, JDOMException {
         MetadataActionListSingleton singleton = MetadataActionListSingleton.getInstance();
         boolean refresh = Util.getParam(params, "refresh", true);
         if (refresh) {
             GeonetContext gc = (GeonetContext) context
-                    .getHandlerContext(Geonet.CONTEXT_NAME);
+                .getHandlerContext(Geonet.CONTEXT_NAME);
             String repoPath = gc.getBean(ServiceConfig.class).getMandatoryValue(
-                    Geonet.Config.SUBVERSION_PATH);
+                Geonet.Config.SUBVERSION_PATH);
             SVNURL svnurl = SVNURL.fromFile(new File(repoPath));
             SVNRepository repository = SVNRepositoryFactory.create(svnurl);
             MyLogEntryHandler logEntryHandler = new MyLogEntryHandler();

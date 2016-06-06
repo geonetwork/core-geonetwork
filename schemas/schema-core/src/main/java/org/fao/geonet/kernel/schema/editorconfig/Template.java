@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
@@ -34,9 +33,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -49,8 +48,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -66,11 +63,8 @@ public class Template {
 
     /**
      * The list of values to match from the template.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Values }
-     *     
+     *
+     * @return possible object is {@link Values }
      */
     public Values getValues() {
         return values;
@@ -78,11 +72,8 @@ public class Template {
 
     /**
      * Sets the value of the values property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Values }
-     *     
+     *
+     * @param value allowed object is {@link Values }
      */
     public void setValues(Values value) {
         this.values = value;
@@ -90,11 +81,8 @@ public class Template {
 
     /**
      * Gets the value of the snippet property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Snippet }
-     *     
+     *
+     * @return possible object is {@link Snippet }
      */
     public Snippet getSnippet() {
         return snippet;
@@ -102,11 +90,8 @@ public class Template {
 
     /**
      * Sets the value of the snippet property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Snippet }
-     *     
+     *
+     * @param value allowed object is {@link Snippet }
      */
     public void setSnippet(Snippet value) {
         this.snippet = value;

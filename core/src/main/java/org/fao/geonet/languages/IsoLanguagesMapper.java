@@ -27,6 +27,7 @@ import org.fao.geonet.repository.IsoLanguageRepository;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,7 +42,7 @@ public class IsoLanguagesMapper {
     /*
      * Stores mapping of ISO 639-1 to ISO 639-2 for all languages defined in IsoLanguages table
      */
-    protected BiMap<String, String> _isoLanguagesMap639 =  HashBiMap.create();
+    protected BiMap<String, String> _isoLanguagesMap639 = HashBiMap.create();
 
     @Autowired
     private IsoLanguageRepository _langRepo;
@@ -59,7 +60,6 @@ public class IsoLanguagesMapper {
      * Helps ensure singleton-ness.
      *
      * @return nothing
-     * @throws CloneNotSupportedException
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
@@ -77,7 +77,7 @@ public class IsoLanguagesMapper {
             if (shortCode != null && code != null) {
                 _isoLanguagesMap639.forcePut(shortCode, code);
             } else {
-                Log.info(Geonet.GEONETWORK, "Unable to add IsoLanguage mapping for "+record);
+                Log.info(Geonet.GEONETWORK, "Unable to add IsoLanguage mapping for " + record);
             }
         }
     }
@@ -92,12 +92,9 @@ public class IsoLanguagesMapper {
 
     /**
      * Retrieves 639-2 code from a 639-1 code
-     *
-     * @param iso639_1
-     * @return
      */
     public String iso639_1_to_iso639_2(String iso639_1) {
-        if(_isoLanguagesMap639.containsValue(iso639_1.toLowerCase())) {
+        if (_isoLanguagesMap639.containsValue(iso639_1.toLowerCase())) {
             return iso639_1.toLowerCase();
         } else {
             return _isoLanguagesMap639.get(iso639_1.toLowerCase());
@@ -106,12 +103,9 @@ public class IsoLanguagesMapper {
 
     /**
      * Retrieves 639-1 code from a 639-2 code
-     *
-     * @param iso639_2
-     * @return
      */
     public String iso639_2_to_iso639_1(String iso639_2) {
-        if(_isoLanguagesMap639.containsKey(iso639_2.toLowerCase())) {
+        if (_isoLanguagesMap639.containsKey(iso639_2.toLowerCase())) {
             return iso639_2.toLowerCase();
         } else {
             return _isoLanguagesMap639.inverse().get(iso639_2.toLowerCase());
@@ -120,30 +114,22 @@ public class IsoLanguagesMapper {
 
     /**
      * Convert the code to iso639_2 or return the default
-     * 
-     * @param iso639_1
-     * @param defaultLang
-     * @return
      */
     public String iso639_1_to_iso639_2(String iso639_1, String defaultLang) {
         String result = iso639_1_to_iso639_2(iso639_1);
-        if(result == null) {
+        if (result == null) {
             return defaultLang.toLowerCase();
         } else {
             return result;
         }
     }
-    
+
     /**
      * Convert the code to iso639_1 or return the default
-     * 
-     * @param iso639_2
-     * @param defaultLang
-     * @return
      */
     public String iso639_2_to_iso639_1(String iso639_2, String defaultLang) {
         String result = iso639_2_to_iso639_1(iso639_2);
-        if(result == null) {
+        if (result == null) {
             return defaultLang.toLowerCase();
         } else {
             return result;

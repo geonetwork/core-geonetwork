@@ -24,6 +24,7 @@
 package org.fao.geonet.csw.common.requests;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
 import org.jdom.Element;
@@ -33,99 +34,99 @@ import java.util.List;
 
 //=============================================================================
 
-/** Params:
-  *  - elementSetName (0..1) Can be 'brief', 'summary', 'full'. Default is 'summary'
-  *  - id             (1..n)
-  */
+/**
+ * Params: - elementSetName (0..1) Can be 'brief', 'summary', 'full'. Default is 'summary' - id
+ * (1..n)
+ */
 
-public class GetRecordByIdRequest extends CatalogRequest
-{
-	private ElementSetName setName;
+public class GetRecordByIdRequest extends CatalogRequest {
+    private ElementSetName setName;
 
-	private List<String> alIds = new ArrayList<String>();
+    private List<String> alIds = new ArrayList<String>();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
 
-	public GetRecordByIdRequest(ServiceContext context) { super(context); }
+    public GetRecordByIdRequest(ServiceContext context) {
+        super(context);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public void setElementSetName(ElementSetName name)
-	{
-		setName = name;
-	}
+    public void setElementSetName(ElementSetName name) {
+        setName = name;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void addId(String id)
-	{
-		alIds.add(id);
-	}
+    public void addId(String id) {
+        alIds.add(id);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void clearIds()
-	{
-		alIds.clear();
-	}
+    public void clearIds() {
+        alIds.clear();
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Protected methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Protected methods
+    //---
+    //---------------------------------------------------------------------------
 
-	protected String getRequestName() { return "GetRecordById"; }
+    protected String getRequestName() {
+        return "GetRecordById";
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	protected void setupGetParams() {
-		addParam("request", getRequestName());
-		addParam("service", Csw.SERVICE);
-		addParam("version", getServerVersion());
-		// heikki doeleman: set outputSchema as per CSW 2.0.2 specification 07-45 section 7.4:
-		if(outputSchema != null) {
-			addParam("outputSchema", outputSchema);
-		}
-		if (setName != null) {
-			addParam("elementSetName", setName);
-		}
-		fill("id", alIds);
-	}
+    protected void setupGetParams() {
+        addParam("request", getRequestName());
+        addParam("service", Csw.SERVICE);
+        addParam("version", getServerVersion());
+        // heikki doeleman: set outputSchema as per CSW 2.0.2 specification 07-45 section 7.4:
+        if (outputSchema != null) {
+            addParam("outputSchema", outputSchema);
+        }
+        if (setName != null) {
+            addParam("elementSetName", setName);
+        }
+        fill("id", alIds);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	protected Element getPostParams() {
-		Element params = new Element(getRequestName(), Csw.NAMESPACE_CSW);
+    protected Element getPostParams() {
+        Element params = new Element(getRequestName(), Csw.NAMESPACE_CSW);
 
-		//--- 'service' and 'version' are common mandatory attributes
-		params.setAttribute("service", Csw.SERVICE);
-		params.setAttribute("version", getServerVersion());
+        //--- 'service' and 'version' are common mandatory attributes
+        params.setAttribute("service", Csw.SERVICE);
+        params.setAttribute("version", getServerVersion());
 
-		// heikki doeleman: set outputSchema as per CSW 2.0.2 specification 07-45 section 7.4:
-		if(outputSchema != null) {
-			params.setAttribute("outputSchema", outputSchema);
-		}
-		
-		fill(params, "Id", alIds);
+        // heikki doeleman: set outputSchema as per CSW 2.0.2 specification 07-45 section 7.4:
+        if (outputSchema != null) {
+            params.setAttribute("outputSchema", outputSchema);
+        }
 
-		if (setName != null) {
-			Element elem = new Element("ElementSetName", Csw.NAMESPACE_CSW);
-			elem.setText(setName.toString());
+        fill(params, "Id", alIds);
 
-			params.addContent(elem);
-		}
-		return params;
-	}
+        if (setName != null) {
+            Element elem = new Element("ElementSetName", Csw.NAMESPACE_CSW);
+            elem.setText(setName.toString());
+
+            params.addContent(elem);
+        }
+        return params;
+    }
 }
 
 //=============================================================================

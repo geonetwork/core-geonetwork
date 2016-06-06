@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.search.MetaSearcher;
@@ -36,42 +37,39 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** remote.result service. Returns just one metadata formatted like the local search
-  */
+/**
+ * remote.result service. Returns just one metadata formatted like the local search
+ */
 
-public class RemoteShow implements Service
-{
-	private ServiceConfig _config;
+public class RemoteShow implements Service {
+    private ServiceConfig _config;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception
-	{
-		_config = config;
-	}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+        _config = config;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Element elCurrTab = params.getChild(Params.CURRTAB);
-		if (elCurrTab != null)
-		{
-			UserSession session = context.getUserSession();
-			session.setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
-		}
-		// build result data
-		MetaSearcher searcher = (MetaSearcher) context.getUserSession().getProperty(Geonet.Session.SEARCH_RESULT);
-		return searcher.get(context, params, _config);
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        Element elCurrTab = params.getChild(Params.CURRTAB);
+        if (elCurrTab != null) {
+            UserSession session = context.getUserSession();
+            session.setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
+        }
+        // build result data
+        MetaSearcher searcher = (MetaSearcher) context.getUserSession().getProperty(Geonet.Session.SEARCH_RESULT);
+        return searcher.get(context, params, _config);
+    }
 }
 
 //=============================================================================

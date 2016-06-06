@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
@@ -27,6 +26,7 @@ package org.fao.geonet.kernel.schema.editorconfig;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -37,9 +37,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -55,13 +55,19 @@ import javax.xml.bind.annotation.XmlType;
  *                       &lt;complexContent>
  *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                           &lt;sequence>
- *                             &lt;element name="template" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *                             &lt;element name="template" type="{http://www.w3.org/2001/XMLSchema}string"
+ * minOccurs="0"/>
  *                           &lt;/sequence>
- *                           &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="xpath" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="indexField" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="use" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="removable" type="{http://www.w3.org/2001/XMLSchema}boolean" fixed="true" />
+ *                           &lt;attribute name="name" use="required"
+ * type="{http://www.w3.org/2001/XMLSchema}string" />
+ *                           &lt;attribute name="xpath" use="required"
+ * type="{http://www.w3.org/2001/XMLSchema}string" />
+ *                           &lt;attribute name="indexField" type="{http://www.w3.org/2001/XMLSchema}string"
+ * />
+ *                           &lt;attribute name="use" type="{http://www.w3.org/2001/XMLSchema}string"
+ * />
+ *                           &lt;attribute name="removable" type="{http://www.w3.org/2001/XMLSchema}boolean"
+ * fixed="true" />
  *                           &lt;attribute name="insertMode">
  *                             &lt;simpleType>
  *                               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -70,13 +76,15 @@ import javax.xml.bind.annotation.XmlType;
  *                               &lt;/restriction>
  *                             &lt;/simpleType>
  *                           &lt;/attribute>
- *                           &lt;attribute name="codelist" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *                           &lt;attribute name="codelist" type="{http://www.w3.org/2001/XMLSchema}string"
+ * />
  *                         &lt;/restriction>
  *                       &lt;/complexContent>
  *                     &lt;/complexType>
  *                   &lt;/element>
  *                 &lt;/sequence>
- *                 &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *                 &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+ * />
  *               &lt;/restriction>
  *             &lt;/complexContent>
  *           &lt;/complexType>
@@ -86,8 +94,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -101,25 +107,18 @@ public class BatchEditing {
 
     /**
      * Gets the value of the section property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the section property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
+     *
+     * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any
+     * modification you make to the returned list will be present inside the JAXB object. This is
+     * why there is not a <CODE>set</CODE> method for the section property.
+     *
+     * <p> For example, to add a new item, do as follows:
      * <pre>
      *    getSection().add(newItem);
      * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link BatchEditing.Section }
-     * 
-     * 
+     *
+     *
+     * <p> Objects of the following type(s) are allowed in the list {@link BatchEditing.Section }
      */
     public List<BatchEditing.Section> getSection() {
         if (section == null) {
@@ -131,9 +130,9 @@ public class BatchEditing {
 
     /**
      * <p>Java class for anonymous complex type.
-     * 
+     *
      * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     *
      * <pre>
      * &lt;complexType>
      *   &lt;complexContent>
@@ -144,13 +143,18 @@ public class BatchEditing {
      *             &lt;complexContent>
      *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *                 &lt;sequence>
-     *                   &lt;element name="template" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+     *                   &lt;element name="template" type="{http://www.w3.org/2001/XMLSchema}string"
+     * minOccurs="0"/>
      *                 &lt;/sequence>
-     *                 &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                 &lt;attribute name="xpath" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                 &lt;attribute name="indexField" type="{http://www.w3.org/2001/XMLSchema}string" />
+     *                 &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+     * />
+     *                 &lt;attribute name="xpath" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+     * />
+     *                 &lt;attribute name="indexField" type="{http://www.w3.org/2001/XMLSchema}string"
+     * />
      *                 &lt;attribute name="use" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                 &lt;attribute name="removable" type="{http://www.w3.org/2001/XMLSchema}boolean" fixed="true" />
+     *                 &lt;attribute name="removable" type="{http://www.w3.org/2001/XMLSchema}boolean"
+     * fixed="true" />
      *                 &lt;attribute name="insertMode">
      *                   &lt;simpleType>
      *                     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -159,19 +163,19 @@ public class BatchEditing {
      *                     &lt;/restriction>
      *                   &lt;/simpleType>
      *                 &lt;/attribute>
-     *                 &lt;attribute name="codelist" type="{http://www.w3.org/2001/XMLSchema}string" />
+     *                 &lt;attribute name="codelist" type="{http://www.w3.org/2001/XMLSchema}string"
+     * />
      *               &lt;/restriction>
      *             &lt;/complexContent>
      *           &lt;/complexType>
      *         &lt;/element>
      *       &lt;/sequence>
-     *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+     *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+     * />
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     * 
-     * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -186,25 +190,19 @@ public class BatchEditing {
 
         /**
          * Gets the value of the field property.
-         * 
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         *
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the field property.
-         * 
-         * <p>
-         * For example, to add a new item, do as follows:
+         *
+         * <p> For example, to add a new item, do as follows:
          * <pre>
          *    getField().add(newItem);
          * </pre>
-         * 
-         * 
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link BatchEditing.Section.Field }
-         * 
-         * 
+         *
+         *
+         * <p> Objects of the following type(s) are allowed in the list {@link
+         * BatchEditing.Section.Field }
          */
         public List<BatchEditing.Section.Field> getField() {
             if (field == null) {
@@ -215,11 +213,8 @@ public class BatchEditing {
 
         /**
          * Gets the value of the name property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is {@link String }
          */
         public String getName() {
             return name;
@@ -227,11 +222,8 @@ public class BatchEditing {
 
         /**
          * Sets the value of the name property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is {@link String }
          */
         public void setName(String value) {
             this.name = value;
@@ -240,21 +232,26 @@ public class BatchEditing {
 
         /**
          * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         *
+         * <p>The following schema fragment specifies the expected content contained within this
+         * class.
+         *
          * <pre>
          * &lt;complexType>
          *   &lt;complexContent>
          *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
          *       &lt;sequence>
-         *         &lt;element name="template" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+         *         &lt;element name="template" type="{http://www.w3.org/2001/XMLSchema}string"
+         * minOccurs="0"/>
          *       &lt;/sequence>
-         *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *       &lt;attribute name="xpath" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+         *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+         * />
+         *       &lt;attribute name="xpath" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+         * />
          *       &lt;attribute name="indexField" type="{http://www.w3.org/2001/XMLSchema}string" />
          *       &lt;attribute name="use" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *       &lt;attribute name="removable" type="{http://www.w3.org/2001/XMLSchema}boolean" fixed="true" />
+         *       &lt;attribute name="removable" type="{http://www.w3.org/2001/XMLSchema}boolean"
+         * fixed="true" />
          *       &lt;attribute name="insertMode">
          *         &lt;simpleType>
          *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -268,8 +265,6 @@ public class BatchEditing {
          *   &lt;/complexContent>
          * &lt;/complexType>
          * </pre>
-         * 
-         * 
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
@@ -295,11 +290,8 @@ public class BatchEditing {
 
             /**
              * Gets the value of the template property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
              */
             public String getTemplate() {
                 return template;
@@ -307,11 +299,8 @@ public class BatchEditing {
 
             /**
              * Sets the value of the template property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
              */
             public void setTemplate(String value) {
                 this.template = value;
@@ -319,11 +308,8 @@ public class BatchEditing {
 
             /**
              * Gets the value of the name property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
              */
             public String getName() {
                 return name;
@@ -331,11 +317,8 @@ public class BatchEditing {
 
             /**
              * Sets the value of the name property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
              */
             public void setName(String value) {
                 this.name = value;
@@ -343,11 +326,8 @@ public class BatchEditing {
 
             /**
              * Gets the value of the xpath property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
              */
             public String getXpath() {
                 return xpath;
@@ -355,11 +335,8 @@ public class BatchEditing {
 
             /**
              * Sets the value of the xpath property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
              */
             public void setXpath(String value) {
                 this.xpath = value;
@@ -367,11 +344,8 @@ public class BatchEditing {
 
             /**
              * Gets the value of the indexField property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
              */
             public String getIndexField() {
                 return indexField;
@@ -379,11 +353,8 @@ public class BatchEditing {
 
             /**
              * Sets the value of the indexField property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
              */
             public void setIndexField(String value) {
                 this.indexField = value;
@@ -391,11 +362,8 @@ public class BatchEditing {
 
             /**
              * Gets the value of the use property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
              */
             public String getUse() {
                 return use;
@@ -403,11 +371,8 @@ public class BatchEditing {
 
             /**
              * Sets the value of the use property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
              */
             public void setUse(String value) {
                 this.use = value;
@@ -415,11 +380,8 @@ public class BatchEditing {
 
             /**
              * Gets the value of the removable property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link Boolean }
-             *     
+             *
+             * @return possible object is {@link Boolean }
              */
             public boolean isRemovable() {
                 if (removable == null) {
@@ -431,11 +393,8 @@ public class BatchEditing {
 
             /**
              * Sets the value of the removable property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link Boolean }
-             *     
+             *
+             * @param value allowed object is {@link Boolean }
              */
             public void setRemovable(Boolean value) {
                 this.removable = value;
@@ -443,11 +402,8 @@ public class BatchEditing {
 
             /**
              * Gets the value of the insertMode property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
              */
             public String getInsertMode() {
                 return insertMode;
@@ -455,11 +411,8 @@ public class BatchEditing {
 
             /**
              * Sets the value of the insertMode property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
              */
             public void setInsertMode(String value) {
                 this.insertMode = value;
@@ -467,11 +420,8 @@ public class BatchEditing {
 
             /**
              * Gets the value of the codelist property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
              */
             public String getCodelist() {
                 return codelist;
@@ -479,11 +429,8 @@ public class BatchEditing {
 
             /**
              * Sets the value of the codelist property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
              */
             public void setCodelist(String value) {
                 this.codelist = value;

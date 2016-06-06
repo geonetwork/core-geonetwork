@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:exslt="http://exslt.org/common" xmlns:geonet="http://www.fao.org/geonetwork"
-  xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-  xmlns:date="http://exslt.org/dates-and-times" xmlns:saxon="http://saxon.sf.net/"
-  extension-element-prefixes="saxon" exclude-result-prefixes="exslt xlink geonet svrl saxon date">
-
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exslt="http://exslt.org/common"
+                xmlns:geonet="http://www.fao.org/geonetwork" xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                xmlns:date="http://exslt.org/dates-and-times"
+                xmlns:saxon="http://saxon.sf.net/" version="2.0"
+                extension-element-prefixes="saxon"
+                exclude-result-prefixes="exslt xlink geonet svrl saxon date">
 
 
   <xsl:template name="md-content">
@@ -42,7 +43,6 @@
   </xsl:template>
 
 
-
   <xsl:template name="simpleElement">
     <xsl:param name="id"/>
     <xsl:param name="type"/>
@@ -69,21 +69,29 @@
     <xsl:param name="n"/>
     <xsl:param name="s"/>
     <xsl:param name="w"/>
-    
+
     <table>
       <tr>
         <td></td>
-        <td><xsl:value-of select="$n"/></td>
+        <td>
+          <xsl:value-of select="$n"/>
+        </td>
         <td></td>
       </tr>
       <tr>
-        <td><xsl:value-of select="$e"/></td>
+        <td>
+          <xsl:value-of select="$e"/>
+        </td>
         <td></td>
-        <td><xsl:value-of select="$w"/></td>
+        <td>
+          <xsl:value-of select="$w"/>
+        </td>
       </tr>
       <tr>
         <td></td>
-        <td><xsl:value-of select="$s"/></td>
+        <td>
+          <xsl:value-of select="$s"/>
+        </td>
         <td></td>
       </tr>
     </table>
@@ -99,7 +107,7 @@
     <!-- TODO -->
   </xsl:template>
 
-  <!-- 
+  <!--
   Use to display a codelist value with its definition
   -->
   <xsl:template name="simpleElementWithDefinition">

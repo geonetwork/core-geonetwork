@@ -33,123 +33,119 @@ import java.util.ArrayList;
 
 //=============================================================================
 
-public class OaiPmhParams extends AbstractParams
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class OaiPmhParams extends AbstractParams {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public OaiPmhParams(DataManager dm)
-	{
-		super(dm);
-	}
+    public String url;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Create : called when a new entry must be added. Reads values from the
+    //---          provided entry, providing default values
+    //---
+    //---------------------------------------------------------------------------
+    public String icon;
 
-	public void create(Element node) throws BadInputEx
-	{
-		super.create(node);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update : called when an entry has changed and variables must be updated
+    //---
+    //---------------------------------------------------------------------------
+    private ArrayList<Search> alSearches = new ArrayList<Search>();
 
-		Element site     = node.getChild("site");
-		Element searches = node.getChild("searches");
+    //---------------------------------------------------------------------------
+    //---
+    //--- Other API methods
+    //---
+    //---------------------------------------------------------------------------
 
-		url      = Util.getParam(site, "url",  "");
-		icon     = Util.getParam(site, "icon", "");
+    public OaiPmhParams(DataManager dm) {
+        super(dm);
+    }
 
-		addSearches(searches);
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
-	//---------------------------------------------------------------------------
+    public void create(Element node) throws BadInputEx {
+        super.create(node);
 
-	public void update(Element node) throws BadInputEx
-	{
-		super.update(node);
+        Element site = node.getChild("site");
+        Element searches = node.getChild("searches");
 
-		Element site     = node.getChild("site");
-		Element searches = node.getChild("searches");
+        url = Util.getParam(site, "url", "");
+        icon = Util.getParam(site, "icon", "");
 
-		url      = Util.getParam(site,  "url",  url);
-		icon     = Util.getParam(site,  "icon", icon);
+        addSearches(searches);
+    }
 
-		//--- if some search queries are given, we drop the previous ones and
-		//--- set these new ones
+    //---------------------------------------------------------------------------
 
-		if (searches != null)
-			addSearches(searches);
-	}
+    public void update(Element node) throws BadInputEx {
+        super.update(node);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
+        Element site = node.getChild("site");
+        Element searches = node.getChild("searches");
 
-	public Iterable<Search> getSearches() { return alSearches; }
+        url = Util.getParam(site, "url", url);
+        icon = Util.getParam(site, "icon", icon);
 
-	//---------------------------------------------------------------------------
+        //--- if some search queries are given, we drop the previous ones and
+        //--- set these new ones
 
-	public boolean isSearchEmpty() { return alSearches.isEmpty(); }
+        if (searches != null)
+            addSearches(searches);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public OaiPmhParams copy()
-	{
-		OaiPmhParams copy = new OaiPmhParams(dm);
-		copyTo(copy);
+    public Iterable<Search> getSearches() {
+        return alSearches;
+    }
 
-		copy.url  = url;
-		copy.icon = icon;
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-		copy.setValidate(getValidate());
+    public boolean isSearchEmpty() {
+        return alSearches.isEmpty();
+    }
 
-		for (Search s : alSearches)
-			copy.alSearches.add(s.copy());
+    public OaiPmhParams copy() {
+        OaiPmhParams copy = new OaiPmhParams(dm);
+        copyTo(copy);
 
-		return copy;
-	}
+        copy.url = url;
+        copy.icon = icon;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+        copy.setValidate(getValidate());
 
-	private void addSearches(Element searches) throws BadInputEx
-	{
-		alSearches.clear();
+        for (Search s : alSearches)
+            copy.alSearches.add(s.copy());
 
-		if (searches == null)
-			return;
+        return copy;
+    }
 
-		for (Object o : searches.getChildren("search"))
-		{
-			Element search = (Element) o;
+    private void addSearches(Element searches) throws BadInputEx {
+        alSearches.clear();
 
-			alSearches.add(new Search(search));
-		}
-	}
+        if (searches == null)
+            return;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        for (Object o : searches.getChildren("search")) {
+            Element search = (Element) o;
 
-	public String url;
-	public String icon;
-
-	private ArrayList<Search> alSearches = new ArrayList<Search>();
+            alSearches.add(new Search(search));
+        }
+    }
 }
 
 //=============================================================================

@@ -32,38 +32,41 @@ import org.springframework.security.ldap.userdetails.InetOrgPerson;
 import java.util.Collection;
 
 public class LDAPUser extends InetOrgPerson implements UserDetails {
-	
+
     private static final long serialVersionUID = -879282571127799714L;
     private final String _userName;
 
     private Multimap<String, Profile> _groupsAndProfile = HashMultimap.create();
 
-	private User _user;
+    private User _user;
 
-	public LDAPUser(String username) {
+    public LDAPUser(String username) {
         this._userName = username;
         this._user = new User();
         _user.setProfile(Profile.RegisteredUser);
         _user.setUsername(username);
 
-		// FIXME Should we here populate the LDAP user with LDAP attributes instead of in the GNLDAPUserDetailsMapper ?
-		// TODO : populate userId which should be in session
-	}
-	
-	public void addPrivilege(String group, Profile profile) {
-		_groupsAndProfile.put(group, profile);
-	}
-	public void setPrivileges(Multimap<String, Profile> privileges) {
-		_groupsAndProfile = privileges;
-	}
-	public Multimap<String, Profile> getPrivileges() {
-		return _groupsAndProfile;
-	}
+        // FIXME Should we here populate the LDAP user with LDAP attributes instead of in the GNLDAPUserDetailsMapper ?
+        // TODO : populate userId which should be in session
+    }
 
-	public User getUser() {
+    public void addPrivilege(String group, Profile profile) {
+        _groupsAndProfile.put(group, profile);
+    }
+
+    public Multimap<String, Profile> getPrivileges() {
+        return _groupsAndProfile;
+    }
+
+    public void setPrivileges(Multimap<String, Profile> privileges) {
+        _groupsAndProfile = privileges;
+    }
+
+    public User getUser() {
         return _user;
     }
-	public void setUser(User user) {
+
+    public void setUser(User user) {
         this._user = user;
         user.setUsername(_userName);
     }
@@ -102,11 +105,9 @@ public class LDAPUser extends InetOrgPerson implements UserDetails {
     public boolean isEnabled() {
         return _user.isEnabled();
     }
-    
+
     /**
      * @see org.springframework.security.ldap.userdetails.LdapUserDetailsImpl#equals(java.lang.Object)
-     * @param obj
-     * @return
      */
     @Override
     public boolean equals(Object obj) {
@@ -119,7 +120,6 @@ public class LDAPUser extends InetOrgPerson implements UserDetails {
 
     /**
      * @see org.springframework.security.ldap.userdetails.LdapUserDetailsImpl#hashCode()
-     * @return
      */
     @Override
     public int hashCode() {

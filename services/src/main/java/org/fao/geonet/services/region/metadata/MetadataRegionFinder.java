@@ -39,16 +39,17 @@ public abstract class MetadataRegionFinder {
 
     /**
      * Find the region and add it/them to the list of regions
-     * @param searchRequest
-     * @param regions the list to add found regions to.
-     * @param mdId the id of the metadata
-     * @param id the id identifying the XML element of the geometry
+     *
+     * @param regions  the list to add found regions to.
+     * @param mdId     the id of the metadata
+     * @param id       the id identifying the XML element of the geometry
      * @param metadata the metadata
      */
     public abstract void findRegion(MetadataRegionSearchRequest searchRequest, java.util.List<Region> regions, MetadataRegionSearchRequest.Id mdId, String id, Element metadata) throws Exception;
 
     /**
-     * Return true if the metadata should have the edit elements added to it in order to find the region.
+     * Return true if the metadata should have the edit elements added to it in order to find the
+     * region.
      */
     public abstract boolean needsEditData();
 }

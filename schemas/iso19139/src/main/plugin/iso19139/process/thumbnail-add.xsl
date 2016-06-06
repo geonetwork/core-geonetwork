@@ -23,8 +23,10 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all" version="2.0">
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all"
+                version="2.0">
 
   <!--
       Usage:
@@ -75,7 +77,6 @@
   </xsl:template>
 
 
-
   <xsl:template match="gmd:graphicOverview[concat(
                           */gmd:fileName/gco:CharacterString,
                           */gmd:fileDescription/gco:CharacterString) = normalize-space($updateKey)]">
@@ -83,16 +84,15 @@
   </xsl:template>
 
 
-
   <xsl:template name="fill">
     <xsl:if test="$thumbnail_url != ''">
 
       <xsl:variable name="useOnlyPTFreeText"
                     select="count(//*[gmd:PT_FreeText and
-                                      not(gco:CharacterString)]) > 0" />
+                                      not(gco:CharacterString)]) > 0"/>
       <xsl:variable name="separator" select="'\|'"/>
       <xsl:variable name="mainLang"
-                    select="//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue" />
+                    select="//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue"/>
 
       <gmd:graphicOverview>
         <gmd:MD_BrowseGraphic>
@@ -123,13 +123,17 @@
 
                   <gmd:PT_FreeText>
                     <xsl:for-each select="tokenize($thumbnail_desc, $separator)">
-                      <xsl:variable name="nameLang" select="substring-before(., '#')"></xsl:variable>
-                      <xsl:variable name="nameValue" select="substring-after(., '#')"></xsl:variable>
+                      <xsl:variable name="nameLang"
+                                    select="substring-before(., '#')"></xsl:variable>
+                      <xsl:variable name="nameValue"
+                                    select="substring-after(., '#')"></xsl:variable>
 
                       <xsl:if test="$useOnlyPTFreeText = true() or
                                     $nameLang != $mainLang">
                         <gmd:textGroup>
-                          <gmd:LocalisedCharacterString locale="{concat('#', $nameLang)}"><xsl:value-of select="$nameValue" /></gmd:LocalisedCharacterString>
+                          <gmd:LocalisedCharacterString locale="{concat('#', $nameLang)}">
+                            <xsl:value-of select="$nameValue"/>
+                          </gmd:LocalisedCharacterString>
                         </gmd:textGroup>
                       </xsl:if>
                     </xsl:for-each>

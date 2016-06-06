@@ -26,9 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 /**
  * Integration Test for the Csw Harvester class.
  *
- * User: Jesse
- * Date: 10/18/13
- * Time: 4:01 PM
+ * User: Jesse Date: 10/18/13 Time: 4:01 PM
  */
 public class CswHarvesterIntegrationAltOutputSchemaTest extends CswHarvesterIntegrationTest {
 

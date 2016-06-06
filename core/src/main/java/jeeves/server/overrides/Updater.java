@@ -31,5 +31,6 @@ import java.util.Properties;
 
 interface Updater {
     public void update(ConfigurableListableBeanFactory beanFactory, Properties properties);
+
     public boolean runOnFinish();
 }

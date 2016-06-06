@@ -24,9 +24,12 @@
 package org.fao.geonet.services.main;
 
 import jeeves.constants.Jeeves;
+
 import org.fao.geonet.Logger;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.component.csw.CatalogDispatcher;
@@ -42,7 +45,7 @@ import java.util.Map;
  * Accepts CSW Publication operations.
  */
 public class CswPublicationDispatcher extends NotInReadOnlyModeService {
-	private Logger logger;
+    private Logger logger;
 
     private String cswServiceSpecificContraint;
 
@@ -53,10 +56,10 @@ public class CswPublicationDispatcher extends NotInReadOnlyModeService {
      * @throws Exception
      */
     @Override
-	public void init(Path appPath, ServiceConfig config) throws Exception {
+    public void init(Path appPath, ServiceConfig config) throws Exception {
         super.init(appPath, config);
-		cswServiceSpecificContraint = config.getValue(Geonet.Elem.FILTER);
-	}
+        cswServiceSpecificContraint = config.getValue(Geonet.Elem.FILTER);
+    }
 
     /**
      *
@@ -66,29 +69,29 @@ public class CswPublicationDispatcher extends NotInReadOnlyModeService {
      * @throws Exception
      */
     @Override
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-		logger = context.getLogger();
-		
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager settingMan = gc.getBean(SettingManager.class);
-		boolean cswEnable    = settingMan.getValueAsBool("system/csw/enable", false);
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        logger = context.getLogger();
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager settingMan = gc.getBean(SettingManager.class);
+        boolean cswEnable = settingMan.getValueAsBool("system/csw/enable", false);
 
         Element response = new Element(Jeeves.Elem.RESPONSE);
 
         String operation;
         // KVP encoding
-        if(params.getName().equals("request")) {
+        if (params.getName().equals("request")) {
             Map<String, String> hm = CatalogDispatcher.extractParams(params);
             operation = hm.get("request");
             if (operation == null) {
-                    Element info = new Element("info")
-                                    .setText("No 'request' parameter found");
-                    response.addContent(info);
-                    return response;
+                Element info = new Element("info")
+                    .setText("No 'request' parameter found");
+                response.addContent(info);
+                return response;
             }
         }
         // SOAP encoding
-        else if(params.getName().equals("Envelope")) {
+        else if (params.getName().equals("Envelope")) {
             Element soapBody = params.getChild("Body",
                 org.jdom.Namespace.getNamespace("http://www.w3.org/2003/05/soap-envelope"));
             @SuppressWarnings("unchecked")
@@ -102,22 +105,21 @@ public class CswPublicationDispatcher extends NotInReadOnlyModeService {
         }
 
         if (operation == null) {
-            Element info  = new Element("info").setText("Request parameter is not defined.");
+            Element info = new Element("info").setText("Request parameter is not defined.");
             response.addContent(info);
-        } else if(!operation.equals("Harvest") && !operation.equals("Transaction")) {
-            Element info  = new Element("info").setText("Not a CSW Publication operation: " + operation + ". Did you mean to use the CSW Discovery service? Use service name /csw");
-			response.addContent(info);
+        } else if (!operation.equals("Harvest") && !operation.equals("Transaction")) {
+            Element info = new Element("info").setText("Not a CSW Publication operation: " + operation + ". Did you mean to use the CSW Discovery service? Use service name /csw");
+            response.addContent(info);
         }
 
-		// FIXME : response should be more explicit, an exception should be return ?
-		if (!cswEnable) {
-			logger.info("CSW is disabled");
-			Element info  = new Element("info").setText("CSW is disabled");
-			response.addContent(info);
-		}
-        else {
-			response = gc.getBean(CatalogDispatcher.class).dispatch(params, context, cswServiceSpecificContraint);
+        // FIXME : response should be more explicit, an exception should be return ?
+        if (!cswEnable) {
+            logger.info("CSW is disabled");
+            Element info = new Element("info").setText("CSW is disabled");
+            response.addContent(info);
+        } else {
+            response = gc.getBean(CatalogDispatcher.class).dispatch(params, context, cswServiceSpecificContraint);
         }
-		return response;
-	}
+        return response;
+    }
 }

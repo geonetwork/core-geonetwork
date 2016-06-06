@@ -26,6 +26,7 @@ package org.fao.geonet.guiservices.search;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Element;
 
@@ -33,30 +34,29 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** Called for the main.search service. Returns the information stored
-  * into the session
-  */
+/**
+ * Called for the main.search service. Returns the information stored into the session
+ */
 
-public class GetDefaults implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class GetDefaults implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		return (Element) SearchDefaults.getDefaultSearch(context, null).clone();
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        return (Element) SearchDefaults.getDefaultSearch(context, null).clone();
+    }
 }
 
 //=============================================================================

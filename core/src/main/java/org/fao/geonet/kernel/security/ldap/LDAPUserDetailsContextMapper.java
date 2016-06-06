@@ -34,70 +34,70 @@ import org.fao.geonet.domain.Profile;
 
 /**
  * Get all user information from the LDAP user's attributes (including profile and groups)
- * 
+ *
  * @author francois
  */
 public class LDAPUserDetailsContextMapper extends
-		AbstractLDAPUserDetailsContextMapper {
+    AbstractLDAPUserDetailsContextMapper {
 
-	protected void setProfilesAndPrivileges(Profile defaultProfile,
-			String defaultGroup, Map<String, ArrayList<String>> userInfo,
-			LDAPUser userDetails) {
+    protected void setProfilesAndPrivileges(Profile defaultProfile,
+                                            String defaultGroup, Map<String, ArrayList<String>> userInfo,
+                                            LDAPUser userDetails) {
 
-		// no privilegePattern defined. In that case the user
-		// has the same profile for all groups. The list of groups
-		// is retreived from the privilegeAttribute content
-		// getUserInfo(userInfo, mapping.get("profile")[0]));
+        // no privilegePattern defined. In that case the user
+        // has the same profile for all groups. The list of groups
+        // is retreived from the privilegeAttribute content
+        // getUserInfo(userInfo, mapping.get("profile")[0]));
 
-		// Usually only one profile is defined in the profile attribute
-		List<String> ldapProfiles = userInfo.get(mapping.get("profile")[0]);
-		if (ldapProfiles != null) {
-			Collections.sort(ldapProfiles);
-			for (String profile : ldapProfiles) {
-				if (Log.isDebugEnabled(Geonet.LDAP)) {
-					Log.debug(Geonet.LDAP, "  User profile " + profile
-							+ " found in attribute "
-							+ mapping.get("profile")[0]);
-				}
-				addProfile(userDetails, profile, null);
-			}
-		}
+        // Usually only one profile is defined in the profile attribute
+        List<String> ldapProfiles = userInfo.get(mapping.get("profile")[0]);
+        if (ldapProfiles != null) {
+            Collections.sort(ldapProfiles);
+            for (String profile : ldapProfiles) {
+                if (Log.isDebugEnabled(Geonet.LDAP)) {
+                    Log.debug(Geonet.LDAP, "  User profile " + profile
+                        + " found in attribute "
+                        + mapping.get("profile")[0]);
+                }
+                addProfile(userDetails, profile, null);
+            }
+        }
 
-		// If no profile defined, use default profile
-		if (userDetails.getUser().getProfile() == null) {
-			if (Log.isDebugEnabled(Geonet.LDAP)) {
-				Log.debug(Geonet.LDAP,
-						"  No profile defined in LDAP, using default profile "
-								+ defaultProfile);
-			}
-			userDetails.getUser().setProfile(defaultProfile);
-		}
+        // If no profile defined, use default profile
+        if (userDetails.getUser().getProfile() == null) {
+            if (Log.isDebugEnabled(Geonet.LDAP)) {
+                Log.debug(Geonet.LDAP,
+                    "  No profile defined in LDAP, using default profile "
+                        + defaultProfile);
+            }
+            userDetails.getUser().setProfile(defaultProfile);
+        }
 
-		if (userDetails.getUser().getProfile() != Profile.Administrator) {
-			List<String> ldapGroups = userInfo.get(mapping.get("privilege")[0]);
-			if (ldapGroups != null) {
-				for (String group : ldapGroups) {
-					if (Log.isDebugEnabled(Geonet.LDAP)) {
-						Log.debug(Geonet.LDAP,
-								"  Define group privilege for group " + group
-										+ " as " + userDetails.getUser().getProfile());
-					}
-					userDetails.addPrivilege(group, userDetails.getUser().getProfile());
-				}
-			}
+        if (userDetails.getUser().getProfile() != Profile.Administrator) {
+            List<String> ldapGroups = userInfo.get(mapping.get("privilege")[0]);
+            if (ldapGroups != null) {
+                for (String group : ldapGroups) {
+                    if (Log.isDebugEnabled(Geonet.LDAP)) {
+                        Log.debug(Geonet.LDAP,
+                            "  Define group privilege for group " + group
+                                + " as " + userDetails.getUser().getProfile());
+                    }
+                    userDetails.addPrivilege(group, userDetails.getUser().getProfile());
+                }
+            }
 
-			// Set default privileges
-			if (userDetails.getPrivileges().size() == 0 && defaultGroup != null) {
-				if (Log.isDebugEnabled(Geonet.LDAP)) {
-					Log.debug(
-							Geonet.LDAP,
-							"  No privilege defined, setting privilege for group "
-									+ defaultGroup + " as "
-									+ userDetails.getUser().getProfile());
-				}
-				userDetails
-						.addPrivilege(defaultGroup, userDetails.getUser().getProfile());
-			}
-		}
-	}
+            // Set default privileges
+            if (userDetails.getPrivileges().size() == 0 && defaultGroup != null) {
+                if (Log.isDebugEnabled(Geonet.LDAP)) {
+                    Log.debug(
+                        Geonet.LDAP,
+                        "  No privilege defined, setting privilege for group "
+                            + defaultGroup + " as "
+                            + userDetails.getUser().getProfile());
+                }
+                userDetails
+                    .addPrivilege(defaultGroup, userDetails.getUser().getProfile());
+            }
+        }
+    }
 }

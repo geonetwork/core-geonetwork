@@ -26,21 +26,19 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class ServiceNotFoundEx extends NotFoundEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class ServiceNotFoundEx extends NotFoundEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public ServiceNotFoundEx(String name)
-	{
-		super("Service not found", name);
+    public ServiceNotFoundEx(String name) {
+        super("Service not found", name);
 
-		id   = "service-not-found";
-		code = 404;
-	}
+        id = "service-not-found";
+        code = 404;
+    }
 }
 
 //=============================================================================

@@ -7,9 +7,7 @@ import ro.isdc.wro.model.resource.locator.factory.UriLocatorFactory;
 import java.util.Properties;
 
 /**
- * User: Jesse
- * Date: 11/25/13
- * Time: 8:35 AM
+ * User: Jesse Date: 11/25/13 Time: 8:35 AM
  */
 public class GeonetworkMavenWrojManagerFactory extends ConfigurableWroManagerFactory {
 

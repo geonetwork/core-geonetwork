@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.repository.MetadataNotificationRepository;
 import org.jdom.Element;
 
@@ -46,22 +47,17 @@ public class List implements Service {
      * @param params
      * @throws Exception
      */
-	public void init(Path appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         // nothing to do.
     }
 
     /**
      * Retrieves notification targets.
-     *
-     * @param params
-     * @param context
-     * @return
-     * @throws Exception
      */
-	public Element exec(Element params, ServiceContext context) throws Exception {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         final Element notifiers = context.getBean(MetadataNotificationRepository.class).findAllAsXml();
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(notifiers);
-		return response;
-	}
+        return response;
+    }
 }

@@ -27,6 +27,7 @@ import org.fao.geonet.domain.HarvesterSetting;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -36,7 +37,7 @@ import javax.annotation.Nullable;
  * @author Jesse
  */
 public interface HarvesterSettingRepository extends GeonetRepository<HarvesterSetting, Integer>,
-        JpaSpecificationExecutor<HarvesterSetting>, HarvesterSettingRepositoryCustom {
+    JpaSpecificationExecutor<HarvesterSetting>, HarvesterSettingRepositoryCustom {
 
     /**
      * The prefix in a path for finding a setting by its id.
@@ -54,18 +55,20 @@ public interface HarvesterSettingRepository extends GeonetRepository<HarvesterSe
      * @return All settings with the given name.
      */
     List<HarvesterSetting> findAllByName(@Nonnull String name);
+
     /**
      * Find all the settings with the given name and value.
      *
-     * @param name the setting name.
+     * @param name  the setting name.
      * @param value the setting value.
      * @return All settings with the given name and value.
      */
     List<HarvesterSetting> findAllByNameAndValue(@Nonnull String name, @Nonnull String value);
+
     /**
      * Find the settings with the given name and value. Null is returned if not found.
      *
-     * @param name the setting name.
+     * @param name  the setting name.
      * @param value the setting value.
      * @return The setting with the given name and value.
      */

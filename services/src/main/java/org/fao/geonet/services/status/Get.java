@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -37,46 +38,46 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** Given a metadata id returns all associated status records. 
-  */
+/**
+ * Given a metadata id returns all associated status records.
+ */
 
-public class Get implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Get implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dataMan = gc.getBean(DataManager.class);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataMan = gc.getBean(DataManager.class);
 
-		String id = Utils.getIdentifierFromParameters(params, context);
+        String id = Utils.getIdentifierFromParameters(params, context);
 
-		//-----------------------------------------------------------------------
-		//--- check access
-		int iLocalId = Integer.parseInt(id);
-		
-		if (!dataMan.existsMetadata(iLocalId))
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+        //-----------------------------------------------------------------------
+        //--- check access
+        int iLocalId = Integer.parseInt(id);
 
-		//-----------------------------------------------------------------------
-		//--- retrieve metadata status
+        if (!dataMan.existsMetadata(iLocalId))
+            throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		Element status = dataMan.getStatus(iLocalId).getAsXml();
+        //-----------------------------------------------------------------------
+        //--- retrieve metadata status
+
+        Element status = dataMan.getStatus(iLocalId).getAsXml();
         status.setName(Jeeves.Elem.RESPONSE);
-		return status;
-	}
+        return status;
+    }
 }
 
 //=============================================================================

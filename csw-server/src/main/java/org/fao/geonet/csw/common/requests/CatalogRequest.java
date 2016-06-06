@@ -24,6 +24,7 @@
 package org.fao.geonet.csw.common.requests;
 
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
@@ -43,100 +44,133 @@ import static org.fao.geonet.utils.AbstractHttpRequest.Method;
 //=============================================================================
 
 public abstract class CatalogRequest {
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public CatalogRequest(ServiceContext context) { this(context, null); }
-
-	//---------------------------------------------------------------------------
-
-	public CatalogRequest(final ServiceContext context, final String host) { this(context, host, -1); }
+    // Parameters to not take into account in GetRequest
+    private static final List<String> excludedParameters = Arrays.asList("", "request", "version", "service");
 
     //---------------------------------------------------------------------------
+    private final XmlRequest client;
+
+    //---------------------------------------------------------------------------
+    protected String outputSchema;
+
+    //---------------------------------------------------------------------------
+    protected String serverVersion = Csw.CSW_VERSION;  // Sets default value
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+
+    public CatalogRequest(ServiceContext context) {
+        this(context, null);
+    }
+
+    public CatalogRequest(final ServiceContext context, final String host) {
+        this(context, host, -1);
+    }
 
     public CatalogRequest(final ServiceContext context, final String host, final int port) {
         this(context, host, port, "http");
     }
 
-	//---------------------------------------------------------------------------
-
-	public CatalogRequest(final ServiceContext context, final String host, final int port, final String protocol) {
+    public CatalogRequest(final ServiceContext context, final String host, final int port, final String protocol) {
         client = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(host, port, protocol);
-		setMethod(Method.POST);
+        setMethod(Method.POST);
         Lib.net.setupProxy(context, client);
-	}
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    public String getHost() {
+        return client.getHost();
+    }
 
-	public String getHost()         { return client.getHost();         }
-	public int    getPort()         { return client.getPort();         }
-    public String getProtocol()     { return client.getProtocol();     }
-	public String getAddress()      { return client.getAddress();      }
-	public Method getMethod()       { return client.getMethod();       }
-	public String getSentData()     { return client.getSentData();     }
+    public int getPort() {
+        return client.getPort();
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public String getOutputSchema() {
-		return outputSchema;
-	}
+    public String getProtocol() {
+        return client.getProtocol();
+    }
 
-	public void setOutputSchema(String outputSchema) {
-		this.outputSchema = outputSchema;
-	}
+    public String getAddress() {
+        return client.getAddress();
+    }
+
+    public Method getMethod() {
+        return client.getMethod();
+    }
+
+    public void setMethod(Method m) {
+        client.setMethod(m);
+    }
+
+    //---------------------------------------------------------------------------
+
+    public String getSentData() {
+        return client.getSentData();
+    }
+
+    //---------------------------------------------------------------------------
+
+    public String getOutputSchema() {
+        return outputSchema;
+    }
+
+    //---------------------------------------------------------------------------
+
+    public void setOutputSchema(String outputSchema) {
+        this.outputSchema = outputSchema;
+    }
+
+    //---------------------------------------------------------------------------
 
     public String getServerVersion() {
         return serverVersion;
     }
 
+    //---------------------------------------------------------------------------
+    //---
+    //--- Abstract methods
+    //---
+    //---------------------------------------------------------------------------
+
     public void setServerVersion(String serverVersion) {
         this.serverVersion = serverVersion;
     }
 
-	//---------------------------------------------------------------------------
-	/**
-	 * Set request URL host, port, address and path.
-	 * If URL contains query string parameters, those parameters are
-	 * preserved (and {@link CatalogRequest#excludedParameters} are
-	 * excluded). A complete GetCapabilities URL may be used for initialization.
-	 */
-	public void setUrl(ServiceContext context, URL url)
-	{
+    /**
+     * Set request URL host, port, address and path. If URL contains query string parameters, those
+     * parameters are preserved (and {@link CatalogRequest#excludedParameters} are excluded). A
+     * complete GetCapabilities URL may be used for initialization.
+     */
+    public void setUrl(ServiceContext context, URL url) {
         client.setUrl(url);
 
         client.setQuery(null);
         client.clearParams();
         String query = url.getQuery();
 
-		if (StringUtils.isNotEmpty(query)) {
-			String[] params = query.split("&");
-			for (String param : params) {
-				String[] kvp = param.split("=");
-				if (!excludedParameters.contains(kvp[0].toLowerCase())) {
-					client.addParam(kvp[0], kvp[1]);
-				}
-			}
-		}
+        if (StringUtils.isNotEmpty(query)) {
+            String[] params = query.split("&");
+            for (String param : params) {
+                String[] kvp = param.split("=");
+                if (!excludedParameters.contains(kvp[0].toLowerCase())) {
+                    client.addParam(kvp[0], kvp[1]);
+                }
+            }
+        }
 
         // Setup the proxy if applies, checking the url in the proxy ignore list
         Lib.net.setupProxy(context, client);
-	}
-
-	//---------------------------------------------------------------------------
-
-	public void setMethod(Method m)
-	{
-		client.setMethod(m);
-	}
-
-    //---------------------------------------------------------------------------
+    }
 
     public Element execute() throws Exception {
         if (getMethod() == Method.GET) {
@@ -148,148 +182,138 @@ public abstract class CatalogRequest {
         }
         Element response = client.execute();
         //--- raises an exception if the case
-		CatalogException.unmarshal(response);
+        CatalogException.unmarshal(response);
 
-		return response;
-	}
+        return response;
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Protected methods
+    //---
+    //---------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------
+    //--- GET fill methods
+    //---------------------------------------------------------------------------
+
+    public void setCredentials(String username, String password) {
+        client.setCredentials(username, password);
+    }
 
     //---------------------------------------------------------------------------
 
-	public void setCredentials(String username, String password)
-	{
-		client.setCredentials(username, password);
-	}
+    protected abstract String getRequestName();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Abstract methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //--- POST fill methods
+    //---------------------------------------------------------------------------
 
-	protected abstract String  getRequestName();
-	protected abstract void    setupGetParams();
-	protected abstract Element getPostParams ();
+    protected abstract void setupGetParams();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Protected methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//--- GET fill methods
-	//---------------------------------------------------------------------------
+    protected abstract Element getPostParams();
 
-	protected void fill(String param, Iterable<?> iter)
-	{
-		fill(param, iter, "");
-	}
+    //---------------------------------------------------------------------------
+    //--- Attribute facilities
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    protected void fill(String param, Iterable<?> iter) {
+        fill(param, iter, "");
+    }
 
-	protected void fill(String param, Iterable<?> iter, String prefix)
-	{
-		Iterator<?> i = iter.iterator();
+    //---------------------------------------------------------------------------
+
+    protected void fill(String param, Iterable<?> iter, String prefix) {
+        Iterator<?> i = iter.iterator();
         if (!i.hasNext())
-			return;
+            return;
 
-		StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
 
-		while(i.hasNext())
-		{
-			sb.append(prefix);
-			sb.append(i.next());
+        while (i.hasNext()) {
+            sb.append(prefix);
+            sb.append(i.next());
 
-			if (i.hasNext())
-				sb.append( ",");
-		}
+            if (i.hasNext())
+                sb.append(",");
+        }
 
-		addParam(param, sb.toString());
-	}
+        addParam(param, sb.toString());
+    }
 
-	//---------------------------------------------------------------------------
-	//--- POST fill methods
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	protected void fill(Element root, String parentName, String childName,
-							  Iterable<?> iter, Namespace ns)
-	{
-		Iterator<?> i = iter.iterator();
+    protected void fill(Element root, String parentName, String childName,
+                        Iterable<?> iter, Namespace ns) {
+        Iterator<?> i = iter.iterator();
 
-		if (!i.hasNext())
-			return;
+        if (!i.hasNext())
+            return;
 
-		Element parent = new Element(parentName, ns);
+        Element parent = new Element(parentName, ns);
 
-		while(i.hasNext())
-		{
-			Element el = new Element(childName, ns);
-			el.setText(i.next().toString());
+        while (i.hasNext()) {
+            Element el = new Element(childName, ns);
+            el.setText(i.next().toString());
 
-			parent.addContent(el);
-		}
+            parent.addContent(el);
+        }
 
-		root.addContent(parent);
-	}
+        root.addContent(parent);
+    }
 
-	//---------------------------------------------------------------------------
+    protected void fill(Element root, String childName, Iterable<?> iter) {
+        Iterator<?> i = iter.iterator();
 
-	protected void fill(Element root, String childName, Iterable<?> iter)
-	{
-		Iterator<?> i = iter.iterator();
+        if (!i.hasNext())
+            return;
 
-		if (!i.hasNext())
-			return;
+        while (i.hasNext()) {
+            Element el = new Element(childName, root.getNamespace());
+            el.setText(i.next().toString());
 
-		while(i.hasNext())
-		{
-			Element el = new Element(childName, root.getNamespace());
-			el.setText(i.next().toString());
+            root.addContent(el);
+        }
+    }
+    //--------------------------------------------------------------------------
+    //--- Parameters facilities (POST)
+    //---------------------------------------------------------------------------
 
-			root.addContent(el);
-		}
-	}
+    protected void setAttrib(Element el, String name, Object value) {
+        setAttrib(el, name, value, "");
+    }
 
-	//---------------------------------------------------------------------------
-	//--- Attribute facilities
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //--- Parameters facilities (GET)
+    //--------------------------------------------------------------------------
 
-	protected void setAttrib(Element el, String name, Object value)
-	{
-		setAttrib(el, name, value, "");
-	}
+    protected void setAttrib(Element el, String name, Object value, String prefix) {
+        if (value != null)
+            el.setAttribute(name, prefix + value.toString());
+    }
 
-	//---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	protected void setAttrib(Element el, String name, Object value, String prefix)
-	{
-		if (value != null)
-			el.setAttribute(name, prefix + value.toString());
-	}
+    protected void setAttrib(Element el, String name, Iterable<?> iter, String prefix) {
+        Iterator<?> i = iter.iterator();
 
-	//---------------------------------------------------------------------------
+        if (!i.hasNext())
+            return;
 
-	protected void setAttrib(Element el, String name, Iterable<?> iter, String prefix)
-	{
-		Iterator<?> i = iter.iterator();
+        StringBuffer sb = new StringBuffer();
 
-		if (!i.hasNext())
-			return;
+        while (i.hasNext()) {
+            sb.append(prefix);
+            sb.append(i.next().toString());
 
-		StringBuffer sb = new StringBuffer();
+            if (i.hasNext())
+                sb.append(" ");
+        }
 
-		while(i.hasNext())
-		{
-			sb.append(prefix);
-			sb.append(i.next().toString());
-
-			if (i.hasNext())
-				sb.append(" ");
-		}
-
-		el.setAttribute(name, sb.toString());
-	}
-
+        el.setAttribute(name, sb.toString());
+    }
 
     protected void setAttribSpaceSeparated(Element el, String name, Iterable<?> iter, String prefix) {
         Iterator<?> i = iter.iterator();
@@ -299,9 +323,8 @@ public abstract class CatalogRequest {
 
         StringBuffer sb = new StringBuffer();
 
-        while(i.hasNext())
-        {
-            Object value =  i.next();
+        while (i.hasNext()) {
+            Object value = i.next();
 
             sb.append(prefix);
             sb.append(value.toString());
@@ -312,42 +335,21 @@ public abstract class CatalogRequest {
 
         el.setAttribute(name, sb.toString());
     }
-	//--------------------------------------------------------------------------
-	//--- Parameters facilities (POST)
-	//---------------------------------------------------------------------------
 
-	protected void addParam(Element root, String name, Object value)
-	{
-		if (value != null)
-			root.addContent(new Element(name, Csw.NAMESPACE_CSW).setText(value.toString()));
-	}
+    protected void addParam(Element root, String name, Object value) {
+        if (value != null)
+            root.addContent(new Element(name, Csw.NAMESPACE_CSW).setText(value.toString()));
+    }
 
-	//---------------------------------------------------------------------------
-	//--- Parameters facilities (GET)
-	//--------------------------------------------------------------------------
+    protected void addParam(String name, Object value) {
+        addParam(name, value, "");
+    }
 
-	protected void addParam(String name, Object value)
-	{
-		addParam(name, value, "");
-	}
-
-	//--------------------------------------------------------------------------
-
-	protected void addParam(String name, Object value, String prefix)
-	{
+    protected void addParam(String name, Object value, String prefix) {
         if (value != null) {
             client.addParam(name, prefix + value.toString());
         }
-	}
-
-	protected String outputSchema;
-
-    protected String serverVersion = Csw.CSW_VERSION;  // Sets default value
-
-	private final XmlRequest client;
-
-    // Parameters to not take into account in GetRequest
-	private static final List<String> excludedParameters = Arrays.asList("", "request", "version", "service");
+    }
 }
 
 //=============================================================================

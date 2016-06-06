@@ -22,16 +22,16 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:dc="http://purl.org/dc/elements/1.1/"   
-	xmlns:dct="http://purl.org/dc/terms/"
-	xmlns:ows="http://www.opengis.net/ows"
-	xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
-	>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:dct="http://purl.org/dc/terms/"
+                xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+                version="1.0"
+>
 
-	<xsl:template match="csw:Record|csw:SummaryRecord">
-		 <dateStamp><xsl:value-of select="dct:modified"/></dateStamp>
-	</xsl:template>
+  <xsl:template match="csw:Record|csw:SummaryRecord">
+    <dateStamp>
+      <xsl:value-of select="dct:modified"/>
+    </dateStamp>
+  </xsl:template>
 
 </xsl:stylesheet>

@@ -24,6 +24,7 @@
 package jeeves;
 
 import jeeves.server.overrides.ConfigurationOverrides;
+
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -32,103 +33,98 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+
 import javax.servlet.ServletContext;
 
 //=============================================================================
 
-public class XmlFileCacher
-{
-	private ServletContext servletContext;
+public class XmlFileCacher {
+    private ServletContext servletContext;
     private Path appPath;
     private Path file;
-    private int  interval; //--- in secs
+    private int interval; //--- in secs
     private long lastTime;
     private FileTime lastModified;
 
     private Element elem;
 
     //--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
-    public XmlFileCacher(Path file, Path appPath)
-    {
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
+    public XmlFileCacher(Path file, Path appPath) {
         this(file, null, appPath);
     }
+
     /**
-     * @param servletContext if non-null the config-overrides can be applied to the xml file when it is loaded
+     * @param servletContext if non-null the config-overrides can be applied to the xml file when it
+     *                       is loaded
      */
-	public XmlFileCacher(Path file, ServletContext servletContext, Path appPath)
-	{
-		//--- 10 seconds as default interval
-		this(file, 10, servletContext, appPath);
-	}
+    public XmlFileCacher(Path file, ServletContext servletContext, Path appPath) {
+        //--- 10 seconds as default interval
+        this(file, 10, servletContext, appPath);
+    }
 
-	//--------------------------------------------------------------------------
-	/**
-	 * @param servletContext if non-null the config-overrides can be applied to the xml file when it is loaded
-	 */
-	public XmlFileCacher(Path file, int interval, ServletContext servletContext, Path appPath)
-	{
-		this.file     = file;
-		this.interval = interval;
-		this.servletContext = servletContext;
-		this.appPath = appPath;
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    /**
+     * @param servletContext if non-null the config-overrides can be applied to the xml file when it
+     *                       is loaded
+     */
+    public XmlFileCacher(Path file, int interval, ServletContext servletContext, Path appPath) {
+        this.file = file;
+        this.interval = interval;
+        this.servletContext = servletContext;
+        this.appPath = appPath;
+    }
 
-	public Element get() throws JDOMException, IOException
-	{
-		if (elem == null)
-		{
-			elem         = load();
-			lastTime     = System.currentTimeMillis();
-			lastModified = Files.getLastModifiedTime(file);
-		}
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-		else
-		{
-			long now   = System.currentTimeMillis();
-			int  delta = (int) (now - lastTime) / 1000;
+    public Element get() throws JDOMException, IOException {
+        if (elem == null) {
+            elem = load();
+            lastTime = System.currentTimeMillis();
+            lastModified = Files.getLastModifiedTime(file);
+        } else {
+            long now = System.currentTimeMillis();
+            int delta = (int) (now - lastTime) / 1000;
 
-			if((delta >= interval))
-			{
-				FileTime fileModified = Files.getLastModifiedTime(file);
+            if ((delta >= interval)) {
+                FileTime fileModified = Files.getLastModifiedTime(file);
 
-				if (!lastModified.equals(fileModified))
-				{
-					elem         = load();
-					lastModified = fileModified;
-				}
+                if (!lastModified.equals(fileModified)) {
+                    elem = load();
+                    lastModified = fileModified;
+                }
 
-				lastTime = now;
-			}
-		}
+                lastTime = now;
+            }
+        }
 
-		return elem;
-	}
+        return elem;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Protected methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Protected methods
+    //---
+    //--------------------------------------------------------------------------
 
-	/** Overriding this method makes it possible a conversion to XML on the fly
-	  * of files in other formats */
+    /**
+     * Overriding this method makes it possible a conversion to XML on the fly of files in other
+     * formats
+     */
 
-	protected Element load() throws JDOMException, IOException
-	{
-		Element xml = Xml.loadFile(file);
-	    ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext, appPath, xml);
+    protected Element load() throws JDOMException, IOException {
+        Element xml = Xml.loadFile(file);
+        ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext, appPath, xml);
         return xml;
-	}
+    }
 }
 
 //=============================================================================

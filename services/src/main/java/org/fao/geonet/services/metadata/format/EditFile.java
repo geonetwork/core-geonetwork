@@ -40,7 +40,7 @@ import org.jdom.Element;
 
 /**
  * Allows a user to set the xsl used for displaying metadata.
- * 
+ *
  * @author jeichar
  */
 public class EditFile extends AbstractFormatService implements Service {
@@ -59,7 +59,7 @@ public class EditFile extends AbstractFormatService implements Service {
         // Check that the requested file is actually nested into formatDir
         String absformatDir = formatDir.toAbsolutePath().toString();
         String absFile = formatDir.resolve(file).toAbsolutePath().toString();
-        if (! absFile.startsWith(absformatDir)) {
+        if (!absFile.startsWith(absformatDir)) {
             throw new BadParameterEx("fname", absFile);
         }
 

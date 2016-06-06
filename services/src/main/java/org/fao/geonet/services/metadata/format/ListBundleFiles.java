@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format;
 
 import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
@@ -40,10 +41,12 @@ import java.nio.file.Path;
 
 /**
  * Allows a user to set the xsl used for displaying metadata.
- * 
+ *
  * @author jeichar
  */
 public class ListBundleFiles extends AbstractFormatService implements Service {
+
+    private final static String[] extensions = {"properties", "xml", "xsl", "css", "js"};
 
     public Element exec(Element params, ServiceContext context) throws Exception {
 
@@ -85,18 +88,17 @@ public class ListBundleFiles extends AbstractFormatService implements Service {
             }
         }
     }
-	private final static String[] extensions = {"properties", "xml", "xsl", "css", "js"};
 
     private boolean isEditibleFileType(Path f) {
-		String fileName = f.getFileName().toString();
-		for (String ext : extensions) {
-			if(fileName.endsWith("."+ext)) return true;
-		}
-		
-		return fileName.toString().equalsIgnoreCase("README");
-	}
+        String fileName = f.getFileName().toString();
+        for (String ext : extensions) {
+            if (fileName.endsWith("." + ext)) return true;
+        }
 
-	private boolean legalFile(Path f) throws IOException {
+        return fileName.toString().equalsIgnoreCase("README");
+    }
+
+    private boolean legalFile(Path f) throws IOException {
         return !f.getFileName().startsWith(".") && !Files.isHidden(f) && Files.isReadable(f) && Files.isWritable(f);
     }
 

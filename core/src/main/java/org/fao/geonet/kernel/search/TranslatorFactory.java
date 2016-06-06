@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.JeevesCacheManager;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
@@ -37,7 +38,7 @@ public class TranslatorFactory {
 
     public static final Translator IDENTITY_TRANSLATOR = new Translator() {
         private static final long serialVersionUID = 1L;
-    
+
         public String translate(String key) {
             return key;
         }
@@ -56,26 +57,8 @@ public class TranslatorFactory {
         }
     }
 
-    private static enum TranslatorTypes {
-        CODELIST("codelist"),
-        APPLOC("apploc"),
-        TERM("term"),
-        DB("db");
-
-        public final String name;
-
-        private TranslatorTypes(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    };
-
-    private Translator getTranslatorUnhandled(String translatorString, final String langCode) 
-            throws Exception {
+    private Translator getTranslatorUnhandled(String translatorString, final String langCode)
+        throws Exception {
         if (translatorString == null || translatorString.length() == 0) {
             return IDENTITY_TRANSLATOR;
         }
@@ -84,9 +67,9 @@ public class TranslatorFactory {
         String[] parts = translatorString.split(":", 2);
         if (parts.length != 2) {
             throw new AssertionError(
-                    String.format(
-                            "Check the translator configuration '%s' of the config-summary.xml. It must be of the form nameOfTranslator:TranslatorParam.",
-                            translatorString));
+                String.format(
+                    "Check the translator configuration '%s' of the config-summary.xml. It must be of the form nameOfTranslator:TranslatorParam.",
+                    translatorString));
         }
         String type = parts[0];
         final String param = parts[1];
@@ -96,7 +79,7 @@ public class TranslatorFactory {
         if (TranslatorTypes.CODELIST.toString().equals(type)) {
             translator = new CodeListTranslator(context.getBean(SchemaManager.class), langCode, param);
         } else if (TranslatorTypes.APPLOC.toString().equals(type)) {
-            translator = new  JSONLocTranslator(context, langCode, param);
+            translator = new JSONLocTranslator(context, langCode, param);
         } else if (TranslatorTypes.TERM.toString().equals(type)) {
             translator = JeevesCacheManager.findInEternalCache(key, new Callable<Translator>() {
                 public Translator call() {
@@ -120,11 +103,31 @@ public class TranslatorFactory {
             });
         } else {
             throw new AssertionError(
-                    String.format("'%s' is not a recognized type of translator. Supported types are: %s",
-                            type, Arrays.asList(TranslatorTypes.values())));
+                String.format("'%s' is not a recognized type of translator. Supported types are: %s",
+                    type, Arrays.asList(TranslatorTypes.values())));
         }
 
         return translator;
+    }
+
+    ;
+
+    private static enum TranslatorTypes {
+        CODELIST("codelist"),
+        APPLOC("apploc"),
+        TERM("term"),
+        DB("db");
+
+        public final String name;
+
+        private TranslatorTypes(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
 }

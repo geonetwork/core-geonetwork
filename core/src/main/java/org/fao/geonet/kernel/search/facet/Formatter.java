@@ -26,6 +26,6 @@ import org.jdom.Element;
 
 public interface Formatter {
     public Element buildDimensionTag(int count);
-    
+
     public Element buildCategoryTag(CategorySummary result);
 }

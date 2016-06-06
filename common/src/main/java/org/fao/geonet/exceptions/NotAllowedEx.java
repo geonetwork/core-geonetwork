@@ -26,20 +26,18 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public abstract class NotAllowedEx extends JeevesClientEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public abstract class NotAllowedEx extends JeevesClientEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public NotAllowedEx(String message, Object object)
-	{
-		super(message, object);
+    public NotAllowedEx(String message, Object object) {
+        super(message, object);
 
-		id = "not-allowed";
-	}
+        id = "not-allowed";
+    }
 }
 
 //=============================================================================

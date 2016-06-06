@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.collect.Maps;
+
 import org.fao.geonet.kernel.rdf.Selectors;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.LiteralImpl;
@@ -32,7 +33,9 @@ import org.openrdf.sesame.query.QueryResultsTable;
 import java.util.Map;
 
 /**
- * Wraps a list of {@link org.openrdf.sesame.query.QueryResultsTable} and represents then as a single instance.
+ * Wraps a list of {@link org.openrdf.sesame.query.QueryResultsTable} and represents then as a
+ * single instance.
+ *
  * @author Jesse on 2/27/2015.
  */
 public class AllQueryResultsTable extends QueryResultsTable {

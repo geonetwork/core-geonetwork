@@ -25,8 +25,10 @@ package org.fao.geonet.kernel;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -59,6 +61,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.annotation.Nonnull;
 
 import static org.junit.Assert.assertEquals;
@@ -70,131 +73,13 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 /**
  * Tests for the DataManager.
  * <p/>
- * User: Jesse
- * Date: 10/24/13
- * Time: 5:30 PM
+ * User: Jesse Date: 10/24/13 Time: 5:30 PM
  */
 public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     DataManager _dataManager;
     @Autowired
     MetadataRepository _metadataRepository;
-
-    @Test
-    public void testDeleteMetadata() throws Exception {
-        int count = (int) _metadataRepository.count();
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
-        final UserSession userSession = serviceContext.getUserSession();
-        final String mdId = _dataManager.insertMetadata(serviceContext, "iso19139", new Element("MD_Metadata"), "uuid",
-                userSession.getUserIdAsInt(),
-                "" + ReservedGroup.all.getId(), "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
-                false, false);
-
-        assertEquals(count + 1, _metadataRepository.count());
-
-        _dataManager.deleteMetadata(serviceContext, mdId);
-
-        assertEquals(count, _metadataRepository.count());
-    }
-
-    @Test
-    public void testBuildPrivilegesMetadataInfo() throws Exception {
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
-        final UserSession userSession = serviceContext.getUserSession();
-        final Element sampleMetadataXml = getSampleMetadataXml();
-        String schema = _dataManager.autodetectSchema(sampleMetadataXml);
-
-        final String mdId1 = _dataManager.insertMetadata(serviceContext, schema, new Element(sampleMetadataXml.getName(),
-                sampleMetadataXml.getNamespace()), "uuid",  userSession.getUserIdAsInt(), "" + ReservedGroup.all.getId(),
-                "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
-                false, false);
-
-
-        Element info = new Element("info", Geonet.Namespaces.GEONET);
-        Map<String, Element> map = Maps.newHashMap();
-        map.put(mdId1, info);
-        info.removeContent();
-        _dataManager.buildPrivilegesMetadataInfo(serviceContext, map);
-        assertEqualsText("true", info, "edit");
-        assertEqualsText("true", info, "owner");
-        assertEqualsText("true", info, "isPublishedToAll");
-        assertEqualsText("true", info, "view");
-        assertEqualsText("true", info, "notify");
-        assertEqualsText("true", info, "download");
-        assertEqualsText("true", info, "dynamic");
-        assertEqualsText("true", info, "featured");
-    }
-
-    @Test
-    public void testCreateMetadataWithTemplateMetadata() throws Exception {
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
-
-        final User principal = serviceContext.getUserSession().getPrincipal();
-
-        final GroupRepository bean = serviceContext.getBean(GroupRepository.class);
-        Group group = bean.findAll().get(0);
-
-        MetadataCategory category = serviceContext.getBean(MetadataCategoryRepository.class).findAll().get(0);
-
-        final SourceRepository sourceRepository = serviceContext.getBean(SourceRepository.class);
-        Source source = sourceRepository.save(new Source().setLocal(true).setName("GN").setUuid("sourceuuid"));
-
-        final Element sampleMetadataXml = super.getSampleMetadataXml();
-        final Metadata metadata = new Metadata();
-        metadata.setDataAndFixCR(sampleMetadataXml)
-            .setUuid(UUID.randomUUID().toString());
-        metadata.getCategories().add(category);
-        metadata.getDataInfo().setSchemaId("iso19139");
-        metadata.getSourceInfo().setSourceId(source.getUuid()).setOwner(1);
-
-        final Metadata templateMd = _metadataRepository.save(metadata);
-        final String newMetadataId = _dataManager.createMetadata(serviceContext, "" + metadata.getId(), "" + group.getId(), source.getUuid(),
-                principal.getId(), templateMd.getUuid(), MetadataType.METADATA.codeString, true);
-
-        Metadata newMetadata = _metadataRepository.findOne(newMetadataId);
-        assertEquals(1, newMetadata.getCategories().size());
-        assertEquals(category, newMetadata.getCategories().iterator().next());
-        assertEqualsText(metadata.getUuid(), newMetadata.getXmlData(false), "gmd:parentIdentifier/gco:CharacterString");
-
-    }
-
-    @Test
-    public void testSetStatus() throws Exception {
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
-
-        final int metadataId = importMetadata(this, serviceContext);
-
-        final MetadataStatus status = _dataManager.getStatus(metadataId);
-
-        assertEquals(null, status);
-
-        final ISODate changeDate = new ISODate();
-        final String changeMessage = "Set to draft";
-        _dataManager.setStatus(serviceContext, metadataId, 0, changeDate, changeMessage);
-
-        final MetadataStatus loadedStatus = _dataManager.getStatus(metadataId);
-
-        assertEquals(changeDate, loadedStatus.getId().getChangeDate());
-        assertEquals(changeMessage, loadedStatus.getChangeMessage());
-        assertEquals(0, loadedStatus.getStatusValue().getId());
-        assertEquals(metadataId, loadedStatus.getId().getMetadataId());
-        assertEquals(0, loadedStatus.getId().getStatusId());
-        assertEquals(serviceContext.getUserSession().getUserIdAsInt(), loadedStatus.getId().getUserId());
-    }
-
-    @Test
-    public void testSetHarvesterData() throws Exception {
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
-
-        final int metadataId = importMetadata(this, serviceContext);
-
-        doSetHarvesterDataTest(_metadataRepository, _dataManager, metadataId);
-    }
 
     static void doSetHarvesterDataTest(MetadataRepository metadataRepository, DataManager dataManager, int metadataId) throws Exception {
         Metadata metadata = metadataRepository.findOne(metadataId);
@@ -241,6 +126,129 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         assertFalse(metadata.getHarvestInfo().isHarvested());
     }
 
+    static int importMetadata(AbstractCoreIntegrationTest test, ServiceContext serviceContext) throws Exception {
+        final Element sampleMetadataXml = test.getSampleMetadataXml();
+        final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
+        return test.importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
+            ReservedGroup.all.getId(), Params.GENERATE_UUID);
+    }
+
+    @Test
+    public void testDeleteMetadata() throws Exception {
+        int count = (int) _metadataRepository.count();
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+        final UserSession userSession = serviceContext.getUserSession();
+        final String mdId = _dataManager.insertMetadata(serviceContext, "iso19139", new Element("MD_Metadata"), "uuid",
+            userSession.getUserIdAsInt(),
+            "" + ReservedGroup.all.getId(), "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
+            false, false);
+
+        assertEquals(count + 1, _metadataRepository.count());
+
+        _dataManager.deleteMetadata(serviceContext, mdId);
+
+        assertEquals(count, _metadataRepository.count());
+    }
+
+    @Test
+    public void testBuildPrivilegesMetadataInfo() throws Exception {
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+        final UserSession userSession = serviceContext.getUserSession();
+        final Element sampleMetadataXml = getSampleMetadataXml();
+        String schema = _dataManager.autodetectSchema(sampleMetadataXml);
+
+        final String mdId1 = _dataManager.insertMetadata(serviceContext, schema, new Element(sampleMetadataXml.getName(),
+                sampleMetadataXml.getNamespace()), "uuid", userSession.getUserIdAsInt(), "" + ReservedGroup.all.getId(),
+            "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
+            false, false);
+
+
+        Element info = new Element("info", Geonet.Namespaces.GEONET);
+        Map<String, Element> map = Maps.newHashMap();
+        map.put(mdId1, info);
+        info.removeContent();
+        _dataManager.buildPrivilegesMetadataInfo(serviceContext, map);
+        assertEqualsText("true", info, "edit");
+        assertEqualsText("true", info, "owner");
+        assertEqualsText("true", info, "isPublishedToAll");
+        assertEqualsText("true", info, "view");
+        assertEqualsText("true", info, "notify");
+        assertEqualsText("true", info, "download");
+        assertEqualsText("true", info, "dynamic");
+        assertEqualsText("true", info, "featured");
+    }
+
+    @Test
+    public void testCreateMetadataWithTemplateMetadata() throws Exception {
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+
+        final User principal = serviceContext.getUserSession().getPrincipal();
+
+        final GroupRepository bean = serviceContext.getBean(GroupRepository.class);
+        Group group = bean.findAll().get(0);
+
+        MetadataCategory category = serviceContext.getBean(MetadataCategoryRepository.class).findAll().get(0);
+
+        final SourceRepository sourceRepository = serviceContext.getBean(SourceRepository.class);
+        Source source = sourceRepository.save(new Source().setLocal(true).setName("GN").setUuid("sourceuuid"));
+
+        final Element sampleMetadataXml = super.getSampleMetadataXml();
+        final Metadata metadata = new Metadata();
+        metadata.setDataAndFixCR(sampleMetadataXml)
+            .setUuid(UUID.randomUUID().toString());
+        metadata.getCategories().add(category);
+        metadata.getDataInfo().setSchemaId("iso19139");
+        metadata.getSourceInfo().setSourceId(source.getUuid()).setOwner(1);
+
+        final Metadata templateMd = _metadataRepository.save(metadata);
+        final String newMetadataId = _dataManager.createMetadata(serviceContext, "" + metadata.getId(), "" + group.getId(), source.getUuid(),
+            principal.getId(), templateMd.getUuid(), MetadataType.METADATA.codeString, true);
+
+        Metadata newMetadata = _metadataRepository.findOne(newMetadataId);
+        assertEquals(1, newMetadata.getCategories().size());
+        assertEquals(category, newMetadata.getCategories().iterator().next());
+        assertEqualsText(metadata.getUuid(), newMetadata.getXmlData(false), "gmd:parentIdentifier/gco:CharacterString");
+
+    }
+
+    @Test
+    public void testSetStatus() throws Exception {
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+
+        final int metadataId = importMetadata(this, serviceContext);
+
+        final MetadataStatus status = _dataManager.getStatus(metadataId);
+
+        assertEquals(null, status);
+
+        final ISODate changeDate = new ISODate();
+        final String changeMessage = "Set to draft";
+        _dataManager.setStatus(serviceContext, metadataId, 0, changeDate, changeMessage);
+
+        final MetadataStatus loadedStatus = _dataManager.getStatus(metadataId);
+
+        assertEquals(changeDate, loadedStatus.getId().getChangeDate());
+        assertEquals(changeMessage, loadedStatus.getChangeMessage());
+        assertEquals(0, loadedStatus.getStatusValue().getId());
+        assertEquals(metadataId, loadedStatus.getId().getMetadataId());
+        assertEquals(0, loadedStatus.getId().getStatusId());
+        assertEquals(serviceContext.getUserSession().getUserIdAsInt(), loadedStatus.getId().getUserId());
+    }
+
+    @Test
+    public void testSetHarvesterData() throws Exception {
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+
+        final int metadataId = importMetadata(this, serviceContext);
+
+        doSetHarvesterDataTest(_metadataRepository, _dataManager, metadataId);
+    }
+
     @Test
     public void testDeleteBatchMetadata() throws Exception {
         ServiceContext context = createServiceContext();
@@ -276,7 +284,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         String parentUuid = UUID.randomUUID().toString();
         Element md = Xml.loadFile(AbstractCoreIntegrationTest.class.getResource("kernel/multilingual-metadata.xml"));
         final Element updateMd = _dataManager.updateFixedInfo("iso19139", Optional.<Integer>absent(), uuid, md, parentUuid,
-                UpdateDatestamp.YES, context);
+            UpdateDatestamp.YES, context);
 
         final List<Namespace> namespaces = _dataManager.getSchema("iso19139").getNamespaces();
         assertEquals(uuid, Xml.selectString(updateMd, "gmd:fileIdentifier/gco:CharacterString", namespaces));
@@ -290,13 +298,6 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         final int startIndexDocs = indexReader.indexReader.numDocs();
         indexReader.close();
         return startIndexDocs;
-    }
-
-    static int importMetadata(AbstractCoreIntegrationTest test, ServiceContext serviceContext) throws Exception {
-        final Element sampleMetadataXml = test.getSampleMetadataXml();
-        final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
-        return test.importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
-                ReservedGroup.all.getId(), Params.GENERATE_UUID);
     }
 
 }

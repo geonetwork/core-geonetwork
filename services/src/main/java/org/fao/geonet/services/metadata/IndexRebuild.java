@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -37,50 +38,51 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** Force rebuild Lucene index 
-  */
+/**
+ * Force rebuild Lucene index
+ */
 
-public class IndexRebuild implements Service
-{
-	private ServiceConfig _config;
+public class IndexRebuild implements Service {
+    private ServiceConfig _config;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception {
-		_config = config;
-	}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+        _config = config;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		boolean xlinks = false;
-		boolean reset = "yes".equals(Util.getParam(params, "reset", "no"));
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        boolean xlinks = false;
+        boolean reset = "yes".equals(Util.getParam(params, "reset", "no"));
         boolean fromSelection = "yes".equals(Util.getParam(params, "fromSelection", "no"));
         String rebuildXLinkIndex = _config.getValue("rebuildxlinkindex");
-		if (rebuildXLinkIndex != null) {
-			xlinks = rebuildXLinkIndex.equals("yes");
-		}
+        if (rebuildXLinkIndex != null) {
+            xlinks = rebuildXLinkIndex.equals("yes");
+        }
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		SearchManager searchMan = gc.getBean(SearchManager.class);
-		
-		boolean info = searchMan.rebuildIndex(context, xlinks, reset, fromSelection);
+        SearchManager searchMan = gc.getBean(SearchManager.class);
 
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element("status").setText((info?"true":"false")));
-		
-		return elResp;
-	};
+        boolean info = searchMan.rebuildIndex(context, xlinks, reset, fromSelection);
+
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        elResp.addContent(new Element("status").setText((info ? "true" : "false")));
+
+        return elResp;
+    }
+
+    ;
 }
 
 //=============================================================================

@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
@@ -35,41 +36,38 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** This service returns all stylesheets that can be used during batch import
-  * selected tab
-  */
+/**
+ * This service returns all stylesheets that can be used during batch import selected tab
+ */
 
-public class GetImportXSLs implements Service
-{
-	private Path appPath;
+public class GetImportXSLs implements Service {
+    private Path appPath;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception
-	{
-		this.appPath = appPath;
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        this.appPath = appPath;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		String dir = appPath + File.separator + Geonet.Path.IMPORT_STYLESHEETS;
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        String dir = appPath + File.separator + Geonet.Path.IMPORT_STYLESHEETS;
 
-		String sheets[] = new File(dir).list();
+        String sheets[] = new File(dir).list();
 
-		if (sheets == null)
-			throw new Exception("Cannot scan directory : "+ dir);
+        if (sheets == null)
+            throw new Exception("Cannot scan directory : " + dir);
 
-		Element elRoot = new Element("a");
+        Element elRoot = new Element("a");
 
         for (String sheet : sheets) {
             if (sheet.endsWith(".xsl")) {
@@ -86,8 +84,8 @@ public class GetImportXSLs implements Service
             }
         }
 
-		return elRoot;
-	}
+        return elRoot;
+    }
 }
 
 //=============================================================================

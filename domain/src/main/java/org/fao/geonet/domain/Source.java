@@ -26,6 +26,7 @@ package org.fao.geonet.domain;
 import org.fao.geonet.entitylistener.SourceEntityListenerManager;
 
 import java.util.Map;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CollectionTable;
@@ -67,7 +68,7 @@ public class Source extends Localized {
      * @param name  the name
      * @param local if the source is the local system
      */
-    public Source(String uuid, String name, Map<String,String> translations, boolean local) {
+    public Source(String uuid, String name, Map<String, String> translations, boolean local) {
         this._uuid = uuid;
         this._name = name;
         setLabelTranslations(translations);
@@ -86,7 +87,6 @@ public class Source extends Localized {
 
     /**
      * Set the uuid of the source.
-     *
      *
      * @param uuid the uuid of the source.
      * @return this entity
@@ -108,7 +108,6 @@ public class Source extends Localized {
     /**
      * Set the name of the source.
      *
-     *
      * @param name the name of the source.
      * @return this entity
      */
@@ -118,8 +117,9 @@ public class Source extends Localized {
     }
 
     /**
-     * For backwards compatibility we need the islocal column to be either 'n' or 'y'. This is a workaround to allow this until future
-     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     * For backwards compatibility we need the islocal column to be either 'n' or 'y'. This is a
+     * workaround to allow this until future versions of JPA that allow different ways of
+     * controlling how types are mapped to the database.
      */
     @Column(name = "isLocal", nullable = false, length = 1)
     protected char getIsLocal_JpaWorkaround() {

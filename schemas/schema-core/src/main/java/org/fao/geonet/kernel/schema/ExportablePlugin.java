@@ -30,10 +30,8 @@ import java.util.Map;
  */
 public interface ExportablePlugin {
     /**
-     * Return the list of format to export to.
-     * The key are the path to the XSL transformation to apply eg. convert/to19139.xsl
-     * and the value is the file name.
-     * @return
+     * Return the list of format to export to. The key are the path to the XSL transformation to
+     * apply eg. convert/to19139.xsl and the value is the file name.
      */
     Map<String, String> getExportFormats();
 }

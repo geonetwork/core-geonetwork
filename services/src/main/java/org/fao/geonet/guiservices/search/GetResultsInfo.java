@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.jdom.Element;
@@ -35,35 +36,34 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** This service is used by metadata.show/edit to retrieve the current
-  * selected tab
-  */
+/**
+ * This service is used by metadata.show/edit to retrieve the current selected tab
+ */
 
-public class GetResultsInfo implements Service
-{
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class GetResultsInfo implements Service {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		UserSession session = context.getUserSession();
-		
-		Element results = new Element("results");
-		
-		if(session != null) {
-    		Object searcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
-    		
-    		if (searcher != null)
-    			if (searcher instanceof LuceneSearcher)
-    				results.setText(((LuceneSearcher)searcher).getSize()+"");
-		}
-		return results;
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        UserSession session = context.getUserSession();
+
+        Element results = new Element("results");
+
+        if (session != null) {
+            Object searcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
+
+            if (searcher != null)
+                if (searcher instanceof LuceneSearcher)
+                    results.setText(((LuceneSearcher) searcher).getSize() + "");
+        }
+        return results;
+    }
 }
 
 //=============================================================================

@@ -2,16 +2,27 @@
 <i18n>
   <viewInGE>Visualiser dans Google Earth</viewInGE>
   <warning>Attention!</warning>
-  <nojs>Javascript n'est pas actif dans votre navigateur. Activez le ou cliquez <a
-    href="catalog.search.nojs">ici pour rechercher des informations</a> en mode dégradé.</nojs>
+  <nojs>Javascript n'est pas actif dans votre navigateur. Activez le ou cliquez
+    <a
+      href="catalog.search.nojs">ici pour rechercher des informations
+    </a>
+    en mode dégradé.
+  </nojs>
   <selectView>Sélectionner une vue</selectView>
   <moreTabs>Plus d'information</moreTabs>
-  <addA>Ajouter un(e) </addA>
+  <addA>Ajouter un(e)</addA>
   <nodeChangeWarning>Attention ! Vous souhaitez accéder à un autre noeud</nodeChangeWarning>
-  <nodeChangeInfo>Attention : Vous n'êtes plus dans le catalogue auquel vous étiez connecté.</nodeChangeInfo>
+  <nodeChangeInfo>Attention : Vous n'êtes plus dans le catalogue auquel vous étiez connecté.
+  </nodeChangeInfo>
   <nodeChangeBack>Si vous souhaitez revenir à ce catalogue cliquer ici :</nodeChangeBack>
-  <nodeChangeForward>Sinon, pour vous déconnectez et poursuivre vers le nouveau catalogue, cliquer là :</nodeChangeForward>
+  <nodeChangeForward>Sinon, pour vous déconnectez et poursuivre vers le nouveau catalogue, cliquer
+    là :
+  </nodeChangeForward>
   <serviceNotAllowedTitle>Service non disponible</serviceNotAllowedTitle>
-  <serviceNotAllowed>Le service {1} n'existe pas ou vous n'avez pas les droits pour y accéder.</serviceNotAllowed>
-  <linkToHome><span>Retourner à la <a href="../..">page de recherche</a>.</span></linkToHome>
+  <serviceNotAllowed>Le service {1} n'existe pas ou vous n'avez pas les droits pour y accéder.
+  </serviceNotAllowed>
+  <linkToHome>
+    <span>Retourner à la<a href="../..">page de recherche</a>.
+    </span>
+  </linkToHome>
 </i18n>

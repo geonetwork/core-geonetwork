@@ -30,6 +30,7 @@ import java.util.Map;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
+
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.SOAPUtil;
 import org.fao.geonet.Util;
@@ -48,132 +49,20 @@ import org.springframework.stereotype.Component;
 
 //=============================================================================
 @Component
-public class CatalogDispatcher
-{
+public class CatalogDispatcher {
     @Autowired
     ApplicationContext appContext;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public Element dispatch(Element request, ServiceContext context, String cswServiceSpecificContraint)
-	{
-		context.info("Received:\n"+Xml.getString(request));
+    public static Map<String, String> extractParams(Element request) {
+        HashMap<String, String> hm = new HashMap<String, String>();
 
-		InputMethod  im = context.getInputMethod();
-		OutputMethod om = context.getOutputMethod();
-
-		boolean inSOAP  = (im == InputMethod.SOAP);
-		boolean outSOAP = (inSOAP || om == OutputMethod.SOAP);
-
-		CatalogException exc;
-
-		try
-		{
-			if (inSOAP)
-				request = SOAPUtil.unembed(request);
-
-			Element response = dispatchI(request, context, cswServiceSpecificContraint);
-
-			if (outSOAP)
-				response = SOAPUtil.embed(response);
-
-			return response;
-		}
-
-		catch(CatalogException e)
-		{
-			exc = e;
-		}
-
-		catch(Exception e)
-		{
-			context.info("Exception stack trace : \n"+ Util.getStackTrace(e));
-            // TODO what's this ?
-			exc = new NoApplicableCodeEx(e.toString());
-		}
-
-		Element response = CatalogException.marshal(exc);
-		boolean sender   = (exc instanceof NoApplicableCodeEx);
-
-		if (outSOAP)
-			return SOAPUtil.embedExc(response, sender, exc.getCode(), exc.toString());
-
-		//TODO: need to set the status code
-
-		return response;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private method
-	//---
-	//---------------------------------------------------------------------------
-
-	private Element dispatchI(Element request, ServiceContext context, String cswServiceSpecificContraint) throws CatalogException
-	{
-		InputMethod im = context.getInputMethod();
-
-		if (im == InputMethod.XML || im == InputMethod.SOAP)
-		{
-			String operation = request.getName();
-
-			CatalogService cs = lookUpService(operation);
-
-			if (cs == null)
-				throw new OperationNotSupportedEx(operation);
-
-			Log.info(Geonet.CSW, "Dispatching operation : "+ operation);
-
-            if (cswServiceSpecificContraint != null){
-				request.addContent(new Element(Geonet.Elem.FILTER).setText(cswServiceSpecificContraint));
-			}
-
-			return cs.execute(request, context);
-		}
-
-		else //--- GET or POST/www-encoded request
-		{
-			Map<String, String> params = extractParams(request);
-
-			String operation = params.get("request");
-
-			if (operation == null)
-				throw new MissingParameterValueEx("request");
-
-			CatalogService cs = lookUpService(operation);
-
-			if (cs == null)
-				throw new OperationNotSupportedEx(operation);
-
-			request = cs.adaptGetRequest(params);
-
-            if (cswServiceSpecificContraint != null){
-				request.addContent(new Element(Geonet.Elem.FILTER).setText(cswServiceSpecificContraint));
-			}
-
-            if(context.isDebugEnabled())
-                context.debug("Adapted GET request is:\n"+Xml.getString(request));
-			context.info("Dispatching operation : "+ operation);
-
-			return cs.execute(request, context);
-		}
-	}
-
-    private CatalogService lookUpService(String operation) {
-        return appContext.getBean(CatalogService.BEAN_PREFIX+operation, CatalogService.class);
-    }
-
-	//---------------------------------------------------------------------------
-
-	public static Map<String, String> extractParams(Element request)
-	{
-		HashMap<String, String> hm = new HashMap<String, String>();
-
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> params = request.getChildren();
 
         for (Element param : params) {
@@ -183,6 +72,104 @@ public class CatalogDispatcher
             hm.put(name, value);
         }
 
-		return hm;
-	}
+        return hm;
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private method
+    //---
+    //---------------------------------------------------------------------------
+
+    public Element dispatch(Element request, ServiceContext context, String cswServiceSpecificContraint) {
+        context.info("Received:\n" + Xml.getString(request));
+
+        InputMethod im = context.getInputMethod();
+        OutputMethod om = context.getOutputMethod();
+
+        boolean inSOAP = (im == InputMethod.SOAP);
+        boolean outSOAP = (inSOAP || om == OutputMethod.SOAP);
+
+        CatalogException exc;
+
+        try {
+            if (inSOAP)
+                request = SOAPUtil.unembed(request);
+
+            Element response = dispatchI(request, context, cswServiceSpecificContraint);
+
+            if (outSOAP)
+                response = SOAPUtil.embed(response);
+
+            return response;
+        } catch (CatalogException e) {
+            exc = e;
+        } catch (Exception e) {
+            context.info("Exception stack trace : \n" + Util.getStackTrace(e));
+            // TODO what's this ?
+            exc = new NoApplicableCodeEx(e.toString());
+        }
+
+        Element response = CatalogException.marshal(exc);
+        boolean sender = (exc instanceof NoApplicableCodeEx);
+
+        if (outSOAP)
+            return SOAPUtil.embedExc(response, sender, exc.getCode(), exc.toString());
+
+        //TODO: need to set the status code
+
+        return response;
+    }
+
+    private Element dispatchI(Element request, ServiceContext context, String cswServiceSpecificContraint) throws CatalogException {
+        InputMethod im = context.getInputMethod();
+
+        if (im == InputMethod.XML || im == InputMethod.SOAP) {
+            String operation = request.getName();
+
+            CatalogService cs = lookUpService(operation);
+
+            if (cs == null)
+                throw new OperationNotSupportedEx(operation);
+
+            Log.info(Geonet.CSW, "Dispatching operation : " + operation);
+
+            if (cswServiceSpecificContraint != null) {
+                request.addContent(new Element(Geonet.Elem.FILTER).setText(cswServiceSpecificContraint));
+            }
+
+            return cs.execute(request, context);
+        } else //--- GET or POST/www-encoded request
+        {
+            Map<String, String> params = extractParams(request);
+
+            String operation = params.get("request");
+
+            if (operation == null)
+                throw new MissingParameterValueEx("request");
+
+            CatalogService cs = lookUpService(operation);
+
+            if (cs == null)
+                throw new OperationNotSupportedEx(operation);
+
+            request = cs.adaptGetRequest(params);
+
+            if (cswServiceSpecificContraint != null) {
+                request.addContent(new Element(Geonet.Elem.FILTER).setText(cswServiceSpecificContraint));
+            }
+
+            if (context.isDebugEnabled())
+                context.debug("Adapted GET request is:\n" + Xml.getString(request));
+            context.info("Dispatching operation : " + operation);
+
+            return cs.execute(request, context);
+        }
+    }
+
+    //---------------------------------------------------------------------------
+
+    private CatalogService lookUpService(String operation) {
+        return appContext.getBean(CatalogService.BEAN_PREFIX + operation, CatalogService.class);
+    }
 }

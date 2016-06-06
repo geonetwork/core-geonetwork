@@ -27,10 +27,12 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import javax.sql.DataSource;
+
 import java.io.StringReader;
 import java.nio.file.Path;
 import java.sql.*;
@@ -41,55 +43,29 @@ import java.util.Date;
 
 //=============================================================================
 
-/** Performs a generic query
-  */
+/**
+ * Performs a generic query
+ */
 
-public class Select implements Service
-{
-	private String query;
-	private Vector<Element> inFields;
-	private Vector<Element> outFields;
+public class Select implements Service {
+    private static final String DEFAULT_DATE_FORMAT = "dd-MM-yyyy";
+    private static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
+    private static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
+    private String query;
 
-	public void init(Path appPath, ServiceConfig params) throws Exception
-	{
-		query  = params.getMandatoryValue(Jeeves.Config.QUERY);
-		List<Element> inList = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);
-
-		inFields = new Vector<Element>();
-		if (inList != null) {
-			for (Element field : inList) {
-				inFields.add(field);
-			}
-		}
-		
-		List<Element> outList = params.getChildren(Jeeves.Config.OUT_FIELDS, Jeeves.Config.FIELD);
-		outFields = new Vector<Element>();
-		if (outList != null) {
-			for (Element field : outList) {
-				outFields.add(field);
-			}
-		}
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Vector<Object>  vArgs  = scanInFields(params, inFields, null, context);
-		Hashtable<String, String> formats = scanOutFields(outFields);
-		return selectFull(context, query, formats, vArgs.toArray());
-	}
-
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
+    private Vector<Element> inFields;
+    private Vector<Element> outFields;
 
     public static Vector<Object> scanInFields(Element params, Vector<Element> inFields, Element result, ServiceContext context) throws Exception {
         // build argument list
@@ -172,6 +148,8 @@ public class Select implements Service
         return vArgs;
     }
 
+    /* ************************** Methods for simplifying JPA migration    ****************************************** */
+
     public static Hashtable<String, String> scanOutFields(Vector<Element> outFields) throws Exception {
         Hashtable<String, String> formats = new Hashtable<String, String>();
 
@@ -189,27 +167,21 @@ public class Select implements Service
         return formats;
     }
 
-    /* ************************** Methods for simplifying JPA migration    ****************************************** */
-
-    private static final String DEFAULT_DATE_FORMAT      = "dd-MM-yyyy";
-    private static final String DEFAULT_TIME_FORMAT      = "HH:mm:ss";
-    private static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
-
     /**
-     * This method is taken from the old Dbms class to allow reading as Element like a lot of xsl require. This is to ease the migration to
-     * all JPA database access.
+     * This method is taken from the old Dbms class to allow reading as Element like a lot of xsl
+     * require. This is to ease the migration to all JPA database access.
      */
     public static Element select(ServiceContext context, String query)
-            throws SQLException {
+        throws SQLException {
         return selectFull(context, query, Collections.<String, String>emptyMap());
     }
 
     /**
-     * This method is taken from the old Dbms class to allow reading as Element like a lot of xsl require. This is to ease the migration to
-     * all JPA database access.
+     * This method is taken from the old Dbms class to allow reading as Element like a lot of xsl
+     * require. This is to ease the migration to all JPA database access.
      */
     public static Element selectFull(ServiceContext context, String query, Map<String, String> formats, Object... args)
-            throws SQLException {
+        throws SQLException {
 
         DataSource datasource = context.getBean(DataSource.class);
 
@@ -293,18 +265,14 @@ public class Select implements Service
         return root;
     }
 
-
-    private static Element buildElement(ResultSet rs, int col, String name, int type, Map<String, String> formats) throws SQLException
-    {
+    private static Element buildElement(ResultSet rs, int col, String name, int type, Map<String, String> formats) throws SQLException {
         String value = null;
 
-        switch (type)
-        {
+        switch (type) {
             case Types.DATE:
-                Date date = rs.getDate(col +1);
+                Date date = rs.getDate(col + 1);
                 if (date == null) value = null;
-                else
-                {
+                else {
                     String format = formats.get(name);
                     SimpleDateFormat df = (format == null) ? new SimpleDateFormat(DEFAULT_DATE_FORMAT) : new SimpleDateFormat(format);
                     value = df.format(date);
@@ -312,10 +280,9 @@ public class Select implements Service
                 break;
 
             case Types.TIME:
-                Time time = rs.getTime(col +1);
+                Time time = rs.getTime(col + 1);
                 if (time == null) value = null;
-                else
-                {
+                else {
                     String format = formats.get(name);
                     SimpleDateFormat df = (format == null) ? new SimpleDateFormat(DEFAULT_TIME_FORMAT) : new SimpleDateFormat(format);
                     value = df.format(time);
@@ -323,10 +290,9 @@ public class Select implements Service
                 break;
 
             case Types.TIMESTAMP:
-                Timestamp timestamp = rs.getTimestamp(col +1);
+                Timestamp timestamp = rs.getTimestamp(col + 1);
                 if (timestamp == null) value = null;
-                else
-                {
+                else {
                     String format = formats.get(name);
                     SimpleDateFormat df = (format == null) ? new SimpleDateFormat(DEFAULT_TIMESTAMP_FORMAT) : new SimpleDateFormat(format);
                     value = df.format(timestamp);
@@ -337,14 +303,12 @@ public class Select implements Service
             case Types.SMALLINT:
             case Types.INTEGER:
             case Types.BIGINT:
-                long l = rs.getLong(col +1);
+                long l = rs.getLong(col + 1);
                 if (rs.wasNull()) value = null;
-                else
-                {
+                else {
                     String format = formats.get(name);
-                    if (format == null) value = l+"";
-                    else
-                    {
+                    if (format == null) value = l + "";
+                    else {
                         DecimalFormat df = new DecimalFormat(format);
                         value = df.format(l);
                     }
@@ -356,26 +320,22 @@ public class Select implements Service
             case Types.DOUBLE:
             case Types.REAL:
             case Types.NUMERIC:
-                double n = rs.getDouble(col +1);
+                double n = rs.getDouble(col + 1);
 
                 if (rs.wasNull())
                     value = null;
-                else
-                {
+                else {
                     String format = formats.get(name);
 
-                    if (format == null)
-                    {
-                        value = n+"";
+                    if (format == null) {
+                        value = n + "";
 
                         //--- this fix is mandatory for oracle
                         //--- that shit returns integers like xxx.0
 
                         if (value.endsWith(".0"))
-                            value = value.substring(0, value.length() -2);
-                    }
-                    else
-                    {
+                            value = value.substring(0, value.length() - 2);
+                    } else {
                         DecimalFormat df = new DecimalFormat(format);
                         value = df.format(n);
                     }
@@ -383,23 +343,52 @@ public class Select implements Service
                 break;
 
             default:
-                value = rs.getString(col +1);
-                if (value != null) { value = stripIllegalChars(value); }
+                value = rs.getString(col + 1);
+                if (value != null) {
+                    value = stripIllegalChars(value);
+                }
 
                 break;
         }
         return new Element(name).setText(value);
     }
+
     private static String stripIllegalChars(String input) {
         String output = input;
-        for (int i=127; i<160; i++) {
-            String c = String.valueOf((char)i);
+        for (int i = 127; i < 160; i++) {
+            String c = String.valueOf((char) i);
             if (output.contains(c)) {
                 output = output.replaceAll(c, "");
             }
         }
 
         return output;
+    }
+
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        query = params.getMandatoryValue(Jeeves.Config.QUERY);
+        List<Element> inList = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);
+
+        inFields = new Vector<Element>();
+        if (inList != null) {
+            for (Element field : inList) {
+                inFields.add(field);
+            }
+        }
+
+        List<Element> outList = params.getChildren(Jeeves.Config.OUT_FIELDS, Jeeves.Config.FIELD);
+        outFields = new Vector<Element>();
+        if (outList != null) {
+            for (Element field : outList) {
+                outFields.add(field);
+            }
+        }
+    }
+
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        Vector<Object> vArgs = scanInFields(params, inFields, null, context);
+        Hashtable<String, String> formats = scanOutFields(outFields);
+        return selectFull(context, query, formats, vArgs.toArray());
     }
 }
 

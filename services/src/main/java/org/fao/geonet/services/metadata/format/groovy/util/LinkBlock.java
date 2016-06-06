@@ -27,11 +27,13 @@ import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+
 import org.jdom.JDOMException;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+
 import javax.annotation.Nullable;
 
 /**
@@ -41,8 +43,6 @@ public class LinkBlock {
     public static String CSS_CLASS_PREFIX = "summary-links-";
 
     public final Multimap<LinkType, Link> linkMap = LinkedHashMultimap.create();
-    private String html;
-
     /**
      * The translation key for the name of this section.
      */
@@ -51,6 +51,8 @@ public class LinkBlock {
      * the classes to put on the link block &lt;i> element. (may be null)
      */
     public final String iconClasses;
+    private String html;
+
     public LinkBlock(String name, String iconClasses) {
         this.name = name;
         this.iconClasses = iconClasses;

@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.jdom.Element;
@@ -57,6 +58,7 @@ public class FormatterParams {
         }
         return values[0];
     }
+
     public String getResourceUrl() {
         String xslid = param("xsl", null);
         String schemaParam = "";
@@ -66,7 +68,7 @@ public class FormatterParams {
         }
 
         return getLocUrl() + "/md.formatter.resource?" + schemaParam +
-                             Params.ID + "=" + xslid + "&" + Params.FNAME + "=";
+            Params.ID + "=" + xslid + "&" + Params.FNAME + "=";
     }
 
     public String getLocUrl() {

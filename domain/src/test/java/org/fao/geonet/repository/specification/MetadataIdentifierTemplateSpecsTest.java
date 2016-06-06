@@ -38,7 +38,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Jose García
  */
-public class MetadataIdentifierTemplateSpecsTest  extends AbstractSpringDataTest {
+public class MetadataIdentifierTemplateSpecsTest extends AbstractSpringDataTest {
 
 
     @Autowired

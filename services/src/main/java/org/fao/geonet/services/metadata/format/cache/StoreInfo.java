@@ -24,7 +24,8 @@
 package org.fao.geonet.services.metadata.format.cache;
 
 /**
- * The metadata about the stored value.  Does not contain the value, only the data describing it like change data and published.
+ * The metadata about the stored value.  Does not contain the value, only the data describing it
+ * like change data and published.
  *
  * @author Jesse on 3/5/2015.
  */

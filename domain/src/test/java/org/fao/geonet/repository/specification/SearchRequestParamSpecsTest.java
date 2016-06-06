@@ -25,6 +25,7 @@ package org.fao.geonet.repository.specification;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.domain.statistic.SearchRequest;
 import org.fao.geonet.domain.statistic.SearchRequestParam;
 import org.fao.geonet.repository.AbstractSpringDataTest;
@@ -36,6 +37,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,10 +46,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test SearchRequestParamSpecs
- * User: Jesse
- * Date: 10/8/13
- * Time: 11:26 AM
+ * Test SearchRequestParamSpecs User: Jesse Date: 10/8/13 Time: 11:26 AM
  */
 public class SearchRequestParamSpecsTest extends AbstractSpringDataTest {
     @Autowired

@@ -26,14 +26,13 @@ package jeeves.server.sources.http;
 import org.fao.geonet.utils.IO;
 
 import java.nio.file.Path;
+
 import javax.servlet.ServletContext;
 
 /**
  * Look up all the paths that the ServletContext is needed to find.
  *
- * User: Jesse
- * Date: 10/18/13
- * Time: 10:10 AM
+ * User: Jesse Date: 10/18/13 Time: 10:10 AM
  */
 public class ServletPathFinder {
     private final String _baseUrl;

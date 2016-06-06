@@ -24,10 +24,7 @@
 package com.yammer.metrics.core;
 
 /**
- * A Counter that ignores input
- * User: jeichar
- * Date: 4/3/12
- * Time: 11:55 AM
+ * A Counter that ignores input User: jeichar Date: 4/3/12 Time: 11:55 AM
  */
 public class DummyCounter extends Counter {
     public static final Counter INSTANCE = new DummyCounter();

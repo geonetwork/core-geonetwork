@@ -29,14 +29,14 @@ import org.fao.geonet.domain.statistic.SearchRequest_;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+
 import java.util.Collection;
 
 /**
- * Specifications for making queries on {@link org.fao.geonet.domain.statistic.SearchRequest} Entities.
+ * Specifications for making queries on {@link org.fao.geonet.domain.statistic.SearchRequest}
+ * Entities.
  * <p/>
- * User: Jesse
- * Date: 10/2/13
- * Time: 7:37 AM
+ * User: Jesse Date: 10/2/13 Time: 7:37 AM
  */
 public final class SearchRequestParamSpecs {
     private SearchRequestParamSpecs() {

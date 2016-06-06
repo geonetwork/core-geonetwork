@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.z3950Config;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -43,113 +44,108 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
-public class Z3950Config
-{
+public class Z3950Config {
     private final AtomicBoolean cancelMonitor;
     //--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
+    private Logger log;
 
-	public Z3950Config(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, XmlRequest req, Z3950ConfigParams params)
-	{
+    //--------------------------------------------------------------------------
+    //---
+    //--- Configer method
+    //---
+    //--------------------------------------------------------------------------
+    private ServiceContext context;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    //--- Clear Z3950 Config from JZKitConfig.xml.tem
+    //--------------------------------------------------------------------------
+    private XmlRequest request;
+
+    //--------------------------------------------------------------------------
+    //--- Add new config to JZKitConfig.xml.tem
+    //--------------------------------------------------------------------------
+    private Z3950ConfigParams params;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //--------------------------------------------------------------------------
+    private SchemaManager schemaMan;
+    private HarvestResult result;
+    public Z3950Config(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, XmlRequest req, Z3950ConfigParams params) {
         this.cancelMonitor = cancelMonitor;
-		this.log     = log;
-		this.context = context;
-		this.request = req;
-		this.params  = params;
+        this.log = log;
+        this.context = context;
+        this.request = req;
+        this.params = params;
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		schemaMan = gc.getBean(SchemaManager.class);
-		result  = new HarvestResult();
-	}
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        schemaMan = gc.getBean(SchemaManager.class);
+        result = new HarvestResult();
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Configer method
-	//---
-	//--------------------------------------------------------------------------
+    public HarvestResult config(Set<RecordInfo> records) throws Exception {
+        log.info("Start of Z3950 Config Harvest for : " + params.getName());
 
-	public HarvestResult config(Set<RecordInfo> records) throws Exception
-	{
-		log.info("Start of Z3950 Config Harvest for : "+ params.getName());
+        if (params.clearConfig) clearZ3950Config();
 
-		if (params.clearConfig) clearZ3950Config();
+        //-----------------------------------------------------------------------
+        //--- for each metadata returned by search, extract info and place in
+        //--- JZKitConfig.xml.tem
 
-		//-----------------------------------------------------------------------
-		//--- for each metadata returned by search, extract info and place in
-		//--- JZKitConfig.xml.tem
-
-		for(RecordInfo ri : records) {
+        for (RecordInfo ri : records) {
             if (cancelMonitor.get()) {
                 return this.result;
             }
 
             result.totalMetadata++;
 
-			// get metadata from remote geonetwork machine (assume local for now)
-			addServerToZ3950Config(ri.uuid);
-		}
+            // get metadata from remote geonetwork machine (assume local for now)
+            addServerToZ3950Config(ri.uuid);
+        }
 
-		log.info("End of Z3950 Config Harvest for : "+ params.getName());
+        log.info("End of Z3950 Config Harvest for : " + params.getName());
 
-		return result;
-	}
+        return result;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods 
-	//---
-	//--------------------------------------------------------------------------
+    private void clearZ3950Config() {
+        Repositories.clearTemplate(context);
+    }
 
-	//--------------------------------------------------------------------------
-	//--- Clear Z3950 Config from JZKitConfig.xml.tem
-	//--------------------------------------------------------------------------
+    private void addServerToZ3950Config(String uuid) throws Exception {
 
-	private void clearZ3950Config() {
-		Repositories.clearTemplate(context);
-	}
+        request.clearParams();
+        request.addParam("uuid", uuid);
+        request.setAddress(context.getBaseUrl() + "/" + Jeeves.Prefix.SERVICE + "/en/" + Geonet.Service.XML_METADATA_GET);
+        Element md = request.execute();
 
-	//--------------------------------------------------------------------------
-	//--- Add new config to JZKitConfig.xml.tem
-	//--------------------------------------------------------------------------
-	
-	private void addServerToZ3950Config(String uuid) throws Exception {
+        // detect the schema
+        String schema = schemaMan.autodetectSchema(md);
 
-		request.clearParams();
-		request.addParam("uuid",   uuid);
-		request.setAddress(context.getBaseUrl() +"/"+ Jeeves.Prefix.SERVICE +"/en/" + Geonet.Service.XML_METADATA_GET);
-		Element md = request.execute();
+        Path convert19119ToJZKitRepo = schemaMan.getSchemaDir(schema).resolve(Geonet.Path.ISO19119TOJZKIT_STYLESHEET);
 
-		// detect the schema
-		String schema = schemaMan.autodetectSchema(md);
-
-		Path convert19119ToJZKitRepo = schemaMan.getSchemaDir(schema).resolve(Geonet.Path.ISO19119TOJZKIT_STYLESHEET);
-
-		if (Files.exists(convert19119ToJZKitRepo)) {
-			Element repoElem = Xml.transform(md, convert19119ToJZKitRepo);
-			if (repoElem.getName().equals("Repository")) {
-				Repositories.addRepo(context, uuid, repoElem);
-				result.addedMetadata++;
-			} else {
-				result.incompatibleMetadata++;
-			}
-		} else {
-			result.incompatibleMetadata++;
-		}
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//--------------------------------------------------------------------------
-
-	private Logger         log;
-	private ServiceContext context;
-	private XmlRequest     request;
-	private Z3950ConfigParams   params;
-	private SchemaManager  schemaMan;
-	private HarvestResult   result;
+        if (Files.exists(convert19119ToJZKitRepo)) {
+            Element repoElem = Xml.transform(md, convert19119ToJZKitRepo);
+            if (repoElem.getName().equals("Repository")) {
+                Repositories.addRepo(context, uuid, repoElem);
+                result.addedMetadata++;
+            } else {
+                result.incompatibleMetadata++;
+            }
+        } else {
+            result.incompatibleMetadata++;
+        }
+    }
 }

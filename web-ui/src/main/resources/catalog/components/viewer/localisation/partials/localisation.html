@@ -18,7 +18,8 @@
     <h5 ng-if="results.length>0" data-translate="">Results</h5>
     <ul class="loc-geonames list-group">
       <li data-ng-repeat="loc in results" class="list-group-item">
-      <a href="" data-ng-click="locCtrl.onClick(loc, map)">{{loc.name}} <em>{{loc.formattedName}}</em></a>
+        <a href="" data-ng-click="locCtrl.onClick(loc, map)">{{loc.name}}
+          <em>{{loc.formattedName}}</em></a>
       </li>
     </ul>
   </div>

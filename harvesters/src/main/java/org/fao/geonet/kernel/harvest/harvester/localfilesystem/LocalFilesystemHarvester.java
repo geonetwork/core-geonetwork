@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
 import com.google.common.collect.Lists;
+
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Logger;
@@ -61,116 +62,115 @@ import java.util.UUID;
 
 /**
  * Harvester for local filesystem.
- * 
- * @author heikki doeleman
  *
+ * @author heikki doeleman
  */
 public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
-	
-	//FIXME Put on a different file?
-	private LocalFilesystemParams params;
 
-	
-	@Override
-	protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
-		LocalFilesystemParams lp = (LocalFilesystemParams) params;
+    //FIXME Put on a different file?
+    private LocalFilesystemParams params;
+
+
+    @Override
+    protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
+        LocalFilesystemParams lp = (LocalFilesystemParams) params;
         super.setParams(lp);
-        
-        settingMan.add( "id:"+siteId, "icon", lp.icon);
-		settingMan.add( "id:"+siteId, "recurse", lp.recurse);
-        settingMan.add( "id:"+siteId, "directory", lp.directoryname);
-        settingMan.add( "id:"+siteId, "recordType", lp.recordType);
-		settingMan.add( "id:"+siteId, "nodelete", lp.nodelete);
-        settingMan.add( "id:"+siteId, "checkFileLastModifiedForUpdate", lp.checkFileLastModifiedForUpdate);
-	}
 
-	@Override
-	protected String doAdd(Element node) throws BadInputEx, SQLException {
-		params = new LocalFilesystemParams(dataMan);
+        settingMan.add("id:" + siteId, "icon", lp.icon);
+        settingMan.add("id:" + siteId, "recurse", lp.recurse);
+        settingMan.add("id:" + siteId, "directory", lp.directoryname);
+        settingMan.add("id:" + siteId, "recordType", lp.recordType);
+        settingMan.add("id:" + siteId, "nodelete", lp.nodelete);
+        settingMan.add("id:" + siteId, "checkFileLastModifiedForUpdate", lp.checkFileLastModifiedForUpdate);
+    }
+
+    @Override
+    protected String doAdd(Element node) throws BadInputEx, SQLException {
+        params = new LocalFilesystemParams(dataMan);
         super.setParams(params);
 
         //--- retrieve/initialize information
-		params.create(node);
-		
-		//--- force the creation of a new uuid
-		params.setUuid(UUID.randomUUID().toString());
-		
-		String id = settingMan.add( "harvesting", "node", getType());
-		storeNode( params, "id:"+id);
+        params.create(node);
+
+        //--- force the creation of a new uuid
+        params.setUuid(UUID.randomUUID().toString());
+
+        String id = settingMan.add("harvesting", "node", getType());
+        storeNode(params, "id:" + id);
 
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
-        	
-		return id;
-	}
 
-	/**
-	 * Aligns new results from filesystem harvesting. Contrary to practice in e.g. CSW Harvesting,
-	 * files removed from the harvesting source are NOT removed from the database. Also, no checks
-	 * on modification date are done; the result gets inserted or replaced if the result appears to
-	 * be in a supported schema.
+        return id;
+    }
+
+    /**
+     * Aligns new results from filesystem harvesting. Contrary to practice in e.g. CSW Harvesting,
+     * files removed from the harvesting source are NOT removed from the database. Also, no checks
+     * on modification date are done; the result gets inserted or replaced if the result appears to
+     * be in a supported schema.
      *
      * @param root the directory to visit
-	 * @throws Exception
-	 */
-	private HarvestResult align(Path root) throws Exception {
-		log.debug("Start of alignment for : " + params.getName());
-		final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, log, this);
-		if (params.recurse) {
-			Files.walkFileTree(root, visitor);
-		} else {
-			try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
-				for (Path path : paths) {
-					if (path != null && Files.isRegularFile(path)) {
-						visitor.visitFile(path, Files.readAttributes(path, BasicFileAttributes.class));
-					}
-				}
-			}
-		}
-		result = visitor.getResult();
+     */
+    private HarvestResult align(Path root) throws Exception {
+        log.debug("Start of alignment for : " + params.getName());
+        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, log, this);
+        if (params.recurse) {
+            Files.walkFileTree(root, visitor);
+        } else {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
+                for (Path path : paths) {
+                    if (path != null && Files.isRegularFile(path)) {
+                        visitor.visitFile(path, Files.readAttributes(path, BasicFileAttributes.class));
+                    }
+                }
+            }
+        }
+        result = visitor.getResult();
         log.debug(String.format("Scan directory is done. %d files analyzed.",
-                result.totalMetadata));
+            result.totalMetadata));
         Set<Integer> idsForHarvestingResult = visitor.getListOfRecords();
-		Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
+        Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
 
-		if (!params.nodelete) {
+        if (!params.nodelete) {
             log.debug("Starting to delete locally existing metadata " +
-                    "from the same source if they " +
-                    " were not in this harvesting result...");
+                "from the same source if they " +
+                " were not in this harvesting result...");
             List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
             for (Integer existingId : existingMetadata) {
 
-				if (cancelMonitor.get()) {
-					return this.result;
-				}
+                if (cancelMonitor.get()) {
+                    return this.result;
+                }
                 if (!idsResultHs.contains(existingId)) {
                     log.debug("  Removing: " + existingId);
                     dataMan.deleteMetadata(context, existingId.toString());
                     result.locallyRemoved++;
-				}
-			}
-		}
+                }
+            }
+        }
 
         log.debug("Starting indexing in batch thread pool...");
 
         List<Integer> listOfRecordsToIndex = Lists.newArrayList(visitor.getListOfRecordsToIndex());
         log.debug(String.format(
-                        "Starting indexing in batch thread pool of %d updated records ...",
-                        listOfRecordsToIndex.size()));
+            "Starting indexing in batch thread pool of %d updated records ...",
+            listOfRecordsToIndex.size()));
         dataMan.batchIndexInThreadPool(context, listOfRecordsToIndex);
-		
-        log.debug("End of alignment for : " + params.getName());
-		return result;
-	}
 
-	void updateMetadata(Element xml, final String id, GroupMapper localGroups,
-            final CategoryMapper localCateg, String changeDate, BaseAligner aligner) throws Exception {
-		updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner, true);
-	}
-	void updateMetadata(Element xml, final String id, GroupMapper localGroups,
+        log.debug("End of alignment for : " + params.getName());
+        return result;
+    }
+
+    void updateMetadata(Element xml, final String id, GroupMapper localGroups,
+                        final CategoryMapper localCateg, String changeDate, BaseAligner aligner) throws Exception {
+        updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner, true);
+    }
+
+    void updateMetadata(Element xml, final String id, GroupMapper localGroups,
                         final CategoryMapper localCateg, String changeDate, BaseAligner aligner, boolean indexAfterUpdate) throws Exception {
-		log.debug("  - Updating metadata with id: "+ id);
+        log.debug("  - Updating metadata with id: " + id);
 
         //
         // update metadata
@@ -179,7 +179,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         String language = context.getLanguage();
 
         final Metadata metadata = dataMan.updateMetadata(context, id, xml, false, false, false, language, changeDate,
-                true);
+            true);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
@@ -193,48 +193,42 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         if (indexAfterUpdate == true) {
             dataMan.indexMetadata(id, true);
         }
-	}
+    }
 
-	
-	/**
-	 * Inserts a metadata into the database. If index param is true, Lucene index is updated after insertion,
-	 * else the indexation step is skipped
-	 * @param xml
-	 * @param uuid
-	 * @param schema
-	 * @param localGroups
-	 * @param localCateg
-	 * @param createDate TODO
-	 * @param aligner
-     * @throws Exception
-	 */
-	String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
-            String createDate, BaseAligner aligner) throws Exception {
-		return addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner, true);
-	}
-	
+
+    /**
+     * Inserts a metadata into the database. If index param is true, Lucene index is updated after
+     * insertion, else the indexation step is skipped
+     *
+     * @param createDate TODO
+     */
+    String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
+                       String createDate, BaseAligner aligner) throws Exception {
+        return addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner, true);
+    }
+
     String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
                        String createDate, BaseAligner aligner, boolean index) throws Exception {
-		log.debug("  - Adding metadata with remote uuid: "+ uuid);
+        log.debug("  - Adding metadata with remote uuid: " + uuid);
 
-		
+
         //
         // insert metadata
         //
         Metadata metadata = new Metadata().setUuid(uuid);
         metadata.getDataInfo().
-                setSchemaId(schema).
-                setRoot(xml.getQualifiedName()).
-                setType(MetadataType.lookup(params.recordType)).
-                setCreateDate(new ISODate(createDate)).
-                setChangeDate(new ISODate(createDate));
+            setSchemaId(schema).
+            setRoot(xml.getQualifiedName()).
+            setType(MetadataType.lookup(params.recordType)).
+            setCreateDate(new ISODate(createDate)).
+            setChangeDate(new ISODate(createDate));
         metadata.getSourceInfo().
-                setSourceId(params.getUuid()).
-                setOwner(Integer.parseInt(params.getOwnerId())).
-                setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
+            setSourceId(params.getUuid()).
+            setOwner(Integer.parseInt(params.getOwnerId())).
+            setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         metadata.getHarvestInfo().
-                setHarvested(true).
-                setUuid(params.getUuid());
+            setHarvested(true).
+            setUuid(params.getUuid());
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
@@ -247,47 +241,47 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         dataMan.flush();
 
         if (index) {
-          dataMan.indexMetadata(id, true);
+            dataMan.indexMetadata(id, true);
         }
-		return id;
+        return id;
     }
 
-	@Override
+    @Override
     public void doHarvest(Logger l) throws Exception {
-		log.debug("LocalFilesystem doHarvest: top directory is " + params.directoryname + ", recurse is " + params.recurse);
-		Path directory = IO.toPath(params.directoryname);
-		this.result = align(directory);
-	}
+        log.debug("LocalFilesystem doHarvest: top directory is " + params.directoryname + ", recurse is " + params.recurse);
+        Path directory = IO.toPath(params.directoryname);
+        this.result = align(directory);
+    }
 
-	@Override
-	protected void doInit(Element entry, ServiceContext context) throws BadInputEx {
-		params = new LocalFilesystemParams(dataMan);
+    @Override
+    protected void doInit(Element entry, ServiceContext context) throws BadInputEx {
+        params = new LocalFilesystemParams(dataMan);
         super.setParams(params);
         params.create(entry);
-	}
+    }
 
-	@Override
-	protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
-		LocalFilesystemParams copy = params.copy();
+    @Override
+    protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
+        LocalFilesystemParams copy = params.copy();
 
-		//--- update variables
-		copy.update(node);
+        //--- update variables
+        copy.update(node);
 
-		String path = "harvesting/id:"+ id;
+        String path = "harvesting/id:" + id;
 
-		settingMan.removeChildren(path);
+        settingMan.removeChildren(path);
 
-		//--- update database
-		storeNode(copy, path);
+        //--- update database
+        storeNode(copy, path);
 
-		//--- we update a copy first because if there is an exception LocalFilesystemParams
-		//--- could be half updated and so it could be in an inconsistent state
+        //--- we update a copy first because if there is an exception LocalFilesystemParams
+        //--- could be half updated and so it could be in an inconsistent state
 
         Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
-		
-		params = copy;
+
+        params = copy;
         super.setParams(params);
 
     }

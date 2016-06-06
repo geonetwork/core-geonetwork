@@ -24,6 +24,7 @@
 package org.fao.geonet.component.csw;
 
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
@@ -68,7 +69,7 @@ import java.util.*;
 /**
  * See OGC 07-006 and OGC 07-045.
  */
-@Component(CatalogService.BEAN_PREFIX+GetRecords.NAME)
+@Component(CatalogService.BEAN_PREFIX + GetRecords.NAME)
 public class GetRecords extends AbstractOperation implements CatalogService {
 
     static final String NAME = "GetRecords";
@@ -84,7 +85,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     //---
     //---------------------------------------------------------------------------
 
-	private SearchController _searchController;
+    private SearchController _searchController;
     @Autowired
     private CatalogConfiguration _catalogConfig;
     @Autowired
@@ -92,24 +93,29 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
     @Autowired
     private SchemaManager _schemaManager;
+
     @Autowired
-	public GetRecords(ApplicationContext context) {
-    	_searchController = new SearchController(context);
+    public GetRecords(ApplicationContext context) {
+        _searchController = new SearchController(context);
     }
 
     /**
      * @return
      */
-	public SearchController getSearchController() {
-		return _searchController;
-	};
-	
+    public SearchController getSearchController() {
+        return _searchController;
+    }
+
+    ;
+
     //---------------------------------------------------------------------------
     //---
     //--- API methods
     //---
     //---------------------------------------------------------------------------
-    public String getName() { return NAME; }
+    public String getName() {
+        return NAME;
+    }
 
     /**
      *
@@ -120,14 +126,14 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      */
     public Element execute(Element request, ServiceContext context) throws CatalogException {
         String timeStamp = new ISODate().toString();
-        
+
         // Return exception is indexing.
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataManager = gc.getBean(DataManager.class);
         if (dataManager.isIndexing()) {
             throw new RuntimeException("Catalog is indexing records, retry later.");
         }
-        
+
         //
         // some validation checks (note: this is not an XSD validation)
         //
@@ -170,7 +176,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         // and checks whether its values are not other than csw:Record or gmd:MD_Metadata. If both are sent,
         // gmd:MD_Metadata is preferred.
         final SettingInfo settingInfo = context.getBean(SearchManager.class).getSettingInfo();
-        String typeName = checkTypenames(query,settingInfo.getInspireEnabled());
+        String typeName = checkTypenames(query, settingInfo.getInspireEnabled());
 
         // set of elementnames or null
         Set<String> elemNames = getElementNames(query);
@@ -183,15 +189,15 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         //
         // no ElementNames requested: use ElementSetName
         //
-        if((elemNames == null)) {
-            setName = getElementSetName(query , ElementSetName.SUMMARY);
+        if ((elemNames == null)) {
+            setName = getElementSetName(query, ElementSetName.SUMMARY);
             // elementsetname is FULL: use customized elementset if defined
-            if(setName.equals(ElementSetName.FULL)) {
+            if (setName.equals(ElementSetName.FULL)) {
                 final List<CustomElementSet> customElementSets = context.getBean(CustomElementSetRepository.class).findAll();
                 // custom elementset defined
-                if(!CollectionUtils.isEmpty(customElementSets)) {
+                if (!CollectionUtils.isEmpty(customElementSets)) {
                     elemNames = new HashSet<String>();
-                    for(CustomElementSet customElementSet : customElementSets) {
+                    for (CustomElementSet customElementSet : customElementSets) {
                         elemNames.add(customElementSet.getXpath());
                     }
                 }
@@ -215,42 +221,40 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
         Element response;
 
-        if(resultType == ResultType.VALIDATE) {
+        if (resultType == ResultType.VALIDATE) {
             //String schema = context.getAppPath() + Geonet.Path.VALIDATION + "csw/2.0.2/csw-2.0.2.xsd";
             Path schema = context.getAppPath().resolve(Geonet.Path.VALIDATION).resolve("csw202_apiso100/csw/2.0.2/CSW-discovery.xsd");
 
-            if(Log.isDebugEnabled(Geonet.CSW))
+            if (Log.isDebugEnabled(Geonet.CSW))
                 Log.debug(Geonet.CSW, "Validating request against " + schema);
             try {
                 Xml.validate(schema, request);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new NoApplicableCodeEx("Request failed validation:" + e.toString());
             }
 
             response = new Element("Acknowledgement", Csw.NAMESPACE_CSW);
-            response.setAttribute("timeStamp",timeStamp);
+            response.setAttribute("timeStamp", timeStamp);
 
             Element echoedRequest = new Element("EchoedRequest", Csw.NAMESPACE_CSW);
             echoedRequest.addContent(request);
 
             response.addContent(echoedRequest);
-        }
-        else {
-            response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
+        } else {
+            response = new Element(getName() + "Response", Csw.NAMESPACE_CSW);
 
-            Attribute schemaLocation = new Attribute("schemaLocation","http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd",Csw.NAMESPACE_XSI);
+            Attribute schemaLocation = new Attribute("schemaLocation", "http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd", Csw.NAMESPACE_XSI);
             response.setAttribute(schemaLocation);
 
             Element status = new Element("SearchStatus", Csw.NAMESPACE_CSW);
-            status.setAttribute("timestamp",timeStamp);
+            status.setAttribute("timestamp", timeStamp);
 
             response.addContent(status);
 
             String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
 
             Pair<Element, Element> search = _searchController.search(context, startPos, maxRecords, resultType, outSchema,
-                    setName, filterExpr, filterVersion, sort, elemNames, typeName, maxHitsInSummary, cswServiceSpecificContraint, elementnameStrategy);
+                setName, filterExpr, filterVersion, sort, elemNames, typeName, maxHitsInSummary, cswServiceSpecificContraint, elementnameStrategy);
 
             // Only add GeoNetwork summary on results_with_summary option
             if (resultType == ResultType.RESULTS_WITH_SUMMARY) {
@@ -264,41 +268,37 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
     /**
      * TODO javadoc.
-     *
-     * @param params
-     * @return
-     * @throws CatalogException
      */
     public Element adaptGetRequest(Map<String, String> params) throws CatalogException {
-        String service      = params.get("service");
-        String version      = params.get("version");
-        String resultType   = params.get("resulttype");
+        String service = params.get("service");
+        String version = params.get("version");
+        String resultType = params.get("resulttype");
         String outputFormat = params.get("outputformat");
         String outputSchema = params.get("outputschema");
-        String startPosition= params.get("startposition");
-        String maxRecords   = params.get("maxrecords");
-        String hopCount     = params.get("hopcount");
-        String distribSearch= params.get("distributedsearch");
-        String typeNames    = params.get("typenames");
-        String elemSetName  = params.get("elementsetname");
-        String elemName     = params.get("elementname");
-        String constraint   = params.get("constraint");
-        String constrLang   = params.get("constraintlanguage");
-        String constrLangVer= params.get("constraint_language_version");
-        String sortby       = params.get("sortby");
-        String elementnameStrategy       = params.get("elementnamestrategy");
+        String startPosition = params.get("startposition");
+        String maxRecords = params.get("maxrecords");
+        String hopCount = params.get("hopcount");
+        String distribSearch = params.get("distributedsearch");
+        String typeNames = params.get("typenames");
+        String elemSetName = params.get("elementsetname");
+        String elemName = params.get("elementname");
+        String constraint = params.get("constraint");
+        String constrLang = params.get("constraintlanguage");
+        String constrLangVer = params.get("constraint_language_version");
+        String sortby = params.get("sortby");
+        String elementnameStrategy = params.get("elementnamestrategy");
 
         //--- build POST request
 
         Element request = new Element(getName(), Csw.NAMESPACE_CSW);
 
-        setAttrib(request, "service",       service);
-        setAttrib(request, "version",       version);
-        setAttrib(request, "resultType",    resultType);
-        setAttrib(request, "outputFormat",  outputFormat);
-        setAttrib(request, "outputSchema",  outputSchema);
+        setAttrib(request, "service", service);
+        setAttrib(request, "version", version);
+        setAttrib(request, "resultType", resultType);
+        setAttrib(request, "outputFormat", outputFormat);
+        setAttrib(request, "outputSchema", outputSchema);
         setAttrib(request, "startPosition", startPosition);
-        setAttrib(request, "maxRecords",    maxRecords);
+        setAttrib(request, "maxRecords", maxRecords);
 
         if (distribSearch != null && distribSearch.equals("true")) {
             Element ds = new Element("DistributedSearch", Csw.NAMESPACE_CSW);
@@ -315,12 +315,12 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         Element query = new Element("Query", Csw.NAMESPACE_CSW);
         request.addContent(query);
 
-        if(elementnameStrategy != null) {
+        if (elementnameStrategy != null) {
             setAttrib(query, "elementnamestrategy", elementnameStrategy);
         }
 
         if (typeNames != null) {
-            setAttrib(query, "typeNames", typeNames.replace(',',' '));
+            setAttrib(query, "typeNames", typeNames.replace(',', ' '));
         }
         //--- these 2 are in mutual exclusion
 
@@ -336,12 +336,10 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
             if (language == ConstraintLanguage.CQL) {
                 addElement(constr, "CqlText", constraint);
-            }
-            else {
+            } else {
                 try {
                     constr.addContent(Xml.loadString(constraint, false));
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     throw new NoApplicableCodeEx("Constraint is not a valid xml");
                 }
@@ -357,15 +355,15 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
             StringTokenizer st = new StringTokenizer(sortby, ",");
             while (st.hasMoreTokens()) {
-                String  sortInfo = st.nextToken();
-                String  field    = sortInfo.substring(0, sortInfo.length() -2);
-                boolean ascen    = sortInfo.endsWith(":A");
+                String sortInfo = st.nextToken();
+                String field = sortInfo.substring(0, sortInfo.length() - 2);
+                boolean ascen = sortInfo.endsWith(":A");
 
                 Element sortProp = new Element("SortProperty", Csw.NAMESPACE_OGC);
                 sortBy.addContent(sortProp);
 
-                Element propName  = new Element("PropertyName", Csw.NAMESPACE_OGC).setText(field);
-                Element sortOrder = new Element("SortOrder",    Csw.NAMESPACE_OGC).setText(ascen ? "ASC" : "DESC");
+                Element propName = new Element("PropertyName", Csw.NAMESPACE_OGC).setText(field);
+                Element sortOrder = new Element("SortOrder", Csw.NAMESPACE_OGC).setText(ascen ? "ASC" : "DESC");
 
                 sortProp.addContent(propName);
                 sortProp.addContent(sortOrder);
@@ -377,25 +375,21 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
     /**
      * TODO javadoc.
-     *
-     * @param parameterName
-     * @return
-     * @throws CatalogException
      */
     public Element retrieveValues(String parameterName) throws CatalogException {
-		
-    	Element listOfValues = null;
-    	if (parameterName.equalsIgnoreCase("resultType")
-				|| parameterName.equalsIgnoreCase("outputFormat")
-				|| parameterName.equalsIgnoreCase("elementSetName")
-				|| parameterName.equalsIgnoreCase("outputSchema")
-				|| parameterName.equalsIgnoreCase("typenames"))
-			listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
-    	
-    	// Handle resultType parameter
-    	if (parameterName.equalsIgnoreCase("resultType")) {
-    		List<Element> values = new ArrayList<Element>();
-    		ResultType[] resultType = ResultType.values();
+
+        Element listOfValues = null;
+        if (parameterName.equalsIgnoreCase("resultType")
+            || parameterName.equalsIgnoreCase("outputFormat")
+            || parameterName.equalsIgnoreCase("elementSetName")
+            || parameterName.equalsIgnoreCase("outputSchema")
+            || parameterName.equalsIgnoreCase("typenames"))
+            listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
+
+        // Handle resultType parameter
+        if (parameterName.equalsIgnoreCase("resultType")) {
+            List<Element> values = new ArrayList<Element>();
+            ResultType[] resultType = ResultType.values();
             for (ResultType aResultType : resultType) {
                 String value = aResultType.toString();
                 values.add(new Element("Value", Csw.NAMESPACE_CSW).setText(value));
@@ -404,11 +398,11 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 listOfValues.addContent(values);
             }
         }
-    	
-    	// Handle elementSetName parameter
-    	if (parameterName.equalsIgnoreCase("elementSetName")) {
-    		List<Element> values = new ArrayList<Element>();
-    		ElementSetName[] esn = ElementSetName.values();
+
+        // Handle elementSetName parameter
+        if (parameterName.equalsIgnoreCase("elementSetName")) {
+            List<Element> values = new ArrayList<Element>();
+            ElementSetName[] esn = ElementSetName.values();
             for (ElementSetName anEsn : esn) {
                 String value = anEsn.toString();
                 values.add(new Element("Value", Csw.NAMESPACE_CSW).setText(value));
@@ -417,39 +411,39 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 listOfValues.addContent(values);
             }
         }
-    	
-    	// Handle outputFormat parameter
-		if (parameterName.equalsIgnoreCase("outputformat")) {
-			Set<String> formats = _catalogConfig
-					.getGetRecordsOutputFormat();
-			List<Element> values = createValuesElement(formats);
-            if (listOfValues != null) {
-                listOfValues.addContent(values);
-            }
-        }
-    	
-		// Handle outputSchema parameter
-		if (parameterName.equalsIgnoreCase("outputSchema")) {
-			Set<String> namespacesUri = _catalogConfig
-					.getGetRecordsOutputSchema();
-			List<Element> values = createValuesElement(namespacesUri);
+
+        // Handle outputFormat parameter
+        if (parameterName.equalsIgnoreCase("outputformat")) {
+            Set<String> formats = _catalogConfig
+                .getGetRecordsOutputFormat();
+            List<Element> values = createValuesElement(formats);
             if (listOfValues != null) {
                 listOfValues.addContent(values);
             }
         }
 
-		// Handle typenames parameter
-		if (parameterName.equalsIgnoreCase("typenames")) {
-			Set<String> typenames = _catalogConfig
-					.getGetRecordsTypenames();
-			List<Element> values = createValuesElement(typenames);
+        // Handle outputSchema parameter
+        if (parameterName.equalsIgnoreCase("outputSchema")) {
+            Set<String> namespacesUri = _catalogConfig
+                .getGetRecordsOutputSchema();
+            List<Element> values = createValuesElement(namespacesUri);
             if (listOfValues != null) {
                 listOfValues.addContent(values);
             }
         }
-		
-    	return listOfValues;
-	}
+
+        // Handle typenames parameter
+        if (parameterName.equalsIgnoreCase("typenames")) {
+            Set<String> typenames = _catalogConfig
+                .getGetRecordsTypenames();
+            List<Element> values = createValuesElement(typenames);
+            if (listOfValues != null) {
+                listOfValues.addContent(values);
+            }
+        }
+
+        return listOfValues;
+    }
 
     //---------------------------------------------------------------------------
     //---
@@ -460,13 +454,13 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     /**
      * GeoNetwork only supports default value for outputFormat.
      *
-     * OGC 07-006:
-     * The only value that is required to be supported is application/xml. Other supported values may include text/html
-     * and text/plain. Cardinality: Zero or one (Optional). Default value is application/xml.
+     * OGC 07-006: The only value that is required to be supported is application/xml. Other
+     * supported values may include text/html and text/plain. Cardinality: Zero or one (Optional).
+     * Default value is application/xml.
      *
-     * In the case where the output format is application/xml, the CSW shall generate an XML document that validates
-     * against a schema document that is specified in the output document via the xsi:schemaLocation attribute defined
-     * in XML.
+     * In the case where the output format is application/xml, the CSW shall generate an XML
+     * document that validates against a schema document that is specified in the output document
+     * via the xsi:schemaLocation attribute defined in XML.
      *
      * @param request GetRecords request
      * @throws InvalidParameterValueEx hmm
@@ -475,8 +469,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         String format = request.getAttributeValue("outputFormat");
         if (format != null && !format.equals(defaultOutputFormat)) {
             throw new InvalidParameterValueEx("outputFormat", format);
-        }
-        else {
+        } else {
             return defaultOutputFormat;
         }
     }
@@ -486,43 +479,46 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      *
      * The OGC 07-045 spec is more restrictive than OGC 07-006.
      *
-     * OGC 07-006 10.8.4.8:
-     * The typeNames parameter is a list of one or more names of queryable entities in the catalogue's information model
-     * that may be constrained in the predicate of the query. In the case of XML realization of the OGC core metadata
-     * properties (Subclause 10.2.5), the element csw:Record is the only queryable entity. Other information models may
-     * include more than one queryable component. For example, queryable components for the XML realization of the ebRIM
-     * include rim:Service, rim:ExtrinsicObject and rim:Association. In such cases the application profile shall
-     * describe how multiple typeNames values should be processed.
-     * In addition, all or some of the these queryable entity names may be specified in the query to define which
-     * metadata record elements the query should present in the response to the GetRecords operation.
+     * OGC 07-006 10.8.4.8: The typeNames parameter is a list of one or more names of queryable
+     * entities in the catalogue's information model that may be constrained in the predicate of the
+     * query. In the case of XML realization of the OGC core metadata properties (Subclause 10.2.5),
+     * the element csw:Record is the only queryable entity. Other information models may include
+     * more than one queryable component. For example, queryable components for the XML realization
+     * of the ebRIM include rim:Service, rim:ExtrinsicObject and rim:Association. In such cases the
+     * application profile shall describe how multiple typeNames values should be processed. In
+     * addition, all or some of the these queryable entity names may be specified in the query to
+     * define which metadata record elements the query should present in the response to the
+     * GetRecords operation.
      *
-     * OGC 07-045 8.2.2.1.1:
-     * Mandatory: Must support *one* of â€œcsw:Recordâ€� or â€œgmd:MD_Metadataâ€� in a query. Default value is â€œcsw:Recordâ€�.
+     * OGC 07-045 8.2.2.1.1: Mandatory: Must support *one* of â€œcsw:Recordâ€� or
+     * â€œgmd:MD_Metadataâ€� in a query. Default value is â€œcsw:Recordâ€�.
      *
      * (note how OGC 07-045 mixes up a mandatory parameter that has a default value !!)
      *
-     * We'll go for the default value option rather than the mandatory-ness. So: if typeNames is not present or empty,
-     * "csw:Record" is used.
+     * We'll go for the default value option rather than the mandatory-ness. So: if typeNames is not
+     * present or empty, "csw:Record" is used.
      *
-     * If the request does not contain exactly one (or comma-separated, both) of the values specified in OGC 07-045,
-     * an exception is thrown. If both are present "gmd:MD_Metadata" is preferred.
+     * If the request does not contain exactly one (or comma-separated, both) of the values
+     * specified in OGC 07-045, an exception is thrown. If both are present "gmd:MD_Metadata" is
+     * preferred.
      *
-     * @param query query element
-     * @param isStrict enable strict error message to comply with GDI-DE Testsuite test csw:InterfaceBindings.GetRecords-InvalidRequest
+     * @param query    query element
+     * @param isStrict enable strict error message to comply with GDI-DE Testsuite test
+     *                 csw:InterfaceBindings.GetRecords-InvalidRequest
      * @return typeName
      * @throws MissingParameterValueEx if typeNames is missing
      * @throws InvalidParameterValueEx if typeNames does not have one of the mandated values
      */
     private String checkTypenames(Element query, boolean isStrict) throws MissingParameterValueEx, InvalidParameterValueEx {
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+        if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
             Log.debug(Geonet.CSW_SEARCH, "checking typenames in query:\n" + Xml.getString(query));
         }
         //
         // get the prefix used for CSW namespace used in this input document
         //
         String cswPrefix = getPrefixForNamespace(query, Csw.NAMESPACE_CSW);
-        if(cswPrefix == null) {
-            if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+        if (cswPrefix == null) {
+            if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
                 Log.debug(Geonet.CSW_SEARCH, "checktypenames: csw prefix not found, using " + Csw.NAMESPACE_CSW.getPrefix());
             }
             cswPrefix = Csw.NAMESPACE_CSW.getPrefix();
@@ -531,22 +527,22 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         // get the prefix used for GMD namespace used in this input document
         //
         String gmdPrefix = getPrefixForNamespace(query, Csw.NAMESPACE_GMD);
-        if(gmdPrefix == null) {
-            if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+        if (gmdPrefix == null) {
+            if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
                 Log.debug(Geonet.CSW_SEARCH, "checktypenames: gmd prefix not found, using " + Csw.NAMESPACE_GMD.getPrefix());
             }
             gmdPrefix = Csw.NAMESPACE_GMD.getPrefix();
         }
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+        if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
             Log.debug(Geonet.CSW_SEARCH, "checktypenames: csw prefix set to " + cswPrefix + ", gmd prefix set to " + gmdPrefix);
         }
 
         Attribute typeNames = query.getAttribute("typeNames", query.getNamespace());
         typeNames = query.getAttribute("typeNames");
-        if(typeNames != null) {
+        if (typeNames != null) {
             String typeNamesValue = typeNames.getValue();
             // empty typenames element
-            if(StringUtils.isEmpty(typeNamesValue)) {
+            if (StringUtils.isEmpty(typeNamesValue)) {
                 return cswPrefix + ":Record";
             }
             // not empty: scan space-separated string
@@ -554,30 +550,30 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             Scanner spaceScanner = new Scanner(typeNamesValue);
             spaceScanner.useDelimiter(" ");
             String result = cswPrefix + ":Record";
-            while(spaceScanner.hasNext()) {
+            while (spaceScanner.hasNext()) {
                 String typeName = spaceScanner.next();
                 typeName = typeName.trim();
-                if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+                if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
                     Log.debug(Geonet.CSW_SEARCH, "checking typename in query:" + typeName);
                 }
 
-                if(!_schemaManager.getListOfTypeNames().contains(typeName)) {
-                throw new InvalidParameterValueEx("typeNames",
+                if (!_schemaManager.getListOfTypeNames().contains(typeName)) {
+                    throw new InvalidParameterValueEx("typeNames",
                         String.format("'%s' typename is not valid. Supported values are: %s", typeName, _schemaManager.getListOfTypeNames()));
-            }
-                if(typeName.equals(gmdPrefix + ":MD_Metadata")) {
+                }
+                if (typeName.equals(gmdPrefix + ":MD_Metadata")) {
                     return typeName;
+                }
             }
-        }
             return result;
         }
         // missing typeNames element
         else {
-            if(isStrict) {
+            if (isStrict) {
                 //Mandatory check if strict.
                 throw new MissingParameterValueEx("typeNames",
-                        String.format("Attribute 'typeNames' is missing. Supported values are: %s. Default is csw:Record according to OGC 07-045.",
-                                _schemaManager.getListOfTypeNames()));
+                    String.format("Attribute 'typeNames' is missing. Supported values are: %s. Default is csw:Record according to OGC 07-045.",
+                        _schemaManager.getListOfTypeNames()));
             } else {
                 //Return default value according to OGC 07-045.
                 return cswPrefix + ":Record";
@@ -586,17 +582,13 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     }
 
     /**
-     * Returns the prefix used in the scope of an element for a particular namespace, or null if the namespace is not in
-     * scope.
-     *
-     * @param element
-     * @param namespace
-     * @return
+     * Returns the prefix used in the scope of an element for a particular namespace, or null if the
+     * namespace is not in scope.
      */
     private String getPrefixForNamespace(Element element, Namespace namespace) {
         List<Namespace> namespacesInScope = NamespaceUtils.getNamespacesInScope(element);
-        for(Namespace ns : namespacesInScope) {
-            if(ns.getURI().equals(namespace.getURI())) {
+        for (Namespace ns : namespacesInScope) {
+            if (ns.getURI().equals(namespace.getURI())) {
                 return ns.getPrefix();
             }
         }
@@ -604,57 +596,54 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     }
 
     /**
-     * GeoNetwork-specific parameter to control the behaviour when dealing with ElementNames. Supported values are
-     * 'csw202', 'relaxed' , 'context'  and 'geonetwork26'. If the parameter is missing or does not have one of these
-     * values, the default value 'relaxed' is used. See documentation in SearchController.applyElementNames() about
-     * these strategies.
+     * GeoNetwork-specific parameter to control the behaviour when dealing with ElementNames.
+     * Supported values are 'csw202', 'relaxed' , 'context'  and 'geonetwork26'. If the parameter is
+     * missing or does not have one of these values, the default value 'relaxed' is used. See
+     * documentation in SearchController.applyElementNames() about these strategies.
      *
      * @param query query element
      * @return elementnames strategy
      */
     private String getElementNameStrategy(Element query) {
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
             Log.debug(Geonet.CSW_SEARCH, "getting elementnameStrategy from query:\n" + Xml.getString(query));
         Attribute elementNameStrategyA = query.getAttribute("elementnameStrategy");
         // default
         String elementNameStrategy = "relaxed";
-        if(elementNameStrategyA != null) {
-            elementNameStrategy = elementNameStrategyA.getValue() ;
+        if (elementNameStrategyA != null) {
+            elementNameStrategy = elementNameStrategyA.getValue();
         }
         // empty or not one of the supported values
-        if(StringUtils.isNotEmpty(elementNameStrategy) &&
-                !(elementNameStrategy.equals("csw202") ||
+        if (StringUtils.isNotEmpty(elementNameStrategy) &&
+            !(elementNameStrategy.equals("csw202") ||
                 elementNameStrategy.equals("relaxed") ||
                 elementNameStrategy.equals("context") ||
                 elementNameStrategy.equals("geonetwork26"))) {
             // use default
             elementNameStrategy = "relaxed";
         }
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
             Log.debug(Geonet.CSW_SEARCH, "elementNameStrategy: " + elementNameStrategy);
         return elementNameStrategy;
     }
 
     /**
-     * Checks that not ElementName and ElementSetName are both present in the query, see OGC 07-006 section 10 8 4 9.
-     *
-     * @param request
-     * @throws InvalidParameterValueEx
+     * Checks that not ElementName and ElementSetName are both present in the query, see OGC 07-006
+     * section 10 8 4 9.
      */
     private void checkElementNamesXORElementSetName(Element request) throws InvalidParameterValueEx {
         Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
-        if(query != null) {
+        if (query != null) {
             boolean elementNamePresent = !CollectionUtils.isEmpty(query.getChildren("ElementName", query.getNamespace()));
             boolean elementSetNamePresent = !CollectionUtils.isEmpty(query.getChildren("ElementSetName", query.getNamespace()));
-            if(elementNamePresent && elementSetNamePresent) {
+            if (elementNamePresent && elementSetNamePresent) {
                 throw new InvalidParameterValueEx("ElementName and ElementSetName", "mutually exclusive");
             }
         }
     }
 
     /**
-     * OGC 07-006 and OGC 07-045:
-     * Non-zero, positive Integer. Optional. The default value is 1.
+     * OGC 07-006 and OGC 07-045: Non-zero, positive Integer. Optional. The default value is 1.
      *
      * @param request the request
      * @return startPosition
@@ -662,26 +651,23 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      */
     private int getStartPosition(Element request) throws InvalidParameterValueEx {
         String start = request.getAttributeValue("startPosition");
-        if(start == null) {
+        if (start == null) {
             return 1;
         }
         try {
             int value = Integer.parseInt(start);
-            if(value >= 1) {
+            if (value >= 1) {
                 return value;
-            }
-            else {
+            } else {
                 throw new InvalidParameterValueEx("startPosition", start);
             }
-        }
-        catch (NumberFormatException x) {
+        } catch (NumberFormatException x) {
             throw new InvalidParameterValueEx("startPosition", start);
         }
     }
 
     /**
-     * OGC 07-006 and OGC 07-045:
-     * PositiveInteger. Optional. The default value is 10.
+     * OGC 07-006 and OGC 07-045: PositiveInteger. Optional. The default value is 10.
      *
      * @param request the request
      * @return maxRecords
@@ -689,19 +675,17 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      */
     private int getMaxRecords(Element request) throws InvalidParameterValueEx {
         String max = request.getAttributeValue("maxRecords");
-        if(max == null) {
+        if (max == null) {
             return 10;
         }
         try {
             int value = Integer.parseInt(max);
             if (value >= 1) {
                 return value;
-            }
-            else {
+            } else {
                 throw new InvalidParameterValueEx("maxRecords", max);
             }
-        }
-        catch (NumberFormatException x) {
+        } catch (NumberFormatException x) {
             throw new InvalidParameterValueEx("maxRecords", max);
         }
     }
@@ -738,25 +722,21 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
     /**
      * TODO javadoc.
-     *
-     * @param request
-     * @param context 
-     * @return
      */
     private Sort getSortFields(Element request, ServiceContext context) {
-		Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
-		if (query == null) {
-			return null;
+        Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
+        if (query == null) {
+            return null;
         }
 
-		Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
-		if (sortBy == null) {
-			return null;
+        Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
+        if (sortBy == null) {
+            return null;
         }
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> list = sortBy.getChildren();
-		List<Pair<String, Boolean>> sortFields = new ArrayList<Pair<String, Boolean>>();
+        List<Pair<String, Boolean>> sortFields = new ArrayList<Pair<String, Boolean>>();
         for (Element el : list) {
             String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
             String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
@@ -765,12 +745,11 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             String luceneField = _fieldMapper.map(field);
             if (luceneField != null) {
                 sortFields.add(Pair.read(luceneField, "DESC".equals(order)));
-            }
-            else {
+            } else {
                 sortFields.add(Pair.read(field, "DESC".equals(order)));
             }
         }
-        
+
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager sm = gc.getBean(SearchManager.class);
         boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
@@ -778,8 +757,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         String preferredLanguage = LuceneSearcher.determineLanguage(context, request, sm.getSettingInfo()).presentationLanguage;
 
         // we always want to keep the relevancy as part of the sorting mechanism
-		return LuceneSearcher.makeSort(sortFields, preferredLanguage, requestedLanguageOnTop);
-	}
+        return LuceneSearcher.makeSort(sortFields, preferredLanguage, requestedLanguageOnTop);
+    }
 
 
     /**
@@ -789,32 +768,31 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @return set of elementname values
      */
     private Set<String> getElementNames(Element query) {
-        if(Log.isDebugEnabled(Geonet.CSW))
+        if (Log.isDebugEnabled(Geonet.CSW))
             Log.debug(Geonet.CSW, "GetRecords getElementNames");
         Set<String> elementNames = null;
-	    if (query != null) {
+        if (query != null) {
             @SuppressWarnings("unchecked")
             List<Element> elementList = query.getChildren("ElementName", query.getNamespace());
-            for(Element element : elementList) {
-                if(elementNames == null) {
+            for (Element element : elementList) {
+                if (elementNames == null) {
                     elementNames = new HashSet<String>();
                 }
                 elementNames.add(element.getText());
             }
         }
         // TODO in if(isDebugEnabled) condition. Jeeves LOG doesn't provide that useful function though.
-        if(elementNames != null) {
-            for(String elementName : elementNames) {
-                if(Log.isDebugEnabled(Geonet.CSW))
+        if (elementNames != null) {
+            for (String elementName : elementNames) {
+                if (Log.isDebugEnabled(Geonet.CSW))
                     Log.debug(Geonet.CSW, "ElementName: " + elementName);
             }
-        }
-        else {
-            if(Log.isDebugEnabled(Geonet.CSW))
+        } else {
+            if (Log.isDebugEnabled(Geonet.CSW))
                 Log.debug(Geonet.CSW, "No ElementNames found in request");
         }
         // TODO end if(isDebugEnabled)
-	    return elementNames;
+        return elementNames;
     }
 
 

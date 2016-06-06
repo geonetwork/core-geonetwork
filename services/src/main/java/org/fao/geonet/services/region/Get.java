@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.region.RegionNotFoundEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
@@ -37,18 +38,19 @@ import java.util.Collection;
 
 //=============================================================================
 
-/** Returns a specific region and coordinates given its id
-  */
+/**
+ * Returns a specific region and coordinates given its id
+ */
 
-public class Get implements Service
-{
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class Get implements Service {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         String id = params.getChildText(Params.ID);

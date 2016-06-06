@@ -21,9 +21,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <xsl:template name="dep3">
-        <dep3>dep3</dep3>
-    </xsl:template>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+  <xsl:template name="dep3">
+    <dep3>dep3</dep3>
+  </xsl:template>
 
 </xsl:stylesheet>

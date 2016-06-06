@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
@@ -46,6 +47,15 @@ public class MetadataIdentifierTemplateRepositoryTest extends AbstractSpringData
 
     @PersistenceContext
     EntityManager _entityManager;
+
+    public static MetadataIdentifierTemplate newMetadataUrnTemplate(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+        MetadataIdentifierTemplate mdUrnTemplate = new MetadataIdentifierTemplate();
+        mdUrnTemplate.setName("name" + val);
+        mdUrnTemplate.setTemplate("xxxx-{AA}-" + val);
+
+        return mdUrnTemplate;
+    }
 
     @Test
     public void testFindOne() {
@@ -76,15 +86,6 @@ public class MetadataIdentifierTemplateRepositoryTest extends AbstractSpringData
 
     private MetadataIdentifierTemplate newMetadataUrnTemplate() {
         return newMetadataUrnTemplate(_inc);
-    }
-
-    public static MetadataIdentifierTemplate newMetadataUrnTemplate(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-        MetadataIdentifierTemplate mdUrnTemplate = new MetadataIdentifierTemplate();
-        mdUrnTemplate.setName("name" + val);
-        mdUrnTemplate.setTemplate("xxxx-{AA}-" + val);
-
-        return mdUrnTemplate;
     }
 
 }

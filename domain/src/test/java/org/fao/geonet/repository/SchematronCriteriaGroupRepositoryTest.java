@@ -25,11 +25,13 @@ package org.fao.geonet.repository;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.domain.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -50,8 +52,38 @@ public class SchematronCriteriaGroupRepositoryTest extends AbstractSpringDataTes
     @Autowired
     private SchematronCriteriaGroupRepository criteriaGroupRepository;
 
+    public static SchematronCriteriaGroup newGroup(AtomicInteger inc, SchematronRepository schematronRepository) {
+        Schematron schematron = schematronRepository.save(SchematronRepositoryTest.newSchematron(inc));
+        int id = inc.incrementAndGet();
+
+        SchematronCriteriaGroup group = new SchematronCriteriaGroup();
+        group.setId(new SchematronCriteriaGroupId(GROUP_NAME_PREFIX + id, schematron));
+        group.setSchematron(schematron);
+        final SchematronRequirement[] requirements = SchematronRequirement.values();
+        group.setRequirement(requirements[id % requirements.length]);
+        for (int i = 0; i < id; i++) {
+            group.addCriteria(newSchematronCriteria(inc));
+        }
+
+        return group;
+
+    }
+
+    public static SchematronCriteria newSchematronCriteria(AtomicInteger inc) {
+        int id = inc.incrementAndGet();
+
+        final SchematronCriteria criteria = new SchematronCriteria();
+        final SchematronCriteriaType[] values = SchematronCriteriaType.values();
+        criteria.setType(values[id % values.length]);
+        criteria.setValue("value_" + id);
+        criteria.setUiType("uitype_" + id);
+        criteria.setUiValue("uivalue_" + id);
+
+        return criteria;
+    }
+
     @Test
-     public void testFindAllBySchematron_schemaName() throws Exception {
+    public void testFindAllBySchematron_schemaName() throws Exception {
         final SchematronCriteriaGroup g1 = criteriaGroupRepository.save(newGroup(_inc, schematronRepository));
         final SchematronCriteriaGroup g2 = criteriaGroupRepository.save(newGroup(_inc, schematronRepository));
         final SchematronCriteriaGroup g3PreSchematron = newGroup(_inc, schematronRepository);
@@ -59,7 +91,7 @@ public class SchematronCriteriaGroupRepositoryTest extends AbstractSpringDataTes
         final SchematronCriteriaGroup g3 = criteriaGroupRepository.save(g3PreSchematron);
 
         List<SchematronCriteriaGroup> found =
-                criteriaGroupRepository.findAllById_SchematronId(g1.getSchematron().getId());
+            criteriaGroupRepository.findAllById_SchematronId(g1.getSchematron().getId());
 
         List<String> foundIds = Lists.transform(found, new SchematronCriteriaGroupStringFunction());
 
@@ -92,36 +124,6 @@ public class SchematronCriteriaGroupRepositoryTest extends AbstractSpringDataTes
     private void assertCorrectNumberOfCriteria(SchematronCriteriaGroup g1) {
         String id = g1.getId().getName().substring(GROUP_NAME_PREFIX.length());
         assertEquals(Integer.parseInt(id), g1.getCriteria().size());
-    }
-
-    public static SchematronCriteriaGroup newGroup(AtomicInteger inc, SchematronRepository schematronRepository) {
-        Schematron schematron = schematronRepository.save(SchematronRepositoryTest.newSchematron(inc));
-        int id = inc.incrementAndGet();
-
-        SchematronCriteriaGroup group = new SchematronCriteriaGroup();
-        group.setId(new SchematronCriteriaGroupId(GROUP_NAME_PREFIX + id, schematron));
-        group.setSchematron(schematron);
-        final SchematronRequirement[] requirements = SchematronRequirement.values();
-        group.setRequirement(requirements[id % requirements.length]);
-        for (int i = 0 ; i < id; i++) {
-            group.addCriteria(newSchematronCriteria(inc));
-        }
-
-        return group;
-
-    }
-
-    public static SchematronCriteria newSchematronCriteria(AtomicInteger inc) {
-        int id = inc.incrementAndGet();
-
-        final SchematronCriteria criteria = new SchematronCriteria();
-        final SchematronCriteriaType[] values = SchematronCriteriaType.values();
-        criteria.setType(values[id % values.length]);
-        criteria.setValue("value_"+id);
-        criteria.setUiType("uitype_"+id);
-        criteria.setUiValue("uivalue_"+id);
-
-        return criteria;
     }
 
     private static class SchematronCriteriaGroupStringFunction implements Function<SchematronCriteriaGroup, String> {

@@ -75,23 +75,19 @@ public class OnlineSrcAddProcessTest extends XslProcessTest {
         );
         assertThat(
             resultString, hasXPath("count(//gmd:onLine" +
-                "[*/gmd:name/*/text() = 'Website name'])",
+                    "[*/gmd:name/*/text() = 'Website name'])",
                 equalTo("1")).withNamespaceContext(ns)
         );
         assertThat(
             resultString, hasXPath("count(//gmd:onLine" +
-                "[*/gmd:description/*/text() = 'Website description'])",
+                    "[*/gmd:description/*/text() = 'Website description'])",
                 equalTo("1")).withNamespaceContext(ns)
         );
         assertThat(
             resultString, hasXPath("count(//gmd:onLine" +
-                "[*/gmd:linkage/*/text() = 'http://www.geonetwork-opensource.org'])",
+                    "[*/gmd:linkage/*/text() = 'http://www.geonetwork-opensource.org'])",
                 equalTo("1")).withNamespaceContext(ns)
         );
-
-
-
-
 
 
         // Add a simple link with name and description
@@ -166,7 +162,7 @@ public class OnlineSrcAddProcessTest extends XslProcessTest {
         );
         assertThat(
             resultString, hasXPath("count(//gmd:onLine" +
-                "[*/gmd:name/gco:CharacterString/text() = 'Le monde en français'])",
+                    "[*/gmd:name/gco:CharacterString/text() = 'Le monde en français'])",
                 equalTo("1")).withNamespaceContext(ns)
         );
         assertThat(
@@ -186,10 +182,9 @@ public class OnlineSrcAddProcessTest extends XslProcessTest {
         );
         assertThat(
             resultString, hasXPath("count(//gmd:onLine" +
-                "[*/gmd:linkage/*/text() = 'http://www.geonetwork-opensource.org'])",
+                    "[*/gmd:linkage/*/text() = 'http://www.geonetwork-opensource.org'])",
                 equalTo("1")).withNamespaceContext(ns)
         );
-
 
 
         // Add a simple link with name and description

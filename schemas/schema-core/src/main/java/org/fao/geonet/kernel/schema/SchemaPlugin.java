@@ -24,11 +24,16 @@
 package org.fao.geonet.kernel.schema;
 
 import com.google.common.collect.ImmutableSet;
+
 import org.jdom.Namespace;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
 
 /**
  * Created by francois on 6/16/14.
@@ -58,7 +63,9 @@ public abstract class SchemaPlugin implements CSWPlugin {
         this.savedQueries = savedQueries;
     }
 
-    public @Nullable SavedQuery getSavedQuery(@Nonnull String queryKey) {
+    public
+    @Nullable
+    SavedQuery getSavedQuery(@Nonnull String queryKey) {
         Iterator<SavedQuery> iterator = this.getSavedQueries().iterator();
         while (iterator.hasNext()) {
             SavedQuery query = iterator.next();

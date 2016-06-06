@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.base.Optional;
+
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
 import org.fao.geonet.services.metadata.format.groovy.TransformationContext;
@@ -67,7 +68,7 @@ public class TNodeFactoryInclude extends TNodeFactoryByAttName {
         private final boolean replace;
 
         public TNodeInclude(SystemInfo info, TextContentParser parser, String qName, Attributes attributes, String templatePath, boolean replace)
-                throws IOException {
+            throws IOException {
             super(info, parser, qName, attributes);
             this.replace = replace;
             this.templatePath = templatePath;

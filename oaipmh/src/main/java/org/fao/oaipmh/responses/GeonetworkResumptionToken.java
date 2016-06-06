@@ -36,204 +36,186 @@ import org.jdom.Element;
 //=============================================================================
 
 
-public class GeonetworkResumptionToken extends ResumptionToken
-{
-	
-	private Integer listSize;
-	private Integer cursor;
-	private Integer pos;
-	private String set ="";
-	private String from="";
-	private String until="";
-	private String prefix="";
-	private Boolean isReset = false;
-	private String randomid;
-	private SearchResult res;
-	public static final String SEPARATOR = "/-/";
-	
+public class GeonetworkResumptionToken extends ResumptionToken {
 
-	/**
-	 * Default constructor.
-	 * Builds a GeonetworkResumptionToken.
-	 * @param rt
-	 */
-	public GeonetworkResumptionToken(Element rt)
-	{
+    public static final String SEPARATOR = "/-/";
+    private Integer listSize;
+    private Integer cursor;
+    private Integer pos;
+    private String set = "";
+    private String from = "";
+    private String until = "";
+    private String prefix = "";
+    private Boolean isReset = false;
+    private String randomid;
+    private SearchResult res;
+    private SecureRandom random = new SecureRandom();
+
+    /**
+     * Default constructor. Builds a GeonetworkResumptionToken.
+     */
+    public GeonetworkResumptionToken(Element rt) {
         build(rt);
-	}
+    }
 
-	/**
-	 * Default constructor.
-	 * Builds a GeonetworkResumptionToken.
-	 * @param req
-	 * @throws BadResumptionTokenException
-	 */
-	public GeonetworkResumptionToken(TokenListRequest req) throws BadResumptionTokenException {
+    /**
+     * Default constructor. Builds a GeonetworkResumptionToken.
+     */
+    public GeonetworkResumptionToken(TokenListRequest req) throws BadResumptionTokenException {
 
-		String strToken = req.getResumptionToken();
+        String strToken = req.getResumptionToken();
 
-		if (strToken==null) {
+        if (strToken == null) {
 
-			if (req.getFrom()!= null)
-				from   = req.getFrom().toString();
-			if (req.getUntil()!= null)
-				until  = req.getUntil().toString();
-			if (req.getSet()!= null)
-				set    = req.getSet();
-			prefix = req.getMetadataPrefix();
+            if (req.getFrom() != null)
+                from = req.getFrom().toString();
+            if (req.getUntil() != null)
+                until = req.getUntil().toString();
+            if (req.getSet() != null)
+                set = req.getSet();
+            prefix = req.getMetadataPrefix();
 
 
-			randomid = generateRandomString();
+            randomid = generateRandomString();
 
-		}
-		else {
+        } else {
 
-			parseToken(strToken);
-		}
-	}
+            parseToken(strToken);
+        }
+    }
 
-	/**
-	 * Default constructor.
-	 * Builds a GeonetworkResumptionToken.
-	 * @param req
-	 * @param res
-	 * @throws BadResumptionTokenException
-	 */
-	public GeonetworkResumptionToken(TokenListRequest req, SearchResult res) throws BadResumptionTokenException {
-		this(req);
-		this.res=res;
-	}
+    /**
+     * Default constructor. Builds a GeonetworkResumptionToken.
+     */
+    public GeonetworkResumptionToken(TokenListRequest req, SearchResult res) throws BadResumptionTokenException {
+        this(req);
+        this.res = res;
+    }
 
-	public static String buildKey(TokenListRequest req)  throws BadResumptionTokenException {
-		GeonetworkResumptionToken temp = new GeonetworkResumptionToken(req);
-		return temp.getKey();
-	}
+    public static String buildKey(TokenListRequest req) throws BadResumptionTokenException {
+        GeonetworkResumptionToken temp = new GeonetworkResumptionToken(req);
+        return temp.getKey();
+    }
 
-	public static int getPos(TokenListRequest req) throws BadResumptionTokenException {
-		GeonetworkResumptionToken temp = new GeonetworkResumptionToken(req);
-		return temp.getPos();
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    public static int getPos(TokenListRequest req) throws BadResumptionTokenException {
+        GeonetworkResumptionToken temp = new GeonetworkResumptionToken(req);
+        return temp.getPos();
+    }
 
-	public String getToken() {
-		if (isReset)
-			return ""; // we are at the last chunk
-		return getKey() + SEPARATOR + pos;
-	}
+    public String getToken() {
+        if (isReset)
+            return ""; // we are at the last chunk
+        return getKey() + SEPARATOR + pos;
+    }
 
-	public boolean isTokenEmpty() {
-		return isReset;
-	}
-
-	public int getPos() {
-		return pos;
-	}
-
-	public String getKey() {
-		return set + SEPARATOR + prefix + SEPARATOR + from + SEPARATOR + until
-				+ SEPARATOR + randomid;
-	}
-
-	public SearchResult getRes() {
-		return res;
-	}
-
-	public void setRes(SearchResult res) {
-		this.res = res;
-	}
-
-	public void setPos(int pos) {
-		this.pos = pos;
-	}
-
-
-	public void reset() {
-		isReset=true;
-	}
-	
-	public void setupToken(int newpos) {
-		if (newpos < res.getIds().size()) // update token so that it refers to the next chunk
-			setPos(newpos);
-		else 
-		{
-			reset(); 	// reset token to indicate last chunk
-		}
-	}
-	
-	public Element toXml()
-	{
-		Element root = new Element("resumptionToken", OaiPmh.Namespaces.OAI_PMH);
-
-		root.setText(getToken());
-
-		if (getExpirDate() != null)
-			root.setAttribute("expirationDate", getExpirDate().toString());
-
-		if (listSize != null)
-			root.setAttribute("completeListSize", listSize.toString());
-
-		if (cursor != null)
-			root.setAttribute("cursor", cursor.toString());
-
-		return root;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public void setToken(String token)
-	{
-		try {
-	        parseToken(token);
+    public void setToken(String token) {
+        try {
+            parseToken(token);
         } catch (BadResumptionTokenException e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
 
-	}
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    public boolean isTokenEmpty() {
+        return isReset;
+    }
 
-	private void build(Element rt)
-	{
-		try {
-	        parseToken(rt.getText());
+    public int getPos() {
+        return pos;
+    }
+
+    public void setPos(int pos) {
+        this.pos = pos;
+    }
+
+    public String getKey() {
+        return set + SEPARATOR + prefix + SEPARATOR + from + SEPARATOR + until
+            + SEPARATOR + randomid;
+    }
+
+    public SearchResult getRes() {
+        return res;
+    }
+
+    public void setRes(SearchResult res) {
+        this.res = res;
+    }
+
+    public void reset() {
+        isReset = true;
+    }
+
+    //---------------------------------------------------------------------------
+
+    public void setupToken(int newpos) {
+        if (newpos < res.getIds().size()) // update token so that it refers to the next chunk
+            setPos(newpos);
+        else {
+            reset();    // reset token to indicate last chunk
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
+
+    public Element toXml() {
+        Element root = new Element("resumptionToken", OaiPmh.Namespaces.OAI_PMH);
+
+        root.setText(getToken());
+
+        if (getExpirDate() != null)
+            root.setAttribute("expirationDate", getExpirDate().toString());
+
+        if (listSize != null)
+            root.setAttribute("completeListSize", listSize.toString());
+
+        if (cursor != null)
+            root.setAttribute("cursor", cursor.toString());
+
+        return root;
+    }
+
+    private void build(Element rt) {
+        try {
+            parseToken(rt.getText());
         } catch (BadResumptionTokenException e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
 
-		String expDt = rt.getAttributeValue("expirationDate");
-		String listSz= rt.getAttributeValue("completeListSize");
-		String curs  = rt.getAttributeValue("cursor");
+        String expDt = rt.getAttributeValue("expirationDate");
+        String listSz = rt.getAttributeValue("completeListSize");
+        String curs = rt.getAttributeValue("cursor");
 
-		setExpirDate((expDt  == null) ? null : new ISODate(expDt));
-		listSize  = (listSz == null) ? null : Integer.valueOf(listSz);
-		cursor    = (curs   == null) ? null : Integer.valueOf(curs);
-	}
+        setExpirDate((expDt == null) ? null : new ISODate(expDt));
+        listSize = (listSz == null) ? null : Integer.valueOf(listSz);
+        cursor = (curs == null) ? null : Integer.valueOf(curs);
+    }
 
-	private void parseToken(String strToken) throws BadResumptionTokenException {
+    private void parseToken(String strToken) throws BadResumptionTokenException {
 
-		String[] temp = strToken.split(SEPARATOR);
+        String[] temp = strToken.split(SEPARATOR);
 
-		if (temp.length != 6)
-			throw new BadResumptionTokenException("unknown resumptionToken format: "+strToken);
+        if (temp.length != 6)
+            throw new BadResumptionTokenException("unknown resumptionToken format: " + strToken);
 
-		set = temp[0];
-		prefix = temp[1];
-		from =  temp[2] ;
-		until = temp[3] ;
-		randomid = temp[4];
+        set = temp[0];
+        prefix = temp[1];
+        from = temp[2];
+        until = temp[3];
+        randomid = temp[4];
 
-		pos = Integer.parseInt( temp[5] );
-	}
-	  private SecureRandom random = new SecureRandom();
+        pos = Integer.parseInt(temp[5]);
+    }
 
     public String generateRandomString() {
         return new BigInteger(130, random).toString(36);

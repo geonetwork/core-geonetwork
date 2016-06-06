@@ -25,6 +25,7 @@ package org.fao.geonet.services.user;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
@@ -43,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.xml.bind.JAXBElement;
 
 import static org.junit.Assert.assertEquals;
@@ -50,23 +52,19 @@ import static org.junit.Assert.assertEquals;
 /**
  * Test listing a user service.
  *
- * User: Jesse
- * Date: 10/12/13
- * Time: 8:30 PM
+ * User: Jesse Date: 10/12/13 Time: 8:30 PM
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
-    private AtomicInteger inc = new AtomicInteger();
     @Autowired
     UserRepository _userRepo;
     @Autowired
     UserGroupRepository _userGroupRepo;
     @Autowired
     GroupRepository _groupRepo;
-
     @Autowired
     List listService;
-
+    private AtomicInteger inc = new AtomicInteger();
 
     @Test
     public void testExecAsUserNoGroups() throws Exception {
@@ -74,12 +72,12 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
         entity.setProfile(Profile.Editor);
 
         entity.getAddresses().add(
-                new Address()
-                        .setAddress("add1")
-                        .setCity("city1")
-                        .setCountry("country1")
-                        .setState("state1")
-                        .setZip("zip1"));
+            new Address()
+                .setAddress("add1")
+                .setCity("city1")
+                .setCountry("country1")
+                .setState("state1")
+                .setZip("zip1"));
         entity.getEmailAddresses().add("email2");
         final User editor = _userRepo.save(entity);
 

@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.jdom.Element;
@@ -35,34 +36,33 @@ import org.jdom.Element;
 import java.nio.file.Path;
 
 /**
- * Select a list of keywords stored in session
- * Returns status 
+ * Select a list of keywords stored in session Returns status
  */
 
 public class SelectKeywords implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
 
-		Element response = new Element(Jeeves.Elem.RESPONSE);
-		UserSession session = context.getUserSession();
-		KeywordsSearcher searcher = (KeywordsSearcher)session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
+        Element response = new Element(Jeeves.Elem.RESPONSE);
+        UserSession session = context.getUserSession();
+        KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
 
-		searcher.selectUnselectKeywords(params);
-		
-		// send ok		
-		response.addContent(new Element("ok"));		
+        searcher.selectUnselectKeywords(params);
 
-		return response;
-	}
+        // send ok
+        response.addContent(new Element("ok"));
+
+        return response;
+    }
 }
 
 // =============================================================================

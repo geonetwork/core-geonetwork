@@ -52,14 +52,14 @@ public final class UserGroupSpecs {
         return new Specification<UserGroup>() {
             @Override
             public Predicate toPredicate(Root<UserGroup> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-            	Path<Integer> grpIdAttributePath = root.get(UserGroup_.id).get(UserGroupId_.groupId);
+                Path<Integer> grpIdAttributePath = root.get(UserGroup_.id).get(UserGroupId_.groupId);
                 Predicate grpIdInPredicate = grpIdAttributePath.in(groupId);
                 return grpIdInPredicate;
             }
         };
     }
-    
-    
+
+
     public static Specification<UserGroup> hasUserId(final int userId) {
         return new Specification<UserGroup>() {
             @Override

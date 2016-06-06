@@ -37,14 +37,14 @@ import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 
 /**
- * Get all user information from the LDAP user's attributes (including profile
- * and groups) where profile and groups are stored in one attribute. A custom
- * pattern is defined to extract those information.
- * 
+ * Get all user information from the LDAP user's attributes (including profile and groups) where
+ * profile and groups are stored in one attribute. A custom pattern is defined to extract those
+ * information.
+ *
  * @author francois
  */
 public class LDAPUserDetailsContextMapperWithPattern extends
-        AbstractLDAPUserDetailsContextMapper {
+    AbstractLDAPUserDetailsContextMapper {
 
     private String privilegePattern;
     private Pattern pattern;
@@ -52,12 +52,12 @@ public class LDAPUserDetailsContextMapperWithPattern extends
     private int profilIndexInPattern;
 
     protected void setProfilesAndPrivileges(Profile defaultProfile, String defaultGroup, Map<String, ArrayList<String>> userInfo,
-            LDAPUser userDetails) {
+                                            LDAPUser userDetails) {
 
         // a privilegePattern is defined which define a
         // combination of group and profile pair.
         ArrayList<String> privileges = userInfo
-                .get(mapping.get("privilege")[0]);
+            .get(mapping.get("privilege")[0]);
         if (privileges != null) {
             Set<Profile> profileList = new HashSet<Profile>();
 
@@ -72,7 +72,7 @@ public class LDAPUserDetailsContextMapperWithPattern extends
                         if (!LDAPConstants.ALL_GROUP_INDICATOR.equals(group)) {
                             if (Log.isDebugEnabled(Geonet.LDAP)) {
                                 Log.debug(Geonet.LDAP, "  Adding profile "
-                                        + profile + " for group " + group);
+                                    + profile + " for group " + group);
                             }
                             userDetails.addPrivilege(group, profile);
                             profileList.add(profile);
@@ -82,16 +82,16 @@ public class LDAPUserDetailsContextMapperWithPattern extends
                     }
                 } else {
                     Log.error(Geonet.LDAP, "LDAP privilege info '"
-                            + privilegeDefinition
-                            + "' does not match search pattern '"
-                            + privilegePattern + "'. Information ignored.");
+                        + privilegeDefinition
+                        + "' does not match search pattern '"
+                        + privilegePattern + "'. Information ignored.");
                 }
             }
             Profile highestUserProfile = ProfileManager.getHighestProfile(profileList.toArray(new Profile[0]));
             if (highestUserProfile != null) {
                 if (Log.isDebugEnabled(Geonet.LDAP)) {
                     Log.debug(Geonet.LDAP, "  Highest user profile is "
-                            + highestUserProfile);
+                        + highestUserProfile);
                 }
                 userDetails.getUser().setProfile(highestUserProfile);
             }

@@ -41,11 +41,8 @@ import static org.fao.geonet.repository.specification.MetadataSpecs.isType;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
- * Service to get main statistics about the content of the catalog
- * <ul>
- * <li>total number of searches</li>
- * </ul>
- * 
+ * Service to get main statistics about the content of the catalog <ul> <li>total number of
+ * searches</li> </ul>
  */
 @Controller("content.statistics")
 public class ContentStatistics {
@@ -54,11 +51,11 @@ public class ContentStatistics {
     private MetadataRepository metadataRepository;
 
     @RequestMapping(value = {"/{lang}/statistics-content"}, produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public ContentStats exec() throws Exception {
         ContentStats response = new ContentStats();
-        
+
         // Add parameter by source catalog
         // Add parameter by group and owner
 
@@ -68,7 +65,7 @@ public class ContentStatistics {
         final long totalSubTemplateMetadata = metadataRepository.count(isType(MetadataType.SUB_TEMPLATE));
         final long totalHarvestedNonTemplateMetadata = metadataRepository.count(isMetadataType.and(MetadataSpecs.isHarvested(true)));
         final long totalPublicMetadata = metadataRepository.getMetadataStatistics().getStatBasedOnOperationAllowed
-                (MetadataStatisticSpec.StandardSpecs.metadataCount(), OperationAllowedSpecs.isPublic(ReservedOperation.view));
+            (MetadataStatisticSpec.StandardSpecs.metadataCount(), OperationAllowedSpecs.isPublic(ReservedOperation.view));
 
         // Total number of metadata by type
         response.setTotalNonTemplateMetadata(totalNonTemplateMetadata);

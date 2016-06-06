@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema"
-        xmlns:gml="http://www.opengis.net/gml"
+<schema xmlns:gml="http://www.opengis.net/gml"
+        xmlns="http://www.w3.org/2001/XMLSchema"
         targetNamespace="http://www.opengis.net/gml"
         version="3.1.1" elementFormDefault="qualified">
 
@@ -25,9 +25,9 @@
     <attribute name="numDerivativesAtStart" type="integer"
                use="optional" default="0"/>
     <attribute name="numDerivativesAtEnd" type="integer"
- use="optional" default="0"/>
+               use="optional" default="0"/>
     <attribute name="numDerivativeInterior" type="integer"
- use="optional" default="0"/>
+               use="optional" default="0"/>
   </complexType>
 
   <element name="segments" type="gml:CurveSegmentArrayPropertyType"/>

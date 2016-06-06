@@ -33,21 +33,20 @@ import java.util.List;
 
 //=============================================================================
 
-public class SchemaSubstitutions
-{
-	private Hashtable<String, Element> htFields = new Hashtable<String, Element>();
+public class SchemaSubstitutions {
+    private Hashtable<String, Element> htFields = new Hashtable<String, Element>();
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public SchemaSubstitutions(Path xmlSubstitutionFile) throws Exception {
-		if (xmlSubstitutionFile != null) {
-			Element subs = Xml.loadFile(xmlSubstitutionFile);
+    public SchemaSubstitutions(Path xmlSubstitutionFile) throws Exception {
+        if (xmlSubstitutionFile != null) {
+            Element subs = Xml.loadFile(xmlSubstitutionFile);
 
-			@SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked")
             List<Element> list = subs.getChildren();
 
             for (Element el : list) {
@@ -55,23 +54,23 @@ public class SchemaSubstitutions
                     htFields.put(el.getAttributeValue("name"), el);
                 }
             }
-		}
-	}
+        }
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-	public ArrayList<String> getSubstitutes(String child) {
-		Element fieldEl = htFields.get(child);
-		if (fieldEl == null)
-			return null;
+    public ArrayList<String> getSubstitutes(String child) {
+        Element fieldEl = htFields.get(child);
+        if (fieldEl == null)
+            return null;
 
-		ArrayList<String> results = new ArrayList<String>();
+        ArrayList<String> results = new ArrayList<String>();
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> list = fieldEl.getChildren();
 
         for (Element elem : list) {
@@ -81,8 +80,8 @@ public class SchemaSubstitutions
             }
         }
 
-		return results;
-	}
+        return results;
+    }
 }
 
 //=============================================================================

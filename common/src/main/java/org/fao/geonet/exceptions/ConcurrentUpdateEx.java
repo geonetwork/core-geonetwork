@@ -25,25 +25,23 @@ package org.fao.geonet.exceptions;
 
 //=============================================================================
 
-public class ConcurrentUpdateEx extends JeevesClientEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class ConcurrentUpdateEx extends JeevesClientEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1882150865337871343L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1882150865337871343L;
 
-	public ConcurrentUpdateEx(String id)
-	{
-		super("Concurrent update", id);
+    public ConcurrentUpdateEx(String id) {
+        super("Concurrent update", id);
 
-		id = "concurrent-update";
-	}
+        id = "concurrent-update";
+    }
 }
 
 //=============================================================================

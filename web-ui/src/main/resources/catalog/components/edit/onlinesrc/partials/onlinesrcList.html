@@ -6,8 +6,8 @@
     <div class="btn-group"
          data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true">
       <button type="button"
-        class="btn btn-link dropdown-toggle fa fa-plus"
-        data-toggle="dropdown">
+              class="btn btn-link dropdown-toggle fa fa-plus"
+              data-toggle="dropdown">
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu pull-right" role="menu">
@@ -20,13 +20,14 @@
           </a>
         </li>
         <li class="dropdown-header"
-            data-translate>linkMetadata</li>
+            data-translate>linkMetadata
+        </li>
         <li data-ng-show="isCategoryEnable('parent')">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('parent')">
-          <i class="fa gn-icon-parent"></i>
-          <i class="icon-external-link"></i>&nbsp;
-          <span data-translate="">linkToParent</span>
+            <i class="fa gn-icon-parent"></i>
+            <i class="icon-external-link"></i>&nbsp;
+            <span data-translate="">linkToParent</span>
           </a>
         </li>
         <li data-ng-show="isCategoryEnable('service') && !gnCurrentEdit.isService">
@@ -55,7 +56,7 @@
         </li>
         <li data-ng-show="isCategoryEnable('fcats')">
           <a href=""
-            data-ng-click="onlinesrcService.onOpenPopup('fcats')">
+             data-ng-click="onlinesrcService.onOpenPopup('fcats')">
             <i class="fa gn-icon-fcats"></i>
             <i class="icon-external-link"></i>&nbsp;
             <span data-translate="">linkToFeatureCatalog</span>
@@ -63,7 +64,7 @@
         </li>
         <li data-ng-show="isCategoryEnable('sibling')">
           <a href=""
-            data-ng-click="onlinesrcService.onOpenPopup('sibling')">
+             data-ng-click="onlinesrcService.onOpenPopup('sibling')">
             <i class="fa gn-icon-sibling"></i>
             <i class="icon-external-link"></i>&nbsp;
             <span data-translate="">linkToSibling</span>
@@ -87,12 +88,12 @@
           <img class="thumb-small"
                title="{{thumb.title | gnLocalized: lang}}"
                data-gn-img-modal="thumb"
-               data-ng-src="{{thumb.id}}" />
+               data-ng-src="{{thumb.id}}"/>
 
           <a href="" class="onlinesrc-remove"
-            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
-            data-ng-click="onlinesrcService.removeThumbnail(thumb)"
-            title="{{'removeThumbnail' | translate}}">
+             data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+             data-ng-click="onlinesrcService.removeThumbnail(thumb)"
+             title="{{'removeThumbnail' | translate}}">
             <i class="btn fa fa-times text-danger"></i>
           </a>
           <a href="" class="onlinesrc-edit"
@@ -186,7 +187,7 @@
       <!-- ******* List of services ******* -->
       <h4 class="onlinesrc-title" data-ng-show="relations.services">
         <a href=""
-          data-ng-click="onlinesrcService.onOpenPopup('service')">
+           data-ng-click="onlinesrcService.onOpenPopup('service')">
           <i class="fa fa-share-square-o"></i>
           <i class="icon-external-link"></i>&nbsp;
           <span data-translate="">service</span>&nbsp;
@@ -227,7 +228,7 @@
       </h4>
       <ul class="list-group">
         <li class="list-group-item"
-          data-ng-repeat="resource in relations.parent | orderBy:'title'">
+            data-ng-repeat="resource in relations.parent | orderBy:'title'">
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
@@ -250,9 +251,9 @@
       <!-- ******* List of sources ******* -->
       <h4 class="onlinesrc-title" data-ng-show="relations.sources">
         <a href=""
-          data-ng-click="onlinesrcService.onOpenPopup('source')">
+           data-ng-click="onlinesrcService.onOpenPopup('source')">
           <i class="fa fa-sitemap fa-rotate-180"
-            data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
+             data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
           <i class="icon-external-link"></i>&nbsp;
           <span data-translate="">sourceDatasets</span>&nbsp;
           <i class="fa fa-plus"></i>
@@ -260,7 +261,7 @@
       </h4>
       <ul class="list-group">
         <li class="list-group-item"
-          data-ng-repeat="resource in relations.sources | orderBy:'title'">
+            data-ng-repeat="resource in relations.sources | orderBy:'title'">
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
@@ -292,7 +293,7 @@
       </h4>
       <ul class="list-group">
         <li class="list-group-item"
-          data-ng-repeat="resource in relations.fcats | orderBy:'title'">
+            data-ng-repeat="resource in relations.fcats | orderBy:'title'">
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
@@ -338,7 +339,7 @@
       <h4 class="onlinesrc-title" data-ng-show="relations.siblings">
         <a href="" data-ng-click="onlinesrcService.onOpenPopup('sibling')">
           <i class="fa fa-sign-out"
-            data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
+             data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
           <i class="icon-external-link"></i>&nbsp;
           <span data-translate="">siblings</span>&nbsp;
           <i class="fa fa-plus"></i>
@@ -346,7 +347,7 @@
       </h4>
       <ul class="list-group">
         <li class="list-group-item"
-          data-ng-repeat="resource in relations.siblings | orderBy:'title'">
+            data-ng-repeat="resource in relations.siblings | orderBy:'title'">
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
@@ -375,7 +376,7 @@
       </h4>
       <ul class="list-group">
         <li class="list-group-item"
-          data-ng-repeat="resource in relations.associated | orderBy:'title'">
+            data-ng-repeat="resource in relations.associated | orderBy:'title'">
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">

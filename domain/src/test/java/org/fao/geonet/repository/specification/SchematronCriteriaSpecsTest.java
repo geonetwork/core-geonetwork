@@ -27,6 +27,7 @@ import static org.junit.Assert.*;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.domain.SchematronCriteria;
 import org.fao.geonet.domain.SchematronCriteriaGroup;
 import org.fao.geonet.repository.*;
@@ -34,6 +35,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -67,7 +69,7 @@ public class SchematronCriteriaSpecsTest extends AbstractSpringDataTest {
         group3 = _criteriaGroupRepository.saveAndFlush(group3);
 
         final List<SchematronCriteria> found = _criteriaRepository.findAll(SchematronCriteriaSpecs.hasSchematronId(group1.getSchematron()
-                .getId()));
+            .getId()));
 
         assertCorrectCriteriaFound(group1, group2, group3, found);
     }

@@ -28,6 +28,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ import java.util.List;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "InspireAtomFeed")
-@SequenceGenerator(name=InspireAtomFeed.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = InspireAtomFeed.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class InspireAtomFeed extends GeonetEntity implements Serializable {
     static final String ID_SEQ_NAME = "inspire_atom_feed_id_seq";
     private int _id;
@@ -65,24 +66,60 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
         _entryList = new ArrayList<InspireAtomFeedEntry>();
     }
 
+    public static InspireAtomFeed build(Element atomDoc) {
+        InspireAtomFeed inspireAtomFeed = new InspireAtomFeed();
+
+        Namespace ns = Namespace.getNamespace("f", "http://www.w3.org/2005/Atom");
+        Namespace nsXml = Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
+
+        inspireAtomFeed.setTitle(atomDoc.getChildText("title", ns));
+        inspireAtomFeed.setSubtitle(atomDoc.getChildText("subtitle", ns));
+        inspireAtomFeed.setRights(atomDoc.getChildText("rights", ns));
+        inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", ns));
+        Element authorEl = atomDoc.getChild("author", ns);
+        if (authorEl != null) {
+            inspireAtomFeed.setAuthorName(atomDoc.getChild("author", ns).getChildText("name", ns));
+            inspireAtomFeed.setAuthorEmail(atomDoc.getChild("author", ns).getChildText("email", ns));
+        }
+        inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", nsXml));
+
+        List<Element> entryList = atomDoc.getChildren("entry", ns);
+        for (Element entry : entryList) {
+            for (Element linkEl : (List<Element>) entry.getChildren("link", ns)) {
+                if (linkEl.getAttributeValue("rel").equals("alternate")) {
+                    InspireAtomFeedEntry inspireAtomFeedEntry = new InspireAtomFeedEntry();
+
+                    inspireAtomFeedEntry.setTitle(entry.getChildText("title", ns));
+                    inspireAtomFeedEntry.setCrs(entry.getChild("category", ns).getAttributeValue("term"));
+
+                    inspireAtomFeedEntry.setType(linkEl.getAttributeValue("type"));
+                    inspireAtomFeedEntry.setLang(linkEl.getAttributeValue("hreflang"));
+                    inspireAtomFeedEntry.setUrl(linkEl.getAttributeValue("href"));
+
+                    inspireAtomFeed.addEntry(inspireAtomFeedEntry);
+                }
+            }
+        }
+
+        return inspireAtomFeed;
+    }
+
     /**
-     * Get the id of the metadata. This is a generated value and as such new instances should not have this set as it will simply be
-     * ignored
-     * and could result in reduced performance.
+     * Get the id of the metadata. This is a generated value and as such new instances should not
+     * have this set as it will simply be ignored and could result in reduced performance.
      *
      * @return the id of the metadata
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(nullable = false)
     public int getId() {
         return _id;
     }
 
     /**
-     * Set the id of the metadata. This is a generated value and as such new instances should not have this set as it will simply be
-     * ignored
-     * and could result in reduced performance.
+     * Set the id of the metadata. This is a generated value and as such new instances should not
+     * have this set as it will simply be ignored and could result in reduced performance.
      *
      * @param _id the id of the metadata
      * @return this entity object
@@ -111,7 +148,7 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
 
     @Column
     @Lob
-    @Type(type="org.hibernate.type.StringClobType")
+    @Type(type = "org.hibernate.type.StringClobType")
     public String getAtom() {
         return _atom;
     }
@@ -205,46 +242,6 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
         _entryList.add(entry);
     }
 
-
-    public static InspireAtomFeed build( Element atomDoc) {
-        InspireAtomFeed inspireAtomFeed = new InspireAtomFeed();
-
-        Namespace ns = Namespace.getNamespace("f", "http://www.w3.org/2005/Atom");
-        Namespace nsXml = Namespace.getNamespace("xml","http://www.w3.org/XML/1998/namespace");
-
-        inspireAtomFeed.setTitle(atomDoc.getChildText("title", ns));
-        inspireAtomFeed.setSubtitle(atomDoc.getChildText("subtitle", ns));
-        inspireAtomFeed.setRights(atomDoc.getChildText("rights", ns));
-        inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", ns));
-        Element authorEl = atomDoc.getChild("author", ns);
-        if (authorEl != null) {
-            inspireAtomFeed.setAuthorName(atomDoc.getChild("author", ns).getChildText("name", ns));
-            inspireAtomFeed.setAuthorEmail(atomDoc.getChild("author", ns).getChildText("email", ns));
-        }
-        inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", nsXml));
-
-        List<Element> entryList = atomDoc.getChildren("entry", ns);
-        for(Element entry : entryList) {
-            for(Element linkEl : (List<Element>) entry.getChildren("link", ns)) {
-                if (linkEl.getAttributeValue("rel").equals("alternate")) {
-                    InspireAtomFeedEntry inspireAtomFeedEntry = new InspireAtomFeedEntry();
-
-                    inspireAtomFeedEntry.setTitle(entry.getChildText("title", ns));
-                    inspireAtomFeedEntry.setCrs( entry.getChild("category", ns).getAttributeValue("term"));
-
-                    inspireAtomFeedEntry.setType(linkEl.getAttributeValue("type"));
-                    inspireAtomFeedEntry.setLang(linkEl.getAttributeValue("hreflang"));
-                    inspireAtomFeedEntry.setUrl(linkEl.getAttributeValue("href"));
-
-                    inspireAtomFeed.addEntry(inspireAtomFeedEntry);
-                }
-            }
-        }
-
-        return inspireAtomFeed;
-    }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -259,14 +256,19 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
             return false;
         if (_atomDatasetns != null ? !_atomDatasetns.equals(that._atomDatasetns) : that._atomDatasetns != null)
             return false;
-        if (_atomUrl != null ? !_atomUrl.equals(that._atomUrl) : that._atomUrl != null) return false;
-        if (_authorEmail != null ? !_authorEmail.equals(that._authorEmail) : that._authorEmail != null) return false;
-        if (_authorName != null ? !_authorName.equals(that._authorName) : that._authorName != null) return false;
+        if (_atomUrl != null ? !_atomUrl.equals(that._atomUrl) : that._atomUrl != null)
+            return false;
+        if (_authorEmail != null ? !_authorEmail.equals(that._authorEmail) : that._authorEmail != null)
+            return false;
+        if (_authorName != null ? !_authorName.equals(that._authorName) : that._authorName != null)
+            return false;
         if (_lang != null ? !_lang.equals(that._lang) : that._lang != null) return false;
         if (_rights != null ? !_rights.equals(that._rights) : that._rights != null) return false;
-        if (_subtitle != null ? !_subtitle.equals(that._subtitle) : that._subtitle != null) return false;
+        if (_subtitle != null ? !_subtitle.equals(that._subtitle) : that._subtitle != null)
+            return false;
         if (_title != null ? !_title.equals(that._title) : that._title != null) return false;
-        if (_entryList != null ? !_entryList.equals(that._entryList) : that._entryList != null) return false;
+        if (_entryList != null ? !_entryList.equals(that._entryList) : that._entryList != null)
+            return false;
 
         return true;
     }

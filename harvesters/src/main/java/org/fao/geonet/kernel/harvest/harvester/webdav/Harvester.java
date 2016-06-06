@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -55,35 +56,98 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
+interface RemoteRetriever {
+    public void init(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params);
+
+    public List<RemoteFile> retrieve() throws Exception;
+
+    public void destroy();
+}
+
+//=============================================================================
+
+interface RemoteFile {
+    public String getPath();
+
+    public ISODate getChangeDate();
+
+    public Element getMetadata(SchemaManager schemaMan) throws Exception;
+
+    public boolean isMoreRecentThan(String localDate);
+}
+
+//=============================================================================
+
 class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params) {
+    private Logger log;
+    private ServiceContext context;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
+    private WebDavParams params;
+
+    //--------------------------------------------------------------------------
+    private DataManager dataMan;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods : addMetadata
+    //---
+    //--------------------------------------------------------------------------
+    private CategoryMapper localCateg;
+
+    //--------------------------------------------------------------------------
+    private GroupMapper localGroups;
+
+    //--------------------------------------------------------------------------
+    private UriMapper localUris;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods : updateMetadata
+    //---
+    //--------------------------------------------------------------------------
+    private HarvestResult result;
+    private SchemaManager schemaMan;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params) {
         super(cancelMonitor);
-		this.log    = log;
-		this.context= context;
-		this.params = params;
+        this.log = log;
+        this.context = context;
+        this.params = params;
 
-		result = new HarvestResult();
+        result = new HarvestResult();
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		dataMan = gc.getBean(DataManager.class);
-		schemaMan = gc.getBean(SchemaManager.class);
-	}
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        dataMan = gc.getBean(DataManager.class);
+        schemaMan = gc.getBean(SchemaManager.class);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
-	@Override
-	public HarvestResult harvest(Logger log) throws Exception {
-		this.log = log;
-        if(log.isDebugEnabled()) log.debug("Retrieving remote metadata information for : "+ params.getName());
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    @Override
+    public HarvestResult harvest(Logger log) throws Exception {
+        this.log = log;
+        if (log.isDebugEnabled())
+            log.debug("Retrieving remote metadata information for : " + params.getName());
         RemoteRetriever rr = null;
         if (params.subtype.equals("webdav")) {
             rr = new WebDavRetriever();
@@ -93,34 +157,29 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             throw new IllegalArgumentException(params.subtype + " is not one of webdav or waf");
         }
         try {
-            Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);
+            Log.info(Log.SERVICE, "webdav harvest subtype : " + params.subtype);
             rr.init(cancelMonitor, log, context, params);
             List<RemoteFile> files = rr.retrieve();
-            if(log.isDebugEnabled()) log.debug("Remote files found : "+ files.size());
+            if (log.isDebugEnabled()) log.debug("Remote files found : " + files.size());
             align(files);
-        } finally { rr.destroy();
+        } finally {
+            rr.destroy();
         }
-		return result;
-	}
+        return result;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    private void align(final List<RemoteFile> files) throws Exception {
+        log.info("Start of alignment for : " + params.getName());
+        //-----------------------------------------------------------------------
+        //--- retrieve all local categories and groups
+        //--- retrieve harvested uuids for given harvesting node
+        localCateg = new CategoryMapper(context);
+        localGroups = new GroupMapper(context);
+        localUris = new UriMapper(context, params.getUuid());
 
-	private void align(final List<RemoteFile> files) throws Exception {
-		log.info("Start of alignment for : "+ params.getName());
-		//-----------------------------------------------------------------------
-		//--- retrieve all local categories and groups
-		//--- retrieve harvested uuids for given harvesting node
-		localCateg = new CategoryMapper(context);
-		localGroups= new GroupMapper(context);
-		localUris  = new UriMapper(context, params.getUuid());
-
-		//-----------------------------------------------------------------------
-		//--- remove old metadata
-		for (final String uri : localUris.getUris()) {
+        //-----------------------------------------------------------------------
+        //--- remove old metadata
+        for (final String uri : localUris.getUris()) {
             if (cancelMonitor.get()) {
                 return;
             }
@@ -128,8 +187,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             if (!exists(files, uri)) {
                 // only one metadata record created per uri by this harvester
                 String id = localUris.getRecords(uri).get(0).id;
-                if (log.isDebugEnabled()){
-                    log.debug("  - Removing old metadata with local id:"+ id);
+                if (log.isDebugEnabled()) {
+                    log.debug("  - Removing old metadata with local id:" + id);
                 }
                 try {
                     dataMan.deleteMetadataGroup(context, id);
@@ -140,102 +199,95 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 result.locallyRemoved++;
 
             }
-		}
-		//-----------------------------------------------------------------------
-		//--- insert/update new metadata
+        }
+        //-----------------------------------------------------------------------
+        //--- insert/update new metadata
 
-		for(RemoteFile rf : files) {
+        for (RemoteFile rf : files) {
             if (cancelMonitor.get()) {
                 return;
             }
 
             result.totalMetadata++;
-			List<RecordInfo> records = localUris.getRecords(rf.getPath());
-			if (records == null) {
-				addMetadata(rf);
-			} else {
-				// only one metadata record created per uri by this harvester 
-				updateMetadata(rf, records.get(0));
-			}
-		}
-		log.info("End of alignment for : "+ params.getName());
-	}
+            List<RecordInfo> records = localUris.getRecords(rf.getPath());
+            if (records == null) {
+                addMetadata(rf);
+            } else {
+                // only one metadata record created per uri by this harvester
+                updateMetadata(rf, records.get(0));
+            }
+        }
+        log.info("End of alignment for : " + params.getName());
+    }
 
-	//--------------------------------------------------------------------------
-	/** Returns true if the uri is present in the remote folder */
-	private boolean exists(List<RemoteFile> files, String uri) {
-		for(RemoteFile rf : files) {
-			if (uri.equals(rf.getPath())) {
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * Returns true if the uri is present in the remote folder
+     */
+    private boolean exists(List<RemoteFile> files, String uri) {
+        for (RemoteFile rf : files) {
+            if (uri.equals(rf.getPath())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods : addMetadata
-	//---
-	//--------------------------------------------------------------------------
-	/**
-	 * 
-	 To determine the UUID we are going to use the following mechanism: 1.-
-	 * Look for the file identifier on the metadata xml 2.- If there is no file
-	 * identifier, then use the name of the file 3.- If there is a collision of
-	 * uuid with existent metadata, use a random one 4.- If we still don't have
-	 * a clear UUID, use a random one (backup plan)
-	 * 
-	 **/
-	private void addMetadata(RemoteFile rf) throws Exception {
-		Element md = retrieveMetadata(rf);
-		if (md == null) {
-			return;
-		}
-		//--- schema handled check already done
-		String schema = dataMan.autodetectSchema(md);
+    /**
+     * To determine the UUID we are going to use the following mechanism: 1.- Look for the file
+     * identifier on the metadata xml 2.- If there is no file identifier, then use the name of the
+     * file 3.- If there is a collision of uuid with existent metadata, use a random one 4.- If we
+     * still don't have a clear UUID, use a random one (backup plan)
+     **/
+    private void addMetadata(RemoteFile rf) throws Exception {
+        Element md = retrieveMetadata(rf);
+        if (md == null) {
+            return;
+        }
+        //--- schema handled check already done
+        String schema = dataMan.autodetectSchema(md);
 
 
         // 1.- Look for the file identifier on the metadata xml
-        String uuid = dataMan.extractUUID(schema,  md);
+        String uuid = dataMan.extractUUID(schema, md);
 
         // 2.- If there is no file identifier, then use the name of the file
         if (uuid == null) {
-                String path = rf.getPath();
-                int start = path.lastIndexOf("/") + 1;
-                uuid = path.substring(start, path.length() - 4);
+            String path = rf.getPath();
+            int start = path.lastIndexOf("/") + 1;
+            uuid = path.substring(start, path.length() - 4);
         }
 
         // 3.- If there is a collision of uuid with existent metadata, use a
         // random one
         if (dataMan.existsMetadataUuid(uuid)) {
-                uuid = null;
+            uuid = null;
         }
 
         // 4.- If we still don't have a clear UUID, use a random one (backup
         // plan)
         if (uuid == null) {
-                uuid = UUID.randomUUID().toString();
-                log.debug("  - Setting uuid for metadata with remote path : "
-                                + rf.getPath());
+            uuid = UUID.randomUUID().toString();
+            log.debug("  - Setting uuid for metadata with remote path : "
+                + rf.getPath());
 
-                // --- set uuid inside metadata and get new xml
-                try {
-                        md = dataMan.setUUID(schema, uuid, md);
-                } catch (Exception e) {
-                        log.error("  - Failed to set uuid for metadata with remote path : "
-                                        + rf.getPath());
-                        errors.add(new HarvestError(e, this.log));
-                        return;
-                }
+            // --- set uuid inside metadata and get new xml
+            try {
+                md = dataMan.setUUID(schema, uuid, md);
+            } catch (Exception e) {
+                log.error("  - Failed to set uuid for metadata with remote path : "
+                    + rf.getPath());
+                errors.add(new HarvestError(e, this.log));
+                return;
+            }
         }
 
         log.debug("  - Adding metadata with remote path : " + rf.getPath());
 
 
+        if (log.isDebugEnabled())
+            log.debug("  - Adding metadata with remote path : " + rf.getPath());
 
-        if(log.isDebugEnabled()) log.debug("  - Adding metadata with remote path : "+ rf.getPath());
-
-		//
+        //
         // insert metadata
         //
 
@@ -247,7 +299,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             date = new ISODate(dataMan.extractDateModified(schema, md));
         } catch (Exception ex) {
             log.error("WebDavHarvester - addMetadata - Can't get metadata modified date for metadata uuid= " + uuid +
-                    ", using current date for modified date");
+                ", using current date for modified date");
             // WAF harvester, rf.getChangeDate() returns null
             if (rf.getChangeDate() != null) {
                 date = rf.getChangeDate();
@@ -255,18 +307,18 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         }
         Metadata metadata = new Metadata().setUuid(uuid);
         metadata.getDataInfo().
-                setSchemaId(schema).
-                setRoot(md.getQualifiedName()).
-                setChangeDate(date).
-                setCreateDate(date).
-                setType(MetadataType.METADATA);
+            setSchemaId(schema).
+            setRoot(md.getQualifiedName()).
+            setChangeDate(date).
+            setCreateDate(date).
+            setType(MetadataType.METADATA);
         metadata.getSourceInfo().
-                setSourceId(params.getUuid()).
-                setOwner(Integer.parseInt(params.getOwnerId()));
+            setSourceId(params.getUuid()).
+            setOwner(Integer.parseInt(params.getOwnerId()));
         metadata.getHarvestInfo().
-                setHarvested(true).
-                setUuid(params.getUuid()).
-                setUri(rf.getPath());
+            setHarvested(true).
+            setUuid(params.getUuid()).
+            setUri(rf.getPath());
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
@@ -277,17 +329,15 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         dataMan.flush();
 
         dataMan.indexMetadata(id, true);
-		result.addedMetadata++;
-	}
-	
-	//--------------------------------------------------------------------------
+        result.addedMetadata++;
+    }
 
-	private Element retrieveMetadata(RemoteFile rf) {
-		try {
-            if(log.isDebugEnabled()) log.debug("Getting remote file : "+ rf.getPath());
-			Element md = rf.getMetadata(schemaMan);
-            if(log.isDebugEnabled()) {
-                log.debug("Record got:\n"+ Xml.getString(md));
+    private Element retrieveMetadata(RemoteFile rf) {
+        try {
+            if (log.isDebugEnabled()) log.debug("Getting remote file : " + rf.getPath());
+            Element md = rf.getMetadata(schemaMan);
+            if (log.isDebugEnabled()) {
+                log.debug("Record got:\n" + Xml.getString(md));
             }
             // check that it is a known schema
             dataMan.autodetectSchema(md);
@@ -296,68 +346,58 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 params.getValidate().validate(dataMan, context, md);
                 return (Element) md.detach();
             } catch (Exception e) {
-                log.info("Skipping metadata that does not validate. Path is : "+ rf.getPath());
+                log.info("Skipping metadata that does not validate. Path is : " + rf.getPath());
                 result.doesNotValidate++;
             }
-		} catch (NoSchemaMatchesException e) {
-				log.warning("Skipping metadata with unknown schema. Path is : "+ rf.getPath());
-				result.unknownSchema++;
-		}
-		catch(JDOMException e) {
-			log.warning("Skipping metadata with bad XML format. Path is : "+ rf.getPath());
-			result.badFormat++;
-		}
-		catch(Exception e) {
-			log.warning("Raised exception while getting metadata file : "+ e);
-			result.unretrievable++;
-		}
-		//--- we don't raise any exception here. Just try to go on
-		return null;
-	}
+        } catch (NoSchemaMatchesException e) {
+            log.warning("Skipping metadata with unknown schema. Path is : " + rf.getPath());
+            result.unknownSchema++;
+        } catch (JDOMException e) {
+            log.warning("Skipping metadata with bad XML format. Path is : " + rf.getPath());
+            result.badFormat++;
+        } catch (Exception e) {
+            log.warning("Raised exception while getting metadata file : " + e);
+            result.unretrievable++;
+        }
+        //--- we don't raise any exception here. Just try to go on
+        return null;
+    }
 
-	//--------------------------------------------------------------------------
+    private boolean validates(String schema, Element md) {
+        try {
+            dataMan.validate(schema, md);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-	private boolean validates(String schema, Element md) {
-		try {
-			dataMan.validate(schema, md);
-			return true;
-		}
-		catch (Exception e) {
-			return false;
-		}
-	}
+    private void updateMetadata(RemoteFile rf, RecordInfo record) throws Exception {
+        if (!rf.isMoreRecentThan(record.changeDate)) {
+            if (log.isDebugEnabled())
+                log.debug("  - Metadata XML not changed for path : " + rf.getPath());
+            result.unchangedMetadata++;
+        } else {
+            if (log.isDebugEnabled())
+                log.debug("  - Updating local metadata for path : " + rf.getPath());
+            Element md = retrieveMetadata(rf);
+            if (md == null) {
+                return;
+            }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods : updateMetadata
-	//---
-	//--------------------------------------------------------------------------
-
-	private void updateMetadata(RemoteFile rf, RecordInfo record) throws Exception {
-		if (!rf.isMoreRecentThan(record.changeDate)) {
-            if(log.isDebugEnabled()) log.debug("  - Metadata XML not changed for path : "+ rf.getPath());
-			result.unchangedMetadata++;
-		}
-		else {
-            if(log.isDebugEnabled()) log.debug("  - Updating local metadata for path : "+ rf.getPath());
-			Element md = retrieveMetadata(rf);
-			if (md == null) {
-				return;
-			}
-			
-			//--- set uuid inside metadata (on metadata add it's created a new uuid ignoring fileIdentifier uuid).
+            //--- set uuid inside metadata (on metadata add it's created a new uuid ignoring fileIdentifier uuid).
             //--- In update we should use db uuid to update the xml uuid and keep in sych both.
             String schema = null;
             try {
                 schema = dataMan.autodetectSchema(md);
-                
+
                 //Update only if different
-                String uuid = dataMan.extractUUID(schema,  md);
+                String uuid = dataMan.extractUUID(schema, md);
                 if (!record.uuid.equals(uuid)) {
-                	md = dataMan.setUUID(schema, record.uuid, md);
+                    md = dataMan.setUUID(schema, record.uuid, md);
                 }
-            } catch(Exception e) {
-                log.error("  - Failed to set uuid for metadata with remote path : "+ rf.getPath());
+            } catch (Exception e) {
+                log.error("  - Failed to set uuid for metadata with remote path : " + rf.getPath());
                 return;
             }
 
@@ -377,7 +417,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 date = dataMan.extractDateModified(schema, md);
             } catch (Exception ex) {
                 log.error("WebDavHarvester - updateMetadata - Can't get metadata modified date for metadata id= "
-                        + record.id + ", using current date for modified date");
+                    + record.id + ", using current date for modified date");
                 // WAF harvester, rf.getChangeDate() returns null
                 if (rf.getChangeDate() != null) {
                     date = rf.getChangeDate().getDateAndTime();
@@ -385,10 +425,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             }
 
             final Metadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
-                    date, false);
+                date, false);
 
             //--- the administrator could change privileges and categories using the
-			//--- web interface so we have to re-set both
+            //--- web interface so we have to re-set both
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
             repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(record.id));
             addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, log);
@@ -399,47 +439,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             dataMan.flush();
 
             dataMan.indexMetadata(record.id, true);
-			result.updatedMetadata++;
-		}
-	}
+            result.updatedMetadata++;
+        }
+    }
 
-	public List<HarvestError> getErrors() {
-		return errors;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private Logger log;
-	private ServiceContext context;
-	private WebDavParams params;
-	private DataManager dataMan;
-	private CategoryMapper localCateg;
-	private GroupMapper localGroups;
-	private UriMapper localUris;
-	private HarvestResult result;
-	private SchemaManager  schemaMan;
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
-}
-
-//=============================================================================
-
-interface RemoteRetriever {
-	public void init(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params);
-	public List<RemoteFile> retrieve() throws Exception;
-	public void destroy();
-}
-
-//=============================================================================
-
-interface RemoteFile {
-	public String  getPath();
-	public ISODate getChangeDate();
-	public Element getMetadata(SchemaManager  schemaMan) throws Exception;
-	public boolean isMoreRecentThan(String localDate);
+    public List<HarvestError> getErrors() {
+        return errors;
+    }
 }
 
 //=============================================================================

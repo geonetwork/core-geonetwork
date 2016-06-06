@@ -44,6 +44,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -57,15 +58,12 @@ public class LDAPUtils {
 
     /**
      * Save or update an LDAP user to the local GeoNetwork database.
-     * 
-     * @param user
-     * @throws Exception
      */
 
     @Transactional
     public synchronized void saveUser(LDAPUser user,
-            boolean importPrivilegesFromLdap, boolean createNonExistingLdapGroup)
-            throws Exception {
+                                      boolean importPrivilegesFromLdap, boolean createNonExistingLdapGroup)
+        throws Exception {
         String userName = user.getUsername();
         if (Log.isDebugEnabled(Geonet.LDAP)) {
             Log.debug(Geonet.LDAP, "LDAP user sync for " + userName + " ...");
@@ -77,7 +75,7 @@ public class LDAPUtils {
             entityManager.flush();
             entityManager.clear();
             List<UserGroup> ug = getPrivilegesAndCreateGroups(user,
-                    createNonExistingLdapGroup, toSave);
+                createNonExistingLdapGroup, toSave);
             entityManager.flush();
             setUserGroups(toSave, ug);
         }
@@ -85,7 +83,7 @@ public class LDAPUtils {
 
     @Transactional
     private User getUser(LDAPUser user, boolean importPrivilegesFromLdap,
-            String userName) {
+                         String userName) {
         UserRepository userRepo = ApplicationContextHolder.get().getBean(UserRepository.class);
 
         User loadedUser = userRepo.findOneByUsername(userName);
@@ -101,16 +99,16 @@ public class LDAPUtils {
             loadedUser.mergeUser(user.getUser(), false);
             if (Log.isDebugEnabled(Geonet.LDAP)) {
                 Log.debug(Geonet.LDAP,
-                        "  - Update LDAP user " + user.getUsername() + " ("
-                                + loadedUser.getId() + ") in local database.");
+                    "  - Update LDAP user " + user.getUsername() + " ("
+                        + loadedUser.getId() + ") in local database.");
             }
             toSave = loadedUser;
 
         } else {
             if (Log.isDebugEnabled(Geonet.LDAP)) {
                 Log.debug(Geonet.LDAP,
-                        "  - Saving new LDAP user " + user.getUsername()
-                                + " to database.");
+                    "  - Saving new LDAP user " + user.getUsername()
+                        + " to database.");
             }
             toSave = user.getUser();
         }
@@ -122,12 +120,12 @@ public class LDAPUtils {
 
     @Transactional
     private List<UserGroup> getPrivilegesAndCreateGroups(LDAPUser user,
-            boolean createNonExistingLdapGroup, User toSave) {
+                                                         boolean createNonExistingLdapGroup, User toSave) {
         GroupRepository groupRepo = ApplicationContextHolder.get().getBean(GroupRepository.class);
 
         List<UserGroup> ug = new LinkedList<UserGroup>();
         for (Map.Entry<String, Profile> privilege : user.getPrivileges()
-                .entries()) {
+            .entries()) {
             // Add group privileges for each groups
 
             // Retrieve group id
@@ -142,13 +140,13 @@ public class LDAPUtils {
 
                 if (Log.isDebugEnabled(Geonet.LDAP)) {
                     Log.debug(Geonet.LDAP, "  - Add LDAP group " + groupName
-                            + " for user.");
+                        + " for user.");
                 }
             }
             if (group != null) {
                 if (Log.isDebugEnabled(Geonet.LDAP)) {
                     Log.debug(Geonet.LDAP, "  - Add LDAP group " + groupName
-                            + " for user.");
+                        + " for user.");
                 }
                 UserGroup usergroup = new UserGroup();
                 usergroup.setGroup(group);
@@ -158,11 +156,11 @@ public class LDAPUtils {
             } else {
                 if (Log.isDebugEnabled(Geonet.LDAP)) {
                     Log.debug(
-                            Geonet.LDAP,
-                            "  - Can't create LDAP group "
-                                    + groupName
-                                    + " for user. "
-                                    + "Group does not exist in local database or createNonExistingLdapGroup is set to false.");
+                        Geonet.LDAP,
+                        "  - Can't create LDAP group "
+                            + groupName
+                            + " for user. "
+                            + "Group does not exist in local database or createNonExistingLdapGroup is set to false.");
                 }
             }
         }
@@ -171,17 +169,18 @@ public class LDAPUtils {
 
     @Transactional
     private void setUserGroups(final User user, List<UserGroup> userGroups)
-            throws Exception {
-        UserGroupRepository userGroupRepo = ApplicationContextHolder.get().getBean(UserGroupRepository.class);;
+        throws Exception {
+        UserGroupRepository userGroupRepo = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
+        ;
 
         Collection<UserGroup> all = userGroupRepo.findAll(UserGroupSpecs
-                .hasUserId(user.getId()));
+            .hasUserId(user.getId()));
 
         if (Log.isTraceEnabled(Log.JEEVES)) {
             Log.trace(
-                    Log.JEEVES,
-                    "Current usergroups:"
-                            + UserGroupSpecs.hasUserId(user.getId()));
+                Log.JEEVES,
+                "Current usergroups:"
+                    + UserGroupSpecs.hasUserId(user.getId()));
             Log.trace(Log.JEEVES, all.size());
 
             for (UserGroup g : all) {
@@ -215,7 +214,7 @@ public class LDAPUtils {
             // Combine all groups editor and reviewer groups
             if (profile.equals(Profile.Reviewer.name())) {
                 final UserGroup userGroup = new UserGroup().setGroup(group)
-                        .setProfile(Profile.Editor).setUser(user);
+                    .setProfile(Profile.Editor).setUser(user);
                 String key = Profile.Editor.toString() + group.getId();
                 if (!listOfAddedProfiles.contains(key)) {
                     toAdd.add(userGroup);
@@ -226,15 +225,15 @@ public class LDAPUtils {
                 // leave it alone:
                 for (UserGroup g : all) {
                     if (g.getGroup().getId() == group.getId()
-                            && g.getProfile().equals(Profile.Editor)) {
+                        && g.getProfile().equals(Profile.Editor)) {
                         toRemove.remove(g);
                     }
                 }
             }
 
             final UserGroup userGroup = new UserGroup().setGroup(group)
-                    .setProfile(Profile.findProfileIgnoreCase(profile))
-                    .setUser(user);
+                .setProfile(Profile.findProfileIgnoreCase(profile))
+                .setUser(user);
             String key = profile + group.getId();
             if (!listOfAddedProfiles.contains(key)) {
                 toAdd.add(userGroup);
@@ -246,7 +245,7 @@ public class LDAPUtils {
             // leave it alone:
             for (UserGroup g : all) {
                 if (g.getGroup().getId() == group.getId()
-                        && g.getProfile().name().equalsIgnoreCase(profile)) {
+                    && g.getProfile().name().equalsIgnoreCase(profile)) {
                     toRemove.remove(g);
                 }
             }
@@ -264,7 +263,7 @@ public class LDAPUtils {
     }
 
     protected Map<String, ArrayList<String>> convertAttributes(
-            NamingEnumeration<? extends Attribute> attributesEnumeration) {
+        NamingEnumeration<? extends Attribute> attributesEnumeration) {
         Map<String, ArrayList<String>> userInfo = new HashMap<String, ArrayList<String>>();
         try {
             while (attributesEnumeration.hasMore()) {

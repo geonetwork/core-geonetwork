@@ -26,24 +26,24 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class MissingParameterEx extends BadInputEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class MissingParameterEx extends BadInputEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public MissingParameterEx(String name) { this(name, null); }
+    public MissingParameterEx(String name) {
+        this(name, null);
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public MissingParameterEx(String name, Object container)
-	{
-		super(name, container);
+    public MissingParameterEx(String name, Object container) {
+        super(name, container);
 
-		id = "missing-parameter";
-	}
+        id = "missing-parameter";
+    }
 }
 
 //=============================================================================

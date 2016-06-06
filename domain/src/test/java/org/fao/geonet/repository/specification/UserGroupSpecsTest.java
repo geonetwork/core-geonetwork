@@ -42,9 +42,7 @@ import static org.junit.Assert.*;
 /**
  * Test the UserGroupSpecs.
  * <p/>
- * User: Jesse
- * Date: 9/10/13
- * Time: 2:37 PM
+ * User: Jesse Date: 9/10/13 Time: 2:37 PM
  */
 public class UserGroupSpecsTest extends AbstractSpringDataTest {
 

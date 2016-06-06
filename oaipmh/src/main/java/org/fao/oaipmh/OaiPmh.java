@@ -27,25 +27,23 @@ import org.jdom.Namespace;
 
 //=============================================================================
 
-public class OaiPmh
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constants
-	//---
-	//---------------------------------------------------------------------------
+public class OaiPmh {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constants
+    //---
+    //---------------------------------------------------------------------------
 
-	public static final String SCHEMA_LOCATION = "http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd";
-	public static final String ROOT_NAME       = "OAI-PMH";
+    public static final String SCHEMA_LOCATION = "http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd";
+    public static final String ROOT_NAME = "OAI-PMH";
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public static class Namespaces
-	{
-		public static final Namespace OAI_PMH= Namespace.getNamespace(          "http://www.openarchives.org/OAI/2.0/");
-		public static final Namespace OAI_DC = Namespace.getNamespace("oai_dc", "http://www.openarchives.org/OAI/2.0/oai_dc/");
-		public static final Namespace XSI    = Namespace.getNamespace("xsi",    "http://www.w3.org/2001/XMLSchema-instance");
-	}
+    public static class Namespaces {
+        public static final Namespace OAI_PMH = Namespace.getNamespace("http://www.openarchives.org/OAI/2.0/");
+        public static final Namespace OAI_DC = Namespace.getNamespace("oai_dc", "http://www.openarchives.org/OAI/2.0/oai_dc/");
+        public static final Namespace XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+    }
 }
 
 //=============================================================================

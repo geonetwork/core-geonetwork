@@ -26,20 +26,18 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public abstract class BadResponseEx extends JeevesClientEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public abstract class BadResponseEx extends JeevesClientEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public BadResponseEx(String message, Object object)
-	{
-		super(message, object);
+    public BadResponseEx(String message, Object object) {
+        super(message, object);
 
-		id = "bad-response";
-	}
+        id = "bad-response";
+    }
 }
 
 //=============================================================================
