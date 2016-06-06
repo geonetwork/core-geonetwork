@@ -369,6 +369,7 @@ public class DirectoryApi {
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         boolean validate = false, ufo = false, index = false;
+        report.setTotalRecords(setOfUuidsToEdit.size());
         for (String recordUuid : setOfUuidsToEdit) {
             Metadata record = metadataRepository.findOneByUuid(recordUuid);
             if (record == null) {
@@ -393,7 +394,6 @@ public class DirectoryApi {
                                 validate, ufo, index, context.getLanguage(),
                                 new ISODate().toString(), true);
                             listOfRecordInternalId.add(record.getId());
-                            report.incrementProcessedRecords();
                             report.addMetadataInfos(record.getId(), "Metadata updated.");
                         } catch (Exception e) {
                             report.addMetadataError(record.getId(), e);
@@ -403,6 +403,7 @@ public class DirectoryApi {
                             listOfUpdatedRecord.add(collectResults.getUpdatedRecord());
                         }
                     }
+                    report.incrementProcessedRecords();
                 } catch (Exception e) {
                     report.addMetadataError(record.getId(), e);
                 }
