@@ -24,14 +24,14 @@
 
 <!--
   The main entry point for all user interface generated
-  from XSLT. 
+  from XSLT.
 -->
-<xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="2.0"
                 exclude-result-prefixes="#all">
 
   <xsl:output omit-xml-declaration="yes" method="html" doctype-system="html" indent="yes"
-    encoding="UTF-8"/>
+              encoding="UTF-8"/>
 
   <xsl:include href="common/base-variables.xsl"/>
   <xsl:include href="skin/default/skin.xsl"/>
@@ -52,31 +52,30 @@
         <meta name="keywords" content=""/>
 
 
-        <link rel="icon" sizes="16x16 32x32 48x48" type="image/png" href="../../images/logos/favicon.png"/>
+        <link rel="icon" sizes="16x16 32x32 48x48" type="image/png"
+              href="../../images/logos/favicon.png"/>
         <link href="rss.search?sortBy=changeDate" rel="alternate" type="application/rss+xml"
-          title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
+              title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
         <link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml"
-          title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
+              title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
 
         <xsl:call-template name="css-load"/>
       </head>
 
 
-      <!-- The GnCatController takes care of 
+      <!-- The GnCatController takes care of
       loading site information, check user login state
       and a facet search to get main site information.
       -->
       <body>
         <div class="gn-full">
-              <xsl:call-template name="header"/>
-              <xsl:apply-templates mode="content" select="."/>
-              <xsl:call-template name="footer"/>
-        </div>               
+          <xsl:call-template name="header"/>
+          <xsl:apply-templates mode="content" select="."/>
+          <xsl:call-template name="footer"/>
+        </div>
       </body>
     </html>
   </xsl:template>
-
-
 
 
 </xsl:stylesheet>

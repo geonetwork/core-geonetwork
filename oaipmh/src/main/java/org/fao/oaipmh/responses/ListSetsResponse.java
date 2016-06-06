@@ -26,6 +26,7 @@ package org.fao.oaipmh.responses;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.ListRequest;
@@ -37,88 +38,89 @@ import org.xml.sax.SAXException;
 
 //=============================================================================
 
-public class ListSetsResponse extends ListResponse
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class ListSetsResponse extends ListResponse {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public ListSetsResponse() {}
+    private List<SetInfo> sets = new ArrayList<SetInfo>();
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public ListSetsResponse(ListRequest lr, Element response)
-	{
-		super(lr, response);
-	}
+    public ListSetsResponse() {
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public void clearSets() { sets.clear(); }
-	
-	public int getSize() {	return sets.size();	}
+    public ListSetsResponse(ListRequest lr, Element response) {
+        super(lr, response);
+    }
 
-	//---------------------------------------------------------------------------
+    public void clearSets() {
+        sets.clear();
+    }
 
-	public void addSet(SetInfo si)
-	{
-		sets.add(si);
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public int getSize() {
+        return sets.size();
+    }
 
-	public SetInfo next() throws IOException, OaiPmhException, JDOMException, SAXException, Exception
-	{
-		return (SetInfo) super.next();
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public void addSet(SetInfo si) {
+        sets.add(si);
+    }
 
-	public Element toXml()
-	{
-		Element root = new Element(ListSetsRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
+    //---------------------------------------------------------------------------
 
-		for (SetInfo si : sets)
-			root.addContent(si.toXml());
+    public SetInfo next() throws IOException, OaiPmhException, JDOMException, SAXException, Exception {
+        return (SetInfo) super.next();
+    }
 
-		ResumptionToken token = getResumptionToken();
+    //---------------------------------------------------------------------------
+    //---
+    //--- Protected methods
+    //---
+    //---------------------------------------------------------------------------
 
-		if (token != null)
-			root.addContent(token.toXml());
+    public Element toXml() {
+        Element root = new Element(ListSetsRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
 
-		return root;
-	}
+        for (SetInfo si : sets)
+            root.addContent(si.toXml());
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Protected methods
-	//---
-	//---------------------------------------------------------------------------
+        ResumptionToken token = getResumptionToken();
 
-	protected Object createObject(Element object)
-	{
-		return new SetInfo(object);
-	}
+        if (token != null)
+            root.addContent(token.toXml());
 
-	//---------------------------------------------------------------------------
+        return root;
+    }
 
-	protected String getListElementName() { return "set"; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+    protected Object createObject(Element object) {
+        return new SetInfo(object);
+    }
 
-	private List<SetInfo> sets = new ArrayList<SetInfo>();
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	
+    protected String getListElementName() {
+        return "set";
+    }
+
+
 }
 
 //=============================================================================

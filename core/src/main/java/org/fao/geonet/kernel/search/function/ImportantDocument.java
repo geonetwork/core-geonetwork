@@ -31,12 +31,11 @@ import org.fao.geonet.kernel.search.SearchManager.LuceneFieldAttribute;
 import org.jdom.Element;
 
 /**
- * Compute a boost factor for document according to field custom field values.
- * Field name, values and boosting factor is defined by configuration.
- * 
- * The boost is computed using a sum of boost factor if field name and field
- * value match.
- * 
+ * Compute a boost factor for document according to field custom field values. Field name, values
+ * and boosting factor is defined by configuration.
+ *
+ * The boost is computed using a sum of boost factor if field name and field value match.
+ *
  * @author fxprunayre
  */
 public class ImportantDocument implements DocumentBoosting {
@@ -45,13 +44,10 @@ public class ImportantDocument implements DocumentBoosting {
     private HashMap<String, HashMap<String, Float>> config = new HashMap<String, HashMap<String, Float>>();
 
     /**
-     * 
-     * @param fields
-     *            A comma separated value of fields.
-     * @param values
-     *            A comma separated value of value for each field. Use NOTNULL to check any field values.
-     * @param boosts
-     *            A comma separated value of boost factor for each field.
+     * @param fields A comma separated value of fields.
+     * @param values A comma separated value of value for each field. Use NOTNULL to check any field
+     *               values.
+     * @param boosts A comma separated value of boost factor for each field.
      */
     public ImportantDocument(String fields, String values, String boosts) {
         List<String> fieldList = Arrays.asList(fields.split(","));
@@ -73,7 +69,7 @@ public class ImportantDocument implements DocumentBoosting {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.fao.geonet.kernel.search.function.DocumentBoosting#getBoost(org.apache
      * .lucene.document.Document)
@@ -84,7 +80,7 @@ public class ImportantDocument implements DocumentBoosting {
             Element field = (Element) o;
             String name = field.getAttributeValue(LuceneFieldAttribute.NAME.toString());
             HashMap<String, Float> fieldBoosts = config.get(name);
-            
+
             if (fieldBoosts != null) {
                 String value = field.getAttributeValue(LuceneFieldAttribute.STRING.toString());
                 Float b = fieldBoosts.get(value);
@@ -92,7 +88,7 @@ public class ImportantDocument implements DocumentBoosting {
                     documentBoost = addBoost(documentBoost, b);
                 } else if (fieldBoosts.containsKey(NOTNULL)) {
                     documentBoost = addBoost(documentBoost,
-                            fieldBoosts.get(NOTNULL));
+                        fieldBoosts.get(NOTNULL));
                 }
             }
         }

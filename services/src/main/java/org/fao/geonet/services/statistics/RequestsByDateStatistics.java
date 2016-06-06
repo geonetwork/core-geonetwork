@@ -25,6 +25,7 @@ package org.fao.geonet.services.statistics;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Pair;
@@ -41,19 +42,19 @@ import java.util.List;
 
 /**
  * Service to get the db-stored requests information group by a date (year, month, day)
- * 
+ *
  * @author nicolas Ribot
- * 
  */
 public class RequestsByDateStatistics extends NotInReadOnlyModeService {
-
-    /** the custom part of the date query; according to user choice for graphic */
-    public Hashtable<String, DateInterval> queryFragments;
 
     static final String BY_YEAR = "YEAR";
     static final String BY_MONTH = "MONTH";
     static final String BY_DAY = "DAY";
     static final String BY_HOUR = "HOUR";
+    /**
+     * the custom part of the date query; according to user choice for graphic
+     */
+    public Hashtable<String, DateInterval> queryFragments;
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
@@ -77,7 +78,7 @@ public class RequestsByDateStatistics extends NotInReadOnlyModeService {
         String dateToParam = Util.getParam(params, "dateTo");
         String graphicType = Util.getParam(params, "graphicType");
         boolean byType = Util.getParam(params, "byType", false);
-        
+
         ISODate dateFrom = null;
         ISODate dateTo = null;
 
@@ -117,16 +118,16 @@ public class RequestsByDateStatistics extends NotInReadOnlyModeService {
     }
 
     public Element buildQuery(SearchRequestRepository requestRepository, String service, ISODate dateFrom,
-                                                       ISODate dateTo, String graphicType) {
+                              ISODate dateTo, String graphicType) {
 
         DateInterval dateInterval = this.queryFragments.get(graphicType);
         final List<Pair<DateInterval, Integer>> requestDateToRequestCountBetween = requestRepository
-                .getRequestDateToRequestCountBetween(dateInterval, dateFrom, dateTo, SearchRequestSpecs.hasService(service));
+            .getRequestDateToRequestCountBetween(dateInterval, dateFrom, dateTo, SearchRequestSpecs.hasService(service));
 
         Element results = new Element("requests");
         for (Pair<DateInterval, Integer> entry : requestDateToRequestCountBetween) {
             results.addContent(new Element("record")
-                .addContent(new Element("number").setText(""+entry.two()))
+                .addContent(new Element("number").setText("" + entry.two()))
                 .addContent(new Element("reqdate").setText(entry.one().getDateString()))
             );
         }

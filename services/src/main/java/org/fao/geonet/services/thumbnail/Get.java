@@ -26,6 +26,7 @@ package org.fao.geonet.services.thumbnail;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -39,74 +40,70 @@ import java.util.List;
 
 //=============================================================================
 
-public class Get implements Service
-{
-	private Update  update = new Update();
+public class Get implements Service {
+    private Update update = new Update();
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception
-	{
-		update.init(appPath, params);
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        update.init(appPath, params);
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		//--- store changed fields if we arrive here from the editing form
-		//--- the update service uses the following parameters:
-		//--- id, data, validate, currTab, version
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        //--- store changed fields if we arrive here from the editing form
+        //--- the update service uses the following parameters:
+        //--- id, data, validate, currTab, version
 
-		if (saveEditData(params))
-			//--- data is not saved if someone else has changed the metadata
-			update.exec(params, context);
+        if (saveEditData(params))
+            //--- data is not saved if someone else has changed the metadata
+            update.exec(params, context);
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		DataManager dataMan = gc.getBean(DataManager.class);
+        DataManager dataMan = gc.getBean(DataManager.class);
 
-		String id = Util.getParam(params, Params.ID);
+        String id = Util.getParam(params, Params.ID);
 
-		//-----------------------------------------------------------------------
-		//--- get metadata
+        //-----------------------------------------------------------------------
+        //--- get metadata
 
-		Element result = dataMan.getThumbnails(context, id);
+        Element result = dataMan.getThumbnails(context, id);
 
-		if (result == null)
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+        if (result == null)
+            throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		result.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
+        result.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
 
-		return result;
-	}
+        return result;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //--------------------------------------------------------------------------
 
-	private boolean saveEditData(Element params)
-	{
-		@SuppressWarnings("unchecked")
+    private boolean saveEditData(Element params) {
+        @SuppressWarnings("unchecked")
         List<Element> list = params.getChildren();
 
-		for (Element el : list) {
-			if (el.getName().startsWith("_"))
-				return true;
-		}
+        for (Element el : list) {
+            if (el.getName().startsWith("_"))
+                return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 }
 
 //=============================================================================

@@ -29,46 +29,44 @@ package jeeves.server.dispatchers;
 /**
  * This class represents a single output page of a service
  */
-public class ErrorPage extends AbstractPage
-{
-	private int statusCode;
-	
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+public class ErrorPage extends AbstractPage {
+    private int statusCode;
 
-	/**
-	 * @return the statusCode
-	 */
-	public int getStatusCode() {
-		return statusCode;
-	}
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-	/**
-	 * @param statusCode the statusCode to set
-	 */
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-	
-	/**
-	 * @param id
-	 * @return
-	 */
-	public boolean matches(String id)
-	{
-		String test = getTestCondition();
+    /**
+     * @return the statusCode
+     */
+    public int getStatusCode() {
+        return statusCode;
+    }
 
-		//--- if the test is missing -> this is the last error page
+    /**
+     * @param statusCode the statusCode to set
+     */
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
 
-		if (test == null)
-			return true;
+    /**
+     * @param id
+     * @return
+     */
+    public boolean matches(String id) {
+        String test = getTestCondition();
 
-		return test.equals(id);
-	}
-	
+        //--- if the test is missing -> this is the last error page
+
+        if (test == null)
+            return true;
+
+        return test.equals(id);
+    }
+
 }
 
 //=============================================================================

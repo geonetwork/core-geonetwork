@@ -25,24 +25,24 @@ package org.fao.geonet.exceptions;
 
 //=============================================================================
 
-public class NoSchemaMatchesException extends JeevesClientEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class NoSchemaMatchesException extends JeevesClientEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
     private static final long serialVersionUID = 1L;
 
-    public NoSchemaMatchesException(String name) { this(name, null); }
+    public NoSchemaMatchesException(String name) {
+        this(name, null);
+    }
 
-	public NoSchemaMatchesException(String name, Object value)
-	{
-		super(name, value);
+    public NoSchemaMatchesException(String name, Object value) {
+        super(name, value);
 
-		id = "no-schema-matches";
-	}
+        id = "no-schema-matches";
+    }
 }
 
 //=============================================================================

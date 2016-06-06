@@ -25,17 +25,18 @@ package org.fao.geonet.monitor.webapp;
 
 import com.yammer.metrics.core.HealthCheckRegistry;
 import com.yammer.metrics.core.MetricsRegistry;
+
 import jeeves.monitor.MonitorManager;
 
 import javax.servlet.*;
+
 import java.io.IOException;
 
 /**
- * Sets the metrics registries earlier enough so all geonetwork and metrics will get and use the same instance.
+ * Sets the metrics registries earlier enough so all geonetwork and metrics will get and use the
+ * same instance.
  *
- * User: jeichar
- * Date: 4/17/12
- * Time: 5:32 PM
+ * User: jeichar Date: 4/17/12 Time: 5:32 PM
  */
 public class MetricsRegistryInitializerFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -51,7 +52,7 @@ public class MetricsRegistryInitializerFilter implements Filter {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        chain.doFilter(request,response);
+        chain.doFilter(request, response);
     }
 
     public void destroy() {

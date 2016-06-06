@@ -24,7 +24,9 @@ package org.fao.geonet.guiservices.csw.virtual;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import jeeves.server.JeevesEngine;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Service;
@@ -51,27 +53,28 @@ public class Update {
     public static final String OCCUR_PREFIX = "occur__";
 
     private static String[] noneFilterParameters = {
-            Params.ID,
-            Params.OPERATION,
-            Params.SERVICENAME,
-            Params.CLASSNAME,
-            Params.SERVICEDESCRIPTION,
-            Params.SERVICED_EXPLICIT_QUERY,
-            "_content_type"
+        Params.ID,
+        Params.OPERATION,
+        Params.SERVICENAME,
+        Params.CLASSNAME,
+        Params.SERVICEDESCRIPTION,
+        Params.SERVICED_EXPLICIT_QUERY,
+        "_content_type"
     };
 
     @RequestMapping(value = "/{lang}/admin.config.virtualcsw.update", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
     OkResponse exec(@RequestParam String operation,
-                 @RequestParam(Params.ID)  String serviceId,
-                 @RequestParam(Params.SERVICENAME) String serviceName,
-                 @RequestParam(Params.CLASSNAME) String className,
-                 @RequestParam(value=Params.SERVICEDESCRIPTION, defaultValue="", required=false) String serviceDescription,
-                 @RequestParam(value=Params.SERVICED_EXPLICIT_QUERY, defaultValue="", required=false) String explicitQuery,
-                 @RequestParam Map<String, String> filters
-                 )
-            throws Exception {
+                    @RequestParam(Params.ID) String serviceId,
+                    @RequestParam(Params.SERVICENAME) String serviceName,
+                    @RequestParam(Params.CLASSNAME) String className,
+                    @RequestParam(value = Params.SERVICEDESCRIPTION, defaultValue = "", required = false) String serviceDescription,
+                    @RequestParam(value = Params.SERVICED_EXPLICIT_QUERY, defaultValue = "", required = false) String explicitQuery,
+                    @RequestParam Map<String, String> filters
+    )
+        throws Exception {
 
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceRepository serviceRepository = applicationContext.getBean(ServiceRepository.class);
@@ -103,7 +106,7 @@ public class Update {
 
             if (service != null) {
                 throw new IllegalArgumentException("Service with name "
-                        + serviceName + " already exists");
+                    + serviceName + " already exists");
             }
 
             service = new org.fao.geonet.domain.Service();

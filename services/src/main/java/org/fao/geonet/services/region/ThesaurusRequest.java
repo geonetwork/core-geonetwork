@@ -24,7 +24,9 @@
 package org.fao.geonet.services.region;
 
 import com.google.common.base.Optional;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SingleThesaurusFinder;
@@ -49,7 +51,7 @@ import java.util.Map.Entry;
 
 public class ThesaurusRequest extends Request {
 
-    
+
     private static final String NO_CATEGORY = "_none_";
 
     private static final CoordinateReferenceSystem WGS84 = Region.WGS84;
@@ -61,8 +63,8 @@ public class ThesaurusRequest extends Request {
     private SingleThesaurusFinder finder;
 
     private Set<String> localesToLoad;
-    
-    
+
+
     public ThesaurusRequest(ServiceContext context, WeakHashMap<String, Map<String, String>> categoryTranslations, Set<String> localesToLoad, Thesaurus thesaurus) {
         this.localesToLoad = localesToLoad;
         this.serviceContext = context;
@@ -85,19 +87,16 @@ public class ThesaurusRequest extends Request {
 
     @Override
     public Request categoryId(String categoryIdParam) {
-        if(categoryIdParam.equals(NO_CATEGORY)) {
+        if (categoryIdParam.equals(NO_CATEGORY)) {
             categoryIdParam = "";
         }
         searchBuilder.relationship(categoryIdParam, KeywordRelation.BROADER, KeywordSearchType.MATCH, false);
         return this;
     }
-    
-    
+
+
     /**
      * Return the first broader term found.
-     * 
-     * @param keywordId
-     * @return
      */
     public String getCategoryId(String keywordId) {
         String categoryIdParam = "";
@@ -114,7 +113,7 @@ public class ThesaurusRequest extends Request {
         }
         return categoryIdParam;
     }
-    
+
     @Override
     public Request maxRecords(int maxRecordsParam) {
         searchBuilder.maxResults(maxRecordsParam);
@@ -123,45 +122,45 @@ public class ThesaurusRequest extends Request {
 
     @Override
     public Collection<Region> execute() throws Exception {
-       
+
         List<KeywordBean> keywords = searchBuilder.build().search(finder);
         List<Region> regions = new ArrayList<Region>(keywords.size());
         for (KeywordBean keywordBean : keywords) {
             String id = keywordBean.getUriCode();
             Map<String, String> unfilteredLabels = keywordBean.getValues();
-            Map<String, String> labels = new HashMap<String, String>((int)(unfilteredLabels.size() * 1.25));
+            Map<String, String> labels = new HashMap<String, String>((int) (unfilteredLabels.size() * 1.25));
             Iterator<Entry<String, String>> iter = unfilteredLabels.entrySet().iterator();
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 Entry<String, String> next = iter.next();
-                if(!next.getValue().trim().isEmpty()) {
+                if (!next.getValue().trim().isEmpty()) {
                     labels.put(next.getKey(), next.getValue());
                 }
             }
             String categoryId = getCategoryId(keywordBean.getUriCode());
-            
-            if(categoryId.trim().isEmpty()) {
+
+            if (categoryId.trim().isEmpty()) {
                 categoryId = NO_CATEGORY;
             }
             String categoryLabelKey = categoryId;
             if (categoryLabelKey.equals(NO_CATEGORY)) {
                 categoryLabelKey = "none";
             }
-            if(categoryLabelKey.indexOf('#') > -1) {
-                categoryLabelKey = categoryLabelKey.substring(categoryLabelKey.lastIndexOf('#')+1);
+            if (categoryLabelKey.indexOf('#') > -1) {
+                categoryLabelKey = categoryLabelKey.substring(categoryLabelKey.lastIndexOf('#') + 1);
             }
             Map<String, String> categoryLabels = categoryTranslations.get(categoryLabelKey);
-            if(categoryLabels == null) {
+            if (categoryLabels == null) {
                 try {
                     categoryLabels = LangUtils.translate(serviceContext.getApplicationContext(), "categories", categoryLabelKey);
                     categoryTranslations.put(categoryLabelKey, categoryLabels);
                 } catch (JDOMException e) {
                     Log.debug(Geonet.THESAURUS_MAN,
-                            String.format("Category key %s is not valid for JDOM element." +
-                                            "Region thesaurus should use rdf:about element " +
-                                            "with the following structure <prefix>#<id> " +
-                                            "where the id could be a valid XML element name. " +
-                                            "Error is %s.",
-                                    categoryLabelKey, e.getMessage()));
+                        String.format("Category key %s is not valid for JDOM element." +
+                                "Region thesaurus should use rdf:about element " +
+                                "with the following structure <prefix>#<id> " +
+                                "where the id could be a valid XML element name. " +
+                                "Error is %s.",
+                            categoryLabelKey, e.getMessage()));
                     categoryLabels = new WeakHashMap<String, String>();
                 }
             }

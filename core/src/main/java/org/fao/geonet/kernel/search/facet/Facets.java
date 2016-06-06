@@ -44,7 +44,7 @@ public class Facets {
     public List<Dimension> getDimensionsUsing(String indexKey) {
         List<Dimension> result = new ArrayList<Dimension>();
 
-        for (Dimension dimension: dimensions) {
+        for (Dimension dimension : dimensions) {
             String dimensionIndexKey = dimension.getIndexKey();
 
             if (dimensionIndexKey != null && dimensionIndexKey.equals(indexKey)) {
@@ -55,7 +55,7 @@ public class Facets {
         return result;
     }
 
-    public FacetsConfig getAsLuceneFacetsConfig () {
+    public FacetsConfig getAsLuceneFacetsConfig() {
         FacetsConfig result = new FacetsConfig();
 
         for (Dimension dimension : dimensions) {
@@ -80,7 +80,7 @@ public class Facets {
     public String toString() {
         StringBuilder sb = new StringBuilder(FACET_CONFIGURATION_HEADER);
 
-        for (Dimension dimension: dimensions) {
+        for (Dimension dimension : dimensions) {
             sb.append(dimension);
         }
 

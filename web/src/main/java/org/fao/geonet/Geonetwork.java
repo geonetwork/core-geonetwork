@@ -145,7 +145,7 @@ public class Geonetwork implements ApplicationHandler {
             LogUtils.refreshLogConfiguration();
         } catch (OperationAbortedEx e) {
             logger.error("Error while setting log configuration. " +
-                         "Check the setting in the database for logger configuration file.");
+                "Check the setting in the database for logger configuration file.");
             logger.error(e.getMessage());
         }
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
@@ -237,16 +237,16 @@ public class Geonetwork implements ApplicationHandler {
                     ContextContainer cc = (ContextContainer) appContext.getBean("ContextGateway");
                     cc.setSrvctx(context);
                     Server.init(z3950port, appContext);
-                    
+
                 } catch (Exception e) {
                     logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
-                                 "harvesting) may not work. Error is:" + e.getMessage());
+                        "harvesting) may not work. Error is:" + e.getMessage());
                     e.printStackTrace();
                 }
 
             } else {
                 logger.error("     Repositories file builder FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
-                             "harvesting) may not work.");
+                    "harvesting) may not work.");
             }
         }
         //------------------------------------------------------------------------
@@ -261,8 +261,8 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("			- Schema Catalog File     : " + schemaCatalogueFile);
         SchemaManager schemaMan = _applicationContext.getBean(SchemaManager.class);
         schemaMan.configure(_applicationContext, appPath, dataDirectory.getResourcesDir(), schemaCatalogueFile,
-                schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA),
-                createOrUpdateSchemaCatalog);
+            schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA),
+            createOrUpdateSchemaCatalog);
 
         //------------------------------------------------------------------------
         //--- initialize search and editing
@@ -299,15 +299,15 @@ public class Geonetwork implements ApplicationHandler {
             maxWritesInTransaction = Integer.parseInt(maxWritesInTransactionStr);
         } catch (NumberFormatException nfe) {
             logger.error("Invalid config parameter: maximum number of writes to spatial index in a transaction (maxWritesInTransaction)"
-                         + ", Using " + maxWritesInTransaction + " instead.");
+                + ", Using " + maxWritesInTransaction + " instead.");
             nfe.printStackTrace();
         }
 
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
         searchMan = _applicationContext.getBean(SearchManager.class);
         searchMan.init(logAsynch,
-                logSpatialObject, luceneTermsToExclude,
-                maxWritesInTransaction);
+            logSpatialObject, luceneTermsToExclude,
+            maxWritesInTransaction);
 
 
         // if the validator exists the proxyCallbackURL needs to have the external host and
@@ -375,10 +375,10 @@ public class Geonetwork implements ApplicationHandler {
         SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
         if (sourceRepository.findOneByUuid(settingMan.getSiteId()) == null) {
             final Source source = sourceRepository.save(
-                    new Source()
-                            .setLocal(true)
-                            .setName(settingMan.getSiteName())
-                            .setUuid(settingMan.getSiteId()));
+                new Source()
+                    .setLocal(true)
+                    .setName(settingMan.getSiteName())
+                    .setUuid(settingMan.getSiteId()));
         }
 
         // Creates a default site logo, only if the logo image doesn't exists
@@ -415,7 +415,7 @@ public class Geonetwork implements ApplicationHandler {
 
 
             if (StringUtils.isNotEmpty(atomType) && StringUtils.isNotEmpty(atomSchedule)
-                    && atomType.equalsIgnoreCase(InspireAtomType.ATOM_REMOTE)) {
+                && atomType.equalsIgnoreCase(InspireAtomType.ATOM_REMOTE)) {
                 logger.info("  - INSPIRE ATOM feed harvester ...");
 
                 InspireAtomHarvesterScheduler.schedule(atomSchedule, context, gnContext);
@@ -429,7 +429,7 @@ public class Geonetwork implements ApplicationHandler {
         boolean dbHeartBeatEnabled = Boolean.parseBoolean(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_ENABLED, "false"));
         if (dbHeartBeatEnabled) {
             Integer dbHeartBeatInitialDelay = Integer.parseInt(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_INITIALDELAYSECONDS,
-                    "5"));
+                "5"));
             Integer dbHeartBeatFixedDelay = Integer.parseInt(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_FIXEDDELAYSECONDS, "60"));
             createDBHeartBeat(gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
         }
@@ -440,7 +440,7 @@ public class Geonetwork implements ApplicationHandler {
         return gnContext;
     }
 
-    private void fillCaches(final ServiceContext context)  {
+    private void fillCaches(final ServiceContext context) {
         final Format formatService = context.getBean(Format.class); // this will initialize the formatter
 
         Thread fillCaches = new Thread(new Runnable() {
@@ -479,7 +479,7 @@ public class Geonetwork implements ApplicationHandler {
                         final MockHttpServletResponse response = new MockHttpServletResponse();
                         try {
                             formatService.exec("eng", FormatType.html.toString(), mdId.toString(), null, formatterName,
-                                    Boolean.TRUE.toString(), false, FormatterWidth._100, new ServletWebRequest(servletRequest, response));
+                                Boolean.TRUE.toString(), false, FormatterWidth._100, new ServletWebRequest(servletRequest, response));
                         } catch (Throwable t) {
                             Log.info(Geonet.GEONETWORK, "Error while initializing the Formatter with id: " + formatterName, t);
                         }
@@ -501,15 +501,15 @@ public class Geonetwork implements ApplicationHandler {
             try {
                 // import data from init files
                 List<Pair<String, String>> importData = context.getApplicationContext().getBean("initial-data", List.class);
-                    final DbLib dbLib = new DbLib();
-                    for (Pair<String, String> pair : importData) {
-                        final ServletContext servletContext = context.getServlet().getServletContext();
-                        final Path appPath = context.getAppPath();
-                        final Path filePath = IO.toPath(pair.one());
-                        final String filePrefix = pair.two();
-                        Log.warning(Geonet.DB, "Executing SQL from: " + filePath + " " + filePrefix);
-                        dbLib.insertData(servletContext, context, appPath, filePath, filePrefix);
-                    }
+                final DbLib dbLib = new DbLib();
+                for (Pair<String, String> pair : importData) {
+                    final ServletContext servletContext = context.getServlet().getServletContext();
+                    final Path appPath = context.getAppPath();
+                    final Path filePath = IO.toPath(pair.one());
+                    final String filePrefix = pair.two();
+                    Log.warning(Geonet.DB, "Executing SQL from: " + filePath + " " + filePrefix);
+                    dbLib.insertData(servletContext, context, appPath, filePath, filePrefix);
+                }
                 String siteUuid = UUID.randomUUID().toString();
                 context.getBean(SettingManager.class).setSiteUuid(siteUuid);
 
@@ -524,8 +524,8 @@ public class Geonetwork implements ApplicationHandler {
     }
 
     /**
-     * Sets up a periodic check whether GeoNetwork can successfully write to the database. If it can't, GeoNetwork will
-     * automatically switch to read-only mode.
+     * Sets up a periodic check whether GeoNetwork can successfully write to the database. If it
+     * can't, GeoNetwork will automatically switch to read-only mode.
      */
     private void createDBHeartBeat(final GeonetContext gc, Integer initialDelay, Integer fixedDelay) throws SchedulerException {
         logger.info("creating DB heartbeat with initial delay of " + initialDelay + " s and fixed delay of " + fixedDelay + " s");
@@ -580,19 +580,15 @@ public class Geonetwork implements ApplicationHandler {
 
     /**
      * Creates a default site logo, only if the logo image doesn't exists
-     *
-     * @param nodeUuid
-     * @param context
-     * @param appPath
      */
     private void createSiteLogo(String nodeUuid, ServiceContext context, Path appPath) {
         try {
             Path logosDir = Resources.locateLogosDir(context);
-            Path logo =logosDir.resolve(nodeUuid + ".png");
+            Path logo = logosDir.resolve(nodeUuid + ".png");
             if (!Files.exists(logo)) {
                 final ServletContext servletContext = context.getServlet().getServletContext();
                 byte[] logoData = Resources.loadImage(servletContext, appPath,
-                                        "images/harvesting/GN3.png", new byte[0]).one();
+                    "images/harvesting/GN3.png", new byte[0]).one();
                 Files.write(logo, logoData);
             }
         } catch (Throwable e) {

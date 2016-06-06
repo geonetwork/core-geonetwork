@@ -26,6 +26,7 @@ package org.fao.geonet.services.crs;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -38,19 +39,19 @@ import java.util.Iterator;
  */
 @Deprecated
 public class GetCRSTypes implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		Element crsTypes = new Element("crsTypes");
-		Iterator<String> iterator = Constant.CRSType.keySet().iterator();
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
+        Element crsTypes = new Element("crsTypes");
+        Iterator<String> iterator = Constant.CRSType.keySet().iterator();
 
-		while (iterator.hasNext()) {
-			Element type = new Element("type");
-			type.addContent(new Element("id").setText(iterator.next()));
-			crsTypes.addContent(type);
-		}
-		return crsTypes;
-	}
+        while (iterator.hasNext()) {
+            Element type = new Element("type");
+            type.addContent(new Element("id").setText(iterator.next()));
+            crsTypes.addContent(type);
+        }
+        return crsTypes;
+    }
 }

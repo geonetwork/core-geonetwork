@@ -61,8 +61,8 @@ public class ConfigFile {
         if (searchParentDir) {
             if (schemaDir == null) {
                 properties = new Path[]{
-                        bundleDir.getParent().resolve(CONFIG_PROPERTIES_FILENAME),
-                        bundleDir.resolve(CONFIG_PROPERTIES_FILENAME)};
+                    bundleDir.getParent().resolve(CONFIG_PROPERTIES_FILENAME),
+                    bundleDir.resolve(CONFIG_PROPERTIES_FILENAME)};
 
             } else {
                 List<Path> tmp = Lists.newArrayList();
@@ -155,12 +155,12 @@ public class ConfigFile {
                 out.println("# Uncomment lines of interest");
                 out.println("");
                 out.println("# " + FIXED_LANG_CONFIG_PROP + " sets the language of the strings to the fixed language, " +
-                            "this ensures that the formatter will always use the same language for its labels, strings, " +
-                            "etc... no matter what language code is in the url.");
+                    "this ensures that the formatter will always use the same language for its labels, strings, " +
+                    "etc... no matter what language code is in the url.");
                 out.println("#" + FIXED_LANG_CONFIG_PROP + "=eng");
                 out.println("# " + LOAD_STRINGS_PROP + " - if true or non-existent then geonetwork strings will be added to the xml " +
-                            "document before view.xsl is applied.  The default is true so if this parameter is not present then the " +
-                            "strings will be loaded");
+                    "document before view.xsl is applied.  The default is true so if this parameter is not present then the " +
+                    "strings will be loaded");
                 out.println(LOAD_STRINGS_PROP + "=true");
                 out.println("");
                 out.println("# " + APPLICABLE_SCHEMAS + " - defines which metadata schemas this bundle applies to.  ");
@@ -179,15 +179,15 @@ public class ConfigFile {
         }
     }
 
-	public String loadLoaderRootPath(final String loader) {
-		return config.getProperty(LOADER+'.'+loader.toLowerCase(), "*");
-	}
-	public boolean isHttpRedirect() {
-		return Boolean.valueOf(config.getProperty(LOADER_REDIRECT, "false")).booleanValue();
-	}
-	public boolean isRemoteAllowed() {
-		return Boolean.valueOf(config.getProperty(LOADER_REMOTE_REQUEST, "false")).booleanValue();
-	}
+    public String loadLoaderRootPath(final String loader) {
+        return config.getProperty(LOADER+'.'+loader.toLowerCase(), "*");
+    }
+    public boolean isHttpRedirect() {
+        return Boolean.valueOf(config.getProperty(LOADER_REDIRECT, "false")).booleanValue();
+    }
+    public boolean isRemoteAllowed() {
+        return Boolean.valueOf(config.getProperty(LOADER_REMOTE_REQUEST, "false")).booleanValue();
+    }
     public boolean loadStrings() {
         return contains(ConfigFile.LOAD_STRINGS_PROP);
     }

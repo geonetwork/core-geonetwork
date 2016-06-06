@@ -28,8 +28,9 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * A useful class for detecting unclosed input streams.  It keeps track of all the open input streams and provides a way to
- * write the stacktrace where each stream was created to a file to allow debugging.
+ * A useful class for detecting unclosed input streams.  It keeps track of all the open input
+ * streams and provides a way to write the stacktrace where each stream was created to a file to
+ * allow debugging.
  *
  * @author Jesse on 1/17/2015.
  */

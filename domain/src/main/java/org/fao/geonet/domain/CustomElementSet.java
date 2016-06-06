@@ -28,7 +28,8 @@ import org.fao.geonet.entitylistener.CustomElementSetEntityListenerManager;
 import javax.persistence.*;
 
 /**
- * Csw custom element set. This is part of the CSW specification related to what elements are returned by GetRecords and GetRecordById.
+ * Csw custom element set. This is part of the CSW specification related to what elements are
+ * returned by GetRecords and GetRecordById.
  *
  * @author Jesse
  */
@@ -42,7 +43,8 @@ public class CustomElementSet extends GeonetEntity {
     private int _xpathHashcode;
 
     /**
-     * The hashcode of the xpath.  This has to be the id because mysql + JPA have a problem with a Ids longer than 255 characters.
+     * The hashcode of the xpath.  This has to be the id because mysql + JPA have a problem with a
+     * Ids longer than 255 characters.
      *
      * @return the hashcode of the xpath.
      */
@@ -52,8 +54,7 @@ public class CustomElementSet extends GeonetEntity {
     }
 
     /**
-     * Set the xpath hashcode.
-     * Method is protected because it is set when calling setXPath.
+     * Set the xpath hashcode. Method is protected because it is set when calling setXPath.
      *
      * @param xpathHashcode the hashcode.
      */
@@ -62,9 +63,8 @@ public class CustomElementSet extends GeonetEntity {
     }
 
     /**
-     * Get the xpath of the element to include in the element set. Each included element is described by a full xpath relative to the
-     * document root. <br/>
-     * This is a required element.
+     * Get the xpath of the element to include in the element set. Each included element is
+     * described by a full xpath relative to the document root. <br/> This is a required element.
      */
     @Column(length = XPATH_COLUMN_LENGTH, nullable = false)
     public String getXpath() {
@@ -72,9 +72,8 @@ public class CustomElementSet extends GeonetEntity {
     }
 
     /**
-     * Get the xpath of the element to include in the element set. Each included element is described by a full xpath relative to the
-     * document root. <br/>
-     * This is a required element.
+     * Get the xpath of the element to include in the element set. Each included element is
+     * described by a full xpath relative to the document root. <br/> This is a required element.
      *
      * @param xpath the xpath relative to document root.
      * @return this object

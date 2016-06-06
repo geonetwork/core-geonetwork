@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.search;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.TestFunction;
 import org.fao.geonet.constants.Geonet;
@@ -45,39 +46,19 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+
 import javax.annotation.Nonnull;
 
 @ContextConfiguration(inheritLocations = true, locations = "classpath:perf-repository-test-context.xml")
 public class LuceneSearcherPerformanceTest extends AbstractCoreIntegrationTest {
-
-    public static class PerfDirectoryFactory extends FSDirectoryFactory {
-        Path luceneTempDir;
-        @Override
-        public synchronized void init() throws IOException {
-            if (taxonomyFile == null) {
-                luceneTempDir = Files.createTempDirectory("luceneTempDir");
-
-                indexFile = luceneTempDir.resolve(NON_SPATIAL_DIR);
-                taxonomyFile = luceneTempDir.resolve(TAXONOMY_DIR);
-
-                Files.createDirectories(indexFile);
-                Files.createDirectories(taxonomyFile);
-            }
-        }
-
-        @Nonnull
-        @Override
-        protected Path createNewIndexDirectory(String baseName) throws IOException {
-            return luceneTempDir.resolve(baseName);
-        }
-    }
 
     @Autowired
     private SearchManager searchManager;
     @Autowired
     private UserRepository userRepository;
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testSearchAndPresent() throws Exception {
         final ServiceContext context = createServiceContext();
         loginAsAdmin(context);
@@ -110,9 +91,9 @@ public class LuceneSearcherPerformanceTest extends AbstractCoreIntegrationTest {
                 try (MetaSearcher searcher = searchManager.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
                     Element request = new Element("request").addContent(Arrays.asList(
-                            new Element("fast").setText("index"),
-                            new Element("from").setText("1"),
-                            new Element("to").setText("10")
+                        new Element("fast").setText("index"),
+                        new Element("from").setText("1"),
+                        new Element("to").setText("10")
                     ));
 
                     searcher.search(context, request, new ServiceConfig());
@@ -121,5 +102,28 @@ public class LuceneSearcherPerformanceTest extends AbstractCoreIntegrationTest {
                 }
             }
         };
+    }
+
+    public static class PerfDirectoryFactory extends FSDirectoryFactory {
+        Path luceneTempDir;
+
+        @Override
+        public synchronized void init() throws IOException {
+            if (taxonomyFile == null) {
+                luceneTempDir = Files.createTempDirectory("luceneTempDir");
+
+                indexFile = luceneTempDir.resolve(NON_SPATIAL_DIR);
+                taxonomyFile = luceneTempDir.resolve(TAXONOMY_DIR);
+
+                Files.createDirectories(indexFile);
+                Files.createDirectories(taxonomyFile);
+            }
+        }
+
+        @Nonnull
+        @Override
+        protected Path createNewIndexDirectory(String baseName) throws IOException {
+            return luceneTempDir.resolve(baseName);
+        }
     }
 }

@@ -38,14 +38,12 @@ public enum TypeName {
 
     //------------------------------------------------------------------------
 
-    private TypeName(String typeName) {
-        this.typeName = typeName;
-    }
+    private String typeName;
 
     //------------------------------------------------------------------------
 
-    public String toString() {
-        return typeName;
+    private TypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     //------------------------------------------------------------------------
@@ -118,5 +116,7 @@ public enum TypeName {
 
     //------------------------------------------------------------------------
 
-    private String typeName;
+    public String toString() {
+        return typeName;
+    }
 }

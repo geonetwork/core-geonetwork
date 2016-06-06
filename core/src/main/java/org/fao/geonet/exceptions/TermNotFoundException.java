@@ -24,13 +24,13 @@
 package org.fao.geonet.exceptions;
 
 public class TermNotFoundException extends RuntimeException {
-    
+
     private static final long serialVersionUID = 1L;
 
     public TermNotFoundException(String message) {
         super(message);
     }
-    
+
     public TermNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }

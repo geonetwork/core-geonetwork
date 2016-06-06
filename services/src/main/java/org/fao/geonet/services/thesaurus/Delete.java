@@ -26,6 +26,7 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -44,33 +45,33 @@ import java.nio.file.Path;
  * Removes a thesaurus from the system.
  */
 public class Delete extends NotInReadOnlyModeService {
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
-		
-		// Get parameters
-		String name = Util.getParam(params, Params.REF);
-		
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
 
-		// Load file
-		Thesaurus thesaurus = manager.getThesaurusByName(name);
-		Path item = thesaurus.getFile();
-		
-		// Remove old file from thesaurus manager
-		manager.remove(name);
-		
-		// Remove file
-		if (Files.exists(item)) {
-			IO.deleteFile(item, true, Geonet.THESAURUS);
+        // Get parameters
+        String name = Util.getParam(params, Params.REF);
+
+
+        // Load file
+        Thesaurus thesaurus = manager.getThesaurusByName(name);
+        Path item = thesaurus.getFile();
+
+        // Remove old file from thesaurus manager
+        manager.remove(name);
+
+        // Remove file
+        if (Files.exists(item)) {
+            IO.deleteFile(item, true, Geonet.THESAURUS);
 
             // Delete thesaurus record in the database
             ThesaurusActivationRepository repo = context.getBean(ThesaurusActivationRepository.class);
@@ -81,8 +82,8 @@ public class Delete extends NotInReadOnlyModeService {
         } else {
             throw new IllegalArgumentException("Thesaurus not found --> " + name);
         }
-		
-		return new Element(Jeeves.Elem.RESPONSE)
-							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));
-	}
+
+        return new Element(Jeeves.Elem.RESPONSE)
+            .addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));
+    }
 }

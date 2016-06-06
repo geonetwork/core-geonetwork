@@ -26,6 +26,7 @@ package org.fao.geonet.services.inspireatom;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.inspireatom.InspireAtomService;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -49,13 +50,19 @@ import java.nio.file.Path;
  */
 public class AtomDescribe implements Service {
 
-    /** Dataset identifier param name **/
+    /**
+     * Dataset identifier param name
+     **/
     private final static String DATASET_IDENTIFIER_CODE_PARAM = "spatial_dataset_identifier_code";
 
-    /** Dataset namespace param name **/
+    /**
+     * Dataset namespace param name
+     **/
     private final static String DATASET_IDENTIFIER_NS_PARAM = "spatial_dataset_identifier_namespace";
 
-    /** Service identifier param name **/
+    /**
+     * Service identifier param name
+     **/
     private final static String SERVICE_IDENTIFIER = "fileIdentifier";
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
@@ -68,8 +75,7 @@ public class AtomDescribe implements Service {
     //---
     //--------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         SettingManager sm = context.getBean(SettingManager.class);
 
         boolean inspireEnable = sm.getValueAsBool("system/inspire/enable");
@@ -92,11 +98,6 @@ public class AtomDescribe implements Service {
 
     /**
      * Process a dataset feed.
-     *
-     * @param params
-     * @param context
-     * @return
-     * @throws Exception
      */
     private Element processDatasetFeed(Element params, ServiceContext context) throws Exception {
         DataManager dm = context.getBean(DataManager.class);
@@ -107,7 +108,7 @@ public class AtomDescribe implements Service {
         String datasetIdNs = Util.getParam(params, DATASET_IDENTIFIER_NS_PARAM);
 
         Log.debug(Geonet.ATOM, "Processing dataset feed  (" + DATASET_IDENTIFIER_CODE_PARAM + ": " +
-                datasetIdCode + ", " + DATASET_IDENTIFIER_NS_PARAM + ": " + datasetIdNs +  " )");
+            datasetIdCode + ", " + DATASET_IDENTIFIER_NS_PARAM + ": " + datasetIdNs + " )");
 
         // Get metadata uuid
         String datasetUuid = service.retrieveDatasetUuidFromIdentifierNs(datasetIdCode, datasetIdNs);
@@ -125,21 +126,16 @@ public class AtomDescribe implements Service {
 
     /**
      * Process a service feed.
-     *
-     * @param params
-     * @param context
-     * @return
-     * @throws Exception
      */
     private Element processServiceFeed(Element params, ServiceContext context) throws Exception {
         String fileIdentifier = Util.getParam(params, SERVICE_IDENTIFIER);
-        Log.debug(Geonet.ATOM, "Processing service feed  (" + SERVICE_IDENTIFIER + ": " + fileIdentifier +  " )");
+        Log.debug(Geonet.ATOM, "Processing service feed  (" + SERVICE_IDENTIFIER + ": " + fileIdentifier + " )");
 
         InspireAtomService service = context.getBean(InspireAtomService.class);
 
         // Retrieve metadata to check existence and permissions.
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm   = gc.getBean(DataManager.class);
+        DataManager dm = gc.getBean(DataManager.class);
 
         String id = dm.getMetadataId(fileIdentifier);
         if (StringUtils.isEmpty(id)) throw new MetadataNotFoundEx(fileIdentifier);

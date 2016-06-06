@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -46,14 +47,12 @@ import java.util.Map;
 
 /**
  * Get suggestion for all metadata
- * 
- * <ul>
- * <li>
- * 1) Discover registered processes:
- * 
- * Use metadata.suggestion?id=2&action=list to retrieve the list of processes
- * registered for the metadata schema.
- * 
+ *
+ * <ul> <li> 1) Discover registered processes:
+ *
+ * Use metadata.suggestion?id=2&action=list to retrieve the list of processes registered for the
+ * metadata schema.
+ *
  * <pre>
  * {@code
  *   <suggestions>
@@ -61,20 +60,12 @@ import java.util.Map;
  *   </suggestions>
  * }
  * </pre>
- * A
- * The process attribute contains the process identifier.
- * </li>
- * <li>
- * 2) Check if processes have suggestions for the metadata record Use
- * metadata.suggestion?id=2&action=analyze to analyze for all known processes or
- * metadata.suggestion?id=2&action=analyze&process=keywords-comma-exploder to
- * analyze for only one process.
- * </li>
- * <li>
- * 3) Apply the transformation using the @see {@link org.fao.geonet.services.metadata.XslProcessing} service
- * metadata.processing?id=41&process=keywords-comma-exploder
- * </li>
- * </ul>
+ * A The process attribute contains the process identifier. </li> <li> 2) Check if processes have
+ * suggestions for the metadata record Use metadata.suggestion?id=2&action=analyze to analyze for
+ * all known processes or metadata.suggestion?id=2&action=analyze&process=keywords-comma-exploder to
+ * analyze for only one process. </li> <li> 3) Apply the transformation using the @see {@link
+ * org.fao.geonet.services.metadata.XslProcessing} service metadata.processing?id=41&process=keywords-comma-exploder
+ * </li> </ul>
  */
 public class GetSuggestion implements Service {
 
@@ -84,11 +75,11 @@ public class GetSuggestion implements Service {
     }
 
     public Element exec(Element params, ServiceContext context)
-            throws Exception {
+        throws Exception {
 
         Element response = new Element("suggestions");
         GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
+            .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
         SettingManager sm = gc.getBean(SettingManager.class);
 

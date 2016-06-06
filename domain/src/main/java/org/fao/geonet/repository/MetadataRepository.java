@@ -29,6 +29,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -38,7 +39,7 @@ import javax.annotation.Nullable;
  * @author Jesse
  */
 public interface MetadataRepository extends GeonetRepository<Metadata, Integer>, MetadataRepositoryCustom,
-        JpaSpecificationExecutor<Metadata> {
+    JpaSpecificationExecutor<Metadata> {
     /**
      * Find one metadata by the metadata's uuid.
      *
@@ -59,8 +60,10 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
 
     /**
      * Increment popularity of metadata by 1.
+     *
      * @param mdId the id of the metadata
      */
     @Modifying
-    @Query("UPDATE "+Metadata.TABLENAME+" m SET m.dataInfo.popularity = m.dataInfo.popularity + 1 WHERE m.id = ?1")
-    void incrementPopularity(int mdId);}
+    @Query("UPDATE " + Metadata.TABLENAME + " m SET m.dataInfo.popularity = m.dataInfo.popularity + 1 WHERE m.id = ?1")
+    void incrementPopularity(int mdId);
+}

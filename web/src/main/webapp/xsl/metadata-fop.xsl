@@ -11,7 +11,7 @@
   <xsl:variable name="background-color-banner">#ffffff</xsl:variable>
   <xsl:variable name="background-color-thumbnail">#ffffff</xsl:variable>
   <xsl:variable name="border-color">#ffffff</xsl:variable>
-  
+
   <xsl:variable name="header-border">2pt solid #2e456b</xsl:variable>
 
   <!-- Some font properties -->
@@ -30,8 +30,8 @@
   <xsl:variable name="df">[Y0001]-[M01]-[D01]</xsl:variable>
 
   <!-- Limit the number of thumbnail to retrieve. According to the server
-  this is usually a cause of OutOfMemory error or UnsupportedOperationException : 
-  readRaster not supported! 
+  this is usually a cause of OutOfMemory error or UnsupportedOperationException :
+  readRaster not supported!
   FIXME : Support more thumbnails
   -->
   <xsl:variable name="max-number-of-thumbnail" select="300"/>
@@ -56,7 +56,7 @@
   </xsl:template>
 
   <!-- ======================================================
-        Page footer with node info, date and paging info 
+        Page footer with node info, date and paging info
   -->
   <xsl:template name="fop-footer">
     <!-- Footer with catalogue name, org name and pagination -->
@@ -150,7 +150,7 @@
     <xsl:param name="block"/>
     <xsl:param name="label"/>
     <xsl:param name="color">blue</xsl:param>
-    
+
       <fo:table-row >
         <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt" margin-top="4pt"
           number-columns-spanned="2">
@@ -252,7 +252,7 @@
                               <xsl:with-param name="value"
                                 select="string-join($metadata/keyword, ', ')"/>
                             </xsl:call-template>
-                            
+
                             <xsl:if test="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:credit">
                               <xsl:call-template name="info-rows">
                                 <xsl:with-param name="label" select="'Sources'"/>
@@ -368,14 +368,14 @@
               select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/',/root/gui/language,'/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
             />') </xsl:attribute>
             <xsl:value-of select="$gui/strings/show"/> <xsl:text>(XML)</xsl:text>
-          </fo:basic-link> 
-            <xsl:if test="/root/gui/reqService != 'pdf'"><xsl:text>|</xsl:text> 
+          </fo:basic-link>
+            <xsl:if test="/root/gui/reqService != 'pdf'"><xsl:text>|</xsl:text>
               <fo:basic-link text-decoration="underline" color="blue">
               <xsl:attribute name="external-destination"> url('<xsl:value-of
                 select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/fre/pdf?uuid=', $metadata/geonet:info/uuid)"
               />') </xsl:attribute>
               <xsl:value-of select="$gui/strings/show"/> <xsl:text>(PDF)</xsl:text>
-            </fo:basic-link> <xsl:text>|</xsl:text> 
+            </fo:basic-link> <xsl:text>|</xsl:text>
             </xsl:if>
           </xsl:when>
           <xsl:otherwise>

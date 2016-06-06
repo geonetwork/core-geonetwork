@@ -27,47 +27,45 @@ package org.fao.geonet.services.main;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.jdom.Element;
 
 import java.nio.file.Path;
 
 //=============================================================================
 
-public class SearchResult implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class SearchResult implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception
-	{
-		search.init(appPath, config);
-		result.init(appPath, config);
-	}
+    private Search search = new Search();
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
+    private Result result = new Result();
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		search.exec(params, context);
+    //--------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //--------------------------------------------------------------------------
 
-		return result.exec(params, context);
-	}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+        search.init(appPath, config);
+        result.init(appPath, config);
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//--------------------------------------------------------------------------
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        search.exec(params, context);
 
-	private Search search = new Search();
-	private Result result = new Result();
+        return result.exec(params, context);
+    }
 }
 
 //=============================================================================

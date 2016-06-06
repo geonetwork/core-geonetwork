@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 
 import org.fao.geonet.Util;
@@ -47,94 +48,92 @@ import java.nio.file.Path;
  * For editing : update leaves information. Access is restricted.
  */
 public class Update extends NotInReadOnlyModeService {
-	private ServiceConfig config;
+    private ServiceConfig config;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception
-	{
-		config = params;
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        config = params;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
         ajaxEditUtils.preprocessUpdate(params, context);
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan = gc.getBean(DataManager.class);
-		UserSession		session = context.getUserSession();
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataMan = gc.getBean(DataManager.class);
+        UserSession session = context.getUserSession();
 
-		String id         = Utils.getIdentifierFromParameters(params, context);
-		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
-		String showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
-		String data       = params.getChildText(Params.DATA);
-        String minor      = Util.getParam(params, Params.MINOREDIT, "false");
+        String id = Utils.getIdentifierFromParameters(params, context);
+        String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
+        String showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
+        String data = params.getChildText(Params.DATA);
+        String minor = Util.getParam(params, Params.MINOREDIT, "false");
 
-		boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
-		boolean forget   = config.getValue(Params.FORGET, "no").equals("yes");
+        boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
+        boolean forget = config.getValue(Params.FORGET, "no").equals("yes");
         boolean commit = config.getValue(Params.START_EDITING_SESSION, "no").equals("yes");
 
-		if (!forget) {
-			int iLocalId = Integer.parseInt(id);
-			dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate));
+        if (!forget) {
+            int iLocalId = Integer.parseInt(id);
+            dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate));
 
-			//--- use StatusActionsFactory and StatusActions class to possibly
-			//--- change status as a result of this edit (use onEdit method)
-			StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
-			StatusActions sa = saf.createStatusActions(context);
+            //--- use StatusActionsFactory and StatusActions class to possibly
+            //--- change status as a result of this edit (use onEdit method)
+            StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
+            StatusActions sa = saf.createStatusActions(context);
             sa.onEdit(iLocalId, minor.equals("true"));
 
-			if (data != null) {
-				Element md = Xml.loadString(data, false);
+            if (data != null) {
+                Element md = Xml.loadString(data, false);
 
                 String changeDate = null;
                 boolean validate = showValidationErrors.equals("true");
                 boolean updateDateStamp = !minor.equals("true");
                 boolean ufo = true;
                 boolean index = true;
-				dataMan.updateMetadata(context, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
-			} else {
-				ajaxEditUtils.updateContent(params, false, true);
-			}
-		} else {
-		  dataMan.cancelEditingSession(context, id);
-		}
+                dataMan.updateMetadata(context, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
+            } else {
+                ajaxEditUtils.updateContent(params, false, true);
+            }
+        } else {
+            dataMan.cancelEditingSession(context, id);
+        }
 
-		//-----------------------------------------------------------------------
-		//--- update element and return status
+        //-----------------------------------------------------------------------
+        //--- update element and return status
 
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-        String tocIndex       = params.getChildText(Geonet.Elem.TOC_INDEX);
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+        String tocIndex = params.getChildText(Geonet.Elem.TOC_INDEX);
         elResp.addContent(new Element(Geonet.Elem.TOC_INDEX).setText(tocIndex));
-		elResp.addContent(new Element(Geonet.Elem.SHOWVALIDATIONERRORS).setText(showValidationErrors));
-        boolean justCreated = Util.getParam(params, Params.JUST_CREATED, null) != null ;
-        if(justCreated) {
+        elResp.addContent(new Element(Geonet.Elem.SHOWVALIDATIONERRORS).setText(showValidationErrors));
+        boolean justCreated = Util.getParam(params, Params.JUST_CREATED, null) != null;
+        if (justCreated) {
             elResp.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
         }
         elResp.addContent(new Element(Params.MINOREDIT).setText(minor));
-        
+
         //--- if finished then remove the XML from the session
-		if (finished) {
-			ajaxEditUtils.removeMetadataEmbedded(session, id);
-			
-			dataMan.endEditingSession(id, session);
-		}
+        if (finished) {
+            ajaxEditUtils.removeMetadataEmbedded(session, id);
+
+            dataMan.endEditingSession(id, session);
+        }
 
         if (!finished && !forget && commit) {
             dataMan.startEditingSession(context, id);
         }
-		return elResp;
-	}
+        return elResp;
+    }
 }

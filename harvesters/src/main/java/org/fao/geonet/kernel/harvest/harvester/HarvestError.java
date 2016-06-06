@@ -36,24 +36,13 @@ import org.fao.geonet.exceptions.*;
 import org.jdom.JDOMException;
 
 /**
- * 
- * <p>
- * Master class for harvesting errors.
- * </p>
- * <p>
- * Example of usage:
- * </p>
- * <code>
- * SQLException e = ...;
- * HarvestError harvestError = new HarvestError(e, log);
-   harvestError.setDescription("Error updating the source logos from " + 
-            params.name + ": \n" + e.getSQLState());
-   harvestError.setHint("Check the original resource (" + sourceUuid + ") is correctly defined.");
-   this.errors.add(harvestError);
-   </code>
- * 
+ * <p> Master class for harvesting errors. </p> <p> Example of usage: </p> <code> SQLException e =
+ * ...; HarvestError harvestError = new HarvestError(e, log); harvestError.setDescription("Error
+ * updating the source logos from " + params.name + ": \n" + e.getSQLState());
+ * harvestError.setHint("Check the original resource (" + sourceUuid + ") is correctly defined.");
+ * this.errors.add(harvestError); </code>
+ *
  * @author delawen
- * 
  */
 public class HarvestError {
 
@@ -69,7 +58,7 @@ public class HarvestError {
 
     /**
      * If there is any hint on how to solve the error, this is it.
-     * 
+     *
      * Example: check the username and password
      */
     private String hint = "Check with your administrator the error.";
@@ -79,11 +68,11 @@ public class HarvestError {
 
         this.origin = ex;
         this.description = "The server didn't accept one of the parameters"
-                + " sent on the request.\n The parameter rejected was: "
-                + ex.getLocator() + " (" + ex.getMessage() + ")";
+            + " sent on the request.\n The parameter rejected was: "
+            + ex.getLocator() + " (" + ex.getMessage() + ")";
 
         this.hint = "Check that geonetwork supports the exact version of"
-                + " the server you are trying to connect";
+            + " the server you are trying to connect";
         printLog(log);
     }
 
@@ -92,12 +81,13 @@ public class HarvestError {
 
         this.origin = ex;
         this.description = ex.getMessage();
-        if(this.description == null || this.description.isEmpty()) {
+        if (this.description == null || this.description.isEmpty()) {
             this.description = ex.getClass().toString();
         }
         // Do not print log, as it is a very generic exception
         // leave it to main caller
     }
+
     public HarvestError(CacheException ex, Logger log) {
         super();
 
@@ -119,7 +109,7 @@ public class HarvestError {
 
         this.origin = e;
         this.description = "The server returned an answer that could not be processed: "
-                + e.getObject();
+            + e.getObject();
         this.hint = "Check the harvester is correctly configured.";
         printLog(log);
     }
@@ -148,7 +138,7 @@ public class HarvestError {
         this.description = "There was an error trying to reach an URI. " + e.getMessage();
         printLog(log);
     }
-    
+
     public HarvestError(MalformedURLException e, Logger log) {
         super();
 
@@ -163,7 +153,7 @@ public class HarvestError {
 
         this.origin = e;
         this.description = "The metadata is defined on an unsupported encoding: "
-                + e.getMessage();
+            + e.getMessage();
         this.hint = "Check with your administrator the encoding error.";
         printLog(log);
     }
@@ -174,7 +164,7 @@ public class HarvestError {
         this.origin = e;
         this.description = "Unable to parse the metadata.";
         this.hint = "Check with your administrator about possible "
-                + "network errors or corrupt data on harvested server.";
+            + "network errors or corrupt data on harvested server.";
         printLog(log);
     }
 
@@ -183,7 +173,7 @@ public class HarvestError {
 
         this.origin = e;
         this.description = "There was an error while updating the database: "
-                + e.getSQLState();
+            + e.getSQLState();
         this.hint = "Check with your administrator that the database is not corrupted.";
         printLog(log);
     }
@@ -205,6 +195,7 @@ public class HarvestError {
         this.hint = "Check that the schemas used are defined on geonetwork.";
         printLog(log);
     }
+
     public HarvestError(SchemaMatchConflictException e, Logger log) {
         super();
 
@@ -275,13 +266,11 @@ public class HarvestError {
     @Override
     public String toString() {
         return this.origin.getClass() + "[" + this.description + " -> "
-                + this.hint + "]";
+            + this.hint + "]";
     }
 
     /**
      * Generic print on log of current harvest error
-     * 
-     * @param log
      */
     public void printLog(Logger log) {
         if (this.description != null) {

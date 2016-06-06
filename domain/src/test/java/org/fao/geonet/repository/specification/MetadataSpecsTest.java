@@ -59,9 +59,7 @@ import static org.fao.geonet.repository.specification.MetadataSpecs.isType;
 /**
  * Test for MetadataSpecs.
  * <p/>
- * User: Jesse
- * Date: 9/4/13
- * Time: 10:08 PM
+ * User: Jesse Date: 9/4/13 Time: 10:08 PM
  */
 public class MetadataSpecsTest extends AbstractSpringDataTest {
     @Autowired

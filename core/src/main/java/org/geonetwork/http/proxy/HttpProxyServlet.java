@@ -24,6 +24,7 @@
 package org.geonetwork.http.proxy;
 
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
@@ -55,6 +56,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -68,21 +70,16 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class HttpProxyServlet extends HttpServlet {
 
-    protected transient AutowireCapableBeanFactory ctx;
-
     private static final long serialVersionUID = 1L;
-
     // Url to proxy
     private static final String PARAM_URL = "url";
-
     // Content type parameter name in header
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
-
     // Servlet init parameters set in servlet definition in web.xml
     private static final String INIT_PARAM_ALLOWED_HOSTS = "AllowedHosts";
     private static final String INIT_PARAM_ALLOWED_CONTENT_TYPES = "AllowedContentTypes";
     private static final String INIT_PARAM_DEFAULT_PROXY_URL = "DefaultProxyUrl";
-
+    protected transient AutowireCapableBeanFactory ctx;
     // Default URL for proxy
     private String defaultProxyUrl;
 
@@ -96,8 +93,7 @@ public class HttpProxyServlet extends HttpServlet {
     /**
      * Initializes servlet Content Types allowed and the host to use in the proxy
      *
-     * @param servletConfig         Servlet configuration
-     * @throws ServletException
+     * @param servletConfig Servlet configuration
      */
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -120,10 +116,10 @@ public class HttpProxyServlet extends HttpServlet {
                         addresses.add(inetAddress);
                     }
                 } catch (UnknownHostException e) {
-                    Log.error(Geonet.GEONETWORK+".httpproxy", "Error resolving address of host:"+host, e);
+                    Log.error(Geonet.GEONETWORK + ".httpproxy", "Error resolving address of host:" + host, e);
                 }
             }
-            if(!addresses.isEmpty()) {
+            if (!addresses.isEmpty()) {
                 this.allowedHosts = addresses;
             }
         }
@@ -153,7 +149,7 @@ public class HttpProxyServlet extends HttpServlet {
             if (!isAllowedHost(host)) {
                 //throw new ServletException("This proxy does not allow you to access that location.");
                 response.sendError(org.springframework.http.HttpStatus.BAD_REQUEST.value(), "This proxy does not allow you to access " +
-                                                                                            "that location.");
+                    "that location.");
                 return;
             }
 
@@ -161,7 +157,7 @@ public class HttpProxyServlet extends HttpServlet {
                 method = new HttpHead(uri);
 
                 ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext
-                        (getServletContext());
+                    (getServletContext());
 
                 SettingManager sm = applicationContext.getBean(SettingManager.class);
 
@@ -181,9 +177,9 @@ public class HttpProxyServlet extends HttpServlet {
                         contentTypesReturned = contentType.getValue().split(" ");
                         if (!isValidContentType(contentTypesReturned[0])) {
                             response.sendError(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE,
-                                    String.format(
-                                            "Status: 415 Unsupported media type '%s'",
-                                            contentTypesReturned[0]));
+                                String.format(
+                                    "Status: 415 Unsupported media type '%s'",
+                                    contentTypesReturned[0]));
                             return;
                         }
                     }
@@ -204,8 +200,8 @@ public class HttpProxyServlet extends HttpServlet {
 
                 } else {
                     returnExceptionMessage(response,
-                            httpResponse.getStatusLine().getStatusCode(),
-                            "Unexpected failure: " + httpResponse.getStatusLine().getReasonPhrase()
+                        httpResponse.getStatusLine().getStatusCode(),
+                        "Unexpected failure: " + httpResponse.getStatusLine().getReasonPhrase()
                     );
                 }
 
@@ -242,7 +238,7 @@ public class HttpProxyServlet extends HttpServlet {
 
             if (url.startsWith("http://") || url.startsWith("https://")) {
                 ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext
-                        (getServletContext());
+                    (getServletContext());
 
                 SettingManager sm = applicationContext.getBean(SettingManager.class);
 
@@ -268,8 +264,8 @@ public class HttpProxyServlet extends HttpServlet {
                         contentTypesReturned = contentType.getValue().split(" ");
                         if (!isValidContentType(contentTypesReturned[0])) {
                             throw new ServletException(
-                                    String.format("Status: 415 Unsupported media type '%s'",
-                                            contentTypesReturned[0]));
+                                String.format("Status: 415 Unsupported media type '%s'",
+                                    contentTypesReturned[0]));
                         }
                     }
 
@@ -290,8 +286,8 @@ public class HttpProxyServlet extends HttpServlet {
 						
                 } else {
                     returnExceptionMessage(response,
-                           httpResponse.getStatusLine().getStatusCode(),
-                            "Unexpected failure: " + httpResponse.getStatusLine().getReasonPhrase()
+                        httpResponse.getStatusLine().getStatusCode(),
+                        "Unexpected failure: " + httpResponse.getStatusLine().getReasonPhrase()
                     );
                 }
 
@@ -301,15 +297,14 @@ public class HttpProxyServlet extends HttpServlet {
                 Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (3-4/4) Error : protocol not supported");
                 returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "only HTTP(S) protocol supported");
             }
-        } 
-        catch (UnknownHostException e) {
+        } catch (UnknownHostException e) {
             e.printStackTrace();
             response.sendError(HttpStatus.SC_NOT_FOUND, "url can't be found");
         } catch (Exception e) {
             e.printStackTrace();
             //throw new ServletException("Some unexpected error occurred. Error text was: " + e.getMessage());
             returnExceptionMessage(response, HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                    "Some unexpected error occurred. Error text was: " + e.getMessage());
+                "Some unexpected error occurred. Error text was: " + e.getMessage());
         } finally {
             if (httpGet != null) {
                 httpGet.releaseConnection();
@@ -329,10 +324,10 @@ public class HttpProxyServlet extends HttpServlet {
                 if (paramString.length() > 0) {
                     paramString.append('&');
                 }
-               paramString.append(paramName).append("=").append(request.getParameter(paramName));
+                paramString.append(paramName).append("=").append(request.getParameter(paramName));
             }
         }
-        if(paramString.length() > 0) {
+        if (paramString.length() > 0) {
             url += "?" + paramString;
         }
         return url;
@@ -352,15 +347,15 @@ public class HttpProxyServlet extends HttpServlet {
             // Checks if allowed host
             if (!isAllowedHost(host)) {
                 //throw new ServletException("This proxy does not allow you to access that location.");
-            	returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "This proxy does not allow you to access that location.");
+                returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "This proxy does not allow you to access that location.");
                 return;
             }
 
             if (url.startsWith("http://") || url.startsWith("https://")) {
-                httpPost = new HttpPost(uri );
+                httpPost = new HttpPost(uri);
 
                 ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext
-                        (getServletContext());
+                    (getServletContext());
 
                 SettingManager sm = applicationContext.getBean(SettingManager.class);
 
@@ -384,7 +379,7 @@ public class HttpProxyServlet extends HttpServlet {
                 }
 
                 final ContentType contentType1 = ContentType.create(ct,
-                        request.getCharacterEncoding());
+                    request.getCharacterEncoding());
                 StringEntity entity = new StringEntity(body, contentType1);
                 httpPost.setEntity(entity);
 
@@ -397,9 +392,9 @@ public class HttpProxyServlet extends HttpServlet {
                         contentTypesReturned = contentType.getValue().split(" ");
                         if (!isValidContentType(contentTypesReturned[0])) {
                             throw new ServletException(
-                                    String.format(
-                                        "Status: 415 Unsupported media type '%s'",
-                                        contentTypesReturned[0]));
+                                String.format(
+                                    "Status: 415 Unsupported media type '%s'",
+                                    contentTypesReturned[0]));
                         }
                     }
 
@@ -412,15 +407,15 @@ public class HttpProxyServlet extends HttpServlet {
                     out.close();
 
                 } else {
-                	returnExceptionMessage(response,
-                            httpResponse.getStatusLine().getStatusCode(),
-                            "Unexpected failure: " + httpResponse.getStatusLine().getReasonPhrase()
+                    returnExceptionMessage(response,
+                        httpResponse.getStatusLine().getStatusCode(),
+                        "Unexpected failure: " + httpResponse.getStatusLine().getReasonPhrase()
                     );
                 }
 
             } else {
                 //throw new ServletException("only HTTP(S) protocol supported");
-            	returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "only HTTP(S) protocol supported");
+                returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "only HTTP(S) protocol supported");
             }
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -429,12 +424,12 @@ public class HttpProxyServlet extends HttpServlet {
             e.printStackTrace();
             //throw new ServletException("Some unexpected error occurred. Error text was: " + e.getMessage());
             returnExceptionMessage(response, HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                    "Some unexpected error occurred. Error text was: " + e.getMessage());
+                "Some unexpected error occurred. Error text was: " + e.getMessage());
         } finally {
             if (httpPost != null) httpPost.releaseConnection();
         }
     }
-    
+
     /**
      * Gets the contentType for response
      *
@@ -448,11 +443,11 @@ public class HttpProxyServlet extends HttpServlet {
         if (contentTypes.length >= 2) charset = ";" + contentTypes[1];
 
         if ((ct.equals("application/vnd.ogc.gml")) ||
-                (ct.equals("text/plain")) ||
-                (ct.equals("text/html")) ||
-                (ct.equals("application/vnd.ogc.se_xml")) ||
-                (ct.equals("application/vnd.ogc.sld+xml")) ||
-                (ct.equals("application/vnd.ogc.wms_xml")))
+            (ct.equals("text/plain")) ||
+            (ct.equals("text/html")) ||
+            (ct.equals("application/vnd.ogc.se_xml")) ||
+            (ct.equals("application/vnd.ogc.sld+xml")) ||
+            (ct.equals("application/vnd.ogc.wms_xml")))
 
             return "text/xml" + charset;
 
@@ -464,11 +459,11 @@ public class HttpProxyServlet extends HttpServlet {
      * Checks if a host is valid for proxy
      *
      * @param host Hosts to validate
-     * @return True if host is allowed or no restrictions for hosts (allowedHosts not defined)
-     *         False in other case
+     * @return True if host is allowed or no restrictions for hosts (allowedHosts not defined) False
+     * in other case
      */
     private boolean isAllowedHost(String host) {
-        if(host == null || host.trim().isEmpty()) return false;
+        if (host == null || host.trim().isEmpty()) return false;
         if (allowedHosts == null || allowedHosts.isEmpty()) return true;
 
         InetAddress[] targetAddr;

@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;

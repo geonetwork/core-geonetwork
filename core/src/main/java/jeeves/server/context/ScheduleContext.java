@@ -24,34 +24,36 @@
 package jeeves.server.context;
 
 import jeeves.monitor.MonitorManager;
+
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.persistence.EntityManager;
+
 import java.util.Hashtable;
 
 //=============================================================================
 
-/** Contains the context for a schedule execution
-  */
+/**
+ * Contains the context for a schedule execution
+ */
 
-public class ScheduleContext extends BasicContext
-{
-	private String scheduleName;
+public class ScheduleContext extends BasicContext {
+    private String scheduleName;
 
     //--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public ScheduleContext(String name, ConfigurableApplicationContext appContext, Hashtable<String, Object> contexts,
+    public ScheduleContext(String name, ConfigurableApplicationContext appContext, Hashtable<String, Object> contexts,
                            EntityManager entityManager) {
-		super(appContext, contexts, entityManager);
+        super(appContext, contexts, entityManager);
 
-		logger = Log.createLogger(Log.SCHEDULER +"."+ name);
-		this.scheduleName = name;
-	}
+        logger = Log.createLogger(Log.SCHEDULER + "." + name);
+        this.scheduleName = name;
+    }
 
     public String getScheduleName() {
         return scheduleName;

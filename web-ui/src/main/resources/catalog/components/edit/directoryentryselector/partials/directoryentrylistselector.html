@@ -87,7 +87,8 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li data-ng-repeat="role in roles | orderBy:'label'" data-ng-hide="role['@hideInEditMode']">
+          <li data-ng-repeat="role in roles | orderBy:'label'"
+              data-ng-hide="role['@hideInEditMode']">
             <a href=""
                data-gn-click-and-spin="addSelectedEntry(role.code)"
                title="{{role.description}}">
@@ -115,7 +116,8 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li data-ng-repeat="role in roles | orderBy:'label'" data-ng-hide="role['@hideInEditMode']">
+          <li data-ng-repeat="role in roles | orderBy:'label'"
+              data-ng-hide="role['@hideInEditMode']">
             <a href=""
                data-gn-click-and-spin="addSelectedEntry(role.code, true)"
                data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"

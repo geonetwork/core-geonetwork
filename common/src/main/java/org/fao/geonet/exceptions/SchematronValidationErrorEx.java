@@ -25,25 +25,25 @@ package org.fao.geonet.exceptions;
 
 //=============================================================================
 
-public class SchematronValidationErrorEx extends JeevesClientEx
-{
+public class SchematronValidationErrorEx extends JeevesClientEx {
     private static final long serialVersionUID = 1L;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
 
-    public SchematronValidationErrorEx(String name) { this(name, null); }
+    public SchematronValidationErrorEx(String name) {
+        this(name, null);
+    }
 
-	public SchematronValidationErrorEx(String name, Object value)
-	{
-		super(name, value);
+    public SchematronValidationErrorEx(String name, Object value) {
+        super(name, value);
 
-		id = "schematron-validation-error";
-	}
+        id = "schematron-validation-error";
+    }
 }
 
 //=============================================================================

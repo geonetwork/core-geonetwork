@@ -6,351 +6,384 @@
 <!--             Autor : Dr. Uwe Voges -->
 <!--             Stand: 18.12.2007 -->
 <!--             Firma: con terra GmbH (www.conterra.de) -->
-<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.isotc211.org/2005/gmd ../../apiso.xsd">
-	<fileIdentifier>
-		<gco:CharacterString>111c0076-b23f-76e5-c888-94327664111</gco:CharacterString>
-	</fileIdentifier>
-	<language>
-		<gco:CharacterString>ger</gco:CharacterString>
-	</language>
-	<characterSet>
-		<MD_CharacterSetCode codeList="MD_CharacterSetCode" codeListValue="UTF-8"/>
-	</characterSet>
-	<hierarchyLevel>
-		<MD_ScopeCode codeList="MD_ScopeCode" codeListValue="series"/>
-	</hierarchyLevel>
-	<contact>
-		<CI_ResponsibleParty>
-			<individualName>
-				<gco:CharacterString>Michael Burscheid</gco:CharacterString>
-			</individualName>
-			<organisationName>
-				<gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
-			</organisationName>
-			<contactInfo>
-				<CI_Contact>
-					<phone>
-						<CI_Telephone>
-							<voice>
-								<gco:CharacterString>++49 0611 4451 524 223</gco:CharacterString>
-							</voice>
-							<facsimile>
-								<gco:CharacterString>++49 0611 4451 555 100</gco:CharacterString>
-							</facsimile>
-						</CI_Telephone>
-					</phone>
-					<address>
-						<CI_Address>
-							<city>
-								<gco:CharacterString>Wiesbaden</gco:CharacterString>
-							</city>
-							<postalCode>
-								<gco:CharacterString>65203</gco:CharacterString>
-							</postalCode>
-							<country>
-								<gco:CharacterString>Deutschland</gco:CharacterString>
-							</country>
-							<electronicMailAddress>
-								<gco:CharacterString>m.burscheid@hlfK.de</gco:CharacterString>
-							</electronicMailAddress>
-						</CI_Address>
-					</address>
-					<onlineResource>
-						<CI_OnlineResource>
-							<linkage>
-								<URL>http://hlfK.hessen.de</URL>
-							</linkage>
-						</CI_OnlineResource>
-					</onlineResource>
-					<contactInstructions>
-						<gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten Informationen suchen, danach eMail- und telefonische Kontaktaufnahme</gco:CharacterString>
-					</contactInstructions>
-				</CI_Contact>
-			</contactInfo>
-			<role>
-				<CI_RoleCode codeList="CI_RoleCode" codeListValue="disributor"/>
-			</role>
-		</CI_ResponsibleParty>
-	</contact>
-	<dateStamp>
-		<gco:Date>2006-01-24</gco:Date>
-	</dateStamp>
-	<metadataStandardName>
-		<gco:CharacterString>ISO 19115 Geographic Information - Metadata</gco:CharacterString>
-	</metadataStandardName>
-	<metadataStandardVersion>
-		<gco:CharacterString>2003/Cor.1:2006</gco:CharacterString>
-	</metadataStandardVersion>
-	<referenceSystemInfo>
-		<MD_ReferenceSystem>
-			<referenceSystemIdentifier>
-				<RS_Identifier>
-					<code>
-						<gco:CharacterString>4326</gco:CharacterString>
-					</code>
-					<codeSpace>
-						<gco:CharacterString>urn:ogc:def:crs:EPSG</gco:CharacterString>
-					</codeSpace>
-					<version>
-						<gco:CharacterString>6.11.2</gco:CharacterString>
-					</version>
-				</RS_Identifier>
-			</referenceSystemIdentifier>
-		</MD_ReferenceSystem>
-	</referenceSystemInfo>
-	<identificationInfo>
-		<MD_DataIdentification>
-			<citation>
-				<CI_Citation>
-					<title>
-						<gco:CharacterString>DTK 50 - Hessen</gco:CharacterString>
-					</title>
-					<alternateTitle>
-						<gco:CharacterString>Digitale Topographische Karte (DTK) 1:50000 von Hessen</gco:CharacterString>
-					</alternateTitle>
-					<date>
-						<CI_Date>
-							<date>
-								<gco:Date>2003-10-01</gco:Date>
-							</date>
-							<dateType>
-								<CI_DateTypeCode codeList="CI_DateTypeCode" codeListValue="creation"/>
-							</dateType>
-						</CI_Date>
-					</date>
-					<presentationForm>
-						<CI_PresentationFormCode codeList="CI_PresentationFormCode" codeListValue="mapDigital"/>
-					</presentationForm>
-					<otherCitationDetails>
-						<gco:CharacterString>emfohlene Farbdarstellung: grau</gco:CharacterString>
-					</otherCitationDetails>
-				</CI_Citation>
-			</citation>
-			<abstract>
-				<gco:CharacterString>Rasterkarten wie die Topographische Karte 1:50000 Rasterdaten eignen sich als räumliche Bezugsgrundlage für den Aufbau von Geo- und Fachinformationssystemen und als Hintergrundinformation für die Überlagerung mit fachspezifischen Daten sowie für die rechnergestützte Bearbeitung thematischer Karten. Anwendungsgebiete sind z. B. Energie-, Forst- und Landwirtschaft, Verwaltung, Demographie, Wohnungswesen, Landnutzungs-, Regional- und Streckenplanung, Straßenbewirtschaftung, Verkehrsnavigation, Transport, Bergbau, Gewässerkunde, Ökologie, Umweltschutz, Geodäsie, Geologie aber auch Kultur, Erholung und Freizeit sowie Kommunikation.</gco:CharacterString>
-			</abstract>
-			<status>
-				<MD_ProgressCode codeList="MD_ProgressCode" codeListValue="completed"/>
-			</status>
-			<pointOfContact>
-				<CI_ResponsibleParty>
-					<individualName>
-						<gco:CharacterString>Der Kartenverkäufer</gco:CharacterString>
-					</individualName>
-					<organisationName>
-						<gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
-					</organisationName>
-					<contactInfo>
-						<CI_Contact>
-							<phone>
-								<CI_Telephone>
-									<voice>
-										<gco:CharacterString>++49 0611 4451 524 229</gco:CharacterString>
-									</voice>
-									<facsimile>
-										<gco:CharacterString>++49 0611 4451 555 100</gco:CharacterString>
-									</facsimile>
-								</CI_Telephone>
-							</phone>
-							<address>
-								<CI_Address>
-									<city>
-										<gco:CharacterString>Wiesbaden</gco:CharacterString>
-									</city>
-									<postalCode>
-										<gco:CharacterString>65203</gco:CharacterString>
-									</postalCode>
-									<country>
-										<gco:CharacterString>Deutschland</gco:CharacterString>
-									</country>
-									<electronicMailAddress>
-										<gco:CharacterString>k.kartenverkaeufer@hlfK.de</gco:CharacterString>
-									</electronicMailAddress>
-								</CI_Address>
-							</address>
-							<onlineResource>
-								<CI_OnlineResource>
-									<linkage>
-										<URL>http://hlfK.hessen.de</URL>
-									</linkage>
-								</CI_OnlineResource>
-							</onlineResource>
-							<contactInstructions>
-								<gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten Informationen suchen, danach eMail- und telefonische Kontaktaufnahme</gco:CharacterString>
-							</contactInstructions>
-						</CI_Contact>
-					</contactInfo>
-					<role>
-						<CI_RoleCode codeList="CI_RoleCode" codeListValue="processor"/>
-					</role>
-				</CI_ResponsibleParty>
-			</pointOfContact>
-			<resourceMaintenance>
-				<MD_MaintenanceInformation>
-					<maintenanceAndUpdateFrequency>
-						<MD_MaintenanceFrequencyCode codeList="MD_MaintenanceFrequencyCode" codeListValue="annually"/>
-					</maintenanceAndUpdateFrequency>
-				</MD_MaintenanceInformation>
-			</resourceMaintenance>
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<keyword>
-						<gco:CharacterString>DTK50</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Frankfurt am Main West</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Wiesbaden</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Topographische Karte</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Hessen</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Geobasisdaten</gco:CharacterString>
-					</keyword>
-				</MD_Keywords>
-			</descriptiveKeywords>
-			<spatialRepresentationType>
-				<MD_SpatialRepresentationTypeCode codeList="MD_SpatialRepresentationTypeCode" codeListValue="grid"/>
-			</spatialRepresentationType>
-			<language>
-				<gco:CharacterString>ger</gco:CharacterString>
-			</language>
-			<characterSet>
-				<MD_CharacterSetCode codeList="MD_CharacterSetCode" codeListValue="UTF-8"/>
-			</characterSet>
-			<topicCategory>
-				<MD_TopicCategoryCode>imageryBaseMapsEarthCover</MD_TopicCategoryCode>
-			</topicCategory>
-			<extent>
-				<EX_Extent>
-					<geographicElement>
-						<EX_GeographicBoundingBox>
-							<extentTypeCode>
-								<gco:Boolean>1</gco:Boolean>
-							</extentTypeCode>
-							<westBoundLongitude>
-								<gco:Decimal>7.36</gco:Decimal>
-							</westBoundLongitude>
-							<eastBoundLongitude>
-								<gco:Decimal>10.67</gco:Decimal>
-							</eastBoundLongitude>
-							<southBoundLatitude>
-								<gco:Decimal>49.34</gco:Decimal>
-							</southBoundLatitude>
-							<northBoundLatitude>
-								<gco:Decimal>51.64</gco:Decimal>
-							</northBoundLatitude>
-						</EX_GeographicBoundingBox>
-					</geographicElement>
-				</EX_Extent>
-			</extent>
-			<supplementalInformation>
-				<gco:CharacterString>Scanauflösung = 508 dpi / Bildformat = TIFF4</gco:CharacterString>
-			</supplementalInformation>
-		</MD_DataIdentification>
-	</identificationInfo>
-	<distributionInfo>
-		<MD_Distribution>
-			<distributor>
-				<MD_Distributor>
-					<distributorContact>
-						<CI_ResponsibleParty>
-							<individualName>
-								<gco:CharacterString>Victor Verkäufer</gco:CharacterString>
-							</individualName>
-							<organisationName>
-								<gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
-							</organisationName>
-							<contactInfo>
-								<CI_Contact>
-									<phone>
-										<CI_Telephone>
-											<voice>
-												<gco:CharacterString>++49 0611 4451 524 445</gco:CharacterString>
-											</voice>
-											<facsimile>
-												<gco:CharacterString>++49 0611 4451 555 102</gco:CharacterString>
-											</facsimile>
-										</CI_Telephone>
-									</phone>
-									<address>
-										<CI_Address>
-											<city>
-												<gco:CharacterString>Wiesbaden</gco:CharacterString>
-											</city>
-											<postalCode>
-												<gco:CharacterString>65203</gco:CharacterString>
-											</postalCode>
-											<country>
-												<gco:CharacterString>Deutschland</gco:CharacterString>
-											</country>
-											<electronicMailAddress>
-												<gco:CharacterString>v.verkaeufer@hlfK.de</gco:CharacterString>
-											</electronicMailAddress>
-										</CI_Address>
-									</address>
-									<onlineResource>
-										<CI_OnlineResource>
-											<linkage>
-												<URL>http://hlfK.hessen.de</URL>
-											</linkage>
-										</CI_OnlineResource>
-									</onlineResource>
-									<contactInstructions>
-										<gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten Informationen suchen, danach eMail- und telefonische Kontaktaufnahme</gco:CharacterString>
-									</contactInstructions>
-								</CI_Contact>
-							</contactInfo>
-							<role>
-								<CI_RoleCode codeList="CI_RoleCode" codeListValue="disributor"/>
-							</role>
-						</CI_ResponsibleParty>
-					</distributorContact>
-					<distributionOrderProcess>
-						<MD_StandardOrderProcess>
-							<fees>
-								<gco:CharacterString>Abgabe ganzer Kartenblätter (ebenengetrennt, 508dpi) je Blatt 130,00 €. Abgabe von Ausschnitten oder blattübergreifender Gebiete (ebenengetrennt, 508dpi) je km²:  1 - 5 000 km² / 0,25 €,  5 000 - 25 000 km² / 0,125 €</gco:CharacterString>
-							</fees>
-							<orderingInstructions>
-								<gco:CharacterString>Die Abgabe erfolgt blattweise, nach dem Blattschnitt der Topographischen Karten oder blattschnittfrei in Ausschnitten, begrenzt nach vollen Kilometern in Gauß-Krüger-Koordinaten.
-Es können sowohl einzelne Inhaltsebenen (Layer) als auch ein- oder mehrfarbige Kombinationen (Farbsummenlayer) geliefert werden.Die Auflösung beträgt 200 Linien / cm (508 dpi). Die Farbsummenlayer sind auch in der Auflösung von 100 L/cm (254 dpi) erhältlich; die ebenengetrennten Layer können auch in der Auflösung von 315 L/cm (800 dpi) bereitgestellt werden.</gco:CharacterString>
-							</orderingInstructions>
-						</MD_StandardOrderProcess>
-					</distributionOrderProcess>
-					<distributorFormat>
-						<MD_Format>
-							<name>
-								<gco:CharacterString>TIFF</gco:CharacterString>
-							</name>
-							<version>
-								<gco:CharacterString>CCITT Group 4</gco:CharacterString>
-							</version>
-							<specification>
-								<gco:CharacterString>508 dpi</gco:CharacterString>
-							</specification>
-							<fileDecompressionTechnique>
-								<gco:CharacterString>test</gco:CharacterString>
-							</fileDecompressionTechnique>
-						</MD_Format>
-					</distributorFormat>
-				</MD_Distributor>
-			</distributor>
-			<transferOptions>
-				<MD_DigitalTransferOptions>
-					<offLine>
-						<MD_Medium>
-							<name>
-								<MD_MediumNameCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_MediumNameCode" codeListValue="CD Rom"/>
-							</name>
-						</MD_Medium>
-					</offLine>
-				</MD_DigitalTransferOptions>
-			</transferOptions>
-		</MD_Distribution>
-	</distributionInfo>
+<MD_Metadata xmlns:gco="http://www.isotc211.org/2005/gco"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.isotc211.org/2005/gmd"
+             xsi:schemaLocation="http://www.isotc211.org/2005/gmd ../../apiso.xsd">
+  <fileIdentifier>
+    <gco:CharacterString>111c0076-b23f-76e5-c888-94327664111</gco:CharacterString>
+  </fileIdentifier>
+  <language>
+    <gco:CharacterString>ger</gco:CharacterString>
+  </language>
+  <characterSet>
+    <MD_CharacterSetCode codeList="MD_CharacterSetCode" codeListValue="UTF-8"/>
+  </characterSet>
+  <hierarchyLevel>
+    <MD_ScopeCode codeList="MD_ScopeCode" codeListValue="series"/>
+  </hierarchyLevel>
+  <contact>
+    <CI_ResponsibleParty>
+      <individualName>
+        <gco:CharacterString>Michael Burscheid</gco:CharacterString>
+      </individualName>
+      <organisationName>
+        <gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
+      </organisationName>
+      <contactInfo>
+        <CI_Contact>
+          <phone>
+            <CI_Telephone>
+              <voice>
+                <gco:CharacterString>++49 0611 4451 524 223</gco:CharacterString>
+              </voice>
+              <facsimile>
+                <gco:CharacterString>++49 0611 4451 555 100</gco:CharacterString>
+              </facsimile>
+            </CI_Telephone>
+          </phone>
+          <address>
+            <CI_Address>
+              <city>
+                <gco:CharacterString>Wiesbaden</gco:CharacterString>
+              </city>
+              <postalCode>
+                <gco:CharacterString>65203</gco:CharacterString>
+              </postalCode>
+              <country>
+                <gco:CharacterString>Deutschland</gco:CharacterString>
+              </country>
+              <electronicMailAddress>
+                <gco:CharacterString>m.burscheid@hlfK.de</gco:CharacterString>
+              </electronicMailAddress>
+            </CI_Address>
+          </address>
+          <onlineResource>
+            <CI_OnlineResource>
+              <linkage>
+                <URL>http://hlfK.hessen.de</URL>
+              </linkage>
+            </CI_OnlineResource>
+          </onlineResource>
+          <contactInstructions>
+            <gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten
+              Informationen suchen, danach eMail- und telefonische Kontaktaufnahme
+            </gco:CharacterString>
+          </contactInstructions>
+        </CI_Contact>
+      </contactInfo>
+      <role>
+        <CI_RoleCode codeList="CI_RoleCode" codeListValue="disributor"/>
+      </role>
+    </CI_ResponsibleParty>
+  </contact>
+  <dateStamp>
+    <gco:Date>2006-01-24</gco:Date>
+  </dateStamp>
+  <metadataStandardName>
+    <gco:CharacterString>ISO 19115 Geographic Information - Metadata</gco:CharacterString>
+  </metadataStandardName>
+  <metadataStandardVersion>
+    <gco:CharacterString>2003/Cor.1:2006</gco:CharacterString>
+  </metadataStandardVersion>
+  <referenceSystemInfo>
+    <MD_ReferenceSystem>
+      <referenceSystemIdentifier>
+        <RS_Identifier>
+          <code>
+            <gco:CharacterString>4326</gco:CharacterString>
+          </code>
+          <codeSpace>
+            <gco:CharacterString>urn:ogc:def:crs:EPSG</gco:CharacterString>
+          </codeSpace>
+          <version>
+            <gco:CharacterString>6.11.2</gco:CharacterString>
+          </version>
+        </RS_Identifier>
+      </referenceSystemIdentifier>
+    </MD_ReferenceSystem>
+  </referenceSystemInfo>
+  <identificationInfo>
+    <MD_DataIdentification>
+      <citation>
+        <CI_Citation>
+          <title>
+            <gco:CharacterString>DTK 50 - Hessen</gco:CharacterString>
+          </title>
+          <alternateTitle>
+            <gco:CharacterString>Digitale Topographische Karte (DTK) 1:50000 von Hessen
+            </gco:CharacterString>
+          </alternateTitle>
+          <date>
+            <CI_Date>
+              <date>
+                <gco:Date>2003-10-01</gco:Date>
+              </date>
+              <dateType>
+                <CI_DateTypeCode codeList="CI_DateTypeCode" codeListValue="creation"/>
+              </dateType>
+            </CI_Date>
+          </date>
+          <presentationForm>
+            <CI_PresentationFormCode codeList="CI_PresentationFormCode" codeListValue="mapDigital"/>
+          </presentationForm>
+          <otherCitationDetails>
+            <gco:CharacterString>emfohlene Farbdarstellung: grau</gco:CharacterString>
+          </otherCitationDetails>
+        </CI_Citation>
+      </citation>
+      <abstract>
+        <gco:CharacterString>Rasterkarten wie die Topographische Karte 1:50000 Rasterdaten eignen
+          sich als räumliche Bezugsgrundlage für den Aufbau von Geo- und Fachinformationssystemen
+          und als Hintergrundinformation für die Überlagerung mit fachspezifischen Daten sowie für
+          die rechnergestützte Bearbeitung thematischer Karten. Anwendungsgebiete sind z. B.
+          Energie-, Forst- und Landwirtschaft, Verwaltung, Demographie, Wohnungswesen,
+          Landnutzungs-, Regional- und Streckenplanung, Straßenbewirtschaftung, Verkehrsnavigation,
+          Transport, Bergbau, Gewässerkunde, Ökologie, Umweltschutz, Geodäsie, Geologie aber auch
+          Kultur, Erholung und Freizeit sowie Kommunikation.
+        </gco:CharacterString>
+      </abstract>
+      <status>
+        <MD_ProgressCode codeList="MD_ProgressCode" codeListValue="completed"/>
+      </status>
+      <pointOfContact>
+        <CI_ResponsibleParty>
+          <individualName>
+            <gco:CharacterString>Der Kartenverkäufer</gco:CharacterString>
+          </individualName>
+          <organisationName>
+            <gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
+          </organisationName>
+          <contactInfo>
+            <CI_Contact>
+              <phone>
+                <CI_Telephone>
+                  <voice>
+                    <gco:CharacterString>++49 0611 4451 524 229</gco:CharacterString>
+                  </voice>
+                  <facsimile>
+                    <gco:CharacterString>++49 0611 4451 555 100</gco:CharacterString>
+                  </facsimile>
+                </CI_Telephone>
+              </phone>
+              <address>
+                <CI_Address>
+                  <city>
+                    <gco:CharacterString>Wiesbaden</gco:CharacterString>
+                  </city>
+                  <postalCode>
+                    <gco:CharacterString>65203</gco:CharacterString>
+                  </postalCode>
+                  <country>
+                    <gco:CharacterString>Deutschland</gco:CharacterString>
+                  </country>
+                  <electronicMailAddress>
+                    <gco:CharacterString>k.kartenverkaeufer@hlfK.de</gco:CharacterString>
+                  </electronicMailAddress>
+                </CI_Address>
+              </address>
+              <onlineResource>
+                <CI_OnlineResource>
+                  <linkage>
+                    <URL>http://hlfK.hessen.de</URL>
+                  </linkage>
+                </CI_OnlineResource>
+              </onlineResource>
+              <contactInstructions>
+                <gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten
+                  Informationen suchen, danach eMail- und telefonische Kontaktaufnahme
+                </gco:CharacterString>
+              </contactInstructions>
+            </CI_Contact>
+          </contactInfo>
+          <role>
+            <CI_RoleCode codeList="CI_RoleCode" codeListValue="processor"/>
+          </role>
+        </CI_ResponsibleParty>
+      </pointOfContact>
+      <resourceMaintenance>
+        <MD_MaintenanceInformation>
+          <maintenanceAndUpdateFrequency>
+            <MD_MaintenanceFrequencyCode codeList="MD_MaintenanceFrequencyCode"
+                                         codeListValue="annually"/>
+          </maintenanceAndUpdateFrequency>
+        </MD_MaintenanceInformation>
+      </resourceMaintenance>
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <keyword>
+            <gco:CharacterString>DTK50</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Frankfurt am Main West</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Wiesbaden</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Topographische Karte</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Hessen</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Geobasisdaten</gco:CharacterString>
+          </keyword>
+        </MD_Keywords>
+      </descriptiveKeywords>
+      <spatialRepresentationType>
+        <MD_SpatialRepresentationTypeCode codeList="MD_SpatialRepresentationTypeCode"
+                                          codeListValue="grid"/>
+      </spatialRepresentationType>
+      <language>
+        <gco:CharacterString>ger</gco:CharacterString>
+      </language>
+      <characterSet>
+        <MD_CharacterSetCode codeList="MD_CharacterSetCode" codeListValue="UTF-8"/>
+      </characterSet>
+      <topicCategory>
+        <MD_TopicCategoryCode>imageryBaseMapsEarthCover</MD_TopicCategoryCode>
+      </topicCategory>
+      <extent>
+        <EX_Extent>
+          <geographicElement>
+            <EX_GeographicBoundingBox>
+              <extentTypeCode>
+                <gco:Boolean>1</gco:Boolean>
+              </extentTypeCode>
+              <westBoundLongitude>
+                <gco:Decimal>7.36</gco:Decimal>
+              </westBoundLongitude>
+              <eastBoundLongitude>
+                <gco:Decimal>10.67</gco:Decimal>
+              </eastBoundLongitude>
+              <southBoundLatitude>
+                <gco:Decimal>49.34</gco:Decimal>
+              </southBoundLatitude>
+              <northBoundLatitude>
+                <gco:Decimal>51.64</gco:Decimal>
+              </northBoundLatitude>
+            </EX_GeographicBoundingBox>
+          </geographicElement>
+        </EX_Extent>
+      </extent>
+      <supplementalInformation>
+        <gco:CharacterString>Scanauflösung = 508 dpi / Bildformat = TIFF4</gco:CharacterString>
+      </supplementalInformation>
+    </MD_DataIdentification>
+  </identificationInfo>
+  <distributionInfo>
+    <MD_Distribution>
+      <distributor>
+        <MD_Distributor>
+          <distributorContact>
+            <CI_ResponsibleParty>
+              <individualName>
+                <gco:CharacterString>Victor Verkäufer</gco:CharacterString>
+              </individualName>
+              <organisationName>
+                <gco:CharacterString>Hessisches Landesamt für Karten</gco:CharacterString>
+              </organisationName>
+              <contactInfo>
+                <CI_Contact>
+                  <phone>
+                    <CI_Telephone>
+                      <voice>
+                        <gco:CharacterString>++49 0611 4451 524 445</gco:CharacterString>
+                      </voice>
+                      <facsimile>
+                        <gco:CharacterString>++49 0611 4451 555 102</gco:CharacterString>
+                      </facsimile>
+                    </CI_Telephone>
+                  </phone>
+                  <address>
+                    <CI_Address>
+                      <city>
+                        <gco:CharacterString>Wiesbaden</gco:CharacterString>
+                      </city>
+                      <postalCode>
+                        <gco:CharacterString>65203</gco:CharacterString>
+                      </postalCode>
+                      <country>
+                        <gco:CharacterString>Deutschland</gco:CharacterString>
+                      </country>
+                      <electronicMailAddress>
+                        <gco:CharacterString>v.verkaeufer@hlfK.de</gco:CharacterString>
+                      </electronicMailAddress>
+                    </CI_Address>
+                  </address>
+                  <onlineResource>
+                    <CI_OnlineResource>
+                      <linkage>
+                        <URL>http://hlfK.hessen.de</URL>
+                      </linkage>
+                    </CI_OnlineResource>
+                  </onlineResource>
+                  <contactInstructions>
+                    <gco:CharacterString>Bitte zunächst auf den Internetseiten nach den gewünschten
+                      Informationen suchen, danach eMail- und telefonische Kontaktaufnahme
+                    </gco:CharacterString>
+                  </contactInstructions>
+                </CI_Contact>
+              </contactInfo>
+              <role>
+                <CI_RoleCode codeList="CI_RoleCode" codeListValue="disributor"/>
+              </role>
+            </CI_ResponsibleParty>
+          </distributorContact>
+          <distributionOrderProcess>
+            <MD_StandardOrderProcess>
+              <fees>
+                <gco:CharacterString>Abgabe ganzer Kartenblätter (ebenengetrennt, 508dpi) je Blatt
+                  130,00 €. Abgabe von Ausschnitten oder blattübergreifender Gebiete
+                  (ebenengetrennt, 508dpi) je km²: 1 - 5 000 km² / 0,25 €, 5 000 - 25 000 km² /
+                  0,125 €
+                </gco:CharacterString>
+              </fees>
+              <orderingInstructions>
+                <gco:CharacterString>Die Abgabe erfolgt blattweise, nach dem Blattschnitt der
+                  Topographischen Karten oder blattschnittfrei in Ausschnitten, begrenzt nach vollen
+                  Kilometern in Gauß-Krüger-Koordinaten.
+                  Es können sowohl einzelne Inhaltsebenen (Layer) als auch ein- oder mehrfarbige
+                  Kombinationen (Farbsummenlayer) geliefert werden.Die Auflösung beträgt 200 Linien
+                  / cm (508 dpi). Die Farbsummenlayer sind auch in der Auflösung von 100 L/cm (254
+                  dpi) erhältlich; die ebenengetrennten Layer können auch in der Auflösung von 315
+                  L/cm (800 dpi) bereitgestellt werden.
+                </gco:CharacterString>
+              </orderingInstructions>
+            </MD_StandardOrderProcess>
+          </distributionOrderProcess>
+          <distributorFormat>
+            <MD_Format>
+              <name>
+                <gco:CharacterString>TIFF</gco:CharacterString>
+              </name>
+              <version>
+                <gco:CharacterString>CCITT Group 4</gco:CharacterString>
+              </version>
+              <specification>
+                <gco:CharacterString>508 dpi</gco:CharacterString>
+              </specification>
+              <fileDecompressionTechnique>
+                <gco:CharacterString>test</gco:CharacterString>
+              </fileDecompressionTechnique>
+            </MD_Format>
+          </distributorFormat>
+        </MD_Distributor>
+      </distributor>
+      <transferOptions>
+        <MD_DigitalTransferOptions>
+          <offLine>
+            <MD_Medium>
+              <name>
+                <MD_MediumNameCode
+                  codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_MediumNameCode"
+                  codeListValue="CD Rom"/>
+              </name>
+            </MD_Medium>
+          </offLine>
+        </MD_DigitalTransferOptions>
+      </transferOptions>
+    </MD_Distribution>
+  </distributionInfo>
 </MD_Metadata>

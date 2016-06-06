@@ -33,7 +33,7 @@
   <constraintInfo>Info sui vincoli di accesso</constraintInfo>
   <xml_iso19139>Salva questo metadato come file XML ISO19139</xml_iso19139>
   <xml_iso19139Tooai_dc>Salva questo metadato come file XML OAI Dublin Core</xml_iso19139Tooai_dc>
-  
+
   <!-- New strings added for the AngularJS editor -->
   <!-- View and tabs -->
   <advanced>Completo</advanced>
@@ -57,18 +57,20 @@
   <bboxesSection>Geographic coverage</bboxesSection>
 
   <!-- XSD error translation -->
-  <invalidElement>Elemento non valido. È stato trovato del contenuto non valido a partire dall'elemento: </invalidElement>
+  <invalidElement>Elemento non valido. È stato trovato del contenuto non valido a partire
+    dall'elemento:
+  </invalidElement>
   <onElementOf>Uno tra gli elementi seguenti</onElementOf>
-  <isExpected> è richiesto.</isExpected>
-  <isNotComplete> non è completo.</isNotComplete>
-  <elementLocated>L'elemento superiore è </elementLocated>
-  <missingElement>Elemento mancante. Il contenuto dell'elemento: </missingElement>
+  <isExpected>è richiesto.</isExpected>
+  <isNotComplete>non è completo.</isNotComplete>
+  <elementLocated>L'elemento superiore è</elementLocated>
+  <missingElement>Elemento mancante. Il contenuto dell'elemento:</missingElement>
   <invalidValue>Valore non valido o assente.</invalidValue>
-  <notValidFor> non è un valore valido per </notValidFor>
-  <xsdErrorIs>Errore XSD: </xsdErrorIs>
-  <inElement> nell'elemento </inElement>
-  <enum1>Valore </enum1>
-  <enum2> non valido per il campo </enum2>
+  <notValidFor>non è un valore valido per</notValidFor>
+  <xsdErrorIs>Errore XSD:</xsdErrorIs>
+  <inElement>nell'elemento</inElement>
+  <enum1>Valore</enum1>
+  <enum2>non valido per il campo</enum2>
   <enum3>La lista di valori è:</enum3>
 
   <!-- INSPIRE view labels and help -->
@@ -105,7 +107,12 @@
   <accessConstraints>Vincoli di accesso</accessConstraints>
   <useLimitation>Limitazioni d'uso</useLimitation>
   <add-resource-id>Crea un id di risorsa</add-resource-id>
-  <add-resource-idHelp>Costruisce l'id di risorsa usando la URL del catalogo e l'id del metadato (es. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).</add-resource-idHelp>
-  <add-extent-from-geokeywords>Calcola l'estensione dalle parole chiavi</add-extent-from-geokeywords>
-  <add-extent-from-geokeywordsHelp>Analizza ogni parola chiave di tipo Luogo e ne usa l'estensione relativa.</add-extent-from-geokeywordsHelp>
+  <add-resource-idHelp>Costruisce l'id di risorsa usando la URL del catalogo e l'id del metadato
+    (es. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).
+  </add-resource-idHelp>
+  <add-extent-from-geokeywords>Calcola l'estensione dalle parole chiavi
+  </add-extent-from-geokeywords>
+  <add-extent-from-geokeywordsHelp>Analizza ogni parola chiave di tipo Luogo e ne usa l'estensione
+    relativa.
+  </add-extent-from-geokeywordsHelp>
 </strings>

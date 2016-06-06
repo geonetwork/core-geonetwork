@@ -26,9 +26,9 @@ package org.fao.geonet.domain;
 import javax.persistence.*;
 
 /**
- * Encapsulates the harvest data related to a metadata document. Like whether the metadata was harvested, the uuid of the harvester,
- * etc...
- * This is a JPA Embeddable object that is embedded into a {@link Metadata} Entity
+ * Encapsulates the harvest data related to a metadata document. Like whether the metadata was
+ * harvested, the uuid of the harvester, etc... This is a JPA Embeddable object that is embedded
+ * into a {@link Metadata} Entity
  *
  * @author Jesse
  */
@@ -40,8 +40,9 @@ public class MetadataHarvestInfo {
     private String _uri;
 
     /**
-     * For backwards compatibility we need the isharvested column to be either 'n' or 'y'. This is a workaround to allow this until future
-     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     * For backwards compatibility we need the isharvested column to be either 'n' or 'y'. This is a
+     * workaround to allow this until future versions of JPA that allow different ways of
+     * controlling how types are mapped to the database.
      */
     @Column(name = "isHarvested", length = 1, nullable = false)
     protected char getHarvested_JPAWorkaround() {
@@ -79,9 +80,11 @@ public class MetadataHarvestInfo {
     }
 
     /**
-     * Get the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
+     * Get the uuid of the harvester that harvested this metadata (if the metadata is harvested
+     * metadata)
      *
-     * @return the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
+     * @return the uuid of the harvester that harvested this metadata (if the metadata is harvested
+     * metadata)
      * @see #isHarvested()
      */
     @Column(name = "harvestUuid")
@@ -90,11 +93,13 @@ public class MetadataHarvestInfo {
     }
 
     /**
-     * Set the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
+     * Set the uuid of the harvester that harvested this metadata (if the metadata is harvested
+     * metadata)
      *
-     * @param uuid the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
-     * @see #isHarvested()
+     * @param uuid the uuid of the harvester that harvested this metadata (if the metadata is
+     *             harvested metadata)
      * @return this harvest info object
+     * @see #isHarvested()
      */
     public MetadataHarvestInfo setUuid(String uuid) {
         this._uuid = uuid;

@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
@@ -46,13 +47,14 @@ public class TemplateCacheIntegrationTest extends AbstractServiceIntegrationTest
     private TemplateCache templateCache;
     @Autowired
     private SchemaManager schemaManager;
+
     @Test
     public void testOnlineResource() throws Exception {
         final Path schemaDir = schemaManager.getSchemaDir(ISO19139SchemaPlugin.IDENTIFIER);
         Path rootFormatterDir = schemaDir.resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
         Path formatterDir = Paths.get(AbstractFormatterTest.class.getResource("template-cache-test").toURI());
 
-        Map <String, Object > model = Maps.newHashMap();
+        Map<String, Object> model = Maps.newHashMap();
         List<Map<String, Object>> links = Lists.newArrayList();
         links.add(newLink("href&1", "name&1", "desc&1"));
         links.add(newLink("href2", null, "desc2"));
@@ -61,7 +63,7 @@ public class TemplateCacheIntegrationTest extends AbstractServiceIntegrationTest
         model.put("links", links);
 
         FileResult fileResult = templateCache.createFileResult(formatterDir, schemaDir, rootFormatterDir,
-                "html/online-resource.html", model);
+            "html/online-resource.html", model);
 
         final String finalResult = fileResult.toString();
         assertTrue(finalResult, finalResult.contains("href&amp;1"));

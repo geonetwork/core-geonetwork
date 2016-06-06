@@ -22,14 +22,19 @@
   -->
 
 <!--
-	overrides used by inspire configuration.   
+	overrides used by inspire configuration.
 -->
 <overrides>
-	<textFile name=".*/data/data-db-default.sql">
-		<!-- inspire-->
-		<update linePattern="(INSERT INTO Settings VALUES \(721,720,'enable',').+?('.*)">$1true$2</update>
-		<update linePattern="(INSERT INTO Settings VALUES \(722,720,'enableSearchPanel',').+?('.*)">$1true$2</update>
-		<!-- Metadata view settings -->
-		<update linePattern="(INSERT INTO Settings VALUES \(913,910,'enableInspireView',').+?('.*)">$1true$2</update>
-	</textFile>
+  <textFile name=".*/data/data-db-default.sql">
+    <!-- inspire-->
+    <update linePattern="(INSERT INTO Settings VALUES \(721,720,'enable',').+?('.*)">$1true$2
+    </update>
+    <update linePattern="(INSERT INTO Settings VALUES \(722,720,'enableSearchPanel',').+?('.*)">
+      $1true$2
+    </update>
+    <!-- Metadata view settings -->
+    <update linePattern="(INSERT INTO Settings VALUES \(913,910,'enableInspireView',').+?('.*)">
+      $1true$2
+    </update>
+  </textFile>
 </overrides>

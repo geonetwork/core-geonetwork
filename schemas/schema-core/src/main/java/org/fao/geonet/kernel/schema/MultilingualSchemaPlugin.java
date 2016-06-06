@@ -34,9 +34,8 @@ public interface MultilingualSchemaPlugin {
     /**
      * Return the sub element matching the requested language.
      *
-     * @param element   The element to search in
-     * @param languageIdentifier    The translation language to search for
-     * @return
+     * @param element            The element to search in
+     * @param languageIdentifier The translation language to search for
      */
     public abstract List<Element> getTranslationForElement(Element element, String languageIdentifier);
 

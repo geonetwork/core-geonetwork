@@ -30,13 +30,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class Crs {
-    public Crs() {};
-
     private String code;
+
+    ;
     private String authority;
     private String version;
     private String codeSpace;
     private String description;
+    public Crs() {
+    }
 
     public Crs(String code, String authority,
                String version, String codeSpace,

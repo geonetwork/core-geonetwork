@@ -37,8 +37,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class Get {
 
     @RequestMapping(value = "/{lang}/admin.config.csw", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
     CswConfigurationResponse exec() throws Exception {
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         SettingManager sm = applicationContext.getBean(SettingManager.class);

@@ -24,7 +24,9 @@
 package org.fao.geonet.services.metadata;
 
 import com.google.common.collect.Sets;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;

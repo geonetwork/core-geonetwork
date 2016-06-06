@@ -23,12 +23,12 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:gml="http://www.opengis.net/gml" xmlns:fra="http://www.cnig.gouv.fr/2005/fra"
-  xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gts="http://www.isotc211.org/2005/gts"
-  xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:geonet="http://www.fao.org/geonetwork"
-  xmlns:date="http://exslt.org/dates-and-times" xmlns:exslt="http://exslt.org/common"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs" version="2.0">
+                xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:gml="http://www.opengis.net/gml" xmlns:fra="http://www.cnig.gouv.fr/2005/fra"
+                xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gts="http://www.isotc211.org/2005/gts"
+                xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:date="http://exslt.org/dates-and-times" xmlns:exslt="http://exslt.org/common"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs" version="2.0">
 
   <xsl:template name="metadata-fop-iso19139">
     <xsl:param name="schema"/>
@@ -36,12 +36,12 @@
       <xsl:with-param name="schema" select="$schema"/>
     </xsl:apply-templates>
   </xsl:template>
-  
+
   <xsl:template mode="elementFOPiso19139" match="*|@*">
     <xsl:param name="schema"/>
     <!-- TODO improve block level element using mode -->
     <xsl:for-each select="*[namespace-uri(.)!=$geonetUri]">
-      
+
       <xsl:call-template name="blockElementFop">
         <xsl:with-param name="block">
           <xsl:choose>
@@ -72,9 +72,9 @@
       </xsl:call-template>
     </xsl:for-each>
   </xsl:template>
-  
+
   <xsl:template mode="elementFOPiso19139" match="geonet:*" priority="99"/>
-  
+
   <xsl:template mode="elementFOPiso19139" match="gmd:identificationInfo|gmd:distributionInfo|
     gmd:descriptiveKeywords|gmd:spatialRepresentationInfo|gmd:pointOfContact|
     gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|
@@ -105,7 +105,7 @@
     <!-- Title -->
     <xsl:variable name="title">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title">
+                           select="./gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
@@ -116,7 +116,7 @@
     <!-- Date -->
     <xsl:variable name="date">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date |
+                           select="./gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date |
                 ./gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
@@ -138,7 +138,7 @@
     <!-- Service Type -->
     <xsl:variable name="serviceType">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/srv:serviceType/gco:LocalName ">
+                           select="./gmd:identificationInfo/*/srv:serviceType/gco:LocalName ">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
@@ -149,7 +149,7 @@
     <!-- Service Type Version -->
     <xsl:variable name="srvVersion">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/srv:serviceTypeVersion">
+                           select="./gmd:identificationInfo/*/srv:serviceTypeVersion">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
@@ -160,7 +160,7 @@
     <!-- Coupling Type -->
     <xsl:variable name="couplingType">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/srv:couplingType/srv:SV_CouplingType/@codeListValue">
+                           select="./gmd:identificationInfo/*/srv:couplingType/srv:SV_CouplingType/@codeListValue">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
@@ -171,7 +171,7 @@
     <!-- Code -->
     <xsl:variable name="code">
       <xsl:apply-templates mode="elementFop"
-        select="gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code">
+                           select="gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
@@ -202,7 +202,7 @@
     <!-- Hierarchy Level -->
     <xsl:variable name="hierarchy">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue">
+                           select="./gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
@@ -213,7 +213,7 @@
     <!-- Source Online -->
     <xsl:variable name="online">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage |
+                           select="./gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage |
                                   ./gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
@@ -229,7 +229,7 @@
     <!-- Contact -->
     <xsl:variable name="poc">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualName    |
+                           select="./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualName    |
                                   ./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName  |
                                   ./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:positionName      |
                                   ./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
@@ -258,7 +258,7 @@
     <!-- Keywords -->
     <xsl:variable name="keyword">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword | 
+                           select="./gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword |
               ./gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
@@ -274,21 +274,21 @@
     <!-- Geographical extent -->
     <xsl:variable name="geoDesc">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/gmd:extent/gmd:EX_Extent/gmd:description |
+                           select="./gmd:identificationInfo/*/gmd:extent/gmd:EX_Extent/gmd:description |
                 ./gmd:identificationInfo/*/srv:extent/gmd:EX_Extent/gmd:description">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
     <xsl:variable name="geoBbox">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox |
+                           select="./gmd:identificationInfo/*/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox |
               ./gmd:identificationInfo/*/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
     <xsl:variable name="timeExtent">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimeInstant/gml:timePosition">
+                           select="./gmd:identificationInfo/*/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimeInstant/gml:timePosition">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
@@ -324,7 +324,7 @@
     <!-- Spatial resolution -->
     <xsl:variable name="spatialResolution">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/gmd:spatialResolution">
+                           select="./gmd:identificationInfo/*/gmd:spatialResolution">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
@@ -341,11 +341,11 @@
     <xsl:if test="./gmd:identificationInfo/*[name(.)!='srv:SV_ServiceIdentification']">
       <xsl:variable name="qual">
         <xsl:apply-templates mode="elementFop"
-          select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement">
+                             select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement">
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:apply-templates>
         <xsl:apply-templates mode="elementFop"
-          select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source">
+                             select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source">
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:apply-templates>
       </xsl:variable>
@@ -361,12 +361,12 @@
     <!-- Constraints -->
     <xsl:variable name="constraints">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:useLimitation/gco:CharacterString">
+                           select="./gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:useLimitation/gco:CharacterString">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
 
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:classification">
+                           select="./gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:classification">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
@@ -402,7 +402,7 @@
     <!-- Encoding -->
     <xsl:variable name="charset">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue">
+                           select="./gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
@@ -413,15 +413,15 @@
     <!-- Contact -->
     <xsl:variable name="contact">
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:contact/gmd:CI_ResponsibleParty/gmd:individualName">
+                           select="./gmd:contact/gmd:CI_ResponsibleParty/gmd:individualName">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName">
+                           select="./gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
       <xsl:apply-templates mode="elementFop"
-        select="./gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                           select="./gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:apply-templates>
     </xsl:variable>
@@ -448,23 +448,23 @@
       test="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult[contains(gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE')]">
       <xsl:variable name="conf">
         <xsl:apply-templates mode="elementFop"
-          select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
+                             select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:apply-templates>
         <xsl:apply-templates mode="elementFop"
-          select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
+                             select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:apply-templates>
         <xsl:apply-templates mode="elementFop"
-          select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue">
+                             select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue">
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:apply-templates>
         <xsl:apply-templates mode="elementFop"
-          select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:explanation">
+                             select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:explanation">
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:apply-templates>
         <xsl:apply-templates mode="elementFop"
-          select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass">
+                             select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass">
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:apply-templates>
       </xsl:variable>

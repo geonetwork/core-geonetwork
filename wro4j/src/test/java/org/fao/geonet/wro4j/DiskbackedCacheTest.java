@@ -2,6 +2,7 @@ package org.fao.geonet.wro4j;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import ro.isdc.wro.cache.CacheKey;
 import ro.isdc.wro.cache.CacheValue;
 import ro.isdc.wro.config.Context;
@@ -66,7 +67,7 @@ public class DiskbackedCacheTest {
         }
     }
 
-    @Test (expected = ro.isdc.wro.WroRuntimeException.class)
+    @Test(expected = ro.isdc.wro.WroRuntimeException.class)
     public void testDestroy() throws Exception {
         CacheKey key = new CacheKey("groupName", ResourceType.CSS);
         CacheValue value = CacheValue.valueOf("rawContent", "hash");

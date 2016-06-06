@@ -32,6 +32,7 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
 import java.util.Date;
 import java.util.Properties;
 
@@ -41,15 +42,6 @@ import java.util.Properties;
 public abstract class MailSendingService implements Service {
     /**
      * Send the mail to the user.
-     * @param host
-     * @param port
-     * @param subject
-     * @param from
-     * @param to
-     * @param content
-     * @param protocol
-     * @return
-     * @throws javax.mail.MessagingException
      */
     protected boolean sendMail(String host, int port, String subject, String from, String to, String content, String protocol) throws MessagingException {
         boolean isSendout;

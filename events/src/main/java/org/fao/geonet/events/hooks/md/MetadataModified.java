@@ -22,7 +22,7 @@
  */
 
 /**
- * 
+ *
  */
 package org.fao.geonet.events.hooks.md;
 
@@ -38,20 +38,17 @@ import org.springframework.stereotype.Component;
 
 /**
  * Hook events to database events
- * 
+ *
  * @author delawen
- * 
- * 
  */
 @Component
 public class MetadataModified implements GeonetworkEntityListener<Metadata>,
-        ApplicationEventPublisherAware {
+    ApplicationEventPublisherAware {
 
     private ApplicationEventPublisher eventPublisher;
 
     /**
      * @see org.fao.geonet.entitylistener.GeonetworkEntityListener#getEntityClass()
-     * @return
      */
     @Override
     public Class<Metadata> getEntityClass() {
@@ -60,15 +57,15 @@ public class MetadataModified implements GeonetworkEntityListener<Metadata>,
 
     /**
      * @see org.fao.geonet.entitylistener.GeonetworkEntityListener#handleEvent(org.fao.geonet.entitylistener.PersistentEventType,
-     *      java.lang.Object)
+     * java.lang.Object)
      */
     @Override
     public void handleEvent(PersistentEventType type, Metadata entity) {
         if (entity.getId() == 0
-                && (type == PersistentEventType.PrePersist || type == PersistentEventType.PreUpdate)) {
+            && (type == PersistentEventType.PrePersist || type == PersistentEventType.PreUpdate)) {
             this.eventPublisher.publishEvent(new MetadataAdd(entity));
         } else if ((type == PersistentEventType.PostPersist || type == PersistentEventType.PostUpdate)
-                && entity.getId() != 0) {
+            && entity.getId() != 0) {
             this.eventPublisher.publishEvent(new MetadataUpdate(entity));
         } else if (type == PersistentEventType.PostRemove) {
             this.eventPublisher.publishEvent(new MetadataRemove(entity));
@@ -77,11 +74,10 @@ public class MetadataModified implements GeonetworkEntityListener<Metadata>,
 
     /**
      * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
-     * @param applicationEventPublisher
      */
     @Override
     public void setApplicationEventPublisher(
-            ApplicationEventPublisher applicationEventPublisher) {
+        ApplicationEventPublisher applicationEventPublisher) {
         this.eventPublisher = applicationEventPublisher;
     }
 }

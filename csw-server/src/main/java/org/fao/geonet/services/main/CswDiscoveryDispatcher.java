@@ -24,10 +24,13 @@
 package org.fao.geonet.services.main;
 
 import jeeves.constants.Jeeves;
+
 import org.fao.geonet.Logger;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.component.csw.CatalogDispatcher;
 import org.fao.geonet.constants.Geonet;
@@ -42,7 +45,7 @@ import java.util.Map;
  * Accepts CSW Discovery operations.
  */
 public class CswDiscoveryDispatcher implements Service {
-	private Logger logger;
+    private Logger logger;
 
     /**
      * The "filter" parameter value is the filter to apply to Lucene query using Lucene query syntax
@@ -50,45 +53,41 @@ public class CswDiscoveryDispatcher implements Service {
      *
      * Service configuration example with filter" parameter:
      *
-     * <service name="csw-custom">
-     *      <class name=".services.main.CswDispatcher" >
-     *         <param name="filter" value="+inspirerelated:on"/>
-     *      </class>
-     *  </service>
-     *
+     * <service name="csw-custom"> <class name=".services.main.CswDispatcher" > <param name="filter"
+     * value="+inspirerelated:on"/> </class> </service>
      */
-	private String cswServiceSpecificContraint;
+    private String cswServiceSpecificContraint;
 
-	public void init(Path appPath, ServiceConfig config) throws Exception {
-		cswServiceSpecificContraint = config.getValue(Geonet.Elem.FILTER);
-	}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+        cswServiceSpecificContraint = config.getValue(Geonet.Elem.FILTER);
+    }
 
-	public Element exec(Element params, ServiceContext context) throws Exception {
-		logger = context.getLogger();
-		
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager settingMan = gc.getBean(SettingManager.class);
-		boolean cswEnable    = settingMan.getValueAsBool("system/csw/enable", false);
-		
-		Element response = new Element(Jeeves.Elem.RESPONSE);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        logger = context.getLogger();
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager settingMan = gc.getBean(SettingManager.class);
+        boolean cswEnable = settingMan.getValueAsBool("system/csw/enable", false);
+
+        Element response = new Element(Jeeves.Elem.RESPONSE);
 
         String operation;
         // KVP encoding
-        if(params.getName().equals("request")) {
-			Map<String, String> hm = CatalogDispatcher.extractParams(params);
-			operation = hm.get("request");
-			// operation = params.getChildText("request");
-			if (operation == null) {
-				Element info = new Element("info")
-						.setText("No 'request' parameter found");
-				response.addContent(info);
-				return response;
-			}
+        if (params.getName().equals("request")) {
+            Map<String, String> hm = CatalogDispatcher.extractParams(params);
+            operation = hm.get("request");
+            // operation = params.getChildText("request");
+            if (operation == null) {
+                Element info = new Element("info")
+                    .setText("No 'request' parameter found");
+                response.addContent(info);
+                return response;
+            }
         }
         // SOAP encoding
-        else if(params.getName().equals("Envelope")) {
+        else if (params.getName().equals("Envelope")) {
             Element soapBody = params.getChild("Body",
-                    org.jdom.Namespace.getNamespace("http://www.w3.org/2003/05/soap-envelope"));
+                org.jdom.Namespace.getNamespace("http://www.w3.org/2003/05/soap-envelope"));
             @SuppressWarnings("unchecked")
             List<Element> payloadList = soapBody.getChildren();
             Element payload = payloadList.get(0);
@@ -99,22 +98,21 @@ public class CswDiscoveryDispatcher implements Service {
             operation = params.getName();
         }
 
-        if(!operation.equals("GetCapabilities") && !operation.equals("GetRecords") && !operation.equals("GetRecordById")
-                && !operation.equals("DescribeRecord") && !operation.equals("GetDomain")) {
-            Element info  = new Element("info").setText("Not a CSW Discovery operation: " + operation + ". Did you mean to use the CSW Publication service? Use service name /csw-publication");
-			response.addContent(info);
+        if (!operation.equals("GetCapabilities") && !operation.equals("GetRecords") && !operation.equals("GetRecordById")
+            && !operation.equals("DescribeRecord") && !operation.equals("GetDomain")) {
+            Element info = new Element("info").setText("Not a CSW Discovery operation: " + operation + ". Did you mean to use the CSW Publication service? Use service name /csw-publication");
+            response.addContent(info);
             return response;
         }
 
-		// FIXME : response should be more explicit, an exception should be return ?
-		if (!cswEnable) {
-			logger.info("CSW is disabled");
-			Element info  = new Element("info").setText("CSW is disabled");
-			response.addContent(info);
-		}
-        else {
-			response = gc.getBean(CatalogDispatcher.class).dispatch(params, context, cswServiceSpecificContraint);
+        // FIXME : response should be more explicit, an exception should be return ?
+        if (!cswEnable) {
+            logger.info("CSW is disabled");
+            Element info = new Element("info").setText("CSW is disabled");
+            response.addContent(info);
+        } else {
+            response = gc.getBean(CatalogDispatcher.class).dispatch(params, context, cswServiceSpecificContraint);
         }
-		return response;
-	}
+        return response;
+    }
 }

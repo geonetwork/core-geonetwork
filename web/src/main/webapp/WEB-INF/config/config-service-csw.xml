@@ -23,25 +23,25 @@
   -->
 
 <geonet>
-    <services package="org.fao.geonet">
+  <services package="org.fao.geonet">
 
-        <service name="csw">
-            <documentation>
-                <![CDATA[
+    <service name="csw">
+      <documentation>
+        <![CDATA[
                 Catalogue Services for the Web
                 ]]>
-            </documentation>
-            <class name=".services.main.CswDiscoveryDispatcher"/>
-        </service>
+      </documentation>
+      <class name=".services.main.CswDiscoveryDispatcher"/>
+    </service>
 
-        <service name="csw-publication">
-            <documentation>
-                <![CDATA[
+    <service name="csw-publication">
+      <documentation>
+        <![CDATA[
                 Catalogue Services for the Web for running transaction operation.
                 ]]>
-            </documentation>
-            <class name=".services.main.CswPublicationDispatcher"/>
-        </service>
+      </documentation>
+      <class name=".services.main.CswPublicationDispatcher"/>
+    </service>
 
-    </services>
+  </services>
 </geonet>

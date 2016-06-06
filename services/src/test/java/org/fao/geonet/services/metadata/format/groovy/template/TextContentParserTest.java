@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Maps;
+
 import org.junit.Test;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +35,29 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 public class TextContentParserTest {
+
+    public static void assertCorrectRender(TextBlock contents, Map<String, Object> model, String expected) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        TRenderContext context = new TRenderContext(out, model);
+        contents.render(context);
+
+        assertEquals(expected, out.toString());
+    }
+
+    public static TextContentParser createTestTextContentParser() throws InstantiationException, IllegalAccessException {
+        final TextContentParser parser = new TextContentParser();
+        addFilters(parser, FilterCapitalize.class, FilterEscapeXmlAttrs.class, FilterEscapeXmlContent.class, FilterLowerCase.class,
+            FilterUpperCase.class, FilterGenerateUUID.class, FilterLastUUID.class);
+        return parser;
+    }
+
+    private static void addFilters(TextContentParser parser, Class<? extends TextContentFilter>... filters) throws IllegalAccessException,
+        InstantiationException {
+        for (Class<? extends TextContentFilter> filter : filters) {
+            final Component componentAnnotation = filter.getAnnotation(Component.class);
+            parser.filters.put(componentAnnotation.value(), filter.newInstance());
+        }
+    }
 
     @Test
     public void testParse() throws Exception {
@@ -71,28 +95,5 @@ public class TextContentParserTest {
         contents = parser.parse("{{name | " + annotation.value() + "}}");
         model.put("name", "&Name");
         assertCorrectRender(contents, model, "&amp;Name");
-    }
-
-    public static void assertCorrectRender(TextBlock contents, Map<String, Object> model, String expected) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        TRenderContext context = new TRenderContext(out, model);
-        contents.render(context);
-
-        assertEquals(expected, out.toString());
-    }
-
-    public static TextContentParser createTestTextContentParser() throws InstantiationException, IllegalAccessException {
-        final TextContentParser parser = new TextContentParser();
-        addFilters(parser, FilterCapitalize.class, FilterEscapeXmlAttrs.class, FilterEscapeXmlContent.class, FilterLowerCase.class,
-                FilterUpperCase.class, FilterGenerateUUID.class, FilterLastUUID.class);
-        return parser;
-    }
-
-    private static void addFilters(TextContentParser parser, Class<? extends TextContentFilter>... filters) throws IllegalAccessException,
-            InstantiationException {
-        for (Class<? extends TextContentFilter> filter : filters) {
-            final Component componentAnnotation = filter.getAnnotation(Component.class);
-            parser.filters.put(componentAnnotation.value(), filter.newInstance());
-        }
     }
 }

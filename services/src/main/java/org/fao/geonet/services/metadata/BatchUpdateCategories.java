@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -53,21 +54,21 @@ import java.util.*;
  * Assigns categories to metadata.
  */
 public class BatchUpdateCategories extends NotInReadOnlyModeService {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
     /**
      *
@@ -76,72 +77,71 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
      * @return
      * @throws Exception
      */
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
         String mode = Util.getParam(params, "mode", "replace");
 
         DataManager dm = gc.getBean(DataManager.class);
-		AccessManager accessMan = gc.getBean(AccessManager.class);
-		UserSession us = context.getUserSession();
+        AccessManager accessMan = gc.getBean(AccessManager.class);
+        UserSession us = context.getUserSession();
 
 
-		context.info("Get selected metadata");
-		SelectionManager sm = SelectionManager.getManager(us);
+        context.info("Get selected metadata");
+        SelectionManager sm = SelectionManager.getManager(us);
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
+        Set<Integer> metadata = new HashSet<Integer>();
+        Set<Integer> notFound = new HashSet<Integer>();
+        Set<Integer> notOwner = new HashSet<Integer>();
 
-		synchronized(sm.getSelection("metadata")) {
-		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
-			String uuid = (String) iter.next();
-			String id   = dm.getMetadataId(uuid);
-								
-			//--- check access
+        synchronized (sm.getSelection("metadata")) {
+            for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext(); ) {
+                String uuid = (String) iter.next();
+                String id = dm.getMetadataId(uuid);
 
-            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-            Metadata info = metadataRepository.findOne(id);
-			if (info == null) {
-				notFound.add(Integer.valueOf(id));
-			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(Integer.valueOf(id));
-			} else {
+                //--- check access
 
-				//--- remove old operations
-                if (!"replace".equals(mode)) {
-                    info.getCategories().clear();
-                }
+                final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+                Metadata info = metadataRepository.findOne(id);
+                if (info == null) {
+                    notFound.add(Integer.valueOf(id));
+                } else if (!accessMan.isOwner(context, id)) {
+                    notOwner.add(Integer.valueOf(id));
+                } else {
 
-				//--- set new ones
-				@SuppressWarnings("unchecked")
-                List<Element> list = params.getChildren();
+                    //--- remove old operations
+                    if (!"replace".equals(mode)) {
+                        info.getCategories().clear();
+                    }
 
-                final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
-                for (Element el : list) {
-					String name = el.getName();
+                    //--- set new ones
+                    @SuppressWarnings("unchecked")
+                    List<Element> list = params.getChildren();
 
-					if (name.startsWith("_") && !name.equals(Params.CONTENT_TYPE))  {
-                        final MetadataCategory category = categoryRepository.findOne(Integer.valueOf(name.substring(1)));
-                        if (category != null) {
-                            info.getCategories().add(category);
-                        } else {
-                            context.warning("Unable to find category with name: "+name.substring(1));
+                    final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
+                    for (Element el : list) {
+                        String name = el.getName();
+
+                        if (name.startsWith("_") && !name.equals(Params.CONTENT_TYPE)) {
+                            final MetadataCategory category = categoryRepository.findOne(Integer.valueOf(name.substring(1)));
+                            if (category != null) {
+                                info.getCategories().add(category);
+                            } else {
+                                context.warning("Unable to find category with name: " + name.substring(1));
+                            }
                         }
                     }
-				}
 
-                metadataRepository.save(info);
-				metadata.add(Integer.valueOf(id));
-			}
-		}
-		}
+                    metadataRepository.save(info);
+                    metadata.add(Integer.valueOf(id));
+                }
+            }
+        }
 
         context.getBean(DataManager.class).flush();
 
         //--- reindex metadata
-		context.info("Re-indexing metadata");
+        context.info("Re-indexing metadata");
 //      AFA we don't have a better fix
 //      https://github.com/geonetwork/core-geonetwork/issues/620
 //		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
@@ -152,11 +152,11 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
             list.add(Integer.toString(mdId));
         }
         dm.indexMetadata(list);
-		// -- for the moment just return the sizes - we could return the ids
-		// -- at a later stage for some sort of result display
-		return new Element(Jeeves.Elem.RESPONSE)
-						.addContent(new Element("done")    .setText(metadata.size()+""))
-						.addContent(new Element("notOwner").setText(notOwner.size()+""))
-						.addContent(new Element("notFound").setText(notFound.size()+""));
-	}
+        // -- for the moment just return the sizes - we could return the ids
+        // -- at a later stage for some sort of result display
+        return new Element(Jeeves.Elem.RESPONSE)
+            .addContent(new Element("done").setText(metadata.size() + ""))
+            .addContent(new Element("notOwner").setText(notOwner.size() + ""))
+            .addContent(new Element("notFound").setText(notFound.size() + ""));
+    }
 }

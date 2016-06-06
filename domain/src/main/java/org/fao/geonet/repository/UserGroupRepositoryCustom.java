@@ -28,6 +28,7 @@ import org.fao.geonet.domain.UserGroupId;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.metamodel.SingularAttribute;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -52,8 +53,8 @@ public interface UserGroupRepositoryCustom {
     List<Integer> findUserIds(Specification<UserGroup> spec);
 
     /**
-     * Delete all the UserGroups with an id in the collection of ids.  The component of the id that is used in the 'in' clause
-     * is determined by the idAttribute.
+     * Delete all the UserGroups with an id in the collection of ids.  The component of the id that
+     * is used in the 'in' clause is determined by the idAttribute.
      *
      * @param idAttribute the part of the id object that is compared to the collection of ids
      * @param ids         the ids for finding the {@link UserGroup} to delete.

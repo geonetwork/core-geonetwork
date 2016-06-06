@@ -25,32 +25,31 @@ package org.fao.geonet.csw.common.exceptions;
 
 //=============================================================================
 
-public class MissingParameterValueEx extends CatalogException
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class MissingParameterValueEx extends CatalogException {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5797750194252680005L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5797750194252680005L;
 
-	public MissingParameterValueEx(String name)
-	{
-		super(MISSING_PARAMETER_VALUE, null, name);
-	}
+    public MissingParameterValueEx(String name) {
+        super(MISSING_PARAMETER_VALUE, null, name);
+    }
 
     //---------------------------------------------------------------------------
 
-	public MissingParameterValueEx(String name, String description) { super(MISSING_PARAMETER_VALUE, description, name); }
+    public MissingParameterValueEx(String name, String description) {
+        super(MISSING_PARAMETER_VALUE, description, name);
+    }
 
-	public MissingParameterValueEx(String name, CatalogException prev)
-	{
-		super(MISSING_PARAMETER_VALUE, null, name, prev);
-	}
+    public MissingParameterValueEx(String name, CatalogException prev) {
+        super(MISSING_PARAMETER_VALUE, null, name, prev);
+    }
 
 
 }

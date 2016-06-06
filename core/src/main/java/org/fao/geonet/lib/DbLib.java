@@ -26,6 +26,7 @@ package org.fao.geonet.lib;
 import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.IO;
@@ -40,6 +41,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.servlet.ServletContext;
@@ -48,41 +50,41 @@ import javax.sql.DataSource;
 //=============================================================================
 
 public class DbLib {
-	// -----------------------------------------------------------------------------
-	// ---
-	// --- API methods
-	// ---
-	// -----------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------
+    // ---
+    // --- API methods
+    // ---
+    // -----------------------------------------------------------------------------
 
-	private static final String SQL_EXTENSION = ".sql";
+    private static final String SQL_EXTENSION = ".sql";
 
-	public void insertData(ServletContext servletContext, final ServiceContext context, Path appPath, Path filePath,
+    public void insertData(ServletContext servletContext, final ServiceContext context, Path appPath, Path filePath,
                            String filePrefix) throws Exception {
-        if(Log.isDebugEnabled(Geonet.DB))
+        if (Log.isDebugEnabled(Geonet.DB))
             Log.debug(Geonet.DB, "Filling database tables");
 
-		final List<String> data = loadSqlDataFile(servletContext, context.getApplicationContext(), appPath, filePath, filePrefix);
+        final List<String> data = loadSqlDataFile(servletContext, context.getApplicationContext(), appPath, filePath, filePrefix);
         TransactionManager.runInTransaction("insert data into database from file", context.getApplicationContext(),
-                TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED, TransactionManager.CommitBehavior.ALWAYS_COMMIT, false,
-                new TransactionTask<Object>() {
-                    @Override
-                    public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                        runSQL(context.getEntityManager(), data, true);
-                        return null;
-                    }
-                });
-	}
+            TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED, TransactionManager.CommitBehavior.ALWAYS_COMMIT, false,
+            new TransactionTask<Object>() {
+                @Override
+                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                    runSQL(context.getEntityManager(), data, true);
+                    return null;
+                }
+            });
+    }
 
-	public void insertData(ServletContext servletContext, Statement statement, Path appPath, Path filePath,
+    public void insertData(ServletContext servletContext, Statement statement, Path appPath, Path filePath,
                            String filePrefix) throws Exception {
-        if(Log.isDebugEnabled(Geonet.DB))
+        if (Log.isDebugEnabled(Geonet.DB))
             Log.debug(Geonet.DB, "Filling database tables");
 
-		List<String> data = loadSqlDataFile(servletContext, statement, appPath, filePath, filePrefix);
-		runSQL(statement, data, true);
-	}
+        List<String> data = loadSqlDataFile(servletContext, statement, appPath, filePath, filePrefix);
+        runSQL(statement, data, true);
+    }
 
-	private void runSQL(EntityManager entityManager, List<String> data, boolean failOnError) throws Exception {
+    private void runSQL(EntityManager entityManager, List<String> data, boolean failOnError) throws Exception {
         StringBuffer sb = new StringBuffer();
 
         boolean inBlock = false;
@@ -128,8 +130,9 @@ public class DbLib {
         entityManager.flush();
         entityManager.clear();
 
-	}
-	private void runSQL(Statement statement, List<String> data, boolean failOnError) throws Exception {
+    }
+
+    private void runSQL(Statement statement, List<String> data, boolean failOnError) throws Exception {
         StringBuffer sb = new StringBuffer();
 
         boolean inBlock = false;
@@ -171,17 +174,12 @@ public class DbLib {
         statement.getConnection().commit();
     }
 
-	/**
-	 * Check if db specific SQL script exist, if not return default SQL script path.
-	 * 
-	 *
-     * @param servletContext
-     * @param appPath
-     *@param filePath
-     * @param prefix
-     * @param type    @return
-	 */
-	private Path checkFilePath(ServletContext servletContext, Path appPath, Path filePath, String prefix, String type) {
+    /**
+     * Check if db specific SQL script exist, if not return default SQL script path.
+     *
+     * @param type @return
+     */
+    private Path checkFilePath(ServletContext servletContext, Path appPath, Path filePath, String prefix, String type) {
         Path finalPath;
         finalPath = testPath(filePath.resolve(prefix + type + SQL_EXTENSION));
 
@@ -209,13 +207,13 @@ public class DbLib {
             }
         }
 
-		if (finalPath != null)
-			return finalPath;
-		else {
-            Log.debug(Geonet.DB, "  No default SQL script found: " + (filePath + "/" +  prefix + type + SQL_EXTENSION));
+        if (finalPath != null)
+            return finalPath;
+        else {
+            Log.debug(Geonet.DB, "  No default SQL script found: " + (filePath + "/" + prefix + type + SQL_EXTENSION));
         }
-		return toPath("");
-	}
+        return toPath("");
+    }
 
     private Path toPath(String pathString) {
         try {
@@ -233,7 +231,7 @@ public class DbLib {
     }
 
     private List<String> loadSqlDataFile(ServletContext servletContext, ApplicationContext appContext, Path appPath, Path filePath, String filePrefix)
-            throws IOException, SQLException {
+        throws IOException, SQLException {
         final DataSource dataSource = appContext.getBean(DataSource.class);
         Connection connection = null;
         try {
@@ -248,14 +246,15 @@ public class DbLib {
                 connection.close();
             }
         }
-	}
+    }
+
     private List<String> loadSqlDataFile(ServletContext servletContext, Statement statement, Path appPath, Path filePath, String filePrefix)
-            throws IOException, SQLException {
-            // --- find out which dbms data file to load
+        throws IOException, SQLException {
+        // --- find out which dbms data file to load
         Path file = checkFilePath(servletContext, appPath, filePath, filePrefix, DatabaseType.lookup(statement.getConnection()).toString());
 
-            // --- load the sql data
-            return Lib.text.load(servletContext, appPath, file, Constants.ENCODING);
-	}
+        // --- load the sql data
+        return Lib.text.load(servletContext, appPath, file, Constants.ENCODING);
+    }
 
 }

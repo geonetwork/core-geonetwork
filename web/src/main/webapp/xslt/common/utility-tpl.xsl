@@ -21,7 +21,7 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
   <xsl:template name="replaceString">
     <xsl:param name="expr"/>
@@ -34,8 +34,8 @@
         <xsl:value-of select="$first"/>
         <xsl:value-of select="$replacement"/>
         <xsl:call-template name="replaceString">
-          <xsl:with-param name="expr"        select="substring-after($expr,$pattern)"/>
-          <xsl:with-param name="pattern"     select="$pattern"/>
+          <xsl:with-param name="expr" select="substring-after($expr,$pattern)"/>
+          <xsl:with-param name="pattern" select="$pattern"/>
           <xsl:with-param name="replacement" select="$replacement"/>
         </xsl:call-template>
       </xsl:when>

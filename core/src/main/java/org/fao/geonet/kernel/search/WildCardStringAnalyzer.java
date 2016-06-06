@@ -54,7 +54,7 @@ public class WildCardStringAnalyzer {
                     qPreserved.append('?').append(analyzedPart);
                 }
                 // remove leading ?
-                if (qPreserved.length() > 0){
+                if (qPreserved.length() > 0) {
                     qPreserved.deleteCharAt(0);
                 }
                 starsPreserved.append('*').append(qPreserved);
@@ -74,8 +74,7 @@ public class WildCardStringAnalyzer {
         // restore ending wildcard
         if (string.endsWith("*")) {
             starsPreserved.append("*");
-        }
-        else if (string.endsWith("?")) {
+        } else if (string.endsWith("?")) {
             starsPreserved.append("?");
         }
         return starsPreserved.toString();

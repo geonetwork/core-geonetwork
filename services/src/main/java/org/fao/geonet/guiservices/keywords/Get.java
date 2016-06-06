@@ -26,6 +26,7 @@ package org.fao.geonet.guiservices.keywords;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -35,25 +36,25 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** A simple service that returns all the keywords in the system (of metadata)
-  */
+/**
+ * A simple service that returns all the keywords in the system (of metadata)
+ */
 
-public class Get implements Service
-{
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class Get implements Service {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		return gc.getBean(DataManager.class).getKeywords();
-	}
+        return gc.getBean(DataManager.class).getKeywords();
+    }
 }
 
 //=============================================================================

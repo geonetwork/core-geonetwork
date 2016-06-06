@@ -24,6 +24,7 @@
 package org.fao.geonet.utils;
 
 import com.google.common.base.Function;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -51,16 +52,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PreDestroy;
 
 /**
- * Factory interface for making different kinds of requests.  This is an interface so that tests can mock their own implementations.
+ * Factory interface for making different kinds of requests.  This is an interface so that tests can
+ * mock their own implementations.
  *
- * User: Jesse
- * Date: 10/18/13
- * Time: 4:16 PM
+ * User: Jesse Date: 10/18/13 Time: 4:16 PM
  */
 public class GeonetHttpRequestFactory {
     private int numberOfConcurrentRequests = 20;
@@ -74,6 +75,7 @@ public class GeonetHttpRequestFactory {
         }
         connectionManager = null;
     }
+
     public synchronized void setNumberOfConcurrentRequests(int numberOfConcurrentRequests) {
         shutdown();
         this.numberOfConcurrentRequests = numberOfConcurrentRequests;
@@ -81,16 +83,13 @@ public class GeonetHttpRequestFactory {
 
     /**
      * Create a default XmlRequest.
-     *
-     * @return
      */
     public final XmlRequest createXmlRequest() {
         return createXmlRequest(null, 80, "http");
     }
+
     /**
      * Create a default XmlRequest.
-     *
-     * @return
      */
     public XmlRequest createXmlRequest(String host, int port, String protocol) {
         return new XmlRequest(host, port, protocol, this);
@@ -98,16 +97,13 @@ public class GeonetHttpRequestFactory {
 
     /**
      * Create a default XmlRequest.
-     *
-     * @return
      */
     public final XmlRequest createXmlRequest(String host) {
         return createXmlRequest(host, 80, "http");
     }
+
     /**
      * Create a default XmlRequest.
-     *
-     * @return
      */
     public final XmlRequest createXmlRequest(String host, int port) {
         String protocol = "http";
@@ -121,13 +117,12 @@ public class GeonetHttpRequestFactory {
      * Ceate an XmlRequest from a url.
      *
      * @param url the url of the request.
-     *
      * @return the XmlRequest.
      */
     public final XmlRequest createXmlRequest(URL url) {
         final int port = url.getPort();
         final XmlRequest request = createXmlRequest(url.getHost(), port,
-                url.getProtocol());
+            url.getProtocol());
 
         request.setAddress(url.getPath());
         request.setQuery(url.getQuery());
@@ -165,6 +160,7 @@ public class GeonetHttpRequestFactory {
         };
         return execute(request, setCredentials);
     }
+
     public ClientHttpResponse execute(HttpUriRequest request,
                                       Function<HttpClientBuilder, Void> configurator) throws IOException {
         final HttpClientBuilder clientBuilder = getDefaultHttpClientBuilder();
@@ -188,6 +184,7 @@ public class GeonetHttpRequestFactory {
         }
 
     }
+
     public HttpClientBuilder getDefaultHttpClientBuilder() {
         final HttpClientBuilder builder = HttpClientBuilder.create();
         builder.setRedirectStrategy(new LaxRedirectStrategy());

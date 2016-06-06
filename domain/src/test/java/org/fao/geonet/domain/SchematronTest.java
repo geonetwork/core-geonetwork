@@ -28,8 +28,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test some of the logic methods in {@link org.fao.geonet.domain.Schematron}
- * Created by Jesse on 1/22/14.
+ * Test some of the logic methods in {@link org.fao.geonet.domain.Schematron} Created by Jesse on
+ * 1/22/14.
  */
 public class SchematronTest {
     @Test
@@ -45,6 +45,7 @@ public class SchematronTest {
         schematron.setFile("abc.xsl");
         assertEquals("abc", schematron.getRuleName());
     }
+
     @Test
     public void testGetRuleName_Parse_Disabled() throws Exception {
         final Schematron schematron = new Schematron();
@@ -58,6 +59,7 @@ public class SchematronTest {
         schematron.setFile("abc.DISABLED.xsl");
         assertEquals("abc", schematron.getRuleName());
     }
+
     @Test
     public void testGetRuleName_Parse_Report() throws Exception {
         final Schematron schematron = new Schematron();
@@ -71,6 +73,7 @@ public class SchematronTest {
         schematron.setFile("abc.REPORT_ONLY.xsl");
         assertEquals("abc", schematron.getRuleName());
     }
+
     @Test
     public void testGetRuleName_Parse_Required() throws Exception {
         final Schematron schematron = new Schematron();
@@ -84,6 +87,7 @@ public class SchematronTest {
         schematron.setFile("abc.REQUIRED.xsl");
         assertEquals("abc", schematron.getRuleName());
     }
+
     @Test
     public void testGetDefaultRequirement() throws Exception {
         final Schematron schematron = new Schematron();

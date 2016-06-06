@@ -29,124 +29,113 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class RecordInfo
-{
-    private final static long SECONDS_PER_DAY = 60* 60 * 24;
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
-
-	public RecordInfo(String uuid, String changeDate)
-	{
-		this(uuid, changeDate, null, null);
-	}
-
-	//---------------------------------------------------------------------------
-
-	public RecordInfo(String uuid, String changeDate, String schema, String source)
-	{
-		if (changeDate == null)
-		{
-			dateWasNull = true;
-			changeDate  = new ISODate().toString();
-		}
-
-		this.uuid       = uuid;
-		this.changeDate = changeDate;
-		this.schema     = schema;
-		this.source     = source;
-	}
+public class RecordInfo {
+    private final static long SECONDS_PER_DAY = 60 * 60 * 24;
 
     //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
+    public String id;
 
-    public RecordInfo(Element record)
-    {
-        id         = record.getChildText("id");
-        uuid       = record.getChildText("uuid");
+    //---------------------------------------------------------------------------
+    public String uuid;
+
+    //---------------------------------------------------------------------------
+    public String changeDate;
+    //---------------------------------------------------------------------------
+    public String schema;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    public String source;
+
+    //---------------------------------------------------------------------------
+    public String isTemplate;
+
+    //-----------------------------------------------------------------------------
+    private boolean dateWasNull;
+    //---------------------------------------------------------------------------
+
+    public RecordInfo(String uuid, String changeDate) {
+        this(uuid, changeDate, null, null);
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+
+    public RecordInfo(String uuid, String changeDate, String schema, String source) {
+        if (changeDate == null) {
+            dateWasNull = true;
+            changeDate = new ISODate().toString();
+        }
+
+        this.uuid = uuid;
+        this.changeDate = changeDate;
+        this.schema = schema;
+        this.source = source;
+    }
+    public RecordInfo(Element record) {
+        id = record.getChildText("id");
+        uuid = record.getChildText("uuid");
         isTemplate = record.getChildText("istemplate");
         changeDate = record.getChildText("changedate");
     }
-    //---------------------------------------------------------------------------
-
-    public RecordInfo(Metadata record)
-    {
-        id         = "" + record.getId();
-        uuid       = record.getUuid();
+    public RecordInfo(Metadata record) {
+        id = "" + record.getId();
+        uuid = record.getUuid();
         isTemplate = record.getDataInfo().getType().codeString;
         changeDate = record.getDataInfo().getChangeDate().getDateAndTime();
     }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    public int hashCode() {
+        return uuid.hashCode();
+    }
 
-	public int hashCode() { return uuid.hashCode(); }
+    public boolean isMoreRecentThan(String localChangeDate) {
+        if (dateWasNull)
+            return true;
 
-	//---------------------------------------------------------------------------
+        ISODate remoteDate = new ISODate(changeDate);
+        ISODate localDate = new ISODate(localChangeDate);
 
-	public boolean isMoreRecentThan(String localChangeDate)
-	{
-		if (dateWasNull)
-			return true;
-
-		ISODate remoteDate = new ISODate(changeDate);
-		ISODate localDate  = new ISODate(localChangeDate);
-        
-        if(remoteDate.timeDifferenceInSeconds(localDate) == 0) {
+        if (remoteDate.timeDifferenceInSeconds(localDate) == 0) {
             return false;
         }
 
         //--- modified:  we accept metadata modified from 24 hours before
         //--- to harvest several changes during a day (if short date format used) or date local differences
         return (remoteDate.timeDifferenceInSeconds(localDate) > (-1) * SECONDS_PER_DAY);
-	}
+    }
 
-	//-----------------------------------------------------------------------------
-	
-	public boolean isOlderThan(String remoteChangeDate) {
-		if (dateWasNull)
-			return true;
+    public boolean isOlderThan(String remoteChangeDate) {
+        if (dateWasNull)
+            return true;
 
-		ISODate remoteDate = new ISODate(remoteChangeDate);
-		ISODate localDate  = new ISODate(changeDate);
+        ISODate remoteDate = new ISODate(remoteChangeDate);
+        ISODate localDate = new ISODate(changeDate);
 
         //--- modified:  we accept metadata modified from 24 hours before
         //--- to harvest several changes during a day (if short date format used) or date local differences
         return (remoteDate.timeDifferenceInSeconds(localDate) > (-1) * SECONDS_PER_DAY);
     }
-	//---------------------------------------------------------------------------
 
-	public boolean equals(Object o)
-	{
-		if (o instanceof RecordInfo)
-		{
-			RecordInfo ri = (RecordInfo) o;
+    public boolean equals(Object o) {
+        if (o instanceof RecordInfo) {
+            RecordInfo ri = (RecordInfo) o;
 
-			return uuid.equals(ri.uuid);
-		}
+            return uuid.equals(ri.uuid);
+        }
 
-		return false;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String id;
-	public String uuid;
-	public String changeDate;
-	public String schema;
-	public String source;
-	public String isTemplate;
-
-	private boolean dateWasNull;
+        return false;
+    }
 
 }
 

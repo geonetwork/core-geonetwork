@@ -50,12 +50,11 @@ import java.util.List;
  */
 public class VersioningTest {
     private static String resources = AbstractCoreIntegrationTest.getClassFile(VersioningTest.class).getParent();
-    private SVNURL tgtURL;
     @Rule
     public TemporaryFolder localRepo = new TemporaryFolder();
     @Rule
     public TemporaryFolder workingFolder = new TemporaryFolder();
-
+    private SVNURL tgtURL;
 
     @Before
     public void setUp() throws Exception {
@@ -124,7 +123,7 @@ public class VersioningTest {
 
         Get get = new Get();
         get.addTitles(metadataActions, repository.getLocation().getPath());
-        Assert.assertEquals("Template for Vector data in ISO19139 (preferred!)", metadataActions.get(0).getTitle());
+        Assert.assertEquals("Template for Vector data in ISO19139 (preferred!)", metadataActions.get(0).getTitle().trim());
         Assert.assertEquals("Modified metadata name", metadataActions.get(1).getTitle());
         Assert.assertEquals("Modified metadata name", metadataActions.get(2).getTitle());
     }
@@ -151,10 +150,6 @@ public class VersioningTest {
 
     /**
      * Creates metadata in a repository exactly as geonetwork would do it.
-     * @param ourClientManager
-     * @param id
-     * @throws java.io.IOException
-     * @throws org.tmatesoft.svn.core.SVNException
      */
     private void create(SVNClientManager ourClientManager, int id) throws IOException, SVNException {
         File dir = new File(workingFolder.getRoot().getPath() + "/" + id + "/");
@@ -178,7 +173,7 @@ public class VersioningTest {
         FileUtils.copyFileToDirectory(categories, dir);
         FileUtils.copyFileToDirectory(owner, dir);
         final String dp = dir.getPath();
-        File[] files = {new File(dp+"/"+pfn), new File(dp+"/"+mfn), new File(dp+"/"+cfn), new File(dp+"/"+ofn)};
+        File[] files = {new File(dp + "/" + pfn), new File(dp + "/" + mfn), new File(dp + "/" + cfn), new File(dp + "/" + ofn)};
         // add files
         ourClientManager.getWCClient().doAdd(files, false, false, true, SVNDepth.FILES, false, true, false);
         final String fileMsg = "GeoNetwork service: metadata.create GeoNetwork User 1 (Username: admin Name: admin admin) Executed from IP address 0:0:0:0:0:0:0:1 adding initial version of metadata " + id;
@@ -188,10 +183,6 @@ public class VersioningTest {
 
     /**
      * Modifies metadata in a repository exactly as geonetwork would do it.
-     * @param ourClientManager
-     * @param id
-     * @throws java.io.IOException
-     * @throws org.tmatesoft.svn.core.SVNException
      */
     private void modify(SVNClientManager ourClientManager, int id) throws IOException, SVNException {
         File dir = new File(workingFolder.getRoot().getPath() + "/" + id + "/");
@@ -205,13 +196,9 @@ public class VersioningTest {
 
     /**
      * Deletes metadata in a repository exactly as geonetwork would do it.
-     * @param ourClientManager
-     * @param id
-     * @throws java.io.IOException
-     * @throws org.tmatesoft.svn.core.SVNException
      */
     private void delete(SVNClientManager ourClientManager, int id) throws IOException, SVNException {
-        final File dir = new File(workingFolder.getRoot(), ""+id);
+        final File dir = new File(workingFolder.getRoot(), "" + id);
         ourClientManager.getWCClient().doDelete(dir, false, true, false);
         String delMsg = "GeoNetwork service: metadata.batch.delete GeoNetwork User 1 (Username: admin Name: admin admin) Executed from IP address 0:0:0:0:0:0:0:1 deleting directory for metadata " + id;
         ourClientManager.getUpdateClient().doUpdate(workingFolder.getRoot(), SVNRevision.HEAD, SVNDepth.INFINITY, false, false);

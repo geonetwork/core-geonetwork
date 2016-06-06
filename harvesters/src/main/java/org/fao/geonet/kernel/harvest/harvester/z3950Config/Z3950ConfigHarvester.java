@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.z3950Config;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -35,125 +36,117 @@ import java.sql.SQLException;
 
 //=============================================================================
 
-public class Z3950ConfigHarvester extends AbstractHarvester<HarvestResult>
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Z3950ConfigHarvester extends AbstractHarvester<HarvestResult> {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	protected void doInit(Element node, ServiceContext context) throws BadInputEx
-	{
-		params = new Z3950ConfigParams(dataMan);
+    private Z3950ConfigParams params;
+
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Add
+    //---
+    //---------------------------------------------------------------------------
+
+    protected void doInit(Element node, ServiceContext context) throws BadInputEx {
+        params = new Z3950ConfigParams(dataMan);
         super.setParams(params);
 
         params.create(node);
-	}
+    }
 
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Add
-	//---
-	//---------------------------------------------------------------------------
-
-	protected String doAdd(Element node) throws BadInputEx, SQLException
-	{
-		params = new Z3950ConfigParams(dataMan);
+    protected String doAdd(Element node) throws BadInputEx, SQLException {
+        params = new Z3950ConfigParams(dataMan);
         super.setParams(params);
-		//--- retrieve/initialize information
-		params.create(node);
+        //--- retrieve/initialize information
+        params.create(node);
 
-		String id = settingMan.add("harvesting", "node", getType());
+        String id = settingMan.add("harvesting", "node", getType());
 
-		storeNode(params, "id:"+id);
+        storeNode(params, "id:" + id);
 
-		return id;
-	}
+        return id;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	protected void doUpdate(String id, Element node) throws BadInputEx, SQLException
-	{
-		Z3950ConfigParams copy = params.copy();
+    protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
+        Z3950ConfigParams copy = params.copy();
 
-		//--- update variables
-		copy.update(node);
+        //--- update variables
+        copy.update(node);
 
-		String path = "harvesting/id:"+ id;
+        String path = "harvesting/id:" + id;
 
-		settingMan.removeChildren(path);
+        settingMan.removeChildren(path);
 
-		//--- update database
-		storeNode(copy, path);
+        //--- update database
+        storeNode(copy, path);
 
-		params = copy;
+        params = copy;
         super.setParams(params);
 
     }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- addHarvestInfo
+    //---
+    //---------------------------------------------------------------------------
 
-	protected void storeNodeExtra(AbstractParams p, String path,
-											String siteId, String optionsId) throws SQLException
-	{
-		Z3950ConfigParams params = (Z3950ConfigParams) p;
+    protected void storeNodeExtra(AbstractParams p, String path,
+                                  String siteId, String optionsId) throws SQLException {
+        Z3950ConfigParams params = (Z3950ConfigParams) p;
         super.setParams(params);
 
-        settingMan.add("id:"+siteId, "host",    params.host);
-		settingMan.add("id:"+siteId, "port",    params.port);
+        settingMan.add("id:" + siteId, "host", params.host);
+        settingMan.add("id:" + siteId, "port", params.port);
 
-		//--- store options
+        //--- store options
 
-		settingMan.add("id:"+optionsId, "clearConfig",  params.clearConfig);
+        settingMan.add("id:" + optionsId, "clearConfig", params.clearConfig);
 
-		//--- store search nodes
+        //--- store search nodes
 
-		for (Search s : params.getSearches())
-		{
-			String  searchID = settingMan.add(path, "search", "");
+        for (Search s : params.getSearches()) {
+            String searchID = settingMan.add(path, "search", "");
 
-			settingMan.add("id:"+searchID, "freeText",   s.freeText);
-			settingMan.add("id:"+searchID, "title",      s.title);
-			settingMan.add("id:"+searchID, "abstract",   s.abstrac);
-			settingMan.add("id:"+searchID, "keywords",   s.keywords);
-			settingMan.add("id:"+searchID, "category",   s.category);
-		}
-	}
+            settingMan.add("id:" + searchID, "freeText", s.freeText);
+            settingMan.add("id:" + searchID, "title", s.title);
+            settingMan.add("id:" + searchID, "abstract", s.abstrac);
+            settingMan.add("id:" + searchID, "keywords", s.keywords);
+            settingMan.add("id:" + searchID, "category", s.category);
+        }
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- addHarvestInfo
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Harvest
+    //---
+    //---------------------------------------------------------------------------
 
-	public void addHarvestInfo(Element info, String id, String uuid)
-	{
-		super.addHarvestInfo(info, id, uuid);
-	}
+    public void addHarvestInfo(Element info, String id, String uuid) {
+        super.addHarvestInfo(info, id, uuid);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Harvest
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public void doHarvest(Logger log) throws Exception
-	{
-		Harvester h = new Harvester(cancelMonitor, log, context, params);
-		result = h.harvest(log);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private Z3950ConfigParams params;
+    public void doHarvest(Logger log) throws Exception {
+        Harvester h = new Harvester(cancelMonitor, log, context, params);
+        result = h.harvest(log);
+    }
 }

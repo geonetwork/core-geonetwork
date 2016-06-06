@@ -24,10 +24,12 @@
 package org.fao.geonet.guiservices.sampledata;
 
 import com.google.common.collect.Lists;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -44,47 +46,43 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * A simple service that adds sample data mef files from each schemas
- * sample-data directory.
- * 
+ * A simple service that adds sample data mef files from each schemas sample-data directory.
  */
 public class Add implements Service {
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	/**
-	 * 
-	 * 
-	 * @return A report on the sample import with information about the status
-	 *         of the insertion operation (failed|loaded).
-	 */
-	public Element exec(final Element params, final ServiceContext context)
-			throws Exception {
+    /**
+     * @return A report on the sample import with information about the status of the insertion
+     * operation (failed|loaded).
+     */
+    public Element exec(final Element params, final ServiceContext context)
+        throws Exception {
 
-		String schemaList = Util.getParam(params, Params.SCHEMA);
-		final String[] serviceStatus = {"true"};
-		final String[] serviceError = {""};
+        String schemaList = Util.getParam(params, Params.SCHEMA);
+        final String[] serviceStatus = {"true"};
+        final String[] serviceError = {""};
 
-		Element result = new Element(Jeeves.Elem.RESPONSE);
+        Element result = new Element(Jeeves.Elem.RESPONSE);
 
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		SchemaManager schemaMan = gc.getBean(SchemaManager.class);
+        GeonetContext gc = (GeonetContext) context
+            .getHandlerContext(Geonet.CONTEXT_NAME);
+        SchemaManager schemaMan = gc.getBean(SchemaManager.class);
 
-		String schemas[] = schemaList.split(",");
+        String schemas[] = schemaList.split(",");
 
         int count = 0;
-		for (String schemaName : schemas) {
-			Log.info(Geonet.DATA_MANAGER, "Loading sample data for schema "
-					+ schemaName);
-			Path schemaDir = schemaMan.getSchemaSampleDataDir(schemaName);
-			if (schemaDir == null) {
-				Log.warning(Geonet.DATA_MANAGER,
-                        String.format("Skipping - No samples found for schema '%s'.", schemaName));
+        for (String schemaName : schemas) {
+            Log.info(Geonet.DATA_MANAGER, "Loading sample data for schema "
+                + schemaName);
+            Path schemaDir = schemaMan.getSchemaSampleDataDir(schemaName);
+            if (schemaDir == null) {
+                Log.warning(Geonet.DATA_MANAGER,
+                    String.format("Skipping - No samples found for schema '%s'.", schemaName));
                 result.addContent(new Element(schemaName).setText("0"));
-				continue;
-			}
+                continue;
+            }
 
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "Searching for mefs in: " + schemaDir);
@@ -100,7 +98,7 @@ public class Add implements Service {
                 try {
                     if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                         Log.debug(Geonet.DATA_MANAGER,
-                                String.format("Loading %s sample file %s ...", schemaName, file));
+                            String.format("Loading %s sample file %s ...", schemaName, file));
                     }
                     schemaCount += MEFLib.doImport(params, context, file, null).size();
                 } catch (Exception e) {
@@ -108,20 +106,20 @@ public class Add implements Service {
                     serviceStatus[0] = "false";
                     serviceError[0] = e.getMessage() + " whilst loading " + file;
                     Log.error(Geonet.DATA_MANAGER,
-                            String.format("Error loading %s sample file %s. Error is %s.",
-                                    schemaName, file, e.getMessage()),
-                            e);
+                        String.format("Error loading %s sample file %s. Error is %s.",
+                            schemaName, file, e.getMessage()),
+                        e);
                 }
                 context.getBean(DataManager.class).flush();
             }
             count += schemaCount;
-            result.addContent(new Element(schemaName).setText(""+schemaCount));
+            result.addContent(new Element(schemaName).setText("" + schemaCount));
         }
 
-		result.setAttribute("status", serviceStatus[0]);
-		result.setAttribute("error", serviceError[0]);
-		result.setAttribute("total", ""+count);
+        result.setAttribute("status", serviceStatus[0]);
+        result.setAttribute("error", serviceError[0]);
+        result.setAttribute("total", "" + count);
 
-		return result;
-	}
+        return result;
+    }
 }

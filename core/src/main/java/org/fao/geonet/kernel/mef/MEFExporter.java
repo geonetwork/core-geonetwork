@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
@@ -46,39 +47,31 @@ import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 
 /**
  * Export MEF file
- * 
  */
 class MEFExporter {
-	/**
-	 * Create a metadata folder according to MEF {@link Version} 1 specification
-	 * and return file path.
-	 * <p>
-	 * Template or subtemplate could not be exported in MEF format. Use XML
-	 * export instead.
-	 * 
-	 * @param context
-	 * @param uuid
-	 *            UUID of the metadata record to export.
-	 * @param format
-	 *            {@link org.fao.geonet.kernel.mef.MEFLib.Format}
-	 * @param skipUUID
-	 * @return the path of the generated MEF file.
-	 * @throws Exception
-	 */
-	public static Path doExport(ServiceContext context, String uuid,
-			Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
-		Pair<Metadata, String> recordAndMetadata =
-				MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
-		Metadata record = recordAndMetadata.one();
-		String xmlDocumentAsString = recordAndMetadata.two();
+    /**
+     * Create a metadata folder according to MEF {@link Version} 1 specification and return file
+     * path. <p> Template or subtemplate could not be exported in MEF format. Use XML export
+     * instead.
+     *
+     * @param uuid   UUID of the metadata record to export.
+     * @param format {@link org.fao.geonet.kernel.mef.MEFLib.Format}
+     * @return the path of the generated MEF file.
+     */
+    public static Path doExport(ServiceContext context, String uuid,
+                                Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+        Pair<Metadata, String> recordAndMetadata =
+            MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
+        Metadata record = recordAndMetadata.one();
+        String xmlDocumentAsString = recordAndMetadata.two();
 
-		if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
-			throw new Exception("Cannot export sub template");
+        if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+            throw new Exception("Cannot export sub template");
         }
 
-		Path file = Files.createTempFile("mef-", ".mef");
-		Path pubDir = Lib.resource.getDir(context, "public", record.getId());
-		Path priDir = Lib.resource.getDir(context, "private", record.getId());
+        Path file = Files.createTempFile("mef-", ".mef");
+        Path pubDir = Lib.resource.getDir(context, "public", record.getId());
+        Path priDir = Lib.resource.getDir(context, "private", record.getId());
 
         try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
             // --- save metadata
@@ -87,7 +80,7 @@ class MEFExporter {
 
             // --- save info file
             binData = MEFLib.buildInfoFile(context, record, format, pubDir, priDir,
-                    skipUUID).getBytes(Constants.ENCODING);
+                skipUUID).getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_INFO), binData);
 
 
@@ -111,8 +104,8 @@ class MEFExporter {
                 }
             }
         }
-		return file;
-	}
+        return file;
+    }
 }
 
 // =============================================================================

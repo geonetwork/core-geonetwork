@@ -51,21 +51,21 @@
 
   <!-- FIXME set common dependencies to the root pom.xml  -->
   <dependencies>
-      <dependency>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-log4j12</artifactId>
-      </dependency>
-      <!-- rewrite url servletfilter -->
-      <dependency>
-          <groupId>org.tuckey</groupId>
-          <artifactId>urlrewritefilter</artifactId>
-      </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
+    <!-- rewrite url servletfilter -->
+    <dependency>
+      <groupId>org.tuckey</groupId>
+      <artifactId>urlrewritefilter</artifactId>
+    </dependency>
 
     <dependency>
-          <groupId>org.antlr</groupId>
-          <artifactId>antlr-runtime</artifactId>
-          <version>3.5.2</version>
-      </dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr-runtime</artifactId>
+      <version>3.5.2</version>
+    </dependency>
     <dependency>
       <groupId>xalan</groupId>
       <artifactId>xalan</artifactId>
@@ -90,33 +90,33 @@
       <groupId>org.openrdf</groupId>
       <artifactId>rio</artifactId>
     </dependency>
-      <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-context</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-orm</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-tx</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-webmvc</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-web</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-test</artifactId>
-          <scope>compile</scope>
-      </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-orm</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>compile</scope>
+    </dependency>
 
-      <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
+    <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
       <artifactId>cql-java</artifactId>
@@ -203,26 +203,26 @@
       <artifactId>lucene-facet</artifactId>
     </dependency>
     <dependency>
-        <groupId>pcj</groupId>
-        <artifactId>pcj</artifactId>
+      <groupId>pcj</groupId>
+      <artifactId>pcj</artifactId>
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-ext</artifactId>
     </dependency>
     <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpclient</artifactId>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
     </dependency>
     <dependency>
-        <groupId>commons-net</groupId>
-        <artifactId>commons-net</artifactId>
+      <groupId>commons-net</groupId>
+      <artifactId>commons-net</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-email</artifactId>
     </dependency>
-      <dependency>
+    <dependency>
       <groupId>avalon-framework</groupId>
       <artifactId>avalon-framework-api</artifactId>
     </dependency>
@@ -266,12 +266,12 @@
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
-		<!-- Not permitted under oracle licensing rules
+    <!-- Not permitted under oracle licensing rules
     <dependency>
       <groupId>ojdbc</groupId>
       <artifactId>ojdbc</artifactId>
     </dependency>
-		-->
+        -->
     <dependency>
       <groupId>eu.medsea.mimeutil</groupId>
       <artifactId>mime-util</artifactId>
@@ -295,8 +295,8 @@
       <artifactId>svnkit</artifactId>
     </dependency>
 
-	  <!-- Print service: MapFish -->
-	  <dependency>
+    <!-- Print service: MapFish -->
+    <dependency>
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
       <version>${print-lib.version}</version>
@@ -320,37 +320,37 @@
       <version>${project.version}</version>
     </dependency>
 
-      <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>core</artifactId>
-          <version>${project.version}</version>
-      </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-      <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>services</artifactId>
-          <version>${project.version}</version>
-      </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>services</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-      <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>harvesters</artifactId>
-          <version>${project.version}</version>
-      </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>harvesters</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-      <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>health-monitor</artifactId>
-          <version>${project.version}</version>
-      </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>health-monitor</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-      <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>inspire-atom</artifactId>
-          <version>${project.version}</version>
-      </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>inspire-atom</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-      <!-- Handled locally by a temporarly repository -->
+    <!-- Handled locally by a temporarly repository -->
     <dependency>
       <groupId>dlib</groupId>
       <artifactId>dlib</artifactId>
@@ -390,45 +390,45 @@
       <version>4.0.patch</version>
     </dependency>
 
-      <!-- Monitoring libraries -->
-      <dependency>
-          <groupId>com.yammer.metrics</groupId>
-          <artifactId>metrics-core</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>com.yammer.metrics</groupId>
-          <artifactId>metrics-servlet</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>com.yammer.metrics</groupId>
-          <artifactId>metrics-web</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>com.yammer.metrics</groupId>
-          <artifactId>metrics-log4j</artifactId>
-      </dependency>
+    <!-- Monitoring libraries -->
+    <dependency>
+      <groupId>com.yammer.metrics</groupId>
+      <artifactId>metrics-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.yammer.metrics</groupId>
+      <artifactId>metrics-servlet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.yammer.metrics</groupId>
+      <artifactId>metrics-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.yammer.metrics</groupId>
+      <artifactId>metrics-log4j</artifactId>
+    </dependency>
 
-      <!-- language detection -->
-      <dependency>
-          <groupId>com.cybozu.labs</groupId>
-          <artifactId>langdetect</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>net.arnx.jsonic</groupId>
-          <artifactId>jsonic</artifactId>
-      </dependency>
-      <!-- end language detection -->
-		<dependency>
+    <!-- language detection -->
+    <dependency>
+      <groupId>com.cybozu.labs</groupId>
+      <artifactId>langdetect</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.arnx.jsonic</groupId>
+      <artifactId>jsonic</artifactId>
+    </dependency>
+    <!-- end language detection -->
+    <dependency>
       <groupId>opendap</groupId>
       <artifactId>opendap</artifactId>
       <version>2.1</version>
     </dependency>
 
     <dependency>
-	    <groupId>org.jsoup</groupId>
-	    <artifactId>jsoup</artifactId>
-	    <version>1.7.1</version>
-	</dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.7.1</version>
+    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>web-ui</artifactId>
@@ -438,66 +438,66 @@
 
     <!-- dependencies for allowing wiki syntax in metadata -->
     <dependency>
-    	<groupId>org.fusesource.wikitext</groupId>
-    	<artifactId>mediawiki-core</artifactId>
-    	<version>1.3</version>
+      <groupId>org.fusesource.wikitext</groupId>
+      <artifactId>mediawiki-core</artifactId>
+      <version>1.3</version>
     </dependency>
     <dependency>
-    	<groupId>org.fusesource.wikitext</groupId>
-    	<artifactId>confluence-core</artifactId>
-    	<version>1.3</version>
+      <groupId>org.fusesource.wikitext</groupId>
+      <artifactId>confluence-core</artifactId>
+      <version>1.3</version>
     </dependency>
     <dependency>
-    	<groupId>org.fusesource.wikitext</groupId>
-    	<artifactId>textile-core</artifactId>
-    	<version>1.3</version>
+      <groupId>org.fusesource.wikitext</groupId>
+      <artifactId>textile-core</artifactId>
+      <version>1.3</version>
     </dependency>
     <dependency>
-    	<groupId>org.fusesource.wikitext</groupId>
-    	<artifactId>tracwiki-core</artifactId>
-    	<version>1.3</version>
+      <groupId>org.fusesource.wikitext</groupId>
+      <artifactId>tracwiki-core</artifactId>
+      <version>1.3</version>
     </dependency>
     <dependency>
-    	<groupId>org.fusesource.wikitext</groupId>
-    	<artifactId>twiki-core</artifactId>
-    	<version>1.3</version>
+      <groupId>org.fusesource.wikitext</groupId>
+      <artifactId>twiki-core</artifactId>
+      <version>1.3</version>
     </dependency>
-      <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>domain</artifactId>
-          <version>${project.version}</version>
-          <classifier>tests</classifier>
-          <scope>test</scope>
-      </dependency>
-      <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>core</artifactId>
-          <version>${project.version}</version>
-          <classifier>tests</classifier>
-          <scope>test</scope>
-      </dependency>
-      <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>services</artifactId>
-          <version>${project.version}</version>
-          <classifier>tests</classifier>
-          <scope>test</scope>
-      </dependency>
-      <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>wro4j</artifactId>
-          <version>${project.version}</version>
-      </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>domain</artifactId>
+      <version>${project.version}</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>core</artifactId>
+      <version>${project.version}</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>services</artifactId>
+      <version>${project.version}</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>wro4j</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-      <dependency>
-          <groupId>ro.isdc.wro4j</groupId>
-          <artifactId>wro4j-maven-plugin</artifactId>
-          <version>${wro.version}</version>
-          <scope>test</scope>
-      </dependency>
+    <dependency>
+      <groupId>ro.isdc.wro4j</groupId>
+      <artifactId>wro4j-maven-plugin</artifactId>
+      <version>${wro.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-      <!-- Add dependencies to schema plugin
-      having a custom Bean to be loaded. -->
+    <!-- Add dependencies to schema plugin
+    having a custom Bean to be loaded. -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139</artifactId>
@@ -571,21 +571,21 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <version>1.7</version>
-         <executions>
-            <execution>
-                 <id>add-source</id>
-                 <phase>generate-sources</phase>
-                 <goals>
-                    <goal>add-source</goal>
-                 </goals>
-                 <configuration>
-                     <sources>
-                          <source>${basedir}/src/main/java</source>
-                          <source>${basedir}/src/main/webapp/WEB-INF/classes/setup/sql/migrate</source>
-                     </sources>
-                 </configuration>
-            </execution>
-         </executions>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${basedir}/src/main/java</source>
+                <source>${basedir}/src/main/webapp/WEB-INF/classes/setup/sql/migrate</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
@@ -594,28 +594,28 @@
         <version>2.5</version>
         <executions>
           <execution>
-             <id>copy-filter-webResource</id>
-             <phase>process-resources</phase>
-             <goals>
-               <goal>copy-resources</goal>
-             </goals>
-             <configuration>
-               <includeEmptyDirs>false</includeEmptyDirs>
-               <outputDirectory>${build.webapp.resources}</outputDirectory>
-               <resources>
-                 <resource>
-                   <directory>${basedir}/src/main/webResources</directory>
-                   <filtering>true</filtering>
-                   <targetPath>${build.webapp.resources}</targetPath>
-                 </resource>
-               </resources>
-               <filters>
-                 <filter>${basedir}/src/main/filters/${env}.properties</filter>
-                 <filter>${basedir}/src/main/filters/deployment/config_${server}.properties</filter>
-               </filters>
-               <overwrite>true</overwrite>
-             </configuration>
-           </execution>
+            <id>copy-filter-webResource</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <includeEmptyDirs>false</includeEmptyDirs>
+              <outputDirectory>${build.webapp.resources}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/webResources</directory>
+                  <filtering>true</filtering>
+                  <targetPath>${build.webapp.resources}</targetPath>
+                </resource>
+              </resources>
+              <filters>
+                <filter>${basedir}/src/main/filters/${env}.properties</filter>
+                <filter>${basedir}/src/main/filters/deployment/config_${server}.properties</filter>
+              </filters>
+              <overwrite>true</overwrite>
+            </configuration>
+          </execution>
           <execution>
             <id>copy-schemas</id>
             <phase>process-resources</phase>
@@ -682,7 +682,7 @@
               </resources>
             </configuration>
           </execution>
-         </executions>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -722,24 +722,24 @@
               <directory>${project.basedir}/../web-client/src/main/resources</directory>
             </resource>
             <resource>
-                  <directory>${project.basedir}/../web-ui/src/main/resources</directory>
+              <directory>${project.basedir}/../web-ui/src/main/resources</directory>
             </resource>
             <resource>
               <directory>${build.webapp.resources}</directory>
             </resource>
           </webResources>
-            <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
-            <packagingExcludes>
-              xml/schemas/**,
-              catalog/lib/style/bootstrap/docs/**,
-              catalog/lib/style/bootstrap/fonts/**,
-              catalog/lib/style/bootstrap/grunt/**,
-              catalog/lib/style/bootstrap/test-infra/**,
-              catalog/lib/style/font-awesome/css/**,
-              catalog/lib/style/font-awesome/src/**,
-              catalog/lib/style/font-awesome/scss/**
-            </packagingExcludes>
-<!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
+          <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
+          <packagingExcludes>
+            xml/schemas/**,
+            catalog/lib/style/bootstrap/docs/**,
+            catalog/lib/style/bootstrap/fonts/**,
+            catalog/lib/style/bootstrap/grunt/**,
+            catalog/lib/style/bootstrap/test-infra/**,
+            catalog/lib/style/font-awesome/css/**,
+            catalog/lib/style/font-awesome/src/**,
+            catalog/lib/style/font-awesome/scss/**
+          </packagingExcludes>
+          <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
           <attachClasses>true</attachClasses>
           <warName>${geonetwork.webapp.name}</warName>
@@ -750,8 +750,8 @@
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
         <configuration>
-            <contextXml>${basedir}/jetty-context.xml</contextXml>
-            <connectors>
+          <contextXml>${basedir}/jetty-context.xml</contextXml>
+          <connectors>
             <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
               <port>8080</port>
               <maxIdleTime>10000</maxIdleTime>
@@ -776,11 +776,11 @@
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-            <resourcesAsCSV>
-              ${project.basedir}/src/main/webapp,
-              ${rootProjectDir}/web-ui/src/main/resources/,
-              ${build.webapp.resources},
-              ${rootProjectDir}/web-client/src/main/resources/</resourcesAsCSV>
+              <resourcesAsCSV>
+                ${project.basedir}/src/main/webapp,
+                ${rootProjectDir}/web-ui/src/main/resources/,
+                ${build.webapp.resources},
+                ${rootProjectDir}/web-client/src/main/resources/</resourcesAsCSV>
             </baseResource>
           </webApp>
           <systemProperties>
@@ -802,19 +802,19 @@
     -->
   <profiles>
     <profile>
-		<id>run-static-analysis</id>
-		<activation>
-			<property><name>!skipTests</name></property>
-		</activation>
-		<build>
-		<plugins>
-		  <plugin>
-			<groupId>org.codehaus.mojo</groupId>
-			<artifactId>findbugs-maven-plugin</artifactId>
-		  </plugin>
+      <id>run-static-analysis</id>
+      <activation>
+        <property><name>!skipTests</name></property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+          </plugin>
         </plugins>
-		</build>
-	</profile>
+      </build>
+    </profile>
     <profile>
       <id>no-env-specified</id>
       <activation>
@@ -1037,7 +1037,7 @@
         <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
       </properties>
     </profile>
-	<profile>
+    <profile>
       <id>ifr-myocean-test-tomcat1</id>
       <activation>
         <property>
@@ -1198,14 +1198,14 @@
     <profile>
       <id>widgets-tab</id>
       <properties>
-          <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widgettab.xml</web.xml.widget.config.overrides>
+        <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widgettab.xml</web.xml.widget.config.overrides>
       </properties>
     </profile>
     <profile>
-		<id>html5ui</id>
-		<properties>
-			<web.xml.widget.config.overrides>/WEB-INF/config-overrides-html5ui.xml</web.xml.widget.config.overrides>
-		</properties>
+      <id>html5ui</id>
+      <properties>
+        <web.xml.widget.config.overrides>/WEB-INF/config-overrides-html5ui.xml</web.xml.widget.config.overrides>
+      </properties>
     </profile>
 
   </profiles>

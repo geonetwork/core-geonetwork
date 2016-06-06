@@ -24,6 +24,7 @@
 package org.fao.geonet.domain;
 
 import javax.persistence.Embeddable;
+
 import java.io.Serializable;
 
 /**

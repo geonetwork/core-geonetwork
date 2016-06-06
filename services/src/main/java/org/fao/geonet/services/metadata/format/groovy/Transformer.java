@@ -25,8 +25,10 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
+
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -88,7 +90,7 @@ public class Transformer {
             return resultantXml.toString();
         } catch (Exception e) {
             Log.error(Geonet.FORMATTER, "Error parsing the resulting XML from '" + formatterPath + "' formatter.  Resulting XML is: " +
-                                        resultantXml, e);
+                resultantXml, e);
             throw e;
         }
     }

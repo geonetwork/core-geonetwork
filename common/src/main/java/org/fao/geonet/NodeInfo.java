@@ -28,9 +28,7 @@ import java.io.Serializable;
 /**
  * Encapsulates information about the current node such as the node id.
  *
- * User: Jesse
- * Date: 11/27/13
- * Time: 2:35 PM
+ * User: Jesse Date: 11/27/13 Time: 2:35 PM
  */
 public class NodeInfo implements Serializable {
     private String id = "srv";
@@ -53,11 +51,11 @@ public class NodeInfo implements Serializable {
         this.defaultNode = defaultNode;
     }
 
-    public void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
-    }
-
     public boolean isReadOnly() {
         return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 }

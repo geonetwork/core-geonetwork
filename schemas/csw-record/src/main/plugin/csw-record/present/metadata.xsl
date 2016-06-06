@@ -32,8 +32,8 @@
 
   <xsl:include href="metadata-fop.xsl"/>
   <xsl:include href="metadata-markup.xsl"/>
-  
-	<!-- main template - the way into processing csw-record which is 
+
+	<!-- main template - the way into processing csw-record which is
 	     processed in dublic-core mode -->
 	<xsl:template name="metadata-csw-record">
 		<xsl:param name="schema"/>
@@ -47,7 +47,7 @@
     </xsl:apply-templates>
   </xsl:template>
 
-	<!-- CompleteTab template - csw-record just calls completeTab from 
+	<!-- CompleteTab template - csw-record just calls completeTab from
 	     metadata-utils.xsl -->
 	<xsl:template name="csw-recordCompleteTab">
 		<xsl:param name="tabLink"/>
@@ -57,7 +57,7 @@
 		</xsl:call-template>
 	</xsl:template>
 
-	<!-- Brief template - csw-record just calls Brief from 
+	<!-- Brief template - csw-record just calls Brief from
 	     dublin-core -->
 	<xsl:template name="csw-recordBrief">
 		<xsl:call-template name="dublin-coreBrief"/>

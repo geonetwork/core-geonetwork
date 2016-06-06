@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -46,28 +47,19 @@ import java.util.Set;
 /**
  * Service to return the uploaded files to metadata records during a period.
  *
- * Service parameters:
- *   dateFrom (mandatory)
- *   dateTo   (mandatory)
- *   groups   (optional)
+ * Service parameters: dateFrom (mandatory) dateTo   (mandatory) groups   (optional)
  *
  * Service output:
  * <p/>
- * <response>
- * <record>
- * <username></username>                    Upload user username
- * <surname></surname>                      Upload user surname
- * <name></name>                            Upload user Owner name
- * <email></email>                          Upload user  mail
- * <profile></profile>                      Upload user profile
- * <recordname></recordname>                Metadata title
- * <uuid></uuid>                            Metadata UUID
- * <filename></filename>                    File name
- * <uploaddesc></uploaddesc>                File description: from online resource descrption
- * <uploaddate></uploaddate>                File upload date
- * <expiry_datetime></expiry_datetime>      File delete date or metadata delete (logical deletes are used for uploads)
- * </record>
- * </response>
+ * <response> <record> <username></username>                    Upload user username
+ * <surname></surname>                      Upload user surname <name></name>
+ *     Upload user Owner name <email></email>                          Upload user  mail
+ * <profile></profile>                      Upload user profile <recordname></recordname>
+ *     Metadata title <uuid></uuid>                            Metadata UUID <filename></filename>
+ *                  File name <uploaddesc></uploaddesc>                File description: from online
+ * resource descrption <uploaddate></uploaddate>                File upload date
+ * <expiry_datetime></expiry_datetime>      File delete date or metadata delete (logical deletes are
+ * used for uploads) </record> </response>
  */
 public class ReportDataUploads implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
@@ -80,7 +72,7 @@ public class ReportDataUploads implements Service {
     // --------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context)
-            throws Exception {
+        throws Exception {
 
         // Process parameters
         String beginDate = Util.getParam(params, "dateFrom");
@@ -96,7 +88,7 @@ public class ReportDataUploads implements Service {
         // Retrieve metadata file uploads
         final Sort sort = new Sort(Sort.Direction.ASC, SortUtils.createPath(MetadataFileUpload_.uploadDate));
         final List<MetadataFileUpload> records = context.getBean(MetadataFileUploadRepository.class).findAll(
-                MetadataFileUploadSpecs.uploadDateBetweenAndByGroups(beginDateIso, endDateIso, groupList), sort);
+            MetadataFileUploadSpecs.uploadDateBetweenAndByGroups(beginDateIso, endDateIso, groupList), sort);
 
         // Process metadata results for the report
         Element response = new Element(Jeeves.Elem.RESPONSE);
@@ -106,16 +98,16 @@ public class ReportDataUploads implements Service {
 
             User user = context.getBean(UserRepository.class).findOneByUsername(username);
 
-            String name = (user.getName() != null?user.getName():"");
-            String surname= (user.getSurname() != null?user.getSurname():"");
-            String email = (user.getEmail() != null?user.getEmail():"");
+            String name = (user.getName() != null ? user.getName() : "");
+            String surname = (user.getSurname() != null ? user.getSurname() : "");
+            String email = (user.getEmail() != null ? user.getEmail() : "");
             String profile = user.getProfile().name();
 
             String fileName = fileUpload.getFileName();
 
             // Get metadata title from index
             String metadataTitle = ReportUtils.retrieveMetadataTitle(context, fileUpload.getMetadataId());
-            String metadataUuid =  ReportUtils.retrieveMetadataUuid(context, fileUpload.getMetadataId());
+            String metadataUuid = ReportUtils.retrieveMetadataUuid(context, fileUpload.getMetadataId());
 
 
             // Online resource description from the index ...
@@ -123,8 +115,8 @@ public class ReportDataUploads implements Service {
             Set<String> fields = new HashSet<String>();
             fields.add("linkage_name_des");
 
-            Map<String,Map<String,String>>  fieldValues = LuceneSearcher.getAllMetadataFromIndexFor(context.getLanguage(), "_id",
-                    fileUpload.getMetadataId() + "", fields, false);
+            Map<String, Map<String, String>> fieldValues = LuceneSearcher.getAllMetadataFromIndexFor(context.getLanguage(), "_id",
+                fileUpload.getMetadataId() + "", fields, false);
 
             if (!fieldValues.isEmpty()) {
                 uploadDescription = fieldValues.get("0").get("linkage_name_des");
@@ -133,16 +125,16 @@ public class ReportDataUploads implements Service {
             // Build the record element with the information for the report
             Element metadataEl = new Element("record");
             metadataEl.addContent(new Element("uuid").setText(metadataUuid))
-                    .addContent(new Element("recordname").setText(metadataTitle))
-                    .addContent(new Element("filename").setText(fileName))
-                    .addContent(new Element("uploaddesc").setText(uploadDescription))
-                    .addContent(new Element("uploaddate").setText(fileUpload.getUploadDate()))
-                    .addContent(new Element("username").setText(username))
-                    .addContent(new Element("surname").setText(surname))
-                    .addContent(new Element("name").setText(name))
-                    .addContent(new Element("email").setText(email))
-                    .addContent(new Element("profile").setText(profile))
-                    .addContent(new Element("expiry_datetime").setText(fileUpload.getDeletedDate()));
+                .addContent(new Element("recordname").setText(metadataTitle))
+                .addContent(new Element("filename").setText(fileName))
+                .addContent(new Element("uploaddesc").setText(uploadDescription))
+                .addContent(new Element("uploaddate").setText(fileUpload.getUploadDate()))
+                .addContent(new Element("username").setText(username))
+                .addContent(new Element("surname").setText(surname))
+                .addContent(new Element("name").setText(name))
+                .addContent(new Element("email").setText(email))
+                .addContent(new Element("profile").setText(profile))
+                .addContent(new Element("expiry_datetime").setText(fileUpload.getDeletedDate()));
 
             response.addContent(metadataEl);
         }

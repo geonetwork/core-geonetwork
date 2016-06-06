@@ -24,6 +24,7 @@
 package org.fao.geonet.services.reports;
 
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -40,27 +41,22 @@ public class ReportUtils {
 
     /**
      * Obtains a list of valid groups to apply in filter query taken from requested groups
-     *
-     * @param context
-     * @param params
-     * @return
-     * @throws Exception
      */
     public static Set<Integer> groupsForFilter(ServiceContext context, Element params) throws Exception {
         List listGroups = params.getChildren(Params.GROUPS);
         Set<Integer> requestedGroups = new HashSet<Integer>();
 
-        for(int i=0; i<listGroups.size(); i++) {
+        for (int i = 0; i < listGroups.size(); i++) {
             String group = ((Element) listGroups.get(i)).getText();
             if (!StringUtils.isEmpty(group)) requestedGroups.add(Integer.parseInt(group));
         }
 
-        if (context.getUserSession().getProfile() !=null && context.getUserSession().getProfile().equals(Profile.Administrator)) {
+        if (context.getUserSession().getProfile() != null && context.getUserSession().getProfile().equals(Profile.Administrator)) {
             return requestedGroups;
 
         } else {
             GeonetContext gc = (GeonetContext) context
-                    .getHandlerContext(Geonet.CONTEXT_NAME);
+                .getHandlerContext(Geonet.CONTEXT_NAME);
             AccessManager am = gc.getBean(AccessManager.class);
             Set<Integer> userGroups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
 
@@ -73,9 +69,9 @@ public class ReportUtils {
                 // Remove not allowed groups from request
                 Set<Integer> filterRequestedGroups = new HashSet<Integer>();
 
-                for(Integer gr : requestedGroups) {
+                for (Integer gr : requestedGroups) {
                     if (userGroups.contains(gr)) {
-                        filterRequestedGroups.add(gr) ;
+                        filterRequestedGroups.add(gr);
                     }
                 }
 

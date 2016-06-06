@@ -23,11 +23,11 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<web-app  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xmlns="http://java.sun.com/xml/ns/javaee"
-          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-          version="2.5"
-          metadata-complete="true">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5"
+         metadata-complete="true">
 
 
   <display-name>${display.name}</display-name>

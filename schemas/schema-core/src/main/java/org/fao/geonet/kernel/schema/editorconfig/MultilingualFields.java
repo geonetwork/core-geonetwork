@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
@@ -34,9 +33,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -49,8 +48,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -67,11 +64,8 @@ public class MultilingualFields {
 
     /**
      * Gets the value of the expanded property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Expanded }
-     *     
+     *
+     * @return possible object is {@link Expanded }
      */
     public Expanded getExpanded() {
         return expanded;
@@ -79,11 +73,8 @@ public class MultilingualFields {
 
     /**
      * Sets the value of the expanded property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Expanded }
-     *     
+     *
+     * @param value allowed object is {@link Expanded }
      */
     public void setExpanded(Expanded value) {
         this.expanded = value;
@@ -91,11 +82,8 @@ public class MultilingualFields {
 
     /**
      * Gets the value of the exclude property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Exclude }
-     *     
+     *
+     * @return possible object is {@link Exclude }
      */
     public Exclude getExclude() {
         return exclude;
@@ -103,11 +91,8 @@ public class MultilingualFields {
 
     /**
      * Sets the value of the exclude property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Exclude }
-     *     
+     *
+     * @param value allowed object is {@link Exclude }
      */
     public void setExclude(Exclude value) {
         this.exclude = value;

@@ -31,6 +31,7 @@ import java.util.List;
 
 /**
  * Text Block.
+ *
  * @author Jesse on 11/29/2014.
  */
 public class TextBlock {

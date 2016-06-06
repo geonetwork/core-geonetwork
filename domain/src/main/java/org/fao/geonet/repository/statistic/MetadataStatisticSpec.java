@@ -32,13 +32,12 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Root;
 
 /**
- * An interface that creates the selection object that creates the calculation for {@link MetadataStatisticsQueries} methods.
+ * An interface that creates the selection object that creates the calculation for {@link
+ * MetadataStatisticsQueries} methods.
  * <p/>
  * Some statndard implementations are in {@link MetadataStatisticSpec.StandardSpecs}
  * <p/>
- * User: Jesse
- * Date: 9/27/13
- * Time: 1:22 PM
+ * User: Jesse Date: 9/27/13 Time: 1:22 PM
  *
  * @see MetadataStatisticsQueries
  * @see MetadataStatisticSpec.StandardSpecs

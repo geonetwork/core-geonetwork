@@ -34,82 +34,95 @@ import java.util.List;
 //=============================================================================
 
 public class Z3950Params extends AbstractParams {
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Constructor
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Constructor
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Z3950Params(DataManager dm) {
-		super(dm);
-	}
+    public String icon;
 
-	// ---------------------------------------------------------------------------
-	// ---
-	// --- Create : called when a new entry must be added. Reads values from the
-	// --- provided entry, providing default values
-	// ---
-	// ---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
+    // ---
+    // --- Create : called when a new entry must be added. Reads values from the
+    // --- provided entry, providing default values
+    // ---
+    // ---------------------------------------------------------------------------
+    public ArrayList<String> alRepositories = new ArrayList<String>();
 
-	public void create(Element node) throws BadInputEx {
-		super.create(node);
+    // ---------------------------------------------------------------------------
+    // ---
+    // --- Update : called when an entry has changed and variables must be
+    // updated
+    // ---
+    // ---------------------------------------------------------------------------
+    public String query;
 
-		Element site = node.getChild("site");
+    // ---------------------------------------------------------------------------
+    public String maximumHits = "100000"; // default
 
-		icon = Util.getParam(site, "icon", "default.gif");
-		query = Util.getParam(site, "query", "");
-		maximumHits = Util.getParam(site, "maximumHits", maximumHits);
+    // ---------------------------------------------------------------------------
 
-		addRepositories(site.getChild("repositories"));
-	}
+    public Z3950Params(DataManager dm) {
+        super(dm);
+    }
 
-	// ---------------------------------------------------------------------------
-	// ---
-	// --- Update : called when an entry has changed and variables must be
-	// updated
-	// ---
-	// ---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void update(Element node) throws BadInputEx {
-		super.update(node);
+    public void create(Element node) throws BadInputEx {
+        super.create(node);
 
-		Element site = node.getChild("site");
+        Element site = node.getChild("site");
 
-		icon = Util.getParam(site, "icon", icon);
-		query = Util.getParam(site, "query", query);
-		maximumHits = Util.getParam(site, "maximumHits", maximumHits);
+        icon = Util.getParam(site, "icon", "default.gif");
+        query = Util.getParam(site, "query", "");
+        maximumHits = Util.getParam(site, "maximumHits", maximumHits);
 
-		Element repos = site.getChild("repositories");
-		if (repos != null) {
-			addRepositories(repos);
-		}
-	}
+        addRepositories(site.getChild("repositories"));
+    }
 
-	// ---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public Z3950Params copy() {
-		Z3950Params copy = new Z3950Params(dm);
-		copyTo(copy);
+    public void update(Element node) throws BadInputEx {
+        super.update(node);
 
-		copy.icon = icon;
-		copy.query = query;
-		copy.maximumHits = maximumHits;
+        Element site = node.getChild("site");
 
-		for (String s : alRepositories) {
-			copy.alRepositories.add(s);
-		}
+        icon = Util.getParam(site, "icon", icon);
+        query = Util.getParam(site, "query", query);
+        maximumHits = Util.getParam(site, "maximumHits", maximumHits);
 
-		return copy;
-	}
+        Element repos = site.getChild("repositories");
+        if (repos != null) {
+            addRepositories(repos);
+        }
+    }
 
-	// ---------------------------------------------------------------------------
+    public Z3950Params copy() {
+        Z3950Params copy = new Z3950Params(dm);
+        copyTo(copy);
 
-	private void addRepositories(Element repos) throws BadInputEx {
-		alRepositories.clear();
+        copy.icon = icon;
+        copy.query = query;
+        copy.maximumHits = maximumHits;
 
-		if (repos == null) return;
+        for (String s : alRepositories) {
+            copy.alRepositories.add(s);
+        }
 
-		@SuppressWarnings("unchecked")
+        return copy;
+    }
+
+    private void addRepositories(Element repos) throws BadInputEx {
+        alRepositories.clear();
+
+        if (repos == null) return;
+
+        @SuppressWarnings("unchecked")
         List<Element> repoList = repos.getChildren("repository");
         for (Element repoElem : repoList) {
             String repoId = repoElem.getAttributeValue("id");
@@ -119,20 +132,9 @@ public class Z3950Params extends AbstractParams {
 
             alRepositories.add(repoId);
         }
-	}
+    }
 
-	//---------------------------------------------------------------------------
-
-	public Iterable<String>     getRepositories() { return alRepositories; }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String icon;
-	public ArrayList<String> alRepositories = new ArrayList<String>();
-	public String query;
-	public String maximumHits = "100000"; // default
+    public Iterable<String> getRepositories() {
+        return alRepositories;
+    }
 }

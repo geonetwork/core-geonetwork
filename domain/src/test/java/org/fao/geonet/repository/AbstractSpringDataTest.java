@@ -48,6 +48,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.annotation.Nonnull;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -58,21 +59,18 @@ import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        AbstractSpringDataTest.CLASSPATH_CONFIG_SPRING_GEONETWORK_PARENT_XML,
-        AbstractSpringDataTest.CLASSPATH_CONFIG_SPRING_GEONETWORK_XML,
-        AbstractSpringDataTest.CLASSPATH_REPOSITORY_TEST_CONTEXT_XML})
+    AbstractSpringDataTest.CLASSPATH_CONFIG_SPRING_GEONETWORK_PARENT_XML,
+    AbstractSpringDataTest.CLASSPATH_CONFIG_SPRING_GEONETWORK_XML,
+    AbstractSpringDataTest.CLASSPATH_REPOSITORY_TEST_CONTEXT_XML})
 @Transactional(propagation = Propagation.REQUIRED)
 public abstract class AbstractSpringDataTest {
 
     public static final String CLASSPATH_CONFIG_SPRING_GEONETWORK_XML = "classpath*:config-spring-geonetwork.xml";
     public static final String CLASSPATH_CONFIG_SPRING_GEONETWORK_PARENT_XML = "classpath*:config-spring-geonetwork-parent.xml";
     public static final String CLASSPATH_REPOSITORY_TEST_CONTEXT_XML = "classpath:domain-repository-test-context.xml";
-
+    private static final ThreadLocal<TransactionlessTesting> transactionlessTesting = new InheritableThreadLocal<TransactionlessTesting>();
     private final Random random = new Random();
     protected final AtomicInteger _inc = new AtomicInteger(random.nextInt(16));
-
-    private static final ThreadLocal<TransactionlessTesting> transactionlessTesting = new InheritableThreadLocal<TransactionlessTesting>();
-
     @Autowired
     private ConfigurableApplicationContext _appContext;
 
@@ -80,41 +78,10 @@ public abstract class AbstractSpringDataTest {
     public static void shutdownTransactionlessTesting() {
         TransactionlessTesting.shutdown();
     }
-    @Before
-    public void setApplicationContextInApplicationHolder() {
-        ApplicationContextHolder.set(_appContext);
-    }
 
     /**
-     * Find a file on the classpath in the same directory (or root) as the current class and return a stream to that file.
-     *
-     * @param fileName the name of the file.
-     */
-    @Nonnull
-    protected InputStream fileStream(@Nonnull String fileName) {
-        final InputStream stream = getClass().getResourceAsStream(fileName);
-        if (stream != null) {
-            return stream;
-        } else {
-            final InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(fileName);
-            if (resourceAsStream != null) {
-                return resourceAsStream;
-            }
-        }
-
-        throw new IllegalArgumentException(fileName + " not found");
-
-    }
-
-    /**
-     * Compares all properties of expected to actual.
-     * <ul>
-     * <li>.equals is used for comparison.</li>
-     * <li>Each element in an array is checked</li>
-     * </ul>
-     *
-     * @param expected
-     * @param actual
+     * Compares all properties of expected to actual. <ul> <li>.equals is used for comparison.</li>
+     * <li>Each element in an array is checked</li> </ul>
      */
     public static final <T> void assertSameContents(@Nonnull T expected, T actual, String... skipProperties) throws Exception {
         Set<String> skip = new HashSet<String>(Arrays.asList(skipProperties));
@@ -139,7 +106,7 @@ public abstract class AbstractSpringDataTest {
                 continue;
             } else if (actualProperty != null && actualProperty.getClass().isArray()) {
                 assertArrayEquals(expectedProperty.getKey() + " does not match", (Object[]) expectedProperty.getValue(),
-                        (Object[]) actualProperty);
+                    (Object[]) actualProperty);
             } else {
                 assertEquals(expectedProperty.getKey() + " does not match", expectedProperty.getValue(), actualProperty);
             }
@@ -159,25 +126,54 @@ public abstract class AbstractSpringDataTest {
         return props;
     }
 
+    @Before
+    public void setApplicationContextInApplicationHolder() {
+        ApplicationContextHolder.set(_appContext);
+    }
+
     /**
-     * All the tests in subclasses of {@link org.fao.geonet.repository.AbstractSpringDataTest} take place
-     * in a transaction which is normally what one wants, however for certain tests (specifically tests that
-     * need to test the behaviour of transactions) the tests need to take place outside of a transaction to make sure
-     * the behaviour is correct.  This class is used to run test code in a separate thread and thus outside of the current
-     * transaction.
-     * <p>
-     *     To use one must obtain a {@link org.fao.geonet.repository.AbstractSpringDataTest.TransactionlessTesting} instance
-     *     with the {@link #get()} method.  Then the test can be ran with the
-     *     {@link #run(org.fao.geonet.repository.AbstractSpringDataTest.TestTask)}.
-     * </p>
+     * Find a file on the classpath in the same directory (or root) as the current class and return
+     * a stream to that file.
+     *
+     * @param fileName the name of the file.
+     */
+    @Nonnull
+    protected InputStream fileStream(@Nonnull String fileName) {
+        final InputStream stream = getClass().getResourceAsStream(fileName);
+        if (stream != null) {
+            return stream;
+        } else {
+            final InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(fileName);
+            if (resourceAsStream != null) {
+                return resourceAsStream;
+            }
+        }
+
+        throw new IllegalArgumentException(fileName + " not found");
+
+    }
+
+    public static interface TestTask {
+        public void run() throws Exception;
+    }
+
+    /**
+     * All the tests in subclasses of {@link org.fao.geonet.repository.AbstractSpringDataTest} take
+     * place in a transaction which is normally what one wants, however for certain tests
+     * (specifically tests that need to test the behaviour of transactions) the tests need to take
+     * place outside of a transaction to make sure the behaviour is correct.  This class is used to
+     * run test code in a separate thread and thus outside of the current transaction. <p> To use
+     * one must obtain a {@link org.fao.geonet.repository.AbstractSpringDataTest.TransactionlessTesting}
+     * instance with the {@link #get()} method.  Then the test can be ran with the {@link
+     * #run(org.fao.geonet.repository.AbstractSpringDataTest.TestTask)}. </p>
      */
     protected static class TransactionlessTesting {
         private ExecutorService _executorService;
 
         /**
-         * Obtain the instance for this thread.  This can be called as many times as desired in the same thread
-         * and it will return the same instance.  If shutdown is called it will shutdown the instance and get() will
-         * return a new instance.
+         * Obtain the instance for this thread.  This can be called as many times as desired in the
+         * same thread and it will return the same instance.  If shutdown is called it will shutdown
+         * the instance and get() will return a new instance.
          *
          * @return the instance for the current thread.  It will always be ready to use.
          */
@@ -199,7 +195,7 @@ public abstract class AbstractSpringDataTest {
         private static void shutdown() {
             synchronized (TransactionlessTesting.class) {
                 TransactionlessTesting testingHarness = transactionlessTesting.get();
-                if (testingHarness!= null) {
+                if (testingHarness != null) {
                     transactionlessTesting.remove();
                     testingHarness._executorService.shutdownNow();
                     testingHarness._executorService = null;
@@ -208,8 +204,8 @@ public abstract class AbstractSpringDataTest {
         }
 
         /**
-         * Execute the test code in a separate thread from the current thread.  Make sure that no transactions are left
-         * open after method is called.
+         * Execute the test code in a separate thread from the current thread.  Make sure that no
+         * transactions are left open after method is called.
          *
          * @param task task to run.
          */
@@ -237,10 +233,6 @@ public abstract class AbstractSpringDataTest {
             }
 
         }
-    }
-
-    public static interface TestTask {
-        public void run() throws Exception;
     }
 
 }

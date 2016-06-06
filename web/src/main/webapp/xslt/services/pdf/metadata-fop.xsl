@@ -79,7 +79,7 @@
   </xsl:template>
 
   <!-- ======================================================
-        Page footer with node info, date and paging info 
+        Page footer with node info, date and paging info
   -->
   <xsl:template name="fop-footer">
     <!-- Footer with catalogue name, org name and pagination -->
@@ -173,7 +173,7 @@
     <xsl:param name="block"/>
     <xsl:param name="label"/>
     <xsl:param name="color">blue</xsl:param>
-    
+
       <fo:table-row >
         <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt" margin-top="4pt"
           number-columns-spanned="2">
@@ -203,7 +203,7 @@
 	-->
   <xsl:template name="fo">
     <xsl:param name="res"/>
-    
+
     <xsl:for-each select="$res/*[name() != 'summary' and name() != 'from' and name() != 'to']">
 
       <xsl:variable name="md">

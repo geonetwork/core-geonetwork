@@ -23,23 +23,23 @@ package org.fao.geonet.kernel.search.lucenequeries;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.util.BytesRef;
 
-	public class DateRangeQuery extends TermRangeQuery {
+public class DateRangeQuery extends TermRangeQuery {
 
-      public DateRangeQuery(String fld, String lowerString, String upperString,String inclusive) {
-        super(fld, formatDate(lowerString), formatDate(upperString), inclusive.equalsIgnoreCase("true"), inclusive.equalsIgnoreCase("true") );
-      }
+    public DateRangeQuery(String fld, String lowerString, String upperString, String inclusive) {
+        super(fld, formatDate(lowerString), formatDate(upperString), inclusive.equalsIgnoreCase("true"), inclusive.equalsIgnoreCase("true"));
+    }
 
-      
-      private static BytesRef formatDate(String s) {
+
+    private static BytesRef formatDate(String s) {
 
         String ret = "";
 
-        if (s==null) return new BytesRef();
+        if (s == null) return new BytesRef();
 
-        ret=s.trim();
-        ret=ret.replaceAll("\'", "");
-        ret=ret.toUpperCase();
+        ret = s.trim();
+        ret = ret.replaceAll("\'", "");
+        ret = ret.toUpperCase();
 
         return new BytesRef(ret);
-      }
-  }
+    }
+}

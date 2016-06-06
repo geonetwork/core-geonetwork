@@ -22,17 +22,23 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<gns:schema xmlns:gns="http://geonetwork-opensource.org/schemas/schema-ident" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://geonetwork-opensource.org/schemas/schema-ident http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd">
-	<gns:name>dublin-core</gns:name>
-	<gns:id>3785ae4c-dde3-11df-a813-001c2346de4c</gns:id>
-	<gns:version>1.0</gns:version>
+<gns:schema xmlns:gns="http://geonetwork-opensource.org/schemas/schema-ident"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://geonetwork-opensource.org/schemas/schema-ident http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd">
+  <gns:name>dublin-core</gns:name>
+  <gns:id>3785ae4c-dde3-11df-a813-001c2346de4c</gns:id>
+  <gns:version>1.0</gns:version>
   <gns:title xml:lang="en">Dublin core</gns:title>
-  <gns:description>The Dublin Core Metadata Element Set is a vocabulary of fifteen properties for use in resource description. The name "Dublin" is due to its origin at a 1995 invitational workshop in Dublin, Ohio; "core" because its elements are broad and generic, usable for describing a wide range of resources.</gns:description>
+  <gns:description>The Dublin Core Metadata Element Set is a vocabulary of fifteen properties for
+    use in resource description. The name "Dublin" is due to its origin at a 1995 invitational
+    workshop in Dublin, Ohio; "core" because its elements are broad and generic, usable for
+    describing a wide range of resources.
+  </gns:description>
   <gns:standardUrl>http://dublincore.org/documents/dces/</gns:standardUrl>
-	<gns:schemaLocation/>
-	<gns:autodetect>
-		<gns:elements type="root">
-			<simpledc/>
-		</gns:elements>
-	</gns:autodetect>
+  <gns:schemaLocation/>
+  <gns:autodetect>
+    <gns:elements type="root">
+      <simpledc/>
+    </gns:elements>
+  </gns:autodetect>
 </gns:schema>

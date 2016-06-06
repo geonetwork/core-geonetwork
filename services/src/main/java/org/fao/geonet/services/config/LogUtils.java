@@ -38,20 +38,19 @@ import org.fao.geonet.repository.SettingRepository;
 
 /**
  * Logger utilities
- * @author bmaire
  *
+ * @author bmaire
  */
 public class LogUtils {
     public static final String DEFAULT_LOG_FILE = "log4j.xml";
 
     /**
-     * Refresh logger configuration.
-     * If settings is not set in database, using default log4j.xml file.
-     * If requested file does not exist, using default log4j.xml file.
+     * Refresh logger configuration. If settings is not set in database, using default log4j.xml
+     * file. If requested file does not exist, using default log4j.xml file.
      */
     public static void refreshLogConfiguration() {
         SettingRepository repository =
-                ApplicationContextHolder.get().getBean(SettingRepository.class);
+            ApplicationContextHolder.get().getBean(SettingRepository.class);
         Setting setting = repository.findOne(SettingManager.SYSTEM_SERVER_LOG);
 
         // get log config from db settings
@@ -62,9 +61,9 @@ public class LogUtils {
             DOMConfigurator.configure(url);
         } else {
             DOMConfigurator.configure(
-                    LogUtils.class.getResource("/" + DEFAULT_LOG_FILE));
+                LogUtils.class.getResource("/" + DEFAULT_LOG_FILE));
             throw new OperationAbortedEx("Can't refresh log configuration because file '" +
-                    log4jProp + "' doesn't exist. Using log4j.xml.");
+                log4jProp + "' doesn't exist. Using log4j.xml.");
         }
     }
 }

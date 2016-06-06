@@ -26,20 +26,28 @@ import org.fao.geonet.domain.MapServer;
 
 /**
  * A Geoserver node configuration
- * 
  */
 public class GeoServerNode {
-	public GeoServerNode(String id, String name, String url,
-			String namespacePrefix, String namespaceUrl, String username,
-			String userPassword) {
-		setId(id);
-		setName(name);
-		setUrl(url);
-		setNamespacePrefix(namespacePrefix);
-		setNamespaceUrl(namespaceUrl);
-		setUsername(username);
-		setUserpassword(userPassword);
-	}
+    private String id;
+    private String name;
+    private String url;
+    private String namespacePrefix;
+    private String namespaceUrl;
+    private String username;
+    private String userpassword;
+
+    public GeoServerNode(String id, String name, String url,
+                         String namespacePrefix, String namespaceUrl, String username,
+                         String userPassword) {
+        setId(id);
+        setName(name);
+        setUrl(url);
+        setNamespacePrefix(namespacePrefix);
+        setNamespaceUrl(namespaceUrl);
+        setUsername(username);
+        setUserpassword(userPassword);
+    }
+
     public GeoServerNode(MapServer m) {
         setId(String.valueOf(m.getId()));
         setName(m.getName());
@@ -50,69 +58,59 @@ public class GeoServerNode {
         setUserpassword(m.getPassword());
     }
 
-	private String id;
+    public String getName() {
+        return name;
+    }
 
-	private String name;
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public String getNamespacePrefix() {
+        return namespacePrefix;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setNamespacePrefix(String namespacePrefix) {
+        this.namespacePrefix = namespacePrefix;
+    }
 
-	public String getNamespacePrefix() {
-		return namespacePrefix;
-	}
+    public String getNamespaceUrl() {
+        return namespaceUrl;
+    }
 
-	public void setNamespacePrefix(String namespacePrefix) {
-		this.namespacePrefix = namespacePrefix;
-	}
+    public void setNamespaceUrl(String namespaceUrl) {
+        this.namespaceUrl = namespaceUrl;
+    }
 
-	public String getNamespaceUrl() {
-		return namespaceUrl;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setNamespaceUrl(String namespaceUrl) {
-		this.namespaceUrl = namespaceUrl;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getUserpassword() {
+        return userpassword;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setUserpassword(String userpassword) {
+        this.userpassword = userpassword;
+    }
 
-	public String getUserpassword() {
-		return userpassword;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setUserpassword(String userpassword) {
-		this.userpassword = userpassword;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	private String url;
-	private String namespacePrefix;
-	private String namespaceUrl;
-	private String username;
-	private String userpassword;
+    public void setId(String id) {
+        this.id = id;
+    }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format">
-	
+
 	<xsl:import href="modal.xsl"/>
 
 	<!--
@@ -13,15 +13,15 @@
 
 				<div id="status" align="center">
 					<xsl:if test="/root/response/statusvalue/*">
-							
+
 							<input name="id" type="hidden" value="{/root/response/id}"/>
 							<table>
 								<tr>
 									<th class="padded" align="center" colspan="2"><xsl:value-of select="/root/gui/strings/status"/></th>
 								</tr>
-		
+
 								<xsl:variable name="lang" select="/root/gui/language"/>
-					
+
 								<!-- loop on all status -->
 								<xsl:variable name="isSubmitted"
 									select="count(/root/response/statusvalue/status[on and name='submitted']) = 1"/>
@@ -30,7 +30,7 @@
 								<xsl:variable name="isReviewerOrAdmin" select="
 									count(/root/response/contentReviewers/record[userid=$userId]) > 0
 									or $profile = 'Administrator'"/>
-								
+
 								<!--<ul>
 									<li>Profile: <xsl:value-of select="$profile"/></li>
 									<li>User: <xsl:value-of select="$userId"/></li>
@@ -44,15 +44,15 @@
 								  <xsl:sort select="label/child::*[name() = $lang]"/>
 									<tr>
 										<td class="padded" align="left" colspan="2">
-											
-											
+
+
 											<input type="radio" name="status" value="{id}" id="st{id}">
 												<xsl:if test="on">
 													<xsl:attribute name="checked"/>
 												</xsl:if>
-												<!-- status value submitted is disabled for reviewers  
+												<!-- status value submitted is disabled for reviewers
 												<xsl:if test="$isReviewer or contains($profile,'Admin')">-->
-												
+
 												<!-- status value draft and unkown disabled once submitted -->
 												<xsl:if test="$isSubmitted and not($isReviewerOrAdmin)">
 													<xsl:if test="name='unknown' or name='draft'">
@@ -74,7 +74,7 @@
 											</input>
 										</td>
 									</tr>
-								</xsl:for-each>				
+								</xsl:for-each>
 								<tr width="100%">
 									<td align="left">
 										<xsl:value-of select="/root/gui/strings/changeLogMessage"/>
@@ -97,7 +97,7 @@
 								</tr>
 							</table>
 					</xsl:if>
-				</div>          
+				</div>
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>

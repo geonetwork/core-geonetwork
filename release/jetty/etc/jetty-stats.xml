@@ -8,12 +8,14 @@
 
 <Configure id="Server" class="org.eclipse.jetty.server.Server">
 
-    <Get id="oldhandler" name="handler"/>
+  <Get id="oldhandler" name="handler"/>
 
-    <Set name="handler">
-     <New id="StatsHandler" class="org.eclipse.jetty.server.handler.StatisticsHandler">
-      <Set name="handler"><Ref id="oldhandler"/></Set>
-     </New>
-    </Set>
-    
+  <Set name="handler">
+    <New id="StatsHandler" class="org.eclipse.jetty.server.handler.StatisticsHandler">
+      <Set name="handler">
+        <Ref id="oldhandler"/>
+      </Set>
+    </New>
+  </Set>
+
 </Configure>

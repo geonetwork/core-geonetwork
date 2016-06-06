@@ -36,62 +36,66 @@ import java.io.StringReader;
 
 //=============================================================================
 
-/** This is a portion of the jeeves.utils.Xml class and is replicated here just
-  * to avoid the jeeves jar
-  */
+/**
+ * This is a portion of the jeeves.utils.Xml class and is replicated here just to avoid the jeeves
+ * jar
+ */
 
-public class Xml
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+public class Xml {
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	/** Loads an xml file and returns its root node (validates the xml with a dtd) */
+    /**
+     * Loads an xml file and returns its root node (validates the xml with a dtd)
+     */
 
-	public static Element loadString(String data, boolean validate)
-												throws IOException, JDOMException
-	{
-		SAXBuilder builder = new SAXBuilder(validate);
-		builder.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
-			
-		
-		Document   jdoc    = builder.build(new StringReader(data));
+    public static Element loadString(String data, boolean validate)
+        throws IOException, JDOMException {
+        SAXBuilder builder = new SAXBuilder(validate);
+        builder.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
 
-		return (Element) jdoc.getRootElement().detach();
-	}
 
-	//--------------------------------------------------------------------------
-	/** Loads an xml stream and returns its root node (validates the xml with a dtd) */
+        Document jdoc = builder.build(new StringReader(data));
 
-	public static Element loadStream(InputStream input) throws IOException, JDOMException
-	{
-		SAXBuilder builder = new SAXBuilder();
-		builder.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
-		Document   jdoc    = builder.build(input);
+        return (Element) jdoc.getRootElement().detach();
+    }
 
-		return (Element) jdoc.getRootElement().detach();
-	}
+    //--------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	/** Converts an xml element to a string */
+    /**
+     * Loads an xml stream and returns its root node (validates the xml with a dtd)
+     */
 
-	public static String getString(Element data)
-	{
-		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+    public static Element loadStream(InputStream input) throws IOException, JDOMException {
+        SAXBuilder builder = new SAXBuilder();
+        builder.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
+        Document jdoc = builder.build(input);
 
-		return outputter.outputString(data);
-	}
+        return (Element) jdoc.getRootElement().detach();
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public static String getString(Document data)
-	{
-		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+    /**
+     * Converts an xml element to a string
+     */
 
-		return outputter.outputString(data);
-	}
+    public static String getString(Element data) {
+        XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+
+        return outputter.outputString(data);
+    }
+
+    //---------------------------------------------------------------------------
+
+    public static String getString(Document data) {
+        XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+
+        return outputter.outputString(data);
+    }
 }
 
 //=============================================================================

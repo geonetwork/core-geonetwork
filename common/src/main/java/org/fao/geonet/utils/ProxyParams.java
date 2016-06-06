@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
@@ -25,8 +24,8 @@
 package org.fao.geonet.utils;
 
 public class ProxyParams {
-	String username, password, proxyHost;
-	int proxyPort;
-	boolean useProxy = false;
-	boolean useProxyAuth = false;
+    String username, password, proxyHost;
+    int proxyPort;
+    boolean useProxy = false;
+    boolean useProxyAuth = false;
 }

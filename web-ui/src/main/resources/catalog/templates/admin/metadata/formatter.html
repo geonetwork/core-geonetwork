@@ -7,13 +7,13 @@
       <div class="panel-body">
 
         <input class="form-control" data-ng-model="formatterSearch.$" autofocus=""
-          placeholder="{{'filter' | translate}}"/>
+               placeholder="{{'filter' | translate}}"/>
         <input type="hidden" data-ng-model="formatterSelected"/>
         <div class="list-group">
           <a href="" class="list-group-item"
-            data-ng-repeat="f in formatters | filter:formatterSearch"
-            data-ng-class="f === userSelected ? 'active' : ''" data-ng-click="selectFormatter(f)">
-              {{f.schema}}/{{f.id}} </a>
+             data-ng-repeat="f in formatters | filter:formatterSearch"
+             data-ng-class="f === userSelected ? 'active' : ''" data-ng-click="selectFormatter(f)">
+            {{f.schema}}/{{f.id}} </a>
         </div>
       </div>
     </div>
@@ -24,7 +24,7 @@
       </div>
       <div class="panel-body">
         <form id="fileupload" action="md.formatter.register" method="POST"
-          enctype="multipart/form-data" data-file-upload="formatterUploadOptions">
+              enctype="multipart/form-data" data-file-upload="formatterUploadOptions">
           <span class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
             <i class="fa fa-plus fa-white"/>
             <span data-translate="">chooseFormatter</span>
@@ -32,7 +32,7 @@
           </span>
           <div class="col-lg-5 fade" data-ng-class="{in: active()}">
             <div class="progress progress-striped active" data-file-upload-progress="progress()"
-              data-file-upload-done="loadFormatter()">
+                 data-file-upload-done="loadFormatter()">
               <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"/>
             </div>
             <div class="progress-extended">&nbsp;</div>
@@ -50,9 +50,11 @@
 
         <div class="btn-toolbar">
           <button type="button" class="btn btn-default pull-right"
-            data-ng-click="downloadFormatter(formatterSelected)"><span class="fa fa-download"></span>&nbsp;<span data-translate="">download</span></button>
+                  data-ng-click="downloadFormatter(formatterSelected)"><span
+            class="fa fa-download"></span>&nbsp;<span data-translate="">download</span></button>
           <button type="button" class="btn btn-danger pull-right"
-            data-ng-click="formatterDelete(formatterSelected)"><span class="fa fa-times"></span>&nbsp;<span data-translate="">delete</span></button>
+                  data-ng-click="formatterDelete(formatterSelected)"><span
+            class="fa fa-times"></span>&nbsp;<span data-translate="">delete</span></button>
         </div>
       </div>
       <div class="panel-body">
@@ -61,22 +63,22 @@
             <label class="control-label col-sm-3" data-translate="">chooseAFile</label>
             <div class="col-sm-9">
               <select class="form-control" data-ng-model="selectedFile"
-                data-ng-options="file['@name'] group by file.dir for file in formatterFiles"/>
+                      data-ng-options="file['@name'] group by file.dir for file in formatterFiles"/>
             </div>
           </div>
           <div class="form-group hidden">
             <input class="form-control" type="text" name="id" data-ng-model="formatterSelected"/>
             <input class="form-control" type="text" name="fname"
-              data-ng-model="selectedFile['@path']"/>
+                   data-ng-model="selectedFile['@path']"/>
           </div>
           <div class="form-group">
             <div class="col-sm-12">
               <textarea class="form-control" name="data" data-gn-autogrow=""
-                data-ng-model="formatterFile"/>
+                        data-ng-model="formatterFile"/>
             </div>
           </div>
           <button type="button" class="btn btn-primary pull-right"
-            data-ng-click="saveFormatterFile('#gn-formatter-file-edit')">
+                  data-ng-click="saveFormatterFile('#gn-formatter-file-edit')">
             <i class="fa fa-save"/>&nbsp; <span data-translate="">saveFile</span></button>
         </form>
       </div>
@@ -100,13 +102,13 @@
 
           <div class="btn-toolbar pull-right">
             <button type="button" class="btn btn-primary" data-ng-disabled="metadataId == ''"
-              data-ng-click="testFormatter('XML')">
+                    data-ng-click="testFormatter('XML')">
               <i class="fa fa-cog"/>&nbsp; <span data-translate="">viewXML</span></button>
             <button type="button" class="btn btn-primary" data-ng-disabled="metadataId == ''"
-              data-ng-click="testFormatter('HTML')">
+                    data-ng-click="testFormatter('HTML')">
               <i class="fa fa-cog"/>&nbsp; <span data-translate="">viewHTML</span></button>
             <button type="button" class="btn btn-primary" data-ng-disabled="metadataId == ''"
-              data-ng-click="testFormatter('DEBUG')">
+                    data-ng-click="testFormatter('DEBUG')">
               <i class="fa fa-cog"/>&nbsp; <span data-translate="">viewDEBUG</span></button>
           </div>
         </form>

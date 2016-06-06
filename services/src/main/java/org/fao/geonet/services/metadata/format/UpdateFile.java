@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata.format;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -41,7 +42,7 @@ import java.util.Collections;
 
 /**
  * Allows a user to set the xsl used for displaying metadata
- * 
+ *
  * @author jeichar
  */
 public class UpdateFile extends AbstractFormatService implements Service {
@@ -50,7 +51,7 @@ public class UpdateFile extends AbstractFormatService implements Service {
 
         String fileName = URLDecoder.decode(Util.getParam(params, Params.FNAME), Constants.ENCODING);
         String xslid = Util.getParam(params, Params.ID);
-        String data =  Util.getParam(params, Params.DATA);
+        String data = Util.getParam(params, Params.DATA);
         String schema = Util.getParam(params, Params.SCHEMA, null);
         Path schemaDir = null;
         if (schema != null) {
@@ -58,9 +59,9 @@ public class UpdateFile extends AbstractFormatService implements Service {
         }
 
         Path formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
-        
+
         Path toUpdate = formatDir.resolve(fileName);
-        
+
         Files.write(toUpdate, Collections.singleton(data), Constants.CHARSET);
 
         Element elResp = new Element(Jeeves.Elem.RESPONSE);

@@ -29,71 +29,69 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class GetRecordResponse extends AbstractResponse
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class GetRecordResponse extends AbstractResponse {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public GetRecordResponse() {}
+    private Record record;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public GetRecordResponse(Element response)
-	{
-		super(response);
-		build(response);
-	}
+    public GetRecordResponse() {
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public Record getRecord() { return record; }
+    public GetRecordResponse(Element response) {
+        super(response);
+        build(response);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setRecord(Record r)
-	{
-		record = r;
-	}
+    public Record getRecord() {
+        return record;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public Element toXml()
-	{
-		Element root = new Element(GetRecordRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
+    public void setRecord(Record r) {
+        record = r;
+    }
 
-		root.addContent(record.toXml());
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-		return root;
-	}
+    public Element toXml() {
+        Element root = new Element(GetRecordRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+        root.addContent(record.toXml());
 
-	private void build(Element response)
-	{
-		Element getRec = response.getChild("GetRecord", OaiPmh.Namespaces.OAI_PMH);
-		Element record = getRec  .getChild("record",    OaiPmh.Namespaces.OAI_PMH);
+        return root;
+    }
 
-		this.record = new Record(record);
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+    private void build(Element response) {
+        Element getRec = response.getChild("GetRecord", OaiPmh.Namespaces.OAI_PMH);
+        Element record = getRec.getChild("record", OaiPmh.Namespaces.OAI_PMH);
 
-	private Record record;
+        this.record = new Record(record);
+    }
 }
 
 //=============================================================================

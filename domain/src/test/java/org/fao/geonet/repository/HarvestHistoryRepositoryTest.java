@@ -41,6 +41,16 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     HarvestHistoryRepository _repo;
 
+    public static HarvestHistory createHarvestHistory(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+        HarvestHistory customElementSet = new HarvestHistory()
+            .setDeleted(val % 2 == 0)
+            .setHarvesterName("name" + val)
+            .setHarvesterType("type" + val)
+            .setHarvesterUuid("uuid" + val);
+        return customElementSet;
+    }
+
     @Test
     public void testFindOne() {
         HarvestHistory history1 = newHarvestHistory();
@@ -139,16 +149,6 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
 
     private HarvestHistory newHarvestHistory() {
         return createHarvestHistory(_inc);
-    }
-
-    public static HarvestHistory createHarvestHistory(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-        HarvestHistory customElementSet = new HarvestHistory()
-                .setDeleted(val % 2 == 0)
-                .setHarvesterName("name" + val)
-                .setHarvesterType("type" + val)
-                .setHarvesterUuid("uuid" + val);
-        return customElementSet;
     }
 
 }

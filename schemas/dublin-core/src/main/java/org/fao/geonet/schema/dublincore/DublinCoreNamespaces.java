@@ -30,7 +30,7 @@ import org.jdom.Namespace;
  */
 public class DublinCoreNamespaces {
     public static final Namespace DC =
-            Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/");
+        Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/");
     public static final Namespace DCT =
-            Namespace.getNamespace("dct", "http://purl.org/dc/terms/");
+        Namespace.getNamespace("dct", "http://purl.org/dc/terms/");
 }

@@ -22,23 +22,17 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:geonet="http://www.fao.org/geonetwork" 
-  xmlns:saxon="http://saxon.sf.net/"
-  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
-  xmlns:foaf="http://xmlns.com/foaf/0.1/"
-  xmlns:void="http://www.w3.org/TR/void/" 
-  xmlns:dcat="http://www.w3.org/ns/dcat#"
-  xmlns:dc="http://purl.org/dc/elements/1.1/" 
-  xmlns:dct="http://purl.org/dc/terms/"
-  xmlns:dctype="http://purl.org/dc/dcmitype/" 
-  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  extension-element-prefixes="saxon" exclude-result-prefixes="#all">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:saxon="http://saxon.sf.net/"
+                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                xmlns:dcat="http://www.w3.org/ns/dcat#"
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns:dct="http://purl.org/dc/terms/"
+                version="2.0"
+                extension-element-prefixes="saxon" exclude-result-prefixes="#all">
 
-  <!-- 
+  <!--
     Create reference block to metadata record and dataset to be added in dcat:Catalog usually.
   -->
   <!-- FIME : $url comes from a global variable. -->
@@ -46,8 +40,8 @@
     <dcat:dataset rdf:resource="{$url}/resource/{dc:identifier}"/>
     <dcat:record rdf:resource="{$url}/metadata/{dc:identifier}"/>
   </xsl:template>
-  
-  
+
+
   <!--
     Convert DC record to DCAT
     -->
@@ -66,9 +60,9 @@
       <xsl:copy-of select="dc:*|dct:*"/>
     </dcat:Dataset>
   </xsl:template>
-  
+
   <xsl:template match="simpledc" mode="references"/>
-  
+
   <xsl:template mode="simpledc" match="gui|request|metadata"/>
-  
+
 </xsl:stylesheet>

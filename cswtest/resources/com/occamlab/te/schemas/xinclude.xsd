@@ -3,24 +3,24 @@
            targetNamespace="http://www.w3.org/2001/XInclude"
            finalDefault="extension">
   <xs:annotation>
-   <xs:documentation>
-    Not normative, but may be useful.
-    See the REC http://www.w3.org/TR/XInclude for definitive
-    information about this namespace.
-   </xs:documentation>
+    <xs:documentation>
+      Not normative, but may be useful.
+      See the REC http://www.w3.org/TR/XInclude for definitive
+      information about this namespace.
+    </xs:documentation>
   </xs:annotation>
 
-  <xs:element name="include" type="xi:includeType" />
+  <xs:element name="include" type="xi:includeType"/>
 
   <xs:complexType name="includeType" mixed="true">
-    <xs:choice minOccurs='0' maxOccurs='unbounded' >
-      <xs:element ref='xi:fallback' />
-      <xs:any namespace='##other' processContents='lax' />
-      <xs:any namespace='##local' processContents='lax' />
+    <xs:choice minOccurs='0' maxOccurs='unbounded'>
+      <xs:element ref='xi:fallback'/>
+      <xs:any namespace='##other' processContents='lax'/>
+      <xs:any namespace='##local' processContents='lax'/>
     </xs:choice>
     <xs:attribute name="href" use="optional" type="xs:anyURI"/>
     <xs:attribute name="parse" use="optional" default="xml"
-                  type="xi:parseType" />
+                  type="xi:parseType"/>
     <xs:attribute name="xpointer" use="optional" type="xs:string"/>
     <xs:attribute name="encoding" use="optional" type="xs:string"/>
     <xs:attribute name="accept" use="optional" type="xs:string"/>
@@ -34,8 +34,8 @@
       <xs:enumeration value="text"/>
     </xs:restriction>
   </xs:simpleType>
-  
-  <xs:element name="fallback" type="xi:fallbackType" />
+
+  <xs:element name="fallback" type="xi:fallbackType"/>
 
   <xs:complexType name="fallbackType" mixed="true">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -43,7 +43,7 @@
       <xs:any namespace="##other" processContents="lax"/>
       <xs:any namespace="##local" processContents="lax"/>
     </xs:choice>
-    <xs:anyAttribute namespace="##other" processContents="lax" />
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
   </xs:complexType>
 
 </xs:schema>

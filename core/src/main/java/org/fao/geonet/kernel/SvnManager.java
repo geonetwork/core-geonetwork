@@ -27,6 +27,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.transaction.AfterCommitTransactionListener;
 import jeeves.transaction.BeforeRollbackTransactionListener;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
@@ -82,34 +83,26 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public class SvnManager implements AfterCommitTransactionListener, BeforeRollbackTransactionListener {
+    private static String username = "geonetwork";
+    private static String password = "geonetwork";
     // configure via setter in Geonetwork app
     private ServiceContext context;
     // configure in init method
     private SVNURL repoUrl;
     // configure in spring configuration of bean
     private String subversionPath;
-
-    private static String username = "geonetwork";
-    private static String password = "geonetwork";
-
     private Map<TransactionStatus, SvnTask> tasks = new ConcurrentHashMap<TransactionStatus, SvnTask>();
     private boolean _enabled = false;
 
-    // SvnTask holds information used to commit changes to a metadata record
-    private static class SvnTask {
-        Set<String> ids; // metadata ids
-        String sessionLogMessage; // session log message for svn commit
-        // Map<String,String> props; // properties to set on metadata record
-    }
-
     /**
-     * Constructor. Creates the subversion repository if it doesn't exist or just open the subversion repository if it does. Stores the
-     * URL
-     * of the repository in repoUrl. Adds the commit/abort listeners to the DbmsPool resource provider.
+     * Constructor. Creates the subversion repository if it doesn't exist or just open the
+     * subversion repository if it does. Stores the URL of the repository in repoUrl. Adds the
+     * commit/abort listeners to the DbmsPool resource provider.
      */
     public void init() throws Exception {
 
@@ -166,14 +159,14 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
                 // check that repository uuid matches the repo uuid in database
                 if (!uuid.equals(repoUuid)) {
                     throw new IllegalArgumentException("Subversion repository at " + subversionPath + " has uuid " + repoUuid
-                                                       + " which does not match repository uuid held in database " + uuid);
+                        + " which does not match repository uuid held in database " + uuid);
                 }
             } else {
                 // if nothing in repo and it doesn't have the uuid we expect then
                 // recreate it and reopen it
                 if (!uuid.equals(repoUuid)) {
                     Log.warning(Geonet.SVN_MANAGER, "Recreating subversion repository at " + subversionPath
-                                                    + " as previous repository was empty");
+                        + " as previous repository was empty");
                     boolean enableRevisionProperties = true;
                     boolean force = true;
                     repoUrl = SVNRepositoryFactory.createLocalRepository(subFile, uuid, enableRevisionProperties, force);
@@ -215,10 +208,10 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             String repoDbUrl = rootProps.getStringValue(Params.Svn.DBURLPROP).trim();
             if (repoDbUrl == null || (!dbUrl.trim().equals(repoDbUrl))) {
                 throw new IllegalArgumentException("Repository uses database URL of '" + repoDbUrl
-                                                   + "' which does not match current database URL '" + dbUrl + "'. Modify the svn " +
-                                                   "property " + Params.Svn.DBURLPROP
-                                                   + " on the root of the subversion repository at " + subversionPath
-                                                   + " or specify a different subversion repository");
+                    + "' which does not match current database URL '" + dbUrl + "'. Modify the svn " +
+                    "property " + Params.Svn.DBURLPROP
+                    + " on the root of the subversion repository at " + subversionPath
+                    + " or specify a different subversion repository");
             }
         }
     }
@@ -294,9 +287,9 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         if (session == null)
             session = getDefaultSession();
         String result = "GeoNetwork service: " + context.getService() + " GeoNetwork User " + session.getUserIdAsInt() + " (Username: "
-                        + session.getUsername() + " Name: " + session.getName() + " " + session.getSurname() + ") Executed from IP " +
-                        "address "
-                        + context.getIpAddress();
+            + session.getUsername() + " Name: " + session.getName() + " " + session.getSurname() + ") Executed from IP " +
+            "address "
+            + context.getIpAddress();
         return result;
     }
 
@@ -331,8 +324,8 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
     }
 
     /**
-     * Creates a history request for this metadata id that will cause metadata and metadata properties to be committed/aborted when the
-     * database is committed/aborted.
+     * Creates a history request for this metadata id that will cause metadata and metadata
+     * properties to be committed/aborted when the database is committed/aborted.
      *
      * @param id      The metadata id that will be tracked
      * @param context Describing the servicer and user carrying out operation
@@ -341,7 +334,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
     public void setHistory(final String id, final ServiceContext context) throws Exception {
 
         if (!_enabled) {
-            return ;
+            return;
         }
         if (!exists(id))
             return; // not in repo so exit
@@ -356,7 +349,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             checkSvnTask(status, id, sessionToLogMessage(context), props);
             if (Log.isDebugEnabled(Geonet.SVN_MANAGER)) {
                 Log.debug(Geonet.SVN_MANAGER, "Changes to metadata " + id + " will be committed/aborted with the database "
-                                              + "channel " + status);
+                    + "channel " + status);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -364,12 +357,12 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
     }
 
     /**
-     * Get the latest file from the directory of the subversion repository corresponding to this metadata id.
+     * Get the latest file from the directory of the subversion repository corresponding to this
+     * metadata id.
      *
      * @param id   Id of the metadata record in the subversion repo
-     * @param file File to retrieve from the subversion repo - could be metadata.xml, owner.xml, privileges.xml, status.xml,
-     *             categories.xml,
-     *             ...
+     * @param file File to retrieve from the subversion repo - could be metadata.xml, owner.xml,
+     *             privileges.xml, status.xml, categories.xml, ...
      * @return Element XML metadata
      */
     private Element getFile(String id, String file) throws Exception {
@@ -387,12 +380,12 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
     }
 
     /**
-     * Creates a directory to hold metadata and property histories and add the metadata specified as the first version.
+     * Creates a directory to hold metadata and property histories and add the metadata specified as
+     * the first version.
      *
      * @param id      The metadata id that will be tracked
      * @param context Service context describing user and operation
      * @param md      Metadata record - initial version
-     * @throws Exception
      */
     public void createMetadataDir(final String id, ServiceContext context, Element md) throws Exception {
         if (!_enabled) {
@@ -478,8 +471,9 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
     }
 
     /**
-     * Check (and create if not present) a subversion commit task for a metadata id. If a commit task exists then the metadata and
-     * properties will be read at the end of the database commit and committed to the subversion repo.
+     * Check (and create if not present) a subversion commit task for a metadata id. If a commit
+     * task exists then the metadata and properties will be read at the end of the database commit
+     * and committed to the subversion repo.
      *
      * @param transaction       The resource we will listen to for commits/aborts
      * @param id                The metadata id we want to track
@@ -488,7 +482,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
      * @throws Exception when something goes wrong with the commit
      */
     private void checkSvnTask(TransactionStatus transaction, String id, String sessionLogMessage, Map<String,
-            String> props) throws Exception {
+        String> props) throws Exception {
         SvnTask task = tasks.get(transaction);
         if (task == null) {
             task = new SvnTask();
@@ -513,7 +507,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         SVNRepository repository = SVNRepositoryFactory.create(repoUrl);
         if (username != null) {
             ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(new File(repoUrl.getPath()), username,
-                    password);
+                password);
             repository.setAuthenticationManager(authManager);
         }
         return repository;
@@ -592,9 +586,9 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         Element catXml = new Element("results");
         for (MetadataCategory categ : categs) {
             catXml.addContent(
-                    new Element("record")
-                            .addContent(new Element("id").setText("" + categ.getId()))
-                            .addContent(new Element("name").setText(categ.getName()))
+                new Element("record")
+                    .addContent(new Element("id").setText("" + categ.getId()))
+                    .addContent(new Element("name").setText(categ.getName()))
             );
         }
         String now = Xml.getString(catXml);
@@ -698,13 +692,13 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         User user = this.context.getBean(UserRepository.class).findOne(metadata.getSourceInfo().getOwner());
         // Backwards compatibility.  Format the metadata as XML in same format as previous versions.
         Element xml = new Element("results").addContent(
-                new Element("record")
-                        .addContent(new Element("metadataid").setText(id))
-                        .addContent(new Element("userid").setText("" + user.getId()))
-                        .addContent(new Element("name").setText(user.getName()))
-                        .addContent(new Element("surname").setText(user.getSurname()))
-                        .addContent(new Element("email").setText(user.getEmail()))
-                        .addContent(new Element("email").setText(user.getEmail()))
+            new Element("record")
+                .addContent(new Element("metadataid").setText(id))
+                .addContent(new Element("userid").setText("" + user.getId()))
+                .addContent(new Element("name").setText(user.getName()))
+                .addContent(new Element("surname").setText(user.getSurname()))
+                .addContent(new Element("email").setText(user.getEmail()))
+                .addContent(new Element("email").setText(user.getEmail()))
         );
         //
         String now = Xml.getString(xml);
@@ -792,5 +786,12 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             return true;
         else
             return false;
+    }
+
+    // SvnTask holds information used to commit changes to a metadata record
+    private static class SvnTask {
+        Set<String> ids; // metadata ids
+        String sessionLogMessage; // session log message for svn commit
+        // Map<String,String> props; // properties to set on metadata record
     }
 }

@@ -24,6 +24,7 @@
 package org.fao.geonet.domain;
 
 import java.io.Serializable;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.AttributeOverride;
@@ -32,9 +33,8 @@ import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 
 /**
- * Encapsulates the metadata about a metadata document. (title, rating, schema etc...) This is a JPA Embeddable object that is embedded
- * into
- * a {@link Metadata} Entity
+ * Encapsulates the metadata about a metadata document. (title, rating, schema etc...) This is a JPA
+ * Embeddable object that is embedded into a {@link Metadata} Entity
  *
  * @author Jesse
  */
@@ -56,6 +56,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Get title of metadata.
+     *
      * @deprecated
      */
     @Column
@@ -64,12 +65,12 @@ public class MetadataDataInfo implements Serializable {
     }
 
     /**
-     * Set title of metadata. This only updates the database not the actual XML document. It is important that this value is retrieved
-     * from
-     * metadata document.
-     * @deprecated
+     * Set title of metadata. This only updates the database not the actual XML document. It is
+     * important that this value is retrieved from metadata document.
+     *
      * @param title new value.
      * @return this data info object
+     * @deprecated
      */
     public MetadataDataInfo setTitle(String title) {
         this._title = title;
@@ -77,11 +78,11 @@ public class MetadataDataInfo implements Serializable {
     }
 
     /**
-     * Get the "extra" data associates with the metadata.  This is situation specific for example it might provide extra
-     * parameters for searching for metadata.
+     * Get the "extra" data associates with the metadata.  This is situation specific for example it
+     * might provide extra parameters for searching for metadata.
      *
-     * This data is normally used for custom geonetwork applications which
-     * need this data for some application specific task.
+     * This data is normally used for custom geonetwork applications which need this data for some
+     * application specific task.
      */
     @Column
     public String getExtra() {
@@ -89,11 +90,11 @@ public class MetadataDataInfo implements Serializable {
     }
 
     /**
-     * Set the "extra" data associates with the metadata.  This is situation specific for example it might provide extra
-     * parameters for searching for metadata.
+     * Set the "extra" data associates with the metadata.  This is situation specific for example it
+     * might provide extra parameters for searching for metadata.
      *
-     * This data is normally used for custom geonetwork applications which
-     * need this data for some application specific task.
+     * This data is normally used for custom geonetwork applications which need this data for some
+     * application specific task.
      *
      * @param extra new value.
      * @return this data info object
@@ -123,8 +124,9 @@ public class MetadataDataInfo implements Serializable {
     }
 
     /**
-     * For backwards compatibility we need the istemplate column to be either 'n' or 'y'. This is a workaround to allow this until future
-     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     * For backwards compatibility we need the istemplate column to be either 'n' or 'y'. This is a
+     * workaround to allow this until future versions of JPA that allow different ways of
+     * controlling how types are mapped to the database.
      */
     @Column(name = "isTemplate", length = 1, nullable = false)
     protected char getType_JPAWorkaround() {
@@ -185,7 +187,8 @@ public class MetadataDataInfo implements Serializable {
     }
 
     /**
-     * Get the doctype to use for validation of the metadata. This will be a reference to a dtd typically.
+     * Get the doctype to use for validation of the metadata. This will be a reference to a dtd
+     * typically.
      *
      * @return the doctype to use for validation of the metadata
      */
@@ -195,7 +198,8 @@ public class MetadataDataInfo implements Serializable {
     }
 
     /**
-     * Set the doctype to use for validation of the metadata. This will be a reference to a dtd typically.
+     * Set the doctype to use for validation of the metadata. This will be a reference to a dtd
+     * typically.
      *
      * @param doctype the doctype to use for validation of the metadata
      * @return this data info object
@@ -206,10 +210,9 @@ public class MetadataDataInfo implements Serializable {
     }
 
     /**
-     * Get the display order. A hint for ordering templates when displayed in a list. May also be used when displaying sub-templates.
-     * <p>
-     * Should be non-negative and lower number indicates higher/earlier in the list.
-     * </p>
+     * Get the display order. A hint for ordering templates when displayed in a list. May also be
+     * used when displaying sub-templates. <p> Should be non-negative and lower number indicates
+     * higher/earlier in the list. </p>
      *
      * @return the display order
      */
@@ -219,10 +222,9 @@ public class MetadataDataInfo implements Serializable {
     }
 
     /**
-     * Set the display order. A hint for ordering templates when displayed in a list. May also be used when displaying sub-templates.
-     * <p>
-     * Should be non-negative and lower number indicates higher/earlier in the list.
-     * </p>
+     * Set the display order. A hint for ordering templates when displayed in a list. May also be
+     * used when displaying sub-templates. <p> Should be non-negative and lower number indicates
+     * higher/earlier in the list. </p>
      *
      * @param displayOrder the display orderthe display order
      * @return this data info object

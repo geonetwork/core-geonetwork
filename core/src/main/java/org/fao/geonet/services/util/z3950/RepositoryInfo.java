@@ -21,6 +21,7 @@
 package org.fao.geonet.services.util.z3950;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -35,89 +36,84 @@ import java.util.Iterator;
 import java.util.Vector;
 
 /**
- * helperclass to get a list of remote searchable collections from the 
- * repositories in the JZkit configuration
+ * helperclass to get a list of remote searchable collections from the repositories in the JZkit
+ * configuration
  *
  * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
  * @author 'Simon Pigot'
- *
  */
 public class RepositoryInfo {
-       
-       private String dn;
-       private String name;
-			 private String code;
-			 private String serverCode;
-			 private String classname;
-       
-       private RepositoryInfo(String dn, String name, String code, String serverCode, String classname) {
-               this.name=name;
-               this.dn=dn;
-							 this.code=code;
-							 this.serverCode=serverCode;
-							 this.classname = classname;
-       }
-       
-       public String getDn() {
-               return dn;
-       }
 
-       public String getName() {
-               return name;
-       }
-       
-       public String getCode() {
-               return code;
-       }
-       
-       public String getServerCode() {
-               return serverCode;
-       }
-       
-       public String getClassName() {
-               return classname;
-       }
-       
-       public String toString() {
-               return getName()+":"+getDn()+":"+getCode()+":"+getServerCode()+":"+getClassName();
-       }
-       
-       
-	/**
-	 * returns the list of repositories that are configured in JZkit
-   * @param srvContext
-   * @return
-   * @throws org.jzkit.configuration.api.ConfigurationException
-   */
-	public static Collection<RepositoryInfo> getRepositories(ServiceContext srvContext) throws ConfigurationException {
+    private String dn;
+    private String name;
+    private String code;
+    private String serverCode;
+    private String classname;
 
-   	GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-		ApplicationContext app_context = gc.getApplicationContext();
-		Vector<RepositoryInfo> ret = new Vector<RepositoryInfo>();
-		
-		if (app_context != null) {
-			Configuration conf = (Configuration)app_context.getBean("JZKitConfig");
-			@SuppressWarnings("unchecked")
+    private RepositoryInfo(String dn, String name, String code, String serverCode, String classname) {
+        this.name = name;
+        this.dn = dn;
+        this.code = code;
+        this.serverCode = serverCode;
+        this.classname = classname;
+    }
+
+    /**
+     * returns the list of repositories that are configured in JZkit
+     */
+    public static Collection<RepositoryInfo> getRepositories(ServiceContext srvContext) throws ConfigurationException {
+
+        GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+        ApplicationContext app_context = gc.getApplicationContext();
+        Vector<RepositoryInfo> ret = new Vector<RepositoryInfo>();
+
+        if (app_context != null) {
+            Configuration conf = (Configuration) app_context.getBean("JZKitConfig");
+            @SuppressWarnings("unchecked")
             Iterator<SearchServiceDescriptionDBO> it = conf.enumerateRepositories();
-               
-			while (it.hasNext()) {
-	   		SearchServiceDescriptionDBO ssd = it.next();
-	     	Collection<CollectionDescriptionDBO> col = ssd.getCollections();
-				if (col.size()>0) {
-					Iterator<CollectionDescriptionDBO> colit = col.iterator();
-                    if(Log.isDebugEnabled(Geonet.Z3950))
-                        Log.debug(Geonet.Z3950, "Service "+ssd.getServiceName()+" has "+col.size()+" collections "+colit.hasNext());
-					while (colit.hasNext()) {
-						CollectionDescriptionDBO oneCol = colit.next();
-                        if(Log.isDebugEnabled(Geonet.Z3950))
-                            Log.debug(Geonet.Z3950, "Adding collection "+oneCol.getCode()+":"+oneCol.getCollectionName()+":"+oneCol.getLocalId()+":"+ssd.getCode());
-						ret.add( new RepositoryInfo(  oneCol.getCode() , oneCol.getCollectionName(), oneCol.getLocalId(), ssd.getCode(), ssd.getClassName()) ) ;                               
-					}
-				}
-			}
-		}
-               
-		return ret;
-	}
+
+            while (it.hasNext()) {
+                SearchServiceDescriptionDBO ssd = it.next();
+                Collection<CollectionDescriptionDBO> col = ssd.getCollections();
+                if (col.size() > 0) {
+                    Iterator<CollectionDescriptionDBO> colit = col.iterator();
+                    if (Log.isDebugEnabled(Geonet.Z3950))
+                        Log.debug(Geonet.Z3950, "Service " + ssd.getServiceName() + " has " + col.size() + " collections " + colit.hasNext());
+                    while (colit.hasNext()) {
+                        CollectionDescriptionDBO oneCol = colit.next();
+                        if (Log.isDebugEnabled(Geonet.Z3950))
+                            Log.debug(Geonet.Z3950, "Adding collection " + oneCol.getCode() + ":" + oneCol.getCollectionName() + ":" + oneCol.getLocalId() + ":" + ssd.getCode());
+                        ret.add(new RepositoryInfo(oneCol.getCode(), oneCol.getCollectionName(), oneCol.getLocalId(), ssd.getCode(), ssd.getClassName()));
+                    }
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    public String getDn() {
+        return dn;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getServerCode() {
+        return serverCode;
+    }
+
+    public String getClassName() {
+        return classname;
+    }
+
+    public String toString() {
+        return getName() + ":" + getDn() + ":" + getCode() + ":" + getServerCode() + ":" + getClassName();
+    }
 
 }

@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -42,19 +43,19 @@ import java.util.List;
 
 //=============================================================================
 
-/** Given a metadata id returns all associated categories. Called by the
- * metadata.category service
+/**
+ * Given a metadata id returns all associated categories. Called by the metadata.category service
  */
 
-public class GetCategories implements Service
-{
+public class GetCategories implements Service {
     //--------------------------------------------------------------------------
     //---
     //--- Init
     //---
     //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
     //--------------------------------------------------------------------------
     //---
@@ -62,8 +63,7 @@ public class GetCategories implements Service
     //---
     //--------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         AccessManager am = context.getBean(AccessManager.class);
 
         String id = Utils.getIdentifierFromParameters(params, context);
@@ -115,9 +115,9 @@ public class GetCategories implements Service
         //--- put all together
 
         Element elRes = new Element(Jeeves.Elem.RESPONSE)
-                .addContent(new Element(Geonet.Elem.ID).setText(id))
-                .addContent(elCateg)
-                .addContent(isOwner);
+            .addContent(new Element(Geonet.Elem.ID).setText(id))
+            .addContent(elCateg)
+            .addContent(isOwner);
 
         return elRes;
     }

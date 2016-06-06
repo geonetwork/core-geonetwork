@@ -102,20 +102,20 @@ public class CrsApi {
         @RequestParam(
             required = false,
             defaultValue = "")
-            final String q,
+        final String q,
         @ApiParam(
             value = "Type of CRS",
             required = false)
         @RequestParam(
             required = false)
-            final CrsType type,
+        final CrsType type,
         @ApiParam(
             value = "Number of results. Default is: " + DEFAULT_PARAMS_ROWS,
             required = false)
         @RequestParam(
             required = false,
             defaultValue = DEFAULT_PARAMS_ROWS)
-            final int rows)
+        final int rows)
         throws Exception {
         List<Crs> crsList = CrsUtils.search(q.split(" "), type, rows);
         return new ResponseEntity<>(crsList, HttpStatus.OK);
@@ -142,7 +142,7 @@ public class CrsApi {
             value = "CRS identifier",
             required = true)
         @PathVariable
-            final String id)
+        final String id)
         throws Exception {
         Crs crs = CrsUtils.getById(id);
         if (crs != null) {

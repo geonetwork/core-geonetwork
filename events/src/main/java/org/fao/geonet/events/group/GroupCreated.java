@@ -28,9 +28,8 @@ import org.springframework.context.ApplicationEvent;
 
 /**
  * Event launched when a group is created on the database
- * 
- * @author delawen
  *
+ * @author delawen
  */
 public class GroupCreated extends ApplicationEvent {
 
@@ -49,5 +48,5 @@ public class GroupCreated extends ApplicationEvent {
     public Group getGroup() {
         return g;
     }
-    
+
 }

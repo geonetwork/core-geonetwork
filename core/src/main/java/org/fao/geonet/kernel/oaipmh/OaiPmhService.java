@@ -24,18 +24,20 @@
 package org.fao.geonet.kernel.oaipmh;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.oaipmh.requests.AbstractRequest;
 import org.fao.oaipmh.responses.AbstractResponse;
 
 //=============================================================================
 
-public interface OaiPmhService
-{
-	public String getVerb();
+public interface OaiPmhService {
+    public String getVerb();
 
-	/** Executes the service on given input request */
-	public AbstractResponse execute(AbstractRequest request, ServiceContext context)
-		throws Exception;
+    /**
+     * Executes the service on given input request
+     */
+    public AbstractResponse execute(AbstractRequest request, ServiceContext context)
+        throws Exception;
 }
 
 //=============================================================================

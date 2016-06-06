@@ -31,6 +31,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import java.util.List;
 
 import static org.fao.geonet.domain.Constants.toYN_EnabledChar;
@@ -38,10 +39,8 @@ import static org.fao.geonet.domain.Constants.toYN_EnabledChar;
 /**
  * Implementation for MetadataNotifierRepositoryCustom methods.
  * <p/>
- * User: Jesse
- * Date: 8/28/13
- * Time: 7:31 AM
- * To change this template use File | Settings | File Templates.
+ * User: Jesse Date: 8/28/13 Time: 7:31 AM To change this template use File | Settings | File
+ * Templates.
  */
 public class MetadataNotifierRepositoryImpl implements MetadataNotifierRepositoryCustom {
 

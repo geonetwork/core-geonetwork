@@ -24,11 +24,13 @@ package org.fao.geonet.kernel.search.spatial;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.TopologyException;
 import com.vividsolutions.jts.index.SpatialIndex;
+
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.lucene.document.Document;
@@ -72,28 +74,27 @@ import java.util.Set;
 
 import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.SPATIAL_FILTER_JCS;
 
-public abstract class SpatialFilter extends Filter
-{
-	private static final Geometry WORLD_BOUNDS;
-	private static final int MAX_FIDS_PER_QUERY = 5000;
-	static {
-		GeometryFactory fac = new GeometryFactory();
-		WORLD_BOUNDS = fac.toGeometry(new Envelope(-180,180,-90,90));
-	}
-	protected Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor;
-    protected final Geometry      _geom;
+public abstract class SpatialFilter extends Filter {
+    private static final Geometry WORLD_BOUNDS;
+    private static final int MAX_FIDS_PER_QUERY = 5000;
 
-    protected final FilterFactory2  _filterFactory;
-    protected       Query                 _query;
-    private org.opengis.filter.Filter _spatialFilter;
+    static {
+        GeometryFactory fac = new GeometryFactory();
+        WORLD_BOUNDS = fac.toGeometry(new Envelope(-180, 180, -90, 90));
+    }
+
+    protected final Geometry _geom;
+    protected final FilterFactory2 _filterFactory;
     protected final Set<String> _fieldsToLoad;
+    protected Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor;
+    protected Query _query;
+    private org.opengis.filter.Filter _spatialFilter;
     private Map<String, FeatureId> _unrefinedMatches;
     private boolean warned = false;
-	private int _numHits;
-	private int _hits = 0;
+    private int _numHits;
+    private int _hits = 0;
 
-    protected SpatialFilter(Query query, int numHits, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
-    {
+    protected SpatialFilter(Query query, int numHits, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException {
         _query = query;
         _geom = geom;
         _numHits = numHits;
@@ -103,9 +104,18 @@ public abstract class SpatialFilter extends Filter
         _fieldsToLoad = Collections.singleton("_id");
     }
 
-    protected SpatialFilter(Query query, int numHits, Envelope bounds, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
-    {
+    protected SpatialFilter(Query query, int numHits, Envelope bounds, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException {
         this(query, numHits, JTS.toGeometry(bounds), sourceAccessor);
+    }
+
+    static JeevesJCS getJCSCache() throws Error {
+        JeevesJCS jcs;
+        try {
+            jcs = JeevesJCS.getInstance(SPATIAL_FILTER_JCS);
+        } catch (CacheException e) {
+            throw new Error(e);
+        }
+        return jcs;
     }
 
     public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
@@ -113,9 +123,9 @@ public abstract class SpatialFilter extends Filter
 
         final Map<String, FeatureId> unrefinedSpatialMatches = unrefinedSpatialMatches();
         final Set<FeatureId> matches = new HashSet<>();
-        final Multimap<FeatureId,Integer> docIndexLookup = HashMultimap.create();
-        
-        if(unrefinedSpatialMatches.isEmpty() || _hits >= _numHits) return bits;
+        final Multimap<FeatureId, Integer> docIndexLookup = HashMultimap.create();
+
+        if (unrefinedSpatialMatches.isEmpty() || _hits >= _numHits) return bits;
 
         new IndexSearcher(context.reader()).search(_query, new Collector() {
             private int docBase;
@@ -153,111 +163,97 @@ public abstract class SpatialFilter extends Filter
                 this.reader = context.reader();
             }
         });
-        
-        if( matches.isEmpty() ){
+
+        if (matches.isEmpty()) {
             return bits;
         } else {
-            return applySpatialFilter(matches,docIndexLookup,bits);
+            return applySpatialFilter(matches, docIndexLookup, bits);
         }
     }
 
-    private OpenBitSet applySpatialFilter(Set<FeatureId> matches, Multimap<FeatureId, Integer> docIndexLookup, OpenBitSet bits) throws IOException
-    {
+    private OpenBitSet applySpatialFilter(Set<FeatureId> matches, Multimap<FeatureId, Integer> docIndexLookup, OpenBitSet bits) throws IOException {
 
         JeevesJCS jcs = getJCSCache();
         processCachedFeatures(jcs, matches, docIndexLookup, bits);
 
         while (!matches.isEmpty()) {
-        	Id fidFilter;
-        	if(matches.size() > MAX_FIDS_PER_QUERY) {
-        		FeatureId[] subset = new FeatureId[MAX_FIDS_PER_QUERY];
-        		int i = 0;
-        		Iterator<FeatureId> iter = matches.iterator();
-        		while(iter.hasNext() && i < MAX_FIDS_PER_QUERY) {
-        			subset[i] = iter.next();
-        			iter.remove();
-							i++;
-        		}
-        		fidFilter = _filterFactory.id(subset);
-	        } else {
-	        	fidFilter = _filterFactory.id(matches);
-	        	matches = Collections.emptySet();
-	        }
-	         
-	        FeatureSource<SimpleFeatureType, SimpleFeature> _featureSource = sourceAccessor.one();
-	        String ftn = _featureSource.getSchema().getName().getLocalPart();
-	        String[] geomAtt = {_featureSource.getSchema().getGeometryDescriptor().getLocalName()};
-	        FeatureCollection<SimpleFeatureType, SimpleFeature> features = _featureSource
-	                .getFeatures(new org.geotools.data.Query(ftn, fidFilter,geomAtt));
-	        FeatureIterator<SimpleFeature> iterator = features.features();
-	
-	        
-	        try {
-	            while (iterator.hasNext()) {
-	                SimpleFeature feature = iterator.next();
-	                FeatureId featureId = feature.getIdentifier();
-	                jcs.put(featureId.getID(), feature.getDefaultGeometry());
-	                if( evaluateFeature(feature) ){
-	                  for(int doc:docIndexLookup.get(featureId)) {
-	                      bits.set(doc);
-	                  }
-	                }
-	            }
-	        } catch (CacheException e) {
-	            throw new Error(e);
-	        } finally {
-	            iterator.close();
-	        }
+            Id fidFilter;
+            if (matches.size() > MAX_FIDS_PER_QUERY) {
+                FeatureId[] subset = new FeatureId[MAX_FIDS_PER_QUERY];
+                int i = 0;
+                Iterator<FeatureId> iter = matches.iterator();
+                while (iter.hasNext() && i < MAX_FIDS_PER_QUERY) {
+                    subset[i] = iter.next();
+                    iter.remove();
+                    i++;
+                }
+                fidFilter = _filterFactory.id(subset);
+            } else {
+                fidFilter = _filterFactory.id(matches);
+                matches = Collections.emptySet();
+            }
+
+            FeatureSource<SimpleFeatureType, SimpleFeature> _featureSource = sourceAccessor.one();
+            String ftn = _featureSource.getSchema().getName().getLocalPart();
+            String[] geomAtt = {_featureSource.getSchema().getGeometryDescriptor().getLocalName()};
+            FeatureCollection<SimpleFeatureType, SimpleFeature> features = _featureSource
+                .getFeatures(new org.geotools.data.Query(ftn, fidFilter, geomAtt));
+            FeatureIterator<SimpleFeature> iterator = features.features();
+
+
+            try {
+                while (iterator.hasNext()) {
+                    SimpleFeature feature = iterator.next();
+                    FeatureId featureId = feature.getIdentifier();
+                    jcs.put(featureId.getID(), feature.getDefaultGeometry());
+                    if (evaluateFeature(feature)) {
+                        for (int doc : docIndexLookup.get(featureId)) {
+                            bits.set(doc);
+                        }
+                    }
+                }
+            } catch (CacheException e) {
+                throw new Error(e);
+            } finally {
+                iterator.close();
+            }
         }
         return bits;
     }
 
-	static JeevesJCS getJCSCache() throws Error {
-	    JeevesJCS jcs;
+    private boolean evaluateFeature(SimpleFeature feature) {
         try {
-            jcs = JeevesJCS.getInstance(SPATIAL_FILTER_JCS);
-        } catch (CacheException e) {
-            throw new Error(e);
-        }
-	    return jcs;
-    }
-
-    private boolean evaluateFeature(SimpleFeature feature)
-    {
-        try{
             return getFilter().evaluate(feature);
-        }catch ( TopologyException e){
-            if( !warned ){
-                warned =true;
-                Log.warning(Geonet.SPATIAL, e.getMessage()+" errors are occuring with filter: "+getFilter());
+        } catch (TopologyException e) {
+            if (!warned) {
+                warned = true;
+                Log.warning(Geonet.SPATIAL, e.getMessage() + " errors are occuring with filter: " + getFilter());
             }
-            if(Log.isDebugEnabled(Geonet.SPATIAL))
-                Log.debug(Geonet.SPATIAL, e.getMessage()+": occurred during a search: "+getFilter()+" on feature: "+feature.getDefaultGeometry());
+            if (Log.isDebugEnabled(Geonet.SPATIAL))
+                Log.debug(Geonet.SPATIAL, e.getMessage() + ": occurred during a search: " + getFilter() + " on feature: " + feature.getDefaultGeometry());
             return false;
         }
     }
 
-    private void processCachedFeatures(GroupCacheAccess jcs, Set<FeatureId> matches, Multimap<FeatureId, Integer> docIndexLookup, OpenBitSet bits)
-    {
-        for(java.util.Iterator<FeatureId> iter=matches.iterator();iter.hasNext();){
+    private void processCachedFeatures(GroupCacheAccess jcs, Set<FeatureId> matches, Multimap<FeatureId, Integer> docIndexLookup, OpenBitSet bits) {
+        for (java.util.Iterator<FeatureId> iter = matches.iterator(); iter.hasNext(); ) {
             FeatureId id = iter.next();
-          Geometry geom = (Geometry) jcs.get(id.getID());
-            if( geom!=null ){
+            Geometry geom = (Geometry) jcs.get(id.getID());
+            if (geom != null) {
                 iter.remove();
                 final SimpleFeatureBuilder simpleFeatureBuilder = new SimpleFeatureBuilder(this.sourceAccessor.one().getSchema());
                 simpleFeatureBuilder.set(this.sourceAccessor.one().getSchema().getGeometryDescriptor().getName(), geom);
                 final SimpleFeature simpleFeature = simpleFeatureBuilder.buildFeature(id.getID());
-                if( evaluateFeature(simpleFeature) ){
-                  for(int doc:docIndexLookup.get(id)) {
-                      bits.set(doc);
-                  }
+                if (evaluateFeature(simpleFeature)) {
+                    for (int doc : docIndexLookup.get(id)) {
+                        bits.set(doc);
+                    }
                 }
             }
         }
     }
 
-    private synchronized org.opengis.filter.Filter getFilter()
-    {
+    private synchronized org.opengis.filter.Filter getFilter() {
         if (_spatialFilter == null) {
             _spatialFilter = createFilter(sourceAccessor.one());
         }
@@ -267,11 +263,11 @@ public abstract class SpatialFilter extends Filter
 
     /**
      * Returns all the FeatureId and ID attributes based on the query against the spatial index
-     * 
+     *
      * @return all the FeatureId and ID attributes based on the query against the spatial index
      */
-    protected synchronized Map<String,FeatureId> unrefinedSpatialMatches(){
-        if(_unrefinedMatches==null){
+    protected synchronized Map<String, FeatureId> unrefinedSpatialMatches() {
+        if (_unrefinedMatches == null) {
             Geometry geom = null;
 
             // _index.query returns geometries that intersect with provided envelope. To use later a spatial filter that
@@ -291,7 +287,7 @@ public abstract class SpatialFilter extends Filter
 
             SpatialIndex spatialIndex = sourceAccessor.two();
             @SuppressWarnings("unchecked")
-            List<Pair<FeatureId,String>> fids = spatialIndex.query(geom.getEnvelopeInternal());
+            List<Pair<FeatureId, String>> fids = spatialIndex.query(geom.getEnvelopeInternal());
             _unrefinedMatches = new HashMap<>();
             for (Pair<FeatureId, String> match : fids) {
                 _unrefinedMatches.put(match.two(), match.one());
@@ -299,24 +295,22 @@ public abstract class SpatialFilter extends Filter
         }
         return _unrefinedMatches;
     }
-    
-    protected org.opengis.filter.Filter createFilter(FeatureSource<SimpleFeatureType, SimpleFeature> source)
-    {
+
+    protected org.opengis.filter.Filter createFilter(FeatureSource<SimpleFeatureType, SimpleFeature> source) {
         String geomAttName = source.getSchema().getGeometryDescriptor()
-                .getLocalName();
+            .getLocalName();
         PropertyName geomPropertyName = _filterFactory.property(geomAttName);
 
         Literal geomExpression = _filterFactory.literal(_geom);
         org.opengis.filter.Filter filter = createGeomFilter(_filterFactory,
-                geomPropertyName, geomExpression);
+            geomPropertyName, geomExpression);
         return filter;
     }
 
     public org.opengis.filter.Filter createGeomFilter(FilterFactory2 filterFactory,
-            PropertyName geomPropertyName, Literal geomExpression)
-    {
+                                                      PropertyName geomPropertyName, Literal geomExpression) {
         throw new UnsupportedOperationException(
-                "createGeomFilter must be overridden ");
+            "createGeomFilter must be overridden ");
     }
 
     public Query getQuery() {

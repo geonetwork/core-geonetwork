@@ -22,8 +22,8 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>geonetwork</artifactId>
@@ -35,14 +35,14 @@
   <name>GeoNetwork schema plugins</name>
   <packaging>pom</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-        </dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+    </dependency>
+  </dependencies>
 
-    <modules>
+  <modules>
     <module>schema-core</module>
     <module>csw-record</module>
     <module>dublin-core</module>

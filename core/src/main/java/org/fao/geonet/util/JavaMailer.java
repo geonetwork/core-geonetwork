@@ -32,15 +32,18 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+
 import java.util.Properties;
 
 /**
- * Mail utility that use standard Java classes, unlike org.fao.geonet.util.MailSender which uses Apache Commons mail.
+ * Mail utility that use standard Java classes, unlike org.fao.geonet.util.MailSender which uses
+ * Apache Commons mail.
  *
- * Another difference is that this class does not send an email in a separate thread which makes it easier to handle
- * exceptions.
+ * Another difference is that this class does not send an email in a separate thread which makes it
+ * easier to handle exceptions.
  *
- * Another difference is that this class is capable of sending multipart email with text, html, images and attachments.
+ * Another difference is that this class is capable of sending multipart email with text, html,
+ * images and attachments.
  *
  * @author heikki doeleman
  */
@@ -56,72 +59,61 @@ public class JavaMailer {
     private String password = null;
 
     /**
-     * Constructor establishes a connection to your smtp server. If that fails, ExceptionInInitializerError is thrown; make sure to catch it if you
-     * want to handle it.
-     * 
-     * @param smtpHost
-     * @param smtpPort
-     * @param authentication
-     * @param username
-     * @param password
-     *
-     * @throws ExceptionInInitializerError
+     * Constructor establishes a connection to your smtp server. If that fails,
+     * ExceptionInInitializerError is thrown; make sure to catch it if you want to handle it.
      */
     public JavaMailer(String smtpHost, String smtpPort, boolean authentication, String username, String password) {
-    	try {
+        try {
             props = new Properties();
             // If true, attempt to authenticate the user using the AUTH command. Defaults to false.
-	        props.put("mail.smtps.auth", String.valueOf(authentication));
+            props.put("mail.smtps.auth", String.valueOf(authentication));
             this.authentication = authentication;
             // The SMTP server
             props.put("mail.smtp.host", smtpHost);
             // The SMTP server port to connect to, if the connect() method doesn't explicitly specify one. Defaults to 25.
-	        props.put("mail.smtp.port", smtpPort);
+            props.put("mail.smtp.port", smtpPort);
             // If true, enables the use of the STARTTLS command (if supported by the server) to switch the connection to a TLS-protected connection before issuing any login
             // commands. Note that an appropriate trust store must configured so that the client will trust the server's certificate. Defaults to false.
-	        props.put("mail.smtp.starttls.enable","true");
+            props.put("mail.smtp.starttls.enable", "true");
             // Socket connection timeout value in milliseconds. Default is infinite timeout.
-            props.put("mail.smtp.connectiontimeout","10000");
+            props.put("mail.smtp.connectiontimeout", "10000");
             // Socket I/O timeout value in milliseconds. Default is infinite timeout.
-            props.put("mail.smtp.timeout","10000");
+            props.put("mail.smtp.timeout", "10000");
             // If set to true, and a message has some valid and some invalid addresses, send the message anyway, reporting the partial failure with a SendFailedException. If
             // set to false (the default), the message is not sent to any of the recipients if there is an invalid recipient address.
-            props.put("mail.smtp.sendpartial","true");
-	        mailSession = Session.getDefaultInstance(props, null);
-	        // for SSL
+            props.put("mail.smtp.sendpartial", "true");
+            mailSession = Session.getDefaultInstance(props, null);
+            // for SSL
             // transport = mailSession.getTransport("smtps");
             transport = mailSession.getTransport("smtp");
             this.smtpHost = smtpHost;
             this.smtpPort = Integer.parseInt(smtpPort);
             this.username = username;
             this.password = password;
-    	}
-    	catch(NoSuchProviderException x) {
-    		throw new ExceptionInInitializerError(x);
-    	}
+        } catch (NoSuchProviderException x) {
+            throw new ExceptionInInitializerError(x);
+        }
     }
 
-	/**
-	 * Sends multipart email.
+    /**
+     * Sends multipart email.
      *
-     * @param subject the email subject
-     * @param text the content of the body for text mail
-     * @param html the content of the body for html mail
-     * @param sender the email sender
+     * @param subject    the email subject
+     * @param text       the content of the body for text mail
+     * @param html       the content of the body for html mail
+     * @param sender     the email sender
      * @param recipients the email recipients
-	 *
-	 * @throws javax.mail.MessagingException
-	 */
-	public void send(String subject, String text, String html, String sender, String... recipients) throws MessagingException {
+     */
+    public void send(String subject, String text, String html, String sender, String... recipients) throws MessagingException {
         try {
             System.out.println("mailer start");
             MimeMessage message = new MimeMessage(mailSession);
             message.setSubject(subject);
             message.setFrom(new InternetAddress(sender));
-            if(recipients == null) {
+            if (recipients == null) {
                 throw new MessagingException("No recipients specified to send e-mail, aborting.");
             }
-            for(int i = 0; i < recipients.length; i++) {
+            for (int i = 0; i < recipients.length; i++) {
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipients[i]));
             }
 
@@ -139,14 +131,14 @@ public class JavaMailer {
             mpRoot.addBodyPart(contentPartRoot);
 
             // Add text
-            if(text != null && text.length() > 0) {
+            if (text != null && text.length() > 0) {
                 MimeBodyPart mbp1 = new MimeBodyPart();
                 mbp1.setText(text);
                 mpContent.addBodyPart(mbp1);
             }
 
             // Add html
-            if(html != null && html.length() > 0) {
+            if (html != null && html.length() > 0) {
                 MimeBodyPart messageBodyPart = new MimeBodyPart();
                 messageBodyPart.setContent(html, "text/html");
                 mpContent.addBodyPart(messageBodyPart);
@@ -172,11 +164,10 @@ public class JavaMailer {
             String username = this.username;
             String password = this.password;
             int smtpPort = this.smtpPort;
-            if(this.authentication) {
+            if (this.authentication) {
                 System.out.println("Using authentication");
                 transport.connect(host, smtpPort, username, password);
-            }
-            else {
+            } else {
                 System.out.println("Not using authentication");
                 transport.connect(host, smtpPort, null, null);
             }
@@ -184,11 +175,10 @@ public class JavaMailer {
             Address[] addresses = new Address[message.getRecipients(Message.RecipientType.TO).length];
             System.arraycopy(message.getRecipients(Message.RecipientType.TO), 0, addresses, 0, message.getRecipients(Message.RecipientType.TO).length);
             transport.sendMessage(message, addresses);
-        }
-        finally {
+        } finally {
             System.out.println("mailer end");
             transport.close();
         }
-	}
+    }
 
 }

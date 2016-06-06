@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import com.github.sardine.DavResource;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -34,8 +35,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static org.junit.Assert.*;
 
 /**
- * Some tests for {@link org.fao.geonet.kernel.harvest.harvester.webdav.WebDavRetriever}
- * Created by Jesse on 1/24/14.
+ * Some tests for {@link org.fao.geonet.kernel.harvest.harvester.webdav.WebDavRetriever} Created by
+ * Jesse on 1/24/14.
  */
 public class WebDavRetrieverTest {
     @Test

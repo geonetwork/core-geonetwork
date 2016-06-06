@@ -91,16 +91,16 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
     @Test
     public void testFindByGroupIdAndMetadataIdAndOperationId() {
         OperationAllowed opAllowedFound = _opAllowRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(_intranetGroup.getId(),
-                _md1.getId(),
-                _viewOp.getId());
+            _md1.getId(),
+            _viewOp.getId());
         assertEquals(_opAllowed4.getId(), opAllowedFound.getId());
 
         opAllowedFound = _opAllowRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(_allGroup.getId(), _md1.getId(),
-                _viewOp.getId());
+            _viewOp.getId());
         assertEquals(_opAllowed1.getId(), opAllowedFound.getId());
 
         opAllowedFound = _opAllowRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(_allGroup.getId(), _md1.getId(),
-                Integer.MAX_VALUE / 2);
+            Integer.MAX_VALUE / 2);
         assertNull(opAllowedFound);
     }
 
@@ -155,7 +155,7 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
     @Test
     public void testFindAllIds() {
         List<Integer> opAllowedFound = _opAllowRepo.findAllIds(OperationAllowedSpecs.hasOperationId(_viewOp.getId()),
-                OperationAllowedId_.metadataId);
+            OperationAllowedId_.metadataId);
         assertEquals(1, opAllowedFound.size());
         assertTrue(opAllowedFound.contains(_md1.getId()));
     }

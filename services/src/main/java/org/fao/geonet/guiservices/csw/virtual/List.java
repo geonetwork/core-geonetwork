@@ -36,12 +36,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller("admin.config.virtualcsw.list")
 public class List {
     @RequestMapping(value = "/{lang}/admin.config.virtualcsw.list", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
     CswVirtualServiceListResponse exec() throws Exception {
         ServiceRepository serviceRepository = ApplicationContextHolder.get().getBean(ServiceRepository.class);
         CswVirtualServiceListResponse cswVirtualList =
-                new CswVirtualServiceListResponse(serviceRepository.findAll());
+            new CswVirtualServiceListResponse(serviceRepository.findAll());
 
         return cswVirtualList;
     }

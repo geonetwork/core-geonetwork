@@ -24,6 +24,7 @@
 package org.fao.geonet.lib;
 
 import jeeves.server.overrides.ConfigurationOverrides;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.IO;
 
@@ -36,136 +37,121 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
 import javax.servlet.ServletContext;
 
 //=============================================================================
 
-public class TextLib
-{
-	private static final Random RANDOM = new Random();
+public class TextLib {
+    private static final Random RANDOM = new Random();
 
     //---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public List<String> load(ServletContext servletContext, Path appPath, Path file) throws IOException
-	{
-		return load(servletContext, appPath, file, "ISO-8859-1");
-	}
+    public List<String> load(ServletContext servletContext, Path appPath, Path file) throws IOException {
+        return load(servletContext, appPath, file, "ISO-8859-1");
+    }
 
-	public List<String> load(ServletContext servletContext, Path appPath, Path file, String encoding) throws IOException
-	{
+    public List<String> load(ServletContext servletContext, Path appPath, Path file, String encoding) throws IOException {
         BufferedReader ir = IO.newBufferedReader(file, Charset.forName(encoding));
 
-		return ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(file.toString(), servletContext, appPath, ir);
-	}
-	
-	//---------------------------------------------------------------------------
+        return ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(file.toString(), servletContext, appPath, ir);
+    }
 
-	public void save(Path file, List<String> lines) throws IOException
-	{
-		try (BufferedWriter ow = Files.newBufferedWriter(file, Charset.forName("ISO-8859-1"))) {
-			for (String line : lines)
-			{
-				ow.write(line);
-				ow.newLine();
-			}
-		}
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public void save(Path file, List<String> lines) throws IOException {
+        try (BufferedWriter ow = Files.newBufferedWriter(file, Charset.forName("ISO-8859-1"))) {
+            for (String line : lines) {
+                ow.write(line);
+                ow.newLine();
+            }
+        }
+    }
 
-	public String getProperty(List<String> lines, String name)
-	{
-		for (String line : lines)
-			if (!line.startsWith("#"))
-			{
-				int pos = line.indexOf("=");
+    //---------------------------------------------------------------------------
 
-				if (pos != -1)
-				{
-					String curName  = line.substring(0, pos).trim();
-					String curValue = line.substring(pos +1).trim();
+    public String getProperty(List<String> lines, String name) {
+        for (String line : lines)
+            if (!line.startsWith("#")) {
+                int pos = line.indexOf("=");
 
-					if (name.equals(curName))
-						return curValue;
-				}
-			}
+                if (pos != -1) {
+                    String curName = line.substring(0, pos).trim();
+                    String curValue = line.substring(pos + 1).trim();
 
-		return null;
-	}
+                    if (name.equals(curName))
+                        return curValue;
+                }
+            }
 
-	//---------------------------------------------------------------------------
+        return null;
+    }
 
-	public void setProperty(List<String> lines, String name, String value)
-	{
-		for (int i=0; i<lines.size(); i++)
-		{
-			String line = lines.get(i).trim();
-			int    pos  = line.indexOf('=');
+    //---------------------------------------------------------------------------
 
-			if (!line.startsWith("#") && pos != -1)
-			{
-				String curName = line.substring(0, pos).trim();
+    public void setProperty(List<String> lines, String name, String value) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i).trim();
+            int pos = line.indexOf('=');
 
-				if (name.equals(curName))
-				{
-					lines.set(i, name +"="+ value);
-					return;
-				}
-			}
-		}
+            if (!line.startsWith("#") && pos != -1) {
+                String curName = line.substring(0, pos).trim();
 
-		lines.add(name +"="+ value);
-	}
+                if (name.equals(curName)) {
+                    lines.set(i, name + "=" + value);
+                    return;
+                }
+            }
+        }
 
-	//---------------------------------------------------------------------------
+        lines.add(name + "=" + value);
+    }
 
-	public String getRandomString(int length)
-	{
-		StringBuffer sb = new StringBuffer();
+    //---------------------------------------------------------------------------
 
-		for (int i=0; i<length; i++)
-			sb.append(getRandomChar());
+    public String getRandomString(int length) {
+        StringBuffer sb = new StringBuffer();
 
-		return sb.toString();
-	}
+        for (int i = 0; i < length; i++)
+            sb.append(getRandomChar());
 
-	//---------------------------------------------------------------------------
+        return sb.toString();
+    }
 
-	public char getRandomChar()
-	{
-		int pos = RANDOM.nextInt() * 62;
+    //---------------------------------------------------------------------------
 
-		if (pos <26)
-			return (char) ('a' + pos);
+    public char getRandomChar() {
+        int pos = RANDOM.nextInt() * 62;
 
-		pos -= 26;
+        if (pos < 26)
+            return (char) ('a' + pos);
 
-		if (pos <26)
-			return (char) ('A' + pos);
+        pos -= 26;
 
-		pos -= 26;
+        if (pos < 26)
+            return (char) ('A' + pos);
 
-		return (char) ('0' + pos);
-	}
+        pos -= 26;
 
-	//---------------------------------------------------------------------------
+        return (char) ('0' + pos);
+    }
 
-	public void replace(List<String> lines, Map<String, ? extends Object> vars)
-	{
-		for (int i=0; i<lines.size(); i++)
-		{
-			String line = lines.get(i);
+    //---------------------------------------------------------------------------
 
-			for (Map.Entry<String, ? extends Object> entry : vars.entrySet())
-				line = Util.replaceString(line, entry.getKey(), entry.getValue().toString());
+    public void replace(List<String> lines, Map<String, ? extends Object> vars) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
 
-			lines.set(i, line);
-		}
-	}
+            for (Map.Entry<String, ? extends Object> entry : vars.entrySet())
+                line = Util.replaceString(line, entry.getKey(), entry.getValue().toString());
+
+            lines.set(i, line);
+        }
+    }
 }
 
 //=============================================================================

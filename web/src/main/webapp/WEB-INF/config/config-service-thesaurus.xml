@@ -41,17 +41,17 @@
       <class name=".services.thesaurus.Upload"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
+
     <service name="thesaurus.download">
       <documentation><![CDATA[
         Download a thesaurus.
-        
+
         ]]></documentation>
       <class name=".services.thesaurus.Download"/>
       <output file="true"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
+
     <service name="thesaurus.add.from.register">
       <documentation><![CDATA[
         TODO
@@ -59,7 +59,7 @@
       <class name=".services.thesaurus.AddRegister"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
+
     <service name="thesaurus.clear">
       <documentation><![CDATA[
         TODO
@@ -67,13 +67,12 @@
       <class name=".services.thesaurus.Clear"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
-    
-    
+
+
     <service name="thesaurus.update">
       <documentation><![CDATA[
         Create a new thesaurus.
-        
+
         Parameters:
         ```
         <request>
@@ -88,26 +87,26 @@
       <class name=".services.thesaurus.Add"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
+
     <service name="thesaurus.remove">
       <documentation><![CDATA[
         Remove a thesaurus.
-        
+
         Parameters are:
         * ref=local.theme.da
         ]]>
-        
+
       </documentation>
       <class name=".services.thesaurus.Delete"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
-    
+
+
     <service name="thesaurus.enable">
       <documentation><![CDATA[
-        Enable a thesaurus or not. If disabled, it will not be proposed 
+        Enable a thesaurus or not. If disabled, it will not be proposed
         in metadata editor.
-        
+
         Parameters are:
         * ref: The thesaurus identifier
         * activated: y or n
@@ -115,28 +114,28 @@
       <class name=".services.thesaurus.Activate"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
-	 	
+
+
     <service name="thesaurus.topconcept" type="xml">
       <documentation><![CDATA[
         Return top concept from a thesaurus.
-        
+
         Parameters are:
         * thesaurus: Name of the thesaurus to return top concept from.
         ]]>
       </documentation>
       <class name=".services.thesaurus.GetTopConcept"/>
       <output sheet="../xslt/services/thesaurus/to-jskos.xsl">
-        <call name="thesaurus" class=".services.thesaurus.GetList" />
+        <call name="thesaurus" class=".services.thesaurus.GetList"/>
       </output>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
+
     <service name="thesaurus.concept" type="xml">
       <documentation><![CDATA[
         Return one keyword with narrower, broader and equal links as a single
 				concept.
-        
+
         Parameters are:
         * id: Concept identifier (eg. http://www.eionet.europa.eu/gemet/concept/5510)
         * thesaurus: Thesaurus identifier (eg. external.theme.gemet)
@@ -144,15 +143,15 @@
       </documentation>
       <class name=".services.thesaurus.GetKeywordByIdAsConcept"/>
       <output sheet="../xslt/services/thesaurus/to-jskos.xsl">
-        <call name="thesaurus" class=".services.thesaurus.GetList" />
+        <call name="thesaurus" class=".services.thesaurus.GetList"/>
       </output>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
+
     <service name="thesaurus.keyword" type="xml">
       <documentation><![CDATA[
         Return one keyword.
-        
+
         Parameters are:
         * transformation: Name of the template to use to return the keyword (eg. to-iso19139-with-anchor).
         * keywordOnly: Skip thesaurus citation section if defined (default no).
@@ -160,16 +159,16 @@
       </documentation>
       <class name=".services.thesaurus.GetKeywordById"/>
       <output sheet="../xslt/services/thesaurus/convert.xsl">
-        <call name="thesaurus" class=".services.thesaurus.GetList" />
+        <call name="thesaurus" class=".services.thesaurus.GetList"/>
       </output>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
-    
+
+
     <service name="thesaurus.keyword.links">
       <documentation><![CDATA[
         Get related/narrower/broader terms for a keyword.
-        
+
         Parameters are:
         * request: Type of relation (narrower, broader or related)
         * id: Concept identifier (eg. http://www.eionet.europa.eu/gemet/concept/5510)
@@ -178,11 +177,11 @@
       <class name=".services.thesaurus.GetNarrowerBroader"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
+
     <service name="thesaurus.keyword.add">
       <documentation><![CDATA[
         Add a new keyword in a thesaurus.
-        
+
         Parameters are:
         ```
         <request>
@@ -199,7 +198,7 @@
       <class name=".services.thesaurus.AddElement"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
+
     <service name="thesaurus.keyword.update">
       <documentation><![CDATA[
         Update a keyword.
@@ -207,7 +206,7 @@
       <class name=".services.thesaurus.UpdateElement"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
+
     <service name="thesaurus.keyword.remove">
       <documentation><![CDATA[
         Remove one or more concepts from a thesaurus
@@ -216,6 +215,6 @@
       <class name=".services.thesaurus.DeleteElement"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
+
   </services>
 </geonet>

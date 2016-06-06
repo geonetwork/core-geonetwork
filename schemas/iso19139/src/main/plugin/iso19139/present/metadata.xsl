@@ -41,7 +41,7 @@
   <xsl:include href="metadata-fop.xsl"/>
   <xsl:include href="metadata-subtemplates.xsl"/>
   <xsl:include href="metadata-markup.xsl"/>
-  
+
 	<!-- main template - the way into processing iso19139 -->
 	<xsl:template name="metadata-iso19139">
 		<xsl:param name="schema"/>
@@ -93,8 +93,8 @@
 
 
 	<!--=====================================================================-->
-	<!-- these elements should not be displayed 
-		* do not display graphicOverview managed by GeoNetwork (ie. having a 
+	<!-- these elements should not be displayed
+		* do not display graphicOverview managed by GeoNetwork (ie. having a
 		fileDescription set to thumbnail or large_thumbnail). Those thumbnails
 		are managed in then thumbnail popup. Others could be valid URL pointing to
 		an image available on the Internet.
@@ -106,14 +106,14 @@
 		priority="20" />
 
 	<!-- Do not try do display element with no children in view mode -->
-	<!-- Usually this should not happen because GeoNetwork will add default children like gco:CharacterString. 
+	<!-- Usually this should not happen because GeoNetwork will add default children like gco:CharacterString.
 		 Fixed #299
 		 TODO : metadocument contains geonet:element which is probably not required ?
 	-->
 	<xsl:template mode="iso19139" priority="199" match="*[@gco:nilReason='missing' and geonet:element and count(*)=1]"/>
 
 	<xsl:template mode="iso19139" priority="199" match="*[geonet:element and count(*)=1 and text()='']"/>
-	
+
 	<!-- ===================================================================== -->
 	<!-- these elements should be boxed -->
 	<!-- ===================================================================== -->
@@ -248,12 +248,12 @@
 	<!-- ============================================================================= -->
 	<!--
 	 Display a list of related resources to which the current service metadata operatesOn.
-	 
+
 	 Ie. User should define related metadata record using operatesOn elements and then if
 	 needed, set a coupledResource to create a link to the data itself
-	  (using layer name/feature type/coverage name as described in capabilities documents). 
+	  (using layer name/feature type/coverage name as described in capabilities documents).
 
-	 To create a relation best is using the related resources panel (see relatedResources 
+	 To create a relation best is using the related resources panel (see relatedResources
 	 template in metadata-iso19139-utils.xsl).
 	-->
 	<xsl:template mode="iso19139" match="srv:coupledResource/srv:SV_CoupledResource/srv:identifier" priority="200">
@@ -324,7 +324,7 @@
 		* nM indicates the number of minutes
 		* nS indicates the number of seconds
 
-		TODO : onload, we should run validateNumber handler in order to change 
+		TODO : onload, we should run validateNumber handler in order to change
 		input class when needed.
 
 	-->
@@ -570,8 +570,8 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!-- Display element attributes only in edit mode 
-		* GML time interval 
+	<!-- Display element attributes only in edit mode
+		* GML time interval
 	-->
 	<xsl:template mode="simpleAttribute" match="gml:timeInterval/@*" priority="99">
 		<xsl:param name="schema"/>
@@ -620,7 +620,7 @@
 
 
 	<!-- gmx:FileName could be used as substitution of any
-		 gco:CharacterString. To turn this on add a schema 
+		 gco:CharacterString. To turn this on add a schema
 		 suggestion.
 	-->
 	<xsl:template mode="iso19139" name="file-upload" match="*[gmx:FileName]">
@@ -983,7 +983,7 @@
 				<xsl:choose>
 					<xsl:when test="normalize-space(gco:*)=''">
 						<span class="info">
-							- <xsl:value-of select="/root/gui/strings/setOnSave"/> - 
+							- <xsl:value-of select="/root/gui/strings/setOnSave"/> -
 						</span>
 					</xsl:when>
 					<xsl:otherwise>
@@ -994,7 +994,7 @@
 		</xsl:apply-templates>
 	</xsl:template>
 
-	<!-- Attributes 
+	<!-- Attributes
 		 * deprecated: gmd:PT_Locale/@id is set by update-fixed-info using first 2 letters.
 		 * gmd:PT_Locale/@id is set by update-fixed-info with 639-2 iso code
 	-->
@@ -1008,7 +1008,7 @@
 			<xsl:with-param name="edit" select="false()" />
 		</xsl:apply-templates>
 	</xsl:template>
-	
+
 
 	<xsl:template mode="iso19139" match="//gmd:MD_Metadata/gmd:characterSet|//*[@gco:isoType='gmd:MD_Metadata']/gmd:characterSet" priority="2">
 		<xsl:param name="schema"/>
@@ -1019,7 +1019,7 @@
 			<xsl:with-param name="edit"    select="false()"/>
 		</xsl:call-template>
 	</xsl:template>
-	
+
 	<!-- ============================================================================= -->
 	<!-- electronicMailAddress -->
 	<!-- ============================================================================= -->
@@ -1047,7 +1047,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!-- gmx:Anchor is a substitute of gco:CharacterString and 
+	<!-- gmx:Anchor is a substitute of gco:CharacterString and
 		 could be use to create a hyperlink for an element.
 		-->
 	<xsl:template mode="iso19139" match="*[gmx:Anchor]" priority="99">
@@ -1257,7 +1257,7 @@
 								<xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						
+
 						<xsl:call-template name="calendar">
 							<xsl:with-param name="ref" select="$ref"/>
 							<xsl:with-param name="date" select="gco:DateTime/text()|gco:Date/text()"/>
@@ -1761,7 +1761,7 @@
       	<xsl:with-param name="edit" select="$edit"/>
       	<xsl:with-param name="realname" select="gmd:distributionInfo"/>
     	</xsl:call-template>
-			
+
 		</xsl:if>
 
 		<!-- metadata info in its own box -->
@@ -1871,7 +1871,7 @@
 
 	</xsl:template>
 
-	<!-- ============================================================================= 
+	<!-- =============================================================================
 	Create a complex element with the content param in it.
 
 	@param id : If using complexElementGuiWrapper in a same for-each statement, generate-id function will
@@ -2721,7 +2721,7 @@
 							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>
 					</xsl:when>
-					<xsl:when test="string(gmd:protocol/gco:CharacterString)='DB:POSTGIS' 
+					<xsl:when test="string(gmd:protocol/gco:CharacterString)='DB:POSTGIS'
 						and string(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)!=''">
 						<xsl:apply-templates mode="iso19139GeoPublisher" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType">
 							<xsl:with-param name="access" select="'private'"/>
@@ -2754,7 +2754,7 @@
 			</xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:template>
-	
+
 	<!-- ============================================================================= -->
 	<!-- online resources: WMS get map -->
 	<!-- ============================================================================= -->
@@ -2961,7 +2961,7 @@
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
 		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)" />
 		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
-		
+
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
 				<xsl:apply-templates mode="iso19139EditOnlineRes" select=".">
@@ -3028,7 +3028,7 @@
 						<xsl:variable name="relatedJsAction">
 			            	<xsl:value-of select="concat('checkForFileUpload(&quot;',$fref,'&quot;, &quot;',$ref,'&quot;, this.options[this.selectedIndex].value);')" />
 			      		</xsl:variable>
-			            
+
 			            <input type="text" id="_{$ref}" name="_{$ref}" value="{$value}"/>
 			            <xsl:for-each select="gco:CharacterString">
 			             <xsl:call-template name="helper">
@@ -3177,9 +3177,9 @@
 			</xsl:variable>
 
 			<button type="button" class="content repository"
-				 onclick="javascript:showGeoPublisherPanel('{/root/*/geonet:info/id}', '{$layer}', 
-				 '{$access}', 'gmd:onLine', '{ancestor::gmd:MD_DigitalTransferOptions/geonet:element/@ref}', [{$bbox}]);" 
-				 alt="{/root/gui/strings/publishHelp}" 
+				 onclick="javascript:showGeoPublisherPanel('{/root/*/geonet:info/id}', '{$layer}',
+				 '{$access}', 'gmd:onLine', '{ancestor::gmd:MD_DigitalTransferOptions/geonet:element/@ref}', [{$bbox}]);"
+				 alt="{/root/gui/strings/publishHelp}"
 				 title="{/root/gui/strings/geopublisherHelp}"><xsl:value-of select="/root/gui/strings/geopublisher"/></button>
 		</xsl:if>
 	</xsl:template>
@@ -3552,7 +3552,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!-- In order to add profil specific tabs 
+	<!-- In order to add profil specific tabs
 		add a template in this mode.
 
 		To add some more tabs.
@@ -3713,7 +3713,7 @@
 				<xsl:with-param name="indent"  select="'&#xA0;&#xA0;&#xA0;'"/>
 				<xsl:with-param name="tabLink" select="$tabLink"/>
 			</xsl:call-template>
-		</xsl:if>		
+		</xsl:if>
 	</xsl:template>
 
 	<!-- ============================================================================= -->
@@ -3750,7 +3750,7 @@
 		<xsl:variable name="qname" select="name(.)"/>
 		<xsl:variable name="value" select="gco:CharacterString"/>
 		<xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0" />
-		
+
 		<xsl:apply-templates mode="simpleElement" select=".">
 			<xsl:with-param name="schema" select="$schema" />
 			<xsl:with-param name="edit" select="$edit" />
@@ -3841,7 +3841,7 @@
                 <xsl:apply-templates mode="simpleElement" select=".">
                     <xsl:with-param name="schema" select="$schema" />
                     <xsl:with-param name="text">
-                    
+
                         <xsl:variable name="metadataTitle">
                             <xsl:call-template name="getMetadataTitle">
                                 <xsl:with-param name="uuid" select="gco:CharacterString"></xsl:with-param>
@@ -3931,7 +3931,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 
 
 	<!--
@@ -3940,11 +3940,11 @@
 		=====================================================================
 		* ISO 19139 define how to store multilingual content in a metadata
 		record.
-		1) A record is defined by a main language set in 
+		1) A record is defined by a main language set in
 		gmd:MD_Metadata/gmd:language element. All gco:CharacterString are
-		then defined in that language. 
+		then defined in that language.
 		2) In order to add translation editor
-		should add a gmd:locale element in gmd:MD_Metadata:  
+		should add a gmd:locale element in gmd:MD_Metadata:
 		<gmd:locale>
 			<gmd:PT_Locale id="FR">
 				<gmd:languageCode>
@@ -3967,9 +3967,9 @@
 			</gmd:PT_FreeText>
 		</gmd:title>
 
-		=====================================================================		
+		=====================================================================
 		Editor principles:
-		=====================================================================		
+		=====================================================================
 		* available locales in metadata records are not displayed in view
 		mode, only used in editing mode in order to add multilingual content.
 	-->
@@ -3999,7 +3999,7 @@
 
 
 	<!--
-		=====================================================================				
+		=====================================================================
 		* All elements having gco:CharacterString or gmd:PT_FreeText elements
 		have to display multilingual editor widget. Even if default language
 		is set, an element could have gmd:PT_FreeText and no gco:CharacterString
@@ -4047,7 +4047,7 @@
 	</xsl:template>
 
 
-	<!-- =====================================================================				
+	<!-- =====================================================================
 		* Anyway some elements should not be multilingual.
 
 		Use this template to define which elements
@@ -4125,11 +4125,11 @@
 
 	<!-- =====================================================================
 		Multilingual editor widget is composed of input box
-		with a list of languages defined in current metadata record. 
+		with a list of languages defined in current metadata record.
 
 		Metadata languages are:
 		* the main language (gmd:MD_Metadata/gmd:language) and
-		* all languages defined in gmd:locale section. 
+		* all languages defined in gmd:locale section.
 
 		Change this template to defined another multilingual widget.
 	-->
@@ -4280,7 +4280,7 @@
 								 =================================
 								 Simple button to translate one element from one language to another.
 								 This is useful to help editor to translate metadata content.
-								 
+
 								 To be improved :
 									* check that jeeves GUI language is equal to Google language code
 									* target parameter of translate function could be set to:
@@ -4292,7 +4292,7 @@
 								<a href="javascript:googleTranslate('{$mainLanguageRef}',
 										'{$suggestionDiv}',
 										null,
-										'{substring-after($mainLangId, '#')}', 
+										'{substring-after($mainLangId, '#')}',
 										$('localization_{geonet:element/@ref}').options[$('localization_{geonet:element/@ref}').selectedIndex].readAttribute('code'));"
 										alt="{/root/gui/strings/translateWithGoogle}" title="{/root/gui/strings/translateWithGoogle}">
 									<img width="14px" src="../../images/translate.png"/>
@@ -4322,7 +4322,7 @@
 	<!--
 		Create a PT_FreeText_Tree for multilingual editing.
 
-		The lang prefix for geonet:element is used by the DataManager 
+		The lang prefix for geonet:element is used by the DataManager
 		to clean multilingual content and add required attribute (xsi:type).
 	-->
 	<xsl:template name="PT_FreeText_Tree">

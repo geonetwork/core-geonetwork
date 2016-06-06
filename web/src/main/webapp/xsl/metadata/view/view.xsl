@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:geonet="http://www.fao.org/geonetwork" xmlns:saxon="http://saxon.sf.net/"
-  extension-element-prefixes="saxon" exclude-result-prefixes="geonet saxon">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:saxon="http://saxon.sf.net/" version="2.0"
+                extension-element-prefixes="saxon" exclude-result-prefixes="geonet saxon">
 
   <xsl:include href="../common.xsl"/>
 
@@ -10,7 +10,7 @@
   <xsl:template match="/">
     <!--<html>
       <head>
-        <link rel="stylesheet" type="text/css" href="../../style.css"/>        
+        <link rel="stylesheet" type="text/css" href="../../style.css"/>
       </head>
       <body>-->
     <xsl:for-each select="/root/*[name(.)!='gui' and name(.)!='request']">
@@ -19,14 +19,14 @@
           <!-- Tabs -->
           <xsl:call-template name="tab">
             <xsl:with-param name="tabLink"
-              select="concat(/root/gui/locService,'/metadata.update.new')"/>
+                            select="concat(/root/gui/locService,'/metadata.update.new')"/>
             <xsl:with-param name="schema" select="geonet:info/schema"/>
           </xsl:call-template>
 
           <xsl:choose>
             <xsl:when test="starts-with($currTab, 'view')">
               <xsl:variable name="schemaTemplate" select="concat('metadata-',$schema, $currTab)"/>
-              <saxon:call-template name="{$schemaTemplate}"> 
+              <saxon:call-template name="{$schemaTemplate}">
                 <xsl:with-param name="schema" select="$schema"/>
                 <xsl:fallback>
                   <xsl:message>Fall back as no saxon:call-template exists</xsl:message>
@@ -44,14 +44,14 @@
               <xsl:apply-templates mode="xmlDocument" select="."/>
             </xsl:when>
             <xsl:when test="$currTab='simple' or $currTab='inspire'">
-                <xsl:variable name="schemaTemplate" select="concat('view-with-header-',$schema)"/>
-                <saxon:call-template name="{$schemaTemplate}">
+              <xsl:variable name="schemaTemplate" select="concat('view-with-header-',$schema)"/>
+              <saxon:call-template name="{$schemaTemplate}">
                 <xsl:with-param name="tabs">
                   <xsl:apply-templates mode="elementEP" select=".">
                     <xsl:with-param name="edit" select="false()"/>
                   </xsl:apply-templates>
                 </xsl:with-param>
-                </saxon:call-template>
+              </saxon:call-template>
             </xsl:when>
             <xsl:otherwise>
               <table class="gn">

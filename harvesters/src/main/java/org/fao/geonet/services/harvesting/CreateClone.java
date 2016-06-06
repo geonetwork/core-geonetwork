@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
@@ -37,39 +38,36 @@ import java.nio.file.Path;
  * TODO javadoc.
  */
 public class CreateClone implements Service {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
+
     /**
      * TODO javadoc.
-     *
-     * @param params
-     * @param context
-     * @return
-     * @throws Exception
      */
-	public Element exec(Element params, ServiceContext context) throws Exception {
-		//--- if 'id' is null all entries are returned
-		String id = params.getChildText("id");
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        //--- if 'id' is null all entries are returned
+        String id = params.getChildText("id");
 
         String newId = context.getBean(HarvestManager.class).createClone(id, context.getUserSession().getUserId(), context);
 
-		if (newId != null) {
-			Element elem = new Element(Jeeves.Elem.RESPONSE).addContent(new Element("id").setText(newId));
-			return elem;
-		}
+        if (newId != null) {
+            Element elem = new Element(Jeeves.Elem.RESPONSE).addContent(new Element("id").setText(newId));
+            return elem;
+        }
 
-		//--- we get here only if the 'id' was not present or node was not found
-		throw new ObjectNotFoundEx(id);
-	}
+        //--- we get here only if the 'id' was not present or node was not found
+        throw new ObjectNotFoundEx(id);
+    }
 }

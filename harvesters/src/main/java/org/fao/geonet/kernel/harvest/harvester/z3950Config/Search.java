@@ -29,90 +29,85 @@ import org.jdom.Element;
 
 //=============================================================================
 
-class Search
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+class Search {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public Search() {}
+    public String freeText;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    public String title;
 
-	public Search(Element search) throws BadParameterEx
-	{
-		freeText = Util.getParam(search, "freeText", "");
-		title    = Util.getParam(search, "title",    "");
-		abstrac  = Util.getParam(search, "abstract", "");
-		keywords = Util.getParam(search, "keywords", "");
-		category = Util.getParam(search, "category", "");
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    public String abstrac;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    public String keywords;
 
-	public Search copy()
-	{
-		Search s = new Search();
+    //---------------------------------------------------------------------------
+    public String category;
 
-		s.freeText  = freeText;
-		s.title     = title;
-		s.abstrac   = abstrac;
-		s.keywords  = keywords;
-		s.category  = category;
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-		return s;
-	}
+    public Search() {
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public Element createRequest()
-	{
-		Element req = new Element("request");
+    public Search(Element search) throws BadParameterEx {
+        freeText = Util.getParam(search, "freeText", "");
+        title = Util.getParam(search, "title", "");
+        abstrac = Util.getParam(search, "abstract", "");
+        keywords = Util.getParam(search, "keywords", "");
+        category = Util.getParam(search, "category", "");
+    }
 
-		add(req, "any",      freeText);
-		add(req, "title",    title);
-		add(req, "abstract", abstrac);
-		add(req, "themekey", keywords);
-		add(req, "category", category);
-		return req;
-	}
+    public static Search createEmptySearch() throws BadParameterEx {
+        return new Search(new Element("search"));
+    }
 
-	//---------------------------------------------------------------------------
+    public Search copy() {
+        Search s = new Search();
 
-	public static Search createEmptySearch() throws BadParameterEx
-	{
-		return new Search(new Element("search"));
-	}
+        s.freeText = freeText;
+        s.title = title;
+        s.abstrac = abstrac;
+        s.keywords = keywords;
+        s.category = category;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+        return s;
+    }
 
-	private void add(Element req, String name, String value)
-	{
-		if (value.length() != 0)
-			req.addContent(new Element(name).setText(value));
-	}
+    public Element createRequest() {
+        Element req = new Element("request");
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        add(req, "any", freeText);
+        add(req, "title", title);
+        add(req, "abstract", abstrac);
+        add(req, "themekey", keywords);
+        add(req, "category", category);
+        return req;
+    }
 
-	public String  freeText;
-	public String  title;
-	public String  abstrac;
-	public String  keywords;
-	public String  category;
+    private void add(Element req, String name, String value) {
+        if (value.length() != 0)
+            req.addContent(new Element(name).setText(value));
+    }
 }
 
 //=============================================================================

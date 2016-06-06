@@ -26,6 +26,7 @@ package org.fao.geonet.notifier;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataNotification;
@@ -96,12 +97,12 @@ public class MetadataNotifierTaskIntegrationTest extends AbstractCoreIntegration
                     assertEquals(1, _notifierRepository.count());
 
                     MetadataNotification notification = new MetadataNotification().
-                            setNotified(false).
-                            setAction(MetadataNotificationAction.UPDATE).
-                            setMetadataUuid(metadata.getUuid());
+                        setNotified(false).
+                        setAction(MetadataNotificationAction.UPDATE).
+                        setMetadataUuid(metadata.getUuid());
                     final MetadataNotificationId notificationId = new MetadataNotificationId().
-                            setMetadataId(metadata.getId()).
-                            setNotifierId(notifier.getId());
+                        setMetadataId(metadata.getId()).
+                        setNotifierId(notifier.getId());
                     notification.setId(notificationId);
                     _notificationRepository.save(notification);
 

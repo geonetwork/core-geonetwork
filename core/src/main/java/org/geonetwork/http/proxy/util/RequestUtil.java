@@ -24,6 +24,7 @@
 package org.geonetwork.http.proxy.util;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,19 +34,16 @@ import java.util.Enumeration;
 import org.fao.geonet.Constants;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Jose
- * Date: 19-may-2009
- * Time: 11:56:10
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: Jose Date: 19-may-2009 Time: 11:56:10 To change this template use
+ * File | Settings | File Templates.
  */
 public class RequestUtil {
-       /**
+    /**
      * Gets a HttpServletRequest parameter value, using a case insensitive name
      *
-     * @param request       HttpServletRequest
-     * @param paramName     Name of the parameter
-     * @return              Value of parameter, null for non valid parameter
+     * @param request   HttpServletRequest
+     * @param paramName Name of the parameter
+     * @return Value of parameter, null for non valid parameter
      */
     public static String getParameter(HttpServletRequest request, String paramName) {
         @SuppressWarnings("unchecked")
@@ -66,28 +64,27 @@ public class RequestUtil {
     /**
      * Gets a HttpServletRequest parameter value, using a case insensitive name
      *
-     * @param request       HttpServletRequest
-     * @param paramName     Name of the parameter
-     * @param paramName     Name of the parameter
-     * @return              Value of parameter, null for non valid parameter
+     * @param request   HttpServletRequest
+     * @param paramName Name of the parameter
+     * @param paramName Name of the parameter
+     * @return Value of parameter, null for non valid parameter
      */
     public static String getParameter(HttpServletRequest request, String paramName, String defaultValue) {
-       String paramValue = getParameter(request, paramName);
+        String paramValue = getParameter(request, paramName);
 
-       if (paramValue == null) paramValue = defaultValue;
+        if (paramValue == null) paramValue = defaultValue;
 
-       return paramValue;
+        return paramValue;
     }
 
     /**
      * Gets the input stream from an HttpServletRequest as a String
      *
-     * @param request           HttpServletRequest
-     * @return                  String of the request input stream
-     * @throws IOException
+     * @param request HttpServletRequest
+     * @return String of the request input stream
      */
     public static String inputStreamAsString(HttpServletRequest request)
-            throws IOException {
+        throws IOException {
 
         InputStream stream = request.getInputStream();
 

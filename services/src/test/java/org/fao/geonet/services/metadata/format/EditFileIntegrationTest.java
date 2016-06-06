@@ -33,16 +33,16 @@ import org.junit.Test;
 
 public class EditFileIntegrationTest extends AbstractServiceIntegrationTest {
 
-    @Test(expected=BadParameterEx.class)
+    @Test(expected = BadParameterEx.class)
     public void testExecBadFnameParameter() throws Exception {
         EditFile ef = new EditFile();
         ServiceContext ctx = createServiceContext();
 
         Element params = Xml.loadString(
-                "<request><id>test</id><_content_type>json</_content_type>"
-                        + "<fname>/etc/passwd</fname></request>", false);
+            "<request><id>test</id><_content_type>json</_content_type>"
+                + "<fname>/etc/passwd</fname></request>", false);
 
-            ef.exec(params, ctx);
+        ef.exec(params, ctx);
     }
 
 }

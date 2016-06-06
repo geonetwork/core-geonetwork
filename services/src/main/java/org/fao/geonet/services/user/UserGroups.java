@@ -24,14 +24,17 @@
 package org.fao.geonet.services.user;
 
 import jeeves.constants.Jeeves;
+
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
@@ -48,34 +51,34 @@ import static org.springframework.data.jpa.domain.Specifications.*;
 
 //=============================================================================
 
-/** Retrieves the groups for a particular user
-  */
+/**
+ * Retrieves the groups for a particular user
+ */
 
-public class UserGroups implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class UserGroups implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		String id = params.getChildText(Params.ID);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        String id = params.getChildText(Params.ID);
 
-		if (id == null) return new Element(Jeeves.Elem.RESPONSE);
+        if (id == null) return new Element(Jeeves.Elem.RESPONSE);
 
-		UserSession usrSess = context.getUserSession();
-		Profile myProfile = usrSess.getProfile();
-		String      myUserId  = usrSess.getUserId();
+        UserSession usrSess = context.getUserSession();
+        Profile myProfile = usrSess.getProfile();
+        String myUserId = usrSess.getUserId();
 
         final UserRepository userRepository = context.getBean(UserRepository.class);
         final GroupRepository groupRepository = context.getBean(GroupRepository.class);
@@ -83,17 +86,17 @@ public class UserGroups implements Service
 
         if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin || myUserId.equals(id)) {
 
-			// -- get the profile of the user id supplied
+            // -- get the profile of the user id supplied
             User user = userRepository.findOne(Integer.valueOf(id));
-			if (user == null) {
-				throw new IllegalArgumentException("user "+id+" doesn't exist");
+            if (user == null) {
+                throw new IllegalArgumentException("user " + id + " doesn't exist");
             }
 
-			String  theProfile = user.getProfile().name();
+            String theProfile = user.getProfile().name();
 
-			//--- retrieve user groups of the user id supplied
-			Element elGroups = new Element(Geonet.Elem.GROUPS);
-			List<Group> theGroups;
+            //--- retrieve user groups of the user id supplied
+            Element elGroups = new Element(Geonet.Elem.GROUPS);
+            List<Group> theGroups;
             List<UserGroup> userGroups;
 
             if (myProfile == Profile.Administrator && theProfile.equals(Profile.Administrator.name())) {
@@ -114,25 +117,25 @@ public class UserGroups implements Service
                 }
             }
 
-			if (!(myUserId.equals(id)) && myProfile == Profile.UserAdmin) {
-			
-		//--- retrieve session user groups and check to see whether this user is 
-		//--- allowed to get this info
+            if (!(myUserId.equals(id)) && myProfile == Profile.UserAdmin) {
+
+                //--- retrieve session user groups and check to see whether this user is
+                //--- allowed to get this info
                 List<Integer> adminList = userGroupRepository.findGroupIds(where(UserGroupSpecs.hasUserId(Integer.valueOf(myUserId)))
-                        .or(UserGroupSpecs.hasUserId(Integer.valueOf(id))));
-				if (adminList.isEmpty()) {
-					throw new OperationNotAllowedEx("You don't have rights to do this because the user you want is not part of your group");
-				}
-			}
+                    .or(UserGroupSpecs.hasUserId(Integer.valueOf(id))));
+                if (adminList.isEmpty()) {
+                    throw new OperationNotAllowedEx("You don't have rights to do this because the user you want is not part of your group");
+                }
+            }
 
-		//--- return data
+            //--- return data
 
-			return elGroups;
-		} else {
-			throw new OperationNotAllowedEx("You don't have rights to do get the groups for this user");
-		}
+            return elGroups;
+        } else {
+            throw new OperationNotAllowedEx("You don't have rights to do get the groups for this user");
+        }
 
-	}
+    }
 }
 
 //=============================================================================

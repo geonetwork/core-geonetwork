@@ -26,6 +26,7 @@ package org.fao.geonet.domain.responses;
 import org.fao.geonet.domain.CswCapabilitiesInfoField;
 
 import javax.xml.bind.annotation.*;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -38,24 +39,22 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CswConfigurationResponse implements Serializable {
     private static final long serialVersionUID = -4426385060234828544L;
-
-    public boolean isCswEnabled() {
-		return cswEnabled;
-	}
-
-	public boolean isCswMetadataPublic() {
-		return cswMetadataPublic;
-	}
-
-	private boolean cswEnabled;
+    private boolean cswEnabled;
     private boolean cswMetadataPublic;
     private int cswContactId;
-
     @XmlElement(name = "record")
     private List<CswCapabilitiesInfoField> capabilitiesInfoFields;
 
+    public boolean isCswEnabled() {
+        return cswEnabled;
+    }
+
     public void setCswEnabled(boolean cswEnabled) {
         this.cswEnabled = cswEnabled;
+    }
+
+    public boolean isCswMetadataPublic() {
+        return cswMetadataPublic;
     }
 
     public void setCswMetadataPublic(boolean cswMetadataPublic) {

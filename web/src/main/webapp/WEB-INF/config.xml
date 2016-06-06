@@ -23,65 +23,65 @@
   -->
 
 <geonet>
-	<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
 
-	<general>
-		<!-- Size must be in megabyte (integer), 100MB by default -->
-		<maxUploadSize>100</maxUploadSize>
-		<uploadDir>./data/tmp</uploadDir>
-		<debug>true</debug>
-	</general>
+  <general>
+    <!-- Size must be in megabyte (integer), 100MB by default -->
+    <maxUploadSize>100</maxUploadSize>
+    <uploadDir>./data/tmp</uploadDir>
+    <debug>true</debug>
+  </general>
 
-	<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
 
-	<default>
-		<service>home</service>
-		<!-- the following service is called if there is an exception raised
-			during the initialization of resources or
-			the appHandler org.fao.geonet.Geonetwork
-		-->
-		<startupErrorService>error</startupErrorService>
-		<language>eng</language>
-		<localized>true</localized>
-		<contentType>text/html; charset=UTF-8</contentType>
+  <default>
+    <service>home</service>
+    <!-- the following service is called if there is an exception raised
+            during the initialization of resources or
+            the appHandler org.fao.geonet.Geonetwork
+        -->
+    <startupErrorService>error</startupErrorService>
+    <language>eng</language>
+    <localized>true</localized>
+    <contentType>text/html; charset=UTF-8</contentType>
 
-		<gui>
-			<xml name="strings" file="xml/strings.xml" />
+    <gui>
+      <xml name="strings" file="xml/strings.xml" />
 
-			<call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
+      <call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
 
-			<call name="session" class="jeeves.guiservices.session.Get" />
-		  <call name="env" class="org.fao.geonet.guiservices.util.Env" />
-		  <call name="systemConfig" class="org.fao.geonet.services.config.Get" />
-			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
-			<call name="schemalist" class="org.fao.geonet.guiservices.schemas.Get" />
-			<call name="svnmanager" class="org.fao.geonet.guiservices.util.GetSvnDetails"/>
+      <call name="session" class="jeeves.guiservices.session.Get" />
+      <call name="env" class="org.fao.geonet.guiservices.util.Env" />
+      <call name="systemConfig" class="org.fao.geonet.services.config.Get" />
+      <call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
+      <call name="schemalist" class="org.fao.geonet.guiservices.schemas.Get" />
+      <call name="svnmanager" class="org.fao.geonet.guiservices.util.GetSvnDetails"/>
 
-			<!-- this service adds labels and codelists from all schemas -->
-			<call name="schemas" class="org.fao.geonet.guiservices.schemas.GetSchemaInfo" />
+      <!-- this service adds labels and codelists from all schemas -->
+      <call name="schemas" class="org.fao.geonet.guiservices.schemas.GetSchemaInfo" />
 
       <xml name="config" file="WEB-INF/config-gui.xml" localized="false" />
     </gui>
 
-		<!-- no privileges to access the service -->
+    <!-- no privileges to access the service -->
 
-		<error id="service-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
-			<xml name="error" file="xml/privileges-error.xml" />
-		</error>
+    <error id="service-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
+      <xml name="error" file="xml/privileges-error.xml" />
+    </error>
 
-		<!-- data in upload too big -->
+    <!-- data in upload too big -->
 
-		<error id="file-upload-too-big" sheet="../xslt/common/error.xsl">
-			<xml name="error" file="xml/file-too-big-error.xml" />
-		</error>
+    <error id="file-upload-too-big" sheet="../xslt/common/error.xsl">
+      <xml name="error" file="xml/file-too-big-error.xml" />
+    </error>
 
-		<!-- general error -->
+    <!-- general error -->
 
-		<error sheet="../xslt/common/error.xsl">
-			<xml name="error" file="xml/error.xml" />
-		</error>
+    <error sheet="../xslt/common/error.xsl">
+      <xml name="error" file="xml/error.xml" />
+    </error>
 
-	</default>
+  </default>
 
   <appHandler class="org.fao.geonet.Geonetwork">
     <!-- language profiles for automatic language detection -->
@@ -217,12 +217,12 @@
       <error sheet="error-xml.xsl"/>
     </service>
 
-		<service name="map.import">
-			<class name=".services.mef.ImportWebMap" />
-			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
-		</service>
+    <service name="map.import">
+      <class name=".services.mef.ImportWebMap" />
+      <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+    </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <service name="mef.export">
       <class name=".services.mef.Export" />
@@ -244,31 +244,31 @@
 
     <service name="isolanguages" deprecated="true">
       <!-- Still used by ExtJS search form criteria on language -->
-			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
-		</service>
+      <class name="org.fao.geonet.guiservices.isolanguages.Get" />
+    </service>
 
 
-        <!-- HTML5UI -->
-        <service name="search">
-            <class name=".services.main.Home" />
-            <output sheet="search.xsl">
-                <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
-                <call name="isoLang" class=".guiservices.isolanguages.Get" />
-            </output>
-        </service>
+    <!-- HTML5UI -->
+    <service name="search">
+      <class name=".services.main.Home" />
+      <output sheet="search.xsl">
+        <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
+        <call name="isoLang" class=".guiservices.isolanguages.Get" />
+      </output>
+    </service>
 
-		<service name="find">
-			<output sheet="search-cat.xsl"/>
-		</service>
+    <service name="find">
+      <output sheet="search-cat.xsl"/>
+    </service>
 
 
 
-<!--
-    tabsearch is turned off by default (no maintainer).
-		<service name="tabsearch">
-			<output sheet="search-tab.xsl"/>
-		</service>
--->
+    <!--
+        tabsearch is turned off by default (no maintainer).
+            <service name="tabsearch">
+                <output sheet="search-tab.xsl"/>
+            </service>
+    -->
 
   </services>
 

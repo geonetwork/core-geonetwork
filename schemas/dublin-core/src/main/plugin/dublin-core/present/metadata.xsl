@@ -32,7 +32,7 @@
 
   <xsl:include href="metadata-fop.xsl"/>
   <xsl:include href="metadata-markup.xsl"/>
-  
+
 	<!-- main template - the way into processing dublin-core -->
   <xsl:template name="metadata-dublin-core">
 		<xsl:param name="schema"/>
@@ -46,7 +46,7 @@
     </xsl:apply-templates>
   </xsl:template>
 
-	<!-- CompleteTab template - dc just calls completeTab from 
+	<!-- CompleteTab template - dc just calls completeTab from
 	     metadata-utils.xsl -->
 	<xsl:template name="dublin-coreCompleteTab">
 		<xsl:param name="tabLink"/>
@@ -62,14 +62,14 @@
 	<xsl:template mode="dublin-core" match="*|@*">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-		
+
 		<xsl:apply-templates mode="element" select=".">
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="$edit"/>
 			<xsl:with-param name="flat"   select="$currTab='simple'"/>
 		</xsl:apply-templates>
 	</xsl:template>
-	
+
 	<!--
 	these elements should be boxed
 	-->
@@ -235,7 +235,7 @@
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<!-- dublin-core brief formatting -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
+
 	<xsl:template name="dublin-coreBrief">
 		<metadata>
 			<xsl:if test="dc:title">
@@ -274,7 +274,7 @@
 					<northBL><xsl:value-of select="$north"/></northBL>
 				</geoBox>
 			</xsl:if>
-		
+
 			<xsl:copy-of select="geonet:*"/>
 		</metadata>
 	</xsl:template>

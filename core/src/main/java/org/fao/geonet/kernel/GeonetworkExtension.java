@@ -28,9 +28,7 @@ package org.fao.geonet.kernel;
  *
  * All interfaces or classes that represent extension points should extend this interface.
  *
- * User: Jesse
- * Date: 11/11/13
- * Time: 1:01 PM
+ * User: Jesse Date: 11/11/13 Time: 1:01 PM
  */
 public interface GeonetworkExtension {
 }

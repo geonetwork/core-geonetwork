@@ -24,11 +24,15 @@
 package org.fao.geonet.services.metadata.format;
 
 import com.google.common.io.ByteStreams;
+
 import com.vividsolutions.jts.util.Assert;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
+
 import net.sf.json.JSONObject;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
@@ -52,14 +56,14 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
+
 import javax.servlet.http.HttpServletRequest;
 
 import static org.fao.geonet.services.metadata.format.FormatterConstants.VIEW_XSL_FILENAME;
 
 /**
- * Upload a formatter bundle.  Uploaded file can be a single xsl or a zip file containing
- * resources as well as the xsl file.  If a zip the zip must contain view.xsl which is the 
- * root xsl file.
+ * Upload a formatter bundle.  Uploaded file can be a single xsl or a zip file containing resources
+ * as well as the xsl file.  If a zip the zip must contain view.xsl which is the root xsl file.
  *
  * The  zip file can be flat or contain a single directory.
  *
@@ -73,9 +77,9 @@ public class Register extends AbstractFormatService {
     @RequestMapping(value = {"/{lang}/md.formatter.register"}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public JSONObject serviceSpecificExec(HttpServletRequest request,
-                                    @PathVariable String lang,
-                                    @RequestParam(value = Params.ID, required = false) String xslid,
-                                    @RequestParam(Params.FNAME) MultipartFile file
+                                          @PathVariable String lang,
+                                          @RequestParam(value = Params.ID, required = false) String xslid,
+                                          @RequestParam(Params.FNAME) MultipartFile file
     ) throws Exception {
 
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
@@ -100,11 +104,11 @@ public class Register extends AbstractFormatService {
         try {
             Files.createDirectories(newBundle);
 
-            try (FileSystem zipFs = ZipUtil.openZipFs(uploadedFile)){
+            try (FileSystem zipFs = ZipUtil.openZipFs(uploadedFile)) {
                 Path viewFile = findViewFile(zipFs);
                 if (viewFile == null) {
                     throw new BadArgumentException(
-                            "A formatter zip file must contain a " + VIEW_XSL_FILENAME + " file as one of its root files");
+                        "A formatter zip file must contain a " + VIEW_XSL_FILENAME + " file as one of its root files");
                 }
 
                 Path viewXslContainerDir = null;
@@ -123,7 +127,7 @@ public class Register extends AbstractFormatService {
 
             } catch (IllegalArgumentException | UnsupportedOperationException e) {
                 handleRawXsl(uploadedFile, newBundle);
-            } catch (Exception e){
+            } catch (Exception e) {
                 IO.deleteFileOrDirectory(newBundle);
                 throw e;
             }
@@ -146,7 +150,7 @@ public class Register extends AbstractFormatService {
         }
 
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir, IO.DIRECTORIES_FILTER)) {
-            for (Path childDir: paths) {
+            for (Path childDir : paths) {
                 Path container = findViewXslContainerDir(childDir);
                 if (container != null) {
                     return container;
@@ -172,8 +176,8 @@ public class Register extends AbstractFormatService {
             if (dirIter.hasNext()) {
                 Path next = dirIter.next();
                 Assert.isTrue(!dirIter.hasNext(),
-                        "The formatter/view zip file must either have a single root directory which contains the view file or " +
-                                "it must have all formatter resources at the root of the directory");
+                    "The formatter/view zip file must either have a single root directory which contains the view file or " +
+                        "it must have all formatter resources at the root of the directory");
                 rootView = next.resolve(VIEW_XSL_FILENAME);
                 if (Files.exists(rootView)) {
                     return rootView;

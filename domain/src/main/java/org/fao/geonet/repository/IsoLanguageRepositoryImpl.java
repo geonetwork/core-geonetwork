@@ -29,9 +29,7 @@ import javax.persistence.PersistenceContext;
 /**
  * The implementation for the IsoLanguageRepository custom method.
  * <p/>
- * User: Jesse
- * Date: 9/9/13
- * Time: 5:37 PM
+ * User: Jesse Date: 9/9/13 Time: 5:37 PM
  */
 public class IsoLanguageRepositoryImpl {
 

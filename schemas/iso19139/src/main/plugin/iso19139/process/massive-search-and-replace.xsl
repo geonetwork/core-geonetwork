@@ -22,12 +22,11 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-                xmlns:geonet="http://www.fao.org/geonetwork"
-                xmlns:srv="http://www.isotc211.org/2005/srv"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:saxon="http://saxon.sf.net/"
+                version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
@@ -114,8 +113,8 @@
         <!-- gmd:URL -->
         <xsl:when test="name() = 'gmd:URL'">
           <xsl:call-template name="replaceValueForField">
-            <xsl:with-param name="fieldId" select="$fieldId" />
-            <xsl:with-param name="value" select="." />
+            <xsl:with-param name="fieldId" select="$fieldId"/>
+            <xsl:with-param name="value" select="."/>
           </xsl:call-template>
         </xsl:when>
 
@@ -125,8 +124,8 @@
           <xsl:for-each select="gco:CharacterString">
             <xsl:copy>
               <xsl:call-template name="replaceValueForField">
-                <xsl:with-param name="fieldId" select="$fieldId" />
-                <xsl:with-param name="value" select="." />
+                <xsl:with-param name="fieldId" select="$fieldId"/>
+                <xsl:with-param name="value" select="."/>
               </xsl:call-template>
             </xsl:copy>
           </xsl:for-each>
@@ -140,8 +139,8 @@
                   <xsl:for-each select="gmd:LocalisedCharacterString">
                     <gmd:LocalisedCharacterString locale="{@locale}">
                       <xsl:call-template name="replaceValueForField">
-                        <xsl:with-param name="fieldId" select="$fieldId" />
-                        <xsl:with-param name="value" select="." />
+                        <xsl:with-param name="fieldId" select="$fieldId"/>
+                        <xsl:with-param name="value" select="."/>
                       </xsl:call-template>
                     </gmd:LocalisedCharacterString>
                   </xsl:for-each>
@@ -155,8 +154,8 @@
         <xsl:otherwise>
           <!--<xsl:copy-of select="saxon:parse($contactAsXML)"/>-->
           <xsl:call-template name="replaceValueForField">
-            <xsl:with-param name="fieldId" select="$fieldId" />
-            <xsl:with-param name="value" select="." />
+            <xsl:with-param name="fieldId" select="$fieldId"/>
+            <xsl:with-param name="value" select="."/>
           </xsl:call-template>
         </xsl:otherwise>
       </xsl:choose>
@@ -165,8 +164,8 @@
 
 
   <xsl:template name="replaceValueForField">
-    <xsl:param name="fieldId" />
-    <xsl:param name="value" />
+    <xsl:param name="fieldId"/>
+    <xsl:param name="value"/>
 
     <xsl:variable name="replacementDetails"
                   select="$replacements/replacements/

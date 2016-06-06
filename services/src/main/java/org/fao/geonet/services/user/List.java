@@ -24,7 +24,9 @@
 package org.fao.geonet.services.user;
 
 import com.google.common.collect.Sets;
+
 import jeeves.server.ServiceConfig;
+
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
@@ -50,6 +52,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -69,19 +72,37 @@ public class List {
     // ---
     // --------------------------------------------------------------------------
 
+    @Autowired
+    private ConfigurableApplicationContext jeevesApplicationContext;
+
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Private methods
+    // ---
+    // --------------------------------------------------------------------------
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private UserGroupRepository userGroupRepo;
+    @Autowired
+    private UserRepository userRepository;
+
     public void init(String appPath, ServiceConfig params) throws Exception {
     }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
-
-	@RequestMapping(value = "/{lang}/admin.user.list", produces = {
-			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public @ResponseBody
-	UserList exec() throws Exception {
+    @RequestMapping(value = "/{lang}/admin.user.list", produces = {
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
+    UserList exec() throws Exception {
         final SecurityContext context = SecurityContextHolder.getContext();
         if (context == null || context.getAuthentication() == null) {
             throw new AuthenticationCredentialsNotFoundException("User needs to log in");
@@ -90,101 +111,84 @@ public class List {
 
         if (me == null) {
             throw new AccessDeniedException(SecurityContextHolder.class.getSimpleName() + " has a user that is not in the database: " +
-                                            context.getAuthentication());
+                context.getAuthentication());
         }
 
-		Set<Integer> hsMyGroups = getGroups(me.getId(), me.getProfile());
+        Set<Integer> hsMyGroups = getGroups(me.getId(), me.getProfile());
 
-		Collection<? extends GrantedAuthority> roles = me.getAuthorities();
+        Collection<? extends GrantedAuthority> roles = me.getAuthorities();
 
-		Set<String> profileSet = Sets.newHashSet();
+        Set<String> profileSet = Sets.newHashSet();
 
-		for (GrantedAuthority rol : roles) {
-			profileSet.add(rol.getAuthority());
-		}
+        for (GrantedAuthority rol : roles) {
+            profileSet.add(rol.getAuthority());
+        }
 
-		// --- retrieve all users
-		final java.util.List<User> all = userRepository.findAll(SortUtils
-				.createSort(User_.username));
+        // --- retrieve all users
+        final java.util.List<User> all = userRepository.findAll(SortUtils
+            .createSort(User_.username));
 
-		// --- now filter them
+        // --- now filter them
 
-		java.util.Set<Integer> usersToRemove = new HashSet<Integer>();
+        java.util.Set<Integer> usersToRemove = new HashSet<Integer>();
 
-		if (!profileSet.contains(Profile.Administrator.name())) {
+        if (!profileSet.contains(Profile.Administrator.name())) {
 
-			for (User user : all) {
-				int userId = user.getId();
-				Profile profile = user.getProfile();
+            for (User user : all) {
+                int userId = user.getId();
+                Profile profile = user.getProfile();
 
-				// TODO is this already equivalent to ID?
-				if (user.getUsername().equals(context.getAuthentication().getName())) {
-					// user is permitted to access his/her own user information
-					continue;
-				}
-				Set<Integer> userGroups = getGroups(userId, profile);
-				// Is user belong to one of the current user admin group?
-				boolean isInCurrentUserAdminGroups = false;
-				for (Integer userGroup : userGroups) {
-					if (hsMyGroups.contains(userGroup)) {
-						isInCurrentUserAdminGroups = true;
-						break;
-					}
-				}
-				// if (!hsMyGroups.containsAll(userGroups))
-				if (!isInCurrentUserAdminGroups) {
-					usersToRemove.add(user.getId());
-				}
+                // TODO is this already equivalent to ID?
+                if (user.getUsername().equals(context.getAuthentication().getName())) {
+                    // user is permitted to access his/her own user information
+                    continue;
+                }
+                Set<Integer> userGroups = getGroups(userId, profile);
+                // Is user belong to one of the current user admin group?
+                boolean isInCurrentUserAdminGroups = false;
+                for (Integer userGroup : userGroups) {
+                    if (hsMyGroups.contains(userGroup)) {
+                        isInCurrentUserAdminGroups = true;
+                        break;
+                    }
+                }
+                // if (!hsMyGroups.containsAll(userGroups))
+                if (!isInCurrentUserAdminGroups) {
+                    usersToRemove.add(user.getId());
+                }
 
-				if (!profileSet.contains(profile.name())) {
-					usersToRemove.add(user.getId());
-				}
-			}
-		}
-		UserList res = new UserList();
+                if (!profileSet.contains(profile.name())) {
+                    usersToRemove.add(user.getId());
+                }
+            }
+        }
+        UserList res = new UserList();
 
-		for (User u : Collections.unmodifiableList(all)) {
-			if (!usersToRemove.contains(u.getId())) {
-				res.addUser(u);
-			}
-		}
+        for (User u : Collections.unmodifiableList(all)) {
+            if (!usersToRemove.contains(u.getId())) {
+                res.addUser(u);
+            }
+        }
 
-		
-		return res;
-	}
 
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Private methods
-    // ---
-    // --------------------------------------------------------------------------
+        return res;
+    }
 
     private Set<Integer> getGroups(final int id, final Profile profile)
-            throws Exception {
+        throws Exception {
         Set<Integer> hs = new HashSet<Integer>();
 
         if (profile == Profile.Administrator) {
             hs.addAll(groupRepository.findIds());
         } else if (profile == Profile.UserAdmin) {
             hs.addAll(userGroupRepo.findGroupIds(Specifications.where(
-                    hasProfile(profile)).and(hasUserId(id))));
+                hasProfile(profile)).and(hasUserId(id))));
         } else {
             hs.addAll(userGroupRepo.findGroupIds(hasUserId(id)));
         }
 
         return hs;
     }
-
-    @Autowired
-    private ConfigurableApplicationContext jeevesApplicationContext;
-    @PersistenceContext
-    private EntityManager entityManager;
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private UserGroupRepository userGroupRepo;
-    @Autowired
-    private UserRepository userRepository;
 
 }
 

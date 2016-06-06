@@ -86,14 +86,15 @@ import jeeves.server.ServiceConfig;
  */
 @Deprecated
 public class XslProcessingReportGet {
-	public void init(String appPath, ServiceConfig config) throws Exception {
-	}
+    public void init(String appPath, ServiceConfig config) throws Exception {
+    }
 
-	@RequestMapping(value = "/{lang}/md.processing.batch.report", produces = {
-			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public @ResponseBody
+    @RequestMapping(value = "/{lang}/md.processing.batch.report", produces = {
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
     IProcessingReport exec(HttpSession session) throws Exception {
-		return (IProcessingReport) session
-				.getAttribute(Geonet.Session.BATCH_PROCESSING_REPORT);
-	}
+        return (IProcessingReport) session
+            .getAttribute(Geonet.Session.BATCH_PROCESSING_REPORT);
+    }
 }

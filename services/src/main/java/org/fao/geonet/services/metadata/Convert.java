@@ -46,49 +46,49 @@ import java.nio.file.Path;
 //=============================================================================
 
 /** Converts a particular metadata using the supplied XSLT name.
-  */
+ */
 
 public class Convert implements Service
 {
     private boolean isExport;
 
     //--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-       isExport = "y".equals(params.getValue("isExport", "n"));
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        isExport = "y".equals(params.getValue("isExport", "n"));
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SchemaManager sm = gc.getBean(SchemaManager.class);
+    public Element exec(Element params, ServiceContext context) throws Exception
+    {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SchemaManager sm = gc.getBean(SchemaManager.class);
 
-		String id = Utils.getIdentifierFromParameters(params, context);
-		if (id == null) throw new MetadataNotFoundEx("Metadata not found.");
+        String id = Utils.getIdentifierFromParameters(params, context);
+        if (id == null) throw new MetadataNotFoundEx("Metadata not found.");
 
-		Element elMd = new Show().exec(params, context);
-		if (elMd == null) throw new MetadataNotFoundEx(id);
+        Element elMd = new Show().exec(params, context);
+        if (elMd == null) throw new MetadataNotFoundEx(id);
 
         if (isExport) {
             elMd = XslUtil.controlForMarkup(context, elMd, Geonet.Settings.WIKI_OUTPUT);
         }
-		
-		//--- get XSLT converter name from params
-		String styleSheet = Util.getParam(params, Params.STYLESHEET);
 
-		//--- get metadata info and create an env that works with oai translators
+        //--- get XSLT converter name from params
+        String styleSheet = Util.getParam(params, Params.STYLESHEET);
+
+        //--- get metadata info and create an env that works with oai translators
         final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
-		Path  schemaDir = sm.getSchemaDir(metadata.getDataInfo().getSchemaId());
+        Path  schemaDir = sm.getSchemaDir(metadata.getDataInfo().getSchemaId());
         final String baseUrl = context.getBaseUrl();
         final ISODate changeDate = metadata.getDataInfo().getChangeDate();
         final String uuid = metadata.getUuid();
@@ -96,9 +96,9 @@ public class Convert implements Service
         final String siteName = gc.getBean(SettingManager.class).getSiteName();
         Element env = Lib.prepareTransformEnv(uuid, changeDate.getDateAndTime(), baseUrl, siteURL, siteName);
 
-		//--- transform the metadata with the created env and specified stylesheet
-		return Lib.transform(schemaDir, env, elMd, styleSheet);
-	}
+        //--- transform the metadata with the created env and specified stylesheet
+        return Lib.transform(schemaDir, env, elMd, styleSheet);
+    }
 
 }
 //=============================================================================

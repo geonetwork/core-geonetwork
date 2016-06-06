@@ -24,15 +24,15 @@
 
 <!--
     ISO19110 support
-    
+
     Feature catalogue support:
      * feature catalogue description
      * class/attribute/property/list of values viewing/editing support
-    
+
     Known limitation:
      * iso19110 links between elements (eg. inheritance)
      * partial support of association and feature operation description
-     
+
      @author francois
      @author mathieu
      @author sppigot
@@ -45,7 +45,7 @@
 
   <xsl:include href="metadata-fop.xsl"/>
   <xsl:include href="metadata-markup.xsl"/>
-  
+
 	<!-- main template - the way into processing iso19110 -->
 	<xsl:template name="metadata-iso19110">
 		<xsl:param name="schema"/>
@@ -131,17 +131,17 @@
         gmx:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure]">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
-        
+
         <!-- Generate a textarea when relevant -->
         <xsl:variable name="rows">
             <xsl:choose>
-                <xsl:when test="name(.)='gfc:description' or 
+                <xsl:when test="name(.)='gfc:description' or
                     (name(.)='gfc:definition' and name(parent::*)!='gfc:FC_ListedValue')
                     ">3</xsl:when>
                 <xsl:otherwise>1</xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        
+
         <xsl:call-template name="iso19139String">
             <xsl:with-param name="schema">
                 <xsl:choose>
@@ -197,7 +197,7 @@
     <xsl:template mode="iso19110" match="gmx:versionDate|gfc:versionDate" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-		
+
 		<xsl:apply-templates mode="simpleElement" select=".">
 			<xsl:with-param name="schema"  select="$schema"/>
 			<xsl:with-param name="edit"    select="false()"/>
@@ -205,7 +205,7 @@
 				<xsl:choose>
 					<xsl:when test="normalize-space(gco:*)=''">
 						<span class="info">
-							- <xsl:value-of select="/root/gui/strings/setOnSave"/> - 
+							- <xsl:value-of select="/root/gui/strings/setOnSave"/> -
 						</span>
 					</xsl:when>
 					<xsl:otherwise>
@@ -245,7 +245,7 @@
 								<xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						
+
 						<xsl:call-template name="calendar">
 							<xsl:with-param name="ref" select="$ref"/>
 							<xsl:with-param name="date" select="gco:DateTime/text()|gco:Date/text()"/>
@@ -267,7 +267,7 @@
     <!-- Do not display those elements:
      * hide nested featureType elements
      * hide definition reference elements
-     * inheritance : does not support linking feature catalogue objects (eg. to indicate subtype or supertype) 
+     * inheritance : does not support linking feature catalogue objects (eg. to indicate subtype or supertype)
     -->
     <xsl:template mode="iso19110" match="gfc:featureType[ancestor::gfc:featureType]|
         gfc:definitionReference|
@@ -275,7 +275,7 @@
         gfc:featureCatalogue|
         gfc:FC_InheritanceRelation/gfc:featureCatalogue|
         @gco:isoType" priority="100"/>
-    
+
     <xsl:template mode="elementEP" match="
         geonet:child[@name='definitionReference']|
         geonet:child[@name='featureCatalogue']|
@@ -283,7 +283,7 @@
         gfc:FC_InheritanceRelation/geonet:child[@name='subtype']|
         gfc:FC_InheritanceRelation/geonet:child[@name='supertype']
         " priority="100"/>
-    
+
     <!-- ==================================================================== -->
     <!-- Metadata -->
     <!-- ==================================================================== -->
@@ -304,7 +304,7 @@
 				</xsl:if>
 			</td>
 		</tr>
-		
+
         <xsl:call-template name="iso19110Simple">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit" select="$edit"/>
@@ -438,7 +438,7 @@
     <xsl:template mode="iso19110" match="gfc:producer">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
-        
+
         <xsl:call-template name="contactTemplate">
             <xsl:with-param name="edit" select="$edit"/>
             <xsl:with-param name="schema" select="$schema"/>
@@ -457,32 +457,32 @@
                     <tr>
                         <td width="50%" valign="top">
                             <table width="100%">
-                                
+
                                 <xsl:apply-templates mode="elementEP" select="gfc:memberName|geonet:child[string(@name)='memberName']">
                                     <xsl:with-param name="schema" select="$schema"/>
                                     <xsl:with-param name="edit"   select="$edit"/>
                                 </xsl:apply-templates>
-                                
+
                                 <xsl:apply-templates mode="elementEP" select="gfc:definition|geonet:child[string(@name)='definition']">
                                     <xsl:with-param name="schema" select="$schema"/>
                                     <xsl:with-param name="edit"   select="$edit"/>
                                 </xsl:apply-templates>
-                                
+
                                 <xsl:apply-templates mode="elementEP" select="gfc:cardinality|geonet:child[string(@name)='cardinality']">
                                     <xsl:with-param name="schema" select="$schema"/>
                                     <xsl:with-param name="edit"   select="$edit"/>
                                 </xsl:apply-templates>
-                                
+
                                 <xsl:apply-templates mode="elementEP" select="gfc:featureType|geonet:child[string(@name)='featureType']">
                                     <xsl:with-param name="schema" select="$schema"/>
                                     <xsl:with-param name="edit"   select="$edit"/>
                                 </xsl:apply-templates>
-                                
+
                                 <xsl:apply-templates mode="elementEP" select="gfc:valueType|geonet:child[string(@name)='valueType']">
                                     <xsl:with-param name="schema" select="$schema"/>
                                     <xsl:with-param name="edit"   select="$edit"/>
                                 </xsl:apply-templates>
-                                
+
                             </table>
                         </td>
                         <td valign="top">
@@ -492,7 +492,7 @@
                                         <xsl:apply-templates mode="elementEP" select="gfc:listedValue|geonet:child[string(@name)='listedValue']">
                                             <xsl:with-param name="schema" select="$schema"/>
                                             <xsl:with-param name="edit" select="$edit"/>
-                                        </xsl:apply-templates>        
+                                        </xsl:apply-templates>
                                     </xsl:when>
                                     <xsl:otherwise>
                                         <xsl:if test="gfc:listedValue">
@@ -505,11 +505,11 @@
                                                     <xsl:value-of select="/root/gui/iso19110/element[@name='gfc:definition']/label"/>)
                                                 </xsl:with-param>
                                                 <xsl:with-param name="content">
-                                                
+
                                                 <ul class="md">
                                                     <xsl:for-each select="gfc:listedValue/gfc:FC_ListedValue">
                                                         <li>
-                                                            <b><xsl:value-of select="gfc:label/gco:CharacterString"/></b> 
+                                                            <b><xsl:value-of select="gfc:label/gco:CharacterString"/></b>
                                                             [<xsl:value-of select="gfc:code/gco:CharacterString"/>] :
                                                             <xsl:value-of select="gfc:definition/gco:CharacterString"/>
                                                         </li>
@@ -520,7 +520,7 @@
                                         </xsl:if>
                                     </xsl:otherwise>
                                 </xsl:choose>
-                                
+
                             </table>
                         </td>
                     </tr>
@@ -535,19 +535,19 @@
         </xsl:apply-templates>
 
     </xsl:template>
-    
-    <!-- handle cardinality edition 
+
+    <!-- handle cardinality edition
         Update fixed info take care of setting UnlimitedInteger attribute.
     -->
     <xsl:template mode="iso19110" match="gfc:cardinality">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
-        
+
         <!-- Variables -->
         <xsl:variable name="minValue" select="gco:Multiplicity/gco:range/gco:MultiplicityRange/gco:lower/gco:Integer"/>
         <xsl:variable name="maxValue" select="gco:Multiplicity/gco:range/gco:MultiplicityRange/gco:upper/gco:UnlimitedInteger"/>
         <xsl:variable name="isInfinite" select="gco:Multiplicity/gco:range/gco:MultiplicityRange/gco:upper/gco:UnlimitedInteger/@isInfinite"/>
-        
+
         <xsl:choose>
             <xsl:when test="$edit=true()">
                 <xsl:variable name="cardinality">
@@ -606,7 +606,7 @@
                                                 <xsl:text>n</xsl:text>
                                             </option>
                                         </select>
-                                        
+
                                         <!-- Hidden value to post -->
                                         <input type="hidden" name="_{$maxValue/geonet:element/@ref}" id="_{$maxValue/geonet:element/@ref}" value="{$maxValue}" />
                                         <input type="hidden" name="_{$maxValue/geonet:element/@ref}_isInfinite" id="_{$maxValue/geonet:element/@ref}_isInfinite" value="{$isInfinite}"/>
@@ -664,7 +664,7 @@
         </xsl:choose>
     </xsl:template>
 
-	<!-- CompleteTab template - iso19110 just calls completeTab from 
+	<!-- CompleteTab template - iso19110 just calls completeTab from
 	     metadata-utils.xsl -->
 	<xsl:template name="iso19110CompleteTab">
 		<xsl:param name="tabLink"/>

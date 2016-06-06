@@ -34,128 +34,128 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class Header
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class Header {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public Header() {}
+    private String identifier;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    private ISODate dateStamp;
 
-	public Header(Element header)
-	{
-		build(header);
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    private boolean deleted;
+    private List<String> sets = new ArrayList<String>();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    public Header() {
+    }
 
-	public String  getIdentifier() { return identifier; }
-	public ISODate getDateStamp()  { return dateStamp;  }
-	public boolean isDeleted()     { return deleted;    }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public Header(Element header) {
+        build(header);
+    }
 
-	public Iterator<String> getSets() { return sets.iterator(); }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public String getIdentifier() {
+        return identifier;
+    }
 
-	public void setIdentifier(String identifier)
-	{
-		this.identifier = identifier;
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 
-	public void setDateStamp(ISODate dateStamp)
-	{
-		this.dateStamp = dateStamp;
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public ISODate getDateStamp() {
+        return dateStamp;
+    }
 
-	public void clearSets()
-	{
-		sets.clear();
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public void setDateStamp(ISODate dateStamp) {
+        this.dateStamp = dateStamp;
+    }
 
-	public void addSet(String set)
-	{
-		sets.add(set);
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public boolean isDeleted() {
+        return deleted;
+    }
 
-	public void setDeleted(boolean yesno)
-	{
-		deleted = yesno;
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public void setDeleted(boolean yesno) {
+        deleted = yesno;
+    }
 
-	public Element toXml()
-	{
-		Element header = new Element("header", OaiPmh.Namespaces.OAI_PMH);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-		Lib.add(header, "identifier", identifier);
-		Lib.add(header, "datestamp",  dateStamp +"Z");
+    public Iterator<String> getSets() {
+        return sets.iterator();
+    }
 
-		for (String set : sets)
-			Lib.add(header, "setSpec",  set);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-		if (deleted)
-			header.setAttribute("status", "deleted");
+    public void clearSets() {
+        sets.clear();
+    }
 
-		return header;
-	}
+    public void addSet(String set) {
+        sets.add(set);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    public Element toXml() {
+        Element header = new Element("header", OaiPmh.Namespaces.OAI_PMH);
 
-	private void build(Element header)
-	{
-		Element ident  = header.getChild("identifier", OaiPmh.Namespaces.OAI_PMH);
-		Element date   = header.getChild("datestamp",  OaiPmh.Namespaces.OAI_PMH);
-		String  status = header.getAttributeValue("status");
+        Lib.add(header, "identifier", identifier);
+        Lib.add(header, "datestamp", dateStamp + "Z");
 
-		//--- store identifier & dateStamp
+        for (String set : sets)
+            Lib.add(header, "setSpec", set);
 
-		identifier = ident.getText();
-		dateStamp  = new ISODate(date.getText());
-		deleted    = (status != null);
+        if (deleted)
+            header.setAttribute("status", "deleted");
 
-		//--- add set information
+        return header;
+    }
 
-		for (Object o : header.getChildren("setSpec", OaiPmh.Namespaces.OAI_PMH))
-		{
-			Element set = (Element) o;
-			sets.add(set.getText());
-		}
-	}
+    private void build(Element header) {
+        Element ident = header.getChild("identifier", OaiPmh.Namespaces.OAI_PMH);
+        Element date = header.getChild("datestamp", OaiPmh.Namespaces.OAI_PMH);
+        String status = header.getAttributeValue("status");
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        //--- store identifier & dateStamp
 
-	private String  identifier;
-	private ISODate dateStamp;
-	private boolean deleted;
+        identifier = ident.getText();
+        dateStamp = new ISODate(date.getText());
+        deleted = (status != null);
 
-	private List<String> sets = new ArrayList<String>();
+        //--- add set information
+
+        for (Object o : header.getChildren("setSpec", OaiPmh.Namespaces.OAI_PMH)) {
+            Element set = (Element) o;
+            sets.add(set.getText());
+        }
+    }
 }
 
 //=============================================================================

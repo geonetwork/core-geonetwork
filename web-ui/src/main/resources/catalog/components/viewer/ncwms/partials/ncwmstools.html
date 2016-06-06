@@ -28,7 +28,7 @@
       </label>
       <div class="col-sm-6">
         <div ui-slider="{range: true}" min="{{colorRange.min}}" max="{{colorRange.max}}" id="ncwmsscales"
-          use-decimals ng-model="colorscalerange" data-ng-change="onColorscaleChange(colorscalerange)"></div>
+             use-decimals ng-model="colorscalerange" data-ng-change="onColorscaleChange(colorscalerange)"></div>
       </div>
     </div>
 
@@ -80,13 +80,13 @@
       <label class="col-sm-4">Dates</label>
       <div class="col-sm-8">
         <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
-          gn-bootstrap-datepicker="timeSeries.tsfromD" date-available="layer.ncInfo.datesWithData">
+             gn-bootstrap-datepicker="timeSeries.tsfromD" date-available="layer.ncInfo.datesWithData">
           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           <input class="form-control input-sm" type="text">
         </div>
         à
         <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
-          gn-bootstrap-datepicker="timeSeries.tstoD" date-available="layer.ncInfo.datesWithData">
+             gn-bootstrap-datepicker="timeSeries.tstoD" date-available="layer.ncInfo.datesWithData">
           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           <input class="form-control input-sm" type="text">
         </div>

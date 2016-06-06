@@ -43,6 +43,7 @@ package org.fao.geonet.services.metadata;
 
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.MoreExecutors;
+
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.util.ThreadUtils;
@@ -56,32 +57,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Class that extends MetadataIndexerProcessor to reindex the metadata
- * changed in any of the Batch operation services
+ * Class that extends MetadataIndexerProcessor to reindex the metadata changed in any of the Batch
+ * operation services
  */
 public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
-
-    public static final class BatchOpsCallable implements Callable<Void> {
-        private final int ids[];
-        private final int beginIndex, count;
-        private final DataManager dm;
-
-        BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm) {
-            this.ids = ids;
-            this.beginIndex = beginIndex;
-            this.count = count;
-            this.dm = dm;
-        }
-
-        public Void call() throws Exception {
-            for (int i = beginIndex; i < beginIndex + count; i++) {
-                boolean doIndex = beginIndex + count - 1 == i;
-                dm.indexMetadata(ids[i] + "", doIndex);
-            }
-
-            return null;
-        }
-    }
 
     Set<Integer> metadata;
 
@@ -93,6 +72,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
     public void process() throws Exception {
         process(false);
     }
+
     public void process(boolean runInCurrentThread) throws Exception {
         int threadCount = ThreadUtils.getNumberOfThreads();
         ExecutorService executor = null;
@@ -145,6 +125,28 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 
     protected BatchOpsCallable createCallable(int[] ids, int start, int count) {
         return new BatchOpsCallable(ids, start, count, getDataManager());
+    }
+
+    public static final class BatchOpsCallable implements Callable<Void> {
+        private final int ids[];
+        private final int beginIndex, count;
+        private final DataManager dm;
+
+        BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm) {
+            this.ids = ids;
+            this.beginIndex = beginIndex;
+            this.count = count;
+            this.dm = dm;
+        }
+
+        public Void call() throws Exception {
+            for (int i = beginIndex; i < beginIndex + count; i++) {
+                boolean doIndex = beginIndex + count - 1 == i;
+                dm.indexMetadata(ids[i] + "", doIndex);
+            }
+
+            return null;
+        }
     }
 }
 

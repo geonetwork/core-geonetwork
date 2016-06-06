@@ -1,6 +1,7 @@
 package org.fao.geonet.wro4j;
 
 import junit.framework.TestCase;
+
 import ro.isdc.wro.model.resource.Resource;
 import ro.isdc.wro.model.resource.ResourceType;
 
@@ -53,7 +54,7 @@ public class StripGoogProcessorTest extends TestCase {
 
     public void testProcess4() throws Exception {
         Reader reader = new StringReader("goog.provide('id');goog.require('id2'); goog.require('id2'); goog.require('id2'); \n" +
-                                         "goog.require('id2'); \ngoog.require('id2'); goog.require('id2'); \n\nconsole.log('hi')");
+            "goog.require('id2'); \ngoog.require('id2'); goog.require('id2'); \n\nconsole.log('hi')");
         StringWriter writer = new StringWriter();
         final StripGoogProcessor processor = new StripGoogProcessor();
         Resource resource = new Resource();

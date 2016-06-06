@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
@@ -34,34 +35,33 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** This service is used by metadata.show/edit to retrieve the current
-  * position in the metadata page before it is refreshed
-  */
+/**
+ * This service is used by metadata.show/edit to retrieve the current position in the metadata page
+ * before it is refreshed
+ */
 
-public class GetPositionMD implements Service
-{
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class GetPositionMD implements Service {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		UserSession session = context.getUserSession();
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        UserSession session = context.getUserSession();
 
-		String data = (String) session.getProperty(Geonet.Session.METADATA_POSITION);
+        String data = (String) session.getProperty(Geonet.Session.METADATA_POSITION);
 
-		if (data == null || data.equals(""))
-		{
-			context.info("Creating default metadata position");
-			data = "0";
-			session.setProperty(Geonet.Session.METADATA_POSITION, data);
-		}
-		return new Element("a").setText(data);
-	}
+        if (data == null || data.equals("")) {
+            context.info("Creating default metadata position");
+            data = "0";
+            session.setProperty(Geonet.Session.METADATA_POSITION, data);
+        }
+        return new Element("a").setText(data);
+    }
 }
 
 //=============================================================================

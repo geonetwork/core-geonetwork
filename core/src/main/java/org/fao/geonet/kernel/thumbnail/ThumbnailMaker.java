@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.thumbnail;
 
 import jeeves.server.context.ServiceContext;
+
 import org.dom4j.DocumentException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.IO;
@@ -46,6 +47,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+
 import javax.imageio.ImageIO;
 
 /**
@@ -63,6 +65,50 @@ public class ThumbnailMaker {
 
     @Autowired
     private ApplicationContext _applicationContext;
+
+    public static void rotate(Path imageFile, String extension, int angle) {
+        BufferedImage originalImage;
+        try {
+            originalImage = readImage(imageFile);
+            BufferedImage rotatedImage = rotate(originalImage, angle);
+            writeImage(rotatedImage, imageFile, extension);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static BufferedImage readImage(Path fileLocation) throws IOException {
+        BufferedImage img;
+        try (InputStream in = IO.newInputStream(fileLocation)) {
+            img = ImageIO.read(in);
+        }
+        return img;
+    }
+
+    public static void writeImage(BufferedImage img, Path fileLocation, String extension) throws IOException {
+        try (OutputStream out = Files.newOutputStream(fileLocation)) {
+            ImageIO.write(img, extension, out);
+        }
+    }
+
+    /**
+     * Rotate an image
+     *
+     * @param angle Angle in degree
+     */
+    public static BufferedImage rotate(BufferedImage image, double angle) {
+        angle = Math.toRadians(angle);
+        double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
+        int w = image.getWidth(), h = image.getHeight();
+        int neww = (int) Math.floor(w * cos + h * sin), newh = (int) Math.floor(h * cos + w * sin);
+        BufferedImage result = new BufferedImage(neww, newh, Transparency.TRANSLUCENT);
+        Graphics2D g = result.createGraphics();
+        g.translate((neww - w) / 2, (newh - h) / 2);
+        g.rotate(angle, w / 2.0, h / 2.0);
+        g.drawRenderedImage(image, null);
+        g.dispose();
+        return result;
+    }
 
     public void init(ServiceContext context) {
         configFilePath = context.getAppPath() + File.separator + CONFIG_FILE;
@@ -88,13 +134,13 @@ public class ThumbnailMaker {
 
                 if (Log.isDebugEnabled(LOGGER_NAME)) {
                     Log.debug(LOGGER_NAME, "Print module configuration: " +
-                            mapPrinter.getConfig().toString());
+                        mapPrinter.getConfig().toString());
                 }
 
                 lastModified = lastModifiedCheck;
             } catch (FileNotFoundException e) {
                 Log.error(LOGGER_NAME, "Thumbnail maker configuration file " +
-                configFilePath + " not found. Error is " + e.getMessage());
+                    configFilePath + " not found. Error is " + e.getMessage());
             }
         }
     }
@@ -104,7 +150,7 @@ public class ThumbnailMaker {
     }
 
     public Path generateThumbnail(String jsonConfig, Integer rotationAngle)
-            throws IOException, DocumentException, com.itextpdf.text.DocumentException {
+        throws IOException, DocumentException, com.itextpdf.text.DocumentException {
 
         PJsonObject specJson = MapPrinter.parseSpec(jsonConfig);
         if (Log.isDebugEnabled(LOGGER_NAME)) {
@@ -116,11 +162,11 @@ public class ThumbnailMaker {
 
         try (OutputStream out = Files.newOutputStream(tempFile)) {
             PrintParams params = new PrintParams(
-                    getMapPrinter().getConfig(),
-                    configFile.getParentFile(),
-                    specJson,
-                    out,
-                    new HashMap<String, String>());
+                getMapPrinter().getConfig(),
+                configFile.getParentFile(),
+                specJson,
+                out,
+                new HashMap<String, String>());
             outputFormat.print(params);
         } catch (InterruptedException e) {
             Log.error(Geonet.GEONETWORK, "Error creating a thumbnail", e);
@@ -130,49 +176,5 @@ public class ThumbnailMaker {
             rotate(tempFile, outputFormat.getFileSuffix(), rotationAngle);
         }
         return tempFile;
-    }
-
-    public static void rotate(Path imageFile, String extension, int angle) {
-        BufferedImage originalImage;
-        try {
-            originalImage = readImage(imageFile);
-            BufferedImage rotatedImage = rotate(originalImage, angle);
-            writeImage(rotatedImage, imageFile, extension);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static BufferedImage readImage(Path fileLocation) throws IOException {
-        BufferedImage img;
-        try (InputStream in = IO.newInputStream(fileLocation)) {
-            img = ImageIO.read(in);
-        }
-        return img;
-    }
-    public static void writeImage(BufferedImage img, Path fileLocation, String extension) throws IOException {
-        try (OutputStream out = Files.newOutputStream(fileLocation)) {
-            ImageIO.write(img, extension, out);
-        }
-    }
-
-    /**
-     * Rotate an image
-     *
-     * @param image
-     * @param angle Angle in degree
-     * @return
-     */
-    public static BufferedImage rotate(BufferedImage image, double angle) {
-        angle = Math.toRadians(angle);
-        double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
-        int w = image.getWidth(), h = image.getHeight();
-        int neww = (int)Math.floor(w*cos+h*sin), newh = (int)Math.floor(h*cos+w*sin);
-        BufferedImage result = new BufferedImage(neww, newh, Transparency.TRANSLUCENT);
-        Graphics2D g = result.createGraphics();
-        g.translate((neww-w)/2, (newh-h)/2);
-        g.rotate(angle, w/2.0, h/2.0);
-        g.drawRenderedImage(image, null);
-        g.dispose();
-        return result;
     }
 }

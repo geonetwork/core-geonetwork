@@ -23,15 +23,15 @@
 
     <!-- The autocomplete list -->
     <div class="list-group tt-dropdown-menu gn-autocomplete-list"
-        data-ng-show="searchResults.records.length > 0">
+         data-ng-show="searchResults.records.length > 0">
       <span class="tt-suggestions">
         <div class="tt-suggestion"
-            data-ng-repeat="r in searchResults.records"> {{r.title}}
+             data-ng-repeat="r in searchResults.records"> {{r.title}}
           <span class="pull-right">
             <!-- Add action for simple subtemplates -->
             <div class="btn btn-default"
                  data-ng-hide="isContact"
-                  data-ng-click="addEntry(r)">
+                 data-ng-click="addEntry(r)">
               <i class="fa fa-plus"></i>
               <!-- TODO: Add with XLink mode -->
             </div>
@@ -66,7 +66,8 @@
               </button>
               <ul class="dropdown-menu" role="menu">
                 <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
-                  <a href="" data-ng-click="addEntry(r, role.code, true)" title="{{role.description}}">
+                  <a href="" data-ng-click="addEntry(r, role.code, true)"
+                     title="{{role.description}}">
                     {{role.label}}
                   </a>
                 </li>

@@ -10,9 +10,7 @@ import ro.isdc.wro.manager.factory.ConfigurableWroManagerFactory;
 import ro.isdc.wro.model.factory.WroModelFactory;
 
 /**
- * User: Jesse
- * Date: 11/25/13
- * Time: 8:35 AM
+ * User: Jesse Date: 11/25/13 Time: 8:35 AM
  */
 public class GeonetworkWrojManagerFactory extends ConfigurableWroManagerFactory {
     public static final String WRO4J_LOG = "geonetwork.wro4j";
@@ -45,6 +43,7 @@ public class GeonetworkWrojManagerFactory extends ConfigurableWroManagerFactory 
                 return new LruMemoryCacheStrategy<>(lruSize);
         }
     }
+
     @Override
     public void destroy() {
         super.destroy();

@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -56,87 +57,6 @@ public class AddElement implements Service {
     public static final String DEFINITION = "definition";
     public static final String PREF_LAB = "label";
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
-
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		String ref = Util.getParam(params, Params.REF);
-		String namespace = Util.getParam(params, "namespace", "");
-		String newid = Util.getParam(params, "newid", null);
-        if (newid == null) {
-            newid = UUID.randomUUID().toString();
-        }
-		String thesaType = Util.getParam(params, "refType");
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-
-		ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
-		Thesaurus thesaurus = manager.getThesaurusByName(ref);
-
-		if (thesaurus.isFreeCode(null, newid)) {
-
-		    KeywordBean keyword = new KeywordBean(context.getBean(IsoLanguagesMapper.class))
-	            .setNamespaceCode(namespace)
-	            .setUriCode(newid);
-
-            Map<Pair<String, String>, String> localizations = getLocalizedElements(params);
-            if (localizations.isEmpty()) {
-                String prefLab = Util.getParam(params, PREF_LAB);
-                String lang = Util.getParam(params, "lang");
-                String definition = Util.getParam(params, DEFINITION,"");
-
-                keyword.setValue(prefLab, lang)
-            	.setDefinition(definition, lang);
-            } else {
-                Set<Map.Entry<Pair<String, String>, String>> entries = localizations.entrySet();
-
-                for (Map.Entry<Pair<String, String>, String> entry : entries) {
-                    String lang = entry.getKey().one();
-                    if (entry.getKey().two().equals(DEFINITION)) {
-                        final String definition = entry.getValue();
-                        keyword.setDefinition(definition, lang);
-                    } else if (entry.getKey().two().equals(PREF_LAB)) {
-                        final String label = entry.getValue();
-                        keyword.setValue(label, lang);
-                    } else {
-                        throw new IllegalArgumentException("Unknown localization type: "+entry.getKey().two());
-                    }
-
-                }
-            }
-
-			if (thesaType.equals("place")) {
-				String east = Util.getParam(params, "east");
-				String west = Util.getParam(params, "west");
-				String south = Util.getParam(params, "south");
-				String north = Util.getParam(params, "north");
-				keyword.setCoordEast(east)
-                    .setCoordNorth(north)
-                    .setCoordSouth(south)
-                    .setCoordWest(west);
-			}
-
-			thesaurus.addElement(keyword);
-
-			elResp.addContent(new Element("selected").setText(ref));
-			elResp.addContent(new Element("mode").setText("edit"));
-		} else {
-			elResp.addContent(new Element("error").setAttribute("message",
-                    String.format("Code value '%s' already exists in thesaurus", newid)));
-		}
-
-		return elResp;
-	}
-
     public static Map<Pair<String, String>, String> getLocalizedElements(Element params) {
         final java.util.List<Element> children = params.getChildren();
 
@@ -151,7 +71,88 @@ public class AddElement implements Service {
             }
         }
         return map;
-	}
+    }
+
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
+
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
+
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
+        GeonetContext gc = (GeonetContext) context
+            .getHandlerContext(Geonet.CONTEXT_NAME);
+
+        String ref = Util.getParam(params, Params.REF);
+        String namespace = Util.getParam(params, "namespace", "");
+        String newid = Util.getParam(params, "newid", null);
+        if (newid == null) {
+            newid = UUID.randomUUID().toString();
+        }
+        String thesaType = Util.getParam(params, "refType");
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+
+        ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
+        Thesaurus thesaurus = manager.getThesaurusByName(ref);
+
+        if (thesaurus.isFreeCode(null, newid)) {
+
+            KeywordBean keyword = new KeywordBean(context.getBean(IsoLanguagesMapper.class))
+                .setNamespaceCode(namespace)
+                .setUriCode(newid);
+
+            Map<Pair<String, String>, String> localizations = getLocalizedElements(params);
+            if (localizations.isEmpty()) {
+                String prefLab = Util.getParam(params, PREF_LAB);
+                String lang = Util.getParam(params, "lang");
+                String definition = Util.getParam(params, DEFINITION, "");
+
+                keyword.setValue(prefLab, lang)
+                    .setDefinition(definition, lang);
+            } else {
+                Set<Map.Entry<Pair<String, String>, String>> entries = localizations.entrySet();
+
+                for (Map.Entry<Pair<String, String>, String> entry : entries) {
+                    String lang = entry.getKey().one();
+                    if (entry.getKey().two().equals(DEFINITION)) {
+                        final String definition = entry.getValue();
+                        keyword.setDefinition(definition, lang);
+                    } else if (entry.getKey().two().equals(PREF_LAB)) {
+                        final String label = entry.getValue();
+                        keyword.setValue(label, lang);
+                    } else {
+                        throw new IllegalArgumentException("Unknown localization type: " + entry.getKey().two());
+                    }
+
+                }
+            }
+
+            if (thesaType.equals("place")) {
+                String east = Util.getParam(params, "east");
+                String west = Util.getParam(params, "west");
+                String south = Util.getParam(params, "south");
+                String north = Util.getParam(params, "north");
+                keyword.setCoordEast(east)
+                    .setCoordNorth(north)
+                    .setCoordSouth(south)
+                    .setCoordWest(west);
+            }
+
+            thesaurus.addElement(keyword);
+
+            elResp.addContent(new Element("selected").setText(ref));
+            elResp.addContent(new Element("mode").setText("edit"));
+        } else {
+            elResp.addContent(new Element("error").setAttribute("message",
+                String.format("Code value '%s' already exists in thesaurus", newid)));
+        }
+
+        return elResp;
+    }
 }
 
 // =============================================================================

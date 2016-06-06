@@ -42,7 +42,7 @@ public class SchematronCriteriaSpecs {
             @Override
             public Predicate toPredicate(Root<SchematronCriteria> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 final Path<Integer> schematronIdPath = root.get(SchematronCriteria_.group).get(SchematronCriteriaGroup_.id).get
-                        (SchematronCriteriaGroupId_.schematronId);
+                    (SchematronCriteriaGroupId_.schematronId);
 
                 return cb.equal(schematronIdPath, schematronId);
             }
@@ -54,7 +54,7 @@ public class SchematronCriteriaSpecs {
             @Override
             public Predicate toPredicate(Root<SchematronCriteria> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 final Path<String> groupNamePath = root.get(SchematronCriteria_.group).get(SchematronCriteriaGroup_.id).get
-                        (SchematronCriteriaGroupId_.name);
+                    (SchematronCriteriaGroupId_.name);
 
                 return cb.equal(groupNamePath, name);
             }

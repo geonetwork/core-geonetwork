@@ -37,8 +37,7 @@ public class SitemapDocumentNotFoundEx extends NotFoundEx {
 
     private static final long serialVersionUID = -1237422298790255281L;
 
-    public SitemapDocumentNotFoundEx(int page)
-    {
+    public SitemapDocumentNotFoundEx(int page) {
         super("Sitemap document not found", page);
 
         id = "sitemap-document-not-found";

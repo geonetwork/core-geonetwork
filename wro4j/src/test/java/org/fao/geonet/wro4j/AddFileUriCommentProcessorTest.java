@@ -1,6 +1,7 @@
 package org.fao.geonet.wro4j;
 
 import org.junit.Test;
+
 import ro.isdc.wro.model.resource.Resource;
 import ro.isdc.wro.model.resource.ResourceType;
 

@@ -2,11 +2,11 @@
 <!--
   Main XSL for creating an editor form.
 -->
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:saxon="http://saxon.sf.net/"
-  xmlns:java="java:org.fao.geonet.util.XslUtil"
-  xmlns:geonet="http://www.fao.org/geonetwork"
-  exclude-result-prefixes="geonet saxon" extension-element-prefixes="saxon">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                version="2.0"
+                exclude-result-prefixes="geonet saxon" extension-element-prefixes="saxon">
 
   <xsl:include href="../common.xsl"/>
 
@@ -20,15 +20,15 @@
   </xsl:template>
 
   <!--
-	Form content
-	-->
+  Form content
+  -->
   <xsl:template name="content">
     <xsl:for-each select="$metadata">
 
 
       <div class="metadata {$currTab}">
         <form id="editForm" name="mainForm" accept-charset="UTF-8" method="POST"
-          action="{/root/gui/locService}/metadata.update">
+              action="{/root/gui/locService}/metadata.update">
           <input type="hidden" id="schema" value="{geonet:info/schema}"/>
           <input type="hidden" id="template" name="template" value="{geonet:info/isTemplate}"/>
           <input type="hidden" id="uuid" value="{geonet:info/uuid}"/>
@@ -41,8 +41,7 @@
           <input type="hidden" name="editTab" value="true"/>
           <input type="hidden" id="minor" name="minor">
             <xsl:attribute name="value">
-                <xsl:value-of select="/root/request/minor"/>
-                <!--<xsl:value-of select="java:encodeForJavaScript(/root/request/minor)"/>-->
+              <xsl:value-of select="java:encodeForJavaScript(/root/request/minor)"/>
             </xsl:attribute>
           </input>
           <input type="hidden" name="ref"/>
@@ -58,11 +57,10 @@
           </xsl:if>
           <input type="hidden" name="position" value="-1"/>
           <!-- showvalidationerrors is only set to true when 'Check' is
-							     pressed - default is false -->
+                   pressed - default is false -->
           <input type="hidden" name="showvalidationerrors">
             <xsl:attribute name="value">
-                <xsl:value-of select="/root/request/showvalidationerrors"/>
-                <!--<xsl:value-of select="java:encodeForJavaScript(/root/request/showvalidationerrors)"/>-->
+              <xsl:value-of select="java:encodeForJavaScript(/root/request/showvalidationerrors)"/>
             </xsl:attribute>
           </input>
 
@@ -75,7 +73,7 @@
           <!-- Tabs -->
           <xsl:call-template name="tab">
             <xsl:with-param name="tabLink"
-              select="concat(/root/gui/locService,'/metadata.update.new')"/>
+                            select="concat(/root/gui/locService,'/metadata.update.new')"/>
             <xsl:with-param name="schema" select="geonet:info/schema"/>
           </xsl:call-template>
 

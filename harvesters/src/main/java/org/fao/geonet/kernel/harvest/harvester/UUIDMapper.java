@@ -31,26 +31,25 @@ import org.fao.geonet.repository.SimpleMetadata;
 
 //=============================================================================
 
-/** Create a mapping remote ID -> local ID / change date. Retrieves all metadata
-  * of a given siteID and puts them into an hashmap.
-  */
+/**
+ * Create a mapping remote ID -> local ID / change date. Retrieves all metadata of a given siteID
+ * and puts them into an hashmap.
+ */
 
-public class UUIDMapper
-{
-	private HashMap<String, String> hmUuidDate 		 = new HashMap<String, String>();
-	private HashMap<String, String> hmUuidId   		 = new HashMap<String, String>();
-	private HashMap<String, String> hmUuidTemplate = new HashMap<String, String>();
+public class UUIDMapper {
+    private HashMap<String, String> hmUuidDate = new HashMap<String, String>();
+    private HashMap<String, String> hmUuidId = new HashMap<String, String>();
+    private HashMap<String, String> hmUuidTemplate = new HashMap<String, String>();
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public UUIDMapper(MetadataRepository repo, String harvestUuid) throws Exception
-	{
+    public UUIDMapper(MetadataRepository repo, String harvestUuid) throws Exception {
 
-	    final List<SimpleMetadata> all = repo.findAllSimple(harvestUuid);
+        final List<SimpleMetadata> all = repo.findAllSimple(harvestUuid);
 
         //This may lead to problems if we have millions of records from the same harvester...
         //If that happens, we may have to look for something that uses even less memory
@@ -59,27 +58,35 @@ public class UUIDMapper
             hmUuidId.put(record.getUuid(), record.getId());
             hmUuidTemplate.put(record.getUuid(), record.getIsTemplate());
         }
-	}
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-	public String getTemplate(String uuid) { return hmUuidTemplate.get(uuid); }
+    public String getTemplate(String uuid) {
+        return hmUuidTemplate.get(uuid);
+    }
 
-	//--------------------------------------------------------------------------
-	
-	public String getChangeDate(String uuid) { return hmUuidDate.get(uuid); }
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public String getChangeDate(String uuid) {
+        return hmUuidDate.get(uuid);
+    }
 
-	public String getID(String uuid) { return hmUuidId.get(uuid); }
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public String getID(String uuid) {
+        return hmUuidId.get(uuid);
+    }
 
-	public Iterable<String> getUUIDs() { return hmUuidDate.keySet(); }
+    //--------------------------------------------------------------------------
+
+    public Iterable<String> getUUIDs() {
+        return hmUuidDate.keySet();
+    }
 }
 
 //=============================================================================

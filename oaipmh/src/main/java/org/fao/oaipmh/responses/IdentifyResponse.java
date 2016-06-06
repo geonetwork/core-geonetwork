@@ -33,244 +33,250 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class IdentifyResponse extends AbstractResponse
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class IdentifyResponse extends AbstractResponse {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public IdentifyResponse() {}
+    private String reposName;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    private String baseURL;
 
-	public IdentifyResponse(Element response)
-	{
-		super(response);
-		build(response);
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    private ISODate earlDateStamp;
+    private DeletedRecord deletedRecord;
+    private Granularity granularity;
+    private List<String> adminEmails = new ArrayList<String>();
+    private List<String> compressions = new ArrayList<String>();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    private List<Element> descriptions = new ArrayList<Element>();
 
-	public String  getRepositoryName()    { return reposName;     }
-	public String  getBaseUrl()           { return baseURL;       }
-	public ISODate getEarliestDateStamp() { return earlDateStamp; }
+    //---------------------------------------------------------------------------
 
-	public DeletedRecord getDeletedRecord() { return deletedRecord; }
-	public Granularity   getGranularity()   { return granularity;   }
+    public IdentifyResponse() {
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setRepositoryName(String name)
-	{
-		reposName = name;
-	}
+    public IdentifyResponse(Element response) {
+        super(response);
+        build(response);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setBaseUrl(String url)
-	{
-		baseURL = url;
-	}
+    public String getRepositoryName() {
+        return reposName;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setEarliestDateStamp(ISODate dateStamp)
-	{
-		earlDateStamp = dateStamp;
-	}
+    public void setRepositoryName(String name) {
+        reposName = name;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setDeletedRecord(DeletedRecord dr)
-	{
-		deletedRecord = dr;
-	}
+    public String getBaseUrl() {
+        return baseURL;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setGranularity(Granularity g)
-	{
-		granularity = g;
-	}
+    public void setBaseUrl(String url) {
+        baseURL = url;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void clearAdminEmails() { adminEmails.clear(); }
+    public ISODate getEarliestDateStamp() {
+        return earlDateStamp;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public void addAdminEmail(String email)
-	{
-		adminEmails.add(email);
-	}
+    public void setEarliestDateStamp(ISODate dateStamp) {
+        earlDateStamp = dateStamp;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public Element toXml()
-	{
-		Element root = new Element(IdentifyRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
+    public DeletedRecord getDeletedRecord() {
+        return deletedRecord;
+    }
 
-		add(root, "repositoryName",  reposName);
-		add(root, "baseURL",         baseURL);
-		add(root, "protocolVersion", "2.0");
+    public void setDeletedRecord(DeletedRecord dr) {
+        deletedRecord = dr;
+    }
 
-		for (String email : adminEmails)
-			add(root, "adminEmail", email);
+    public Granularity getGranularity() {
+        return granularity;
+    }
 
-		add(root, "earliestDatestamp", earlDateStamp +"Z");
-		add(root, "deletedRecord",     deletedRecord.toString());
-		add(root, "granularity",       granularity.toString());
+    public void setGranularity(Granularity g) {
+        granularity = g;
+    }
 
-		for (String compression : compressions)
-			add(root, "compression", compression);
+    public void clearAdminEmails() {
+        adminEmails.clear();
+    }
 
-		for (Element descr : descriptions)
-			root.addContent((Element) descr.clone());
+    public void addAdminEmail(String email) {
+        adminEmails.add(email);
+    }
 
-		return root;
-	}
+    public Element toXml() {
+        Element root = new Element(IdentifyRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+        add(root, "repositoryName", reposName);
+        add(root, "baseURL", baseURL);
+        add(root, "protocolVersion", "2.0");
 
-	private void build(Element response)
-	{
-		Element ident = response.getChild("Identify", OaiPmh.Namespaces.OAI_PMH);
+        for (String email : adminEmails)
+            add(root, "adminEmail", email);
 
-		reposName = ident.getChildText("repositoryName", OaiPmh.Namespaces.OAI_PMH);
-		baseURL   = ident.getChildText("baseURL",        OaiPmh.Namespaces.OAI_PMH);
+        add(root, "earliestDatestamp", earlDateStamp + "Z");
+        add(root, "deletedRecord", deletedRecord.toString());
+        add(root, "granularity", granularity.toString());
 
-		//--- store earliest datestamp
+        for (String compression : compressions)
+            add(root, "compression", compression);
 
-		String eds = ident.getChildText("earliestDatestamp", OaiPmh.Namespaces.OAI_PMH);
-		earlDateStamp = new ISODate(eds);
+        for (Element descr : descriptions)
+            root.addContent((Element) descr.clone());
 
-		//--- add admin emails
+        return root;
+    }
 
-		for (Object o : ident.getChildren("adminEmail", OaiPmh.Namespaces.OAI_PMH))
-		{
-			Element email = (Element) o;
-			adminEmails.add(email.getText());
-		}
+    private void build(Element response) {
+        Element ident = response.getChild("Identify", OaiPmh.Namespaces.OAI_PMH);
 
-		//--- handle granularity
+        reposName = ident.getChildText("repositoryName", OaiPmh.Namespaces.OAI_PMH);
+        baseURL = ident.getChildText("baseURL", OaiPmh.Namespaces.OAI_PMH);
 
-		String gran = ident.getChildText("granularity", OaiPmh.Namespaces.OAI_PMH);
-		granularity = Granularity.parse(gran);
+        //--- store earliest datestamp
 
-		//--- handle deleted record
+        String eds = ident.getChildText("earliestDatestamp", OaiPmh.Namespaces.OAI_PMH);
+        earlDateStamp = new ISODate(eds);
 
-		String delRec = ident.getChildText("deletedRecord", OaiPmh.Namespaces.OAI_PMH);
-		deletedRecord = DeletedRecord.parse(delRec);
+        //--- add admin emails
 
-		//--- add compressions
+        for (Object o : ident.getChildren("adminEmail", OaiPmh.Namespaces.OAI_PMH)) {
+            Element email = (Element) o;
+            adminEmails.add(email.getText());
+        }
 
-		for (Object o : ident.getChildren("compression", OaiPmh.Namespaces.OAI_PMH))
-		{
-			Element comp = (Element) o;
-			compressions.add(comp.getText());
-		}
+        //--- handle granularity
 
-		//--- add descriptions
+        String gran = ident.getChildText("granularity", OaiPmh.Namespaces.OAI_PMH);
+        granularity = Granularity.parse(gran);
 
-		for (Object o : ident.getChildren("description", OaiPmh.Namespaces.OAI_PMH))
-			descriptions.add((Element) o);
-	}
+        //--- handle deleted record
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        String delRec = ident.getChildText("deletedRecord", OaiPmh.Namespaces.OAI_PMH);
+        deletedRecord = DeletedRecord.parse(delRec);
 
-	private String  reposName;
-	private String  baseURL;
+        //--- add compressions
 
-	private ISODate       earlDateStamp;
-	private DeletedRecord deletedRecord;
-	private Granularity   granularity;
+        for (Object o : ident.getChildren("compression", OaiPmh.Namespaces.OAI_PMH)) {
+            Element comp = (Element) o;
+            compressions.add(comp.getText());
+        }
 
-	private List<String>  adminEmails  = new ArrayList<String>();
-	private List<String>  compressions = new ArrayList<String>();
-	private List<Element> descriptions = new ArrayList<Element>();
+        //--- add descriptions
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Enumerations
-	//---
-	//---------------------------------------------------------------------------
+        for (Object o : ident.getChildren("description", OaiPmh.Namespaces.OAI_PMH))
+            descriptions.add((Element) o);
+    }
 
-	//---------------------------------------------------------------------------
-	//--- Granularity
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Enumerations
+    //---
+    //---------------------------------------------------------------------------
 
-	public enum Granularity
-	{
-		SHORT("YYYY-MM-DD"), LONG("YYYY-MM-DDThh:mm:ssZ");
+    //---------------------------------------------------------------------------
+    //--- Granularity
+    //---------------------------------------------------------------------------
 
-		//------------------------------------------------------------------------
+    public enum Granularity {
+        SHORT("YYYY-MM-DD"), LONG("YYYY-MM-DDThh:mm:ssZ");
 
-		private Granularity(String type) { this.type = type; }
+        //------------------------------------------------------------------------
 
-		//------------------------------------------------------------------------
+        private String type;
 
-		public String toString() { return type; }
+        //------------------------------------------------------------------------
 
-		//------------------------------------------------------------------------
+        private Granularity(String type) {
+            this.type = type;
+        }
 
-		public static Granularity parse(String type)
-		{
-			if (type.equals(SHORT.toString())) return SHORT;
-			if (type.equals(LONG .toString())) return LONG;
+        //------------------------------------------------------------------------
 
-			throw new RuntimeException("Unknown granularity type : "+ type);
-		}
+        public static Granularity parse(String type) {
+            if (type.equals(SHORT.toString())) return SHORT;
+            if (type.equals(LONG.toString())) return LONG;
 
-		//------------------------------------------------------------------------
+            throw new RuntimeException("Unknown granularity type : " + type);
+        }
 
-		private String type;
-	}
+        //------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//--- DeletedRecord
-	//---------------------------------------------------------------------------
+        public String toString() {
+            return type;
+        }
+    }
 
-	public enum DeletedRecord
-	{
-		NO("no"), PERSISTENT("persistent"), TRANSIENT("transient");
+    //---------------------------------------------------------------------------
+    //--- DeletedRecord
+    //---------------------------------------------------------------------------
 
-		//------------------------------------------------------------------------
+    public enum DeletedRecord {
+        NO("no"), PERSISTENT("persistent"), TRANSIENT("transient");
 
-		private DeletedRecord(String type) { this.type = type; }
+        //------------------------------------------------------------------------
 
-		//------------------------------------------------------------------------
+        private String type;
 
-		public String toString() { return type; }
+        //------------------------------------------------------------------------
 
-		//------------------------------------------------------------------------
+        private DeletedRecord(String type) {
+            this.type = type;
+        }
 
-		public static DeletedRecord parse(String type)
-		{
-			if (type.equals(NO.toString()))         return NO;
-			if (type.equals(PERSISTENT.toString())) return PERSISTENT;
-			if (type.equals(TRANSIENT .toString())) return TRANSIENT;
+        //------------------------------------------------------------------------
 
-			throw new RuntimeException("Unknown deleted record type : "+ type);
-		}
+        public static DeletedRecord parse(String type) {
+            if (type.equals(NO.toString())) return NO;
+            if (type.equals(PERSISTENT.toString())) return PERSISTENT;
+            if (type.equals(TRANSIENT.toString())) return TRANSIENT;
 
-		//------------------------------------------------------------------------
+            throw new RuntimeException("Unknown deleted record type : " + type);
+        }
 
-		private String type;
-	}
+        //------------------------------------------------------------------------
+
+        public String toString() {
+            return type;
+        }
+    }
 }
 
 //=============================================================================

@@ -25,24 +25,24 @@ package org.fao.geonet.exceptions;
 
 //=============================================================================
 
-public class SchemaMatchConflictException extends JeevesClientEx
-{
+public class SchemaMatchConflictException extends JeevesClientEx {
     private static final long serialVersionUID = 1L;
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
 
-    public SchemaMatchConflictException(String name) { this(name, null); }
+    public SchemaMatchConflictException(String name) {
+        this(name, null);
+    }
 
-	public SchemaMatchConflictException(String name, Object value)
-	{
-		super(name, value);
+    public SchemaMatchConflictException(String name, Object value) {
+        super(name, value);
 
-		id = "schema-match-conflict";
-	}
+        id = "schema-match-conflict";
+    }
 }
 
 //=============================================================================

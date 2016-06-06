@@ -107,7 +107,7 @@ public final class XslUtil
     }
 
     public static Object parseWikiText(NodeInfo node, String src, String markupLanguage) throws InstantiationException,
-            IllegalAccessException, ClassNotFoundException, XPathException, UnsupportedEncodingException {
+        IllegalAccessException, ClassNotFoundException, XPathException, UnsupportedEncodingException {
         NodeInfo info = (NodeInfo) node;
         MarkupParser markupParser;
         if (!markupLanguage.equals("none")) {
@@ -150,7 +150,7 @@ public final class XslUtil
         }
         String cleanedHtml = Jsoup.clean(html, WHITE_LIST);
         // span is needed so that the case where there is text before or after html
-        // the xml is valid and order of text elements is maintained 
+        // the xml is valid and order of text elements is maintained
         return "<span>"+cleanedHtml+"</span>";
     }
 
@@ -186,8 +186,8 @@ public final class XslUtil
     }
 
     public static boolean isCasEnabled() {
-		return ProfileManager.isCasEnabled();
-	}
+        return ProfileManager.isCasEnabled();
+    }
 
     /**
      * Return a service handler config parameter
@@ -245,26 +245,26 @@ public final class XslUtil
         return "";
     }
     /**
-	 * Check if bean is defined in the context
-	 *
-	 * @param beanId id of the bean to look up
-	 */
-	public static boolean existsBean(String beanId) {
-		return ProfileManager.existsBean(beanId);
-	}
+     * Check if bean is defined in the context
+     *
+     * @param beanId id of the bean to look up
+     */
+    public static boolean existsBean(String beanId) {
+        return ProfileManager.existsBean(beanId);
+    }
     /**
-	 * Optimistically check if user can access a given url.  If not possible to determine then
-	 * the methods will return true.  So only use to show url links, not check if a user has access
-	 * for certain.  Spring security should ensure that users cannot access restricted urls though.
-	 *
-	 * @param serviceName the raw services name (main.home) or (admin)
-	 *
-	 * @return true if accessible or system is unable to determine because the current
-	 * 				thread does not have a ServiceContext in its thread local store
-	 */
-	public static boolean isAccessibleService(Object serviceName) {
-		return ProfileManager.isAccessibleService(serviceName);
-	}
+     * Optimistically check if user can access a given url.  If not possible to determine then
+     * the methods will return true.  So only use to show url links, not check if a user has access
+     * for certain.  Spring security should ensure that users cannot access restricted urls though.
+     *
+     * @param serviceName the raw services name (main.home) or (admin)
+     *
+     * @return true if accessible or system is unable to determine because the current
+     * 				thread does not have a ServiceContext in its thread local store
+     */
+    public static boolean isAccessibleService(Object serviceName) {
+        return ProfileManager.isAccessibleService(serviceName);
+    }
     /**
      * Takes the characters until the pattern is matched
      */
@@ -423,14 +423,14 @@ public final class XslUtil
             try {
                 final GeonetContext gc = (GeonetContext) ServiceContext.get().getHandlerContext(Geonet.CONTEXT_NAME);
                 Translator t = new CodeListTranslator(gc.getBean(SchemaManager.class),
-                        (String) langCode,
-                        (String) codelist);
+                    (String) langCode,
+                    (String) codelist);
                 translation = t.translate(codeListValue);
             } catch (Exception e) {
                 Log.error(
                     Geonet.GEONETWORK,
                     String.format("Failed to translate codelist value '%s' in language '%s'. Error is %s",
-                            codeListValue, langCode, e.getMessage()));
+                        codeListValue, langCode, e.getMessage()));
             }
             return translation;
         } else {
@@ -455,8 +455,8 @@ public final class XslUtil
      */
     public static @Nonnull String twoCharLangCode(String iso3LangCode, String defaultValue) {
         if(iso3LangCode==null || iso3LangCode.length() == 0) {
-    		return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
-    	} else {
+            return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
+        } else {
             if(iso3LangCode.equalsIgnoreCase("FRA")) {
                 return "FR";
             }
@@ -506,19 +506,19 @@ public final class XslUtil
             // TODO : set proxy
 
             if (conn instanceof HttpURLConnection) {
-               HttpURLConnection httpConnection = (HttpURLConnection) conn;
-               httpConnection.setInstanceFollowRedirects(true);
-               httpConnection.connect();
-               httpConnection.disconnect();
-               // FIXME : some URL return HTTP200 with an empty reply from server
-               // which trigger SocketException unexpected end of file from server
-               int code = httpConnection.getResponseCode();
+                HttpURLConnection httpConnection = (HttpURLConnection) conn;
+                httpConnection.setInstanceFollowRedirects(true);
+                httpConnection.connect();
+                httpConnection.disconnect();
+                // FIXME : some URL return HTTP200 with an empty reply from server
+                // which trigger SocketException unexpected end of file from server
+                int code = httpConnection.getResponseCode();
 
-               if (code == HttpURLConnection.HTTP_OK) {
-                   return "";
-               } else {
-                   return "Status: " + code;
-               }
+                if (code == HttpURLConnection.HTTP_OK) {
+                    return "";
+                } else {
+                    return "Status: " + code;
+                }
             } // TODO : Other type of URLConnection
         } catch (Throwable e) {
             e.printStackTrace();
@@ -528,12 +528,12 @@ public final class XslUtil
         return "";
     }
 
-	public static String threeCharLangCode(String langCode) {
-	    if (langCode == null || langCode.length() < 2) {
+    public static String threeCharLangCode(String langCode) {
+        if (langCode == null || langCode.length() < 2) {
             return Geonet.DEFAULT_LANGUAGE;
         }
 
-		if (langCode.length() == 3) {
+        if (langCode.length() == 3) {
             return langCode;
         }
 
@@ -548,12 +548,12 @@ public final class XslUtil
 
     }
 
-	public static boolean match(Object src, Object pattern) {
-		if (src == null || src.toString().trim().isEmpty()) {
-			return false;
-		}
-		return src.toString().matches(pattern.toString());
-	}
+    public static boolean match(Object src, Object pattern) {
+        if (src == null || src.toString().trim().isEmpty()) {
+            return false;
+        }
+        return src.toString().matches(pattern.toString());
+    }
 
 
     public static Element controlForMarkup(ServiceContext context, Element metadata, String outputParamPath) throws Exception {
@@ -595,57 +595,57 @@ public final class XslUtil
         return contactDetails;
     }
 
-	public static String reprojectCoords(Object minx, Object miny, Object maxx,
-			Object maxy, Object fromEpsg) {
-		String ret = "";
-		try {
-			Double minxf = new Double((String) minx);
-			Double minyf = new Double((String) miny);
-			Double maxxf = new Double((String) maxx);
-			Double maxyf = new Double((String) maxy);
-			CoordinateReferenceSystem fromCrs = CRS.decode((String) fromEpsg);
-			CoordinateReferenceSystem toCrs = CRS.decode("EPSG:4326");
+    public static String reprojectCoords(Object minx, Object miny, Object maxx,
+                                         Object maxy, Object fromEpsg) {
+        String ret = "";
+        try {
+            Double minxf = new Double((String) minx);
+            Double minyf = new Double((String) miny);
+            Double maxxf = new Double((String) maxx);
+            Double maxyf = new Double((String) maxy);
+            CoordinateReferenceSystem fromCrs = CRS.decode((String) fromEpsg);
+            CoordinateReferenceSystem toCrs = CRS.decode("EPSG:4326");
 
-			ReferencedEnvelope env = new ReferencedEnvelope(minxf, maxxf, minyf, maxyf, fromCrs);
-			ReferencedEnvelope reprojected = env.transform(toCrs, true);
+            ReferencedEnvelope env = new ReferencedEnvelope(minxf, maxxf, minyf, maxyf, fromCrs);
+            ReferencedEnvelope reprojected = env.transform(toCrs, true);
 
-			ret = reprojected.getMinX() + "," + reprojected.getMinY() + "," + reprojected.getMaxX() + "," + reprojected.getMaxY();
+            ret = reprojected.getMinX() + "," + reprojected.getMinY() + "," + reprojected.getMaxX() + "," + reprojected.getMaxY();
 
-			Element elemRet = new Element("EX_GeographicBoundingBox", ISO19139Namespaces.GMD);
+            Element elemRet = new Element("EX_GeographicBoundingBox", ISO19139Namespaces.GMD);
 
-			boolean forceXY = Boolean.getBoolean(System.getProperty("org.geotools.referencing.forceXY", "false"));
-			Element elemminx, elemmaxx, elemminy, elemmaxy;
-			if (forceXY) {
-				elemminx = new Element("westBoundLongitude", ISO19139Namespaces.GMD)
-						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinX()));
-				elemmaxx = new Element("eastBoundLongitude", ISO19139Namespaces.GMD)
-						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxX()));
-				elemminy = new Element("southBoundLatitude", ISO19139Namespaces.GMD)
-						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinY()));
-				elemmaxy = new Element("northBoundLatitude", ISO19139Namespaces.GMD)
-						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxY()));
-			} else {
-				elemminx = new Element("westBoundLongitude", ISO19139Namespaces.GMD)
-						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinY()));
-				elemmaxx = new Element("eastBoundLongitude", ISO19139Namespaces.GMD)
-						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxY()));
-				elemminy = new Element("southBoundLatitude", ISO19139Namespaces.GMD)
-						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinX()));
-				elemmaxy = new Element("northBoundLatitude", ISO19139Namespaces.GMD)
-						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxX()));
-			}
-			elemRet.addContent(elemminx);
-			elemRet.addContent(elemmaxx);
-			elemRet.addContent(elemminy);
-			elemRet.addContent(elemmaxy);
+            boolean forceXY = Boolean.getBoolean(System.getProperty("org.geotools.referencing.forceXY", "false"));
+            Element elemminx, elemmaxx, elemminy, elemmaxy;
+            if (forceXY) {
+                elemminx = new Element("westBoundLongitude", ISO19139Namespaces.GMD)
+                    .addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinX()));
+                elemmaxx = new Element("eastBoundLongitude", ISO19139Namespaces.GMD)
+                    .addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxX()));
+                elemminy = new Element("southBoundLatitude", ISO19139Namespaces.GMD)
+                    .addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinY()));
+                elemmaxy = new Element("northBoundLatitude", ISO19139Namespaces.GMD)
+                    .addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxY()));
+            } else {
+                elemminx = new Element("westBoundLongitude", ISO19139Namespaces.GMD)
+                    .addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinY()));
+                elemmaxx = new Element("eastBoundLongitude", ISO19139Namespaces.GMD)
+                    .addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxY()));
+                elemminy = new Element("southBoundLatitude", ISO19139Namespaces.GMD)
+                    .addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinX()));
+                elemmaxy = new Element("northBoundLatitude", ISO19139Namespaces.GMD)
+                    .addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxX()));
+            }
+            elemRet.addContent(elemminx);
+            elemRet.addContent(elemmaxx);
+            elemRet.addContent(elemminy);
+            elemRet.addContent(elemmaxy);
 
-			ret = Xml.getString(elemRet);
+            ret = Xml.getString(elemRet);
 
-		} catch (Throwable e) {
-		}
+        } catch (Throwable e) {
+        }
 
-		return ret;
-	}
+        return ret;
+    }
 
     public static String getSiteUrl() {
         ServiceContext context = ServiceContext.get();

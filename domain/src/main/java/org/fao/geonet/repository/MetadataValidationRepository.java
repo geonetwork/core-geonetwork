@@ -34,7 +34,7 @@ import java.util.List;
  * @author Jesse
  */
 public interface MetadataValidationRepository extends GeonetRepository<MetadataValidation, MetadataValidationId>,
-        MetadataValidationRepositoryCustom {
+    MetadataValidationRepositoryCustom {
     /**
      * Find all validation entities related to the metadata identified by metadataId.
      *

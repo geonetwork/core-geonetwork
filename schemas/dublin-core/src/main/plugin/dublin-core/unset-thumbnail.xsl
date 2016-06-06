@@ -23,22 +23,22 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
-	<!-- ================================================================= -->
-	
-	<xsl:template match="/root">
-		 <xsl:apply-templates select="simpledc"/>
-	</xsl:template>
+  <!-- ================================================================= -->
 
-	<!-- ================================================================= -->
-	
-	<xsl:template match="@*|node()">
-		 <xsl:copy>
-			  <xsl:apply-templates select="@*|node()"/>
-		 </xsl:copy>
-	</xsl:template>
-	
-	<!-- ================================================================= -->
-	
+  <xsl:template match="/root">
+    <xsl:apply-templates select="simpledc"/>
+  </xsl:template>
+
+  <!-- ================================================================= -->
+
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- ================================================================= -->
+
 </xsl:stylesheet>

@@ -24,6 +24,7 @@
 package org.fao.geonet.services.resources.handlers;
 
 import jeeves.server.context.ServiceContext;
+
 import org.jdom.Element;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -34,11 +35,9 @@ import java.util.List;
 public interface IResourceDownloadHandler {
     /**
      * Invoked to manage custom download processing
-     *
-     * @throws ResourceHandlerException
      */
     public HttpEntity<byte[]> onDownload(ServiceContext context, NativeWebRequest request, int metadataId,
-                              String fileName, Path file) throws ResourceHandlerException;
+                                         String fileName, Path file) throws ResourceHandlerException;
 
     public Element onDownloadMultiple(ServiceContext context, Element params, int metadataId,
                                       List<Element> files) throws ResourceHandlerException;

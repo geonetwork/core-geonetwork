@@ -63,9 +63,9 @@ public class ProfileTest {
 
     private void assertContainsAllExactly(Set<Profile> all, Profile... profiles) {
         assertEquals(profiles.length, all.size());
-        
+
         for (Profile profile : profiles) {
-            assertTrue(profile+" is not one of "+all, all.contains(profile));
+            assertTrue(profile + " is not one of " + all, all.contains(profile));
         }
     }
 }

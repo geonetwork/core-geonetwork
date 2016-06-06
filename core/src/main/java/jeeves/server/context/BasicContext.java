@@ -24,6 +24,7 @@
 package jeeves.server.context;
 
 import jeeves.monitor.MonitorManager;
+
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.fao.geonet.Logger;
@@ -35,6 +36,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
+
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 
@@ -46,11 +48,10 @@ import javax.persistence.EntityManager;
 
 public class BasicContext implements Logger {
 
-    protected Logger logger = Log.createLogger(Log.JEEVES);
-    private String baseUrl;
-
-    protected Map<String, Object> htContexts;
     private final ConfigurableApplicationContext jeevesApplicationContext;
+    protected Logger logger = Log.createLogger(Log.JEEVES);
+    protected Map<String, Object> htContexts;
+    private String baseUrl;
     private EntityManager entityManager;
 
     //--------------------------------------------------------------------------
@@ -82,14 +83,14 @@ public class BasicContext implements Logger {
         return baseUrl;
     }
 
-    public Path getAppPath() {
-        return this.jeevesApplicationContext.getBean(GeonetworkDataDirectory.class).getWebappDir();
+    public void setBaseUrl(String name) {
+        baseUrl = name;
     }
 
     //--------------------------------------------------------------------------
 
-    public void setBaseUrl(String name) {
-        baseUrl = name;
+    public Path getAppPath() {
+        return this.jeevesApplicationContext.getBean(GeonetworkDataDirectory.class).getWebappDir();
     }
 
     //--------------------------------------------------------------------------
@@ -111,7 +112,9 @@ public class BasicContext implements Logger {
     }
     //--------------------------------------------------------------------------
 
-    public @Nonnull <T> T getBean(Class<T> beanType) {
+    public
+    @Nonnull
+    <T> T getBean(Class<T> beanType) {
         return jeevesApplicationContext.getBean(beanType);
     }
 

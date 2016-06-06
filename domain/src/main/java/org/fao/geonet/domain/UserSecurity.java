@@ -24,12 +24,14 @@
 package org.fao.geonet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -37,7 +39,8 @@ import java.util.IdentityHashMap;
 import java.util.Set;
 
 /**
- * Encapsulates security information about the user. This is a JPA Embeddable object that is embedded into a {@link User} Entity
+ * Encapsulates security information about the user. This is a JPA Embeddable object that is
+ * embedded into a {@link User} Entity
  *
  * @author Jesse
  */
@@ -65,11 +68,8 @@ public class UserSecurity extends GeonetEntity implements Serializable {
      * @param password the hashed password.
      * @return this UserSecurity object
      */
-    public
-    @Nonnull
-    @JsonIgnore
-    UserSecurity setPassword(@Nonnull char[] password) {
-        this._password = password == null ? new char[0] : password.clone();
+    public UserSecurity setPassword(String password) {
+        setPassword(password.toCharArray());
         return this;
     }
 
@@ -79,15 +79,17 @@ public class UserSecurity extends GeonetEntity implements Serializable {
      * @param password the hashed password.
      * @return this UserSecurity object
      */
-    public UserSecurity setPassword(String password) {
-        setPassword(password.toCharArray());
+    public
+    @Nonnull
+    @JsonIgnore
+    UserSecurity setPassword(@Nonnull char[] password) {
+        this._password = password == null ? new char[0] : password.clone();
         return this;
     }
 
     /**
-     * Get the security notifications. This property used to store arbitrary security related notifications.
-     *
-     * @return
+     * Get the security notifications. This property used to store arbitrary security related
+     * notifications.
      */
     @Column(name = "security", length = 128)
     protected String getSecurityNotificationsString() {
@@ -139,7 +141,8 @@ public class UserSecurity extends GeonetEntity implements Serializable {
      * Merge all data from other security into this security.
      *
      * @param otherSecurity other user to merge data from.
-     * @param mergeNullData if true then also set null values from other security. If false then only merge non-null data
+     * @param mergeNullData if true then also set null values from other security. If false then
+     *                      only merge non-null data
      */
     public void mergeSecurity(UserSecurity otherSecurity, boolean mergeNullData) {
         if (mergeNullData || otherSecurity.getPassword() != null) {
@@ -161,7 +164,8 @@ public class UserSecurity extends GeonetEntity implements Serializable {
 
         UserSecurity that = (UserSecurity) o;
 
-        if (_authType != null ? !_authType.equals(that._authType) : that._authType != null) return false;
+        if (_authType != null ? !_authType.equals(that._authType) : that._authType != null)
+            return false;
         if (_nodeId != null ? !_nodeId.equals(that._nodeId) : that._nodeId != null) return false;
         if (!Arrays.equals(_password, that._password)) return false;
         if (!_securityNotifications.equals(that._securityNotifications)) return false;

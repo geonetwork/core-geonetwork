@@ -31,9 +31,10 @@ import javax.persistence.*;
 /**
  * The enumeration of all languages available in the system.
  * <p/>
- * Note: The difference between IsoLanguages and Languages seems to be IsoLanguages lists all possible mappings between language codes and
- * Languages are the translations that can be used in the system. For example the languages the UI is translated into, the languages
- * metadata can be written in, the languages the groups, etc... should be translated into.
+ * Note: The difference between IsoLanguages and Languages seems to be IsoLanguages lists all
+ * possible mappings between language codes and Languages are the translations that can be used in
+ * the system. For example the languages the UI is translated into, the languages metadata can be
+ * written in, the languages the groups, etc... should be translated into.
  *
  * @author Jesse
  */
@@ -49,9 +50,8 @@ public class Language extends GeonetEntity {
     char _defaultLanguage = Constants.YN_FALSE;
 
     /**
-     * Get the id of the language. This is a generated value and as such new instances should not have this set as it will simply be
-     * ignored
-     * and could result in reduced performance.
+     * Get the id of the language. This is a generated value and as such new instances should not
+     * have this set as it will simply be ignored and could result in reduced performance.
      *
      * @return the id of the language
      */
@@ -63,9 +63,8 @@ public class Language extends GeonetEntity {
     }
 
     /**
-     * The id of the language. This is a generated value and as such new instances should not have this set as it will simply be
-     * ignored and
-     * could result in reduced performance.
+     * The id of the language. This is a generated value and as such new instances should not have
+     * this set as it will simply be ignored and could result in reduced performance.
      *
      * @param id the id of the language
      */
@@ -74,7 +73,8 @@ public class Language extends GeonetEntity {
     }
 
     /**
-     * Get the name/descriptor of the language. This is not a translated value is primarily for the admin user interface.
+     * Get the name/descriptor of the language. This is not a translated value is primarily for the
+     * admin user interface.
      *
      * @return the language name
      */
@@ -84,7 +84,8 @@ public class Language extends GeonetEntity {
     }
 
     /**
-     * Set the name/descriptor of the language. This is not a translated value is primarily for the admin user interface.
+     * Set the name/descriptor of the language. This is not a translated value is primarily for the
+     * admin user interface.
      *
      * @param name This is not a translated value is primarily for the admin user interface.
      */
@@ -93,8 +94,9 @@ public class Language extends GeonetEntity {
     }
 
     /**
-     * For backwards compatibility we need the isinspire column to be either 'n' or 'y'. This is a workaround to allow this until future
-     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     * For backwards compatibility we need the isinspire column to be either 'n' or 'y'. This is a
+     * workaround to allow this until future versions of JPA that allow different ways of
+     * controlling how types are mapped to the database.
      */
     @Column(name = "isInspire", length = 1)
     protected char getInspire_JPAWorkaround() {
@@ -102,7 +104,8 @@ public class Language extends GeonetEntity {
     }
 
     /**
-     * Setter for the value actual value that will be in the database. This should not be set by end programmer.
+     * Setter for the value actual value that will be in the database. This should not be set by end
+     * programmer.
      *
      * @param isinspire y or n
      */
@@ -130,8 +133,9 @@ public class Language extends GeonetEntity {
     }
 
     /**
-     * For backwards compatibility we need the isdefault column to be either 'n' or 'y'. This is a workaround to allow this until future
-     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     * For backwards compatibility we need the isdefault column to be either 'n' or 'y'. This is a
+     * workaround to allow this until future versions of JPA that allow different ways of
+     * controlling how types are mapped to the database.
      */
     @Column(name = "isDefault", length = 1)
     protected char getDefaultLanguage_JPAWorkaround() {

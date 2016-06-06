@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.search.facet;
 
 import com.google.common.annotations.VisibleForTesting;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.search.classifier.Classifier;
 import org.fao.geonet.kernel.search.classifier.Value;
@@ -34,10 +35,8 @@ import org.springframework.context.support.GenericApplicationContext;
 import java.util.Set;
 
 public class Dimension {
-    private static final String TEMPLATE = "  * %s: {indexKey=%s, label=%s, classifier=%s, localized=%b}%n";
-
     public static final String FACET_FIELD_SUFFIX = "_facet";
-
+    private static final String TEMPLATE = "  * %s: {indexKey=%s, label=%s, classifier=%s, localized=%b}%n";
     private String name;
 
     private String indexKey;

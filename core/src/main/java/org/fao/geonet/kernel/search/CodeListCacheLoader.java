@@ -48,20 +48,20 @@ public final class CodeListCacheLoader implements Callable<Map<String, String>> 
         this.schemaManager = schemaManager;
     }
 
+    public static String cacheKey(final String langCode, final String codeListName) {
+        return "codelist:" + langCode + ":" + codeListName;
+    }
+
     @Override
     public Map<String, String> call() throws Exception {
         Map<String, String> _codeList = new HashMap<String, String>();
         Set<String> schemas = schemaManager.getSchemas();
         for (String schema : schemas) {
-            
+
             Path schemaDir = schemaManager.getSchemaDir(schema);
             addCodeLists(codeListName, _codeList, schemaDir.resolve("loc").resolve(langCode).resolve("codelists.xml"));
         }
         return _codeList;
-    }
-
-    public static String cacheKey(final String langCode, final String codeListName) {
-        return "codelist:"+langCode+":"+codeListName;
     }
 
     @SuppressWarnings("unchecked")

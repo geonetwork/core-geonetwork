@@ -32,9 +32,9 @@ import java.io.IOException;
 /**
  * Creates fmt-translate nodes.
  *
- * A translate node take the text content element and find a translation.  depending on the value of the
- * fmt-translate attribute the translation is resolved using the {@link org.fao.geonet.services.metadata.format.groovy.Functions}
- * translate methods.
+ * A translate node take the text content element and find a translation.  depending on the value of
+ * the fmt-translate attribute the translation is resolved using the {@link
+ * org.fao.geonet.services.metadata.format.groovy.Functions} translate methods.
  *
  * Examples:
  * <pre><code>

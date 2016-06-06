@@ -24,6 +24,7 @@
 package jeeves.server.sources;
 
 import jeeves.constants.Jeeves;
+
 import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -35,125 +36,200 @@ import java.util.Map;
 
 //=============================================================================
 
-/** A ServiceRequest is a generic request for a service
-  */
+/**
+ * A ServiceRequest is a generic request for a service
+ */
 
-public class ServiceRequest
-{
-    public enum InputMethod  { GET, POST, XML, SOAP }
-	public enum OutputMethod { DEFAULT, XML, SOAP }
+public class ServiceRequest {
+    protected String service = null;
+    protected String language = null;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    protected Element params = new Element(Jeeves.Elem.REQUEST);
+    protected boolean debug = false;
+    protected boolean jsonOutput = false;
+    protected OutputStream outStream = null;
+    protected String address = "0.0.0.0";
+    protected int statusCode = 200;
+    protected InputMethod input = InputMethod.GET;
+    protected OutputMethod output = OutputMethod.DEFAULT;
+    private Map<String, String> headers = new HashMap<String, String>();
+    public ServiceRequest() {
+    }
 
-	protected String       service   = null;
-	protected String       language  = null;
-	protected Element      params    = new Element(Jeeves.Elem.REQUEST);
-	protected boolean      debug     = false;
-	protected boolean jsonOutput = false;
-	protected OutputStream outStream = null;
-	protected String       address   = "0.0.0.0";
-	protected int          statusCode= 200;
-	protected InputMethod  input     = InputMethod.GET;
-	protected OutputMethod output    = OutputMethod.DEFAULT;
-	private Map<String, String> headers = new HashMap<String, String>();
+    /**
+     * Name of the requested service
+     */
 
-	//---------------------------------------------------------------------------
+    public String getService() {
+        return service;
+    }
 
-	public ServiceRequest() {}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API
-	//---
-	//---------------------------------------------------------------------------
+    public void setService(String newService) {
+        service = newService;
+    }
 
-	/** Name of the requested service */
+    //---------------------------------------------------------------------------
+    //---
+    //--- API
+    //---
+    //---------------------------------------------------------------------------
 
-	public String getService() { return service; }
+    /**
+     * requesting language (eg. 'en')
+     */
 
-	//---------------------------------------------------------------------------
-	/** requesting language (eg. 'en') */
+    public String getLanguage() {
+        return language;
+    }
 
-	public String getLanguage() { return language; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	/** requesting parameters*/
+    public void setLanguage(String newLang) {
+        language = newLang;
+    }
 
-	public Element getParams() { return params; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	/**
-	 * @return Map of the request headers
-	 */
-	public Map<String, String> getHeaders() {	return headers; }
+    /**
+     * requesting parameters
+     */
 
-	//---------------------------------------------------------------------------
-	/** true if the request has the debug option turned on */
+    public Element getParams() {
+        return params;
+    }
 
-	public boolean hasDebug() { return debug; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	/** gets the output stream of this request to output data */
+    public void setParams(Element newParams) {
+        params = newParams;
+    }
 
-	public OutputStream getOutputStream() { return outStream; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	/** gets the ip address of the request (if any) */
+    /**
+     * @return Map of the request headers
+     */
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
 
-	public String getAddress() { return address; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public void setHeaders(Map<String, String> newHeaders) {
+        headers = newHeaders;
+    }
 
-	public InputMethod  getInputMethod()  { return input;  }
-	public OutputMethod getOutputMethod() { return output; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    /**
+     * true if the request has the debug option turned on
+     */
 
-	public void setService (String  newService) { service  = newService; }
-	public void setLanguage(String  newLang)    { language = newLang;    }
-	public void setParams  (Element newParams)  { params   = newParams;  }
-	public void setHeaders (Map<String, String> newHeaders) { headers = newHeaders; }
+    public boolean hasDebug() {
+        return debug;
+    }
 
-	public void setAddress (String  newAddress) { address  = newAddress; }
+    //---------------------------------------------------------------------------
 
-	public void setStatusCode(int code) { statusCode = code; }
+    /**
+     * gets the output stream of this request to output data
+     */
 
-	public void setInputMethod (InputMethod m)  { input  = m; }
-	public void setOutputMethod(OutputMethod m) { output = m; }
+    public OutputStream getOutputStream() {
+        return outStream;
+    }
 
-	//---------------------------------------------------------------------------
+    public void setOutputStream(OutputStream os) {
+        outStream = os;
+    }
 
-	public void setOutputStream(OutputStream os) { outStream = os; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    /**
+     * gets the ip address of the request (if any)
+     */
 
-	public void setDebug(boolean yesno) { debug = yesno; }
+    public String getAddress() {
+        return address;
+    }
 
-    public void setJSONOutput(boolean yesno) { jsonOutput = yesno; }
-    public boolean hasJSONOutput() { return jsonOutput; }
+    public void setAddress(String newAddress) {
+        address = newAddress;
+    }
 
-	//---------------------------------------------------------------------------
+    public InputMethod getInputMethod() {
+        return input;
+    }
 
-	public void write(Element response) throws IOException
-	{
-		Xml.writeResponse(new Document(response), outStream);
-		endStream();
-	}
+    public void setInputMethod(InputMethod m) {
+        input = m;
+    }
 
-	//---------------------------------------------------------------------------
-	/** called when the system starts streaming data */
+    public OutputMethod getOutputMethod() {
+        return output;
+    }
 
-	public void beginStream(String contentType, boolean cache) {}
+    public void setOutputMethod(OutputMethod m) {
+        output = m;
+    }
 
-	//---------------------------------------------------------------------------
+    public void setStatusCode(int code) {
+        statusCode = code;
+    }
 
-	public void beginStream(String contentType, int contentLength, String contentDisp,
-									boolean cache) {}
+    public void setDebug(boolean yesno) {
+        debug = yesno;
+    }
 
-	//---------------------------------------------------------------------------
-	/** called when the system ends streaming data*/
+    //---------------------------------------------------------------------------
 
-	public void endStream() throws IOException {}
+    public void setJSONOutput(boolean yesno) {
+        jsonOutput = yesno;
+    }
+
+    //---------------------------------------------------------------------------
+
+    public boolean hasJSONOutput() {
+        return jsonOutput;
+    }
+
+    public void write(Element response) throws IOException {
+        Xml.writeResponse(new Document(response), outStream);
+        endStream();
+    }
+
+    /**
+     * called when the system starts streaming data
+     */
+
+    public void beginStream(String contentType, boolean cache) {
+    }
+
+    //---------------------------------------------------------------------------
+
+    public void beginStream(String contentType, int contentLength, String contentDisp,
+                            boolean cache) {
+    }
+
+    //---------------------------------------------------------------------------
+
+    /**
+     * called when the system ends streaming data
+     */
+
+    public void endStream() throws IOException {
+    }
+
+    //---------------------------------------------------------------------------
+
+    public enum InputMethod {GET, POST, XML, SOAP}
+
+    //---------------------------------------------------------------------------
+
+    public enum OutputMethod {DEFAULT, XML, SOAP}
 }
 
 //=============================================================================

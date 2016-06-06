@@ -23,6 +23,7 @@
 package org.fao.geonet.notifier;
 
 import com.google.common.base.Function;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
@@ -44,6 +45,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
 import javax.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -60,14 +62,12 @@ public class MetadataNotifierClient {
 
     /**
      * Uses the notifier update service to handle insertion and updates of metadata.
-     *
-     * @throws MetadataNotifierClientException
      */
     public void webUpdate(MetadataNotifier notifier, String metadataXml, String metadataUuid) throws MetadataNotifierClientException {
         List<? extends NameValuePair> data = Arrays.asList(
-                new BasicNameValuePair("action", "update"),
-                new BasicNameValuePair("uuid", metadataUuid),
-                new BasicNameValuePair("XMLFile", metadataXml)
+            new BasicNameValuePair("action", "update"),
+            new BasicNameValuePair("uuid", metadataUuid),
+            new BasicNameValuePair("XMLFile", metadataXml)
         );
         execute(notifier, data);
     }
@@ -84,7 +84,7 @@ public class MetadataNotifierClient {
             method.setEntity(entity);
 
             final boolean authenticationEnabled = StringUtils.isNotBlank(notifier.getUsername()) && notifier.getPassword() != null &&
-                    notifier.getPassword().length > 0;
+                notifier.getPassword().length > 0;
             configBuilder.setAuthenticationEnabled(authenticationEnabled);
 
             method.setConfig(configBuilder.build());
@@ -132,14 +132,13 @@ public class MetadataNotifierClient {
      * Uses the notifier delete service to handle deletion of metadata.
      *
      * @param metadataUuid medatada UUID identifier
-     * @throws MetadataNotifierClientException
      */
     public void webDelete(MetadataNotifier notifier, String metadataUuid) throws MetadataNotifierClientException {
 
         List<? extends NameValuePair> data = Arrays.asList(
-                new BasicNameValuePair("action", "delete"),
-                new BasicNameValuePair("uuid", metadataUuid),
-                new BasicNameValuePair("XMLFile", "")
+            new BasicNameValuePair("action", "delete"),
+            new BasicNameValuePair("uuid", metadataUuid),
+            new BasicNameValuePair("XMLFile", "")
         );
 
         execute(notifier, data);

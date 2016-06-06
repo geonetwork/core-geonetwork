@@ -3,18 +3,16 @@
  *
  * This file is part of GeoNetwork
  *
- * GeoNetwork is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * GeoNetwork is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * GeoNetwork is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GeoNetwork is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with GeoNetwork.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with GeoNetwork.  If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package org.fao.geonet.services.harvesting.notifier;
@@ -39,48 +37,48 @@ public class SaveNotificationSettings implements Service {
 
     @Override
     public Element exec(Element params, ServiceContext context)
-            throws Exception {
+        throws Exception {
         GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager settings = gc.getBean(SettingManager.class);
+            .getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager settings = gc.getBean(SettingManager.class);
 
         String sendTo = "";
-        
+
         for (Object o : params.getChildren()) {
             Element param = ((Element) o);
 
             if (param.getName().equalsIgnoreCase("recipient")) {
                 if (!param.getValue().trim().isEmpty()) {
-                    if(sendTo.isEmpty()) {
-                    	sendTo = param.getValue().trim();
+                    if (sendTo.isEmpty()) {
+                        sendTo = param.getValue().trim();
                     } else {
-                    	sendTo += "," + param.getValue().trim();
+                        sendTo += "," + param.getValue().trim();
                     }
                 }
             } else if (param.getName().equalsIgnoreCase("template")) {
                 settings.setValue("system/harvesting/mail/template",
-                        param.getValue());
+                    param.getValue());
             } else if (param.getName().equalsIgnoreCase("templateError")) {
                 settings.setValue("system/harvesting/mail/templateError",
-                        param.getValue());
+                    param.getValue());
             } else if (param.getName().equalsIgnoreCase("templateWarning")) {
                 settings.setValue("system/harvesting/mail/templateWarning",
-                        param.getValue());
+                    param.getValue());
             } else if (param.getName().equalsIgnoreCase("subject")) {
                 settings.setValue("system/harvesting/mail/subject",
-                        param.getValue());
+                    param.getValue());
             } else if (param.getName().equalsIgnoreCase("enabled")) {
                 settings.setValue("system/harvesting/mail/enabled",
-                        param.getValue());
+                    param.getValue());
             } else if (param.getName().equalsIgnoreCase("level1")) {
                 settings.setValue("system/harvesting/mail/level1",
-                        param.getValue());
+                    param.getValue());
             } else if (param.getName().equalsIgnoreCase("level2")) {
                 settings.setValue("system/harvesting/mail/level2",
-                        param.getValue());
+                    param.getValue());
             } else if (param.getName().equalsIgnoreCase("level3")) {
                 settings.setValue("system/harvesting/mail/level3",
-                        param.getValue());
+                    param.getValue());
             }
         }
 

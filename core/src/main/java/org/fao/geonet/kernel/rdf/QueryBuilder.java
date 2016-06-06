@@ -41,53 +41,28 @@ import org.openrdf.model.Value;
 
 public class QueryBuilder<Q> {
 
-    private static class Select extends PathDecorator {
-
-        public final boolean require;
-
-        public Select(Selector path, boolean require) {
-            super(path);
-            this.require = require;
-        }
-
-        @Override
-        public String getPath() {
-            if(!super.getPath().trim().isEmpty()) {
-                if (require) {
-                    return super.getPath();
-                } else {
-                    return format("[{0}]", super.getPath());
-                }
-            }
-            return "";
-        }
-    }
-
     private Map<String /* Id */, Select> selectPaths = new LinkedHashMap<String, Select>();
     private int limit = -1;
     private int offset = -1;
     private boolean distinct = false;
-    
     @SuppressWarnings("rawtypes")
     private ResultInterpreter interpreter = new IdentityResultInterpreter();
     private Where whereClause = null;
-    
     protected QueryBuilder() {
     }
 
     /**
      * Creates a simple query builder that returns simple query objects
-     * 
-     * @return
      */
-    public static QueryBuilder<Query<LinkedHashMap<String,Value>>> builder() {
-        return new QueryBuilder<Query<LinkedHashMap<String,Value>>>();
+    public static QueryBuilder<Query<LinkedHashMap<String, Value>>> builder() {
+        return new QueryBuilder<Query<LinkedHashMap<String, Value>>>();
     }
-    
+
     /**
-     * Create a query builder that is configured to read keywords with translations in the provided languages
-     * 
-     * @param mapper the mapper to use to convert the language code when needed
+     * Create a query builder that is configured to read keywords with translations in the provided
+     * languages
+     *
+     * @param mapper    the mapper to use to convert the language code when needed
      * @param languages the languages to read from the thesaurus file
      * @return A QueryBuilder configured to read keywords
      */
@@ -96,30 +71,33 @@ public class QueryBuilder<Q> {
     }
 
     /**
-     * Create a query builder that is configured to read keywords with translations in the provided languages
-     * 
-     * @param mapper the mapper to use to convert the language code when needed
+     * Create a query builder that is configured to read keywords with translations in the provided
+     * languages
+     *
+     * @param mapper    the mapper to use to convert the language code when needed
      * @param languages the languages to read from the thesaurus file
      * @return A QueryBuilder configured to read keywords
      */
     public static QueryBuilder<KeywordBean> keywordQueryBuilder(IsoLanguagesMapper mapper, Collection<String> languages, boolean requireBoundedBy) {
         QueryBuilder<KeywordBean> builder = builder()
-                .distinct(true)
-                .selectId()
-                .select(UPPER_CORNER, requireBoundedBy)
-                .select(LOWER_CORNER, requireBoundedBy)
-                .interpreter(new KeywordResultInterpreter(languages));
-            
+            .distinct(true)
+            .selectId()
+            .select(UPPER_CORNER, requireBoundedBy)
+            .select(LOWER_CORNER, requireBoundedBy)
+            .interpreter(new KeywordResultInterpreter(languages));
+
         for (String lang : languages) {
             builder.select(Selectors.prefLabel(lang, mapper), false);
             builder.select(Selectors.note(lang, mapper), false);
         }
         return builder;
     }
+
     /**
-     * Create a query builder that is configured to read keywords with translations in the provided languages
-     * 
-     * @param mapper the mapper to use to convert the language code when needed
+     * Create a query builder that is configured to read keywords with translations in the provided
+     * languages
+     *
+     * @param mapper    the mapper to use to convert the language code when needed
      * @param languages the languages to read from the thesaurus file
      * @return A QueryBuilder configured to read keywords
      */
@@ -129,33 +107,33 @@ public class QueryBuilder<Q> {
 
     /**
      * Create a query builder that is configured to read distinct languages in the thesaurus
-     * 
+     *
      * @param mapper the mapper to use to convert the language code when needed
      * @return A QueryBuilder configured to read keywords
      */
     public static QueryBuilder<String> languagesQueryBuilder(final IsoLanguagesMapper mapper) {
-        ResultInterpreter<String> newInterpreter = new IdentityResultInterpreter().onlyColumn("language").map(new com.google.common.base.Function<Value,String>(){
+        ResultInterpreter<String> newInterpreter = new IdentityResultInterpreter().onlyColumn("language").map(new com.google.common.base.Function<Value, String>() {
             @Override
             public String apply(Value input) {
-                if(input == null) {
+                if (input == null) {
                     throw new AssertionError("Input of ResultInterpreter must not be null");
                 }
                 return mapper.iso639_1_to_iso639_2(input.toString(), "");
             }
         });
-        
+
         Selector languages = Selectors.languages(PREF_LABEL);
         QueryBuilder<String> builder = builder()
-                .distinct(true)
-                .select(languages, true)
-                .interpreter(newInterpreter);
-            
+            .distinct(true)
+            .select(languages, true)
+            .interpreter(newInterpreter);
+
         return builder;
     }
 
     /**
      * Build the query object.
-     * 
+     *
      * @return the query object that can be used to perform the query
      */
     @SuppressWarnings("unchecked")
@@ -166,7 +144,7 @@ public class QueryBuilder<Q> {
 
     /**
      * Process the configuration and create a SERQL query string
-     * 
+     *
      * @return the created query string
      */
     protected String createQueryString() {
@@ -185,7 +163,7 @@ public class QueryBuilder<Q> {
                 }
             }
         }
-        
+
         StringBuilder statement = new StringBuilder("SELECT ");
         if (distinct) statement.append("DISTINCT ");
         statement.append(variables);
@@ -193,7 +171,7 @@ public class QueryBuilder<Q> {
         statement.append(paths);
         statement.append(' ');
 
-        if(whereClause != null) {
+        if (whereClause != null) {
             String clause = whereClause.getClause();
             if (!clause.trim().isEmpty()) {
                 statement.append("WHERE ");
@@ -212,7 +190,7 @@ public class QueryBuilder<Q> {
             statement.append(offset);
             statement.append(' ');
         }
-        
+
         if (namespaces.length() > 0) {
             statement.append("USING NAMESPACE ");
             statement.append(namespaces);
@@ -231,13 +209,10 @@ public class QueryBuilder<Q> {
 
     /**
      * add a new path for selection.
-     * 
-     * @param selector
-     *            the selector to add to the list of selectors
-     * @param require
-     *            indicate if it is optional or required. 
-     *            (this is ignored if selector does not have an associated path) 
-     * 
+     *
+     * @param selector the selector to add to the list of selectors
+     * @param require  indicate if it is optional or required. (this is ignored if selector does not
+     *                 have an associated path)
      * @return a query builder to use for the next configuration option.
      */
     public QueryBuilder<Q> select(Selector selector, boolean require) {
@@ -247,8 +222,7 @@ public class QueryBuilder<Q> {
 
     /**
      * Select the id element
-     * 
-     * @param optional
+     *
      * @return a query builder to use for the next configuration option.
      */
     public QueryBuilder<Q> selectId() {
@@ -256,12 +230,9 @@ public class QueryBuilder<Q> {
     }
 
     /**
-     * Set a limit on the query. If value is < -1 then all records will be
-     * returned
-     * 
-     * @param limit
-     *            the maximum number of records that will be returned
-     * 
+     * Set a limit on the query. If value is < -1 then all records will be returned
+     *
+     * @param limit the maximum number of records that will be returned
      * @return a query builder to use for the next configuration option.
      */
     public QueryBuilder<Q> limit(int limit) {
@@ -270,12 +241,9 @@ public class QueryBuilder<Q> {
     }
 
     /**
-     * Set a limit on the query. If value is < -1 then all records will be
-     * returned
-     * 
-     * @param limit
-     *            the maximum number of records that will be returned
-     * 
+     * Set a limit on the query. If value is < -1 then all records will be returned
+     *
+     * @param limit the maximum number of records that will be returned
      * @return a query builder to use for the next configuration option.
      */
     public QueryBuilder<Q> distinct(boolean distinct) {
@@ -285,10 +253,8 @@ public class QueryBuilder<Q> {
 
     /**
      * Set a offset on the query. If value is <= 0 then offset is ignored
-     * 
-     * @param offset
-     *            the number of records to skip. It is useful for paging
-     * 
+     *
+     * @param offset the number of records to skip. It is useful for paging
      * @return a query builder to use for the next configuration option.
      */
     public QueryBuilder<Q> offset(int offset) {
@@ -297,10 +263,9 @@ public class QueryBuilder<Q> {
     }
 
     /**
-     * Set the ResultsInterpreter responsible for converting the raw results into
-     * a more "friendly" type of object for java programming
-     *  
-     * @param newInterpreter
+     * Set the ResultsInterpreter responsible for converting the raw results into a more "friendly"
+     * type of object for java programming
+     *
      * @return a query builder to use for the next configuration option.
      */
     @SuppressWarnings("unchecked")
@@ -311,7 +276,7 @@ public class QueryBuilder<Q> {
 
     /**
      * Replace the current where clause with the new where clause
-     * 
+     *
      * @param clause the where new clause to use in query
      * @return a query builder to use for the next configuration option.
      */
@@ -321,7 +286,7 @@ public class QueryBuilder<Q> {
 
     /**
      * Replace the current where clause with the new where clause
-     * 
+     *
      * @param clause the where new clause to use in query
      * @return a query builder to use for the next configuration option.
      */
@@ -334,6 +299,28 @@ public class QueryBuilder<Q> {
     public String toString() {
         return "QueryBuilder [" + createQueryString() + "]";
     }
-    
-    
+
+    private static class Select extends PathDecorator {
+
+        public final boolean require;
+
+        public Select(Selector path, boolean require) {
+            super(path);
+            this.require = require;
+        }
+
+        @Override
+        public String getPath() {
+            if (!super.getPath().trim().isEmpty()) {
+                if (require) {
+                    return super.getPath();
+                } else {
+                    return format("[{0}]", super.getPath());
+                }
+            }
+            return "";
+        }
+    }
+
+
 }

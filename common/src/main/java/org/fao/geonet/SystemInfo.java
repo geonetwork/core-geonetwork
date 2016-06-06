@@ -44,10 +44,6 @@ public class SystemInfo {
     private String buildJavaVersion;
     private String buildJavaVendor;
 
-    public static SystemInfo createForTesting(String stagingProfile) {
-        return new SystemInfo(stagingProfile, "testing", "3.0.0", "SNAPSHOT", "testing", "testing", "testing");
-    }
-
     public SystemInfo(String stagingProfile, String buildDate, String version, String subVersion,
                       String buildOsInfo, String buildJavaVersion, String buildJavaVendor) {
         this.stagingProfile = stagingProfile;
@@ -57,6 +53,24 @@ public class SystemInfo {
         this.buildOsInfo = buildOsInfo;
         this.buildJavaVersion = buildJavaVersion;
         this.buildJavaVendor = buildJavaVendor;
+    }
+
+    public static SystemInfo createForTesting(String stagingProfile) {
+        return new SystemInfo(stagingProfile, "testing", "3.0.0", "SNAPSHOT", "testing", "testing", "testing");
+    }
+
+    public static SystemInfo getInfo() {
+        return getInfo(null);
+    }
+
+    public static SystemInfo getInfo(SystemInfo defaultInfo) {
+        SystemInfo actualInfo = defaultInfo;
+        if (actualInfo == null && ApplicationContextHolder.get() != null) {
+            actualInfo = ApplicationContextHolder.get().getBean(SystemInfo.class);
+        }
+
+
+        return actualInfo;
     }
 
     /**
@@ -97,12 +111,14 @@ public class SystemInfo {
     public String getBuildOsInfo() {
         return buildOsInfo;
     }
+
     /**
      * Return the version of java used to build the web app.
      */
     public String getBuildJavaVersion() {
         return this.buildJavaVersion;
     }
+
     /**
      * Return the jvm vendor of java used to build the web app.
      */
@@ -119,24 +135,11 @@ public class SystemInfo {
 
     public Element toXml() {
         return new Element("systemInfo").addContent(Arrays.asList(
-                new Element("stagingProfile").setText(this.stagingProfile),
-                new Element("buildOsInfo").setText(this.buildOsInfo),
-                new Element("buildJavaVendor").setText(this.buildJavaVendor),
-                new Element("buildJavaVersion").setText(this.buildJavaVersion),
-                new Element("buildDate").setText(this.buildDate)
+            new Element("stagingProfile").setText(this.stagingProfile),
+            new Element("buildOsInfo").setText(this.buildOsInfo),
+            new Element("buildJavaVendor").setText(this.buildJavaVendor),
+            new Element("buildJavaVersion").setText(this.buildJavaVersion),
+            new Element("buildDate").setText(this.buildDate)
         ));
-    }
-
-    public static SystemInfo getInfo() {
-        return getInfo(null);
-    }
-    public static SystemInfo getInfo(SystemInfo defaultInfo) {
-        SystemInfo actualInfo = defaultInfo;
-        if (actualInfo == null && ApplicationContextHolder.get() != null) {
-            actualInfo = ApplicationContextHolder.get().getBean(SystemInfo.class);
-        }
-
-
-        return actualInfo;
     }
 }

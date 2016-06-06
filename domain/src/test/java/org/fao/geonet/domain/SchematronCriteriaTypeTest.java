@@ -32,8 +32,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test schematron criteria type accept methods
- * Created by Jesse on 2/27/14.
+ * Test schematron criteria type accept methods Created by Jesse on 2/27/14.
  */
 public class SchematronCriteriaTypeTest extends AbstractSpringDataTest {
 
@@ -58,6 +57,7 @@ public class SchematronCriteriaTypeTest extends AbstractSpringDataTest {
         ), null));
 
     }
+
     @Test
     public void testAcceptsSingleOrGroup() throws Exception {
         final Group group = groupRepository.save(GroupRepositoryTest.newGroup(_inc));

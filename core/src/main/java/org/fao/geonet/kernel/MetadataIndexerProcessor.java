@@ -42,10 +42,9 @@
 package org.fao.geonet.kernel;
 
 /**
- * Template Method abstract class to handle faster indexing of many metadata
- * documents.
- * Each subclass must implement process method and define a custom constructor 
- * with all parameters required to exec the process method
+ * Template Method abstract class to handle faster indexing of many metadata documents. Each
+ * subclass must implement process method and define a custom constructor with all parameters
+ * required to exec the process method
  */
 public abstract class MetadataIndexerProcessor {
     private DataManager dm;

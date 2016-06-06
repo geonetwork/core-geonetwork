@@ -39,58 +39,57 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** Retrieves a particular metadata with editing information. Access is restricted
-  */
+/**
+ * Retrieves a particular metadata with editing information. Access is restricted
+ */
 
-public class GetEditableData implements Service
-{
+public class GetEditableData implements Service {
     boolean useEditTab = false;
-    
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
+
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         useEditTab = params.getValue("editTab", "false").equals("true");
-	}
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    public Element exec(Element params, ServiceContext context) throws Exception {
         boolean showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, false);
-        
-		String id = Utils.getIdentifierFromParameters(params, context);
+
+        String id = Utils.getIdentifierFromParameters(params, context);
         String sessionTabProperty = useEditTab ? Geonet.Session.METADATA_EDITING_TAB : Geonet.Session.METADATA_SHOW;
-        
+
         // Set current tab for new editing session if defined.
         Element elCurrTab = params.getChild(Params.CURRTAB);
         if (elCurrTab != null) {
             context.getUserSession().setProperty(sessionTabProperty, elCurrTab.getText());
         }
-		
+
         //-----------------------------------------------------------------------
-		//--- get metadata
+        //--- get metadata
         boolean starteditingsession = Util.getParam(params, Params.START_EDITING_SESSION, "no").equals("yes");
         if (starteditingsession) {
-          GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-          DataManager   dm = gc.getBean(DataManager.class);
-          dm.startEditingSession(context, id);
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            DataManager dm = gc.getBean(DataManager.class);
+            dm.startEditingSession(context, id);
         }
 
-		Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, id, true, showValidationErrors);
-		if (elMd == null)
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+        Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, id, true, showValidationErrors);
+        if (elMd == null)
+            throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		//--- return metadata
-		return elMd;
-	}
+        //--- return metadata
+        return elMd;
+    }
 }
 
 //=============================================================================

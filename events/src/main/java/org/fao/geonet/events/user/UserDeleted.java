@@ -22,7 +22,7 @@
  */
 
 /**
- * 
+ *
  */
 package org.fao.geonet.events.user;
 
@@ -30,9 +30,8 @@ import org.fao.geonet.domain.User;
 
 /**
  * Event launched when a user is removed from the database
- * 
- * @author delawen
  *
+ * @author delawen
  */
 public class UserDeleted extends UserEvent {
 

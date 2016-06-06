@@ -43,57 +43,59 @@ import java.nio.file.Path;
 
 @Controller("admin.logo.upload")
 public class Add implements ApplicationContextAware {
-	private volatile Path logoDirectory;
+    private volatile Path logoDirectory;
 
-	private ApplicationContext context;
+    private ApplicationContext context;
 
-	public synchronized void setApplicationContext(ApplicationContext context) {
-		this.context = context;
-	}
+    public synchronized void setApplicationContext(ApplicationContext context) {
+        this.context = context;
+    }
 
-	@RequestMapping(value = "/{lang}/admin.logo.upload",
-			consumes = { MediaType.ALL_VALUE }, 
-			produces = { MediaType.APPLICATION_JSON_VALUE })
-	public @ResponseBody
-	StatusResponse execJSON(@RequestParam("fname") MultipartFile fname)
-			throws Exception {
-		return exec(fname);
-	}
+    @RequestMapping(value = "/{lang}/admin.logo.upload",
+        consumes = {MediaType.ALL_VALUE},
+        produces = {MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
+    StatusResponse execJSON(@RequestParam("fname") MultipartFile fname)
+        throws Exception {
+        return exec(fname);
+    }
 
-	@RequestMapping(value = "/{lang}/admin.logo.upload", produces = {
-			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public @ResponseBody
-	StatusResponse exec(@RequestParam("fname") MultipartFile fname)
-			throws Exception {
+    @RequestMapping(value = "/{lang}/admin.logo.upload", produces = {
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
+    StatusResponse exec(@RequestParam("fname") MultipartFile fname)
+        throws Exception {
 
-		try {
+        try {
             Path logoDir;
             synchronized (this) {
-                if(this.logoDirectory == null) {
+                if (this.logoDirectory == null) {
                     this.logoDirectory = Resources.locateHarvesterLogosDirSMVC(context);
                 }
                 logoDir = this.logoDirectory;
             }
 
-			if (fname.getName().contains("..")) {
-				throw new BadParameterEx(
-						"Invalid character found in resource name.",
-						fname.getName());
-			}
+            if (fname.getName().contains("..")) {
+                throw new BadParameterEx(
+                    "Invalid character found in resource name.",
+                    fname.getName());
+            }
 
-			if ("".equals(fname.getName())) {
-				throw new Exception("Logo name is not defined.");
-			}
+            if ("".equals(fname.getName())) {
+                throw new Exception("Logo name is not defined.");
+            }
 
-			Path serverFile = logoDir.resolve(fname.getOriginalFilename());
-			if (Files.exists(serverFile)) {
+            Path serverFile = logoDir.resolve(fname.getOriginalFilename());
+            if (Files.exists(serverFile)) {
                 IO.deleteFile(serverFile, true, "Deleting server file");
-				serverFile = logoDir.resolve(fname.getOriginalFilename());
-			}
+                serverFile = logoDir.resolve(fname.getOriginalFilename());
+            }
 
             serverFile = Files.createFile(serverFile);
 
-			try (OutputStream stream = Files.newOutputStream(serverFile)) {
+            try (OutputStream stream = Files.newOutputStream(serverFile)) {
 
                 int read;
                 byte[] bytes = new byte[1024];
@@ -104,10 +106,10 @@ public class Add implements ApplicationContextAware {
                     stream.write(bytes, 0, read);
                 }
             }
-		} catch (Exception e) {
-			return new StatusResponse(e.getMessage());
-		}
+        } catch (Exception e) {
+            return new StatusResponse(e.getMessage());
+        }
 
-		return new StatusResponse("Logo added.");
-	}
+        return new StatusResponse("Logo added.");
+    }
 }

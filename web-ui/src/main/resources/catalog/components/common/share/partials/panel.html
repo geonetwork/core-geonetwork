@@ -16,63 +16,63 @@
   <table class="table table-striped">
 
     <thead>
-      <tr>
-        <th><a href="" ng-click="setSorter('g')">
-            <span translate>groupOwners</span>&nbsp;
-            <i data-ng-if="sorter.predicate == 'g'" class="fa" ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"></i>
-          </a>
-        </th>
-        <th data-ng-repeat="o in operations">
-          <a href="" ng-click="setSorter(o.id)">
-            <span>{{o.label[lang]}}</span>&nbsp;
-            <i data-ng-if="sorter.predicate == o.id" class="fa" data-ng-class="sorter.reverse ? 'fa-long-arrow-down' : 'fa-long-arrow-up'"></i>
-          </a>
-        </th>
-        <th><a href="" ng-click="setSorter('p')" data-ng-if="displayProfile">
-          <span translate>profile</span>&nbsp;
-          <i data-ng-if="sorter.predicate == 'p'" class="fa" ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"></i>
+    <tr>
+      <th><a href="" ng-click="setSorter('g')">
+        <span translate>groupOwners</span>&nbsp;
+        <i data-ng-if="sorter.predicate == 'g'" class="fa" ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"></i>
+      </a>
+      </th>
+      <th data-ng-repeat="o in operations">
+        <a href="" ng-click="setSorter(o.id)">
+          <span>{{o.label[lang]}}</span>&nbsp;
+          <i data-ng-if="sorter.predicate == o.id" class="fa" data-ng-class="sorter.reverse ? 'fa-long-arrow-down' : 'fa-long-arrow-up'"></i>
         </a>
-        </th>
-      </tr>
+      </th>
+      <th><a href="" ng-click="setSorter('p')" data-ng-if="displayProfile">
+        <span translate>profile</span>&nbsp;
+        <i data-ng-if="sorter.predicate == 'p'" class="fa" ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"></i>
+      </a>
+      </th>
+    </tr>
     </thead>
 
     <tbody>
-      <tr class="info" data-ng-repeat="g in groups | filter:{reserved: 'true'} ">
-        <td title="{{g.description}}"><strong>{{g.label[lang]}}</strong></td>
-        <td data-ng-repeat="o in operations" class="text-center">
-          <input type="checkbox"
-          data-ng-disabled="!isAdminOrReviewer"
-          data-ng-class="internalGroups.indexOf(g.id) != -1 && internalOperations.indexOf(o.id) != -1 ? 'hidden' : ''"
-          data-ng-model="g.privileges[o.id].value"/>
-        </td>
-        <td data-ng-if="!disableAllCol">
-          <input type="checkbox"
-          data-ng-disabled="!isAdminOrReviewer"
-          data-ng-click="checkAll(g)"
-          data-ng-model="g.isCheckedAll"/>
-        </td>
-        <td class="text-center" data-ng-if="displayProfile">
-          {{g.userProfile}}
-        </td>
-      </tr>
-      <tr data-ng-repeat="g in groups | filter:{reserved: 'false'} | filter:groupSearch | orderBy:sortGroups:sorter.reverse"
-              data-ng-show="(onlyUserGroup == true && g['@userGroup'] == 'true') || onlyUserGroup == false">
-        <td title="{{g.description}}">{{g.label[lang]}}</td>
-        <td data-ng-repeat="o in operations" class="text-center">
-          <input type="checkbox"
-          data-ng-disabled="g.privileges[o.id].disabled"
-          data-ng-model="g.privileges[o.id].value"/>
-        </td>
-        <td data-ng-if="!disableAllCol">
-          <input type="checkbox"
-          data-ng-click="checkAll(g)"
-          data-ng-model="g.isCheckedAll"/>
-        </td>
-        <td class="text-center" data-ng-if="displayProfile">
-          {{g.userProfile || (user.isAdministrator() ? 'Administrator' : '')}}
-        </td>
+    <tr class="info" data-ng-repeat="g in groups | filter:{reserved: 'true'} ">
+      <td title="{{g.description}}"><strong>{{g.label[lang]}}</strong></td>
+      <td data-ng-repeat="o in operations" class="text-center">
+        <input type="checkbox"
+               data-ng-disabled="!isAdminOrReviewer"
+               data-ng-class="internalGroups.indexOf(g.id) != -1 && internalOperations.indexOf(o.id) != -1 ? 'hidden' : ''"
+               data-ng-model="g.privileges[o.id].value"/>
+      </td>
+      <td data-ng-if="!disableAllCol">
+        <input type="checkbox"
+               data-ng-disabled="!isAdminOrReviewer"
+               data-ng-click="checkAll(g)"
+               data-ng-model="g.isCheckedAll"/>
+      </td>
+      <td class="text-center" data-ng-if="displayProfile">
+        {{g.userProfile}}
+      </td>
+    </tr>
+    <tr data-ng-repeat="g in groups | filter:{reserved: 'false'} | filter:groupSearch | orderBy:sortGroups:sorter.reverse"
+        data-ng-show="(onlyUserGroup == true && g['@userGroup'] == 'true') || onlyUserGroup == false">
+      <td title="{{g.description}}">{{g.label[lang]}}</td>
+      <td data-ng-repeat="o in operations" class="text-center">
+        <input type="checkbox"
+               data-ng-disabled="g.privileges[o.id].disabled"
+               data-ng-model="g.privileges[o.id].value"/>
+      </td>
+      <td data-ng-if="!disableAllCol">
+        <input type="checkbox"
+               data-ng-click="checkAll(g)"
+               data-ng-model="g.isCheckedAll"/>
+      </td>
+      <td class="text-center" data-ng-if="displayProfile">
+        {{g.userProfile || (user.isAdministrator() ? 'Administrator' : '')}}
+      </td>
 
-      </tr>
+    </tr>
     </tbody>
 
   </table>

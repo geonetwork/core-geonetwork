@@ -1,14 +1,14 @@
 {
-    "abstract": "Kurzbeschreibung",
-    "complete": "Vollständig",
-    "hierarchy": "Hierarchie",
-    "links": "Links",
-    "noUuidInLink": "Keine UUID im Link vorhanden",
-    "overview": "Überblick",
-    "parent": "Eltern",
-    "source-link": "Quellen",
-    "testString": "Dieser dient für Tests, bitte nicht löschen!",
-    "xml": "XML",
-    "uncategorizedKeywords":"Keine Kategorie",
-    "related-link": "Relations"
+  "abstract": "Kurzbeschreibung",
+  "complete": "Vollständig",
+  "hierarchy": "Hierarchie",
+  "links": "Links",
+  "noUuidInLink": "Keine UUID im Link vorhanden",
+  "overview": "Überblick",
+  "parent": "Eltern",
+  "source-link": "Quellen",
+  "testString": "Dieser dient für Tests, bitte nicht löschen!",
+  "xml": "XML",
+  "uncategorizedKeywords": "Keine Kategorie",
+  "related-link": "Relations"
 }

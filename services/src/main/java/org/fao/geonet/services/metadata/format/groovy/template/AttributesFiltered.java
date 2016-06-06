@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Sets;
+
 import org.apache.xalan.xsltc.runtime.AttributeList;
 import org.xml.sax.Attributes;
 
@@ -31,6 +32,7 @@ import java.util.Set;
 
 /**
  * Represents a subset of an element's attributes
+ *
  * @author Jesse on 11/29/2014.
  */
 public class AttributesFiltered implements Attributes {

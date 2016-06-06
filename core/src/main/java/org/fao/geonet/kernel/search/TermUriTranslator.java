@@ -109,7 +109,7 @@ public class TermUriTranslator implements Translator {
         }
 
         String label;
-        
+
         try {
             label = keyword.getPreferredLabel(langCode);
         } catch (LabelNotFoundException e) {

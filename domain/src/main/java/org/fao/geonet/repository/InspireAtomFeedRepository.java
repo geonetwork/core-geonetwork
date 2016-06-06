@@ -28,13 +28,12 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 
 /**
- * Repository class for InspireAtomFeed.
- * Repository class for InspireAtomFeed.
+ * Repository class for InspireAtomFeed. Repository class for InspireAtomFeed.
  *
  * @author Jose García
  */
 public interface InspireAtomFeedRepository extends GeonetRepository<InspireAtomFeed, Integer>,
-        InspireAtomFeedRepositoryCustom, JpaSpecificationExecutor<InspireAtomFeed> {
+    InspireAtomFeedRepositoryCustom, JpaSpecificationExecutor<InspireAtomFeed> {
     /**
      * Find an inspire atom feed related to a metadata.
      *

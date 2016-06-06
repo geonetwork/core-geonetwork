@@ -24,10 +24,12 @@
 package org.fao.geonet.services.region;
 
 import com.vividsolutions.jts.geom.Geometry;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.region.Region;

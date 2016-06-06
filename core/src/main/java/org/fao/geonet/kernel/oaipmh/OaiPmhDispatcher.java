@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.oaipmh;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
@@ -51,123 +52,106 @@ import java.util.Map;
 
 //=============================================================================
 
-public class OaiPmhDispatcher
-{
-	
-	public static final int MODE_MODIFIDATE = 2;
-	public static final int MODE_TEMPEXTEND = 1;
-	
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class OaiPmhDispatcher {
 
-	public OaiPmhDispatcher(SettingManager sm, SchemaManager scm)
-	{
-		ResumptionTokenCache cache = new ResumptionTokenCache(sm);
-		
-		register(new GetRecord());
-		register(new Identify());
-		register(new ListIdentifiers(cache, sm, scm));
-		register(new ListMetadataFormats());
-		register(new ListRecords(cache, sm, scm));
-		register(new ListSets());
-	}
+    public static final int MODE_MODIFIDATE = 2;
+    public static final int MODE_TEMPEXTEND = 1;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
+    private HashMap<String, OaiPmhService> hmServices = new HashMap<String, OaiPmhService>();
 
-	private void register(OaiPmhService s)
-	{
-		hmServices.put(s.getVerb(), s);
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    public OaiPmhDispatcher(SettingManager sm, SchemaManager scm) {
+        ResumptionTokenCache cache = new ResumptionTokenCache(sm);
 
-	public Element dispatch(Element request, ServiceContext context)
-	{
-		Element response = dispatchI(request, context);
-		validateResponse(context, response);
+        register(new GetRecord());
+        register(new Identify());
+        register(new ListIdentifiers(cache, sm, scm));
+        register(new ListMetadataFormats());
+        register(new ListRecords(cache, sm, scm));
+        register(new ListSets());
+    }
 
-		return response;
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private method
-	//---
-	//---------------------------------------------------------------------------
+    private void register(OaiPmhService s) {
+        hmServices.put(s.getVerb(), s);
+    }
 
-	private Element dispatchI(Element request, ServiceContext context)
-	{
-		String url = null;
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private method
+    //---
+    //---------------------------------------------------------------------------
 
-		Map<String, String> params = null;
+    public Element dispatch(Element request, ServiceContext context) {
+        Element response = dispatchI(request, context);
+        validateResponse(context, response);
 
-		SettingInfo si = context.getBean(SettingInfo.class);
+        return response;
+    }
 
-		try
-		{
-			url    = si.getSiteUrl() + context.getBaseUrl() +"/"+ Jeeves.Prefix.SERVICE +"/en/"+ context.getService();
-			params = OaiPmhFactory.extractParams(request);
+    //---------------------------------------------------------------------------
 
-			AbstractRequest  req = OaiPmhFactory.parse(context.getApplicationContext(), params);
-			OaiPmhService    srv = hmServices.get(req.getVerb());
-			AbstractResponse res = srv.execute(req, context);
+    private Element dispatchI(Element request, ServiceContext context) {
+        String url = null;
 
-			Element response = res.toXml();
+        Map<String, String> params = null;
 
-			return Lib.createOaiRoot(url, params, response);
-		}
+        SettingInfo si = context.getBean(SettingInfo.class);
 
-		catch(OaiPmhException e)
-		{
-			return OaiPmhException.marshal(e, url, params);
-		}
+        try {
+            url = si.getSiteUrl() + context.getBaseUrl() + "/" + Jeeves.Prefix.SERVICE + "/en/" + context.getService();
+            params = OaiPmhFactory.extractParams(request);
 
-		catch(Exception e)
-		{
-			context.info("Exception stack trace : \n"+ Util.getStackTrace(e));
+            AbstractRequest req = OaiPmhFactory.parse(context.getApplicationContext(), params);
+            OaiPmhService srv = hmServices.get(req.getVerb());
+            AbstractResponse res = srv.execute(req, context);
 
-			//--- we should use another exception type but we don't have a specific
-			//--- type to handle internal errors
+            Element response = res.toXml();
 
-			BadArgumentException ex = new BadArgumentException("Internal error : "+ e.getMessage());
+            return Lib.createOaiRoot(url, params, response);
+        } catch (OaiPmhException e) {
+            return OaiPmhException.marshal(e, url, params);
+        } catch (Exception e) {
+            context.info("Exception stack trace : \n" + Util.getStackTrace(e));
 
-			return OaiPmhException.marshal(ex, url, params);
-		}
-	}
+            //--- we should use another exception type but we don't have a specific
+            //--- type to handle internal errors
 
-	//---------------------------------------------------------------------------
+            BadArgumentException ex = new BadArgumentException("Internal error : " + e.getMessage());
 
-	private void validateResponse(ServiceContext context, Element response)
-	{
-		Path schema = context.getAppPath().resolve(Geonet.SchemaPath.OAI_PMH);
+            return OaiPmhException.marshal(ex, url, params);
+        }
+    }
 
-        if(context.isDebugEnabled())
-            context.debug("Validating against : "+ schema);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-		try
-		{
-			Xml.validate(schema, response);
-		}
-		catch (Exception e)
-		{
-			context.warning("OAI-PMH response does not validate : "+e.getMessage());
-		}
-	}
+    private void validateResponse(ServiceContext context, Element response) {
+        Path schema = context.getAppPath().resolve(Geonet.SchemaPath.OAI_PMH);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        if (context.isDebugEnabled())
+            context.debug("Validating against : " + schema);
 
-	private HashMap<String, OaiPmhService> hmServices = new HashMap<String, OaiPmhService>();
+        try {
+            Xml.validate(schema, response);
+        } catch (Exception e) {
+            context.warning("OAI-PMH response does not validate : " + e.getMessage());
+        }
+    }
 }
 
 //=============================================================================

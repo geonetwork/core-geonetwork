@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.escape.Escaper;
 import com.google.common.xml.XmlEscapers;
+
 import org.springframework.stereotype.Component;
 
 /**

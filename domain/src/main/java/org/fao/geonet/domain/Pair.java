@@ -29,6 +29,17 @@ package org.fao.geonet.domain;
  * @author jesse
  */
 public class Pair<R, L> {
+    private R one;
+    private L two;
+
+    protected Pair() {
+    }
+    private Pair(R one, L two) {
+        super();
+        this.one = one;
+        this.two = two;
+    }
+
     public static <R, L> Pair<R, L> read(R one, L two) {
         return new Pair<R, L>(one, two);
     }
@@ -37,40 +48,12 @@ public class Pair<R, L> {
         return new Writeable<R, L>(one, two);
     }
 
-    private R one;
-    private L two;
-
-    protected Pair() {
-    }
-
-    private Pair(R one, L two) {
-        super();
-        this.one = one;
-        this.two = two;
-    }
-
     public R one() {
         return one;
     }
 
     public L two() {
         return two;
-    }
-
-    public static class Writeable<R, L> extends Pair<R, L> {
-        public Writeable(R one, L two) {
-            super(one, two);
-        }
-
-        public Writeable<R, L> one(R newVal) {
-            super.one = newVal;
-            return this;
-        }
-
-        public Writeable<R, L> two(L newVal) {
-            super.two = newVal;
-            return this;
-        }
     }
 
     @Override
@@ -107,6 +90,22 @@ public class Pair<R, L> {
         } else if (!two.equals(other.two))
             return false;
         return true;
+    }
+
+    public static class Writeable<R, L> extends Pair<R, L> {
+        public Writeable(R one, L two) {
+            super(one, two);
+        }
+
+        public Writeable<R, L> one(R newVal) {
+            super.one = newVal;
+            return this;
+        }
+
+        public Writeable<R, L> two(L newVal) {
+            super.two = newVal;
+            return this;
+        }
     }
 
 

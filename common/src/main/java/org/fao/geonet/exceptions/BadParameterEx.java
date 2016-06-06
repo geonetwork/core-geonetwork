@@ -26,20 +26,18 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class BadParameterEx extends BadInputEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class BadParameterEx extends BadInputEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public BadParameterEx(String name, Object value)
-	{
-		super(value+" is not a valid value for: "+name, value);
+    public BadParameterEx(String name, Object value) {
+        super(value + " is not a valid value for: " + name, value);
 
-		id = "bad-parameter";
-	}
+        id = "bad-parameter";
+    }
 }
 
 //=============================================================================

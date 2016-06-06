@@ -24,7 +24,6 @@
 package org.fao.geonet.services.notifications.domain;
 
 /**
- * 
  * Represents a notification target.
  *
  * @author heikki doeleman

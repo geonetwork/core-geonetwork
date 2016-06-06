@@ -42,29 +42,30 @@ import static org.junit.Assert.assertTrue;
  */
 public class XPathCriteriaEvaluatorTest {
     static final Element testMetadata;
+    private static final List<Namespace> NAMESPACES = Collections.emptyList();
+
     static {
         try {
             testMetadata = Xml.loadString("<geonet>\n"
-                                          + "    <general>\n"
-                                          + "        <profiles>../../../web/geonetwork/WEB-INF/user-profiles.xml</profiles>\n"
-                                          + "        <uploadDir>../../../data/tmp</uploadDir>\n"
-                                          + "        <maxUploadSize>100</maxUploadSize> <!-- Size must be in megabyte (integer) -->\n"
-                                          + "        <debug>true</debug>\n"
-                                          + "    </general>\n"
-                                          + "\n"
-                                          + "    <default>\n"
-                                          + "        <service>main.home</service>\n"
-                                          + "        <language></language>\n"
-                                          + "        <localized>true</localized>\n"
-                                          + "        <contentType>text/html; charset=UTF-8</contentType>\n"
-                                          + "    </default>\n"
-                                          + "</geonet>", false);
+                + "    <general>\n"
+                + "        <profiles>../../../web/geonetwork/WEB-INF/user-profiles.xml</profiles>\n"
+                + "        <uploadDir>../../../data/tmp</uploadDir>\n"
+                + "        <maxUploadSize>100</maxUploadSize> <!-- Size must be in megabyte (integer) -->\n"
+                + "        <debug>true</debug>\n"
+                + "    </general>\n"
+                + "\n"
+                + "    <default>\n"
+                + "        <service>main.home</service>\n"
+                + "        <language></language>\n"
+                + "        <localized>true</localized>\n"
+                + "        <contentType>text/html; charset=UTF-8</contentType>\n"
+                + "    </default>\n"
+                + "</geonet>", false);
         } catch (Throwable e) {
             throw new Error(e);
         }
     }
 
-    private static final List<Namespace> NAMESPACES = Collections.emptyList();
     private final int metadataId = -1;
 
     @Test
@@ -83,12 +84,14 @@ public class XPathCriteriaEvaluatorTest {
         assertFalse(XPathCriteriaEvaluator.INSTANCE.accepts(null, "*//debug/text() = 'false'", metadataId, testMetadata, NAMESPACES));
         assertFalse(XPathCriteriaEvaluator.INSTANCE.accepts(null, "*//missing/text() = 'false'", metadataId, testMetadata, NAMESPACES));
     }
+
     @Test
     public void testAcceptsXPathString() throws Exception {
         assertTrue(XPathCriteriaEvaluator.INSTANCE.accepts(null, "*//debug/text()", metadataId, testMetadata, NAMESPACES));
         assertFalse(XPathCriteriaEvaluator.INSTANCE.accepts(null, "*//language/text()", metadataId, testMetadata, NAMESPACES));
         assertFalse(XPathCriteriaEvaluator.INSTANCE.accepts(null, "*//missing/text()", metadataId, testMetadata, NAMESPACES));
     }
+
     @Test
     public void testAcceptsXPathElement() throws Exception {
         assertTrue(XPathCriteriaEvaluator.INSTANCE.accepts(null, "*//debug", metadataId, testMetadata, NAMESPACES));
@@ -97,6 +100,7 @@ public class XPathCriteriaEvaluatorTest {
         assertTrue(XPathCriteriaEvaluator.INSTANCE.accepts(null, "*//service[text() = 'main.home']", metadataId, testMetadata, NAMESPACES));
         assertFalse(XPathCriteriaEvaluator.INSTANCE.accepts(null, "*//service[text() = 'xyz']", metadataId, testMetadata, NAMESPACES));
     }
+
     @Test
     public void testAcceptsXPathError() throws Exception {
         final XPathCriteriaEvaluator xPathCriteriaEvaluator = new XPathCriteriaEvaluator() {
@@ -107,6 +111,7 @@ public class XPathCriteriaEvaluatorTest {
         };
         assertFalse(xPathCriteriaEvaluator.accepts(null, "*//debug[d = 'da", metadataId, testMetadata, NAMESPACES));
     }
+
     @Test
     public void testAcceptsORXPath() throws Exception {
         SchematronCriteria oneGoodOrXPath = XPathCriteriaEvaluator.createOrCriteria("*//language/text()", "*//debug/text()");
@@ -119,6 +124,7 @@ public class XPathCriteriaEvaluatorTest {
         SchematronCriteria noGoodOrXPath = XPathCriteriaEvaluator.createOrCriteria("*//language/text()", "*//service[text() = 'xyz']");
         assertFalse(noGoodOrXPath.accepts(null, metadataId, testMetadata, NAMESPACES));
     }
+
     @Test
     public void testAcceptsANDXPath() throws Exception {
         SchematronCriteria noGoodAndXPath = XPathCriteriaEvaluator.createAndCriteria("*//language/text()", "*//service[text() = 'xyz']");
@@ -128,7 +134,7 @@ public class XPathCriteriaEvaluatorTest {
         assertFalse(oneGoodAndXPath.accepts(null, metadataId, testMetadata, NAMESPACES));
 
         SchematronCriteria twoGoodAndXPath = XPathCriteriaEvaluator.createAndCriteria("*//debug/text()", "*//service[text() = 'main" +
-                                                                                                         ".home']");
+            ".home']");
         assertTrue(twoGoodAndXPath.accepts(null, metadataId, testMetadata, NAMESPACES));
     }
 

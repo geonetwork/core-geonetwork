@@ -26,6 +26,7 @@ package org.fao.geonet.utils;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.jdom.Element;
@@ -43,9 +44,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Test creating requests.
  * <p/>
- * User: Jesse
- * Date: 11/4/13
- * Time: 8:32 AM
+ * User: Jesse Date: 11/4/13 Time: 8:32 AM
  */
 public class GeonetHttpRequestFactoryTest {
     @Test
@@ -60,7 +59,7 @@ public class GeonetHttpRequestFactoryTest {
             public void handle(HttpExchange exchange) throws IOException {
                 byte[] response = Xml.getString(expectedResponse).getBytes();
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK,
-                        response.length);
+                    response.length);
                 exchange.getResponseBody().write(response);
                 exchange.close();
             }
@@ -69,7 +68,7 @@ public class GeonetHttpRequestFactoryTest {
         httpServer.createContext(urlPath, requestHandler);
         try {
             httpServer.start();
-            final XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL ("http://localhost:"+port+ urlPath));
+            final XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL("http://localhost:" + port + urlPath));
             final Element response = xmlRequest.execute();
             assertEquals(Xml.getString(expectedResponse), Xml.getString(response));
         } finally {
@@ -81,7 +80,7 @@ public class GeonetHttpRequestFactoryTest {
     @Ignore // Ignore because it requires a running instance
     public void testBasicAuthenticationWithPreemptiveMode() throws Exception {
         XmlRequest req = new GeonetHttpRequestFactory().
-                createXmlRequest(new URL("http://localhost:8081"));
+            createXmlRequest(new URL("http://localhost:8081"));
         req.setCredentials("admin", "admin");
         req.setAddress("/geonetwork/srv/eng/xml.info");
         req.addParam("type", "me");
@@ -95,6 +94,7 @@ public class GeonetHttpRequestFactoryTest {
         assertEquals(response.getName(), "info");
         assertEquals(response.getChild("me").getAttributeValue("authenticated"), "true");
     }
+
     @Test
     public void testFollowsRedirects() throws Exception {
         final int port = 29484;
@@ -108,7 +108,7 @@ public class GeonetHttpRequestFactoryTest {
             public void handle(HttpExchange exchange) throws IOException {
                 byte[] response = Xml.getString(expectedResponse).getBytes();
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK,
-                        response.length);
+                    response.length);
                 exchange.getResponseBody().write(response);
                 exchange.close();
             }
@@ -123,7 +123,7 @@ public class GeonetHttpRequestFactoryTest {
                 byte[] response = finalUrlPath.getBytes();
                 exchange.getResponseHeaders().add("location", finalUrlPath);
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_PERM,
-                        response.length);
+                    response.length);
                 exchange.getResponseBody().write(response);
                 exchange.close();
             }
@@ -138,7 +138,7 @@ public class GeonetHttpRequestFactoryTest {
                 byte[] response = finalUrlPath.getBytes();
                 exchange.getResponseHeaders().add("location", finalUrlPath);
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_TEMP,
-                        response.length);
+                    response.length);
                 exchange.getResponseBody().write(response);
                 exchange.close();
             }
@@ -149,11 +149,11 @@ public class GeonetHttpRequestFactoryTest {
 
         try {
             httpServer.start();
-            XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL ("http://localhost:"+port+ permUrlPath));
+            XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL("http://localhost:" + port + permUrlPath));
             Element response = xmlRequest.execute();
             assertEquals(Xml.getString(expectedResponse), Xml.getString(response));
 
-            xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL ("http://localhost:"+port+ tempUrlPath));
+            xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL("http://localhost:" + port + tempUrlPath));
             response = xmlRequest.execute();
             assertEquals(Xml.getString(expectedResponse), Xml.getString(response));
         } finally {
@@ -164,7 +164,7 @@ public class GeonetHttpRequestFactoryTest {
     @Test
     public void testCreateXmlRequestURL() throws Exception {
         final XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL
-                ("http://user:pass@host:1234/path?queryString#fragment"));
+            ("http://user:pass@host:1234/path?queryString#fragment"));
 
         final HttpRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
 
@@ -181,7 +181,7 @@ public class GeonetHttpRequestFactoryTest {
     @Test
     public void testCreateXmlRequestURLDefaultPortHttp() throws Exception {
         final XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL
-                ("http://host/path?queryString#fragment"));
+            ("http://host/path?queryString#fragment"));
 
         final HttpRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
 
@@ -198,7 +198,7 @@ public class GeonetHttpRequestFactoryTest {
     @Test
     public void testCreateXmlRequestURLDefaultPortHttps() throws Exception {
         final XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL
-                ("https://host/path?queryString#fragment"));
+            ("https://host/path?queryString#fragment"));
 
         final HttpRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
 
@@ -212,12 +212,13 @@ public class GeonetHttpRequestFactoryTest {
         assertEquals("fragment", httpRequestBase.getURI().getFragment());
     }
 
-    @Test (expected = IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void testAlternateXmlRequestNoArgConstructor() throws Exception {
         final XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest();
         xmlRequest.setupHttpMethod();
     }
-    @Test (expected = IllegalArgumentException.class)
+
+    @Test(expected = IllegalArgumentException.class)
     public void testAlternateXmlRequestIllegalProtocol() throws Exception {
         new GeonetHttpRequestFactory().createXmlRequest("host", 1234, "ftp");
     }
@@ -257,7 +258,7 @@ public class GeonetHttpRequestFactoryTest {
         assertEquals(null, httpRequestBase.getURI().getQuery());
         assertEquals(null, httpRequestBase.getURI().getFragment());
 
-                xmlRequest = new GeonetHttpRequestFactory().createXmlRequest("host", 80);
+        xmlRequest = new GeonetHttpRequestFactory().createXmlRequest("host", 80);
         httpRequestBase = xmlRequest.setupHttpMethod();
 
         assertTrue(httpRequestBase instanceof HttpGet);
@@ -282,7 +283,7 @@ public class GeonetHttpRequestFactoryTest {
         xmlRequest = new GeonetHttpRequestFactory().createXmlRequest();
 
         assertEquals(null, xmlRequest.getHost());
-        assertEquals(80,  xmlRequest.getPort());
+        assertEquals(80, xmlRequest.getPort());
         assertEquals("http", xmlRequest.getProtocol());
         assertEquals(null, xmlRequest.getAddress());
         assertEquals(null, xmlRequest.getQuery());

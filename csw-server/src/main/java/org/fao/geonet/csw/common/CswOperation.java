@@ -30,70 +30,71 @@ import java.util.List;
 
 /**
  * Representation of a CSW operation as it was described in a GetCapabilities response.
- *
  */
+
 /**
  * @author Jesse
  *
  */
 public class CswOperation {
-	
-	private String name;
-	private URL    getUrl;
-	private URL    postUrl;
-	
-	/**
-	 * The OutputSchemas as advertised in the CSW server's GetCapabilities response.
-	 */
-	private List<String> outputSchemaList = new ArrayList<String>();
+
+    private String name;
+    private URL getUrl;
+    private URL postUrl;
 
     /**
-	 * The OutputFormats as advertised in the CSW server's GetCapabilities response.
-	 */
+     * The OutputSchemas as advertised in the CSW server's GetCapabilities response.
+     */
+    private List<String> outputSchemaList = new ArrayList<String>();
+
+    /**
+     * The OutputFormats as advertised in the CSW server's GetCapabilities response.
+     */
     private List<String> outputFormatList = new ArrayList<String>();
 
     /**
      * The constraintLanguage as advertised in the CSW server's GetCapabilities response.
      */
     private List<String> constraintLanguage = new ArrayList<String>();
-    
-	/**
-	 * The preferred OutputSchema from the above.
-	 */
-	private String preferredOutputSchema;
 
     /**
-	 * The preferred OutputFormat from the above.
-	 */
+     * The preferred OutputSchema from the above.
+     */
+    private String preferredOutputSchema;
+
+    /**
+     * The preferred OutputFormat from the above.
+     */
     private String preferredOutputFormat;
 
     private String preferredServerVersion;
 
     private List<String> typeNamesList = new ArrayList<String>();
 
-	protected void choosePreferredOutputSchema() {
-		OutputSchemaPreference preference = new OutputSchemaPreference();
-		for(Iterator<String> i = preference.iterator(); i.hasNext();){
-			String nextBest = i.next();
-			if(outputSchemaList.contains(nextBest)) {
-				preferredOutputSchema = nextBest;
-				break;
-			}
-		}
-	}
+    protected void choosePreferredOutputSchema() {
+        OutputSchemaPreference preference = new OutputSchemaPreference();
+        for (Iterator<String> i = preference.iterator(); i.hasNext(); ) {
+            String nextBest = i.next();
+            if (outputSchemaList.contains(nextBest)) {
+                preferredOutputSchema = nextBest;
+                break;
+            }
+        }
+    }
 
     protected void choosePreferredOutputFormat() {
-		OutputFormatPreference preference = new OutputFormatPreference();
-		for(Iterator<String> i = preference.iterator(); i.hasNext();){
-			String nextBest = i.next();
-			if(outputFormatList.contains(nextBest)) {
-				preferredOutputFormat = nextBest;
-				break;
-			}
-		}
+        OutputFormatPreference preference = new OutputFormatPreference();
+        for (Iterator<String> i = preference.iterator(); i.hasNext(); ) {
+            String nextBest = i.next();
+            if (outputFormatList.contains(nextBest)) {
+                preferredOutputFormat = nextBest;
+                break;
+            }
+        }
 
-        if (preferredOutputFormat == null) preferredOutputFormat = Csw.OUTPUT_FORMAT_APPLICATION_XML;
-	}
+        if (preferredOutputFormat == null)
+            preferredOutputFormat = Csw.OUTPUT_FORMAT_APPLICATION_XML;
+    }
 
     public String getPreferredOutputSchema() {
         return preferredOutputSchema;
@@ -103,12 +104,24 @@ public class CswOperation {
         return name;
     }
 
+    public void setName(String name2) {
+        this.name = name2;
+    }
+
     public URL getGetUrl() {
         return getUrl;
     }
 
+    public void setGetUrl(URL url) {
+        this.getUrl = url;
+    }
+
     public URL getPostUrl() {
         return postUrl;
+    }
+
+    public void setPostUrl(URL url) {
+        this.postUrl = url;
     }
 
     public List<String> getOutputSchemaList() {
@@ -127,32 +140,20 @@ public class CswOperation {
         return preferredOutputFormat;
     }
 
-    public String getPreferredServerVersion() {
-        return preferredServerVersion;
-    }
-
-    public List<String> getTypeNamesList() {
-        return typeNamesList;
-    }
-
-    public void setName(String name2) {
-        this.name = name2;
-    }
-
-    public void setPreferredServerVersion(String preferredServerVersion2) {
-        this.preferredServerVersion = preferredServerVersion2;        
-    }
-
     public void setPreferredOutputFormat(String preferredOutputFormat2) {
         this.preferredOutputFormat = preferredOutputFormat2;
     }
 
-    public void setPostUrl(URL url) {
-        this.postUrl = url;
+    public String getPreferredServerVersion() {
+        return preferredServerVersion;
     }
 
-    public void setGetUrl(URL url) {
-        this.getUrl = url;
+    public void setPreferredServerVersion(String preferredServerVersion2) {
+        this.preferredServerVersion = preferredServerVersion2;
+    }
+
+    public List<String> getTypeNamesList() {
+        return typeNamesList;
     }
 
 }

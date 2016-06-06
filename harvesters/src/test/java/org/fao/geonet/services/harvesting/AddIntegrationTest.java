@@ -24,6 +24,7 @@
 package org.fao.geonet.services.harvesting;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.kernel.harvest.AbstractHarvesterServiceIntegrationTest;
 import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvesterIntegrationTest;
@@ -43,9 +44,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Test adding a harvester.
  *
- * User: Jesse
- * Date: 10/23/13
- * Time: 11:41 AM
+ * User: Jesse Date: 10/23/13 Time: 11:41 AM
  */
 public class AddIntegrationTest extends AbstractHarvesterServiceIntegrationTest {
     @Autowired
@@ -70,7 +69,7 @@ public class AddIntegrationTest extends AbstractHarvesterServiceIntegrationTest 
         final Element afterAddSettings = _settingsManager.get("harvesting", -1);
         assertEquals(1, afterAddSettings.getChildren("children").size());
 
-        final Element nodeSettings = _settingsManager.get("harvester/id:"+id, -1);
+        final Element nodeSettings = _settingsManager.get("harvester/id:" + id, -1);
         assertNotNull(nodeSettings);
 
         final List<HarvestHistory> harvestHistoryByType = _historyRepository.findAllByHarvesterType("csw");

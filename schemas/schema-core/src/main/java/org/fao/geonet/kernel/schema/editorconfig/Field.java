@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
@@ -35,9 +34,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -47,19 +46,20 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;/sequence>
  *       &lt;attribute name="if" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="xpath" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
+ *       &lt;attribute name="xpath" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType"
+ * />
  *       &lt;attribute name="isMissingLabel" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="or" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="in" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="del" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="templateModeOnly" type="{http://www.w3.org/2001/XMLSchema}boolean" fixed="true" />
- *       &lt;attribute name="notDisplayedIfMissing" type="{http://www.w3.org/2001/XMLSchema}boolean" fixed="true" />
+ *       &lt;attribute name="templateModeOnly" type="{http://www.w3.org/2001/XMLSchema}boolean"
+ * fixed="true" />
+ *       &lt;attribute name="notDisplayedIfMissing" type="{http://www.w3.org/2001/XMLSchema}boolean"
+ * fixed="true" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -94,11 +94,8 @@ public class Field {
 
     /**
      * Gets the value of the template property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Template }
-     *     
+     *
+     * @return possible object is {@link Template }
      */
     public Template getTemplate() {
         return template;
@@ -106,11 +103,8 @@ public class Field {
 
     /**
      * Sets the value of the template property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Template }
-     *     
+     *
+     * @param value allowed object is {@link Template }
      */
     public void setTemplate(Template value) {
         this.template = value;
@@ -118,11 +112,8 @@ public class Field {
 
     /**
      * Gets the value of the if property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getIf() {
         return _if;
@@ -130,11 +121,8 @@ public class Field {
 
     /**
      * Sets the value of the if property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setIf(String value) {
         this._if = value;
@@ -142,11 +130,8 @@ public class Field {
 
     /**
      * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getName() {
         return name;
@@ -154,11 +139,8 @@ public class Field {
 
     /**
      * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setName(String value) {
         this.name = value;
@@ -166,11 +148,8 @@ public class Field {
 
     /**
      * Gets the value of the xpath property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getXpath() {
         return xpath;
@@ -178,11 +157,8 @@ public class Field {
 
     /**
      * Sets the value of the xpath property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setXpath(String value) {
         this.xpath = value;
@@ -190,11 +166,8 @@ public class Field {
 
     /**
      * Gets the value of the isMissingLabel property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getIsMissingLabel() {
         return isMissingLabel;
@@ -202,11 +175,8 @@ public class Field {
 
     /**
      * Sets the value of the isMissingLabel property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setIsMissingLabel(String value) {
         this.isMissingLabel = value;
@@ -214,11 +184,8 @@ public class Field {
 
     /**
      * Gets the value of the or property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getOr() {
         return or;
@@ -226,11 +193,8 @@ public class Field {
 
     /**
      * Sets the value of the or property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setOr(String value) {
         this.or = value;
@@ -238,11 +202,8 @@ public class Field {
 
     /**
      * Gets the value of the in property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getIn() {
         return in;
@@ -250,11 +211,8 @@ public class Field {
 
     /**
      * Sets the value of the in property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setIn(String value) {
         this.in = value;
@@ -262,11 +220,8 @@ public class Field {
 
     /**
      * Gets the value of the del property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getDel() {
         return del;
@@ -274,11 +229,8 @@ public class Field {
 
     /**
      * Sets the value of the del property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setDel(String value) {
         this.del = value;
@@ -286,11 +238,8 @@ public class Field {
 
     /**
      * Gets the value of the templateModeOnly property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     *
+     * @return possible object is {@link Boolean }
      */
     public boolean isTemplateModeOnly() {
         if (templateModeOnly == null) {
@@ -302,11 +251,8 @@ public class Field {
 
     /**
      * Sets the value of the templateModeOnly property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     *
+     * @param value allowed object is {@link Boolean }
      */
     public void setTemplateModeOnly(Boolean value) {
         this.templateModeOnly = value;
@@ -314,11 +260,8 @@ public class Field {
 
     /**
      * Gets the value of the notDisplayedIfMissing property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     *
+     * @return possible object is {@link Boolean }
      */
     public boolean isNotDisplayedIfMissing() {
         if (notDisplayedIfMissing == null) {
@@ -330,11 +273,8 @@ public class Field {
 
     /**
      * Sets the value of the notDisplayedIfMissing property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     *
+     * @param value allowed object is {@link Boolean }
      */
     public void setNotDisplayedIfMissing(Boolean value) {
         this.notDisplayedIfMissing = value;

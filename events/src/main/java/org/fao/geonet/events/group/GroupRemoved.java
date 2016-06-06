@@ -28,9 +28,8 @@ import org.springframework.context.ApplicationEvent;
 
 /**
  * Event launched when a group is removed from the database
- * 
- * @author delawen
  *
+ * @author delawen
  */
 public class GroupRemoved extends ApplicationEvent {
 
@@ -49,5 +48,5 @@ public class GroupRemoved extends ApplicationEvent {
     public Group getGroup() {
         return g;
     }
-    
+
 }

@@ -25,8 +25,10 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Test;
@@ -35,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import javax.annotation.Nullable;
 
 import static org.junit.Assert.assertEquals;
@@ -61,7 +64,7 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
         assertFormattersForSchema(true, "dublin-core", listService, "full_view");
     }
 
-    private void assertFormattersForSchema(boolean publishedOnly,String schema, ListFormatters listService,
+    private void assertFormattersForSchema(boolean publishedOnly, String schema, ListFormatters listService,
                                            String... expectedFormatters) throws Exception {
 
         final ListFormatters.FormatterDataResponse response = listService.exec(null, null, schema, false, publishedOnly);
@@ -78,9 +81,9 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
         Arrays.sort(expectedFormatters);
 
         assertEquals("Expected/Actual: \n" + Arrays.asList(expectedFormatters) + "\n" + formatters,
-                expectedFormatters.length, formatters.size());
+            expectedFormatters.length, formatters.size());
         for (String expectedFormatter : expectedFormatters) {
-            assertTrue("Expected formatter: "+expectedFormatter, formatters.contains(schema + "/" + expectedFormatter));
+            assertTrue("Expected formatter: " + expectedFormatter, formatters.contains(schema + "/" + expectedFormatter));
         }
     }
 }

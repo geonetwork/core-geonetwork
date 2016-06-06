@@ -32,176 +32,185 @@ import java.util.Vector;
 
 //=============================================================================
 
-/** Utility that handles the CatalogResolver and XmlResolver and
-  * observes the ProxyInfo subject class to obtain proxy info needed for 
-	* resolver
-  */
+/**
+ * Utility that handles the CatalogResolver and XmlResolver and observes the ProxyInfo subject class
+ * to obtain proxy info needed for resolver
+ */
 
-public final class Resolver implements ProxyInfoObserver
-{
+public final class Resolver implements ProxyInfoObserver {
 
-	private ProxyInfo proxyInfo;
-	private XmlResolver xmlResolver;
-	private CatalogResolver catResolver;
-	
-	/**
-	 * When path is resolved to a non existing file, return this file.
-	 */
-	private String blankXSLFile;
-	
-	/** Active readers count */
-	private static int activeReaders = 0;
-	/** Active writers count */
-	private static int activeWriters = 0;
+    /**
+     * Active readers count
+     */
+    private static int activeReaders = 0;
+    /**
+     * Active writers count
+     */
+    private static int activeWriters = 0;
+    private ProxyInfo proxyInfo;
+    private XmlResolver xmlResolver;
+    private CatalogResolver catResolver;
+    /**
+     * When path is resolved to a non existing file, return this file.
+     */
+    private String blankXSLFile;
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-  public Resolver() {
-		beforeWrite();
-		try {
-			setUpXmlResolver();
-		} finally {
-			afterWrite();
-		}
-	}
-   
-	//--------------------------------------------------------------------------
+    public Resolver() {
+        beforeWrite();
+        try {
+            setUpXmlResolver();
+        } finally {
+            afterWrite();
+        }
+    }
 
-	private void setUpXmlResolver() {
-		CatalogManager catMan = new CatalogManager();
-		catMan.setAllowOasisXMLCatalogPI(false);
-		catMan.setCatalogClassName("org.apache.xml.resolver.Catalog");
-		String catFiles = System.getProperty(Constants.XML_CATALOG_FILES);
-		if (catFiles == null) catFiles="";
-        if(Log.isDebugEnabled(Log.JEEVES)) Log.debug(Log.JEEVES,"Using oasis catalog files "+catFiles);
+    //--------------------------------------------------------------------------
+
+    private void setUpXmlResolver() {
+        CatalogManager catMan = new CatalogManager();
+        catMan.setAllowOasisXMLCatalogPI(false);
+        catMan.setCatalogClassName("org.apache.xml.resolver.Catalog");
+        String catFiles = System.getProperty(Constants.XML_CATALOG_FILES);
+        if (catFiles == null) catFiles = "";
+        if (Log.isDebugEnabled(Log.JEEVES))
+            Log.debug(Log.JEEVES, "Using oasis catalog files " + catFiles);
 
         setBlankXSLFile(System.getProperty(Constants.XML_CATALOG_BLANKXSLFILE));
-        
-		catMan.setCatalogFiles(catFiles);
-		catMan.setIgnoreMissingProperties(true);
-		catMan.setPreferPublic(true);
-		catMan.setRelativeCatalogs(false);
-		catMan.setUseStaticCatalog(false);
-		String catVerbosity = System.getProperty(Constants.XML_CATALOG_VERBOSITY);
-		if (catVerbosity == null) catVerbosity = "1";
-		int iCatVerb = 1;
-		try {
-			iCatVerb = Integer.parseInt(catVerbosity);
-		} catch (NumberFormatException nfe) {
-			Log.error(Log.JEEVES, "Failed to parse "+ Constants.XML_CATALOG_VERBOSITY+" "+catVerbosity);
-			nfe.printStackTrace();
-		}
-        if(Log.isDebugEnabled(Log.JEEVES)) Log.debug(Log.JEEVES,"Using catalog resolver verbosity "+iCatVerb);
-		catMan.setVerbosity(iCatVerb);
 
-		catResolver = new NioPathAwareCatalogResolver(catMan);
+        catMan.setCatalogFiles(catFiles);
+        catMan.setIgnoreMissingProperties(true);
+        catMan.setPreferPublic(true);
+        catMan.setRelativeCatalogs(false);
+        catMan.setUseStaticCatalog(false);
+        String catVerbosity = System.getProperty(Constants.XML_CATALOG_VERBOSITY);
+        if (catVerbosity == null) catVerbosity = "1";
+        int iCatVerb = 1;
+        try {
+            iCatVerb = Integer.parseInt(catVerbosity);
+        } catch (NumberFormatException nfe) {
+            Log.error(Log.JEEVES, "Failed to parse " + Constants.XML_CATALOG_VERBOSITY + " " + catVerbosity);
+            nfe.printStackTrace();
+        }
+        if (Log.isDebugEnabled(Log.JEEVES))
+            Log.debug(Log.JEEVES, "Using catalog resolver verbosity " + iCatVerb);
+        catMan.setVerbosity(iCatVerb);
 
-		@SuppressWarnings("unchecked")
+        catResolver = new NioPathAwareCatalogResolver(catMan);
+
+        @SuppressWarnings("unchecked")
         Vector<String> catalogs = catResolver.getCatalog().getCatalogManager().getCatalogFiles();
-		String[] cats = new String[catalogs.size()];
-		System.arraycopy(catalogs.toArray(), 0, cats, 0, catalogs.size());
+        String[] cats = new String[catalogs.size()];
+        System.arraycopy(catalogs.toArray(), 0, cats, 0, catalogs.size());
 
-		if (proxyInfo == null) proxyInfo = new ProxyInfo();
-		ProxyParams proxyParams = proxyInfo.getProxyParams();
-		xmlResolver = new XmlResolver(cats, proxyParams);
-	}
-
-	//--------------------------------------------------------------------------
-
-	public void reset() {
-		beforeWrite();
-		try {
-			setUpXmlResolver();
-		} finally {
-			afterWrite();
-		}
-	}
-
-	//--------------------------------------------------------------------------
-
-	public XmlResolver getXmlResolver() {
-		beforeRead();
-		try {
-			return xmlResolver;
-		} finally {
-			afterRead();
-		}
-	}
-
-	//--------------------------------------------------------------------------
-
-	public CatalogResolver getCatalogResolver() {
-		beforeRead();
-		try {
-			return catResolver;
-		} finally {
-			afterRead();
-		}
-	}
-
-	//--------------------------------------------------------------------------
-
-	public void update(ProxyInfo proxyInfo) {
-		beforeWrite();
-		try {
-			this.proxyInfo = proxyInfo;
-			proxyInfo.getProxyParams();  // call to initialize
-			setUpXmlResolver();
-		} finally {
-			afterWrite();
-		}
-	}
-
-	//--------------------------------------------------------------------------
-  // -- Private methods
-  //--------------------------------------------------------------------------
-  /**
-   * Invoked just before reading, waits until reading is allowed.
-   */
-  private synchronized void beforeRead() {
-    while (activeWriters > 0) {
-      try {
-        wait();
-      } catch (InterruptedException iex) {}
+        if (proxyInfo == null) proxyInfo = new ProxyInfo();
+        ProxyParams proxyParams = proxyInfo.getProxyParams();
+        xmlResolver = new XmlResolver(cats, proxyParams);
     }
-    ++activeReaders;
-  }
 
-  //--------------------------------------------------------------------------
-  /**
-   * Invoked just after reading.
-   */
-  private synchronized void afterRead() {
-    --activeReaders;
-    notifyAll();
-  }
+    //--------------------------------------------------------------------------
 
-  //--------------------------------------------------------------------------
-  /**
-   * Invoked just before writing, waits until writing is allowed.
-   */
-  private synchronized void beforeWrite() {
-    while (activeReaders > 0 || activeWriters > 0) {
-      try {
-        wait();
-      } catch (InterruptedException iex) {}
+    public void reset() {
+        beforeWrite();
+        try {
+            setUpXmlResolver();
+        } finally {
+            afterWrite();
+        }
     }
-    ++activeWriters;
-  }
 
-  //--------------------------------------------------------------------------
-  /**
-   * Invoked just after writing.
-   */
-  private synchronized void afterWrite() {
-    --activeWriters;
-    notifyAll();
-  }
+    //--------------------------------------------------------------------------
+
+    public XmlResolver getXmlResolver() {
+        beforeRead();
+        try {
+            return xmlResolver;
+        } finally {
+            afterRead();
+        }
+    }
+
+    //--------------------------------------------------------------------------
+
+    public CatalogResolver getCatalogResolver() {
+        beforeRead();
+        try {
+            return catResolver;
+        } finally {
+            afterRead();
+        }
+    }
+
+    //--------------------------------------------------------------------------
+
+    public void update(ProxyInfo proxyInfo) {
+        beforeWrite();
+        try {
+            this.proxyInfo = proxyInfo;
+            proxyInfo.getProxyParams();  // call to initialize
+            setUpXmlResolver();
+        } finally {
+            afterWrite();
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    // -- Private methods
+    //--------------------------------------------------------------------------
+
+    /**
+     * Invoked just before reading, waits until reading is allowed.
+     */
+    private synchronized void beforeRead() {
+        while (activeWriters > 0) {
+            try {
+                wait();
+            } catch (InterruptedException iex) {
+            }
+        }
+        ++activeReaders;
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Invoked just after reading.
+     */
+    private synchronized void afterRead() {
+        --activeReaders;
+        notifyAll();
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Invoked just before writing, waits until writing is allowed.
+     */
+    private synchronized void beforeWrite() {
+        while (activeReaders > 0 || activeWriters > 0) {
+            try {
+                wait();
+            } catch (InterruptedException iex) {
+            }
+        }
+        ++activeWriters;
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Invoked just after writing.
+     */
+    private synchronized void afterWrite() {
+        --activeWriters;
+        notifyAll();
+    }
 
     public String getBlankXSLFile() {
         return blankXSLFile;
     }
-    
+
     public void setBlankXSLFile(String blankXSLFile) {
         this.blankXSLFile = blankXSLFile;
     }

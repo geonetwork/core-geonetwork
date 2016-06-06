@@ -35,9 +35,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test for Category Update service
- * User: pmauduit
- * Date: 2014-06-03
+ * Test for Category Update service User: pmauduit Date: 2014-06-03
  */
 
 public class UpdateTest extends AbstractServiceIntegrationTest {
@@ -53,35 +51,35 @@ public class UpdateTest extends AbstractServiceIntegrationTest {
 
         final String categoryName = "updatecategorytest_renamed";
         CategoryUpdateResponse ret = updateCategoryController.exec(1, categoryName);
-    	assertEquals(1, ret.getOperations().size());
-    	assertTrue(ret.getOperations().contains(Operation.updated));
-    	// Checks that the category has correctly been saved using JPA
+        assertEquals(1, ret.getOperations().size());
+        assertTrue(ret.getOperations().contains(Operation.updated));
+        // Checks that the category has correctly been saved using JPA
         MetadataCategory category = categoryRepository.findOne(1);
         assertTrue(category.getName().equals(categoryName));
     }
 
-	@Test
+    @Test
     public void createCategoryTest() throws Exception {
 
         final String name = "createdcategory_updatetest";
-    	CategoryUpdateResponse ret = updateCategoryController.exec(null, name);
-    	assertEquals(1, ret.getOperations().size());
-    	
-    	assertTrue(ret.getOperations().contains(Operation.added));
-    	// Checks that the category has correctly been saved using JPA
+        CategoryUpdateResponse ret = updateCategoryController.exec(null, name);
+        assertEquals(1, ret.getOperations().size());
+
+        assertTrue(ret.getOperations().contains(Operation.added));
+        // Checks that the category has correctly been saved using JPA
         MetadataCategory category = categoryRepository.findOneByName(name);
         assertTrue(category != null);
     }
 
-	@Test
+    @Test
     public void badParameterCategoryTest() throws Exception {
-    	try {
-    		updateCategoryController.exec(42, null);
-    	} catch (Throwable e) {
-    		// Should complain of a missing parameter "name"
-    		assertTrue (e.getClass().toString(), e instanceof MissingParameterEx);
-    	}
-    	
+        try {
+            updateCategoryController.exec(42, null);
+        } catch (Throwable e) {
+            // Should complain of a missing parameter "name"
+            assertTrue(e.getClass().toString(), e instanceof MissingParameterEx);
+        }
+
     }
 
 }
