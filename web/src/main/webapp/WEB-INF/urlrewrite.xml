@@ -187,7 +187,7 @@
             Example URL: http://localhost:8080/geonetwork/metadata/eng/summary/da165110-88fd-11da-a88f-000d939bc5d8.xml
         </note>
         <from>^/metadata/(.*)/(.*)/(.*).(xml|html)$</from>
-        <to type="forward">/srv/$1/metadata.formatter.$4?uuid=$3&amp;xsl=$4</to>
+        <to type="forward">/srv/$1/md.format.$4?uuid=$3&amp;xsl=$4</to>
     </rule>
 
     <rule>
@@ -196,7 +196,7 @@
         Example URL: http://localhost:8080/geonetwork/metadata/da165110-88fd-11da-a88f-000d939bc5d8
       </note>
       <from>^/metadata/(.*)$</from>
-      <to type="permanent-redirect">%{context-path}/?uuid=$1</to>
+      <to type="forward">/srv/eng/md.format.html?uuid=$1&amp;xsl=schema-org</to>
     </rule>
     <rule>
       <note>

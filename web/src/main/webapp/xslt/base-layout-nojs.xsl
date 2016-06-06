@@ -58,17 +58,27 @@
         <link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml"
           title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
 
-        <xsl:call-template name="css-load"/>
-      </head>
+        <link href="../../static/gn_search_default.css" rel="stylesheet" media="screen"></link>
+		<style>
+		.gn-full { min-height:100%; }
+		.page-body { padding-bottom:200px; }
+		.footer {
+			position:absolute;
+			width:100%;
+			bottom:0;
+			height:200px;
+		}
+		</style>
 
+      </head>
 
       <!-- The GnCatController takes care of 
       loading site information, check user login state
       and a facet search to get main site information.
       -->
-      <body>
-        <div class="gn-full">
-              <xsl:call-template name="header"/>
+      <body style="margin:0;padding:0;min-height:100%;position:relative;">
+        <div class="gn-full container">
+              <xsl:call-template name="header"/> 
               <xsl:apply-templates mode="content" select="."/>
               <xsl:call-template name="footer"/>
         </div>               

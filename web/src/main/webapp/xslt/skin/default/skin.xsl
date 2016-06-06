@@ -31,8 +31,7 @@
         </a>
       </li>
       <li>
-        <a title="Search" href=".">
-          <i class="fa fa-search"></i>
+        <a title="Search" href="catalog.search.nojs">
           <span class="visible-lg ng-scope" >Search</span>
         </a>
       </li>
