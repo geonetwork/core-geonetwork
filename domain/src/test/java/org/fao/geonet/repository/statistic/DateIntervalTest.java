@@ -23,16 +23,14 @@
 
 package org.fao.geonet.repository.statistic;
 
-import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
- * Test DateInterval class
- * User: Jesse
- * Date: 10/1/13
- * Time: 8:04 PM
+ * Test DateInterval class User: Jesse Date: 10/1/13 Time: 8:04 PM
  */
 public class DateIntervalTest {
     final String date = "1980-10-12T06:45:23";

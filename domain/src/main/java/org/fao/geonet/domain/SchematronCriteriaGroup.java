@@ -23,12 +23,23 @@
 
 package org.fao.geonet.domain;
 
-import org.jdom.Element;
-
-import javax.annotation.Nonnull;
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * Created by Jesse on 2/6/14.
@@ -58,7 +69,6 @@ public class SchematronCriteriaGroup extends GeonetEntity {
      * Set the id object.
      *
      * @param id the id.
-     * @return
      */
     public SchematronCriteriaGroup setId(SchematronCriteriaGroupId id) {
         this.id = id;
@@ -78,8 +88,9 @@ public class SchematronCriteriaGroup extends GeonetEntity {
     /**
      * Set the schematron criteria that of this group.
      * <p/>
-     * Use {@link #addCriteria(SchematronCriteria)} for adding criteria to this group rather than adding
-     * the criteria to this list.
+     * Use {@link #addCriteria(SchematronCriteria)} for adding criteria to this group rather than
+     * adding the criteria to this list.
+     *
      * @param criteria the schematron criteria that of this group.
      */
     public void setCriteria(List<SchematronCriteria> criteria) {
@@ -100,15 +111,13 @@ public class SchematronCriteriaGroup extends GeonetEntity {
     /**
      * Set the level requirement for this group.
      *
-     *
-     * @param requirement
-     *
      * @return this entity
      */
     public SchematronCriteriaGroup setRequirement(SchematronRequirement requirement) {
         this.requirement = requirement;
         return this;
     }
+
     /**
      * Get the schematron this group applies to.
      *
@@ -123,10 +132,7 @@ public class SchematronCriteriaGroup extends GeonetEntity {
     /**
      * Set the schematron this group applies to.
      *
-     *
-     * @param schematron
-     *            the schematron to set
-     *
+     * @param schematron the schematron to set
      * @return this entity
      */
     public SchematronCriteriaGroup setSchematron(Schematron schematron) {
@@ -146,7 +152,6 @@ public class SchematronCriteriaGroup extends GeonetEntity {
      * Set the group on the criteria object and add to the list of criteria.
      *
      * @param schematronCriteria the criteria to add to this group.
-     *
      * @return this entity
      */
     public SchematronCriteriaGroup addCriteria(SchematronCriteria schematronCriteria) {

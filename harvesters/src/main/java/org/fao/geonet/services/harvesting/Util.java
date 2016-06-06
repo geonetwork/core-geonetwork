@@ -23,8 +23,6 @@
 
 package org.fao.geonet.services.harvesting;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
@@ -34,51 +32,51 @@ import org.jdom.Element;
 
 import java.util.List;
 
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
+
 //=============================================================================
 
-public class Util
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Job interface
-	//---
-	//--------------------------------------------------------------------------
+public class Util {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Job interface
+    //---
+    //--------------------------------------------------------------------------
 
-	public interface Job
-	{
-		public OperResult execute(HarvestManager hm, String id) throws Exception;
-	}
+    public static Element exec(Element params, ServiceContext context, Job job) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        HarvestManager hm = gc.getBean(HarvestManager.class);
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Exec service: executes the job on all input ids returning the status
-	//---               for each one
-	//---
-	//--------------------------------------------------------------------------
-
-	public static Element exec(Element params, ServiceContext context, Job job) throws Exception
-	{
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		HarvestManager hm = gc.getBean(HarvestManager.class);
-
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> paramList = params.getChildren();
 
-		Element response = new Element(Jeeves.Elem.RESPONSE);
+        Element response = new Element(Jeeves.Elem.RESPONSE);
 
-		for (Element el : paramList) {
-			String  id  = el.getText();
-			String  res = job.execute(hm, id).toString();
+        for (Element el : paramList) {
+            String id = el.getText();
+            String res = job.execute(hm, id).toString();
 
-			el = new Element("id")
-							.setText(id)
-							.setAttribute(new Attribute("status", res));
+            el = new Element("id")
+                .setText(id)
+                .setAttribute(new Attribute("status", res));
 
-			response.addContent(el);
-		}
+            response.addContent(el);
+        }
 
-		return response;
-	}
+        return response;
+    }
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Exec service: executes the job on all input ids returning the status
+    //---               for each one
+    //---
+    //--------------------------------------------------------------------------
+
+    public interface Job {
+        public OperResult execute(HarvestManager hm, String id) throws Exception;
+    }
 }
 
 //=============================================================================

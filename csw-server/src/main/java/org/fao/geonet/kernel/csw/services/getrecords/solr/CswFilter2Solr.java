@@ -81,6 +81,8 @@ import java.util.regex.Pattern;
  * Manages the translation from CSW &lt;Filter&gt; into a Solr expression.
  */
 public class CswFilter2Solr extends AbstractFilterVisitor {
+    static final String SPECIAL_RE = "([" + Pattern.quote("+-&|!(){}[]^\\\"~*?:/") + "])";
+    static final String SPECIAL_LIKE_RE = "(?<!\\\\)([" + Pattern.quote("+-&|!(){}[]^\"~:/") + "])";
     private final StringBuilder out = new StringBuilder();
     private final Expression2CswVisitor expressionVisitor;
 
@@ -95,6 +97,31 @@ public class CswFilter2Solr extends AbstractFilterVisitor {
         CswFilter2Solr translator = new CswFilter2Solr(fieldMapper);
         filter.accept(translator, translator);
         return translator.out.toString();
+    }
+
+    protected static String escapeLiteral(String text) {
+        return text.replaceAll(SPECIAL_RE, "\\\\$1");
+    }
+
+    protected static String escapeLikeLiteral(String text) {
+        return text.replaceAll(SPECIAL_LIKE_RE, "\\\\$1");
+    }
+
+    protected static String[] convertLikePattern(PropertyIsLike filter) {
+        String result = filter.getLiteral();
+        if (!filter.getWildCard().equals("*")) {
+            final String wildcardRe = "(?<!" + Pattern.quote(filter.getEscape()) + ")" + Pattern.quote(filter.getWildCard());
+            result = result.replaceAll(wildcardRe, "*");
+        }
+        if (!filter.getSingleChar().equals("?")) {
+            final String singleCharRe = "(?<!" + Pattern.quote(filter.getEscape()) + ")" + Pattern.quote(filter.getSingleChar());
+            result = result.replaceAll(singleCharRe, "?");
+        }
+        if (!filter.getEscape().equals("\\")) {
+            final String escapeRe = Pattern.quote(filter.getEscape()) + "(.)";
+            result = result.replaceAll(escapeRe, "\\\\$1");
+        }
+        return escapeLikeLiteral(result).split(" +");
     }
 
     @Override
@@ -198,7 +225,6 @@ public class CswFilter2Solr extends AbstractFilterVisitor {
         return this;
     }
 
-
     @Override
     public Object visit(PropertyIsGreaterThan filter, Object extraData) {
         return visitRange(filter, "{", " TO *]", extraData);
@@ -217,35 +243,6 @@ public class CswFilter2Solr extends AbstractFilterVisitor {
     @Override
     public Object visit(PropertyIsLessThanOrEqualTo filter, Object extraData) {
         return visitRange(filter, "[* TO ", "]", extraData);
-    }
-
-    static final String SPECIAL_RE = "([" + Pattern.quote("+-&|!(){}[]^\\\"~*?:/") + "])";
-
-    protected static String escapeLiteral(String text) {
-        return text.replaceAll(SPECIAL_RE, "\\\\$1");
-    }
-
-    static final String SPECIAL_LIKE_RE = "(?<!\\\\)([" + Pattern.quote("+-&|!(){}[]^\"~:/") + "])";
-
-    protected static String escapeLikeLiteral(String text) {
-        return text.replaceAll(SPECIAL_LIKE_RE, "\\\\$1");
-    }
-
-    protected static String[] convertLikePattern(PropertyIsLike filter) {
-        String result = filter.getLiteral();
-        if (!filter.getWildCard().equals("*")) {
-            final String wildcardRe = "(?<!" + Pattern.quote(filter.getEscape()) + ")" + Pattern.quote(filter.getWildCard());
-            result = result.replaceAll(wildcardRe, "*");
-        }
-        if (!filter.getSingleChar().equals("?")) {
-            final String singleCharRe = "(?<!" + Pattern.quote(filter.getEscape()) + ")" + Pattern.quote(filter.getSingleChar());
-            result = result.replaceAll(singleCharRe, "?");
-        }
-        if (!filter.getEscape().equals("\\")) {
-            final String escapeRe = Pattern.quote(filter.getEscape()) + "(.)";
-            result = result.replaceAll(escapeRe, "\\\\$1");
-        }
-        return escapeLikeLiteral(result).split(" +");
     }
 
     @Override

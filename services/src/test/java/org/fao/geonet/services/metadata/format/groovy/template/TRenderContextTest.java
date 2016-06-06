@@ -24,8 +24,10 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Maps;
+
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
+
 import org.fao.geonet.services.metadata.format.groovy.util.NavBarItem;
 import org.junit.Test;
 
@@ -89,7 +91,7 @@ public class TRenderContextTest {
         String itemKey = "item";
         final XmlSlurper xmlSlurper = new XmlSlurper(false, false);
         final String xml =
-                "<gmd:MD_Metadata xmlns:gmd=\"http://www.isotc211.org/2005/gmd\"><gmd:fileIdentifier><gco:CharacterString "
+            "<gmd:MD_Metadata xmlns:gmd=\"http://www.isotc211.org/2005/gmd\"><gmd:fileIdentifier><gco:CharacterString "
                 + "xmlns:gco=\"http://www.isotc211.org/2005/gco\">da165110-88fd-11da-a88f-000d939bc5d8</gco:CharacterString>"
                 + "</gmd:fileIdentifier></gmd:MD_Metadata>";
 

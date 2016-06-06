@@ -28,9 +28,7 @@ import com.yammer.metrics.stats.Snapshot;
 /**
  * Histogram implementation that does nothing
  *
- * User: jeichar
- * Date: 4/3/12
- * Time: 1:15 PM
+ * User: jeichar Date: 4/3/12 Time: 1:15 PM
  */
 public class DummyHistogram extends Histogram {
     public static final Histogram INSTANCE = new DummyHistogram();

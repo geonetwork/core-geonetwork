@@ -25,9 +25,9 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.HarvesterSetting;
 
-import javax.annotation.Nonnull;
-
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * Custom (Non spring-data) Query methods for {@link HarvesterSetting} entities.
@@ -64,7 +64,6 @@ public interface HarvesterSettingRepositoryCustom {
      *
      * @param parentid the parentid parameter
      * @param name     the name parameter
-     * @return
      */
     List<HarvesterSetting> findChildrenByName(int parentid, String name);
 
@@ -86,8 +85,6 @@ public interface HarvesterSettingRepositoryCustom {
 
     /**
      * Get all settings on given names of settings with one request
-     * @param names
-     * @return
      */
-	List<HarvesterSetting> findAllByNames(List<String> names);
+    List<HarvesterSetting> findAllByNames(List<String> names);
 }

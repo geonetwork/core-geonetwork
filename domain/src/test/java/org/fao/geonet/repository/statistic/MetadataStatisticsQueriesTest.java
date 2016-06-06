@@ -24,8 +24,39 @@
 package org.fao.geonet.repository.statistic;
 
 import com.google.common.base.Optional;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.repository.*;
+
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.MetadataValidationStatus;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.GroupRepositoryTest;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataCategoryRepositoryTest;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataRepositoryTest;
+import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.MetadataStatusRepositoryTest;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.MetadataValidationRepositoryTest;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.SourceRepositoryTest;
+import org.fao.geonet.repository.StatusValueRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.UserRepositoryTest;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.junit.Test;
@@ -34,22 +65,20 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static junit.framework.Assert.assertNull;
-import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.*;
+import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.metadataCount;
+import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.popularitySum;
+import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.ratingSum;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test MetadataStatisticsQueries
- * User: Jesse
- * Date: 9/23/13
- * Time: 12:20 PM
+ * Test MetadataStatisticsQueries User: Jesse Date: 9/23/13 Time: 12:20 PM
  */
 public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
 
-    private static final int POPULARITY = 2;
     public static final int RATING = 3;
+    private static final int POPULARITY = 2;
     @Autowired
     UserRepository _userRepository;
     @Autowired
@@ -91,7 +120,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         _metadataRepository.save(metadata3c2);
 
         Map<MetadataCategory, Integer> popularityMap = _metadataRepository.getMetadataStatistics()
-                .getMetadataCategoryToStatMap(popularitySum());
+            .getMetadataCategoryToStatMap(popularitySum());
 
         assertEquals(2, popularityMap.size());
         assertEquals(2 * POPULARITY, popularityMap.get(category1).intValue());
@@ -99,7 +128,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertNull(popularityMap.get(category3));
 
         popularityMap = _metadataRepository.getMetadataStatistics()
-                .getMetadataCategoryToStatMap(metadataCount());
+            .getMetadataCategoryToStatMap(metadataCount());
 
         assertEquals(2, popularityMap.size());
         assertEquals(2, popularityMap.get(category1).intValue());
@@ -107,7 +136,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertNull(popularityMap.get(category3));
 
         popularityMap = _metadataRepository.getMetadataStatistics()
-                .getMetadataCategoryToStatMap(ratingSum());
+            .getMetadataCategoryToStatMap(ratingSum());
 
         assertEquals(2, popularityMap.size());
         assertEquals(2 * RATING, popularityMap.get(category1).intValue());
@@ -138,7 +167,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         _metadataRepository.save(metadata3g2);
 
         Map<Group, Integer> groupOwnerToStatMap = _metadataRepository.getMetadataStatistics()
-                .getGroupOwnerToStatMap(metadataCount());
+            .getGroupOwnerToStatMap(metadataCount());
 
         assertEquals(2, groupOwnerToStatMap.size());
         assertEquals(2, groupOwnerToStatMap.get(group1).intValue());
@@ -146,7 +175,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertNull(groupOwnerToStatMap.get(group3));
 
         groupOwnerToStatMap = _metadataRepository.getMetadataStatistics()
-                .getGroupOwnerToStatMap(popularitySum());
+            .getGroupOwnerToStatMap(popularitySum());
 
         assertEquals(2, groupOwnerToStatMap.size());
         assertEquals(2 * POPULARITY, groupOwnerToStatMap.get(group1).intValue());
@@ -154,7 +183,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertNull(groupOwnerToStatMap.get(group3));
 
         groupOwnerToStatMap = _metadataRepository.getMetadataStatistics()
-                .getGroupOwnerToStatMap(ratingSum());
+            .getGroupOwnerToStatMap(ratingSum());
 
         assertEquals(2, groupOwnerToStatMap.size());
         assertEquals(2 * RATING, groupOwnerToStatMap.get(group1).intValue());
@@ -228,7 +257,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         _metadataRepository.save(metadata3g2);
 
         Map<Source, Integer> sourceToStatMap = _metadataRepository.getMetadataStatistics()
-                .getSourceToStatMap(metadataCount());
+            .getSourceToStatMap(metadataCount());
 
         assertEquals(2, sourceToStatMap.size());
         assertEquals(2, sourceToStatMap.get(source1).intValue());
@@ -236,7 +265,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertNull(sourceToStatMap.get(source3));
 
         sourceToStatMap = _metadataRepository.getMetadataStatistics()
-                .getSourceToStatMap(popularitySum());
+            .getSourceToStatMap(popularitySum());
 
         assertEquals(2, sourceToStatMap.size());
         assertEquals(2 * POPULARITY, sourceToStatMap.get(source1).intValue());
@@ -244,7 +273,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertNull(sourceToStatMap.get(source3));
 
         sourceToStatMap = _metadataRepository.getMetadataStatistics()
-                .getSourceToStatMap(ratingSum());
+            .getSourceToStatMap(ratingSum());
 
         assertEquals(2, sourceToStatMap.size());
         assertEquals(2 * RATING, sourceToStatMap.get(source1).intValue());
@@ -275,7 +304,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         _metadataRepository.save(metadata3g2);
 
         Map<String, Integer> sourceToStatMap = _metadataRepository.getMetadataStatistics()
-                .getSchemaToStatMap(metadataCount());
+            .getSchemaToStatMap(metadataCount());
 
         assertEquals(2, sourceToStatMap.size());
         assertEquals(2, sourceToStatMap.get(schema1).intValue());
@@ -283,7 +312,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertNull(sourceToStatMap.get(schema3));
 
         sourceToStatMap = _metadataRepository.getMetadataStatistics()
-                .getSchemaToStatMap(popularitySum());
+            .getSchemaToStatMap(popularitySum());
 
         assertEquals(2, sourceToStatMap.size());
         assertEquals(2 * POPULARITY, sourceToStatMap.get(schema1).intValue());
@@ -291,7 +320,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertNull(sourceToStatMap.get(schema3));
 
         sourceToStatMap = _metadataRepository.getMetadataStatistics()
-                .getSchemaToStatMap(ratingSum());
+            .getSchemaToStatMap(ratingSum());
 
         assertEquals(2, sourceToStatMap.size());
         assertEquals(2 * RATING, sourceToStatMap.get(schema1).intValue());
@@ -318,21 +347,21 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
 
 
         Map<MetadataType, Integer> typeToStatMap = _metadataRepository.getMetadataStatistics()
-                .getMetadataTypeToStatMap(metadataCount());
+            .getMetadataTypeToStatMap(metadataCount());
         assertEquals(3, typeToStatMap.size());
         assertEquals(2, typeToStatMap.get(MetadataType.METADATA).intValue());
         assertEquals(1, typeToStatMap.get(MetadataType.SUB_TEMPLATE).intValue());
         assertEquals(0, typeToStatMap.get(MetadataType.TEMPLATE).intValue());
 
         typeToStatMap = _metadataRepository.getMetadataStatistics()
-                .getMetadataTypeToStatMap(popularitySum());
+            .getMetadataTypeToStatMap(popularitySum());
         assertEquals(3, typeToStatMap.size());
         assertEquals(2 * POPULARITY, typeToStatMap.get(MetadataType.METADATA).intValue());
         assertEquals(POPULARITY, typeToStatMap.get(MetadataType.SUB_TEMPLATE).intValue());
         assertEquals(0, typeToStatMap.get(MetadataType.TEMPLATE).intValue());
 
         typeToStatMap = _metadataRepository.getMetadataStatistics()
-                .getMetadataTypeToStatMap(ratingSum());
+            .getMetadataTypeToStatMap(ratingSum());
         assertEquals(3, typeToStatMap.size());
         assertEquals(2 * RATING, typeToStatMap.get(MetadataType.METADATA).intValue());
         assertEquals(RATING, typeToStatMap.get(MetadataType.SUB_TEMPLATE).intValue());
@@ -357,21 +386,21 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         _metadataRepository.save(metadata3g2);
 
         Map<Boolean, Integer> sourceToStatMap = _metadataRepository.getMetadataStatistics()
-                .getIsHarvestedToStatMap(metadataCount());
+            .getIsHarvestedToStatMap(metadataCount());
 
         assertEquals(2, sourceToStatMap.size());
         assertEquals(2, sourceToStatMap.get(false).intValue());
         assertEquals(1, sourceToStatMap.get(true).intValue());
 
         sourceToStatMap = _metadataRepository.getMetadataStatistics()
-                .getIsHarvestedToStatMap(popularitySum());
+            .getIsHarvestedToStatMap(popularitySum());
 
         assertEquals(2, sourceToStatMap.size());
         assertEquals(2 * POPULARITY, sourceToStatMap.get(false).intValue());
         assertEquals(POPULARITY, sourceToStatMap.get(true).intValue());
 
         sourceToStatMap = _metadataRepository.getMetadataStatistics()
-                .getIsHarvestedToStatMap(ratingSum());
+            .getIsHarvestedToStatMap(ratingSum());
 
         assertEquals(2, sourceToStatMap.size());
         assertEquals(2 * RATING, sourceToStatMap.get(false).intValue());
@@ -456,7 +485,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         _metadataValidationRepository.save(validation3);
 
         Map<MetadataValidationStatus, Integer> statusToStatMap = _metadataRepository
-                .getMetadataStatistics().getMetadataValidationStatusToStatMap(metadataCount());
+            .getMetadataStatistics().getMetadataValidationStatusToStatMap(metadataCount());
 
         assertEquals(3, statusToStatMap.size());
         assertEquals(2, statusToStatMap.get(MetadataValidationStatus.VALID).intValue());
@@ -464,7 +493,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertEquals(4, statusToStatMap.get(MetadataValidationStatus.NEVER_CALCULATED).intValue());
 
         statusToStatMap = _metadataRepository
-                .getMetadataStatistics().getMetadataValidationStatusToStatMap(popularitySum());
+            .getMetadataStatistics().getMetadataValidationStatusToStatMap(popularitySum());
 
         assertEquals(3, statusToStatMap.size());
         assertEquals(2 * POPULARITY, statusToStatMap.get(MetadataValidationStatus.VALID).intValue());
@@ -472,7 +501,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertEquals(4 * POPULARITY, statusToStatMap.get(MetadataValidationStatus.NEVER_CALCULATED).intValue());
 
         statusToStatMap = _metadataRepository
-                .getMetadataStatistics().getMetadataValidationStatusToStatMap(ratingSum());
+            .getMetadataStatistics().getMetadataValidationStatusToStatMap(ratingSum());
 
         assertEquals(3, statusToStatMap.size());
         assertEquals(2 * RATING, statusToStatMap.get(MetadataValidationStatus.VALID).intValue());
@@ -521,7 +550,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         _metadataValidationRepository.save(validation6);
 
         Map<Pair<String, MetadataValidationStatus>, Integer> map =
-                _metadataRepository.getMetadataStatistics().getMetadataValidationTypeAndStatusToStatMap(metadataCount());
+            _metadataRepository.getMetadataStatistics().getMetadataValidationTypeAndStatusToStatMap(metadataCount());
 
         assertEquals(6, map.size());
         assertEquals(1, map.get(Pair.read(validation.getId().getValidationType(), MetadataValidationStatus.VALID)).intValue());
@@ -545,13 +574,13 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertEquals(6, map.size());
         assertEquals(POPULARITY, map.get(Pair.read(validation.getId().getValidationType(), MetadataValidationStatus.VALID)).intValue());
         assertEquals(2 * POPULARITY, map.get(Pair.read(validation.getId().getValidationType(),
-                MetadataValidationStatus.INVALID)).intValue());
+            MetadataValidationStatus.INVALID)).intValue());
         assertEquals(POPULARITY, map.get(Pair.read(validation4.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue
-                ());
+            ());
         assertEquals(POPULARITY, map.get(Pair.read(validation5.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue
-                ());
+            ());
         assertEquals(POPULARITY, map.get(Pair.read(validation6.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue
-                ());
+            ());
         assertNull(map.get(Pair.read(validation4.getId().getValidationType(), MetadataValidationStatus.VALID)));
         assertNull(map.get(Pair.read(validation5.getId().getValidationType(), MetadataValidationStatus.VALID)));
         assertNull(map.get(Pair.read(validation6.getId().getValidationType(), MetadataValidationStatus.VALID)));
@@ -592,15 +621,15 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
 
         assertEquals(3 * POPULARITY, metadataStatistics.getTotalStat(popularitySum(), absent));
         assertEquals(POPULARITY, metadataStatistics.getTotalStat(popularitySum(), Optional.of(MetadataSpecs.hasMetadataId
-                (metadata1.getId()))));
+            (metadata1.getId()))));
 
         assertEquals(3, metadataStatistics.getTotalStat(metadataCount(), absent));
         assertEquals(1, metadataStatistics.getTotalStat(metadataCount(), Optional.of(MetadataSpecs.hasMetadataId
-                (metadata1.getId()))));
+            (metadata1.getId()))));
 
         assertEquals(3 * RATING, metadataStatistics.getTotalStat(ratingSum(), absent));
         assertEquals(RATING, metadataStatistics.getTotalStat(ratingSum(), Optional.of(MetadataSpecs.hasMetadataId
-                (metadata1.getId()))));
+            (metadata1.getId()))));
 
 
     }
@@ -622,22 +651,22 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
 
 
         _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md1.getId(), ReservedGroup.all.getId(),
-                ReservedOperation.download.getId())));
+            ReservedOperation.download.getId())));
         _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md1.getId(), ReservedGroup.all.getId(),
-                ReservedOperation.view.getId())));
+            ReservedOperation.view.getId())));
         _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md1.getId(), ReservedGroup.intranet.getId(),
-                ReservedOperation.view.getId())));
+            ReservedOperation.view.getId())));
 
         _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md2.getId(), ReservedGroup.all.getId(),
-                ReservedOperation.view.getId())));
+            ReservedOperation.view.getId())));
         _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md2.getId(), ReservedGroup.intranet.getId(),
-                ReservedOperation.view.getId())));
+            ReservedOperation.view.getId())));
 
         _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md3.getId(), ReservedGroup.intranet.getId(),
-                ReservedOperation.view.getId())));
+            ReservedOperation.view.getId())));
 
         Specification<OperationAllowed> operationAllowedSpec = Specifications.where(OperationAllowedSpecs.isPublic(ReservedOperation
-                .view)).or(OperationAllowedSpecs.isPublic(ReservedOperation.download));
+            .view)).or(OperationAllowedSpecs.isPublic(ReservedOperation.download));
 
         assertEquals(2, metadataStatistics.getStatBasedOnOperationAllowed(metadataCount(), operationAllowedSpec));
         assertEquals(2 * POPULARITY, metadataStatistics.getStatBasedOnOperationAllowed(popularitySum(), operationAllowedSpec));
@@ -658,7 +687,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertEquals(0, metadataStatistics.getGroupOwnerToStatMap(ratingSum()).size());
         assertEquals(0, metadataStatistics.getGroupOwnerToStatMap(popularitySum()).size());
         assertEquals(0, metadataStatistics.getStatBasedOnOperationAllowed(popularitySum(), OperationAllowedSpecs.hasOperation
-                (ReservedOperation.view)));
+            (ReservedOperation.view)));
 
         final Map<Boolean, Integer> isHarvestedToStatMap = metadataStatistics.getIsHarvestedToStatMap(metadataCount());
         metadataStatistics.getIsHarvestedToStatMap(ratingSum());
@@ -679,7 +708,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertEquals(0, metadataTypeToStatMap.get(MetadataType.TEMPLATE).intValue());
 
         final Map<MetadataValidationStatus, Integer> metadataValidationStatusToStatMap = metadataStatistics
-                .getMetadataValidationStatusToStatMap(metadataCount());
+            .getMetadataValidationStatusToStatMap(metadataCount());
         metadataStatistics.getMetadataValidationStatusToStatMap(ratingSum());
         metadataStatistics.getMetadataValidationStatusToStatMap(popularitySum());
         assertEquals(3, metadataValidationStatusToStatMap.size());
@@ -688,12 +717,12 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertEquals(0, metadataValidationStatusToStatMap.get(MetadataValidationStatus.INVALID).intValue());
 
         final Map<Pair<String, MetadataValidationStatus>, Integer> metadataValidationTypeAndStatusToStatMap =
-                metadataStatistics.getMetadataValidationTypeAndStatusToStatMap(metadataCount());
+            metadataStatistics.getMetadataValidationTypeAndStatusToStatMap(metadataCount());
         metadataStatistics.getMetadataValidationTypeAndStatusToStatMap(popularitySum());
         metadataStatistics.getMetadataValidationTypeAndStatusToStatMap(ratingSum());
         assertEquals(1, metadataValidationTypeAndStatusToStatMap.size());
         assertEquals(0, metadataValidationTypeAndStatusToStatMap.get(Pair.read(null, MetadataValidationStatus.NEVER_CALCULATED))
-                .intValue());
+            .intValue());
 
         assertEquals(0, metadataStatistics.getMetadataCategoryToStatMap(metadataCount()).size());
         assertEquals(0, metadataStatistics.getMetadataCategoryToStatMap(ratingSum()).size());

@@ -28,6 +28,8 @@ import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.HarvestHistory_;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -35,14 +37,11 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Root;
-import java.util.Collection;
 
 /**
  * Implementation for custom methods for the HarvestHistoryRepository class.
  * <p/>
- * User: Jesse
- * Date: 9/20/13
- * Time: 4:03 PM
+ * User: Jesse Date: 9/20/13 Time: 4:03 PM
  */
 public class HarvestHistoryRepositoryImpl implements HarvestHistoryRepositoryCustom {
 

@@ -23,16 +23,16 @@
 
 package org.fao.geonet.services.region;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.jdom.Element;
 
 import java.nio.file.Path;
 import java.util.Collection;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 

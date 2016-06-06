@@ -23,22 +23,22 @@
 
 package org.fao.geonet.kernel.search.keyword;
 
-import java.util.Set;
-
 import org.fao.geonet.kernel.rdf.Where;
 import org.fao.geonet.kernel.rdf.Wheres;
 import org.jdom.Element;
 
+import java.util.Set;
+
 /**
  * A search clause for selecting based on a provided keyowrd URI
- * 
+ *
  * @author jeichar
  */
 public class URISearchClause implements SearchClause {
 
     KeywordSearchType searchType;
-    private String uri;
     boolean ignoreCase;
+    private String uri;
 
     public URISearchClause(String uri) {
         this.uri = uri;
@@ -65,7 +65,7 @@ public class URISearchClause implements SearchClause {
         KeywordSearchParamsBuilder.addXmlParam(params, XmlParams.pUri, this.uri);
         if (this.searchType != null) {
             KeywordSearchParamsBuilder.addXmlParam(params,
-                    XmlParams.pTypeSearch, "" + searchType.ordinal());
+                XmlParams.pTypeSearch, "" + searchType.ordinal());
         }
     }
 

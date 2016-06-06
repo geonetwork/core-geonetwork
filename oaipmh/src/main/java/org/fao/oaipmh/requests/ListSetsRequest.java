@@ -23,46 +23,46 @@
 
 package org.fao.oaipmh.requests;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.ListSetsResponse;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 //=============================================================================
 
-public class ListSetsRequest extends ListRequest
-{
-	public static final String VERB = "ListSets";
+public class ListSetsRequest extends ListRequest {
+    public static final String VERB = "ListSets";
 
     public ListSetsRequest(GeonetHttpRequestFactory transport) {
         super(transport);
     }
 
     //---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public ListSetsResponse execute() throws IOException, OaiPmhException, JDOMException,
-														  SAXException, Exception
-	{
-		Map<String, String> params = new HashMap<String, String>();
+    public ListSetsResponse execute() throws IOException, OaiPmhException, JDOMException,
+        SAXException, Exception {
+        Map<String, String> params = new HashMap<String, String>();
 
-		if (resumpToken != null)
-			params.put("resumptionToken", resumpToken);
+        if (resumpToken != null)
+            params.put("resumptionToken", resumpToken);
 
-		return new ListSetsResponse(this, sendRequest(params));
-	}
+        return new ListSetsResponse(this, sendRequest(params));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public String getVerb() { return VERB; }
+    public String getVerb() {
+        return VERB;
+    }
 }
 
 //=============================================================================

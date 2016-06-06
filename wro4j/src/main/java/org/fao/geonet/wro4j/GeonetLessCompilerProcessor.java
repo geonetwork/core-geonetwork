@@ -1,26 +1,26 @@
 package org.fao.geonet.wro4j;
 
 import org.apache.commons.io.IOUtils;
-import ro.isdc.wro.extensions.processor.css.Less4jProcessor;
-import ro.isdc.wro.model.resource.Resource;
-import ro.isdc.wro.model.resource.ResourceType;
-import ro.isdc.wro.model.resource.SupportedResourceType;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.logging.Logger;
 
+import ro.isdc.wro.extensions.processor.css.Less4jProcessor;
+import ro.isdc.wro.model.resource.Resource;
+import ro.isdc.wro.model.resource.ResourceType;
+import ro.isdc.wro.model.resource.SupportedResourceType;
+
 /**
- * Custom Geonetwork implementation for importing stylesheets.  Main factor is to make it more forgiving.
+ * Custom Geonetwork implementation for importing stylesheets.  Main factor is to make it more
+ * forgiving.
  * <p/>
- * User: Jesse
- * Date: 12/2/13
- * Time: 3:29 PM
+ * User: Jesse Date: 12/2/13 Time: 3:29 PM
  */
 @SupportedResourceType(ResourceType.CSS)
 public class GeonetLessCompilerProcessor
-        extends Less4jProcessor {
+    extends Less4jProcessor {
 
     public static final String ALIAS = "geonetLessCompiler";
     private static final String LESS_EXT = ".less";

@@ -25,17 +25,27 @@ package org.fao.geonet.domain;
 
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
- * Entity to model a metadata file upload request: metadata identifier, upload date, user, file name, etc.
+ * Entity to model a metadata file upload request: metadata identifier, upload date, user, file
+ * name, etc.
  *
  * @author Jose García
  */
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "MetadataFileUploads")
-@SequenceGenerator(name=MetadataFileUpload.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = MetadataFileUpload.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MetadataFileUpload extends GeonetEntity {
     static final String ID_SEQ_NAME = "metadata_fileupload_id_seq";
     private int _id;
@@ -52,7 +62,7 @@ public class MetadataFileUpload extends GeonetEntity {
      * @return the id object for this MetadataFileUpload entity.
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
@@ -217,11 +227,13 @@ public class MetadataFileUpload extends GeonetEntity {
 
         if (_id != that._id) return false;
         if (_metadataId != that._metadataId) return false;
-        if (_deletedDate != null ? !_deletedDate.equals(that._deletedDate) : that._deletedDate != null) return false;
+        if (_deletedDate != null ? !_deletedDate.equals(that._deletedDate) : that._deletedDate != null)
+            return false;
         if (!_fileName.equals(that._fileName)) return false;
         if (!_fileSize.equals(that._fileSize)) return false;
         if (!_uploadDate.equals(that._uploadDate)) return false;
-        if (_userName != null ? !_userName.equals(that._userName) : that._userName != null) return false;
+        if (_userName != null ? !_userName.equals(that._userName) : that._userName != null)
+            return false;
 
         return true;
     }

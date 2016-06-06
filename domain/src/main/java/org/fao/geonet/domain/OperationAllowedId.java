@@ -23,8 +23,9 @@
 
 package org.fao.geonet.domain;
 
-import javax.persistence.Embeddable;
 import java.io.Serializable;
+
+import javax.persistence.Embeddable;
 
 /**
  * The id object of {@link OperationAllowed}

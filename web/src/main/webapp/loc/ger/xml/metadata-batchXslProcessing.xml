@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Metadatensätze nicht gefunden</notfound>
+  <notowner>Metadatensätze, die nicht bearbeitet werden konnten, Sie sind nicht der Besitzer
+  </notowner>
+  <updated>Bearbeitete Metdatensätze</updated>
+  <notProcessFound>Metadaten Prozess nicht gefunden für Metadatenschema</notProcessFound>
+</strings>

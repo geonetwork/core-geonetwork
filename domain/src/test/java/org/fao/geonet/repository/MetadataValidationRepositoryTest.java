@@ -23,7 +23,11 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.MetadataValidationId;
+import org.fao.geonet.domain.MetadataValidationStatus;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,10 +38,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
- * Test the MetadataValidationRepository class
- * User: Jesse
- * Date: 9/4/13
- * Time: 4:01 PM
+ * Test the MetadataValidationRepository class User: Jesse Date: 9/4/13 Time: 4:01 PM
  */
 public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
 
@@ -45,6 +46,23 @@ public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
     private MetadataValidationRepository _metadataValidationRepository;
     @Autowired
     private MetadataRepository _metadataRepository;
+
+    public static MetadataValidation newValidation(AtomicInteger inc, MetadataRepository metadataRepository) {
+        int val = inc.incrementAndGet();
+
+        Metadata metadata = metadataRepository.save(MetadataRepositoryTest.newMetadata(inc));
+
+        MetadataValidation validation = new MetadataValidation();
+        MetadataValidationId id = new MetadataValidationId();
+        id.setMetadataId(metadata.getId());
+        id.setValidationType("valType" + val);
+        validation.setId(id);
+        validation.setStatus(val % 2 == 0 ? MetadataValidationStatus.INVALID : MetadataValidationStatus.VALID);
+        validation.setValidationDate(new ISODate());
+        validation.setValid(val % 2 == 1);
+
+        return validation;
+    }
 
     @Test
     public void testFindById_MetadataId() throws Exception {
@@ -84,22 +102,5 @@ public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
 
     private MetadataValidation newValidation() {
         return newValidation(_inc, _metadataRepository);
-    }
-
-    public static MetadataValidation newValidation(AtomicInteger inc, MetadataRepository metadataRepository) {
-        int val = inc.incrementAndGet();
-
-        Metadata metadata = metadataRepository.save(MetadataRepositoryTest.newMetadata(inc));
-
-        MetadataValidation validation = new MetadataValidation();
-        MetadataValidationId id = new MetadataValidationId();
-        id.setMetadataId(metadata.getId());
-        id.setValidationType("valType" + val);
-        validation.setId(id);
-        validation.setStatus(val % 2 == 0 ? MetadataValidationStatus.INVALID : MetadataValidationStatus.VALID);
-        validation.setValidationDate(new ISODate());
-        validation.setValid(val % 2 == 1);
-
-        return validation;
     }
 }

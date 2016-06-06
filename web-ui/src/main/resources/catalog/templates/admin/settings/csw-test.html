@@ -30,7 +30,7 @@
 
         <br/>
         <button type="submit" class="btn btn-success btn-block" data-ng-click="runCSWRequest()"
-          data-ng-disabled="currentTestId == null">
+                data-ng-disabled="currentTestId == null">
           <i class="fa fa-play"/>
           <span data-translate="">runCSWRequest</span>
         </button>
@@ -39,17 +39,16 @@
         <textarea rows="20" class="form-control" data-ng-model="currentTestResponse"/>
 
 
-
         <h4 data-translate="">cswSampleGetRequest</h4>
         <ul>
           <li>
             <a href="csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities"
-              >GetCapabilities</a>
+            >GetCapabilities</a>
           </li>
           <li>
             <a
               href="csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById&amp;ID=8c74e8c4-701a-4cd1-a988-7f2bf9e891bd"
-              >GetRecordById</a>
+            >GetRecordById</a>
           </li>
         </ul>
       </div>

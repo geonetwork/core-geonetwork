@@ -33,18 +33,14 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.repository.specification.MetadataStatusSpecs.hasMetadataId;
 import static org.fao.geonet.repository.specification.MetadataStatusSpecs.hasUserId;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test cases for MetadataStatusSpec
- * User: Jesse
- * Date: 9/6/13
- * Time: 10:31 AM
- * To change this template use File | Settings | File Templates.
+ * Test cases for MetadataStatusSpec User: Jesse Date: 9/6/13 Time: 10:31 AM To change this template
+ * use File | Settings | File Templates.
  */
 public class MetadataStatusSpecsTest extends AbstractSpringDataTest {
     @Autowired

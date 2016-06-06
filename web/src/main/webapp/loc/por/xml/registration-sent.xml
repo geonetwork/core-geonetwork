@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Registo foi bem-sucedido</heading>
+  <message>Seu registo foi bem-sucedido. Já enviámos-lhe um email que contem o seu nome de
+    utilizador e a sua palavra-passe. Obrigado.
+  </message>
+  <errorEmailAddressAlreadyRegistered>
+    <p>Desculpe, o seu registo
+      <font class="error">FALHOU</font>
+      porque o seu endereço de email já é registado.
+    </p>
+    <p>No caso que esqueça-se a sua palavra-passe, por favor contacte a nossa 'helpdesk' através de
+      <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a>
+      ou lige para: xxx-xxxxxxxx
+    </p>
+    <p>Uma opção para alterar a palavra-passe propriamente será disponível em breve. No caso que
+      precise de iniciar uma sessão urgentamente e não consiga contactar a 'helpdesk', registaria-se
+      novamente usando um nome que for um pouco diferente, como medida temporária.
+    </p>
+  </errorEmailAddressAlreadyRegistered>
+  <errorEmailToAddressFailed>
+    <p>Desculpe, o seu registo
+      <font class="error">FALHOU</font>
+      porque não foi possível enviar um email ao endereço que nos deu.
+    </p>
+    <p>Por favor verifique os seus dados e tente novamente.</p>
+  </errorEmailToAddressFailed>
+  <errorProfileRequestFailed>
+    <p>Your request for Editor access could not be delivered.</p>
+    <p>Please contact the helpdesk at
+      <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a>
+      or ph: xxx-xxxxxxxx
+    </p>
+  </errorProfileRequestFailed>
+</strings>

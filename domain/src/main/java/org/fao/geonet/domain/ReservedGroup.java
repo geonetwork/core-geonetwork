@@ -34,7 +34,8 @@ public enum ReservedGroup {
      */
     all(1),
     /**
-     * The Intranet group.  IE the group that represents all users within the same intranet as the geonetwork server.
+     * The Intranet group.  IE the group that represents all users within the same intranet as the
+     * geonetwork server.
      */
     intranet(0),
     /**
@@ -47,6 +48,15 @@ public enum ReservedGroup {
 
     private ReservedGroup(int id) {
         _id = id;
+    }
+
+    public static boolean isReserved(int grpId) {
+        for (ReservedGroup reservedGroup : values()) {
+            if (reservedGroup.getId() == grpId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -65,14 +75,5 @@ public enum ReservedGroup {
      */
     public Group getGroupEntityTemplate() {
         return new Group().setId(_id).setName(name()).setDescription(name());
-    }
-
-    public static boolean isReserved(int grpId) {
-        for (ReservedGroup reservedGroup : values()) {
-            if (reservedGroup.getId() == grpId) {
-                return true;
-            }
-        }
-        return false;
     }
 }

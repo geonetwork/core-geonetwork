@@ -46,7 +46,7 @@
         <param name="maxHitsInSummary" value="1000"/>
       </class>
       <output sheet="../xslt/services/rss/rss-search.xsl"
-        contentType="application/rss+xml; charset=UTF-8">
+              contentType="application/rss+xml; charset=UTF-8">
         <!--TODO SOLR-MIGRATION <call name="rssItems" class=".services.main.Result"/>-->
         <call name="siteURL" class=".guiservices.util.GetSiteURL"/>
         <xml name="i18n" file="xml/i18n.xml"/>

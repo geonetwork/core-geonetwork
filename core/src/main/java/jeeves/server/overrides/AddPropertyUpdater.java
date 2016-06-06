@@ -28,18 +28,25 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.*;
+import org.springframework.beans.factory.support.ManagedList;
+import org.springframework.beans.factory.support.ManagedMap;
+import org.springframework.beans.factory.support.ManagedProperties;
+import org.springframework.beans.factory.support.ManagedSet;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 class AddPropertyUpdater extends PropertyUpdater {
 
     @SuppressWarnings("unchecked")
     @Override
     protected void doUpdate(ConfigurableListableBeanFactory beanFactory, BeanDefinition bean, Object value) {
-        Log.debug(Log.JEEVES, "Adding new value "+value+" to property: "+propertyName+" on "+beanName);
+        Log.debug(Log.JEEVES, "Adding new value " + value + " to property: " + propertyName + " on " + beanName);
         PropertyValue propertyValue = bean.getPropertyValues().getPropertyValue(propertyName);
         if (propertyValue == null) {
             final String beanClassName = bean.getBeanClassName();
@@ -62,13 +69,13 @@ class AddPropertyUpdater extends PropertyUpdater {
                         } else if (Collection.class.isAssignableFrom(collectionType)) {
                             propertyValue = new PropertyValue(propertyName, new ManagedList<Object>());
                         } else {
-                            throw new IllegalArgumentException(collectionType+" is not a supported type for adding new values");
+                            throw new IllegalArgumentException(collectionType + " is not a supported type for adding new values");
                         }
                         break;
                     }
                 }
                 if (propertyValue == null) {
-                    throw new IllegalArgumentException("Unable to find the collection type for property: "+propertyName+" on bean "+beanName);
+                    throw new IllegalArgumentException("Unable to find the collection type for property: " + propertyName + " on bean " + beanName);
                 }
                 bean.getPropertyValues().addPropertyValue(propertyValue);
             } catch (ClassNotFoundException e) {
@@ -81,8 +88,8 @@ class AddPropertyUpdater extends PropertyUpdater {
             Collection<Object> coll = (Collection<Object>) originalValue;
             coll.add(value);
         } else {
-            throw new IllegalArgumentException(originalValue+" is not a collection as expected");
+            throw new IllegalArgumentException(originalValue + " is not a collection as expected");
         }
     }
-    
+
 }

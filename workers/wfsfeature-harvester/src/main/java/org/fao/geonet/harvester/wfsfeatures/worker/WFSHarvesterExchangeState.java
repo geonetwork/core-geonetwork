@@ -41,9 +41,19 @@ import java.util.Map;
  * Created by fgravin on 11/5/15.
  */
 public class WFSHarvesterExchangeState {
+    /**
+     * A list of properties to be saved in the index
+     */
+    private static Map<String, Object> harvesterReport = new HashMap<>();
     Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
-
     private WFSHarvesterParameter parameters;
+    private Map<String, String> fields = new LinkedHashMap<String, String>();
+    private WFSDataStore wfsDatastore = null;
+
+    WFSHarvesterExchangeState(WFSHarvesterParameter parameters) {
+        this.parameters = parameters;
+        checkTaskParameters();
+    }
 
     public static Map<String, Object> getHarvesterReport() {
         return harvesterReport;
@@ -61,36 +71,21 @@ public class WFSHarvesterExchangeState {
         this.parameters = parameters;
     }
 
-    private Map<String, String> fields = new LinkedHashMap<String, String>();
-
-    public void setFields(Map<String, String> fields) {
-        this.fields = fields;
-    }
-
     public Map<String, String> getFields() {
         return fields;
     }
 
-    private WFSDataStore wfsDatastore = null;
-
-    public void setWfsDatastore(WFSDataStore wfsDatastore) {
-        this.wfsDatastore = wfsDatastore;
+    public void setFields(Map<String, String> fields) {
+        this.fields = fields;
     }
 
     public WFSDataStore getWfsDatastore() {
         return wfsDatastore;
     }
 
-    WFSHarvesterExchangeState(WFSHarvesterParameter parameters) {
-        this.parameters = parameters;
-        checkTaskParameters();
+    public void setWfsDatastore(WFSDataStore wfsDatastore) {
+        this.wfsDatastore = wfsDatastore;
     }
-
-    /**
-     * A list of properties to be saved in the index
-     */
-    private static Map<String, Object> harvesterReport = new HashMap<>();
-
 
     private void checkTaskParameters() {
         logger.info("Checking parameters ...");
@@ -108,8 +103,8 @@ public class WFSHarvesterExchangeState {
     }
 
     /**
-     * Create a WFSDatastore for this featuretype and retrieve
-     * all schema infos (attributes names and types).
+     * Create a WFSDatastore for this featuretype and retrieve all schema infos (attributes names
+     * and types).
      */
     public void initDataStore() throws Exception {
         WFSDataStoreFactory factory = new WFSDataStoreFactory();
@@ -121,10 +116,10 @@ public class WFSHarvesterExchangeState {
 
         try {
             String getCapUrl = OwsUtils.getGetCapabilitiesUrl(
-                    parameters.getUrl(), parameters.getVersion());
+                parameters.getUrl(), parameters.getVersion());
             logger.info(String.format(
-                    "Connecting using GetCatapbilities URL '%s'.",
-                    getCapUrl));
+                "Connecting using GetCatapbilities URL '%s'.",
+                getCapUrl));
 
             m.put(WFSDataStoreFactory.URL.key, getCapUrl);
             m.put(WFSDataStoreFactory.TIMEOUT.key, parameters.getTimeOut());
@@ -138,8 +133,8 @@ public class WFSHarvesterExchangeState {
             wfsDatastore = factory.createDataStore(m);
 
             logger.info(String.format(
-                    "Reading feature type '%s' schema structure.",
-                    parameters.getTypeName()));
+                "Reading feature type '%s' schema structure.",
+                parameters.getTypeName()));
             SimpleFeatureType sft = wfsDatastore.getSchema(parameters.getTypeName());
             List<AttributeDescriptor> attributesDesc = sft.getAttributeDescriptors();
 
@@ -148,16 +143,16 @@ public class WFSHarvesterExchangeState {
             }
 
             logger.info(String.format(
-                    "Successfully analyzed %d attributes in schema.", fields.size()));
+                "Successfully analyzed %d attributes in schema.", fields.size()));
         } catch (IOException e) {
             String errorMsg = String.format(
-                    "Failed to create datastore from service using URL '%s'. Error is %s.", parameters.getUrl(), e.getMessage());
+                "Failed to create datastore from service using URL '%s'. Error is %s.", parameters.getUrl(), e.getMessage());
             logger.error(errorMsg);
             throw e;
         } catch (Exception e) {
             String errorMsg = String.format(
-                    "Failed to GetCatpabilities from service using URL '%s'. Error is %s.",
-                    parameters.getUrl(), e.getMessage());
+                "Failed to GetCatpabilities from service using URL '%s'. Error is %s.",
+                parameters.getUrl(), e.getMessage());
             logger.error(errorMsg);
             throw e;
         }

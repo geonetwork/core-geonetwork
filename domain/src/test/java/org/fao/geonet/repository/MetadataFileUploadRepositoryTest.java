@@ -23,14 +23,17 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataFileUpload;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -47,6 +50,18 @@ public class MetadataFileUploadRepositoryTest extends AbstractSpringDataTest {
     EntityManager _entityManager;
 
     AtomicInteger _inc = new AtomicInteger();
+
+    public static MetadataFileUpload newMetadataFileUpload(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+        MetadataFileUpload metadataFileUpload = new MetadataFileUpload();
+
+        metadataFileUpload.setFileName("name" + val);
+        metadataFileUpload.setFileSize(200.0);
+        metadataFileUpload.setUploadDate(new ISODate().toString());
+        metadataFileUpload.setUserName("user" + val);
+
+        return metadataFileUpload;
+    }
 
     @Test
     public void testFindOne() {
@@ -65,7 +80,6 @@ public class MetadataFileUploadRepositoryTest extends AbstractSpringDataTest {
         assertEquals(fileUpload2, _metadataFileUploadRepo.findOne(fileUpload2.getId()));
     }
 
-
     @Test
     public void testByMetadataIdAndFileNameNotDeleted() {
         Metadata metadata = MetadataRepositoryTest.newMetadata(_inc);
@@ -81,7 +95,7 @@ public class MetadataFileUploadRepositoryTest extends AbstractSpringDataTest {
         fileUpload2 = _metadataFileUploadRepo.save(fileUpload2);
 
         assertEquals(fileUpload1, _metadataFileUploadRepo.findByMetadataIdAndFileNameNotDeleted(
-                metadata.getId(), fileUpload1.getFileName()));
+            metadata.getId(), fileUpload1.getFileName()));
 
         try {
             _metadataFileUploadRepo.findByMetadataIdAndFileNameNotDeleted(metadata.getId(), fileUpload2.getFileName());
@@ -93,18 +107,6 @@ public class MetadataFileUploadRepositoryTest extends AbstractSpringDataTest {
 
     private MetadataFileUpload newMetadataFileUpload() {
         return newMetadataFileUpload(_inc);
-    }
-
-    public static MetadataFileUpload newMetadataFileUpload(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-        MetadataFileUpload metadataFileUpload = new MetadataFileUpload();
-
-        metadataFileUpload.setFileName("name" + val);
-        metadataFileUpload.setFileSize(200.0);
-        metadataFileUpload.setUploadDate(new ISODate().toString());
-        metadataFileUpload.setUserName("user" + val);
-
-        return metadataFileUpload;
     }
 
 }

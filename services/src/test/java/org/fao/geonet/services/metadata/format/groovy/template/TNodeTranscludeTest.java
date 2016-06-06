@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Maps;
+
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.groovy.Environment;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
@@ -78,8 +79,8 @@ public class TNodeTranscludeTest extends AbstractTemplateParserTest {
         model.put("other2", "Other&Two");
         model.put("other3", "Other Three");
         String expected = "<div><div>"
-                          + "    within"
-                          + "    </div>Other OneOther&TwoOther Three</div>";
+            + "    within"
+            + "    </div>Other OneOther&TwoOther Three</div>";
 
         assertCorrectRender(parseTree, model, expected);
     }

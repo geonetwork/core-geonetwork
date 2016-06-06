@@ -10,7 +10,9 @@
   <xsl:variable name="metadataId"
                 select="/root/info/record/id"/>
 
-  <xsl:variable name="schemaCodelists"><null/></xsl:variable>
+  <xsl:variable name="schemaCodelists">
+    <null/>
+  </xsl:variable>
 
   <xsl:variable name="metadata"
                 select="/root/undefined"/>
@@ -30,7 +32,6 @@
       <for lang="fre">[D1] [MNn] [Y]</for>
     </date>
   </xsl:variable>
-
 
 
   <xsl:variable name="schemaStrings"

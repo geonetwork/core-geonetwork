@@ -23,13 +23,14 @@
 
 package org.fao.geonet.lib;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.file.Path;
+
+import jeeves.server.context.ServiceContext;
 
 import static org.junit.Assert.assertTrue;
 

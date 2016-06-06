@@ -22,11 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-                xmlns:geonet="http://www.fao.org/geonetwork"
-                xmlns:dc="http://purl.org/dc/elements/1.1/"
-                xmlns:dct="http://purl.org/dc/terms/"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:saxon="http://saxon.sf.net/"
+                version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
@@ -84,8 +82,8 @@
     <xsl:choose>
       <xsl:when test="$hasReplacement">
         <xsl:call-template name="replaceValueForField">
-          <xsl:with-param name="fieldId" select="$elementKey" />
-          <xsl:with-param name="value" select="." />
+          <xsl:with-param name="fieldId" select="$elementKey"/>
+          <xsl:with-param name="value" select="."/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
@@ -106,8 +104,8 @@
 
 
   <xsl:template name="replaceValueForField">
-    <xsl:param name="fieldId" />
-    <xsl:param name="value" />
+    <xsl:param name="fieldId"/>
+    <xsl:param name="value"/>
 
     <xsl:variable name="replacementDetails"
                   select="$replacements/replacements/
@@ -144,8 +142,6 @@
         </xsl:if>
       </xsl:for-each>
     </xsl:variable>
-
-
 
 
     <!-- Report the changes to the record.

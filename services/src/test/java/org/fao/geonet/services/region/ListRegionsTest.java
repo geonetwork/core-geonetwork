@@ -28,6 +28,7 @@ import org.fao.geonet.utils.Xml;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -41,7 +42,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import static org.junit.Assert.assertEquals;
-import org.junit.Ignore;
 
 public class ListRegionsTest extends AbstractServiceIntegrationTest {
 

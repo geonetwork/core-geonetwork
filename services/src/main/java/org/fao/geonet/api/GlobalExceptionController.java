@@ -75,8 +75,8 @@ public class GlobalExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
-            FileNotFoundException.class,
-            NoResultsFoundException.class})
+        FileNotFoundException.class,
+        NoResultsFoundException.class})
     public Object NotFoundHandler(final Exception exception) {
         return new LinkedHashMap<String, String>() {{
             put("code", "not_found");

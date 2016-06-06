@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Tiedosto liian suuri</heading>
+  <message>Tiedosto on liian suuri. Operaatio ei onnistunut.</message>
+  <button>Takaisin</button>
+</strings>

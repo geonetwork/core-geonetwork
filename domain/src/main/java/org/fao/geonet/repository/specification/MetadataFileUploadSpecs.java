@@ -23,14 +23,24 @@
 
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.domain.MetadataFileUpload_;
+import org.fao.geonet.domain.MetadataSourceInfo_;
+import org.fao.geonet.domain.Metadata_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
 import java.util.Collection;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 /**
- *  Specifications for querying {@link org.fao.geonet.repository.MetadataFileUploadRepository}.
+ * Specifications for querying {@link org.fao.geonet.repository.MetadataFileUploadRepository}.
  *
  * @author Jose García
  */
@@ -51,8 +61,8 @@ public class MetadataFileUploadSpecs {
     }
 
     public static Specification<MetadataFileUpload> uploadDateBetweenAndByGroups(final ISODate uploadFrom,
-                                                                  final ISODate uploadTo,
-                                                                  final Collection<Integer> groups) {
+                                                                                 final ISODate uploadTo,
+                                                                                 final Collection<Integer> groups) {
         return new Specification<MetadataFileUpload>() {
             @Override
             public Predicate toPredicate(Root<MetadataFileUpload> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -60,7 +70,7 @@ public class MetadataFileUploadSpecs {
                 Path<Integer> metadataIdAttributePath = root.get(MetadataFileUpload_.metadataId);
 
                 Predicate uploadDateBetweenPredicate = cb.between(uploadDateAttributePath,
-                        uploadFrom.toString(), uploadTo.toString());
+                    uploadFrom.toString(), uploadTo.toString());
 
                 if (!groups.isEmpty()) {
                     final Root<Metadata> metadataRoot = query.from(Metadata.class);
@@ -69,7 +79,7 @@ public class MetadataFileUploadSpecs {
                     Predicate inGroups = groupOwnerPath.in(groups);
 
                     uploadDateBetweenPredicate = cb.and(cb.equal(metadataRoot.get(Metadata_.id),
-                            metadataIdAttributePath), cb.and(uploadDateBetweenPredicate, inGroups));
+                        metadataIdAttributePath), cb.and(uploadDateBetweenPredicate, inGroups));
                 }
 
 
@@ -96,7 +106,7 @@ public class MetadataFileUploadSpecs {
                 Path<String> deletedDateAttributePath = root.get(MetadataFileUpload_.deletedDate);
                 Path<Integer> metadataIdAttributePath = root.get(MetadataFileUpload_.metadataId);
                 Predicate notDeletedPredicate = cb.and(cb.isNull(deletedDateAttributePath),
-                        cb.equal(metadataIdAttributePath, metadataId));
+                    cb.equal(metadataIdAttributePath, metadataId));
 
                 return notDeletedPredicate;
             }

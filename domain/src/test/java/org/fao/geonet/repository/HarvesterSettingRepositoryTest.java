@@ -36,7 +36,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.repository.HarvesterSettingRepository.ID_PREFIX;
 import static org.fao.geonet.repository.HarvesterSettingRepository.SEPARATOR;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
 
@@ -44,6 +46,11 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
     HarvesterSettingRepository _repo;
 
     private String[] _skipProps = new String[]{"getValueAsInt", "getValueAsBool"};
+
+    public static HarvesterSetting newSetting(AtomicInteger inc) {
+        int id = inc.incrementAndGet();
+        return new HarvesterSetting().setName("name " + id).setValue("value " + id);
+    }
 
     @Test
     public void testFindByName() throws Exception {
@@ -195,7 +202,6 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
         assertEquals(0, found2.size());
     }
 
-
     @Test
     public void testFindOneByPath() throws Exception {
         HarvesterSetting parent = _repo.save(newSetting().setName("2"));
@@ -220,6 +226,7 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(0, _repo.count());
     }
+
     @Test
     public void testDeleteByEntity() throws Exception {
         HarvesterSetting parent = _repo.save(newSetting().setName("2"));
@@ -261,10 +268,6 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
 
     private HarvesterSetting newSetting() {
         return newSetting(_inc);
-    }
-    public static HarvesterSetting newSetting(AtomicInteger inc) {
-        int id = inc.incrementAndGet();
-        return new HarvesterSetting().setName("name " + id).setValue("value " + id);
     }
 
 }

@@ -23,14 +23,24 @@
 
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataFileDownload;
+import org.fao.geonet.domain.MetadataFileDownload_;
+import org.fao.geonet.domain.MetadataSourceInfo_;
+import org.fao.geonet.domain.Metadata_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
 import java.util.Collection;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 /**
- *  Specifications for querying {@link org.fao.geonet.repository.MetadataFileDownloadRepository}.
+ * Specifications for querying {@link org.fao.geonet.repository.MetadataFileDownloadRepository}.
  *
  * @author Jose García
  */
@@ -40,8 +50,8 @@ public class MetadataFileDownloadSpecs {
     }
 
     public static Specification<MetadataFileDownload> downloadDateBetweenAndByGroups(final ISODate downloadFrom,
-                                                                  final ISODate downloadTo,
-                                                                  final Collection<Integer> groups) {
+                                                                                     final ISODate downloadTo,
+                                                                                     final Collection<Integer> groups) {
         return new Specification<MetadataFileDownload>() {
             @Override
             public Predicate toPredicate(Root<MetadataFileDownload> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -49,7 +59,7 @@ public class MetadataFileDownloadSpecs {
                 Path<Integer> metadataIdAttributePath = root.get(MetadataFileDownload_.metadataId);
 
                 Predicate downloadDateBetweenPredicate = cb.between(downloadDateAttributePath,
-                        downloadFrom.toString(), downloadTo.toString());
+                    downloadFrom.toString(), downloadTo.toString());
 
                 if (!groups.isEmpty()) {
                     final Root<Metadata> metadataRoot = query.from(Metadata.class);
@@ -58,7 +68,7 @@ public class MetadataFileDownloadSpecs {
                     Predicate inGroups = groupOwnerPath.in(groups);
 
                     downloadDateBetweenPredicate = cb.and(cb.equal(metadataRoot.get(Metadata_.id),
-                            metadataIdAttributePath), cb.and(downloadDateBetweenPredicate, inGroups));
+                        metadataIdAttributePath), cb.and(downloadDateBetweenPredicate, inGroups));
                 }
 
                 return downloadDateBetweenPredicate;

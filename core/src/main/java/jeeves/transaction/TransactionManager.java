@@ -32,31 +32,18 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.Collection;
+
 import javax.annotation.Nullable;
 import javax.persistence.RollbackException;
 
 /**
  * Declares the cut-points/places where transactions are needed in Geonetwork.  Each module that
- * needs transactions needs to define a class like this and add it as a bean in the spring configuration.
+ * needs transactions needs to define a class like this and add it as a bean in the spring
+ * configuration.
  * <p/>
  * Created by Jesse on 3/10/14.
  */
 public class TransactionManager {
-    public static enum TransactionRequirement {
-        CREATE_ONLY_WHEN_NEEDED(TransactionDefinition.PROPAGATION_REQUIRED),
-        THROW_EXCEPTION_IF_NOT_PRESENT(TransactionDefinition.PROPAGATION_MANDATORY),
-        CREATE_NEW(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        private final int propagationId;
-
-        TransactionRequirement(int propagation) {
-            this.propagationId = propagation;
-        }
-    }
-
-    public static enum CommitBehavior {
-        ALWAYS_COMMIT, ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS
-    }
-
     public static <V> V runInTransaction(String name,
                                          ApplicationContext context,
                                          TransactionRequirement transactionRequirement,
@@ -82,7 +69,7 @@ public class TransactionManager {
                     listener.newTransaction(transaction);
                 }
             }
-            
+
             result = action.doInTransaction(transaction);
 
         } catch (Throwable e) {
@@ -145,23 +132,38 @@ public class TransactionManager {
 
                 try {
                     Collection<BeforeRollbackTransactionListener> listeners = context.getBeansOfType
-                            (BeforeRollbackTransactionListener.class).values();
+                        (BeforeRollbackTransactionListener.class).values();
                     for (BeforeRollbackTransactionListener listener : listeners) {
                         listener.beforeRollback(transaction);
                     }
                 } finally {
                     transactionManager.rollback(transaction);
                     Collection<AfterRollbackTransactionListener> listeners = context.getBeansOfType(
-                            AfterRollbackTransactionListener.class).values();
+                        AfterRollbackTransactionListener.class).values();
                     for (AfterRollbackTransactionListener listener : listeners) {
                         listener.afterRollback(transaction);
                     }
                 }
-			} 
-			//what if the transaction is completed?
-			//maybe then we shouldn't be here
+            }
+            //what if the transaction is completed?
+            //maybe then we shouldn't be here
         } catch (Throwable t) {
             Log.error(Log.JEEVES, "ERROR rolling back transaction", t);
         }
+    }
+
+    public static enum TransactionRequirement {
+        CREATE_ONLY_WHEN_NEEDED(TransactionDefinition.PROPAGATION_REQUIRED),
+        THROW_EXCEPTION_IF_NOT_PRESENT(TransactionDefinition.PROPAGATION_MANDATORY),
+        CREATE_NEW(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        private final int propagationId;
+
+        TransactionRequirement(int propagation) {
+            this.propagationId = propagation;
+        }
+    }
+
+    public static enum CommitBehavior {
+        ALWAYS_COMMIT, ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS
     }
 }

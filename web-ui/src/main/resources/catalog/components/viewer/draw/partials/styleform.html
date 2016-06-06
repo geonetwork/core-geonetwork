@@ -4,16 +4,17 @@
   <div data-ng-if="getType() == 'point'">
     <div class="form-group">
       <label>{{'drawRadius'|translate}}
-        <input type="number" class="form-control input-sm" data-ng-model="style.image.radius" placeholder="{{'drawRadius'|translate}}" >
+        <input type="number" class="form-control input-sm" data-ng-model="style.image.radius"
+               placeholder="{{'drawRadius'|translate}}">
       </label>
     </div>
     <div class="form-group">
       <label>{{'drawColor'|translate}}
         <color-picker
-                ng-model="style.image.fill.color"
-                color-picker-format="'rgb'"
-                color-picker-alpha="false"
-                ></color-picker>
+          ng-model="style.image.fill.color"
+          color-picker-format="'rgb'"
+          color-picker-alpha="false"
+        ></color-picker>
       </label>
     </div>
   </div>
@@ -22,16 +23,17 @@
   <div data-ng-if="getType() == 'line'">
     <div class="form-group">
       <label>{{'drawWidth'|translate}}
-        <input type="number" class="form-control input-sm" data-ng-model="style.stroke.width" placeholder="{{'drawWidth'|translate}}" >
+        <input type="number" class="form-control input-sm" data-ng-model="style.stroke.width"
+               placeholder="{{'drawWidth'|translate}}">
       </label>
     </div>
     <div class="form-group">
       <label>{{'drawColor'|translate}}
         <color-picker
-                ng-model="style.stroke.color"
-                color-picker-format="'rgb'"
-                color-picker-alpha="false"
-                ></color-picker>
+          ng-model="style.stroke.color"
+          color-picker-format="'rgb'"
+          color-picker-alpha="false"
+        ></color-picker>
       </label>
     </div>
   </div>
@@ -40,25 +42,26 @@
   <div data-ng-if="getType() == 'polygon'">
     <div class="form-group">
       <label>{{'drawWidth'|translate}}
-        <input type="number" class="form-control input-sm" data-ng-model="style.stroke.width" placeholder="{{'drawWidth'|translate}}" >
+        <input type="number" class="form-control input-sm" data-ng-model="style.stroke.width"
+               placeholder="{{'drawWidth'|translate}}">
       </label>
     </div>
     <div class="form-group">
       <label>{{'drawStrokeColor'|translate}}
         <color-picker
-                ng-model="style.stroke.color"
-                color-picker-format="'rgb'"
-                color-picker-alpha="false"
-                ></color-picker>
+          ng-model="style.stroke.color"
+          color-picker-format="'rgb'"
+          color-picker-alpha="false"
+        ></color-picker>
       </label>
     </div>
     <div class="form-group">
       <label>{{'drawFillColor'|translate}}
         <color-picker
-                ng-model="style.fill.color"
-                color-picker-format="'rgb'"
-                color-picker-alpha="true"
-                ></color-picker>
+          ng-model="style.fill.color"
+          color-picker-format="'rgb'"
+          color-picker-alpha="true"
+        ></color-picker>
       </label>
     </div>
   </div>
@@ -67,31 +70,33 @@
   <div data-ng-if="getType() == 'text'">
     <div class="form-group">
       <label>{{'textWidth'|translate}}
-        <input type="number" class="form-control input-sm" data-ng-model="style.text.width" placeholder="{{'textWidth'|translate}}" >
+        <input type="number" class="form-control input-sm" data-ng-model="style.text.width"
+               placeholder="{{'textWidth'|translate}}">
       </label>
     </div>
     <div class="form-group">
       <label>{{'textFillColor'|translate}}
         <color-picker
-                ng-model="style.text.fill.color"
-                color-picker-format="'rgb'"
-                color-picker-alpha="false"
-                ></color-picker>
+          ng-model="style.text.fill.color"
+          color-picker-format="'rgb'"
+          color-picker-alpha="false"
+        ></color-picker>
 
       </label>
     </div>
     <div class="form-group">
       <label>{{'textStrokeColor'|translate}}
         <color-picker
-                ng-model="style.text.stroke.color"
-                color-picker-format="'rgb'"
-                color-picker-alpha="false"
-                ></color-picker>
+          ng-model="style.text.stroke.color"
+          color-picker-format="'rgb'"
+          color-picker-alpha="false"
+        ></color-picker>
       </label>
     </div>
     <div class="form-group">
       <label>{{'textStrokeWidth'|translate}}
-        <input type="number" class="form-control input-sm" data-ng-model="style.text.stroke.width" placeholder="{{'textWidth'|translate}}" >
+        <input type="number" class="form-control input-sm" data-ng-model="style.text.stroke.width"
+               placeholder="{{'textWidth'|translate}}">
       </label>
     </div>
 

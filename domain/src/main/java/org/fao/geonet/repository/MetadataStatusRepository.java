@@ -28,8 +28,9 @@ import org.fao.geonet.domain.MetadataStatusId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import javax.annotation.Nonnull;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * Data Access object for accessing {@link MetadataStatus} entities.
@@ -37,7 +38,7 @@ import java.util.List;
  * @author Jesse
  */
 public interface MetadataStatusRepository extends GeonetRepository<MetadataStatus, MetadataStatusId>, MetadataStatusRepositoryCustom,
-        JpaSpecificationExecutor<MetadataStatus> {
+    JpaSpecificationExecutor<MetadataStatus> {
     /**
      * Find all the MetadataStatus objects by the associated metadata id.
      *

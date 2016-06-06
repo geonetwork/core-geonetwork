@@ -27,11 +27,13 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Maps;
+
 import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.util.GroovyScriptEngine;
 import groovy.util.ResourceException;
 import groovy.util.ScriptException;
+
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -39,8 +41,8 @@ import org.fao.geonet.services.metadata.format.groovy.Environment;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
-import org.fao.geonet.services.metadata.format.groovy.template.TemplateCache;
 import org.fao.geonet.services.metadata.format.groovy.Transformer;
+import org.fao.geonet.services.metadata.format.groovy.template.TemplateCache;
 import org.fao.geonet.utils.IO;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,12 +73,12 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_
 @Component
 public class GroovyFormatter implements FormatterImpl {
 
+    private final Cache<Path, Transformer> transformers = CacheBuilder.newBuilder().
+        concurrencyLevel(1).
+        maximumSize(40).
+        initialCapacity(40).build();
     @Autowired
     private TemplateCache templateCache;
-    private final Cache<Path, Transformer> transformers = CacheBuilder.newBuilder().
-            concurrencyLevel(1).
-            maximumSize(40).
-            initialCapacity(40).build();
     private GroovyClassLoader baseClassLoader;
     private Map<String, GroovyClassLoader> schemaClassLoaders = Maps.newHashMap();
 
@@ -89,6 +91,7 @@ public class GroovyFormatter implements FormatterImpl {
             }
         });
     }
+
     public String format(FormatterParams fparams) throws Exception {
         EnvironmentProxy.clearContext();
         final Transformer transformer = createTransformer(fparams);
@@ -112,7 +115,7 @@ public class GroovyFormatter implements FormatterImpl {
             GroovyClassLoader cl = getParentClassLoader(fparams, fparams.schema, baseShared, schemaShared);
 
             URL[] roots = new URL[]{
-                    IO.toURL(fparams.formatDir)
+                IO.toURL(fparams.formatDir)
             };
             GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine(roots, cl);
 
@@ -141,7 +144,7 @@ public class GroovyFormatter implements FormatterImpl {
     }
 
     private GroovyClassLoader getParentClassLoader(FormatterParams fparams, String schema, Path baseShared, Path schemaShared) throws IOException,
-            ResourceException, ScriptException {
+        ResourceException, ScriptException {
         GroovyClassLoader cl = this.schemaClassLoaders.get(schema);
         if (fparams.isDevMode() || cl == null) {
             final GroovyClassLoader parent;
@@ -176,7 +179,7 @@ public class GroovyFormatter implements FormatterImpl {
             return;
         }
         final Map<Path, Throwable> compileErrors = Maps.newHashMap();
-        Files.walkFileTree(baseShared, new SimpleFileVisitor<Path>(){
+        Files.walkFileTree(baseShared, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir, "*.groovy")) {
@@ -186,7 +189,7 @@ public class GroovyFormatter implements FormatterImpl {
                                 gse.loadScriptByName(path.toUri().toString());
                             } catch (CompilationFailedException e) {
                                 compileErrors.put(path, null);
-                            } catch (ScriptException  | ResourceException e) {
+                            } catch (ScriptException | ResourceException e) {
                                 throw new RuntimeException(e);
                             }
 

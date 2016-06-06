@@ -23,11 +23,8 @@
 
 package org.fao.geonet.services.feedback;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -36,54 +33,56 @@ import org.jdom.Element;
 
 import java.nio.file.Path;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
 //=============================================================================
 
-/** Stores the feedback from a user into the database and sends an e-mail
-  */
+/**
+ * Stores the feedback from a user into the database and sends an e-mail
+ */
 
-public class Insert implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Insert implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, final ServiceContext context) throws Exception
-	{
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getBean(SettingManager.class);
+    public Element exec(Element params, final ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
 
-		String name     = Util.getParam(params, Params.NAME);
-		String org      = Util.getParam(params, Params.ORG);
-		String email    = Util.getParam(params, Params.EMAIL);
-		String comments = Util.getParam(params, Params.COMMENTS);
-		String subject  = Util.getParam(params, Params.SUBJECT, "New feedback");
-        // TODO : i18n
-        // TODO : Would be good to add captcha to avoid spamming catalog admin
+        String name = Util.getParam(params, Params.NAME);
+        String org = Util.getParam(params, Params.ORG);
+        String email = Util.getParam(params, Params.EMAIL);
+        String comments = Util.getParam(params, Params.COMMENTS);
+        String subject = Util.getParam(params, Params.SUBJECT, "New feedback");  // TODO : i18n
 
-		String host = sm.getValue("system/feedback/mailServer/host");
-		String to   = sm.getValue("system/feedback/email");
+        String host = sm.getValue("system/feedback/mailServer/host");
+        String to = sm.getValue("system/feedback/email");
 
-		MailSender sender = new MailSender(context);
-		sender.send(host, 
-		        sm.getValueAsInt("system/feedback/mailServer/port"), 
-		        sm.getValue("system/feedback/mailServer/username"), 
-		        sm.getValue("system/feedback/mailServer/password"), 
-		        sm.getValueAsBool("system/feedback/mailServer/ssl"), 
-				sm.getValueAsBool("system/feedback/mailServer/tls"),
-		        email, name +" ("+org+")", to, null, subject, comments);
+        MailSender sender = new MailSender(context);
+        sender.send(host,
+            sm.getValueAsInt("system/feedback/mailServer/port"),
+            sm.getValue("system/feedback/mailServer/username"),
+            sm.getValue("system/feedback/mailServer/password"),
+            sm.getValueAsBool("system/feedback/mailServer/ssl"),
+            sm.getValueAsBool("system/feedback/mailServer/tls"),
+            email, name + " (" + org + ")", to, null, subject, comments);
 
-		return new Element("response").addContent(params.cloneContent());
-	}
+        return new Element("response").addContent(params.cloneContent());
+    }
 }
 
 //=============================================================================

@@ -23,10 +23,10 @@
 
 package org.fao.geonet.kernel.search.keyword;
 
-import java.util.Set;
-
 import org.fao.geonet.kernel.rdf.Where;
 import org.jdom.Element;
+
+import java.util.Set;
 
 public class RelationShipClause implements SearchClause {
 

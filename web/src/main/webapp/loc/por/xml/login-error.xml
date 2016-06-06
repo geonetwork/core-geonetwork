@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Ocorreu um erro durante da iniciacão de sessão</heading>
+  <message>O nome de utilizador ou a palavra-passe é errado.<br/>Por favor carregue o botão 'Voltar'
+    e tente novamente.
+  </message>
+  <button>Voltar</button>
+</strings>

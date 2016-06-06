@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Erro durante o acesso ao recurso</heading>
+  <message>O recurso solicitado não pôde ser encontrado ou acedido. Há hipótese que foi removido ou
+    que você não tem os direitos necessários.
+  </message>
+  <button>Voltar</button>
+</strings>

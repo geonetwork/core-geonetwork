@@ -23,12 +23,14 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/"
-  xmlns:geonet="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" version="2.0" extension-element-prefixes="saxon"
-  exclude-result-prefixes="#all">
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd" version="2.0"
+                extension-element-prefixes="saxon"
+                exclude-result-prefixes="#all">
 
 
-  <!-- Search for all contact avec a defined email and 
+  <!-- Search for all contact avec a defined email and
     replace the CI_ResponsibleParty by the provided XML. -->
 
   <!-- The contact email to search for -->

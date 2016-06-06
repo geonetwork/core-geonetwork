@@ -109,14 +109,14 @@ public class SolrConfig {
         if (solrServerUrl != null) {
             String url = solrServerUrl + "/" + solrServerCore;
             if (!StringUtils.isEmpty(solrServerUsername) &&
-                    !StringUtils.isEmpty(solrServerPassword)) {
+                !StringUtils.isEmpty(solrServerPassword)) {
                 CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 credentialsProvider.setCredentials(AuthScope.ANY,
-                        new UsernamePasswordCredentials(
-                                solrServerUsername,
-                                solrServerPassword));
+                    new UsernamePasswordCredentials(
+                        solrServerUsername,
+                        solrServerPassword));
                 CloseableHttpClient httpClient =
-                        HttpClientBuilder.create().setDefaultCredentialsProvider(credentialsProvider).build();
+                    HttpClientBuilder.create().setDefaultCredentialsProvider(credentialsProvider).build();
                 return new HttpSolrClient(url, httpClient);
             } else {
                 return new HttpSolrClient(url);

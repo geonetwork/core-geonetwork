@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>No s'han trobat metadades</notfound>
+  <notowner>Les metadades no es poden processar, donat que no en sou el propietari</notowner>
+  <updated>Les metadades han estat processades</updated>
+  <notProcessFound>No s'ha trobat cap procés per aquest esquema de metadades</notProcessFound>
+</strings>

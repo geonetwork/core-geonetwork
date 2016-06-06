@@ -29,12 +29,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
- * Test the logic of calculating the Geonetwork data directories when the node id is the default and the system data directory
- * is set to something other than the default via the general property ({@link GeonetworkDataDirectory#GEONETWORK_DIR_KEY}.
+ * Test the logic of calculating the Geonetwork data directories when the node id is the default and
+ * the system data directory is set to something other than the default via the general property
+ * ({@link GeonetworkDataDirectory#GEONETWORK_DIR_KEY}.
  * <p/>
- * User: Jesse
- * Date: 11/14/13
- * Time: 8:36 AM
+ * User: Jesse Date: 11/14/13 Time: 8:36 AM
  */
 public class GeonetworkDataDirectoryMultiNodeServiceConfigOnlySystemDataDirSetTest extends AbstractGeonetworkDataDirectoryTest {
 
@@ -49,6 +48,7 @@ public class GeonetworkDataDirectoryMultiNodeServiceConfigOnlySystemDataDirSetTe
     protected String getGeonetworkNodeId() {
         return "node1";
     }
+
     @Override
     protected boolean isDefaultNode() {
         return false;
@@ -61,7 +61,7 @@ public class GeonetworkDataDirectoryMultiNodeServiceConfigOnlySystemDataDirSetTe
     @Override
     protected Path getDataDir() {
         final Path baseDir = getBaseDir();
-        return baseDir.getParent().resolve(baseDir.getFileName() + "_"+getGeonetworkNodeId());
+        return baseDir.getParent().resolve(baseDir.getFileName() + "_" + getGeonetworkNodeId());
     }
 
     private Path getBaseDir() {

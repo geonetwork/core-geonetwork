@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <groups>Następnie wybierz grupę, do której należy użytkownik</groups>
+  <notfound>Nie znaleziono rekordu metadanych</notfound>
+  <notowner>Rekordy metadanych,które nie zostały przetransferowane ponieważ nie jesteś
+    właścicielem
+  </notowner>
+  <updated>Rekordy metadanych, które zostały przetransferowane</updated>
+  <resultstitle>Wyniki transferu</resultstitle>
+  <users>Wybierz użytkownika, który ma być nowym właścicielem</users>
+</strings>

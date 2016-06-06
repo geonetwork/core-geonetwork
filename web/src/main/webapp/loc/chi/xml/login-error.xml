@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>登陆错误信息</heading>
+  <message>用户名或口令有误。<br/>点击“回退”按钮再试。
+  </message>
+  <button>回退</button>
+</strings>

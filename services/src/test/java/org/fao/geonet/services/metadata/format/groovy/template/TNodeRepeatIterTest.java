@@ -38,7 +38,7 @@ public class TNodeRepeatIterTest {
     @Test
     public void testEmptyRender() throws Exception {
         final TNodeRepeatIter repeat = new TNodeRepeatIter(info, TextContentParserTest.createTestTextContentParser(),
-                false, null, TNode.EMPTY_ATTRIBUTES, "iter", "key");
+            false, null, TNode.EMPTY_ATTRIBUTES, "iter", "key");
         Map<String, Object> model = Collections.<String, Object>singletonMap("iter", Collections.emptyList());
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         repeat.render(new TRenderContext(outputStream, model));

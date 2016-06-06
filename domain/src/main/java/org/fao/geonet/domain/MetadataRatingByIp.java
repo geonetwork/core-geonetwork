@@ -25,12 +25,17 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.MetadataRatingByIpEntityListenerManager;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Table;
 
 /**
- * An entity that tracks which users have rated a metadata. It currently tracks by Ip address so that each IP address can only rate a
- * given
- * metadata once.
+ * An entity that tracks which users have rated a metadata. It currently tracks by Ip address so
+ * that each IP address can only rate a given metadata once.
  *
  * @author Jesse
  */

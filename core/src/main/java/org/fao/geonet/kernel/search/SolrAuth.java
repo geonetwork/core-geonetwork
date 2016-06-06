@@ -23,13 +23,14 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.server.context.ServiceContext;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import jeeves.server.context.ServiceContext;
 
 public class SolrAuth {
     public static String addPermissions(String queryString) throws Exception {
@@ -42,7 +43,7 @@ public class SolrAuth {
         Set<Integer> groups = accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
         final int viewId = ReservedOperation.view.getId();
         final String ids = groups.stream().map(Object::toString)
-                .collect(Collectors.joining("\" \"", "(\"", "\")"));
+            .collect(Collectors.joining("\" \"", "(\"", "\")"));
         return String.format(
             "(+docType:metadata +_op%d:%s) " +
                 "or (+docType:feature) " +

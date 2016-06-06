@@ -185,6 +185,7 @@ public class PublishTest extends AbstractServiceIntegrationTest {
         report = publishService.unpublish("eng", request, metadataId, false);
         assertCorrectReport(report, 0, 0, 0, 1);
     }
+
     @Test
     public void testUnpublishMultiple() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();

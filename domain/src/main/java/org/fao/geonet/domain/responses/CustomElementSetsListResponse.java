@@ -23,12 +23,13 @@
 
 package org.fao.geonet.domain.responses;
 
+import java.io.Serializable;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * This class is a helper class for the service that returns the list of custom element sets.

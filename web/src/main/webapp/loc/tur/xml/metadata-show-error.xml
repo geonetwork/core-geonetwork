@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Bilgi veya kaynağa erişimde hata oluştu</heading>
+  <message>Hedeflenen kaynak veya bilgiye erişilemedi. Kaynak kaldırılmış veya yetkiniz kaynağa
+    erişim için yeterli değil
+  </message>
+  <button>Geri</button>
+</strings>

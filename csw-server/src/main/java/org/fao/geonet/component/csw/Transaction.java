@@ -83,11 +83,11 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
     static final String NAME = "Transaction";
     @Autowired
+    SchemaManager _schemaManager;
+    @Autowired
     private ISearchController _searchController;
     @Autowired
     private FieldMapper _fieldMapper;
-    @Autowired
-    SchemaManager _schemaManager;
 
     //---------------------------------------------------------------------------
     //---
@@ -248,7 +248,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
         String docType = null, title = null, isTemplate = null;
         boolean ufo = true, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, xml, uuid, userId, group, source,
-                isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
+            isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
         // Privileges for the first group of the user that inserts the metadata
         // (same permissions as when inserting xml file from UI)
@@ -407,16 +407,16 @@ public class Transaction extends AbstractOperation implements CatalogService {
                     if (children.isEmpty()) {
                         propertyValue = new AddElemValue(propertyValueEl.getText());
                         metadataChanged |= editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpathProperty, propertyValue,
-                                createXpathNodeIfNotExists);
+                            createXpathNodeIfNotExists);
                     } else {
                         for (Element child : children) {
                             propertyValue = new AddElemValue((Element) child.clone());
                             metadataChanged |= editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpathProperty, propertyValue,
-                                    createXpathNodeIfNotExists);
+                                createXpathNodeIfNotExists);
                         }
                     }
 
-                    Log.info(Geonet.CSW, "Metadata has been updated: "+metadataChanged);
+                    Log.info(Geonet.CSW, "Metadata has been updated: " + metadataChanged);
 
                 }
 
@@ -500,7 +500,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
         ElementSetName setName = ElementSetName.BRIEF;
 
         Pair<Element, Element> results = _searchController.search(context, 1, 100, ResultType.RESULTS,
-                OutputSchema.DEFAULT.toString(), setName, filterExpr, filterVersion, null, null, null, 0, null, null);
+            OutputSchema.DEFAULT.toString(), setName, filterExpr, filterVersion, null, null, null, 0, null, null);
 
         @SuppressWarnings("unchecked")
         List<Element> children = results.two().getChildren();
@@ -578,10 +578,6 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
     /**
      * Retrieves namespaces based on metadata schema
-     *
-     * @param mdSchema
-     * @return
-     * @throws NoApplicableCodeEx
      */
     private Map<String, String> retrieveNamepacesForSchema(MetadataSchema mdSchema) throws NoApplicableCodeEx {
         Map<String, String> mapNs = new HashMap<String, String>();

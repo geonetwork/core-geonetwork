@@ -33,32 +33,29 @@ import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 @Deprecated
-public class SelectionSearch implements Service
-{
-	private ServiceConfig _config;
+public class SelectionSearch implements Service {
+    private ServiceConfig _config;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception
-	{
-		_config = config;
-	}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+        _config = config;
+    }
 
-	/*
-	 * Get the current search and add an uuid params
-	 * with the list of records contain in the
-	 * selection manager.
-	 *
-	 */
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    /*
+     * Get the current search and add an uuid params
+     * with the list of records contain in the
+     * selection manager.
+     *
+     */
+    public Element exec(Element params, ServiceContext context) throws Exception {
         throw new RuntimeException("Use selection service");
         // TODO: SOLR-MIGRATION-TO-DELETE
-	}
+    }
 }
 
 //=============================================================================

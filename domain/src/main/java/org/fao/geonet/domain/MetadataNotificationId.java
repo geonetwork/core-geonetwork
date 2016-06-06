@@ -23,10 +23,11 @@
 
 package org.fao.geonet.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
-import java.io.Serializable;
 
 /**
  * Id of a MetadataNotification object.

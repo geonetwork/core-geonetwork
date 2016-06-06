@@ -28,29 +28,27 @@ import org.jdom.Element;
 //=============================================================================
 
 public class BadResumptionTokenException extends OaiPmhException {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4190920293383092381L;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    /**
+     *
+     */
+    private static final long serialVersionUID = -4190920293383092381L;
 
-	public BadResumptionTokenException(String message)
-	{
-		this(message, null);
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public BadResumptionTokenException(String message) {
+        this(message, null);
+    }
 
-	public BadResumptionTokenException(String message, Element response)
-	{
-		super(BAD_RESUMPTION_TOKEN, message, response);
-	}
+    //---------------------------------------------------------------------------
+
+    public BadResumptionTokenException(String message, Element response) {
+        super(BAD_RESUMPTION_TOKEN, message, response);
+    }
 }
 
 //=============================================================================

@@ -62,78 +62,6 @@ public class GetDomain extends AbstractOperation implements CatalogService {
     @Autowired
     private CatalogConfiguration _catalogConfig;
 
-    public String getName() {
-        return NAME;
-    }
-
-    //---------------------------------------------------------------------------
-
-    public Element execute(Element request, ServiceContext context) throws CatalogException {
-        checkService(request);
-        checkVersion(request);
-
-        Element response = new Element(getName() + "Response", Csw.NAMESPACE_CSW);
-
-        String[] propertyNames = getParameters(request, "PropertyName");
-        String[] parameterNames = getParameters(request, "ParameterName");
-
-
-        String cswServiceSpecificConstraint = request.getChildText(Geonet.Elem.FILTER);
-
-        // PropertyName handled first.
-        if (propertyNames != null) {
-            List<Element> domainValues;
-            try {
-                final int maxNumberOfRecordsForPropertyNames = _catalogConfig.getMaxNumberOfRecordsForPropertyNames();
-                domainValues = handlePropertyName(_catalogConfig, propertyNames, context, false, maxNumberOfRecordsForPropertyNames,
-                    cswServiceSpecificConstraint);
-            } catch (Exception e) {
-                Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
-                throw new NoApplicableCodeEx(
-                    "Raised exception while getting domain value for specified PropertyName  : " + e);
-            }
-            response.addContent(domainValues);
-            return response;
-        }
-
-        if (parameterNames != null) {
-            List<Element> domainValues = handleParameterName(parameterNames);
-            response.addContent(domainValues);
-        }
-
-        return response;
-    }
-
-    //---------------------------------------------------------------------------
-
-    public Element adaptGetRequest(Map<String, String> params) {
-        String service = params.get("service");
-        String version = params.get("version");
-        String parameterName = params.get("parametername");
-        String propertyName = params.get("propertyname");
-
-        Element request = new Element(getName(), Csw.NAMESPACE_CSW);
-
-        setAttrib(request, "service", service);
-        setAttrib(request, "version", version);
-
-        //--- these 2 are in mutual exclusion.
-        Element propName = new Element("PropertyName", Csw.NAMESPACE_CSW).setText(propertyName);
-        Element paramName = new Element("ParameterName", Csw.NAMESPACE_CSW).setText(parameterName);
-
-        // Property is handled first.
-        if (propertyName != null && !propertyName.equals(""))
-            request.addContent(propName);
-        else if (parameterName != null && !parameterName.equals(""))
-            request.addContent(paramName);
-
-        return request;
-    }
-
-    public Element retrieveValues(String parameterName) throws CatalogException {
-        return null;
-    }
-
     public static List<Element> handlePropertyName(CatalogConfiguration catalogConfig, String[] propertyNames,
                                                    ServiceContext context, boolean freq, int maxRecords,
                                                    String cswServiceSpecificConstraint) throws Exception {
@@ -213,12 +141,15 @@ public class GetDomain extends AbstractOperation implements CatalogService {
 
     }
 
+    //---------------------------------------------------------------------------
+
     public static String getGroupsSolrQuery(ServiceContext context) throws Exception {
         AccessManager am = context.getBean(AccessManager.class);
         Set<Integer> hs = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
 
 
-        String q = hs.stream().map(Object::toString).collect(Collectors.joining("\" \"", "(\"", "\")"));;
+        String q = hs.stream().map(Object::toString).collect(Collectors.joining("\" \"", "(\"", "\")"));
+        ;
 
         // If user is authenticated, add the current user to the query because
         // if an editor unchecked all
@@ -228,6 +159,76 @@ public class GetDomain extends AbstractOperation implements CatalogService {
             q += " _owner:" + context.getUserSession().getUserId();
         }
         return q;
+    }
+
+    //---------------------------------------------------------------------------
+
+    public String getName() {
+        return NAME;
+    }
+
+    public Element execute(Element request, ServiceContext context) throws CatalogException {
+        checkService(request);
+        checkVersion(request);
+
+        Element response = new Element(getName() + "Response", Csw.NAMESPACE_CSW);
+
+        String[] propertyNames = getParameters(request, "PropertyName");
+        String[] parameterNames = getParameters(request, "ParameterName");
+
+
+        String cswServiceSpecificConstraint = request.getChildText(Geonet.Elem.FILTER);
+
+        // PropertyName handled first.
+        if (propertyNames != null) {
+            List<Element> domainValues;
+            try {
+                final int maxNumberOfRecordsForPropertyNames = _catalogConfig.getMaxNumberOfRecordsForPropertyNames();
+                domainValues = handlePropertyName(_catalogConfig, propertyNames, context, false, maxNumberOfRecordsForPropertyNames,
+                    cswServiceSpecificConstraint);
+            } catch (Exception e) {
+                Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
+                throw new NoApplicableCodeEx(
+                    "Raised exception while getting domain value for specified PropertyName  : " + e);
+            }
+            response.addContent(domainValues);
+            return response;
+        }
+
+        if (parameterNames != null) {
+            List<Element> domainValues = handleParameterName(parameterNames);
+            response.addContent(domainValues);
+        }
+
+        return response;
+    }
+
+    public Element adaptGetRequest(Map<String, String> params) {
+        String service = params.get("service");
+        String version = params.get("version");
+        String parameterName = params.get("parametername");
+        String propertyName = params.get("propertyname");
+
+        Element request = new Element(getName(), Csw.NAMESPACE_CSW);
+
+        setAttrib(request, "service", service);
+        setAttrib(request, "version", version);
+
+        //--- these 2 are in mutual exclusion.
+        Element propName = new Element("PropertyName", Csw.NAMESPACE_CSW).setText(propertyName);
+        Element paramName = new Element("ParameterName", Csw.NAMESPACE_CSW).setText(parameterName);
+
+        // Property is handled first.
+        if (propertyName != null && !propertyName.equals(""))
+            request.addContent(propName);
+        else if (parameterName != null && !parameterName.equals(""))
+            request.addContent(paramName);
+
+        return request;
+    }
+
+    public Element retrieveValues(String parameterName) throws CatalogException {
+        return null;
     }
 
     private List<Element> handleParameterName(String[] parameterNames) throws CatalogException {

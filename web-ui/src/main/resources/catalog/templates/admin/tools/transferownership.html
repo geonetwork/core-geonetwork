@@ -5,7 +5,8 @@
     <select class="form-control" data-ng-model="editorsSelectedId"
             autofocus="" data-ng-change="selectUser(editorsSelectedId)">
       <option data-ng-repeat="e in editors | orderBy:'name'" value="{{e.id}}">{{e.name
-        + ' ' + e.surname}}</option>
+        + ' ' + e.surname}}
+      </option>
     </select>
     <table class="table" data-ng-hide="editorsSelectedId == null">
       <tr>
@@ -29,7 +30,7 @@
                   data-ng-click="tranferOwnership(g.id)"
                   data-ng-disabled="!transfertList[g.id].targetEditor">
             <span data-translate="">transfertPriv</span> <i
-              data-ng-class="isRunning(g.id) ? 'fa fa-plus' : ''"></i>
+            data-ng-class="isRunning(g.id) ? 'fa fa-plus' : ''"></i>
           </button>
         </td>
       </tr>

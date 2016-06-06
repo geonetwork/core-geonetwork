@@ -20,13 +20,15 @@
 
 package org.fao.geonet.services.util.z3950;
 
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.fao.geonet.constants.Geonet;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jzkit.search.provider.iface.IRQuery;
-import org.jzkit.search.util.QueryModel.Internal.*;
+import org.jzkit.search.util.QueryModel.Internal.AttrPlusTermNode;
+import org.jzkit.search.util.QueryModel.Internal.AttrValue;
+import org.jzkit.search.util.QueryModel.Internal.ComplexNode;
+import org.jzkit.search.util.QueryModel.Internal.InternalModelRootNode;
+import org.jzkit.search.util.QueryModel.Internal.QueryNodeVisitor;
 import org.jzkit.search.util.QueryModel.InvalidQueryException;
 import org.jzkit.search.util.QueryModel.QueryModel;
 import org.springframework.context.ApplicationContext;
@@ -36,159 +38,149 @@ import java.util.Stack;
 
 /**
  * transforms a JZKit internal query into the GN XML query format
- * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
  *
+ * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
  */
 public class GNXMLQuery {
-       
-       
-       ApplicationContext ctx ;
-       QueryModel querymodel ;
-			 List<String> collections;
-       
+
+
+    ApplicationContext ctx;
+    QueryModel querymodel;
+    List<String> collections;
+
     @SuppressWarnings("unchecked")
     public GNXMLQuery(IRQuery q, ApplicationContext ctx) {
         this.ctx = ctx;
         this.querymodel = q.getQueryModel();
         this.collections = q.getCollections();
-       }
-       
+    }
 
-       public Element toGNXMLRep() {
-               
-               GNRemoteQueryDecoder decoder = new GNRemoteQueryDecoder(querymodel , ctx);             
-               return decoder.getQuery();
-       }
-       
-       public String toString() {
-               return "";
-       }
 
-			 public List<String> getCollections() {
-			 	return collections;
-			 }
-       
+    public Element toGNXMLRep() {
+
+        GNRemoteQueryDecoder decoder = new GNRemoteQueryDecoder(querymodel, ctx);
+        return decoder.getQuery();
+    }
+
+    public String toString() {
+        return "";
+    }
+
+    public List<String> getCollections() {
+        return collections;
+    }
+
 }
 
 //--------------------------------------------------------------------------
 //converts an internal query format query to GN xml
-class GNRemoteQueryDecoder
-{
-       private Stack<Element> stack = new Stack<Element>();
+class GNRemoteQueryDecoder {
+    private Stack<Element> stack = new Stack<Element>();
 
-       public GNRemoteQueryDecoder(QueryModel qm, ApplicationContext ctx)
-       {
-               try
-               {
-                       InternalModelRootNode rn = qm.toInternalQueryModel(ctx);
-                       QueryNodeVisitor qnv = new QueryNodeVisitor()
-                       {
-                               public void visit(AttrPlusTermNode aptn)
-                               {
-                                       super.visit(aptn);
-                                       Element node = new Element("term");
+    public GNRemoteQueryDecoder(QueryModel qm, ApplicationContext ctx) {
+        try {
+            InternalModelRootNode rn = qm.toInternalQueryModel(ctx);
+            QueryNodeVisitor qnv = new QueryNodeVisitor() {
+                public void visit(AttrPlusTermNode aptn) {
+                    super.visit(aptn);
+                    Element node = new Element("term");
 
-                                       if (aptn.getAccessPoint() != null) {
-                                               node.setAttribute(new Attribute("use",  getAttrVal((AttrValue)aptn.getAccessPoint())) );
-                                       }
-                                       
-                                       if (aptn.getRelation() != null) {
-                                               node.setAttribute(new Attribute("relation",  getAttrVal((AttrValue)aptn.getRelation())) );
-                                       }
-                                       
-                                       if (aptn.getStructure() != null) {
-                                               node.setAttribute(new Attribute("structure",  getAttrVal((AttrValue)aptn.getStructure()) ));
-                                       }
-                                       
-                                       if (aptn.getTruncation() != null) {
-                                               node.setAttribute(new Attribute("truncation",  getAttrVal((AttrValue)aptn.getTruncation()) ));
-                                       }
-                                       
-                                       node.addContent(aptn.getTermAsString(false));
-                                       stack.push(node);
-                               }
-                               public void visit(ComplexNode cn)
-                               {
-                                       super.visit(cn);
-                                       Element rightChild = (Element)stack.pop();
-                                       Element leftChild = (Element)stack.pop();
-                                       Element node = new Element(getOpString(cn.getOp()));
-                                       node.addContent(leftChild);
-                                       node.addContent(rightChild);
-                                       stack.push(node);
-                               }
+                    if (aptn.getAccessPoint() != null) {
+                        node.setAttribute(new Attribute("use", getAttrVal((AttrValue) aptn.getAccessPoint())));
+                    }
 
-                               public void visit(InternalModelRootNode rn)
-                               {
-                                       super.visit(rn);
-                                       Element query = new Element("query");
-                                       
-                                       //QueryNode node = rn.getChild(); TODO: I dont know if this is important
-                                       //query.setAttribute("attrset", node.getAttrs().toString() );
-                                       query.addContent((Element)stack.pop());
-                                       stack.push(query);
-                               }
-                               @Override
-                               public void onAttrPlusTermNode(AttrPlusTermNode aptn) {
-                                   if(Log.isDebugEnabled(Geonet.SRU))
-                                       Log.debug(Geonet.SRU, "doing nothing..."+aptn); //TODO: find out how this is supposed to be used
-                               }
-                               
+                    if (aptn.getRelation() != null) {
+                        node.setAttribute(new Attribute("relation", getAttrVal((AttrValue) aptn.getRelation())));
+                    }
 
-                               
-                               /**
-                                * @param val
-                                * @return
-                                * extracts the last index of an attribute (e.G 1.4 becomes 4)
-                                */
-                               private String getAttrVal(AttrValue val) {
-                                       
-                                       if (val == null || val.getValue() == null ) return null;
-                                       
-                                       String value = val.getValue();
-                                       String ret=value;
-                                       
-                                       String[] temp = value.split("\\.");
-                                       
-                                       if (temp!=null && temp.length>1 ) {
-                                               ret = temp[temp.length-1];
-                                       }
-                                       
-                                       return ret;
-                               }
-                               
-                       };
-                       qnv.visit(rn);
-               }
-               catch (InvalidQueryException iqe)
-               {
-                       iqe.printStackTrace();
-               }
-       }
+                    if (aptn.getStructure() != null) {
+                        node.setAttribute(new Attribute("structure", getAttrVal((AttrValue) aptn.getStructure())));
+                    }
 
-       public Element getQuery()
-       {
-               return (Element)stack.peek();
-       }
+                    if (aptn.getTruncation() != null) {
+                        node.setAttribute(new Attribute("truncation", getAttrVal((AttrValue) aptn.getTruncation())));
+                    }
 
-       public String toString()
-       {
-               return Xml.getString(getQuery());
-       }
+                    node.addContent(aptn.getTermAsString(false));
+                    stack.push(node);
+                }
 
-       private String getOpString(int op)
-       {
-               switch (op)
-               {
-               case ComplexNode.COMPLEX_AND:    return "and";
-               case ComplexNode.COMPLEX_ANDNOT: return "not";
-               case ComplexNode.COMPLEX_OR:     return "or";
-               case ComplexNode.COMPLEX_PROX:   return "prox";
-               default:                         return op+"";
-               }
-       }
-       
+                public void visit(ComplexNode cn) {
+                    super.visit(cn);
+                    Element rightChild = (Element) stack.pop();
+                    Element leftChild = (Element) stack.pop();
+                    Element node = new Element(getOpString(cn.getOp()));
+                    node.addContent(leftChild);
+                    node.addContent(rightChild);
+                    stack.push(node);
+                }
 
+                public void visit(InternalModelRootNode rn) {
+                    super.visit(rn);
+                    Element query = new Element("query");
+
+                    //QueryNode node = rn.getChild(); TODO: I dont know if this is important
+                    //query.setAttribute("attrset", node.getAttrs().toString() );
+                    query.addContent((Element) stack.pop());
+                    stack.push(query);
+                }
+
+                @Override
+                public void onAttrPlusTermNode(AttrPlusTermNode aptn) {
+
+                }
+
+
+                /**
+                 * @param val
+                 * @return
+                 * extracts the last index of an attribute (e.G 1.4 becomes 4)
+                 */
+                private String getAttrVal(AttrValue val) {
+
+                    if (val == null || val.getValue() == null) return null;
+
+                    String value = val.getValue();
+                    String ret = value;
+
+                    String[] temp = value.split("\\.");
+
+                    if (temp != null && temp.length > 1) {
+                        ret = temp[temp.length - 1];
+                    }
+
+                    return ret;
+                }
+
+            };
+            qnv.visit(rn);
+        } catch (InvalidQueryException iqe) {
+            iqe.printStackTrace();
+        }
+    }
+
+    public Element getQuery() {
+        return (Element) stack.peek();
+    }
+
+    public String toString() {
+        return Xml.getString(getQuery());
+    }
+
+    private String getOpString(int op) {
+        switch (op) {
+            case ComplexNode.COMPLEX_AND:
+                return "and";
+            case ComplexNode.COMPLEX_ANDNOT:
+                return "not";
+            case ComplexNode.COMPLEX_OR:
+                return "or";
+            case ComplexNode.COMPLEX_PROX:
+                return "prox";
+            default:
+                return op + "";
+        }
+    }
 
 
 }

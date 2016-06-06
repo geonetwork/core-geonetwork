@@ -23,13 +23,6 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import java.net.URLDecoder;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import jeeves.interfaces.Service;
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
@@ -38,9 +31,16 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
+import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import jeeves.interfaces.Service;
+import jeeves.server.context.ServiceContext;
+
 /**
  * Allows a user to set the xsl used for displaying metadata.
- * 
+ *
  * @author jeichar
  */
 public class EditFile extends AbstractFormatService implements Service {
@@ -59,7 +59,7 @@ public class EditFile extends AbstractFormatService implements Service {
         // Check that the requested file is actually nested into formatDir
         String absformatDir = formatDir.toAbsolutePath().toString();
         String absFile = formatDir.resolve(file).toAbsolutePath().toString();
-        if (! absFile.startsWith(absformatDir)) {
+        if (!absFile.startsWith(absformatDir)) {
             throw new BadParameterEx("fname", absFile);
         }
 

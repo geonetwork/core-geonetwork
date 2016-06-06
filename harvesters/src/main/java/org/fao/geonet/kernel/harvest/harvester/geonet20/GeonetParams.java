@@ -38,75 +38,84 @@ import java.util.ArrayList;
 
 //=============================================================================
 
-public class GeonetParams extends AbstractParams
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class GeonetParams extends AbstractParams {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public GeonetParams(DataManager dm)
-	{
-		super(dm);
-	}
+    public String host;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Create : called when a new entry must be added. Reads values from the
+    //---          provided entry, providing default values
+    //---
+    //---------------------------------------------------------------------------
+    private ArrayList<Search> alSearches = new ArrayList<Search>();
 
-	public void create(Element node) throws BadInputEx
-	{
-		super.create(node);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update : called when an entry has changed and variables must be updated
+    //---
+    //---------------------------------------------------------------------------
 
-		Element site     = node.getChild("site");
-		Element searches = node.getChild("searches");
+    public GeonetParams(DataManager dm) {
+        super(dm);
+    }
 
-		host    = Util.getParam(site, "host",    "");
+    //---------------------------------------------------------------------------
+    //---
+    //--- Other API methods
+    //---
+    //---------------------------------------------------------------------------
 
-		//checkPort(port);
-		addSearches(searches);
-	}
+    public void create(Element node) throws BadInputEx {
+        super.create(node);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
-	//---------------------------------------------------------------------------
+        Element site = node.getChild("site");
+        Element searches = node.getChild("searches");
 
-	public void update(Element node) throws BadInputEx
-	{
-		super.update(node);
+        host = Util.getParam(site, "host", "");
 
-		Element site     = node.getChild("site");
-		Element searches = node.getChild("searches");
+        //checkPort(port);
+        addSearches(searches);
+    }
 
-		host    = Util.getParam(site, "host",    host);
+    public void update(Element node) throws BadInputEx {
+        super.update(node);
 
-		//checkPort(port);
+        Element site = node.getChild("site");
+        Element searches = node.getChild("searches");
 
-		//--- if some search queries are given, we drop the previous ones and
-		//--- set these new ones
+        host = Util.getParam(site, "host", host);
 
-		if (searches != null)
-			addSearches(searches);
-	}
+        //checkPort(port);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
+        //--- if some search queries are given, we drop the previous ones and
+        //--- set these new ones
 
-	public Iterable<Search> getSearches() { return alSearches; }
+        if (searches != null)
+            addSearches(searches);
+    }
+
+    //---------------------------------------------------------------------------
+
+    public Iterable<Search> getSearches() {
+        return alSearches;
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
     public String getServletPath() {
         if (StringUtils.isNotEmpty(host)) {
             try {
-                return  new URL(host).getPath();
+                return new URL(host).getPath();
             } catch (MalformedURLException ex) {
                 ex.printStackTrace();
             }
@@ -115,33 +124,29 @@ public class GeonetParams extends AbstractParams
         return "";
     }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public GeonetParams copy()
-	{
-		GeonetParams copy = new GeonetParams(dm);
-		copyTo(copy);
+    public GeonetParams copy() {
+        GeonetParams copy = new GeonetParams(dm);
+        copyTo(copy);
 
-		copy.host    = host;
+        copy.host = host;
 
-		for (Search s : alSearches)
-			copy.alSearches.add(s.copy());
+        for (Search s : alSearches)
+            copy.alSearches.add(s.copy());
 
-		return copy;
-	}
+        return copy;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    private void addSearches(Element searches) throws BadInputEx {
+        alSearches.clear();
 
-	private void addSearches(Element searches) throws BadInputEx
-	{
-		alSearches.clear();
-
-		if (searches == null)
-			return;
+        if (searches == null)
+            return;
 
         for (Object o : searches.getChildren("search")) {
             Element search = (Element) o;
@@ -162,78 +167,65 @@ public class GeonetParams extends AbstractParams
                 throw new BadParameterEx("siteId", "");
             }
         }
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String  host;
-
-	private ArrayList<Search> alSearches = new ArrayList<Search>();
+    }
 }
 
 //=============================================================================
 
-class Search
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+class Search {
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public Search copy()
-	{
-		Search s = new Search();
+    public String freeText;
 
-		s.freeText = freeText;
-		s.title    = title;
-		s.abstrac  = abstrac;
-		s.keywords = keywords;
-		s.digital  = digital;
-		s.hardcopy = hardcopy;
-		s.siteId   = siteId;
+    //---------------------------------------------------------------------------
+    public String title;
 
-		return s;
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    public String abstrac;
+    public String keywords;
+    public boolean digital;
+    public boolean hardcopy;
+    public String siteId;
 
-	//---------------------------------------------------------------------------
+    public Search copy() {
+        Search s = new Search();
 
-	public Element createRequest()
-	{
-		Element req = new Element("request");
+        s.freeText = freeText;
+        s.title = title;
+        s.abstrac = abstrac;
+        s.keywords = keywords;
+        s.digital = digital;
+        s.hardcopy = hardcopy;
+        s.siteId = siteId;
 
-		Lib.element.add(req, "any",      freeText);
-		Lib.element.add(req, "title",    title);
-		Lib.element.add(req, "abstract", abstrac);
-		Lib.element.add(req, "themekey", keywords);
-		Lib.element.add(req, "siteId",   siteId);
+        return s;
+    }
 
-		if (digital)
-			Lib.element.add(req, "digital", "on");
+    public Element createRequest() {
+        Element req = new Element("request");
 
-		if (hardcopy)
-			Lib.element.add(req, "paper", "on");
+        Lib.element.add(req, "any", freeText);
+        Lib.element.add(req, "title", title);
+        Lib.element.add(req, "abstract", abstrac);
+        Lib.element.add(req, "themekey", keywords);
+        Lib.element.add(req, "siteId", siteId);
 
-		return req;
-	}
+        if (digital)
+            Lib.element.add(req, "digital", "on");
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        if (hardcopy)
+            Lib.element.add(req, "paper", "on");
 
-	public String  freeText;
-	public String  title;
-	public String  abstrac;
-	public String  keywords;
-	public boolean digital;
-	public boolean hardcopy;
-	public String  siteId;
+        return req;
+    }
 }
 
 //=============================================================================

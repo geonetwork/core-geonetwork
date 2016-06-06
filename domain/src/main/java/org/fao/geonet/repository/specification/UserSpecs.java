@@ -23,12 +23,24 @@
 
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Group_;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.UserGroup_;
+import org.fao.geonet.domain.UserSecurity_;
+import org.fao.geonet.domain.User_;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
 import java.util.Collection;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * Specifications for querying {@link UserRepository}.
@@ -136,7 +148,7 @@ public final class UserSpecs {
                 Path<String> lastLoginDateAttributePath = root.get(User_.lastLoginDate);
                 Path<Integer> userIdPath = root.get(User_.id);
                 Predicate userLastLoginBetweenPredicate = cb.between(lastLoginDateAttributePath,
-                        loginDateFrom.toString(), loginDateTo.toString());
+                    loginDateFrom.toString(), loginDateTo.toString());
 
                 if (!groups.isEmpty()) {
                     final Root<UserGroup> userGroupRoot = query.from(UserGroup.class);
@@ -146,7 +158,7 @@ public final class UserSpecs {
                     Predicate inGroups = groupGPath.in(groups);
 
                     userLastLoginBetweenPredicate = cb.and(cb.equal(userGPath,
-                            userIdPath), cb.and(userLastLoginBetweenPredicate, inGroups));
+                        userIdPath), cb.and(userLastLoginBetweenPredicate, inGroups));
                 }
 
 

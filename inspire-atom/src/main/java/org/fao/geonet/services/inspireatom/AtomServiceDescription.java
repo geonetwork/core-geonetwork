@@ -53,11 +53,11 @@ import jeeves.server.context.ServiceContext;
  * INSPIRE OpenSearchDescription atom service.
  *
  * @author Jose García
- *
  */
-public class AtomServiceDescription implements Service
-{
-    /** Service uuid param name **/
+public class AtomServiceDescription implements Service {
+    /**
+     * Service uuid param name
+     **/
     private final static String SERVICE_IDENTIFIER_PARAM = "fileIdentifier";
 
 
@@ -71,8 +71,7 @@ public class AtomServiceDescription implements Service
     //---
     //--------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = context.getBean(DataManager.class);
         SettingManager sm = context.getBean(SettingManager.class);
@@ -147,43 +146,43 @@ public class AtomServiceDescription implements Service
 
         // Build response.
         return new Element("response")
-                .addContent(new Element("fileId").setText(fileIdentifier))
-                .addContent(new Element("title").setText(feedTitle))
-                .addContent(new Element("subtitle").setText(feedSubtitle))
-                .addContent(new Element("lang").setText(feedLang))
-                .addContent(new Element("keywords").setText(keywords))
-                .addContent(new Element("authorName").setText(feedAuthorName))
-                .addContent(new Element("url").setText(feedUrl))
-                .addContent(datasetsEl);
+            .addContent(new Element("fileId").setText(fileIdentifier))
+            .addContent(new Element("title").setText(feedTitle))
+            .addContent(new Element("subtitle").setText(feedSubtitle))
+            .addContent(new Element("lang").setText(feedLang))
+            .addContent(new Element("keywords").setText(keywords))
+            .addContent(new Element("authorName").setText(feedAuthorName))
+            .addContent(new Element("url").setText(feedUrl))
+            .addContent(datasetsEl);
     }
 
 
     /**
      * Retrieves the information from datasets referenced in a service metadata.
      *
-     * @param datasetIdentifiers    List of dataset identifiers to process.
-     * @param serviceIdentifier     Service identifier.
-     * @param context               Service context.
-     * @return                      JDOM Element with the datasets information.
-     * @throws Exception            Exception.
+     * @param datasetIdentifiers List of dataset identifiers to process.
+     * @param serviceIdentifier  Service identifier.
+     * @param context            Service context.
+     * @return JDOM Element with the datasets information.
+     * @throws Exception Exception.
      */
     private Element processDatasetsInfo(final List<String> datasetIdentifiers, final String serviceIdentifier,
                                         final ServiceContext context)
-            throws Exception {
+        throws Exception {
         Element datasetsEl = new Element("datasets");
 
         final InspireAtomFeedRepository repository = context.getBean(InspireAtomFeedRepository.class);
 
         DataManager dm = context.getBean(DataManager.class);
 
-        for (String datasetIdentifier: datasetIdentifiers) {
+        for (String datasetIdentifier : datasetIdentifiers) {
             // Get the metadata uuid for the dataset
-            String datasetUuid =  repository.retrieveDatasetUuidFromIdentifier(datasetIdentifier);
+            String datasetUuid = repository.retrieveDatasetUuidFromIdentifier(datasetIdentifier);
 
             // If dataset metadata not found, ignore
             if (StringUtils.isEmpty(datasetUuid)) {
                 Log.warning(Geonet.ATOM, "AtomServiceDescription for service metadata (" + serviceIdentifier +
-                        "): metadata for dataset identifier " + datasetIdentifier + " is not found, ignoring it.");
+                    "): metadata for dataset identifier " + datasetIdentifier + " is not found, ignoring it.");
                 continue;
             }
 
@@ -196,15 +195,15 @@ public class AtomServiceDescription implements Service
             // If dataset metadata has no identifier information, ignore
             if (StringUtils.isEmpty(idNs)) {
                 Log.warning(Geonet.ATOM, "AtomServiceDescription for service metadata (" + serviceIdentifier +
-                        "): dataset with uuid " + datasetUuid + " has no dataset identifier/namespace, ignoring it.");
+                    "): dataset with uuid " + datasetUuid + " has no dataset identifier/namespace, ignoring it.");
                 continue;
             }
 
-            String atomUrl =  inspireAtomFeed.getAtomUrl();
+            String atomUrl = inspireAtomFeed.getAtomUrl();
             // If the dataset has no atom feed, ignore it
             if (StringUtils.isEmpty(atomUrl)) {
                 Log.warning(Geonet.ATOM, "AtomServiceDescription for service metadata (" + serviceIdentifier +
-                        "): dataset with uuid " + datasetUuid + " has no dataset feed, ignoring it.");
+                    "): dataset with uuid " + datasetUuid + " has no dataset feed, ignoring it.");
                 continue;
             }
 
@@ -214,13 +213,13 @@ public class AtomServiceDescription implements Service
             // Get dataset download info
             // From INSPIRE spec: if a CRS has multiple downloads should be returned a link to feed document with the CRS downloads.
             Map<String, Integer> downloadsCountByCrs = new HashMap<String, Integer>();
-            for(InspireAtomFeedEntry entry : inspireAtomFeed.getEntryList()) {
+            for (InspireAtomFeedEntry entry : inspireAtomFeed.getEntryList()) {
                 Integer count = downloadsCountByCrs.get(entry.getCrs());
                 if (count == null) count = Integer.valueOf(0);
                 downloadsCountByCrs.put(entry.getCrs(), count + 1);
             }
 
-            for(InspireAtomFeedEntry entry : inspireAtomFeed.getEntryList()) {
+            for (InspireAtomFeedEntry entry : inspireAtomFeed.getEntryList()) {
                 Integer count = downloadsCountByCrs.get(entry.getCrs());
                 if (count != null) {
                     Element downloadEl = new Element("file");
@@ -252,9 +251,8 @@ public class AtomServiceDescription implements Service
     /**
      * Builds JDOM element for dataset information.
      *
-     * @param identifier    Dataset identifier.
-     * @param namespace     Dataset namespace.
-     * @return
+     * @param identifier Dataset identifier.
+     * @param namespace  Dataset namespace.
      */
     private Element buildDatasetInfo(final String identifier, final String namespace) {
         Element datasetEl = new Element("dataset");

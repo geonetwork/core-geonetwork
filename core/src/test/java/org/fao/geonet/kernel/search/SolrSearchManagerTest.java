@@ -70,19 +70,19 @@ public class SolrSearchManagerTest {
         TransformerFactoryFactory.init(null);
     }
 
-    @Before
-    public void setupManager() {
-        manager = new SolrSearchManager();
-        client = new MockSolrClient();
-        manager.setClient(client);
-    }
-
     private static Path getSchemaDir() {
         Path tmp = AbstractCoreIntegrationTest.getClassFile(SolrSearchManagerTest.class).toPath();
         while (tmp != null && !Files.exists(tmp.resolve("schemas/iso19139"))) {
             tmp = tmp.getParent();
         }
         return tmp.resolve("schemas/iso19139/src/main/plugin/iso19139");
+    }
+
+    @Before
+    public void setupManager() {
+        manager = new SolrSearchManager();
+        client = new MockSolrClient();
+        manager.setClient(client);
     }
 
     @Test
@@ -122,8 +122,8 @@ public class SolrSearchManagerTest {
     @Test
     public void testGetDocField() throws Exception {
         String value = (String) manager.getDocFieldValue(
-                                            "+" + SolrSearchManager.ID + ":toto",
-                                            SolrSearchManager.ID).getFieldValue(SolrSearchManager.ID);
+            "+" + SolrSearchManager.ID + ":toto",
+            SolrSearchManager.ID).getFieldValue(SolrSearchManager.ID);
         assertEquals("toto", value);
     }
 
@@ -135,9 +135,6 @@ public class SolrSearchManagerTest {
             throw new NotImplementedException();
         }
 
-        @Override
-        public void shutdown() {
-        }
 
         @Override
         public UpdateResponse add(String collection, SolrInputDocument doc, int commitWithinMs) throws SolrServerException, IOException {
@@ -166,6 +163,10 @@ public class SolrSearchManagerTest {
                 callback.streamSolrDocument(doc);
             }
             return null;
+        }
+
+        @Override
+        public void close() throws IOException {
         }
     }
 }

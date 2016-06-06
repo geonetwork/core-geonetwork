@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+  <cannotGet>Kan ikke hente tips fra serveren</cannotGet>
+  <error>Feil</error>
+</strings>

@@ -26,7 +26,9 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+
 import groovy.util.slurpersupport.GPathResult;
+
 import org.fao.geonet.SystemInfo;
 import org.xml.sax.Attributes;
 
@@ -55,6 +57,15 @@ public class TNodeRepeatIter extends TNode {
         this.key = key;
         this.rowContextKey = rowContextKey;
         this.onlyChildren = onlyChildren;
+    }
+
+    static void addIndexInfo(Map<String, Object> newModelMap, int index, int total) {
+        newModelMap.put(INDEX_KEY, index);
+        newModelMap.put(FIRST_KEY, index == 0);
+        newModelMap.put(LAST_KEY, (total - 1) == index);
+        newModelMap.put(ODD_KEY, Math.abs(index % 2) == 1);
+        newModelMap.put(EVEN_KEY, Math.abs(total % 2) == 0);
+        newModelMap.put(MIDDLE_KEY, (total / 2) == index);
     }
 
     @SuppressWarnings("unchecked")
@@ -117,15 +128,6 @@ public class TNodeRepeatIter extends TNode {
         if (i == 0 && this.info.isDevMode()) {
             context.append("<!-- fmt-repeat: ").append(rowContextKey).append(" in ").append(this.key).append(" is empty -->");
         }
-    }
-
-    static void addIndexInfo(Map<String, Object> newModelMap, int index, int total) {
-        newModelMap.put(INDEX_KEY, index);
-        newModelMap.put(FIRST_KEY, index == 0);
-        newModelMap.put(LAST_KEY, (total - 1) == index);
-        newModelMap.put(ODD_KEY, Math.abs(index % 2) == 1);
-        newModelMap.put(EVEN_KEY, Math.abs(total % 2) == 0);
-        newModelMap.put(MIDDLE_KEY, (total / 2) == index);
     }
 
     @Override

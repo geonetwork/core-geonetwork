@@ -23,10 +23,6 @@
 
 package org.fao.geonet.services.harvesting;
 
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.Common;
@@ -36,46 +32,47 @@ import org.jdom.Element;
 
 import java.nio.file.Path;
 
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
 /**
  * Run a harvester synchronously.
  *
- * The harvest "Run" service will run a harvester in the background, i.e.
- * asynchronously. The "Invoke" service will run a harvester directly, i.e.
- * synchronously. The main purpose for this service is testing, i.e. get results
- * immmediately returned in a test script.
+ * The harvest "Run" service will run a harvester in the background, i.e. asynchronously. The
+ * "Invoke" service will run a harvester directly, i.e. synchronously. The main purpose for this
+ * service is testing, i.e. get results immmediately returned in a test script.
  */
-public class Invoke implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Invoke implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception
-	{
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		HarvestManager hm = gc.getBean(HarvestManager.class);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        HarvestManager hm = gc.getBean(HarvestManager.class);
 
-		String id = params.getChildText("id");
+        String id = params.getChildText("id");
 
-		// Invoke: synchronous "run" of harvester
-		Common.OperResult result = hm.invoke(id);
+        // Invoke: synchronous "run" of harvester
+        Common.OperResult result = hm.invoke(id);
 
-		// Construct result
-		return new Element(Jeeves.Elem.RESPONSE)
-				.addContent(new Element("id").setText(id).setAttribute(new Attribute("status", result.toString())));
-	}
+        // Construct result
+        return new Element(Jeeves.Elem.RESPONSE)
+            .addContent(new Element("id").setText(id).setAttribute(new Attribute("status", result.toString())));
+    }
 }
 
 //=============================================================================

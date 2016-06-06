@@ -32,5 +32,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @author Jesse
  */
 public interface ThesaurusActivationRepository extends GeonetRepository<ThesaurusActivation, String>,
-        JpaSpecificationExecutor<ThesaurusActivation> {
+    JpaSpecificationExecutor<ThesaurusActivation> {
 }

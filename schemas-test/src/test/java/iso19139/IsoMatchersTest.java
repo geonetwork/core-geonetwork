@@ -24,6 +24,7 @@
 package iso19139;
 
 import groovy.util.slurpersupport.GPathResult;
+
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
 import org.fao.geonet.services.metadata.format.groovy.Handler;
@@ -56,7 +57,7 @@ public class IsoMatchersTest extends AbstractFormatterTest {
         final String formatterId = "full_view";
         final Handlers handlers = getHandlers(request, formatterId);
         GPathResult elem = parseXml(
-                "<root><gmd:title  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xsi:type=\"gmd:PT_FreeText_PropertyType\" gco:nilReason=\"missing\">\n"
+            "<root><gmd:title  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xsi:type=\"gmd:PT_FreeText_PropertyType\" gco:nilReason=\"missing\">\n"
                 + "  <gmd:PT_FreeText xmlns:gco=\"http://www.isotc211.org/2005/gmd\">\n"
                 + "    <gmd:textGroup>\n"
                 + "      <gmd:LocalisedCharacterString locale=\"#DE\">GER Citation Title</gmd:LocalisedCharacterString>\n"
@@ -72,7 +73,7 @@ public class IsoMatchersTest extends AbstractFormatterTest {
         assertTrue(handlerResult, handlerResult.contains("GER Citation Title"));
 
         elem = parseXml(
-                "<root  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" "
+            "<root  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" "
                 + "xmlns:gco=\"http://www.isotc211.org/2005/gco\" xsi:type=\"gmd:PT_FreeText_PropertyType\" gco:nilReason=\"missing\">"
                 + "<gmd:language>\n"
                 + "    <gco:CharacterString>eng</gco:CharacterString>\n"

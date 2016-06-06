@@ -35,7 +35,7 @@ import java.util.List;
  * @author Jesse
  */
 public interface MetadataRelationRepository extends GeonetRepository<MetadataRelation, MetadataRelationId>,
-        JpaSpecificationExecutor<MetadataRelation> {
+    JpaSpecificationExecutor<MetadataRelation> {
     /**
      * Find all metadata that are related to the provided metadata.
      *

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Registratie is gelukt</heading>
+  <message>Uw registratie is gelukt. Controleer uw gebruikersnaam en wachtwoord in uw e-mail.
+    Bedankt.
+  </message>
+  <errorEmailAddressAlreadyRegistered>
+    <p>De registratie is
+      <font class="error">MISLUKT</font>
+      omdat u al een geregistreerde gebruiker bent.
+    </p>
+    <p>Neem contact op met de helpdesk als u uw wachtwoord vergeten bent via
+      <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a>
+      of telefoonnummer: xxx-xxxxxxxx
+    </p>
+    <p>Een wachtwoord reset funktie komt binnenkort beschikbaar. Als u dringend opnieuw moet
+      inloggen maar geen contact kunt krijgen met de helpdesk kunt u tijdelijk een nieuw account
+      aanmaken.
+    </p>
+  </errorEmailAddressAlreadyRegistered>
+  <errorEmailToAddressFailed>
+    <p>De registratie is
+      <font class="error">MISLUKT</font>
+      omdat we geen e-mail naar het adres konden sturen dat u opgaf.
+    </p>
+    <p>Controleer uw gegevens en probeer opnieuw te registreren.</p>
+  </errorEmailToAddressFailed>
+  <errorProfileRequestFailed>
+    <p>Uw aanvraag voor Editor toegang kon niet behandeld worden.</p>
+    <p>Neem contact op met de helpdesk via
+      <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a>
+      or ph: xxx-xxxxxxxx
+    </p>
+  </errorProfileRequestFailed>
+</strings>

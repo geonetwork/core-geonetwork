@@ -22,8 +22,8 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="2.0"
                 exclude-result-prefixes="#all">
 
   <xsl:template mode="relation" match="metadata[simpledc]" priority="99">

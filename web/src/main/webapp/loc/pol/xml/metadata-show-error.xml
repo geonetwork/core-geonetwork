@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Błąd dostępu do zasobu</heading>
+  <message>Żądany zasób nie może zostać odnaleziony lub brak dostępu. Zasób mógł zostać usunięty,
+    lub nie masz do niego odpowiednich uprawnień.
+  </message>
+  <button>Powrót</button>
+</strings>

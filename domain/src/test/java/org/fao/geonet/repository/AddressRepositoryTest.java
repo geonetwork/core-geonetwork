@@ -38,6 +38,14 @@ public class AddressRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     AddressRepository _repo;
 
+    public static Address newAddress(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+        Address Address = new Address().setAddress("address" + val).setCity("city" + val).setCountry("country" + val).setState("state"
+            + val)
+            .setZip("zip" + val);
+        return Address;
+    }
+
     @Test
     public void testFindOne() {
         Address address1 = newAddress();
@@ -71,13 +79,6 @@ public class AddressRepositoryTest extends AbstractSpringDataTest {
 
     private Address newAddress() {
         return newAddress(_inc);
-    }
-    public static Address newAddress(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-        Address Address = new Address().setAddress("address" + val).setCity("city" + val).setCountry("country" + val).setState("state"
-                                                                                                                               + val)
-                .setZip("zip" + val);
-        return Address;
     }
 
 }

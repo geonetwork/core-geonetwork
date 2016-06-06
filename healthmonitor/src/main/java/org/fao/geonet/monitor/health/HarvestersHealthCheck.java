@@ -24,8 +24,7 @@
 package org.fao.geonet.monitor.health;
 
 import com.yammer.metrics.core.HealthCheck;
-import jeeves.monitor.HealthCheckFactory;
-import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.HarvestHistory_;
 import org.fao.geonet.domain.HarvesterSetting;
@@ -43,12 +42,13 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
+import jeeves.monitor.HealthCheckFactory;
+import jeeves.server.context.ServiceContext;
+
 /**
  * Verifies that all metadata have been correctly indexed (without errors)
  * <p/>
- * User: jeichar
- * Date: 3/26/12
- * Time: 9:01 AM
+ * User: jeichar Date: 3/26/12 Time: 9:01 AM
  */
 public class HarvestersHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {

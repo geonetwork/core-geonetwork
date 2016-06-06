@@ -28,7 +28,13 @@ import org.junit.Test;
 
 import java.util.Set;
 
-import static org.fao.geonet.domain.Profile.*;
+import static org.fao.geonet.domain.Profile.Administrator;
+import static org.fao.geonet.domain.Profile.Editor;
+import static org.fao.geonet.domain.Profile.Guest;
+import static org.fao.geonet.domain.Profile.Monitor;
+import static org.fao.geonet.domain.Profile.RegisteredUser;
+import static org.fao.geonet.domain.Profile.Reviewer;
+import static org.fao.geonet.domain.Profile.UserAdmin;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -63,9 +69,9 @@ public class ProfileTest {
 
     private void assertContainsAllExactly(Set<Profile> all, Profile... profiles) {
         assertEquals(profiles.length, all.size());
-        
+
         for (Profile profile : profiles) {
-            assertTrue(profile+" is not one of "+all, all.contains(profile));
+            assertTrue(profile + " is not one of " + all, all.contains(profile));
         }
     }
 }

@@ -25,7 +25,7 @@
   <!-- login.conf file, and the realm Name must be the same as in  -->
   <!-- the web.xml file.                                           -->
   <!-- =========================================================== -->
-  <!-- 
+  <!--
   <Call name="addBean">
     <Arg>
       <New class="org.eclipse.jetty.plus.jaas.JAASLoginService">
@@ -55,7 +55,7 @@
   <!-- Uncomment the section entitled "Apply plusConfig to all     -->
   <!-- webapps for this Server". NOTE: this is the default.        -->
   <!-- =========================================================== -->
-  
+
 
   <!-- =========================================================== -->
   <!-- Sequence of configurations to defining Plus features.       -->
@@ -99,12 +99,12 @@
   <!-- =========================================================== -->
   <!-- Apply plusConfig to all webapps for this Server             -->
   <!-- =========================================================== -->
-    <Call name="setAttribute">
-      <Arg>org.eclipse.jetty.webapp.configuration</Arg>
-      <Arg>
-          <Ref id="plusConfig"/>
-      </Arg>
-    </Call>
+  <Call name="setAttribute">
+    <Arg>org.eclipse.jetty.webapp.configuration</Arg>
+    <Arg>
+      <Ref id="plusConfig"/>
+    </Arg>
+  </Call>
 
 </Configure>
 

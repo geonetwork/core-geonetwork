@@ -37,7 +37,6 @@ public interface MetadataRecordSelector {
      *
      * @param maxHits the maximum number to return
      * @param context context to use during selection
-     * @throws Exception
      */
     @Nonnull
     @Deprecated

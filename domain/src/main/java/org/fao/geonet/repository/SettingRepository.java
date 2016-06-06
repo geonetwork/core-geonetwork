@@ -28,7 +28,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  * Data Access object for accessing {@link Setting} entities.
- * 
+ *
  * @author Jesse
  */
 public interface SettingRepository extends GeonetRepository<Setting, String>,

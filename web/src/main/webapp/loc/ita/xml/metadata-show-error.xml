@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Errore nell'accedere alla risorsa</heading>
+  <message>La risorsa richiesta non può essere trovata o raggiunta. Potrebbe essere stata rimossa o
+    potresti non avere i diritti per accedervi.
+  </message>
+  <button>Indietro</button>
+</strings>

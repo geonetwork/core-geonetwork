@@ -23,13 +23,6 @@
 
 package org.fao.geonet.services.thesaurus;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -40,16 +33,18 @@ import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.fao.geonet.kernel.search.keyword.SortDirection;
-
 import org.jdom.Element;
 
 import java.nio.file.Path;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
 /**
- * Returns a keyword from a thesaurus with narrower, broader and related 
- * concepts filled out. Keyword and related concepts are returned in raw 
- * format. 
- * 
+ * Returns a keyword from a thesaurus with narrower, broader and related concepts filled out.
+ * Keyword and related concepts are returned in raw format.
+ *
  * @author sppigot - taken from GetKeywordById and GetNarrowerBroader
  */
 public class GetKeywordByIdAsConcept implements Service {
@@ -57,7 +52,7 @@ public class GetKeywordByIdAsConcept implements Service {
     }
 
     public Element exec(Element params, ServiceContext context)
-            throws Exception {
+        throws Exception {
         String sThesaurusName = Util.getParam(params, "thesaurus");
         String uri = Util.getParam(params, "id", null);
         String lang = Util.getParam(params, "lang", context.getLanguage());
@@ -65,51 +60,51 @@ public class GetKeywordByIdAsConcept implements Service {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
 
-				Thesaurus the = thesaurusMan.getThesaurusByName(sThesaurusName);
-				String langForThesaurus = the.getIsoLanguageMapper().iso639_2_to_iso639_1(lang);
-        
+        Thesaurus the = thesaurusMan.getThesaurusByName(sThesaurusName);
+        String langForThesaurus = the.getIsoLanguageMapper().iso639_2_to_iso639_1(lang);
+
         KeywordsSearcher searcher = null;
 
         Element root = null;
-        
+
         if (uri == null) {
             root = new Element("descKeys");
         } else {
-        		// perform the search for the specified concept by uri
+            // perform the search for the specified concept by uri
             searcher = new KeywordsSearcher(context, thesaurusMan);
             KeywordBean kb = null;
-            
+
             kb = searcher.searchById(uri, sThesaurusName, langForThesaurus);
             if (kb == null) {
-              root = new Element("descKeys");
+                root = new Element("descKeys");
             } else {
-              root = KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
+                root = KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
 
-							// now get the narrower, broader and related/equal concepts and
-							// place them in the result tree
-							String[] relations = { "narrower", "broader", "related" };
-							for (String request : relations) {
-								searcher = new KeywordsSearcher(context, thesaurusMan);
-								KeywordRelation reqType;
-								if (request.equals("broader")) {
-									reqType = KeywordRelation.NARROWER;
-								} else if (request.equals("narrower")) {
-									reqType = KeywordRelation.BROADER;
-								} else {
-									reqType = KeywordRelation.RELATED;
-								}
+                // now get the narrower, broader and related/equal concepts and
+                // place them in the result tree
+                String[] relations = {"narrower", "broader", "related"};
+                for (String request : relations) {
+                    searcher = new KeywordsSearcher(context, thesaurusMan);
+                    KeywordRelation reqType;
+                    if (request.equals("broader")) {
+                        reqType = KeywordRelation.NARROWER;
+                    } else if (request.equals("narrower")) {
+                        reqType = KeywordRelation.BROADER;
+                    } else {
+                        reqType = KeywordRelation.RELATED;
+                    }
 
-								searcher.searchForRelated(params, reqType, KeywordSort.defaultLabelSorter(SortDirection.DESC),lang);
-								// build response for each request type
-								Element keywordType = new Element(request);
-								for (KeywordBean kbr : searcher.getResults()) {
-									keywordType.addContent(kbr.toElement(context.getLanguage()));
-								}
-								root.addContent(keywordType);
-							}
+                    searcher.searchForRelated(params, reqType, KeywordSort.defaultLabelSorter(SortDirection.DESC), lang);
+                    // build response for each request type
+                    Element keywordType = new Element(request);
+                    for (KeywordBean kbr : searcher.getResults()) {
+                        keywordType.addContent(kbr.toElement(context.getLanguage()));
+                    }
+                    root.addContent(keywordType);
+                }
             }
         }
-        
+
         return root;
     }
 }

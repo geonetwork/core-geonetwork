@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Registos de metadados não encontrados</notfound>
+  <notowner>Não foi possível actualizar as categorias nos registos de metadados seguintes porque
+    você não é o dono.
+  </notowner>
+  <updated>Actualização de categorias foi bem-sucedida nos registos de metadados seguintes</updated>
+  <resultstitle>Resultados da actualização de categorias</resultstitle>
+</strings>

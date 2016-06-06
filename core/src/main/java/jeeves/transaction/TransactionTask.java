@@ -35,9 +35,7 @@ public interface TransactionTask<V> {
      * Execute task and return result.
      *
      * @param transaction an object to allow the task to interact with the transaction if needed.
-     *
      * @return result of task
-     * @throws Throwable
      */
     V doInTransaction(TransactionStatus transaction) throws Throwable;
 }

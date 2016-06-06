@@ -23,65 +23,65 @@
 
 package org.fao.oaipmh.requests;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.ListMetadataFormatsResponse;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 //=============================================================================
 
-public class ListMetadataFormatsRequest extends AbstractRequest
-{
-	public static final String VERB = "ListMetadataFormats";
+public class ListMetadataFormatsRequest extends AbstractRequest {
+    public static final String VERB = "ListMetadataFormats";
+    private String identifier;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
     public ListMetadataFormatsRequest(GeonetHttpRequestFactory transport) {
         super(transport);
     }
 
     //---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
 
-	public String getIdentifier() { return identifier; }
+    public String getIdentifier() {
+        return identifier;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setIdentifier(String identifier)
-	{
-		this.identifier = identifier;
-	}
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public ListMetadataFormatsResponse execute() throws IOException, OaiPmhException,
-																		 JDOMException, SAXException, Exception
-	{
-		Map<String, String> params = new HashMap<String, String>();
+    public ListMetadataFormatsResponse execute() throws IOException, OaiPmhException,
+        JDOMException, SAXException, Exception {
+        Map<String, String> params = new HashMap<String, String>();
 
-		if (identifier != null)
-			params.put("identifier", identifier);
+        if (identifier != null)
+            params.put("identifier", identifier);
 
-		return new ListMetadataFormatsResponse(sendRequest(params));
-	}
+        return new ListMetadataFormatsResponse(sendRequest(params));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public String getVerb() { return VERB; }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private String identifier;
+    public String getVerb() {
+        return VERB;
+    }
 }
 
 //=============================================================================

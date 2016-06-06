@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <groups>Så velg gruppe brukeren tilhører</groups>
+  <notfound>Metadata ikke funnet</notfound>
+  <notowner>Metadata ikke overført på grunn av manglende rettigheter (ikke eier)</notowner>
+  <updated>Metadata overført til ny eier</updated>
+  <resultstitle>Overføring til ny eier resultater</resultstitle>
+  <users>Velg brukeren som skal bli ny eier av metadataene</users>
+</strings>

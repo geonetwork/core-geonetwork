@@ -25,10 +25,24 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.MetadataNotifierEntityListenerManager;
 
-import javax.annotation.Nullable;
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * An entity representing a service that desires to be notified when a metadata is modified.
@@ -39,7 +53,7 @@ import java.util.List;
 @Access(AccessType.PROPERTY)
 @Table(name = "MetadataNotifiers")
 @EntityListeners(MetadataNotifierEntityListenerManager.class)
-@SequenceGenerator(name=MetadataNotifier.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = MetadataNotifier.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MetadataNotifier extends GeonetEntity {
     static final String ID_SEQ_NAME = "metadata_notifier_id_seq";
 
@@ -52,20 +66,20 @@ public class MetadataNotifier extends GeonetEntity {
     private List<MetadataNotification> _notifications = new ArrayList<MetadataNotification>();
 
     /**
-     * Get the id of this notifier. This is a generated value and as such new instances should not have this set as it will simply be
-     * ignored and could result in reduced performance.
+     * Get the id of this notifier. This is a generated value and as such new instances should not
+     * have this set as it will simply be ignored and could result in reduced performance.
      *
      * @return the id of this notifier.
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
 
     /**
-     * Set the id of this notifier. This is a generated value and as such new instances should not have this set as it will simply be
-     * ignored and could result in reduced performance.
+     * Set the id of this notifier. This is a generated value and as such new instances should not
+     * have this set as it will simply be ignored and could result in reduced performance.
      *
      * @param id the id of this notifier
      */
@@ -112,8 +126,9 @@ public class MetadataNotifier extends GeonetEntity {
     }
 
     /**
-     * For backwards compatibility we need the enabled column to be either 'n' or 'y'. This is a workaround to allow this until future
-     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     * For backwards compatibility we need the enabled column to be either 'n' or 'y'. This is a
+     * workaround to allow this until future versions of JPA that allow different ways of
+     * controlling how types are mapped to the database.
      */
     @Column(name = "enabled", length = 1, nullable = false)
     protected char getEnabled_JPAWorkaround() {
@@ -162,7 +177,8 @@ public class MetadataNotifier extends GeonetEntity {
     /**
      * Set the username to use as credentials when notifying the notifier. This may be null.
      *
-     * @param username the username to use as credentials when notifying the notifier. This may be null.
+     * @param username the username to use as credentials when notifying the notifier. This may be
+     *                 null.
      */
     public void setUsername(@Nullable String username) {
         this._username = username;
@@ -177,7 +193,7 @@ public class MetadataNotifier extends GeonetEntity {
     public char[] getPassword() {
         if (_password == null) {
             return null;
-        }  else {
+        } else {
             return _password.clone();
         }
     }
@@ -185,7 +201,8 @@ public class MetadataNotifier extends GeonetEntity {
     /**
      * Set the password to use as credentials when notifying the notifier. This may be null.
      *
-     * @param password the password to use as credentials when notifying the notifier. This may be null.
+     * @param password the password to use as credentials when notifying the notifier. This may be
+     *                 null.
      */
     public void setPassword(@Nullable char[] password) {
         if (password == null) {
@@ -198,7 +215,8 @@ public class MetadataNotifier extends GeonetEntity {
     /**
      * Set the password to use as credentials when notifying the notifier. This may be null.
      *
-     * @param password the password to use as credentials when notifying the notifier. This may be null.
+     * @param password the password to use as credentials when notifying the notifier. This may be
+     *                 null.
      */
     public void setPassword(@Nullable String password) {
         if (password == null) {
@@ -209,11 +227,9 @@ public class MetadataNotifier extends GeonetEntity {
     }
 
     /**
-     * Get the lazily loaded list of all the notifications for this notifier.
-     * <p>
-     * For performance on might use the {@link org.fao.geonet.repository.MetadataNotificationRepository} to efficiently look up just
-     * the notifications needed.
-     * </p>
+     * Get the lazily loaded list of all the notifications for this notifier. <p> For performance on
+     * might use the {@link org.fao.geonet.repository.MetadataNotificationRepository} to efficiently
+     * look up just the notifications needed. </p>
      *
      * @return the lazily loaded list of all the notifications for this notifier.
      */

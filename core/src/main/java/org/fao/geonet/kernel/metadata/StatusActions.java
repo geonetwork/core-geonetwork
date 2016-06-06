@@ -23,18 +23,18 @@
 
 package org.fao.geonet.kernel.metadata;
 
-import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.ISODate;
 
 import java.util.Set;
 
-import org.fao.geonet.domain.ISODate;
+import jeeves.server.context.ServiceContext;
 
 public interface StatusActions {
 
-	public void init(ServiceContext context) throws Exception;
+    public void init(ServiceContext context) throws Exception;
 
-	public void onEdit(int id, boolean minorEdit) throws Exception;
+    public void onEdit(int id, boolean minorEdit) throws Exception;
 
-	public Set<Integer> statusChange(String status, Set<Integer> metadataIds, ISODate changeDate, String changeMessage) throws Exception;
+    public Set<Integer> statusChange(String status, Set<Integer> metadataIds, ISODate changeDate, String changeMessage) throws Exception;
 
 }

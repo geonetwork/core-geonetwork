@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
@@ -35,8 +34,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  * A runnable for indexing multiple metadata in a separate thread.
@@ -48,15 +50,14 @@ final class IndexMetadataTask implements Runnable {
     private final TransactionStatus _transactionStatus;
     private final Set<IndexMetadataTask> _batchIndex;
     private final ISearchManager searchManager;
-    private User _user;
     private final AtomicInteger indexed;
+    private User _user;
 
     /**
      * Constructor.
      *
      * @param context           context object
      * @param metadataIds       the metadata ids to index (either integers or strings)
-     * @param batchIndex
      * @param transactionStatus if non-null, wait for the transaction to complete before indexing
      */
     IndexMetadataTask(@Nonnull ServiceContext context, @Nonnull List<?> metadataIds, Set<IndexMetadataTask> batchIndex,
@@ -82,7 +83,7 @@ final class IndexMetadataTask implements Runnable {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
-                    return ;
+                    return;
                 }
             }
             // poll context to see whether servlet is up yet
@@ -113,7 +114,7 @@ final class IndexMetadataTask implements Runnable {
                     dataManager.indexMetadata(metadataId.toString(), false);
                 } catch (Exception e) {
                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + metadataId + "': " + e.getMessage()
-                                                   + "\n" + Util.getStackTrace(e));
+                        + "\n" + Util.getStackTrace(e));
                 }
             }
             if (_user != null && _context.getUserSession().getUserId() == null) {

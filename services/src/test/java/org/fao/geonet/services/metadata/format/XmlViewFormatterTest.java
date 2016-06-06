@@ -24,8 +24,7 @@
 package org.fao.geonet.services.metadata.format;
 
 import com.google.common.collect.Lists;
-import com.google.common.io.Files;
-import org.fao.geonet.Constants;
+
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.IsoLanguageRepository;
@@ -67,7 +66,7 @@ public class XmlViewFormatterTest extends AbstractFormatterTest {
 
         final String formatterId = "xml_view";
         FormatterParams fparams = getFormatterFormatterParamsPair
-                (request, formatterId).two();
+            (request, formatterId).two();
         Environment env = new EnvironmentImpl(fparams, mapper);
         final Functions functions = new Functions(fparams, env);
 

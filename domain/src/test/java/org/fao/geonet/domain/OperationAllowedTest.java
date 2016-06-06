@@ -25,7 +25,6 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.repository.AbstractOperationsAllowedTest;
 import org.junit.Test;
-import org.springframework.transaction.annotation.Propagation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -44,7 +43,7 @@ public class OperationAllowedTest extends AbstractOperationsAllowedTest {
         int opId = 20;
         int grpId = 300;
         assertEquals(new OperationAllowedId().setMetadataId(mdId).setGroupId(grpId).setOperationId(opId),
-                new OperationAllowedId(mdId, grpId, opId));
+            new OperationAllowedId(mdId, grpId, opId));
     }
 
 }

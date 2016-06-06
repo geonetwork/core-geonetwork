@@ -25,6 +25,7 @@ package org.fao.geonet.utils;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
@@ -54,8 +55,7 @@ import static org.junit.Assert.assertSame;
 
 
 /**
- * Test methods in the {@link org.fao.geonet.utils.Xml} utility class
- * Created by Jesse on 2/6/14.
+ * Test methods in the {@link org.fao.geonet.utils.Xml} utility class Created by Jesse on 2/6/14.
  */
 public class XmlTest {
     public static final Namespace GMD = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
@@ -179,11 +179,12 @@ public class XmlTest {
         assertSame(1, actual.size());
         assertSame(charString, actual.get(0));
     }
+
     @Test
     public void testGetXPathExprAttribute() throws Exception {
         final Attribute attribute = TEST_METADATA.getChild("characterSet", GMD)
-                .getChild("MD_CharacterSetCode", GMD)
-                .getAttribute("codeListValue");
+            .getChild("MD_CharacterSetCode", GMD)
+            .getAttribute("codeListValue");
         String xpath = Xml.getXPathExpr(attribute);
 
         final List<?> actual = Xml.selectNodes(TEST_METADATA, xpath, NAMESPACES);

@@ -25,27 +25,24 @@ package org.fao.geonet.csw.common.exceptions;
 
 //=============================================================================
 
-public class VersionNegotiationFailedEx extends CatalogException
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class VersionNegotiationFailedEx extends CatalogException {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
     private static final long serialVersionUID = 1L;
 
-    public VersionNegotiationFailedEx(String versions)
-	{
-		super(VERSION_NEGOTIATION_FAILED, versions, null);
-	}
+    public VersionNegotiationFailedEx(String versions) {
+        super(VERSION_NEGOTIATION_FAILED, versions, null);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public VersionNegotiationFailedEx(String versions, CatalogException prev)
-	{
-		super(VERSION_NEGOTIATION_FAILED, versions, null, prev);
-	}
+    public VersionNegotiationFailedEx(String versions, CatalogException prev) {
+        super(VERSION_NEGOTIATION_FAILED, versions, null, prev);
+    }
 }
 
 //=============================================================================

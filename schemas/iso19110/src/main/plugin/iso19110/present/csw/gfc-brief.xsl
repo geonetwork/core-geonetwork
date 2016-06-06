@@ -22,11 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/"
-  xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd"
-  xmlns:gfc="http://www.isotc211.org/2005/gfc" xmlns:ows="http://www.opengis.net/ows"
-  xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gfc="http://www.isotc211.org/2005/gfc"
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                version="2.0" exclude-result-prefixes="#all">
 
   <xsl:param name="displayInfo"/>
 

@@ -23,6 +23,13 @@
 
 package org.fao.geonet.services.log;
 
+import com.google.common.collect.Lists;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -31,12 +38,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.TransformException;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Lists;
 
 /**
  * @author Jesse on 4/9/2015.
@@ -53,7 +54,7 @@ public class ListLogFilesResponse {
     }
 
     public ListLogFilesResponse(List<LogFileResponse> logFileList) throws TransformException, FactoryException {
-    	this.logFile.addAll(logFileList);
+        this.logFile.addAll(logFileList);
 
     }
 
@@ -66,7 +67,7 @@ public class ListLogFilesResponse {
         @XmlAttribute
         @JsonProperty("name")
         private String name;
-        
+
         public LogFileResponse() {
         }
 

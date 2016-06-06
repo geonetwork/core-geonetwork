@@ -35,41 +35,37 @@ import java.util.List;
 
 //==============================================================================
 
-class ComplexContentEntry extends BaseHandler
-{
-	public String base;
-	public ArrayList<String> alAttribGroups = new ArrayList<String>();
-	public ArrayList<ElementEntry> alElements = new ArrayList<ElementEntry>();
-	public ArrayList<AttributeEntry> alAttribs  = new ArrayList<AttributeEntry>();
-	boolean restriction = false;
+class ComplexContentEntry extends BaseHandler {
+    public String base;
+    public ArrayList<String> alAttribGroups = new ArrayList<String>();
+    public ArrayList<ElementEntry> alElements = new ArrayList<ElementEntry>();
+    public ArrayList<AttributeEntry> alAttribs = new ArrayList<AttributeEntry>();
+    boolean restriction = false;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public ComplexContentEntry(Element el, Path file, String targetNS, String targetNSPrefix)
-	{
-		this(new ElementInfo(el, file, targetNS, targetNSPrefix));
-	}
+    public ComplexContentEntry(Element el, Path file, String targetNS, String targetNSPrefix) {
+        this(new ElementInfo(el, file, targetNS, targetNSPrefix));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public ComplexContentEntry(ElementInfo ei)
-	{
-		handleAttribs(ei);
-		handleChildren(ei);
-	}
+    public ComplexContentEntry(ElementInfo ei) {
+        handleAttribs(ei);
+        handleChildren(ei);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	private void handleAttribs(ElementInfo ei)
-	{
+    private void handleAttribs(ElementInfo ei) {
 //		@SuppressWarnings("unchecked")
 //        List<Attribute> attribs = ei.element.getAttributes();
 //
@@ -83,38 +79,32 @@ class ComplexContentEntry extends BaseHandler
 //                Logger.log();
 //            }
 //        }
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private void handleChildren(ElementInfo ei)
-	{
-		@SuppressWarnings("unchecked")
+    private void handleChildren(ElementInfo ei) {
+        @SuppressWarnings("unchecked")
         List<Element> children = ei.element.getChildren();
 
         for (Element elChild : children) {
             if (elChild.getName().equals("extension")) {
                 handleExtension(elChild, ei);
-            }
-
-            else if (elChild.getName().equals("restriction")) {
+            } else if (elChild.getName().equals("restriction")) {
                 handleRestriction(elChild, ei);
                 restriction = true;
-            }
-
-            else {
+            } else {
                 Logger.log();
             }
         }
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private void handleExtension(Element el, ElementInfo ei)
-	{
-		base = el.getAttributeValue("base");
+    private void handleExtension(Element el, ElementInfo ei) {
+        base = el.getAttributeValue("base");
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> extension = el.getChildren();
 
         for (Element elExt : extension) {
@@ -125,79 +115,61 @@ class ComplexContentEntry extends BaseHandler
                 for (Element elSeq : sequence) {
                     if (isChoiceOrElementOrGroupOrSequence(elSeq)) {
                         alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
-                    }
-
-                    else {
+                    } else {
                         Logger.log();
                     }
                 }
-            }
-            else if (elExt.getName().equals("group")) {
+            } else if (elExt.getName().equals("group")) {
                 alElements.add(new ElementEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
-            }
-            else if (elExt.getName().equals("choice")) {
+            } else if (elExt.getName().equals("choice")) {
                 alElements.add(new ElementEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
-            }
-            else if (elExt.getName().equals("attribute")) {
+            } else if (elExt.getName().equals("attribute")) {
                 alAttribs.add(new AttributeEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
-            }
-            else if (elExt.getName().equals("attributeGroup")) {
+            } else if (elExt.getName().equals("attributeGroup")) {
                 String attribGroup = elExt.getAttributeValue("ref");
 
                 if (attribGroup == null) {
                     throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of ComplexContent with extension base " + base);
                 }
                 alAttribGroups.add(attribGroup);
-            }
-
-
-            else {
+            } else {
                 Logger.log();
             }
         }
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private void handleRestriction(Element el, ElementInfo ei)
-	{
-		base = el.getAttributeValue("base");
+    private void handleRestriction(Element el, ElementInfo ei) {
+        base = el.getAttributeValue("base");
 
-		//--- handle children
+        //--- handle children
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> restriction = el.getChildren();
 
-        for (Element elRes: restriction) {
+        for (Element elRes : restriction) {
             String elName = elRes.getName();
 
             if (elRes.getName().equals("sequence")) {
                 handleSequence(elRes, alElements, ei);
-            }
-
-            else if (elRes.getName().equals("group")) {
+            } else if (elRes.getName().equals("group")) {
                 alElements.add(new ElementEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
-            }
-
-            else if (elName.equals("attribute")) {
+            } else if (elName.equals("attribute")) {
                 alAttribs.add(new AttributeEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
-            }
-
-            else if (elName.equals("attributeGroup")) {
+            } else if (elName.equals("attributeGroup")) {
                 String attribGroup = elRes.getAttributeValue("ref");
 
                 if (attribGroup == null) {
                     throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of ComplexContent with restriction base " + base);
                 }
                 alAttribGroups.add(attribGroup);
-            }
-
-            else {
+            } else {
                 Logger.log();
             }
 
         }
-	}
+    }
 }
 
 //==============================================================================

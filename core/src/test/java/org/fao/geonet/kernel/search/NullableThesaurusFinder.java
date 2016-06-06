@@ -23,7 +23,9 @@
 
 package org.fao.geonet.kernel.search;
 
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.Thesaurus;
+import org.fao.geonet.kernel.ThesaurusFinder;
+
 import java.util.Collections;
 import java.util.Map;
 
@@ -50,7 +52,7 @@ public class NullableThesaurusFinder implements ThesaurusFinder {
 
     @Override
     public Thesaurus getThesaurusByName(String thesaurusName) {
-        if(existsThesaurus(thesaurusName)) {
+        if (existsThesaurus(thesaurusName)) {
             return thesaurus;
         }
         return null;

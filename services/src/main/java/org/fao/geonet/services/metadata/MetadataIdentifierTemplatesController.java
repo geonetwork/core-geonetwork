@@ -24,17 +24,22 @@
 package org.fao.geonet.services.metadata;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.MetadataIdentifierTemplate;
 import org.fao.geonet.domain.responses.OkResponse;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.MetadataIdentifierTemplateRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.specification.MetadataIdentifierTemplateSpecs;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * Controller for Metadata identifier templates.
@@ -46,13 +51,13 @@ public class MetadataIdentifierTemplatesController {
     @RequestMapping(value = "/{lang}/metadataIdentifierTemplates", method = RequestMethod.POST)
     @ResponseBody
     public OkResponse updateUrnTemplate(
-            @RequestParam final Integer id,
-            @RequestParam final String name,
-            @RequestParam final String template) {
+        @RequestParam final Integer id,
+        @RequestParam final String name,
+        @RequestParam final String template) {
 
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository =
-                appContext.getBean(MetadataIdentifierTemplateRepository.class);
+            appContext.getBean(MetadataIdentifierTemplateRepository.class);
 
         if (id == null) {
             // Create a new metadata identifier template
@@ -77,12 +82,12 @@ public class MetadataIdentifierTemplatesController {
     }
 
     @RequestMapping(value = "/{lang}/metadataIdentifierTemplates",
-            method = RequestMethod.DELETE)
+        method = RequestMethod.DELETE)
     @ResponseBody
     public OkResponse deleteMetadataURNTemplate(@RequestParam final Integer id) {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository =
-                appContext.getBean(MetadataIdentifierTemplateRepository.class);
+            appContext.getBean(MetadataIdentifierTemplateRepository.class);
 
         metadataIdentifierTemplateRepository.delete(id);
 
@@ -90,11 +95,11 @@ public class MetadataIdentifierTemplatesController {
     }
 
     @RequestMapping(value = "/{lang}/metadataIdentifierTemplates",
-            method = RequestMethod.GET, produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        method = RequestMethod.GET, produces = {
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public List<MetadataIdentifierTemplate> retrieveMetadataURNTemplates(
-            @RequestParam(required = false, defaultValue = "false") final Boolean userDefinedOnly) {
+        @RequestParam(required = false, defaultValue = "false") final Boolean userDefinedOnly) {
 
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository = appContext.getBean(MetadataIdentifierTemplateRepository.class);

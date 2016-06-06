@@ -25,7 +25,11 @@ package org.fao.geonet.repository.specification;
 
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserGroupRepositoryTest;
+import org.fao.geonet.repository.UserRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
@@ -34,17 +38,19 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.fao.geonet.repository.specification.UserGroupSpecs.*;
-import static org.junit.Assert.*;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasGroupId;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.isReservedGroup;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the UserGroupSpecs.
  * <p/>
- * User: Jesse
- * Date: 9/10/13
- * Time: 2:37 PM
+ * User: Jesse Date: 9/10/13 Time: 2:37 PM
  */
 public class UserGroupSpecsTest extends AbstractSpringDataTest {
 

@@ -23,10 +23,6 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.jdom.Element;
@@ -34,49 +30,54 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.List;
 
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
 //=============================================================================
 
-/** Returns all categories.
-  */
+/**
+ * Returns all categories.
+ */
 
-public class PrepareBatchUpdateCategories implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class PrepareBatchUpdateCategories implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Element isOwner = new Element("owner").setText("true");
-		
-		//--- retrieve categories
-		Element elCateg = context.getBean(MetadataCategoryRepository.class).findAllAsXml();
-		@SuppressWarnings("unchecked")
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        Element isOwner = new Element("owner").setText("true");
+
+        //--- retrieve categories
+        Element elCateg = context.getBean(MetadataCategoryRepository.class).findAllAsXml();
+        @SuppressWarnings("unchecked")
         List<Element> list = elCateg.getChildren();
 
-		for (Element element : list) {
-			element.setName(Geonet.Elem.CATEGORY);
-		}
+        for (Element element : list) {
+            element.setName(Geonet.Elem.CATEGORY);
+        }
 
-		//-----------------------------------------------------------------------
-		//--- put all together
+        //-----------------------------------------------------------------------
+        //--- put all together
 
-		Element elRes = new Element(Jeeves.Elem.RESPONSE)
-										.addContent(elCateg)
-										.addContent(isOwner);
+        Element elRes = new Element(Jeeves.Elem.RESPONSE)
+            .addContent(elCateg)
+            .addContent(isOwner);
 
-		return elRes;
-	}
+        return elRes;
+    }
 }
 
 //=============================================================================

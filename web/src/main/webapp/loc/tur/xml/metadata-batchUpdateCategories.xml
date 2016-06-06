@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Metaveri kayıtları bulunamadı</notfound>
+  <notowner>Metadata veri kayıtlarına ait kategoriler kayıt sahibi olmadığınız için gerçekleşmedi
+  </notowner>
+  <updated>Metaveri kayıtlarına ait kategoriler güncellendi</updated>
+  <resultstitle>Kategori güncellemesi gerçekleşti</resultstitle>
+</strings>

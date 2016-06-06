@@ -28,63 +28,60 @@ import org.fao.oaipmh.responses.Header;
 
 //=============================================================================
 
-public class RecordInfo
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class RecordInfo {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public RecordInfo(Header h, String mdPrefix)
-	{
-		id         = h.getIdentifier();
-		changeDate = h.getDateStamp();
-		prefix     = mdPrefix;
-	}
+    public String id;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    public ISODate changeDate;
 
-	public int hashCode() { return id.hashCode(); }
+    //---------------------------------------------------------------------------
+    public String prefix;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public boolean isMoreRecentThan(String localChangeDate)
-	{
-		ISODate localDate = new ISODate(localChangeDate);
+    public RecordInfo(Header h, String mdPrefix) {
+        id = h.getIdentifier();
+        changeDate = h.getDateStamp();
+        prefix = mdPrefix;
+    }
 
-		//--- accept if remote date is greater than local date
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-		return (changeDate.timeDifferenceInSeconds(localDate) > 0);
-	}
+    public int hashCode() {
+        return id.hashCode();
+    }
 
-	//---------------------------------------------------------------------------
+    public boolean isMoreRecentThan(String localChangeDate) {
+        ISODate localDate = new ISODate(localChangeDate);
 
-	public boolean equals(Object o)
-	{
-		if (o instanceof RecordInfo)
-		{
-			RecordInfo ri = (RecordInfo) o;
+        //--- accept if remote date is greater than local date
 
-			return id.equals(ri.id);
-		}
+        return (changeDate.timeDifferenceInSeconds(localDate) > 0);
+    }
 
-		return false;
-	}
+    public boolean equals(Object o) {
+        if (o instanceof RecordInfo) {
+            RecordInfo ri = (RecordInfo) o;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+            return id.equals(ri.id);
+        }
 
-	public String  id;
-	public ISODate changeDate;
-	public String  prefix;
+        return false;
+    }
 
 }
 

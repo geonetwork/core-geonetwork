@@ -76,35 +76,36 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+
 import javax.annotation.Nonnull;
 
 public class Thesaurus {
-	private static final String DEFAULT_THESAURUS_NAMESPACE = "http://custom.shared.obj.ch/concept#";
+    private static final String DEFAULT_THESAURUS_NAMESPACE = "http://custom.shared.obj.ch/concept#";
 
-	private String fname;
+    private String fname;
 
-	private String type;
+    private String type;
 
-	private String dname;
+    private String dname;
 
-	private Path thesaurusFile;
+    private Path thesaurusFile;
 
-	private LocalRepository repository;
+    private LocalRepository repository;
 
     private String title;
 
     private String date;
-    
+
     private String defaultNamespace;
-    
+
     private String downloadUrl;
-    
+
     private String keywordUrl;
 
     private IsoLanguagesMapper isoLanguageMapper;
 
 /*    @SuppressWarnings("unused")
-	private String version;
+    private String version;
 
 	@SuppressWarnings("unused")
 	private String name;
@@ -121,72 +122,87 @@ public class Thesaurus {
 	@SuppressWarnings("unused")
 	private String authority;
 */
+
     /**
      * Available for subclasses.
      */
     protected Thesaurus() {
     }
-	/**
-	 * @param fname
-	 *            file name
-	 * @param type
-	 * @param dname category/domain name of thesaurus
-	 */
-	public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String type, String dname, Path thesaurusFile, String siteUrl) {
-	    this(isoLanguageMapper, fname, null, null, type, dname, thesaurusFile, siteUrl, false);
-	}
+
+    /**
+     * @param fname file name
+     * @param dname category/domain name of thesaurus
+     */
+    public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String type, String dname, Path thesaurusFile, String siteUrl) {
+        this(isoLanguageMapper, fname, null, null, type, dname, thesaurusFile, siteUrl, false);
+    }
+
     public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String tname, String tnamespace, String type, String dname, Path thesaurusFile, String siteUrl, boolean ignoreMissingError) {
-		super();
-		this.isoLanguageMapper = isoLanguageMapper;
-		this.fname = fname;
-		this.type = type;
-		this.dname = dname;
-		this.thesaurusFile = thesaurusFile;
+        super();
+        this.isoLanguageMapper = isoLanguageMapper;
+        this.fname = fname;
+        this.type = type;
+        this.dname = dname;
+        this.thesaurusFile = thesaurusFile;
         if (!siteUrl.endsWith("/")) {
             siteUrl += '/';
         }
-		this.downloadUrl = buildDownloadUrl(fname, type, dname, siteUrl);
-		this.keywordUrl = buildKeywordUrl(fname, type, dname, siteUrl);
-		
-		this.defaultNamespace = (tnamespace == null ? DEFAULT_THESAURUS_NAMESPACE : tnamespace);
-		
-		if (tname != null) {
-		    this.title = tname;
-		} else {
-		    retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, ignoreMissingError);
-		}
-	}
+        this.downloadUrl = buildDownloadUrl(fname, type, dname, siteUrl);
+        this.keywordUrl = buildKeywordUrl(fname, type, dname, siteUrl);
+
+        this.defaultNamespace = (tnamespace == null ? DEFAULT_THESAURUS_NAMESPACE : tnamespace);
+
+        if (tname != null) {
+            this.title = tname;
+        } else {
+            retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, ignoreMissingError);
+        }
+    }
 
     /**
-	 * 
-	 * @return Thesaurus identifier
-	 */
-	public String getKey() {
-		return buildThesaurusKey(fname, type, dname);
-	}
-	/**
-	 * Get the Domain/category name of the thesaurus 
-	 * @return
-	 */
-	public String getDname() {
-		return dname;
-	}
+     *
+     * @param fname
+     * @param type
+     * @param dname
+     * @return
+     */
+    public static String buildThesaurusKey(String fname, String type, String dname) {
+        String name = fname;
+        if (name.endsWith(".rdf")) {
+            name = name.substring(0, fname.indexOf(".rdf"));
+        }
+        return type + "." + dname + "." + name;
+    }
 
-	public String getFname() {
-		return fname;
-	}
+    /**
+     * @return Thesaurus identifier
+     */
+    public String getKey() {
+        return buildThesaurusKey(fname, type, dname);
+    }
 
-	public Path getFile() {
-		return thesaurusFile;
-	}
+    /**
+     * Get the Domain/category name of the thesaurus
+     */
+    public String getDname() {
+        return dname;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getFname() {
+        return fname;
+    }
+
+    public Path getFile() {
+        return thesaurusFile;
+    }
+
+    public String getType() {
+        return type;
+    }
 
     public String getTitle() {
-		return title;
-	}
+        return title;
+    }
 
     public String getDate() {
         return date;
@@ -209,61 +225,45 @@ public class Thesaurus {
     }
 
     public String getDownloadUrl() {
-		return downloadUrl;
-	}
+        return downloadUrl;
+    }
 
-  public String getKeywordUrl() {
-		return keywordUrl;
-	}
-  
+    public String getKeywordUrl() {
+        return keywordUrl;
+    }
 
-  public void retrieveThesaurusTitle() {
-    retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, false);
-  }
+    public void retrieveThesaurusTitle() {
+        retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, false);
+    }
 
-
-	/**
-	 * 
-	 * @param fname
-	 * @param type
-	 * @param dname
-	 * @return
-	 */
-	public static String buildThesaurusKey(String fname, String type, String dname) {
-	    String name = fname;
-	    if(name.endsWith(".rdf")) {
-	        name = name.substring(0, fname.indexOf(".rdf"));
-	    }
-		return type + "." + dname + "." + name;
-	}
-
-	protected String buildDownloadUrl(String fname, String type, String dname, String siteUrl) {
-		if (type.equals(Geonet.CodeList.REGISTER)) {
-			return siteUrl + "?uuid="+fname.substring(0, fname.indexOf(".rdf"));
-		} else {
-			return siteUrl + "thesaurus.download?ref="+Thesaurus.buildThesaurusKey(fname, type, dname);
-		}
-	}
+    protected String buildDownloadUrl(String fname, String type, String dname, String siteUrl) {
+        if (type.equals(Geonet.CodeList.REGISTER)) {
+            return siteUrl + "?uuid=" + fname.substring(0, fname.indexOf(".rdf"));
+        } else {
+            return siteUrl + "thesaurus.download?ref=" + Thesaurus.buildThesaurusKey(fname, type, dname);
+        }
+    }
 
     protected String buildKeywordUrl(String fname, String type, String dname, String siteUrl) {
-		return siteUrl + "xml.keyword.get?thesaurus="+Thesaurus.buildThesaurusKey(fname, type, dname) + "&amp;id=";
-		// needs to have term/concept id tacked onto the end
-	}
+        return siteUrl + "xml.keyword.get?thesaurus=" + Thesaurus.buildThesaurusKey(fname, type, dname) + "&amp;id=";
+        // needs to have term/concept id tacked onto the end
+    }
 
-	public synchronized LocalRepository getRepository() {
-		return repository;
-	}
+    public synchronized LocalRepository getRepository() {
+        return repository;
+    }
 
-	public synchronized Thesaurus setRepository(LocalRepository repository) {
-		this.repository = repository;
-		return this;
-	}
-	public synchronized Thesaurus initRepository() throws ConfigurationException, IOException {
-	    RepositoryConfig repConfig = new RepositoryConfig(getKey());
+    public synchronized Thesaurus setRepository(LocalRepository repository) {
+        this.repository = repository;
+        return this;
+    }
+
+    public synchronized Thesaurus initRepository() throws ConfigurationException, IOException {
+        RepositoryConfig repConfig = new RepositoryConfig(getKey());
 
         SailConfig syncSail = new SailConfig("org.openrdf.sesame.sailimpl.sync.SyncRdfSchemaRepository");
         SailConfig memSail = new org.openrdf.sesame.sailimpl.memory.RdfSchemaRepositoryConfig(getFile().toString(),
-                RDFFormat.RDFXML);
+            RDFFormat.RDFXML);
         repConfig.addSail(syncSail);
         repConfig.addSail(memSail);
         repConfig.setWorldReadable(true);
@@ -271,48 +271,41 @@ public class Thesaurus {
 
         LocalRepository thesaurusRepository = Sesame.getService().createRepository(repConfig);
         setRepository(thesaurusRepository);
-	    return this;
-	}
+        return this;
+    }
 
     /**
      * TODO javadoc.
-     *
-     * @param query
-     * @return
-     * @throws IOException
-     * @throws MalformedQueryException
-     * @throws QueryEvaluationException
-     * @throws AccessDeniedException
      */
-	public synchronized QueryResultsTable performRequest(String query) throws IOException, MalformedQueryException,
-            QueryEvaluationException, AccessDeniedException {
-        if(Log.isDebugEnabled(Geonet.THESAURUS))
+    public synchronized QueryResultsTable performRequest(String query) throws IOException, MalformedQueryException,
+        QueryEvaluationException, AccessDeniedException {
+        if (Log.isDebugEnabled(Geonet.THESAURUS))
             Log.debug(Geonet.THESAURUS, "Query : " + query);
 
         //printResultsTable(resultsTable);
-		return repository.performTableQuery(QueryLanguage.SERQL, query);
-	}
+        return repository.performTableQuery(QueryLanguage.SERQL, query);
+    }
 
-	public boolean hasConceptScheme(String uri) {
+    public boolean hasConceptScheme(String uri) {
 
-		String query = "SELECT conceptScheme"
-		             + " FROM {conceptScheme} rdf:type {skos:ConceptScheme}"
-		             + " WHERE conceptScheme = <" + uri + ">"
-		             + " USING NAMESPACE skos = <http://www.w3.org/2004/02/skos/core#>"; 
+        String query = "SELECT conceptScheme"
+            + " FROM {conceptScheme} rdf:type {skos:ConceptScheme}"
+            + " WHERE conceptScheme = <" + uri + ">"
+            + " USING NAMESPACE skos = <http://www.w3.org/2004/02/skos/core#>";
 
-		try {
-			return performRequest(query).getRowCount() > 0;
-		} catch (Exception e) {
-			Log.error(Geonet.THESAURUS_MAN, "Error retrieving concept scheme for " + thesaurusFile + ". Error is: " + e.getMessage());
-			throw new RuntimeException(e);
-		}
+        try {
+            return performRequest(query).getRowCount() > 0;
+        } catch (Exception e) {
+            Log.error(Geonet.THESAURUS_MAN, "Error retrieving concept scheme for " + thesaurusFile + ". Error is: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     public List<String> getConceptSchemes() {
 
         String query = "SELECT conceptScheme"
-                + " FROM {conceptScheme} rdf:type {skos:ConceptScheme}"
-                + " USING NAMESPACE skos = <http://www.w3.org/2004/02/skos/core#>";
+            + " FROM {conceptScheme} rdf:type {skos:ConceptScheme}"
+            + " USING NAMESPACE skos = <http://www.w3.org/2004/02/skos/core#>";
 
         try {
             List<String> ret = new ArrayList<>();
@@ -328,38 +321,34 @@ public class Thesaurus {
         }
     }
 
-	/**
-	 * 
-	 * @param resultsTable
-	 */
-    @SuppressWarnings("unused")    
-	private void printResultsTable(QueryResultsTable resultsTable) {
-		int rowCount = resultsTable.getRowCount();
-		int columnCount = resultsTable.getColumnCount();
+    /**
+     *
+     * @param resultsTable
+     */
+    @SuppressWarnings("unused")
+    private void printResultsTable(QueryResultsTable resultsTable) {
+        int rowCount = resultsTable.getRowCount();
+        int columnCount = resultsTable.getColumnCount();
 
-		for (int row = 0; row < rowCount; row++) {
-			for (int column = 0; column < columnCount; column++) {
-				Value value = resultsTable.getValue(row, column);
+        for (int row = 0; row < rowCount; row++) {
+            for (int column = 0; column < columnCount; column++) {
+                Value value = resultsTable.getValue(row, column);
 
-				if (value != null) {
-					System.out.print(value.toString());
-				} else {
-					System.out.print("null");
-				}
-				System.out.print("\t");
-			}
-		}
-	}
+                if (value != null) {
+                    System.out.print(value.toString());
+                } else {
+                    System.out.print("null");
+                }
+                System.out.print("\t");
+            }
+        }
+    }
 
-	/**
-	 * Add a keyword to the Thesaurus.
-	 * 
-	 * @param keyword The keyword to add
-	 * 
-	 * @throws IOException
-	 * @throws AccessDeniedException
-	 * @throws GraphException
-	 */
+    /**
+     * Add a keyword to the Thesaurus.
+     *
+     * @param keyword The keyword to add
+     */
     public synchronized URI addElement(KeywordBean keyword) throws IOException, AccessDeniedException, GraphException {
         Graph myGraph = new org.openrdf.model.impl.GraphImpl();
 
@@ -370,30 +359,30 @@ public class Thesaurus {
         String namespaceGml = "http://www.opengis.net/gml#";
         String namespace = keyword.getNameSpaceCode();
 
-        if(namespace.equals("#")) {
-        	namespace = this.defaultNamespace;
+        if (namespace.equals("#")) {
+            namespace = this.defaultNamespace;
         }
-        
+
         // Create subject
         URI mySubject = myFactory.createURI(keyword.getUriCode());
 
         URI skosClass = myFactory.createURI(namespaceSkos, "Concept");
         URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
         URI predicatePrefLabel = myFactory
-                .createURI(namespaceSkos, "prefLabel");
+            .createURI(namespaceSkos, "prefLabel");
         URI predicateScopeNote = myFactory
-                .createURI(namespaceSkos, "scopeNote");
+            .createURI(namespaceSkos, "scopeNote");
 
         URI predicateBoundedBy = myFactory.createURI(namespaceGml, "BoundedBy");
         URI predicateEnvelope = myFactory.createURI(namespaceGml, "Envelope");
         URI predicateSrsName = myFactory.createURI(namespaceGml, "srsName");
         URI srsNameURI = myFactory
-                .createURI("http://www.opengis.net/gml/srs/epsg.xml#epsg:4326");
+            .createURI("http://www.opengis.net/gml/srs/epsg.xml#epsg:4326");
         BNode gmlNode = myFactory.createBNode();
         URI predicateLowerCorner = myFactory.createURI(namespaceGml,
-                "lowerCorner");
+            "lowerCorner");
         URI predicateUpperCorner = myFactory.createURI(namespaceGml,
-                "upperCorner");
+            "upperCorner");
 
         Literal lowerCorner = myFactory.createLiteral(keyword.getCoordWest() + " " + keyword.getCoordSouth());
         Literal upperCorner = myFactory.createLiteral(keyword.getCoordEast() + " " + keyword.getCoordNorth());
@@ -403,15 +392,15 @@ public class Thesaurus {
         for (Entry<String, String> entry : values) {
             String language = toiso639_1_Lang(entry.getKey());
             Value valueObj = myFactory.createLiteral(entry.getValue(), language);
-            myGraph.add(mySubject, predicatePrefLabel, valueObj );
-            
+            myGraph.add(mySubject, predicatePrefLabel, valueObj);
+
         }
         Set<Entry<String, String>> definitions = keyword.getDefinitions().entrySet();
         for (Entry<String, String> entry : definitions) {
             String language = toiso639_1_Lang(entry.getKey());
             Value definitionObj = myFactory.createLiteral(entry.getValue(), language);
-            myGraph.add(mySubject, predicateScopeNote, definitionObj );
-            
+            myGraph.add(mySubject, predicateScopeNote, definitionObj);
+
         }
         myGraph.add(mySubject, predicateBoundedBy, gmlNode);
 
@@ -423,18 +412,12 @@ public class Thesaurus {
         repository.addGraph(myGraph);
         return mySubject;
     }
-	
+
     /**
      * Remove keyword from thesaurus.
-     * 
-     * @param keyword
-     * @throws MalformedQueryException
-     * @throws QueryEvaluationException
-     * @throws IOException
-     * @throws AccessDeniedException
      */
     public synchronized Thesaurus removeElement(KeywordBean keyword) throws MalformedQueryException,
-            QueryEvaluationException, IOException, AccessDeniedException {
+        QueryEvaluationException, IOException, AccessDeniedException {
         String namespace = keyword.getNameSpaceCode();
         String code = keyword.getRelativeCode();
 
@@ -443,35 +426,29 @@ public class Thesaurus {
 
     /**
      * Remove keyword from thesaurus.
-     * 
-     * @param namespace
-     * @param code
-     * @throws AccessDeniedException
      */
     public synchronized Thesaurus removeElement(String namespace, String code) throws AccessDeniedException {
         Graph myGraph = repository.getGraph();
         ValueFactory myFactory = myGraph.getValueFactory();
         URI subject = myFactory.createURI(namespace, code);
-        
+
         return removeElement(myGraph, subject);
     }
+
     /**
      * Remove keyword from thesaurus.
-     * 
-     * @param uri
-     * @throws AccessDeniedException
      */
     public synchronized Thesaurus removeElement(String uri) throws AccessDeniedException {
         Graph myGraph = repository.getGraph();
         ValueFactory myFactory = myGraph.getValueFactory();
         URI subject = myFactory.createURI(uri);
-        
+
         return removeElement(myGraph, subject);
     }
-    
-	private Thesaurus removeElement(Graph myGraph, URI subject)
-			throws AccessDeniedException {
-		StatementIterator iter = myGraph.getStatements(subject, null, null);
+
+    private Thesaurus removeElement(Graph myGraph, URI subject)
+        throws AccessDeniedException {
+        StatementIterator iter = myGraph.getStatements(subject, null, null);
         while (iter.hasNext()) {
             AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
             if (st.get().getObject() instanceof BNode) {
@@ -480,45 +457,41 @@ public class Thesaurus {
             }
         }
         int removedItems = myGraph.remove(subject, null, null);
-        if(Log.isDebugEnabled(Geonet.THESAURUS)) {
-        	String msg = "Removed "+removedItems+" elements from thesaurus "+this.title+" with uri: "+subject;
-        	Log.debug(Geonet.THESAURUS, msg);
+        if (Log.isDebugEnabled(Geonet.THESAURUS)) {
+            String msg = "Removed " + removedItems + " elements from thesaurus " + this.title + " with uri: " + subject;
+            Log.debug(Geonet.THESAURUS, msg);
         }
         return this;
-	}
+    }
 
     private String toiso639_1_Lang(String lang) {
-         String defaultCode = getIsoLanguageMapper().iso639_2_to_iso639_1(
-                 Geonet.DEFAULT_LANGUAGE,
-                 Geonet.DEFAULT_LANGUAGE.substring(0, 2));
+        String defaultCode = getIsoLanguageMapper().iso639_2_to_iso639_1(
+            Geonet.DEFAULT_LANGUAGE,
+            Geonet.DEFAULT_LANGUAGE.substring(0, 2));
         return getIsoLanguageMapper().iso639_2_to_iso639_1(lang, defaultCode);
-     }
+    }
 
-	/**
-	 * Update the keyword.  If replaceLanguages is true all of the old data will be removed and the new data in the keyword will replace it.
-	 * 
-	 * @param keyword the bean with the updated information
-	 * @param replace If true all of the old data will be removed and the new data in the keyword will replace it.  If false only the data in the
-	 * keyword will be updated.  This means only notes and labels that are in the keyword will be updated (for those languages) and the coordinates
-	 * will only be updated if they are non-empty strings.
-	 * @return 
-	 * 
-	 * @throws AccessDeniedException
-	 * @throws IOException
-	 * @throws MalformedQueryException
-	 * @throws QueryEvaluationException
-	 * @throws GraphException
-	 */
-	public synchronized URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException, IOException,
-	        MalformedQueryException, QueryEvaluationException, GraphException {
-	    
+    /**
+     * Update the keyword.  If replaceLanguages is true all of the old data will be removed and the
+     * new data in the keyword will replace it.
+     *
+     * @param keyword the bean with the updated information
+     * @param replace If true all of the old data will be removed and the new data in the keyword
+     *                will replace it.  If false only the data in the keyword will be updated.  This
+     *                means only notes and labels that are in the keyword will be updated (for those
+     *                languages) and the coordinates will only be updated if they are non-empty
+     *                strings.
+     */
+    public synchronized URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException, IOException,
+        MalformedQueryException, QueryEvaluationException, GraphException {
+
         // Get thesaurus graph
-        Graph myGraph = repository.getGraph();      
-        
-        // Set namespace skos and predicates 
+        Graph myGraph = repository.getGraph();
+
+        // Set namespace skos and predicates
         ValueFactory myFactory = myGraph.getValueFactory();
         String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
-        URI predicatePrefLabel = myFactory .createURI(namespaceSkos, "prefLabel");
+        URI predicatePrefLabel = myFactory.createURI(namespaceSkos, "prefLabel");
         URI predicateScopeNote = myFactory.createURI(namespaceSkos, "scopeNote");
 
         // Get subject (URI)
@@ -527,7 +500,7 @@ public class Thesaurus {
         // Remove old labels
         StatementIterator iter = myGraph.getStatements(subject, predicatePrefLabel, null);
         removeMatchingLiterals(replace, myGraph, iter, keyword.getValues().keySet());
-        
+
         // remove old scopeNote
         iter = myGraph.getStatements(subject, predicateScopeNote, null);
         removeMatchingLiterals(replace, myGraph, iter, keyword.getDefinitions().keySet());
@@ -537,66 +510,66 @@ public class Thesaurus {
         for (Entry<String, String> entry : values) {
             String language = toiso639_1_Lang(entry.getKey());
             Value valueObj = myFactory.createLiteral(entry.getValue(), language);
-            myGraph.add(subject, predicatePrefLabel, valueObj );
-            
+            myGraph.add(subject, predicatePrefLabel, valueObj);
+
         }
         // add updated Definitions/Notes
         Set<Entry<String, String>> definitions = keyword.getDefinitions().entrySet();
         for (Entry<String, String> entry : definitions) {
             String language = toiso639_1_Lang(entry.getKey());
             Value definitionObj = myFactory.createLiteral(entry.getValue(), language);
-            myGraph.add(subject, predicateScopeNote, definitionObj );
-            
+            myGraph.add(subject, predicateScopeNote, definitionObj);
+
         }
 
-	    // update bbox
-        if(replace || !(keyword.getCoordEast() + keyword.getCoordNorth() + keyword.getCoordWest() + keyword.getCoordSouth()).trim().isEmpty()) {
-    	    String namespaceGml = "http://www.opengis.net/gml#";
-    	    URI predicateBoundedBy = myFactory.createURI(namespaceGml, "BoundedBy");
-    	    URI predicateLowerCorner = myFactory.createURI(namespaceGml, "lowerCorner");
-    	    URI predicateUpperCorner = myFactory.createURI(namespaceGml, "upperCorner");
-    	    
-    	    BNode subjectGml = null;
-    	    iter = myGraph.getStatements(subject, predicateBoundedBy, null);
-    	    while (iter.hasNext()) {
-    	        AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
-    	        if (st.get().getObject() instanceof BNode) {
-    	            subjectGml = (BNode) st.get().getObject();
-    	        }
-    	    }
-    	    if (subjectGml != null) {
-    	        // lowerCorner
-    	        iter = myGraph.getStatements(subjectGml, predicateLowerCorner, null);
-    	        while (true) {
-    	            if (!(iter.hasNext())) {
-    	                break;
-    	            }
-    	            AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
-    	            myGraph.remove(st.get());
-    	            break;
-    	        }
-    	        // upperCorner
-    	        iter = myGraph.getStatements(subjectGml, predicateUpperCorner, null);
-    	        while (true) {
-    	            if (!(iter.hasNext())) {
-    	                break;
-    	            }
-    	            AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
-    	            myGraph.remove(st.get());
-    	            break;
-    	        }
-    	        // create the new statements
-    	        Literal lowerCorner = myFactory.createLiteral(keyword.getCoordWest() + " " + keyword.getCoordSouth());
-    	        Literal upperCorner = myFactory.createLiteral(keyword.getCoordEast() + " " + keyword.getCoordNorth());
-    	        
-    	        // Add the new statements
-    	        myGraph.add(subjectGml, predicateLowerCorner, lowerCorner);
-    	        myGraph.add(subjectGml, predicateUpperCorner, upperCorner);
-	        }
-	    }
-        
+        // update bbox
+        if (replace || !(keyword.getCoordEast() + keyword.getCoordNorth() + keyword.getCoordWest() + keyword.getCoordSouth()).trim().isEmpty()) {
+            String namespaceGml = "http://www.opengis.net/gml#";
+            URI predicateBoundedBy = myFactory.createURI(namespaceGml, "BoundedBy");
+            URI predicateLowerCorner = myFactory.createURI(namespaceGml, "lowerCorner");
+            URI predicateUpperCorner = myFactory.createURI(namespaceGml, "upperCorner");
+
+            BNode subjectGml = null;
+            iter = myGraph.getStatements(subject, predicateBoundedBy, null);
+            while (iter.hasNext()) {
+                AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+                if (st.get().getObject() instanceof BNode) {
+                    subjectGml = (BNode) st.get().getObject();
+                }
+            }
+            if (subjectGml != null) {
+                // lowerCorner
+                iter = myGraph.getStatements(subjectGml, predicateLowerCorner, null);
+                while (true) {
+                    if (!(iter.hasNext())) {
+                        break;
+                    }
+                    AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+                    myGraph.remove(st.get());
+                    break;
+                }
+                // upperCorner
+                iter = myGraph.getStatements(subjectGml, predicateUpperCorner, null);
+                while (true) {
+                    if (!(iter.hasNext())) {
+                        break;
+                    }
+                    AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+                    myGraph.remove(st.get());
+                    break;
+                }
+                // create the new statements
+                Literal lowerCorner = myFactory.createLiteral(keyword.getCoordWest() + " " + keyword.getCoordSouth());
+                Literal upperCorner = myFactory.createLiteral(keyword.getCoordEast() + " " + keyword.getCoordNorth());
+
+                // Add the new statements
+                myGraph.add(subjectGml, predicateLowerCorner, lowerCorner);
+                myGraph.add(subjectGml, predicateUpperCorner, upperCorner);
+            }
+        }
+
         return subject;
-	}
+    }
 
 
     private void removeMatchingLiterals(boolean replace, Graph myGraph, StatementIterator iter, Set<String> valueLanguages) {
@@ -613,7 +586,7 @@ public class Thesaurus {
                     }
                 }
             }
-            
+
             for (Statement statement : toRemove) {
                 myGraph.remove(statement);
             }
@@ -625,125 +598,106 @@ public class Thesaurus {
     /**
      * Check if code is already used by a thesaurus concept.
      *
-     * @param namespace  Use null, to check a concept identifier not based on thesaurus namespace
-     * @param code  The concept identifier
-     * @return
-     * @throws AccessDeniedException
+     * @param namespace Use null, to check a concept identifier not based on thesaurus namespace
+     * @param code      The concept identifier
      */
-	public synchronized boolean isFreeCode(String namespace, String code) throws AccessDeniedException {
-		boolean res = true;				
-		Graph myGraph = repository.getGraph();
-		ValueFactory myFactory = myGraph.getValueFactory();
-		URI obj = namespace == null ? myFactory.createURI(code) : myFactory.createURI(namespace,code);
-		Collection<?> statementsCollection = myGraph.getStatementCollection(obj,null,null);
-		if (statementsCollection!=null && statementsCollection.size()>0){
-			res = false;
-		}
-		statementsCollection = myGraph.getStatementCollection(null,null,obj);
-		if (statementsCollection!=null && statementsCollection.size()>0){
-			res = false;
-		}				
-		return res;
-	}
+    public synchronized boolean isFreeCode(String namespace, String code) throws AccessDeniedException {
+        boolean res = true;
+        Graph myGraph = repository.getGraph();
+        ValueFactory myFactory = myGraph.getValueFactory();
+        URI obj = namespace == null ? myFactory.createURI(code) : myFactory.createURI(namespace, code);
+        Collection<?> statementsCollection = myGraph.getStatementCollection(obj, null, null);
+        if (statementsCollection != null && statementsCollection.size() > 0) {
+            res = false;
+        }
+        statementsCollection = myGraph.getStatementCollection(null, null, obj);
+        if (statementsCollection != null && statementsCollection.size() > 0) {
+            res = false;
+        }
+        return res;
+    }
+
     public Thesaurus updateCode(KeywordBean bean, String newcode) throws AccessDeniedException, IOException {
         return updateCode(bean.getNameSpaceCode(), bean.getRelativeCode(), newcode);
     }
-    
+
     /**
-     * Update concept code by creating URI from namespace and code.
-     * This is recommended when thesaurus concept identifiers contains #
-     * eg. http://vocab.nerc.ac.uk/collection/P07/current#CFV13N44
-     * 
-     * @param namespace
-     * @param oldcode
-     * @param newcode
-     * @return
-     * @throws AccessDeniedException
-     * @throws IOException
+     * Update concept code by creating URI from namespace and code. This is recommended when
+     * thesaurus concept identifiers contains # eg. http://vocab.nerc.ac.uk/collection/P07/current#CFV13N44
      */
     public synchronized Thesaurus updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException, IOException {
-    	Graph myGraph = repository.getGraph();
-		
-		ValueFactory myFactory = myGraph.getValueFactory();
+        Graph myGraph = repository.getGraph();
 
-		URI oldobj = myFactory.createURI(namespace,oldcode);
-		URI newobj = myFactory.createURI(namespace,newcode);
-		
-		return updateElementCode(myGraph, oldobj, newobj);
-		
+        ValueFactory myFactory = myGraph.getValueFactory();
+
+        URI oldobj = myFactory.createURI(namespace, oldcode);
+        URI newobj = myFactory.createURI(namespace, newcode);
+
+        return updateElementCode(myGraph, oldobj, newobj);
+
     }
-    /**
-     * Update concept code using its URI.
-     * This is recommended when concept identifier may not be based on 
-     * thesaurus namespace and does not contains #.
-     * 
-     * eg. http://vocab.nerc.ac.uk/collection/P07/current/CFV13N44/
-     *
-     * @param olduri
-     * @param newuri
-     * @throws AccessDeniedException
-     * @throws IOException
-     */
-	public synchronized Thesaurus updateCodeByURI(String olduri, String newuri) throws AccessDeniedException, IOException {
-		Graph myGraph = repository.getGraph();
-		
-		ValueFactory myFactory = myGraph.getValueFactory();
-		
-		URI oldobj = myFactory.createURI(olduri);
-		URI newobj = myFactory.createURI(newuri);
-		
-		return updateElementCode(myGraph, oldobj, newobj);
-	}
-	
-	private Thesaurus updateElementCode(Graph myGraph, URI oldobj, URI newobj) {
-		StatementIterator iterStSubject = myGraph.getStatements(oldobj,null,null);
-		while(iterStSubject.hasNext()){
-			AtomicReference<Statement> st = new AtomicReference<Statement>(iterStSubject.next());
-			myGraph.add(newobj, st.get().getPredicate(), st.get().getObject());
-		}		
-		
-		StatementIterator iterStObject = myGraph.getStatements(null,null,oldobj);
-		while(iterStObject.hasNext()){
-			Statement st = iterStObject.next();
-			myGraph.add(st.getSubject(), st.getPredicate(), newobj);
-		}
-		myGraph.remove(oldobj,null,null);
-		myGraph.remove(null,null,oldobj);
-		return this;
-	}
 
-	
+    /**
+     * Update concept code using its URI. This is recommended when concept identifier may not be
+     * based on thesaurus namespace and does not contains #.
+     *
+     * eg. http://vocab.nerc.ac.uk/collection/P07/current/CFV13N44/
+     */
+    public synchronized Thesaurus updateCodeByURI(String olduri, String newuri) throws AccessDeniedException, IOException {
+        Graph myGraph = repository.getGraph();
+
+        ValueFactory myFactory = myGraph.getValueFactory();
+
+        URI oldobj = myFactory.createURI(olduri);
+        URI newobj = myFactory.createURI(newuri);
+
+        return updateElementCode(myGraph, oldobj, newobj);
+    }
+
+    private Thesaurus updateElementCode(Graph myGraph, URI oldobj, URI newobj) {
+        StatementIterator iterStSubject = myGraph.getStatements(oldobj, null, null);
+        while (iterStSubject.hasNext()) {
+            AtomicReference<Statement> st = new AtomicReference<Statement>(iterStSubject.next());
+            myGraph.add(newobj, st.get().getPredicate(), st.get().getObject());
+        }
+
+        StatementIterator iterStObject = myGraph.getStatements(null, null, oldobj);
+        while (iterStObject.hasNext()) {
+            Statement st = iterStObject.next();
+            myGraph.add(st.getSubject(), st.getPredicate(), newobj);
+        }
+        myGraph.remove(oldobj, null, null);
+        myGraph.remove(null, null, oldobj);
+        return this;
+    }
+
+
     /**
      * Set the title of the thesaurus and save the graph to the repository.
-     * 
-     * @param thesaurusTitle
-     * @throws AccessDeniedException 
-     * @throws IOException 
-     * @throws GraphException 
      */
-    public void addTitleElement(String thesaurusTitle) throws IOException, AccessDeniedException, GraphException{
-      
-      Graph myGraph = new org.openrdf.model.impl.GraphImpl();
+    public void addTitleElement(String thesaurusTitle) throws IOException, AccessDeniedException, GraphException {
 
-      ValueFactory myFactory = myGraph.getValueFactory();
-      
-      String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
-      String namespaceDC = "http://purl.org/dc/elements/1.1/";
-      
-      URI mySubject = myFactory.createURI( "http://geonetwork-opensource.org/" , thesaurusTitle);
-      URI skosClass = myFactory.createURI(namespaceSkos, "ConceptScheme");
-      URI titleURI = myFactory.createURI(namespaceDC, "title");
-      
-      URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
-      
-      mySubject.addProperty(rdfType, skosClass);
-      
-      Value valueObj = myFactory.createLiteral(thesaurusTitle);
-      myGraph.add(mySubject, titleURI, valueObj );
-      
-      repository.addGraph(myGraph);
+        Graph myGraph = new org.openrdf.model.impl.GraphImpl();
+
+        ValueFactory myFactory = myGraph.getValueFactory();
+
+        String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
+        String namespaceDC = "http://purl.org/dc/elements/1.1/";
+
+        URI mySubject = myFactory.createURI("http://geonetwork-opensource.org/", thesaurusTitle);
+        URI skosClass = myFactory.createURI(namespaceSkos, "ConceptScheme");
+        URI titleURI = myFactory.createURI(namespaceDC, "title");
+
+        URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
+
+        mySubject.addProperty(rdfType, skosClass);
+
+        Value valueObj = myFactory.createLiteral(thesaurusTitle);
+        myGraph.add(mySubject, titleURI, valueObj);
+
+        repository.addGraph(myGraph);
     }
-    
+
     /**
      * Retrieves the thesaurus title from rdf file.
      *
@@ -823,7 +777,7 @@ public class Thesaurus {
                 Log.debug(Geonet.THESAURUS_MAN, "Thesaurus information: " + this.title + " (" + this.date + ")");
             }
         } catch (Exception ex) {
-            if(!ignoreMissingError)
+            if (!ignoreMissingError)
                 Log.error(Geonet.THESAURUS_MAN, "Error getting thesaurus info for " + thesaurusFile + ". Error is: " + ex.getMessage());
         }
     }
@@ -831,8 +785,8 @@ public class Thesaurus {
     /**
      * Method to parse the thesaurus date value
      *
-     * @param dateEl   thesaurus date element
-     * @return  Date object representing the thesaurus date value
+     * @param dateEl thesaurus date element
+     * @return Date object representing the thesaurus date value
      */
     private Date parseThesaurusDate(Element dateEl) {
         Date thesaurusDate = null;
@@ -851,12 +805,12 @@ public class Thesaurus {
         StringBuffer errorMsg = new StringBuffer("Error parsing the thesaurus date value: ");
         errorMsg.append(dateVal);
         boolean success = false;
-        
-        for(SimpleDateFormat df: dfList) {
+
+        for (SimpleDateFormat df : dfList) {
             try {
                 thesaurusDate = df.parse(dateVal);
                 success = true;
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 // Ignore the exception and try next format
                 errorMsg.append("\n  * with format: ");
                 errorMsg.append(df.toPattern());
@@ -873,275 +827,276 @@ public class Thesaurus {
         return thesaurusDate;
     }
 
-		/**
-		 * finalize method shuts down the local sesame repository just before an 
-		 * unused Thesaurus object is garbage collected - to save resources 
-		 *
-	   */
-		protected void finalize() {
-			if (repository != null) {
-				repository.shutDown();
-			}
-		}
-
-        public IsoLanguagesMapper getIsoLanguageMapper() {
-            return isoLanguageMapper;
+    /**
+     * finalize method shuts down the local sesame repository just before an unused Thesaurus object
+     * is garbage collected - to save resources
+     */
+    protected void finalize() {
+        if (repository != null) {
+            repository.shutDown();
         }
+    }
 
-        /**
-         * Adds a relation between two keywords.  Both directions in relation will be added   
-         * 
-         * @param subject the keyword that is related to the other keyword
-         * @param related the relation between the two keywords
-         * @param relatedSubject
-         */
-        public synchronized void addRelation(String subject, KeywordRelation related, String relatedSubject) throws AccessDeniedException, IOException,
+    public IsoLanguagesMapper getIsoLanguageMapper() {
+        return isoLanguageMapper;
+    }
+
+    /**
+     * Adds a relation between two keywords.  Both directions in relation will be added
+     *
+     * @param subject the keyword that is related to the other keyword
+     * @param related the relation between the two keywords
+     */
+    public synchronized void addRelation(String subject, KeywordRelation related, String relatedSubject) throws AccessDeniedException, IOException,
         MalformedQueryException, QueryEvaluationException, GraphException {
-            
-            Graph myGraph = repository.getGraph();      
-            
-             // Set namespace skos and predicates 
-             ValueFactory myFactory = myGraph.getValueFactory();
-             String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
-             URI relationURI = myFactory .createURI(namespaceSkos, related.name);
-             URI opposteRelationURI = myFactory .createURI(namespaceSkos, related.opposite().name);
-             URI subjectURI = myFactory.createURI(subject);
-             URI relatedSubjectURI = myFactory.createURI(relatedSubject);
 
-             myGraph.add(subjectURI, relationURI, relatedSubjectURI);
-             myGraph.add(relatedSubjectURI, opposteRelationURI, subjectURI);
-        }
+        Graph myGraph = repository.getGraph();
 
-        /**
-         * Gets a keyword using its id
-         * 
-         * @param uri the keyword to retrieve
-         * @return keyword 
-         */
-        public KeywordBean getKeyword(String uri, String... languages) {
-            List<KeywordBean> keywords;
+        // Set namespace skos and predicates
+        ValueFactory myFactory = myGraph.getValueFactory();
+        String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
+        URI relationURI = myFactory.createURI(namespaceSkos, related.name);
+        URI opposteRelationURI = myFactory.createURI(namespaceSkos, related.opposite().name);
+        URI subjectURI = myFactory.createURI(subject);
+        URI relatedSubjectURI = myFactory.createURI(relatedSubject);
 
-            try {
-                Query<KeywordBean> query = QueryBuilder
-                    .keywordQueryBuilder(getIsoLanguageMapper(), languages)
-                    .where(Wheres.ID(uri))
-                    .build();
+        myGraph.add(subjectURI, relationURI, relatedSubjectURI);
+        myGraph.add(relatedSubjectURI, opposteRelationURI, subjectURI);
+    }
 
-                keywords = query.execute(this);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+    /**
+     * Gets a keyword using its id
+     *
+     * @param uri the keyword to retrieve
+     * @return keyword
+     */
+    public KeywordBean getKeyword(String uri, String... languages) {
+        List<KeywordBean> keywords;
 
-            if (keywords.isEmpty()) {
-                throw new TermNotFoundException(getTermNotFoundMessage(uri));
-            }
-
-            return keywords.get(0);
-        }
-
-        /**
-         * Gets top concepts/keywords from the thesaurus
-         * 
-         * @return keywords
-         */
-        public List<KeywordBean> getTopConcepts(String... languages) {
-            List<KeywordBean> keywords;
-
-            try {
-                Query<KeywordBean> query = QueryBuilder
-                    .keywordQueryBuilder(getIsoLanguageMapper(), languages)
-                    .select(Selectors.TOPCONCEPTS, true)
-                    .build();
-
-                keywords = query.execute(this);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-            if (keywords.isEmpty()) {
-                throw new TermNotFoundException("No top concepts/keywords in file "+thesaurusFile);
-            }
-
-            return keywords;
-        }
-
-        private String getTermNotFoundMessage(String searchValue) {
-            return "Could not find "+searchValue+" in file "+thesaurusFile;
-        }
-
-        /**
-         * Thesaurus has keyword
-         * 
-         * @param uri the keyword to check
-         * @return boolean
-         */
-        public boolean hasKeyword(String uri) {
-            try {
-                getKeyword(uri);
-            } catch (TermNotFoundException e) {
-                return false;
-            }
-
-            return true;
-        }
-
-        /**
-         * Gets broader keywords
-         * 
-         * @param uri the keyword whose broader terms should be retrieved
-         * @return keywords
-         */
-
-        public List<KeywordBean> getBroader(String uri, String... languages) {
-            return getRelated(uri, KeywordRelation.NARROWER, languages);
-        }
-
-        /**
-         * Has broader keywords
-         * 
-         * @param uri the keyword to check for broader terms
-         * @return keywords
-         */
-
-        public boolean hasBroader(String uri) {
-            return getRelated(uri, KeywordRelation.NARROWER).size() > 0;
-        }
-
-        /**
-         * Gets related keywords
-         * 
-         * @param uri the keyword whose related terms should be retrieved
-         * @return keyword
-         */
-        public List<KeywordBean> getRelated(String uri, KeywordRelation request, String... languages) {
+        try {
             Query<KeywordBean> query = QueryBuilder
                 .keywordQueryBuilder(getIsoLanguageMapper(), languages)
-                .select(Selectors.related(uri, request), true)
+                .where(Wheres.ID(uri))
                 .build();
 
-            try {
-                return query.execute(this);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            keywords = query.execute(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
-        /**
-         * Returns whether there is a keyword for a label
-         * 
-         * @param label the preferred label of the keyword
-         * @param langCode the language of the label
-         * @return boolean 
-         */
-        public boolean hasKeywordWithLabel(String label, String langCode) {
-            try {
-                getKeywordWithLabel(label, langCode);
-            } catch (TermNotFoundException e) {
-                return false;
-            }
-
-            return true;
+        if (keywords.isEmpty()) {
+            throw new TermNotFoundException(getTermNotFoundMessage(uri));
         }
 
-        /**
-         * Gets a keyword using its label.
-         * 
-         * @param label the preferred label of the keyword
-         * @param langCode the language of the label
-         * @return keyword 
-         * @throws TermNotFoundException
-         */
-        public KeywordBean getKeywordWithLabel(String label, String langCode) {
+        return keywords.get(0);
+    }
+
+    /**
+     * Gets top concepts/keywords from the thesaurus
+     *
+     * @return keywords
+     */
+    public List<KeywordBean> getTopConcepts(String... languages) {
+        List<KeywordBean> keywords;
+
+        try {
             Query<KeywordBean> query = QueryBuilder
-                    .keywordQueryBuilder(getIsoLanguageMapper(), langCode)
-                    .where(Wheres.prefLabel(langCode, label))
-                    .build();
+                .keywordQueryBuilder(getIsoLanguageMapper(), languages)
+                .select(Selectors.TOPCONCEPTS, true)
+                .build();
 
-            List<KeywordBean> matchingKeywords;
-
-            try {
-                matchingKeywords = query.execute(this);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-            if (matchingKeywords.size() == 0) {
-                throw new TermNotFoundException(label);
-            }
-
-            return matchingKeywords.get(0);
+            keywords = query.execute(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
-        // ------------------------------- Deprecated methods -----------------------------
-        /**
-         * @deprecated since 2.9.0.  Use {@link #addElement(KeywordBean)}
-         */
-        URI addElement(String code, String prefLab, String note, String lang) throws GraphException, IOException,
-                AccessDeniedException {
-
-            KeywordBean bean = new KeywordBean(getIsoLanguageMapper())
-                .setUriCode(code)
-                .setValue(prefLab, lang)
-                .setDefinition(note, lang);
-            
-            return addElement(bean);
+        if (keywords.isEmpty()) {
+            throw new TermNotFoundException("No top concepts/keywords in file " + thesaurusFile);
         }
 
-        /**
-         * @deprecated since 2.9.0 use {@link #addElement(KeywordBean)}
-         */
-        URI addElement(String code, String prefLab, String note, String east, String west, String south,
-                               String north, String lang) throws IOException, AccessDeniedException, GraphException {
-            
-            return addElement(new KeywordBean(getIsoLanguageMapper())
-                        .setUriCode(code)
-                        .setValue(prefLab, lang)
-                        .setDefinition(note, lang)
-                        .setCoordEast(east)
-                        .setCoordNorth(north)
-                        .setCoordSouth(south)
-                        .setCoordWest(west));
+        return keywords;
+    }
+
+    private String getTermNotFoundMessage(String searchValue) {
+        return "Could not find " + searchValue + " in file " + thesaurusFile;
+    }
+
+    /**
+     * Thesaurus has keyword
+     *
+     * @param uri the keyword to check
+     * @return boolean
+     */
+    public boolean hasKeyword(String uri) {
+        try {
+            getKeyword(uri);
+        } catch (TermNotFoundException e) {
+            return false;
         }
 
+        return true;
+    }
 
-        /**
-         * @deprecated since 2.9.0 use {@link #updateElement(KeywordBean, boolean)}
-         */
-        URI updateElement(String namespace, String id, String prefLab, String note, String lang) throws IOException,
-                MalformedQueryException, QueryEvaluationException, AccessDeniedException, GraphException {
-            KeywordBean keyword = new KeywordBean(getIsoLanguageMapper())
-                        .setNamespaceCode(namespace)
-                        .setRelativeCode(id)
-                        .setValue(prefLab, lang)
-                        .setDefinition(note, lang);
-            return updateElement(keyword, false);
-        }
-        /**
-         * @deprecated Since 2.9.0 use {@link #updateElement(KeywordBean, boolean)}
-         */
-        URI updateElement(String namespace, String id, String prefLab, String note, String east, String west,
-                                  String south, String north, String lang) throws AccessDeniedException, IOException,
-                MalformedQueryException, QueryEvaluationException, GraphException {
+    /**
+     * Gets broader keywords
+     *
+     * @param uri the keyword whose broader terms should be retrieved
+     * @return keywords
+     */
 
-            KeywordBean bean = new KeywordBean(getIsoLanguageMapper())
-                .setNamespaceCode(namespace)
-                .setRelativeCode(id)
-                .setValue(prefLab, lang)
-                .setDefinition(note, lang)
-                .setCoordEast(east)
-                .setCoordNorth(north)
-                .setCoordSouth(south)
-                .setCoordWest(west);
-            
-            return updateElement(bean, true);
+    public List<KeywordBean> getBroader(String uri, String... languages) {
+        return getRelated(uri, KeywordRelation.NARROWER, languages);
+    }
+
+    /**
+     * Has broader keywords
+     *
+     * @param uri the keyword to check for broader terms
+     * @return keywords
+     */
+
+    public boolean hasBroader(String uri) {
+        return getRelated(uri, KeywordRelation.NARROWER).size() > 0;
+    }
+
+    /**
+     * Gets related keywords
+     *
+     * @param uri the keyword whose related terms should be retrieved
+     * @return keyword
+     */
+    public List<KeywordBean> getRelated(String uri, KeywordRelation request, String... languages) {
+        Query<KeywordBean> query = QueryBuilder
+            .keywordQueryBuilder(getIsoLanguageMapper(), languages)
+            .select(Selectors.related(uri, request), true)
+            .build();
+
+        try {
+            return query.execute(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-		public synchronized void clear() throws IOException, AccessDeniedException {
-			AdminListener listener = new DummyAdminListener();
-			repository.clear(listener);
-		}
-        public String getDefaultNamespace() {
-            return this.defaultNamespace;
+    }
+
+    /**
+     * Returns whether there is a keyword for a label
+     *
+     * @param label    the preferred label of the keyword
+     * @param langCode the language of the label
+     * @return boolean
+     */
+    public boolean hasKeywordWithLabel(String label, String langCode) {
+        try {
+            getKeywordWithLabel(label, langCode);
+        } catch (TermNotFoundException e) {
+            return false;
         }
+
+        return true;
+    }
+
+    /**
+     * Gets a keyword using its label.
+     *
+     * @param label    the preferred label of the keyword
+     * @param langCode the language of the label
+     * @return keyword
+     */
+    public KeywordBean getKeywordWithLabel(String label, String langCode) {
+        Query<KeywordBean> query = QueryBuilder
+            .keywordQueryBuilder(getIsoLanguageMapper(), langCode)
+            .where(Wheres.prefLabel(langCode, label))
+            .build();
+
+        List<KeywordBean> matchingKeywords;
+
+        try {
+            matchingKeywords = query.execute(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        if (matchingKeywords.size() == 0) {
+            throw new TermNotFoundException(label);
+        }
+
+        return matchingKeywords.get(0);
+    }
+
+    // ------------------------------- Deprecated methods -----------------------------
+
+    /**
+     * @deprecated since 2.9.0.  Use {@link #addElement(KeywordBean)}
+     */
+    URI addElement(String code, String prefLab, String note, String lang) throws GraphException, IOException,
+        AccessDeniedException {
+
+        KeywordBean bean = new KeywordBean(getIsoLanguageMapper())
+            .setUriCode(code)
+            .setValue(prefLab, lang)
+            .setDefinition(note, lang);
+
+        return addElement(bean);
+    }
+
+    /**
+     * @deprecated since 2.9.0 use {@link #addElement(KeywordBean)}
+     */
+    URI addElement(String code, String prefLab, String note, String east, String west, String south,
+                   String north, String lang) throws IOException, AccessDeniedException, GraphException {
+
+        return addElement(new KeywordBean(getIsoLanguageMapper())
+            .setUriCode(code)
+            .setValue(prefLab, lang)
+            .setDefinition(note, lang)
+            .setCoordEast(east)
+            .setCoordNorth(north)
+            .setCoordSouth(south)
+            .setCoordWest(west));
+    }
+
+
+    /**
+     * @deprecated since 2.9.0 use {@link #updateElement(KeywordBean, boolean)}
+     */
+    URI updateElement(String namespace, String id, String prefLab, String note, String lang) throws IOException,
+        MalformedQueryException, QueryEvaluationException, AccessDeniedException, GraphException {
+        KeywordBean keyword = new KeywordBean(getIsoLanguageMapper())
+            .setNamespaceCode(namespace)
+            .setRelativeCode(id)
+            .setValue(prefLab, lang)
+            .setDefinition(note, lang);
+        return updateElement(keyword, false);
+    }
+
+    /**
+     * @deprecated Since 2.9.0 use {@link #updateElement(KeywordBean, boolean)}
+     */
+    URI updateElement(String namespace, String id, String prefLab, String note, String east, String west,
+                      String south, String north, String lang) throws AccessDeniedException, IOException,
+        MalformedQueryException, QueryEvaluationException, GraphException {
+
+        KeywordBean bean = new KeywordBean(getIsoLanguageMapper())
+            .setNamespaceCode(namespace)
+            .setRelativeCode(id)
+            .setValue(prefLab, lang)
+            .setDefinition(note, lang)
+            .setCoordEast(east)
+            .setCoordNorth(north)
+            .setCoordSouth(south)
+            .setCoordWest(west);
+
+        return updateElement(bean, true);
+    }
+
+    public synchronized void clear() throws IOException, AccessDeniedException {
+        AdminListener listener = new DummyAdminListener();
+        repository.clear(listener);
+    }
+
+    public String getDefaultNamespace() {
+        return this.defaultNamespace;
+    }
 
     public Map<String, String> getTitles(ApplicationContext context) throws JDOMException, IOException {
         return LangUtils.translate(context, getKey());

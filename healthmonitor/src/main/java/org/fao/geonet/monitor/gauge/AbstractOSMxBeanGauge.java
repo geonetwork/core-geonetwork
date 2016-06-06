@@ -25,11 +25,12 @@ package org.fao.geonet.monitor.gauge;
 
 import com.yammer.metrics.core.Gauge;
 import com.yammer.metrics.core.MetricsRegistry;
-import jeeves.monitor.MetricsFactory;
-import jeeves.server.context.ServiceContext;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+
+import jeeves.monitor.MetricsFactory;
+import jeeves.server.context.ServiceContext;
 
 /**
  * @author Jesse on 5/8/2015.
@@ -51,7 +52,7 @@ public abstract class AbstractOSMxBeanGauge<T> implements MetricsFactory<Gauge<T
                 OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
                 if (operatingSystemMXBean instanceof com.sun.management.OperatingSystemMXBean) {
                     com.sun.management.OperatingSystemMXBean mxBean = (com.sun.management.OperatingSystemMXBean)
-                            operatingSystemMXBean;
+                        operatingSystemMXBean;
 
                     return getValue(mxBean);
                 }
@@ -62,5 +63,6 @@ public abstract class AbstractOSMxBeanGauge<T> implements MetricsFactory<Gauge<T
     }
 
     protected abstract T getDefaultValue();
+
     protected abstract T getValue(com.sun.management.OperatingSystemMXBean operatingSystemMXBean);
 }

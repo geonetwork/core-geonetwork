@@ -24,8 +24,6 @@
 package jeeves.server.dispatchers.guiservices;
 
 
-import jeeves.constants.ConfigFile;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.utils.IO;
@@ -33,38 +31,39 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
 
-import java.net.URI;
-
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 
+import jeeves.constants.ConfigFile;
+import jeeves.server.context.ServiceContext;
+
 //=============================================================================
 
-/** Loads and returns an xml file
-  */
+/**
+ * Loads and returns an xml file
+ */
 
-public class XmlFile implements GuiService
-{
-	private final String  name;
-	private final String  file;
-	private final Path base;
-	private final String  language;
-	private final String  defaultLang;
-	private final boolean localized;
+public class XmlFile implements GuiService {
+    private final String name;
+    private final String file;
+    private final Path base;
+    private final String language;
+    private final String defaultLang;
+    private final boolean localized;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public XmlFile(Element config, String defaultLanguage, boolean defaultLocalized) throws BadInputEx
-	{
-		defaultLang = defaultLanguage;
+    public XmlFile(Element config, String defaultLanguage, boolean defaultLocalized) throws BadInputEx {
+        defaultLang = defaultLanguage;
 
-		name = Util.getAttrib(config, ConfigFile.Xml.Attr.NAME);
-		file = Util.getAttrib(config, ConfigFile.Xml.Attr.FILE);
+        name = Util.getAttrib(config, ConfigFile.Xml.Attr.NAME);
+        file = Util.getAttrib(config, ConfigFile.Xml.Attr.FILE);
 
         final String loc = Util.getAttrib(config, ConfigFile.Xml.Attr.BASE, "loc");
         Path basePath;
@@ -75,32 +74,32 @@ public class XmlFile implements GuiService
         }
         base = basePath;
 
-		language = config.getAttributeValue(ConfigFile.Xml.Attr.LANGUAGE);
+        language = config.getAttributeValue(ConfigFile.Xml.Attr.LANGUAGE);
 
-		//--- handle localized attrib
+        //--- handle localized attrib
 
-		String local = config.getAttributeValue(ConfigFile.Xml.Attr.LOCALIZED);
+        String local = config.getAttributeValue(ConfigFile.Xml.Attr.LOCALIZED);
 
-		if (local == null)	localized = defaultLocalized;
-		else localized = local.equals("true");
-	}
+        if (local == null) localized = defaultLocalized;
+        else localized = local.equals("true");
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Exec
-	//---
-	//--------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Exec
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element response, ServiceContext context) throws Exception {
+    public Element exec(Element response, ServiceContext context) throws Exception {
         String lang = context.getLanguage();
 
         return getXml(context.getApplicationContext(), lang, true);
-	}
+    }
 
     public Element getXml(ApplicationContext context, String lang, boolean makeCopy) throws JDOMException, IOException {
         String preferedLanguage = language;
-        if(localized || preferedLanguage  == null) preferedLanguage = lang;
-        if(preferedLanguage == null) preferedLanguage = defaultLang;
+        if (localized || preferedLanguage == null) preferedLanguage = lang;
+        if (preferedLanguage == null) preferedLanguage = defaultLang;
 
         Element element = context.getBean(XmlCacheManager.class).get(context, localized, base, file, preferedLanguage, defaultLang, makeCopy);
         element.setName(name);

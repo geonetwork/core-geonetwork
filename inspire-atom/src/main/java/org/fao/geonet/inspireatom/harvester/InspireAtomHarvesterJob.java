@@ -23,8 +23,8 @@
 package org.fao.geonet.inspireatom.harvester;
 
 
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

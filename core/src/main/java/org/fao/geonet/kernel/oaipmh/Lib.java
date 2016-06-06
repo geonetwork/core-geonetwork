@@ -40,99 +40,94 @@ import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
-public class Lib
-{
-	public static final String SESSION_OBJECT = "oai-list-records-result";
+public class Lib {
+    public static final String SESSION_OBJECT = "oai-list-records-result";
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    private static ServiceConfig dummyConfig = new ServiceConfig();
 
-	public static boolean existsConverter(Path schemaDir, String prefix) {
-		 Path f = schemaDir.resolve("convert").resolve(prefix + ".xsl");
-		 return Files.exists(f);
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public static boolean existsConverter(Path schemaDir, String prefix) {
+        Path f = schemaDir.resolve("convert").resolve(prefix + ".xsl");
+        return Files.exists(f);
+    }
 
-	public static Element prepareTransformEnv(String uuid, String changeDate, String baseUrl, String siteUrl, String siteName) {
+    //--------------------------------------------------------------------------
 
-		//--- setup environment
+    public static Element prepareTransformEnv(String uuid, String changeDate, String baseUrl, String siteUrl, String siteName) {
 
-		Element env = new Element("env");
+        //--- setup environment
 
-		env.addContent(new Element("uuid")      .setText(uuid));
-		env.addContent(new Element("changeDate").setText(changeDate));
-		env.addContent(new Element("baseURL")   .setText(baseUrl));
-		env.addContent(new Element("siteURL")   .setText(siteUrl));
-		env.addContent(new Element("siteName")  .setText(siteName));
+        Element env = new Element("env");
 
-		return env;
-	}
+        env.addContent(new Element("uuid").setText(uuid));
+        env.addContent(new Element("changeDate").setText(changeDate));
+        env.addContent(new Element("baseURL").setText(baseUrl));
+        env.addContent(new Element("siteURL").setText(siteUrl));
+        env.addContent(new Element("siteName").setText(siteName));
 
-	//--------------------------------------------------------------------------
+        return env;
+    }
 
-	public static Element transform(Path schemaDir, Element env, Element md, String targetFormat) throws Exception {
+    //---------------------------------------------------------------------------
 
-		//--- setup root element
+    public static Element transform(Path schemaDir, Element env, Element md, String targetFormat) throws Exception {
 
-		Element root = new Element("root");
-		root.addContent(md);
-		root.addContent(env);
+        //--- setup root element
 
-		//--- do an XSL transformation
+        Element root = new Element("root");
+        root.addContent(md);
+        root.addContent(env);
 
-		Path styleSheet = schemaDir.resolve("convert").resolve(targetFormat);
+        //--- do an XSL transformation
 
-		return Xml.transform(root, styleSheet);
-	}
+        Path styleSheet = schemaDir.resolve("convert").resolve(targetFormat);
 
-	//---------------------------------------------------------------------------
+        return Xml.transform(root, styleSheet);
+    }
 
-	public static List<Integer> search(ServiceContext context, Element params) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		ISearchManager sm = gc.getBean(ISearchManager.class);
+    //---------------------------------------------------------------------------
+
+    public static List<Integer> search(ServiceContext context, Element params) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        ISearchManager sm = gc.getBean(ISearchManager.class);
 
         // TODO: SOLR-MIGRATION
         throw new UnsupportedOperationException("Solr search does not support OAI yet");
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public static Element toJeevesException(OaiPmhException e)
-	{
-		String  msg = e.getMessage();
-		String  cls = e.getClass().getSimpleName();
-		String  id  = e.getCode();
-		Element res = e.getResponse();
+    public static Element toJeevesException(OaiPmhException e) {
+        String msg = e.getMessage();
+        String cls = e.getClass().getSimpleName();
+        String id = e.getCode();
+        Element res = e.getResponse();
 
-		Element error = new Element(Jeeves.Elem.ERROR)
-								.addContent(new Element("message").setText(msg))
-								.addContent(new Element("class")  .setText(cls));
+        Element error = new Element(Jeeves.Elem.ERROR)
+            .addContent(new Element("message").setText(msg))
+            .addContent(new Element("class").setText(cls));
 
-		error.setAttribute("id", id);
+        error.setAttribute("id", id);
 
-		if (res != null)
-		{
-			Element elObj = new Element("object");
-			elObj.addContent(res.detach());
+        if (res != null) {
+            Element elObj = new Element("object");
+            elObj.addContent(res.detach());
 
-			error.addContent(elObj);
-		}
+            error.addContent(elObj);
+        }
 
-		return error;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private static ServiceConfig dummyConfig = new ServiceConfig();
+        return error;
+    }
 }
 
 //=============================================================================

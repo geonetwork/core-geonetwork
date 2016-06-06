@@ -23,23 +23,26 @@
 
 package org.fao.geonet.services.metadata.schema;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
-import org.fao.geonet.repository.SchematronCriteriaRepository;
+import org.fao.geonet.domain.GeonetEntity;
+import org.fao.geonet.domain.Schematron;
 import org.fao.geonet.repository.SchematronRepository;
 import org.jdom.Element;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
+import jeeves.server.context.ServiceContext;
+
 import static org.fao.geonet.domain.Pair.read;
-import static org.fao.geonet.services.metadata.schema.SchematronServiceAction.*;
+import static org.fao.geonet.services.metadata.schema.SchematronServiceAction.ADD;
+import static org.fao.geonet.services.metadata.schema.SchematronServiceAction.DELETE;
+import static org.fao.geonet.services.metadata.schema.SchematronServiceAction.EDIT;
+import static org.fao.geonet.services.metadata.schema.SchematronServiceAction.EXISTS;
 import static org.fao.geonet.services.metadata.schema.SchematronServiceAction.LIST;
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Jesse on 2/13/14.
@@ -71,7 +74,7 @@ public class SchematronServiceIntegrationTest extends AbstractSchematronServiceI
         loginAsAdmin(context);
 
         Element params = createParams(
-                read(Params.ID, _group1_Name1_SchematronId1.getSchematron().getId())
+            read(Params.ID, _group1_Name1_SchematronId1.getSchematron().getId())
         );
 
         Element result = create(LIST).exec(params, context);
@@ -79,25 +82,27 @@ public class SchematronServiceIntegrationTest extends AbstractSchematronServiceI
         assertEquals(1, result.getChildren().size());
         assertSchematronInfo(result.getChild(GeonetEntity.RECORD_EL_NAME));
     }
+
     @Test
     public void testExecExists() throws Exception {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
 
         Element params = createParams(
-                read(Params.ID, _group1_Name1_SchematronId1.getSchematron().getId())
+            read(Params.ID, _group1_Name1_SchematronId1.getSchematron().getId())
         );
 
         Element result = create(EXISTS).exec(params, context);
         assertEquals(Boolean.TRUE.toString(), result.getText());
 
         params = createParams(
-                read(Params.ID, Integer.MAX_VALUE)
+            read(Params.ID, Integer.MAX_VALUE)
         );
 
         result = create(EXISTS).exec(params, context);
         assertEquals(Boolean.FALSE.toString(), result.getText());
     }
+
     @Test(expected = UnsupportedOperationException.class)
     public void testAdd() throws Exception {
 
@@ -116,8 +121,8 @@ public class SchematronServiceIntegrationTest extends AbstractSchematronServiceI
         int newPriority = _group1_Name1_SchematronId1.getSchematron().getDisplayPriority() + 1000;
         final int id = _group1_Name1_SchematronId1.getId().getSchematronId();
         final Element params = createParams(
-                read(Params.ID, id),
-                read(SchematronService.PARAM_DISPLAY_PRIORITY, newPriority));
+            read(Params.ID, id),
+            read(SchematronService.PARAM_DISPLAY_PRIORITY, newPriority));
         Element result = create(EDIT).exec(params, context);
 
         assertEquals("ok", result.getName());

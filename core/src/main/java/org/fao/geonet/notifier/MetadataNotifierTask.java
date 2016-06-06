@@ -22,7 +22,6 @@
 //==============================================================================
 package org.fao.geonet.notifier;
 
-import jeeves.server.context.ServiceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 

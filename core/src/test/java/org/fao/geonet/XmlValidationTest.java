@@ -23,7 +23,6 @@
 
 package org.fao.geonet;
 
-import jeeves.xlink.XLink;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -31,6 +30,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Iterator;
+
+import jeeves.xlink.XLink;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

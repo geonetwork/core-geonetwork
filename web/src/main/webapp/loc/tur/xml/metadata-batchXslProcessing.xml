@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Metaveri kayıtları bulunamadı</notfound>
+  <notowner>Metaveri kayıtları kayıt sahibi olmadığınız için güncellenemedi.</notowner>
+  <updated>Metaveri kayıtları işlendi</updated>
+  <notProcessFound>Metaveri şemasına ait metaveri işlem veya süreci bulunamadı</notProcessFound>
+</strings>

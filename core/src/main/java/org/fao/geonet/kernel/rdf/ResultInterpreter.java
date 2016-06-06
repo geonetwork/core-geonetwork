@@ -23,17 +23,17 @@
 
 package org.fao.geonet.kernel.rdf;
 
+import com.google.common.base.Function;
+
 import org.fao.geonet.kernel.Thesaurus;
 import org.openrdf.sesame.query.QueryResultsTable;
 
-import com.google.common.base.Function;
-
 /**
- * A strategy for interpreting the results of a query.  When a query is executed each row is processed by the Result Interpreter
- *  
- * @author jeichar
+ * A strategy for interpreting the results of a query.  When a query is executed each row is
+ * processed by the Result Interpreter
  *
  * @param <T> the type of results returned for each row
+ * @author jeichar
  */
 public abstract class ResultInterpreter<T> {
     public abstract T createFromRow(Thesaurus thesaurus, QueryResultsTable resultTable, int rowIndex);

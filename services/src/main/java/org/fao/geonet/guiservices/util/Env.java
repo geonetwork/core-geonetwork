@@ -23,10 +23,6 @@
 
 package org.fao.geonet.guiservices.util;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.XmlSerializer;
@@ -35,31 +31,36 @@ import org.jdom.Element;
 
 import java.nio.file.Path;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
 /**
  * This service returns some useful information about GeoNetwork.
  */
 public class Env implements Service {
     private static final String READ_ONLY = "readonly";
-    public void init(Path appPath, ServiceConfig params) throws Exception {}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		// reset the thread local
-		XmlSerializer.clearThreadLocal();
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        // reset the thread local
+        XmlSerializer.clearThreadLocal();
 
-		Element response  = gc.getBean(SettingManager.class).getAllAsXML(true);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+
+        Element response = gc.getBean(SettingManager.class).getAllAsXML(true);
 
         Element readOnly = new Element(READ_ONLY);
         readOnly.setText(Boolean.toString(gc.isReadOnly()));
-        
+
         // Get the system node (which is for the time being the only child node
         // of settings
         Element system = response.getChild("system");
@@ -68,5 +69,5 @@ public class Env implements Service {
             system.addContent(response.getChild("map").detach());
         }
         return (Element) system.clone();
-	}
+    }
 }

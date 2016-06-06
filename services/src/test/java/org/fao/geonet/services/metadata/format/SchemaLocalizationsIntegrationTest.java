@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.services.metadata.format.groovy.CurrentLanguageHolder;

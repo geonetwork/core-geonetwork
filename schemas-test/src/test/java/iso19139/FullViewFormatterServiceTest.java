@@ -24,9 +24,9 @@
 package iso19139;
 
 import com.google.common.collect.Lists;
+
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.io.File;
 import java.net.URL;
@@ -38,7 +38,8 @@ import java.util.List;
 public class FullViewFormatterServiceTest extends AbstractFullViewFormatterTest {
 
     @Test
-    public void testDummy(){}
+    public void testDummy() {
+    }
 
     @Test
     @Ignore
@@ -59,7 +60,7 @@ public class FullViewFormatterServiceTest extends AbstractFullViewFormatterTest 
             "> gmd:MD_Metadata > gmd:identificationInfo > srv:SV_ServiceIdentification > srv:containsOperations > srv:SV_OperationMetadata > srv:connectPoint > gmd:CI_OnlineResource > gmd:protocol > gco:CharacterString > Text",
             "> gmd:MD_Metadata > gmd:identificationInfo > srv:SV_ServiceIdentification > srv:containsOperations > srv:SV_OperationMetadata > srv:connectPoint > gmd:CI_OnlineResource > gmd:function > gmd:CI_OnLineFunctionCode> @codeListValue",
             "> gmd:MD_Metadata > gmd:identificationInfo > srv:SV_ServiceIdentification > gmd:descriptiveKeywords > gmd:MD_Keywords > gmd:type > gmd:MD_KeywordTypeCode> @codeListValue"
-         );
+        );
     }
 
     @Override

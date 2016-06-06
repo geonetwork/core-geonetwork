@@ -8,9 +8,9 @@
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <Call name="addConnector">
     <Arg>
-       <New class="org.eclipse.jetty.ajp.Ajp13SocketConnector">
-         <Set name="port">8009</Set>
-       </New>
+      <New class="org.eclipse.jetty.ajp.Ajp13SocketConnector">
+        <Set name="port">8009</Set>
+      </New>
     </Arg>
   </Call>
 

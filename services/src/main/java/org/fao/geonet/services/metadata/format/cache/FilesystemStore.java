@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format.cache;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.lib.Lib;
@@ -47,6 +48,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PreDestroy;
@@ -55,11 +57,14 @@ import static org.fao.geonet.constants.Params.Access.PRIVATE;
 import static org.fao.geonet.constants.Params.Access.PUBLIC;
 
 /**
- * A {@link org.fao.geonet.services.metadata.format.cache.PersistentStore} that saves the files to disk.
+ * A {@link org.fao.geonet.services.metadata.format.cache.PersistentStore} that saves the files to
+ * disk.
  *
  * @author Jesse on 3/5/2015.
  */
 public class FilesystemStore implements PersistentStore {
+    public static final String WITHHELD_MD_DIRNAME = "withheld_md";
+    public static final String FULL_MD_NAME = "full_md";
     private static final String BASE_CACHE_DIR = "formatter-cache";
     private static final String INFO_TABLE = "info";
     private static final String KEY = "keyhash";
@@ -70,22 +75,18 @@ public class FilesystemStore implements PersistentStore {
     private static final String NAME = "name";
     private static final String CURRENT_SIZE = "currentsize";
     private static final String VALUE = "value";
-    public static final String WITHHELD_MD_DIRNAME = "withheld_md";
-    public static final String FULL_MD_NAME = "full_md";
-
+    public static final String QUERY_SETCURRENT_SIZE = "MERGE INTO " + STATS_TABLE + " (" + NAME + ", " + VALUE + ") VALUES ('" + CURRENT_SIZE + "', ?)";
+    public static final String QUERY_GETCURRENT_SIZE = "SELECT " + VALUE + " FROM " + STATS_TABLE + " WHERE " + NAME + " = '" + CURRENT_SIZE + "'";
     private static final String QUERY_GET_INFO = "SELECT * FROM " + INFO_TABLE + " WHERE " + KEY + "=?";
-    private static final String QUERY_GET_INFO_FOR_RESIZE = "SELECT " +KEY + "," + PATH + " FROM " + INFO_TABLE + " ORDER BY " + CHANGE_DATE + " ASC";
+    private static final String QUERY_GET_INFO_FOR_RESIZE = "SELECT " + KEY + "," + PATH + " FROM " + INFO_TABLE + " ORDER BY " + CHANGE_DATE + " ASC";
     private static final String QUERY_PUT = "MERGE INTO " + INFO_TABLE + " (" + KEY + "," + CHANGE_DATE + "," + PUBLISHED + "," + PATH + ") VALUES (?,?,?, ?)";
     private static final String QUERY_REMOVE = "DELETE FROM " + INFO_TABLE + " WHERE " + KEY + "=?";
-    public static final String QUERY_SETCURRENT_SIZE = "MERGE INTO "+STATS_TABLE + " (" + NAME + ", " + VALUE + ") VALUES ('" + CURRENT_SIZE + "', ?)";
-    public static final String QUERY_GETCURRENT_SIZE = "SELECT "+VALUE+" FROM " + STATS_TABLE + " WHERE "+NAME+" = '"+CURRENT_SIZE+"'";
     private static final String QUERY_CLEAR_INFO = "DELETE FROM " + INFO_TABLE;
     private static final String QUERY_CLEAR_STATS = "DELETE FROM " + STATS_TABLE;
-
-    @Autowired
-    private GeonetworkDataDirectory geonetworkDataDir;
     @VisibleForTesting
     Connection metadataDb;
+    @Autowired
+    private GeonetworkDataDirectory geonetworkDataDir;
     private boolean testing = false;
     private volatile long maxSizeB = 10000;
     private volatile long currentSize = 0;
@@ -102,10 +103,10 @@ public class FilesystemStore implements PersistentStore {
             }
 
             String[] initSql = {
-                    "CREATE SCHEMA IF NOT EXISTS " + INFO_TABLE,
-                    "CREATE TABLE IF NOT EXISTS " + INFO_TABLE + "(" + KEY + " INT PRIMARY KEY, " + CHANGE_DATE + " BIGINT NOT NULL, " +
+                "CREATE SCHEMA IF NOT EXISTS " + INFO_TABLE,
+                "CREATE TABLE IF NOT EXISTS " + INFO_TABLE + "(" + KEY + " INT PRIMARY KEY, " + CHANGE_DATE + " BIGINT NOT NULL, " +
                     PUBLISHED + " BOOL NOT NULL, " + PATH + " CLOB  NOT NULL)",
-                    "CREATE TABLE IF NOT EXISTS " + STATS_TABLE + " (" + NAME + " VARCHAR(64) PRIMARY KEY, " + VALUE + " VARCHAR(32) NOT NULL)"
+                "CREATE TABLE IF NOT EXISTS " + STATS_TABLE + " (" + NAME + " VARCHAR(64) PRIMARY KEY, " + VALUE + " VARCHAR(32) NOT NULL)"
 
             };
             String init = ";INIT=" + Joiner.on("\\;").join(initSql) + ";DB_CLOSE_DELAY=-1";
@@ -113,8 +114,8 @@ public class FilesystemStore implements PersistentStore {
             metadataDb = DriverManager.getConnection("jdbc:h2:" + dbPath + init, "fsStore", "");
 
             try (
-                    Statement statement = metadataDb.createStatement();
-                    ResultSet rs = statement.executeQuery(QUERY_GETCURRENT_SIZE)) {
+                Statement statement = metadataDb.createStatement();
+                ResultSet rs = statement.executeQuery(QUERY_GETCURRENT_SIZE)) {
                 if (rs.next()) {
                     this.currentSize = Long.parseLong(rs.getString(1));
                 }
@@ -232,8 +233,8 @@ public class FilesystemStore implements PersistentStore {
         Log.warning(Geonet.FORMATTER, "Resizing Formatter cache.  Required to reduce size by " + targetSize);
         long startTime = System.currentTimeMillis();
         try (
-                Statement statement = metadataDb.createStatement();
-                ResultSet resultSet = statement.executeQuery(QUERY_GET_INFO_FOR_RESIZE);
+            Statement statement = metadataDb.createStatement();
+            ResultSet resultSet = statement.executeQuery(QUERY_GET_INFO_FOR_RESIZE);
         ) {
             while (currentSize > targetSize && resultSet.next()) {
                 Path path = IO.toPath(new URI(resultSet.getString(PATH)));
@@ -309,7 +310,7 @@ public class FilesystemStore implements PersistentStore {
             statement.execute(QUERY_CLEAR_INFO);
             statement.execute(QUERY_CLEAR_STATS);
             currentSize = 0;
-            Files.walkFileTree(getBaseCacheDir(), new SimpleFileVisitor<Path>(){
+            Files.walkFileTree(getBaseCacheDir(), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     try {

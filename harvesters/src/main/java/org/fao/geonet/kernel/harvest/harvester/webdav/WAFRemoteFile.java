@@ -38,122 +38,117 @@ import java.util.Map;
 //=============================================================================
 
 class WAFRemoteFile implements RemoteFile {
-	
-	public static class WXS{
-		public static final String WMS = "SERVICE=WMS";
-		public static final String WCS = "SERVICE=WCS";
-		public static final String WFS = "SERVICE=WFS";
-		public static final String WPS = "SERVICE=WPS";
-	}
-	
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
 
-	public WAFRemoteFile(String path) {
-		this.path = path;
-	}
+    private static String outputSchema = "iso19139";
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- RemoteFile interface
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
+    private String path;
 
-	public Element getMetadata(SchemaManager  schemaMan) throws Exception {
+    //---------------------------------------------------------------------------
+    //---
+    //--- RemoteFile interface
+    //---
+    //---------------------------------------------------------------------------
+
+    public WAFRemoteFile(String path) {
+        this.path = path;
+    }
+
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Get Metadata from GetCapabilities file (Service)
+    //---
+    //---------------------------------------------------------------------------
+
+    public Element getMetadata(SchemaManager schemaMan) throws Exception {
         String type = WAFRetriever.getFileType(this.path);
-        if(type.equals(WAFRetriever.type_GetCapabilities))
+        if (type.equals(WAFRetriever.type_GetCapabilities))
             return getMdFromService(path, schemaMan);
-        else if(type.equals(WAFRetriever.type_xml))
+        else if (type.equals(WAFRetriever.type_xml))
             return Xml.loadFile(new URL(path));
         else
             return null;
-	}
+    }
 
-
-	
-	//---------------------------------------------------------------------------
-	//---
-	//--- Get Metadata from GetCapabilities file (Service)
-	//---
-	//---------------------------------------------------------------------------	
-	
-	private Element getMdFromService(String url, SchemaManager  schemaMan) throws Exception
-	{
-		Element el = null;
-		Path styleSheet = getStyleSheet(url, schemaMan);
-		if(styleSheet == null) {
+    private Element getMdFromService(String url, SchemaManager schemaMan) throws Exception {
+        Element el = null;
+        Path styleSheet = getStyleSheet(url, schemaMan);
+        if (styleSheet == null) {
             return null;
         }
         Element xml = Xml.loadFile(new URL(url));
 
         // md5 the full capabilities URL
-        String uuid = Sha1Encoder.encodeString (url); // is the service identifier
+        String uuid = Sha1Encoder.encodeString(url); // is the service identifier
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("uuid", uuid);
 
-        el = Xml.transform (xml, styleSheet, param);
-		return el;
-	}
-	
-	private Path getStyleSheet(String url, SchemaManager  schemaMan)
-	{
+        el = Xml.transform(xml, styleSheet, param);
+        return el;
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Get Service Type
+    //---
+    //---------------------------------------------------------------------------
+
+    private Path getStyleSheet(String url, SchemaManager schemaMan) {
         String serviceType = getServiceType(url);
         if (serviceType == null)
             return null;
         return schemaMan.getSchemaDir(outputSchema).
-                resolve(Geonet.Path.CONVERT_STYLESHEETS).
-                resolve("OGCWxSGetCapabilitiesto19119").
-                resolve("OGC" + serviceType + "GetCapabilities-to-ISO19119_ISO19139.xsl");
+            resolve(Geonet.Path.CONVERT_STYLESHEETS).
+            resolve("OGCWxSGetCapabilitiesto19119").
+            resolve("OGC" + serviceType + "GetCapabilities-to-ISO19119_ISO19139.xsl");
     }
-	
-	//---------------------------------------------------------------------------
-	//---
-	//--- Get Service Type
-	//---
-	//---------------------------------------------------------------------------
-	
-	private String getServiceType(String url)
-	{
-		if(url.toUpperCase().contains(WXS.WMS))
-			return "WMS";
-		else if(url.toUpperCase().contains(WXS.WCS))
-			return "WCS";
-		else if(url.toUpperCase().contains(WXS.WFS))
-			return "WFS";
-		else if(url.toUpperCase().contains(WXS.WPS))
-			return "WPS";
-		else 
-			return null;
-	}
-	
-	//---------------------------------------------------------------------------
 
-	public boolean isMoreRecentThan(String localChangeDate) {
-		return true;
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-	
-	private String path;
-	private static String outputSchema = "iso19139";
-	
-	public String getPath() {
-		return path;
-	}
+    private String getServiceType(String url) {
+        if (url.toUpperCase().contains(WXS.WMS))
+            return "WMS";
+        else if (url.toUpperCase().contains(WXS.WCS))
+            return "WCS";
+        else if (url.toUpperCase().contains(WXS.WFS))
+            return "WFS";
+        else if (url.toUpperCase().contains(WXS.WPS))
+            return "WPS";
+        else
+            return null;
+    }
 
-	
-	public ISODate getChangeDate() {
-		return null;
-	}
-	
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+
+    public boolean isMoreRecentThan(String localChangeDate) {
+        return true;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public ISODate getChangeDate() {
+        return null;
+    }
+
+    public static class WXS {
+        public static final String WMS = "SERVICE=WMS";
+        public static final String WCS = "SERVICE=WCS";
+        public static final String WFS = "SERVICE=WFS";
+        public static final String WPS = "SERVICE=WPS";
+    }
+
 }
 
 //=============================================================================

@@ -38,9 +38,9 @@ import jeeves.server.context.ServiceContext;
  *
  * @author Jose García
  */
-public class AtomHarvester implements Service
-{
-    public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class AtomHarvester implements Service {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
     //--------------------------------------------------------------------------
     //---
@@ -48,8 +48,7 @@ public class AtomHarvester implements Service
     //---
     //--------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
         InspireAtomHarvester inspireAtomHarvester = new InspireAtomHarvester(gc);

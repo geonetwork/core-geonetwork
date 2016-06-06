@@ -27,10 +27,10 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public interface Activator
-{
-	public void startup(String appPath, Element config) throws Exception;
-	public void shutdown();
+public interface Activator {
+    public void startup(String appPath, Element config) throws Exception;
+
+    public void shutdown();
 }
 
 //=============================================================================

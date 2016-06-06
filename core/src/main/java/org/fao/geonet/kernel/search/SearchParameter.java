@@ -23,11 +23,9 @@
 package org.fao.geonet.kernel.search;
 
 /**
- * 
  * Parameter names used in search.
  *
  * @author heikki doeleman
- * 
  */
 public class SearchParameter {
 
@@ -90,19 +88,19 @@ public class SearchParameter {
     public static final String CREDIT = "credit";
     public static final String DATAPARAM = "dataparam";
     public static final String ORGNAME = "orgName";
-	public static final String SPATIALREPRESENTATIONTYPE = "spatialRepresentationType";
+    public static final String SPATIALREPRESENTATIONTYPE = "spatialRepresentationType";
     public static final String VALID = "valid";
-    public static final String HASFEATURECAT="hasfeaturecat";
+    public static final String HASFEATURECAT = "hasfeaturecat";
     public static final String ROOT = "_root";
     public static final String ISTEMPLATE = "_isTemplate";
     public static final String RESULTTYPE = "resultType";
     public static final String FACET_QUERY = "facet.q";
 
-	public static final String OP_VIEW 	   = "_operation0";
-	public static final String OP_DOWNLOAD = "_operation1";
-	public static final String OP_EDITING  = "_operation2";
-	public static final String OP_NOTIFY   = "_operation3";
-	public static final String OP_DYNAMIC  = "_operation5";
-	public static final String OP_FEATURED = "_operation6";
+    public static final String OP_VIEW = "_operation0";
+    public static final String OP_DOWNLOAD = "_operation1";
+    public static final String OP_EDITING = "_operation2";
+    public static final String OP_NOTIFY = "_operation3";
+    public static final String OP_DYNAMIC = "_operation5";
+    public static final String OP_FEATURED = "_operation6";
 
 }

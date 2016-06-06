@@ -23,9 +23,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.mutable.MutableLong;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -62,16 +59,107 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
 public class SolrSearchManager implements ISearchManager {
     public static final String ID = "id";
     public static final String DOC_TYPE = "docType";
     public static final String SCHEMA_INDEX_XSLT_FOLDER = "index-fields";
     public static final String SCHEMA_INDEX_XSTL_FILENAME = "solr-default.xsl";
-
+    public static final String FIELDNAME = "name";
+    public static final String FIELDSTRING = "string";
     @Autowired
     private SolrConfig config;
-
     private SolrClient client;
+
+    public static Path getXSLTForIndexing(Path schemaDir) {
+        Path xsltForIndexing = schemaDir
+            .resolve(SCHEMA_INDEX_XSLT_FOLDER).resolve(SCHEMA_INDEX_XSTL_FILENAME);
+        if (!Files.exists(xsltForIndexing)) {
+            throw new RuntimeException(String.format(
+                "XSLT for schema indexing does not exist. Create file '%s'.",
+                xsltForIndexing.toString()));
+        }
+        return xsltForIndexing;
+    }
+
+    private static void addMDFields(SolrInputDocument doc, Path schemaDir, Element metadata, String root) {
+        final Path styleSheet = getXSLTForIndexing(schemaDir);
+        try {
+            Element fields = Xml.transform(metadata, styleSheet);
+            /* Generates something like that:
+            <doc>
+              <field name="toto">Contenu</field>
+            </doc>*/
+            for (Element field : (List<Element>) fields.getChildren("field")) {
+                doc.addField(field.getAttributeValue("name"), field.getValue());
+            }
+        } catch (Exception e) {
+            Log.error(Geonet.INDEX_ENGINE,
+                String.format("Indexing stylesheet contains errors: %s \n\t Marking the metadata as _indexingError=1 in index",
+                    e.getMessage()));
+            doc.addField(IndexFields.INDEXING_ERROR_FIELD, "1");
+            doc.addField(IndexFields.INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage());
+            StringBuilder sb = new StringBuilder();
+            allText(metadata, sb);
+            doc.addField("_text_", sb.toString());
+        }
+    }
+
+    private static void allText(Element metadata, StringBuilder sb) {
+        String text = metadata.getText().trim();
+        if (text.length() > 0) {
+            if (sb.length() > 0)
+                sb.append(" ");
+            sb.append(text);
+        }
+        @SuppressWarnings("unchecked")
+        List<Element> children = metadata.getChildren();
+        for (Element aChildren : children) {
+            allText(aChildren, sb);
+        }
+    }
+
+    private static void addMoreFields(SolrInputDocument doc, List<Element> fields) {
+        for (Element field : fields) {
+            doc.addField(field.getAttributeValue(FIELDNAME),
+                field.getAttributeValue(FIELDSTRING));
+        }
+    }
+
+    public static String convertDate(Object date) {
+        if (date != null) {
+            return new ISODate((Date) date).toString();
+        } else {
+            return null;
+        }
+    }
+
+    public static Integer convertInteger(Object value) {
+        if (value == null) {
+            return null;
+        } else if (value instanceof Number) {
+            return ((Number) value).intValue();
+        } else {
+            return Integer.valueOf(value.toString());
+        }
+    }
+
+    public static Element makeField(String name, String value) {
+        Element field = new Element("Field");
+        field.setAttribute(SolrSearchManager.FIELDNAME, name);
+        field.setAttribute(SolrSearchManager.FIELDSTRING, value == null ? "" : value);
+        return field;
+    }
+
+    /**
+     * Creates a new XML field for the Lucene index and add it to the document.
+     */
+    public static void addField(Element xmlDoc, String name, String value, boolean store, boolean index) {
+        Element field = makeField(name, value);
+        xmlDoc.addContent(field);
+    }
 
     @Override
     public void init(ServiceConfig handlerConfig) throws Exception {
@@ -103,65 +191,6 @@ public class SolrSearchManager implements ISearchManager {
         }
     }
 
-
-    public static Path getXSLTForIndexing(Path schemaDir) {
-        Path xsltForIndexing = schemaDir
-            .resolve(SCHEMA_INDEX_XSLT_FOLDER).resolve(SCHEMA_INDEX_XSTL_FILENAME);
-        if (!Files.exists(xsltForIndexing)) {
-            throw new RuntimeException(String.format(
-                "XSLT for schema indexing does not exist. Create file '%s'.",
-                xsltForIndexing.toString()));
-        }
-        return xsltForIndexing;
-    }
-    private static void addMDFields(SolrInputDocument doc, Path schemaDir, Element metadata, String root) {
-        final Path styleSheet = getXSLTForIndexing(schemaDir);
-        try {
-            Element fields = Xml.transform(metadata, styleSheet);
-            /* Generates something like that:
-            <doc>
-              <field name="toto">Contenu</field>
-            </doc>*/
-            for (Element field : (List<Element>) fields.getChildren("field")) {
-                doc.addField(field.getAttributeValue("name"), field.getValue());
-            }
-        } catch (Exception e) {
-            Log.error(Geonet.INDEX_ENGINE,
-                    String.format("Indexing stylesheet contains errors: %s \n\t Marking the metadata as _indexingError=1 in index",
-                            e.getMessage()));
-            doc.addField(IndexFields.INDEXING_ERROR_FIELD, "1");
-            doc.addField(IndexFields.INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage());
-            StringBuilder sb = new StringBuilder();
-            allText(metadata, sb);
-            doc.addField("_text_", sb.toString());
-        }
-    }
-
-
-    private static void allText(Element metadata, StringBuilder sb) {
-        String text = metadata.getText().trim();
-        if (text.length() > 0) {
-            if (sb.length() > 0)
-                sb.append(" ");
-            sb.append(text);
-        }
-        @SuppressWarnings("unchecked")
-        List<Element> children = metadata.getChildren();
-        for (Element aChildren : children) {
-            allText(aChildren, sb);
-        }
-    }
-
-    public static final String FIELDNAME = "name";
-    public static final String FIELDSTRING = "string";
-
-    private static void addMoreFields(SolrInputDocument doc, List<Element> fields) {
-        for (Element field : fields) {
-            doc.addField(field.getAttributeValue(FIELDNAME),
-                    field.getAttributeValue(FIELDSTRING));
-        }
-    }
-
     @Override
     public void forceIndexChanges() throws IOException {
         try {
@@ -170,7 +199,6 @@ public class SolrSearchManager implements ISearchManager {
             throw new IOException(e);
         }
     }
-
 
     @Override
     public boolean rebuildIndex(ServiceContext context, boolean xlinks, boolean reset, boolean fromSelection) throws Exception {
@@ -191,7 +219,7 @@ public class SolrSearchManager implements ISearchManager {
             return true;
         } catch (Exception e) {
             Log.error(Geonet.INDEX_ENGINE, "Exception while rebuilding solr index, going to rebuild it: " +
-                    e.getMessage(), e);
+                e.getMessage(), e);
             return false;
         }
     }
@@ -199,7 +227,6 @@ public class SolrSearchManager implements ISearchManager {
     private void clearIndex() throws SolrServerException, IOException {
         client.deleteByQuery(DOC_TYPE + ":metadata");
     }
-
 
     public void iterateQuery(SolrQuery params, final Consumer<SolrDocument> callback) throws IOException, SolrServerException {
         final MutableLong pos = new MutableLong(0);
@@ -221,24 +248,6 @@ public class SolrSearchManager implements ISearchManager {
         }
     }
 
-    public static String convertDate(Object date) {
-        if (date != null) {
-            return new ISODate((Date) date).toString();
-        } else {
-            return null;
-        }
-    }
-
-    public static Integer convertInteger(Object value) {
-        if (value == null) {
-            return null;
-        } else if (value instanceof Number) {
-            return ((Number) value).intValue();
-        } else {
-            return Integer.valueOf(value.toString());
-        }
-    }
-
     @Override
     public Map<String, String> getDocsChangeDate() throws Exception {
         final SolrQuery params = new SolrQuery("*:*");
@@ -246,8 +255,8 @@ public class SolrSearchManager implements ISearchManager {
         params.setFields(ID, Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
         final Map<String, String> result = new HashMap<>();
         iterateQuery(params, doc ->
-                result.put(doc.getFieldValue(ID).toString(),
-                        convertDate(doc.getFieldValue(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE))));
+            result.put(doc.getFieldValue(ID).toString(),
+                convertDate(doc.getFieldValue(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE))));
         return result;
     }
 
@@ -309,7 +318,7 @@ public class SolrSearchManager implements ISearchManager {
         params.setFields(ID);
         Set<Integer> result = new HashSet<>();
         iterateQuery(params,
-                doc -> result.add(convertInteger(doc.getFieldValue(ID))));
+            doc -> result.add(convertInteger(doc.getFieldValue(ID))));
         return result;
     }
 
@@ -323,13 +332,6 @@ public class SolrSearchManager implements ISearchManager {
     public void delete(List<String> txts) throws Exception {
         client.deleteById(txts);
         client.commit();
-    }
-
-    /**
-     * Only for UTs
-     */
-    void setClient(SolrClient client) {
-        this.client = client;
     }
 
     public int getNumDocs(String query) throws IOException, SolrServerException {
@@ -369,7 +371,7 @@ public class SolrSearchManager implements ISearchManager {
     private void updateField(int metadataId, String fieldName, int newValue, String operator) throws IOException, SolrServerException {
         SolrInputDocument doc = new SolrInputDocument();
         doc.addField(ID, metadataId);
-        Map<String,Object> fieldModifier = new HashMap<>(1);
+        Map<String, Object> fieldModifier = new HashMap<>(1);
         fieldModifier.put(operator, newValue);
         doc.addField(fieldName, fieldModifier);
         client.add(doc);
@@ -379,6 +381,14 @@ public class SolrSearchManager implements ISearchManager {
     public SolrClient getClient() {
         return client;
     }
+
+    /**
+     * Only for UTs
+     */
+    void setClient(SolrClient client) {
+        this.client = client;
+    }
+
     public List<Element> getDocs(String query, Integer start, Integer rows) throws IOException, SolrServerException, JDOMException {
         final List<String> result = getDocIds(query, start, rows);
         List<Element> xmlDocs = new ArrayList<>(result.size());
@@ -413,28 +423,9 @@ public class SolrSearchManager implements ISearchManager {
         int hitsNumber = getNumDocs(query);
         return getDocs(query, 0, hitsNumber);
     }
+
     public List<String> getAllDocIds(String query) throws IOException, SolrServerException, JDOMException {
         int hitsNumber = getNumDocs(query);
         return getDocIds(query, 0, hitsNumber);
-    }
-
-    public static Element makeField(String name, String value) {
-        Element field = new Element("Field");
-        field.setAttribute(SolrSearchManager.FIELDNAME, name);
-        field.setAttribute(SolrSearchManager.FIELDSTRING, value == null ? "" : value);
-        return field;
-    }
-    /**
-     * Creates a new XML field for the Lucene index and add it to the document.
-     *
-     * @param xmlDoc
-     * @param name
-     * @param value
-     * @param store
-     * @param index
-     */
-    public static void addField(Element xmlDoc, String name, String value, boolean store, boolean index) {
-        Element field = makeField(name, value);
-        xmlDoc.addContent(field);
     }
 }

@@ -41,12 +41,13 @@ public class Key {
 
     /**
      * Constructor.
-     * @param mdId the id of the metadata
-     * @param lang the current ui language
-     * @param formatType the content type of the output
-     * @param formatterId the formatter used to create the output
-     * @param hideWithheld if true then elements in the metadata with the attribute gco:nilreason="withheld" are being hidden
-     * @param width
+     *
+     * @param mdId         the id of the metadata
+     * @param lang         the current ui language
+     * @param formatType   the content type of the output
+     * @param formatterId  the formatter used to create the output
+     * @param hideWithheld if true then elements in the metadata with the attribute
+     *                     gco:nilreason="withheld" are being hidden
      */
     public Key(int mdId, String lang, FormatType formatType, String formatterId, boolean hideWithheld, FormatterWidth width) {
         this.mdId = mdId;
@@ -88,12 +89,12 @@ public class Key {
     @Override
     public String toString() {
         return "Key{" +
-               "mdId=" + mdId +
-               ", lang='" + lang + '\'' +
-               ", width=" + width +
-               ", formatType=" + formatType +
-               ", formatterId='" + formatterId + '\'' +
-               ", hideWithheld=" + hideWithheld +
-               '}';
+            "mdId=" + mdId +
+            ", lang='" + lang + '\'' +
+            ", width=" + width +
+            ", formatType=" + formatType +
+            ", formatterId='" + formatterId + '\'' +
+            ", hideWithheld=" + hideWithheld +
+            '}';
     }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Métadonnées non trouvées</notfound>
+  <notowner>Métadonnées non mises à jour car vous n'en êtes pas l'auteur</notowner>
+  <updated>Métadonnées dont les privilèges ont été mis à jour</updated>
+  <resultstitle>Rapport sur la mise à jour des privilèges</resultstitle>
+</strings>

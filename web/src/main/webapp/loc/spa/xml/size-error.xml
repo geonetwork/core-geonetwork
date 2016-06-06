@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Error: exceso de tamaño</heading>
+  <message>El fichero es demasiado largo</message>
+  <button>Volver</button>
+</strings>
+

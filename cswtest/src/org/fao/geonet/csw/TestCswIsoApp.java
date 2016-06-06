@@ -20,7 +20,7 @@ public class TestCswIsoApp extends TestCase {
         String session = "s0001";
 
         try {
-            InputStream is = TestCswIsoApp.class.getResourceAsStream ("config.properties");
+            InputStream is = TestCswIsoApp.class.getResourceAsStream("config.properties");
             Properties prop = new Properties();
 
             prop.load(is);
@@ -32,8 +32,8 @@ public class TestCswIsoApp extends TestCase {
         }
 
         String p1 = "-mode=test";
-        String p2 = "-source="+source;
-        String p3 = "-workdir="+workDir;
+        String p2 = "-source=" + source;
+        String p3 = "-workdir=" + workDir;
         String p4 = "-logdir=" + logDir;
         String p5 = "-session=" + session;
 
@@ -58,7 +58,7 @@ public class TestCswIsoApp extends TestCase {
 
         } catch (Exception e) {
             e.printStackTrace();
-             // Fail test if any exception
+            // Fail test if any exception
             fail();
         }
     }

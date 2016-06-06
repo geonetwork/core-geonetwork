@@ -23,20 +23,28 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.MetadataNotification;
+import org.fao.geonet.domain.MetadataNotificationAction;
+import org.fao.geonet.domain.MetadataNotificationId_;
+import org.fao.geonet.domain.MetadataNotification_;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.*;
-import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * Implementation for methods in MetadataNotificationRepositoryCustom.
  * <p/>
- * User: Jesse
- * Date: 9/7/13
- * Time: 8:30 PM
+ * User: Jesse Date: 9/7/13 Time: 8:30 PM
  */
 public class MetadataNotificationRepositoryImpl implements MetadataNotificationRepositoryCustom {
     @PersistenceContext

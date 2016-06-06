@@ -22,8 +22,7 @@
 //==============================================================================
 
 package org.fao.geonet.kernel.setting;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.sources.http.ServletPathFinder;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
@@ -43,18 +42,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletContext;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.http.ServletPathFinder;
+
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 
 /**
- * A convenience class for updating and accessing settings.  One of the primary needs of this
- * class at the moment is to maintain backwards compatibility so not all code and xsl files
- * that make use of the settings need to be modified.
+ * A convenience class for updating and accessing settings.  One of the primary needs of this class
+ * at the moment is to maintain backwards compatibility so not all code and xsl files that make use
+ * of the settings need to be modified.
  */
 public class SettingManager {
 
@@ -71,7 +74,7 @@ public class SettingManager {
 
     public static final String SYSTEM_REQUESTED_LANGUAGE_ONLY = "system/requestedLanguage/only";
     public static final String SYSTEM_XLINKRESOLVER_ENABLE = "system/xlinkResolver/enable";
-	public static final String SYSTEM_SERVER_LOG = "system/server/log";
+    public static final String SYSTEM_SERVER_LOG = "system/server/log";
 
     public static final String SYSTEM_INSPIRE_ENABLE = "system/inspire/enable";
     public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
@@ -94,9 +97,8 @@ public class SettingManager {
     /**
      * Get all settings as xml.
      *
-     * @param asTree get the settings as a tree. If true only settings
-     * from the system family will be returned.
-     *
+     * @param asTree get the settings as a tree. If true only settings from the system family will
+     *               be returned.
      * @return all settings as xml.
      */
     public Element getAllAsXML(boolean asTree) {
@@ -231,7 +233,7 @@ public class SettingManager {
     /**
      * Get value of a setting as boolean
      *
-     * @param key The setting key
+     * @param key          The setting key
      * @param defaultValue The default value
      * @return The setting value as boolean
      */
@@ -260,9 +262,8 @@ public class SettingManager {
     /**
      * Set the value of a Setting entity
      *
-     * @param key the path/name/key of the setting.
+     * @param key   the path/name/key of the setting.
      * @param value the new value
-     *
      * @return true if the types are correct and the setting is found.
      */
     public boolean setValue(String key, String value) {
@@ -288,7 +289,7 @@ public class SettingManager {
     /**
      * Set the setting value by key to the boolean value.
      *
-     * @param key the key/path/name of the setting.
+     * @param key   the key/path/name of the setting.
      * @param value the new boolean value
      */
     public boolean setValue(String key, boolean value) {
@@ -300,8 +301,6 @@ public class SettingManager {
      *
      * @param values The settings to update
      * @return true if the types are correct and the setting is found.
-     *
-     * @throws SQLException
      */
     public final boolean setValues(final Map<String, String> values) {
         boolean success = true;
@@ -314,8 +313,8 @@ public class SettingManager {
     }
 
     /**
-     * Refreshes current settings manager. This has to be used when updating the Settings table without using this class. For example when
-     * using an SQL script.
+     * Refreshes current settings manager. This has to be used when updating the Settings table
+     * without using this class. For example when using an SQL script.
      */
     public final boolean refresh() throws SQLException {
         _entityManager.getEntityManagerFactory().getCache().evict(HarvesterSetting.class);
@@ -331,28 +330,26 @@ public class SettingManager {
     }
 
     public void setSiteUuid(String siteUuid) {
-       setValue(SYSTEM_SITE_SITE_ID_PATH, siteUuid);
+        setValue(SYSTEM_SITE_SITE_ID_PATH, siteUuid);
     }
 
     /**
-     * Return complete site URL including language
-     * eg. http://localhost:8080/geonetwork/srv/eng
-     *
-     * @param context
-     * @return
+     * Return complete site URL including language eg. http://localhost:8080/geonetwork/srv/eng
      */
-    public @Nonnull String getSiteURL(@Nonnull ServiceContext context) {
+    public
+    @Nonnull
+    String getSiteURL(@Nonnull ServiceContext context) {
         return getSiteURL(context.getLanguage());
     }
+
     /**
-     * Return complete site URL including language
-     * eg. http://localhost:8080/geonetwork/srv/eng
-     *
-     * @return
+     * Return complete site URL including language eg. http://localhost:8080/geonetwork/srv/eng
      */
-    public @Nonnull String getSiteURL(String language) {
+    public
+    @Nonnull
+    String getSiteURL(String language) {
         LanguageRepository languageRepository = ApplicationContextHolder.get().getBean(LanguageRepository.class);
-        if(language == null) {
+        if (language == null) {
             language = languageRepository.findOneByDefaultLanguage().getId();
         }
 
@@ -360,19 +357,18 @@ public class SettingManager {
     }
 
     /**
-     * Return complete node URL
-     * eg. http://localhost:8080/geonetwork/srv/
-     *
-     * @return
+     * Return complete node URL eg. http://localhost:8080/geonetwork/srv/
      */
-    public @Nonnull String getNodeURL() {
+    public
+    @Nonnull
+    String getNodeURL() {
         NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
 
         String baseURL = pathFinder.getBaseUrl();
         String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
-        String host    = getValue(Geonet.Settings.SERVER_HOST);
-        String port    = getValue(Geonet.Settings.SERVER_PORT);
-        String locServ = baseURL +"/"+ nodeInfo.getId() +"/";
+        String host = getValue(Geonet.Settings.SERVER_HOST);
+        String port = getValue(Geonet.Settings.SERVER_PORT);
+        String locServ = baseURL + "/" + nodeInfo.getId() + "/";
 
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
     }

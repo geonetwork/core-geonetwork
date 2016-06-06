@@ -25,7 +25,8 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 /**
  * A mode is a way of grouping {@link org.fao.geonet.services.metadata.format.groovy.Handler} and
- * {@link org.fao.geonet.services.metadata.format.groovy.Sorter} so that groups of handlers and sorters can be partitioned.
+ * {@link org.fao.geonet.services.metadata.format.groovy.Sorter} so that groups of handlers and
+ * sorters can be partitioned.
  *
  * @author Jesse on 10/22/2014.
  */
@@ -55,8 +56,8 @@ public class Mode {
     }
 
     /**
-     * The id of another mode which will be used if the object (Handler or Sorter) was not found in this mode.  This can be null
-     * if not fallback is desired.
+     * The id of another mode which will be used if the object (Handler or Sorter) was not found in
+     * this mode.  This can be null if not fallback is desired.
      */
     public String getFallback() {
         return fallback;

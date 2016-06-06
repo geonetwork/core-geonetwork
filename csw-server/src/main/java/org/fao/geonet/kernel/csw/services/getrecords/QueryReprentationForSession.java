@@ -24,10 +24,10 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import org.fao.geonet.util.Sha1Encoder;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Xml;
 
 public class QueryReprentationForSession {
 
@@ -35,9 +35,9 @@ public class QueryReprentationForSession {
     private final String query;
     private final String userid;
 
-    public QueryReprentationForSession( ServiceContext context, Element filterExpr ) {
+    public QueryReprentationForSession(ServiceContext context, Element filterExpr) {
         this.language = context.getLanguage();
-        this.query = Sha1Encoder.encodeString (Xml.getString(filterExpr));
+        this.query = Sha1Encoder.encodeString(Xml.getString(filterExpr));
         this.userid = context.getUserSession().getUserId();
     }
 
@@ -52,7 +52,7 @@ public class QueryReprentationForSession {
     }
 
     @Override
-    public boolean equals( Object obj ) {
+    public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;

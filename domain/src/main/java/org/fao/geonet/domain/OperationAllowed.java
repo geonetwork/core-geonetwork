@@ -26,11 +26,16 @@ package org.fao.geonet.domain;
 import org.fao.geonet.entitylistener.OperationAllowedEntityListenerManager;
 
 import javax.annotation.Nonnull;
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Table;
 
 /**
- * An entity that represents the relationship between a metadata, group and the operations that group is allowed to perform on the
- * metadata.
+ * An entity that represents the relationship between a metadata, group and the operations that
+ * group is allowed to perform on the metadata.
  *
  * @author Jesse
  */

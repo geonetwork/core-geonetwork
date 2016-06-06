@@ -23,8 +23,13 @@
 
 package org.fao.geonet.domain;
 
-import javax.persistence.*;
 import java.io.Serializable;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
 /**
  * The id object of {@link MetadataStatus}.

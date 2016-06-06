@@ -23,14 +23,10 @@
 
 package org.fao.geonet.services.metadata.schema;
 
-import jeeves.server.ServiceConfig;
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.MissingParameterEx;
-import org.fao.geonet.services.thesaurus.EditElement;
-import org.jdom.Element;
+
+import jeeves.server.ServiceConfig;
 
 /**
  * Parse the action parameter of one of the schematron services.

@@ -23,21 +23,20 @@
 
 package org.fao.oaipmh.requests;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.ListRecordsResponse;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 //=============================================================================
 
-public class ListRecordsRequest extends TokenListRequest
-{
-	public static final String VERB = "ListRecords";
+public class ListRecordsRequest extends TokenListRequest {
+    public static final String VERB = "ListRecords";
 
     public ListRecordsRequest(GeonetHttpRequestFactory transport) {
         super(transport);
@@ -45,32 +44,32 @@ public class ListRecordsRequest extends TokenListRequest
 
 
     public ListRecordsResponse execute() throws IOException, OaiPmhException, JDOMException,
-															  SAXException, Exception
-	{
-		Map<String, String> params = new HashMap<String, String>();
+        SAXException, Exception {
+        Map<String, String> params = new HashMap<String, String>();
 
-		if (resumpToken != null)
-			params.put("resumptionToken", resumpToken);
-		else
-		{
-			params.put("metadataPrefix", mdPrefix);
+        if (resumpToken != null)
+            params.put("resumptionToken", resumpToken);
+        else {
+            params.put("metadataPrefix", mdPrefix);
 
-			if (from != null)
-				params.put("from", from.toString() +"Z");
+            if (from != null)
+                params.put("from", from.toString() + "Z");
 
-			if (until != null)
-				params.put("until", until.toString() +"Z");
+            if (until != null)
+                params.put("until", until.toString() + "Z");
 
-			if (set != null)
-				params.put("set", set);
-		}
+            if (set != null)
+                params.put("set", set);
+        }
 
-		return new ListRecordsResponse(this, sendRequest(params));
-	}
+        return new ListRecordsResponse(this, sendRequest(params));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public String getVerb() { return VERB; }
+    public String getVerb() {
+        return VERB;
+    }
 
 
 }

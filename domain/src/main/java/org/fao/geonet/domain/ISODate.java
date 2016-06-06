@@ -27,12 +27,14 @@
 
 package org.fao.geonet.domain;
 
-import static java.util.Calendar.DAY_OF_MONTH;
-import static java.util.Calendar.HOUR_OF_DAY;
-import static java.util.Calendar.MINUTE;
-import static java.util.Calendar.MONTH;
-import static java.util.Calendar.SECOND;
-import static java.util.Calendar.YEAR;
+import org.jdom.Element;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+import org.joda.time.format.ISOPeriodFormat;
+import org.joda.time.format.PeriodFormatter;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -48,41 +50,36 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 
-import org.jdom.Element;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Period;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-import org.joda.time.format.ISOPeriodFormat;
-import org.joda.time.format.PeriodFormatter;
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.SECOND;
+import static java.util.Calendar.YEAR;
 
 /**
- * Represents a date at a given time. Provides methods for representing the date
- * as a string and parsing from string.
- * <p>
- * String format is: yyyy-mm-ddThh:mm:ss
- * </p>
+ * Represents a date at a given time. Provides methods for representing the date as a string and
+ * parsing from string. <p> String format is: yyyy-mm-ddThh:mm:ss </p>
  */
 @Embeddable
 @XmlRootElement
 public class ISODate
-        implements Cloneable, Comparable<ISODate>, Serializable, XmlEmbeddable {
+    implements Cloneable, Comparable<ISODate>, Serializable, XmlEmbeddable {
     private static final String DEFAULT_DATE_TIME = "3000-01-01T00:00:00.000Z"; // JUNK
-                                                                                // Value
+    // Value
 
     // Pattern to check dates
     @XmlTransient
     private static Pattern gsYear = Pattern
-            .compile("([0-9]{4})(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
+        .compile("([0-9]{4})(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
     @XmlTransient
     private static Pattern gsYearMonth = Pattern.compile(
-            "([0-9]{4})-([0-1][0-9])(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
+        "([0-9]{4})-([0-1][0-9])(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
 
     // Fri Jan 01 2010 00:00:00 GMT+0100 (CET)
     @XmlTransient
     private static Pattern htmlFormat = Pattern.compile(
-            "([a-zA-Z]{3}) ([a-zA-Z]{3}) ([0-9]{2}) ([0-9]{4}) ([0-2][0-9]):([0-5][0-9]):([0-5][0-9]) (.+)");
+        "([a-zA-Z]{3}) ([a-zA-Z]{3}) ([0-9]{2}) ([0-9]{4}) ([0-2][0-9]):([0-5][0-9]):([0-5][0-9]) (.+)");
 
     @XmlTransient
     private boolean _shortDate; // --- 'true' if the format is yyyy-mm-dd
@@ -123,11 +120,10 @@ public class ISODate
     }
 
     /**
-     * Converts a given ISO date time into the form used to index in Lucene.
-     * Returns null if it gets back a ridiculous value
+     * Converts a given ISO date time into the form used to index in Lucene. Returns null if it gets
+     * back a ridiculous value
      *
-     * @param stringToParse
-     *            the string to parse
+     * @param stringToParse the string to parse
      */
     public static String parseISODateTime(final String stringToParse) {
         String newDateTime = parseISODateTimes(stringToParse, null);
@@ -157,7 +153,7 @@ public class ISODate
         try {
             DateTime idt = parseBasicOrFullDateTime(input1);
             odt1 = dto.parseDateTime(idt.toString())
-                    .withZone(DateTimeZone.forID("UTC"));
+                .withZone(DateTimeZone.forID("UTC"));
             odt = odt1.toString();
 
         } catch (Exception e) {
@@ -191,7 +187,7 @@ public class ISODate
             } else {
                 DateTime idt = parseBasicOrFullDateTime(input2);
                 DateTime odt2 = dto.parseDateTime(idt.toString())
-                        .withZone(DateTimeZone.forID("UTC"));
+                    .withZone(DateTimeZone.forID("UTC"));
                 odt = odt + "|" + odt2.toString();
             }
         } catch (Exception e) {
@@ -203,7 +199,7 @@ public class ISODate
     }
 
     public static DateTime parseBasicOrFullDateTime(String input1)
-            throws Exception {
+        throws Exception {
         DateTimeFormatter bd = ISODateTimeFormat.basicDate();
         DateTimeFormatter bt = ISODateTimeFormat.basicTime();
         DateTimeFormatter bdt = ISODateTimeFormat.basicDateTime();
@@ -215,7 +211,7 @@ public class ISODate
         } else if (input1.startsWith("T") && !input1.contains(":")) {
             idt = bt.parseDateTime(input1);
         } else if (input1.contains("T") && !input1.contains(":")
-                && !input1.contains("-")) {
+            && !input1.contains("-")) {
             idt = bdt.parseDateTime(input1);
         } else if ((matcher = gsYearMonth.matcher(input1)).matches()) {
             String year = matcher.group(1);
@@ -247,42 +243,42 @@ public class ISODate
             // Fri Jan 01 2010 00:00:00 GMT+0100 (CET)
             String month = matcher.group(2);
             switch (month) {
-            case "Jan":
-                month = "1";
-                break;
-            case "Feb":
-                month = "2";
-                break;
-            case "Mar":
-                month = "3";
-                break;
-            case "Apr":
-                month = "4";
-                break;
-            case "May":
-                month = "5";
-                break;
-            case "Jun":
-                month = "6";
-                break;
-            case "Jul":
-                month = "7";
-                break;
-            case "Aug":
-                month = "8";
-                break;
-            case "Sep":
-                month = "9";
-                break;
-            case "Oct":
-                month = "10";
-                break;
-            case "Nov":
-                month = "11";
-                break;
-            default:
-                month = "12";
-                break;
+                case "Jan":
+                    month = "1";
+                    break;
+                case "Feb":
+                    month = "2";
+                    break;
+                case "Mar":
+                    month = "3";
+                    break;
+                case "Apr":
+                    month = "4";
+                    break;
+                case "May":
+                    month = "5";
+                    break;
+                case "Jun":
+                    month = "6";
+                    break;
+                case "Jul":
+                    month = "7";
+                    break;
+                case "Aug":
+                    month = "8";
+                    break;
+                case "Sep":
+                    month = "9";
+                    break;
+                case "Oct":
+                    month = "10";
+                    break;
+                case "Nov":
+                    month = "11";
+                    break;
+                default:
+                    month = "12";
+                    break;
             }
             String day = matcher.group(3);
             String year = matcher.group(4);
@@ -292,7 +288,7 @@ public class ISODate
             String timezone = matcher.group(8);
 
             idt = generateDate(year, month, day, second, minute, hour,
-                    timezone);
+                timezone);
         } else {
             idt = dtp.parseDateTime(input1);
         }
@@ -310,7 +306,7 @@ public class ISODate
      * @return
      */
     private static DateTime generateDate(String year, String month, String day,
-            String second, String minute, String hour, String timezone) {
+                                         String second, String minute, String hour, String timezone) {
 
         Calendar c = Calendar.getInstance();
         c.set(Calendar.YEAR, Integer.valueOf(year));
@@ -337,7 +333,7 @@ public class ISODate
      * @return
      */
     private static DateTime generateDate(String year, String month,
-            String minute, String hour, String timezone) {
+                                         String minute, String hour, String timezone) {
 
         return generateDate(year, month, "1", "00", minute, hour, timezone);
     }
@@ -362,10 +358,8 @@ public class ISODate
     // ---------------------------------------------------------------------------
 
     /**
-     * Subtract a date from this date and return the seconds between them.
-     * <p>
-     * The value is always positive so that date1.timeDifferenceInSeconds(date2)
-     * == date2.timeDifferenceInSeconds(date1)
+     * Subtract a date from this date and return the seconds between them. <p> The value is always
+     * positive so that date1.timeDifferenceInSeconds(date2) == date2.timeDifferenceInSeconds(date1)
      * </p>
      */
     public long timeDifferenceInSeconds(ISODate date) {
@@ -450,11 +444,9 @@ public class ISODate
     }
 
     /**
-     * Return true if this object is only the date (year, month, day) and time
-     * should be ignored.
+     * Return true if this object is only the date (year, month, day) and time should be ignored.
      *
-     * @return true if this object is only the date (year, month, day) and time
-     *         should be ignored.
+     * @return true if this object is only the date (year, month, day) and time should be ignored.
      */
     @Transient
     public boolean isDateOnly() {
@@ -534,13 +526,13 @@ public class ISODate
             String[] parts = isoDate.split("-|/");
             if (parts.length != 3) {
                 throw new IllegalArgumentException(
-                        "Invalid ISO date : " + isoDate);
+                    "Invalid ISO date : " + isoDate);
             }
             int year;
             if (parts[0].length() < 4) {
                 int shortYear = Integer.parseInt(parts[0]);
                 String thisYear = String
-                        .valueOf(Calendar.getInstance().get(YEAR));
+                    .valueOf(Calendar.getInstance().get(YEAR));
                 int century = Integer.parseInt(thisYear.substring(0, 2)) * 100;
                 int yearInCentury = Integer.parseInt(thisYear.substring(2));
 
@@ -556,7 +548,7 @@ public class ISODate
             int day;
             if (parts[2].toLowerCase().endsWith("z")) {
                 day = Integer
-                        .parseInt(parts[2].substring(0, parts[2].length() - 1));
+                    .parseInt(parts[2].substring(0, parts[2].length() - 1));
             } else {
                 day = Integer.parseInt(parts[2]);
             }
@@ -570,7 +562,7 @@ public class ISODate
             _calendar.set(year, month - 1, day, hour, minute, second);
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid ISO date : " + isoDate,
-                    e);
+                e);
         }
     }
 
@@ -579,7 +571,7 @@ public class ISODate
             String[] parts = isoDate.split(":");
             if (parts.length == 1 || parts.length > 3) {
                 throw new IllegalArgumentException(
-                        "Invalid ISO date : " + isoDate);
+                    "Invalid ISO date : " + isoDate);
             }
 
             int hour = Integer.parseInt(parts[0]);
@@ -602,14 +594,14 @@ public class ISODate
             _shortDate = false;
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid ISO date : " + isoDate,
-                    e);
+                e);
         }
     }
 
     @Transient
     public String getTimeAsString() {
         return pad(getHours()) + ":" + pad(getMinutes()) + ":"
-                + pad(getSeconds());
+            + pad(getSeconds());
     }
 
     private String pad(int value) {

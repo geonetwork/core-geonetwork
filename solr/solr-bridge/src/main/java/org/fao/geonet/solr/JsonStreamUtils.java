@@ -36,15 +36,6 @@ import java.util.Arrays;
 public class JsonStreamUtils {
     public static final JsonFactory jsonFactory = new JsonFactory(new ObjectMapper());
 
-    public interface JsonFilter {
-        void apply(JsonParser parser, JsonGenerator generator) throws Exception;
-    }
-
-    public interface TreeFilter {
-        void apply(ObjectNode doc) throws Exception;
-    }
-
-
     public static void filterArrayElements(JsonParser parser, JsonGenerator generator,
                                            JsonFilter callback) throws Exception {
         if (parser.getCurrentToken() != JsonToken.START_ARRAY) {
@@ -84,10 +75,10 @@ public class JsonStreamUtils {
 
     public static void addInfoToDocs(JsonParser parser, JsonGenerator generator, TreeFilter callback) throws Exception {
         JsonStreamUtils.filterObjectInPath(parser, generator,
-                (par, gen) ->
-                        JsonStreamUtils.filterArrayElements(par, gen, (par1, gen1) ->
-                                filterTree(parser, generator, callback)),
-                "response", "docs");
+            (par, gen) ->
+                JsonStreamUtils.filterArrayElements(par, gen, (par1, gen1) ->
+                    filterTree(parser, generator, callback)),
+            "response", "docs");
     }
 
     private static void filterTree(JsonParser parser, JsonGenerator generator, TreeFilter callback) throws Exception {
@@ -97,5 +88,13 @@ public class JsonStreamUtils {
         final JsonNode tree = parser.readValueAsTree();
         callback.apply((ObjectNode) tree);
         generator.writeTree(tree);
+    }
+
+    public interface JsonFilter {
+        void apply(JsonParser parser, JsonGenerator generator) throws Exception;
+    }
+
+    public interface TreeFilter {
+        void apply(ObjectNode doc) throws Exception;
     }
 }

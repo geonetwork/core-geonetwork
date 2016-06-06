@@ -23,11 +23,11 @@
 
 package v2110;
 
-import v280.MoveHarvesterSettingsToHigherNumber;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import v280.MoveHarvesterSettingsToHigherNumber;
 
 /**
  * @author Jesse on 10/31/2014.

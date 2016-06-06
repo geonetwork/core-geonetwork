@@ -27,10 +27,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * Executionservice to deal with asynchronous CSW HarvestResponse. It is shut down in org.fao.geonet.GeoNetwork.stop().
+ * Executionservice to deal with asynchronous CSW HarvestResponse. It is shut down in
+ * org.fao.geonet.GeoNetwork.stop().
  *
  * @author heikki doeleman
- *
  */
 public class CswHarvesterResponseExecutionService {
 

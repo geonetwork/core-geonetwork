@@ -23,12 +23,20 @@
 
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDataInfo_;
+import org.fao.geonet.domain.MetadataHarvestInfo_;
+import org.fao.geonet.domain.MetadataSourceInfo_;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Metadata_;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -181,10 +189,12 @@ public final class MetadataSpecs {
     }
 
     /**
-     * Creates a specification for finding all metadata containing a {@link MetadataCategory} with the provided category
+     * Creates a specification for finding all metadata containing a {@link MetadataCategory} with
+     * the provided category
      *
      * @param category the category to use in the search
-     * @return a specification for finding all metadata containing a {@link MetadataCategory} with the provided category
+     * @return a specification for finding all metadata containing a {@link MetadataCategory} with
+     * the provided category
      */
     public static Specification<Metadata> hasCategory(final MetadataCategory category) {
         return new Specification<Metadata>() {
@@ -211,7 +221,7 @@ public final class MetadataSpecs {
         return new Specification<Metadata>() {
             @Override
             public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<String> schemaIdAttributePath =  root.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId);
+                Path<String> schemaIdAttributePath = root.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId);
                 Predicate likeSchemaIdPredicate = cb.like(schemaIdAttributePath, cb.literal("iso19139"));
                 return likeSchemaIdPredicate;
             }

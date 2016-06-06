@@ -26,8 +26,9 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ReservedGroup;
 
-import javax.annotation.Nonnull;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * Custom (non-spring-data) query methods for {@link Group} entities

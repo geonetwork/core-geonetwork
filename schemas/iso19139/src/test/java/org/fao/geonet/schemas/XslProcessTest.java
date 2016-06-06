@@ -44,17 +44,22 @@ import java.util.Map;
 import javax.xml.transform.TransformerConfigurationException;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 
 /**
  * Base class for XSL processing tests.
  *
- * The class checks that the process with no parameter
- * do not alter the record.
+ * The class checks that the process with no parameter do not alter the record.
  *
  * Created by francois on 26/05/16.
  */
 public abstract class XslProcessTest {
+
+    protected Map<String, String> ns = new HashMap<String, String>();
+    protected Path root;
+    protected Path xslFile;
+    protected Path xmlFile;
+    private String xslFilename;
+    private String xmlFilename;
 
     /**
      *
@@ -62,7 +67,6 @@ public abstract class XslProcessTest {
     public XslProcessTest() {
     }
 
-    private String xslFilename;
     public String getXslFilename() {
         return xslFilename;
     }
@@ -72,8 +76,6 @@ public abstract class XslProcessTest {
         return this;
     }
 
-    private String xmlFilename;
-
     public String getXmlFilename() {
         return xmlFilename;
     }
@@ -82,12 +84,6 @@ public abstract class XslProcessTest {
         this.xmlFilename = xmlFilename;
         return this;
     }
-
-    protected Map<String, String> ns = new HashMap<String, String>();
-    protected Path root;
-    protected Path xslFile;
-    protected Path xmlFile;
-
 
     @Before
     public void setup() throws TransformerConfigurationException, URISyntaxException {

@@ -23,7 +23,6 @@
 
 package org.fao.geonet.guiservices.sampledata;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
@@ -34,15 +33,14 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collection;
 
+import jeeves.server.context.ServiceContext;
+
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test add sample data service
- * User: Jesse
- * Date: 10/16/13
- * Time: 12:47 PM
+ * Test add sample data service User: Jesse Date: 10/16/13 Time: 12:47 PM
  */
 public class SampleDataAddIntegrationTest extends AbstractServiceIntegrationTest {
     @Test

@@ -24,6 +24,7 @@
 package org.fao.geonet.services.sources;
 
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.SettingDataType;
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 
@@ -72,9 +74,9 @@ public class SourcesController {
     @RequestMapping("/{lang}/source/{uuid}")
     @ResponseBody
     public OkResponse updateTranslations(
-            @PathVariable String lang,
-            @PathVariable String uuid,
-            final HttpServletRequest request) {
+        @PathVariable String lang,
+        @PathVariable String uuid,
+        final HttpServletRequest request) {
         if (settingRepository.findOne(SettingManager.SYSTEM_SITE_SITE_ID_PATH).getValue().equals(uuid)) {
             updateSite(request);
         }
@@ -96,10 +98,10 @@ public class SourcesController {
                 String lang = paramName.substring(PREFIX.length());
                 if (values.length > 0) {
                     Setting setting = new Setting().
-                            setDataType(SettingDataType.STRING).
-                            setInternal(true).
-                            setName(SettingManager.SYSTEM_SITE_LABEL_PREFIX + lang).
-                            setValue(values[0]);
+                        setDataType(SettingDataType.STRING).
+                        setInternal(true).
+                        setName(SettingManager.SYSTEM_SITE_LABEL_PREFIX + lang).
+                        setValue(values[0]);
                     translationSettings.add(setting);
                 }
             }

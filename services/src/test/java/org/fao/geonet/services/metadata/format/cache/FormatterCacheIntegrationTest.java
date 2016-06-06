@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.metadata.format.cache;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.domain.OperationAllowed;
@@ -51,6 +50,8 @@ import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import jeeves.server.context.ServiceContext;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -59,6 +60,8 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTest {
 
     public static final MockHttpServletRequest SERVLET_REQUEST = new MockHttpServletRequest("GET", "requesturi");
+    @PersistenceContext
+    EntityManager entityManager;
     @Autowired
     private Publish publish;
     @Autowired
@@ -67,8 +70,6 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
     private DataManager dataManager;
     @Autowired
     private SystemInfo systemInfo;
-    @PersistenceContext
-    EntityManager entityManager;
     private FilesystemStore fsStore;
     private FormatterCache formatterCache;
 
@@ -136,7 +137,7 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
         assertNull(fsStore.getPublished(key));
         assertNull(fsStore.get(key));
         final byte[] result = formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("newValue", changeDate,
-                true), true);
+            true), true);
         assertEquals("newValue", new String(result, Constants.CHARSET));
     }
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <groups>Kies dan een groep waar deze gebruiker bij hoort</groups>
+  <notfound>Metadata Records niet gevonden</notfound>
+  <notowner>Metadata Records die niet konden worden overgezet omdat u niet de eigenaar bent
+  </notowner>
+  <updated>Metadata Records naar een nieuwe eigenaar overgezet</updated>
+  <resultstitle>Resultaat van Overzetten naar Nieuwe Eigenaar</resultstitle>
+  <users>Selecteer de gebruiker die de nieuwe eigenaar moet worden</users>
+</strings>

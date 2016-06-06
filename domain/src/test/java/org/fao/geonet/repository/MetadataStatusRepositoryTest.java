@@ -24,7 +24,12 @@
 package org.fao.geonet.repository;
 
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
+import org.fao.geonet.domain.MetadataStatusId_;
+import org.fao.geonet.domain.MetadataStatus_;
+import org.fao.geonet.domain.StatusValue;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -42,6 +47,23 @@ public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
     StatusValueRepository _statusRepo;
     @Autowired
     MetadataStatusRepository _repo;
+
+    public static MetadataStatus newMetadataStatus(AtomicInteger inc, StatusValueRepository statusRepo) {
+        int val = inc.incrementAndGet();
+
+        MetadataStatus metadataStatus = new MetadataStatus();
+
+        MetadataStatusId id = new MetadataStatusId();
+        id.setMetadataId(inc.incrementAndGet());
+        id.setChangeDate(new ISODate());
+        id.setUserId(inc.incrementAndGet());
+        metadataStatus.setId(id);
+        metadataStatus.setChangeMessage("change message " + val);
+        final StatusValue statusValue = statusRepo.save(StatusValueRepositoryTest.newStatusValue(inc));
+        metadataStatus.setStatusValue(statusValue);
+
+        return metadataStatus;
+    }
 
     @Test
     public void testFindOne() {
@@ -95,23 +117,6 @@ public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
     private MetadataStatus newMetadataStatus() {
 
         return newMetadataStatus(_inc, _statusRepo);
-    }
-
-    public static MetadataStatus newMetadataStatus(AtomicInteger inc, StatusValueRepository statusRepo) {
-        int val = inc.incrementAndGet();
-
-        MetadataStatus metadataStatus = new MetadataStatus();
-
-        MetadataStatusId id = new MetadataStatusId();
-        id.setMetadataId(inc.incrementAndGet());
-        id.setChangeDate(new ISODate());
-        id.setUserId(inc.incrementAndGet());
-        metadataStatus.setId(id);
-        metadataStatus.setChangeMessage("change message " + val);
-        final StatusValue statusValue = statusRepo.save(StatusValueRepositoryTest.newStatusValue(inc));
-        metadataStatus.setStatusValue(statusValue);
-
-        return metadataStatus;
     }
 
 }

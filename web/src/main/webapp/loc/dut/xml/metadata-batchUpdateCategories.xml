@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Metadata Records niet gevonden</notfound>
+  <notowner>Metadata Records waarvan categorieën niet zijn aangepast omdat u niet de eigenaar bent
+  </notowner>
+  <updated>Metadata Records waarvan categorieën zijn aangepast</updated>
+  <resultstitle>Resultaat van Aanpassen Categorieën</resultstitle>
+</strings>

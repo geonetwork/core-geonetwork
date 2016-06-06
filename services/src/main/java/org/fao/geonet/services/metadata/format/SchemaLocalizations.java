@@ -30,10 +30,11 @@ import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
 import com.vividsolutions.jts.util.Assert;
+
 import groovy.util.slurpersupport.GPathResult;
-import jeeves.server.dispatchers.guiservices.XmlFile;
-import jeeves.server.sources.ServiceRequestFactory;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.kernel.SchemaManager;
@@ -54,20 +55,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+
+import jeeves.server.dispatchers.guiservices.XmlFile;
+import jeeves.server.sources.ServiceRequestFactory;
 
 import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
 
 /**
- * Contains methods for efficiently accessing the translations in a schema's labels and codelists files.
+ * Contains methods for efficiently accessing the translations in a schema's labels and codelists
+ * files.
  *
  * @author Jesse on 11/28/2014.
  */
 public class SchemaLocalizations {
     public static final String LANG_CODELIST_NS = "http://www.loc.gov/standards/iso639-2/";
     /**
-     * Localization files from schema plugin and the parents.  each file should be tried from the first to last.
+     * Localization files from schema plugin and the parents.  each file should be tried from the
+     * first to last.
      */
     private final List<SchemaLocalization> schemaLocalizations;
     private final CurrentLanguageHolder languageHolder;
@@ -78,7 +85,7 @@ public class SchemaLocalizations {
         this.languageHolder = languageHolder;
         this.languageRepo = context.getBean(IsoLanguageRepository.class);
 
-        ArrayList <SchemaLocalization> tmpLocalizations = Lists.newArrayList();
+        ArrayList<SchemaLocalization> tmpLocalizations = Lists.newArrayList();
         final SchemaManager schemaManager = context.getBean(SchemaManager.class);
         final Map<String, SchemaLocalization> allLocalizations = getSchemaLocalizations(context, schemaManager);
         tmpLocalizations.add(allLocalizations.get(schema));
@@ -87,39 +94,14 @@ public class SchemaLocalizations {
         this.schemaLocalizations = Collections.unmodifiableList(tmpLocalizations);
     }
 
-    private void addParentLocalizations(SchemaManager schemaManager, Map<String, SchemaLocalization> allLocalizations,
-                                        ArrayList<SchemaLocalization> tmpLocalizations, String dependantSchema) throws IOException {
-        if (dependantSchema == null) {
-            return;
-        }
-
-        final SchemaLocalization schemaLocalization = allLocalizations.get(dependantSchema);
-        if (schemaLocalization != null) {
-            tmpLocalizations.add(schemaLocalization);
-        }
-
-        final ConfigFile parentConfig = getConfigFile(schemaManager, dependantSchema);
-        addParentLocalizations(schemaManager, allLocalizations, tmpLocalizations, parentConfig.dependOn());
-    }
-
-    @VisibleForTesting
-    protected ConfigFile getConfigFile(SchemaManager schemaManager, String schema) throws IOException {
-        final Path schemaDir = schemaManager.getSchemaDir(schema).resolve(FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR);
-        return new ConfigFile(schemaDir, false, null);
-    }
-
-    @VisibleForTesting
-    protected Map<String, SchemaLocalization> getSchemaLocalizations(ApplicationContext context, SchemaManager schemaManager) throws
-            IOException, JDOMException {
-        return loadSchemaLocalizations(context, schemaManager);
-    }
     /**
-     * Get the strings.xml, codelists.xml and labels.xml for the correct language from the schema plugin
+     * Get the strings.xml, codelists.xml and labels.xml for the correct language from the schema
+     * plugin
      *
      * @return Map(SchemaName, SchemaLocalizations)
      */
     static Map<String, SchemaLocalization> loadSchemaLocalizations(ApplicationContext context, SchemaManager schemaManager)
-            throws IOException, JDOMException {
+        throws IOException, JDOMException {
 
         Map<String, SchemaLocalization> localization = Maps.newHashMap();
         final Set<String> allSchemas = schemaManager.getSchemas();
@@ -130,7 +112,6 @@ public class SchemaLocalizations {
 
         return localization;
     }
-
 
     public static SchemaLocalizations create(String schema) throws IOException, JDOMException {
         Object obj = RequestContextHolder.getRequestAttributes();
@@ -156,8 +137,37 @@ public class SchemaLocalizations {
         return new SchemaLocalizations(appContext, languageHolder, schema, null);
     }
 
+    private void addParentLocalizations(SchemaManager schemaManager, Map<String, SchemaLocalization> allLocalizations,
+                                        ArrayList<SchemaLocalization> tmpLocalizations, String dependantSchema) throws IOException {
+        if (dependantSchema == null) {
+            return;
+        }
+
+        final SchemaLocalization schemaLocalization = allLocalizations.get(dependantSchema);
+        if (schemaLocalization != null) {
+            tmpLocalizations.add(schemaLocalization);
+        }
+
+        final ConfigFile parentConfig = getConfigFile(schemaManager, dependantSchema);
+        addParentLocalizations(schemaManager, allLocalizations, tmpLocalizations, parentConfig.dependOn());
+    }
+
+    @VisibleForTesting
+    protected ConfigFile getConfigFile(SchemaManager schemaManager, String schema) throws IOException {
+        final Path schemaDir = schemaManager.getSchemaDir(schema).resolve(FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR);
+        return new ConfigFile(schemaDir, false, null);
+    }
+
+    @VisibleForTesting
+    protected Map<String, SchemaLocalization> getSchemaLocalizations(ApplicationContext context, SchemaManager schemaManager) throws
+        IOException, JDOMException {
+        return loadSchemaLocalizations(context, schemaManager);
+    }
+
     /**
-     * Obtain a translation for the given node by looking up the elements name in the the schema's labels.xml file
+     * Obtain a translation for the given node by looking up the elements name in the the schema's
+     * labels.xml file
+     *
      * @param node the node to get a translation for.
      */
     public String nodeLabel(GPathResult node) throws Exception {
@@ -167,16 +177,19 @@ public class SchemaLocalizations {
 
     /**
      * Look up a translation in the schema's labels.xml file
-     * @param qualifiedNodeName the name to use as a key for the lookup
-     * @param qualifiedParentNodeName the name of the parent, used as the second lookup key.  This can be null and the default value will
-     *                                be returned
+     *
+     * @param qualifiedNodeName       the name to use as a key for the lookup
+     * @param qualifiedParentNodeName the name of the parent, used as the second lookup key.  This
+     *                                can be null and the default value will be returned
      */
     public String nodeLabel(String qualifiedNodeName, String qualifiedParentNodeName) throws Exception {
         return nodeTranslation(qualifiedNodeName, qualifiedParentNodeName, "label");
     }
 
     /**
-     * Obtain the description for the given node by looking up the elements name in the the schema's labels.xml file
+     * Obtain the description for the given node by looking up the elements name in the the schema's
+     * labels.xml file
+     *
      * @param node the node to get a description for.
      */
     public String nodeDesc(GPathResult node) throws Exception {
@@ -195,16 +208,17 @@ public class SchemaLocalizations {
 
     /**
      * Look up a description in the schema's labels.xml file
-     * @param qualifiedNodeName the name to use as a key for the lookup
-     * @param qualifiedParentNodeName the name of the parent, used as the second lookup key.  This can be null and the default value will
-     *                                be returned
+     *
+     * @param qualifiedNodeName       the name to use as a key for the lookup
+     * @param qualifiedParentNodeName the name of the parent, used as the second lookup key.  This
+     *                                can be null and the default value will be returned
      */
     public String nodeDesc(String qualifiedNodeName, String qualifiedParentNodeName) throws Exception {
 
         return nodeTranslation(qualifiedNodeName, qualifiedParentNodeName, "description");
     }
 
-    public String nodeTranslation(String qualifiedNodeName, String qualifiedParentNodeName,  String type) throws Exception {
+    public String nodeTranslation(String qualifiedNodeName, String qualifiedParentNodeName, String type) throws Exception {
         if (qualifiedParentNodeName == null) {
             qualifiedParentNodeName = "";
         }
@@ -231,24 +245,29 @@ public class SchemaLocalizations {
     }
 
     /**
-     * Obtain a translation for the given codelist by looking up the codelist and codelist value in the the schema's codelists.xml file
-     * * @param node a node containing a codeListValue attribute and a codeList attribute
+     * Obtain a translation for the given codelist by looking up the codelist and codelist value in
+     * the the schema's codelists.xml file * @param node a node containing a codeListValue attribute
+     * and a codeList attribute
      */
     public String codelistValueLabel(GPathResult node) throws Exception {
         return codelistValueLabel(node.getProperty("@codeList").toString(), node.getProperty("@codeListValue").toString());
     }
 
     /**
-     * Obtain a translation for the given codelist by looking up the codelist and codelist value in the the schema's codelists.xml file.
+     * Obtain a translation for the given codelist by looking up the codelist and codelist value in
+     * the the schema's codelists.xml file.
+     *
      * @param codelist the name of the codelist
-     * @param value the codelist value
+     * @param value    the codelist value
      */
     public String codelistValueLabel(String codelist, String value) throws Exception {
         return codelistTranslation(codelist, value, "label");
     }
 
     /**
-     * Obtain the description for the given codelist by looking up the codelist and codelist value in the the schema's codelists.xml file.
+     * Obtain the description for the given codelist by looking up the codelist and codelist value
+     * in the the schema's codelists.xml file.
+     *
      * @param node a node containing a codeListValue attribute and a codeList attribute
      */
     public String codelistValueDesc(GPathResult node) throws Exception {
@@ -256,10 +275,11 @@ public class SchemaLocalizations {
     }
 
     /**
-     * Obtain the description for the given codelist by looking up the codelist and codelist value in the the schema's codelists.xml file.
+     * Obtain the description for the given codelist by looking up the codelist and codelist value
+     * in the the schema's codelists.xml file.
      *
      * @param codelist the name of the codelist
-     * @param value the codelist value
+     * @param value    the codelist value
      */
     public String codelistValueDesc(String codelist, String value) throws Exception {
         return codelistTranslation(codelist, value, "description");
@@ -335,7 +355,8 @@ public class SchemaLocalizations {
     }
 
     /**
-     * Translate a string in the schema's strings.xml file.  Each element in the key array is one level deep in the xml tree.
+     * Translate a string in the schema's strings.xml file.  Each element in the key array is one
+     * level deep in the xml tree.
      *
      * If there are two elements with the same name the second element will be ignored.
      *

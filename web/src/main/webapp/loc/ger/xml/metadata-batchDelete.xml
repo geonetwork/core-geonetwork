@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Metadatensatz nicht gefunden</notfound>
+  <notowner>Metadatensatz kann wegen fehlender Berechtigungen nicht gelöscht werden.</notowner>
+  <updated>Metadatensatz gelöscht</updated>
+</strings>

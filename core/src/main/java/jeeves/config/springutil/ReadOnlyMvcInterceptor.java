@@ -23,7 +23,6 @@
 
 package jeeves.config.springutil;
 
-import jeeves.services.ReadWriteController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -32,14 +31,15 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jeeves.services.ReadWriteController;
+
 import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getServletContext;
 
 /**
- * This class intercepts MVC requests and verifies that:
- * <ol>
- *     <li>The system is no in readonly mode</li>
- *     <li>If the system is readonly then only allow tests <em>without</em> the {@link jeeves.services.ReadWriteController} annotation</li>
- * </ol>
+ * This class intercepts MVC requests and verifies that: <ol> <li>The system is no in readonly
+ * mode</li> <li>If the system is readonly then only allow tests <em>without</em> the {@link
+ * jeeves.services.ReadWriteController} annotation</li> </ol>
+ *
  * @author Jesse on 6/4/2014.
  */
 public class ReadOnlyMvcInterceptor extends HandlerInterceptorAdapter {
@@ -65,6 +65,7 @@ public class ReadOnlyMvcInterceptor extends HandlerInterceptorAdapter {
 
         return super.preHandle(request, response, handler);
     }
+
     private static class InReadOnlyModeException extends RuntimeException {
         InReadOnlyModeException(String req) {
             super("Server is in Readonly mode, requested service is not allowed when in read only mode: " + req);

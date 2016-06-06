@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <delUserConf>Soll der Benutzer aus der Datenbank gelöscht werden?</delUserConf>
+  <delUserCsw>Dieser Benutzer ist unserer CSW-ISO Profil-Kontakt, wollen Sie diesen Benutzer
+    trotzdem löschen?
+  </delUserCsw>
+</strings>

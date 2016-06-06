@@ -29,7 +29,11 @@ import org.fao.geonet.domain.SchematronCriteriaGroup_;
 import org.fao.geonet.domain.SchematronCriteria_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * Specifications for selecting {@link org.fao.geonet.domain.SchematronCriteria}
@@ -42,7 +46,7 @@ public class SchematronCriteriaSpecs {
             @Override
             public Predicate toPredicate(Root<SchematronCriteria> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 final Path<Integer> schematronIdPath = root.get(SchematronCriteria_.group).get(SchematronCriteriaGroup_.id).get
-                        (SchematronCriteriaGroupId_.schematronId);
+                    (SchematronCriteriaGroupId_.schematronId);
 
                 return cb.equal(schematronIdPath, schematronId);
             }
@@ -54,7 +58,7 @@ public class SchematronCriteriaSpecs {
             @Override
             public Predicate toPredicate(Root<SchematronCriteria> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 final Path<String> groupNamePath = root.get(SchematronCriteria_.group).get(SchematronCriteriaGroup_.id).get
-                        (SchematronCriteriaGroupId_.name);
+                    (SchematronCriteriaGroupId_.name);
 
                 return cb.equal(groupNamePath, name);
             }

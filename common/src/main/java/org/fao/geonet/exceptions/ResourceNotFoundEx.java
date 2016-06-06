@@ -30,20 +30,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @SuppressWarnings("serial")
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class ResourceNotFoundEx extends NotFoundEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class ResourceNotFoundEx extends NotFoundEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public ResourceNotFoundEx(String name)
-	{
-		super("Resource not found", name);
+    public ResourceNotFoundEx(String name) {
+        super("Resource not found", name);
 
-		id = "resource-not-found";
-	}
+        id = "resource-not-found";
+    }
 }
 
 //=============================================================================

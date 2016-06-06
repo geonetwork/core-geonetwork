@@ -36,59 +36,56 @@ import java.util.List;
 
 //==============================================================================
 
-/** This class parses a "SimpleType" element. All attributes are ignored (a warning
-  * is logged). Only the "restriction" child is recognized and extracted.
-  */
+/**
+ * This class parses a "SimpleType" element. All attributes are ignored (a warning is logged). Only
+ * the "restriction" child is recognized and extracted.
+ */
 
-class SimpleTypeEntry extends BaseHandler
-{
-	public String name;
-	public List<String> alTypes = new ArrayList<String>();
-	public List<String> alEnum = new ArrayList<String>();
+class SimpleTypeEntry extends BaseHandler {
+    public String name;
+    public List<String> alTypes = new ArrayList<String>();
+    public List<String> alEnum = new ArrayList<String>();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public SimpleTypeEntry(Element el, Path file, String targetNS, String targetNSPrefix)
-	{
-		this(new ElementInfo(el, file, targetNS, targetNSPrefix));
-	}
+    public SimpleTypeEntry(Element el, Path file, String targetNS, String targetNSPrefix) {
+        this(new ElementInfo(el, file, targetNS, targetNSPrefix));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public SimpleTypeEntry(ElementInfo ei)
-	{
+    public SimpleTypeEntry(ElementInfo ei) {
         name = handleAttribs(ei, null);
         handleChildren(ei);
-	}
+    }
 
 
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("SimpleTypeEntry name:" + name + " Enums:[");
-		for (int j = 0; j < alEnum.size(); j++) {
-		    sb.append(alEnum.get(j) + ", ");
-		}
-		sb.append("], types:[");
-		for (int j = 0; j < alTypes.size(); j++) {
-		    sb.append(alTypes.get(j) + ", ");
-		}
-		sb.append("]");
-		return sb.toString();
-	}
-	
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("SimpleTypeEntry name:" + name + " Enums:[");
+        for (int j = 0; j < alEnum.size(); j++) {
+            sb.append(alEnum.get(j) + ", ");
+        }
+        sb.append("], types:[");
+        for (int j = 0; j < alTypes.size(); j++) {
+            sb.append(alTypes.get(j) + ", ");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 
-	private void handleChildren(ElementInfo ei)
-	{
-		List<?> children = ei.element.getChildren();
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
+
+    private void handleChildren(ElementInfo ei) {
+        List<?> children = ei.element.getChildren();
 
         for (Object aChildren : children) {
             Element elChild = (Element) aChildren;
@@ -103,63 +100,54 @@ class SimpleTypeEntry extends BaseHandler
 
                     if (elemName.equals("enumeration")) {
                         alEnum.add(elEnum.getAttributeValue("value"));
-                    }
-
-                    else if (elemName.equals("minInclusive") || elemName.equals("maxInclusive") ||
-                            elemName.equals("minExclusive") || elemName.equals("maxExclusive") ||
-                            elemName.equals("pattern"))
+                    } else if (elemName.equals("minInclusive") || elemName.equals("maxInclusive") ||
+                        elemName.equals("minExclusive") || elemName.equals("maxExclusive") ||
+                        elemName.equals("pattern"))
                     //--- we are not interested in type's domain so we skip these specifications
                     {
 
-                    }
-
-                    else {
+                    } else {
                         Logger.log();
                     }
                 }
-            }
-
-            else if (elName.equals("union")) {
+            } else if (elName.equals("union")) {
                 List<?> simpleTypes = elChild.getChildren("simpleType", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
                 // Load enumeration of union of simpleType (eg. gml:TimeUnitType, gml:NilReasonEnumeration)
-                if (simpleTypes.size()>0) {
-	                for (Object st : simpleTypes) {
-	                	Element stEl = (Element) st;
-	                	List<?> restrictions = stEl.getChildren("restriction", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
-	                
-	                	for (Object r : restrictions) {
-							Element rEl = (Element) r;
-							List<?> enumerationList = rEl.getChildren("enumeration", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
-							for (Object e : enumerationList) {
-								Element elEnum = (Element) e;
-								String v = elEnum.getAttributeValue("value");
-								alEnum.add(v);
-							}
-	                	}
-	                }
-	                // TODO : Optional pattern restriction
+                if (simpleTypes.size() > 0) {
+                    for (Object st : simpleTypes) {
+                        Element stEl = (Element) st;
+                        List<?> restrictions = stEl.getChildren("restriction", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
+
+                        for (Object r : restrictions) {
+                            Element rEl = (Element) r;
+                            List<?> enumerationList = rEl.getChildren("enumeration", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
+                            for (Object e : enumerationList) {
+                                Element elEnum = (Element) e;
+                                String v = elEnum.getAttributeValue("value");
+                                alEnum.add(v);
+                            }
+                        }
+                    }
+                    // TODO : Optional pattern restriction
                 } else {
-                	// List of member types are loaded in order to retrieve type enumeration list when available (eg. gco:nilReason).
-                	String memberTypes = elChild.getAttributeValue("memberTypes");
-                	// TODO : Probably member types should be handled as geonet:choose style complexElement
-                	if (memberTypes != null) {
-                		String[] types = memberTypes.split(" ");
-                		for (String type : types) {
-                			alTypes.add(type);
-                		}
-                	}
+                    // List of member types are loaded in order to retrieve type enumeration list when available (eg. gco:nilReason).
+                    String memberTypes = elChild.getAttributeValue("memberTypes");
+                    // TODO : Probably member types should be handled as geonet:choose style complexElement
+                    if (memberTypes != null) {
+                        String[] types = memberTypes.split(" ");
+                        for (String type : types) {
+                            alTypes.add(type);
+                        }
+                    }
                 }
-            }
+            } else if (elName.equals("annotation")) {
 
-            else if (elName.equals("annotation")) {
-
-            }
-            else {
+            } else {
                 Logger.log();
             }
         }
-        
-	}
+
+    }
 }
 
 //==============================================================================

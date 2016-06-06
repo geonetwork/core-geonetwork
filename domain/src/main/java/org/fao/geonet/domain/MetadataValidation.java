@@ -26,7 +26,15 @@ package org.fao.geonet.domain;
 import org.fao.geonet.entitylistener.MetadataValidationEntityListenerManager;
 
 import javax.annotation.Nonnull;
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Entity representing metadata validation reports.
@@ -98,10 +106,9 @@ public class MetadataValidation extends GeonetEntity {
     }
 
     /**
-     * Set the status as either {@link MetadataValidationStatus#VALID) or
-     * {@link MetadataValidationStatus#INVALID)
+     * Set the status as either {@link MetadataValidationStatus#VALID) or {@link
+     * MetadataValidationStatus#INVALID)
      *
-     * @param isValid
      * @return this entity object
      */
     public MetadataValidation setValid(boolean isValid) {
@@ -120,7 +127,6 @@ public class MetadataValidation extends GeonetEntity {
     }
 
     /**
-     * @param validationDate
      * @return this entity object
      */
     public MetadataValidation setValidationDate(ISODate validationDate) {
@@ -135,9 +141,10 @@ public class MetadataValidation extends GeonetEntity {
     }
 
     /**
-     * Set if this type of validation is required for the metadata to be considered valid.  Some validation tests are informational
-     * only (see {@link org.fao.geonet.domain.Schematron}) if the test is informational only then required is false and it will not
-     * affect the metadata's overall validity.
+     * Set if this type of validation is required for the metadata to be considered valid.  Some
+     * validation tests are informational only (see {@link org.fao.geonet.domain.Schematron}) if the
+     * test is informational only then required is false and it will not affect the metadata's
+     * overall validity.
      */
     @Column(nullable = true)
     @Nonnull
@@ -184,11 +191,11 @@ public class MetadataValidation extends GeonetEntity {
     @Override
     public String toString() {
         return "MetadataValidation{" + id +
-               ", status=" + status +
-               ", numTests=" + numTests +
-               ", numFailures=" + numFailures +
-               ", validationDate=" + validationDate +
-               ", required=" + required +
-               '}';
+            ", status=" + status +
+            ", numTests=" + numTests +
+            ", numFailures=" + numFailures +
+            ", validationDate=" + validationDate +
+            ", required=" + required +
+            '}';
     }
 }

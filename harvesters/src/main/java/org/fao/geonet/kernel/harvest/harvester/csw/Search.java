@@ -31,79 +31,72 @@ import java.util.Map;
 
 //=============================================================================
 
-class Search
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+class Search {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public Search() {}
+    public String freeText;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    public String title;
+    public String abstrac;
 
-	public Search(Element search)
-	{
-		freeText = Util.getParam(search, "freeText", "").trim();
-		title    = Util.getParam(search, "title",    "").trim();
-		abstrac  = Util.getParam(search, "abstract", "").trim();
-		subject  = Util.getParam(search, "subject",  "").trim();
-		minscale  = Util.getParam(search, "minscale",  "").trim();
-		maxscale  = Util.getParam(search, "maxscale",  "").trim();
-	}
-	
-	
-	public void addAttribute(String elementName, String elementValue)
-	{
-		if (elementValue!=null && !elementValue.equals("")){
-			attributesMap.put(elementName, elementValue);
-		}
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    public String subject;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    public String minscale;
 
-	public Search copy()
-	{
-		Search s = new Search();
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    public String maxscale;
+    public Map<String, String> attributesMap = new HashMap<String, String>();
 
-		s.freeText = freeText;
-		s.title    = title;
-		s.abstrac  = abstrac;
-		s.subject  = subject;
-		s.minscale = minscale;
-		s.maxscale = maxscale;
+    public Search() {
+    }
 
-		return s;
-	}
+    public Search(Element search) {
+        freeText = Util.getParam(search, "freeText", "").trim();
+        title = Util.getParam(search, "title", "").trim();
+        abstrac = Util.getParam(search, "abstract", "").trim();
+        subject = Util.getParam(search, "subject", "").trim();
+        minscale = Util.getParam(search, "minscale", "").trim();
+        maxscale = Util.getParam(search, "maxscale", "").trim();
+    }
 
-	//---------------------------------------------------------------------------
+    public static Search createEmptySearch() {
+        return new Search(new Element("search"));
+    }
 
-	public static Search createEmptySearch()
-	{
-		return new Search(new Element("search"));
-	}
+    public void addAttribute(String elementName, String elementValue) {
+        if (elementValue != null && !elementValue.equals("")) {
+            attributesMap.put(elementName, elementValue);
+        }
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+    public Search copy() {
+        Search s = new Search();
 
-	public String freeText;
-	public String title;
-	public String abstrac;
-	public String subject;
-	public String minscale;
-	public String maxscale;
-	
-	public Map<String, String> attributesMap = new HashMap<String, String>();
-	
-	
+        s.freeText = freeText;
+        s.title = title;
+        s.abstrac = abstrac;
+        s.subject = subject;
+        s.minscale = minscale;
+        s.maxscale = maxscale;
+
+        return s;
+    }
+
 
 }
 

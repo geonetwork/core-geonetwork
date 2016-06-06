@@ -34,12 +34,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     HarvestHistoryRepository _repo;
+
+    public static HarvestHistory createHarvestHistory(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+        HarvestHistory customElementSet = new HarvestHistory()
+            .setDeleted(val % 2 == 0)
+            .setHarvesterName("name" + val)
+            .setHarvesterType("type" + val)
+            .setHarvesterUuid("uuid" + val);
+        return customElementSet;
+    }
 
     @Test
     public void testFindOne() {
@@ -139,16 +153,6 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
 
     private HarvestHistory newHarvestHistory() {
         return createHarvestHistory(_inc);
-    }
-
-    public static HarvestHistory createHarvestHistory(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-        HarvestHistory customElementSet = new HarvestHistory()
-                .setDeleted(val % 2 == 0)
-                .setHarvesterName("name" + val)
-                .setHarvesterType("type" + val)
-                .setHarvesterUuid("uuid" + val);
-        return customElementSet;
     }
 
 }

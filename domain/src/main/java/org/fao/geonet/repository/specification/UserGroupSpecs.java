@@ -23,13 +23,22 @@
 
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Group_;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.UserGroupId_;
+import org.fao.geonet.domain.UserGroup_;
 import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.*;
 
 import java.util.HashSet;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 public final class UserGroupSpecs {
 
@@ -52,14 +61,14 @@ public final class UserGroupSpecs {
         return new Specification<UserGroup>() {
             @Override
             public Predicate toPredicate(Root<UserGroup> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-            	Path<Integer> grpIdAttributePath = root.get(UserGroup_.id).get(UserGroupId_.groupId);
+                Path<Integer> grpIdAttributePath = root.get(UserGroup_.id).get(UserGroupId_.groupId);
                 Predicate grpIdInPredicate = grpIdAttributePath.in(groupId);
                 return grpIdInPredicate;
             }
         };
     }
-    
-    
+
+
     public static Specification<UserGroup> hasUserId(final int userId) {
         return new Specification<UserGroup>() {
             @Override

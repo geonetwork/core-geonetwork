@@ -31,14 +31,28 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.persistence.*;
 import java.io.IOException;
 import java.util.IdentityHashMap;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 /**
- * An entity representing a harvesting task that may have been completed or possibly ending in error.
+ * An entity representing a harvesting task that may have been completed or possibly ending in
+ * error.
  *
  * @author Jesse
  */
@@ -46,7 +60,7 @@ import java.util.IdentityHashMap;
 @Access(AccessType.PROPERTY)
 @Table(name = "HarvestHistory")
 @EntityListeners(HarvestHistoryEntityListenerManager.class)
-@SequenceGenerator(name=HarvestHistory.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = HarvestHistory.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class HarvestHistory extends GeonetEntity {
     static final String ID_SEQ_NAME = "harvest_history_id_seq";
     private int _id;
@@ -60,20 +74,22 @@ public class HarvestHistory extends GeonetEntity {
     private String _params;
 
     /**
-     * Get the id of the harvest history record. This is a generated value and as such new instances should not have this set as it will
-     * simply be ignored and could result in reduced performance.
+     * Get the id of the harvest history record. This is a generated value and as such new instances
+     * should not have this set as it will simply be ignored and could result in reduced
+     * performance.
      *
      * @return the id
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
 
     /**
-     * Set the id of the harvest history record. This is a generated value and as such new instances should not have this set as it will
-     * simply be ignored and could result in reduced performance.
+     * Set the id of the harvest history record. This is a generated value and as such new instances
+     * should not have this set as it will simply be ignored and could result in reduced
+     * performance.
      *
      * @param id the new id
      * @return this entity object
@@ -148,9 +164,8 @@ public class HarvestHistory extends GeonetEntity {
     }
 
     /**
-     * Get the name of the harvester. This is a non-translated string and is used for UI purposes as a human readable identifier (as
-     * opposed
-     * to the harvester uuid)
+     * Get the name of the harvester. This is a non-translated string and is used for UI purposes as
+     * a human readable identifier (as opposed to the harvester uuid)
      *
      * @return the name
      */
@@ -160,9 +175,8 @@ public class HarvestHistory extends GeonetEntity {
     }
 
     /**
-     * Set the name of the harvester. This is a non-translated string and is used for UI purposes as a human readable identifier (as
-     * opposed
-     * to the harvester uuid)
+     * Set the name of the harvester. This is a non-translated string and is used for UI purposes as
+     * a human readable identifier (as opposed to the harvester uuid)
      *
      * @param harvesterName the name of the harvester
      * @return this entity object
@@ -194,8 +208,9 @@ public class HarvestHistory extends GeonetEntity {
     }
 
     /**
-     * For backwards compatibility we need the deleted column to be either 'n' or 'y'. This is a workaround to allow this until future
-     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     * For backwards compatibility we need the deleted column to be either 'n' or 'y'. This is a
+     * workaround to allow this until future versions of JPA that allow different ways of
+     * controlling how types are mapped to the database.
      */
     @Column(name = "deleted", nullable = false, length = 1)
     protected char getDeleted_JpaWorkaround() {
@@ -233,9 +248,39 @@ public class HarvestHistory extends GeonetEntity {
      * @return the harvester info.
      */
     @Lob
-    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
+    @Type(type = "org.hibernate.type.StringClobType")
+    // this is a work around for postgres so postgres can correctly load clobs
     public String getInfo() {
         return _info;
+    }
+
+    /**
+     * Set the arbitrary harvester specific data about the harvesting. Can be error information or
+     * other related information.
+     *
+     * @param info the information to store.
+     * @return this entity object
+     */
+    protected HarvestHistory setInfo(String info) {
+        this._info = info;
+        return this;
+    }
+
+    /**
+     * Set the arbitrary harvester specific data about the harvesting. Can be error information or
+     * other related information.
+     *
+     * @param info the information to store.
+     * @return this entity object.
+     */
+    @Nonnull
+    public HarvestHistory setInfo(@Nullable Element info) {
+        if (info == null) {
+            setInfo((String) null);
+        } else {
+            setInfo(Xml.getString(info));
+        }
+        return this;
     }
 
     /**
@@ -254,58 +299,16 @@ public class HarvestHistory extends GeonetEntity {
     }
 
     /**
-     * Set the arbitrary harvester specific data about the harvesting. Can be error information or other related information.
-     *
-     * @param info the information to store.
-     * @return this entity object
-     */
-    protected HarvestHistory setInfo(String info) {
-        this._info = info;
-        return this;
-    }
-    /**
-     * Set the arbitrary harvester specific data about the harvesting. Can be error information or other related information.
-     *
-     *
-     * @param info the information to store.
-     * @return this entity object.
-     */
-    @Nonnull
-    public HarvestHistory setInfo(@Nullable Element info) {
-        if (info == null) {
-            setInfo((String)null);
-        } else {
-            setInfo(Xml.getString(info));
-        }
-        return this;
-    }
-
-    /**
-     * Get the parameters used for performing the harvesting. As of 2.10 this is XML from the setting table. Future versions will likely
-     * change this.
+     * Get the parameters used for performing the harvesting. As of 2.10 this is XML from the
+     * setting table. Future versions will likely change this.
      *
      * @return the parameters used for performing the harvesting.
      */
     @Lob
-    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
+    @Type(type = "org.hibernate.type.StringClobType")
+    // this is a work around for postgres so postgres can correctly load clobs
     public String getParams() {
         return _params;
-    }
-
-    /**
-     * Get the parameters used for performing the harvesting. As of 2.10 this is XML from the setting table. Future versions will likely
-     * change this.
-     *
-     * @return the parameters used for performing the harvesting.
-     */
-    @Transient
-    @Nullable
-    public Element getParamsAsXml() throws IOException, JDOMException {
-        final String params = getParams();
-        if (params == null) {
-            return null;
-        }
-        return Xml.loadString(params, false);
     }
 
     /**
@@ -318,6 +321,7 @@ public class HarvestHistory extends GeonetEntity {
         this._params = params;
         return this;
     }
+
     /**
      * Set the parameters used for performing the harvesting.
      *
@@ -333,6 +337,21 @@ public class HarvestHistory extends GeonetEntity {
         return this;
     }
 
+    /**
+     * Get the parameters used for performing the harvesting. As of 2.10 this is XML from the
+     * setting table. Future versions will likely change this.
+     *
+     * @return the parameters used for performing the harvesting.
+     */
+    @Transient
+    @Nullable
+    public Element getParamsAsXml() throws IOException, JDOMException {
+        final String params = getParams();
+        if (params == null) {
+            return null;
+        }
+        return Xml.loadString(params, false);
+    }
 
     @Override
     protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {

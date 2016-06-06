@@ -48,6 +48,7 @@ import static org.junit.Assert.assertEquals;
 
 public class CswFilter2SolrTest {
     private static final IFieldMapper FIELD_MAPPER = field -> field;
+    private static final String expectedGeom = "POLYGON ((-170 -80, -170 80, 170 80, 170 -80, -170 -80))";
 
     @Test
     public void testIsEqualsTo() throws Exception {
@@ -129,8 +130,6 @@ public class CswFilter2SolrTest {
         final PropertyIsBetween filter = FilterUtils.createPropertyIsBetween("toto", 1, 10);
         assertEquals("(toto:[\"1\" TO \"10\"])", CswFilter2Solr.translate(filter, FIELD_MAPPER));
     }
-
-    private static final String expectedGeom = "POLYGON ((-170 -80, -170 80, 170 80, 170 -80, -170 -80))";
 
     @Test
     public void testBbox() {

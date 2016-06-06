@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Metadata Records not found</notfound>
+  <notowner>Metadata Records that could not be versioned because you are not the owner</notowner>
+  <updated>Metadata Records versioned</updated>
+</strings>

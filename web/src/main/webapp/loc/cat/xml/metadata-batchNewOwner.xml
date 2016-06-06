@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <groups>Escollir el grup al que pertanyerà l'usuari</groups>
+  <notfound>No s'han trobat les metadades</notfound>
+  <notowner>Les metadades no han estat transferides donat que no en sou el propietari</notowner>
+  <updated>Les metadades han estat transferides al nou propietari</updated>
+  <resultstitle>Resultat de la transferència al nou propietari</resultstitle>
+  <users>Seleccioneu l'usuari que serà el nou propietari</users>
+</strings>

@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -32,53 +31,58 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import jeeves.server.context.ServiceContext;
+
 //=============================================================================
 
-/** Create a mapping (remote URI) -> (local ID / change date). Retrieves all
-  * metadata of a given harvest uuid and puts them into an hashmap.
-  */
+/**
+ * Create a mapping (remote URI) -> (local ID / change date). Retrieves all metadata of a given
+ * harvest uuid and puts them into an hashmap.
+ */
 
-public class UriMapper
-{
-	private HashMap<String, List<RecordInfo>> hmUriRecords = new HashMap<String, List<RecordInfo>>();
+public class UriMapper {
+    private HashMap<String, List<RecordInfo>> hmUriRecords = new HashMap<String, List<RecordInfo>>();
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public UriMapper(ServiceContext context, String harvestUuid) throws Exception
-	{
+    public UriMapper(ServiceContext context, String harvestUuid) throws Exception {
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         final List<Metadata> metadataList = metadataRepository.findAll(MetadataSpecs.hasHarvesterUuid(harvestUuid));
 
-		for (Metadata record : metadataList) {
-			String uri  = record.getHarvestInfo().getUri();
+        for (Metadata record : metadataList) {
+            String uri = record.getHarvestInfo().getUri();
 
-			List<RecordInfo> records = hmUriRecords.get(uri);
-			
-			if (records == null) {
-				records = new ArrayList<RecordInfo>();
-				hmUriRecords.put(uri, records);
-			}
-			
-			records.add(new RecordInfo(record));
-		}
-	}
+            List<RecordInfo> records = hmUriRecords.get(uri);
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+            if (records == null) {
+                records = new ArrayList<RecordInfo>();
+                hmUriRecords.put(uri, records);
+            }
 
-	public List<RecordInfo> getRecords(String uri) { return hmUriRecords.get(uri); }
+            records.add(new RecordInfo(record));
+        }
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-	public Iterable<String> getUris() { return hmUriRecords.keySet(); }
-	
+    public List<RecordInfo> getRecords(String uri) {
+        return hmUriRecords.get(uri);
+    }
+
+    //--------------------------------------------------------------------------
+
+    public Iterable<String> getUris() {
+        return hmUriRecords.keySet();
+    }
+
 }
 
 //=============================================================================

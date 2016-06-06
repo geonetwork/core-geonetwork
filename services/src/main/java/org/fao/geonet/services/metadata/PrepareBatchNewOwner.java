@@ -23,51 +23,51 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.services.ownership.OwnershipUtils;
 import org.jdom.Element;
 
 import java.nio.file.Path;
 import java.util.List;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+
 //=============================================================================
 
-public class PrepareBatchNewOwner implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class PrepareBatchNewOwner implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception {}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		UserSession   us   = context.getUserSession();
-		Element result = new Element("response");
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        UserSession us = context.getUserSession();
+        Element result = new Element("response");
 
-		// -- get the list of users (who are editors or above) from the database
-		List<Element> list = OwnershipUtils.getEditorUsers(context, us);
-		for (Element user : list) {
-			user = (Element) user.clone();
-			user.removeChild("password");
-			user.setName("editor");
+        // -- get the list of users (who are editors or above) from the database
+        List<Element> list = OwnershipUtils.getEditorUsers(context, us);
+        for (Element user : list) {
+            user = (Element) user.clone();
+            user.removeChild("password");
+            user.setName("editor");
 
-			result.addContent(user);
-		}
+            result.addContent(user);
+        }
 
-		return result;
-	}
+        return result;
+    }
 
 }
 

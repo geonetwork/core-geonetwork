@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+  <cannotGet>Kann keine Tooltips vom Server holen</cannotGet>
+  <error>Fehler</error>
+</strings>

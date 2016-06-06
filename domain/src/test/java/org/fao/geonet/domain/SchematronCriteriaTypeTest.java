@@ -23,7 +23,11 @@
 
 package org.fao.geonet.domain;
 
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.GroupRepositoryTest;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataRepositoryTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -32,8 +36,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test schematron criteria type accept methods
- * Created by Jesse on 2/27/14.
+ * Test schematron criteria type accept methods Created by Jesse on 2/27/14.
  */
 public class SchematronCriteriaTypeTest extends AbstractSpringDataTest {
 
@@ -58,6 +61,7 @@ public class SchematronCriteriaTypeTest extends AbstractSpringDataTest {
         ), null));
 
     }
+
     @Test
     public void testAcceptsSingleOrGroup() throws Exception {
         final Group group = groupRepository.save(GroupRepositoryTest.newGroup(_inc));

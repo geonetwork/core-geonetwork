@@ -30,8 +30,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Test schematron criteria
- * Created by Jesse on 2/7/14.
+ * Test schematron criteria Created by Jesse on 2/7/14.
  */
 public class SchematronCriteriaGroupTest {
 
@@ -66,8 +65,8 @@ public class SchematronCriteriaGroupTest {
 
         SchematronCriteriaGroup group = new SchematronCriteriaGroup();
         group.setId(new SchematronCriteriaGroupId("Name", schematron))
-                .setRequirement(SchematronRequirement.REQUIRED)
-                .addCriteria(criteria);
+            .setRequirement(SchematronRequirement.REQUIRED)
+            .addCriteria(criteria);
         group.setSchematron(schematron);
 
         Element xml = group.asXml();
@@ -78,7 +77,7 @@ public class SchematronCriteriaGroupTest {
         assertNotNull(criterialist);
         assertEquals(1, criterialist.getContentSize());
         Element criteriaEl = criterialist.getChild("criteria");
-        assertEquals(""+criteria.getId(), criteriaEl.getChildText("id"));
+        assertEquals("" + criteria.getId(), criteriaEl.getChildText("id"));
         assertEquals(criteria.getType().name(), criteriaEl.getChildText("type"));
         assertEquals(criteria.getValue(), criteriaEl.getChildText("value"));
 
@@ -88,8 +87,8 @@ public class SchematronCriteriaGroupTest {
 
         Element schematronEl = xml.getChild("schematron");
 
-        assertEquals(""+schematron.getId(), schematronEl.getChildText("id"));
-        assertEquals(""+schematron.getFile(), schematronEl.getChildText("file"));
-        assertEquals(""+schematron.getSchemaName(), schematronEl.getChildText("schemaname"));
+        assertEquals("" + schematron.getId(), schematronEl.getChildText("id"));
+        assertEquals("" + schematron.getFile(), schematronEl.getChildText("file"));
+        assertEquals("" + schematron.getSchemaName(), schematronEl.getChildText("schemaname"));
     }
 }

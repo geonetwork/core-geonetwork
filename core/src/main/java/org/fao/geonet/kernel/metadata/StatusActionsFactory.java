@@ -23,35 +23,33 @@
 
 package org.fao.geonet.kernel.metadata;
 
-import jeeves.server.context.ServiceContext;
-
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.Set;
+
+import jeeves.server.context.ServiceContext;
 
 public class StatusActionsFactory {
 
-	Class<StatusActions> statusRules;
+    Class<StatusActions> statusRules;
 
-	/**
-	  * Constructor.
-		*
-		* @param statusRules Class defined in WEB-INF/config.xml that defines status actions
-		*/
-	public StatusActionsFactory(Class<StatusActions> statusRules) {
-		this.statusRules = statusRules;
-	}	
+    /**
+     * Constructor.
+     *
+     * @param statusRules Class defined in WEB-INF/config.xml that defines status actions
+     */
+    public StatusActionsFactory(Class<StatusActions> statusRules) {
+        this.statusRules = statusRules;
+    }
 
-	/**
-	  * Creates a StatusActions class and initializes it using Reflections.
-		*
-		* @param context ServiceContext from Jeeves
-		*/
-	public StatusActions createStatusActions(ServiceContext context) throws Exception {
-		Constructor<StatusActions> ct = statusRules.getConstructor();
-		StatusActions sa = ct.newInstance();
-		sa.init(context);
-		return sa;
-	}
+    /**
+     * Creates a StatusActions class and initializes it using Reflections.
+     *
+     * @param context ServiceContext from Jeeves
+     */
+    public StatusActions createStatusActions(ServiceContext context) throws Exception {
+        Constructor<StatusActions> ct = statusRules.getConstructor();
+        StatusActions sa = ct.newInstance();
+        sa.init(context);
+        return sa;
+    }
 
 }

@@ -22,11 +22,12 @@
 //==============================================================================
 package org.fao.geonet.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.io.Serializable;
 
 /**
  * INSPIRE Atom feed entry model class.
@@ -35,7 +36,7 @@ import java.io.Serializable;
  */
 @Embeddable
 @Access(AccessType.PROPERTY)
-public class InspireAtomFeedEntry  implements Serializable {
+public class InspireAtomFeedEntry implements Serializable {
     private int _id;
     private String _title;
 

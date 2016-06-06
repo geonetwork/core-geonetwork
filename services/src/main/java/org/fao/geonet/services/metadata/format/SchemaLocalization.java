@@ -26,7 +26,7 @@ package org.fao.geonet.services.metadata.format;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import jeeves.server.dispatchers.guiservices.XmlFile;
+
 import org.fao.geonet.domain.Pair;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import jeeves.server.dispatchers.guiservices.XmlFile;
 
 /**
  * Contains all the translation/localization files for a particular schema.
@@ -47,13 +49,16 @@ public class SchemaLocalization {
     private final Map<String, XmlFile> schemaInfo;
     private final ApplicationContext context;
     /**
-     * A Map &lt;3CharlangId, Table&lt;elementName, parentElemName, Element containing label child and description child>>
+     * A Map &lt;3CharlangId, Table&lt;elementName, parentElemName, Element containing label child
+     * and description child>>
      * <p/>
-     * the parent may be "" if the labels.xml does not have a context attribute and thus the "" string will be a fallback
+     * the parent may be "" if the labels.xml does not have a context attribute and thus the ""
+     * string will be a fallback
      */
     private final Map<String, ImmutableTable<String, String, Element>> labelIndex = Maps.newHashMap();
     /**
-     * A Map &lt;3CharlangId, Table &lt;codeListName, code, Element containing label child and description child>>
+     * A Map &lt;3CharlangId, Table &lt;codeListName, code, Element containing label child and
+     * description child>>
      * <p/>
      * The codeListName has the prefix removed.
      */
@@ -79,14 +84,11 @@ public class SchemaLocalization {
     }
 
     /**
-     * Get a quick lookup for labels.  The returned map is
-     * Table &lt;codeListName, code, Element containing label child and description child>>
+     * Get a quick lookup for labels.  The returned map is Table &lt;codeListName, code, Element
+     * containing label child and description child>>
      * <p/>
-     * the parent may be "" if the labels.xml does not have a context attribute and thus the "" string will be a fallback
-     *
-     * @param lang
-     * @return
-     * @throws Exception
+     * the parent may be "" if the labels.xml does not have a context attribute and thus the ""
+     * string will be a fallback
      */
     public synchronized ImmutableTable<String, String, Element> getLabelIndex(String lang) throws Exception {
         ImmutableTable<String, String, Element> index = this.labelIndex.get(lang);
@@ -117,8 +119,8 @@ public class SchemaLocalization {
     }
 
     /**
-     * Get a quick lookup table for finding codelist translations.  The returned table is
-     * Table &lt;codeListName, code, Element containing label child and description child>
+     * Get a quick lookup table for finding codelist translations.  The returned table is Table
+     * &lt;codeListName, code, Element containing label child and description child>
      * <p/>
      * The codeListName has the prefix removed.
      */

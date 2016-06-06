@@ -27,8 +27,9 @@ import org.fao.geonet.domain.HarvesterData;
 import org.fao.geonet.domain.HarvesterDataId;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import javax.annotation.Nonnull;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * Data Access object for accessing {@link org.fao.geonet.domain.MetadataCategory} entities.
@@ -36,7 +37,7 @@ import java.util.List;
  * @author Jesse
  */
 public interface HarvesterDataRepository extends GeonetRepository<HarvesterData, HarvesterDataId>,
-        JpaSpecificationExecutor<HarvesterData> {
+    JpaSpecificationExecutor<HarvesterData> {
     /**
      * Find all the HarvesterData objects belonging to a particular harvester.
      *

@@ -2,7 +2,7 @@
   <div class="col-lg-8" data-ng-controller="GnAdminController">
     <div class="clearfix">
       <a data-ng-repeat="m in getMenu()" href="{{getMenuUrl(m)}}"
-        class="btn btn-lg btn-block {{m.classes}} gn-btn-admin">
+         class="btn btn-lg btn-block {{m.classes}} gn-btn-admin">
         <i class="fa {{m.icon}} fa-4x"/>
         <p data-translate="">{{m.name}}</p>
       </a>
@@ -28,7 +28,7 @@
         <div data-ng-hide="searchInfo.count == 0">
           <h2>{{searchInfo.count}}</h2>
           <h5 data-translate="" title="{{'totalNumberOfRecordsHelp' | translate}}"
-            >totalNumberOfRecords</h5>
+          >totalNumberOfRecords</h5>
         </div>
         <div data-ng-show="searchInfo.count == 0" data-translate=""> emptyCatalogShouldBeFilled
         </div>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Metadata ikke funnet</notfound>
+  <notowner>Metadata som ikke fikk oppdatert privilegier på grunn av manglende rettigheter (ikke
+    eier)
+  </notowner>
+  <updated>Metadata som fikk oppdatert privilegier</updated>
+  <resultstitle>Reslutater av oppdatering av privilegier</resultstitle>
+</strings>

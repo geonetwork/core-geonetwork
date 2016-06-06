@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Feil ved tilkobling til ressursen</heading>
+  <message>Den valgte ressursen ble ikke funnet eller kunne ikke brukes. Den kan ha blitt slettet
+    eller du mangler privilegier for å benytte den.
+  </message>
+  <button>Tilbake</button>
+</strings>

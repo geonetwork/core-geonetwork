@@ -29,14 +29,11 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.jdom.Element;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 /**
  * Integration Test for the Csw Harvester class.
  *
- * User: Jesse
- * Date: 10/18/13
- * Time: 4:01 PM
+ * User: Jesse Date: 10/18/13 Time: 4:01 PM
  */
 public class CswHarvesterIntegrationNoOwnerTest extends CswHarvesterIntegrationTest {
 
@@ -48,6 +45,6 @@ public class CswHarvesterIntegrationNoOwnerTest extends CswHarvesterIntegrationT
     @Override
     protected void performExtraAssertions(AbstractHarvester harvester) {
         final User admin = _userRepo.findAllByProfile(Profile.Administrator).get(0);
-        assertEquals(""+admin.getId(), harvester.getParams().getOwnerId());
+        assertEquals("" + admin.getId(), harvester.getParams().getOwnerId());
     }
 }

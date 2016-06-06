@@ -23,36 +23,36 @@
   -->
 
 <beans
-	xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     " >
 
-    <bean id="ProfileManager" class="jeeves.component.ProfileManager" lazy-init="true"/>
-    <bean id="MonitorManager" class="jeeves.monitor.MonitorManager" lazy-init="true"/>
-    <bean id="JeevesEngine" class="jeeves.server.JeevesEngine" lazy-init="true"/>
-    <bean id="ServiceManager" class="jeeves.server.dispatchers.ServiceManager" lazy-init="true"/>
-    <bean id="XmlCacheManager" class="jeeves.server.dispatchers.guiservices.XmlCacheManager" lazy-init="true"/>
-    <bean id="ServiceInfo" class="jeeves.server.dispatchers.ServiceInfo" scope="prototype"/>
+  <bean id="ProfileManager" class="jeeves.component.ProfileManager" lazy-init="true"/>
+  <bean id="MonitorManager" class="jeeves.monitor.MonitorManager" lazy-init="true"/>
+  <bean id="JeevesEngine" class="jeeves.server.JeevesEngine" lazy-init="true"/>
+  <bean id="ServiceManager" class="jeeves.server.dispatchers.ServiceManager" lazy-init="true"/>
+  <bean id="XmlCacheManager" class="jeeves.server.dispatchers.guiservices.XmlCacheManager" lazy-init="true"/>
+  <bean id="ServiceInfo" class="jeeves.server.dispatchers.ServiceInfo" scope="prototype"/>
 
 
-    <bean id="AccessManager" class="org.fao.geonet.kernel.AccessManager" lazy-init="true" />
-    <bean id="DataManager" class="org.fao.geonet.kernel.DataManager" lazy-init="true" />
-    <bean id="GeonetworkDataDirectory" class="org.fao.geonet.kernel.GeonetworkDataDirectory" lazy-init="true" />
+  <bean id="AccessManager" class="org.fao.geonet.kernel.AccessManager" lazy-init="true" />
+  <bean id="DataManager" class="org.fao.geonet.kernel.DataManager" lazy-init="true" />
+  <bean id="GeonetworkDataDirectory" class="org.fao.geonet.kernel.GeonetworkDataDirectory" lazy-init="true" />
 
-    <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
+  <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
 
-    <bean id="SearchManager" class="org.fao.geonet.kernel.search.SolrSearchManager" lazy-init="true"/>
-    <bean id="HarvesterSettingsManager" class="org.fao.geonet.kernel.setting.HarvesterSettingsManager" lazy-init="true"/>
-    <bean id="SettingInfo" class="org.fao.geonet.kernel.setting.SettingInfo" lazy-init="true"/>
-    <bean id="SettingManager" class="org.fao.geonet.kernel.setting.SettingManager" lazy-init="true"/>
-    <bean id="MetadataNotifierManager" class="org.fao.geonet.notifier.MetadataNotifierManager" lazy-init="true"/>
-    <bean id="IsoLanguagesMapper" class="org.fao.geonet.languages.IsoLanguagesMapper" lazy-init="true"/>
-    <bean id="selectionManager" class="org.fao.geonet.kernel.SelectionManager" lazy-init="true"/>
-    <bean id="TranslatorCache" class="org.fao.geonet.kernel.search.TranslatorCache" lazy-init="false" scope="singleton"/>
-    <bean id="schematronValidator" class="org.fao.geonet.kernel.SchematronValidator" lazy-init="false" scope="singleton"/>
+  <bean id="SearchManager" class="org.fao.geonet.kernel.search.SolrSearchManager" lazy-init="true"/>
+  <bean id="HarvesterSettingsManager" class="org.fao.geonet.kernel.setting.HarvesterSettingsManager" lazy-init="true"/>
+  <bean id="SettingInfo" class="org.fao.geonet.kernel.setting.SettingInfo" lazy-init="true"/>
+  <bean id="SettingManager" class="org.fao.geonet.kernel.setting.SettingManager" lazy-init="true"/>
+  <bean id="MetadataNotifierManager" class="org.fao.geonet.notifier.MetadataNotifierManager" lazy-init="true"/>
+  <bean id="IsoLanguagesMapper" class="org.fao.geonet.languages.IsoLanguagesMapper" lazy-init="true"/>
+  <bean id="selectionManager" class="org.fao.geonet.kernel.SelectionManager" lazy-init="true"/>
+  <bean id="TranslatorCache" class="org.fao.geonet.kernel.search.TranslatorCache" lazy-init="false" scope="singleton"/>
+  <bean id="schematronValidator" class="org.fao.geonet.kernel.SchematronValidator" lazy-init="false" scope="singleton"/>
 
-    <bean id="MetadataNotifierTask" class="org.fao.geonet.notifier.MetadataNotifierTask" lazy-init="true" scope="prototype"/>
-    <bean id="MetadataNotifierClient" class="org.fao.geonet.notifier.MetadataNotifierClient" lazy-init="true" scope="prototype"/>
+  <bean id="MetadataNotifierTask" class="org.fao.geonet.notifier.MetadataNotifierTask" lazy-init="true" scope="prototype"/>
+  <bean id="MetadataNotifierClient" class="org.fao.geonet.notifier.MetadataNotifierClient" lazy-init="true" scope="prototype"/>
 </beans>

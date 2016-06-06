@@ -13,11 +13,11 @@
         <!-- To enable logging CPU utilization for threads above specified threshold, -->
         <!-- uncomment the following lines, changing log interval (in milliseconds)  -->
         <!-- and log threshold (in percent) as desired.                              -->
-        <!-- 
+        <!--
         <Set name="logInterval">10000</Set>
         <Set name="logThreshold">65</Set>
         -->
-        
+
         <!-- To enable detail dump of the server whenever a thread is detected as spinning, -->
         <!-- uncomment the following lines. -->
         <!--

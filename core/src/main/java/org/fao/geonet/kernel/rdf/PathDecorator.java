@@ -23,11 +23,11 @@
 
 package org.fao.geonet.kernel.rdf;
 
+import org.jdom.Namespace;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import org.jdom.Namespace;
 
 public class PathDecorator extends Selector {
     private Selector wrapped;
@@ -58,5 +58,5 @@ public class PathDecorator extends Selector {
     public String getPath() {
         return wrapped.getPath();
     }
-    
+
 }

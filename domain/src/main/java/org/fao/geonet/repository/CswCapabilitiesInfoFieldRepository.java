@@ -28,12 +28,13 @@ import org.fao.geonet.domain.CswCapabilitiesInfoField;
 import java.util.List;
 
 /**
- * Data Access object for accessing {@link org.fao.geonet.domain.CswCapabilitiesInfoField} entities.
+ * Data Access object for accessing {@link org.fao.geonet.domain.CswCapabilitiesInfoField}
+ * entities.
  *
  * @author Jesse
  */
 public interface CswCapabilitiesInfoFieldRepository extends GeonetRepository<CswCapabilitiesInfoField, Integer>,
-        CswCapabilitiesInfoFieldRepositoryCustom {
+    CswCapabilitiesInfoFieldRepositoryCustom {
     /**
      * Find all the Capabilities Info objects for the given field.
      *

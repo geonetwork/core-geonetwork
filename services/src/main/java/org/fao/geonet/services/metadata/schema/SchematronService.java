@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.metadata.schema;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Schematron;
@@ -36,8 +35,10 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 
+import jeeves.server.context.ServiceContext;
+
 /**
- *  Load, edit, delete {@link org.fao.geonet.domain.Schematron} entities.
+ * Load, edit, delete {@link org.fao.geonet.domain.Schematron} entities.
  *
  * Created by Jesse on 2/7/14.
  */

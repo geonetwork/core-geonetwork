@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Métadonnées non trouvées</notfound>
+  <notowner>Métadonnées ne pouvant pas être supprimées car vous n'en êtes pas l'auteur</notowner>
+  <updated>Métadonnées supprimées</updated>
+</strings>

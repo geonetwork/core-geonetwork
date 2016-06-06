@@ -34,29 +34,25 @@ import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 @Deprecated
-public class XmlSearch implements Service
-{
+public class XmlSearch implements Service {
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception
-	{
-	}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+    }
 
-	/**
-	 * Run a search and return results as XML.
-	 *
-	 * @param params	All search parameters defined in {@link IndexFields}.
-	 * <br/>
-	 * To return only results summary, set summaryOnly parameter to 1.
-	 * Default is 0 (ie.results and summary).
-	 *
-	 */
-	public Element exec(Element params, ServiceContext context) throws Exception {
+    /**
+     * Run a search and return results as XML.
+     *
+     * @param params All search parameters defined in {@link IndexFields}. <br/> To return only
+     *               results summary, set summaryOnly parameter to 1. Default is 0 (ie.results and
+     *               summary).
+     */
+    public Element exec(Element params, ServiceContext context) throws Exception {
         throw new RuntimeException("Use SOLR search instead");
         // TODO: SOLR-MIGRATION-TO-DELETE
     }

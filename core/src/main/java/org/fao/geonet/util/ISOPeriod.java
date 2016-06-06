@@ -25,9 +25,10 @@ package org.fao.geonet.util;
 
 /**
  * Utility to convert an ISO8601 Period to minutes.
- *
  */
 public class ISOPeriod {
+
+    public final static String ZERO_DURATION = "P0Y0M0DT0H0M0S";
 
     /**
      * Converts a string in ISO8601 Period format to how many minutes that is.
@@ -45,7 +46,5 @@ public class ISOPeriod {
         minutes += Integer.parseInt(iso8601Period.substring(iso8601Period.indexOf('M', iso8601Period.indexOf('H')) + 1, iso8601Period.indexOf('S'))) / 60;
         return minutes;
     }
-
-    public final static String ZERO_DURATION = "P0Y0M0DT0H0M0S";
 
 }

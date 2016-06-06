@@ -24,14 +24,12 @@
 package org.fao.geonet;
 
 import org.fao.geonet.utils.IO;
-
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.mock.web.MockServletContext;
 
 import java.net.URISyntaxException;
-
-import java.nio.file.Path;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**

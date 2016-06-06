@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Öznitelik kaydı bulunamadı</notfound>
+  <notowner>Kayıt sahibi olmadığınızdan dolayı, öznitelik kaydı silinemedi</notowner>
+  <updated>Öznitelik kaydı silindi</updated>
+</strings>

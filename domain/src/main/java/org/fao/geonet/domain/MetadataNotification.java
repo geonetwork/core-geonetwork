@@ -26,7 +26,15 @@ package org.fao.geonet.domain;
 import org.fao.geonet.entitylistener.MetadataNotificationEntityListenerManager;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * An entity representing a metadata related notification that has been made or is pending.
@@ -66,8 +74,9 @@ public class MetadataNotification extends GeonetEntity {
     }
 
     /**
-     * For backwards compatibility we need the notified column to be either 'n' or 'y'. This is a workaround to allow this until future
-     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     * For backwards compatibility we need the notified column to be either 'n' or 'y'. This is a
+     * workaround to allow this until future versions of JPA that allow different ways of
+     * controlling how types are mapped to the database.
      */
     @Column(name = "notified", length = 1, nullable = false)
     protected char getNotified_JPAWorkaround() {
@@ -153,7 +162,8 @@ public class MetadataNotification extends GeonetEntity {
      */
     @Lob
     @Column(name = "errormsg")
-    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
+    @Type(type = "org.hibernate.type.StringClobType")
+    // this is a work around for postgres so postgres can correctly load clobs
     public String getErrorMessage() {
         return _errorMessage;
     }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Metaveri kayıtları bulunamadı</notfound>
+  <notowner>Metaveri kayıtlarına ilişkin yetki ve ayrıcalıklar kayıt sahibi olmadığınız için
+    güncellenmedi
+  </notowner>
+  <updated>Metaveri kayıtlarına ilişkin yetki ver ayrıcalıklar güncellendi</updated>
+  <resultstitle>Yetki ve Ayrıcalık Güncelleme Sonuçları</resultstitle>
+</strings>

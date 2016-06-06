@@ -24,7 +24,9 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.Lists;
+
 import groovy.lang.Closure;
+
 import org.codehaus.groovy.runtime.GStringImpl;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.junit.Assert;

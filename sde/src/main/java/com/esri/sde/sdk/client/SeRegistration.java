@@ -2,31 +2,53 @@ package com.esri.sde.sdk.client;
 
 
 public class SeRegistration {
-	
-	public static /* GEOT-947 final*/ int SE_REGISTRATION_ROW_ID_COLUMN_TYPE_SDE = 0;
-	public static /* GEOT-947 final*/ int SE_REGISTRATION_ROW_ID_COLUMN_TYPE_USER = 1;
-	public static /* GEOT-947 final*/ int SE_REGISTRATION_ROW_ID_COLUMN_TYPE_NONE = 2;
-    
-	public SeRegistration(SeConnection c, String s) throws SeException{}
-	
-	public SeRegistration(SeConnection conn) {
+
+    public static /* GEOT-947 final*/ int SE_REGISTRATION_ROW_ID_COLUMN_TYPE_SDE = 0;
+    public static /* GEOT-947 final*/ int SE_REGISTRATION_ROW_ID_COLUMN_TYPE_USER = 1;
+    public static /* GEOT-947 final*/ int SE_REGISTRATION_ROW_ID_COLUMN_TYPE_NONE = 2;
+
+    public SeRegistration(SeConnection c, String s) throws SeException {
     }
 
-    public String getRowIdColumnName() { return null; }
-	public void setRowIdColumnName(String s) {}
-	public int getRowIdColumnType() throws SeException { return -1;}
-	public void setRowIdColumnType(int i) {}
-	public void alter() {}
-	public String getTableName() { return null; }
+    public SeRegistration(SeConnection conn) {
+    }
 
-    public boolean isMultiVersion() {return false;}
+    public String getRowIdColumnName() {
+        return null;
+    }
 
-    public boolean isView() {return false;}
+    public void setRowIdColumnName(String s) {
+    }
 
-    public void setMultiVersion(boolean b) {}
+    public int getRowIdColumnType() throws SeException {
+        return -1;
+    }
 
-    public void getInfo() throws SeException{}
+    public void setRowIdColumnType(int i) {
+    }
 
-    public void setTableName(String tableName) {}
+    public void alter() {
+    }
+
+    public String getTableName() {
+        return null;
+    }
+
+    public void setTableName(String tableName) {
+    }
+
+    public boolean isMultiVersion() {
+        return false;
+    }
+
+    public void setMultiVersion(boolean b) {
+    }
+
+    public boolean isView() {
+        return false;
+    }
+
+    public void getInfo() throws SeException {
+    }
 
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Metadane - walidacja</heading>
+  <message>Walidacja wg schematu pomyślna</message>
+  <schemaTronError>jednak są błędy przy walidacji wg reguł schematronu</schemaTronError>
+  <schemaTronValid>Walidacja wg schematronu pomyślna</schemaTronValid>
+  <schemaTronReport>Raport z walidacji wg schematronu</schemaTronReport>
+  <invalidElement>Nieprawidłowy element. Odnaleziono nieprawidłową zawartość zaczynając od
+    elementu::
+  </invalidElement>
+  <onElementOf>Jeden z następujących elementów</onElementOf>
+  <isExpected>jest oczekiwane.</isExpected>
+  <isNotComplete>jest niekompletny.</isNotComplete>
+  <elementLocated>Element nadrzędny</elementLocated>
+  <missingElement>Brakujący element. Wartość elementu:</missingElement>
+  <invalidValue>Nieprawidłowa lub brakująca zawartość.</invalidValue>
+  <notValidFor>nie jest poprawną wartośćią dla</notValidFor>
+  <xsdErrorIs>Błąd XSD:</xsdErrorIs>
+  <inElement>w elemencie</inElement>
+  <enum1>Value</enum1>
+  <enum2>is not valid for the field</enum2>
+  <enum3>List of values is :</enum3>
+</strings>

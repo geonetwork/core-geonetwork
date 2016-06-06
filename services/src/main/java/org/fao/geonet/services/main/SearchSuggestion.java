@@ -32,23 +32,22 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 /**
- * Return a list of suggestion for a field. The values could be filtered and
- * only values contained in field values are returned.
+ * Return a list of suggestion for a field. The values could be filtered and only values contained
+ * in field values are returned.
  *
- * Two modes are defined. First one is browse the index for a field and return a
- * list of suggestion. For this origin should be set to INDEX_TERM_VALUES. The
- * second mode, using origin RECORDS_FIELD_VALUES, perform a search and extract
- * the field for all docs and return the matching values.
+ * Two modes are defined. First one is browse the index for a field and return a list of suggestion.
+ * For this origin should be set to INDEX_TERM_VALUES. The second mode, using origin
+ * RECORDS_FIELD_VALUES, perform a search and extract the field for all docs and return the matching
+ * values.
  *
- * If no origin is set, a RECORDS_FIELD_VALUES mode is done and if no suggestion
- * found, a INDEX_TERM_VALUES mode is done.
+ * If no origin is set, a RECORDS_FIELD_VALUES mode is done and if no suggestion found, a
+ * INDEX_TERM_VALUES mode is done.
  *
  *
  * The response body is converted to JSON using search-suggestion.xsl
  *
  *
- * OpenSearch suggestion specification:
- * http://www.opensearch.org/Specifications/OpenSearch/Extensions/Suggestions/1.0
+ * OpenSearch suggestion specification: http://www.opensearch.org/Specifications/OpenSearch/Extensions/Suggestions/1.0
  * TODO: SOLR-MIGRATION-TO-DELETE
  */
 @Deprecated
@@ -82,7 +81,7 @@ public class SearchSuggestion implements Service {
      * Browse the index and return suggestion list.
      */
     public Element exec(Element params, ServiceContext context)
-            throws Exception {
+        throws Exception {
         throw new RuntimeException("Use Solr suggestion service");
     }
 }

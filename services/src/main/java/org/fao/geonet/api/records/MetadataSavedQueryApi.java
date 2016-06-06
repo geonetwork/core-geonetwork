@@ -23,19 +23,16 @@
 
 package org.fao.geonet.api.records;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.API;
+import org.fao.geonet.api.exception.NoResultsFoundException;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SavedQuery;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.api.API;
-import org.fao.geonet.api.exception.NoResultsFoundException;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -45,21 +42,33 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 /**
  * Created by francois on 29/01/16.
  */
 @Service
 @RequestMapping(value = {
-        "/api/metadata/{metadataUuid}",
-        "/api/" + API.VERSION_0_1 + "/metadata/{metadataUuid}"
+    "/api/metadata/{metadataUuid}",
+    "/api/" + API.VERSION_0_1 + "/metadata/{metadataUuid}"
 })
 @Api(value = "metadata",
-        tags= "metadata",
-        description = "Metadata operations")
+    tags = "metadata",
+    description = "Metadata operations")
 public class MetadataSavedQueryApi {
     private static final String LOG_MODULE = "MetadataApi";
 
@@ -68,26 +77,26 @@ public class MetadataSavedQueryApi {
 
 
     @ApiOperation(value = "List saved queries for this metadata",
-                  nickname = "getMetadataSavedQueries")
+        nickname = "getMetadataSavedQueries")
     @RequestMapping(value = "/query",
-                    method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     public List<SavedQuery> getSavedQueries(
-            @ApiParam(value = "The metadata UUID",
-                      required = true,
-                      example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-            @PathVariable final String metadataUuid
-            ) throws ResourceNotFoundException {
+        @ApiParam(value = "The metadata UUID",
+            required = true,
+            example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
+        @PathVariable final String metadataUuid
+    ) throws ResourceNotFoundException {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
 
         Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
         if (metadata == null) {
             throw new ResourceNotFoundException(String.format(
-                    "Metadata '%s' not found.",
-                    metadataUuid));
+                "Metadata '%s' not found.",
+                metadataUuid));
         }
 
         String schemaIdentifier = metadata.getDataInfo().getSchemaId();
@@ -106,24 +115,24 @@ public class MetadataSavedQueryApi {
 
     // TODO: Api is query xpath
     @ApiOperation(value = "Apply a saved query for this metadata",
-                  nickname = "getMetadataSavedQueries",
-                  notes = "All parameters will be substituted to the XPath query. eg. {{protocol}} in the XPath expression will be replaced by the protocol parameter provided in the request body.")
+        nickname = "getMetadataSavedQueries",
+        notes = "All parameters will be substituted to the XPath query. eg. {{protocol}} in the XPath expression will be replaced by the protocol parameter provided in the request body.")
     @RequestMapping(value = "/query/{savedQuery}",
-                    method = RequestMethod.POST,
-                    consumes = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.POST,
+        consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     public String applyQuery(
-            @ApiParam(value = "The metadata UUID",
-                      required = true,
-                      example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-            @PathVariable final String metadataUuid,
-            @ApiParam(value = "The saved query to apply",
-                      required = true,
-                      example = "wfs-indexing-config")
-            @PathVariable final String savedQuery,
-            @ApiParam(value = "The query parameters")
-            @RequestBody(required = false) final HashMap<String,String> parameters) throws Exception {
+        @ApiParam(value = "The metadata UUID",
+            required = true,
+            example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
+        @PathVariable final String metadataUuid,
+        @ApiParam(value = "The saved query to apply",
+            required = true,
+            example = "wfs-indexing-config")
+        @PathVariable final String savedQuery,
+        @ApiParam(value = "The query parameters")
+        @RequestBody(required = false) final HashMap<String, String> parameters) throws Exception {
 
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
@@ -131,30 +140,30 @@ public class MetadataSavedQueryApi {
         Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
         if (metadata == null) {
             throw new ResourceNotFoundException(String.format(
-                    "Metadata '%s' not found.",
-                    metadataUuid));
+                "Metadata '%s' not found.",
+                metadataUuid));
         }
 
         String schemaIdentifier = metadata.getDataInfo().getSchemaId();
         SchemaPlugin schemaPlugin = schemaManager.getSchema(schemaIdentifier).getSchemaPlugin();
         if (schemaPlugin == null) {
             throw new ResourceNotFoundException(String.format(
-                    "Saved query '%s' for schema '%s' not found.",
-                    savedQuery, schemaIdentifier));
+                "Saved query '%s' for schema '%s' not found.",
+                savedQuery, schemaIdentifier));
         }
 
         SavedQuery query = schemaPlugin.getSavedQuery(savedQuery);
         if (query == null) {
             throw new ResourceNotFoundException(String.format(
-                    "Saved query '%s' for schema '%s' not found. Available queries are '%s'.",
-                    savedQuery, schemaIdentifier, schemaPlugin.getSavedQueries()));
+                "Saved query '%s' for schema '%s' not found. Available queries are '%s'.",
+                savedQuery, schemaIdentifier, schemaPlugin.getSavedQueries()));
         }
 
 
         String xpath = query.getXpath();
         if (Log.isDebugEnabled(LOG_MODULE)) {
             Log.debug(LOG_MODULE, String.format(
-                    "Saved query XPath: %s", xpath));
+                "Saved query XPath: %s", xpath));
         }
         if (parameters != null) {
             Iterator<String> parametersIterator = parameters.keySet().iterator();
@@ -165,7 +174,7 @@ public class MetadataSavedQueryApi {
         }
         if (Log.isDebugEnabled(LOG_MODULE)) {
             Log.debug(LOG_MODULE, String.format(
-                    "Saved query XPath after URL parameters substitution %s", xpath));
+                "Saved query XPath after URL parameters substitution %s", xpath));
         }
 
 
@@ -173,21 +182,21 @@ public class MetadataSavedQueryApi {
         // TODO: Could select multiple nodes
         try {
             final Element matchingElement =
-                    (Element) Xml.selectSingle(metadata.getXmlData(false),
-                            xpath,
-                            new ArrayList<>(schemaPlugin.getNamespaces()));
+                (Element) Xml.selectSingle(metadata.getXmlData(false),
+                    xpath,
+                    new ArrayList<>(schemaPlugin.getNamespaces()));
 
             if (matchingElement != null) {
                 return matchingElement.getText();
             }
 
             throw new NoResultsFoundException(String.format(
-                    "No results found in metadata '%s' for query '%s'.",
-                    metadataUuid, xpath));
+                "No results found in metadata '%s' for query '%s'.",
+                metadataUuid, xpath));
         } catch (JDOMException e) {
             throw new IllegalArgumentException(String.format(
-                    "Error in query: %s. Saved query parameters are '%s'.",
-                    e.getMessage(), query.getParameters()));
+                "Error in query: %s. Saved query parameters are '%s'.",
+                e.getMessage(), query.getParameters()));
         }
     }
 }

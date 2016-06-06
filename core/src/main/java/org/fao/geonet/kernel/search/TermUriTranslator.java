@@ -22,7 +22,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.util.Map;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.LabelNotFoundException;
 import org.fao.geonet.exceptions.TermNotFoundException;
@@ -31,16 +30,15 @@ import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusFinder;
 import org.fao.geonet.utils.Log;
 
+import java.util.Map;
+
 public class TermUriTranslator implements Translator {
 
     private static final long serialVersionUID = 1L;
-
-    private transient Thesaurus thesaurus = null;
     private final transient ThesaurusFinder finder;
-
     private final String conceptSchemeUri;
     private final String langCode;
-
+    private transient Thesaurus thesaurus = null;
     private boolean firstWarning = true; // used to display verbose info only once
 
     public TermUriTranslator(ThesaurusFinder finder, String langCode, String conceptSchemeUri) {
@@ -98,7 +96,7 @@ public class TermUriTranslator implements Translator {
         }
 
         String label;
-        
+
         try {
             label = keyword.getPreferredLabel(langCode);
         } catch (LabelNotFoundException e) {

@@ -1,7 +1,6 @@
 package org.fao.geonet.api.sld;
 
 import org.fao.geonet.domain.TextFile;
-import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.TextFileRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Test;
@@ -35,7 +34,7 @@ public class TextFileTest extends AbstractServiceIntegrationTest {
         TextFile file = textFileRepository.findOne(id);
         file.getContent();
 
-        assertEquals(this.getRessourceAsString("test-sld-merged.xml"),file.getContent());
+        assertEquals(this.getRessourceAsString("test-sld-merged.xml"), file.getContent());
 
     }
 

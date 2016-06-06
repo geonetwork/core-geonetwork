@@ -35,17 +35,6 @@ import java.util.Date;
 
 public class OwsUtils {
 
-    public String getDescribeFeatureTypeUrl(final String wfsUrl, final String featureType, final String version) throws Exception {
-        URIBuilder builder = new URIBuilder(wfsUrl);
-        builder.addParameter("request", "DescribeFeatureType");
-        builder.addParameter("service", "WFS");
-        builder.addParameter("version", version);
-        builder.addParameter("TYPENAME", featureType);
-
-        String url = builder.build().toURL().toString();
-        return url;
-    }
-
     public static String getGetCapabilitiesUrl(final String wfsUrl, final String version) throws Exception {
         URIBuilder builder = new URIBuilder(wfsUrl);
         builder.addParameter("request", "GetCapabilities");
@@ -61,37 +50,48 @@ public class OwsUtils {
         if (descriptor.getType().getBinding().isAssignableFrom(String.class)) {
             type = "string";
         } else if (descriptor.getType().getBinding().isAssignableFrom(
-                Double.class)) {
+            Double.class)) {
             type = "double";
         } else if (descriptor.getType().getBinding().isAssignableFrom(
-                Integer.class)) {
+            Integer.class)) {
             type = "integer";
         } else if (descriptor.getType().getBinding().isAssignableFrom(
-                Float.class)) {
+            Float.class)) {
             type = "double";
         } else if (descriptor.getType().getBinding().isAssignableFrom(
-                Date.class) ||
-                   descriptor.getType().getBinding().isAssignableFrom(
-               Timestamp.class)) {
+            Date.class) ||
+            descriptor.getType().getBinding().isAssignableFrom(
+                Timestamp.class)) {
             type = "date";
         } else if (descriptor.getType().getBinding().isAssignableFrom(
-                Long.class)) {
+            Long.class)) {
             type = "integer";
         } else if (descriptor.getType().getBinding().isAssignableFrom(
-                Short.class)) {
+            Short.class)) {
             type = "integer";
         } else if (descriptor.getType().getBinding().getSuperclass().isAssignableFrom(
-                        com.vividsolutions.jts.geom.Geometry.class)
-                || descriptor.getType().getBinding().getSuperclass().isAssignableFrom(
-                        com.vividsolutions.jts.geom.GeometryCollection.class)
-                || descriptor.getType().getBinding().isAssignableFrom(
-                        com.vividsolutions.jts.geom.Geometry.class)
-                || descriptor.getType().getBinding().isAssignableFrom(
-                        com.vividsolutions.jts.geom.GeometryCollection.class)) {
+            com.vividsolutions.jts.geom.Geometry.class)
+            || descriptor.getType().getBinding().getSuperclass().isAssignableFrom(
+            com.vividsolutions.jts.geom.GeometryCollection.class)
+            || descriptor.getType().getBinding().isAssignableFrom(
+            com.vividsolutions.jts.geom.Geometry.class)
+            || descriptor.getType().getBinding().isAssignableFrom(
+            com.vividsolutions.jts.geom.GeometryCollection.class)) {
             type = "geometry";
         } else {
             type = "string";
         }
         return type;
+    }
+
+    public String getDescribeFeatureTypeUrl(final String wfsUrl, final String featureType, final String version) throws Exception {
+        URIBuilder builder = new URIBuilder(wfsUrl);
+        builder.addParameter("request", "DescribeFeatureType");
+        builder.addParameter("service", "WFS");
+        builder.addParameter("version", version);
+        builder.addParameter("TYPENAME", featureType);
+
+        String url = builder.build().toURL().toString();
+        return url;
     }
 }

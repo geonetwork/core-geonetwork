@@ -23,9 +23,10 @@
 
 package org.fao.geonet.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.io.Serializable;
 
 /**
  * Id class for Metadata relation.

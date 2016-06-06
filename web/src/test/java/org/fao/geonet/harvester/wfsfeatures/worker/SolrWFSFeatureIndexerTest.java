@@ -3,7 +3,7 @@ package org.fao.geonet.harvester.wfsfeatures.worker;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
-import org.fao.geonet.Assert;
+
 import org.geotools.data.DataUtilities;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
@@ -13,9 +13,11 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by francois on 04/03/16.
@@ -39,16 +41,16 @@ public class SolrWFSFeatureIndexerTest {
         String expression = "name";
         String title = SolrWFSFeatureIndexer.buildFeatureTitle(feature, fields, expression);
         assertEquals(
-                values.get("name"),
-                title);
+            values.get("name"),
+            title);
 
         expression = "Feature title is '{{name}} [{{number}}]'.";
         title = SolrWFSFeatureIndexer.buildFeatureTitle(feature, fields, expression);
         assertEquals(
-                "Feature title is '" +
-                        values.get("name") + " [" +
-                        values.get("number") + "]'.",
-                title);
+            "Feature title is '" +
+                values.get("name") + " [" +
+                values.get("number") + "]'.",
+            title);
     }
 
     @Test
@@ -76,17 +78,17 @@ public class SolrWFSFeatureIndexerTest {
 
     private SimpleFeature buildFeature(Map<String, String> fields,
                                        Map<String, String> values)
-            throws SchemaException {
+        throws SchemaException {
         Iterator<String> iterator = fields.keySet().iterator();
         StringBuffer typeDef = new StringBuffer("the_geom:Point:srid=4326");
         while (iterator.hasNext()) {
             String name = iterator.next();
             typeDef.append(",")
-                    .append(name).append(":").append(fields.get(name));
+                .append(name).append(":").append(fields.get(name));
         }
         final SimpleFeatureType TYPE = DataUtilities.createType(
-                "Location",
-                typeDef.toString()
+            "Location",
+            typeDef.toString()
         );
 
         GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
@@ -95,7 +97,7 @@ public class SolrWFSFeatureIndexerTest {
         double latitude = 1;
         double longitude = 1;
         Point point = geometryFactory.createPoint(
-                new Coordinate(longitude, latitude));
+            new Coordinate(longitude, latitude));
         featureBuilder.add(point);
         Iterator<String> valueIterator = values.keySet().iterator();
         while (valueIterator.hasNext()) {

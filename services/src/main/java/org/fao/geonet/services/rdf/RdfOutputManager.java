@@ -23,12 +23,9 @@
 
 package org.fao.geonet.services.rdf;
 
-import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -37,10 +34,16 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import java.io.*;
-import java.nio.charset.Charset;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.List;
+
+import jeeves.server.context.ServiceContext;
 
 
 /**
@@ -60,11 +63,10 @@ public class RdfOutputManager {
     }
 
     /**
-     * Creates an rdf file with all the public metadata from the catalogue that fits the search criteria.
+     * Creates an rdf file with all the public metadata from the catalogue that fits the search
+     * criteria.
      *
-     * @param context
      * @return Name of the temporal file
-     * @throws Exception
      */
     public File createRdfFile(ServiceContext context, RdfSearcher searcher) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -91,7 +93,7 @@ public class RdfOutputManager {
             outputCatalogFile = new BufferedWriter(new FileWriter(catalogFile));
 
             Path xslPath = context.getAppPath().resolve(Geonet.Path.XSLT_FOLDER).
-                    resolve("services").resolve("dcat").resolve("rdf.xsl");
+                resolve("services").resolve("dcat").resolve("rdf.xsl");
 
             int size = results.size();
             int page = 1;
@@ -181,23 +183,14 @@ public class RdfOutputManager {
 
     /**
      * Write results at the end of page (100 records per page) or at the end of results.
-     *
-     * @param pos
-     * @param total
-     * @return
      */
     private boolean hasToWriteResults(int pos, int total) {
-        return (((pos+1) % PAGE_SIZE == 0) || (pos == total - 1));
+        return (((pos + 1) % PAGE_SIZE == 0) || (pos == total - 1));
     }
 
 
     /**
      * Writes the catalog results section to a file.
-     *
-     * @param output
-     * @param rdf
-     * @param page
-     * @throws Exception
      */
     private void writeCatalogResults(BufferedWriter output, Element rdf, int page) throws Exception {
         // First time the catalogFile contains the complete dcat:Catalog section, the following times
@@ -206,7 +199,7 @@ public class RdfOutputManager {
             Namespace nsDcat = Namespace.getNamespace("dcat", "http://www.w3.org/ns/dcat#");
             List<Element> mdDcatDatasets = rdf.getChild("Catalog", nsDcat).getChildren("dataset", nsDcat);
 
-            for (Element mdDcatDataset: mdDcatDatasets) {
+            for (Element mdDcatDataset : mdDcatDatasets) {
                 String dataset = Xml.getString(mdDcatDataset);
 
                 // remove namespaces that will be defined in the header
@@ -226,16 +219,12 @@ public class RdfOutputManager {
 
     /**
      * Writes the metatada rdf to the results file.
-     *
-     * @param output
-     * @param rdf
-     * @throws Exception
      */
     private void writeFileResults(BufferedWriter output, Element rdf, int page) throws Exception {
         List<Element> mdDcatList = rdf.getChildren();
 
         boolean recordsSectionStarted = false;
-        for (Element mdDcat: mdDcatList) {
+        for (Element mdDcat : mdDcatList) {
             String elementName = mdDcat.getName();
             // Ignore the catalog section
             if (elementName.equalsIgnoreCase("Catalog")) continue;
@@ -258,31 +247,25 @@ public class RdfOutputManager {
 
     /**
      * Writes the results file header.
-     *
-     * @param output
-     * @throws Exception
      */
     private void writeFileHeader(BufferedWriter output) throws Exception {
         output.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         output.write("\n");
         output.write("<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" " +
-                "xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\" " +
-                "xmlns:foaf=\"http://xmlns.com/foaf/0.1/\" " +
-                "xmlns:void=\"http://www.w3.org/TR/void/\" " +
-                "xmlns:dcat=\"http://www.w3.org/ns/dcat#\" " +
-                "xmlns:dctype=\"http://purl.org/dc/dcmitype/\" " +
-                "xmlns:dc=\"http://purl.org/dc/elements/1.1/\" " +
-                "xmlns:skos=\"http://www.w3.org/2004/02/skos/core#\" " +
-                "xmlns:locn=\"http://www.w3.org/ns/locn#\" xmlns:time=\"http://www.w3.org/2006/time#\" " +
-                "xmlns:dct=\"http://purl.org/dc/terms/\">");
+            "xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\" " +
+            "xmlns:foaf=\"http://xmlns.com/foaf/0.1/\" " +
+            "xmlns:void=\"http://www.w3.org/TR/void/\" " +
+            "xmlns:dcat=\"http://www.w3.org/ns/dcat#\" " +
+            "xmlns:dctype=\"http://purl.org/dc/dcmitype/\" " +
+            "xmlns:dc=\"http://purl.org/dc/elements/1.1/\" " +
+            "xmlns:skos=\"http://www.w3.org/2004/02/skos/core#\" " +
+            "xmlns:locn=\"http://www.w3.org/ns/locn#\" xmlns:time=\"http://www.w3.org/2006/time#\" " +
+            "xmlns:dct=\"http://purl.org/dc/terms/\">");
         output.write("\n");
     }
 
     /**
      * Writes the results file footer.
-     *
-     * @param output
-     * @throws Exception
      */
     private void writeFileFooter(BufferedWriter output) throws Exception {
         output.write("</rdf:RDF>");
@@ -290,9 +273,6 @@ public class RdfOutputManager {
 
     /**
      * Creates the model element to send to the rdf xslt.
-     *
-     * @param context
-     * @return
      */
     private Element createXsltModel(ServiceContext context) {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -328,19 +308,17 @@ public class RdfOutputManager {
     }
 
     /**
-     * Removes namespaces added to the rdf outputs for each metadata. They are already defined in the header.
-     *
-     * @param xml
-     * @throws Exception
+     * Removes namespaces added to the rdf outputs for each metadata. They are already defined in
+     * the header.
      */
     private String removeNamespaces(String xml) {
         return xml.replace("xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"", "").
-                replace("xmlns:dct=\"http://purl.org/dc/terms/\"", "").
-                replace("xmlns:dcat=\"http://www.w3.org/ns/dcat#\"", "").
-                replace("xmlns:skos=\"http://www.w3.org/2004/02/skos/core#\"", "").
-                replace("xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"", "").
-                replace("xmlns:void=\"http://www.w3.org/TR/void/\"", "").
-                replace("xmlns:foaf=\"http://xmlns.com/foaf/0.1/\"", "").
-                replace("xmlns:locn=\"http://www.w3.org/ns/locn#\"", "");
+            replace("xmlns:dct=\"http://purl.org/dc/terms/\"", "").
+            replace("xmlns:dcat=\"http://www.w3.org/ns/dcat#\"", "").
+            replace("xmlns:skos=\"http://www.w3.org/2004/02/skos/core#\"", "").
+            replace("xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"", "").
+            replace("xmlns:void=\"http://www.w3.org/TR/void/\"", "").
+            replace("xmlns:foaf=\"http://xmlns.com/foaf/0.1/\"", "").
+            replace("xmlns:locn=\"http://www.w3.org/ns/locn#\"", "");
     }
 }

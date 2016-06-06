@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Metaveri Doğrulama</heading>
+  <message>Şema tanımına göre doğrulama başarılı</message>
+  <schemaTronError>ancak şematron kurallarına göre doğrulamada hatalar oluştu</schemaTronError>
+  <schemaTronValid>Şematron kurallarına göre doğrulama başarılı</schemaTronValid>
+  <schemaTronReport>Şematron raporuna buradan erişebilirsiniz</schemaTronReport>
+</strings>

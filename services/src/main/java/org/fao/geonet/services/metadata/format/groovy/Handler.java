@@ -43,13 +43,42 @@ public abstract class Handler extends Selectable implements Comparable<Handler> 
         this.handlerFunction = handlerFunction;
     }
 
+    /**
+     * Process the result of the handler function.
+     */
+    public static void processResult(Object result, StringBuilder resultantXml) throws IOException {
+        if (result == null) {
+            return;
+        }
+
+        resultantXml.append(result);
+    }
+
+    protected static void createPath(GPathResult element, StringBuilder path) {
+        createPath(element, path, 0);
+    }
+
+    protected static void createPath(GPathResult element, StringBuilder path, int depth) {
+        if (element != null) {
+            if (depth > 10) {
+                path.append("... >");
+            } else {
+                if (element.parent() != element) {
+                    createPath(element.parent(), path, depth + 1);
+                    path.append(">");
+                }
+            }
+            path.append(element.name());
+        }
+    }
+
     @Override
     public int compareTo(Handler o) {
         return Integer.compare(o.priority, this.priority);
     }
 
     public HandlerResult handle(TransformationContext context, List<GPathResult> elem, StringBuilder resultantXml)
-            throws IOException {
+        throws IOException {
         Logging.debug("Executing handler '%2$s' on element %1$s.", elem, this);
         Object elParam = null;
         if (group) {
@@ -72,7 +101,7 @@ public abstract class Handler extends Selectable implements Comparable<Handler> 
                 break;
             default:
                 throw new IllegalStateException("Too many arguments in handler '" + this + "' there are: " +
-                                                maximumNumberOfParameters);
+                    maximumNumberOfParameters);
         }
 
         processResult(result, resultantXml);
@@ -85,35 +114,6 @@ public abstract class Handler extends Selectable implements Comparable<Handler> 
 
     public void setGroup(boolean group) {
         this.group = group;
-    }
-
-    /**
-     * Process the result of the handler function.
-     */
-    public static void processResult(Object result, StringBuilder resultantXml) throws IOException {
-        if (result == null) {
-            return;
-        }
-
-        resultantXml.append(result);
-    }
-
-    protected static void createPath(GPathResult element, StringBuilder path) {
-        createPath(element, path, 0);
-    }
-
-    protected static void createPath(GPathResult element, StringBuilder path, int depth) {
-        if(element != null) {
-            if (depth > 10) {
-                path.append("... >");
-            } else {
-                if (element.parent() != element) {
-                    createPath(element.parent(), path, depth + 1);
-                    path.append(">");
-                }
-            }
-            path.append(element.name());
-        }
     }
 
     @Override

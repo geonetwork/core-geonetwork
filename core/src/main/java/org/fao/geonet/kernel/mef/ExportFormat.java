@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
@@ -36,29 +35,28 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.Namespace;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  * An extension point called to create files to export as part of the MEF export.
  *
- * User: Jesse
- * Date: 11/8/13
- * Time: 3:21 PM
+ * User: Jesse Date: 11/8/13 Time: 3:21 PM
  */
 public class ExportFormat implements GeonetworkExtension {
     /**
      * Return a list of &lt;filename, fileContents>.
      *
-     * @param context
      * @param metadata the metadata to convert to files.
-     *
-     * @return
      */
-    public static Iterable<Pair<String, String>>  getFormats(ServiceContext context, Metadata metadata) throws Exception {
+    public static Iterable<Pair<String, String>> getFormats(ServiceContext context, Metadata metadata) throws Exception {
         String schema = metadata.getDataInfo().getSchemaId();
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
@@ -68,7 +66,7 @@ public class ExportFormat implements GeonetworkExtension {
             Map<String, String> allFormats = ((ExportablePlugin) schemaPlugin).getExportFormats();
 
             Set<Pair<String, String>> allExports = new HashSet<>();
-            for (Map.Entry< String, String> entry : allFormats.entrySet()) {
+            for (Map.Entry<String, String> entry : allFormats.entrySet()) {
                 String xslFileName = entry.getKey();
                 String outputFileName = entry.getValue();
                 Path path = metadataSchema.getSchemaDir().resolve(xslFileName);
@@ -87,16 +85,15 @@ public class ExportFormat implements GeonetworkExtension {
             return allExports;
         }
         return Collections.emptyList();
-    };
+    }
+
+    ;
 
 
     /**
      * Format xml data
      *
-     * @param metadata
-     * @param transform
      * @return ByteArrayInputStream
-     * @throws Exception
      */
     public static String formatData(Metadata metadata, boolean transform, Path stylePath) throws Exception {
         String xmlData = metadata.getData();

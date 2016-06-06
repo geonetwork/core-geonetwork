@@ -29,8 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Create a bean providing a connection to the
- * Solr.
+ * Create a bean providing a connection to the Solr.
  */
 @Component
 public class SolrJProxy implements InitializingBean {
@@ -44,8 +43,14 @@ public class SolrJProxy implements InitializingBean {
     private boolean connectionChecked = false;
 
     /**
-     * The first time this method is called, ping the
-     * client to check connection status.
+     * @return Return the bean instance
+     */
+    public static SolrJProxy get() {
+        return instance;
+    }
+
+    /**
+     * The first time this method is called, ping the client to check connection status.
      *
      * @return The Solr instance.
      */
@@ -63,10 +68,7 @@ public class SolrJProxy implements InitializingBean {
     }
 
     /**
-     * Connect to the Solr, ping the client
-     * to check connection and set the instance.
-     *
-     * @throws Exception
+     * Connect to the Solr, ping the client to check connection and set the instance.
      */
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -76,25 +78,16 @@ public class SolrJProxy implements InitializingBean {
 
     /**
      * Ping the Solr.
-     *
-     * @throws Exception
      */
     public void ping() throws Exception {
         try {
             client.ping();
         } catch (Exception e) {
             throw new Exception(
-                    String.format("Failed to ping Solr at URL %s. " +
-                                    "Check configuration.",
-                            config.getSolrServerUrl()),
-                    e);
+                String.format("Failed to ping Solr at URL %s. " +
+                        "Check configuration.",
+                    config.getSolrServerUrl()),
+                e);
         }
-    }
-
-    /**
-     * @return Return the bean instance
-     */
-    public static SolrJProxy get() {
-        return instance;
     }
 }

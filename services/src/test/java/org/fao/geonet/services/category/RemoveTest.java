@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.category;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -35,14 +34,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import jeeves.server.context.ServiceContext;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test for Category Remove service
- * User: Jesse
- * Date: 11/1/13
- * Time: 7:08 PM
+ * Test for Category Remove service User: Jesse Date: 11/1/13 Time: 7:08 PM
  */
 public class RemoveTest extends AbstractServiceIntegrationTest {
     @Autowired

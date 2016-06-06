@@ -35,11 +35,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * A file handler for urls that are created by {@link org.fao.geonet.utils.IO#toURL(java.net.URI)} and represent a url to
- * a file.
+ * A file handler for urls that are created by {@link org.fao.geonet.utils.IO#toURL(java.net.URI)}
+ * and represent a url to a file.
  *
-* @author Jesse on 11/18/2014.
-*/
+ * @author Jesse on 11/18/2014.
+ */
 class FileSystemSpecificStreamHandler extends URLStreamHandler {
     @Override
     protected URLConnection openConnection(URL u) throws IOException {
@@ -62,8 +62,8 @@ class FileSystemSpecificStreamHandler extends URLStreamHandler {
                     try {
                         final long size = Files.size(path);
                         if (size > Integer.MAX_VALUE) {
-                            throw new AssertionError(path  + " size is too large for the getContentLength method.  " +
-                                                     "It is greater than Integer.MAX_VALUE: " + size);
+                            throw new AssertionError(path + " size is too large for the getContentLength method.  " +
+                                "It is greater than Integer.MAX_VALUE: " + size);
                         }
                         return (int) size;
                     } catch (IOException e) {

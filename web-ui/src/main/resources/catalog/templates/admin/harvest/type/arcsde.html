@@ -1,49 +1,51 @@
 <form data-ng-keypress="updatingHarvester()">
 
-    <div class="row">
-        <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected"/>
+  <div class="row">
+    <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected"/>
 
-        <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+  </div>
+
+  <fieldset>
+    <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+      harvesterSelected['@type']) | translate}}
+    </legend>
+    <div data-ng-class="harvesterSelected.site.server == '' ? 'has-error' : ''">
+      <label class="control-label" data-translate="">arcsde-server</label>
+      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.server"/>
+      <p class="help-block" data-translate="">arcsde-serverHelp</p>
+    </div>
+    <div data-ng-class="harvesterSelected.site.port == '' ? 'has-error' : ''">
+      <label class="control-label" data-translate="">arcsde-port</label>
+      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.port"/>
+      <p class="help-block" data-translate="">arcsde-portHelp</p>
+    </div>
+    <div data-ng-class="harvesterSelected.site.database == '' ? 'has-error' : ''">
+      <label class="control-label" data-translate="">arcsde-database</label>
+      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.database"/>
+      <p class="help-block" data-translate="">arcsde-databaseHelp</p>
     </div>
 
-    <fieldset>
-        <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
-            harvesterSelected['@type']) | translate}}</legend>
-        <div data-ng-class="harvesterSelected.site.server == '' ? 'has-error' : ''">
-            <label class="control-label" data-translate="">arcsde-server</label>
-            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.server"/>
-            <p class="help-block" data-translate="">arcsde-serverHelp</p>
-        </div>
-        <div data-ng-class="harvesterSelected.site.port == '' ? 'has-error' : ''">
-            <label class="control-label" data-translate="">arcsde-port</label>
-            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.port"/>
-            <p class="help-block" data-translate="">arcsde-portHelp</p>
-        </div>
-        <div data-ng-class="harvesterSelected.site.database == '' ? 'has-error' : ''">
-            <label class="control-label" data-translate="">arcsde-database</label>
-            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.database"/>
-            <p class="help-block" data-translate="">arcsde-databaseHelp</p>
-        </div>
+    <div data-gn-harvester-account="harvesterSelected"/>
 
-        <div data-gn-harvester-account="harvesterSelected"/>
-
-    </fieldset>
+  </fieldset>
 
 
-    <fieldset>
-        <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
-            {{harvesterSelected['@type'] | translate}}</legend>
+  <fieldset>
+    <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+      {{harvesterSelected['@type'] | translate}}
+    </legend>
 
 
-        <div>
-            <label class="control-label">
-                <span data-translate="">harvesterValidate</span>
-            </label>
-            <div data-gn-harvester-validation="harvesterSelected.content.validate"/>
-            <p class="help-block" data-translate="">harvesterValidateHelp</p>
-        </div>
-    </fieldset>
+    <div>
+      <label class="control-label">
+        <span data-translate="">harvesterValidate</span>
+      </label>
+      <div data-gn-harvester-validation="harvesterSelected.content.validate"/>
+      <p class="help-block" data-translate="">harvesterValidateHelp</p>
+    </div>
+  </fieldset>
 
 
-    <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+  <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>

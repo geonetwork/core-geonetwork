@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <groups>Scegli un gruppo a cui questo utente appartiene</groups>
+  <notfound>Record di metadati non trovati</notfound>
+  <notowner>Record di metadati non trasferiti perchè non ne sei il proprietario</notowner>
+  <updated>Record di metadati trasferiti al nuovo proprietario</updated>
+  <resultstitle>Risultati del trasferimento al nuovo proprietario</resultstitle>
+  <users>Seleziona l'utente che sarà il nuovo proprietario</users>
+</strings>

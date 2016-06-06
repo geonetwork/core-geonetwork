@@ -23,24 +23,21 @@
 
 package org.fao.geonet.services.resources.handlers;
 
+import org.jdom.Element;
+
 import javax.servlet.http.HttpServletRequest;
 
 import jeeves.server.context.ServiceContext;
 
-import org.jdom.Element;
-
 public interface IResourceRemoveHandler {
-	/**
+    /**
      * Invoked to manage custom resource delete processing. Old Jeeves way.
-     *
-     * @throws ResourceHandlerException
      */
-	@Deprecated
+    @Deprecated
     public void onDelete(ServiceContext context, Element params, int metadataId, String fileName, String access) throws ResourceHandlerException;
+
     /**
      * Invoked to manage custom resource delete processing. Spring MVC way-
-     *
-     * @throws ResourceHandlerException
      */
     public void onDelete(ServiceContext context, HttpServletRequest request, int metadataId, String fileName, String access) throws ResourceHandlerException;
 }

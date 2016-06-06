@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -41,47 +40,43 @@ public class FieldMapper implements IFieldMapper {
     @Autowired
     private CatalogConfiguration _catalogConfig;
 
-    public String map(String field)
-    {
+    public String map(String field) {
         final String result = _catalogConfig.getFieldMapping().get(getAbsolute(field));
         return result != null ? result : field;
     }
 
     //---------------------------------------------------------------------------
 
-    public String mapXPath(String field, String schema)
-    {
-        HashMap<String, String> xpaths =  _catalogConfig.getFieldMappingXPath().get(getAbsolute(field));
+    public String mapXPath(String field, String schema) {
+        HashMap<String, String> xpaths = _catalogConfig.getFieldMappingXPath().get(getAbsolute(field));
 
-        return (xpaths != null)?xpaths.get(schema):null;
+        return (xpaths != null) ? xpaths.get(schema) : null;
     }
 
     //---------------------------------------------------------------------------
 
-    public Iterable<String> getMappedFields()
-    {
-		return _catalogConfig.getFieldMapping().values();
+    public Iterable<String> getMappedFields() {
+        return _catalogConfig.getFieldMapping().values();
     }
 
     //---------------------------------------------------------------------------
 
-    public boolean match(Element elem, Set<String> elemNames)
-    {
-	String name = elem.getQualifiedName();
+    public boolean match(Element elem, Set<String> elemNames) {
+        String name = elem.getQualifiedName();
 
-	for (String field : elemNames)
-		// Here we supposed that namespaces prefix are equals when removing elements
-		// when an ElementName parameter is set.
-	    if (field.equals(name))
-	    	return true;
+        for (String field : elemNames)
+            // Here we supposed that namespaces prefix are equals when removing elements
+            // when an ElementName parameter is set.
+            if (field.equals(name))
+                return true;
 
-	return false;
+        return false;
     }
 
     //---------------------------------------------------------------------------
 
     public Set<String> getPropertiesByType(String type) {
-    	return  _catalogConfig.getTypeMapping(type);
+        return _catalogConfig.getTypeMapping(type);
     }
 
     //---------------------------------------------------------------------------
@@ -90,16 +85,15 @@ public class FieldMapper implements IFieldMapper {
     //---
     //---------------------------------------------------------------------------
 
-    private String getAbsolute(String field)
-    {
-	if (field.startsWith("./"))
-	    field = field.substring(2);
+    private String getAbsolute(String field) {
+        if (field.startsWith("./"))
+            field = field.substring(2);
 
-	// Remove any namespaces ... to be validated
-	if (field.contains(":"))
-		field = field.substring(field.indexOf(':')+1);
+        // Remove any namespaces ... to be validated
+        if (field.contains(":"))
+            field = field.substring(field.indexOf(':') + 1);
 
-	return field.toLowerCase();
+        return field.toLowerCase();
     }
 
 }

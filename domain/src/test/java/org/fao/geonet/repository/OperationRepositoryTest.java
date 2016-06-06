@@ -28,13 +28,16 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import static org.fao.geonet.repository.SpringDataTestSupport.setId;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class OperationRepositoryTest extends AbstractSpringDataTest {
 
@@ -43,6 +46,15 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
 
     @PersistenceContext
     EntityManager _entityManager;
+
+    public static Operation newOperation(AtomicInteger inc) {
+        int id = inc.incrementAndGet();
+        return newOperation(id, "name " + id);
+    }
+
+    private static Operation newOperation(int id, String name) {
+        return new Operation().setName(name);
+    }
 
     @Test
     public void test_Save_Count_FindOnly_DeleteAll() throws Exception {
@@ -140,14 +152,6 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
 
     private Operation newOperation() {
         return newOperation(_inc);
-    }
-    public static Operation newOperation(AtomicInteger inc) {
-        int id = inc.incrementAndGet();
-        return newOperation(id, "name " + id);
-    }
-
-    private static Operation newOperation(int id, String name) {
-        return new Operation().setName(name);
     }
 
 }

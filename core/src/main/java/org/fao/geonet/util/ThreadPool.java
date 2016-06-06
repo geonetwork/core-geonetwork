@@ -35,48 +35,45 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 import javax.annotation.PreDestroy;
 
 public class ThreadPool {
     public static final String SEQUENTIAL_EXECUTION = "geonetwork.sequential.execution";
+    final ArrayBlockingQueue<Runnable> queue = new ArrayBlockingQueue<Runnable>(20);
+    int poolSize = 5;
+    int maxPoolSize = 10;
+    long keepAliveTime = 2;
+    ThreadPoolExecutor threadPool = null;
+    ScheduledExecutorService timer = Executors.newScheduledThreadPool(1);
 
-	int poolSize = 5;
+    // --- threadpool will create all possible threads and queue tasks up to the
+    // --- size of the queue - any tasks submitted after that will be run by
+    // --- the caller thread (ie. the main thread) - this is why we create with
+    // --- CallerRunsPolicy for rejected tasks
+    public ThreadPool() {
+        threadPool = new ThreadPoolExecutor(poolSize, maxPoolSize,
+            keepAliveTime, TimeUnit.SECONDS, queue,
+            new ThreadPoolExecutor.CallerRunsPolicy());
+    }
 
-	int maxPoolSize = 10;
+    public void runTask(Runnable task) {
+        runTask(task, 0, TimeUnit.SECONDS);
+    }
 
-	long keepAliveTime = 2;
-
-	ThreadPoolExecutor threadPool = null;
-	ScheduledExecutorService timer =  Executors.newScheduledThreadPool(1);
-
-	final ArrayBlockingQueue<Runnable> queue = new ArrayBlockingQueue<Runnable>(20);
-
-	// --- threadpool will create all possible threads and queue tasks up to the
-	// --- size of the queue - any tasks submitted after that will be run by
-	// --- the caller thread (ie. the main thread) - this is why we create with
-	// --- CallerRunsPolicy for rejected tasks
-	public ThreadPool() {
-		threadPool = new ThreadPoolExecutor(poolSize, maxPoolSize,
-				keepAliveTime, TimeUnit.SECONDS, queue,
-				new ThreadPoolExecutor.CallerRunsPolicy());
-	}
-
-	public void runTask(Runnable task) {
-	    runTask(task,0,TimeUnit.SECONDS);
-	}
-    public void runTask( Runnable task, int delayBeforeStart, TimeUnit unit ) {
+    public void runTask(Runnable task, int delayBeforeStart, TimeUnit unit) {
         if (Boolean.parseBoolean(System.getProperty(SEQUENTIAL_EXECUTION, "false"))) {
             task.run();
         } else {
-            if(delayBeforeStart < 1) {
+            if (delayBeforeStart < 1) {
                 if (Log.isDebugEnabled(Geonet.THREADPOOL)) {
-                    Log.debug(Geonet.THREADPOOL, "Adding task to threadpool:"+toString());
+                    Log.debug(Geonet.THREADPOOL, "Adding task to threadpool:" + toString());
                 }
                 threadPool.execute(task);
             } else {
                 if (Log.isDebugEnabled(Geonet.THREADPOOL)) {
                     Log.debug(Geonet.THREADPOOL,
-                            "Scheduling task to be executed in threadpool in "+delayBeforeStart+" "+unit+": "+toString());
+                        "Scheduling task to be executed in threadpool in " + delayBeforeStart + " " + unit + ": " + toString());
                 }
 
                 timer.schedule(new ScheduledTask(task), delayBeforeStart, unit);
@@ -85,38 +82,38 @@ public class ThreadPool {
     }
 
     @PreDestroy
-	public void shutDown() {
-		threadPool.shutdown();
-	}
+    public void shutDown() {
+        threadPool.shutdown();
+    }
 
-	public String toString() {
-		StringBuffer sb = new StringBuffer("ThreadPool tasks | ");
-		sb.append(" \t| total: ").append(threadPool.getTaskCount());
-		sb.append(" \t| completed: ")
-				.append(threadPool.getCompletedTaskCount());
-		sb.append(" \t| active: ").append(threadPool.getActiveCount());
-		sb.append(" \t| in queue: ").append(queue.size());
-		sb.append(" \t| remaining in queue: ")
-				.append(queue.remainingCapacity());
+    public String toString() {
+        StringBuffer sb = new StringBuffer("ThreadPool tasks | ");
+        sb.append(" \t| total: ").append(threadPool.getTaskCount());
+        sb.append(" \t| completed: ")
+            .append(threadPool.getCompletedTaskCount());
+        sb.append(" \t| active: ").append(threadPool.getActiveCount());
+        sb.append(" \t| in queue: ").append(queue.size());
+        sb.append(" \t| remaining in queue: ")
+            .append(queue.remainingCapacity());
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
-	private class ScheduledTask implements Runnable {
+    private class ScheduledTask implements Runnable {
 
         private final Runnable task;
 
-        public ScheduledTask( Runnable task ) {
+        public ScheduledTask(Runnable task) {
             this.task = task;
         }
 
         public void run() {
             threadPool.execute(task);
             if (Log.isDebugEnabled(Geonet.THREADPOOL)) {
-                Log.debug(Geonet.THREADPOOL, "Adding task to threadpool after being scheduled: "+toString());
+                Log.debug(Geonet.THREADPOOL, "Adding task to threadpool after being scheduled: " + toString());
             }
 
         }
 
-	}
+    }
 }

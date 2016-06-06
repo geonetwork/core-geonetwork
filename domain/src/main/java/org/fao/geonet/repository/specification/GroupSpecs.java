@@ -23,15 +23,6 @@
 
 package org.fao.geonet.repository.specification;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
-
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Group_;
 import org.fao.geonet.domain.Profile;
@@ -41,6 +32,13 @@ import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.domain.UserGroup_;
 import org.fao.geonet.domain.User_;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 public final class GroupSpecs {
 
@@ -52,7 +50,7 @@ public final class GroupSpecs {
         return new Specification<Group>() {
             @Override
             public Predicate toPredicate(Root<Group> root,
-                    CriteriaQuery<?> query, CriteriaBuilder cb) {
+                                         CriteriaQuery<?> query, CriteriaBuilder cb) {
                 return getIsReserved(root, cb);
             }
         };
@@ -62,15 +60,15 @@ public final class GroupSpecs {
         return new Specification<Group>() {
             @Override
             public Predicate toPredicate(Root<Group> root,
-                    CriteriaQuery<?> query, CriteriaBuilder cb) {
+                                         CriteriaQuery<?> query, CriteriaBuilder cb) {
                 return cb.and(root.get(Group_.id).in(ids),
-                        cb.not(getIsReserved(root, cb)));
+                    cb.not(getIsReserved(root, cb)));
             }
         };
     }
 
     private static Predicate getIsReserved(Root<Group> root,
-            CriteriaBuilder cb) {
+                                           CriteriaBuilder cb) {
         int maxId = Integer.MIN_VALUE;
         for (ReservedGroup reservedGroup : ReservedGroup.values()) {
             if (maxId < reservedGroup.getId()) {
@@ -82,22 +80,22 @@ public final class GroupSpecs {
     }
 
     public static Specification<UserGroup> isEditorOrMore(
-            final Integer userId) {
+        final Integer userId) {
         return new Specification<UserGroup>() {
             @Override
             public Predicate toPredicate(Root<UserGroup> root,
-                    CriteriaQuery<?> query, CriteriaBuilder cb) {
+                                         CriteriaQuery<?> query, CriteriaBuilder cb) {
                 root.join(UserGroup_.group);
 
                 Predicate pred = cb
-                        .equal(root.get(UserGroup_.user).get(User_.id), userId);
+                    .equal(root.get(UserGroup_.user).get(User_.id), userId);
 
                 pred = cb
-                        .and(pred,
-                                cb.lessThanOrEqualTo(
-                                        root.get(UserGroup_.id)
-                                                .get(UserGroupId_.profile),
-                                        Profile.Editor));
+                    .and(pred,
+                        cb.lessThanOrEqualTo(
+                            root.get(UserGroup_.id)
+                                .get(UserGroupId_.profile),
+                            Profile.Editor));
 
                 return pred;
             }

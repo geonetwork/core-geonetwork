@@ -25,10 +25,10 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
+
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.AbstractCoreIntegrationTest;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.TestFunction;
@@ -65,6 +65,8 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 
+import jeeves.server.context.ServiceContext;
+
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 
 /**
@@ -76,8 +78,8 @@ public abstract class AbstractFormatterTest extends AbstractServiceIntegrationTe
     protected Format formatService;
     @Autowired
     protected SystemInfo systemInfo;
-    @Autowired
-    private IsoLanguagesMapper mapper;
+    protected int id;
+    protected String xml;
     @Autowired
     MetadataRepository metadataRepository;
     @Autowired
@@ -86,9 +88,17 @@ public abstract class AbstractFormatterTest extends AbstractServiceIntegrationTe
     SettingManager settingManager;
     @Autowired
     DataManager dataManager;
+    @Autowired
+    private IsoLanguagesMapper mapper;
 
-    protected int id;
-    protected String xml;
+    public static GPathResult parseXml(String xmlString, Namespace... namespaces) throws Exception {
+        Map<String, String> namespaceUriToPrefix = Maps.newHashMap();
+        for (Namespace namespace : namespaces) {
+            namespaceUriToPrefix.put(namespace.getPrefix(), namespace.getURI());
+        }
+        final XmlSlurper xmlSlurper = new XmlSlurper(false, false);
+        return xmlSlurper.parseText(xmlString).declareNamespace(namespaceUriToPrefix);
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -103,18 +113,18 @@ public abstract class AbstractFormatterTest extends AbstractServiceIntegrationTe
         MetadataSourceInfo sourceInfo = new MetadataSourceInfo().setSourceId(settingManager.getSiteId()).setOwner(1);
         metadata.setSourceInfo(sourceInfo);
         MetadataDataInfo dataInfo = new MetadataDataInfo().
-                setChangeDate(new ISODate()).
-                setSchemaId(schemaId).
-                setCreateDate(new ISODate()).
-                setType(MetadataType.METADATA).
-                setRoot(md.getQualifiedName());
+            setChangeDate(new ISODate()).
+            setSchemaId(schemaId).
+            setCreateDate(new ISODate()).
+            setType(MetadataType.METADATA).
+            setRoot(md.getQualifiedName());
         metadata.setDataInfo(dataInfo);
         metadata.setUuid(UUID);
         MetadataHarvestInfo harvestInfo = new MetadataHarvestInfo().setHarvested(isHarvested());
         metadata.setHarvestInfo(harvestInfo);
         metadata.setData(xml);
         this.id = dataManager.insertMetadata(serviceContext, metadata, metadata.getXmlData(false), false, true, false,
-                UpdateDatestamp.NO, false, false).getId();
+            UpdateDatestamp.NO, false, false).getId();
     }
 
     public boolean isHarvested() {
@@ -145,9 +155,9 @@ public abstract class AbstractFormatterTest extends AbstractServiceIntegrationTe
         final ServletWebRequest webRequest = new ServletWebRequest(request, new MockHttpServletResponse());
         TestFunction testFunction = new TestFunction() {
             @Override
-            public void exec() throws Exception{
+            public void exec() throws Exception {
                 formatService.exec(getUILang(), getOutputType().name(), "" + id, null, formatterId, "true", false, FormatterWidth._100,
-                        webRequest);
+                    webRequest);
             }
         };
 
@@ -163,16 +173,7 @@ public abstract class AbstractFormatterTest extends AbstractServiceIntegrationTe
     }
 
     private double round(double num) {
-        return Math.round(num * 1000) /1000;
-    }
-
-    public static GPathResult parseXml(String xmlString, Namespace... namespaces) throws Exception {
-        Map<String, String> namespaceUriToPrefix = Maps.newHashMap();
-        for (Namespace namespace : namespaces) {
-            namespaceUriToPrefix.put(namespace.getPrefix(), namespace.getURI());
-        }
-        final XmlSlurper xmlSlurper = new XmlSlurper(false, false);
-        return xmlSlurper.parseText(xmlString).declareNamespace(namespaceUriToPrefix);
+        return Math.round(num * 1000) / 1000;
     }
 
     protected String executeHandler(MockHttpServletRequest request, String formatterId, GPathResult elem, Handler handler) throws Exception {

@@ -1,14 +1,15 @@
 package org.fao.geonet.wro4j;
 
 import org.fao.geonet.utils.IO;
-import ro.isdc.wro.model.resource.Resource;
-import ro.isdc.wro.model.resource.ResourceType;
-import ro.isdc.wro.model.resource.locator.UriLocator;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+
+import ro.isdc.wro.model.resource.Resource;
+import ro.isdc.wro.model.resource.ResourceType;
+import ro.isdc.wro.model.resource.locator.UriLocator;
 
 /**
  * Converts a resource to a closure goog.addDependency statement.
@@ -26,7 +27,7 @@ public class ClosureDependencyUriLocator implements UriLocator {
         resource.setMinimize(false);
         resource.setType(ResourceType.JS);
 
-        if (Files.exists(IO.toPath(dep.path.replace("file:/D:","/D")))) {
+        if (Files.exists(IO.toPath(dep.path.replace("file:/D:", "/D")))) {
             resource.setUri(IO.toPath(dep.path).toUri().toString());
         } else {
             StringBuilder path = new StringBuilder();

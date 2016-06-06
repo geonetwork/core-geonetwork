@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Error en el inicio de sesión</heading>
+  <message>El nombre de Usuario o la contaseña son incorrectos.<br/>Pulse el botón 'Volver' e
+    inéntelo de nuevo.
+  </message>
+  <button>Volver</button>
+</strings>

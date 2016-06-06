@@ -9,16 +9,18 @@
             <h4 class="list-group-item-heading">{{s.id | translate}}</h4>
             <p> {{(s.id + '-help') | translate}} </p>
             <p>
-              <ul>
-                <li data-ng-show="s.props['@namespaces']">
-                  <span data-translate="">namespace</span>
-                  <pre>{{s.props['@namespaces']}}</pre>
-                </li>
-              </ul>
+            <ul>
+              <li data-ng-show="s.props['@namespaces']">
+                <span data-translate="">namespace</span>
+                <pre>{{s.props['@namespaces']}}</pre>
+              </li>
+            </ul>
             </p>
             <div class="btn-toolbar">
               <button type="button" class="btn btn-primary pull-right"
-                data-ng-click="removeStandard(s.id)"><span class="fa fa-times"></span> {{"removeStandard"|translate}}</button>
+                      data-ng-click="removeStandard(s.id)"><span class="fa fa-times"></span>
+                {{"removeStandard"|translate}}
+              </button>
             </div>
           </a>
         </div>
@@ -53,11 +55,13 @@
 
           <div class="btn-toolbar">
             <button type="button" class="btn btn-primary pull-right"
-              data-ng-click="addStandard('#gn-standard-add', 'add')" 
-              ><span class="fa fa-plus"></span> {{"addStandard"|translate}}</button>
+                    data-ng-click="addStandard('#gn-standard-add', 'add')"
+            ><span class="fa fa-plus"></span> {{"addStandard"|translate}}
+            </button>
             <button type="button" class="btn btn-primary pull-right"
-              data-ng-click="updateStandard('#gn-standard-add', 'update')" 
-              ><span class="fa fa-save"></span> {{"updateStandard"|translate}}</button>
+                    data-ng-click="updateStandard('#gn-standard-add', 'update')"
+            ><span class="fa fa-save"></span> {{"updateStandard"|translate}}
+            </button>
           </div>
         </form>
       </div>

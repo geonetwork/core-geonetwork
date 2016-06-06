@@ -56,17 +56,17 @@ public class TNodeTranslateTest extends AbstractTemplateParserTest {
         final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
 
         String expected = "<html>\n"
-                          + "    <div>translation null</div>\n"
-                          + "    <div>translation null</div>\n"
-                          + "    <div>translation file</div>\n"
-                          + "    <div>translation file</div>\n"
-                          + "    <div>translation codelist null name</div>\n"
-                          + "    <div>translation codelist desc context1</div>\n"
-                          + "    <div>translation codelist desc context2</div>\n"
-                          + "    <div>translation node name context</div>\n"
-                          + "    <div>translation node desc null</div>\n"
-                          + "    <div>Translated After resolve</div>\n"
-                          + "</html>";
+            + "    <div>translation null</div>\n"
+            + "    <div>translation null</div>\n"
+            + "    <div>translation file</div>\n"
+            + "    <div>translation file</div>\n"
+            + "    <div>translation codelist null name</div>\n"
+            + "    <div>translation codelist desc context1</div>\n"
+            + "    <div>translation codelist desc context2</div>\n"
+            + "    <div>translation node name context</div>\n"
+            + "    <div>translation node desc null</div>\n"
+            + "    <div>Translated After resolve</div>\n"
+            + "</html>";
 
         assertCorrectRender(parseTree, Collections.<String, Object>singletonMap("key", "nameKey"), expected);
     }

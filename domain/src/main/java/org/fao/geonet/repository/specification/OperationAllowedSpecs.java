@@ -23,11 +23,20 @@
 
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.OperationAllowed_;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collection;
-import javax.persistence.criteria.*;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 public final class OperationAllowedSpecs {
     private OperationAllowedSpecs() {
@@ -35,7 +44,8 @@ public final class OperationAllowedSpecs {
     }
 
     /**
-     * A specification that is limits results to opAllowed objects that have the correct metadataId.
+     * A specification that is limits results to opAllowed objects that have the correct
+     * metadataId.
      *
      * @param metadataId the id to match
      */
@@ -44,7 +54,8 @@ public final class OperationAllowedSpecs {
     }
 
     /**
-     * A specification that is limits results to opAllowed objects that have the correct metadataId.
+     * A specification that is limits results to opAllowed objects that have the correct
+     * metadataId.
      *
      * @param metadataId the id to match
      */
@@ -77,7 +88,8 @@ public final class OperationAllowedSpecs {
     }
 
     /**
-     * A specification that is limits results to opAllowed objects that have the correct operationId.
+     * A specification that is limits results to opAllowed objects that have the correct
+     * operationId.
      *
      * @param operation the operation to match
      */
@@ -86,7 +98,8 @@ public final class OperationAllowedSpecs {
     }
 
     /**
-     * A specification that is limits results to opAllowed objects that have the correct operationId.
+     * A specification that is limits results to opAllowed objects that have the correct
+     * operationId.
      *
      * @param operationId the id to match
      */
@@ -124,6 +137,7 @@ public final class OperationAllowedSpecs {
 
     /**
      * A specification that selects all the operations allowed for all the metadata.
+     *
      * @param metadataIds the ids of all the metadata
      */
     public static Specification<OperationAllowed> hasMetadataIdIn(final Collection<Integer> metadataIds) {
@@ -137,6 +151,7 @@ public final class OperationAllowedSpecs {
 
     /**
      * A specification that selects all the operations allowed for all the groups provided.
+     *
      * @param groupIds the ids of all the groups
      */
     public static Specification<OperationAllowed> hasGroupIdIn(final Collection<Integer> groupIds) {
@@ -150,6 +165,7 @@ public final class OperationAllowedSpecs {
 
     /**
      * A specification that selects all the operations allowed for all the operation ids provided.
+     *
      * @param operationIds the ids of all the operations
      */
     public static Specification<OperationAllowed> hasOperationIdIn(final Collection<Integer> operationIds) {

@@ -34,7 +34,6 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.repository.specification.GroupSpecs.isReserved;
 import static org.junit.Assert.assertEquals;
@@ -44,9 +43,7 @@ import static org.springframework.data.jpa.domain.Specifications.not;
 /**
  * Test the Group specs.
  * <p/>
- * User: Jesse
- * Date: 9/10/13
- * Time: 10:22 AM
+ * User: Jesse Date: 9/10/13 Time: 10:22 AM
  */
 public class GroupSpecsTest extends AbstractSpringDataTest {
 

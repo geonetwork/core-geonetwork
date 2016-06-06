@@ -26,6 +26,7 @@ package org.fao.geonet.services.region;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.csw.common.util.Xml;
 import org.geotools.gml2.GMLConfiguration;
@@ -192,20 +193,16 @@ public enum GeomFormat {
         }
     };
 
+    static GMLConfiguration gml2Config = new GMLConfiguration();
+    static org.geotools.gml3.GMLConfiguration gml3Config = new org.geotools.gml3.GMLConfiguration();
+    static org.geotools.gml3.v3_2.GMLConfiguration gml32Config = new org.geotools.gml3.v3_2.GMLConfiguration();
+
     private static String decode(String geomString) throws UnsupportedEncodingException {
         if (!geomString.contains(" ")) {
             return URLDecoder.decode(geomString, Constants.ENCODING);
         }
         return geomString;
     }
-
-    public abstract Element toElement(Geometry geom) throws Exception;
-
-    public abstract Geometry parse(String geomString) throws Exception;
-
-    static GMLConfiguration gml2Config = new GMLConfiguration();
-    static org.geotools.gml3.GMLConfiguration gml3Config = new org.geotools.gml3.GMLConfiguration();
-    static org.geotools.gml3.v3_2.GMLConfiguration gml32Config = new org.geotools.gml3.v3_2.GMLConfiguration();
 
     public static GeomFormat find(String geomType) {
         for (GeomFormat f : values()) {
@@ -214,6 +211,10 @@ public enum GeomFormat {
             }
         }
         throw new IllegalArgumentException(geomType + " is not an acceptable format.  Permitted values are: " + Arrays.toString(values
-                ()));
+            ()));
     }
+
+    public abstract Element toElement(Geometry geom) throws Exception;
+
+    public abstract Geometry parse(String geomString) throws Exception;
 }

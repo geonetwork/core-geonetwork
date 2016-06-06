@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Registrazione effettuata con successo</heading>
+  <message>Registrazione effettuata con successo, verifica nome utente e password nella tua e-mail.
+    Grazie.
+  </message>
+  <errorEmailAddressAlreadyRegistered>
+    <p>Spiacenti, la registrazione è
+      <font class="error">FALLITA</font>
+      perchè sei già un utente registrato.
+    </p>
+    <p>Se hai dimenticato la password, contattare l'helpdesk a
+      <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a>
+      o telefonare al xxx-xxxxxxxx
+    </p>
+    <p>Una password di reset sarà disponibile a breve. Se si ha urgente necessità di effettuare il
+      login e l'helpdesk non è al momento contattabile, si può, come soluzione temporanea,
+      effettuare una nuova registrazione usando un nome utente diverso.
+    </p>
+  </errorEmailAddressAlreadyRegistered>
+  <errorEmailToAddressFailed>
+    <p>Spiacenti, la registrazione è
+      <font class="error">FALLITA</font>
+      poichè non è stato possibile inviare una email all'indirizzo fornito.
+    </p>
+    <p>Verifica i dati inseriti e riprova.</p>
+  </errorEmailToAddressFailed>
+  <errorProfileRequestFailed>
+    <p>Non è stato possibile recapitare la richiesta di accesso come redattore.</p>
+    <p>Contattare l'helkpdesk a
+      <a href="mailto:yourname@yoursite.org?subject=Password dimenticata">yourname@yoursite.org</a>
+      o telefonare al xxx-xxxxxxxx
+    </p>
+  </errorProfileRequestFailed>
+
+</strings>

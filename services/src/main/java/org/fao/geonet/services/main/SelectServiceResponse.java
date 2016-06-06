@@ -1,9 +1,9 @@
 package org.fao.geonet.services.main;
 
-import jeeves.constants.Jeeves;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import jeeves.constants.Jeeves;
 
 /**
  * @deprecated Use the service with JSON format as output

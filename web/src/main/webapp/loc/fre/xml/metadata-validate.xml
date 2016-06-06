@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Validation des métadonnées</heading>
+  <message>Validation réussie</message>
+  <schemaTronError>Erreur dans la validation des règles</schemaTronError>
+  <schemaTronValid>Validation des règles</schemaTronValid>
+  <schemaTronReport>Accéder au rapport sur les règles</schemaTronReport>
+  <invalidElement>Élément invalide. Contenu invalide pour l'élément :</invalidElement>
+  <onElementOf>Un des éléments suivants</onElementOf>
+  <isExpected>est attendu.</isExpected>
+  <isNotComplete>est incomplet.</isNotComplete>
+  <elementLocated>L'élément parent est</elementLocated>
+  <missingElement>Élément manquant. Le contenu de l'élément</missingElement>
+  <invalidValue>Valeur manquante ou invalide.</invalidValue>
+  <notValidFor>n'est pas une valeur valide pour</notValidFor>
+  <xsdErrorIs>L'erreur est :</xsdErrorIs>
+  <inElement>dont le parent est</inElement>
+  <enum1>La valeur</enum1>
+  <enum2>n'est pas valide pour le champ</enum2>
+  <enum3>Les valeurs possibles sont :</enum3>
+</strings>

@@ -25,9 +25,7 @@ package org.fao.geonet.services.metadata.schema;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import org.fao.geonet.Constants;
+
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.SchematronCriteriaGroup;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
@@ -41,9 +39,12 @@ import org.jdom.Text;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.annotation.Nullable;
+
+import jeeves.server.ServiceConfig;
 
 import static org.fao.geonet.repository.SchematronCriteriaGroupRepositoryTest.newGroup;
 import static org.junit.Assert.assertEquals;
@@ -61,9 +62,9 @@ public abstract class AbstractSchematronServiceIntegrationTest extends AbstractS
     @Autowired
     SchematronRepository _schematronRepository;
     @Autowired
-    private SchematronCriteriaGroupRepository _schematronCriteriaGroupRepository;
-    @Autowired
     SchematronCriteriaRepository _schematronCriteriaRepository;
+    @Autowired
+    private SchematronCriteriaGroupRepository _schematronCriteriaGroupRepository;
 
     @Before
     public void addTestData() {
@@ -92,13 +93,13 @@ public abstract class AbstractSchematronServiceIntegrationTest extends AbstractS
         final List<?> schematronIds = selectSchematronIds(result);
         assertEquals(groups.length, schematronIds.size());
         for (SchematronCriteriaGroup group : groups) {
-            assertTrue(schematronIds.contains(""+group.getId().getSchematronId()));
+            assertTrue(schematronIds.contains("" + group.getId().getSchematronId()));
         }
     }
 
     private List<?> selectSchematronIds(Element result) throws JDOMException {
         return Lists.transform(Xml.selectNodes(result, "record/id/schematronid/text()"), new Function<Object,
-                Object>() {
+            Object>() {
             @Nullable
             @Override
             public Object apply(@Nullable Object input) {
@@ -127,7 +128,7 @@ public abstract class AbstractSchematronServiceIntegrationTest extends AbstractS
     protected void assertNotSchematronIds(Element result, SchematronCriteriaGroup... groups) throws JDOMException {
         final List<?> schematronIds = selectSchematronIds(result);
         for (SchematronCriteriaGroup group : groups) {
-            assertFalse(schematronIds.contains(""+group.getId().getSchematronId()));
+            assertFalse(schematronIds.contains("" + group.getId().getSchematronId()));
         }
     }
 

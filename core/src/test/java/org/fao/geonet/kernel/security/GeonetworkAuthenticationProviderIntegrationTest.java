@@ -45,8 +45,6 @@ import org.springframework.test.context.ContextConfiguration;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -85,19 +83,14 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
     }
 
     @Test(expected = UsernameNotFoundException.class)
-    public void testUserNotFound() throws Exception{
+    public void testUserNotFound() throws Exception {
         final User user = userFoundSetup(PasswordEncoding.CURRENT);
 
         _geonetworkAuthenticationProvider.retrieveUser(user.getUsername() + "not", authentication);
     }
 
-    enum PasswordEncoding {
-        UNSALTED, OLD, CURRENT
-    }
     /**
      * Makes dbms find a user.
-     *
-     * @throws Exception
      */
     private User userFoundSetup(PasswordEncoding passwordEncoding) throws Exception {
         final User entity = UserRepositoryTest.newUser(_inc);
@@ -124,16 +117,16 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
     }
 
     @Test
-    public void testUserFound() throws Exception{
+    public void testUserFound() throws Exception {
         final User user = userFoundSetup(PasswordEncoding.CURRENT);
 
         _geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
         TestCase.assertNotNull("User should be found",
-                _geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication));
+            _geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication));
     }
 
     @Test
-    public void testFindUserWithAuthenticationTokenUnsalted() throws Exception{
+    public void testFindUserWithAuthenticationTokenUnsalted() throws Exception {
         final User user = userFoundSetup(PasswordEncoding.UNSALTED);
 
         mockAuthenticationSetup(user);
@@ -143,7 +136,7 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
     }
 
     @Test
-    public void testFindUserWithAuthenticationTokenOldPasswordHash() throws Exception{
+    public void testFindUserWithAuthenticationTokenOldPasswordHash() throws Exception {
         final User user = userFoundSetup(PasswordEncoding.OLD);
 
         mockAuthenticationSetup(user);
@@ -151,8 +144,9 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
         final UserDetails userDetails = _geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
         TestCase.assertNotNull("User with authentication token should be found", userDetails);
     }
+
     @Test
-    public void testFindUserWithAuthenticationToken() throws Exception{
+    public void testFindUserWithAuthenticationToken() throws Exception {
         final User user = userFoundSetup(PasswordEncoding.CURRENT);
         mockAuthenticationSetup(user);
 
@@ -177,7 +171,6 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
 
     /**
      * Sets up a mock authentication that can return a password.
-     * @param user
      */
     private void mockAuthenticationSetup(User user) {
         authentication = mock(UsernamePasswordAuthenticationToken.class);
@@ -200,13 +193,17 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
         final User user = userFoundSetup(PasswordEncoding.CURRENT);
         mockAuthenticationSetup(user);
         TestCase.assertNotNull("Authentication with correct credentials should succeed",
-                _geonetworkAuthenticationProvider.authenticate(authentication));
+            _geonetworkAuthenticationProvider.authenticate(authentication));
     }
 
     @Test(expected = BadCredentialsException.class)
     public void testAuthenticateWithTokenWithWrongCredentials() throws Exception {
         mockAuthenticationSetup(null);
         _geonetworkAuthenticationProvider.authenticate(authentication);
+    }
+
+    enum PasswordEncoding {
+        UNSALTED, OLD, CURRENT
     }
 
 }

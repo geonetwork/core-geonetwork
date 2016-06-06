@@ -23,18 +23,20 @@
 
 package org.fao.geonet.kernel.rdf;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
 import org.fao.geonet.kernel.AbstractThesaurusBasedTest;
 import org.fao.geonet.kernel.KeywordBean;
 import org.junit.Test;
 import org.openrdf.sesame.config.AccessDeniedException;
 import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class KeywordQueryBuilderTest extends AbstractThesaurusBasedTest {
 
@@ -46,7 +48,7 @@ public class KeywordQueryBuilderTest extends AbstractThesaurusBasedTest {
     public void keywords() throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
         Query<KeywordBean> query = QueryBuilder.keywordQueryBuilder(isoLangMapper, Arrays.asList(languages)).build();
         List<KeywordBean> results = query.execute(thesaurus);
-        
+
         assertCorrectKeywords(results);
     }
 
@@ -54,8 +56,8 @@ public class KeywordQueryBuilderTest extends AbstractThesaurusBasedTest {
         assertEquals(keywords, results.size());
         KeywordBean keywordBean = results.get(0);
         assertTrue(keywordBean.getUriCode().endsWith("#0"));
-        assertEquals(createExampleLabel(0,"eng"), keywordBean.getValues().get("eng"));
-        assertEquals(createExampleNote(0,"ger"), keywordBean.getDefinitions().get("ger"));
+        assertEquals(createExampleLabel(0, "eng"), keywordBean.getValues().get("eng"));
+        assertEquals(createExampleNote(0, "ger"), keywordBean.getDefinitions().get("ger"));
         assertEquals(4, keywordBean.getValues().size());
         assertEquals("0", keywordBean.getCoordEast());
         assertEquals("10", keywordBean.getCoordWest());
@@ -63,10 +65,10 @@ public class KeywordQueryBuilderTest extends AbstractThesaurusBasedTest {
         assertEquals("15", keywordBean.getCoordNorth());
 
         KeywordBean keywordBean2 = results.get(1);
-        
+
         assertTrue(keywordBean2.getUriCode().endsWith("#1"));
-        assertEquals(createExampleLabel(1,"eng"), keywordBean2.getValues().get("eng"));
-        assertEquals(createExampleNote(1,"ger"), keywordBean2.getDefinitions().get("ger"));
+        assertEquals(createExampleLabel(1, "eng"), keywordBean2.getValues().get("eng"));
+        assertEquals(createExampleNote(1, "ger"), keywordBean2.getDefinitions().get("ger"));
         assertEquals(4, keywordBean2.getValues().size());
         assertEquals("", keywordBean2.getCoordEast());
         assertEquals("", keywordBean2.getCoordWest());
@@ -80,7 +82,7 @@ public class KeywordQueryBuilderTest extends AbstractThesaurusBasedTest {
         List<String> readLanguages = query.execute(thesaurus);
         assertArrayEquals(languages, readLanguages.toArray(new String[readLanguages.size()]));
     }
-    
+
     @Test
     public void keywordsCaseInsensitive() throws Exception {
         String[] upperCase = new String[languages.length];
@@ -90,7 +92,7 @@ public class KeywordQueryBuilderTest extends AbstractThesaurusBasedTest {
 
         Query<KeywordBean> query = QueryBuilder.keywordQueryBuilder(isoLangMapper, Arrays.asList(upperCase)).build();
         List<KeywordBean> results = query.execute(thesaurus);
-        
+
         assertCorrectKeywords(results);
     }
 }

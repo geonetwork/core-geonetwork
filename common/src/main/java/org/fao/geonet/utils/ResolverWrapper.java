@@ -23,20 +23,20 @@ package org.fao.geonet.utils;
 
 //=============================================================================
 
-/** Static container for a single instance of Resolver 
-  */
+/**
+ * Static container for a single instance of Resolver
+ */
 
-public final class ResolverWrapper
-{
+public final class ResolverWrapper {
 
-	private static Resolver resolver = null;
+    private static Resolver resolver = null;
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public static synchronized Resolver getInstance() {
-		if (resolver == null) resolver = new Resolver();
-		return resolver;
-	}
+    public static synchronized Resolver getInstance() {
+        if (resolver == null) resolver = new Resolver();
+        return resolver;
+    }
 }
 
 //=============================================================================

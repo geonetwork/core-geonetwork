@@ -25,6 +25,7 @@ package org.fao.geonet.utils;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -32,6 +33,7 @@ import javax.annotation.Nonnull;
  */
 public class TimerThreadFactory implements ThreadFactory {
     AtomicInteger numberOfThread = new AtomicInteger();
+
     @Override
     public Thread newThread(@Nonnull Runnable r) {
         final Thread thread = new Thread(r, "TimerThread-" + numberOfThread.incrementAndGet());

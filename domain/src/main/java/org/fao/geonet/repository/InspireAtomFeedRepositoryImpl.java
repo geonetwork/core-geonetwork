@@ -30,8 +30,11 @@ import org.fao.geonet.domain.Metadata;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 
 public class InspireAtomFeedRepositoryImpl implements InspireAtomFeedRepositoryCustom {
@@ -63,7 +66,7 @@ public class InspireAtomFeedRepositoryImpl implements InspireAtomFeedRepositoryC
 
         InspireAtomFeed feed = null;
 
-        try{
+        try {
             feed = _entityManager.createQuery(cbQuery).getSingleResult();
         } catch (NoResultException nre) {
             //Ignore this
@@ -98,7 +101,7 @@ public class InspireAtomFeedRepositoryImpl implements InspireAtomFeedRepositoryC
         cbQuery.where(datasetIdCodePredicate);
 
         InspireAtomFeed feed = null;
-        try{
+        try {
             feed = _entityManager.createQuery(cbQuery).getSingleResult();
         } catch (NoResultException nre) {
             //Ignore this

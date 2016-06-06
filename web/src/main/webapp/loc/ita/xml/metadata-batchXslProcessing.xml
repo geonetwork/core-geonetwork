@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Record di metadati non trovati</notfound>
+  <notowner>Record di metadati non processati poichè non ne sei il proprietario</notowner>
+  <updated>Record di metadati processati</updated>
+  <notProcessFound>Metadati processati non trovati per lo schema di metadati</notProcessFound>
+</strings>

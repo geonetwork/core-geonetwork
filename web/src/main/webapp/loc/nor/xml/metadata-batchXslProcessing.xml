@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Metadata ikke funnet</notfound>
+  <notowner>Metadata som ikke kunne prosesseres på grunn av manglende rettigheter (ikke eier)
+  </notowner>
+  <updated>Metadata prosessert</updated>
+  <notProcessFound>Metadata prosess ikke funnet for schema</notProcessFound>
+</strings>

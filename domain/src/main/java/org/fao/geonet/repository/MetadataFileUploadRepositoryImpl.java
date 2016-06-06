@@ -23,11 +23,15 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.domain.MetadataFileUpload_;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Root;
 
 /**
  * Implementation for methods in {@link MetadataFileUploadRepositoryCustom}.
@@ -40,10 +44,6 @@ public class MetadataFileUploadRepositoryImpl implements MetadataFileUploadRepos
 
     /**
      * Returns a {@link org.fao.geonet.domain.MetadataFileUpload} by file name that is not deleted.
-     *
-     * @param metadataId
-     * @param fileName
-     * @return
      */
     @Override
     public MetadataFileUpload findByMetadataIdAndFileNameNotDeleted(int metadataId, String fileName) {
@@ -56,8 +56,8 @@ public class MetadataFileUploadRepositoryImpl implements MetadataFileUploadRepos
         final Expression<String> deletedPath = root.get(MetadataFileUpload_.deletedDate);
 
         cbQuery.where(cb.and(
-                        cb.and(cb.equal(metadataIdPath, metadataId), cb.equal(fileNamePath, fileName))),
-                        cb.isNull(deletedPath)
+            cb.and(cb.equal(metadataIdPath, metadataId), cb.equal(fileNamePath, fileName))),
+            cb.isNull(deletedPath)
         );
 
         return _entityManager.createQuery(cbQuery).getSingleResult();

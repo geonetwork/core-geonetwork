@@ -66,36 +66,129 @@ import java.util.regex.Pattern;
 public class SolrWFSFeatureIndexer {
     public static final String MULTIVALUED_SUFFIX = "s";
     public static final String FEATURE_FIELD_PREFIX = "ft_";
-    private SolrClient solr;
+    // TODO: Move attributeType / solr dynamic index field suffix to config
+    // maybe make a bean taking care of this which could also do more
+    // complex mapping like based on feature type column name defined suffix
+    public static final String DEFAULT_SOLRFIELDSUFFIX = "_s";
+    /**
+     * Define for each attribute type the Solr field suffix.
+     */
+    private static Map<String, String> XSDTYPES_TO_SOLRFIELDSUFFIX;
+    private static Pattern pt = Pattern.compile("\\{\\{([^}]*)\\}\\}");
+    private static Pattern titleColumnShouldMatchPattern =
+        Pattern.compile(
+            ".*(TITLE|LABEL|NAME|TITRE|NOM|LIBELLE).*",
+            Pattern.CASE_INSENSITIVE);
 
+    static {
+        XSDTYPES_TO_SOLRFIELDSUFFIX = ImmutableMap.<String, String>builder()
+            .put("integer", "_ti")
+            .put("string", DEFAULT_SOLRFIELDSUFFIX)
+            .put("double", "_d")
+            .put("boolean", "_b")
+            .put("date", "_dt")
+            .put("dateTime", "_dt")
+            .build();
+    }
+
+    Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
+    private SolrClient solr;
+    private String solrCollectionUrl;
+    private int solrCommitWithinMs = 10000;
+    private int featureCommitInterval = 200;
+
+    /**
+     * Build a title for the feature. The title expression could be an attribute name or could
+     * contain expression were attributes will be substituted. eg. "{{TITLE_FR}} ({{ID}})"
+     *
+     * @param feature         A simple feature
+     * @param fields          List of columns
+     * @param titleExpression A title expression based on one or more attributes
+     */
+    public static String buildFeatureTitle(SimpleFeature feature,
+                                           Map<String, String> fields,
+                                           String titleExpression) {
+        if (StringUtils.isNotEmpty(titleExpression)) {
+            if (titleExpression.contains("{{")) {
+                Matcher m = pt.matcher(titleExpression);
+                while (m.find()) {
+                    String attributeName = m.group(1);
+                    String attributeValue = (String) feature.getAttribute(attributeName);
+                    titleExpression = titleExpression.replaceAll(
+                        "\\{\\{" + attributeName + "\\}\\}",
+                        attributeValue);
+
+                }
+                return titleExpression;
+            } else {
+                String attributeValue = (String) feature.getAttribute(titleExpression);
+                if (attributeValue != null) {
+                    return attributeValue;
+                } else {
+                    return null;
+                }
+            }
+        } else {
+            for (String attributeName : fields.keySet()) {
+                String attributeType = fields.get(attributeName);
+                String attributeValue = (String) feature.getAttribute(attributeName);
+                if (attributeValue != null && !attributeType.equals("geometry")) {
+                    return attributeValue;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * From the list of attributes try to find the best one for a title. If not found, return the
+     * first attribute which is not a geometry. If none, return null.
+     *
+     * @param fields List of attributes
+     */
+    public static String guessFeatureTitleAttribute(Map<String, String> fields) {
+        Set<String> keySet = fields.keySet();
+        String defaultTitle = null;
+        for (String attributeName : keySet) {
+            if (!"geometry".equals(fields.get(attributeName))) {
+                // Default title is the first column which is not a geom
+                if (defaultTitle == null) {
+                    defaultTitle = attributeName;
+                }
+                Matcher m = titleColumnShouldMatchPattern.matcher(attributeName);
+                if (m.find()) {
+                    return attributeName;
+                }
+            }
+        }
+        return defaultTitle;
+    }
 
     /**
      * Create exchange states for this feature type.
      *
-     * Load configuration from exchange properties.
-     * Could be a {@link WFSHarvesterParameter} or url and typeName
-     * exchange properties.
+     * Load configuration from exchange properties. Could be a {@link WFSHarvesterParameter} or url
+     * and typeName exchange properties.
      *
-     * @param exchange
-     * @param connect   Init datastore ie. connect to WFS, retrieve schema
+     * @param connect Init datastore ie. connect to WFS, retrieve schema
      */
     public void initialize(
-            Exchange exchange,
-            boolean connect) throws InvalidArgumentException {
+        Exchange exchange,
+        boolean connect) throws InvalidArgumentException {
         WFSHarvesterParameter configuration =
-                (WFSHarvesterParameter) exchange.getProperty("configuration");
+            (WFSHarvesterParameter) exchange.getProperty("configuration");
         if (configuration == null) {
             throw new InvalidArgumentException("Missing WFS harvester configuration.");
         }
 
         logger.info(
-                String.format(
-                        "Initializing harvester configuration for uuid '%s', url '%s', feature type '%s'. Exchange id is '%s'.",
-                        configuration.getMetadataUuid(),
-                        configuration.getUrl(),
-                        configuration.getTypeName(),
-                        exchange.getExchangeId()
-                ));
+            String.format(
+                "Initializing harvester configuration for uuid '%s', url '%s', feature type '%s'. Exchange id is '%s'.",
+                configuration.getMetadataUuid(),
+                configuration.getUrl(),
+                configuration.getTypeName(),
+                exchange.getExchangeId()
+            ));
 
         WFSHarvesterExchangeState config = new WFSHarvesterExchangeState(configuration);
         if (connect) {
@@ -103,9 +196,9 @@ public class SolrWFSFeatureIndexer {
                 config.initDataStore();
             } catch (Exception e) {
                 String errorMsg = String.format(
-                        "Failed to connect to server '%s'. Error is %s",
-                        configuration.getUrl(),
-                        e.getMessage());
+                    "Failed to connect to server '%s'. Error is %s",
+                    configuration.getUrl(),
+                    e.getMessage());
                 logger.error(errorMsg);
                 throw new RuntimeException(errorMsg);
             }
@@ -113,41 +206,13 @@ public class SolrWFSFeatureIndexer {
         exchange.setProperty("featureTypeConfig", config);
     }
 
-    /**
-     * Define for each attribute type the Solr field suffix.
-     */
-    private static Map<String, String> XSDTYPES_TO_SOLRFIELDSUFFIX;
-
-
-    Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
-    // TODO: Move attributeType / solr dynamic index field suffix to config
-    // maybe make a bean taking care of this which could also do more
-    // complex mapping like based on feature type column name defined suffix
-    public static final String DEFAULT_SOLRFIELDSUFFIX = "_s";
-
-    static {
-        XSDTYPES_TO_SOLRFIELDSUFFIX = ImmutableMap.<String, String>builder()
-                .put("integer", "_ti")
-                .put("string", DEFAULT_SOLRFIELDSUFFIX)
-                .put("double", "_d")
-                .put("boolean", "_b")
-                .put("date", "_dt")
-                .put("dateTime", "_dt")
-                .build();
-    }
-
-    private String solrCollectionUrl;
-
-    public void setSolrCollectionUrl(String solrCollectionUrl) {
-        this.solrCollectionUrl = solrCollectionUrl;
-    }
-
     public String getSolrCollectionUrl() {
         return solrCollectionUrl;
     }
 
-
-    private int solrCommitWithinMs = 10000;
+    public void setSolrCollectionUrl(String solrCollectionUrl) {
+        this.solrCollectionUrl = solrCollectionUrl;
+    }
 
     public int getSolrCommitWithinMs() {
         return solrCommitWithinMs;
@@ -158,9 +223,6 @@ public class SolrWFSFeatureIndexer {
         return this;
     }
 
-
-    private int featureCommitInterval = 200;
-
     public int getFeatureCommitInterval() {
         return featureCommitInterval;
     }
@@ -169,12 +231,8 @@ public class SolrWFSFeatureIndexer {
         this.featureCommitInterval = featureCommitInterval;
     }
 
-
     /**
-     * Delete all Solr documents matching a WFS server and a specific
-     * typename.
-     *
-     * @param exchange
+     * Delete all Solr documents matching a WFS server and a specific typename.
      */
     public void deleteFeatures(Exchange exchange) {
         WFSHarvesterExchangeState state = (WFSHarvesterExchangeState) exchange.getProperty("featureTypeConfig");
@@ -182,34 +240,34 @@ public class SolrWFSFeatureIndexer {
         final String typeName = state.getParameters().getTypeName();
 
         logger.info(String.format(
-                "Deleting features previously index from service '%s' and feature type '%s' in '%s'",
-                url, typeName, solrCollectionUrl));
+            "Deleting features previously index from service '%s' and feature type '%s' in '%s'",
+            url, typeName, solrCollectionUrl));
 
         solr = new HttpSolrClient(solrCollectionUrl);
         try {
             UpdateResponse response = solr.deleteByQuery(String.format(
-                    "+featureTypeId:\"%s#%s\"", url, typeName)
+                "+featureTypeId:\"%s#%s\"", url, typeName)
             );
             logger.info(String.format(
-                    "  Features deleted in %sms.",
-                    response.getElapsedTime()));
+                "  Features deleted in %sms.",
+                response.getElapsedTime()));
             response = solr.deleteByQuery(String.format(
-                    "+id:\"%s#%s\"", url, typeName)
+                "+id:\"%s#%s\"", url, typeName)
             );
             logger.info(String.format(
-                    "  Report deleted in %sms.",
-                    response.getElapsedTime()));
+                "  Report deleted in %sms.",
+                response.getElapsedTime()));
             solr.commit();
         } catch (SolrServerException e) {
             e.printStackTrace();
             logger.error(String.format(
-                    "Error connecting to Solr server at '%s'. Error is %s.",
-                    solrCollectionUrl, e.getMessage()));
+                "Error connecting to Solr server at '%s'. Error is %s.",
+                solrCollectionUrl, e.getMessage()));
         } catch (IOException e) {
             e.printStackTrace();
             logger.error(String.format(
-                    "Error connecting to Solr server at '%s'. Error is %s.",
-                    solrCollectionUrl, e.getMessage()));
+                "Error connecting to Solr server at '%s'. Error is %s.",
+                solrCollectionUrl, e.getMessage()));
         }
     }
 
@@ -220,14 +278,14 @@ public class SolrWFSFeatureIndexer {
         while (fields.hasNext()) {
             String field = fields.next();
             harvestingTaskDocument.addField(
-                    field,
-                    state.getHarvesterReport().get(field));
+                field,
+                state.getHarvesterReport().get(field));
         }
         try {
             UpdateResponse response = solr.add(harvestingTaskDocument);
             logger.info(String.format(
-                    "Report saved in %sms.",
-                    response.getElapsedTime()));
+                "Report saved in %sms.",
+                response.getElapsedTime()));
             solr.commit();
         } catch (SolrServerException e) {
             e.printStackTrace();
@@ -236,11 +294,8 @@ public class SolrWFSFeatureIndexer {
         }
     }
 
-
     /**
      * Index all features found in a WFS server
-     *
-     * @param exchange
      */
     public void indexFeatures(Exchange exchange) throws Exception {
         WFSHarvesterExchangeState state = (WFSHarvesterExchangeState) exchange.getProperty("featureTypeConfig");
@@ -248,8 +303,8 @@ public class SolrWFSFeatureIndexer {
         final String url = state.getParameters().getUrl();
         final String typeName = state.getParameters().getTypeName();
         logger.info(String.format(
-                "Indexing WFS features from service '%s' and feature type '%s'",
-                url, typeName));
+            "Indexing WFS features from service '%s' and feature type '%s'",
+            url, typeName));
 
         WFSDataStore wfs = state.getWfsDatastore();
         // Feature attribute name and type
@@ -276,9 +331,9 @@ public class SolrWFSFeatureIndexer {
             } else {
                 boolean isTokenized = separator != null;
                 documentFields.put(attributeName, FEATURE_FIELD_PREFIX +
-                               attributeName +
-                               XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType) +
-                               (isTokenized ? MULTIVALUED_SUFFIX : "")
+                    attributeName +
+                    XSDTYPES_TO_SOLRFIELDSUFFIX.get(attributeType) +
+                    (isTokenized ? MULTIVALUED_SUFFIX : "")
                 );
             }
         }
@@ -298,11 +353,11 @@ public class SolrWFSFeatureIndexer {
                 if (element instanceof GeographicBoundingBox) {
                     GeographicBoundingBox bounds = (GeographicBoundingBox) element;
                     wgs84bbox = new ReferencedEnvelope(
-                            bounds.getSouthBoundLatitude(),
-                            bounds.getNorthBoundLatitude(),
-                            bounds.getWestBoundLongitude(),
-                            bounds.getEastBoundLongitude(),
-                            wgs84
+                        bounds.getSouthBoundLatitude(),
+                        bounds.getNorthBoundLatitude(),
+                        bounds.getWestBoundLongitude(),
+                        bounds.getEastBoundLongitude(),
+                        wgs84
                     );
                 }
             }
@@ -330,7 +385,7 @@ public class SolrWFSFeatureIndexer {
                 SolrInputDocument document = new SolrInputDocument();
                 try {
                     SimpleFeature feature = features.next();
-                    nbOfFeatures ++;
+                    nbOfFeatures++;
 
                     document.addField("id", feature.getID());
                     document.addField("docType", "feature");
@@ -339,7 +394,7 @@ public class SolrWFSFeatureIndexer {
 
                     if (titleExpression != null) {
                         document.addField("resourceTitle",
-                                buildFeatureTitle(feature, featureAttributes, titleExpression));
+                            buildFeatureTitle(feature, featureAttributes, titleExpression));
                     }
 
                     if (state.getParameters().getMetadataUuid() != null) {
@@ -357,9 +412,9 @@ public class SolrWFSFeatureIndexer {
                                 separator = tokenizedFields.get(attributeName);
                             }
                             boolean isTokenized = separator != null;
-                            if (isTokenized){
+                            if (isTokenized) {
                                 StringTokenizer tokenizer =
-                                        new StringTokenizer((String) attributeValue, separator);
+                                    new StringTokenizer((String) attributeValue, separator);
                                 while (tokenizer.hasMoreElements()) {
                                     String token = tokenizer.nextToken();
                                     document.addField(
@@ -369,12 +424,12 @@ public class SolrWFSFeatureIndexer {
                             } else {
                                 if (documentFields.get(attributeName).equals("geom")) {
                                     document.addField(
-                                            documentFields.get(attributeName),
-                                            attributeValue.toString());
+                                        documentFields.get(attributeName),
+                                        attributeValue.toString());
                                 } else {
                                     document.addField(
-                                            documentFields.get(attributeName),
-                                            attributeValue);
+                                        documentFields.get(attributeName),
+                                        attributeValue);
                                 }
                             }
 
@@ -387,8 +442,8 @@ public class SolrWFSFeatureIndexer {
                     }
                 } catch (Exception ex) {
                     state.getHarvesterReport().put("error_ss", String.format(
-                            "Error while creating document for feature %d. Exception is: %s",
-                            nbOfFeatures, ex.getMessage()
+                        "Error while creating document for feature %d. Exception is: %s",
+                        nbOfFeatures, ex.getMessage()
                     ));
                     continue;
                 }
@@ -399,53 +454,53 @@ public class SolrWFSFeatureIndexer {
                 if (numInBatch >= featureCommitInterval) {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                                "  %d features to index.",
-                                nbOfFeatures));
+                            "  %d features to index.",
+                            nbOfFeatures));
                     }
                     try {
                         UpdateResponse response = solr.add(docCollection);
                         solr.commit();
                     } catch (Exception ex) {
                         state.getHarvesterReport().put("error_ss", String.format(
-                                "Error while indexing block of documents [%d-%d]. Exception is: %s",
-                                nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
+                            "Error while indexing block of documents [%d-%d]. Exception is: %s",
+                            nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
                         ));
                     }
                     docCollection.clear();
                     numInBatch = 0;
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                                "  %d features indexed.",
-                                nbOfFeatures));
+                            "  %d features indexed.",
+                            nbOfFeatures));
                     }
                 }
             }
             if (docCollection.size() > 0) {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                            "  %d features to index.",
-                            nbOfFeatures));
+                        "  %d features to index.",
+                        nbOfFeatures));
                 }
                 try {
                     UpdateResponse response = solr.add(docCollection);
                     solr.commit();
                 } catch (Exception ex) {
                     state.getHarvesterReport().put("error_ss", String.format(
-                            "Error while indexing block of documents [%d-%d]. Exception is: %s",
-                            nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
+                        "Error while indexing block of documents [%d-%d]. Exception is: %s",
+                        nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
                     ));
                 }
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                            "  %d features indexed.",
-                            nbOfFeatures));
+                        "  %d features indexed.",
+                        nbOfFeatures));
                 }
             }
             logger.info(String.format("Total number of features indexed is %d.", nbOfFeatures));
             state.getHarvesterReport().put("status_s", "success");
             state.getHarvesterReport().put("totalRecords_i", nbOfFeatures);
             state.getHarvesterReport().put("endDate_dt",
-                    ISODateTimeFormat.dateTime().print(new DateTime()));
+                ISODateTimeFormat.dateTime().print(new DateTime()));
         } catch (Exception e) {
             state.getHarvesterReport().put("status_s", "error");
             state.getHarvesterReport().put("error_ss", e.getMessage());
@@ -454,82 +509,5 @@ public class SolrWFSFeatureIndexer {
         } finally {
             saveHarvesterReport(state);
         }
-    }
-
-    private static Pattern pt = Pattern.compile("\\{\\{([^}]*)\\}\\}");
-    /**
-     * Build a title for the feature. The title expression could be
-     * an attribute name or could contain expression were attributes
-     * will be substituted. eg. "{{TITLE_FR}} ({{ID}})"
-     *
-     * @param feature   A simple feature
-     * @param fields    List of columns
-     * @param titleExpression A title expression based on one or more attributes
-     * @return
-     */
-    public static String buildFeatureTitle(SimpleFeature feature,
-                                    Map<String, String> fields,
-                                    String titleExpression) {
-        if (StringUtils.isNotEmpty(titleExpression)) {
-            if (titleExpression.contains("{{")) {
-                Matcher m = pt.matcher(titleExpression);
-                while (m.find()) {
-                    String attributeName = m.group(1);
-                    String attributeValue = (String) feature.getAttribute(attributeName);
-                    titleExpression = titleExpression.replaceAll(
-                            "\\{\\{" + attributeName + "\\}\\}",
-                            attributeValue);
-
-                }
-                return titleExpression;
-            } else {
-                String attributeValue = (String) feature.getAttribute(titleExpression);
-                if (attributeValue != null) {
-                    return attributeValue;
-                } else {
-                    return null;
-                }
-            }
-        } else {
-            for (String attributeName : fields.keySet()) {
-                String attributeType = fields.get(attributeName);
-                String attributeValue = (String) feature.getAttribute(attributeName);
-                if (attributeValue != null && !attributeType.equals("geometry")) {
-                    return attributeValue;
-                }
-            }
-        }
-        return null;
-    }
-
-    private static Pattern titleColumnShouldMatchPattern =
-            Pattern.compile(
-                    ".*(TITLE|LABEL|NAME|TITRE|NOM|LIBELLE).*",
-                    Pattern.CASE_INSENSITIVE);
-
-    /**
-     * From the list of attributes try to find the best one
-     * for a title. If not found, return the first attribute
-     * which is not a geometry. If none, return null.
-     *
-     * @param fields List of attributes
-     * @return
-     */
-    public static String guessFeatureTitleAttribute(Map<String, String> fields) {
-        Set<String> keySet = fields.keySet();
-        String defaultTitle = null;
-        for (String attributeName : keySet) {
-            if (!"geometry".equals(fields.get(attributeName))) {
-                // Default title is the first column which is not a geom
-                if (defaultTitle == null) {
-                    defaultTitle = attributeName;
-                }
-                Matcher m = titleColumnShouldMatchPattern.matcher(attributeName);
-                if (m.find()) {
-                    return attributeName;
-                }
-            }
-        }
-        return defaultTitle;
     }
 }

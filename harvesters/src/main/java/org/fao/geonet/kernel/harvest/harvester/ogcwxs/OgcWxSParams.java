@@ -31,111 +31,106 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class OgcWxSParams extends AbstractParams
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class OgcWxSParams extends AbstractParams {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public OgcWxSParams(DataManager dm)
-	{
-		super(dm);
-	}
+    public String url;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Create : called when a new entry must be added. Reads values from the
+    //---          provided entry, providing default values
+    //---
+    //---------------------------------------------------------------------------
+    public String icon;
 
-	public void create(Element node) throws BadInputEx
-	{
-		super.create(node);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update : called when an entry has changed and variables must be updated
+    //---
+    //---------------------------------------------------------------------------
+    public String ogctype;
 
-		Element site = node.getChild("site");
-		Element opt  = node.getChild("options");
+    //---------------------------------------------------------------------------
+    //---
+    //--- Other API methods
+    //---
+    //---------------------------------------------------------------------------
+    public String lang;
 
-		url       		= Util.getParam(site, "url",  "");
-		icon      		= Util.getParam(site, "icon", "");
-		ogctype   		= Util.getParam(site, "ogctype", "");
-		lang  	  		= Util.getParam(opt, "lang",  "");
-		topic  	  		= Util.getParam(opt, "topic",  "");
-		createThumbnails= Util.getParam(opt, "createThumbnails",  false);
-		useLayer  		= Util.getParam(opt, "useLayer",  false);
-		useLayerMd		= Util.getParam(opt, "useLayerMd",  false);
-		datasetCategory	= Util.getParam(opt, "datasetCategory",  "");
-		outputSchema	= Util.getParam(opt, "outputSchema",  "");
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    public String topic;
+    public boolean createThumbnails;
+    public boolean useLayer;
+    public boolean useLayerMd;
+    public String datasetCategory;
+    public String outputSchema;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
-	//---------------------------------------------------------------------------
+    public OgcWxSParams(DataManager dm) {
+        super(dm);
+    }
 
-	public void update(Element node) throws BadInputEx
-	{
-		super.update(node);
+    public void create(Element node) throws BadInputEx {
+        super.create(node);
 
-		Element site = node.getChild("site");
-		Element opt  = node.getChild("options");
+        Element site = node.getChild("site");
+        Element opt = node.getChild("options");
 
-		url       		= Util.getParam(site,  "url",  url);
-		icon      		= Util.getParam(site,  "icon", icon);
-		ogctype  		= Util.getParam(site,  "ogctype", ogctype);
-		
-		lang  	  		= Util.getParam(opt, "lang",  lang);
-		topic  	  		= Util.getParam(opt, "topic",  topic);
-		createThumbnails= Util.getParam(opt, "createThumbnails",  createThumbnails);
-		useLayer  		= Util.getParam(opt, "useLayer",  useLayer);
-		useLayerMd		= Util.getParam(opt, "useLayerMd",  useLayerMd);
-		datasetCategory = Util.getParam(opt, "datasetCategory",  datasetCategory);
-		outputSchema 	= Util.getParam(opt, "outputSchema",  outputSchema);
-	}
+        url = Util.getParam(site, "url", "");
+        icon = Util.getParam(site, "icon", "");
+        ogctype = Util.getParam(site, "ogctype", "");
+        lang = Util.getParam(opt, "lang", "");
+        topic = Util.getParam(opt, "topic", "");
+        createThumbnails = Util.getParam(opt, "createThumbnails", false);
+        useLayer = Util.getParam(opt, "useLayer", false);
+        useLayerMd = Util.getParam(opt, "useLayerMd", false);
+        datasetCategory = Util.getParam(opt, "datasetCategory", "");
+        outputSchema = Util.getParam(opt, "outputSchema", "");
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
+    public void update(Element node) throws BadInputEx {
+        super.update(node);
 
-	public OgcWxSParams copy()
-	{
-		OgcWxSParams copy = new OgcWxSParams(dm);
-		copyTo(copy);
+        Element site = node.getChild("site");
+        Element opt = node.getChild("options");
 
-		copy.url  				= url;
-		copy.icon 				= icon;
-		copy.ogctype		 	= ogctype;
-		copy.lang 				= lang;
-		copy.topic 				= topic;
-		copy.createThumbnails 	= createThumbnails;
-		copy.useLayer 			= useLayer;
-		copy.useLayerMd 		= useLayerMd;
-		copy.datasetCategory    = datasetCategory;
-		copy.outputSchema    	= outputSchema;
-		return copy;
-	}
+        url = Util.getParam(site, "url", url);
+        icon = Util.getParam(site, "icon", icon);
+        ogctype = Util.getParam(site, "ogctype", ogctype);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        lang = Util.getParam(opt, "lang", lang);
+        topic = Util.getParam(opt, "topic", topic);
+        createThumbnails = Util.getParam(opt, "createThumbnails", createThumbnails);
+        useLayer = Util.getParam(opt, "useLayer", useLayer);
+        useLayerMd = Util.getParam(opt, "useLayerMd", useLayerMd);
+        datasetCategory = Util.getParam(opt, "datasetCategory", datasetCategory);
+        outputSchema = Util.getParam(opt, "outputSchema", outputSchema);
+    }
 
-	public String url;
-	public String icon;
-	public String ogctype;
-	public String lang;
-	public String topic;
-	public boolean createThumbnails;
-	public boolean useLayer;
-	public boolean useLayerMd;
-	public String datasetCategory;
-	public String outputSchema;
+    public OgcWxSParams copy() {
+        OgcWxSParams copy = new OgcWxSParams(dm);
+        copyTo(copy);
+
+        copy.url = url;
+        copy.icon = icon;
+        copy.ogctype = ogctype;
+        copy.lang = lang;
+        copy.topic = topic;
+        copy.createThumbnails = createThumbnails;
+        copy.useLayer = useLayer;
+        copy.useLayerMd = useLayerMd;
+        copy.datasetCategory = datasetCategory;
+        copy.outputSchema = outputSchema;
+        return copy;
+    }
 }
 
 //=============================================================================

@@ -23,52 +23,49 @@
 
 package org.fao.geonet.harvester.wfsfeatures.model;
 
-import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.Map;
+
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by francois on 14/01/16.
  */
 @XmlRootElement(name = "wfs")
 public class WFSHarvesterParameter implements Serializable {
+    private static final long serialVersionUID = 7526471155622776147L;
     private String metadataUuid;
-
     private String url;
-
     private String typeName;
-
     private String version = "1.0.0";
-
     private int timeOut = 60000;
-
     private int maxFeatures = -1;
-
     private String encoding = "UTF-8";
-
     private String crs = "EPSG:4326";
-
     private String titleExpression;
-
-    public WFSHarvesterParameter () {}
-    public WFSHarvesterParameter (String url, String typeName, String metadataUuid) {
-        this.url = url;
-        this.typeName = typeName;
-        this.metadataUuid = metadataUuid;
-    }
-
     /**
-     * List of fields to tokenize during
-     * indexing.
+     * List of fields to tokenize during indexing.
      *
      * The key is the column name, the value is the separator.
      */
     private Map<String, String> tokenize;
 
+    public WFSHarvesterParameter() {
+    }
+
+    public WFSHarvesterParameter(String url, String typeName, String metadataUuid) {
+        this.url = url;
+        this.typeName = typeName;
+        this.metadataUuid = metadataUuid;
+    }
+
     @XmlAttribute(required = true)
     public String getUrl() {
         return url;
     }
+
     public void setUrl(String url) {
         this.url = url;
     }
@@ -77,6 +74,7 @@ public class WFSHarvesterParameter implements Serializable {
     public String getTypeName() {
         return typeName;
     }
+
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
@@ -85,6 +83,7 @@ public class WFSHarvesterParameter implements Serializable {
     public String getVersion() {
         return version;
     }
+
     public void setVersion(String version) {
         this.version = version;
     }
@@ -93,6 +92,7 @@ public class WFSHarvesterParameter implements Serializable {
     public int getTimeOut() {
         return timeOut;
     }
+
     public void setTimeOut(int timeOut) {
         this.timeOut = timeOut;
     }
@@ -101,6 +101,7 @@ public class WFSHarvesterParameter implements Serializable {
     public int getMaxFeatures() {
         return maxFeatures;
     }
+
     public void setMaxFeatures(int maxFeatures) {
         this.maxFeatures = maxFeatures;
     }
@@ -109,6 +110,7 @@ public class WFSHarvesterParameter implements Serializable {
     public String getEncoding() {
         return encoding;
     }
+
     public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
@@ -117,14 +119,16 @@ public class WFSHarvesterParameter implements Serializable {
     public String getMetadataUuid() {
         return metadataUuid;
     }
+
     public void setMetadataUuid(String metadataUuid) {
         this.metadataUuid = metadataUuid;
     }
 
-    @XmlElementWrapper(name="tokenize")
+    @XmlElementWrapper(name = "tokenize")
     public Map<String, String> getTokenize() {
         return tokenize;
     }
+
     public void setTokenize(Map<String, String> tokenize) {
         this.tokenize = tokenize;
     }
@@ -144,15 +148,13 @@ public class WFSHarvesterParameter implements Serializable {
             sb.append("\ntokenize: ");
             for (Map.Entry<String, String> e : tokenize.entrySet()) {
                 sb.append(" * ")
-                        .append(e.getKey())
-                        .append(" separated by: ")
-                        .append(e.getValue());
+                    .append(e.getKey())
+                    .append(" separated by: ")
+                    .append(e.getValue());
             }
         }
         return sb.toString();
     }
-
-    private static final long serialVersionUID = 7526471155622776147L;
 
     public String getCrs() {
         return crs;

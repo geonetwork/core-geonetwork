@@ -23,18 +23,19 @@
 
 package org.fao.geonet.guiservices.util;
 
-import jeeves.server.ServiceConfig;
-
 import org.fao.geonet.constants.Geonet;
 
 import java.nio.file.Path;
 
+import jeeves.server.ServiceConfig;
+
 /**
- * This service is used by edit service to retrieve the current selected tab
- * in editing mode (used by widget apps).
+ * This service is used by edit service to retrieve the current selected tab in editing mode (used
+ * by widget apps).
  */
 public class GetCurrentMDEditingTab extends GetCurrentMDTab {
     String sessionTabProperty = Geonet.Session.METADATA_EDITING_TAB;
+
     public void init(Path appPath, ServiceConfig params) throws Exception {
         setSessionTabProperty(sessionTabProperty);
     }

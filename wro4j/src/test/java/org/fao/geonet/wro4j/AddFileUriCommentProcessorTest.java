@@ -1,12 +1,13 @@
 package org.fao.geonet.wro4j;
 
 import org.junit.Test;
-import ro.isdc.wro.model.resource.Resource;
-import ro.isdc.wro.model.resource.ResourceType;
 
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+
+import ro.isdc.wro.model.resource.Resource;
+import ro.isdc.wro.model.resource.ResourceType;
 
 import static java.lang.String.format;
 import static org.fao.geonet.wro4j.AddFileUriCommentProcessor.END_CSS_BLOCK;

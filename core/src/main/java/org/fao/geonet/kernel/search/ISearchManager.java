@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
@@ -50,26 +49,26 @@ public interface ISearchManager {
     /**
      * Indexes a metadata record.
      *
-     * @param forceRefreshReaders if true then block all searches until they can obtain a up-to-date reader
+     * @param forceRefreshReaders if true then block all searches until they can obtain a up-to-date
+     *                            reader
      */
     void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
                MetadataType metadataType, String root, boolean forceRefreshReaders)
-            throws Exception;
+        throws Exception;
 
     /**
-     * Force the index to wait until all changes are processed and the next reader obtained will get the latest data.
-     *
-     * @throws IOException
+     * Force the index to wait until all changes are processed and the next reader obtained will get
+     * the latest data.
      */
     void forceIndexChanges() throws IOException;
 
 
-
     /**
-     * Rebuilds the Lucene index. If xlink or from selection parameters
-     * are defined, reindex a subset of record. Otherwise reindex all records.
+     * Rebuilds the Lucene index. If xlink or from selection parameters are defined, reindex a
+     * subset of record. Otherwise reindex all records.
      *
-     * @param xlinks        Search all docs with XLinks, clear the XLinks cache and index all records found.
+     * @param xlinks        Search all docs with XLinks, clear the XLinks cache and index all
+     *                      records found.
      * @param fromSelection Reindex all records from selection.
      */
     boolean rebuildIndex(ServiceContext context,
@@ -90,9 +89,6 @@ public interface ISearchManager {
 
     /**
      * deletes a list of documents.
-     *
-     * @param txts
-     * @throws Exception
      */
     void delete(List<String> txts) throws Exception;
 }

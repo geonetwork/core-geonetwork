@@ -28,7 +28,11 @@ import org.fao.geonet.domain.MetadataIdentifierTemplate;
 import org.fao.geonet.domain.MetadataIdentifierTemplate_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * Specifications for querying MetadataIdentifierTemplate.
@@ -46,7 +50,7 @@ public class MetadataIdentifierTemplateSpecs {
             public Predicate toPredicate(Root<MetadataIdentifierTemplate> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 
                 Path<Character> defaultAttributePath = root.get(MetadataIdentifierTemplate_.systemProvided_JPAWorkaround);
-                Predicate systemProvidedDefaultPredicate = cb.equal(defaultAttributePath,  cb.literal(Constants.toYN_EnabledChar(isSystemProvided)));
+                Predicate systemProvidedDefaultPredicate = cb.equal(defaultAttributePath, cb.literal(Constants.toYN_EnabledChar(isSystemProvided)));
                 return systemProvidedDefaultPredicate;
             }
         };

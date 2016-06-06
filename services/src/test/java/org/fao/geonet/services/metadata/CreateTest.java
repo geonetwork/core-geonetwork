@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
@@ -36,14 +35,17 @@ import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import javax.imageio.ImageIO;
+
+import jeeves.server.context.ServiceContext;
 
 import static org.fao.geonet.domain.Pair.read;
 import static org.junit.Assert.assertEquals;
@@ -73,8 +75,8 @@ public class CreateTest extends AbstractServiceIntegrationTest {
 
         int sampleGroup = _groupRepo.findByName("sample").getId();
         final Element params = createParams(
-                read(Geonet.Elem.ID, id),
-                read(Geonet.Elem.GROUP, sampleGroup));
+            read(Geonet.Elem.ID, id),
+            read(Geonet.Elem.GROUP, sampleGroup));
 
         final Create createService = new Create();
 
@@ -106,8 +108,8 @@ public class CreateTest extends AbstractServiceIntegrationTest {
 
         int sampleGroup = _groupRepo.findByName("sample").getId();
         final Element params = createParams(
-                read(Geonet.Elem.ID, id),
-                read(Geonet.Elem.GROUP, sampleGroup));
+            read(Geonet.Elem.ID, id),
+            read(Geonet.Elem.GROUP, sampleGroup));
 
         final Create createService = new Create();
 
@@ -166,8 +168,8 @@ public class CreateTest extends AbstractServiceIntegrationTest {
 
         int sampleGroup = _groupRepo.findByName("sample").getId();
         final Element params = createParams(
-                read(Geonet.Elem.ID, id),
-                read(Geonet.Elem.GROUP, sampleGroup));
+            read(Geonet.Elem.ID, id),
+            read(Geonet.Elem.GROUP, sampleGroup));
 
         final Create createService = new Create();
 

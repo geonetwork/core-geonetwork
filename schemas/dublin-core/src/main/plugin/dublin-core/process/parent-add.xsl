@@ -25,11 +25,11 @@
 <!--
 Stylesheet used to update metadata adding a reference to a parent record.
 -->
-<xsl:stylesheet version="2.0"
-                xmlns:dc="http://purl.org/dc/elements/1.1/"
+<xsl:stylesheet xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:geonet="http://www.fao.org/geonetwork">
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                version="2.0">
 
   <!-- Parent metadata record UUID -->
   <xsl:param name="parentUuid"/>
@@ -38,7 +38,7 @@ Stylesheet used to update metadata adding a reference to a parent record.
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:copy-of
-          select="dc:*|dct:*"/>
+        select="dc:*|dct:*"/>
 
       <xsl:if test="not(dct:isPartOf[text() = $parentUuid])">
         <dct:isPartOf>

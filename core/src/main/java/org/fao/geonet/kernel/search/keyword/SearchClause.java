@@ -23,14 +23,14 @@
 
 package org.fao.geonet.kernel.search.keyword;
 
-import java.util.Set;
-
 import org.fao.geonet.kernel.rdf.Where;
 import org.jdom.Element;
 
+import java.util.Set;
+
 /**
  * Represents a criteria for searching for Keywords
- * 
+ *
  * @author jeichar
  */
 public interface SearchClause {
@@ -44,9 +44,7 @@ public interface SearchClause {
 
     /**
      * Add a representation of this clause to the search params
-     * 
-     * @param params
      */
     public void addXmlParams(Element params);
-    
+
 }

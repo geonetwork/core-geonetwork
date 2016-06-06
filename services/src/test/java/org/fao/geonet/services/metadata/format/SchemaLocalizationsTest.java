@@ -24,9 +24,10 @@
 package org.fao.geonet.services.metadata.format;
 
 import com.google.common.collect.Maps;
+
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
-import jeeves.server.dispatchers.guiservices.XmlFile;
+
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.IsoLanguageRepository;
@@ -43,6 +44,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
+import jeeves.server.dispatchers.guiservices.XmlFile;
+
 import static org.fao.geonet.services.metadata.format.SchemaLocalizations.LANG_CODELIST_NS;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -51,6 +54,50 @@ public class SchemaLocalizationsTest {
 
     public static final String SCHEMA = "iso19139";
     private SchemaLocalizations localizations;
+
+    private static IsoLanguage isoLang(String engTranslation) {
+        final IsoLanguage isoLanguage = new IsoLanguage();
+        isoLanguage.getLabelTranslations().put("eng", engTranslation);
+        return isoLanguage;
+    }
+
+    private static Object[] sort(Object[] sort) {
+        Arrays.sort(sort);
+        return sort;
+    }
+
+    private static Element createLabelElement(String name, String parentName, String label, String desc) {
+        final Element element = new Element("element");
+        if (parentName != null) {
+            element.setAttribute("context", parentName);
+        }
+        return element.setAttribute("name", name).addContent(Arrays.asList(
+            new Element("label").setText(label),
+            new Element("description").setText(desc)
+        ));
+    }
+
+    private static Element createCodelistElement(String name, String code, String label, String desc) {
+        return new Element("codelist").setAttribute("name", name).addContent(
+            new Element("entry").addContent(Arrays.asList(
+                new Element("code").setText(code),
+                new Element("label").setText(label),
+                new Element("description").setText(desc)
+            )));
+    }
+
+    private static XmlFile createXmlFile(final Element xml) {
+        Element config = new Element("config").
+            setAttribute(jeeves.constants.ConfigFile.Xml.Attr.NAME, "name").
+            setAttribute(jeeves.constants.ConfigFile.Xml.Attr.FILE, "FILE").
+            setAttribute(jeeves.constants.ConfigFile.Xml.Attr.BASE, "loc");
+        return new XmlFile(config, "eng", true) {
+            @Override
+            public Element getXml(ApplicationContext context, String lang, boolean makeCopy) throws JDOMException, IOException {
+                return xml;
+            }
+        };
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -72,24 +119,24 @@ public class SchemaLocalizationsTest {
         localizations = new SchemaLocalizations(appContext, env, SCHEMA, null) {
             @Override
             protected Map<String, SchemaLocalization> getSchemaLocalizations(ApplicationContext context, SchemaManager schemaManager)
-                    throws IOException, JDOMException {
+                throws IOException, JDOMException {
                 Map<String, SchemaLocalization> localizations = Maps.newHashMap();
                 Map<String, XmlFile> schemaInfo = Maps.newHashMap();
                 schemaInfo.put("labels.xml", createXmlFile(new Element("labels").addContent(Arrays.asList(
-                        createLabelElement("elem1", "parent", "Element One", "Desc Element One"),
-                        createLabelElement("elem1", null, "Element One No Parent", "Desc Element One No Parent"),
-                        createLabelElement("elem2", null, "Element Two", "Desc Element Two")
+                    createLabelElement("elem1", "parent", "Element One", "Desc Element One"),
+                    createLabelElement("elem1", null, "Element One No Parent", "Desc Element One No Parent"),
+                    createLabelElement("elem2", null, "Element Two", "Desc Element Two")
                 ))));
                 schemaInfo.put("codelists.xml", createXmlFile(new Element("codelists").addContent(Arrays.asList(
-                        createCodelistElement("gmd:codelist1", "code1", "Code One", "Desc Code One").addContent(
-                                createCodelistElement("gmd:codelist1", "code2", "Code Two", "Desc Code Two").getChild("entry").detach()
-                        ),
-                        createCodelistElement("gmd:codelist2", "code1", "Code Three", "Desc Code Three"),
-                        createCodelistElement("gmd:codelist1", "code1", "Code Four", "Desc Code Four")
+                    createCodelistElement("gmd:codelist1", "code1", "Code One", "Desc Code One").addContent(
+                        createCodelistElement("gmd:codelist1", "code2", "Code Two", "Desc Code Two").getChild("entry").detach()
+                    ),
+                    createCodelistElement("gmd:codelist2", "code1", "Code Three", "Desc Code Three"),
+                    createCodelistElement("gmd:codelist1", "code1", "Code Four", "Desc Code Four")
                 ))));
                 schemaInfo.put("strings.xml", createXmlFile(new Element("strings").addContent(Arrays.asList(
-                        new Element("string1").setText("String One"),
-                        new Element("string2").addContent(new Element("part2").setText("String Two Part Two"))
+                    new Element("string1").setText("String One"),
+                    new Element("string2").addContent(new Element("part2").setText("String Two Part Two"))
                 ))));
 
                 SchemaLocalization sl = new SchemaLocalization(appContext, SCHEMA, schemaInfo);
@@ -102,12 +149,6 @@ public class SchemaLocalizationsTest {
                 return Mockito.mock(ConfigFile.class);
             }
         };
-    }
-
-    private static IsoLanguage isoLang(String engTranslation) {
-        final IsoLanguage isoLanguage = new IsoLanguage();
-        isoLanguage.getLabelTranslations().put("eng", engTranslation);
-        return isoLanguage;
     }
 
     @Test
@@ -135,6 +176,7 @@ public class SchemaLocalizationsTest {
 
 
     }
+
     @Test
     public void testCodeListValue() throws Exception {
         assertEquals("Code One", localizations.codelistValueLabel("http://yaya.com#codelist1", "code1"));
@@ -145,6 +187,7 @@ public class SchemaLocalizationsTest {
         assertEquals("Code One", localizations.codelistValueLabel(gPathResult));
         assertEquals("Desc Code One", localizations.codelistValueDesc(gPathResult));
     }
+
     @Test
     public void testLangCodeTranslations() throws Exception {
         assertEquals("English", localizations.codelistValueLabel(LANG_CODELIST_NS, "eng"));
@@ -156,6 +199,7 @@ public class SchemaLocalizationsTest {
         assertEquals("dd", localizations.codelistValueLabel(LANG_CODELIST_NS, "dd"));
         assertEquals(null, localizations.codelistValueLabel(LANG_CODELIST_NS, null));
     }
+
     @Test
     public void testCodeList() throws Exception {
         final Collection<String> codelist1 = localizations.codelist("gmd:codelist1");
@@ -163,49 +207,11 @@ public class SchemaLocalizationsTest {
         final Collection<String> codelist2 = localizations.codelist("gmd:codelist2");
         assertArrayEquals(codelist2.toString(), new String[]{"code1"}, sort(codelist2.toArray()));
     }
+
     @Test
     public void testStrings() throws Exception {
         assertEquals("String One", localizations.schemaString("string1"));
         assertEquals("String Two Part Two", localizations.schemaString("string2", "part2"));
-    }
-
-    private static Object[] sort(Object[] sort) {
-        Arrays.sort(sort);
-        return sort;
-    }
-
-    private static Element createLabelElement(String name, String parentName, String label, String desc) {
-        final Element element = new Element("element");
-        if (parentName != null) {
-            element.setAttribute("context", parentName);
-        }
-        return element.setAttribute("name", name).addContent(Arrays.asList(
-                new Element("label").setText(label),
-                new Element("description").setText(desc)
-        ));
-    }
-
-
-    private static Element createCodelistElement(String name, String code, String label, String desc) {
-        return new Element("codelist").setAttribute("name", name).addContent(
-                new Element("entry").addContent(Arrays.asList(
-                        new Element("code").setText(code),
-                        new Element("label").setText(label),
-                        new Element("description").setText(desc)
-                )));
-    }
-
-    private static XmlFile createXmlFile(final Element xml) {
-        Element config = new Element("config").
-                setAttribute(jeeves.constants.ConfigFile.Xml.Attr.NAME, "name").
-                setAttribute(jeeves.constants.ConfigFile.Xml.Attr.FILE, "FILE").
-                setAttribute(jeeves.constants.ConfigFile.Xml.Attr.BASE, "loc");
-        return new XmlFile(config, "eng", true){
-            @Override
-            public Element getXml(ApplicationContext context, String lang, boolean makeCopy) throws JDOMException, IOException {
-                return xml;
-            }
-        };
     }
 
 }

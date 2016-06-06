@@ -23,8 +23,9 @@
 
 package jeeves.server.dispatchers;
 
-import jeeves.server.context.ServiceContext;
 import org.jdom.Element;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  * The function of the MockService.

@@ -28,6 +28,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.TopologyException;
+
 import org.geotools.feature.NameImpl;
 import org.geotools.filter.spatial.BBOXImpl;
 import org.geotools.filter.spatial.ContainsImpl;

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Fehler beim Zugriff auf die Resource</heading>
+  <message>Die angefragte Resource kann nicht gefunden werden oder Sie besitzen nicht die nötogen
+    Rechte.
+  </message>
+  <button>Zurück</button>
+</strings>

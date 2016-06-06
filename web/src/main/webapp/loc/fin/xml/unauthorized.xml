@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Virhe</heading>
+  <message>Sinulla ei ole oikeuksia suorittaa kyseistä operaatiota.</message>
+  <button>Takaisin</button>
+</strings>

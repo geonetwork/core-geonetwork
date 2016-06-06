@@ -25,7 +25,7 @@
 <geonet>
   <services package="org.fao.geonet">
     <documentation>XML API service are Jeeves services returning XML response.
-    At some point they may be deprecated and replaced by services used
+      At some point they may be deprecated and replaced by services used
       by AngularUI returning XML or JSON response.
     </documentation>
 
@@ -109,8 +109,8 @@
     </service>
 
     <!--<service name="xml.relation" deprecated="true" xmlapi="true">-->
-      <!--<class name=".guiservices.metadata.GetRelated" />-->
-      <!--<output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8" />-->
+    <!--<class name=".guiservices.metadata.GetRelated" />-->
+    <!--<output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8" />-->
     <!--</service>-->
 
     <service name="xml.relation.get" xmlapi="true">

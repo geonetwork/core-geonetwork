@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -50,7 +51,7 @@ public class TextContentReplacementTest {
     @Test
     public void testTextAttributeEscape() throws Exception {
         final TextContentReplacement textContentReplacement = new TextContentReplacement("key",
-                Lists.newArrayList(new FilterEscapeXmlAttrs()));
+            Lists.newArrayList(new FilterEscapeXmlAttrs()));
 
 
         String expected = "value";

@@ -30,7 +30,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 
 /**
@@ -48,7 +53,6 @@ public class ZipUtil {
      *
      * @param zipFile the zip file to extract
      * @param toDir   the target directory
-     * @throws java.io.IOException
      */
     public static void extract(FileSystem zipFile, Path toDir) throws IOException {
         Files.createDirectories(toDir);
@@ -66,7 +70,8 @@ public class ZipUtil {
     }
 
     /**
-     * FileSystem must be closed when done.  This method should always be called in a try (resource) {} block
+     * FileSystem must be closed when done.  This method should always be called in a try (resource)
+     * {} block
      */
     public static FileSystem openZipFs(Path path) throws IOException, URISyntaxException {
         try {

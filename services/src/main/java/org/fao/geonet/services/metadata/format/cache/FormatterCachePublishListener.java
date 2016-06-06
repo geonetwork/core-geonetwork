@@ -39,8 +39,8 @@ import java.io.IOException;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
- * This class is responsible for listening for metadata index events and updating the cache's publication values so that it stays in
- * sync with the actual metadata.
+ * This class is responsible for listening for metadata index events and updating the cache's
+ * publication values so that it stays in sync with the actual metadata.
  *
  * @author Jesse on 3/6/2015.
  */

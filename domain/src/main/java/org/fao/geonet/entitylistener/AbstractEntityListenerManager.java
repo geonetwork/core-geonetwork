@@ -35,17 +35,15 @@ import java.util.Map;
  *
  * @param <T> The type of entity this listener will recieve events from.
  *
- * User: Jesse
- * Date: 11/26/13
- * Time: 11:33 AM
+ *            User: Jesse Date: 11/26/13 Time: 11:33 AM
  */
 public class AbstractEntityListenerManager<T> {
     private static boolean systemRunning = false;
 
     /**
-     * set to true when it should be considered an error when there is no ApplicationContext set in the
-     * {@link org.fao.geonet.ApplicationContextHolder}.  For example, when the Web application has been loaded it should call this method
-     * to indicate that the system is ready.
+     * set to true when it should be considered an error when there is no ApplicationContext set in
+     * the {@link org.fao.geonet.ApplicationContextHolder}.  For example, when the Web application
+     * has been loaded it should call this method to indicate that the system is ready.
      */
     public static void setSystemRunning(boolean systemRunning) {
         AbstractEntityListenerManager.systemRunning = systemRunning;
@@ -54,7 +52,7 @@ public class AbstractEntityListenerManager<T> {
     protected void handleEvent(final PersistentEventType type, final T entity) {
         final ConfigurableApplicationContext context = ApplicationContextHolder.get();
         if (context != null) {
-            final Map<String,GeonetworkEntityListener> listeners = context.getBeansOfType(GeonetworkEntityListener.class);
+            final Map<String, GeonetworkEntityListener> listeners = context.getBeansOfType(GeonetworkEntityListener.class);
             for (GeonetworkEntityListener listener : listeners.values()) {
                 if (listener.getEntityClass() == entity.getClass()) {
                     listener.handleEvent(type, entity);
@@ -62,8 +60,8 @@ public class AbstractEntityListenerManager<T> {
             }
         } else if (systemRunning) {
             Log.error(Constants.DOMAIN_LOG_MODULE, "An event occurred that was not handled because the " +
-                                                     ApplicationContextHolder.class.getName() +
-                                                     " has not been set in this thread", new IllegalStateException("No ApplicationContext set in thread local"));
+                ApplicationContextHolder.class.getName() +
+                " has not been set in this thread", new IllegalStateException("No ApplicationContext set in thread local"));
         }
     }
 }

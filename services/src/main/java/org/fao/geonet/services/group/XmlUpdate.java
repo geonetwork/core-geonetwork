@@ -23,8 +23,6 @@
 
 package org.fao.geonet.services.group;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
@@ -34,7 +32,11 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+
 import javax.annotation.Nonnull;
+
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 public class XmlUpdate extends NotInReadOnlyModeService {
     public void init(final Path appPath, final ServiceConfig params) throws Exception {

@@ -27,12 +27,6 @@
 
 package org.fao.geonet.guiservices.metadata;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataDataInfo_;
@@ -41,7 +35,6 @@ import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.SitemapDocumentNotFoundEx;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -50,6 +43,9 @@ import org.jdom.Element;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
+
+import java.nio.file.Path;
+import java.util.List;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -84,11 +80,10 @@ public class Sitemap implements Service {
         }
     }
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         String format = Util.getParam(params, "format", FORMAT_XML);
         if (!((format.equalsIgnoreCase(FORMAT_HTML)) ||
-           (format.equalsIgnoreCase(FORMAT_XML)))) {
+            (format.equalsIgnoreCase(FORMAT_XML)))) {
 
             format = FORMAT_XML;
         }
@@ -96,20 +91,20 @@ public class Sitemap implements Service {
         Integer allgroup = 1;
 
         Specifications<OperationAllowed> spec = Specifications.where(
-                OperationAllowedSpecs.hasOperation(ReservedOperation.view));
+            OperationAllowedSpecs.hasOperation(ReservedOperation.view));
         spec = spec.and(OperationAllowedSpecs.hasGroupId(allgroup));
-        
-        OperationAllowedRepository operationAllowedRepository = 
-                context.getBean(OperationAllowedRepository.class);
-        MetadataRepository metadataRepository = 
-                context.getBean(MetadataRepository.class);
+
+        OperationAllowedRepository operationAllowedRepository =
+            context.getBean(OperationAllowedRepository.class);
+        MetadataRepository metadataRepository =
+            context.getBean(MetadataRepository.class);
 
         final List<Integer> list = operationAllowedRepository.findAllIds(spec,
-                OperationAllowedId_.metadataId);
+            OperationAllowedId_.metadataId);
         Sort sortByChangeDateDesc = new Sort(Sort.Direction.DESC, Metadata_.dataInfo.getName() + "." + MetadataDataInfo_.changeDate.getName());
 
         long metadatataCount = metadataRepository.count(MetadataSpecs.hasMetadataIdIn(list));
-        long pages = (long) Math.ceil((double)metadatataCount / _maxItemsPage);
+        long pages = (long) Math.ceil((double) metadatataCount / _maxItemsPage);
 
         int doc = Util.getParam(params, "doc", 0);
 
@@ -151,7 +146,7 @@ public class Sitemap implements Service {
                 result.addContent(changeDate);
             }
         }
-        
+
         return result;
     }
 }

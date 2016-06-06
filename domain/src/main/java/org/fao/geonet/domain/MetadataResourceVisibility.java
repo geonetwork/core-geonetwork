@@ -25,8 +25,9 @@
 
 package org.fao.geonet.domain;
 
-import javax.persistence.Convert;
 import java.util.Comparator;
+
+import javax.persistence.Convert;
 
 /**
  * Metadata resource visibility.
@@ -42,6 +43,13 @@ public enum MetadataResourceVisibility {
      */
     PRIVATE("private");
 
+    public static final Comparator<MetadataResource> sortByFileName =
+        new Comparator<MetadataResource>() {
+            public int compare(MetadataResource o1, MetadataResource o2) {
+                return o1.getId().compareTo(
+                    o2.getId());
+            }
+        };
     String value;
 
     MetadataResourceVisibility(String value) {
@@ -49,23 +57,15 @@ public enum MetadataResourceVisibility {
     }
 
     public static MetadataResourceVisibility parse(String value) {
-      for (MetadataResourceVisibility metadataResourceVisibility : MetadataResourceVisibility.values()) {
-          if (metadataResourceVisibility.toString().equals(value)) {
-              return metadataResourceVisibility;
-          }
-      }
-      return null;
+        for (MetadataResourceVisibility metadataResourceVisibility : MetadataResourceVisibility.values()) {
+            if (metadataResourceVisibility.toString().equals(value)) {
+                return metadataResourceVisibility;
+            }
+        }
+        return null;
     }
 
     public String toString() {
         return this.value;
     }
-
-    public static final Comparator<MetadataResource> sortByFileName =
-            new Comparator<MetadataResource>() {
-                public int compare(MetadataResource o1, MetadataResource o2) {
-                    return o1.getId().compareTo(
-                            o2.getId());
-                }
-            };
 }

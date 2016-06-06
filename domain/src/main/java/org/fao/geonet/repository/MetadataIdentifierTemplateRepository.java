@@ -35,8 +35,8 @@ import javax.annotation.Nullable;
  * @author Jose García
  */
 public interface MetadataIdentifierTemplateRepository extends
-        GeonetRepository<MetadataIdentifierTemplate, Integer>,
-        JpaSpecificationExecutor<MetadataIdentifierTemplate> {
+    GeonetRepository<MetadataIdentifierTemplate, Integer>,
+    JpaSpecificationExecutor<MetadataIdentifierTemplate> {
     /**
      * Look up a metadata identifier template by its name.
      *
@@ -44,7 +44,6 @@ public interface MetadataIdentifierTemplateRepository extends
      */
     @Nullable
     MetadataIdentifierTemplate findOneByName(@Nonnull String name);
-
 
 
 }

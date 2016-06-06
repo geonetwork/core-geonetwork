@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
@@ -32,24 +31,26 @@ import org.jdom.Element;
 
 import java.util.Set;
 
+import jeeves.server.context.ServiceContext;
+
 public interface ISearchController {
     /**
      * Performs the general search tasks.
      *
-     * @param context Service context
-     * @param startPos start position (if paged)
-     * @param maxRecords max records to return
-     * @param resultType requested ResultType
-     * @param outSchema requested OutputSchema
-     * @param setName requested ElementSetName
-     * @param filterExpr requested FilterExpression
-     * @param filterVersion requested Filter version
-     * @param request requested sorting
-     * @param elemNames requested ElementNames
-     * @param typeName requested typeName
-     * @param maxHitsFromSummary ?
+     * @param context                     Service context
+     * @param startPos                    start position (if paged)
+     * @param maxRecords                  max records to return
+     * @param resultType                  requested ResultType
+     * @param outSchema                   requested OutputSchema
+     * @param setName                     requested ElementSetName
+     * @param filterExpr                  requested FilterExpression
+     * @param filterVersion               requested Filter version
+     * @param request                     requested sorting
+     * @param elemNames                   requested ElementNames
+     * @param typeName                    requested typeName
+     * @param maxHitsFromSummary          ?
      * @param cswServiceSpecificContraint specific contraint for specialized CSW services
-     * @param strategy ElementNames strategy
+     * @param strategy                    ElementNames strategy
      * @return result
      * @throws CatalogException hmm
      */

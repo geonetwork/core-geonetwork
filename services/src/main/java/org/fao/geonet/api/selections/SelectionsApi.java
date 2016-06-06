@@ -104,7 +104,7 @@ public class SelectionsApi {
         @PathVariable
             String bucket,
         @ApiParam(value = "A query to select a subset of records.",
-                  required = false)
+            required = false)
         @RequestParam(required = false)
             String q,
         @ApiParam(value = "One or more record UUIDs. If null, select all in current search if bucket name is 'metadata' (TODO: remove this limitation?).",
@@ -116,13 +116,13 @@ public class SelectionsApi {
         ServiceContext serviceContext = ServiceContext.get();
 
         int nbSelected = SelectionManager.updateSelection(bucket,
-                serviceContext.getUserSession(),
-                uuid != null ?
-                        SelectionManager.ADD_SELECTED :
-                        SelectionManager.ADD_ALL_SELECTED,
-                uuid != null ?
-                        Arrays.asList(uuid) : null,
-                q, serviceContext);
+            serviceContext.getUserSession(),
+            uuid != null ?
+                SelectionManager.ADD_SELECTED :
+                SelectionManager.ADD_ALL_SELECTED,
+            uuid != null ?
+                Arrays.asList(uuid) : null,
+            q, serviceContext);
 
         return new ResponseEntity<>(nbSelected, HttpStatus.CREATED);
     }
@@ -153,12 +153,12 @@ public class SelectionsApi {
         ServiceContext serviceContext = ServiceContext.get();
 
         int nbSelected = SelectionManager.updateSelection(bucket,
-                serviceContext.getUserSession(),
-                uuid != null ?
-                        SelectionManager.REMOVE_SELECTED :
-                        SelectionManager.REMOVE_ALL_SELECTED,
-                uuid != null ?
-                        Arrays.asList(uuid) : null,
+            serviceContext.getUserSession(),
+            uuid != null ?
+                SelectionManager.REMOVE_SELECTED :
+                SelectionManager.REMOVE_ALL_SELECTED,
+            uuid != null ?
+                Arrays.asList(uuid) : null,
             null, serviceContext);
 
         return new ResponseEntity<>(nbSelected, HttpStatus.OK);

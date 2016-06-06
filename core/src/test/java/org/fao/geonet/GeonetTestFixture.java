@@ -71,11 +71,9 @@ public class GeonetTestFixture {
     private volatile static FileSystemPool.CreatedFs templateFs;
     private volatile static SchemaManager templateSchemaManager;
     @Autowired
-    private ConfigurableApplicationContext _applicationContext;
-    @Autowired
     protected DataStore dataStore;
-
-
+    @Autowired
+    private ConfigurableApplicationContext _applicationContext;
     private FileSystemPool.CreatedFs currentFs;
 
     public void tearDown() throws IOException {
@@ -84,6 +82,7 @@ public class GeonetTestFixture {
             FILE_SYSTEM_POOL.release(currentFs);
         }
     }
+
     public void setup(AbstractCoreIntegrationTest test) throws Exception {
         final Path webappDir = AbstractCoreIntegrationTest.getWebappDir(test.getClass());
         TransformerFactoryFactory.init("de.fzi.dbs.xml.transform.CachingTransformerFactory");
@@ -96,18 +95,18 @@ public class GeonetTestFixture {
 
                     Path templateDataDirectory = templateFs.dataDir;
                     IO.copyDirectoryOrFile(webappDir.resolve("WEB-INF/data"), templateDataDirectory, true, new DirectoryStream
-                            .Filter<Path>() {
+                        .Filter<Path>() {
                         @Override
                         public boolean accept(Path entry) throws IOException {
                             return !entry.toString().contains("schema_plugins") &&
-                                   !entry.getFileName().toString().startsWith(".") &&
-                                   !entry.getFileName().toString().endsWith(".iml") &&
-                                   !entry.toString().contains("metadata_data") &&
-                                   !entry.toString().contains("removed") &&
-                                   !entry.toString().contains("metadata_subversion") &&
-                                   !entry.toString().contains("upload") &&
-                                   !entry.toString().contains("index") &&
-                                   !entry.toString().contains("resources");
+                                !entry.getFileName().toString().startsWith(".") &&
+                                !entry.getFileName().toString().endsWith(".iml") &&
+                                !entry.toString().contains("metadata_data") &&
+                                !entry.toString().contains("removed") &&
+                                !entry.toString().contains("metadata_subversion") &&
+                                !entry.toString().contains("upload") &&
+                                !entry.toString().contains("index") &&
+                                !entry.toString().contains("resources");
                         }
                     });
                     Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
@@ -185,7 +184,7 @@ public class GeonetTestFixture {
 
         SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
         schemaManager.configure(_applicationContext, webappDir, resourcePath,
-                schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
+            schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
 
         assertRequiredSchemas(schemaManager);
         SchemaManager template = new SchemaManager();
@@ -264,10 +263,10 @@ public class GeonetTestFixture {
             Xml.loadFile(newSM.getSchemaDir("iso19139").resolve("schematron/criteria-type.xml"));
             Xml.loadFile(thisContextSM.getSchemaDir("iso19139").resolve("schematron/criteria-type.xml"));
 
-            assertEquals("Expected Schemas: " + templateSchemaManager.getSchemas() + "\nActual Schemas: "+ newSM.getSchemas(),
-                    templateSchemaManager.getSchemas().size(), newSM.getSchemas().size());
-            assertEquals("Expected Schemas: " + templateSchemaManager.getSchemas() + "\nActual Schemas: "+ thisContextSM.getSchemas(),
-                    templateSchemaManager.getSchemas().size(), thisContextSM.getSchemas().size());
+            assertEquals("Expected Schemas: " + templateSchemaManager.getSchemas() + "\nActual Schemas: " + newSM.getSchemas(),
+                templateSchemaManager.getSchemas().size(), newSM.getSchemas().size());
+            assertEquals("Expected Schemas: " + templateSchemaManager.getSchemas() + "\nActual Schemas: " + thisContextSM.getSchemas(),
+                templateSchemaManager.getSchemas().size(), thisContextSM.getSchemas().size());
             for (String templateName : templateSchemaManager.getSchemas()) {
                 assertTrue(templateName, newSM.existsSchema(templateName));
                 assertTrue(templateName, thisContextSM.existsSchema(templateName));

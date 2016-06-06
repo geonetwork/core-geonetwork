@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.csw.services.getrecords.solr;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
+
 import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
 import org.geotools.filter.expression.AbstractExpressionVisitor;
 import org.geotools.geometry.jts.JTS;
@@ -44,6 +45,10 @@ public class Expression2CswVisitor extends AbstractExpressionVisitor {
     public Expression2CswVisitor(StringBuilder builder, IFieldMapper fieldMapper) {
         this.builder = builder;
         this.fieldMapper = fieldMapper;
+    }
+
+    private static String quoteString(String text) {
+        return text.replace("\"", "\\\"");
     }
 
     @Override
@@ -79,10 +84,6 @@ public class Expression2CswVisitor extends AbstractExpressionVisitor {
             e.printStackTrace();
         }
         builder.append(WKT_WRITER.write(geometry));
-    }
-
-    private static String quoteString(String text) {
-        return text.replace("\"", "\\\"");
     }
 
 

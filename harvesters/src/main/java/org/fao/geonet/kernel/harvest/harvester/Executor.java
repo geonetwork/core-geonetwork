@@ -25,107 +25,95 @@ package org.fao.geonet.kernel.harvest.harvester;
 
 //=============================================================================
 
-class Executor extends Thread
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+class Executor extends Thread {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public Executor(AbstractHarvester<?> ah)
-	{
-		terminate  = false;
-		status     = WAITING;
-		harvester  = ah;
-		timeout    = -1;
-	}
+    private static final int WAITING = 0;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    private static final int RUNNING = 1;
 
-	public void setTimeout(int minutes)
-	{
-		timeout = minutes;
-	}
+    //---------------------------------------------------------------------------
+    private boolean terminate;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    private int status;
 
-	public void terminate()
-	{
-		terminate = true;
-		interrupt();
-		harvester = null;
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Executor's main loop
+    //---
+    //---------------------------------------------------------------------------
+    private int timeout;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
+    private AbstractHarvester<?> harvester;
 
-	public boolean isRunning() { return status == RUNNING; }
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Executor's main loop
-	//---
-	//---------------------------------------------------------------------------
+    public Executor(AbstractHarvester<?> ah) {
+        terminate = false;
+        status = WAITING;
+        harvester = ah;
+        timeout = -1;
+    }
 
-	public void run()
-	{
-		while (!terminate)
-		{
-			if (timeout == -1)
-				await(1);
-			else
-			{
-				await(timeout);
+    public void setTimeout(int minutes) {
+        timeout = minutes;
+    }
 
-				if (!terminate && harvester != null)
-				{
-					status = RUNNING;
-					harvester.harvest();
-					status = WAITING;
-				}
-			}
-		}
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    public void terminate() {
+        terminate = true;
+        interrupt();
+        harvester = null;
+    }
 
-	private boolean await(int minutes)
-	{
-		try
-		{
-			sleep((long)minutes * 60 * 1000);
-			return false;
-		}
-		catch (InterruptedException e)
-		{
-			return true;
-		}
-	}
+    public boolean isRunning() {
+        return status == RUNNING;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+    public void run() {
+        while (!terminate) {
+            if (timeout == -1)
+                await(1);
+            else {
+                await(timeout);
 
-	private static final int WAITING = 0;
-	private static final int RUNNING = 1;
+                if (!terminate && harvester != null) {
+                    status = RUNNING;
+                    harvester.harvest();
+                    status = WAITING;
+                }
+            }
+        }
+    }
 
-	//---------------------------------------------------------------------------
-
-	private boolean terminate;
-	private int     status;
-	private int     timeout;
-
-	private AbstractHarvester<?> harvester;
+    private boolean await(int minutes) {
+        try {
+            sleep((long) minutes * 60 * 1000);
+            return false;
+        } catch (InterruptedException e) {
+            return true;
+        }
+    }
 }
 
 //=============================================================================

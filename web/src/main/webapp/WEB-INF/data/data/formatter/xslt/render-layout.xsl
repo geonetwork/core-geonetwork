@@ -22,7 +22,9 @@
 
       <article id="gn-metadata-view-{$metadataId}">
         <header>
-          <h1><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>
+          <h1>
+            <xsl:apply-templates mode="getMetadataTitle" select="$metadata"/>
+          </h1>
           <!--<p><xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/></p>-->
           <!-- TODO : Add thumbnail to header -->
 
@@ -44,21 +46,21 @@
   </xsl:template>
 
 
-
   <!-- Render list of tabs in the current view -->
   <xsl:template mode="render-toc" match="view">
     <xsl:if test="count(tab) > 1">
       <!-- TODO: Hide tabs which does not contains anything -->
       <ul class="view-outline nav nav-pills">
         <xsl:for-each select="tab">
-          <li><a href="#gn-tab-{@id}">
-            <xsl:value-of select="gn-fn-render:get-schema-strings($schemaStrings, @id)"/>
-          </a></li>
+          <li>
+            <a href="#gn-tab-{@id}">
+              <xsl:value-of select="gn-fn-render:get-schema-strings($schemaStrings, @id)"/>
+            </a>
+          </li>
         </xsl:for-each>
       </ul>
     </xsl:if>
   </xsl:template>
-
 
 
   <!-- Render a tab. Tab id is defined in strings
@@ -81,7 +83,6 @@
       </div>
     </xsl:if>
   </xsl:template>
-
 
 
   <!-- Render sections. 2 types of sections could be

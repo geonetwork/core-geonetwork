@@ -28,26 +28,25 @@ package org.fao.geonet.harvester.wfsfeatures.event;
  */
 
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
-
 import org.springframework.context.ApplicationEvent;
 
-public class WFSHarvesterEvent extends ApplicationEvent{
+public class WFSHarvesterEvent extends ApplicationEvent {
 
 
     private WFSHarvesterParameter parameters;
 
-    public WFSHarvesterEvent setParameters(WFSHarvesterParameter parameters) {
+    public WFSHarvesterEvent(Object source, WFSHarvesterParameter parameters) {
+        super(source);
         this.parameters = parameters;
-        return this;
     }
 
     public WFSHarvesterParameter getParameters() {
         return parameters;
     }
 
-    public WFSHarvesterEvent(Object source, WFSHarvesterParameter parameters) {
-        super(source);
+    public WFSHarvesterEvent setParameters(WFSHarvesterParameter parameters) {
         this.parameters = parameters;
+        return this;
     }
 
     @Override

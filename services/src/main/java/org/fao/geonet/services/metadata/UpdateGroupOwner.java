@@ -24,9 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -42,6 +39,10 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Update the metadata group owner.
@@ -98,7 +99,7 @@ public class UpdateGroupOwner extends NotInReadOnlyModeService {
 
         //--- return id for showing
         return new Element(Jeeves.Elem.RESPONSE).
-                addContent(new Element(Geonet.Elem.ID).
-                        setText(id));
+            addContent(new Element(Geonet.Elem.ID).
+                setText(id));
     }
 }

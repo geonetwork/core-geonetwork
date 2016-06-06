@@ -31,21 +31,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 
 /**
- * Used to encode localized properties in key value layout in JSON
- * eg. in XML
- * <code>
- *    &lt;title>
-        &lt;values lang="eng">
- Localities in Victoria (VMADMIN.LOCALITY_POLYGON) - Comprehensive Elements
-        &lt;/values>
-      &lt;/title>
- * </code>
- * is in JSON
- * <code>
- *     "title": {
- "eng": "Localities in Victoria (VMADMIN.LOCALITY_POLYGON) - Comprehensive Elements"
- }
- * </code>
+ * Used to encode localized properties in key value layout in JSON eg. in XML <code> &lt;title>
+ * &lt;values lang="eng"> Localities in Victoria (VMADMIN.LOCALITY_POLYGON) - Comprehensive Elements
+ * &lt;/values> &lt;/title> </code> is in JSON <code> "title": { "eng": "Localities in Victoria
+ * (VMADMIN.LOCALITY_POLYGON) - Comprehensive Elements" } </code>
  */
 public class LocalizedStringSerializer extends JsonSerializer<ILocalizedStringProperty> {
     @Override
@@ -54,7 +43,7 @@ public class LocalizedStringSerializer extends JsonSerializer<ILocalizedStringPr
         JsonGenerator jgen,
         SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
         jgen.writeStartObject();
-        for(LocalizedString l : localizedStringProperty.getValue()) {
+        for (LocalizedString l : localizedStringProperty.getValue()) {
             jgen.writeStringField(l.getLang(), l.getValue());
         }
         jgen.writeEndObject();

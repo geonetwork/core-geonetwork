@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>No s'han trobat les metadades</notfound>
+  <notowner>Les metadades no es poden esborrar, donat que no en sou el propietari</notowner>
+  <updated>Les metadades han estat esborrades</updated>
+</strings>

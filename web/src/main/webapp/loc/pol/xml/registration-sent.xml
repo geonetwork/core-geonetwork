@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Rejestracja zakończona powodzeniem</heading>
+  <message>Rejestracja zakończona powodzeniem, hasło i login wysałno e-mail. Dziękujemy.</message>
+  <errorEmailAddressAlreadyRegistered>
+    <p>Przepraszamy, rejestracja
+      <font class="error">Nie powiodła się</font>
+      ponieważ już jesteś zarejestrowany.
+    </p>
+    <p>Jeżeli zapomniałeś hasła wyślij e-mail:
+      <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a>
+    </p>
+  </errorEmailAddressAlreadyRegistered>
+  <errorEmailToAddressFailed>
+    <p>Przepraszamy, rejestracja
+      <font class="error">Nie powiodła się</font>
+      ponieważ podany adres e-mail nie działa.
+    </p>
+  </errorEmailToAddressFailed>
+  <errorProfileRequestFailed>
+    <p>Twoja prośba o dostęp do edycji nie mogła zostać zrealizowana.</p>
+    <p>Skontaktuj się z Helpdesk
+      <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a>
+      or ph: xxx-xxxxxxxx
+    </p>
+  </errorProfileRequestFailed>
+</strings>

@@ -48,8 +48,7 @@ import jeeves.server.context.ServiceContext;
  *
  * @author Jose García
  */
-public class AtomSearch implements Service
-{
+public class AtomSearch implements Service {
 //    private Search search = new Search();
 //    private Result result = new Result();
 
@@ -64,10 +63,9 @@ public class AtomSearch implements Service
     //---
     //--------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         SettingManager sm = context.getBean(SettingManager.class);
-        DataManager dm   = context.getBean(DataManager.class);
+        DataManager dm = context.getBean(DataManager.class);
         InspireAtomService service = context.getBean(InspireAtomService.class);
 
         boolean inspireEnable = sm.getValueAsBool("system/inspire/enable");

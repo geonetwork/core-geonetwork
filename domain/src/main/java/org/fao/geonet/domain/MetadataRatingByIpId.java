@@ -23,11 +23,12 @@
 
 package org.fao.geonet.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.io.Serializable;
 
 /**
  * An Id object for {@link MetadataRatingByIp}

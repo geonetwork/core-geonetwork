@@ -25,14 +25,18 @@ package com.yammer.metrics.core;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Does nothing
  *
- * User: jeichar
- * Date: 4/3/12
- * Time: 12:04 PM
+ * User: jeichar Date: 4/3/12 Time: 12:04 PM
  */
 public class DummyExecutorService implements ScheduledExecutorService {
     public static final DummyExecutorService INSTANCE = new DummyExecutorService();
@@ -54,7 +58,7 @@ public class DummyExecutorService implements ScheduledExecutorService {
     }
 
     public void shutdown() {
-      
+
     }
 
     public List<Runnable> shutdownNow() {
@@ -102,6 +106,6 @@ public class DummyExecutorService implements ScheduledExecutorService {
     }
 
     public void execute(Runnable command) {
-      
+
     }
 }

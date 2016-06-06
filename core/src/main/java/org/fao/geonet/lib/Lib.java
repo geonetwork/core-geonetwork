@@ -25,15 +25,14 @@ package org.fao.geonet.lib;
 
 //=============================================================================
 
-public class Lib
-{
-	public final static ElementLib  element   = new ElementLib();
-	public final static DbLib       db        = new DbLib();
-	public final static ResourceLib resource  = new ResourceLib();
-	public final static TypeLib     type      = new TypeLib();
-	public final static NetLib      net       = new NetLib();
-	public final static SourcesLib  sources   = new SourcesLib();
-	public final static TextLib text = new TextLib();
+public class Lib {
+    public final static ElementLib element = new ElementLib();
+    public final static DbLib db = new DbLib();
+    public final static ResourceLib resource = new ResourceLib();
+    public final static TypeLib type = new TypeLib();
+    public final static NetLib net = new NetLib();
+    public final static SourcesLib sources = new SourcesLib();
+    public final static TextLib text = new TextLib();
 }
 
 //=============================================================================

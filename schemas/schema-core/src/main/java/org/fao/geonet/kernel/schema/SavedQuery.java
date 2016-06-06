@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 /**
  * A query to be applied to a metadata record.
- *
  */
 public class SavedQuery {
     /**
@@ -34,6 +33,7 @@ public class SavedQuery {
     public void setId(String id) {
         this.id = id;
     }
+
     public List<String> getParameters() {
         List<String> parameters = new ArrayList<>();
         Pattern parameterExtractorPattern = Pattern.compile("\\{\\{(\\w*)\\}\\}");

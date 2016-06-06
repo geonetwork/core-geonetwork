@@ -23,12 +23,13 @@
 
 package jeeves.server.dispatchers;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * For testing with {@link ServiceManagerIntegratedTest}
@@ -38,6 +39,7 @@ import java.nio.file.Path;
 public class MockService implements Service {
 
     private ServiceFunction service;
+
     @Override
     public void init(Path appPath, ServiceConfig params) throws Exception {
 

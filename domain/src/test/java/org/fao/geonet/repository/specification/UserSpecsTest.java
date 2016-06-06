@@ -25,6 +25,7 @@ package org.fao.geonet.repository.specification;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.AbstractSpringDataTest;
@@ -33,23 +34,26 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.Nullable;
 
 import static org.fao.geonet.repository.UserRepositoryTest.newUser;
-import static org.fao.geonet.repository.specification.UserSpecs.*;
+import static org.fao.geonet.repository.specification.UserSpecs.hasAuthType;
+import static org.fao.geonet.repository.specification.UserSpecs.hasEnabled;
+import static org.fao.geonet.repository.specification.UserSpecs.hasNullAuthType;
+import static org.fao.geonet.repository.specification.UserSpecs.hasProfile;
+import static org.fao.geonet.repository.specification.UserSpecs.hasUserId;
 import static org.fao.geonet.repository.specification.UserSpecs.hasUserIdIn;
+import static org.fao.geonet.repository.specification.UserSpecs.hasUserName;
+import static org.fao.geonet.repository.specification.UserSpecs.userIsNameNotOneOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test UserSpecs class
- * User: Jesse
- * Date: 9/12/13
- * Time: 7:32 PM
+ * Test UserSpecs class User: Jesse Date: 9/12/13 Time: 7:32 PM
  */
 public class UserSpecsTest extends AbstractSpringDataTest {
     @Autowired
@@ -156,9 +160,9 @@ public class UserSpecsTest extends AbstractSpringDataTest {
 
         assertEquals(0, _userRepo.findAll(userIsNameNotOneOf(Arrays.asList(new String[]{"1", "2"}))).size());
         assertEquals(2, _userRepo.findAll(userIsNameNotOneOf(Arrays.asList(new String[]{user1.getUsername(),
-                user2.getUsername()}))).size());
+            user2.getUsername()}))).size());
         assertEquals(1, _userRepo.findAll(userIsNameNotOneOf(Arrays.asList(new String[]{user1.getUsername(),
-                user1.getUsername()}))).size());
+            user1.getUsername()}))).size());
 
     }
 

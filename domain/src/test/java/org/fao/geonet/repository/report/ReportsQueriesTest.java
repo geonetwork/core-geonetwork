@@ -23,8 +23,23 @@
 
 package org.fao.geonet.repository.report;
 
-import org.fao.geonet.domain.*;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.GroupRepositoryTest;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataRepositoryTest;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.UserRepositoryTest;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +62,8 @@ import static org.junit.Assert.assertEquals;
 public class ReportsQueriesTest extends AbstractSpringDataTest {
 
     @Autowired
+    protected OperationAllowedRepository _opAllowRepo;
+    @Autowired
     UserRepository _userRepository;
     @Autowired
     GroupRepository _groupRepository;
@@ -54,9 +71,6 @@ public class ReportsQueriesTest extends AbstractSpringDataTest {
     MetadataRepository _metadataRepository;
     @Autowired
     OperationRepository _opRepo;
-    @Autowired
-    protected OperationAllowedRepository _opAllowRepo;
-
     private AtomicInteger _inc = new AtomicInteger();
 
     @Test
@@ -97,7 +111,7 @@ public class ReportsQueriesTest extends AbstractSpringDataTest {
         ISODate dateTo = new ISODate("2014-04-01T00:00:0");
         Set<Integer> groupsSet = new HashSet<Integer>();
         List<Metadata> updatedMetadata = _metadataRepository.getMetadataReports().
-                getUpdatedMetadata(dateFrom, dateTo, groupsSet);
+            getUpdatedMetadata(dateFrom, dateTo, groupsSet);
 
         assertEquals(3, updatedMetadata.size());
 
@@ -106,7 +120,7 @@ public class ReportsQueriesTest extends AbstractSpringDataTest {
         dateTo = new ISODate("2013-04-01T00:00:0");
 
         updatedMetadata = _metadataRepository.getMetadataReports().
-                getUpdatedMetadata(dateFrom, dateTo, groupsSet);
+            getUpdatedMetadata(dateFrom, dateTo, groupsSet);
 
         assertEquals(0, updatedMetadata.size());
 
@@ -115,7 +129,7 @@ public class ReportsQueriesTest extends AbstractSpringDataTest {
         dateTo = new ISODate("2014-04-01T00:00:0");
 
         updatedMetadata = _metadataRepository.getMetadataReports().
-                getUpdatedMetadata(dateFrom, dateTo, groupsSet);
+            getUpdatedMetadata(dateFrom, dateTo, groupsSet);
 
         assertEquals(2, updatedMetadata.size());
     }
@@ -162,7 +176,7 @@ public class ReportsQueriesTest extends AbstractSpringDataTest {
         ISODate dateTo = new ISODate("2014-04-01T00:00:0");
 
         List<Metadata> updatedMetadata = _metadataRepository.getMetadataReports().
-                getUpdatedMetadata(dateFrom, dateTo, groupsSet);
+            getUpdatedMetadata(dateFrom, dateTo, groupsSet);
 
         assertEquals(1, updatedMetadata.size());
 
@@ -172,7 +186,7 @@ public class ReportsQueriesTest extends AbstractSpringDataTest {
         groupsSet.add(group2.getId());
 
         updatedMetadata = _metadataRepository.getMetadataReports().
-                getUpdatedMetadata(dateFrom, dateTo, groupsSet);
+            getUpdatedMetadata(dateFrom, dateTo, groupsSet);
 
         assertEquals(2, updatedMetadata.size());
 
@@ -234,7 +248,7 @@ public class ReportsQueriesTest extends AbstractSpringDataTest {
         ISODate dateTo = new ISODate("2014-04-01T00:00:0");
         Set<Integer> groupsSet = new HashSet<Integer>();
         List<Metadata> updatedMetadata = _metadataRepository.getMetadataReports().
-                getInternalMetadata(dateFrom, dateTo, groupsSet, OperationAllowedSpecs.isPublic(ReservedOperation.view));
+            getInternalMetadata(dateFrom, dateTo, groupsSet, OperationAllowedSpecs.isPublic(ReservedOperation.view));
 
         assertEquals(1, updatedMetadata.size());
 

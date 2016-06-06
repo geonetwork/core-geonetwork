@@ -2,16 +2,17 @@ package org.fao.geonet.wro4j;
 
 import org.junit.Before;
 import org.junit.Test;
-import ro.isdc.wro.cache.CacheKey;
-import ro.isdc.wro.cache.CacheValue;
-import ro.isdc.wro.config.Context;
-import ro.isdc.wro.model.resource.ResourceType;
 
 import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import ro.isdc.wro.cache.CacheKey;
+import ro.isdc.wro.cache.CacheValue;
+import ro.isdc.wro.config.Context;
+import ro.isdc.wro.model.resource.ResourceType;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -66,7 +67,7 @@ public class DiskbackedCacheTest {
         }
     }
 
-    @Test (expected = ro.isdc.wro.WroRuntimeException.class)
+    @Test(expected = ro.isdc.wro.WroRuntimeException.class)
     public void testDestroy() throws Exception {
         CacheKey key = new CacheKey("groupName", ResourceType.CSS);
         CacheValue value = CacheValue.valueOf("rawContent", "hash");

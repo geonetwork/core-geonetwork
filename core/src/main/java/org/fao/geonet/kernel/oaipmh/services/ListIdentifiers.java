@@ -23,18 +23,14 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import java.util.List;
-
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
-import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.oaipmh.requests.ListIdentifiersRequest;
@@ -44,97 +40,96 @@ import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.fao.oaipmh.responses.ListResponse;
 import org.fao.oaipmh.util.SearchResult;
 
+import jeeves.server.context.ServiceContext;
+
 //=============================================================================
 
-public class ListIdentifiers extends AbstractTokenLister
-{
-	public ListIdentifiers(ResumptionTokenCache cache, SettingManager sm, SchemaManager scm) {
-		super(cache, sm, scm);
-	}
+public class ListIdentifiers extends AbstractTokenLister {
+    public ListIdentifiers(ResumptionTokenCache cache, SettingManager sm, SchemaManager scm) {
+        super(cache, sm, scm);
+    }
 
-	public String getVerb() { return ListIdentifiersRequest.VERB; }
+    public String getVerb() {
+        return ListIdentifiersRequest.VERB;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //---------------------------------------------------------------------------
 
-	public ListResponse processRequest(TokenListRequest req, int pos, SearchResult result, ServiceContext context) throws Exception  {
+    public ListResponse processRequest(TokenListRequest req, int pos, SearchResult result, ServiceContext context) throws Exception {
 
-		//--- loop to retrieve metadata		
-		ListIdentifiersResponse res = new ListIdentifiersResponse();
+        //--- loop to retrieve metadata
+        ListIdentifiersResponse res = new ListIdentifiersResponse();
 
-		int num = 0;
+        int num = 0;
 
-		while (num < getMaxRecords() && pos < result.getIds().size())
-		{
-			int id = result.getIds().get(pos);
+        while (num < getMaxRecords() && pos < result.getIds().size()) {
+            int id = result.getIds().get(pos);
 
-			Header h = buildHeader(context, id, result.prefix);
+            Header h = buildHeader(context, id, result.prefix);
 
-			if (h != null)
-			{
-				res.addHeader(h);
-				num++;
-			}
+            if (h != null) {
+                res.addHeader(h);
+                num++;
+            }
 
-			pos++;
-		}
+            pos++;
+        }
 
-		return res;
+        return res;
 
-	}
+    }
 
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
-	private Header buildHeader(ServiceContext context, int id, String prefix) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SchemaManager   sm = gc.getBean(SchemaManager.class);
+    @SuppressWarnings("unchecked")
+    private Header buildHeader(ServiceContext context, int id, String prefix) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SchemaManager sm = gc.getBean(SchemaManager.class);
 
         final Metadata metadata = gc.getBean(MetadataRepository.class).findOne(id);
 
-		//--- maybe the metadata has been removed
+        //--- maybe the metadata has been removed
 
-		if (metadata == null) {
-			return null;
+        if (metadata == null) {
+            return null;
         }
 
-		String uuid       = metadata.getUuid();
-		String schema     = metadata.getDataInfo().getSchemaId();
-		ISODate changeDate = metadata.getDataInfo().getChangeDate();
+        String uuid = metadata.getUuid();
+        String schema = metadata.getDataInfo().getSchemaId();
+        ISODate changeDate = metadata.getDataInfo().getChangeDate();
 
-		//--- try to disseminate format if not by schema then by conversion
+        //--- try to disseminate format if not by schema then by conversion
 
-		if (!prefix.equals(schema)) {
-			if (!Lib.existsConverter(sm.getSchemaDir(schema), prefix)) {
-				return null;
-			}
-		}
+        if (!prefix.equals(schema)) {
+            if (!Lib.existsConverter(sm.getSchemaDir(schema), prefix)) {
+                return null;
+            }
+        }
 
-		//--- build header and set some infos
+        //--- build header and set some infos
 
-		Header h = new Header();
+        Header h = new Header();
 
-		h.setIdentifier(uuid);
-		h.setDateStamp(changeDate);
+        h.setIdentifier(uuid);
+        h.setDateStamp(changeDate);
 
-		//--- find and add categories (here called sets)
+        //--- find and add categories (here called sets)
 
-		for (MetadataCategory category : metadata.getCategories())
-		{
-			h.addSet(category.getName());
-		}
+        for (MetadataCategory category : metadata.getCategories()) {
+            h.addSet(category.getName());
+        }
 
-		return h;
-	}
+        return h;
+    }
 }
 
 //=============================================================================

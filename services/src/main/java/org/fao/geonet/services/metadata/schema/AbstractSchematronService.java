@@ -23,13 +23,14 @@
 
 package org.fao.geonet.services.metadata.schema;
 
+import org.jdom.Element;
+
+import java.nio.file.Path;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.jdom.Element;
-
-import java.nio.file.Path;
 
 /**
  * Provides the Distpatch API for the different actions available to all the services.

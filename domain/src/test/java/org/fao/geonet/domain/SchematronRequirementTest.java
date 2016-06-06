@@ -26,7 +26,9 @@ package org.fao.geonet.domain;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.fao.geonet.domain.SchematronRequirement.*;
+import static org.fao.geonet.domain.SchematronRequirement.DISABLED;
+import static org.fao.geonet.domain.SchematronRequirement.REPORT_ONLY;
+import static org.fao.geonet.domain.SchematronRequirement.REQUIRED;
 
 /**
  * Created by Jesse on 2/6/14.

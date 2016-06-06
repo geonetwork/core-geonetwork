@@ -3,7 +3,12 @@ package org.geonetwork.messaging;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.context.ApplicationEvent;
 
-import javax.jms.*;
+import javax.jms.Connection;
+import javax.jms.DeliveryMode;
+import javax.jms.Destination;
+import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
 
 /**
  * Created by francois on 05/11/15.

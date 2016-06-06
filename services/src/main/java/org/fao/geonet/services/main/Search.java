@@ -34,35 +34,33 @@ import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
-/** main.search service. Perform a search
-  */
+/**
+ * main.search service. Perform a search
+ */
 @Deprecated
-public class Search implements Service
-{
-	private ServiceConfig _config;
+public class Search implements Service {
+    private ServiceConfig _config;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception
-	{
-		_config = config;
-	}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+        _config = config;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    public Element exec(Element params, ServiceContext context) throws Exception {
         throw new RuntimeException("Use SOLR search instead");
         // TODO: SOLR-MIGRATION-TO-DELETE
-	}
+    }
 }
 
 //=============================================================================

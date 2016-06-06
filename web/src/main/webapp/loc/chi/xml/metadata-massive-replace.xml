@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <massiveReplaceForm>
+    <title>Metadata massive replacements</title>
+    <subtitle>This process allow to replace content in the selected metadata.</subtitle>
+    <description>
+      <h2 style="margin:0px; padding: 5px">Instructions</h2>
+      <p style="margin:0px; padding: 5px">To define a replacement you should:</p>
+      <ol style="list-style-type: decimal; padding-left: 40px;">
+        <li>Select the package that contains the metadata element to replace.</li>
+        <li>Select the metadata element you want to replace.</li>
+        <li>Specify the text content to replace.</li>
+        <li>Specify the new text content.</li>
+      </ol>
+      <p style="padding: 5px">Note that multiple replacements can be specified and the process will
+        replace any occurrence of the text indicated in (3) with the text indicated in (4) for the
+        metadata element indicated in (2)
+      </p>
+    </description>
+    <caseInsensitive>Case insensitive search</caseInsensitive>
+    <package>Package</package>
+    <element>Element</element>
+    <searchText>Search text</searchText>
+    <replaceText>Replace text</replaceText>
+    <update>Update metadata</update>
+    <test>Test</test>
+    <testResultsTitle>Massive update test results</testResultsTitle>
+    <resultsTitle>Massive update results</resultsTitle>
+    <fillFormFields>Please select the replacements to apply.</fillFormFields>
+
+    <processed>Processed</processed>
+    <changed>Changed</changed>
+    <notchanged>Not changed</notchanged>
+    <notowner>Not owner</notowner>
+    <notfound>Not found</notfound>
+    <errors>Errors</errors>
+    <warnings>Warnings</warnings>
+
+    <section id="metadata" label="Metadata">
+      <field key="id.contact.individualName">Contact > Individual Name</field>
+      <field key="id.contact.organisationName">Contact > Organization Name</field>
+      <field key="id.contact.voicePhone">Contact > Voice phone</field>
+      <field key="id.contact.faxPhone">Contact > Fax phone</field>
+      <field key="id.contact.address">Contact > Delivery Point</field>
+      <field key="id.contact.city">Contact > City</field>
+      <field key="id.contact.province">Contact > Administrative Area (Province)</field>
+      <field key="id.contact.postalCode">Contact > Postal code</field>
+      <field key="id.contact.country">Contact > Country</field>
+      <field key="id.contact.email">Contact > Email</field>
+      <field key="id.contact.or.url">Contact > OnlineRes > URL</field>
+      <field key="id.contact.or.ap">Contact > OnlineRes > Application Profile</field>
+      <field key="id.contact.or.name">Contact > OnlineRes > Name</field>
+      <field key="id.contact.or.description">Contact > OnlineRes > Description</field>
+      <field key="id.contact.hoursOfService">Contact > Hours of service</field>
+      <field key="id.contact.contactInstructions">Contact > Contact Instructions</field>
+    </section>
+
+    <section id="dataIdentification" label="Data Identification">
+      <field key="id.dataid.abstract">Abstract</field>
+      <field key="id.dataid.purpose">Purpose</field>
+      <field key="id.dataid.keyword">Keyword</field>
+
+      <field key="id.dataid.citation.individualName">Citation > Individual Name</field>
+      <field key="id.dataid.citation.organisationName">Citation > Organization Name</field>
+      <field key="id.dataid.citation.voicePhone">Citation > Voice phone</field>
+      <field key="id.dataid.citation.faxPhone">Citation > Fax phone</field>
+      <field key="id.dataid.citation.address">Citation > Delivery Point</field>
+      <field key="id.dataid.citation.city">Citation > City</field>
+      <field key="id.dataid.citation.province">Citation > Administrative Area (Province)</field>
+      <field key="id.dataid.citationt.postalCode">Citation > Postal code</field>
+      <field key="id.dataid.citation.country">Citation > Country</field>
+      <field key="id.dataid.citation.email">Citation > Email</field>
+      <field key="id.dataid.citation.or.url">Citation > OnlineRes > URL</field>
+      <field key="id.dataid.citation.or.ap">Citation > OnlineRes > Application Profile</field>
+      <field key="id.dataid.citation.or.name">Citation > OnlineRes > Name</field>
+      <field key="id.dataid.citation.or.description">Citation > OnlineRes > Description</field>
+      <field key="id.dataid.citation.hoursOfService">Citation > Hours of service</field>
+      <field key="id.dataid.citation.contactInstructions">Citation > Contact Instructions</field>
+
+      <field key="id.dataid.poc.individualName">Point Of Contact > Individual Name</field>
+      <field key="id.dataid.poc.organisationName">Point Of Contact > Organization Name</field>
+      <field key="id.dataid.poc.voicePhone">Point Of Contact > Voice phone</field>
+      <field key="id.dataid.poc.faxPhone">Point Of Contact > Fax phone</field>
+      <field key="id.dataid.poc.address">Point Of Contact > Delivery Point</field>
+      <field key="id.dataid.poc.city">Point Of Contact > City</field>
+      <field key="id.dataid.poc.province">Point Of Contact > Administrative Area (Province)</field>
+      <field key="id.dataid.poc.postalCode">Point Of Contact > Postal code</field>
+      <field key="id.dataid.poc.country">Point Of Contact > Country</field>
+      <field key="id.dataid.poc.email">Point Of Contact > Email</field>
+      <field key="id.dataid.poc.or.url">Point Of Contact > OnlineRes > URL</field>
+      <field key="id.dataid.poc.or.ap">Point Of Contact > OnlineRes > Application Profile</field>
+      <field key="id.dataid.poc.or.name">Point Of Contact > OnlineRes > Name</field>
+      <field key="id.dataid.poc.or.description">Point Of Contact > OnlineRes > Description</field>
+      <field key="id.dataid.poc.hoursOfService">Point Of Contact > Hours of service</field>
+      <field key="id.dataid.poc.contactInstructions">Point Of Contact > Contact Instructions</field>
+
+      <field key="id.dataid.resc.gc.useLimitation">Resource Constraints > General Constraint > Use
+        Limitation
+      </field>
+      <field key="id.dataid.resc.lc.useLimitation">Resource Constraints > Legal Constraints > Use
+        Limitation
+      </field>
+      <field key="id.dataid.resc.lc.otherConstraints">Resource Constraints > Security Constraint >
+        Use Limitation
+      </field>
+      <field key="id.dataid.resc.sc.useLimitation">Resource Constraints > General Constraint > Use
+        Limitation
+      </field>
+      <field key="id.dataid.resc.otherConstraints">Resource Constraints > Other Constraints</field>
+    </section>
+
+
+    <section id="serviceIdentification" label="Service Identification">
+      <field key="id.serviceid.abstract">Abstract</field>
+      <field key="id.serviceid.purpose">Purpose</field>
+
+      <field key="id.serviceid.citation.individualName">Citation > Individual Name</field>
+      <field key="id.serviceid.citation.organisationName">Citation > Organization Name</field>
+      <field key="id.serviceid.citation.voicePhone">Citation > Voice phone</field>
+      <field key="id.serviceid.citation.faxPhone">Citation > Fax phone</field>
+      <field key="id.serviceid.citation.address">Citation > Delivery Point</field>
+      <field key="id.serviceid.citation.city">Citation > City</field>
+      <field key="id.serviceid.citation.province">Citation > Administrative Area (Province)</field>
+      <field key="id.serviceid.citationt.postalCode">Citation > Postal code</field>
+      <field key="id.serviceid.citation.country">Citation > Country</field>
+      <field key="id.serviceid.citation.email">Citation > Email</field>
+      <field key="id.serviceid.citation.or.url">Citation > OnlineRes > URL</field>
+      <field key="id.serviceid.citation.or.ap">Citation > OnlineRes > Application Profile</field>
+      <field key="id.serviceid.citation.or.name">Citation > OnlineRes > Name</field>
+      <field key="id.serviceid.citation.or.description">Citation > OnlineRes > Description</field>
+      <field key="id.serviceid.citation.hoursOfService">Citation > Hours of service</field>
+      <field key="id.serviceid.citation.contactInstructions">Citation > Contact Instructions</field>
+
+      <field key="id.serviceid.poc.individualName">Point Of Contact > Individual Name</field>
+      <field key="id.serviceid.poc.organisationName">Point Of Contact > Organization Name</field>
+      <field key="id.serviceid.poc.voicePhone">Point Of Contact > Voice phone</field>
+      <field key="id.serviceid.poc.faxPhone">Point Of Contact > Fax phone</field>
+      <field key="id.serviceid.poc.address">Point Of Contact > Delivery Point</field>
+      <field key="id.serviceid.poc.city">Point Of Contact > City</field>
+      <field key="id.serviceid.poc.province">Point Of Contact > Administrative Area (Province)
+      </field>
+      <field key="id.serviceid.poc.postalCode">Point Of Contact > Postal code</field>
+      <field key="id.serviceid.poc.country">Point Of Contact > Country</field>
+      <field key="id.serviceid.poc.email">Point Of Contact > Email</field>
+      <field key="id.serviceid.poc.or.url">Point Of Contact > OnlineRes > URL</field>
+      <field key="id.serviceid.poc.or.ap">Point Of Contact > OnlineRes > Application Profile</field>
+      <field key="id.serviceid.poc.or.name">Point Of Contact > OnlineRes > Name</field>
+      <field key="id.serviceid.poc.or.description">Point Of Contact > OnlineRes > Description
+      </field>
+      <field key="id.serviceid.poc.hoursOfService">Point Of Contact > Hours of service</field>
+      <field key="id.serviceid.poc.contactInstructions">Point Of Contact > Contact Instructions
+      </field>
+
+      <field key="id.serviceid.connectpoint.url">Connect Point > URL</field>
+      <field key="id.serviceid.connectpoint.ap">Connect Point > Application Profile</field>
+      <field key="id.serviceid.connectpoint.name">Connect Point > Name</field>
+      <field key="id.serviceid.connectpoint.description">Connect Point > Description</field>
+    </section>
+
+    <section id="maintenanceInformation" label="Maintenance Information">
+      <field key="mi.contact.individualName">Contact > Individual Name</field>
+      <field key="mi.contact.organisationName">Contact > Organization Name</field>
+      <field key="mi.contact.voicePhone">Contact > Voice phone</field>
+      <field key="mi.contact.faxPhone">Contact > Fax phone</field>
+
+      <field key="mi.contact.address">Contact > Delivery Point</field>
+      <field key="mi.contact.city">Contact > City</field>
+      <field key="mi.contact.province">Contact > Administrative Area (Province)</field>
+      <field key="mi.contact.postalCode">Contact > Postal code</field>
+      <field key="mi.contact.country">Contact > Country</field>
+      <field key="mi.contact.email">Contact > Email</field>
+      <field key="mi.contact.or.url">Contact > OnlineRes > URL</field>
+      <field key="mi.contact.or.ap">Contact > OnlineRes > Application Profile</field>
+      <field key="mi.contact.or.name">Contact > OnlineRes > Name</field>
+      <field key="mi.contact.or.description">Contact > OnlineRes > Description</field>
+      <field key="mi.contact.hoursOfService">Contact > Hours of service</field>
+      <field key="mi.contact.contactInstructions">Contact > Contact Instructions</field>
+
+    </section>
+
+    <section id="contentInformation" label="Content Information">
+      <field key="ci.citation.individualName">Feature Catalogue Citation > Individual Name</field>
+      <field key="ci.citation.organisationName">Feature Catalogue Citation > Organization Name
+      </field>
+      <field key="ci.citation.voicePhone">Feature Catalogue Citation > Voice phone</field>
+      <field key="ci.citation.faxPhone">Feature Catalogue Citation > Fax phone</field>
+      <field key="ci.citation.address">Feature Catalogue Citation > Delivery Point</field>
+      <field key="ci.citation.city">Feature Catalogue Citation > City</field>
+      <field key="ci.citation.province">Feature Catalogue Citation > Administrative Area
+        (Province)
+      </field>
+      <field key="ci.citation.postalCode">Feature Catalogue Citation > Postal code</field>
+      <field key="ci.citation.country">Feature Catalogue Citation > Country</field>
+      <field key="ci.citation.email">Feature Catalogue Citation > Email</field>
+      <field key="ci.citation.or.url">Feature Catalogue Citation > OnlineRes > URL</field>
+      <field key="ci.citation.or.ap">Feature Catalogue Citation > OnlineRes > Application Profile
+      </field>
+      <field key="ci.citation.or.name">Feature Catalogue Citation > OnlineRes > Name</field>
+      <field key="ci.citation.or.description">Feature Catalogue Citation > OnlineRes > Description
+      </field>
+      <field key="ci.citation.hoursOfService">Feature Catalogue Citation > Hours of service</field>
+      <field key="ci.citation.contactInstructions">Feature Catalogue Citation > Contact
+        Instructions
+      </field>
+    </section>
+
+    <section id="distributionInformation" label="Distribution Information">
+      <field key="di.contact.individualName">Distributor Contact > Individual Name</field>
+      <field key="di.contact.organisationName">Distributor Contact > Organization Name</field>
+      <field key="di.contact.voicePhone">Distributor Contact > Voice phone</field>
+      <field key="di.contact.faxPhone">Distributor Contact > Fax phone</field>
+      <field key="di.contact.address">Distributor Contact > Delivery Point</field>
+      <field key="di.contact.city">Distributor Contact > City</field>
+      <field key="di.contact.province">Distributor Contact > Administrative Area (Province)</field>
+      <field key="di.contact.postalCode">Distributor Contact > Postal code</field>
+      <field key="di.contact.country">Distributor Contact > Country</field>
+      <field key="di.contact.email">Distributor Contact > Email</field>
+      <field key="di.contact.hoursOfService">Distributor Contact > Hours of service</field>
+      <field key="di.contact.contactInstructions">Distributor Contact > Contact Instructions</field>
+      <field key="di.fees">Fees</field>
+      <field key="di.transferOptions.url">Digital Transfer Options > URL</field>
+      <field key="di.transferOptions.ap">Digital Transfer Options > Application Profile</field>
+      <field key="di.transferOptions.name">Digital Transfer Options > Name</field>
+      <field key="di.transferOptions.description">Digital Transfer Options > Description</field>
+    </section>
+
+    <replacements-defined>Replacements defined</replacements-defined>
+    <no-replacements-defined>No replacements defined</no-replacements-defined>
+
+    <massiveMetadataReplace>Massive metadata replace</massiveMetadataReplace>
+  </massiveReplaceForm>
+</strings>

@@ -32,8 +32,8 @@ import java.util.List;
 import jeeves.server.context.ServiceContext;
 
 /**
- * Class to search with the lucene searcher all public metadata that fits the user filter. Used by RDF harvest service
- * to return all the public metadata from the catalogue in rdf format.
+ * Class to search with the lucene searcher all public metadata that fits the user filter. Used by
+ * RDF harvest service to return all the public metadata from the catalogue in rdf format.
  *
  * @author Jose García
  */

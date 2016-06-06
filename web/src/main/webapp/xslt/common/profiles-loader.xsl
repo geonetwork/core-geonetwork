@@ -22,7 +22,7 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
   <!-- The profile loader using the oasis-catalog to load
   <schema>/layout/dispatcher.xsl in each activated schema plugins.
   -->
@@ -46,5 +46,5 @@
   <xsl:include href="blanks/metadata-schema18/layout/dispatcher.xsl"/>
   <xsl:include href="blanks/metadata-schema19/layout/dispatcher.xsl"/>
   <xsl:include href="blanks/metadata-schema20/layout/dispatcher.xsl"/>
-  
+
 </xsl:stylesheet>

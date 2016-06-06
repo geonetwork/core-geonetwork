@@ -24,8 +24,7 @@
 package org.fao.geonet.services.metadata;
 
 import com.google.common.collect.Sets;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.AbstractCoreIntegrationTest;
+
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.repository.MetadataRepository;
@@ -34,6 +33,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Set;
+
+import jeeves.server.context.ServiceContext;
 
 import static org.junit.Assert.assertEquals;
 

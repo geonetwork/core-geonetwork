@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <heading>Innloggingsfeil</heading>
+  <message>Brukernavnet eller passordet er feil.<br/>Klikk 'tilbake' knappen og forsøk på nytt.
+  </message>
+  <button>Tilbake</button>
+</strings>

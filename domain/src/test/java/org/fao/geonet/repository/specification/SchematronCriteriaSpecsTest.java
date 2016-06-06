@@ -23,21 +23,26 @@
 
 package org.fao.geonet.repository.specification;
 
-import static org.junit.Assert.*;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.domain.SchematronCriteria;
 import org.fao.geonet.domain.SchematronCriteriaGroup;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
+import org.fao.geonet.repository.SchematronCriteriaRepository;
+import org.fao.geonet.repository.SchematronRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.List;
 
-import static org.fao.geonet.repository.SchematronCriteriaGroupRepositoryTest.*;
+import javax.annotation.Nullable;
+
+import static org.fao.geonet.repository.SchematronCriteriaGroupRepositoryTest.newGroup;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the specifications for selecting {@link org.fao.geonet.domain.SchematronCriteria}.
@@ -67,7 +72,7 @@ public class SchematronCriteriaSpecsTest extends AbstractSpringDataTest {
         group3 = _criteriaGroupRepository.saveAndFlush(group3);
 
         final List<SchematronCriteria> found = _criteriaRepository.findAll(SchematronCriteriaSpecs.hasSchematronId(group1.getSchematron()
-                .getId()));
+            .getId()));
 
         assertCorrectCriteriaFound(group1, group2, group3, found);
     }

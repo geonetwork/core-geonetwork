@@ -23,13 +23,7 @@
 
 package org.fao.geonet.component.csw;
 
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.csw.services.getrecords.ISearchController;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
@@ -39,9 +33,12 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
+import org.fao.geonet.kernel.csw.services.getrecords.ISearchController;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,24 +46,21 @@ import org.springframework.stereotype.Component;
 import java.util.Iterator;
 import java.util.Map;
 
+import jeeves.server.context.ServiceContext;
+
 //=============================================================================
 
 /**
- * TODO
- * OGC 07045:
- * - TYPENAME
- * - Zero or one (Optional) Default action is to describe all types known to server
- * - Optional. Must support “gmd:MD_Metadata”.
- *
+ * TODO OGC 07045: - TYPENAME - Zero or one (Optional) Default action is to describe all types known
+ * to server - Optional. Must support “gmd:MD_Metadata”.
  */
-@Component(CatalogService.BEAN_PREFIX+GetRecordById.NAME)
-public class GetRecordById extends AbstractOperation implements CatalogService
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+@Component(CatalogService.BEAN_PREFIX + GetRecordById.NAME)
+public class GetRecordById extends AbstractOperation implements CatalogService {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
     static final String NAME = "GetRecordById";
     @Autowired
@@ -77,36 +71,38 @@ public class GetRecordById extends AbstractOperation implements CatalogService
     @Autowired
     private SchemaManager _schemaManager;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public String getName() { return NAME; }
+    public String getName() {
+        return NAME;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public Element execute(Element request, ServiceContext context) throws CatalogException {
-		checkService(request);
-		checkVersion(request);
-		//-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
-		checkOutputFormat(request);
-		//--------------------------------------------------------
+    public Element execute(Element request, ServiceContext context) throws CatalogException {
+        checkService(request);
+        checkVersion(request);
+        //-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
+        checkOutputFormat(request);
+        //--------------------------------------------------------
 
-		Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
+        Element response = new Element(getName() + "Response", Csw.NAMESPACE_CSW);
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         Iterator<Element> ids = request.getChildren("Id", Csw.NAMESPACE_CSW).iterator();
 
-		if (!ids.hasNext())
-			throw new MissingParameterValueEx("id");
+        if (!ids.hasNext())
+            throw new MissingParameterValueEx("id");
 
-		try {
+        try {
             StringBuilder query1 = new StringBuilder();
             query1.append("+_uuid:(");
             int count = 0;
-            while(ids.hasNext()) {
+            while (ids.hasNext()) {
                 if (count > 0) {
                     query1.append(" ");
                 }
@@ -123,66 +119,64 @@ public class GetRecordById extends AbstractOperation implements CatalogService
                 ElementSetName.BRIEF, null, Csw.FILTER_VERSION_1_1, null, null, null, 0, query, null);
             response.addContent(results.two());
             return response;
-		} catch (Exception e) {
-			context.error("Raised : "+ e);
-			context.error(" (C) Stacktrace is\n"+Util.getStackTrace(e));
-			throw new NoApplicableCodeEx(e.toString());
-		}
-	}
+        } catch (Exception e) {
+            context.error("Raised : " + e);
+            context.error(" (C) Stacktrace is\n" + Util.getStackTrace(e));
+            throw new NoApplicableCodeEx(e.toString());
+        }
+    }
 
     //---------------------------------------------------------------------------
 
-	public Element adaptGetRequest(Map<String, String> params)
-	{
-		String service     = params.get("service");
-		String version     = params.get("version");
-		String elemSetName = params.get("elementsetname");
-		String ids         = params.get("id");
+    public Element adaptGetRequest(Map<String, String> params) {
+        String service = params.get("service");
+        String version = params.get("version");
+        String elemSetName = params.get("elementsetname");
+        String ids = params.get("id");
 
-		//-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
-		String outputFormat = params.get("outputformat");
-		String outputSchema = params.get("outputschema");
-		//--------------------------------------------------------
+        //-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
+        String outputFormat = params.get("outputformat");
+        String outputSchema = params.get("outputschema");
+        //--------------------------------------------------------
 
-		Element request = new Element(getName(), Csw.NAMESPACE_CSW);
+        Element request = new Element(getName(), Csw.NAMESPACE_CSW);
 
-		setAttrib(request, "service", service);
-		setAttrib(request, "version", version);
+        setAttrib(request, "service", service);
+        setAttrib(request, "version", version);
 
-		//-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
-		setAttrib(request, "outputFormat",  outputFormat);
-		setAttrib(request, "outputSchema",  outputSchema);
-		//--------------------------------------------------------
+        //-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
+        setAttrib(request, "outputFormat", outputFormat);
+        setAttrib(request, "outputSchema", outputSchema);
+        //--------------------------------------------------------
 
-		fill(request, "Id", ids);
+        fill(request, "Id", ids);
 
-		addElement(request, "ElementSetName", elemSetName);
+        addElement(request, "ElementSetName", elemSetName);
 
-		return request;
-	}
+        return request;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public Element retrieveValues(String parameterName) throws CatalogException {
-		// TODO
-		return null;
-	}
+    public Element retrieveValues(String parameterName) throws CatalogException {
+        // TODO
+        return null;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
     //-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
-	private void checkOutputFormat(Element request) throws InvalidParameterValueEx
-	{
-		String format = request.getAttributeValue("outputFormat");
+    private void checkOutputFormat(Element request) throws InvalidParameterValueEx {
+        String format = request.getAttributeValue("outputFormat");
 
-		if (format == null)
-			return;
+        if (format == null)
+            return;
 
-		if (!format.equals("application/xml"))
-			throw new InvalidParameterValueEx("outputFormat", format);
-	}
+        if (!format.equals("application/xml"))
+            throw new InvalidParameterValueEx("outputFormat", format);
+    }
 }

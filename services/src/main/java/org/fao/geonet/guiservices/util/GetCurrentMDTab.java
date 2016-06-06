@@ -23,50 +23,47 @@
 
 package org.fao.geonet.guiservices.util;
 
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+
+import java.nio.file.Path;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.jdom.Element;
-
-import java.nio.file.Path;
-
 //=============================================================================
 
-/** This service is used by metadata.show/edit to retrieve the current
-  * selected tab.
-  */
+/**
+ * This service is used by metadata.show/edit to retrieve the current selected tab.
+ */
 
-public class GetCurrentMDTab implements Service
-{
+public class GetCurrentMDTab implements Service {
     String sessionTabProperty = Geonet.Session.METADATA_SHOW;
-    
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		UserSession session = context.getUserSession();
-		String currentTab = (String) session.getProperty(sessionTabProperty);
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-		if (currentTab == null) {
-			context.info("Creating default metadata tab");
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        UserSession session = context.getUserSession();
+        String currentTab = (String) session.getProperty(sessionTabProperty);
+
+        if (currentTab == null) {
+            context.info("Creating default metadata tab");
 
             currentTab = "simple";
 
             session.setProperty(sessionTabProperty, currentTab);
-		}
-		return new Element("a").setText(currentTab);
-	}
+        }
+        return new Element("a").setText(currentTab);
+    }
 
     public String getSessionTabProperty() {
         return sessionTabProperty;

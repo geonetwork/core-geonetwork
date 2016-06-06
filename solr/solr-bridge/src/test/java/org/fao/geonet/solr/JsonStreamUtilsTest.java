@@ -47,8 +47,8 @@ public class JsonStreamUtilsTest {
     public void testFilterArrayElements() throws Exception {
         final String orig = "[1,3]";
         final String actual = transform(orig, (parser, generator) ->
-                JsonStreamUtils.filterArrayElements(parser, generator, (par, gen) ->
-                        gen.writeNumber(par.getIntValue() * 2)));
+            JsonStreamUtils.filterArrayElements(parser, generator, (par, gen) ->
+                gen.writeNumber(par.getIntValue() * 2)));
 
         assertEquals("[2,6]", actual);
     }
@@ -57,8 +57,8 @@ public class JsonStreamUtilsTest {
     public void testFilterObjectInPath() throws Exception {
         final String orig = "{\"a\":{\"b\":[1,2,3],\"c\": 4}}";
         final String actual = transform(orig, (parser, generator) ->
-                JsonStreamUtils.filterObjectInPath(parser, generator, (par, gen) ->
-                        gen.writeNumber(par.getIntValue() * 2), "a", "c"));
+            JsonStreamUtils.filterObjectInPath(parser, generator, (par, gen) ->
+                gen.writeNumber(par.getIntValue() * 2), "a", "c"));
 
         assertEquals("{\"a\":{\"b\":[1,2,3],\"c\":8}}", actual);
     }
@@ -67,13 +67,13 @@ public class JsonStreamUtilsTest {
     public void testAddInfoToDocs() throws Exception {
         final String orig = "{\"x\":12,\"response\":{\"docs\":[{\"id\":12,\"other\":\"OTHER\"}],\"y\":13}}";
         final String actual = transform(orig, (parser, generator) ->
-                JsonStreamUtils.addInfoToDocs(parser, generator, (tree) -> {
-                    assertEquals(12, tree.get("id").asInt());
-                    tree.put("test", "yep");
-                }));
+            JsonStreamUtils.addInfoToDocs(parser, generator, (tree) -> {
+                assertEquals(12, tree.get("id").asInt());
+                tree.put("test", "yep");
+            }));
 
         assertEquals(
-                "{\"x\":12,\"response\":{\"docs\":[{\"id\":12,\"other\":\"OTHER\",\"test\":\"yep\"}],\"y\":13}}",
-                actual);
+            "{\"x\":12,\"response\":{\"docs\":[{\"id\":12,\"other\":\"OTHER\",\"test\":\"yep\"}],\"y\":13}}",
+            actual);
     }
 }

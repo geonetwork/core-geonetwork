@@ -25,16 +25,17 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.MetadataRelationEntityListenerManager;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Table;
 
 /**
- * Tables that links related metadata.
- * <p>
- * Object is its own entity so that it is easier to add relations without having to load the related metadata.
- * </p>
- * <p>
- * Note: It is important that both Metadata are managed (have been saved or loaded from the MetadataRepository.)
- * For example:
+ * Tables that links related metadata. <p> Object is its own entity so that it is easier to add
+ * relations without having to load the related metadata. </p> <p> Note: It is important that both
+ * Metadata are managed (have been saved or loaded from the MetadataRepository.) For example:
  * <pre><code>
  *      Metadata metadata1 = _metadataRepo.findOne(id);
  *      Metadata metadata2 = _metadataRepo.findOne(id2);

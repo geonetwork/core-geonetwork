@@ -23,134 +23,133 @@
 
 package org.fao.oaipmh.exceptions;
 
-import java.util.Map;
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.util.Lib;
 import org.jdom.Element;
 
+import java.util.Map;
+
 //=============================================================================
 
-public class OaiPmhException extends Exception
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class OaiPmhException extends Exception {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -370658366099038395L;
-	public OaiPmhException(String code, String message)
-	{
-		this(code, message, null);
-	}
+    protected static final String BAD_ARGUMENT = "badArgument";
+    protected static final String BAD_RESUMPTION_TOKEN = "badResumptionToken";
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    protected static final String BAD_VERB = "badVerb";
 
-	public OaiPmhException(String code, String message, Element response)
-	{
-		super(message);
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    protected static final String CANNOT_DISSEMINATE_FORMAT = "cannotDisseminateFormat";
+    protected static final String ID_DOES_NOT_EXIST = "idDoesNotExist";
 
-		this.code     = code;
-		this.response = response;
-	}
+    //---------------------------------------------------------------------------
+    protected static final String NO_RECORDS_MATCH = "noRecordsMatch";
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Static marshalling methods
+    //---
+    //---------------------------------------------------------------------------
+    protected static final String NO_METADATA_FORMATS = "noMetadataFormats";
 
-	public String  getCode()     { return code;     }
-	public Element getResponse() { return response; }
+    //---------------------------------------------------------------------------
+    protected static final String NO_SET_HIERARCHY = "noSetHierarchy";
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    /**
+     *
+     */
+    private static final long serialVersionUID = -370658366099038395L;
+    private String code;
+    private Element response;
 
-	public String toString()
-	{
-		return getClass().getSimpleName() +": code="+code+", message="+getMessage();
-	}
+    public OaiPmhException(String code, String message) {
+        this(code, message, null);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Static marshalling methods
-	//---
-	//---------------------------------------------------------------------------
+    public OaiPmhException(String code, String message, Element response) {
+        super(message);
 
-	public static Element marshal(OaiPmhException e, String reqUrl, Map<String, String> reqParams)
-	{
-		Element err = new Element("error", OaiPmh.Namespaces.OAI_PMH);
+        this.code = code;
+        this.response = response;
+    }
 
-		err.setText(e.getMessage());
-		err.setAttribute("code", e.getCode());
+    public static Element marshal(OaiPmhException e, String reqUrl, Map<String, String> reqParams) {
+        Element err = new Element("error", OaiPmh.Namespaces.OAI_PMH);
 
-		Element root = Lib.createOaiRoot(reqUrl, reqParams, err);
+        err.setText(e.getMessage());
+        err.setAttribute("code", e.getCode());
 
-		return root;
-	}
+        Element root = Lib.createOaiRoot(reqUrl, reqParams, err);
 
-	//---------------------------------------------------------------------------
+        return root;
+    }
 
-	public static void unmarshal(Element response) throws OaiPmhException
-	{
-		Element error = response.getChild("error", OaiPmh.Namespaces.OAI_PMH);
+    public static void unmarshal(Element response) throws OaiPmhException {
+        Element error = response.getChild("error", OaiPmh.Namespaces.OAI_PMH);
 
-		//--- no errors: ok, skip
-		if (error == null)
-			return;
+        //--- no errors: ok, skip
+        if (error == null)
+            return;
 
-		String code = error.getAttributeValue("code");
-		String msg  = error.getText();
+        String code = error.getAttributeValue("code");
+        String msg = error.getText();
 
-		if (code.equals(BAD_ARGUMENT))
-			throw new BadArgumentException(msg, response);
+        if (code.equals(BAD_ARGUMENT))
+            throw new BadArgumentException(msg, response);
 
-		if (code.equals(BAD_RESUMPTION_TOKEN))
-			throw new BadResumptionTokenException(msg, response);
+        if (code.equals(BAD_RESUMPTION_TOKEN))
+            throw new BadResumptionTokenException(msg, response);
 
-		if (code.equals(BAD_VERB))
-			throw new BadVerbException(msg, response);
+        if (code.equals(BAD_VERB))
+            throw new BadVerbException(msg, response);
 
-		if (code.equals(CANNOT_DISSEMINATE_FORMAT))
-			throw new CannotDisseminateFormatException(msg, response);
+        if (code.equals(CANNOT_DISSEMINATE_FORMAT))
+            throw new CannotDisseminateFormatException(msg, response);
 
-		if (code.equals(ID_DOES_NOT_EXIST))
-			throw new IdDoesNotExistException(msg, response);
+        if (code.equals(ID_DOES_NOT_EXIST))
+            throw new IdDoesNotExistException(msg, response);
 
-		if (code.equals(NO_RECORDS_MATCH))
-			throw new NoRecordsMatchException(msg, response);
+        if (code.equals(NO_RECORDS_MATCH))
+            throw new NoRecordsMatchException(msg, response);
 
-		if (code.equals(NO_METADATA_FORMATS))
-			throw new NoMetadataFormatsException(msg, response);
+        if (code.equals(NO_METADATA_FORMATS))
+            throw new NoMetadataFormatsException(msg, response);
 
-		if (code.equals(NO_SET_HIERARCHY))
-			throw new NoSetHierarchyException(msg, response);
+        if (code.equals(NO_SET_HIERARCHY))
+            throw new NoSetHierarchyException(msg, response);
 
-		//--- we should not get here
-		throw new RuntimeException("Unknown error code : "+ code);
-	}
+        //--- we should not get here
+        throw new RuntimeException("Unknown error code : " + code);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+    public String getCode() {
+        return code;
+    }
 
-	protected static final String BAD_ARGUMENT              = "badArgument";
-	protected static final String BAD_RESUMPTION_TOKEN      = "badResumptionToken";
-	protected static final String BAD_VERB                  = "badVerb";
-	protected static final String CANNOT_DISSEMINATE_FORMAT = "cannotDisseminateFormat";
-	protected static final String ID_DOES_NOT_EXIST         = "idDoesNotExist";
-	protected static final String NO_RECORDS_MATCH          = "noRecordsMatch";
-	protected static final String NO_METADATA_FORMATS       = "noMetadataFormats";
-	protected static final String NO_SET_HIERARCHY          = "noSetHierarchy";
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public Element getResponse() {
+        return response;
+    }
 
-	private String  code;
-	private Element response;
+    public String toString() {
+        return getClass().getSimpleName() + ": code=" + code + ", message=" + getMessage();
+    }
 }
 
 //=============================================================================

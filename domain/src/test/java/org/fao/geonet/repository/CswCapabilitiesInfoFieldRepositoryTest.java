@@ -41,6 +41,14 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
     @Autowired
     CswCapabilitiesInfoFieldRepository _repo;
 
+    public static CswCapabilitiesInfoField newCswServerCapabilitiesInfo(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+        CswCapabilitiesInfoField CswCapabilitiesInfoField = new CswCapabilitiesInfoField().setFieldName("field" + val).setValue("lang"
+            + val)
+            .setLangId("l_" + val);
+        return CswCapabilitiesInfoField;
+    }
+
     @Before
     public void setUp() throws Exception {
         _inc.set(0);
@@ -138,13 +146,6 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
 
     private CswCapabilitiesInfoField newCswServerCapabilitiesInfo() {
         return newCswServerCapabilitiesInfo(_inc);
-    }
-    public static CswCapabilitiesInfoField newCswServerCapabilitiesInfo(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-        CswCapabilitiesInfoField CswCapabilitiesInfoField = new CswCapabilitiesInfoField().setFieldName("field" + val).setValue("lang"
-                                                                                                                                + val)
-                .setLangId("l_" + val);
-        return CswCapabilitiesInfoField;
     }
 
 }

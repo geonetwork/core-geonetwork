@@ -47,11 +47,10 @@ import jeeves.server.context.ServiceContext;
 
 /**
  * Import MEF file.
- *
  */
 public class Import extends NotInReadOnlyModeService {
-	private Path stylePath;
     private static final Set<String> UUID_FIELD_LOADER = Sets.newHashSet(Geonet.IndexFieldNames.UUID);
+    private Path stylePath;
 
     /**
      *
@@ -60,36 +59,29 @@ public class Import extends NotInReadOnlyModeService {
      * @throws Exception
      */
     @Override
-	public void init(Path appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
-		this.stylePath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
-	}
+        this.stylePath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
+    }
 
-	/**
-	 * Service to import MEF File.
-	 *
-	 *
-	 * @param params
-	 *            List of parameters:
-	 *            <ul>
-	 *            <li>mefFile: file to upload</li>
-	 *            <li>file_type: "single" for loading a single XML file, "mef" to
-	 *            load MEF file (version 1 or 2). "mef" is the default value.</li>
-	 *            </ul>
-	 *
-	 * @return List of imported ids.
-	 *
-	 */
+    /**
+     * Service to import MEF File.
+     *
+     * @param params List of parameters: <ul> <li>mefFile: file to upload</li> <li>file_type:
+     *               "single" for loading a single XML file, "mef" to load MEF file (version 1 or
+     *               2). "mef" is the default value.</li> </ul>
+     * @return List of imported ids.
+     */
     @Override
-	public Element serviceSpecificExec(Element params, ServiceContext context)
-			throws Exception {
-		String mefFile = Util.getParam(params, "mefFile");
+    public Element serviceSpecificExec(Element params, ServiceContext context)
+        throws Exception {
+        String mefFile = Util.getParam(params, "mefFile");
         String fileType = Util.getParam(params, "file_type", "mef");
-		Path uploadDir = context.getUploadDir();
+        Path uploadDir = context.getUploadDir();
 
-		Path file = uploadDir.resolve(mefFile);
+        Path file = uploadDir.resolve(mefFile);
 
-		List<String> id = MEFLib.doImport(params, context, file, stylePath);
+        List<String> id = MEFLib.doImport(params, context, file, stylePath);
         StringBuilder ids = new StringBuilder();
         StringBuilder uuidString = new StringBuilder();
 
@@ -107,28 +99,28 @@ public class Import extends NotInReadOnlyModeService {
 
         IO.deleteFile(file, false, Geonet.MEF);
 
-		Element result;
+        Element result;
 
         if (context.getService().equals("mef.import")) {
 
             result = new Element("id");
             result.setText(ids.toString());
-            result .setAttribute(Params.UUID, uuidString.toString());
+            result.setAttribute(Params.UUID, uuidString.toString());
 
         } else {
 
             result = new Element(Jeeves.Elem.RESPONSE);
             if ((fileType.equals("single") && (id.size() == 1))) {
-                result.addContent(new Element(Params.ID).setText(id.get(0) +""));
-                result.addContent(new Element(Params.UUID).setText(uuids.get(0) +""));
+                result.addContent(new Element(Params.ID).setText(id.get(0) + ""));
+                result.addContent(new Element(Params.UUID).setText(uuids.get(0) + ""));
             } else {
-                result.addContent(new Element("records").setText(id.size() +""));
+                result.addContent(new Element("records").setText(id.size() + ""));
 
             }
 
         }
 
-		// --- return success with all metadata id
-		return result;
-	}
+        // --- return success with all metadata id
+        return result;
+    }
 }

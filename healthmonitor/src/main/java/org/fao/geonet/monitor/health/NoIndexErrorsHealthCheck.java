@@ -36,9 +36,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Verifies that all metadata have been correctly indexed (without errors)
  * <p/>
- * User: jeichar
- * Date: 3/26/12
- * Time: 9:01 AM
+ * User: jeichar Date: 3/26/12 Time: 9:01 AM
  */
 public class NoIndexErrorsHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {

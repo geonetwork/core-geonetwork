@@ -28,67 +28,74 @@ import org.jdom.Element;
 
 //=============================================================================
 
- /** This class represents a single output page of a service
-  */
+/**
+ * This class represents a single output page of a service
+ */
 
-public class OutputPage extends AbstractPage
-{
-	private String  forward;
-	private boolean isFile, isBLOB;
+public class OutputPage extends AbstractPage {
+    private String forward;
+    private boolean isFile, isBLOB;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-	/** If the output page is a forward returns the service, otherwise returns null
-	  */
+    /**
+     * If the output page is a forward returns the service, otherwise returns null
+     */
 
-	public String getForward() { return forward; }
+    public String getForward() {
+        return forward;
+    }
 
-	//--------------------------------------------------------------------------
-	/** If the output page is a binary file returns the element name, otherwise returns null
-	  */
+    //--------------------------------------------------------------------------
 
-	public boolean isFile() { return isFile; }
+    public void setForward(String f) {
+        forward = f;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public boolean isBLOB() { return isBLOB; }
+    /**
+     * If the output page is a binary file returns the element name, otherwise returns null
+     */
 
-	//--------------------------------------------------------------------------
+    public boolean isFile() {
+        return isFile;
+    }
 
-	public void setForward(String f)
-	{
-		forward = f;
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public void setFile(boolean yesno) {
+        isFile = yesno;
+    }
 
-	public void setFile(boolean yesno)
-	{
-		isFile = yesno;
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public boolean isBLOB() {
+        return isBLOB;
+    }
 
-	public void setBLOB(boolean yesno)
-	{
-		isBLOB = yesno;
-	}
+    //--------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	/** Returns true if the service output has attributes that match this page
-	  */
+    public void setBLOB(boolean yesno) {
+        isBLOB = yesno;
+    }
 
-	public boolean matches(Element el) throws Exception
-	{
-		String test = getTestCondition();
+    //---------------------------------------------------------------------------
 
-		if (test == null)	return true;
-			else				return Xml.selectBoolean(el, test);
-	}
+    /**
+     * Returns true if the service output has attributes that match this page
+     */
+
+    public boolean matches(Element el) throws Exception {
+        String test = getTestCondition();
+
+        if (test == null) return true;
+        else return Xml.selectBoolean(el, test);
+    }
 }
 
 //=============================================================================

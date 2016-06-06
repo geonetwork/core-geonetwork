@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Metadata Records niet gevonden</notfound>
+  <notowner>Metadata Records die niet konden worden bewerkt omdat u niet de eigenaar bent</notowner>
+  <updated>Metadata Records bewerkt</updated>
+  <notProcessFound>Metadata bewerking niet gevonden voor metadata schema</notProcessFound>
+</strings>
