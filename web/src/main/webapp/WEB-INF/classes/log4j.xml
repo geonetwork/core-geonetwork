@@ -92,12 +92,6 @@
   <logger name="geonetwork.mef">
     <level value="WARN"/>
   </logger>
-  <logger name="geonetwork.z3950server">
-    <level value="WARN"/>
-  </logger>
-  <logger name="geonetwork.z3950">
-    <level value="WARN"/>
-  </logger>
   <logger name="geonetwork.sru">
     <level value="WARN"/>
   </logger>

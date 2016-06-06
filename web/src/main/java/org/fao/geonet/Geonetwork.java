@@ -62,8 +62,6 @@ import org.fao.geonet.services.config.LogUtils;
 import org.fao.geonet.services.metadata.format.Format;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterWidth;
-import org.fao.geonet.services.util.z3950.Repositories;
-import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -82,6 +80,8 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -214,42 +214,24 @@ public class Geonetwork implements ApplicationHandler {
             }
         }
 
-
         //------------------------------------------------------------------------
-        //--- initialize Z39.50
 
-        logger.info("  - Z39.50...");
+        logger.info("  - SRU...");
 
-        boolean z3950Enable = settingMan.getValueAsBool(Settings.SYSTEM_Z3950_ENABLE, false);
-        String z3950port = settingMan.getValue(Settings.SYSTEM_Z3950_PORT);
+        try {
+				  String[] configs = { Geonet.File.JZKITAPPLICATIONCONTEXT };
+          ApplicationContext app_context = new  ClassPathXmlApplicationContext( configs, _applicationContext );
+    
+          // to have access to the GN context in spring-managed objects
+          ContextContainer cc = (ContextContainer)_applicationContext.getBean("ContextGateway");
+          cc.setSrvctx(context);
 
-        logger.info("     - Z39.50 is enabled: " + z3950Enable);
-        if (z3950Enable) {
-            // build Z3950 repositories file first from template
-            URL url = getClass().getClassLoader().getResource(Geonet.File.JZKITCONFIG_TEMPLATE);
-
-            if (Repositories.build(url, context)) {
-                logger.info("     Repositories file built from template.");
-
-                try {
-                    ConfigurableApplicationContext appContext = context.getApplicationContext();
-
-                    // to have access to the GN context in spring-managed objects
-                    ContextContainer cc = (ContextContainer) appContext.getBean("ContextGateway");
-                    cc.setSrvctx(context);
-                    Server.init(z3950port, appContext);
-
-                } catch (Exception e) {
-                    logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
-                        "harvesting) may not work. Error is:" + e.getMessage());
-                    e.printStackTrace();
-                }
-
-            } else {
-                logger.error("     Repositories file builder FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
-                    "harvesting) may not work.");
-            }
+    
+        } catch (Exception e) {
+          logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + e.getMessage());
+          e.printStackTrace();
         }
+    
         //------------------------------------------------------------------------
         //--- initialize SchemaManager
 
@@ -660,9 +642,6 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Harvest Manager...");
         _applicationContext.getBean(HarvestManager.class).shutdown();
-
-        logger.info("  - Z39.50...");
-        Server.end();
     }
 
     //---------------------------------------------------------------------------

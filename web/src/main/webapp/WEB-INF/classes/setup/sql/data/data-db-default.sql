@@ -13,7 +13,6 @@ INSERT INTO Categories (id, name) VALUES (7,'photo');
 INSERT INTO Categories (id, name) VALUES (8,'audioVideo');
 INSERT INTO Categories (id, name) VALUES (9,'directories');
 INSERT INTO Categories (id, name) VALUES (10,'otherResources');
-INSERT INTO Categories (id, name) VALUES (11,'z3950Servers');
 INSERT INTO Categories (id, name) VALUES (12,'registers');
 INSERT INTO Categories (id, name) VALUES (13,'physicalSamples');
 
@@ -564,8 +563,6 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j.xml',0,250,'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/intranet/network', '127.0.0.1', 0, 310, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/intranet/netmask', '255.0.0.0', 0, 320, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/z3950/enable', 'true', 2, 410, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/z3950/port', '2100', 1, 420, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/use', 'false', 2, 510, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/host', NULL, 0, 520, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/port', NULL, 1, 530, 'y');
