@@ -33,5 +33,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @author Jesse
  */
 public interface SearchRequestParamRepository extends GeonetRepository<SearchRequestParam, Integer>,
-        SearchRequestParamRepositoryCustom, JpaSpecificationExecutor<SearchRequestParam> {
+    SearchRequestParamRepositoryCustom, JpaSpecificationExecutor<SearchRequestParam> {
 }

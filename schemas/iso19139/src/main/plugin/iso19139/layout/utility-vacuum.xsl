@@ -22,12 +22,10 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:gco="http://www.isotc211.org/2005/gco"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
+                version="2.0"
                 exclude-result-prefixes="#all">
 
   <!-- Vacuum utility. Remove empty elements from a metadata record:
@@ -74,9 +72,9 @@
 
     <xsl:choose>
       <xsl:when test="$isElementEmpty = true()">
-    <!--    <empty>
-          <xsl:copy-of select="."/>
-        </empty>-->
+        <!--    <empty>
+              <xsl:copy-of select="."/>
+            </empty>-->
       </xsl:when>
       <xsl:otherwise>
         <xsl:copy>

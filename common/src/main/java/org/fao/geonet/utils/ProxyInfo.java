@@ -29,138 +29,148 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/** Subject for observers (Jeeves classes) that need proxy info from GeoNetwork
-	*/
-public class ProxyInfo
-{
+/**
+ * Subject for observers (Jeeves classes) that need proxy info from GeoNetwork
+ */
+public class ProxyInfo {
 
-	private final ProxyParams proxyParams = new ProxyParams();
-	private List<ProxyInfoObserver> observers = new ArrayList<ProxyInfoObserver>();
+    /**
+     * Active readers count
+     */
+    private static int activeReaders = 0;
+    /**
+     * Active writers count
+     */
+    private static int activeWriters = 0;
+    private final ProxyParams proxyParams = new ProxyParams();
+    private List<ProxyInfoObserver> observers = new ArrayList<ProxyInfoObserver>();
 
-	/** Active readers count */
-	private static int activeReaders = 0;
-	/** Active writers count */
-	private static int activeWriters = 0;
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
-
-	public ProxyInfo() {}
-
-  //---------------------------------------------------------------------------
-
-	public void addObserver(ProxyInfoObserver o) {
-		observers.add(o);
-	}
-
-  //---------------------------------------------------------------------------
-
-	public void removeObserver(ProxyInfoObserver o) {
-		observers.remove(o);
-	}
-
-  //---------------------------------------------------------------------------
-
-  public void setProxyInfo(String host, int port, String username, String password) {
-
-		beforeWrite();
-		proxyParams.useProxy= false;
-		if (host != null) {
-			if (host.trim().length() != 0 && port != 0) { 
-    		proxyParams.proxyHost = host;
-    		proxyParams.proxyPort = port;
-				proxyParams.useProxy= true;
-	
-    		proxyParams.useProxyAuth = false;
-    		if (username != null) {
-					if (username.trim().length() != 0) { 
-						proxyParams.username = username;
-						proxyParams.password = password;
-    				proxyParams.useProxyAuth = true;
-					}
-				}
-			}
-		}
-		afterWrite();
-
-		beforeRead();
-		notifyAllObservers();
-		afterRead();
-	}
-
-  //---------------------------------------------------------------------------
-
-	public void notifyAllObservers() {
-		// -- notify all observers that proxy info has changed
-
-		Iterator<ProxyInfoObserver> i = observers.iterator();
-		while (i.hasNext()) {
-			ProxyInfoObserver o = (ProxyInfoObserver) i.next();
-			o.update(this);
-		}
-
-	}
-
-  //---------------------------------------------------------------------------
-
-	public ProxyParams getProxyParams() {
-
-		beforeRead();
-		try {
-			return proxyParams;
-		} finally {
-			afterRead();
-		}
-	}
-
-	//--------------------------------------------------------------------------
-  // -- Private methods
-  //--------------------------------------------------------------------------
-  /**
-   * Invoked just before reading, waits until reading is allowed.
-   */
-  private synchronized void beforeRead() {
-    while (activeWriters > 0) {
-      try {
-        wait();
-      } catch (InterruptedException iex) {}
+    public ProxyInfo() {
     }
-    ++activeReaders;
-  }
 
-  //--------------------------------------------------------------------------
-  /**
-   * Invoked just after reading.
-   */
-  private synchronized void afterRead() {
-    --activeReaders;
-    notifyAll();
-  }
+    //---------------------------------------------------------------------------
 
-  //--------------------------------------------------------------------------
-  /**
-   * Invoked just before writing, waits until writing is allowed.
-   */
-  private synchronized void beforeWrite() {
-    while (activeReaders > 0 || activeWriters > 0) {
-      try {
-        wait();
-      } catch (InterruptedException iex) {}
+    public void addObserver(ProxyInfoObserver o) {
+        observers.add(o);
     }
-    ++activeWriters;
-  }
 
-  //--------------------------------------------------------------------------
-  /**
-   * Invoked just after writing.
-   */
-  private synchronized void afterWrite() {
-    --activeWriters;
-    notifyAll();
-  }	
+    //---------------------------------------------------------------------------
+
+    public void removeObserver(ProxyInfoObserver o) {
+        observers.remove(o);
+    }
+
+    //---------------------------------------------------------------------------
+
+    public void setProxyInfo(String host, int port, String username, String password) {
+
+        beforeWrite();
+        proxyParams.useProxy = false;
+        if (host != null) {
+            if (host.trim().length() != 0 && port != 0) {
+                proxyParams.proxyHost = host;
+                proxyParams.proxyPort = port;
+                proxyParams.useProxy = true;
+
+                proxyParams.useProxyAuth = false;
+                if (username != null) {
+                    if (username.trim().length() != 0) {
+                        proxyParams.username = username;
+                        proxyParams.password = password;
+                        proxyParams.useProxyAuth = true;
+                    }
+                }
+            }
+        }
+        afterWrite();
+
+        beforeRead();
+        notifyAllObservers();
+        afterRead();
+    }
+
+    //---------------------------------------------------------------------------
+
+    public void notifyAllObservers() {
+        // -- notify all observers that proxy info has changed
+
+        Iterator<ProxyInfoObserver> i = observers.iterator();
+        while (i.hasNext()) {
+            ProxyInfoObserver o = (ProxyInfoObserver) i.next();
+            o.update(this);
+        }
+
+    }
+
+    //---------------------------------------------------------------------------
+
+    public ProxyParams getProxyParams() {
+
+        beforeRead();
+        try {
+            return proxyParams;
+        } finally {
+            afterRead();
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    // -- Private methods
+    //--------------------------------------------------------------------------
+
+    /**
+     * Invoked just before reading, waits until reading is allowed.
+     */
+    private synchronized void beforeRead() {
+        while (activeWriters > 0) {
+            try {
+                wait();
+            } catch (InterruptedException iex) {
+            }
+        }
+        ++activeReaders;
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Invoked just after reading.
+     */
+    private synchronized void afterRead() {
+        --activeReaders;
+        notifyAll();
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Invoked just before writing, waits until writing is allowed.
+     */
+    private synchronized void beforeWrite() {
+        while (activeReaders > 0 || activeWriters > 0) {
+            try {
+                wait();
+            } catch (InterruptedException iex) {
+            }
+        }
+        ++activeWriters;
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Invoked just after writing.
+     */
+    private synchronized void afterWrite() {
+        --activeWriters;
+        notifyAll();
+    }
 
 }
 

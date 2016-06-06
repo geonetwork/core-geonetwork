@@ -25,6 +25,7 @@ package jeeves.config.springutil;
 
 import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.server.sources.http.ServletPathFinder;
+
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -34,10 +35,11 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 
 import java.io.IOException;
 import java.nio.file.Path;
+
 import javax.annotation.CheckForNull;
 import javax.servlet.ServletContext;
 
-public class JeevesApplicationContext extends XmlWebApplicationContext  {
+public class JeevesApplicationContext extends XmlWebApplicationContext {
 
     @CheckForNull
     private final ConfigurationOverrides _configurationOverrides;
@@ -56,7 +58,7 @@ public class JeevesApplicationContext extends XmlWebApplicationContext  {
 
     @Override
     protected void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
-		super.postProcessBeanFactory(beanFactory);
+        super.postProcessBeanFactory(beanFactory);
         try {
             final ServletContext servletContext = getServletContext();
 
@@ -103,7 +105,7 @@ public class JeevesApplicationContext extends XmlWebApplicationContext  {
     }
 
     @Override
-	protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws IOException {
+    protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws IOException {
         reader.setValidating(false);
         super.loadBeanDefinitions(reader);
 
@@ -111,7 +113,7 @@ public class JeevesApplicationContext extends XmlWebApplicationContext  {
         if (this._configurationOverrides != null) {
             try {
                 this._configurationOverrides.importSpringConfigurations(reader, (ConfigurableBeanFactory) reader.getBeanFactory(),
-                        getServletContext(), appPath);
+                    getServletContext(), appPath);
             } catch (JDOMException e) {
                 throw new IOException(e);
             }

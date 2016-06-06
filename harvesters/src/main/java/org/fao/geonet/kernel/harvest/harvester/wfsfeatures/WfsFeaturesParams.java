@@ -31,18 +31,14 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class WfsFeaturesParams extends AbstractParams
-{
+public class WfsFeaturesParams extends AbstractParams {
     //--------------------------------------------------------------------------
     //---
     //--- Constructor
     //---
     //--------------------------------------------------------------------------
 
-    public WfsFeaturesParams(DataManager dm)
-    {
-        super(dm);
-    }
+    public String url;
 
     //---------------------------------------------------------------------------
     //---
@@ -50,90 +46,88 @@ public class WfsFeaturesParams extends AbstractParams
     //---          provided entry, providing default values
     //---
     //---------------------------------------------------------------------------
-
-    public void create(Element node) throws BadInputEx
-    {
-        super.create(node);
-
-        Element site = node.getChild("site");
-        Element opt  = node.getChild("options");
-
-        url       			= Util.getParam(site, "url",  "");
-        icon 						= Util.getParam(site, "icon", "wfs.gif");
-        lang  	  			= Util.getParam(opt, "lang",  "");
-        query						= Util.getParam(opt, "query",  "");
-        outputSchema		= Util.getParam(opt, "outputSchema",  "");
-        stylesheet			= Util.getParam(opt, "stylesheet",  "");
-        streamFeatures		= Util.getParam(opt, "streamFeatures",  true);
-        createSubtemplates	= Util.getParam(opt, "createSubtemplates", true);
-        templateId			= Util.getParam(opt, "templateId",  "");
-        recordsCategory	= Util.getParam(opt, "recordsCategory",  "");
-    }
+    public String icon;
 
     //---------------------------------------------------------------------------
     //---
     //--- Update : called when an entry has changed and variables must be updated
     //---
     //---------------------------------------------------------------------------
-
-    public void update(Element node) throws BadInputEx
-    {
-        super.update(node);
-
-        Element site = node.getChild("site");
-        Element opt  = node.getChild("options");
-
-        url       			= Util.getParam(site, "url",  url);
-        icon            = Util.getParam(site, "icon", "wfs.gif");
-        lang  	  			= Util.getParam(opt,  "lang",  lang);
-        query						= Util.getParam(opt,  "query",  "");
-        outputSchema		= Util.getParam(opt,  "outputSchema",  "");
-        stylesheet			= Util.getParam(opt,  "stylesheet",  "");
-        streamFeatures		= Util.getParam(opt, "streamFeatures", streamFeatures);
-        createSubtemplates	= Util.getParam(opt, "createSubtemplates", createSubtemplates);
-        templateId			= Util.getParam(opt,  "templateId",  "");
-        recordsCategory = Util.getParam(opt,  "recordsCategory",  recordsCategory);
-    }
+    public String lang;
 
     //---------------------------------------------------------------------------
     //---
     //--- Other API methods
     //---
     //---------------------------------------------------------------------------
-
-    public WfsFeaturesParams copy()
-    {
-        WfsFeaturesParams copy = new WfsFeaturesParams(dm);
-        copyTo(copy);
-
-        copy.url  				= url;
-        copy.icon					= icon;
-        copy.lang 				= lang;
-        copy.query		 		= query;
-        copy.outputSchema	= outputSchema;
-        copy.stylesheet		= stylesheet;
-        copy.createSubtemplates	= createSubtemplates;
-        copy.templateId		= templateId;
-        copy.recordsCategory    = recordsCategory;
-        return copy;
-    }
+    public String query;
 
     //---------------------------------------------------------------------------
     //---
     //--- Variables
     //---
     //---------------------------------------------------------------------------
-
-    public String url;
-    public String icon;
-    public String lang;
-    public String query;
     public String outputSchema;
     public String stylesheet;
     public boolean streamFeatures;
     public boolean createSubtemplates;
     public String templateId;
     public String recordsCategory;
+    public WfsFeaturesParams(DataManager dm) {
+        super(dm);
+    }
+
+    public void create(Element node) throws BadInputEx {
+        super.create(node);
+
+        Element site = node.getChild("site");
+        Element opt = node.getChild("options");
+
+        url = Util.getParam(site, "url", "");
+        icon = Util.getParam(site, "icon", "wfs.gif");
+        lang = Util.getParam(opt, "lang", "");
+        query = Util.getParam(opt, "query", "");
+        outputSchema = Util.getParam(opt, "outputSchema", "");
+        stylesheet = Util.getParam(opt, "stylesheet", "");
+        streamFeatures = Util.getParam(opt, "streamFeatures", true);
+        createSubtemplates = Util.getParam(opt, "createSubtemplates", true);
+        templateId = Util.getParam(opt, "templateId", "");
+        recordsCategory = Util.getParam(opt, "recordsCategory", "");
+    }
+
+    public void update(Element node) throws BadInputEx {
+        super.update(node);
+
+        Element site = node.getChild("site");
+        Element opt = node.getChild("options");
+
+        url = Util.getParam(site, "url", url);
+        icon = Util.getParam(site, "icon", "wfs.gif");
+        lang = Util.getParam(opt, "lang", lang);
+        query = Util.getParam(opt, "query", "");
+        outputSchema = Util.getParam(opt, "outputSchema", "");
+        stylesheet = Util.getParam(opt, "stylesheet", "");
+        streamFeatures = Util.getParam(opt, "streamFeatures", streamFeatures);
+        createSubtemplates = Util.getParam(opt, "createSubtemplates", createSubtemplates);
+        templateId = Util.getParam(opt, "templateId", "");
+        recordsCategory = Util.getParam(opt, "recordsCategory", recordsCategory);
+    }
+
+    public WfsFeaturesParams copy() {
+        WfsFeaturesParams copy = new WfsFeaturesParams(dm);
+        copyTo(copy);
+
+        copy.url = url;
+        copy.icon = icon;
+        copy.lang = lang;
+        copy.query = query;
+        copy.outputSchema = outputSchema;
+        copy.stylesheet = stylesheet;
+        copy.createSubtemplates = createSubtemplates;
+        copy.templateId = templateId;
+        copy.recordsCategory = recordsCategory;
+        return copy;
+    }
 }
 
 //=============================================================================

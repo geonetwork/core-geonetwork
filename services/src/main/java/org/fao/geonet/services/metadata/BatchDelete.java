@@ -24,10 +24,12 @@
 package org.fao.geonet.services.metadata;
 
 import com.google.common.collect.Sets;
+
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -52,33 +54,33 @@ import java.util.Set;
  * Removes a metadata from the system.
  */
 public class BatchDelete extends BackupFileService {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getBean(DataManager.class);
-		AccessManager accessMan = gc.getBean(AccessManager.class);
-		UserSession   session   = context.getUserSession();
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataMan = gc.getBean(DataManager.class);
+        AccessManager accessMan = gc.getBean(AccessManager.class);
+        UserSession session = context.getUserSession();
 
-		Set<String> metadata = new HashSet<>();
-		Set<String> notFound = new HashSet<>();
-		Set<String> notOwner = new HashSet<>();
+        Set<String> metadata = new HashSet<>();
+        Set<String> notFound = new HashSet<>();
+        Set<String> notOwner = new HashSet<>();
         boolean backupFile = Util.getParam(params, Params.BACKUP_FILE, true);
 
-        if(context.isDebugEnabled()) {
+        if (context.isDebugEnabled()) {
             context.debug("Get selected metadata");
         }
-		SelectionManager sm = SelectionManager.getManager(session);
+        SelectionManager sm = SelectionManager.getManager(session);
         final Set<String> selection;
-        synchronized(sm.getSelection(SelectionManager.SELECTION_METADATA)) {
+        synchronized (sm.getSelection(SelectionManager.SELECTION_METADATA)) {
             selection = Sets.newHashSet(sm.getSelection(SelectionManager.SELECTION_METADATA));
 
             // Clear the selection after delete
@@ -117,11 +119,11 @@ public class BatchDelete extends BackupFileService {
             }
         }
 
-		// -- for the moment just return the sizes - we could return the ids
-		// -- at a later stage for some sort of result display
-		return new Element(Jeeves.Elem.RESPONSE)
-			.addContent(new Element("done")    .setText(metadata.size()+""))
-			.addContent(new Element("notOwner").setText(notOwner.size()+""))
-			.addContent(new Element("notFound").setText(notFound.size()+""));
-	}
+        // -- for the moment just return the sizes - we could return the ids
+        // -- at a later stage for some sort of result display
+        return new Element(Jeeves.Elem.RESPONSE)
+            .addContent(new Element("done").setText(metadata.size() + ""))
+            .addContent(new Element("notOwner").setText(notOwner.size() + ""))
+            .addContent(new Element("notFound").setText(notFound.size() + ""));
+    }
 }

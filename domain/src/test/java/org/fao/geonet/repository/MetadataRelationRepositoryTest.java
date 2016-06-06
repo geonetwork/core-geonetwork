@@ -43,6 +43,16 @@ public class MetadataRelationRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     MetadataRepository _metadataRepo;
 
+    public static MetadataRelation newMetadataRelation(AtomicInteger inc, MetadataRepository metadataRepo) {
+        Metadata metadata1 = metadataRepo.save(newMetadata(inc));
+        Metadata metadata2 = metadataRepo.save(newMetadata(inc));
+
+        MetadataRelation relation = new MetadataRelation();
+        relation.setId(new MetadataRelationId(metadata1.getId(), metadata2.getId()));
+
+        return relation;
+    }
+
     @Test
     public void testFindOne() {
         MetadataRelation relation = newMetadataRelation();
@@ -71,15 +81,6 @@ public class MetadataRelationRepositoryTest extends AbstractSpringDataTest {
 
     private MetadataRelation newMetadataRelation() {
         return newMetadataRelation(_inc, _metadataRepo);
-    }
-    public static MetadataRelation newMetadataRelation(AtomicInteger inc, MetadataRepository metadataRepo) {
-        Metadata metadata1 = metadataRepo.save(newMetadata(inc));
-        Metadata metadata2 = metadataRepo.save(newMetadata(inc));
-
-        MetadataRelation relation = new MetadataRelation();
-        relation.setId(new MetadataRelationId(metadata1.getId(), metadata2.getId()));
-
-        return relation;
     }
 
 }

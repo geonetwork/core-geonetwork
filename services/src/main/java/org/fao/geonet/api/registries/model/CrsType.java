@@ -34,7 +34,10 @@ public enum CrsType {
 
     private Class clazz;
 
-    CrsType() {};
+    CrsType() {
+    }
+
+    ;
 
     CrsType(Class clazz) {
         this.clazz = clazz;

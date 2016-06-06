@@ -25,10 +25,10 @@
 <!--
 Stylesheet used to update metadata adding a reference to a parent record.
 -->
-<xsl:stylesheet version="2.0"
-                xmlns:dc="http://purl.org/dc/elements/1.1/"
+<xsl:stylesheet xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:dct="http://purl.org/dc/terms/"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="2.0">
 
   <xsl:param name="url"/>
   <xsl:param name="updateKey"/>
@@ -37,7 +37,7 @@ Stylesheet used to update metadata adding a reference to a parent record.
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:copy-of
-          select="dc:*|dct:*[name() != 'dct:references']"/>
+        select="dc:*|dct:*[name() != 'dct:references']"/>
 
       <xsl:for-each select="dct:references">
         <xsl:choose>
@@ -58,7 +58,7 @@ Stylesheet used to update metadata adding a reference to a parent record.
        and URL not already here. -->
       <xsl:if test="$updateKey = '' and not(dct:references[text() = $url])">
         <dct:references>
-            <xsl:value-of select="$url"/>
+          <xsl:value-of select="$url"/>
         </dct:references>
       </xsl:if>
     </xsl:copy>

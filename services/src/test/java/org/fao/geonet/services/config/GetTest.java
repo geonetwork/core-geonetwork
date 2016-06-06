@@ -23,21 +23,18 @@
 
 package org.fao.geonet.services.config;
 
-import static org.junit.Assert.*;
-
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 
+import jeeves.server.context.ServiceContext;
+
+import static org.junit.Assert.assertEquals;
+
 /**
- * Test the get config service
- * User: Jesse
- * Date: 11/6/13
- * Time: 12:15 PM
+ * Test the get config service User: Jesse Date: 11/6/13 Time: 12:15 PM
  */
 public class GetTest extends AbstractServiceIntegrationTest {
     @Test

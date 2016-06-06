@@ -37,77 +37,76 @@ import java.util.Collection;
 
 //==============================================================================
 
-public class MimeTypeFinder
-{
-	private static boolean isWindows = System.getProperty("os.name").startsWith("Windows");
-	private static String blank = "";
+public class MimeTypeFinder {
+    private static boolean isWindows = System.getProperty("os.name").startsWith("Windows");
+    private static String blank = "";
 
-	/*
-	 * register mime detectors in order
-	 */
-	private static void registerMimeDetectors(boolean notLocal) {
+    /*
+     * register mime detectors in order
+     */
+    private static void registerMimeDetectors(boolean notLocal) {
 
-		// unregister anything previously registered
-		MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.WindowsRegistryMimeDetector");
-		MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.OpendesktopMimeDetector");
-		MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
-		MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.ExtensionMimeDetector");
+        // unregister anything previously registered
+        MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.WindowsRegistryMimeDetector");
+        MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.OpendesktopMimeDetector");
+        MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
+        MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.ExtensionMimeDetector");
 
-		// register anything required
-		if (isWindows) {
-			MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.WindowsRegistryMimeDetector");
-		}
-		if (!notLocal) {
-			MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.OpendesktopMimeDetector");
-			MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
-		}
-		MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.ExtensionMimeDetector");
-	}
+        // register anything required
+        if (isWindows) {
+            MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.WindowsRegistryMimeDetector");
+        }
+        if (!notLocal) {
+            MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.OpendesktopMimeDetector");
+            MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
+        }
+        MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.ExtensionMimeDetector");
+    }
 
-	/* 
-	 * read file name and get mime type
-	 */
-	public static String detectMimeTypeFile(String dir, String fName) {
+    /*
+     * read file name and get mime type
+     */
+    public static String detectMimeTypeFile(String dir, String fName) {
 
-		if (fName != null && dir != null) { 
-			if (fName.equals("")) return blank;
-			registerMimeDetectors(false);
-			try {
-				File theFile = new File(dir, fName);
-				@SuppressWarnings("unchecked")
+        if (fName != null && dir != null) {
+            if (fName.equals("")) return blank;
+            registerMimeDetectors(false);
+            try {
+                File theFile = new File(dir, fName);
+                @SuppressWarnings("unchecked")
                 Collection<MimeType> types = MimeUtil.getMimeTypes(theFile);
-				boolean specific = false;
-				for (MimeType mt : types) {
-					if (mt.getSpecificity()>1) specific = true;
-				}
-				if (specific) {
-					return MimeUtil.getMostSpecificMimeType(types).toString();
-				} else {
-					return types.iterator().next().toString();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return MimeUtil2.UNKNOWN_MIME_TYPE.toString();
-			}
-		} else return blank;
-	}
+                boolean specific = false;
+                for (MimeType mt : types) {
+                    if (mt.getSpecificity() > 1) specific = true;
+                }
+                if (specific) {
+                    return MimeUtil.getMostSpecificMimeType(types).toString();
+                } else {
+                    return types.iterator().next().toString();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return MimeUtil2.UNKNOWN_MIME_TYPE.toString();
+            }
+        } else return blank;
+    }
 
-	/* 
-	 * read URL and get mime type
-	 */
-	public static String detectMimeTypeUrl(String url) {
+    /*
+     * read URL and get mime type
+     */
+    public static String detectMimeTypeUrl(String url) {
 
-		if (url != null) {
-			registerMimeDetectors(true);
-			try {
-				URL theUrl = new URL(url);
-				MimeType mt = MimeUtil.getMostSpecificMimeType(MimeUtil.getMimeTypes(theUrl));
-				return mt.toString();
-			} catch (Exception e) {
-				return MimeUtil2.UNKNOWN_MIME_TYPE.toString();
-			}
-		} else return blank;
-	}
+        if (url != null) {
+            registerMimeDetectors(true);
+            try {
+                URL theUrl = new URL(url);
+                MimeType mt = MimeUtil.getMostSpecificMimeType(MimeUtil.getMimeTypes(theUrl));
+                return mt.toString();
+            } catch (Exception e) {
+                return MimeUtil2.UNKNOWN_MIME_TYPE.toString();
+            }
+        } else return blank;
+    }
 }
 //==============================================================================
 

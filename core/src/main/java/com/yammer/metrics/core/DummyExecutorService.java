@@ -30,9 +30,7 @@ import java.util.concurrent.*;
 /**
  * Does nothing
  *
- * User: jeichar
- * Date: 4/3/12
- * Time: 12:04 PM
+ * User: jeichar Date: 4/3/12 Time: 12:04 PM
  */
 public class DummyExecutorService implements ScheduledExecutorService {
     public static final DummyExecutorService INSTANCE = new DummyExecutorService();
@@ -54,7 +52,7 @@ public class DummyExecutorService implements ScheduledExecutorService {
     }
 
     public void shutdown() {
-      
+
     }
 
     public List<Runnable> shutdownNow() {
@@ -102,6 +100,6 @@ public class DummyExecutorService implements ScheduledExecutorService {
     }
 
     public void execute(Runnable command) {
-      
+
     }
 }

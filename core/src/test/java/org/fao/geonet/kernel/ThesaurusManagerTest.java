@@ -83,6 +83,7 @@ public class ThesaurusManagerTest extends AbstractCoreIntegrationTest {
         this.settingManager.setValue(Settings.SYSTEM_ENABLE_ALL_THESAURUS, false);
         assertFalse(this.thesaurusManager.existsThesaurus(AllThesaurus.ALL_THESAURUS_KEY));
     }
+
     @Test
     public void testBuildResultfromThTable() throws Exception {
         this.settingManager.setValue(Settings.SYSTEM_ENABLE_ALL_THESAURUS, false);

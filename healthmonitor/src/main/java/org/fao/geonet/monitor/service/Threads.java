@@ -25,6 +25,7 @@ package org.fao.geonet.monitor.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.HashSet;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -50,7 +52,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Controller("/thread")
 public class Threads {
     @RequestMapping(value = "/{lang}/thread/status", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public ThreadResponse status() {
         ThreadMXBean bean = ManagementFactory.getThreadMXBean();
@@ -82,7 +84,7 @@ public class Threads {
     }
 
     @RequestMapping(value = "/{lang}/thread/trace/{threadid}", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public StackTrace trace(@PathVariable String threadid) {
         ThreadMXBean bean = ManagementFactory.getThreadMXBean();
@@ -92,11 +94,11 @@ public class Threads {
 
 
     @RequestMapping(value = "/{lang}/thread/debugging/{contention}/{enablement}", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public ThreadResponse debugging(
-            @PathVariable(value = "contention") boolean threadContentionMonitoring,
-            @PathVariable boolean enablement) {
+        @PathVariable(value = "contention") boolean threadContentionMonitoring,
+        @PathVariable boolean enablement) {
         ThreadMXBean bean = ManagementFactory.getThreadMXBean();
 
         if (threadContentionMonitoring && bean.isThreadContentionMonitoringSupported()) {
@@ -114,12 +116,12 @@ public class Threads {
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class ThreadResponse implements Serializable {
 
-        @XmlElement(name = "thread")
-        private List<ThreadDetail> threads = Lists.newArrayList();
         public boolean threadContentionMonitoringEnabled;
         public boolean threadContentionMonitoringSupported;
         public boolean threadCpuTimeSupported;
         public boolean threadCpuTimeEnabled;
+        @XmlElement(name = "thread")
+        private List<ThreadDetail> threads = Lists.newArrayList();
 
         public boolean isThreadContentionMonitoringEnabled() {
             return threadContentionMonitoringEnabled;
@@ -141,6 +143,7 @@ public class Threads {
             return threads;
         }
     }
+
     @XmlRootElement(name = "thread")
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class ThreadDetail implements Serializable {
@@ -172,6 +175,7 @@ public class Threads {
             this.waitTime = -1;
             this.blockedTime = -1;
         }
+
         public ThreadDetail(ThreadInfo threadInfo, long userTime, long cpuTime, boolean isDeadlocked) {
             this.name = threadInfo.getThreadName();
             this.id = threadInfo.getThreadId();
@@ -225,6 +229,7 @@ public class Threads {
         private StackTrace() {
             stackTrace = "";
         }
+
         private StackTrace(StackTraceElement[] stackTrace) {
             StringBuilder builder = new StringBuilder();
             for (StackTraceElement element : stackTrace) {

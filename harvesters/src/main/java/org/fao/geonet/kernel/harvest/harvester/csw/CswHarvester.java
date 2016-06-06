@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -39,60 +40,57 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- *  Harvest metadata from other catalogues using the CSW protocol
+ * Harvest metadata from other catalogues using the CSW protocol
  */
 public class CswHarvester extends AbstractHarvester<HarvestResult> {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	protected void doInit(Element node, ServiceContext context) throws BadInputEx {
-		params = new CswParams(dataMan);
+    private CswParams params;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Add
+    //---
+    //---------------------------------------------------------------------------
+
+    protected void doInit(Element node, ServiceContext context) throws BadInputEx {
+        params = new CswParams(dataMan);
         super.setParams(params);
-		params.create(node);
-	}
+        params.create(node);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Add
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update
+    //---
+    //---------------------------------------------------------------------------
 
     /**
      * TODO javadoc.
-     *
-     * @param node
-     * @return
-     * @throws org.fao.geonet.exceptions.BadInputEx
-     * @throws java.sql.SQLException
      */
-	protected String doAdd(Element node) throws BadInputEx, SQLException {
-		params = new CswParams(dataMan);
+    protected String doAdd(Element node) throws BadInputEx, SQLException {
+        params = new CswParams(dataMan);
         super.setParams(params);
 
         //--- retrieve/initialize information
-		params.create(node);
+        params.create(node);
 
-		//--- force the creation of a new uuid
-		params.setUuid(UUID.randomUUID().toString());
+        //--- force the creation of a new uuid
+        params.setUuid(UUID.randomUUID().toString());
 
-		String id = settingMan.add("harvesting", "node", getType());
+        String id = settingMan.add("harvesting", "node", getType());
 
-		storeNode(params, "id:"+id);
+        storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
 
-		return id;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update
-	//---
-	//---------------------------------------------------------------------------
+        return id;
+    }
 
     /**
      *
@@ -101,31 +99,37 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
      * @throws org.fao.geonet.exceptions.BadInputEx
      * @throws java.sql.SQLException
      */
-	protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
-		CswParams copy = params.copy();
+    protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
+        CswParams copy = params.copy();
         super.setParams(params);
 
         //--- update variables
-		copy.update(node);
+        copy.update(node);
 
-		String path = "harvesting/id:"+ id;
+        String path = "harvesting/id:" + id;
 
-		settingMan.removeChildren(path);
+        settingMan.removeChildren(path);
 
-		//--- update database
-		storeNode(copy, path);
+        //--- update database
+        storeNode(copy, path);
 
-		//--- we update a copy first because if there is an exception CswParams could be half updated and so it could be
-		// in an inconsistent state
+        //--- we update a copy first because if there is an exception CswParams could be half updated and so it could be
+        // in an inconsistent state
 
         Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
 
-		params = copy;
+        params = copy;
         super.setParams(params);
 
     }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Harvest
+    //---
+    //---------------------------------------------------------------------------
 
     /**
      *
@@ -135,34 +139,34 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
      * @param optionsId
      * @throws java.sql.SQLException
      */
-	protected void storeNodeExtra(AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
-		CswParams params = (CswParams) p;
-		
-		settingMan.add("id:"+siteId, "capabUrl", params.capabUrl);
-		settingMan.add("id:"+siteId, "icon",     params.icon);
-        settingMan.add("id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
-        settingMan.add("id:"+siteId, "queryScope", params.queryScope);
-        settingMan.add("id:"+siteId, "hopCount",     params.hopCount);
-        settingMan.add("id:"+siteId, "xslfilter",     params.xslfilter);
-        settingMan.add("id:"+siteId, "outputSchema",     params.outputSchema);
+    protected void storeNodeExtra(AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
+        CswParams params = (CswParams) p;
 
-		//--- store dynamic search nodes
-		String  searchID = settingMan.add(path, "search", "");	
-		
-		if (params.eltSearches!=null){
-			for (Element element : params.eltSearches) {
-				if (!element.getName().startsWith("parser")){
-					settingMan.add("id:"+searchID, element.getName(), element.getText());
-				}
-			}
-		}
-	}
+        settingMan.add("id:" + siteId, "capabUrl", params.capabUrl);
+        settingMan.add("id:" + siteId, "icon", params.icon);
+        settingMan.add("id:" + siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
+        settingMan.add("id:" + siteId, "queryScope", params.queryScope);
+        settingMan.add("id:" + siteId, "hopCount", params.hopCount);
+        settingMan.add("id:" + siteId, "xslfilter", params.xslfilter);
+        settingMan.add("id:" + siteId, "outputSchema", params.outputSchema);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Harvest
-	//---
-	//---------------------------------------------------------------------------
+        //--- store dynamic search nodes
+        String searchID = settingMan.add(path, "search", "");
+
+        if (params.eltSearches != null) {
+            for (Element element : params.eltSearches) {
+                if (!element.getName().startsWith("parser")) {
+                    settingMan.add("id:" + searchID, element.getName(), element.getText());
+                }
+            }
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
     /**
      *
@@ -170,15 +174,7 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
      * @throws Exception
      */
     public void doHarvest(Logger log) throws Exception {
-		Harvester h = new Harvester(cancelMonitor, log, context, params);
-		result = h.harvest(log);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private CswParams params;
+        Harvester h = new Harvester(cancelMonitor, log, context, params);
+        result = h.harvest(log);
+    }
 }

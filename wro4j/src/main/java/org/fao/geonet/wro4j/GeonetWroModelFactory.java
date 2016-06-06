@@ -1,6 +1,7 @@
 package org.fao.geonet.wro4j;
 
 import com.google.common.collect.Lists;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Priority;
@@ -13,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
 import ro.isdc.wro.config.ReadOnlyContext;
 import ro.isdc.wro.model.WroModel;
 import ro.isdc.wro.model.factory.WroModelFactory;
@@ -48,6 +50,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -58,12 +61,9 @@ import static org.fao.geonet.wro4j.GeonetworkWrojManagerFactory.WRO4J_LOG;
 /**
  * Creates model of views to javascript and css.
  * <p/>
- * User: Jesse
- * Date: 11/22/13
- * Time: 8:28 AM
+ * User: Jesse Date: 11/22/13 Time: 8:28 AM
  */
 public class GeonetWroModelFactory implements WroModelFactory {
-    private static final Pattern PATH_REPLACEMENT_MATCHER = Pattern.compile("\\{\\{(.+?)\\}\\}");
     public static final String WRO_SOURCES_KEY = "wroSources";
     public static final String JS_SOURCE_EL = "jsSource";
     public static final String INCLUDE_EL = "include";
@@ -77,15 +77,28 @@ public class GeonetWroModelFactory implements WroModelFactory {
     public static final String WEBAPP_ATT = "webappPath";
     public static final String PATH_ON_DISK_ATT = "pathOnDisk";
     public static final String CLASSPATH_PREFIX = "classpath:";
-    private static final String NOT_MINIMIZED_EL = "notMinimized";
     public static final String GROUP_NAME_CLOSURE_DEPS = "closure_deps";
-
     public static final String TEMPLATE_PATTERN = "directive.js";
+    private static final Pattern PATH_REPLACEMENT_MATCHER = Pattern.compile("\\{\\{(.+?)\\}\\}");
+    private static final String NOT_MINIMIZED_EL = "notMinimized";
     @Inject
     private ReadOnlyContext _context;
     private Collection<Throwable> errors = Lists.newArrayList();
 
     private String _geonetworkRootDirectory = "";
+
+    static String findGeonetworkRootDirectory(String sourcesXmlFile) {
+        File currentFile = new File(sourcesXmlFile);
+        while (currentFile != null && !new File(currentFile, "web/src/main/webResources/WEB-INF/web.xml").exists()) {
+            currentFile = currentFile.getParentFile();
+        }
+
+        if (currentFile == null) {
+            throw new AssertionError("Unable to find root geonetwork directory using '" + sourcesXmlFile + "' as a starting point");
+        }
+
+        return currentFile.getAbsolutePath() + "/";
+    }
 
     @Override
     public void destroy() {
@@ -124,21 +137,8 @@ public class GeonetWroModelFactory implements WroModelFactory {
         }
     }
 
-    static String findGeonetworkRootDirectory(String sourcesXmlFile) {
-        File currentFile = new File(sourcesXmlFile);
-        while (currentFile != null && !new File(currentFile, "web/src/main/webResources/WEB-INF/web.xml").exists()) {
-            currentFile = currentFile.getParentFile();
-        }
-
-        if (currentFile == null) {
-            throw new AssertionError("Unable to find root geonetwork directory using '" + sourcesXmlFile + "' as a starting point");
-        }
-
-        return currentFile.getAbsolutePath() + "/";
-    }
-
     private WroModel createModel(String parentSourcesXmlFile, InputStream sourcesXmlFile) throws ParserConfigurationException,
-            SAXException, IOException {
+        SAXException, IOException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(sourcesXmlFile);
@@ -210,16 +210,6 @@ public class GeonetWroModelFactory implements WroModelFactory {
         this._geonetworkRootDirectory = geonetworkRootDirectory;
     }
 
-    private static class IncludesStream {
-        final InputStream stream;
-        final String locationLoadedFrom;
-
-        private IncludesStream(InputStream stream, String locationLoadedFrom) {
-            this.stream = stream;
-            this.locationLoadedFrom = locationLoadedFrom;
-        }
-    }
-
     private Collection<IncludesStream> openIncludesStream(String parentSourcesXmlFile, String includeFile) throws IOException {
 
         if (includeFile.startsWith(CLASSPATH_PREFIX)) {
@@ -287,7 +277,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
         }
 
         throw new AssertionError("Unable to locate include xml file. \n\trelativePath: " + relativePath +
-                                 "\n\tinclude file: " + includeFile);
+            "\n\tinclude file: " + includeFile);
     }
 
     private String toRelativePath(String relativeToWithName) {
@@ -406,7 +396,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
         final Matcher matcher = PATH_REPLACEMENT_MATCHER.matcher(path);
 
         StringBuffer builder = new StringBuffer();
-        while(matcher.find()) {
+        while (matcher.find()) {
             final String group = matcher.group(1);
             try {
                 final Method method = dataDirectory.getClass().getMethod("get" + Character.toUpperCase(group.charAt(0)) + group.substring(1));
@@ -467,7 +457,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
                 if (cssGroups.contains(groupId)) {
                     throw new IllegalArgumentException("There are at least two css file with the name: " + name + ".  Each css file " +
-                                                       "must have unique names. Check " + file.getPath() + ".");
+                        "must have unique names. Check " + file.getPath() + ".");
                 }
 
                 cssGroups.add(groupId);
@@ -501,7 +491,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
     }
 
     private Map<String, Group> addJavascriptGroupsByRequireDependencies(final WroModel model, final ClosureRequireDependencyManager
-            dependencyManager, Group closureDepsGroup) {
+        dependencyManager, Group closureDepsGroup) {
         final Set<String> moduleIds = dependencyManager.getAllModuleIds();
         Map<String, Group> groupMap = new HashMap<String, Group>((int) (moduleIds.size() * 1.5));
 
@@ -520,7 +510,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
             }
 
             group.addResource(createResourceFrom(dependencyManager.getNode(moduleId)));
-            if(resources.size() > 0) {
+            if (resources.size() > 0) {
                 group.addResource(getTemplateResource(TemplatesUriLocator.URI_PREFIX_HEADER));
                 for (Resource resource : resources) {
                     group.addResource(resource);
@@ -537,7 +527,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
         Resource resource = new Resource();
         resource.setMinimize(dep.isMinimized);
         resource.setType(ResourceType.JS);
-        final Path path = IO.toPath(dep.path.replace("file:/D:","/D"));
+        final Path path = IO.toPath(dep.path.replace("file:/D:", "/D"));
         if (Files.exists(path)) {
             resource.setUri(path.toUri().toString());
         } else {
@@ -555,7 +545,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
     }
 
     private void addTemplateResourceFrom(List<Resource> group, ClosureRequireDependencyManager.Node dep) {
-        if(dep.path.toLowerCase().endsWith(TEMPLATE_PATTERN)) {
+        if (dep.path.toLowerCase().endsWith(TEMPLATE_PATTERN)) {
             Path dir;
             if (dep.path.startsWith("file:/")) {
                 try {
@@ -566,7 +556,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
             } else {
                 dir = Paths.get(dep.path).getParent();
             }
-            if(dir == null) {
+            if (dir == null) {
                 throw new RuntimeException("Directory folder is missing!!");
             }
             Path resolve = dir.resolve("partials");
@@ -655,7 +645,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
             }
             if (!new File(desc.finalPath).exists()) {
                 throw new AssertionError("Neither '" + desc.finalPath + "' nor '" + new File(desc.pathOnDisk,
-                        desc.relativePath) + "' exist");
+                    desc.relativePath) + "' exist");
             }
         } else {
             if (Files.exists(IO.toPath(desc.relativePath))) {
@@ -691,6 +681,16 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
     protected Properties getConfigProperties() {
         return null;
+    }
+
+    private static class IncludesStream {
+        final InputStream stream;
+        final String locationLoadedFrom;
+
+        private IncludesStream(InputStream stream, String locationLoadedFrom) {
+            this.stream = stream;
+            this.locationLoadedFrom = locationLoadedFrom;
+        }
     }
 
     private static class ResourceDesc {

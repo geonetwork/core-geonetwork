@@ -27,21 +27,23 @@
                 service="CSW" version="2.0.2"
                 resultType="results"
                 outputSchema="http://www.isotc211.org/2005/gmd">
-    <csw:Query typeNames="gmd:MD_Metadata">
-				<!-- xpaths must start with / (ie. they are measured from the root
-				     element) and can only contain '/', '[]', and ::node -->
-				<!-- note: if the xpath does not apply to the metadata record
-				     matched or there are no elements that match the xpath then 
-						 an empty element will be returned -->
-        <csw:ElementName>/gmd:MD_Metadata/gmd:fileIdentifier</csw:ElementName>
-        <csw:ElementName>/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title</csw:ElementName>
-        <csw:Constraint version="1.1.0">
-            <Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
-                <PropertyIsLike wildCard="%" singleChar="_" escapeChar="\">
-                    <PropertyName>any</PropertyName>
-                    <Literal>Victoria</Literal>
-                </PropertyIsLike>
-							</Filter>
-        </csw:Constraint>
-    </csw:Query>
+  <csw:Query typeNames="gmd:MD_Metadata">
+    <!-- xpaths must start with / (ie. they are measured from the root
+                 element) and can only contain '/', '[]', and ::node -->
+    <!-- note: if the xpath does not apply to the metadata record
+                 matched or there are no elements that match the xpath then
+                     an empty element will be returned -->
+    <csw:ElementName>/gmd:MD_Metadata/gmd:fileIdentifier</csw:ElementName>
+    <csw:ElementName>
+      /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title
+    </csw:ElementName>
+    <csw:Constraint version="1.1.0">
+      <Filter xmlns="http://www.opengis.net/ogc">
+        <PropertyIsLike wildCard="%" singleChar="_" escapeChar="\">
+          <PropertyName>any</PropertyName>
+          <Literal>Victoria</Literal>
+        </PropertyIsLike>
+      </Filter>
+    </csw:Constraint>
+  </csw:Query>
 </csw:GetRecords>

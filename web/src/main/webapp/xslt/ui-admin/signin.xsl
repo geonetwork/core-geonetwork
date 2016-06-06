@@ -22,10 +22,10 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
 
   <xsl:include href="../base-layout.xsl"/>
-  
+
   <xsl:template mode="content" match="/">
     <div data-ng-include="'{$uiResourcesPath}templates/signin.html'">
     </div>

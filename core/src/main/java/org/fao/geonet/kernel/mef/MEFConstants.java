@@ -24,17 +24,17 @@
 package org.fao.geonet.kernel.mef;
 
 /**
- * Main MEF constants. 
+ * Main MEF constants.
  */
 class MEFConstants {
 
-	static final String DIR_PUBLIC = "public/";
-	static final String DIR_PRIVATE = "private/";
-	static final String FILE_METADATA = "metadata.xml";
-	static final String FILE_INFO = "info.xml";
-	static final String VERSION = "1.1";
+    static final String DIR_PUBLIC = "public/";
+    static final String DIR_PRIVATE = "private/";
+    static final String FILE_METADATA = "metadata.xml";
+    static final String FILE_INFO = "info.xml";
+    static final String VERSION = "1.1";
     static final String MD_DIR = "metadata/";
-	static final String SCHEMA = "applschema/";
-	static final String FS = "/";
-	static final String FILE_METADATA_19139 = "metadata.iso19139.xml";
+    static final String SCHEMA = "applschema/";
+    static final String FS = "/";
+    static final String FILE_METADATA_19139 = "metadata.iso19139.xml";
 }

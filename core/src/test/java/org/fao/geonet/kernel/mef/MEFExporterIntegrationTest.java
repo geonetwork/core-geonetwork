@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.ZipUtil;
 import org.junit.Ignore;
@@ -50,7 +51,7 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
 
         Path path = MEFExporter.doExport(context, "da165110-88fd-11da-a88f-000d939bc5d8", MEFLib.Format.FULL, false, false, false);
 
-        try(FileSystem zipFs = ZipUtil.openZipFs(path)) {
+        try (FileSystem zipFs = ZipUtil.openZipFs(path)) {
             assertTrue(Files.exists(zipFs.getPath("metadata.xml")));
             assertTrue(Files.exists(zipFs.getPath("info.xml")));
             assertTrue(Files.exists(zipFs.getPath("private/basins.zip")));
@@ -59,7 +60,7 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         }
         path = MEFExporter.doExport(context, "0e1943d6-64e8-4430-827c-b465c3e9e55c", MEFLib.Format.FULL, false, false, false);
 
-        try(FileSystem zipFs = ZipUtil.openZipFs(path)) {
+        try (FileSystem zipFs = ZipUtil.openZipFs(path)) {
             assertTrue(Files.exists(zipFs.getPath("metadata.xml")));
             assertTrue(Files.exists(zipFs.getPath("info.xml")));
             assertFalse(Files.exists(zipFs.getPath("private")));

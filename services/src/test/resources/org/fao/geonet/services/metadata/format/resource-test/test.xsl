@@ -23,11 +23,11 @@
 
 <!DOCTYPE html>
 <html>
-<head lang="en">
+  <head lang="en">
     <meta charset="UTF-8">
     <title></title>
-</head>
-<body>
+  </head>
+  <body>
 
-</body>
+  </body>
 </html>

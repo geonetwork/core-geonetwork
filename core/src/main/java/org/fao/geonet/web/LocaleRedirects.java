@@ -25,6 +25,7 @@ package org.fao.geonet.web;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.overrides.ConfigurationOverrides;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
@@ -49,6 +50,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -56,8 +58,9 @@ import javax.servlet.http.HttpServletRequest;
 import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
 
 /**
- * Handles requests where there is no locale and a redirect to a correct (and localized) service is needed.  For example
- * index.html redirects to /srv/eng/home but that redirect should depend on the language of the users browser.
+ * Handles requests where there is no locale and a redirect to a correct (and localized) service is
+ * needed.  For example index.html redirects to /srv/eng/home but that redirect should depend on the
+ * language of the users browser.
  * <p/>
  * Created by Jesse on 12/4/13.
  */
@@ -143,7 +146,7 @@ public class LocaleRedirects {
                         headers.append('&');
                     }
                     headers.append(paramName);
-                    if (!value.isEmpty()){
+                    if (!value.isEmpty()) {
                         headers.append('=').append(value);
                     }
                 }

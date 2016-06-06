@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt"
-  xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:geonet="http://www.fao.org/geonetwork"
-  xmlns:fo="http://www.w3.org/1999/XSL/Format">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exslt="http://exslt.org/common"
+                xmlns:geonet="http://www.fao.org/geonetwork" xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                version="2.0"
+                exclude-result-prefixes="exslt">
 
 
   <!-- Some colors -->
@@ -35,7 +35,8 @@
   <xsl:template name="fop-master">
     <fo:layout-master-set>
       <fo:simple-page-master master-name="simpleA4" page-height="29.7cm" page-width="21cm"
-        margin-top=".2cm" margin-bottom=".2cm" margin-left=".6cm" margin-right=".2cm">
+                             margin-top=".2cm" margin-bottom=".2cm" margin-left=".6cm"
+                             margin-right=".2cm">
         <fo:region-body margin-top="0cm"/>
         <fo:region-after extent=".2cm"/>
       </fo:simple-page-master>
@@ -47,26 +48,29 @@
   </xsl:template>
 
   <!-- ======================================================
-        Page footer with node info, date and paging info 
+        Page footer with node info, date and paging info
   -->
   <xsl:template name="fop-footer">
     <!-- Footer with catalogue name, org name and pagination -->
     <fo:static-content flow-name="xsl-region-after">
       <fo:block text-align="end" font-family="{$font-family}" font-size="{$note-size}"
-        color="{$font-color}">
-        <xsl:value-of select="/root/gui/env/site/name"/> - <xsl:value-of
-          select="/root/gui/env/site/organization"/> | <!-- TODO : set date format according to locale -->
-        <xsl:value-of select="format-dateTime(current-dateTime(),$df)"/> | <fo:page-number/> /
-          <fo:page-number-citation ref-id="terminator"/>
+                color="{$font-color}">
+        <xsl:value-of select="/root/gui/env/site/name"/> -
+        <xsl:value-of
+          select="/root/gui/env/site/organization"/>
+        | <!-- TODO : set date format according to locale -->
+        <xsl:value-of select="format-dateTime(current-dateTime(),$df)"/> |
+        <fo:page-number/>
+        /
+        <fo:page-number-citation ref-id="terminator"/>
       </fo:block>
     </fo:static-content>
   </xsl:template>
 
 
-
   <!--
-		gui to show a complex element
-	-->
+    gui to show a complex element
+  -->
   <xsl:template name="complexElementFop">
     <xsl:param name="title"/>
     <xsl:param name="text"/>
@@ -77,11 +81,13 @@
       <xsl:choose>
 
         <!-- current node is an element -->
-        <xsl:when test="geonet:element/@ref"> _ <xsl:value-of select="geonet:element/@ref"/>
+        <xsl:when test="geonet:element/@ref">_
+          <xsl:value-of select="geonet:element/@ref"/>
         </xsl:when>
 
         <!-- current node is a new child: create anchor to parent -->
-        <xsl:when test="../geonet:element/@ref"> _ <xsl:value-of select="../geonet:element/@ref"/>
+        <xsl:when test="../geonet:element/@ref">_
+          <xsl:value-of select="../geonet:element/@ref"/>
         </xsl:when>
 
       </xsl:choose>
@@ -96,10 +102,11 @@
             <fo:table-column column-width="1cm"/>
             <fo:table-body>
               <fo:table-row border-top-style="solid" border-right-style="solid"
-                border-left-style="solid" border-top-color="{$background-color}"
-                border-right-color="{$background-color}" border-left-color="{$background-color}">
+                            border-left-style="solid" border-top-color="{$background-color}"
+                            border-right-color="{$background-color}"
+                            border-left-color="{$background-color}">
                 <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt"
-                  margin-top="4pt" number-columns-spanned="3">
+                               margin-top="4pt" number-columns-spanned="3">
                   <fo:block border-top="2pt solid black">
                     <fo:inline>
                       <xsl:text>::</xsl:text>
@@ -141,34 +148,34 @@
     <xsl:param name="block"/>
     <xsl:param name="label"/>
     <xsl:param name="color">blue</xsl:param>
-    
-      <fo:table-row >
-        <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt" margin-top="4pt"
-          number-columns-spanned="2">
-            <fo:block>
-              <xsl:if test="$block != ''">
-                <xsl:if test="$label!=''">
-                <fo:inline font-size="{$title-size}" font-weight="{$title-weight}"
-                  color="{$title-color}" margin="8pt">
-                  <xsl:value-of select="$label"/>
-                </fo:inline>
-              </xsl:if>
-              <fo:table width="100%" table-layout="fixed">
-                <fo:table-column column-width="5cm"/>
-                <fo:table-column column-width="15cm"/>
-                <fo:table-body>
-                  <xsl:copy-of select="$block"/>
-                </fo:table-body>
-              </fo:table>
-              </xsl:if>
-          </fo:block>
-        </fo:table-cell>
-      </fo:table-row>
+
+    <fo:table-row>
+      <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt" margin-top="4pt"
+                     number-columns-spanned="2">
+        <fo:block>
+          <xsl:if test="$block != ''">
+            <xsl:if test="$label!=''">
+              <fo:inline font-size="{$title-size}" font-weight="{$title-weight}"
+                         color="{$title-color}" margin="8pt">
+                <xsl:value-of select="$label"/>
+              </fo:inline>
+            </xsl:if>
+            <fo:table width="100%" table-layout="fixed">
+              <fo:table-column column-width="5cm"/>
+              <fo:table-column column-width="15cm"/>
+              <fo:table-body>
+                <xsl:copy-of select="$block"/>
+              </fo:table-body>
+            </fo:table>
+          </xsl:if>
+        </fo:block>
+      </fo:table-cell>
+    </fo:table-row>
   </xsl:template>
 
   <!-- ===========================================
-		metadata result to fop
-	-->
+    metadata result to fop
+  -->
   <xsl:template name="fo">
     <xsl:param name="res"/>
     <xsl:param name="server"/>
@@ -186,30 +193,33 @@
 
       <xsl:if test="$metadata/geonet:info/id != ''">
         <fo:table-row border-top-style="solid" border-right-style="solid" border-left-style="solid"
-          border-top-color="{$background-color}" border-right-color="{$background-color}"
-          border-left-color="{$background-color}"
-          page-break-inside="avoid">
+                      border-top-color="{$background-color}"
+                      border-right-color="{$background-color}"
+                      border-left-color="{$background-color}"
+                      page-break-inside="avoid">
           <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt" margin-top="4pt">
             <fo:block>
               <fo:external-graphic content-width="35pt">
-                <xsl:attribute name="src"> url('<xsl:value-of
-                    select="concat($server/protocol, '://', $server/host,':', $server/port, $gui/url, '/images/logos/', $source , '.png')"
-                  />')" </xsl:attribute>
+                <xsl:attribute name="src">url('<xsl:value-of
+                  select="concat($server/protocol, '://', $server/host,':', $server/port, $gui/url, '/images/logos/', $source , '.png')"
+                />')"
+                </xsl:attribute>
               </fo:external-graphic>
             </fo:block>
           </fo:table-cell>
           <fo:table-cell display-align="center">
             <fo:block font-weight="{$title-weight}" font-size="{$title-size}" color="{$title-color}"
-              padding-top="4pt" padding-bottom="4pt" padding-left="4pt" padding-right="4pt">
+                      padding-top="4pt" padding-bottom="4pt" padding-left="4pt" padding-right="4pt">
               <xsl:value-of select="$metadata/title"/>
             </fo:block>
           </fo:table-cell>
         </fo:table-row>
         <fo:table-row border-bottom-style="solid" border-right-style="solid"
-          border-left-style="solid" border-bottom-color="{$background-color}"
-          border-right-color="{$background-color}" border-left-color="{$background-color}"
-          keep-with-previous.within-page="always"
-          page-break-inside="avoid">
+                      border-left-style="solid" border-bottom-color="{$background-color}"
+                      border-right-color="{$background-color}"
+                      border-left-color="{$background-color}"
+                      keep-with-previous.within-page="always"
+                      page-break-inside="avoid">
           <fo:table-cell number-columns-spanned="2">
             <fo:block margin-left="2pt" margin-right="4pt" margin-top="4pt" margin-bottom="4pt">
               <fo:table>
@@ -241,7 +251,7 @@
                             <xsl:call-template name="info-rows">
                               <xsl:with-param name="label" select="$gui/strings/keywords"/>
                               <xsl:with-param name="value"
-                                select="string-join($metadata/keyword, ', ')"/>
+                                              select="string-join($metadata/keyword, ', ')"/>
                             </xsl:call-template>
 
 
@@ -332,26 +342,34 @@
       <xsl:with-param name="label" select="if ($title) then $gui/strings/resources else ''"/>
       <xsl:with-param name="content">
         <xsl:choose>
-          <xsl:when test="$remote=false()"><fo:basic-link text-decoration="underline" color="blue">
-							<xsl:choose>
-								<xsl:when test="/root/gui/config/client/@widget='true'">
-									<xsl:attribute name="external-destination"> url('<xsl:value-of
-										select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/apps/tabsearch/', /root/gui/config/client/@url,'?uuid=', $metadata/geonet:info/uuid , '&amp;hl=', /root/gui/language)"
-									/>') </xsl:attribute>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:attribute name="external-destination"> url('<xsl:value-of
-										select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/',/root/gui/language, '/' ,/root/gui/config/client/@url,'?uuid=', $metadata/geonet:info/uuid)"
-									/>') </xsl:attribute>
-								</xsl:otherwise>
-							</xsl:choose>
+          <xsl:when test="$remote=false()">
+            <fo:basic-link text-decoration="underline" color="blue">
+              <xsl:choose>
+                <xsl:when test="/root/gui/config/client/@widget='true'">
+                  <xsl:attribute name="external-destination">url('<xsl:value-of
+                    select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/apps/tabsearch/', /root/gui/config/client/@url,'?uuid=', $metadata/geonet:info/uuid , '&amp;hl=', /root/gui/language)"
+                  />')
+                  </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="external-destination">url('<xsl:value-of
+                    select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/',/root/gui/language, '/' ,/root/gui/config/client/@url,'?uuid=', $metadata/geonet:info/uuid)"
+                  />')
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
               <xsl:value-of select="$gui/strings/show"/>
-          </fo:basic-link> | <fo:basic-link text-decoration="underline" color="blue">
-            <xsl:attribute name="external-destination"> url('<xsl:value-of
-              select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/',/root/gui/language,'/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
-            />') </xsl:attribute>
-            <xsl:value-of select="$gui/strings/show"/> (XML)
-          </fo:basic-link> | </xsl:when>
+            </fo:basic-link>
+            |
+            <fo:basic-link text-decoration="underline" color="blue">
+              <xsl:attribute name="external-destination">url('<xsl:value-of
+                select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/',/root/gui/language,'/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
+              />')
+              </xsl:attribute>
+              <xsl:value-of select="$gui/strings/show"/> (XML)
+            </fo:basic-link>
+            |
+          </xsl:when>
           <xsl:otherwise>
             <fo:block text-align="left" font-style="italic">
               <xsl:text>Z3950: </xsl:text>
@@ -364,17 +382,24 @@
         <xsl:if test="$metadata/geonet:info/download='true'">
           <xsl:for-each select="$metadata/link[@type='download']">
             <fo:basic-link text-decoration="underline" color="blue">
-              <xsl:attribute name="external-destination"> url('<xsl:value-of select="."/>') </xsl:attribute>
+              <xsl:attribute name="external-destination">url('<xsl:value-of select="."/>')
+              </xsl:attribute>
               <xsl:value-of select="$gui/strings/download"/>
-            </fo:basic-link> | </xsl:for-each>
+            </fo:basic-link>
+            |
+          </xsl:for-each>
         </xsl:if>
 
         <xsl:if test="$metadata/geonet:info/dynamic='true'">
           <xsl:for-each select="$metadata/link[@type='application/vnd.ogc.wms_xml']">
             <fo:basic-link text-decoration="underline" color="blue">
-              <xsl:attribute name="external-destination"> url('<xsl:value-of select="@href"/>') </xsl:attribute>
+              <xsl:attribute name="external-destination">url('<xsl:value-of select="@href"/>')
+              </xsl:attribute>
               <xsl:value-of select="$gui/strings/visualizationService"/> (<xsl:value-of
-                select="@title"/>) </fo:basic-link> | </xsl:for-each>
+              select="@title"/>)
+            </fo:basic-link>
+            |
+          </xsl:for-each>
         </xsl:if>
 
       </xsl:with-param>
@@ -383,27 +408,29 @@
 
 
   <!--
-		main pdf banner
-	-->
+    main pdf banner
+  -->
   <xsl:template name="banner">
     <fo:table table-layout="fixed" width="100%">
       <fo:table-column column-width="20cm"/>
       <!--<fo:table-column column-width="4cm"/>-->
       <fo:table-body>
         <fo:table-row border-bottom-style="solid" border-bottom-color="{$header-color}"
-          border-bottom-width="1pt">
+                      border-bottom-width="1pt">
           <fo:table-cell display-align="center" background-color="{$background-color-banner}">
             <!-- FIXME : align all text on top and capitalize ? -->
             <fo:block font-family="{$font-family}" font-size="{$header-size}" color="{$title-color}"
-              font-weight="{$header-weight}" padding-top="4pt" padding-right="4pt"
-              padding-left="4pt">
+                      font-weight="{$header-weight}" padding-top="4pt" padding-right="4pt"
+                      padding-left="4pt">
               <fo:external-graphic padding-right="4pt">
-                <xsl:attribute name="src"> url('<xsl:value-of
-                    select="concat( /root/gui/env/server/protocol, '://', /root/gui/env/server/host,':', /root/gui/env/server/port, /root/gui/url,'/images/logos/', /root/gui/env/site/siteId,'.png')"
-                  />')" </xsl:attribute>
+                <xsl:attribute name="src">url('<xsl:value-of
+                  select="concat( /root/gui/env/server/protocol, '://', /root/gui/env/server/host,':', /root/gui/env/server/port, /root/gui/url,'/images/logos/', /root/gui/env/site/siteId,'.png')"
+                />')"
+                </xsl:attribute>
               </fo:external-graphic>
               <xsl:value-of select="upper-case(/root/gui/env/site/name)"/> (<xsl:value-of
-                select="upper-case(/root/gui/env/site/organization)"/>) </fo:block>
+              select="upper-case(/root/gui/env/site/organization)"/>)
+            </fo:block>
           </fo:table-cell>
           <!-- <fo:table-cell display-align="right" text-align="top"
             background-color="{$background-color-banner}">
@@ -423,17 +450,19 @@
     <xsl:param name="value"/>
     <xsl:param name="content"/>
     <fo:table-row border-bottom-style="solid" border-top-style="solid"
-      border-top-color="{$title-color}" border-top-width=".1pt" border-bottom-color="{$title-color}"
-      border-bottom-width=".1pt">
+                  border-top-color="{$title-color}" border-top-width=".1pt"
+                  border-bottom-color="{$title-color}"
+                  border-bottom-width=".1pt">
       <fo:table-cell background-color="{if ($label != '') then $background-color else ''}"
-        color="{$title-color}" padding-top="4pt" padding-bottom="4pt" padding-right="4pt"
-        padding-left="4pt">
+                     color="{$title-color}" padding-top="4pt" padding-bottom="4pt"
+                     padding-right="4pt"
+                     padding-left="4pt">
         <fo:block linefeed-treatment="preserve">
           <xsl:value-of select="$label"/>
         </fo:block>
       </fo:table-cell>
       <fo:table-cell color="{$font-color}" padding-top="4pt" padding-bottom="4pt"
-        padding-right="4pt" padding-left="4pt">
+                     padding-right="4pt" padding-left="4pt">
         <fo:block linefeed-treatment="preserve">
           <xsl:value-of select="$value"/>
           <xsl:copy-of select="$content"/>

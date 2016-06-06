@@ -37,6 +37,17 @@ public class StatusValueRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     StatusValueRepository _repo;
 
+    public static StatusValue newStatusValue(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+
+        StatusValue statusValue = new StatusValue();
+        statusValue.setName("name" + val);
+        statusValue.setDisplayOrder(val);
+        statusValue.setReserved(val % 2 == 0);
+
+        return statusValue;
+    }
+
     @Test
     public void testFindOne() {
         StatusValue status = newStatusValue();
@@ -64,17 +75,6 @@ public class StatusValueRepositoryTest extends AbstractSpringDataTest {
     private StatusValue newStatusValue() {
 
         return newStatusValue(_inc);
-    }
-
-    public static StatusValue newStatusValue(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-
-        StatusValue statusValue = new StatusValue();
-        statusValue.setName("name" + val);
-        statusValue.setDisplayOrder(val);
-        statusValue.setReserved(val % 2 == 0);
-
-        return statusValue;
     }
 
 }

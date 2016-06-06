@@ -28,29 +28,27 @@ import org.jdom.Element;
 //=============================================================================
 
 public class IdDoesNotExistException extends OaiPmhException {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8543869963297296662L;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8543869963297296662L;
 
-	public IdDoesNotExistException(String message)
-	{
-		this(message, null);
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public IdDoesNotExistException(String message) {
+        this(message, null);
+    }
 
-	public IdDoesNotExistException(String message, Element response)
-	{
-		super(ID_DOES_NOT_EXIST, message, response);
-	}
+    //---------------------------------------------------------------------------
+
+    public IdDoesNotExistException(String message, Element response) {
+        super(ID_DOES_NOT_EXIST, message, response);
+    }
 }
 
 //=============================================================================

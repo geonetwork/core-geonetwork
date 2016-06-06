@@ -202,6 +202,14 @@
         }
       });
 
+      $scope.$on('layerAddedFromContext', function(e,l) {
+        var md = l.get('md');
+        if(md) {
+          var linkGroup = md.getLinkGroup(l);
+          gnMap.feedLayerWithRelated(l,linkGroup);
+        }
+      });
+
       $scope.resultviewFns = {
         addMdLayerToMap: function (link, md) {
 
@@ -209,7 +217,12 @@
               link.name, link.url)) {
             return;
           }
-          gnMap.addWmsFromScratch(viewerMap, link.url, link.name, false, md);
+          gnMap.addWmsFromScratch(viewerMap, link.url, link.name, false, md).
+          then(function(layer) {
+            if(layer) {
+              gnMap.feedLayerWithRelated(layer, link.group);
+            }
+          });
       },
         addAllMdLayersToMap: function (layers, md) {
           angular.forEach(layers, function (layer) {

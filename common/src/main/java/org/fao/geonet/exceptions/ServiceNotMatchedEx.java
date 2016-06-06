@@ -26,20 +26,18 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class ServiceNotMatchedEx extends JeevesServerEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class ServiceNotMatchedEx extends JeevesServerEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public ServiceNotMatchedEx(String name)
-	{
-		super("Service not matched in list", name);
+    public ServiceNotMatchedEx(String name) {
+        super("Service not matched in list", name);
 
-		id = "service-not-matched";
-	}
+        id = "service-not-matched";
+    }
 }
 
 //=============================================================================

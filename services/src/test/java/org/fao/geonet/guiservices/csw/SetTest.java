@@ -23,10 +23,6 @@
 
 package org.fao.geonet.guiservices.csw;
 
-import static org.junit.Assert.*;
-
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.CswCapabilitiesInfo;
 import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
@@ -36,13 +32,13 @@ import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import jeeves.server.context.ServiceContext;
+
 import static org.fao.geonet.domain.Pair.read;
+import static org.junit.Assert.assertEquals;
 
 /**
- * Test Csw Config Set
- * User: Jesse
- * Date: 11/7/13
- * Time: 8:24 AM
+ * Test Csw Config Set User: Jesse Date: 11/7/13 Time: 8:24 AM
  */
 public class SetTest extends AbstractServiceIntegrationTest {
 
@@ -50,6 +46,7 @@ public class SetTest extends AbstractServiceIntegrationTest {
     CswCapabilitiesInfoFieldRepository _infoRepository;
     @Autowired
     SettingRepository _settingsRepository;
+
     @Test
     public void testExec() throws Exception {
         final ServiceContext context = createServiceContext();
@@ -59,19 +56,19 @@ public class SetTest extends AbstractServiceIntegrationTest {
         assertEquals(null, _settingsRepository.findOne(Settings.SYSTEM_CSW_CONTACT_ID).getValue());
 
         final Element params = createParams(read("csw.enable", "off"),
-                read("csw.contactId", "2"),
-                read("csw.title_eng", "en ti"),
-                read("csw.abstract_eng", "en ab"),
-                read("csw.fees_eng", "en fee"),
-                read("csw.accessConstraints_eng", "en acc"),
-                read("csw.title_fre", "fr ti"),
-                read("csw.abstract_fre", "fr ab"),
-                read("csw.fees_fre", "fr fee"),
-                read("csw.accessConstraints_fre", "fr acc"),
-                read("csw.title_ger", "ge ti"),
-                read("csw.abstract_ger", "ge ab"),
-                read("csw.fees_ger", "ge fee"),
-                read("csw.accessConstraints_ger", "ge acc"));
+            read("csw.contactId", "2"),
+            read("csw.title_eng", "en ti"),
+            read("csw.abstract_eng", "en ab"),
+            read("csw.fees_eng", "en fee"),
+            read("csw.accessConstraints_eng", "en acc"),
+            read("csw.title_fre", "fr ti"),
+            read("csw.abstract_fre", "fr ab"),
+            read("csw.fees_fre", "fr fee"),
+            read("csw.accessConstraints_fre", "fr acc"),
+            read("csw.title_ger", "ge ti"),
+            read("csw.abstract_ger", "ge ab"),
+            read("csw.fees_ger", "ge fee"),
+            read("csw.accessConstraints_ger", "ge acc"));
 
         final Element results = new Set().exec(params, context);
 

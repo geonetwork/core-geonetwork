@@ -26,6 +26,7 @@ package org.fao.geonet.services.statistics;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -43,28 +44,37 @@ import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.sql.DataSource;
 
 /**
- * Jeeves service to export a Database table (based on its given name) into the configured file format (currently, only CSV supported, full
- * fields dump for the given table)
- * 
+ * Jeeves service to export a Database table (based on its given name) into the configured file
+ * format (currently, only CSV supported, full fields dump for the given table)
+ *
  * @author nicolas ribot
  */
 public class TableExport extends NotInReadOnlyModeService {
-    /** constant for CSV file export */
+    /**
+     * constant for CSV file export
+     */
     public final static String CSV = "CSV";
 
-    /** the full path to the application directory */
+    /**
+     * the full path to the application directory
+     */
     private Path appPath;
     /**
      * the separator for CSV format fixme: add a string quotation parameter
      */
     private String csvSep = ",";
-    /** true to dump headers, false to dump only data */
+    /**
+     * true to dump headers, false to dump only data
+     */
     private boolean dumpHeader = true;
 
-    /** List of tables that can be exported **/
+    /**
+     * List of tables that can be exported
+     **/
 
     private List<String> allowedTablesToExport;
 
@@ -87,8 +97,10 @@ public class TableExport extends NotInReadOnlyModeService {
     // --- Service
     // ---
     // --------------------------------------------------------------------------
+
     /**
-     * Physically dumps the given table, writing it to the App tmp folder, returning the URL of the file to get.
+     * Physically dumps the given table, writing it to the App tmp folder, returning the URL of the
+     * file to get.
      */
     @Override
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
@@ -123,7 +135,7 @@ public class TableExport extends NotInReadOnlyModeService {
         try (Connection con = context.getBean(DataSource.class).getConnection();
              Statement stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
              ResultSet rs = stmt.executeQuery(query);
-             BufferedWriter out = Files.newBufferedWriter(tableDumpFile, Constants.CHARSET)){
+             BufferedWriter out = Files.newBufferedWriter(tableDumpFile, Constants.CHARSET)) {
             ResultSetMetaData rsMetaData = rs.getMetaData();
 
             if (this.dumpHeader) {

@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.EditLib;
@@ -38,43 +39,43 @@ import java.nio.file.Path;
  * For editing : removes a tag from a metadata. Access is restricted.
  */
 public class DeleteElement extends NotInReadOnlyModeService {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		UserSession session = context.getUserSession();
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        UserSession session = context.getUserSession();
 
-		String id      		= Util.getParam(params, Params.ID);
-		String[] ref     		= Util.getParam(params, Params.REF).split(",");
-		String parentRef	= Util.getParam(params, Params.PARENT);
+        String id = Util.getParam(params, Params.ID);
+        String[] ref = Util.getParam(params, Params.REF).split(",");
+        String parentRef = Util.getParam(params, Params.PARENT);
 
-		Element child = null;
-		for (int i = 0; i < ref.length; i++) {
-			child = new AjaxEditUtils(context).deleteElementEmbedded(session, id, ref[i], parentRef);
-		}
+        Element child = null;
+        for (int i = 0; i < ref.length; i++) {
+            child = new AjaxEditUtils(context).deleteElementEmbedded(session, id, ref[i], parentRef);
+        }
 
-		// -- The metadata-edit-embedded.xsl searches for a taged element to
-		// -- transform so tag the element for display
-		Element cloned;
-		if(child != null) {
+        // -- The metadata-edit-embedded.xsl searches for a taged element to
+        // -- transform so tag the element for display
+        Element cloned;
+        if (child != null) {
             cloned = (Element) child.clone();
             EditLib.tagForDisplay(cloned);
-		} else {
-		    cloned = new Element("result");
-		}
-		
-		return cloned;
-	}
+        } else {
+            cloned = new Element("result");
+        }
+
+        return cloned;
+    }
 }

@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.jdom.Element;
@@ -34,32 +35,32 @@ import org.jdom.Element;
 import java.nio.file.Path;
 
 /**
- * Returns the list of selected keywords 
+ * Returns the list of selected keywords
  */
 
 public class GetSelectedKeywords implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
 
-		// Get thesaurus manager
-		Element response = new Element(Jeeves.Elem.RESPONSE);
-		UserSession session = context.getUserSession();
-		KeywordsSearcher searcher = (KeywordsSearcher)session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);		
-		
-		// get the results
-		response.addContent(searcher.getSelectedKeywordsAsXml());
+        // Get thesaurus manager
+        Element response = new Element(Jeeves.Elem.RESPONSE);
+        UserSession session = context.getUserSession();
+        KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
 
-		return response;
-	}
+        // get the results
+        response.addContent(searcher.getSelectedKeywordsAsXml());
+
+        return response;
+    }
 }
 
 // =============================================================================

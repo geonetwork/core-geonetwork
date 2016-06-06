@@ -1,5 +1,5 @@
 <div class="gn-facet" data-ng-show="facetResults[facet].length > 1">
-  <h5 data-gn-collapse="{{collapsed}}">
+  <h5 data-gn-collapsible="collapsed">
     <i class="fa" data-ng-class="collapsed ? 'fa-angle-left' : ''"></i>
     <span data-translate="">{{facet}}</span>
   </h5>
@@ -16,7 +16,8 @@
     <button data-ng-click="toggle()"
             data-ng-if="facetResults[facet].length-initialMaxItems > 0"
             class="btn btn-link">
-      {{facetResults[facet].length-initialMaxItems}} {{ (facetResults[facet].length >= maxItems) ? ('more' | translate) : ('less' | translate) }}
+      {{facetResults[facet].length-initialMaxItems}} {{ (facetResults[facet].length >= maxItems) ?
+      ('more' | translate) : ('less' | translate) }}
     </button>
   </div>
 </div>

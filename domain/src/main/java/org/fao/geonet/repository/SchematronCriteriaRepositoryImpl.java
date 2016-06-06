@@ -34,6 +34,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,7 +48,8 @@ public class SchematronCriteriaRepositoryImpl {
     EntityManager _entityManager;
 
     /**
-     * Override method in CRUD repository because criteria need to be removed from Group in order to be deleted.
+     * Override method in CRUD repository because criteria need to be removed from Group in order to
+     * be deleted.
      *
      * @param id id of criteria to delete
      */
@@ -77,8 +79,10 @@ public class SchematronCriteriaRepositoryImpl {
         _entityManager.getEntityManagerFactory().getCache().evict(SchematronCriteria.class);
         _entityManager.getEntityManagerFactory().getCache().evict(SchematronCriteriaGroup.class);
     }
+
     /**
-     * Override method in CRUD repository because criteria need to be removed from Group in order to be deleted.
+     * Override method in CRUD repository because criteria need to be removed from Group in order to
+     * be deleted.
      *
      * @param criteria criteria to delete
      */
@@ -89,8 +93,10 @@ public class SchematronCriteriaRepositoryImpl {
         }
 
     }
+
     /**
-     * Override method in CRUD repository because criteria need to be removed from Group in order to be deleted.
+     * Override method in CRUD repository because criteria need to be removed from Group in order to
+     * be deleted.
      *
      * @param criteria criteria to delete
      */

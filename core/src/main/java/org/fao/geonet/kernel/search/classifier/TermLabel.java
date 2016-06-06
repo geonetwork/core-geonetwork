@@ -40,7 +40,7 @@ public class TermLabel extends AbstractTerm {
     }
 
     public void setIndexLabel(boolean indexLabel) {
-        setLanguageToIndex(indexLabel?langCode:null);
+        setLanguageToIndex(indexLabel ? langCode : null);
     }
 
     @Override

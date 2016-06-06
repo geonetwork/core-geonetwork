@@ -24,10 +24,13 @@
 package org.fao.geonet.services.user;
 
 import jeeves.constants.Jeeves;
+
 import org.fao.geonet.exceptions.UserNotFoundEx;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -41,34 +44,34 @@ import java.nio.file.Path;
  * Update the password of logged user.
  */
 public class PwUpdate extends NotInReadOnlyModeService {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		String password    = Util.getParam(params, Params.PASSWORD);
-		String newPassword = Util.getParam(params, Params.NEW_PASSWORD);
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        String password = Util.getParam(params, Params.PASSWORD);
+        String newPassword = Util.getParam(params, Params.NEW_PASSWORD);
 
-		UserSession session = context.getUserSession();
-		String      currentUserId  = session.getUserId();
+        UserSession session = context.getUserSession();
+        String currentUserId = session.getUserId();
 
-		if (currentUserId == null) throw new UserNotFoundEx(null);
+        if (currentUserId == null) throw new UserNotFoundEx(null);
 
-		int iUserId = Integer.parseInt(currentUserId);
+        int iUserId = Integer.parseInt(currentUserId);
         ApplicationContext appContext = context.getApplicationContext();
-		PasswordUtil.updatePasswordWithNew(true, password, newPassword, iUserId, appContext);
+        PasswordUtil.updatePasswordWithNew(true, password, newPassword, iUserId, appContext);
 
-		return new Element(Jeeves.Elem.RESPONSE);
-	}
+        return new Element(Jeeves.Elem.RESPONSE);
+    }
 }

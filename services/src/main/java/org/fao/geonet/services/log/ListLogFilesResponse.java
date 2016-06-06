@@ -36,6 +36,7 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import com.google.common.collect.Lists;
 
 /**
@@ -53,7 +54,7 @@ public class ListLogFilesResponse {
     }
 
     public ListLogFilesResponse(List<LogFileResponse> logFileList) throws TransformException, FactoryException {
-    	this.logFile.addAll(logFileList);
+        this.logFile.addAll(logFileList);
 
     }
 
@@ -66,7 +67,7 @@ public class ListLogFilesResponse {
         @XmlAttribute
         @JsonProperty("name")
         private String name;
-        
+
         public LogFileResponse() {
         }
 

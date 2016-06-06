@@ -34,6 +34,6 @@ import javax.annotation.Nonnull;
  * @author Jose García
  */
 public interface MetadataFileUploadRepository extends GeonetRepository<MetadataFileUpload, Integer>,
-        JpaSpecificationExecutor<MetadataFileUpload>, MetadataFileUploadRepositoryCustom {
+    JpaSpecificationExecutor<MetadataFileUpload>, MetadataFileUploadRepositoryCustom {
 
 }

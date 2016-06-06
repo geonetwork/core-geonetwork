@@ -26,7 +26,9 @@ package org.fao.geonet.kernel.harvest.harvester.webdav;
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import com.github.sardine.impl.SardineImpl;
+
 import jeeves.server.context.ServiceContext;
+
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.lib.Lib;
@@ -56,14 +58,31 @@ class WebDavRetriever implements RemoteRetriever {
     //---
     //--------------------------------------------------------------------------
 
+    static String calculateBaseURL(AtomicBoolean cancelMonitor, String url, List<DavResource> resources) throws IOException {
+        for (Iterator<DavResource> iterator = resources.iterator(); iterator.hasNext(); ) {
+            if (cancelMonitor.get()) {
+                return "";
+            }
+
+            DavResource next = iterator.next();
+            if (url.endsWith(next.getPath())) {
+                // this is the directory we just searched for so remove it and use it to calculate the base URL.
+                iterator.remove();
+
+                return url.substring(0, url.length() - next.getPath().length());
+            }
+        }
+        return url;
+    }
+
+    //---------------------------------------------------------------------------
+
     public void init(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params) {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
         this.params = params;
     }
-
-    //---------------------------------------------------------------------------
 
     public List<RemoteFile> retrieve() throws Exception {
 
@@ -75,7 +94,7 @@ class WebDavRetriever implements RemoteRetriever {
         } else {
             this.sardine = new SardineImpl(clientBuilder);
         }
-         files.clear();
+        files.clear();
 
         String url = params.url;
         if (!url.endsWith("/")) {
@@ -95,23 +114,6 @@ class WebDavRetriever implements RemoteRetriever {
             retrieveFile(url, resource);
         }
         return files;
-    }
-
-    static String calculateBaseURL(AtomicBoolean cancelMonitor, String url, List<DavResource> resources) throws IOException {
-        for (Iterator<DavResource> iterator = resources.iterator(); iterator.hasNext(); ) {
-            if (cancelMonitor.get()) {
-                return "";
-            }
-
-            DavResource next = iterator.next();
-            if (url.endsWith(next.getPath())) {
-                // this is the directory we just searched for so remove it and use it to calculate the base URL.
-                iterator.remove();
-
-                return url.substring(0, url.length() - next.getPath().length());
-            }
-        }
-        return url;
     }
 
     //---------------------------------------------------------------------------
@@ -140,7 +142,7 @@ class WebDavRetriever implements RemoteRetriever {
         }
 
         final List<DavResource> davResources = sardine.list(url, 1, false);
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("# " + davResources.size() + " webdav resources found in: " + url);
         }
 
@@ -159,34 +161,33 @@ class WebDavRetriever implements RemoteRetriever {
         if (davResource.isDirectory()) {
             // it is a directory
             if (params.recurse) {
-                if(log.isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
                     log.debug(path + " is a collection, processed recursively");
                 }
 
-                for (DavResource resource : sardine.list(baseURL+path)) {
+                for (DavResource resource : sardine.list(baseURL + path)) {
                     if (!resource.getHref().equals(davResource.getHref())) {
                         retrieveFile(baseURL, resource);
                     }
                 }
             } else {
-                if(log.isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
                     log.debug(path + " is a collection. Ignoring because recursion is disabled.");
                 }
             }
         } else {
             // it is a file
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug(path + " is not a collection");
             }
             final String name = davResource.getName();
             if (name.toLowerCase().endsWith(".xml")) {
-                if(log.isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
                     log.debug("found xml file ! " + name.toLowerCase());
                 }
                 files.add(new WebDavRemoteFile(sardine, baseURL, davResource));
-            }
-            else {
-                if(log.isDebugEnabled()) {
+            } else {
+                if (log.isDebugEnabled()) {
                     log.debug(name.toLowerCase() + " is not an xml file");
                 }
             }
@@ -197,7 +198,8 @@ class WebDavRetriever implements RemoteRetriever {
         if (added == 0) {
             if (log.isDebugEnabled()) log.debug("No xml files found in path : " + path);
         } else {
-            if (log.isDebugEnabled()) log.debug("Found " + added + " xml file(s) in path : " + path);
+            if (log.isDebugEnabled())
+                log.debug("Found " + added + " xml file(s) in path : " + path);
         }
     }
 

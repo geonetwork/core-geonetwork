@@ -38,36 +38,46 @@ public class ExampleBean {
         collectionProp.add("initial");
         collectionProp2.add("initial");
     }
+
     public String getBasicProp() {
         return basicProp;
     }
+
     public void setBasicProp(String basicProp) {
         this.basicProp = basicProp;
     }
+
     public String getBasicProp2() {
         return basicProp2;
     }
+
     public void setBasicProp2(String basicProp2) {
         this.basicProp2 = basicProp2;
     }
+
     public List<String> getCollectionProp() {
         return collectionProp;
     }
+
     public void setCollectionProp(List<String> collectionProp) {
         this.collectionProp = collectionProp;
     }
+
     public ExampleBean getSimpleRef() {
         return simpleRefOtherNameForTesting;
     }
+
     public void setSimpleRef(ExampleBean simpleRef) {
         this.simpleRefOtherNameForTesting = simpleRef;
     }
+
     public List<ExampleBean> getCollectionRef() {
         return collectionRef;
     }
+
     public void setCollectionRef(List<ExampleBean> collectionRef) {
         this.collectionRef = collectionRef;
     }
 
-    
+
 }

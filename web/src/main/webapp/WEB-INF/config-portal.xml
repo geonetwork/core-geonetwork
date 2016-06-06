@@ -24,112 +24,112 @@
   -->
 
 <geonet>
-	<services package="org.fao.geonet">
-  <!-- TODO: Review all - old services probably duplicated with other services in xml api -->
+  <services package="org.fao.geonet">
+    <!-- TODO: Review all - old services probably duplicated with other services in xml api -->
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Portal XML services -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Portal XML services -->
 
-		<service name="portal.search" xmlapi="true">
-			<class name=".services.main.Search">
-				<param name="maxSummaryKeys" value="10" />
-				<param name="maxHitsInSummary" value="1000" />
-			</class>
-	      <output sheet="portal-search.xsl" contentType="text/xml; charset=UTF-8"/>
-		</service>
+    <service name="portal.search" xmlapi="true">
+      <class name=".services.main.Search">
+        <param name="maxSummaryKeys" value="10"/>
+        <param name="maxHitsInSummary" value="1000"/>
+      </class>
+      <output sheet="portal-search.xsl" contentType="text/xml; charset=UTF-8"/>
+    </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.search.keywords" xmlapi="true">
-			<class name=".services.main.Search">
-				<param name="maxSummaryKeys" value="1000" />
-				<param name="maxHitsInSummary" value="10000" />
-			</class>
-			<output sheet="thesaurus/thesaurus-keywordlist.xsl" contentType="text/xml; charset=UTF-8"/>
-		</service>
+    <service name="portal.search.keywords" xmlapi="true">
+      <class name=".services.main.Search">
+        <param name="maxSummaryKeys" value="1000"/>
+        <param name="maxHitsInSummary" value="10000"/>
+      </class>
+      <output sheet="thesaurus/thesaurus-keywordlist.xsl" contentType="text/xml; charset=UTF-8"/>
+    </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.present" xmlapi="true">
-			<class name=".services.main.Result"/>
+    <service name="portal.present" xmlapi="true">
+      <class name=".services.main.Result"/>
 
-			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8"/>
-		</service>
+      <output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8"/>
+    </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.search.present" xmlapi="true">
-			<class name=".services.main.SearchResult">
-				<param name="maxSummaryKeys" value="10" />
-				<param name="maxHitsInSummary" value="1000" />
-				<param name="range" value="all" />
-			</class>
+    <service name="portal.search.present" xmlapi="true">
+      <class name=".services.main.SearchResult">
+        <param name="maxSummaryKeys" value="10"/>
+        <param name="maxHitsInSummary" value="1000"/>
+        <param name="range" value="all"/>
+      </class>
 
-			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8"/>
-		</service>
+      <output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8"/>
+    </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.get" xmlapi="true">
-			<class name=".services.metadata.Show"/>
+    <service name="portal.get" xmlapi="true">
+      <class name=".services.metadata.Show"/>
 
-			<output sheet="portal-get.xsl" contentType="text/xml; charset=UTF-8"/>
-		</service>
+      <output sheet="portal-get.xsl" contentType="text/xml; charset=UTF-8"/>
+    </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.full" xmlapi="true">
-			<class name=".services.main.Result"/>
+    <service name="portal.full" xmlapi="true">
+      <class name=".services.main.Result"/>
 
-			<output sheet="portal-full.xsl" contentType="text/xml; charset=UTF-8"/>
-		</service>
+      <output sheet="portal-full.xsl" contentType="text/xml; charset=UTF-8"/>
+    </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.latest.updated" xmlapi="true">
-			<output sheet="portal-latest-updated.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="latestUpdated"  class=".guiservices.metadata.GetLatestUpdated">
-					<param name="maxItems"           value="5" />
-					<param name="timeBetweenUpdates" value="10" />
-				</call>
-			</output>
-		</service>
+    <service name="portal.latest.updated" xmlapi="true">
+      <output sheet="portal-latest-updated.xsl" contentType="text/xml; charset=UTF-8">
+        <call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
+          <param name="maxItems" value="5"/>
+          <param name="timeBetweenUpdates" value="10"/>
+        </call>
+      </output>
+    </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.featured" xmlapi="true">
-			<class name=".guiservices.metadata.GetRandom">
-				<param name="maxItems"           value="1" />
-				<param name="timeBetweenUpdates" value="10" />
-			</class>
+    <service name="portal.featured" xmlapi="true">
+      <class name=".guiservices.metadata.GetRandom">
+        <param name="maxItems" value="1"/>
+        <param name="timeBetweenUpdates" value="10"/>
+      </class>
 
-			<output sheet="portal-featured.xsl" contentType="text/xml; charset=UTF-8"/>
-		</service>
+      <output sheet="portal-featured.xsl" contentType="text/xml; charset=UTF-8"/>
+    </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.categories" xmlapi="true">
-			<class name=".services.category.List"/>
+    <service name="portal.categories" xmlapi="true">
+      <class name=".services.category.List"/>
 
-			<output sheet="portal-categories.xsl" contentType="text/xml; charset=UTF-8"/>
-		</service>
+      <output sheet="portal-categories.xsl" contentType="text/xml; charset=UTF-8"/>
+    </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.sources" xmlapi="true">
-			<output sheet="portal-sources.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="sources"  class=".guiservices.util.Sources"/>
-			</output>
-		</service>
+    <service name="portal.sources" xmlapi="true">
+      <output sheet="portal-sources.xsl" contentType="text/xml; charset=UTF-8">
+        <call name="sources" class=".guiservices.util.Sources"/>
+      </output>
+    </service>
 
-		<service name="get.conversions.xsl">
+    <service name="get.conversions.xsl">
       <!-- TODO : Rename and uupdate Catalogue.js -->
-			<class name=".guiservices.util.GetImportXSLs" />
-		</service>
-		
-	</services>
+      <class name=".guiservices.util.GetImportXSLs"/>
+    </service>
+
+  </services>
 </geonet>
 

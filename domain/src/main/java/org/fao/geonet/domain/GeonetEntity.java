@@ -32,52 +32,19 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.annotation.Nonnull;
 import javax.persistence.Embeddable;
 
 /**
  * Contains common methods of all entities in Geonetwork.
  * <p/>
- * User: Jesse
- * Date: 9/10/13
- * Time: 4:33 PM
+ * User: Jesse Date: 9/10/13 Time: 4:33 PM
  */
 public class GeonetEntity {
 
     public static final String LABEL_EL_NAME = "label";
     public static final String RECORD_EL_NAME = "record";
-
-    /**
-     * Convert the entity to Xml.  The process is to find all getters and invoke the getters to get the value.  The xml
-     * tag is the name of the getter as per the Java bean conventions, and the data is the text.
-     * <p/>
-     * If the returned value of the getter is another GeonetEntity then the the entity is recursively encoded, if the returned
-     * value is a collection then the collection is encoded and many children of the tag.  Each child tag will have the singular
-     * form of the getter or if that cannot be determined they will have the same tagname.
-     *
-     * @return XML representing the entity.
-     */
-    @Nonnull
-    public final Element asXml() {
-        IdentityHashMap<Object, Void> alreadyEncoded = new IdentityHashMap<Object, Void>();
-
-        Element record = asXml(alreadyEncoded);
-
-        return record;
-    }
-
-    /**
-     * Subclasses can override this if there are properties that should not be called when constructing the XML representation.
-     * of this entity.
-     *
-     * The property should not have the get prefix.
-     */
-    protected Set<String> propertiesToExcludeFromXml() {
-        return Collections.emptySet();
-    }
-    protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
-        return asXml(this, alreadyEncoded, propertiesToExcludeFromXml());
-    }
 
     private static Element asXml(Object obj, IdentityHashMap<Object, Void> alreadyEncoded, Set<String> exclude) {
         alreadyEncoded.put(obj, null);
@@ -122,7 +89,7 @@ public class GeonetEntity {
         final Element element = new Element(descName.toLowerCase());
         if (rawData instanceof GeonetEntity) {
             if (!alreadyEncoded.containsKey(rawData)) {
-                final Element element1 = ((GeonetEntity)rawData).asXml(alreadyEncoded);
+                final Element element1 = ((GeonetEntity) rawData).asXml(alreadyEncoded);
                 final List list = element1.removeContent();
                 element.addContent(list);
             }
@@ -154,6 +121,41 @@ public class GeonetEntity {
             return descName.substring(0, descName.length() - 1);
         }
         return descName;
+    }
+
+    /**
+     * Convert the entity to Xml.  The process is to find all getters and invoke the getters to get
+     * the value.  The xml tag is the name of the getter as per the Java bean conventions, and the
+     * data is the text.
+     * <p/>
+     * If the returned value of the getter is another GeonetEntity then the the entity is
+     * recursively encoded, if the returned value is a collection then the collection is encoded and
+     * many children of the tag.  Each child tag will have the singular form of the getter or if
+     * that cannot be determined they will have the same tagname.
+     *
+     * @return XML representing the entity.
+     */
+    @Nonnull
+    public final Element asXml() {
+        IdentityHashMap<Object, Void> alreadyEncoded = new IdentityHashMap<Object, Void>();
+
+        Element record = asXml(alreadyEncoded);
+
+        return record;
+    }
+
+    /**
+     * Subclasses can override this if there are properties that should not be called when
+     * constructing the XML representation. of this entity.
+     *
+     * The property should not have the get prefix.
+     */
+    protected Set<String> propertiesToExcludeFromXml() {
+        return Collections.emptySet();
+    }
+
+    protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
+        return asXml(this, alreadyEncoded, propertiesToExcludeFromXml());
     }
 
 }

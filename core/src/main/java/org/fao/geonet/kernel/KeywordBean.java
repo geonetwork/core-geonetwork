@@ -34,64 +34,208 @@ import java.util.*;
 
 /**
  * TODO javadoc.
- *
  */
 public class KeywordBean {
-
-	private int id;
-	private String code;
-	private String coordEast="";
-	private String coordWest="";
-	private String coordSouth="";
-	private String coordNorth="";	
-	private String thesaurusKey;	
-	private boolean selected;
-    private String thesaurusTitle;
-	private String thesaurusDate;
-	private String downloadUrl;
-	private String keywordUrl;
 
     /**
      * A Hashmap of all the languages available in this keyword
      *
      * Parameters are:  Language, Label
      */
-	private final Map<String, String> values = new LinkedHashMap<String,String>();
-	private final Map<String, String> definitions = new LinkedHashMap<String,String>();
+    private final Map<String, String> values = new LinkedHashMap<String, String>();
+    private final Map<String, String> definitions = new LinkedHashMap<String, String>();
+    private int id;
+    private String code;
+    private String coordEast = "";
+    private String coordWest = "";
+    private String coordSouth = "";
+    private String coordNorth = "";
+    private String thesaurusKey;
+    private boolean selected;
+    private String thesaurusTitle;
+    private String thesaurusDate;
+    private String downloadUrl;
+    private String keywordUrl;
     private IsoLanguagesMapper isoLanguageMapper;
     private String defaultLang;
-    
+
     public KeywordBean(IsoLanguagesMapper isoLangMapper) {
         this.isoLanguageMapper = isoLangMapper;
     }
 
-	public KeywordBean setThesaurusInfo(Thesaurus thesaurus) {
-	    this.thesaurusKey = thesaurus.getKey();
-	    this.thesaurusDate = thesaurus.getDate();
-	    this.thesaurusTitle = thesaurus.getTitle();
-	    
-	    return this;
-	}
-	
+    /**
+     * Transforms a list of KeywordBean object into its iso19139 representation.
+     *
+     * <pre>
+     *  <gmd:MD_Keywords>
+     *  	<gmd:keyword>
+     *  		<gmx:Anchor xlink:href="link_to_keyword_generator">Keyword 1</gmx:Anchor>
+     *  	</gmd:keyword>
+     * 		<gmd:keyword>
+     *  		<gmx:Anchor xlink:href="link_to_keyword_generator">Keyword 2</gmx:Anchor>
+     *  	</gmd:keyword>
+     *  	<gmd:type>
+     *  		<gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
+     * codeListValue="TYPE"/>
+     *  	</gmd:type>
+     *  	<gmd:thesaurusName>
+     *  		<gmd:CI_Citation id="geonetwork.thesaurus.register.theme.bc44a748-f1a1-4775-9395-a4a6d8bb8df6">
+     *  			<gmd:title>
+     *  				<gco:CharacterString>THESAURUS NAME</gco:CharacterString>
+     *  			</gmd:title>
+     *  			<gmd:date gco:nilReason="unknown"/>
+     * 				<gmd:identifier>
+     *          <gmd:MD_Identifier>
+     * 						<gmd:code>
+     * 							<gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/metadata.show?uuid=bc44a748-f1a1-4775-9395-a4a6d8bb8df6">register.theme.bc44a748-f1a1-4775-9395-a4a6d8bb8df6</gmx:Anchor>
+     * 						</gmd:code>
+     *          </gmd:MD_Identifier>
+     * 				</gmd:identifier>
+     *  		</gmd:CI_Citation>
+     *  	</gmd:thesaurusName>
+     *  </gmd:MD_Keywords>
+     *  </pre>
+     *
+     * @return a complex iso19139 representation of the keyword
+     */
+    public static Element getComplexIso19139Elt(List<KeywordBean> kbList) {
+        Element root = new Element("MD_Keywords", Namespaces.GMD);
+
+        Element cs = new Element("CharacterString", Namespaces.GCO);
+        Element an = new Element("Anchor", Namespaces.GMX);
+
+        List<Element> keywords = new ArrayList<Element>();
+
+        Element type = null;
+        Element thesaurusName = null;
+
+        for (KeywordBean kb : kbList) {
+            Element keyword = new Element("keyword", Namespaces.GMD);
+            if (kb.getUriCode() != null && kb.getUriCode().length() != 0) {
+                an.setText(kb.getDefaultValue());
+                an.setAttribute("href", URIUtil.encodePath(kb.keywordUrl + kb.getUriCode()), Namespaces.XLINK);
+                keyword.addContent((Content) an.clone());
+            } else {
+                cs.setText(kb.getDefaultValue());
+                keyword.addContent((Content) cs.clone());
+            }
+            keywords.add((Element) keyword.detach());
+            if (type == null)
+                type = KeywordBean.createKeywordTypeElt(kb);
+            if (thesaurusName == null)
+                thesaurusName = KeywordBean.createThesaurusNameElt(kb);
+        }
+
+        // Add elements to the root MD_Keywords element.
+        root.addContent(keywords);
+        root.addContent(type);
+        root.addContent(thesaurusName);
+
+        return root;
+    }
+
+    /**
+     * Creates keyword type element.
+     */
+    private static Element createKeywordTypeElt(KeywordBean kb) {
+        Element type = new Element("type", Namespaces.GMD);
+        Element keywordTypeCode = new Element("MD_KeywordTypeCode", Namespaces.GMD);
+        keywordTypeCode.setAttribute("codeList", "http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode");
+        keywordTypeCode.setAttribute("codeListValue", kb.getType());
+        type.addContent(keywordTypeCode);
+
+        return type;
+    }
+
+    /**
+     * Create an identifier/MD_Identifier that describes the thesaurus
+     */
+    private static Element createIdentifier(String authority, String downloadUrl) {
+        Element result = new Element("identifier", Namespaces.GMD);
+        Element ident = new Element("MD_Identifier", Namespaces.GMD);
+        Element code = new Element("code", Namespaces.GMD);
+        Element gmxAnchor = new Element("Anchor", Namespaces.GMX).setText(authority);
+        gmxAnchor.setAttribute("href", downloadUrl, Namespaces.XLINK);
+
+        code.addContent(gmxAnchor);
+        ident.addContent(code);
+        result.addContent(ident);
+        return result;
+    }
+
+    /**
+     * Creates thesaurus name element.
+     */
+    private static Element createThesaurusNameElt(KeywordBean kb) {
+        Element thesaurusName = new Element("thesaurusName", Namespaces.GMD);
+        Element citation = new Element("CI_Citation", Namespaces.GMD);
+        Element title = new Element("title", Namespaces.GMD);
+        Element cs = new Element("CharacterString", Namespaces.GCO);
+        Element date = new Element("date", Namespaces.GMD);
+
+        cs.setText(kb.thesaurusTitle);
+
+        if (StringUtils.hasLength(kb.thesaurusDate)) {
+            Element ciDateEl = new Element("CI_Date", Namespaces.GMD);
+            Element ciDateDateEl = new Element("date", Namespaces.GMD);
+            Element ciDateDateGcoDateEl = new Element("Date", Namespaces.GCO);
+
+            ciDateDateGcoDateEl.setText(kb.thesaurusDate);
+
+            Element ciDateDatetypeEl = new Element("dateType", Namespaces.GMD);
+            Element ciDateDatetypeCodeEl = new Element("CI_DateTypeCode", Namespaces.GMD);
+            ciDateDatetypeCodeEl.setAttribute("codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode");
+            ciDateDatetypeCodeEl.setAttribute("codeListValue", "publication");
+
+            ciDateDatetypeEl.addContent(ciDateDatetypeCodeEl);
+            ciDateDateEl.addContent(ciDateDateGcoDateEl);
+            ciDateEl.addContent(0, ciDateDateEl);
+            ciDateEl.addContent(1, ciDateDatetypeEl);
+            date.addContent(ciDateEl);
+
+        } else {
+            date.setAttribute("nilReason", "unknown", Namespaces.GCO);
+        }
+
+
+        title.addContent((Content) cs.clone());
+        Element id = createIdentifier("geonetwork.thesaurus." + kb.thesaurusKey, kb.downloadUrl);
+
+        citation.addContent(0, title);
+        citation.addContent(1, date);
+        citation.addContent(2, id);
+        thesaurusName.addContent(citation);
+
+        return thesaurusName;
+    }
+
+    public KeywordBean setThesaurusInfo(Thesaurus thesaurus) {
+        this.thesaurusKey = thesaurus.getKey();
+        this.thesaurusDate = thesaurus.getDate();
+        this.thesaurusTitle = thesaurus.getTitle();
+
+        return this;
+    }
+
     public boolean isSelected() {
-		return selected;
-	}
+        return selected;
+    }
 
-	public KeywordBean setSelected(boolean selected) {
-		this.selected = selected;
+    public KeywordBean setSelected(boolean selected) {
+        this.selected = selected;
         return this;
-	}
+    }
 
-	public String getThesaurusKey() {
-		return thesaurusKey;
-	}
+    public String getThesaurusKey() {
+        return thesaurusKey;
+    }
 
-	public KeywordBean setThesaurusKey(String thesaurusKey) {
-		this.thesaurusKey = thesaurusKey;
+    public KeywordBean setThesaurusKey(String thesaurusKey) {
+        this.thesaurusKey = thesaurusKey;
         return this;
-	}
+    }
 
-	public String getThesaurusTitle() {
+    public String getThesaurusTitle() {
         return thesaurusTitle;
     }
 
@@ -107,23 +251,23 @@ public class KeywordBean {
         this.thesaurusDate = thesaurusDate;
     }
 
-    public KeywordBean setKeywordUrl(String keywordUrl) {
-        this.keywordUrl = keywordUrl;
-				return this;
-    }
-
     public String getKeywordUrl() {
         return keywordUrl;
     }
 
+    public KeywordBean setKeywordUrl(String keywordUrl) {
+        this.keywordUrl = keywordUrl;
+        return this;
+    }
+
     /**
-	 * Return default language.  The default language is determined when creating the bean.
-	 * In some cases the language is explicitly declared if not then it is the context language
-	 * if there is no context available it is Geonet.DEFAULT_LANGUAGE
-	 * 
-	 * @return the default language
-	 */
-	public String getDefaultLang() {
+     * Return default language.  The default language is determined when creating the bean. In some
+     * cases the language is explicitly declared if not then it is the context language if there is
+     * no context available it is Geonet.DEFAULT_LANGUAGE
+     *
+     * @return the default language
+     */
+    public String getDefaultLang() {
         return defaultLang;
     }
 
@@ -133,419 +277,266 @@ public class KeywordBean {
     }
 
     /**
-     * Get the "default" value. The default language is determined when creating the
-     * bean.  Since often keyword beans have a single language this will return the only value
-     * 
+     * Get the "default" value. The default language is determined when creating the bean.  Since
+     * often keyword beans have a single language this will return the only value
+     *
      * @return return default value
      */
-	public String getDefaultValue() {
-		return values.get(defaultLang);
-	}
+    public String getDefaultValue() {
+        return values.get(defaultLang);
+    }
 
-	/**
-	 * Get the preferred label for a given language code
-	 * 
-	 * @param langCode
-	 * @return preferredLabel
-	 */
+    /**
+     * Get the preferred label for a given language code
+     *
+     * @return preferredLabel
+     */
 
-	public String getPreferredLabel(String langCode) {
-		String preferredLabel = values.get(langCode);
+    public String getPreferredLabel(String langCode) {
+        String preferredLabel = values.get(langCode);
 
-		if (hasPreferredLabel(preferredLabel))
-		{
-			return preferredLabel;
-		} else {
-			throw new LabelNotFoundException(noPreferredLabelMessage(langCode));
-		}
-	}
+        if (hasPreferredLabel(preferredLabel)) {
+            return preferredLabel;
+        } else {
+            throw new LabelNotFoundException(noPreferredLabelMessage(langCode));
+        }
+    }
 
-	private String noPreferredLabelMessage(String langCode) {
-		return "Could not find preferred label for language code " + langCode + " for the keyword uri " + getUriCode();
-	}
+    private String noPreferredLabelMessage(String langCode) {
+        return "Could not find preferred label for language code " + langCode + " for the keyword uri " + getUriCode();
+    }
 
-	private boolean hasPreferredLabel(String preferredLabel) {
-		return preferredLabel != null && !preferredLabel.isEmpty();
-	}
+    private boolean hasPreferredLabel(String preferredLabel) {
+        return preferredLabel != null && !preferredLabel.isEmpty();
+    }
 
     /**
      * Return an <em>unmodifiable</em> map of values.  Key is the 3 letter code language
-     * 
+     *
      * @return all definitions
      */
-	public Map<String, String> getValues() {
+    public Map<String, String> getValues() {
         return Collections.unmodifiableMap(values);
     }
-	
+
     /**
      * Set a definition for the specified language
-     * 
+     *
      * @param value the new value
-     * @param lang the language to set, can be 2 or 3 letter language code
-     * 
+     * @param lang  the language to set, can be 2 or 3 letter language code
      * @return this keyword bean
      */
     public KeywordBean setValue(String value, String lang) {
-        if(defaultLang == null) {
+        if (defaultLang == null) {
             defaultLang = to3CharLang(lang);
         }
         values.put(to3CharLang(lang), value);
         return this;
     }
-	/**
-	 * Get the "default" definition. The default language is determined when creating the
-	 * bean.  Since often keyword beans have a single language this will return the only definition
-	 * 
-	 * @return return default definition
-	 */
-	public String getDefaultDefinition() {
-	    return definitions.get(defaultLang);
-	}
+
+    /**
+     * Get the "default" definition. The default language is determined when creating the bean.
+     * Since often keyword beans have a single language this will return the only definition
+     *
+     * @return return default definition
+     */
+    public String getDefaultDefinition() {
+        return definitions.get(defaultLang);
+    }
 
     /**
      * Return an <em>unmodifiable</em> map of definitions.  Key is the 3 letter code language
-     * 
+     *
      * @return all definitions
      */
     public Map<String, String> getDefinitions() {
         return Collections.unmodifiableMap(definitions);
     }
-    
+
     /**
      * Set a definition for the specified language
-     * 
+     *
      * @param definition the new definition
-     * @param lang the language to set
-     * 
+     * @param lang       the language to set
      * @return this keyword
      */
     public KeywordBean setDefinition(String definition, String lang) {
-        if(defaultLang == null) {
+        if (defaultLang == null) {
             defaultLang = to3CharLang(lang);
         }
         definitions.put(to3CharLang(lang), definition);
         return this;
     }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public KeywordBean setId(int id) {
-		this.id = id;
-		return this;
-	}
+    public KeywordBean setId(int id) {
+        this.id = id;
+        return this;
+    }
 
-	/**
-	 * Returns the URI of the keyword concept.
-	 */
-	public String getUriCode() {
-		return code;
-	}
+    /**
+     * Returns the URI of the keyword concept.
+     */
+    public String getUriCode() {
+        return code;
+    }
+
+    public KeywordBean setUriCode(String code) {
+        this.code = code;
+        return this;
+    }
 
     /**
      * TODO javadoc.
-     *
-     * @return
      */
-	public String getRelativeCode() {
-	    if(code == null) {
-	        return "";
-	    } else if (code.contains("#"))
-		    return code.split("#")[1];
-		else
-			return code;
-	}
+    public String getRelativeCode() {
+        if (code == null) {
+            return "";
+        } else if (code.contains("#"))
+            return code.split("#")[1];
+        else
+            return code;
+    }
+
+    /**
+     * Set the id/relative portion of the code
+     *
+     * @param newCode the new relative code
+     * @return this bean
+     */
+    public KeywordBean setRelativeCode(String newCode) {
+        this.code = getNameSpaceCode() + newCode;
+        return this;
+    }
 
     /**
      * TODO javadoc.
-     *
-     * @return
      */
-	public String getNameSpaceCode() {
-		if (code == null) {
-			return "#";
-		} else if (code.contains("#")) {
-			String[] parts = code.split("#",2);
-			return parts[0] + "#";
-		} else {
-			return "#";
-		}
-	}
+    public String getNameSpaceCode() {
+        if (code == null) {
+            return "#";
+        } else if (code.contains("#")) {
+            String[] parts = code.split("#", 2);
+            return parts[0] + "#";
+        } else {
+            return "#";
+        }
+    }
 
-	public KeywordBean setUriCode(String code) {
-		this.code = code;
-		return this;
-	}
+    private String asString(String s) {
+        return s == null ? "" : s;
+    }
 
-	private String asString(String s) {
-	    return s == null?"":s;
-	}
-
-	public String getCoordEast() {
-		return asString(coordEast);
-	}
-
+    public String getCoordEast() {
+        return asString(coordEast);
+    }
 
     public KeywordBean setCoordEast(String coordEast) {
-		this.coordEast = asString(coordEast);
-		return this;
-	}
+        this.coordEast = asString(coordEast);
+        return this;
+    }
 
-	public String getCoordNorth() {
-		return asString(coordNorth);
-	}
+    public String getCoordNorth() {
+        return asString(coordNorth);
+    }
 
-	public KeywordBean setCoordNorth(String coordNorth) {
-		this.coordNorth = asString(coordNorth);
-		return this;
-	}
+    public KeywordBean setCoordNorth(String coordNorth) {
+        this.coordNorth = asString(coordNorth);
+        return this;
+    }
 
-	public String getCoordWest() {
-		return asString(coordWest);
-	}
+    public String getCoordWest() {
+        return asString(coordWest);
+    }
 
-	public KeywordBean setCoordWest(String coordWest) {
-		this.coordWest = asString(coordWest);
-		return this;
-	}
+    public KeywordBean setCoordWest(String coordWest) {
+        this.coordWest = asString(coordWest);
+        return this;
+    }
 
-	public String getCoordSouth() {
-		return asString(coordSouth);
-	}
+    public String getCoordSouth() {
+        return asString(coordSouth);
+    }
 
-	public KeywordBean setCoordSouth(String coordSouth) {
-		this.coordSouth = asString(coordSouth);
-		return this;
-	}
+    public KeywordBean setCoordSouth(String coordSouth) {
+        this.coordSouth = asString(coordSouth);
+        return this;
+    }
 
     /**
      * TODO javadoc.
-     *
-     * @return
      */
-	public String getType() {
-		int tmpDotIndex = thesaurusKey.indexOf('.');
-		return thesaurusKey.substring(tmpDotIndex+1, thesaurusKey.indexOf(".",tmpDotIndex+1));
-	}
-	
-	public String getThesaurusType() {
-		return org.apache.commons.lang.StringUtils.substringBefore(thesaurusKey, ".");
-	}
-	
-	/**
-	 * Transforms a KeywordBean object into its iso19139 representation.
-	 * 
-	 * <pre>
-	 * 		<gmd:keyword xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="">
-	 *	  		<gmx:Anchor xlink:href="link_to_keyword_generator">A KEYWORD GENERATED BY XLINK SERVICE</gco:Anchor>
-	 *		</gmd:keyword>
-	 *  	<gmd:type>
-	 *  		<gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="TYPE"/>
-	 *  	</gmd:type>
-	 *  	<gmd:thesaurusName>
-	 *  		<gmd:CI_Citation>
-	 *  			<gmd:title>
-	 *  				<gco:CharacterString>THESAURUS NAME</gco:CharacterString>
-	 *  			</gmd:title>
-	 *  			<gmd:date gco:nilReason="unknown"/>
-	 *				<gmd:identifier>
-	 *          <gmd:MD_Identifier>
-	 *						<gmd:code>
-	 *							<gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/metadata.show?uuid=bc44a748-f1a1-4775-9395-a4a6d8bb8df6">register.theme.bc44a748-f1a1-4775-9395-a4a6d8bb8df6</gmx:Anchor>
-	 *						</gmd:code>
-	 *          </gmd:MD_Identifier>
-	 *				</gmd:identifier>
-	 *  		</gmd:CI_Citation>
-	 *  	</gmd:thesaurusName>
-	 * </pre>
-	 * 
-	 * @return an iso19139 representation of the keyword
-	 */
-	public Element getIso19139 () {
-		Element ele = new Element("MD_Keywords", Namespaces.GMD);
-		Element el = new Element("keyword", Namespaces.GMD);
-		Element an = new Element("Anchor", Namespaces.GMX);
-		Element cs = new Element("CharacterString", Namespaces.GCO);
-		if (getUriCode() != null && getUriCode().length() != 0) {
+    public String getType() {
+        int tmpDotIndex = thesaurusKey.indexOf('.');
+        return thesaurusKey.substring(tmpDotIndex + 1, thesaurusKey.indexOf(".", tmpDotIndex + 1));
+    }
+
+    public String getThesaurusType() {
+        return org.apache.commons.lang.StringUtils.substringBefore(thesaurusKey, ".");
+    }
+
+    /**
+     * Transforms a KeywordBean object into its iso19139 representation.
+     *
+     * <pre>
+     * 		<gmd:keyword xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+     * xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="">
+     * 	  		<gmx:Anchor xlink:href="link_to_keyword_generator">A KEYWORD GENERATED BY XLINK
+     * SERVICE</gco:Anchor>
+     * 		</gmd:keyword>
+     *  	<gmd:type>
+     *  		<gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
+     * codeListValue="TYPE"/>
+     *  	</gmd:type>
+     *  	<gmd:thesaurusName>
+     *  		<gmd:CI_Citation>
+     *  			<gmd:title>
+     *  				<gco:CharacterString>THESAURUS NAME</gco:CharacterString>
+     *  			</gmd:title>
+     *  			<gmd:date gco:nilReason="unknown"/>
+     * 				<gmd:identifier>
+     *          <gmd:MD_Identifier>
+     * 						<gmd:code>
+     * 							<gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/metadata.show?uuid=bc44a748-f1a1-4775-9395-a4a6d8bb8df6">register.theme.bc44a748-f1a1-4775-9395-a4a6d8bb8df6</gmx:Anchor>
+     * 						</gmd:code>
+     *          </gmd:MD_Identifier>
+     * 				</gmd:identifier>
+     *  		</gmd:CI_Citation>
+     *  	</gmd:thesaurusName>
+     * </pre>
+     *
+     * @return an iso19139 representation of the keyword
+     */
+    public Element getIso19139() {
+        Element ele = new Element("MD_Keywords", Namespaces.GMD);
+        Element el = new Element("keyword", Namespaces.GMD);
+        Element an = new Element("Anchor", Namespaces.GMX);
+        Element cs = new Element("CharacterString", Namespaces.GCO);
+        if (getUriCode() != null && getUriCode().length() != 0) {
             an.setText(getDefaultValue());
             an.setAttribute("href", URIUtil.encodePath(keywordUrl + getUriCode()), Namespaces.XLINK);
             el.addContent(an);
-		} else {
-			cs.setText(getDefaultValue());
-			el.addContent(cs);
-		}
-		
-		Element type = KeywordBean.createKeywordTypeElt(this);
-		
-		Element thesaurusName = KeywordBean.createThesaurusNameElt(this);
-
-		ele.addContent(el);
-		ele.addContent(type);
-		ele.addContent(thesaurusName);
-		  
-		return ele;
-	}
-
-	/**
-	 * Transforms a list of KeywordBean object into its iso19139 representation.
-	 *  
-	 *  <pre>
-	 *  <gmd:MD_Keywords>
-	 *  	<gmd:keyword>
-	 *  		<gmx:Anchor xlink:href="link_to_keyword_generator">Keyword 1</gmx:Anchor>
-	 *  	</gmd:keyword>
-	 * 		<gmd:keyword>
-	 *  		<gmx:Anchor xlink:href="link_to_keyword_generator">Keyword 2</gmx:Anchor>
-	 *  	</gmd:keyword>
-	 *  	<gmd:type>
-	 *  		<gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="TYPE"/>
-	 *  	</gmd:type>
-	 *  	<gmd:thesaurusName>
-	 *  		<gmd:CI_Citation id="geonetwork.thesaurus.register.theme.bc44a748-f1a1-4775-9395-a4a6d8bb8df6">
-	 *  			<gmd:title>
-	 *  				<gco:CharacterString>THESAURUS NAME</gco:CharacterString>
-	 *  			</gmd:title>
-	 *  			<gmd:date gco:nilReason="unknown"/>
-	 *				<gmd:identifier>
-	 *          <gmd:MD_Identifier>
-	 *						<gmd:code>
-	 *							<gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/metadata.show?uuid=bc44a748-f1a1-4775-9395-a4a6d8bb8df6">register.theme.bc44a748-f1a1-4775-9395-a4a6d8bb8df6</gmx:Anchor>
-	 *						</gmd:code>
-	 *          </gmd:MD_Identifier>
-	 *				</gmd:identifier>
-	 *  		</gmd:CI_Citation>
-	 *  	</gmd:thesaurusName>
-	 *  </gmd:MD_Keywords>
-	 *  </pre>
-	 *       
-	 *  
-	 * @param kbList
-	 * @return a complex iso19139 representation of the keyword
-	 */
-	public static Element getComplexIso19139Elt(List<KeywordBean> kbList) {
-		Element root = new Element("MD_Keywords", Namespaces.GMD);
-		
-		Element cs = new Element("CharacterString", Namespaces.GCO);
-		Element an = new Element("Anchor", Namespaces.GMX);
-		
-		List<Element> keywords = new ArrayList<Element>();
-		
-		Element type = null;
-		Element thesaurusName = null;
-		
-		for (KeywordBean kb : kbList) {
-			Element keyword = new Element("keyword", Namespaces.GMD);
-			if (kb.getUriCode() != null && kb.getUriCode().length() != 0) {
-                an.setText(kb.getDefaultValue());
-                an.setAttribute("href", URIUtil.encodePath(kb.keywordUrl+kb.getUriCode()), Namespaces.XLINK);
-                keyword.addContent((Content) an.clone());
-			} else {
-				cs.setText(kb.getDefaultValue());
-				keyword.addContent((Content) cs.clone());
-			}
-			keywords.add((Element) keyword.detach());
-			if (type == null)
-				type = KeywordBean.createKeywordTypeElt(kb);
-			if (thesaurusName == null)
-				thesaurusName = KeywordBean.createThesaurusNameElt(kb);
-		}
-		
-		// Add elements to the root MD_Keywords element.
-		root.addContent(keywords);
-		root.addContent(type);
-		root.addContent(thesaurusName);
-		
-		return root;
-	}
-	
-	/**
-	 * Creates keyword type element.
-	 * 
-	 * @param kb
-	 * @return
-	 */
-	private static Element createKeywordTypeElt(KeywordBean kb) {
-		Element type = new Element("type", Namespaces.GMD);
-		Element keywordTypeCode = new Element("MD_KeywordTypeCode", Namespaces.GMD);
-		keywordTypeCode.setAttribute("codeList", "http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode");
-		keywordTypeCode.setAttribute("codeListValue", kb.getType());
-		type.addContent(keywordTypeCode);
-		
-		return type;
-	}
-
-	/**
-	 * Create an identifier/MD_Identifier that describes the thesaurus
-	 * 
-	 * @return
-	 */
-	private static Element createIdentifier(String authority, String downloadUrl) {
-		Element result = new Element("identifier", Namespaces.GMD);
-		Element ident  = new Element("MD_Identifier", Namespaces.GMD);
-		Element code = new Element("code", Namespaces.GMD);
-		Element gmxAnchor = new Element("Anchor", Namespaces.GMX).setText(authority);
-		gmxAnchor.setAttribute("href", downloadUrl, Namespaces.XLINK);
-
-		code.addContent(gmxAnchor);
-		ident.addContent(code);
-		result.addContent(ident);
-		return result;
-	}
-
-	/**
-	 * Creates thesaurus name element.
-	 * 
-	 * @param kb
-	 * @return
-	 */
-	private static Element createThesaurusNameElt (KeywordBean kb) {
-		Element thesaurusName = new Element("thesaurusName", Namespaces.GMD);
-		Element citation = new Element("CI_Citation", Namespaces.GMD);
-		Element title = new Element("title", Namespaces.GMD);
-		Element cs = new Element("CharacterString", Namespaces.GCO);
-		Element date = new Element("date", Namespaces.GMD);
-
-        cs.setText(kb.thesaurusTitle);
-
-        if (StringUtils.hasLength(kb.thesaurusDate)) {
-            Element ciDateEl = new Element("CI_Date", Namespaces.GMD);
-            Element ciDateDateEl = new Element("date", Namespaces.GMD);
-            Element ciDateDateGcoDateEl = new Element("Date", Namespaces.GCO);
-
-            ciDateDateGcoDateEl.setText(kb.thesaurusDate);
-
-            Element ciDateDatetypeEl = new Element("dateType", Namespaces.GMD);
-            Element ciDateDatetypeCodeEl = new Element("CI_DateTypeCode", Namespaces.GMD);
-            ciDateDatetypeCodeEl.setAttribute("codeList","http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode");
-            ciDateDatetypeCodeEl.setAttribute("codeListValue", "publication");
-
-            ciDateDatetypeEl.addContent(ciDateDatetypeCodeEl);
-            ciDateDateEl.addContent(ciDateDateGcoDateEl);
-            ciDateEl.addContent(0, ciDateDateEl);
-            ciDateEl.addContent(1, ciDateDatetypeEl);
-            date.addContent(ciDateEl);
-
         } else {
-            date.setAttribute("nilReason", "unknown",Namespaces.GCO);
+            cs.setText(getDefaultValue());
+            el.addContent(cs);
         }
 
+        Element type = KeywordBean.createKeywordTypeElt(this);
 
-		title.addContent((Content) cs.clone());
-		Element id = createIdentifier("geonetwork.thesaurus."+kb.thesaurusKey,kb.downloadUrl);
+        Element thesaurusName = KeywordBean.createThesaurusNameElt(this);
 
-		citation.addContent(0,title);
-		citation.addContent(1,date);
-		citation.addContent(2,id);
-		thesaurusName.addContent(citation);
-		
-		return thesaurusName;
-	}
+        ele.addContent(el);
+        ele.addContent(type);
+        ele.addContent(thesaurusName);
 
-	/**
+        return ele;
+    }
+
+    /**
      * Create a xml node for the current Keyword
-     *
-     * @return
      */
     public Element toElement(String defaultLang, String... langs) {
         defaultLang = to3CharLang(defaultLang);
@@ -557,7 +548,7 @@ public class KeywordBean {
         }
         TreeSet<String> languages = new TreeSet<String>(new PrioritizedLangComparator(defaultLang, prioritizedList));
 
-        for(String l : values.keySet()) {
+        for (String l : values.keySet()) {
             l = to3CharLang(l);
             languages.add(l.toLowerCase());
         }
@@ -581,7 +572,7 @@ public class KeywordBean {
         elKeyword.addContent(elCode);
 
         for (String language : languages) {
-            if(!prioritizedList.isEmpty() && ! prioritizedList.contains(language)) {
+            if (!prioritizedList.isEmpty() && !prioritizedList.contains(language)) {
                 continue;
             }
 
@@ -605,7 +596,7 @@ public class KeywordBean {
 
         // Geo attribute
         if (this.getCoordEast() != null && this.getCoordWest() != null
-                && this.getCoordSouth() != null && this.getCoordNorth() != null) {
+            && this.getCoordSouth() != null && this.getCoordNorth() != null) {
             Element elBbox = new Element("geo");
             Element elEast = new Element("east");
             elEast.addContent(this.getCoordEast());
@@ -635,9 +626,8 @@ public class KeywordBean {
 
     public KeywordBean setDownloadUrl(String downloadUrl) {
         this.downloadUrl = downloadUrl;
-				return this;
+        return this;
     }
-
 
     private String to3CharLang(String lang) {
         return getIsoLanguageMapper().iso639_1_to_iso639_2(lang.toLowerCase(), lang.toLowerCase());
@@ -649,35 +639,22 @@ public class KeywordBean {
 
     /**
      * Set the namespace portion of the code
-     * 
+     *
      * @param namespace the new namespace
-     * 
      * @return this bean
      */
     public KeywordBean setNamespaceCode(String namespace) {
         if (namespace.endsWith("#")) {
             this.code = namespace + getRelativeCode();
         } else {
-            this.code = namespace+"#"+getRelativeCode();
+            this.code = namespace + "#" + getRelativeCode();
         }
-        return this;
-    }
-    
-    /**
-     * Set the id/relative portion of the code
-     * 
-     * @param newCode the new relative code
-     * 
-     * @return this bean
-     */
-    public KeywordBean setRelativeCode(String newCode) {
-        this.code = getNameSpaceCode()+newCode;
         return this;
     }
 
     /**
      * Remove the value with the provided language from this keyword
-     * 
+     *
      * @param lang language of value to remove
      * @return this
      */
@@ -688,7 +665,7 @@ public class KeywordBean {
 
     /**
      * Remove the definition with the provided language from this keyword
-     * 
+     *
      * @param lang language of definition to remove
      * @return this
      */
@@ -696,9 +673,9 @@ public class KeywordBean {
         definitions.remove(lang);
         return this;
     }
-    
+
     @Override
     public String toString() {
-        return getUriCode()+" : "+getDefaultValue();
+        return getUriCode() + " : " + getDefaultValue();
     }
 }

@@ -22,10 +22,10 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:saxon="http://saxon.sf.net/"
+                version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
@@ -48,7 +48,9 @@
             <xsl:with-param name="in" select="concat('/../', $displayIfRecord)"/>
           </saxon:call-template>
         </xsl:when>
-        <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
 
@@ -60,7 +62,9 @@
             <xsl:with-param name="in" select="concat('/', $displayIfServiceInfo)"/>
           </saxon:call-template>
         </xsl:when>
-        <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
 

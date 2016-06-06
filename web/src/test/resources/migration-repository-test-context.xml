@@ -22,60 +22,61 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-       ">
-    <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/>
-    <bean id="geonetworkAuthenticationProvider" class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider"/>
-    <bean id="geonetworkEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
-    <bean id="dataStore" class="org.geotools.data.memory.MemoryDataStore"/>
-    <bean id="facets" class="org.fao.geonet.kernel.search.facet.Facets">
-      <constructor-arg index="0">
-        <list></list>
-      </constructor-arg>
-    </bean>
-    <bean id="summaryTypes" class="org.fao.geonet.kernel.search.facet.SummaryTypes">
-      <constructor-arg index="0">
-        <list></list>
-      </constructor-arg>
-    </bean>
-    <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager">
-    </bean>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+  <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/>
+  <bean id="geonetworkAuthenticationProvider"
+        class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider"/>
+  <bean id="geonetworkEncoder"
+        class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
+  <bean id="dataStore" class="org.geotools.data.memory.MemoryDataStore"/>
+  <bean id="facets" class="org.fao.geonet.kernel.search.facet.Facets">
+    <constructor-arg index="0">
+      <list></list>
+    </constructor-arg>
+  </bean>
+  <bean id="summaryTypes" class="org.fao.geonet.kernel.search.facet.SummaryTypes">
+    <constructor-arg index="0">
+      <list></list>
+    </constructor-arg>
+  </bean>
+  <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager">
+  </bean>
 
-    <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.MemoryDirectoryFactory" lazy-init="true"/>
-    <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext">
-        <property name="testClass" value="org.fao.geonet.DatabaseMigrationTest" />
-    </bean>
+  <bean id="luceneDirectoryFactory"
+        class="org.fao.geonet.kernel.search.index.MemoryDirectoryFactory" lazy-init="true"/>
+  <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext">
+    <property name="testClass" value="org.fao.geonet.DatabaseMigrationTest"/>
+  </bean>
 
-    <bean id="systemInfo" class="org.fao.geonet.SystemInfo" factory-method="createForTesting">
-        <constructor-arg value="development" />
-    </bean>
+  <bean id="systemInfo" class="org.fao.geonet.SystemInfo" factory-method="createForTesting">
+    <constructor-arg value="development"/>
+  </bean>
 
-    <bean id="databaseMigrationPostProcessor" class="org.fao.geonet.DatabaseMigration">
-        <property name="migrationLoader">
-            <bean class="org.fao.geonet.DatabaseMigrationTest$MigrationConfigLoader" />
-        </property>
-    </bean>
+  <bean id="databaseMigrationPostProcessor" class="org.fao.geonet.DatabaseMigration">
+    <property name="migrationLoader">
+      <bean class="org.fao.geonet.DatabaseMigrationTest$MigrationConfigLoader"/>
+    </property>
+  </bean>
 
-    <!--<jdbc:embedded-database type="H2" id="jdbcDataSource" />-->
-    <bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactoryBean">
-        <property name="databaseType" value="H2"/>
-        <property name="databaseConfigurer">
-            <bean class="org.fao.geonet.GeonetworkH2TestEmbeddedDatabaseConfigurer">
-                <!--<property name="compatilityMode" value="MySQL"/>-->
-                <!--<property name="compatilityMode" value="Oracle"/>-->
-                <!--<property name="compatilityMode" value="DB2"/>-->
-                <!--<property name="compatilityMode" value="MSSQLServer"/>-->
-                <!--<property name="compatilityMode" value="PostgreSQL"/>-->
-                <property name="databasePathLocator" ref="databasePathLocator"/>
-                <property name="username" value="admin"/>
-                <property name="password" value="gnos"/>
-            </bean>
-        </property>
-    </bean>
+  <!--<jdbc:embedded-database type="H2" id="jdbcDataSource" />-->
+  <bean id="jdbcDataSource"
+        class="org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactoryBean">
+    <property name="databaseType" value="H2"/>
+    <property name="databaseConfigurer">
+      <bean class="org.fao.geonet.GeonetworkH2TestEmbeddedDatabaseConfigurer">
+        <!--<property name="compatilityMode" value="MySQL"/>-->
+        <!--<property name="compatilityMode" value="Oracle"/>-->
+        <!--<property name="compatilityMode" value="DB2"/>-->
+        <!--<property name="compatilityMode" value="MSSQLServer"/>-->
+        <!--<property name="compatilityMode" value="PostgreSQL"/>-->
+        <property name="databasePathLocator" ref="databasePathLocator"/>
+        <property name="username" value="admin"/>
+        <property name="password" value="gnos"/>
+      </bean>
+    </property>
+  </bean>
 
-    <bean id="databasePathLocator" class="org.fao.geonet.DatabaseMigrationTest$DatabasePathLocator"/>
+  <bean id="databasePathLocator" class="org.fao.geonet.DatabaseMigrationTest$DatabasePathLocator"/>
 </beans>

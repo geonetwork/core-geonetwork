@@ -28,6 +28,7 @@ import org.fao.geonet.domain.MetadataCategory_;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collection;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;

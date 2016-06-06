@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <strings>
-	<cannotGet>No es poden obtenir els indicadors de funció (tooltips) des del servidor</cannotGet>
-	<error>Error</error>
+  <cannotGet>No es poden obtenir els indicadors de funció (tooltips) des del servidor</cannotGet>
+  <error>Error</error>
 </strings>

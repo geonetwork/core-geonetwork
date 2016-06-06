@@ -30,44 +30,41 @@ import org.springframework.context.ApplicationContext;
 
 //=============================================================================
 
-/** Z3950 server
-  */
+/**
+ * Z3950 server
+ */
 
-public class Server
-{
-	private static Z3950Listener _listener;
+public class Server {
+    private static Z3950Listener _listener;
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	/** initializes the server
-	  */
-	public static void init(String port, ApplicationContext app_context)
-	{
-		try
-		{
-			//--- normal processing
+    /**
+     * initializes the server
+     */
+    public static void init(String port, ApplicationContext app_context) {
+        try {
+            //--- normal processing
 
-			_listener  = (Z3950Listener)app_context.getBean("Z3950Listener", Z3950Listener.class);
-			_listener.setPort(Integer.parseInt(port));
-			_listener.start();
-		}
-		catch (Exception e)
-		{
-			//--- Z39.50 must not stop Geonetwork starting even if there are problems
-			Log.warning(Geonet.Z3950_SERVER, "Cannot start Z39.50 server : "+ e.getMessage());
-			e.printStackTrace();
-		}
-	}
+            _listener = (Z3950Listener) app_context.getBean("Z3950Listener", Z3950Listener.class);
+            _listener.setPort(Integer.parseInt(port));
+            _listener.start();
+        } catch (Exception e) {
+            //--- Z39.50 must not stop Geonetwork starting even if there are problems
+            Log.warning(Geonet.Z3950_SERVER, "Cannot start Z39.50 server : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	/** ends the server
-	  */
-	public static void end()
-	{
-		if (_listener != null)
-			_listener.shutdown(0); // shutdown type is not used in current implementation
-	}
+    /**
+     * ends the server
+     */
+    public static void end() {
+        if (_listener != null)
+            _listener.shutdown(0); // shutdown type is not used in current implementation
+    }
 
 }
 

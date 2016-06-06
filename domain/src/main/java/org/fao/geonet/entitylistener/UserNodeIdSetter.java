@@ -32,9 +32,7 @@ import org.springframework.context.ApplicationContext;
 /**
  * Obtains the current node id from the application context and sets it on the user object.
  *
- * User: Jesse
- * Date: 11/26/13
- * Time: 12:17 PM
+ * User: Jesse Date: 11/26/13 Time: 12:17 PM
  */
 public class UserNodeIdSetter implements GeonetworkEntityListener<User> {
     @Autowired

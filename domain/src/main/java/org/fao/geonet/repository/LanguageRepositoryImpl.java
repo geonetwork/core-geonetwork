@@ -32,13 +32,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import java.util.List;
 
 /**
- * Implement custom repository methods in LanguageRepositoryCustom
- * User: Jesse
- * Date: 8/30/13
- * Time: 8:22 AM
+ * Implement custom repository methods in LanguageRepositoryCustom User: Jesse Date: 8/30/13 Time:
+ * 8:22 AM
  */
 public class LanguageRepositoryImpl implements LanguageRepositoryCustom {
     @PersistenceContext

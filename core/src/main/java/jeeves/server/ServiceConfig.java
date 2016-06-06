@@ -24,6 +24,7 @@
 package jeeves.server;
 
 import jeeves.constants.ConfigFile;
+
 import org.jdom.Element;
 
 import java.util.Hashtable;
@@ -31,102 +32,93 @@ import java.util.List;
 
 //=============================================================================
 
-public class ServiceConfig
-{
-	private Hashtable<String, String> values   = new Hashtable<String, String>();
-	private Hashtable<String, Element> elements = new Hashtable<String, Element>();
+public class ServiceConfig {
+    private Hashtable<String, String> values = new Hashtable<String, String>();
+    private Hashtable<String, Element> elements = new Hashtable<String, Element>();
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public ServiceConfig() {}
+    public ServiceConfig() {
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public ServiceConfig(List<Element> params)
-	{
-		for(int i=0; i<params.size(); i++)
-		{
-			Element param = params.get(i);
+    public ServiceConfig(List<Element> params) {
+        for (int i = 0; i < params.size(); i++) {
+            Element param = params.get(i);
 
-			String name    = param.getAttributeValue(ConfigFile.Param.Attr.NAME);
-			String value   = param.getAttributeValue(ConfigFile.Param.Attr.VALUE);
+            String name = param.getAttributeValue(ConfigFile.Param.Attr.NAME);
+            String value = param.getAttributeValue(ConfigFile.Param.Attr.VALUE);
 
-			if (name == null)
-				throw new IllegalArgumentException("Missing 'name' attrib in parameter");
+            if (name == null)
+                throw new IllegalArgumentException("Missing 'name' attrib in parameter");
 
-			if (value != null) values.put(name, value);
-			elements.put(name, param);
-		}
-	}
+            if (value != null) values.put(name, value);
+            elements.put(name, param);
+        }
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-	public String getValue(String name)
-	{
-		return values.get(name);
-	}
+    public String getValue(String name) {
+        return values.get(name);
+    }
 
-	public void setValue(String name, String value)
-	{
-		values.put(name, value);
-	}
-	
-	//--------------------------------------------------------------------------
+    public void setValue(String name, String value) {
+        values.put(name, value);
+    }
 
-	public String getValue(String name, String def)
-	{
-		String value = getValue(name);
+    //--------------------------------------------------------------------------
 
-		if (value == null)
-			value = def;
+    public String getValue(String name, String def) {
+        String value = getValue(name);
 
-		return value;
-	}
+        if (value == null)
+            value = def;
 
-	//--------------------------------------------------------------------------
+        return value;
+    }
 
-	public String getMandatoryValue(String name)
-	{
-		String value = getValue(name);
+    //--------------------------------------------------------------------------
 
-		if (value == null)
-			throw new IllegalArgumentException("Missing '"+name+"' parameter");
+    public String getMandatoryValue(String name) {
+        String value = getValue(name);
 
-		return value;
-	}
+        if (value == null)
+            throw new IllegalArgumentException("Missing '" + name + "' parameter");
 
-	//--------------------------------------------------------------------------
+        return value;
+    }
 
-	public List<Element> getChildren(String paramName)
-	{
-		return getChildren(paramName, null);
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public List<Element> getChildren(String paramName) {
+        return getChildren(paramName, null);
+    }
 
-	@SuppressWarnings("unchecked")
-	public List<Element> getChildren(String paramName, String elemName)
-	{
-		Element elem = elements.get(paramName);
+    //--------------------------------------------------------------------------
 
-		if (elem == null)
-			return null;
-		else
-		{
-			if (elemName == null)
-				return ((List<Element>) elem.getChildren());
-			else
-				return  ((List<Element>) elem.getChildren(elemName));
-		}
-	}
+    @SuppressWarnings("unchecked")
+    public List<Element> getChildren(String paramName, String elemName) {
+        Element elem = elements.get(paramName);
+
+        if (elem == null)
+            return null;
+        else {
+            if (elemName == null)
+                return ((List<Element>) elem.getChildren());
+            else
+                return ((List<Element>) elem.getChildren(elemName));
+        }
+    }
 }
 
 //=============================================================================

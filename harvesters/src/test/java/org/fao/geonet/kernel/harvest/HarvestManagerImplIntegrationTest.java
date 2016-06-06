@@ -24,7 +24,9 @@
 package org.fao.geonet.kernel.harvest;
 
 import static org.junit.Assert.*;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Metadata;
@@ -38,15 +40,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Test the harvest manager.
  *
- * User: Jesse
- * Date: 10/24/13
- * Time: 2:27 PM
+ * User: Jesse Date: 10/24/13 Time: 2:27 PM
  */
 public class HarvestManagerImplIntegrationTest extends AbstractHarvesterServiceIntegrationTest {
     @Autowired
@@ -110,7 +111,7 @@ public class HarvestManagerImplIntegrationTest extends AbstractHarvesterServiceI
 
     private void addHarvestHistory(String harvesterUUID) {
         final HarvestHistory harvestHistory = new HarvestHistory().setDeleted(false).setElapsedTime(1234).setHarvesterName("name")
-                .setHarvesterType("csw").setHarvesterUuid(harvesterUUID);
+            .setHarvesterType("csw").setHarvesterUuid(harvesterUUID);
 
         _harvestHistoryRepository.save(harvestHistory);
 

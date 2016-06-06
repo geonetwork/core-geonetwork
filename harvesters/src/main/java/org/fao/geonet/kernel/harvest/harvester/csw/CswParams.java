@@ -39,78 +39,99 @@ import java.util.List;
  *
  */
 public class CswParams extends AbstractParams {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public CswParams(DataManager dm) {
-		super(dm);
-	}
+    public String capabUrl;
+    public String icon;
+    public String outputSchema;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Other API methods
+    //---
+    //---------------------------------------------------------------------------
+
+    //public Iterable<Element> getSearchElements() { return eltSearches; }
+    public boolean rejectDuplicateResource;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    public String queryScope;
+    public Integer hopCount;
+    /**
+     * The filter is a process (see schema/process folder) which depends on the schema. It could be
+     * composed of parameter which will be sent to XSL transformation using the following syntax :
+     * <pre>
+     * anonymizer?protocol=MYLOCALNETWORK:FILEPATH&email=gis@organisation.org&thesaurus=MYORGONLYTHEASURUS
+     * </pre>
+     */
+    public String xslfilter;
+    public List<Element> eltSearches = new ArrayList<Element>();
+    public CswParams(DataManager dm) {
+        super(dm);
+    }
 
     /**
-     * called when a new entry must be added. Reads values from the provided entry, providing default values.
-     *
-     * @param node
-     * @throws org.fao.geonet.exceptions.BadInputEx
+     * called when a new entry must be added. Reads values from the provided entry, providing
+     * default values.
      */
-	public void create(Element node) throws BadInputEx {
-		super.create(node);
+    public void create(Element node) throws BadInputEx {
+        super.create(node);
 
-		Element site     = node.getChild("site");
-		Element searches = node.getChild("searches");
+        Element site = node.getChild("site");
+        Element searches = node.getChild("searches");
 
-		capabUrl = Util.getParam(site, "capabilitiesUrl", "");
+        capabUrl = Util.getParam(site, "capabilitiesUrl", "");
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", false);
         queryScope = Util.getParam(site, "queryScope", "off");
         hopCount = Util.getParam(site, "hopCount", 2);
         xslfilter = Util.getParam(site, "xslfilter", "");
-		outputSchema = Util.getParam(site, "outputSchema", outputSchema);
+        outputSchema = Util.getParam(site, "outputSchema", outputSchema);
 
         try {
             capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
-        }
-        catch (UnsupportedEncodingException x) {
+        } catch (UnsupportedEncodingException x) {
             System.out.println(x.getMessage());
             x.printStackTrace();
             // TODO should not swallow
         }
-		icon     = Util.getParam(site, "icon", "default.gif");
+        icon = Util.getParam(site, "icon", "default.gif");
 
-		if (searches!=null){
-			if (searches.getChild("search")!=null){
-			    @SuppressWarnings("unchecked")
+        if (searches != null) {
+            if (searches.getChild("search") != null) {
+                @SuppressWarnings("unchecked")
                 List<Element> tmp = searches.getChild("search").getChildren();
-				eltSearches = tmp;
-			} else {
-				eltSearches = new ArrayList<Element>();
-			}
-		}
+                eltSearches = tmp;
+            } else {
+                eltSearches = new ArrayList<Element>();
+            }
+        }
 
 
-
-	}
+    }
 
     /**
      * called when an entry has changed and variables must be updated.
-     *
-     * @param node
-     * @throws org.fao.geonet.exceptions.BadInputEx
      */
-	public void update(Element node) throws BadInputEx {
-		super.update(node);
-		
-		Element site     = node.getChild("site");
-		Element searches = node.getChild("searches");
-		
-		capabUrl = Util.getParam(site, "capabilitiesUrl", capabUrl);
+    public void update(Element node) throws BadInputEx {
+        super.update(node);
+
+        Element site = node.getChild("site");
+        Element searches = node.getChild("searches");
+
+        capabUrl = Util.getParam(site, "capabilitiesUrl", capabUrl);
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", rejectDuplicateResource);
-        
+
         try {
             capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
-        }
-        catch (UnsupportedEncodingException x) {
+        } catch (UnsupportedEncodingException x) {
             System.out.println(x.getMessage());
             x.printStackTrace();
             // TODO should not swallow
@@ -118,74 +139,42 @@ public class CswParams extends AbstractParams {
         queryScope = Util.getParam(site, "queryScope", queryScope);
         hopCount = Util.getParam(site, "hopCount", hopCount);
         xslfilter = Util.getParam(site, "xslfilter", "");
-		outputSchema = Util.getParam(site, "outputSchema", outputSchema);
+        outputSchema = Util.getParam(site, "outputSchema", outputSchema);
 
-		icon     = Util.getParam(site, "icon", icon);
+        icon = Util.getParam(site, "icon", icon);
 
-		//--- if some search queries are given, we drop the previous ones and
-		//--- set these new ones
+        //--- if some search queries are given, we drop the previous ones and
+        //--- set these new ones
 
-		if (searches != null){
-			if (searches.getChild("search")!=null){
-			    @SuppressWarnings("unchecked")
-                List<Element> tmp = searches.getChild("search").getChildren(); 
-			    eltSearches = tmp;
-			}
-		}
+        if (searches != null) {
+            if (searches.getChild("search") != null) {
+                @SuppressWarnings("unchecked")
+                List<Element> tmp = searches.getChild("search").getChildren();
+                eltSearches = tmp;
+            }
+        }
 
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	//public Iterable<Element> getSearchElements() { return eltSearches; }
+    }
 
     /**
      *
      * @return
      */
-	public CswParams copy() {
-		CswParams copy = new CswParams(dm);
-		copyTo(copy);
+    public CswParams copy() {
+        CswParams copy = new CswParams(dm);
+        copyTo(copy);
 
-		copy.capabUrl = capabUrl;
-		copy.icon     = icon;
-		copy.rejectDuplicateResource = rejectDuplicateResource;
-	 	copy.queryScope = queryScope;
-	 	copy.hopCount = hopCount;
+        copy.capabUrl = capabUrl;
+        copy.icon = icon;
+        copy.rejectDuplicateResource = rejectDuplicateResource;
+        copy.queryScope = queryScope;
+        copy.hopCount = hopCount;
         copy.xslfilter = xslfilter;
-		copy.outputSchema = outputSchema;
+        copy.outputSchema = outputSchema;
 
-		copy.eltSearches = eltSearches;
+        copy.eltSearches = eltSearches;
 
-		return copy;
-	}
+        return copy;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String capabUrl;
-	public String icon;
-	public String outputSchema;
-    public boolean rejectDuplicateResource;
-    public String queryScope;
-    public Integer hopCount;
-    /**
-     * The filter is a process (see schema/process folder) which depends on the schema.
-     * It could be composed of parameter which will be sent to XSL transformation using
-     * the following syntax :
-     * <pre>
-     * anonymizer?protocol=MYLOCALNETWORK:FILEPATH&email=gis@organisation.org&thesaurus=MYORGONLYTHEASURUS
-     * </pre>
-     */
-    public String  xslfilter;
-
-	public List<Element> eltSearches = new ArrayList<Element>();
-	
 }

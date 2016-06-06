@@ -35,9 +35,8 @@ import javax.annotation.Nullable;
  */
 public interface MapServerRepositoryCustom {
     /**
-     * Find the mapserver with the given id
-     * (where id is a string). The string will be
-     * converted to an integer for making the query.
+     * Find the mapserver with the given id (where id is a string). The string will be converted to
+     * an integer for making the query.
      *
      * @param id the mapserver id.
      * @return the mapserver with the given id

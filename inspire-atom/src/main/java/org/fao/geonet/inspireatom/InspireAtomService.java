@@ -23,6 +23,7 @@
 package org.fao.geonet.inspireatom;
 
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.InspireAtomFeed;
@@ -50,7 +51,7 @@ public class InspireAtomService {
         if (StringUtils.isEmpty(atomUrl)) throw new Exception("Metadata has no atom feed");
 
         // Retrieve the remote feed
-        String feedValue =  InspireAtomUtil.retrieveRemoteAtomFeedDocument(context, atomUrl);
+        String feedValue = InspireAtomUtil.retrieveRemoteAtomFeedDocument(context, atomUrl);
 
         if (StringUtils.isEmpty(feedValue)) {
             feedValue = feed.getAtom();

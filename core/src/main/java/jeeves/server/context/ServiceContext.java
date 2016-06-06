@@ -32,6 +32,7 @@ import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -43,6 +44,7 @@ import org.springframework.transaction.TransactionStatus;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.annotation.CheckForNull;
 import javax.persistence.EntityManager;
 
@@ -54,10 +56,49 @@ import javax.persistence.EntityManager;
 public class ServiceContext extends BasicContext {
 
     private static final InheritableThreadLocal<ServiceContext> THREAD_LOCAL_INSTANCE = new InheritableThreadLocal<ServiceContext>();
+    private UserSession _userSession = new UserSession();
+    private InputMethod _input;
+    private OutputMethod _output;
+    private Map<String, String> _headers;
+    private String _language;
+    private String _service;
+    private String _ipAddress;
+    private int _maxUploadSize;
+    private JeevesServlet _servlet;
+    private boolean _startupError = false;
+    private Map<String, String> _startupErrors;
+    /**
+     * Property to be able to add custom response headers depending on the code (and not the xml of
+     * Jeeves)
+     *
+     * Be very careful using this, because right now Jeeves doesn't check the headers. Can lead to
+     * infinite loops or wrong behaviour.
+     *
+     * @see #_statusCode
+     */
+    private Map<String, String> _responseHeaders;
+    /**
+     * Property to be able to add custom http status code headers depending on the code (and not the
+     * xml of Jeeves)
+     *
+     * Be very careful using this, because right now Jeeves doesn't check the headers. Can lead to
+     * infinite loops or wrong behaviour.
+     *
+     * @see #_responseHeaders
+     */
+    private Integer _statusCode;
+    public ServiceContext(final String service, final ConfigurableApplicationContext jeevesApplicationContext,
+                          final Map<String, Object> contexts, final EntityManager entityManager) {
+        super(jeevesApplicationContext, contexts, entityManager);
+
+        setService(service);
+
+        setResponseHeaders(new HashMap<String, String>());
+    }
 
     /**
-     * ServiceManager sets the service context thread local when dispatch is called.  this method will
-     * return null or the service context
+     * ServiceManager sets the service context thread local when dispatch is called.  this method
+     * will return null or the service context
      *
      * @return the service context set by service context or null if no in an inherited thread
      */
@@ -65,6 +106,12 @@ public class ServiceContext extends BasicContext {
     public static ServiceContext get() {
         return THREAD_LOCAL_INSTANCE.get();
     }
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
     /**
      * Called to set the Service context for this thread and inherited threads.
@@ -74,181 +121,177 @@ public class ServiceContext extends BasicContext {
         ApplicationContextHolder.set(this.getApplicationContext());
     }
 
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-    private UserSession _userSession = new UserSession();
+    public String getLanguage() {
+        return _language;
+    }
 
-	private InputMethod _input;
-	private OutputMethod _output;
-	private Map<String, String> _headers;
+    public void setLanguage(final String lang) {
+        _language = lang;
+    }
 
-	private String _language;
-	private String _service;
-	private String _ipAddress;
-	private int _maxUploadSize;
-	private JeevesServlet _servlet;
-	private boolean _startupError = false;
-	private Map<String, String> _startupErrors;
-    /**
-     * Property to be able to add custom response headers depending on the code
-     * (and not the xml of Jeeves)
-     * 
-     * Be very careful using this, because right now Jeeves doesn't check the
-     * headers. Can lead to infinite loops or wrong behaviour.
-     * 
-     * @see #_statusCode
-     * 
-     */
-    private Map<String, String> _responseHeaders;
-    /**
-     * Property to be able to add custom http status code headers depending on
-     * the code (and not the xml of Jeeves)
-     * 
-     * Be very careful using this, because right now Jeeves doesn't check the
-     * headers. Can lead to infinite loops or wrong behaviour.
-     * 
-     * @see #_responseHeaders
-     * 
-     */
-    private Integer _statusCode;
+    public String getService() {
+        return _service;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    public void setService(final String service) {
+        this._service = service;
+        logger = Log.createLogger(Log.WEBAPP + "." + service);
+    }
 
-	public ServiceContext(final String service, final ConfigurableApplicationContext jeevesApplicationContext,
-                          final Map<String, Object> contexts, final EntityManager entityManager)
-	{
-		super(jeevesApplicationContext, contexts, entityManager);
+    public String getIpAddress() {
+        return _ipAddress;
+    }
 
-		setService(service);
+    public void setIpAddress(final String address) {
+        _ipAddress = address;
+    }
 
-        setResponseHeaders(new HashMap<String, String>());
-	}
+    public Path getUploadDir() {
+        return getBean(GeonetworkDataDirectory.class).getUploadDir();
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    public int getMaxUploadSize() {
+        return _maxUploadSize;
+    }
 
-	public String getLanguage()  { return _language;  }
-	public String getService()   { return _service;   }
-	public String getIpAddress() { return _ipAddress; }
-	public Path getUploadDir() { return getBean(GeonetworkDataDirectory.class).getUploadDir(); }
-    public int getMaxUploadSize() { return _maxUploadSize; }
+    public void setMaxUploadSize(final int size) {
+        _maxUploadSize = size;
+    }
 
     /**
      * Warning: this may return a null value if the user is a crawler!!
+     *
      * @return the user session stored on httpsession
      */
-	public UserSession    getUserSession()    { return _userSession; }
-	public ProfileManager getProfileManager() { return getBean(ProfileManager.class);   }
+    public UserSession getUserSession() {
+        return _userSession;
+    }
 
-	public InputMethod  getInputMethod()  { return _input;  }
-	public OutputMethod getOutputMethod() { return _output; }
-	public Map<String, String> getStartupErrors() { return _startupErrors; }
-	public boolean isStartupError() { return _startupError; }
-	public boolean isServletInitialized() { 
-		if (_servlet != null) {
+    public void setUserSession(final UserSession session) {
+        _userSession = session;
+    }
+
+    public ProfileManager getProfileManager() {
+        return getBean(ProfileManager.class);
+    }
+
+    //--------------------------------------------------------------------------
+
+    public InputMethod getInputMethod() {
+        return _input;
+    }
+
+    public void setInputMethod(final InputMethod m) {
+        _input = m;
+    }
+
+    public OutputMethod getOutputMethod() {
+        return _output;
+    }
+
+    public void setOutputMethod(final OutputMethod m) {
+        _output = m;
+    }
+
+    public Map<String, String> getStartupErrors() {
+        return _startupErrors;
+    }
+
+    public void setStartupErrors(final Map<String, String> errs) {
+        _startupErrors = errs;
+        _startupError = true;
+    }
+
+    public boolean isStartupError() {
+        return _startupError;
+    }
+
+    //--------------------------------------------------------------------------
+
+    public boolean isServletInitialized() {
+        if (_servlet != null) {
             return _servlet.isInitialized();
         } else {
             return true; // Jeeves not running in servlet container eg for testing
         }
-	}
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public void setLanguage(final String lang)    { _language = lang;    }
-	public void setServlet(final JeevesServlet serv)    { _servlet = serv;    }
-	public void setIpAddress(final String address) { _ipAddress = address; }
-    public void setMaxUploadSize(final int size)   { _maxUploadSize = size; }
-    public void setStartupErrors(final Map<String,String> errs)   { _startupErrors = errs; _startupError = true; }
+    public void setLogger(final Logger l) {
+        logger = l;
+    }
 
-	public void setInputMethod(final InputMethod m)  { _input = m; }
-	public void setOutputMethod(final OutputMethod m) { _output = m; }
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    /**
+     * @return The map of headers from the request
+     */
+    public Map<String, String> getHeaders() {
+        return _headers;
+    }
 
-	public void setService(final String service) {
-		this._service = service;
-		logger       = Log.createLogger(Log.WEBAPP +"."+ service);
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    /**
+     * Set the map of headers from the request.
+     *
+     * @param headers The new headers to be set.
+     */
+    public void setHeaders(Map<String, String> headers) {
+        this._headers = headers;
+    }
 
-	public void setUserSession(final UserSession session) {
-		_userSession = session;
-	}
-
-	//--------------------------------------------------------------------------
-
-	public void setLogger(final Logger l)
-	{
-		logger = l;
-	}
-
-	//--------------------------------------------------------------------------
-
-	/**
-	 * @return The map of headers from the request
-	 */
-	public Map<String, String> getHeaders()
-	{
-		return _headers;
-	}
-
-	/**
-	 * Set the map of headers from the request.
-	 * @param headers The new headers to be set.
-	 */
-	public void setHeaders(Map<String, String> headers)
-	{
-		this._headers = headers;
-	}
-
-	public JeevesServlet getServlet() {
+    public JeevesServlet getServlet() {
         return _servlet;
+    }
+
+    public void setServlet(final JeevesServlet serv) {
+        _servlet = serv;
     }
 
     /**
      * Execute a service but _don't_ parse the result.  This is used if in one of two cases.
      *
-     * <ol>
-     *     <li>If the service is side-effect only and the result doesn't matter</li>
-     *     <li>If the response is not XML, for example if it is JSON or a string</li>
-     * </ol>
+     * <ol> <li>If the service is side-effect only and the result doesn't matter</li> <li>If the
+     * response is not XML, for example if it is JSON or a string</li> </ol>
      */
     public void executeOnly(final LocalServiceRequest request) throws Exception {
 
         TransactionManager.runInTransaction("ServiceContext#executeOnly: " + request.getAddress(), getApplicationContext(),
-                TransactionManager.TransactionRequirement.CREATE_NEW, TransactionManager.CommitBehavior.ALWAYS_COMMIT, false,
-                new TransactionTask<Void>() {
-                    @Override
-                    public Void doInTransaction(TransactionStatus transaction) throws Throwable {
-                        final ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
-                        UserSession session = ServiceContext.this._userSession;
-                        if (session == null) {
-                            session = new UserSession();
-                        }
-                        try {
-                            final ServiceManager serviceManager = context.getBean(ServiceManager.class);
-                            serviceManager.dispatch(request, session, context);
-                        } catch (Exception e) {
-                            Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml" + request.getService());
-                            throw new ServiceExecutionFailedException(request.getService(), e);
-                        } finally {
-                            // set old context back as thread local
-                            setAsThreadLocal();
-                        }
-                        return null;
+            TransactionManager.TransactionRequirement.CREATE_NEW, TransactionManager.CommitBehavior.ALWAYS_COMMIT, false,
+            new TransactionTask<Void>() {
+                @Override
+                public Void doInTransaction(TransactionStatus transaction) throws Throwable {
+                    final ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
+                    UserSession session = ServiceContext.this._userSession;
+                    if (session == null) {
+                        session = new UserSession();
                     }
-                });
+                    try {
+                        final ServiceManager serviceManager = context.getBean(ServiceManager.class);
+                        serviceManager.dispatch(request, session, context);
+                    } catch (Exception e) {
+                        Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml" + request.getService());
+                        throw new ServiceExecutionFailedException(request.getService(), e);
+                    } finally {
+                        // set old context back as thread local
+                        setAsThreadLocal();
+                    }
+                    return null;
+                }
+            });
     }
 
     /**
-     * Call {@link #executeOnly(jeeves.server.local.LocalServiceRequest)} and return the response as XML.
+     * Call {@link #executeOnly(jeeves.server.local.LocalServiceRequest)} and return the response as
+     * XML.
      */
     public Element execute(LocalServiceRequest request) throws Exception {
         executeOnly(request);
@@ -256,10 +299,11 @@ public class ServiceContext extends BasicContext {
             return request.getResult();
         } catch (Exception e) {
             Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml from service:" + request.toString() + "\n"
-                                           + request.getResultString());
+                + request.getResultString());
             throw new ServiceExecutionFailedException(request.getService(), e);
         }
     }
+
     public Map<String, String> getResponseHeaders() {
         return _responseHeaders;
     }
@@ -268,12 +312,12 @@ public class ServiceContext extends BasicContext {
         this._responseHeaders = responseHeaders;
     }
 
-    public void setStatusCode(Integer statusCode) {
-        this._statusCode = statusCode;
-    }
-
     public Integer getStatusCode() {
         return _statusCode;
+    }
+
+    public void setStatusCode(Integer statusCode) {
+        this._statusCode = statusCode;
     }
 
 }

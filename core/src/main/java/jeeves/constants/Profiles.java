@@ -25,37 +25,33 @@ package jeeves.constants;
 
 //=============================================================================
 
-/** Constants for the "user-profiles.xml" configuration file
-  */
+/**
+ * Constants for the "user-profiles.xml" configuration file
+ */
 
-public class Profiles
-{
-	public static final class Elem
-	{
-		/**
-       * Default constructor.
-       * Builds a Profiles.Elem.
-       */
-      private Elem() {}
-      
-	   public static final String PROFILE = "profile";
-		public static final String ALLOW   = "allow";
-	}
+public class Profiles {
+    public static final class Elem {
+        public static final String PROFILE = "profile";
+        public static final String ALLOW = "allow";
+        /**
+         * Default constructor. Builds a Profiles.Elem.
+         */
+        private Elem() {
+        }
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public static final class Attr
-	{
-		/**
-       * Default constructor.
-       * Builds a Profiles.Attr.
-       */
-      private Attr() {}
-      
-	   public static final String NAME    = "name";
-		public static final String SERVICE = "service";
-		public static final String EXTENDS = "extends";
-	}
+    public static final class Attr {
+        public static final String NAME = "name";
+        public static final String SERVICE = "service";
+        public static final String EXTENDS = "extends";
+        /**
+         * Default constructor. Builds a Profiles.Attr.
+         */
+        private Attr() {
+        }
+    }
 }
 
 //=============================================================================

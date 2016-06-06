@@ -37,16 +37,34 @@ import java.util.List;
 
 public class SummaryTypesBeanDefinitionParser extends AbstractBeanDefinitionParser {
 
+    private static void parseChildSummaryTypes(List<Element> childElements, ParserContext parserContext, BeanDefinitionBuilder factory) {
+        ManagedList<BeanDefinition> children = new ManagedList<BeanDefinition>(childElements.size());
+
+        ParserContext nestedContext = new ParserContext(
+            parserContext.getReaderContext(),
+            parserContext.getDelegate(),
+            factory.getBeanDefinition()
+        );
+
+        SummaryTypeBeanDefinitionParser facetParser = new SummaryTypeBeanDefinitionParser();
+
+        for (Element element : childElements) {
+            children.add(facetParser.parse(element, nestedContext));
+        }
+
+        factory.addConstructorArgValue(children);
+    }
+
     @Override
     protected AbstractBeanDefinition parseInternal(Element element,
-            ParserContext parserContext) {
+                                                   ParserContext parserContext) {
         return parseSummaryTypesElement(element, parserContext);
     }
 
     @Override
     protected String resolveId(Element element,
-            AbstractBeanDefinition definition, ParserContext parserContext)
-            throws BeanDefinitionStoreException {
+                               AbstractBeanDefinition definition, ParserContext parserContext)
+        throws BeanDefinitionStoreException {
         return "summaryTypes";
     }
 
@@ -59,24 +77,6 @@ public class SummaryTypesBeanDefinitionParser extends AbstractBeanDefinitionPars
         }
 
         return factory.getBeanDefinition();
-    }
-
-    private static void parseChildSummaryTypes(List<Element> childElements, ParserContext parserContext, BeanDefinitionBuilder factory) {
-        ManagedList<BeanDefinition> children = new ManagedList<BeanDefinition>(childElements.size());
-
-        ParserContext nestedContext = new ParserContext(
-            parserContext.getReaderContext(), 
-            parserContext.getDelegate(),
-            factory.getBeanDefinition()
-        );
-
-        SummaryTypeBeanDefinitionParser facetParser = new SummaryTypeBeanDefinitionParser();
-
-        for (Element element : childElements) {
-            children.add(facetParser.parse(element, nestedContext));
-        }
-
-        factory.addConstructorArgValue(children);
     }
 
 }

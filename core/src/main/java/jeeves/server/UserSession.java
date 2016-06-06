@@ -42,133 +42,137 @@ import java.util.Hashtable;
 /**
  * Abstraction layer from the user session.
  */
-public class UserSession
-{
-	private Hashtable<String, Object> htProperties = new Hashtable<String, Object>(10, .75f);
+public class UserSession {
+    private Hashtable<String, Object> htProperties = new Hashtable<String, Object>(10, .75f);
 
-	private HttpSession sHttpSession;
+    private HttpSession sHttpSession;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public UserSession() {}
+    public UserSession() {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * @return the sHttpSession
-	 */
-	public HttpSession getsHttpSession() {
-		return sHttpSession;
-	}
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-	/**
-	 * @param sHttpSession the sHttpSession to set
-	 */
-	public void setsHttpSession(HttpSession sHttpSession) {
-		this.sHttpSession = sHttpSession;
-	}
+    /**
+     * @return the sHttpSession
+     */
+    public HttpSession getsHttpSession() {
+        return sHttpSession;
+    }
 
-	/**
+    /**
+     * @param sHttpSession the sHttpSession to set
+     */
+    public void setsHttpSession(HttpSession sHttpSession) {
+        this.sHttpSession = sHttpSession;
+    }
+
+    /**
      * Sets a generic property.
-	 */
-	public void setProperty(String name, Object value)
-	{
-		htProperties.put(name, value);
-	}
+     */
+    public void setProperty(String name, Object value) {
+        htProperties.put(name, value);
+    }
 
-	//--------------------------------------------------------------------------
-	/**
+    //--------------------------------------------------------------------------
+
+    /**
      * Gets a generic property.
-	 */
-	public Object getProperty(String name)
-	{
-		return htProperties.get(name);
-	}
+     */
+    public Object getProperty(String name) {
+        return htProperties.get(name);
+    }
 
-	//--------------------------------------------------------------------------
-	/**
+    //--------------------------------------------------------------------------
+
+    /**
      * Removes a generic property.
-	 */
-	public void removeProperty(String name)
-	{
-		htProperties.remove(name);
-	}
+     */
+    public void removeProperty(String name) {
+        htProperties.remove(name);
+    }
 
     /**
      * Clears user session properties and authentication.
      */
     public void clear() {
         htProperties.clear();
-       	SecurityContextHolder.clearContext();
-       	if(sHttpSession != null) {
-       		sHttpSession.invalidate();
-       	}
+        SecurityContextHolder.clearContext();
+        if (sHttpSession != null) {
+            sHttpSession.invalidate();
+        }
     }
 
-	//--------------------------------------------------------------------------
-    
+    //--------------------------------------------------------------------------
+
     public void loginAs(User user) {
         SecurityContextImpl secContext = new SecurityContextImpl();
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                user, null);
+            user, null);
         secContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(secContext);
     }
-    
-	public boolean isAuthenticated() {
-		return !(auth() instanceof AnonymousAuthenticationToken);
-	}
 
-	//--------------------------------------------------------------------------
+    public boolean isAuthenticated() {
+        return !(auth() instanceof AnonymousAuthenticationToken);
+    }
 
-	public String getUserId() { 
-		User userDetails = getPrincipal();
-		if (userDetails == null) {
-			return null;   
-		} else {
-			return String.valueOf(userDetails.getId());
-		}
-	}
-	public String getUsername() {
-		User userDetails = getPrincipal();
-		if (userDetails == null) {
-			return null;   
-		} else {
-			return userDetails.getUsername();
-		}
-	}
-	public String getName() {
-		User userDetails = getPrincipal();
-		if (userDetails == null) {
-			return null;   
-		} else {
-			return userDetails.getName();
-		}
-	}
-	public String getSurname() { 
-		User userDetails = getPrincipal();
-		if (userDetails == null) {
-			return null;   
-		} else {
-			return userDetails.getSurname();
-		}
-	}
-	public Profile getProfile() {
-		User userDetails = getPrincipal();
-		if (userDetails == null) {
-			return null;
-		} else {
-			return userDetails.getProfile();
-		}
-	}
+    //--------------------------------------------------------------------------
+
+    public String getUserId() {
+        User userDetails = getPrincipal();
+        if (userDetails == null) {
+            return null;
+        } else {
+            return String.valueOf(userDetails.getId());
+        }
+    }
+
+    public String getUsername() {
+        User userDetails = getPrincipal();
+        if (userDetails == null) {
+            return null;
+        } else {
+            return userDetails.getUsername();
+        }
+    }
+
+    public String getName() {
+        User userDetails = getPrincipal();
+        if (userDetails == null) {
+            return null;
+        } else {
+            return userDetails.getName();
+        }
+    }
+
+    public String getSurname() {
+        User userDetails = getPrincipal();
+        if (userDetails == null) {
+            return null;
+        } else {
+            return userDetails.getSurname();
+        }
+    }
+
+    public Profile getProfile() {
+        User userDetails = getPrincipal();
+        if (userDetails == null) {
+            return null;
+        } else {
+            return userDetails.getProfile();
+        }
+    }
+
     public String getEmailAddr() {
         User userDetails = getPrincipal();
         if (userDetails == null) {
@@ -177,6 +181,7 @@ public class UserSession
             return userDetails.getEmail();
         }
     }
+
     public String getOrganisation() {
         User userDetails = getPrincipal();
         if (userDetails == null) {
@@ -186,32 +191,36 @@ public class UserSession
         }
     }
 
-	public int getUserIdAsInt()  { 
-		String id = getUserId();
-		return id == null? -1 : Integer.parseInt(getUserId()); }
-	
-	private SecurityContext secContext() { return SecurityContextHolder.getContext(); }
-	private Authentication auth() {
-		SecurityContext secContext = secContext();
-		if (secContext == null) {
-			return null;
-		} else {
-			Authentication authentication = secContext.getAuthentication();
-			return authentication;
-		}
-	}
+    public int getUserIdAsInt() {
+        String id = getUserId();
+        return id == null ? -1 : Integer.parseInt(getUserId());
+    }
 
-	public User getPrincipal() {
-		Authentication auth = auth();
-		if (auth != null) {
-			if (auth.getPrincipal() instanceof User) {
-				return (User) auth.getPrincipal();
-			} else if (auth.getPrincipal() instanceof LDAPUser) {
-				return ((LDAPUser) auth.getPrincipal()).getUser();
-			}
-		}
-		return null;
-	}
+    private SecurityContext secContext() {
+        return SecurityContextHolder.getContext();
+    }
+
+    private Authentication auth() {
+        SecurityContext secContext = secContext();
+        if (secContext == null) {
+            return null;
+        } else {
+            Authentication authentication = secContext.getAuthentication();
+            return authentication;
+        }
+    }
+
+    public User getPrincipal() {
+        Authentication auth = auth();
+        if (auth != null) {
+            if (auth.getPrincipal() instanceof User) {
+                return (User) auth.getPrincipal();
+            } else if (auth.getPrincipal() instanceof LDAPUser) {
+                return ((LDAPUser) auth.getPrincipal()).getUser();
+            }
+        }
+        return null;
+    }
 
 }
 

@@ -40,16 +40,16 @@ import com.google.common.base.Predicate;
 
 class GeonetworkNRTManager implements Closeable {
 
+    String language;
     private ControlledRealTimeReopenThread<IndexSearcher> reopenThread;
     private SearcherManager actualManager;
-    String language;
     private SearcherLifetimeManager lifetimeManager = new SearcherLifetimeManager();
-    // taxonomyTracker is here so that we can commit it and refresh reader when 
+    // taxonomyTracker is here so that we can commit it and refresh reader when
     // we refresh
     private TaxonomyIndexTracker taxonomyTracker;
 
     public GeonetworkNRTManager(LuceneConfig luceneConfig, String language, TrackingIndexWriter writer, IndexWriter iWriter, SearcherFactory searcherFactory,
-            boolean applyAllDeletes, TaxonomyIndexTracker taxonomyTracker) throws IOException {
+                                boolean applyAllDeletes, TaxonomyIndexTracker taxonomyTracker) throws IOException {
         this.taxonomyTracker = taxonomyTracker;
         actualManager = new SearcherManager(iWriter, applyAllDeletes, searcherFactory);
         this.language = language;
@@ -81,19 +81,16 @@ class GeonetworkNRTManager implements Closeable {
     }
 
     /**
-     * Try to acquire a reader of a particular version. The version will be
-     * mapped to the specific lifetime manager for this manager
-     * 
-     * @param versionToken
-     * @param versionTracker 
-     * @return either versionToken if there was an old version. If not then a
-     *         new version will be returned which will have to be later
-     *         registered with the single versionToken for the entire set of
-     *         searchers.
+     * Try to acquire a reader of a particular version. The version will be mapped to the specific
+     * lifetime manager for this manager
+     *
+     * @return either versionToken if there was an old version. If not then a new version will be
+     * returned which will have to be later registered with the single versionToken for the entire
+     * set of searchers.
      */
     public synchronized AcquireResult acquire(long versionToken, SearcherVersionTracker versionTracker) throws IOException {
         Long version = -1L;
-        if(versionToken != -1) {
+        if (versionToken != -1) {
             version = versionTracker.get(this.language, versionToken);
             if (version == null) {
                 version = -1L;
@@ -105,10 +102,10 @@ class GeonetworkNRTManager implements Closeable {
             searcher = actualManager.acquire();
             version = lifetimeManager.record(searcher);
             Long lastVersion = versionTracker.last(this.language);
-            
+
             if (lastVersion != null) {
                 IndexSearcher lastSearcher = lifetimeManager.acquire(lastVersion);
-                if(lastSearcher == searcher) {
+                if (lastSearcher == searcher) {
                     actualManager.release(searcher);
                     searcher = lastSearcher;
                     lastVersionUpToDate = true;
@@ -119,24 +116,11 @@ class GeonetworkNRTManager implements Closeable {
         }
         return new AcquireResult(version, lastVersionUpToDate, searcher, version != versionToken);
     }
-    static final class AcquireResult {
-        final long version;
-        final boolean lastVersionUpToDate;
-        final IndexSearcher searcher;
-        final boolean newSearcher;
-        private AcquireResult(long version, boolean lastVersionUpToDate, IndexSearcher searcher, boolean newSearcher) {
-            super();
-            this.version = version;
-            this.lastVersionUpToDate = lastVersionUpToDate;
-            this.searcher = searcher;
-            this.newSearcher = newSearcher;
-        }
-        
-    }
 
     public void maybeRefreshBlocking() throws IOException {
         taxonomyTracker.maybeRefresh();
-        actualManager.maybeRefreshBlocking();;
+        actualManager.maybeRefreshBlocking();
+        ;
     }
 
     public void release(IndexSearcher searcher) throws IOException {
@@ -170,5 +154,21 @@ class GeonetworkNRTManager implements Closeable {
 
     public String getLanguage() {
         return language;
+    }
+
+    static final class AcquireResult {
+        final long version;
+        final boolean lastVersionUpToDate;
+        final IndexSearcher searcher;
+        final boolean newSearcher;
+
+        private AcquireResult(long version, boolean lastVersionUpToDate, IndexSearcher searcher, boolean newSearcher) {
+            super();
+            this.version = version;
+            this.lastVersionUpToDate = lastVersionUpToDate;
+            this.searcher = searcher;
+            this.newSearcher = newSearcher;
+        }
+
     }
 }

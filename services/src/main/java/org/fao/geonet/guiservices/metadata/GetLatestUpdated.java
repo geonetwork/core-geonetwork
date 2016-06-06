@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
@@ -43,62 +44,59 @@ import java.util.Map;
 
 //=============================================================================
 
-/** Service used to return most recently updated records using Lucene
-  */
+/**
+ * Service used to return most recently updated records using Lucene
+ */
 
-public class GetLatestUpdated implements Service
-{
-	private int      			 _maxItems;
-	private long    			 _timeBetweenUpdates;
+public class GetLatestUpdated implements Service {
+    private int _maxItems;
+    private long _timeBetweenUpdates;
 
-	private Element 			 _response;
-	private long    			 _lastUpdateTime;
+    private Element _response;
+    private long _lastUpdateTime;
 
-	private ServiceConfig  _config;
+    private ServiceConfig _config;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception
-	{
-		String sMaxItems           = config.getValue("maxItems",           "10");
-		String sTimeBetweenUpdates = config.getValue("timeBetweenUpdates", "60");
-		_timeBetweenUpdates = Long.parseLong(sTimeBetweenUpdates) * 1000;
-		_maxItems           = Integer.parseInt(sMaxItems);
-		_config             = config;
-	}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+        String sMaxItems = config.getValue("maxItems", "10");
+        String sTimeBetweenUpdates = config.getValue("timeBetweenUpdates", "60");
+        _timeBetweenUpdates = Long.parseLong(sTimeBetweenUpdates) * 1000;
+        _maxItems = Integer.parseInt(sMaxItems);
+        _config = config;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    public Element exec(Element params, ServiceContext context) throws Exception {
 
-		 Element _request = new Element(Jeeves.Elem.REQUEST);
-		_request.addContent(new Element("query").setText(""));
-		_request.addContent(new Element("sortBy").setText("changeDate"));
-		_request.addContent(new Element("from").setText("1"));
-		_request.addContent(new Element("to")  .setText(""));
+        Element _request = new Element(Jeeves.Elem.REQUEST);
+        _request.addContent(new Element("query").setText(""));
+        _request.addContent(new Element("sortBy").setText("changeDate"));
+        _request.addContent(new Element("from").setText("1"));
+        _request.addContent(new Element("to").setText(""));
 
-		if (System.currentTimeMillis() > _lastUpdateTime + _timeBetweenUpdates)
-		{
-			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-			SearchManager searchMan = gc.getBean(SearchManager.class);
-			DataManager   dataMan   = gc.getBean(DataManager.class);
+        if (System.currentTimeMillis() > _lastUpdateTime + _timeBetweenUpdates) {
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            SearchManager searchMan = gc.getBean(SearchManager.class);
+            DataManager dataMan = gc.getBean(DataManager.class);
 
-			_request.getChild("to").setText(""+_maxItems);
+            _request.getChild("to").setText("" + _maxItems);
 
-			_response = new Element(Jeeves.Elem.RESPONSE);
+            _response = new Element(Jeeves.Elem.RESPONSE);
 
-			// perform the search and return the results read from the index
-			Log.info(Geonet.SEARCH_ENGINE, "Creating latest updates searcher");
-			try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+            // perform the search and return the results read from the index
+            Log.info(Geonet.SEARCH_ENGINE, "Creating latest updates searcher");
+            try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
                 searcher.search(context, _request, _config);
                 Map<Integer, Metadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, _maxItems);
                 for (Integer id : allMdInfo.keySet()) {
@@ -115,11 +113,11 @@ public class GetLatestUpdated implements Service
                 }
             }
 
-			_lastUpdateTime = System.currentTimeMillis();
-		}
+            _lastUpdateTime = System.currentTimeMillis();
+        }
 
-		return (Element)_response.clone();
-	}
+        return (Element) _response.clone();
+    }
 }
 
 //=============================================================================

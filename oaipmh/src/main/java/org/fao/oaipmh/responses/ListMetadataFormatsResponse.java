@@ -32,79 +32,79 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class ListMetadataFormatsResponse extends AbstractResponse
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class ListMetadataFormatsResponse extends AbstractResponse {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public ListMetadataFormatsResponse() {}
+    private List<MetadataFormat> formats = new ArrayList<MetadataFormat>();
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public ListMetadataFormatsResponse(Element response)
-	{
-		super(response);
-		build(response);
-	}
+    public ListMetadataFormatsResponse() {
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public Iterable<MetadataFormat> getFormats() { return formats; }
+    public ListMetadataFormatsResponse(Element response) {
+        super(response);
+        build(response);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void clearFormats() { formats.clear(); }
+    public Iterable<MetadataFormat> getFormats() {
+        return formats;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void addFormat(MetadataFormat mf)
-	{
-		formats.add(mf);
-	}
+    public void clearFormats() {
+        formats.clear();
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public Element toXml()
-	{
-		Element root = new Element(ListMetadataFormatsRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
+    public void addFormat(MetadataFormat mf) {
+        formats.add(mf);
+    }
 
-		for (MetadataFormat mf : formats)
-			root.addContent(mf.toXml());
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-		return root;
-	}
+    public Element toXml() {
+        Element root = new Element(ListMetadataFormatsRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+        for (MetadataFormat mf : formats)
+            root.addContent(mf.toXml());
 
-	@SuppressWarnings("unchecked")
-	private void build(Element response)
-	{
-		Element listMdFor = response.getChild("ListMetadataFormats", OaiPmh.Namespaces.OAI_PMH);
+        return root;
+    }
 
-		List<Element> mdFormats = listMdFor.getChildren("metadataFormat", OaiPmh.Namespaces.OAI_PMH);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-		for (Element el : mdFormats)
-			formats.add(new MetadataFormat(el));
-	}
+    @SuppressWarnings("unchecked")
+    private void build(Element response) {
+        Element listMdFor = response.getChild("ListMetadataFormats", OaiPmh.Namespaces.OAI_PMH);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        List<Element> mdFormats = listMdFor.getChildren("metadataFormat", OaiPmh.Namespaces.OAI_PMH);
 
-	private List<MetadataFormat> formats = new ArrayList<MetadataFormat>();
+        for (Element el : mdFormats)
+            formats.add(new MetadataFormat(el));
+    }
 }
 
 //=============================================================================

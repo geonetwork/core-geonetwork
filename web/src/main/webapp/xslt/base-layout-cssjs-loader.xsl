@@ -22,9 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
+                version="2.0"
                 exclude-result-prefixes="#all">
   <!-- Template to load CSS and Javascript -->
 
@@ -32,10 +32,10 @@
   <xsl:import href="common/base-variables.xsl"/>
 
   <xsl:variable name="minimizedParam">
-      <xsl:choose>
-          <xsl:when test="/root/request/debug">?minimize=false</xsl:when>
-          <xsl:otherwise></xsl:otherwise>
-      </xsl:choose>
+    <xsl:choose>
+      <xsl:when test="/root/request/debug">?minimize=false</xsl:when>
+      <xsl:otherwise></xsl:otherwise>
+    </xsl:choose>
   </xsl:variable>
 
   <xsl:template name="css-load">
@@ -44,23 +44,27 @@
             <link href="style/app.css" rel="stylesheet" media="screen" />
 -->
     <xsl:if test="$withD3">
-      <link href="{/root/gui/url}/static/nv.d3.css{$minimizedParam}" rel="stylesheet" media="screen" />
+      <link href="{/root/gui/url}/static/nv.d3.css{$minimizedParam}" rel="stylesheet"
+            media="screen"/>
     </xsl:if>
 
-    <link href="{/root/gui/url}/static/{$customFilename}.css{$minimizedParam}" rel="stylesheet" media="screen" />
+    <link href="{/root/gui/url}/static/{$customFilename}.css{$minimizedParam}" rel="stylesheet"
+          media="screen"/>
 
-    <link href="{/root/gui/url}/static/bootstrap-table.min.css" rel="stylesheet" media="screen"></link>
+    <link href="{/root/gui/url}/static/bootstrap-table.min.css" rel="stylesheet"
+          media="screen"></link>
     <link href="{/root/gui/url}/static/ng-skos.css" rel="stylesheet" media="screen"></link>
-    <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}" rel="stylesheet" media="screen" />
+    <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}"
+          rel="stylesheet" media="screen"/>
   </xsl:template>
 
 
   <xsl:template name="javascript-load">
 
-    <script>var geonet = {provide:function(s){},require:function(s){}};</script>
 
     <xsl:if test="$is3DModeAllowed">
-      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/ol3cesium/Cesium/';</script>
+      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/ol3cesium/Cesium/';
+      </script>
     </xsl:if>
 
     <xsl:choose>
@@ -92,7 +96,8 @@
         <script src="{$uiResourcesPath}lib/angular.ext/bindHtml.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/tabs.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/slider.js"></script>
-        <script src="{$uiResourcesPath}lib/angular.ext/colorpicker/angularjs-color-picker.js"></script>
+        <script
+          src="{$uiResourcesPath}lib/angular.ext/colorpicker/angularjs-color-picker.js"></script>
         <script src="{$uiResourcesPath}lib/tinycolor.js"></script>
 
         <script src="{$uiResourcesPath}lib/style/bootstrap/dist/js/bootstrap.js"></script>
@@ -109,7 +114,8 @@
           </xsl:otherwise>
         </xsl:choose>
 
-
+        <script src="{$uiResourcesPath}lib/FileSaver/FileSaver.min.js"></script>
+        <script src="{$uiResourcesPath}lib/tableExport/tableExport.min.js"></script>
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
@@ -134,10 +140,13 @@
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-process.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-angular.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"></script>
-        <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
-        <script src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"></script>
         <script src="{$uiResourcesPath}/lib/bootstrap-table/dist/bootstrap-table.js"></script>
+        <script src="{$uiResourcesPath}/lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js"></script>
         <!--</xsl:if>-->
 
       </xsl:when>
@@ -147,26 +156,26 @@
 
 
     <xsl:choose>
-        <xsl:when test="/root/request/debug">
-            <!-- Use Closure to load the application scripts -->
-            <script src="{/root/gui/url}/static/closure_deps.js"></script>
-            <script>
-                 goog.require('<xsl:value-of select="$angularModule"/>');
-            </script>
-        </xsl:when>
-        <xsl:otherwise>
+      <xsl:when test="/root/request/debug">
+        <!-- Use Closure to load the application scripts -->
+        <script src="{/root/gui/url}/static/closure_deps.js"></script>
+        <script>
+          goog.require('<xsl:value-of select="$angularModule"/>');
+        </script>
+      </xsl:when>
+      <xsl:otherwise>
 
-          <xsl:choose>
-            <xsl:when test="$is3DModeAllowed">
-              <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js"></script>
-              <script src="{/root/gui/url}/static/lib3d.js"></script>
-            </xsl:when>
-            <xsl:otherwise>
-              <script src="{/root/gui/url}/static/lib.js"></script>
-            </xsl:otherwise>
-          </xsl:choose>
-          <script src="{/root/gui/url}/static/{$angularModule}.js{$minimizedParam}"></script>
-        </xsl:otherwise>
+        <xsl:choose>
+          <xsl:when test="$is3DModeAllowed">
+            <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js"></script>
+            <script src="{/root/gui/url}/static/lib3d.js"></script>
+          </xsl:when>
+          <xsl:otherwise>
+            <script src="{/root/gui/url}/static/lib.js"></script>
+          </xsl:otherwise>
+        </xsl:choose>
+        <script src="{/root/gui/url}/static/{$angularModule}.js{$minimizedParam}"></script>
+      </xsl:otherwise>
     </xsl:choose>
 
 
@@ -174,10 +183,12 @@
                   select="util:getSettingValue('map/config')"/>
 
     <xsl:variable name="isMapViewerEnabled">
-	    <xsl:choose>
-	    <xsl:when test="util:getSettingValue('map/isMapViewerEnabled')"><xsl:value-of select="util:getSettingValue('map/isMapViewerEnabled')"/></xsl:when>
-	    <xsl:otherwise>true</xsl:otherwise> <!-- default value -->
-	  </xsl:choose>
+      <xsl:choose>
+        <xsl:when test="util:getSettingValue('map/isMapViewerEnabled')">
+          <xsl:value-of select="util:getSettingValue('map/isMapViewerEnabled')"/>
+        </xsl:when>
+        <xsl:otherwise>true</xsl:otherwise> <!-- default value -->
+      </xsl:choose>
 
     </xsl:variable>
 
@@ -185,17 +196,17 @@
       <script type="text/javascript">
         var module = angular.module('gn_search');
         module.config(['gnViewerSettings', 'gnGlobalSettings',
-                function(gnViewerSettings, gnGlobalSettings) {
-          <xsl:if test="$owsContext">
-            gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
-          </xsl:if>
-          <xsl:if test="$wmsUrl and $layerName">
-            gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
-            gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
-            gnViewerSettings.layerGroup = '<xsl:value-of select="$layerGroup"/>';
-          </xsl:if>
-          gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
-          gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
+        function(gnViewerSettings, gnGlobalSettings) {
+        <xsl:if test="$owsContext">
+          gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
+        </xsl:if>
+        <xsl:if test="$wmsUrl and $layerName">
+          gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
+          gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
+          gnViewerSettings.layerGroup = '<xsl:value-of select="$layerGroup"/>';
+        </xsl:if>
+        gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
+        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
         }]);
       </script>
     </xsl:if>
@@ -204,16 +215,16 @@
       <script type="text/javascript">
         var module = angular.module('gn_editor');
         module.config(['gnViewerSettings', 'gnGlobalSettings',
-                function(gnViewerSettings, gnGlobalSettings) {
-          <xsl:if test="$owsContext">
-            gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
-          </xsl:if>
-          <xsl:if test="$wmsUrl and $layerName">
-            gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
-            gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
-          </xsl:if>
-          gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
-          gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
+        function(gnViewerSettings, gnGlobalSettings) {
+        <xsl:if test="$owsContext">
+          gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
+        </xsl:if>
+        <xsl:if test="$wmsUrl and $layerName">
+          gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
+          gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
+        </xsl:if>
+        gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
+        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
         }]);
       </script>
     </xsl:if>
@@ -222,8 +233,8 @@
       <script type="text/javascript">
         var module = angular.module('gn_admin');
         module.config(['gnGlobalSettings',
-                function(gnGlobalSettings) {
-          gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
+        function(gnGlobalSettings) {
+        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
         }]);
       </script>
     </xsl:if>

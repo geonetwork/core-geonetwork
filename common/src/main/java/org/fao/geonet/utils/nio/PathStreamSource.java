@@ -28,6 +28,7 @@ import org.fao.geonet.Constants;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.file.Path;
+
 import javax.xml.transform.stream.StreamSource;
 
 /**
@@ -41,22 +42,22 @@ public class PathStreamSource extends StreamSource {
     }
 
     @Override
-    public void setInputStream(InputStream inputStream) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public InputStream getInputStream() {
         return pathSourceMixin.getInputStream();
     }
 
     @Override
-    public void setReader(Reader reader) {
+    public void setInputStream(InputStream inputStream) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public Reader getReader() {
         return this.pathSourceMixin.getReader(Constants.CHARSET);
+    }
+
+    @Override
+    public void setReader(Reader reader) {
+        throw new UnsupportedOperationException();
     }
 }

@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Maps;
+
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.utils.IO;
 import org.junit.Test;
@@ -37,6 +38,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Test the UUID template filters
+ *
  * @author Jesse on 4/27/2015.
  */
 public class FilterUUIDTest extends AbstractTemplateParserTest {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<heading>Commentaire</heading>
-	<message>Commentaire envoyé.</message>
-	<text>Merci.</text>
+  <heading>Commentaire</heading>
+  <message>Commentaire envoyé.</message>
+  <text>Merci.</text>
 </strings>

@@ -27,6 +27,7 @@ import com.esri.sde.sdk.client.SeException;
 import com.esri.sde.sdk.client.SeQuery;
 import com.esri.sde.sdk.client.SeRow;
 import com.esri.sde.sdk.client.SeSqlConstruct;
+
 import org.fao.geonet.Constants;
 
 import java.io.ByteArrayInputStream;
@@ -39,65 +40,61 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Adapter to retrieve ISO metadata from an ArcSDE server. The metadata in ArcSDE is scanned for
  * "MD_Metadata" and those that match are included in the result unprocessed, so including any
  * non-ISO ESRI elements they may contain.
- * 
- * @author heikki doeleman
  *
+ * @author heikki doeleman
  */
 public class ArcSDEMetadataAdapter extends ArcSDEConnection {
 
-	public ArcSDEMetadataAdapter(String server, int instance, String database, String username, String password) {
-		super(server, instance, database, username, password);
-	}
-	
-	private static final String METADATA_TABLE = "SDE.GDB_USERMETADATA";
-	private static final String METADATA_COLUMN = "SDE.GDB_USERMETADATA.XML";
-	private static final String ISO_METADATA_IDENTIFIER = "MD_Metadata";
-	
-	public List<String> retrieveMetadata(AtomicBoolean cancelMonitor) throws Exception {
-		System.out.println("start retrieve metadata");
-		List<String> results = new ArrayList<String>();
-		try {	
-			// query table containing XML metadata
-			SeSqlConstruct sqlConstruct = new SeSqlConstruct();
-			String[] tables = {METADATA_TABLE };
-			sqlConstruct.setTables(tables);
-			String[] propertyNames = { METADATA_COLUMN };			
-			SeQuery query = new SeQuery(seConnection);
-			query.prepareQuery(propertyNames, sqlConstruct);
-			query.execute();
-			
-			// it is not documented in the ArcSDE API how you know there are no more rows to fetch!
-			// I'm assuming: query.fetch returns null (empiric tests indicate this assumption is correct).
-			boolean allRowsFetched = false;
-			while(! allRowsFetched) {
+    private static final String METADATA_TABLE = "SDE.GDB_USERMETADATA";
+    private static final String METADATA_COLUMN = "SDE.GDB_USERMETADATA.XML";
+    private static final String ISO_METADATA_IDENTIFIER = "MD_Metadata";
+    public ArcSDEMetadataAdapter(String server, int instance, String database, String username, String password) {
+        super(server, instance, database, username, password);
+    }
+
+    public List<String> retrieveMetadata(AtomicBoolean cancelMonitor) throws Exception {
+        System.out.println("start retrieve metadata");
+        List<String> results = new ArrayList<String>();
+        try {
+            // query table containing XML metadata
+            SeSqlConstruct sqlConstruct = new SeSqlConstruct();
+            String[] tables = {METADATA_TABLE};
+            sqlConstruct.setTables(tables);
+            String[] propertyNames = {METADATA_COLUMN};
+            SeQuery query = new SeQuery(seConnection);
+            query.prepareQuery(propertyNames, sqlConstruct);
+            query.execute();
+
+            // it is not documented in the ArcSDE API how you know there are no more rows to fetch!
+            // I'm assuming: query.fetch returns null (empiric tests indicate this assumption is correct).
+            boolean allRowsFetched = false;
+            while (!allRowsFetched) {
                 if (cancelMonitor.get()) {
                     return Collections.emptyList();
                 }
-				SeRow row = query.fetch();
-				if(row != null) {
-					ByteArrayInputStream bytes = row.getBlob(0);
-					byte [] buff = new byte[bytes.available()];
-					bytes.read(buff);
-					String document = new String(buff, Constants.ENCODING);
-					if(document.contains(ISO_METADATA_IDENTIFIER)) {
-						System.out.println("ISO metadata found");
-						results.add(document);
-					}
-				}
-				else {
-					allRowsFetched = true;
-				}
-			}			
-			query.close();
-			System.out.println("cool");
-			return results;
-		}
-		catch(SeException x) {
-			SeError error = x.getSeError();
-			String description = error.getExtError() + " " + error.getExtErrMsg() + " " + error.getErrDesc();
-			System.out.println(description);
-			x.printStackTrace();
-			throw new Exception(x);
-		}
-	}
+                SeRow row = query.fetch();
+                if (row != null) {
+                    ByteArrayInputStream bytes = row.getBlob(0);
+                    byte[] buff = new byte[bytes.available()];
+                    bytes.read(buff);
+                    String document = new String(buff, Constants.ENCODING);
+                    if (document.contains(ISO_METADATA_IDENTIFIER)) {
+                        System.out.println("ISO metadata found");
+                        results.add(document);
+                    }
+                } else {
+                    allRowsFetched = true;
+                }
+            }
+            query.close();
+            System.out.println("cool");
+            return results;
+        } catch (SeException x) {
+            SeError error = x.getSeError();
+            String description = error.getExtError() + " " + error.getExtErrMsg() + " " + error.getErrDesc();
+            System.out.println(description);
+            x.printStackTrace();
+            throw new Exception(x);
+        }
+    }
 }

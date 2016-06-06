@@ -27,7 +27,9 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+
 import jeeves.server.context.ServiceContext;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
@@ -105,7 +107,8 @@ public class EnvironmentImpl implements Environment {
     }
 
     /**
-     * Return the value of the first parameter with the provided name.  Null is returned if there is no parameter with the given name.
+     * Return the value of the first parameter with the provided name.  Null is returned if there is
+     * no parameter with the given name.
      */
     public ParamValue param(String paramName) {
         final Collection<ParamValue> paramValues = this.params.get(paramName);
@@ -134,6 +137,7 @@ public class EnvironmentImpl implements Environment {
         }
         return paramValues.iterator().next();
     }
+
     /**
      * Return ALL values of parameter with the provided name.
      */
@@ -239,7 +243,7 @@ public class EnvironmentImpl implements Environment {
     public boolean canEdit() throws Exception {
         final AccessManager bean = serviceContext.getBean(AccessManager.class);
         return bean.isOwner(serviceContext, this.metadataInfo.getSourceInfo())
-               || bean.hasEditPermission(serviceContext, String.valueOf(this.metadataInfo.getId()));
+            || bean.hasEditPermission(serviceContext, String.valueOf(this.metadataInfo.getId()));
     }
 
     @Override

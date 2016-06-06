@@ -27,6 +27,7 @@ package org.fao.geonet.services.metadata;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 
 import org.fao.geonet.GeonetContext;
@@ -57,7 +58,8 @@ public class UpdateStatus extends NotInReadOnlyModeService {
      * @param params
      * @throws Exception
      */
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
     /**
      *
@@ -66,42 +68,42 @@ public class UpdateStatus extends NotInReadOnlyModeService {
      * @return
      * @throws Exception
      */
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		DataManager dataMan = gc.getBean(DataManager.class);
-		AccessManager am = gc.getBean(AccessManager.class);
-		String id = Utils.getIdentifierFromParameters(params, context);
+        DataManager dataMan = gc.getBean(DataManager.class);
+        AccessManager am = gc.getBean(AccessManager.class);
+        String id = Utils.getIdentifierFromParameters(params, context);
 
-		//--- check access
-		int iLocalId = Integer.parseInt(id);
-		if (!dataMan.existsMetadata(iLocalId))
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+        //--- check access
+        int iLocalId = Integer.parseInt(id);
+        if (!dataMan.existsMetadata(iLocalId))
+            throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		//--- only allow the owner of the record to set its status
-		if (!am.isOwner(context, id)) {
-			throw new UnAuthorizedException("Only the owner of the metadata can set the status. User is not the owner of the metadata", null);
-		}
+        //--- only allow the owner of the record to set its status
+        if (!am.isOwner(context, id)) {
+            throw new UnAuthorizedException("Only the owner of the metadata can set the status. User is not the owner of the metadata", null);
+        }
 
-		String status = Util.getParam(params, Params.STATUS);
-		String changeMessage = Util.getParam(params, Params.CHANGE_MESSAGE);
-		ISODate changeDate = new ISODate();
+        String status = Util.getParam(params, Params.STATUS);
+        String changeMessage = Util.getParam(params, Params.CHANGE_MESSAGE);
+        ISODate changeDate = new ISODate();
 
-		//--- use StatusActionsFactory and StatusActions class to 
-		//--- change status and carry out behaviours for status changes
-		StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
+        //--- use StatusActionsFactory and StatusActions class to
+        //--- change status and carry out behaviours for status changes
+        StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
 
-		StatusActions sa = saf.createStatusActions(context);
+        StatusActions sa = saf.createStatusActions(context);
 
-		Set<Integer> metadataIds = new HashSet<Integer>();
-		metadataIds.add(iLocalId);
+        Set<Integer> metadataIds = new HashSet<Integer>();
+        metadataIds.add(iLocalId);
 
-		sa.statusChange(status, metadataIds, changeDate, changeMessage);
+        sa.statusChange(status, metadataIds, changeDate, changeMessage);
 
-		//--- reindex metadata
-		dataMan.indexMetadata(id, true);
+        //--- reindex metadata
+        dataMan.indexMetadata(id, true);
 
-		//--- return id for showing
-		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
-	}
+        //--- return id for showing
+        return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
+    }
 }

@@ -32,6 +32,6 @@ import org.fao.geonet.domain.MetadataNotificationId;
  * @author Jesse
  */
 public interface MetadataNotificationRepository extends GeonetRepository<MetadataNotification, MetadataNotificationId>,
-        MetadataNotificationRepositoryCustom {
+    MetadataNotificationRepositoryCustom {
 
 }

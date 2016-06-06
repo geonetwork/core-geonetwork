@@ -24,6 +24,7 @@
 package org.fao.geonet;
 
 import com.google.common.annotations.VisibleForTesting;
+
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.util.ThreadPool;
 import org.springframework.context.ApplicationContext;
@@ -37,7 +38,7 @@ public class GeonetContext {
     // ---------------------------------------------------------------------------
     @VisibleForTesting
     public GeonetContext(ApplicationContext springAppContext, boolean readOnly,
-                               Class<StatusActions> statusActionsClass) {
+                         Class<StatusActions> statusActionsClass) {
         this._springAppContext = springAppContext;
         this.nodeInfo = springAppContext.getBean(NodeInfo.class);
         nodeInfo.setReadOnly(readOnly);

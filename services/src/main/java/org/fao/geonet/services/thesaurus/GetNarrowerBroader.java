@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -45,57 +46,58 @@ import java.nio.file.Path;
  */
 
 public class GetNarrowerBroader implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		Element response = new Element(Jeeves.Elem.RESPONSE);
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
+        Element response = new Element(Jeeves.Elem.RESPONSE);
 
-		KeywordsSearcher searcher = null;
-		
-			
-		// perform the search and save search result into session
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
+        KeywordsSearcher searcher = null;
 
-        if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
-		searcher = new KeywordsSearcher(context, thesaurusMan);
-		
-		String request = Util.getParam(params, "request");
+
+        // perform the search and save search result into session
+        GeonetContext gc = (GeonetContext) context
+            .getHandlerContext(Geonet.CONTEXT_NAME);
+        ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
+
+        if (Log.isDebugEnabled("KeywordsManager"))
+            Log.debug("KeywordsManager", "Creating new keywords searcher");
+        searcher = new KeywordsSearcher(context, thesaurusMan);
+
+        String request = Util.getParam(params, "request");
         String conceptId = Util.getParam(params, "id");
-		
-		if (request.equals("broader") 
-				|| request.equals("narrower")
-				|| request.equals("related")) {
-		    KeywordRelation reqType;
-			
-			if(request.equals("broader"))		// If looking for broader search concept in a narrower element
-				reqType = KeywordRelation.NARROWER;
-			else if(request.equals("narrower"))
-				reqType = KeywordRelation.BROADER;
-			else 
-				reqType = KeywordRelation.RELATED;
-			
-			searcher.searchForRelated(params, reqType, KeywordSort.defaultLabelSorter(SortDirection.DESC), context.getLanguage());
-		
-			// Build response
-			response.setAttribute("relation", request);
+
+        if (request.equals("broader")
+            || request.equals("narrower")
+            || request.equals("related")) {
+            KeywordRelation reqType;
+
+            if (request.equals("broader"))        // If looking for broader search concept in a narrower element
+                reqType = KeywordRelation.NARROWER;
+            else if (request.equals("narrower"))
+                reqType = KeywordRelation.BROADER;
+            else
+                reqType = KeywordRelation.RELATED;
+
+            searcher.searchForRelated(params, reqType, KeywordSort.defaultLabelSorter(SortDirection.DESC), context.getLanguage());
+
+            // Build response
+            response.setAttribute("relation", request);
             response.setAttribute("to", conceptId);
-			response.addContent(searcher.getXmlResults());
-		}else  
-			throw new Exception("unknown request type: " + request);
-			
-		
-		return response;
-	}
+            response.addContent(searcher.getXmlResults());
+        } else
+            throw new Exception("unknown request type: " + request);
+
+
+        return response;
+    }
 }
 
 // =============================================================================

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<heading>Error</heading>
-	<message>La càrrega del fitxer ha fallat.</message>
+  <heading>Error</heading>
+  <message>La càrrega del fitxer ha fallat.</message>
 </strings>

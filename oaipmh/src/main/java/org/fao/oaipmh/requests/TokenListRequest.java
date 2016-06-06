@@ -28,55 +28,61 @@ import org.fao.geonet.utils.GeonetHttpRequestFactory;
 
 
 public abstract class TokenListRequest extends ListRequest {
-	
 
-	protected ISODate from;
-	protected ISODate until;
-	protected String  mdPrefix;
-	protected String  set;
+
+    protected ISODate from;
+    protected ISODate until;
+    protected String mdPrefix;
+    protected String set;
 
     public TokenListRequest(GeonetHttpRequestFactory transport) {
         super(transport);
     }
 
     //---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
-	
-	public ISODate getFrom()  { return from;  }
-	public ISODate getUntil() { return until; }
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public String getMetadataPrefix() { return mdPrefix; }
-	public String getSet()            { return set;      }
-	
-	//---------------------------------------------------------------------------
+    public ISODate getFrom() {
+        return from;
+    }
 
-	public void setFrom(ISODate date)
-	{
-		from = date;
-	}
+    public void setFrom(ISODate date) {
+        from = date;
+    }
 
-	//---------------------------------------------------------------------------
+    public ISODate getUntil() {
+        return until;
+    }
 
-	public void setUntil(ISODate date)
-	{
-		until = date;
-	}
+    public void setUntil(ISODate date) {
+        until = date;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setMetadataPrefix(String mdPrefix)
-	{
-		this.mdPrefix = mdPrefix;
-	}
+    public String getMetadataPrefix() {
+        return mdPrefix;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setSet(String set)
-	{
-		this.set = set;
-	}
-	
+    public void setMetadataPrefix(String mdPrefix) {
+        this.mdPrefix = mdPrefix;
+    }
+
+    //---------------------------------------------------------------------------
+
+    public String getSet() {
+        return set;
+    }
+
+    //---------------------------------------------------------------------------
+
+    public void setSet(String set) {
+        this.set = set;
+    }
+
 }

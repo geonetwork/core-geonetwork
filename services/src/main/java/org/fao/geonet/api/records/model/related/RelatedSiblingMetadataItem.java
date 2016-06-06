@@ -1,4 +1,3 @@
-
 package org.fao.geonet.api.records.model.related;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -9,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for relatedSiblingMetadataItem complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="relatedSiblingMetadataItem">
  *   &lt;complexContent>
@@ -24,8 +23,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "relatedSiblingMetadataItem", propOrder = {
@@ -33,8 +30,7 @@ import javax.xml.bind.annotation.XmlType;
     "initiativeType"
 })
 public class RelatedSiblingMetadataItem
-    extends RelatedMetadataItem
-{
+    extends RelatedMetadataItem {
 
     @XmlElement(required = true)
     protected String associationType;
@@ -43,11 +39,8 @@ public class RelatedSiblingMetadataItem
 
     /**
      * Gets the value of the associationType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getAssociationType() {
         return associationType;
@@ -55,11 +48,8 @@ public class RelatedSiblingMetadataItem
 
     /**
      * Sets the value of the associationType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setAssociationType(String value) {
         this.associationType = value;
@@ -67,11 +57,8 @@ public class RelatedSiblingMetadataItem
 
     /**
      * Gets the value of the initiativeType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getInitiativeType() {
         return initiativeType;
@@ -79,11 +66,8 @@ public class RelatedSiblingMetadataItem
 
     /**
      * Sets the value of the initiativeType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setInitiativeType(String value) {
         this.initiativeType = value;

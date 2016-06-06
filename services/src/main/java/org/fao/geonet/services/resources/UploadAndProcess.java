@@ -54,8 +54,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 
 /**
- * Handles the file upload and attach the uploaded service to the metadata record
- * using the onlinesrc-add XSL process.
+ * Handles the file upload and attach the uploaded service to the metadata record using the
+ * onlinesrc-add XSL process.
  *
  * Return a simple JSON response in case of success.
  */
@@ -70,17 +70,17 @@ public class UploadAndProcess {
     private ServiceManager serviceManager;
 
     @RequestMapping(value = {"/{lang}/resource.upload.and.link", "/{lang}/resource-onlinesrc-upload"}, produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public IdResponse exec(HttpServletRequest request,
                            @PathVariable String lang,
-                           @RequestParam(value="filename") MultipartFile file,
+                           @RequestParam(value = "filename") MultipartFile file,
                            @RequestParam(defaultValue = "") String description,
                            @RequestParam(defaultValue = "") String id,
                            @RequestParam(defaultValue = "") String uuid,
                            @RequestParam(defaultValue = "private", value = Params.ACCESS) String access,
                            @RequestParam(value = Params.OVERWRITE, defaultValue = "no") String overwrite)
-            throws Exception {
+        throws Exception {
         ServiceContext context = serviceManager.createServiceContext("resource.upload.and.link", lang, request);
 
         if (id.trim().isEmpty()) {
@@ -118,11 +118,11 @@ public class UploadAndProcess {
         try {
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
             processedMetadata = XslProcessUtils.process(context, id, process,
-                    true, report, siteURL, allParams);
+                true, report, siteURL, allParams);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
-                        + report.getNumberOfRecordNotFound() + ", Not owner:" + report.getNumberOfRecordsNotEditable()
-                        + ", No process found:" + report.getNoProcessFoundCount() + ".");
+                    + report.getNumberOfRecordNotFound() + ", Not owner:" + report.getNumberOfRecordsNotEditable()
+                    + ", No process found:" + report.getNoProcessFoundCount() + ".");
             }
         } catch (Exception e) {
             throw e;

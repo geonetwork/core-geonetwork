@@ -1,12 +1,12 @@
 <nav class="navbar navbar-default navbar-fixed-top gn-top-bar" role="navigation"
      data-ng-if="!unsupportedSchema">
-  
+
 
   <p class="navbar-text gn-tooltip"
-    data-ng-mouseover="getSaveStatus()" title="{{savedStatus}}">
+     data-ng-mouseover="getSaveStatus()" title="{{savedStatus}}">
     <span data-ng-class="saveError ? 'text-danger' : ''">{{savedStatus}}</span>
   </p>
-  
+
   <div class="pull-right">
     <!--<button type="button" class="btn btn-primary navbar-btn gn-tooltip" data-ng-click="share()"
       data-title="{{'share-help' | translate}}" data-placement="bottom">
@@ -50,12 +50,12 @@
     <!-- TODO: automatic save status -->
     <button type="button" class="btn btn-default navbar-btn gn-tooltip"
             gn-click-and-spin="cancel()"
-      data-ng-mouseover="getCancelStatus()" title="{{cancelStatus}}">
+            data-ng-mouseover="getCancelStatus()" title="{{cancelStatus}}">
       <i class="fa fa-undo"/>&nbsp;
       <span class="visible-lg" data-translate="">cancel</span>
     </button>
     <button type="button" class="btn btn-default navbar-btn gn-tooltip"
-        title="{{'closeEditor'|translate}}" gn-click-and-spin="close()">
+            title="{{'closeEditor'|translate}}" gn-click-and-spin="close()">
       <i class="fa fa-sign-out"/>&nbsp;
       <span class="visible-lg" data-translate="">closeEditor</span>
     </button>
@@ -64,10 +64,11 @@
               data-gn-click-and-spin="save(true)"
               class="btn btn-primary">
         <i class="fa fa-save"/>&nbsp;
-        <span class="visible-lg">{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}</span>
+        <span
+          class="visible-lg">{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}</span>
       </button>
-      <button type="button" class="btn btn-primary dropdown-toggle" 
-      data-toggle="dropdown" aria-expanded="false">
+      <button type="button" class="btn btn-primary dropdown-toggle"
+              data-toggle="dropdown" aria-expanded="false">
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">

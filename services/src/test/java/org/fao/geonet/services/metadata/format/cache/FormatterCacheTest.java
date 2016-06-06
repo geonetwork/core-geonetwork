@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.cache;
 
 import com.google.common.collect.Sets;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
@@ -42,6 +43,7 @@ import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -83,9 +85,9 @@ public class FormatterCacheTest {
         formatterCache.clear();
 
         assertArrayEquals("newVal1".getBytes(Constants.CHARSET), formatterCache.get(key, new ChangeDateValidator(changeDate),
-                new TestLoader("newVal1", changeDate, false), true));
+            new TestLoader("newVal1", changeDate, false), true));
         assertArrayEquals("newVal2".getBytes(Constants.CHARSET), formatterCache.get(key2, new ChangeDateValidator(changeDate),
-                new TestLoader("newVal2", changeDate, false), true));
+            new TestLoader("newVal2", changeDate, false), true));
     }
 
     @Test
@@ -101,6 +103,7 @@ public class FormatterCacheTest {
         assertEquals("result", getAsString(key, changeDate, new TestLoader("result", changeDate, false)));
         assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
     }
+
     @Test
     public void testGet() throws Exception {
         final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
@@ -216,6 +219,7 @@ public class FormatterCacheTest {
             public void remove(@Nonnull Key key) throws IOException, SQLException {
                 // ignore
             }
+
             @Override
             public void setPublished(int metadataId, boolean published) {
                 throw new UnsupportedOperationException("not yet implemented");
@@ -231,7 +235,7 @@ public class FormatterCacheTest {
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
         final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
-        formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result",changeDate, false), true);
+        formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), true);
         assertEquals(true, persistentStoreHit.get());
 
         persistentStoreHit.set(false);
@@ -255,7 +259,7 @@ public class FormatterCacheTest {
                     @Override
                     void doStore(Pair<Key, StoreInfoAndDataLoadResult> request) throws Exception {
                         waitForStartPut.set(true);
-                        while(!waitForAllowPut.get()) {
+                        while (!waitForAllowPut.get()) {
                             Thread.sleep(100);
                         }
                         super.doStore(request);
@@ -272,7 +276,7 @@ public class FormatterCacheTest {
         waitForStartPut.set(true);
         assertNull(persistentStore.get(key));
         waitForAllowPut.set(true);
-        while(!waitForDone.get()) {
+        while (!waitForDone.get()) {
             Thread.sleep(100);
         }
         assertNotNull(persistentStore.get(key));

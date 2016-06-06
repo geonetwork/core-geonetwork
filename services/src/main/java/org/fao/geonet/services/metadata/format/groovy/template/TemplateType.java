@@ -42,20 +42,19 @@ public enum TemplateType {
             return TEXT;
         }
     }
+
     public static TemplateType fromPath(Path path) throws IOException {
         String type = Files.probeContentType(path);
-        if(type == null) {
+        if (type == null) {
             String file = path.getFileName().toString();
-            if(file.endsWith(".xsd") ||
-                    file.endsWith(".html") ||
-                    file.endsWith(".xml")) {
+            if (file.endsWith(".xsd") ||
+                file.endsWith(".html") ||
+                file.endsWith(".xml")) {
                 return XML;
-            }
-            else {
+            } else {
                 return TEXT;
             }
-        }
-        else {
+        } else {
             return fromContentType(Files.probeContentType(path));
         }
     }

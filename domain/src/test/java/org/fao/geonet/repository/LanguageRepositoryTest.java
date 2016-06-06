@@ -38,6 +38,16 @@ public class LanguageRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     LanguageRepository _repo;
 
+    public static Language newLanguage(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+        Language lang = new Language();
+        lang.setId("l-" + val);
+        lang.setDefaultLanguage(val % 2 == 0);
+        lang.setInspire(val % 2 == 1);
+        lang.setName("name" + val);
+        return lang;
+    }
+
     @Test
     public void testFindOne() {
         Language language = newLanguage();
@@ -81,16 +91,6 @@ public class LanguageRepositoryTest extends AbstractSpringDataTest {
 
     private Language newLanguage() {
         return newLanguage(_inc);
-    }
-
-    public static Language newLanguage(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-        Language lang = new Language();
-        lang.setId("l-" + val);
-        lang.setDefaultLanguage(val % 2 == 0);
-        lang.setInspire(val % 2 == 1);
-        lang.setName("name" + val);
-        return lang;
     }
 
 }

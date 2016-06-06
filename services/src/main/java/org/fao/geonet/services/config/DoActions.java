@@ -47,38 +47,16 @@ import org.jdom.Element;
 /**
  * do any immediate actions resulting from changes to settings
  */
-public class DoActions implements Service
-{
+public class DoActions implements Service {
     //--------------------------------------------------------------------------
     //---
     //--- Init
     //---
     //--------------------------------------------------------------------------
 
-    public void init(Path appPath, ServiceConfig params) throws Exception {}
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
-
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
-
-        if (params.getText().equals("ok")) {
-            doActions(context);
-        } else {
-            // else what? Exceptions don't get this far so must be "ok" response
-            throw new OperationAbortedEx("DoActions received unexpected request: "+Xml.getString(params));
-        }
-
-        return new Element(Jeeves.Elem.RESPONSE).setText("ok");
-    }
-
     public static void doActions(ServiceContext context) throws Exception {
-        GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager     dataMan = gc.getBean(DataManager.class);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataMan = gc.getBean(DataManager.class);
         SettingManager settingMan = gc.getBean(SettingManager.class);
         SettingInfo si = context.getBean(SettingInfo.class);
 
@@ -90,7 +68,7 @@ public class DoActions implements Service
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: "+e.getMessage());
+            throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: " + e.getMessage());
         }
 
         LogUtils.refreshLogConfiguration();
@@ -111,6 +89,27 @@ public class DoActions implements Service
             throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
         }
         // FIXME: should also restart the Z server?
+    }
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
+
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
+
+    public Element exec(Element params, ServiceContext context) throws Exception {
+
+        if (params.getText().equals("ok")) {
+            doActions(context);
+        } else {
+            // else what? Exceptions don't get this far so must be "ok" response
+            throw new OperationAbortedEx("DoActions received unexpected request: " + Xml.getString(params));
+        }
+
+        return new Element(Jeeves.Elem.RESPONSE).setText("ok");
     }
 
 }

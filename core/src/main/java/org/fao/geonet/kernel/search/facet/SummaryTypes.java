@@ -32,7 +32,7 @@ public class SummaryTypes {
 
     private static final String SUMMARY_TYPES_HEADER = " * Summary Type Configuration:\n";
 
-    private List<SummaryType>  summaryTypes;
+    private List<SummaryType> summaryTypes;
 
     public SummaryTypes(List<SummaryType> summaryTypes) {
         this.summaryTypes = summaryTypes;
@@ -54,7 +54,7 @@ public class SummaryTypes {
     }
 
     public SummaryType get(String resultType) {
-        for (SummaryType summaryType: summaryTypes) {
+        for (SummaryType summaryType : summaryTypes) {
             if (summaryType.getName().equals(resultType)) {
                 return summaryType;
             }

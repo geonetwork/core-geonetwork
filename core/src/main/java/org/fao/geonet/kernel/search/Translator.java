@@ -27,7 +27,7 @@ import java.io.Serializable;
 
 /**
  * Takes a key and looks up a translation for that key.
- * 
+ *
  * @author jesse
  */
 public interface Translator extends Serializable {

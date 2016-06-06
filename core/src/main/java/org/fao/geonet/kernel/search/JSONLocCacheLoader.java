@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.search;
 
 import com.google.common.io.Resources;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.util.XslUtil;
 import org.jdom.JDOMException;
@@ -39,6 +40,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+
 import javax.servlet.ServletContext;
 
 /**
@@ -47,19 +49,21 @@ import javax.servlet.ServletContext;
  * All JSON files are combined in one cache (like the client app does).
  */
 public final class JSONLocCacheLoader implements Callable<Map<String, String>> {
-    private final String langCode;
-
     /**
      * The list of files to load.
      */
     private static final List<String> files = Arrays.asList(
-            new String[]{"core", "admin", "editor", "search"});
-
+        new String[]{"core", "admin", "editor", "search"});
+    private final String langCode;
     private ConfigurableApplicationContext applicationContext;
 
     public JSONLocCacheLoader(ConfigurableApplicationContext context, String langCode) {
         this.langCode = langCode;
         this.applicationContext = context;
+    }
+
+    public static String cacheKey(final String langCode) {
+        return "json:" + langCode;
     }
 
     @Override
@@ -80,25 +84,16 @@ public final class JSONLocCacheLoader implements Callable<Map<String, String>> {
         return translations;
     }
 
-    public static String cacheKey(final String langCode) {
-        return "json:" + langCode;
-    }
-
     /**
      * Populate the cache by loading all JSON files.
-     *
-     * @param translation
-     * @param file
-     * @throws IOException
-     * @throws JDOMException
      */
     @SuppressWarnings("unchecked")
     private void addJSONLocalizationFile(Map<String, String> translation, URL file)
-            throws IOException, JDOMException {
+        throws IOException, JDOMException {
         if (file != null) {
             try {
                 JSONObject json =
-                        new JSONObject(Resources.toString(file, Constants.CHARSET));
+                    new JSONObject(Resources.toString(file, Constants.CHARSET));
 
                 Iterator<String> keys = json.keys();
                 while (keys.hasNext()) {

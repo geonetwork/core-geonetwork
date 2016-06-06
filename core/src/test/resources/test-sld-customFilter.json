@@ -1,0 +1,17 @@
+{
+    "baseStyle" : "Test:MuiltiRoad",
+    "filters": [ {"field_name": "longueur",
+                  "filter": [ { "filter_type": "PropertyIsBetween",
+                                "params": [0,500]},
+                              { "filter_type": "PropertyIsBetween",
+                                "params": [500,5000]}]},
+                 {"field_name": "departement",
+                  "filter": [ { "filter_type": "PropertyIsEqualTo",
+                                "params": ["Ain"]}]},
+                 {"field_name": "date_renovation",
+                  "filter": [ { "filter_type": "PropertyIsBetween",
+                                "params": ["2015-07-01", "2015-08-31"]},
+                              { "filter_type": "PropertyIsBetween",
+                                "params": ["2014-07-01", "2014-08-31"]}]}
+               ]
+}

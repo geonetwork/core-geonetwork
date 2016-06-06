@@ -30,7 +30,7 @@ import org.jdom.Element;
 
 /**
  * Represents a criteria for searching for Keywords
- * 
+ *
  * @author jeichar
  */
 public interface SearchClause {
@@ -44,9 +44,7 @@ public interface SearchClause {
 
     /**
      * Add a representation of this clause to the search params
-     * 
-     * @param params
      */
     public void addXmlParams(Element params);
-    
+
 }

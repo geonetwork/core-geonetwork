@@ -25,8 +25,10 @@ package org.fao.geonet.services.ownership;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
@@ -38,6 +40,7 @@ import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.Nonnull;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,34 +49,30 @@ import java.util.Set;
 
 //=============================================================================
 
-public class OwnershipUtils
-{
+public class OwnershipUtils {
 
-	public static List<Element> getOwnerUsers(ServiceContext context, UserSession us) throws SQLException
-	{
-		if (!us.isAuthenticated())
-			return new ArrayList<Element>();
+    public static List<Element> getOwnerUsers(ServiceContext context, UserSession us) throws SQLException {
+        if (!us.isAuthenticated())
+            return new ArrayList<Element>();
 
         final List<User> allUsersThatOwnMetadata = context.getBean(UserRepository.class).findAllUsersThatOwnMetadata();
 
-		return getUsers(context, us, allUsersThatOwnMetadata);
-	}
+        return getUsers(context, us, allUsersThatOwnMetadata);
+    }
 
-	public static List<Element> getEditorUsers(ServiceContext context, UserSession us) throws SQLException
-	{
-		if (!us.isAuthenticated())
-			return new ArrayList<Element>();
+    public static List<Element> getEditorUsers(ServiceContext context, UserSession us) throws SQLException {
+        if (!us.isAuthenticated())
+            return new ArrayList<Element>();
 
         List<User> users = context.getBean(UserRepository.class).findAll(Specifications.not(UserSpecs.hasProfile(Profile.RegisteredUser)));
-        return getUsers(context,us,users);
-	}
+        return getUsers(context, us, users);
+    }
 
-	public static List<Element> getUsers(ServiceContext context, UserSession us, List<User> users) throws SQLException
-	{
+    public static List<Element> getUsers(ServiceContext context, UserSession us, List<User> users) throws SQLException {
 
-		int id = us.getUserIdAsInt();
+        int id = us.getUserIdAsInt();
 
-		if (us.getProfile() == Profile.Administrator){
+        if (us.getProfile() == Profile.Administrator) {
             final List<Element> userXml = Lists.transform(users, new Function<User, Element>() {
                 @Override
                 @Nonnull
@@ -85,49 +84,48 @@ public class OwnershipUtils
             return userXml;
         }
 
-		//--- we have a user admin
+        //--- we have a user admin
 
-		Set<String> hsMyGroups = getUserGroups(context, id);
+        Set<String> hsMyGroups = getUserGroups(context, id);
 
         Set<Profile> profileSet = us.getProfile().getAll();
 
-		//--- now filter them
+        //--- now filter them
 
-		List<Element> newList = new ArrayList<Element>();
+        List<Element> newList = new ArrayList<Element>();
 
-		for (User elRec : users) {
+        for (User elRec : users) {
             int userId = elRec.getId();
             Profile profile = elRec.getProfile();
 
-			if (profileSet.contains(profile)) {
-				if (hsMyGroups.containsAll(getUserGroups(context, userId))) {
-					newList.add(elRec.asXml());
+            if (profileSet.contains(profile)) {
+                if (hsMyGroups.containsAll(getUserGroups(context, userId))) {
+                    newList.add(elRec.asXml());
                 }
             }
-		}
+        }
 
-		//--- return result
+        //--- return result
 
-		return newList;
-	}
+        return newList;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //--------------------------------------------------------------------------
 
-	private static Set<String> getUserGroups(ServiceContext context, int id) throws SQLException
-	{
+    private static Set<String> getUserGroups(ServiceContext context, int id) throws SQLException {
         HashSet<String> groupIds = new HashSet<String>();
 
         final List<UserGroup> users = context.getBean(UserGroupRepository.class).findAll(UserGroupSpecs.hasUserId(id));
-		for (UserGroup el : users) {
-			groupIds.add("" + el.getId().getGroupId());
-		}
+        for (UserGroup el : users) {
+            groupIds.add("" + el.getId().getGroupId());
+        }
 
-		return groupIds;
-	}
+        return groupIds;
+    }
 }
 
 //=============================================================================

@@ -41,7 +41,7 @@ public class SummaryTypeBeanDefinitionParser extends AbstractBeanDefinitionParse
 
     @Override
     protected AbstractBeanDefinition parseInternal(Element element,
-            ParserContext parserContext) {
+                                                   ParserContext parserContext) {
         return parseSummaryTypesElement(element, parserContext);
     }
 
@@ -63,7 +63,7 @@ public class SummaryTypeBeanDefinitionParser extends AbstractBeanDefinitionParse
         ManagedList<BeanDefinition> children = new ManagedList<BeanDefinition>(childElements.size());
 
         ParserContext nestedContext = new ParserContext(
-            parserContext.getReaderContext(), 
+            parserContext.getReaderContext(),
             parserContext.getDelegate(),
             factory.getBeanDefinition()
         );

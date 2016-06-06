@@ -1,133 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Change log 
+<!-- Change log
 [2007.08]
  * added ctl:suite/@version attribute (optional)
 -->
-<xs:schema xmlns:ctl="http://www.occamlab.com/ctl" 
-  xmlns:xi="http://www.w3.org/2001/XInclude" 
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-  targetNamespace="http://www.occamlab.com/ctl" 
-  elementFormDefault="qualified"
-  version="2007.08">
-	<!-- CTL supports XSLT 1.0 instructions, but since the W3C has not published an XSLT 1.0 schema
-	     and 1.0 instructions are forwards-compatible with 2.0 instructions, include the XSLT 2.0 schema -->
-	<xs:import namespace="http://www.w3.org/1999/XSL/Transform" schemaLocation="xslt20.xsd"/>
-	<xs:import namespace="http://www.w3.org/2001/XInclude" schemaLocation="xinclude.xsd"/>
-	<xs:element name="package" type="ctl:packageType"/>
-	<xs:complexType name="packageType">
-		<xs:sequence minOccurs="0" maxOccurs="unbounded">
-			<xs:choice>
-				<xs:element ref="xsl:template"/>
-				<xs:element ref="ctl:function"/>
-				<xs:element ref="ctl:parser"/>
-				<xs:element ref="ctl:package"/>
-				<xs:element ref="ctl:test"/>
-				<xs:element ref="ctl:suite"/>
-				<xs:element ref="xi:include"/>
-			</xs:choice>
-		</xs:sequence>
-		<xs:anyAttribute namespace="##other" processContents="lax"/>
-	</xs:complexType>
-	<xs:element name="function" type="ctl:functionType"/>
-	<xs:complexType name="functionType">
-		<xs:sequence>
-			<xs:element name="param" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:string">
-							<xs:attribute name="name" type="xs:string" use="optional"/>
-						</xs:extension>
-					</xs:simpleContent>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="var-params" minOccurs="0">
-				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:string">
-							<xs:attribute name="min" type="xs:integer" use="required"/>
-							<xs:attribute name="max" type="xs:integer" use="required"/>
-						</xs:extension>
-					</xs:simpleContent>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="context" type="xs:string" minOccurs="0"/>
-			<xs:element name="return" type="xs:string" minOccurs="0"/>
-			<xs:element name="description" type="xs:string" minOccurs="0"/>
-			<xs:element name="comment" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:choice>
-				<xs:element name="java" type="ctl:javaType"/>
-				<xs:element name="code" type="ctl:codeType"/>
-			</xs:choice>
-		</xs:sequence>
-		<xs:attribute name="name" type="xs:QName" use="required"/>
-	</xs:complexType>
-	<xs:element name="parser" type="ctl:functionType"/>
-	<xs:element name="test" type="ctl:testType"/>
-	<xs:complexType name="testType">
-		<xs:sequence>
-			<xs:element name="param" type="ctl:paramType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="context" type="xs:string" minOccurs="0"/>
-			<xs:element name="assertion" type="xs:string"/>
-			<xs:element name="comment" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="link" type="ctl:linkType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="code" type="ctl:codeType"/>
-		</xs:sequence>
-		<xs:attribute name="name" type="xs:QName" use="required"/>
-	</xs:complexType>
-	<xs:element name="suite" type="ctl:suiteType"/>
-	<xs:complexType name="suiteType">
-		<xs:sequence>
-			<xs:element name="title" type="xs:string"/>
-			<xs:element name="description" type="xs:string" minOccurs="0"/>
-			<xs:element name="link" type="ctl:linkType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="starting-test" type="xs:QName"/>
-		</xs:sequence>
-		<xs:attribute name="name" type="xs:QName" use="required"/>
-        <xs:attribute name="requires-modules" type="ctl:ModuleListType" use="optional"/>
-        <xs:attribute name="version" type="xs:string" use="optional"/>
-	</xs:complexType>
-	<xs:complexType name="paramType">
-		<xs:simpleContent>
-			<xs:extension base="xs:string">
-				<xs:attribute name="name" type="xs:string" use="required"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-	<xs:complexType name="javaType">
-		<xs:sequence minOccurs="0" maxOccurs="unbounded">
-			<xs:element name="with-param">
-				<xs:complexType mixed="true">
-					<xs:sequence>
-						<xs:any processContents="lax" minOccurs="0"/>
-					</xs:sequence>
-					<xs:attribute name="name" type="xs:string" use="optional"/>
-					<xs:attribute name="select" type="xs:string" use="optional"/>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
-		<xs:attribute name="class" type="xs:string" use="required"/>
-		<xs:attribute name="method" type="xs:string" use="required"/>
-		<xs:attribute name="initialized" type="xs:boolean" use="optional"/>
-	</xs:complexType>
-	<xs:complexType name="codeType" mixed="true">
-		<xs:sequence minOccurs="0" maxOccurs="unbounded">
-			<xs:any processContents="lax"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="linkType">
-		<xs:simpleContent>
-			<xs:extension base="xs:string">
-				<xs:attribute name="title" type="xs:string" use="optional"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-    <xs:simpleType name="ModuleListType">
-      <xs:annotation>
+<xs:schema xmlns:ctl="http://www.occamlab.com/ctl"
+           xmlns:xi="http://www.w3.org/2001/XInclude"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+           targetNamespace="http://www.occamlab.com/ctl"
+           elementFormDefault="qualified"
+           version="2007.08">
+  <!-- CTL supports XSLT 1.0 instructions, but since the W3C has not published an XSLT 1.0 schema
+         and 1.0 instructions are forwards-compatible with 2.0 instructions, include the XSLT 2.0 schema -->
+  <xs:import namespace="http://www.w3.org/1999/XSL/Transform" schemaLocation="xslt20.xsd"/>
+  <xs:import namespace="http://www.w3.org/2001/XInclude" schemaLocation="xinclude.xsd"/>
+  <xs:element name="package" type="ctl:packageType"/>
+  <xs:complexType name="packageType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:choice>
+        <xs:element ref="xsl:template"/>
+        <xs:element ref="ctl:function"/>
+        <xs:element ref="ctl:parser"/>
+        <xs:element ref="ctl:package"/>
+        <xs:element ref="ctl:test"/>
+        <xs:element ref="ctl:suite"/>
+        <xs:element ref="xi:include"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+  <xs:element name="function" type="ctl:functionType"/>
+  <xs:complexType name="functionType">
+    <xs:sequence>
+      <xs:element name="param" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="name" type="xs:string" use="optional"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="var-params" minOccurs="0">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="min" type="xs:integer" use="required"/>
+              <xs:attribute name="max" type="xs:integer" use="required"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="context" type="xs:string" minOccurs="0"/>
+      <xs:element name="return" type="xs:string" minOccurs="0"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="comment" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:choice>
+        <xs:element name="java" type="ctl:javaType"/>
+        <xs:element name="code" type="ctl:codeType"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:QName" use="required"/>
+  </xs:complexType>
+  <xs:element name="parser" type="ctl:functionType"/>
+  <xs:element name="test" type="ctl:testType"/>
+  <xs:complexType name="testType">
+    <xs:sequence>
+      <xs:element name="param" type="ctl:paramType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="context" type="xs:string" minOccurs="0"/>
+      <xs:element name="assertion" type="xs:string"/>
+      <xs:element name="comment" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="link" type="ctl:linkType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="code" type="ctl:codeType"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:QName" use="required"/>
+  </xs:complexType>
+  <xs:element name="suite" type="ctl:suiteType"/>
+  <xs:complexType name="suiteType">
+    <xs:sequence>
+      <xs:element name="title" type="xs:string"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="link" type="ctl:linkType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="starting-test" type="xs:QName"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:QName" use="required"/>
+    <xs:attribute name="requires-modules" type="ctl:ModuleListType" use="optional"/>
+    <xs:attribute name="version" type="xs:string" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="paramType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="javaType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="with-param">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:any processContents="lax" minOccurs="0"/>
+          </xs:sequence>
+          <xs:attribute name="name" type="xs:string" use="optional"/>
+          <xs:attribute name="select" type="xs:string" use="optional"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+    <xs:attribute name="method" type="xs:string" use="required"/>
+    <xs:attribute name="initialized" type="xs:boolean" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="codeType" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any processContents="lax"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="linkType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="title" type="xs:string" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="ModuleListType">
+    <xs:annotation>
       <xs:documentation>
-      A whitespace-delimited list of extension modules required by this test suite.
+        A whitespace-delimited list of extension modules required by this test suite.
       </xs:documentation>
-      </xs:annotation>
-      <xs:list itemType="xs:string" />
-  	</xs:simpleType>
+    </xs:annotation>
+    <xs:list itemType="xs:string"/>
+  </xs:simpleType>
 </xs:schema>

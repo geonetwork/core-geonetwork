@@ -22,7 +22,7 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
 
   <xs:element name="related" type="relatedResponse"/>
 
@@ -32,7 +32,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="relatedMetadataItem"
-            > </xs:element>
+            ></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -40,7 +40,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="relatedMetadataItem"
-            > </xs:element>
+            ></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -48,7 +48,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded"
-              type="relatedSiblingMetadataItem"> </xs:element>
+                        type="relatedSiblingMetadataItem"></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -56,7 +56,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="relatedMetadataItem"
-            > </xs:element>
+            ></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -64,7 +64,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="relatedMetadataItem"
-            > </xs:element>
+            ></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -72,7 +72,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="relatedMetadataItem"
-            > </xs:element>
+            ></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -80,7 +80,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="relatedMetadataItem"
-            > </xs:element>
+            ></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -88,7 +88,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="relatedMetadataItem"
-            > </xs:element>
+            ></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -96,7 +96,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="relatedMetadataItem"
-            > </xs:element>
+            ></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -104,7 +104,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="relatedMetadataItem"
-            > </xs:element>
+            ></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -112,7 +112,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="relatedMetadataItem"
-            > </xs:element>
+            ></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -120,7 +120,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="relatedLinkItem"
-            > </xs:element>
+            ></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -128,7 +128,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="relatedThumbnailItem"
-            > </xs:element>
+            ></xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -167,7 +167,8 @@
           <xs:element name="description">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="value" type="localizedString" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="value" type="localizedString" minOccurs="0"
+                            maxOccurs="unbounded"/>
               </xs:sequence>
             </xs:complexType>
           </xs:element>
@@ -205,7 +206,8 @@
           <xs:element name="description">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="value" type="localizedString" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="value" type="localizedString" minOccurs="0"
+                            maxOccurs="unbounded"/>
               </xs:sequence>
             </xs:complexType>
           </xs:element>
@@ -215,19 +217,19 @@
   </xs:complexType>
 
   <!--<xs:simpleType name="relatedItemType">-->
-    <!--<xs:restriction base="xs:string">-->
-      <!--<xs:enumeration value="children"/>-->
-      <!--<xs:enumeration value="parent"/>-->
-      <!--<xs:enumeration value="siblings"/>-->
-      <!--<xs:enumeration value="associated"/>-->
-      <!--<xs:enumeration value="SERVICE"/>-->
-      <!--<xs:enumeration value="DATASET"/>-->
-      <!--<xs:enumeration value="fcats"/>-->
-      <!--<xs:enumeration value="sources"/>-->
-      <!--<xs:enumeration value="hassources"/>-->
-      <!--<xs:enumeration value="related"/>-->
-      <!--<xs:enumeration value="onlines"/>-->
-      <!--<xs:enumeration value="thumbnails"/>-->
-    <!--</xs:restriction>-->
+  <!--<xs:restriction base="xs:string">-->
+  <!--<xs:enumeration value="children"/>-->
+  <!--<xs:enumeration value="parent"/>-->
+  <!--<xs:enumeration value="siblings"/>-->
+  <!--<xs:enumeration value="associated"/>-->
+  <!--<xs:enumeration value="SERVICE"/>-->
+  <!--<xs:enumeration value="DATASET"/>-->
+  <!--<xs:enumeration value="fcats"/>-->
+  <!--<xs:enumeration value="sources"/>-->
+  <!--<xs:enumeration value="hassources"/>-->
+  <!--<xs:enumeration value="related"/>-->
+  <!--<xs:enumeration value="onlines"/>-->
+  <!--<xs:enumeration value="thumbnails"/>-->
+  <!--</xs:restriction>-->
   <!--</xs:simpleType>-->
 </xs:schema>

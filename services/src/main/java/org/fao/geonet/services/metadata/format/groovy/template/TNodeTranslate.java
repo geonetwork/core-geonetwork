@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.base.Optional;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
@@ -34,8 +35,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
-* @author Jesse on 12/2/2014.
-*/
+ * @author Jesse on 12/2/2014.
+ */
 class TNodeTranslate extends TNode {
 
     private final Translator translator;
@@ -53,7 +54,7 @@ class TNodeTranslate extends TNode {
             translator = new DefaultTranslator(type, textContentParser);
         } else {
             throw new TemplateException(
-                    "Translate type: '" + parts[0] + "' is not one of the recognized type: ['', 'default', 'node', 'codelist']");
+                "Translate type: '" + parts[0] + "' is not one of the recognized type: ['', 'default', 'node', 'codelist']");
         }
     }
 
@@ -71,34 +72,6 @@ class TNodeTranslate extends TNode {
             addChild(new Node(info, textContentParser, text));
         } catch (Exception e) {
             throw new TemplateException(e);
-        }
-    }
-
-    private class Node extends TNode {
-        private final String text;
-
-        public Node(SystemInfo info, TextContentParser parser, String text) throws IOException {
-            super(info, parser, "", EMPTY_ATTRIBUTES);
-            this.text = text;
-        }
-
-        @Override
-        protected Optional<String> canRender(TRenderContext context) {
-            return Optional.absent();
-        }
-
-        @Override
-        public void render(TRenderContext context) throws IOException {
-            final TextBlock block = textContentParser.parse(text);
-
-            final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            block.render(new TRenderContext(stream, context.getModel(true)));
-
-            try {
-                translator.translate(new String(stream.toByteArray(), Constants.CHARSET)).render(context);
-            } catch (Exception e) {
-                throw new TemplateException(e);
-            }
         }
     }
 
@@ -141,6 +114,7 @@ class TNodeTranslate extends TNode {
             return textContentParser.parse(translation);
         }
     }
+
     private static class DefaultTranslator implements Translator {
         private final String file;
         private final TextContentParser textContentParser;
@@ -154,6 +128,34 @@ class TNodeTranslate extends TNode {
             final Functions functions = TransformationContext.getContext().getFunctions();
             final String translation = functions.translate(text, file);
             return textContentParser.parse(translation);
+        }
+    }
+
+    private class Node extends TNode {
+        private final String text;
+
+        public Node(SystemInfo info, TextContentParser parser, String text) throws IOException {
+            super(info, parser, "", EMPTY_ATTRIBUTES);
+            this.text = text;
+        }
+
+        @Override
+        protected Optional<String> canRender(TRenderContext context) {
+            return Optional.absent();
+        }
+
+        @Override
+        public void render(TRenderContext context) throws IOException {
+            final TextBlock block = textContentParser.parse(text);
+
+            final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            block.render(new TRenderContext(stream, context.getModel(true)));
+
+            try {
+                translator.translate(new String(stream.toByteArray(), Constants.CHARSET)).render(context);
+            } catch (Exception e) {
+                throw new TemplateException(e);
+            }
         }
     }
 }

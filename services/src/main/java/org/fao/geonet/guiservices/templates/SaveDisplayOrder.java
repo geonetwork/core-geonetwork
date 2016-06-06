@@ -40,15 +40,15 @@ import org.jdom.Element;
  * Saves display order of a list of templates.
  *
  * @author heikki doeleman
- * 
  */
 @Deprecated
 public class SaveDisplayOrder implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	public Element exec(Element params, ServiceContext context) throws Exception {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getBean(DataManager.class) ;
+        DataManager dm = gc.getBean(DataManager.class);
         @SuppressWarnings("unchecked")
         List<Element> requestParameters = params.getChildren();
         List<String> ids = new ArrayList<String>();

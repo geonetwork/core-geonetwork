@@ -25,6 +25,7 @@ package org.fao.geonet;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+
 import org.fao.geonet.utils.IO;
 
 import java.io.IOException;
@@ -41,27 +42,28 @@ import static java.nio.file.Files.exists;
 import static java.nio.file.Files.getLastModifiedTime;
 
 /**
- * Responsible for obtaining in memory filesystems for tests.  In order to reduce memory consumption this class will recycle
- * filesystems.  The reason this is needed is because when each test obtains a new FS and copies all the files to the new FS, then a
- * great deal of memory is consumed and then needs to be garbage collected.  This can result in 2 types of OOM errors.  One is a heap
- * space error where all the heap space is used up.  The other is a GC overhead exceeded error where there is too much garbage collection
- * and the JVM throws an error regarding this.
+ * Responsible for obtaining in memory filesystems for tests.  In order to reduce memory consumption
+ * this class will recycle filesystems.  The reason this is needed is because when each test obtains
+ * a new FS and copies all the files to the new FS, then a great deal of memory is consumed and then
+ * needs to be garbage collected.  This can result in 2 types of OOM errors.  One is a heap space
+ * error where all the heap space is used up.  The other is a GC overhead exceeded error where there
+ * is too much garbage collection and the JVM throws an error regarding this.
  * <p/>
- * This class also synchronizes each filesystem that is obtained with the template file system by ensuring that all files are the same
- * as the files in the template.
+ * This class also synchronizes each filesystem that is obtained with the template file system by
+ * ensuring that all files are the same as the files in the template.
  *
  * @author Jesse on 11/24/2014.
  */
 public class FileSystemPool {
     private static final int MAX_FS = 5;
     private final CreatedFs template = new CreatedFs(Jimfs.newFileSystem("template", Configuration.unix()), "/", "data");
-    private int openFs = 0;
     private final Stack<CreatedFs> pool = new Stack<>();
-
+    private int openFs = 0;
 
     public synchronized CreatedFs getTemplate() {
         return template;
     }
+
     public synchronized CreatedFs get(String fsId) throws IOException {
         while (openFs > MAX_FS && pool.isEmpty()) {
             try {
@@ -103,7 +105,7 @@ public class FileSystemPool {
             return;
         }
 
-        Files.walkFileTree(fileSystem.dataDir, new SimpleFileVisitor<Path>(){
+        Files.walkFileTree(fileSystem.dataDir, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 Path relativePath = fileSystem.dataDir.relativize(dir);
@@ -128,7 +130,7 @@ public class FileSystemPool {
     }
 
     private void copyMissingFiles(final CreatedFs fileSystem) throws IOException {
-        Files.walkFileTree(template.dataDir, new SimpleFileVisitor<Path>(){
+        Files.walkFileTree(template.dataDir, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 final Path newDir = fileSystem.dataDir.resolve(template.dataDir.relativize(dir).toString());

@@ -26,6 +26,7 @@ package org.fao.geonet.services.config;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -36,28 +37,28 @@ import java.nio.file.Path;
 
 public class Reload implements Service {
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		String status = "true";
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		ServiceConfig handlerConfig = gc.getBean(ServiceConfig.class);
-		String luceneConfigXmlFile = handlerConfig
-				.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
+        String status = "true";
+        GeonetContext gc = (GeonetContext) context
+            .getHandlerContext(Geonet.CONTEXT_NAME);
+        ServiceConfig handlerConfig = gc.getBean(ServiceConfig.class);
+        String luceneConfigXmlFile = handlerConfig
+            .getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
 
-		LuceneConfig lc = context.getBean(LuceneConfig.class);
+        LuceneConfig lc = context.getBean(LuceneConfig.class);
         lc.configure(luceneConfigXmlFile);
 
-		Logger logger = context.getLogger();
-		logger.info("  - Lucene configuration is:");
-		String config = lc.toString();
-		logger.info(config);
+        Logger logger = context.getLogger();
+        logger.info("  - Lucene configuration is:");
+        String config = lc.toString();
+        logger.info(config);
 
-		return new Element("response")
-			.addContent(new Element("status").setText(status))
-			.addContent(new Element("config").setText(config));
-	}
+        return new Element("response")
+            .addContent(new Element("status").setText(status))
+            .addContent(new Element("config").setText(config));
+    }
 }

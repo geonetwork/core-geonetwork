@@ -33,10 +33,11 @@ import java.util.Properties;
 
 abstract class BeanUpdater implements Updater {
     protected String beanName;
+
     public void setBeanName(Element element) {
         this.beanName = element.getAttributeValue("bean");
     }
-    
+
 
     @Override
     public final void update(ConfigurableListableBeanFactory beanFactory, Properties properties) {
@@ -44,9 +45,9 @@ abstract class BeanUpdater implements Updater {
             BeanDefinition bean = beanFactory.getBeanDefinition(beanName);
             update(beanFactory, properties, bean);
         } catch (NoSuchBeanDefinitionException e) {
-            Log.warning(Log.JEEVES, "Unable apply override to bean: "+beanName+" because bean was not found");
+            Log.warning(Log.JEEVES, "Unable apply override to bean: " + beanName + " because bean was not found");
         }
-        
+
     }
 
     @Override
@@ -55,5 +56,5 @@ abstract class BeanUpdater implements Updater {
     }
 
     protected abstract void update(ConfigurableListableBeanFactory beanFactory, Properties properties, BeanDefinition bean);
-    
+
 }

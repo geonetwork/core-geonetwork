@@ -29,8 +29,9 @@ import com.yammer.metrics.core.MetricsRegistry;
 import com.yammer.metrics.reporting.JmxReporter;
 
 /**
- * A jmx reporter that appends the webapp name so multiple geonetwork instances can exist in same JVM
- * 
+ * A jmx reporter that appends the webapp name so multiple geonetwork instances can exist in same
+ * JVM
+ *
  * @author jeichar
  */
 public class GeonetworkJmxReporter extends JmxReporter {
@@ -53,6 +54,6 @@ public class GeonetworkJmxReporter extends JmxReporter {
     }
 
     private MetricName newMetricName(MetricName name) {
-        return new MetricName(name.getGroup(), name.getType(), name.getName(), name.getScope(), webappName+"."+name.getMBeanName());
+        return new MetricName(name.getGroup(), name.getType(), name.getName(), name.getScope(), webappName + "." + name.getMBeanName());
     }
 }

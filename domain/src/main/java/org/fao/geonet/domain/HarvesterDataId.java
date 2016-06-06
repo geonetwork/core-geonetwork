@@ -29,6 +29,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+
 import java.io.Serializable;
 
 /**
@@ -54,7 +55,8 @@ public class HarvesterDataId implements Serializable {
     /**
      * The uuid of the harvester that the {@link org.fao.geonet.domain.HarvesterData} belongs to.
      *
-     * @return uuid of the harvester that the {@link org.fao.geonet.domain.HarvesterData} belongs to.
+     * @return uuid of the harvester that the {@link org.fao.geonet.domain.HarvesterData} belongs
+     * to.
      */
     public String getHarvesterUuid() {
         return harvesterUuid;
@@ -62,7 +64,9 @@ public class HarvesterDataId implements Serializable {
 
     /**
      * Set uuid of the harvester that the {@link org.fao.geonet.domain.HarvesterData} belongs to.
-     * @param harvesterUuid uuid of the harvester that the {@link org.fao.geonet.domain.HarvesterData} belongs to.
+     *
+     * @param harvesterUuid uuid of the harvester that the {@link org.fao.geonet.domain.HarvesterData}
+     *                      belongs to.
      */
     public void setHarvesterUuid(String harvesterUuid) {
         this.harvesterUuid = harvesterUuid;
@@ -79,8 +83,10 @@ public class HarvesterDataId implements Serializable {
     }
 
     /**
-     * Set the key identifying the data entity (within the scope of the harvester).  Max length is 255
-     * @param key  identifying the data entity (within the scope of the harvester).
+     * Set the key identifying the data entity (within the scope of the harvester).  Max length is
+     * 255
+     *
+     * @param key identifying the data entity (within the scope of the harvester).
      */
     public void setKey(String key) {
         Assert.isTrue(key.length() <= 255);
@@ -110,8 +116,8 @@ public class HarvesterDataId implements Serializable {
     @Override
     public String toString() {
         return "ID {" +
-               "harvesterUuid='" + harvesterUuid + '\'' +
-               ", key='" + key + '\'' +
-               '}';
+            "harvesterUuid='" + harvesterUuid + '\'' +
+            ", key='" + key + '\'' +
+            '}';
     }
 }

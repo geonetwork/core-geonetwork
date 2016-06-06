@@ -37,14 +37,26 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * Test the
- * User: Jesse
- * Date: 9/29/13
- * Time: 11:03 PM
+ * Test the User: Jesse Date: 9/29/13 Time: 11:03 PM
  */
 public class SearchRequestParamRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     SearchRequestParamRepository _paramRepo;
+
+    public static SearchRequestParam newRequestParam(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+        SearchRequestParam param = new SearchRequestParam();
+        param.setInclusive(val % 2 == 0);
+        param.setLowerText("lower text" + val);
+        final LuceneQueryParamType[] values = LuceneQueryParamType.values();
+        param.setQueryType(values[val % values.length]);
+        param.setSimilarity(val);
+        param.setTermField("term field" + val);
+        param.setTermText("term text" + val);
+        param.setUpperText("upper text" + val);
+
+        return param;
+    }
 
     @Test
     public void testGetTermTextToRequestCount() {
@@ -82,21 +94,6 @@ public class SearchRequestParamRepositoryTest extends AbstractSpringDataTest {
         }
         fail("Unable to find " + termText);
         return -1;
-    }
-
-    public static SearchRequestParam newRequestParam(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-        SearchRequestParam param = new SearchRequestParam();
-        param.setInclusive(val % 2 == 0);
-        param.setLowerText("lower text" + val);
-        final LuceneQueryParamType[] values = LuceneQueryParamType.values();
-        param.setQueryType(values[val % values.length]);
-        param.setSimilarity(val);
-        param.setTermField("term field" + val);
-        param.setTermText("term text" + val);
-        param.setUpperText("upper text" + val);
-
-        return param;
     }
 
 }

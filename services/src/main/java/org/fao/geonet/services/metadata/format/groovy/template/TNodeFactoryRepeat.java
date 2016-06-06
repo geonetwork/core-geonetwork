@@ -39,10 +39,9 @@ import java.util.regex.Pattern;
  */
 @Component
 public class TNodeFactoryRepeat extends TNodeFactoryByAttName {
-    private static final Pattern MAP_PATTERN = Pattern.compile("\\s*\\(\\s*(\\S+)\\s*,\\s*(\\S+)\\s*\\)");
-
     public static final String REPEAT = "repeat";
     public static final String ONLY_CHILDREN = REPEAT + "-only-children";
+    private static final Pattern MAP_PATTERN = Pattern.compile("\\s*\\(\\s*(\\S+)\\s*,\\s*(\\S+)\\s*\\)");
 
     protected TNodeFactoryRepeat() {
         super(REPEAT, null);

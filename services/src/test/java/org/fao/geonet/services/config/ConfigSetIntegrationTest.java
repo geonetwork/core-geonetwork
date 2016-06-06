@@ -24,6 +24,7 @@
 package org.fao.geonet.services.config;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jdom.Element;
@@ -35,13 +36,12 @@ import static junit.framework.Assert.assertEquals;
 /**
  * Test updating geonetwork settings via the Config Set service.
  *
- * User: Jesse
- * Date: 10/17/13
- * Time: 7:55 AM
+ * User: Jesse Date: 10/17/13 Time: 7:55 AM
  */
 public class ConfigSetIntegrationTest extends AbstractServiceIntegrationTest {
     @Autowired
     SettingManager _settingManager;
+
     @Test
     public void testExecBatch() throws Exception {
 
@@ -85,7 +85,7 @@ public class ConfigSetIntegrationTest extends AbstractServiceIntegrationTest {
         Element params = new Element("config").addContent(new Element(setting).setText(value));
         new Set().exec(params, serviceContext);
 
-        final String newValue = _settingManager.getValue(setting.replace('.','/'));
+        final String newValue = _settingManager.getValue(setting.replace('.', '/'));
 
         assertEquals(value, newValue);
     }

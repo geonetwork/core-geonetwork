@@ -27,18 +27,27 @@ import org.apache.log4j.FileAppender;
 
 //=============================================================================
 
-public interface Logger
-{
+public interface Logger {
     public boolean isDebugEnabled();
-	public void debug  (String message);
-	public void info   (String message);
-	public void warning(String message);
-	public void error  (String message);
-    public void error  (Throwable ex);
-	public void fatal  (String message);
+
+    public void debug(String message);
+
+    public void info(String message);
+
+    public void warning(String message);
+
+    public void error(String message);
+
+    public void error(Throwable ex);
+
+    public void fatal(String message);
+
     public String getModule();
+
     public void setAppender(FileAppender fa);
+
     public String getFileAppender();
+
     public org.apache.log4j.Level getThreshold();
 
 }

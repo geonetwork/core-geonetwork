@@ -121,7 +121,7 @@ public class Column implements Comparable<Column> {
     public String toString() {
         String ldefaultVal = ignoreDefVal ? "<ignored>" : defaultVal;
         return "Column [tableName=" + tableName + ", columnName=" + columnName + ", defaultVal=" + ldefaultVal + ", isNullable="
-               + isNullable + ", dataType=" + dataType + ", charLength=" + charLength + "]";
+            + isNullable + ", dataType=" + dataType + ", charLength=" + charLength + "]";
     }
 
     @Override

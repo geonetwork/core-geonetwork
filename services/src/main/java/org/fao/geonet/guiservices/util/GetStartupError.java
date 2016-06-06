@@ -26,6 +26,7 @@ package org.fao.geonet.guiservices.util;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -33,37 +34,37 @@ import java.util.Map;
 
 //=============================================================================
 
-/** This service returns the error that was generated if an exception occurred
-  * when starting GeoNetwork
-  */
+/**
+ * This service returns the error that was generated if an exception occurred when starting
+ * GeoNetwork
+ */
 
-public class GetStartupError implements Service
-{
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class GetStartupError implements Service {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Element root = new Element("response");
-		if (context.isStartupError()) {
-			Element errorElem = new Element("error");
-			Map<String,String> errors = context.getStartupErrors();
-			for (Map.Entry<String,String> entry : errors.entrySet()) {
-				Element err = new Element(entry.getKey()).setText(entry.getValue());
-				errorElem.addContent(err);
-			}
-			root.addContent(errorElem);
-		} else {
-			Element ok = new Element("ok");
-			root.addContent(ok);
-		}
-		return root;
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        Element root = new Element("response");
+        if (context.isStartupError()) {
+            Element errorElem = new Element("error");
+            Map<String, String> errors = context.getStartupErrors();
+            for (Map.Entry<String, String> entry : errors.entrySet()) {
+                Element err = new Element(entry.getKey()).setText(entry.getValue());
+                errorElem.addContent(err);
+            }
+            root.addContent(errorElem);
+        } else {
+            Element ok = new Element("ok");
+            root.addContent(ok);
+        }
+        return root;
+    }
 }
 
 //=============================================================================

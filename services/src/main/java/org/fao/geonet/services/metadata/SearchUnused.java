@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -39,46 +40,44 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** Search for unused metadata to allow the possibility to view/remove them
-  */
+/**
+ * Search for unused metadata to allow the possibility to view/remove them
+ */
 
-public class SearchUnused implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class SearchUnused implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception
-	{
-	}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		SearchManager searchMan = gc.getBean(SearchManager.class);
+        SearchManager searchMan = gc.getBean(SearchManager.class);
 
-		// possibly close old searcher
-		UserSession  session     = context.getUserSession();
-		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
+        // possibly close old searcher
+        UserSession session = context.getUserSession();
+        Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
 
-		if (oldSearcher != null)
-			if (oldSearcher instanceof LuceneSearcher)
-				((LuceneSearcher)oldSearcher).close();
+        if (oldSearcher != null)
+            if (oldSearcher instanceof LuceneSearcher)
+                ((LuceneSearcher) oldSearcher).close();
 
-		// perform the search and save search result into session
+        // perform the search and save search result into session
 
-		context.info("Creating UnusedSearcher");
+        context.info("Creating UnusedSearcher");
 
-		try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.UNUSED, Geonet.File.SEARCH_LUCENE)) {
+        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.UNUSED, Geonet.File.SEARCH_LUCENE)) {
 
             searcher.search(context, params, null);
             session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
@@ -87,7 +86,7 @@ public class SearchUnused implements Service
 
             return searcher.getSummary();
         }
-	}
+    }
 }
 
 //=============================================================================

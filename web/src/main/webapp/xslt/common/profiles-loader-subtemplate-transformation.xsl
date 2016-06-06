@@ -22,12 +22,11 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:gn="http://www.fao.org/geonetwork"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:saxon="http://saxon.sf.net/"
+                version="2.0"
                 extension-element-prefixes="saxon">
-  <!-- 
+  <!--
     Load the subtemplate transformation for each schemas
   -->
   <xsl:include href="blanks/metadata-schema01/convert/subtemplate-transformation.xsl"/>

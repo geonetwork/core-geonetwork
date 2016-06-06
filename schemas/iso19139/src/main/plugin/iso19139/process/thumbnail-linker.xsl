@@ -23,11 +23,13 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all" version="2.0">
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all"
+                version="2.0">
 
-  <!-- 
-      Usage: 
+  <!--
+      Usage:
         thumbnail_linker?prefix=http://geonetwork.org/thumbnails/
     -->
 
@@ -40,7 +42,8 @@
   <!-- File name extension -->
   <xsl:param name="suffix" select="'.png'"/>
 
-  <xsl:template match="gmd:MD_DataIdentification|*[contains(@gco:isoType, 'MD_DataIdentification')]">
+  <xsl:template
+    match="gmd:MD_DataIdentification|*[contains(@gco:isoType, 'MD_DataIdentification')]">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates select="gmd:citation"/>

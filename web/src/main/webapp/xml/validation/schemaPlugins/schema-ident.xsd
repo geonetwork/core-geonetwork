@@ -22,69 +22,69 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xs:schema version="1.0" elementFormDefault="qualified"
-        attributeFormDefault="unqualified"
-        targetNamespace="http://geonetwork-opensource.org/schemas/schema-ident"
-				xmlns:gns="http://geonetwork-opensource.org/schemas/schema-ident"
-        xmlns:xml="http://www.w3.org/XML/1998/namespace"
-        xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:gns="http://geonetwork-opensource.org/schemas/schema-ident" xmlns:xml="http://www.w3.org/XML/1998/namespace"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           version="1.0"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           targetNamespace="http://geonetwork-opensource.org/schemas/schema-ident">
 
   <xs:import schemaLocation="xml.xsd" namespace="http://www.w3.org/XML/1998/namespace"/>
 
   <xs:annotation>
     <xs:documentation>
-    XML Schema which can be used to validate GeoNetwork schema-ident.xml
-    file used in Schema Plugins.
+      XML Schema which can be used to validate GeoNetwork schema-ident.xml
+      file used in Schema Plugins.
     </xs:documentation>
   </xs:annotation>
 
-<!-- ====================================================================== -->
-<!-- schema is the root element in a GeoNetwork schema identification -->
-<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
+  <!-- schema is the root element in a GeoNetwork schema identification -->
+  <!-- ====================================================================== -->
 
   <xs:element name="schema" type="gns:schemaType"/>
 
-<!-- ====================================================================== -->
-<!-- schemaType complex type -->
-<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
+  <!-- schemaType complex type -->
+  <!-- ====================================================================== -->
 
   <xs:complexType name="schemaType">
     <xs:annotation>
       <xs:documentation>
-			All schema identity files must have the elements defined in this
-			type:
+        All schema identity files must have the elements defined in this
+        type:
 
-				name = unique name of the schema used in GeoNetwork (lower case,
-				       and if a profile then it should be named after the base schema
-							 using base-schema-name.profile-name eg. iso19139.mcp)
+        name = unique name of the schema used in GeoNetwork (lower case,
+        and if a profile then it should be named after the base schema
+        using base-schema-name.profile-name eg. iso19139.mcp)
 
-				id   = unique identifier for the schema
+        id = unique identifier for the schema
 
-				version = official version number of the schema
+        version = official version number of the schema
 
-				depends = names of other schemas that this schema depends on. This 
-				          schema will fail to load if these schemas are not present.
+        depends = names of other schemas that this schema depends on. This
+        schema will fail to load if these schemas are not present.
 
-				schemaLocation = official URL of XML schema definitions (XSD) for this
-				                 metadata schema
+        schemaLocation = official URL of XML schema definitions (XSD) for this
+        metadata schema
 
-				autodetect = information used to detect whether a metadata record
-				             belongs to this schema
+        autodetect = information used to detect whether a metadata record
+        belongs to this schema
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element name="name"           type="xs:string" minOccurs="1"/>
-      <xs:element name="id"             type="xs:string" minOccurs="1"/>
-      <xs:element name="version"        type="xs:string" minOccurs="1"/>
-      <xs:element name="title"          type="gns:title" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="description"    type="gns:description" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="standardUrl"    type="gns:standardUrl" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="depends"        type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="name" type="xs:string" minOccurs="1"/>
+      <xs:element name="id" type="xs:string" minOccurs="1"/>
+      <xs:element name="version" type="xs:string" minOccurs="1"/>
+      <xs:element name="title" type="gns:title" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="description" type="gns:description" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="standardUrl" type="gns:standardUrl" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="depends" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="schemaLocation" type="xs:string" minOccurs="1"/>
-      <xs:element name="autodetect"     type="gns:autodetectType" 
-        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="autodetect" type="gns:autodetectType"
+                  minOccurs="1" maxOccurs="1"/>
       <xs:element name="filters" type="gns:filters" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="readwriteUuid"  type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="readwriteUuid" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -112,88 +112,88 @@
     </xs:simpleContent>
   </xs:complexType>
 
-<!-- ====================================================================== -->
-<!-- autodetectType complex type -->
-<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
+  <!-- autodetectType complex type -->
+  <!-- ====================================================================== -->
 
   <xs:complexType name="autodetectType">
     <xs:annotation>
       <xs:documentation>
-			Define the information used to determine whether a
-			metadata record is defined using this schema.
+        Define the information used to determine whether a
+        metadata record is defined using this schema.
       </xs:documentation>
     </xs:annotation>
-		<!-- one and one only rule to detect schemas can be specified -->
-		<xs:choice minOccurs="1" maxOccurs="1">
-			<xs:element name="elements"       type="gns:elementsType"/>
-			<xs:element name="attributes"     type="gns:attributesType"/>
-			<xs:element name="namespaces"     type="gns:namespacesType"/>
+    <!-- one and one only rule to detect schemas can be specified -->
+    <xs:choice minOccurs="1" maxOccurs="1">
+      <xs:element name="elements" type="gns:elementsType"/>
+      <xs:element name="attributes" type="gns:attributesType"/>
+      <xs:element name="namespaces" type="gns:namespacesType"/>
     </xs:choice>
   </xs:complexType>
 
-<!-- ====================================================================== -->
-<!-- namespacesType complex type -->
-<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
+  <!-- namespacesType complex type -->
+  <!-- ====================================================================== -->
 
   <xs:simpleType name="namespacesType">
     <xs:annotation>
       <xs:documentation>
-			Describes the namespace(s) that must exist in a metadata record for it
-			to be identified as belonging to this schema.
+        Describes the namespace(s) that must exist in a metadata record for it
+        to be identified as belonging to this schema.
       </xs:documentation>
     </xs:annotation>
-		<xs:restriction base="xs:token"> <!-- no content allowed -->
-			<xs:enumeration value=""/>
-		</xs:restriction>
+    <xs:restriction base="xs:token"> <!-- no content allowed -->
+      <xs:enumeration value=""/>
+    </xs:restriction>
   </xs:simpleType>
 
-<!-- ====================================================================== -->
-<!-- attributesType complex type -->
-<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
+  <!-- attributesType complex type -->
+  <!-- ====================================================================== -->
 
   <xs:complexType name="attributesType">
     <xs:annotation>
       <xs:documentation>
-			Describes the attribute(s) that must exist in a metadata record for it
-			to be identified as belonging to this schema.
+        Describes the attribute(s) that must exist in a metadata record for it
+        to be identified as belonging to this schema.
       </xs:documentation>
     </xs:annotation>
-		<xs:anyAttribute namespace="##any" processContents="skip"/>
+    <xs:anyAttribute namespace="##any" processContents="skip"/>
   </xs:complexType>
 
-<!-- ====================================================================== -->
-<!-- elementsType complex type -->
-<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
+  <!-- elementsType complex type -->
+  <!-- ====================================================================== -->
 
   <xs:complexType name="elementsType">
     <xs:annotation>
       <xs:documentation>
-			Contains the elements that must exist in a metadata record for it
-			to be identified as belonging to this schema.
+        Contains the elements that must exist in a metadata record for it
+        to be identified as belonging to this schema.
       </xs:documentation>
     </xs:annotation>
-		<xs:sequence>
-			<xs:any namespace="##any" processContents="skip" maxOccurs="unbounded"/>
+    <xs:sequence>
+      <xs:any namespace="##any" processContents="skip" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="type" use="optional">
-    	<xs:annotation>
-      	<xs:documentation>
-				Determines how the elements specified will be used to detect the 
-				schema.
+      <xs:annotation>
+        <xs:documentation>
+          Determines how the elements specified will be used to detect the
+          schema.
 
-				root = the element defined is expected to be the root element
-	
-				search = the elements and their content must be present somewhere in 
-			         	 the record (default if unspecified)
-      	</xs:documentation>
-    	</xs:annotation>
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="root"/>
-					<xs:enumeration value="search"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
+          root = the element defined is expected to be the root element
+
+          search = the elements and their content must be present somewhere in
+          the record (default if unspecified)
+        </xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="root"/>
+          <xs:enumeration value="search"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="filters">
@@ -218,7 +218,8 @@
         to check for the user groups and apply the filter
         defined by the XPath. All elements matching the XPath
         are removed from the record before being returned
-        to the user.</xs:documentation>
+        to the user.
+      </xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element name="keepMarkedElement" minOccurs="0" maxOccurs="1">
@@ -226,7 +227,8 @@
           <xs:documentation>An optional element definition to substitute
             the replaced element by (if a match is found this element
             attributes or children are inserted).
-            This is used to highlight removed element.</xs:documentation>
+            This is used to highlight removed element.
+          </xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:sequence>
@@ -237,14 +239,18 @@
       </xs:element>
     </xs:sequence>
     <xs:attribute name="xpath" use="required">
-      <xs:annotation><xs:documentation>
-        An XPath to select elements to filter
-      </xs:documentation></xs:annotation>
+      <xs:annotation>
+        <xs:documentation>
+          An XPath to select elements to filter
+        </xs:documentation>
+      </xs:annotation>
     </xs:attribute>
     <xs:attribute name="ifNotOperation" use="required">
-      <xs:annotation><xs:documentation>
-        An operation (which match canEdit, canDownload, canDynamic method in AccessManager)
-      </xs:documentation></xs:annotation>
+      <xs:annotation>
+        <xs:documentation>
+          An operation (which match canEdit, canDownload, canDynamic method in AccessManager)
+        </xs:documentation>
+      </xs:annotation>
       <xs:simpleType>
         <xs:restriction base="xs:string">
           <xs:enumeration value="editing"/>

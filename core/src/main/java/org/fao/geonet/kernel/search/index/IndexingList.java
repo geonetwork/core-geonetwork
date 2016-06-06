@@ -30,8 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A list of metadata identifiers to be index in
- * the near future by the {@link IndexingTask}.
+ * A list of metadata identifiers to be index in the near future by the {@link IndexingTask}.
  * <p/>
  * Created by francois on 7/29/14.
  */
@@ -42,7 +41,7 @@ public class IndexingList {
     synchronized public void add(final int metadataIdentifier) {
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.error(Geonet.INDEX_ENGINE, "Indexing list / Adding record with id: "
-                    + metadataIdentifier + ".");
+                + metadataIdentifier + ".");
         }
         this.metadataIdentifiers.add(metadataIdentifier);
     }

@@ -34,15 +34,16 @@ import java.io.IOException;
 public class NoFilterFilter extends Filter {
 
     private final static NoFilterFilter instance = new NoFilterFilter();
+
+    public static Filter instance() {
+        return instance;
+    }
+
     @Override
     public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
         OpenBitSet set = new OpenBitSet(context.reader().maxDoc());
         set.set(0, context.reader().maxDoc());
         return set;
-    }
-
-    public static Filter instance() {
-        return instance;
     }
 
 }

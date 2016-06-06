@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -37,46 +38,76 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 class WAFRetriever implements RemoteRetriever {
-    private AtomicBoolean cancelMonitor;
+    public static final String type_GetCapabilities = "GetCapabilities";
     //--------------------------------------------------------------------------
-	//---
-	//--- RemoteRetriever interface
-	//---
-	//--------------------------------------------------------------------------
+    //---
+    //--- RemoteRetriever interface
+    //---
+    //--------------------------------------------------------------------------
+    public static final String type_xml = "xml";
 
-	public void init(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params) {
+    //---------------------------------------------------------------------------
+    public static final String type_dir = "directory";
+
+    //---------------------------------------------------------------------------
+    private AtomicBoolean cancelMonitor;
+
+    //---------------------------------------------------------------------------
+    private Logger log;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- check type if url is a xml file or GetCapabilities file
+    //---
+    //---------------------------------------------------------------------------
+    private WebDavParams params;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    private List<RemoteFile> files = new ArrayList<RemoteFile>();
+
+    public static String getFileType(String path) {
+        if (path.toUpperCase().contains("REQUEST=GETCAPABILITIES")) {
+            return type_GetCapabilities;
+        } else if (path.toUpperCase().endsWith(".XML")) {
+            return type_xml;
+        } else if (path.toUpperCase().endsWith("/")) {
+            return type_dir;
+        } else {
+            return null;
+        }
+    }
+
+    public void init(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params) {
         this.cancelMonitor = cancelMonitor;
-		this.log    = log;
-		this.params = params;
-	}
+        this.log = log;
+        this.params = params;
+    }
 
-	//---------------------------------------------------------------------------
+    public List<RemoteFile> retrieve() throws Exception {
 
-	public List<RemoteFile> retrieve() throws Exception {
-		
-		files.clear();
-		retrieveFiles(params.url);
-		return files;
-	}
+        files.clear();
+        retrieveFiles(params.url);
+        return files;
+    }
 
-	//---------------------------------------------------------------------------
+    public void destroy() {
+        return;
+    }
 
-	public void destroy() {
-		return;
-	}
+    private void retrieveFiles(String wafurl) throws IOException {
 
-	//---------------------------------------------------------------------------
+        if (log.isDebugEnabled()) log.debug("Scanning resource : " + wafurl);
 
-	private void retrieveFiles(String wafurl) throws IOException {
-
-        if(log.isDebugEnabled()) log.debug("Scanning resource : "+ wafurl);
-		
-        Document doc = Jsoup.parse(new URL(wafurl),3000);
+        Document doc = Jsoup.parse(new URL(wafurl), 3000);
         Elements links = doc.select("a[href]");
         for (Element link : links) {
             if (cancelMonitor.get()) {
                 files.clear();
-                return ;
+                return;
             }
 
             String url = link.attr("abs:href");
@@ -84,7 +115,7 @@ class WAFRetriever implements RemoteRetriever {
 
             String fileType = getFileType(url);
 
-            if(fileType == null) {
+            if (fileType == null) {
                 continue;
             } else if (fileType.equals(type_dir)) {
                 if (params.recurse) {
@@ -98,40 +129,7 @@ class WAFRetriever implements RemoteRetriever {
                 files.add(new WAFRemoteFile(url));
             }
         }
-	}
-	
-	//---------------------------------------------------------------------------
-	//---
-	//--- check type if url is a xml file or GetCapabilities file
-	//---
-	//---------------------------------------------------------------------------
-	
-	public static String getFileType(String path)
-	{
-		if(path.toUpperCase().contains("REQUEST=GETCAPABILITIES")) {
-			return type_GetCapabilities;
-        } else if(path.toUpperCase().endsWith(".XML")) {
-			return	type_xml;
-        } else if(path.toUpperCase().endsWith("/")) {
-            return type_dir;
-        } else {
-			return null;
-        }
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private Logger         log;
-	private WebDavParams   params;
-	private List<RemoteFile> files = new ArrayList<RemoteFile>();
-	
-	public static final String type_GetCapabilities = "GetCapabilities";
-	public static final String type_xml = "xml";
-    public static final String type_dir = "directory";
+    }
 }
 
 //=============================================================================

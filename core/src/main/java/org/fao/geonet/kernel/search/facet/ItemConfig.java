@@ -26,18 +26,15 @@ import org.fao.geonet.kernel.search.Translator;
 import org.fao.geonet.kernel.search.TranslatorFactory;
 
 public class ItemConfig {
-    private static final String TEMPLATE = "   * %s: {max=%s, sort by=%s, sort order=%s, translator=%s, depth=%s}%n";
-
     /**
      * Default number of values for a facet
      */
     public static final int DEFAULT_MAX_KEYS = 10;
-
     /**
      * Default depth of sub categories to count
      */
     public static final int DEFAULT_DEPTH = 1;
-
+    private static final String TEMPLATE = "   * %s: {max=%s, sort by=%s, sort order=%s, translator=%s, depth=%s}%n";
     private final Dimension dimension;
     private SortBy sortBy;
     private SortOrder sortOrder;
@@ -61,11 +58,7 @@ public class ItemConfig {
      */
 
     public Dimension getDimension() {
-        return dimension; 
-    }
-
-    public void setSortBy(SortBy sortBy) {
-        this.sortBy = sortBy;
+        return dimension;
     }
 
     /**
@@ -74,6 +67,10 @@ public class ItemConfig {
 
     public SortBy getSortBy() {
         return sortBy;
+    }
+
+    public void setSortBy(SortBy sortBy) {
+        this.sortBy = sortBy;
     }
 
     /**
@@ -87,10 +84,6 @@ public class ItemConfig {
         this.sortOrder = sortOrder;
     }
 
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
-
     /**
      * @return the depth to go to returning facet values
      */
@@ -98,18 +91,21 @@ public class ItemConfig {
         return depth;
     }
 
-    public void setMax(int max) {
-        this.max = max;
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 
     /**
-     * @return (optional) the number of values to be returned for the facet.
-     * Defaults is {@link ItemConfig#DEFAULT_MAX_KEYS} and never greater than
-     * {@link ItemConfig#MAX_SUMMARY_KEY}.
+     * @return (optional) the number of values to be returned for the facet. Defaults is {@link
+     * ItemConfig#DEFAULT_MAX_KEYS} and never greater than {@link ItemConfig#MAX_SUMMARY_KEY}.
      */
 
     public int getMax() {
         return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
     }
 
     public void setTranslator(String translator) {

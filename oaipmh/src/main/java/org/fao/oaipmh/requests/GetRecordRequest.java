@@ -36,9 +36,16 @@ import org.xml.sax.SAXException;
 
 //=============================================================================
 
-public class GetRecordRequest extends AbstractRequest
-{
-	public static final String VERB = "GetRecord";
+public class GetRecordRequest extends AbstractRequest {
+    public static final String VERB = "GetRecord";
+    private String identifier;
+    private String mdPrefix;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
     public GetRecordRequest(GeonetHttpRequestFactory transport) {
         super(transport);
@@ -49,53 +56,48 @@ public class GetRecordRequest extends AbstractRequest
     }
 
     //---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
 
-	public String getIdentifier()     { return identifier; }
-	public String getMetadataPrefix() { return mdPrefix;   }
+    public String getIdentifier() {
+        return identifier;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setIdentifier(String identifier)
-	{
-		this.identifier = identifier;
-	}
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setMetadataPrefix(String mdPrefix)
-	{
-		this.mdPrefix = mdPrefix;
-	}
+    public String getMetadataPrefix() {
+        return mdPrefix;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public GetRecordResponse execute() throws IOException, OaiPmhException, JDOMException,
-															SAXException, Exception
-	{
-		Map<String, String> params = new HashMap<String, String>();
+    public void setMetadataPrefix(String mdPrefix) {
+        this.mdPrefix = mdPrefix;
+    }
 
-		params.put("identifier",     identifier);
-		params.put("metadataPrefix", mdPrefix);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-		return new GetRecordResponse(sendRequest(params));
-	}
+    public GetRecordResponse execute() throws IOException, OaiPmhException, JDOMException,
+        SAXException, Exception {
+        Map<String, String> params = new HashMap<String, String>();
 
-	//---------------------------------------------------------------------------
+        params.put("identifier", identifier);
+        params.put("metadataPrefix", mdPrefix);
 
-	public String getVerb() { return VERB; }
+        return new GetRecordResponse(sendRequest(params));
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private String identifier;
-	private String mdPrefix;
+    public String getVerb() {
+        return VERB;
+    }
 }
 
 //=============================================================================

@@ -28,9 +28,8 @@ import org.springframework.context.ApplicationEvent;
 
 /**
  * Event launched when a group is updated on the database
- * 
- * @author delawen
  *
+ * @author delawen
  */
 public class GroupUpdated extends ApplicationEvent {
 
@@ -49,5 +48,5 @@ public class GroupUpdated extends ApplicationEvent {
     public Group getGroup() {
         return g;
     }
-    
+
 }

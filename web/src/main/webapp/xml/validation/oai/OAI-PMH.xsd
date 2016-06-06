@@ -1,22 +1,22 @@
-<schema targetNamespace="http://www.openarchives.org/OAI/2.0/"
+<schema xmlns:oai="http://www.openarchives.org/OAI/2.0/"
+        targetNamespace="http://www.openarchives.org/OAI/2.0/"
         xmlns="http://www.w3.org/2001/XMLSchema"
-        xmlns:oai="http://www.openarchives.org/OAI/2.0/"
         elementFormDefault="qualified"
         attributeFormDefault="unqualified">
 
   <annotation>
     <documentation>
-    XML Schema which can be used to validate replies to all OAI-PMH 
-    v2.0 requests. Herbert Van de Sompel, 2002-05-13.
-    Validated with XML Spy v.4.3 on 2002-05-13.
-    Validated with XSV 1.203.2.45/1.106.2.22 on 2002-05-13.
-    Added definition of protocolVersionType instead of using anonymous 
-    type. No change of function. Simeon Warner, 2004-03-29.
-    Tightened definition of UTCdatetimeType to enforce the restriction 
-    to UTC Z notation. Simeon Warner, 2004-09-14.
-    Corrected pattern matches for setSpecType and metedataPrefixType
-    to agree with protocol specification. Simeon Warner, 2004-10-12.
-    $Date: 2004/10/12 15:20:29 $
+      XML Schema which can be used to validate replies to all OAI-PMH
+      v2.0 requests. Herbert Van de Sompel, 2002-05-13.
+      Validated with XML Spy v.4.3 on 2002-05-13.
+      Validated with XSV 1.203.2.45/1.106.2.22 on 2002-05-13.
+      Added definition of protocolVersionType instead of using anonymous
+      type. No change of function. Simeon Warner, 2004-03-29.
+      Tightened definition of UTCdatetimeType to enforce the restriction
+      to UTC Z notation. Simeon Warner, 2004-09-14.
+      Corrected pattern matches for setSpecType and metedataPrefixType
+      to agree with protocol specification. Simeon Warner, 2004-10-12.
+      $Date: 2004/10/12 15:20:29 $
     </documentation>
   </annotation>
 
@@ -40,10 +40,11 @@
 
   <complexType name="requestType">
     <annotation>
-      <documentation>Define requestType, indicating the protocol request that 
-      led to the response. Element content is BASE-URL, attributes are arguments 
-      of protocol request, attribute-values are values of arguments of protocol 
-      request</documentation>
+      <documentation>Define requestType, indicating the protocol request that
+        led to the response. Element content is BASE-URL, attributes are arguments
+        of protocol request, attribute-values are values of arguments of protocol
+        request
+      </documentation>
     </annotation>
     <simpleContent>
       <extension base="anyURI">
@@ -106,7 +107,7 @@
       <element name="deletedRecord" type="oai:deletedRecordType"/>
       <element name="granularity" type="oai:granularityType"/>
       <element name="compression" type="string" minOccurs="0" maxOccurs="unbounded"/>
-      <element name="description" type="oai:descriptionType" 
+      <element name="description" type="oai:descriptionType"
                minOccurs="0" maxOccurs="unbounded"/>
     </sequence>
   </complexType>
@@ -144,14 +145,15 @@
     </sequence>
   </complexType>
 
-  <!-- define basic types used in replies to 
+  <!-- define basic types used in replies to
        GetRecord, ListRecords, ListIdentifiers -->
   <!-- ======================================= -->
 
   <complexType name="recordType">
     <annotation>
       <documentation>A record has a header, a metadata part, and
-        an optional about container</documentation>
+        an optional about container
+      </documentation>
     </annotation>
     <sequence>
       <element name="header" type="oai:headerType"/>
@@ -166,7 +168,8 @@
         and setSpec(s) in case the item from which
         the record is disseminated belongs to set(s).
         the header can carry a deleted status indicating
-        that the record is deleted.</documentation>
+        that the record is deleted.
+      </documentation>
     </annotation>
     <sequence>
       <element name="identifier" type="oai:identifierType"/>
@@ -189,11 +192,12 @@
   <complexType name="metadataType">
     <annotation>
       <documentation>Metadata must be expressed in XML that complies
-       with another XML Schema (namespace=#other). Metadata must be 
-       explicitly qualified in the response.</documentation>
+        with another XML Schema (namespace=#other). Metadata must be
+        explicitly qualified in the response.
+      </documentation>
     </annotation>
     <sequence>
-		<!-- Changed by AC 18-Sep-2007 in order to validate against metadata -->
+      <!-- Changed by AC 18-Sep-2007 in order to validate against metadata -->
       <any namespace="##other" processContents="lax"/>
       <!--any namespace="##other" processContents="lax"/-->
     </sequence>
@@ -202,7 +206,8 @@
   <complexType name="aboutType">
     <annotation>
       <documentation>Data "about" the record must be expressed in XML
-      that is compliant with an XML Schema defined by a community.</documentation>
+        that is compliant with an XML Schema defined by a community.
+      </documentation>
     </annotation>
     <sequence>
       <any namespace="##other" processContents="strict"/>
@@ -212,8 +217,9 @@
   <complexType name="resumptionTokenType">
     <annotation>
       <documentation>A resumptionToken may have 3 optional attributes
-       and can be used in ListSets, ListIdentifiers, ListRecords
-       responses.</documentation>
+        and can be used in ListSets, ListIdentifiers, ListRecords
+        responses.
+      </documentation>
     </annotation>
     <simpleContent>
       <extension base="string">
@@ -227,9 +233,10 @@
   <complexType name="descriptionType">
     <annotation>
       <documentation>The descriptionType is used for the description
-      element in Identify and for setDescription element in ListSets.
-      Content must be compliant with an XML Schema defined by a 
-      community.</documentation>
+        element in Identify and for setDescription element in ListSets.
+        Content must be compliant with an XML Schema defined by a
+        community.
+      </documentation>
     </annotation>
     <sequence>
       <any namespace="##other" processContents="strict"/>
@@ -239,7 +246,8 @@
   <simpleType name="UTCdatetimeType">
     <annotation>
       <documentation>Datestamps are to either day (type date)
-      or to seconds granularity (type oai:UTCdateTimeZType)</documentation>
+        or to seconds granularity (type oai:UTCdateTimeZType)
+      </documentation>
     </annotation>
     <union memberTypes="date oai:UTCdateTimeZType"/>
   </simpleType>
@@ -304,7 +312,7 @@
     <sequence>
       <element name="setSpec" type="oai:setSpecType"/>
       <element name="setName" type="string"/>
-      <element name="setDescription" type="oai:descriptionType" 
+      <element name="setDescription" type="oai:descriptionType"
                minOccurs="0" maxOccurs="unbounded"/>
     </sequence>
   </complexType>

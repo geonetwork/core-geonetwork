@@ -35,9 +35,8 @@ import org.xml.sax.SAXException;
 
 //=============================================================================
 
-public class ListIdentifiersRequest extends TokenListRequest
-{
-	public static final String VERB = "ListIdentifiers";
+public class ListIdentifiersRequest extends TokenListRequest {
+    public static final String VERB = "ListIdentifiers";
 
     public ListIdentifiersRequest(GeonetHttpRequestFactory transport) {
         super(transport);
@@ -46,33 +45,33 @@ public class ListIdentifiersRequest extends TokenListRequest
 
     //---------------------------------------------------------------------------
 
-	public ListIdentifiersResponse execute() throws IOException, OaiPmhException,
-																	JDOMException, SAXException, Exception
-	{
-		Map<String, String> params = new HashMap<String, String>();
+    public ListIdentifiersResponse execute() throws IOException, OaiPmhException,
+        JDOMException, SAXException, Exception {
+        Map<String, String> params = new HashMap<String, String>();
 
-		if (resumpToken != null)
-			params.put("resumptionToken", resumpToken);
-		else
-		{
-			params.put("metadataPrefix", mdPrefix);
+        if (resumpToken != null)
+            params.put("resumptionToken", resumpToken);
+        else {
+            params.put("metadataPrefix", mdPrefix);
 
-			if (from != null)
-				params.put("from", (from.isDateOnly()) ? from.getDateAsString() : from.toString() +"Z");
+            if (from != null)
+                params.put("from", (from.isDateOnly()) ? from.getDateAsString() : from.toString() + "Z");
 
-			if (until != null)
-				params.put("until", (until.isDateOnly()) ? until.getDateAsString() : until.toString() +"Z");
+            if (until != null)
+                params.put("until", (until.isDateOnly()) ? until.getDateAsString() : until.toString() + "Z");
 
-			if (set != null)
-				params.put("set", set);
-		}
+            if (set != null)
+                params.put("set", set);
+        }
 
-		return new ListIdentifiersResponse(this, sendRequest(params));
-	}
+        return new ListIdentifiersResponse(this, sendRequest(params));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public String getVerb() { return VERB; }
+    public String getVerb() {
+        return VERB;
+    }
 
 
 }

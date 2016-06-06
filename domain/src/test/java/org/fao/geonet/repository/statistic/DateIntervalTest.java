@@ -29,10 +29,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Test DateInterval class
- * User: Jesse
- * Date: 10/1/13
- * Time: 8:04 PM
+ * Test DateInterval class User: Jesse Date: 10/1/13 Time: 8:04 PM
  */
 public class DateIntervalTest {
     final String date = "1980-10-12T06:45:23";

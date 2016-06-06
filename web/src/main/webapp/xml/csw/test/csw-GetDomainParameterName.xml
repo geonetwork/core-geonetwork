@@ -24,5 +24,6 @@
 
 <csw:GetDomain xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
                service="CSW" version="2.0.2">
-  <csw:ParameterName>DescribeRecord.outputFormat,GetRecords.resultType,GetRecords.outputSchema</csw:ParameterName>
+  <csw:ParameterName>DescribeRecord.outputFormat,GetRecords.resultType,GetRecords.outputSchema
+  </csw:ParameterName>
 </csw:GetDomain>

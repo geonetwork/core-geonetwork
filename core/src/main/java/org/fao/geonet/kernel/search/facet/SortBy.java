@@ -29,11 +29,11 @@ public enum SortBy {
     /**
      * Use a text comparator for sorting values
      */
-    VALUE, 
+    VALUE,
     /**
      * Use a numeric comparator for sorting values
      */
-    NUMVALUE, 
+    NUMVALUE,
     /**
      * Sort by count
      */
@@ -45,7 +45,7 @@ public enum SortBy {
 
     public static SortBy find(String lookupName) {
         for (SortBy sortBy : values()) {
-            if(sortBy.name().equalsIgnoreCase(lookupName)) {
+            if (sortBy.name().equalsIgnoreCase(lookupName)) {
                 return sortBy;
             }
         }

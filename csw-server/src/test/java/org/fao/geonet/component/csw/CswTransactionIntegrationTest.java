@@ -60,9 +60,7 @@ import static org.junit.Assert.assertNull;
 /**
  * Test Csw Transaction handling.
  * <p/>
- * User: Jesse
- * Date: 10/17/13
- * Time: 7:56 PM
+ * User: Jesse Date: 10/17/13 Time: 7:56 PM
  */
 @ContextConfiguration(inheritLocations = true, locations = "classpath:csw-integration-test-context.xml")
 public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
@@ -153,11 +151,11 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         metadata2.getChild("fileIdentifier", GMD).getChild("CharacterString", GCO).setText(uuid2);
 
         Element params = new Element("Transaction", NAMESPACE_CSW)
-                .setAttribute("service", "CSW")
-                .setAttribute("version", "2.0.2")
-                .addContent(new Element("Insert", NAMESPACE_CSW)
-                        .addContent(metadata)
-                        .addContent(metadata2));
+            .setAttribute("service", "CSW")
+            .setAttribute("version", "2.0.2")
+            .addContent(new Element("Insert", NAMESPACE_CSW)
+                .addContent(metadata)
+                .addContent(metadata2));
         Element response = _transaction.execute(params, serviceContext);
 
         assertEquals(2, getUpdatedCount(response, TOTAL_INSERTED));
@@ -191,16 +189,16 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         Xml.selectElement(metadata, xpath, Arrays.asList(GMD)).detach();
 
         assertNotNull(Xml.selectElement(_metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID).getXmlData(false), xpath,
-                Arrays.asList(GMD)));
+            Arrays.asList(GMD)));
 
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
         Element request = new Element("Transaction", NAMESPACE_CSW)
-                .setAttribute("service", "CSW")
-                .setAttribute("version", "2.0.2")
-                .addContent(new Element("Update", NAMESPACE_CSW)
-                        .addContent(metadata));
+            .setAttribute("service", "CSW")
+            .setAttribute("version", "2.0.2")
+            .addContent(new Element("Update", NAMESPACE_CSW)
+                .addContent(metadata));
 
         _transaction.execute(request, serviceContext);
 
@@ -293,15 +291,15 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         String fr = "frValue";
         String en = "enValue";
         Element ptFreeText = new Element("PT_FreeText", GMD)
-                .addContent(new Element("textGroup", GMD).addContent(new Element("LocalisedCharacterString", GMD)
-                        .setAttribute("locale", "#DE").addContent(de))
-                )
-                .addContent(new Element("textGroup", GMD).addContent(new Element("LocalisedCharacterString", GMD)
-                        .setAttribute("locale", "#FR").addContent(fr))
-                )
-                .addContent(new Element("textGroup", GMD).addContent(new Element("LocalisedCharacterString", GMD)
-                        .setAttribute("locale", "#EN").addContent(en))
-                );
+            .addContent(new Element("textGroup", GMD).addContent(new Element("LocalisedCharacterString", GMD)
+                .setAttribute("locale", "#DE").addContent(de))
+            )
+            .addContent(new Element("textGroup", GMD).addContent(new Element("LocalisedCharacterString", GMD)
+                .setAttribute("locale", "#FR").addContent(fr))
+            )
+            .addContent(new Element("textGroup", GMD).addContent(new Element("LocalisedCharacterString", GMD)
+                .setAttribute("locale", "#EN").addContent(en))
+            );
         final Element title = new Element("title", GMD).addContent(Lists.newArrayList(charStringEl, ptFreeText));
         Element params = createUpdateTransaction(TITLE_XPATH, title);
 
@@ -325,15 +323,15 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     private Element createDeleteTransaction() {
         Element constraint = createConstraint();
         return new Element("Transaction", NAMESPACE_CSW)
-                .setAttribute("service", "CSW")
-                .setAttribute("version", "2.0.2")
-                .addContent(new Element("Delete", NAMESPACE_CSW)
-                        .addContent(constraint));
+            .setAttribute("service", "CSW")
+            .setAttribute("version", "2.0.2")
+            .addContent(new Element("Delete", NAMESPACE_CSW)
+                .addContent(constraint));
     }
 
     private Element createRecordProperty(String propertyName, Object value) {
         Element xml = new Element("RecordProperty", NAMESPACE_CSW)
-                .addContent(new Element("Name", NAMESPACE_CSW).setText(propertyName));
+            .addContent(new Element("Name", NAMESPACE_CSW).setText(propertyName));
 
         final Element valueEl = new Element("Value", NAMESPACE_CSW);
         if (value instanceof Content) {
@@ -341,7 +339,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         } else if (value instanceof String) {
             valueEl.setText((String) value);
         } else {
-            throw new AssertionError("Not a supported new value : "+value);
+            throw new AssertionError("Not a supported new value : " + value);
         }
 
         xml.addContent(valueEl);
@@ -358,12 +356,12 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         metadata = _metadataRepository.save(metadata);
         final Path schemaDir = _schemaManager.getSchemaDir("iso19139");
         List<Element> extras = Lists.newArrayList(
-                SearchManager.makeField("_uuid", PHOTOGRAPHIC_UUID, false, true),
-                SearchManager.makeField("_isTemplate", "n", true, true),
-                SearchManager.makeField("_owner", "" + ownerId, true, true)
+            SearchManager.makeField("_uuid", PHOTOGRAPHIC_UUID, false, true),
+            SearchManager.makeField("_isTemplate", "n", true, true),
+            SearchManager.makeField("_owner", "" + ownerId, true, true)
         );
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
-                MetadataType.METADATA, metadata.getDataInfo().getRoot(), false);
+            MetadataType.METADATA, metadata.getDataInfo().getRoot(), false);
     }
 
     private Element createUpdateTransaction(String property, Object newValue) {
@@ -371,28 +369,28 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         Element recordProperty = createRecordProperty(property, newValue);
 
         return new Element("Transaction", NAMESPACE_CSW)
-                .setAttribute("service", "CSW")
-                .setAttribute("version", "2.0.2")
-                .addContent(new Element("Update", NAMESPACE_CSW)
-                        .addContent(constraint)
-                        .addContent(recordProperty));
+            .setAttribute("service", "CSW")
+            .setAttribute("version", "2.0.2")
+            .addContent(new Element("Update", NAMESPACE_CSW)
+                .addContent(constraint)
+                .addContent(recordProperty));
     }
 
     private Element createConstraint() {
         return new Element("Constraint", NAMESPACE_CSW)
-                .setAttribute("version", "1.0.0")
-                .addContent(new Element("Filter", NAMESPACE_OGC)
-                        .addContent(new Element("PropertyIsEqualTo", NAMESPACE_OGC)
-                                .addContent(new Element("PropertyName", NAMESPACE_OGC).setText("Identifier"))
-                                .addContent(new Element("Literal", NAMESPACE_OGC).setText(PHOTOGRAPHIC_UUID))));
+            .setAttribute("version", "1.0.0")
+            .addContent(new Element("Filter", NAMESPACE_OGC)
+                .addContent(new Element("PropertyIsEqualTo", NAMESPACE_OGC)
+                    .addContent(new Element("PropertyName", NAMESPACE_OGC).setText("Identifier"))
+                    .addContent(new Element("Literal", NAMESPACE_OGC).setText(PHOTOGRAPHIC_UUID))));
     }
 
     private Element createInsertTransactionRequest(Element metadata) {
         return new Element("Transaction", NAMESPACE_CSW)
-                .setAttribute("service", "CSW")
-                .setAttribute("version", "2.0.2")
-                .addContent(new Element("Insert", NAMESPACE_CSW)
-                        .addContent(metadata));
+            .setAttribute("service", "CSW")
+            .setAttribute("version", "2.0.2")
+            .addContent(new Element("Insert", NAMESPACE_CSW)
+                .addContent(metadata));
     }
 
     private int getUpdatedCount(Element response, String type) {

@@ -29,8 +29,8 @@ import javax.annotation.Nonnull;
 import javax.persistence.*;
 
 /**
- * An entity that represents the relationship between a metadata, group and the operations that group is allowed to perform on the
- * metadata.
+ * An entity that represents the relationship between a metadata, group and the operations that
+ * group is allowed to perform on the metadata.
  *
  * @author Jesse
  */

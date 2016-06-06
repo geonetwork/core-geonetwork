@@ -24,6 +24,7 @@
 package jeeves.config.springutil;
 
 import com.google.common.annotations.VisibleForTesting;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.User;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -40,6 +41,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletContext;
@@ -49,16 +51,31 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Jesse
- * Date: 11/13/13
- * Time: 5:15 PM
+ * Created with IntelliJ IDEA. User: Jesse Date: 11/13/13 Time: 5:15 PM
  */
 public class JeevesDelegatingFilterProxy extends GenericFilterBean {
     private final static InheritableThreadLocal<String> applicationContextAttributeKey = new InheritableThreadLocal<String>();
+    String trustedHost;
     private HashMap<String, Filter> _nodeIdToFilterMap = new HashMap<String, Filter>();
 
-    
+    public static ServletContext getServletContext(ServletContext fallback) {
+        if (ApplicationContextHolder.get() != null) {
+            return ApplicationContextHolder.get().getBean(ServletContext.class);
+        } else {
+            return fallback;
+        }
+    }
+
+    public static ConfigurableApplicationContext getApplicationContextFromServletContext(ServletContext servletContext) {
+        final Object applicationContext = servletContext.getAttribute(applicationContextAttributeKey.get());
+        return (ConfigurableApplicationContext) applicationContext;
+    }
+
+    @VisibleForTesting
+    public static void setApplicationContextAttributeKey(String key) {
+        applicationContextAttributeKey.set(key);
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
@@ -101,9 +118,6 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
         return nodeId;
     }
 
-    String trustedHost;
-    
-
     public String getTrustedHost() {
         return trustedHost;
     }
@@ -118,7 +132,7 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
             return null;
         } else {
             final int nextSlash = split[1].indexOf('/', 1);
-            if (nextSlash > -1 ) {
+            if (nextSlash > -1) {
                 return split[1].substring(0, nextSlash);
             } else {
                 return null;
@@ -130,21 +144,21 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
         if (referer == null) {
             return false;
         }
-        
+
         try {
             final URL refererUrl = new URL(referer);
             final Set<InetAddress> refererInetAddress = new HashSet<InetAddress>(Arrays.asList(InetAddress.getAllByName(refererUrl
-                    .getHost())));
+                .getHost())));
             for (String trusted : getTrustedHost().split(",")) {
                 InetAddress[] localINetAddres = InetAddress.getAllByName(trusted.trim());
-                
+
                 for (InetAddress localAddress : localINetAddres) {
                     if (refererInetAddress.contains(localAddress)) {
                         return true;
                     }
                 }
             }
-            
+
         } catch (UnknownHostException e) {
             return false;
         } catch (MalformedURLException e) {
@@ -162,24 +176,6 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
         }
 
         return filter;
-    }
-
-    public static ServletContext getServletContext(ServletContext fallback) {
-        if (ApplicationContextHolder.get() != null) {
-            return ApplicationContextHolder.get().getBean(ServletContext.class);
-        } else {
-            return fallback;
-        }
-    }
-
-    public static ConfigurableApplicationContext getApplicationContextFromServletContext(ServletContext servletContext) {
-        final Object applicationContext = servletContext.getAttribute(applicationContextAttributeKey.get());
-        return (ConfigurableApplicationContext) applicationContext;
-    }
-
-    @VisibleForTesting
-    public static void setApplicationContextAttributeKey(String key) {
-        applicationContextAttributeKey.set(key);
     }
 
 }

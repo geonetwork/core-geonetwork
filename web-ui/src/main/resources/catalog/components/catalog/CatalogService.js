@@ -384,7 +384,11 @@
     geoserverNodes: 'geoserver.publisher?_content_type=json&',
     suggest: 'suggest',
     facetConfig: 'search/facet/config',
-    selectionLayers: 'selection.layers'
+    selectionLayers: 'selection.layers',
+
+    // wfs indexing
+    generateSLD: 'generateSLD',
+    solrproxy: '../api/0.1/search'
   });
 
   /**
@@ -448,7 +452,7 @@
           callService: function(serviceKey, params, httpConfig) {
 
             var config = {
-              url: gnHttpServices[serviceKey],
+              url: gnHttpServices[serviceKey] || serviceKey,
               params: params,
               method: 'GET'
             };
@@ -644,10 +648,17 @@
             'false' : 'true';
       },
 
-
-
       getLinks: function() {
         return this.link;
+      },
+      getLinkGroup: function(layer) {
+        var links = this.getLinksByType('OGC');
+        for (var i = 0; i < links.length; ++i) {
+          var link = links[i];
+          if (link.name == layer.getSource().getParams().LAYERS) {
+            return link.group;
+          }
+        }
       },
       /**
        * Get all links of the metadata of the given types.

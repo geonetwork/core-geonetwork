@@ -24,6 +24,7 @@
 package org.fao.geonet.utils;
 
 import com.google.common.base.Function;
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -59,15 +60,14 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Super class for classes that encapsulate requests.
  *
- * User: Jesse
- * Date: 10/21/13
- * Time: 12:03 PM
+ * User: Jesse Date: 10/21/13 Time: 12:03 PM
  */
 public class AbstractHttpRequest {
     protected final GeonetHttpRequestFactory requestFactory;
@@ -95,7 +95,7 @@ public class AbstractHttpRequest {
 
     public AbstractHttpRequest(String protocol, String host, int port, GeonetHttpRequestFactory requestFactory) {
         if (!(protocol.equals("http") || protocol.equals("https"))) {
-            throw new IllegalArgumentException("Currently only http and https requests are supported.  Protocol given: '"+protocol+"'");
+            throw new IllegalArgumentException("Currently only http and https requests are supported.  Protocol given: '" + protocol + "'");
         }
         this.port = port;
         this.protocol = protocol;
@@ -107,28 +107,20 @@ public class AbstractHttpRequest {
         return host;
     }
 
-    public int getPort() {
-        return port;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public Method getMethod() {
-        return method;
-    }
-
-    public String getSentData() {
-        return sentData;
-    }
-
     public void setHost(String host) {
         this.host = host;
     }
 
+    public int getPort() {
+        return port;
+    }
+
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public void setAddress(String address) {
@@ -138,8 +130,16 @@ public class AbstractHttpRequest {
         this.address = address;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
+    public Method getMethod() {
+        return method;
+    }
+
+    public void setMethod(Method m) {
+        method = m;
+    }
+
+    public String getSentData() {
+        return sentData;
     }
 
     public void setUrl(URL url) {
@@ -148,10 +148,6 @@ public class AbstractHttpRequest {
         protocol = url.getProtocol();
         address = url.getPath();
         query = url.getQuery();
-    }
-
-    public void setMethod(Method m) {
-        method = m;
     }
 
     public void setUseSOAP(boolean yesno) {
@@ -196,8 +192,7 @@ public class AbstractHttpRequest {
     }
 
     /**
-     * Sends the content of a file using a POST request and gets the response in
-     * xml format.
+     * Sends the content of a file using a POST request and gets the response in xml format.
      */
 //	public final Element send(String name, File inFile) throws IOException, BadXmlResponseEx, BadSoapResponseEx
 //	{
@@ -227,7 +222,6 @@ public class AbstractHttpRequest {
 //
 //		return response;
 //	}
-
     public boolean isPreemptiveBasicAuth() {
         return preemptiveBasicAuth;
     }
@@ -254,9 +248,9 @@ public class AbstractHttpRequest {
                 if (credentials != null) {
                     final URI uri = httpMethod.getURI();
                     HttpHost hh = new HttpHost(
-                            uri.getHost(),
-                            uri.getPort(),
-                            uri.getScheme());
+                        uri.getHost(),
+                        uri.getPort(),
+                        uri.getScheme());
                     credentialsProvider.setCredentials(new AuthScope(hh), credentials);
 
                     // Preemptive authentication
@@ -309,9 +303,9 @@ public class AbstractHttpRequest {
         }
 
         if (host == null || protocol == null) {
-            throw new IllegalStateException(String.format(getClass().getSimpleName()+" is not ready to be executed: \n\tprotocol: '%s' " +
-                                            "\n\tuserinfo: '%s'\n\thost: '%s' \n\tport: '%s' \n\taddress: '%s'\n\tquery '%s'" +
-                                            "\n\tfragment: '%s'", protocol, userInfo, host, port, address, query, fragment));
+            throw new IllegalStateException(String.format(getClass().getSimpleName() + " is not ready to be executed: \n\tprotocol: '%s' " +
+                "\n\tuserinfo: '%s'\n\thost: '%s' \n\tport: '%s' \n\taddress: '%s'\n\tquery '%s'" +
+                "\n\tfragment: '%s'", protocol, userInfo, host, port, address, query, fragment));
         }
 
         HttpRequestBase httpMethod;
@@ -409,24 +403,28 @@ public class AbstractHttpRequest {
         return protocol;
     }
 
-    public void setFragment(String fragment) {
-        this.fragment = fragment;
-    }
-
     public String getFragment() {
         return fragment;
     }
 
-    public void setUserInfo(String userInfo) {
-        this.userInfo = userInfo;
+    public void setFragment(String fragment) {
+        this.fragment = fragment;
     }
 
     public String getUserInfo() {
         return userInfo;
     }
 
+    public void setUserInfo(String userInfo) {
+        this.userInfo = userInfo;
+    }
+
     public String getQuery() {
         return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
     }
 
     public CookieStore getCookieStore() {

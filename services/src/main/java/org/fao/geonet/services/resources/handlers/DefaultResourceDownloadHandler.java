@@ -25,6 +25,7 @@ package org.fao.geonet.services.resources.handlers;
 
 
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -52,21 +53,22 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
 
     @Autowired
     private ThreadPool threadPool;
+
     public HttpEntity<byte[]> onDownload(ServiceContext context, NativeWebRequest request, int metadataId,
-                              String fileName, Path file) throws ResourceHandlerException {
+                                         String fileName, Path file) throws ResourceHandlerException {
 
 
         try {
-            String requesterName =  getParam(request, "name", "");
-            String requesterMail =  getParam(request, "email",  "");
-            String requesterOrg =  getParam(request, "org",  "");
-            String requesterComments =  getParam(request, "comments",  "");
+            String requesterName = getParam(request, "name", "");
+            String requesterMail = getParam(request, "email", "");
+            String requesterOrg = getParam(request, "org", "");
+            String requesterComments = getParam(request, "comments", "");
 
 
             // Store download request for statistics
             String downloadDate = new ISODate().toString();
             storeFileDownloadRequest(context, metadataId, fileName, requesterName, requesterMail, requesterOrg,
-                    requesterComments, downloadDate);
+                requesterComments, downloadDate);
 
             if (Files.exists(file) && request.checkNotModified(Files.getLastModifiedTime(file).toMillis())) {
                 return null;
@@ -95,18 +97,18 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
 
     @Override
     public Element onDownloadMultiple(ServiceContext context, Element params, int metadataId, List<Element> files)
-            throws ResourceHandlerException {
+        throws ResourceHandlerException {
 
         try {
-            String requesterName =  Util.getParam(params, "name", "");
-            String requesterMail =  Util.getParam(params, "email",  "");
-            String requesterOrg =  Util.getParam(params, "org",  "");
-            String requesterComments =  Util.getParam(params, "comments",  "");
+            String requesterName = Util.getParam(params, "name", "");
+            String requesterMail = Util.getParam(params, "email", "");
+            String requesterOrg = Util.getParam(params, "org", "");
+            String requesterComments = Util.getParam(params, "comments", "");
 
             String fileList = "";
 
             for (Object o : files) {
-                Element elem = (Element)o;
+                Element elem = (Element) o;
                 String fname = elem.getText();
 
                 if (StringUtils.isEmpty(fileList)) {
@@ -121,12 +123,12 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
             String downloadDate = new ISODate().toString();
 
             for (Object o : files) {
-                Element elem = (Element)o;
+                Element elem = (Element) o;
                 String fname = elem.getText();
 
                 // Store download request for statistics
                 storeFileDownloadRequest(context, metadataId, fname, requesterName, requesterMail, requesterOrg,
-                        requesterComments, downloadDate);
+                    requesterComments, downloadDate);
             }
 
 
@@ -142,15 +144,6 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
 
     /**
      * * Stores a file download request in the MetadataFileDownloads table.
-     *
-     * @param context
-     * @param metadataId
-     * @param fname
-     * @param requesterName
-     * @param requesterMail
-     * @param requesterOrg
-     * @param requesterComments
-     * @param downloadDate
      */
     private void storeFileDownloadRequest(final ServiceContext context, final int metadataId, final String fname,
                                           final String requesterName, final String requesterMail,
@@ -175,7 +168,7 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
                 }
 
                 if (metadataFileUpload != null) {
-            MetadataFileDownload metadataFileDownload = new MetadataFileDownload();
+                    MetadataFileDownload metadataFileDownload = new MetadataFileDownload();
 
                     metadataFileDownload.setMetadataId(metadataId);
                     metadataFileDownload.setFileName(fname);

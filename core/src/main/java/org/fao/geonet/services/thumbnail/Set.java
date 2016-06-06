@@ -27,6 +27,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
 import lizard.tiff.Tiff;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
@@ -57,6 +58,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -74,15 +76,15 @@ public class Set {
         }
     };
 
-    private static final String IMAGE_TYPE   = "png";
+    private static final String IMAGE_TYPE = "png";
     private static final String SMALL_SUFFIX = "_s";
-    private static final String FNAME_PARAM   = "fname=";
+    private static final String FNAME_PARAM = "fname=";
 
 
     @RequestMapping(value = {"/{lang}/md.thumbnail.upload"}, produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-	public Response serviceSpecificExec(HttpServletRequest request,
+    public Response serviceSpecificExec(HttpServletRequest request,
                                         @PathVariable String lang,
                                         @RequestParam(Params.ID) String id,
                                         @RequestParam(Params.TYPE) String type,
@@ -94,77 +96,70 @@ public class Set {
                                         @RequestParam(value = Params.CREATE_SMALL, defaultValue = "false") boolean createSmall,
                                         @RequestParam(value = Params.SMALL_SCALING_DIR, defaultValue = "") String smallScalingDir,
                                         @RequestParam(value = Params.SMALL_SCALING_FACTOR, defaultValue = "0") int smallScalingFactor
-                                        ) throws Exception {
+    ) throws Exception {
 
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
         ServiceContext context = serviceManager.createServiceContext("md.thumbnail.upload", lang, request);
 
-		Lib.resource.checkEditPrivilege(context, id);
+        Lib.resource.checkEditPrivilege(context, id);
 
-		//-----------------------------------------------------------------------
-		//--- environment vars
+        //-----------------------------------------------------------------------
+        //--- environment vars
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		DataManager dataMan = gc.getBean(DataManager.class);
+        DataManager dataMan = gc.getBean(DataManager.class);
 
-		//--- check if the metadata has been modified from last time
+        //--- check if the metadata has been modified from last time
 
-		if (version != null && !StringUtils.isEmpty(version) && !dataMan.getVersion(id).equals(version))
-			throw new ConcurrentUpdateEx(id);
+        if (version != null && !StringUtils.isEmpty(version) && !dataMan.getVersion(id).equals(version))
+            throw new ConcurrentUpdateEx(id);
 
         //-----------------------------------------------------------------------
         //--- create destination directory
 
-		Path metadataPublicDatadir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
+        Path metadataPublicDatadir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
 
         Files.createDirectories(metadataPublicDatadir);
 
-		//-----------------------------------------------------------------------
-		//--- create the small thumbnail, removing the old one
+        //-----------------------------------------------------------------------
+        //--- create the small thumbnail, removing the old one
 
-		if (createSmall)
-		{
-			Path smallFile = getFileName(file.getOriginalFilename(), true);
-            Path outFile   = metadataPublicDatadir.resolve(smallFile);
+        if (createSmall) {
+            Path smallFile = getFileName(file.getOriginalFilename(), true);
+            Path outFile = metadataPublicDatadir.resolve(smallFile);
 
-			removeOldThumbnail(context, id, "small", false);
-			createThumbnail(file, outFile, smallScalingFactor, smallScalingDir);
-			dataMan.setThumbnail(context, id, true, smallFile.toString(), false);
-		}
+            removeOldThumbnail(context, id, "small", false);
+            createThumbnail(file, outFile, smallScalingFactor, smallScalingDir);
+            dataMan.setThumbnail(context, id, true, smallFile.toString(), false);
+        }
 
-		//-----------------------------------------------------------------------
-		//--- create the requested thumbnail, removing the old one
+        //-----------------------------------------------------------------------
+        //--- create the requested thumbnail, removing the old one
 
-		removeOldThumbnail(context, id, type, false);
+        removeOldThumbnail(context, id, type, false);
 
-		if (scaling)
-		{
-			Path newFile = getFileName(file.getOriginalFilename(), type.equals("small"));
-			Path outFile = metadataPublicDatadir.resolve(newFile);
+        if (scaling) {
+            Path newFile = getFileName(file.getOriginalFilename(), type.equals("small"));
+            Path outFile = metadataPublicDatadir.resolve(newFile);
 
-			createThumbnail(file, outFile, scalingFactor, scalingDir);
+            createThumbnail(file, outFile, scalingFactor, scalingDir);
 
-			dataMan.setThumbnail(context, id, type.equals("small"), newFile.toString(), false);
-		}
-		else
-		{
-			//--- move uploaded file to destination directory
+            dataMan.setThumbnail(context, id, type.equals("small"), newFile.toString(), false);
+        } else {
+            //--- move uploaded file to destination directory
             Files.copy(file.getInputStream(), metadataPublicDatadir.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
 
-			dataMan.setThumbnail(context, id, type.equals("small"), file.getOriginalFilename(), false);
-		}
+            dataMan.setThumbnail(context, id, type.equals("small"), file.getOriginalFilename(), false);
+        }
 
         dataMan.indexMetadata(id, true);
 
-		return new Response(id, dataMan.getNewVersion(id));
-	}
+        return new Response(id, dataMan.getNewVersion(id));
+    }
 
     /**
      * TODO javadoc.
-     *
-     * @param id
-     * @param context
      */
     private Path createDataDir(String id, ServiceContext context) {
         Path dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
@@ -176,164 +171,158 @@ public class Set {
         return dataDir;
     }
 
-	// FIXME : not elegant
-	public Element execOnHarvest(
-							Element params, 
-							ServiceContext context, 
-							DataManager dataMan) throws Exception {
+    // FIXME : not elegant
+    public Element execOnHarvest(
+        Element params,
+        ServiceContext context,
+        DataManager dataMan) throws Exception {
 
-		String  id            = Util.getParam     (params, Params.ID);
+        String id = Util.getParam(params, Params.ID);
         Path dataDir = createDataDir(id, context);
-		
-		//-----------------------------------------------------------------------
-		//--- create the small thumbnail, removing the old one
-        boolean createSmall        = Util.getParam(params, Params.CREATE_SMALL,        false);
-        final String  file          = Util.getParam     (params, Params.FNAME);
-        String  scalingDir    = Util.getParam     (params, Params.SCALING_DIR, "width");
-        boolean scaling       = Util.getParam     (params, Params.SCALING, false);
-        int     scalingFactor = Util.getParam     (params, Params.SCALING_FACTOR, 1);
-        String  type          = Util.getParam     (params, Params.TYPE);
+
+        //-----------------------------------------------------------------------
+        //--- create the small thumbnail, removing the old one
+        boolean createSmall = Util.getParam(params, Params.CREATE_SMALL, false);
+        final String file = Util.getParam(params, Params.FNAME);
+        String scalingDir = Util.getParam(params, Params.SCALING_DIR, "width");
+        boolean scaling = Util.getParam(params, Params.SCALING, false);
+        int scalingFactor = Util.getParam(params, Params.SCALING_FACTOR, 1);
+        String type = Util.getParam(params, Params.TYPE);
 
 
         if (createSmall) {
-			Path smallFile = getFileName(file, true);
-			final Path inFile    = context.getUploadDir().resolve(file);
-			Path outFile   = dataDir.resolve(smallFile);
+            Path smallFile = getFileName(file, true);
+            final Path inFile = context.getUploadDir().resolve(file);
+            Path outFile = dataDir.resolve(smallFile);
             MultipartFile multipartFile = new FileWrappingMultipartFile(inFile, file);
 
-            String  smallScalingDir    = Util.getParam(params, Params.SMALL_SCALING_DIR,   "");
-            int     smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
-			// FIXME should be done before removeOldThumbnail(context, dbms, id, "small");
-			createThumbnail(multipartFile, outFile, smallScalingFactor, smallScalingDir);
+            String smallScalingDir = Util.getParam(params, Params.SMALL_SCALING_DIR, "");
+            int smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
+            // FIXME should be done before removeOldThumbnail(context, dbms, id, "small");
+            createThumbnail(multipartFile, outFile, smallScalingFactor, smallScalingDir);
             dataMan.setThumbnail(context, id, true, smallFile.toString(), false);
-       }
+        }
 
-		//-----------------------------------------------------------------------
-		//--- create the requested thumbnail, removing the old one
+        //-----------------------------------------------------------------------
+        //--- create the requested thumbnail, removing the old one
         removeOldThumbnail(context, id, type, false);
         saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, id, context);
 
-		//-----------------------------------------------------------------------
+        //-----------------------------------------------------------------------
         dataMan.indexMetadata(id, true);
         Element response = new Element("Response");
-		response.addContent(new Element("id").setText(id));
+        response.addContent(new Element("id").setText(id));
 
-		return response;
-	}
+        return response;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //--------------------------------------------------------------------------
 
     private void saveThumbnail(boolean scaling, String file, String type, Path dataDir, String scalingDir,
                                int scalingFactor, DataManager dataMan, String id, ServiceContext context) throws Exception {
-            if (scaling) {
-                Path newFile = getFileName(file, type.equals("small"));
-                Path inFile  = context.getUploadDir().resolve(file);
-                Path outFile = dataDir.resolve(newFile);
+        if (scaling) {
+            Path newFile = getFileName(file, type.equals("small"));
+            Path inFile = context.getUploadDir().resolve(file);
+            Path outFile = dataDir.resolve(newFile);
 
-                MultipartFile multipartFile = new FileWrappingMultipartFile(inFile, file);
-                createThumbnail(multipartFile, outFile, scalingFactor, scalingDir);
+            MultipartFile multipartFile = new FileWrappingMultipartFile(inFile, file);
+            createThumbnail(multipartFile, outFile, scalingFactor, scalingDir);
 
-                try {
-                    Files.delete(inFile);
-                } catch (IOException e) {
-                    context.error("Error while deleting thumbnail : " + inFile);
-                }
-
-                dataMan.setThumbnail(context, id, type.equals("small"), newFile.toString(), false);
-            } else {
-                //--- move uploaded file to destination directory
-                Path inFile  = context.getUploadDir().resolve(file);
-                Path outFile = dataDir.resolve(file);
-
-                try {
-                    Files.move(inFile, outFile);
-                } catch (Exception e) {
-                    IO.deleteFileOrDirectory(inFile);
-                    throw new Exception("Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
-                }
-			
-                dataMan.setThumbnail(context, id, type.equals("small"), file, false);
+            try {
+                Files.delete(inFile);
+            } catch (IOException e) {
+                context.error("Error while deleting thumbnail : " + inFile);
             }
+
+            dataMan.setThumbnail(context, id, type.equals("small"), newFile.toString(), false);
+        } else {
+            //--- move uploaded file to destination directory
+            Path inFile = context.getUploadDir().resolve(file);
+            Path outFile = dataDir.resolve(file);
+
+            try {
+                Files.move(inFile, outFile);
+            } catch (Exception e) {
+                IO.deleteFileOrDirectory(inFile);
+                throw new Exception("Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
+            }
+
+            dataMan.setThumbnail(context, id, type.equals("small"), file, false);
+        }
+    }
+
+    private void removeOldThumbnail(ServiceContext context, String id, String type, boolean indexAfterChange) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+
+        DataManager dataMan = gc.getBean(DataManager.class);
+
+        Element result = dataMan.getThumbnails(context, id);
+
+        if (result == null)
+            throw new IllegalArgumentException("Metadata not found --> " + id);
+
+        result = result.getChild(type);
+
+        //--- if there is no thumbnail, we return
+
+        if (result == null)
+            return;
+
+        //-----------------------------------------------------------------------
+        //--- remove thumbnail
+
+        dataMan.unsetThumbnail(context, id, type.equals("small"), indexAfterChange);
+
+        //--- remove file
+
+        String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
+        if (!new File(file).delete())
+            context.error("Error while deleting thumbnail : " + file);
+    }
+
+    //--------------------------------------------------------------------------
+
+    private void createThumbnail(MultipartFile inFile, Path outFile, int scalingFactor,
+                                 String scalingDir) throws IOException {
+        BufferedImage origImg = getImage(inFile);
+
+        int imgWidth = origImg.getWidth();
+        int imgHeight = origImg.getHeight();
+
+        int width;
+        int height;
+
+        if (scalingDir.equals("width")) {
+            width = scalingFactor;
+            height = width * imgHeight / imgWidth;
+        } else {
+            height = scalingFactor;
+            width = height * imgWidth / imgHeight;
         }
 
-	private void removeOldThumbnail(ServiceContext context, String id, String type, boolean indexAfterChange) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        Image thumb = origImg.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
 
-		DataManager dataMan = gc.getBean(DataManager.class);
+        BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
 
-		Element result = dataMan.getThumbnails(context, id);
-
-		if (result == null)
-			throw new IllegalArgumentException("Metadata not found --> " + id);
-
-		result = result.getChild(type);
-
-		//--- if there is no thumbnail, we return
-
-		if (result == null)
-			return;
-
-		//-----------------------------------------------------------------------
-		//--- remove thumbnail
-
-		dataMan.unsetThumbnail(context, id, type.equals("small"), indexAfterChange);
-
-		//--- remove file
-
-		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
-		if (!new File(file).delete())
-			context.error("Error while deleting thumbnail : "+file);
-	}
-
-	//--------------------------------------------------------------------------
-
-	private void createThumbnail(MultipartFile inFile, Path outFile, int scalingFactor,
-										  String scalingDir) throws IOException
-	{
-		BufferedImage origImg = getImage(inFile);
-
-		int imgWidth  = origImg.getWidth();
-		int imgHeight = origImg.getHeight();
-
-		int width;
-		int height;
-
-		if (scalingDir.equals("width"))
-		{
-			width  = scalingFactor;
-			height = width * imgHeight / imgWidth;
-		}
-		else
-		{
-			height = scalingFactor;
-			width  = height * imgWidth / imgHeight;
-		}
-
-		Image thumb = origImg.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
-
-		BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
-
-		Graphics2D g = bimg.createGraphics();
-		g.drawImage(thumb, 0, 0, null);
-		g.dispose();
+        Graphics2D g = bimg.createGraphics();
+        g.drawImage(thumb, 0, 0, null);
+        g.dispose();
 
         try (OutputStream out = Files.newOutputStream(outFile)) {
             ImageIO.write(bimg, IMAGE_TYPE, out);
         }
-	}
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private Path getFileName(String file, boolean small)
-	{
-		int pos = file.lastIndexOf('.');
+    private Path getFileName(String file, boolean small) {
+        int pos = file.lastIndexOf('.');
 
-		if (pos != -1) {
+        if (pos != -1) {
             file = file.substring(0, pos);
         }
 
@@ -345,61 +334,55 @@ public class Set {
         }
 
         return IO.toPath(path);
-	}
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     @Nonnull
-	public BufferedImage getImage(MultipartFile inFile) throws IOException
-	{
-		String lcFile = inFile.getName().toLowerCase();
+    public BufferedImage getImage(MultipartFile inFile) throws IOException {
+        String lcFile = inFile.getName().toLowerCase();
 
-		if (lcFile.endsWith(".tif") || lcFile.endsWith(".tiff"))
-		{
-			//--- load the TIFF/GEOTIFF file format
+        if (lcFile.endsWith(".tif") || lcFile.endsWith(".tiff")) {
+            //--- load the TIFF/GEOTIFF file format
 
-			Image image = getTiffImage(inFile);
+            Image image = getTiffImage(inFile);
 
-			int width = image.getWidth(IMAGE_OBSERVER);
-			int height= image.getHeight(IMAGE_OBSERVER);
+            int width = image.getWidth(IMAGE_OBSERVER);
+            int height = image.getHeight(IMAGE_OBSERVER);
 
-			BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-			Graphics2D g = bimg.createGraphics();
-			g.drawImage(image, 0,0, null);
-			g.dispose();
+            BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+            Graphics2D g = bimg.createGraphics();
+            g.drawImage(image, 0, 0, null);
+            g.dispose();
 
-			return bimg;
-		}
+            return bimg;
+        }
         try (InputStream in = inFile.getInputStream()) {
             return ImageIO.read(in);
         }
-	}
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private Image getTiffImage(MultipartFile inFile) throws IOException
-	{
-    		Tiff t = new Tiff();
-            t.read(inFile.getBytes());
-    
-    		if (t.getPageCount() == 0)
-    			throw new IOException("No images inside TIFF file");
-    
-    		return t.getImage(0);
-	}
+    private Image getTiffImage(MultipartFile inFile) throws IOException {
+        Tiff t = new Tiff();
+        t.read(inFile.getBytes());
 
-	/**
-	 * Return file name from full url thumbnail formated as
-	 * http://wwwmyCatalogue.com:8080/srv/eng/resources.get?uuid=34baff6e-3880-4589-a5e9-4aa376ecd2a5&fname=snapshot3.png
-	 */
-	private String getFileName(String file)
-	{
-		if(!file.contains(FNAME_PARAM)) {
-			return file;
-		}
-		else {
-			return file.substring(file.lastIndexOf(FNAME_PARAM)+FNAME_PARAM.length());
-		}
-	}
+        if (t.getPageCount() == 0)
+            throw new IOException("No images inside TIFF file");
+
+        return t.getImage(0);
+    }
+
+    /**
+     * Return file name from full url thumbnail formated as http://wwwmyCatalogue.com:8080/srv/eng/resources.get?uuid=34baff6e-3880-4589-a5e9-4aa376ecd2a5&fname=snapshot3.png
+     */
+    private String getFileName(String file) {
+        if (!file.contains(FNAME_PARAM)) {
+            return file;
+        } else {
+            return file.substring(file.lastIndexOf(FNAME_PARAM) + FNAME_PARAM.length());
+        }
+    }
 
     @XmlRootElement(name = "response")
     @XmlAccessorType(XmlAccessType.PROPERTY)

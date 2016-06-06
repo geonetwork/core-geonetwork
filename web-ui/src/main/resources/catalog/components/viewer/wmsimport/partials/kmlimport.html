@@ -3,10 +3,12 @@
     <div class="form-group" data-ng-class="{'has-error' : !validUrl}">
 
       <!--File URL-->
-      <input class="form-control input-sm ng-pristine ng-valid" placeholder="{{'KMLfileURL'|translate}}" type="text"
-             data-ng-model="url" data-ng-model-options="{debounce: 500}" data-ng-change="kmlCtrl.addKml(url, map)">
+      <input class="form-control input-sm ng-pristine ng-valid"
+             placeholder="{{'KMLfileURL'|translate}}" type="text"
+             data-ng-model="url" data-ng-model-options="{debounce: 500}"
+             data-ng-change="kmlCtrl.addKml(url, map)">
 
-     <p> {{'or'|translate}} </p>
+      <p> {{'or'|translate}} </p>
 
       <!--KMZ upload-->
       <div class="fu">
@@ -18,11 +20,12 @@
                accept="application/vnd.google-earth.kmz" id="kmz-file-input">
       </div>
       <div class="list-group" id="file-list">
-          <a href="" class="list-group-item" data-ng-repeat="e in kmzEntries" data-ng-click="onEntryClick(e, $event)">
-            <span class="pull-right" data-ng-class="{'fa fa-spinner fa-spin' : e.loading }"></span>
-            {{e.filename}}
-          </a>
-        </div>
+        <a href="" class="list-group-item" data-ng-repeat="e in kmzEntries"
+           data-ng-click="onEntryClick(e, $event)">
+          <span class="pull-right" data-ng-class="{'fa fa-spinner fa-spin' : e.loading }"></span>
+          {{e.filename}}
+        </a>
+      </div>
     </div>
   </form>
 

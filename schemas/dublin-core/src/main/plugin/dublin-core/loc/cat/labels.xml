@@ -23,165 +23,229 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<labels xmlns:dc = "http://purl.org/dc/elements/1.1/" xmlns:dct = "http://purl.org/dc/terms/">
-	<!-- ==================================================== -->
-	<element name="simpledc">
-		<label>Metadada</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:title">
-		<label>Títol</label>
-		<description>Nom pel qual és conegut el recurs.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:creator">
-		<label>Creador</label>
-		<description>Organització que va produir el conjunt de dades.</description>
-		<example>Exemples de Creador inclou una persona, una organització o un servei. Preferentment indiquem una organització</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:subject">
-		<label>Tema i paraules clau</label>
-		<description>Un tema del contingut del recurs. Usualment expressem un tema amb paraules clau, frases clau o codis de classificació que descriuen el tema del recurs.</description>
-	<example>Es recomana seleccionar un valor existent bé a un vocabulari controlat o bé a un sistema de classificació formal.</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:description">
-		<label>Descripció</label>
-		<description>Explicació del contingut del recurs.</description>
-	<example>Exemples de Descripció inclouen, tot i no estar limitats, un resum, una taula de continguts, una referència a la representació gràfica del contingut o un text lliure explicant el contingut.</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:publisher">
-		<label>Editor</label>
-		<description>Entitat encarregada de la publicació de les dades.</description>
-		<example>Exemples d'Editor inclouen una persona, una organització o un servei. Normalment el nom d'editor ha de ser usat per indicar una entitat</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:contributor">
-		<label>Col·laborador</label>
-		<description>Una entitat responsable de contribuir pel que fa als continguts del recurs.</description>
-		<example>Exemples de col·laboradors inclouen una persona, una organització o servei. Normalment, el nom de col·laborador ha de ser usat per indicar una entitat.</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:date">
-		<label>Data</label>
-		<description>La data d'un esdeveniment al cicle de vida del recurs. Normalment la data estarà associada a la creació o disponibilitat del recurs. </description>
-		<example>Les pràctiques recomanades per la codificació del valor de la data són definides per la norma ISO 8602 i inclouen (entre altres) dates amb format AAAA-MM-DD</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:type">
-		<label>Tipus de recurs</label>
-		<description>La naturalesa o gènere del contingut del recurs. Inclou termes que descriuen categories generals, funcions, gèneres o nivells d'agregació del contingut.</description>
-		<example>La pràtica recomanada és seleccionar un valor d'un vocabulari controlat (per exemple, el DCMI type vocabulary). Per descriure la representació digital o física del recurs cal usar l'element Format.</example>
-		<helper>
-			<option value="dataset">Conjunt de dades</option>
-			<option value="service">Servei</option>
-		</helper>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:format">
-		<label>Format</label>
-		<description>La representació física o digital del recurs. Normalment el format inclou els tipus de mitjans o les dimensions del recurs. El format pot ser usat per identificar el programari, el maquinari o altres equipaments necessaris per exhibir o utilizar el fitxer.</description>
-		<example>Exemples de dimensions inclouen mida i duració. La pràctica recomanada és seleccionar un valor d'un vocabulari controlat (per exemple, la llista de tipus de mitjans que hi ha a Internet que defineixen els formats en un ordinador).</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:identifier">
-		<label>Identificador del recurs</label>
-		<description>Una referència inequívoca pel recurs a un determinat context.</description>
-		<example>La pràctica recomanada és identificar el recurs mitjançant una seqüència de caràcters o un número segons un sistema d'identificació. Els sitemes d'identificació inclouen, però no estan limitats, l'Uniform Resource Identifier (URI) (incloent l'Uniform Resource Locator (URL)), el Digital Object Identifier (DOI) i  l'International Standard Book Number (ISBN).</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:source">
-		<label>Font</label>
-		<description>Una referència a un recurs d'on es deriva aquest. El recurs present pot derivar completament o en part de la font del recurs.</description>
-		<example>La pràctica recomanada és identificar el recurs referenciat a través d'una seqüència de caràcters o un número segons un sistema formal d'identificació.</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:language">
-		<label>Idioma</label>
-		<description>Un llenguatge del contingut del recurs. Les bones pràctiques recomanen usar RFC 3066 que, junt amb la norma ISO 639, defineix codis de dues o tres lletres.</description>
-		<example>Exemples inclouen "en" o "eng" per Anglès, "ca" o "cat" per Català i "en-GB" per Anglès de Regne Unit.</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:relation">
-		<label>Relació</label>
-		<description>Una referència a un recurs relacionat.</description>
-		<example>Les bones pràctiques recomanen que el recurs referenciat sigui identificat per una seqüència de caràcters o un número segons un sistema d'identificació.</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:coverage">
-		<label>Cobertura</label>
-		<description>Extensió o abast del contingut del recurs. Normalment la cobertura inclou la localització espacial (nom del lloc o coordenades geogràfiques), el període temporal (etiqueta de període, data o intervals de data) o jurisdicció (per exemple, el nom de l'entitat administrativa). </description>
-		<example>Per exemple: "Nord 90, Sud -90, Est 180, Oest -180. Global".
-		les bones pràctiques recomanen que es seleccioni um valor d'un vocabulari controlat (per exemple, el Thesaurus de Noms Geogràfics[TGN]) i usar, si s'escau, noms de llocs o períodes de temps en comptes d'identificadors numèrics com coordenades o intervals de data.</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:rights">
-		<label>Gestió de drets</label>
-		<description>Informació sobre els drets del recurs.</description>
-		<example>Normalment conté una exposició de la gestió de drets del recurs o una referència a un servei que pugui facilitar aquesta informació. Aquesta informació usualment engloba els drets de propietat intel·lectual (IPR), els drets d'autor i altres drets de propietat. Si aquests drets no consten, no es podrà fer cap suposició dels drets del recurs.</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:modified">
-		<label>Data de modificació</label>
-		<description>Data en què la metadata es va modificar</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:abstract">
-		<label>Resum</label>
-		<description>Un resum del contingut del recurs.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:spatial">
-		<label>Espacial</label>
-		<description>Característiques espacials del contingut del recurs.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:audience">
-		<label>Audiència</label>
-		<description>Descripció dels destinataris del recurs.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:accrualMethod">
-		<label>Accrual Method</label>
-		<description>Els mètodes amb què els ítems són afegits a una col·lecció.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:accrualPeriodicity">
-		<label>Accrual Periodicity</label>
-		<description>La freqüència amb què els ítems són afegits a una col·lecció.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:accrualPolicy">
-		<label>Accrual Policy</label>
-		<description>La política amb què els ítems són afegits a una col·lecció.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:instructionalMethod">
-		<label>Instructional Method</label>
-		<description>Un procés usat per generar coneixement, actituds i habilitats que el recurs pot suportar, atès el seu disseny.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:provenance">
-		<label>Procedència</label>
-		<description>Una explicació sobre els canvis en la propietat o custòdia del recurs des de la seva creació i que són significants amb vista a la seva autenticitat, integritat i interpretació.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:rightsHolder">
-		<label>Drets del titular</label>
-		<description>Una persona o organització que té o gestiona els drets sobre el recurs.</description>
-	</element>
+<labels xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
+  <!-- ==================================================== -->
+  <element name="simpledc">
+    <label>Metadada</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:title">
+    <label>Títol</label>
+    <description>Nom pel qual és conegut el recurs.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:creator">
+    <label>Creador</label>
+    <description>Organització que va produir el conjunt de dades.</description>
+    <example>Exemples de Creador inclou una persona, una organització o un servei. Preferentment
+      indiquem una organització
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:subject">
+    <label>Tema i paraules clau</label>
+    <description>Un tema del contingut del recurs. Usualment expressem un tema amb paraules clau,
+      frases clau o codis de classificació que descriuen el tema del recurs.
+    </description>
+    <example>Es recomana seleccionar un valor existent bé a un vocabulari controlat o bé a un
+      sistema de classificació formal.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:description">
+    <label>Descripció</label>
+    <description>Explicació del contingut del recurs.</description>
+    <example>Exemples de Descripció inclouen, tot i no estar limitats, un resum, una taula de
+      continguts, una referència a la representació gràfica del contingut o un text lliure explicant
+      el contingut.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:publisher">
+    <label>Editor</label>
+    <description>Entitat encarregada de la publicació de les dades.</description>
+    <example>Exemples d'Editor inclouen una persona, una organització o un servei. Normalment el nom
+      d'editor ha de ser usat per indicar una entitat
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:contributor">
+    <label>Col·laborador</label>
+    <description>Una entitat responsable de contribuir pel que fa als continguts del recurs.
+    </description>
+    <example>Exemples de col·laboradors inclouen una persona, una organització o servei. Normalment,
+      el nom de col·laborador ha de ser usat per indicar una entitat.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:date">
+    <label>Data</label>
+    <description>La data d'un esdeveniment al cicle de vida del recurs. Normalment la data estarà
+      associada a la creació o disponibilitat del recurs.
+    </description>
+    <example>Les pràctiques recomanades per la codificació del valor de la data són definides per la
+      norma ISO 8602 i inclouen (entre altres) dates amb format AAAA-MM-DD
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:type">
+    <label>Tipus de recurs</label>
+    <description>La naturalesa o gènere del contingut del recurs. Inclou termes que descriuen
+      categories generals, funcions, gèneres o nivells d'agregació del contingut.
+    </description>
+    <example>La pràtica recomanada és seleccionar un valor d'un vocabulari controlat (per exemple,
+      el DCMI type vocabulary). Per descriure la representació digital o física del recurs cal usar
+      l'element Format.
+    </example>
+    <helper>
+      <option value="dataset">Conjunt de dades</option>
+      <option value="service">Servei</option>
+    </helper>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:format">
+    <label>Format</label>
+    <description>La representació física o digital del recurs. Normalment el format inclou els tipus
+      de mitjans o les dimensions del recurs. El format pot ser usat per identificar el programari,
+      el maquinari o altres equipaments necessaris per exhibir o utilizar el fitxer.
+    </description>
+    <example>Exemples de dimensions inclouen mida i duració. La pràctica recomanada és seleccionar
+      un valor d'un vocabulari controlat (per exemple, la llista de tipus de mitjans que hi ha a
+      Internet que defineixen els formats en un ordinador).
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:identifier">
+    <label>Identificador del recurs</label>
+    <description>Una referència inequívoca pel recurs a un determinat context.</description>
+    <example>La pràctica recomanada és identificar el recurs mitjançant una seqüència de caràcters o
+      un número segons un sistema d'identificació. Els sitemes d'identificació inclouen, però no
+      estan limitats, l'Uniform Resource Identifier (URI) (incloent l'Uniform Resource Locator
+      (URL)), el Digital Object Identifier (DOI) i l'International Standard Book Number (ISBN).
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:source">
+    <label>Font</label>
+    <description>Una referència a un recurs d'on es deriva aquest. El recurs present pot derivar
+      completament o en part de la font del recurs.
+    </description>
+    <example>La pràctica recomanada és identificar el recurs referenciat a través d'una seqüència de
+      caràcters o un número segons un sistema formal d'identificació.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:language">
+    <label>Idioma</label>
+    <description>Un llenguatge del contingut del recurs. Les bones pràctiques recomanen usar RFC
+      3066 que, junt amb la norma ISO 639, defineix codis de dues o tres lletres.
+    </description>
+    <example>Exemples inclouen "en" o "eng" per Anglès, "ca" o "cat" per Català i "en-GB" per Anglès
+      de Regne Unit.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:relation">
+    <label>Relació</label>
+    <description>Una referència a un recurs relacionat.</description>
+    <example>Les bones pràctiques recomanen que el recurs referenciat sigui identificat per una
+      seqüència de caràcters o un número segons un sistema d'identificació.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:coverage">
+    <label>Cobertura</label>
+    <description>Extensió o abast del contingut del recurs. Normalment la cobertura inclou la
+      localització espacial (nom del lloc o coordenades geogràfiques), el període temporal (etiqueta
+      de període, data o intervals de data) o jurisdicció (per exemple, el nom de l'entitat
+      administrativa).
+    </description>
+    <example>Per exemple: "Nord 90, Sud -90, Est 180, Oest -180. Global".
+      les bones pràctiques recomanen que es seleccioni um valor d'un vocabulari controlat (per
+      exemple, el Thesaurus de Noms Geogràfics[TGN]) i usar, si s'escau, noms de llocs o períodes de
+      temps en comptes d'identificadors numèrics com coordenades o intervals de data.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:rights">
+    <label>Gestió de drets</label>
+    <description>Informació sobre els drets del recurs.</description>
+    <example>Normalment conté una exposició de la gestió de drets del recurs o una referència a un
+      servei que pugui facilitar aquesta informació. Aquesta informació usualment engloba els drets
+      de propietat intel·lectual (IPR), els drets d'autor i altres drets de propietat. Si aquests
+      drets no consten, no es podrà fer cap suposició dels drets del recurs.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:modified">
+    <label>Data de modificació</label>
+    <description>Data en què la metadata es va modificar</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:abstract">
+    <label>Resum</label>
+    <description>Un resum del contingut del recurs.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:spatial">
+    <label>Espacial</label>
+    <description>Característiques espacials del contingut del recurs.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:audience">
+    <label>Audiència</label>
+    <description>Descripció dels destinataris del recurs.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualMethod">
+    <label>Accrual Method</label>
+    <description>Els mètodes amb què els ítems són afegits a una col·lecció.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPeriodicity">
+    <label>Accrual Periodicity</label>
+    <description>La freqüència amb què els ítems són afegits a una col·lecció.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPolicy">
+    <label>Accrual Policy</label>
+    <description>La política amb què els ítems són afegits a una col·lecció.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:instructionalMethod">
+    <label>Instructional Method</label>
+    <description>Un procés usat per generar coneixement, actituds i habilitats que el recurs pot
+      suportar, atès el seu disseny.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:provenance">
+    <label>Procedència</label>
+    <description>Una explicació sobre els canvis en la propietat o custòdia del recurs des de la
+      seva creació i que són significants amb vista a la seva autenticitat, integritat i
+      interpretació.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:rightsHolder">
+    <label>Drets del titular</label>
+    <description>Una persona o organització que té o gestiona els drets sobre el recurs.
+    </description>
+  </element>
   <!-- ==================================================== -->
   <element name="dct:references">
     <label>Related resource</label>
-    <description>A related resource that is referenced, cited, or otherwise pointed to by the described resource.</description>
+    <description>A related resource that is referenced, cited, or otherwise pointed to by the
+      described resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:accessRights">
     <label>Access Rights</label>
-    <description>Information about who can access the resource or an indication of its security status.</description>
+    <description>Information about who can access the resource or an indication of its security
+      status.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:alternative">
@@ -221,7 +285,9 @@
   <!-- ==================================================== -->
   <element name="dct:educationLevel">
     <label>Audience Education Level</label>
-    <description>A class of entity, defined in terms of progression through an educational or training context, for which the described resource is intended.</description>
+    <description>A class of entity, defined in terms of progression through an educational or
+      training context, for which the described resource is intended.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:extent">
@@ -231,47 +297,65 @@
   <!-- ==================================================== -->
   <element name="dct:hasFormat">
     <label>Has Format</label>
-    <description>A related resource that is substantially the same as the pre-existing described resource, but in another format.</description>
+    <description>A related resource that is substantially the same as the pre-existing described
+      resource, but in another format.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:hasPart">
     <label>Has Part</label>
-    <description>A related resource that is included either physically or logically in the described resource.</description>
+    <description>A related resource that is included either physically or logically in the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:hasVersion">
     <label>Has Version</label>
-    <description>A related resource that is a version, edition, or adaptation of the described resource.</description>
+    <description>A related resource that is a version, edition, or adaptation of the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isFormatOf">
     <label>Is Format Of</label>
-    <description>A related resource that is substantially the same as the described resource, but in another format.</description>
+    <description>A related resource that is substantially the same as the described resource, but in
+      another format.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isPartOf">
     <label>Is Part Of</label>
-    <description>A related resource in which the described resource is physically or logically included.</description>
+    <description>A related resource in which the described resource is physically or logically
+      included.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isReferencedBy">
     <label>Is Referenced By</label>
-    <description>A related resource that references, cites, or otherwise points to the described resource.</description>
+    <description>A related resource that references, cites, or otherwise points to the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isReplacedBy">
     <label>Is Replaced By</label>
-    <description>A related resource that supplants, displaces, or supersedes the described resource.</description>
+    <description>A related resource that supplants, displaces, or supersedes the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isRequiredBy">
     <label>Is Required By</label>
-    <description>A related resource that requires the described resource to support its function, delivery, or coherence.</description>
+    <description>A related resource that requires the described resource to support its function,
+      delivery, or coherence.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isVersionOf">
     <label>Is Version Of</label>
-    <description>A related resource of which the described resource is a version, edition, or adaptation.</description>
+    <description>A related resource of which the described resource is a version, edition, or
+      adaptation.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:issued">
@@ -281,12 +365,15 @@
   <!-- ==================================================== -->
   <element name="dct:license">
     <label>License</label>
-    <description>A legal document giving official permission to do something with the resource.</description>
+    <description>A legal document giving official permission to do something with the resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:mediator">
     <label>Mediator</label>
-    <description>An entity that mediates access to the resource and for whom the resource is intended or useful.</description>
+    <description>An entity that mediates access to the resource and for whom the resource is
+      intended or useful.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:medium">
@@ -296,12 +383,16 @@
   <!-- ==================================================== -->
   <element name="dct:replaces">
     <label>Replaces</label>
-    <description>A related resource that is supplanted, displaced, or superseded by the described resource.</description>
+    <description>A related resource that is supplanted, displaced, or superseded by the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:requires">
     <label>Requires</label>
-    <description>A related resource that is required by the described resource to support its function, delivery, or coherence.</description>
+    <description>A related resource that is required by the described resource to support its
+      function, delivery, or coherence.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:tableOfContents">

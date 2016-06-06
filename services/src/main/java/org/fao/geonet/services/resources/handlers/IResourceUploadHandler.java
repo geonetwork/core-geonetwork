@@ -37,20 +37,22 @@ public interface IResourceUploadHandler {
      * @param metadataId
      * @throws ResourceHandlerException
      */
-	@Deprecated
+    @Deprecated
     public void onUpload(ServiceContext context, Element params, int metadataId,
-            String fileName, double fileSize) throws ResourceHandlerException;
-	
-	/**
-	 * @param inputStream
-	 * @param context
-	 * @param access
-	 * @param overwrite
-	 * @param parseInt
-	 * @param fname
-	 * @param parseDouble
-	 */
-	public void onUpload(InputStream inputStream, ServiceContext context,
-			String access, String overwrite, int parseInt, String fname,
-			double parseDouble) throws ResourceHandlerException;;
+                         String fileName, double fileSize) throws ResourceHandlerException;
+
+    /**
+     * @param inputStream
+     * @param context
+     * @param access
+     * @param overwrite
+     * @param parseInt
+     * @param fname
+     * @param parseDouble
+     */
+    public void onUpload(InputStream inputStream, ServiceContext context,
+                         String access, String overwrite, int parseInt, String fname,
+                         double parseDouble) throws ResourceHandlerException;
+
+    ;
 }

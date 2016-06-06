@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.z3950Config;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -48,42 +49,56 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
-class Harvester implements IHarvester<HarvestResult>
-{
+class Harvester implements IHarvester<HarvestResult> {
     private final AtomicBoolean cancelMonitor;
     //--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
+    private Logger log;
 
-	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, Z3950ConfigParams params)
-	{
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
+    private Z3950ConfigParams params;
+
+    //---------------------------------------------------------------------------
+    private ServiceContext context;
+
+    //---------------------------------------------------------------------------
+    /**
+     * Contains a list of accumulated errors during the executing of this harvest.
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
+
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, Z3950ConfigParams params) {
         this.cancelMonitor = cancelMonitor;
-		this.log    = log;
-		this.params = params;
-		this.context = context;
-	}
+        this.log = log;
+        this.params = params;
+        this.context = context;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public HarvestResult harvest(Logger log) throws Exception
-	{
-	    this.log = log;
+    public HarvestResult harvest(Logger log) throws Exception {
+        this.log = log;
 
         XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.host, Integer.valueOf(params.port));
 
-		Lib.net.setupProxy(context, req);
+        Lib.net.setupProxy(context, req);
 
-		//--- perform all searches
+        //--- perform all searches
 
-		Set<RecordInfo> records = new HashSet<RecordInfo>();
+        Set<RecordInfo> records = new HashSet<RecordInfo>();
 
-		for(Search s : params.getSearches()) {
+        for (Search s : params.getSearches()) {
             if (cancelMonitor.get()) {
                 return new HarvestResult();
             }
@@ -91,93 +106,68 @@ class Harvester implements IHarvester<HarvestResult>
             records.addAll(search(req, s));
         }
 
-		if (params.isSearchEmpty())
-			records.addAll(search(req, Search.createEmptySearch()));
+        if (params.isSearchEmpty())
+            records.addAll(search(req, Search.createEmptySearch()));
 
-		log.info("Total records processed in all searches :"+ records.size());
+        log.info("Total records processed in all searches :" + records.size());
 
-		//--- config local node
+        //--- config local node
 
-		Z3950Config  configer = new Z3950Config(cancelMonitor, log, context, req, params);
-		HarvestResult result  = configer.config(records);
+        Z3950Config configer = new Z3950Config(cancelMonitor, log, context, req, params);
+        HarvestResult result = configer.config(records);
 
-		return result;
-	}
+        return result;
+    }
 
-	//---------------------------------------------------------------------------
+    private Set<RecordInfo> search(XmlRequest request, Search s) throws OperationAbortedEx {
+        Set<RecordInfo> records = new HashSet<RecordInfo>();
 
-	private Set<RecordInfo> search(XmlRequest request, Search s) throws OperationAbortedEx
-	{
-		Set<RecordInfo> records = new HashSet<RecordInfo>();
-
-		for (Object o : doSearch(request, s).getChildren("metadata"))
-		{
+        for (Object o : doSearch(request, s).getChildren("metadata")) {
             if (cancelMonitor.get()) {
                 return Collections.emptySet();
             }
 
-            Element md   = (Element) o;
-			Element info = md.getChild("info", Edit.NAMESPACE);
+            Element md = (Element) o;
+            Element info = md.getChild("info", Edit.NAMESPACE);
 
-			if (info == null)
-				log.warning("Missing 'geonet:info' element in 'metadata' element");
-			else
-			{
-				String uuid       = info.getChildText("uuid");
-				String schema     = info.getChildText("schema");
-				String changeDate = info.getChildText("changeDate");
-				String source     = info.getChildText("source");
+            if (info == null)
+                log.warning("Missing 'geonet:info' element in 'metadata' element");
+            else {
+                String uuid = info.getChildText("uuid");
+                String schema = info.getChildText("schema");
+                String changeDate = info.getChildText("changeDate");
+                String source = info.getChildText("source");
 
-				records.add(new RecordInfo(uuid, changeDate, schema, source));
-			}
-		}
+                records.add(new RecordInfo(uuid, changeDate, schema, source));
+            }
+        }
 
-		log.info("Records added to result list : "+ records.size());
+        log.info("Records added to result list : " + records.size());
 
-		return records;
-	}
+        return records;
+    }
 
-	//---------------------------------------------------------------------------
+    private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx {
+        request.setAddress(context.getBaseUrl() + "/" + Jeeves.Prefix.SERVICE + "/en/" + Geonet.Service.XML_SEARCH);
 
-	private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx
-	{
-		request.setAddress(context.getBaseUrl() +"/"+ Jeeves.Prefix.SERVICE +"/en/" + Geonet.Service.XML_SEARCH);
+        try {
+            log.info("Searching on : " + params.getName());
+            Element response = request.execute(s.createRequest());
+            if (log.isDebugEnabled()) log.debug("Search results:\n" + Xml.getString(response));
 
-		try
-		{
-			log.info("Searching on : "+ params.getName());
-			Element response = request.execute(s.createRequest());
-            if(log.isDebugEnabled()) log.debug("Search results:\n"+ Xml.getString(response));
-
-			return response;
-		}
-		catch(Exception e)
-		{
+            return response;
+        } catch (Exception e) {
             HarvestError error = new HarvestError(e, log);
-            error.setDescription("Raised exception when searching : "+ e);
+            error.setDescription("Raised exception when searching : " + e);
             this.errors.add(error);
             error.printLog(log);
-			throw new OperationAbortedEx("Raised exception when searching", e);
-		}
-	}
+            throw new OperationAbortedEx("Raised exception when searching", e);
+        }
+    }
 
     public List<HarvestError> getErrors() {
         return errors;
     }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private Logger         log;
-	private Z3950ConfigParams   params;
-	private ServiceContext      context;
-   /**
-     * Contains a list of accumulated errors during the executing of this harvest.
-     */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
 }
 
 //=============================================================================

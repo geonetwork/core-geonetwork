@@ -29,7 +29,8 @@ import groovy.util.slurpersupport.GPathResult;
 import java.util.regex.Pattern;
 
 /**
- * A Handler where the function will be executed if the element's qualified name matches the pattern.
+ * A Handler where the function will be executed if the element's qualified name matches the
+ * pattern.
  *
  * @author Jesse on 10/15/2014.
  */

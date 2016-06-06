@@ -35,6 +35,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -45,16 +46,16 @@ import javax.annotation.Nullable;
  */
 public interface MetadataRepositoryCustom {
     /**
-     * Return an object that contains functions for calculating several different statistical calculations (related to the metadata)
-     * based on the data in the database.
+     * Return an object that contains functions for calculating several different statistical
+     * calculations (related to the metadata) based on the data in the database.
      *
      * @return an object for performing statistic calculation queries.
      */
     MetadataStatisticsQueries getMetadataStatistics();
 
     /**
-     * Return an object that contains functions for calculating several different statistical calculations (related to the metadata)
-     * based on the data in the database.
+     * Return an object that contains functions for calculating several different statistical
+     * calculations (related to the metadata) based on the data in the database.
      *
      * @return an object for performing statistic calculation queries.
      */
@@ -68,22 +69,17 @@ public interface MetadataRepositoryCustom {
      * This is just short for repository.findOne(Integer.parseInt(id))
      *
      * @param id the id in string form instead of integer.
-     * @return
      */
     @Nullable
     Metadata findOne(@Nonnull String id);
 
     /**
-     * Find the list of Metadata Ids and changes dates for the metadata.
-     * <p>
-     * When constructing sort objects use the MetaModel objects:
-     * <ul>
-     * <li><code>new Sort(Metadata_.id.getName())</code></li>
-     * <li><code>new Sort(Sort.Direction.ASC, Metadata_.id.getName())</code></li>
-     * </ul>
-     * </p>
+     * Find the list of Metadata Ids and changes dates for the metadata. <p> When constructing sort
+     * objects use the MetaModel objects: <ul> <li><code>new Sort(Metadata_.id.getName())</code></li>
+     * <li><code>new Sort(Sort.Direction.ASC, Metadata_.id.getName())</code></li> </ul> </p>
      *
-     * @param pageable if non-null then control which subset of the results to return (and how to sort the results).
+     * @param pageable if non-null then control which subset of the results to return (and how to
+     *                 sort the results).
      * @return List of &lt;MetadataId, changeDate&gt;
      */
     @Nonnull
@@ -113,12 +109,9 @@ public interface MetadataRepositoryCustom {
      * @return a map of metadataId -> SourceInfo
      */
     Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<Metadata> spec);
-    
+
     /**
      * Load only the basic info for a metadata. Used in harvesters, mostly.
-     * 
-     * @param spec
-     * @return
      */
     List<SimpleMetadata> findAllSimple(String harvestUuid);
 

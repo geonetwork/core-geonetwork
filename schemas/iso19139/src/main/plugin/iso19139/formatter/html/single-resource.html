@@ -22,7 +22,8 @@
   -->
 
 <span>
-    <a fmt-if="link.href" href="{{link.href | escapeXmlAttrs}}" target="_link" title="{{link.tip}}" class="{{link.class}}">
+    <a fmt-if="link.href" href="{{link.href | escapeXmlAttrs}}" target="_link" title="{{link.tip}}"
+       class="{{link.class}}">
         <span fmt-if="link.name">{{link.name | escapeXmlContent}}</span>
         <span fmt-if="!link.name">{{link.href | escapeXmlContent}}</span>
     </a>

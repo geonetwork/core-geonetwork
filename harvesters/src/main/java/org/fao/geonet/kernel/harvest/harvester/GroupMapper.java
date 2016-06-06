@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.repository.GroupRepository;
 
@@ -31,19 +32,29 @@ import java.util.HashMap;
 
 //=============================================================================
 
-/** Loads all groups from the database and create a mapping (group name) -> (group ID).
-  */
+/**
+ * Loads all groups from the database and create a mapping (group name) -> (group ID).
+ */
 
-public class GroupMapper
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class GroupMapper {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public GroupMapper(ServiceContext context) throws Exception
-	{
+    private HashMap<String, String> hmNameId = new HashMap<String, String>();
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
+    private HashMap<String, String> hmIdName = new HashMap<String, String>();
+
+    //--------------------------------------------------------------------------
+
+    public GroupMapper(ServiceContext context) throws Exception {
 
         final GroupRepository groupRepository = context.getBean(GroupRepository.class);
 
@@ -53,36 +64,30 @@ public class GroupMapper
 
             add(name, id);
         }
-	}
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    public void add(String name, String id) {
+        hmNameId.put(name, id);
+        hmIdName.put(id, name);
+    }
 
-	public void add(String name, String id)
-	{
-		hmNameId.put(name, id);
-		hmIdName.put(id, name);
-	}
+    //--------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    /**
+     * Given a group name returns its id
+     */
 
-	/** Given a group name returns its id */
+    public String getID(String name) {
+        return hmNameId.get(name);
+    }
 
-	public String getID(String name) { return hmNameId.get(name); }
-
-	public String getName(String id) { return hmIdName.get(id); }
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//--------------------------------------------------------------------------
-
-	private HashMap<String, String> hmNameId = new HashMap<String, String>();
-	private HashMap<String, String> hmIdName = new HashMap<String, String>();
+    public String getName(String id) {
+        return hmIdName.get(id);
+    }
 }
 
 //=============================================================================

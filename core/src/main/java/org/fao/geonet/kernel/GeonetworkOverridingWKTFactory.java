@@ -42,17 +42,17 @@ public class GeonetworkOverridingWKTFactory extends FactoryUsingWKT implements C
 
     private static final String SYSTEM_DEFAULT_USER_PROJ_FILE = "geonetwork.override.crs.proj.file";
 
-	public GeonetworkOverridingWKTFactory() {
+    public GeonetworkOverridingWKTFactory() {
         super(null, MAXIMUM_PRIORITY);
     }
-    
+
     public GeonetworkOverridingWKTFactory(Hints userHints) {
         super(userHints, MAXIMUM_PRIORITY);
     }
 
     /**
-     * Returns the URL to the property file that contains CRS definitions. The
-     * default implementation returns the URL to the {@value #FILENAME} file.
+     * Returns the URL to the property file that contains CRS definitions. The default
+     * implementation returns the URL to the {@value #FILENAME} file.
      *
      * @return The URL, or {@code null} if none.
      */
@@ -60,14 +60,14 @@ public class GeonetworkOverridingWKTFactory extends FactoryUsingWKT implements C
         String overrideProjFile = System.getProperty(SYSTEM_DEFAULT_USER_PROJ_FILE);
 
         if (overrideProjFile == null) {
-        	ServiceContext srvContext = ServiceContext.get();
-        	if(srvContext != null) {
-        		overrideProjFile = srvContext.getServlet().getServletContext().getRealPath("/WEB-INF/override_epsg.properties");
-        	}
-        	
-        	if(overrideProjFile == null || !new File(overrideProjFile).exists()) {
+            ServiceContext srvContext = ServiceContext.get();
+            if (srvContext != null) {
+                overrideProjFile = srvContext.getServlet().getServletContext().getRealPath("/WEB-INF/override_epsg.properties");
+            }
+
+            if (overrideProjFile == null || !new File(overrideProjFile).exists()) {
                 overrideProjFile = "override_epsg.properties";
-        	}
+            }
         }
 
         // Attempt to load user-defined projections
@@ -86,6 +86,6 @@ public class GeonetworkOverridingWKTFactory extends FactoryUsingWKT implements C
 
         return GeonetworkOverridingWKTFactory.class.getResource(overrideProjFile);
     }
-    
-    
+
+
 }

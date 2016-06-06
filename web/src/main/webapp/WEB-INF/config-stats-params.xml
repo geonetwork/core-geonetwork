@@ -35,6 +35,6 @@
 -->
 
 <statistics>
-    <mdPopularityLimit>25</mdPopularityLimit>
-    <tagCloudLimit>6</tagCloudLimit>
+  <mdPopularityLimit>25</mdPopularityLimit>
+  <tagCloudLimit>6</tagCloudLimit>
 </statistics>

@@ -28,29 +28,27 @@ import org.jdom.Element;
 //=============================================================================
 
 public class CannotDisseminateFormatException extends OaiPmhException {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2553103551296680741L;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    /**
+     *
+     */
+    private static final long serialVersionUID = 2553103551296680741L;
 
-	public CannotDisseminateFormatException(String message)
-	{
-		this(message, null);
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public CannotDisseminateFormatException(String message) {
+        this(message, null);
+    }
 
-	public CannotDisseminateFormatException(String message, Element response)
-	{
-		super(CANNOT_DISSEMINATE_FORMAT, message, response);
-	}
+    //---------------------------------------------------------------------------
+
+    public CannotDisseminateFormatException(String message, Element response) {
+        super(CANNOT_DISSEMINATE_FORMAT, message, response);
+    }
 }
 
 //=============================================================================

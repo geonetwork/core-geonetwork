@@ -26,6 +26,7 @@ package org.fao.geonet;
 import com.google.common.collect.Lists;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+
 import org.fao.geonet.utils.IO;
 import org.junit.Rule;
 import org.junit.Test;
@@ -78,6 +79,7 @@ public class ZipUtilTest {
         final Path zipfile = folder.getRoot().toPath().resolve("zipfile.zip");
         assertCreateZipFile(zipfile);
     }
+
     @Test
     public void testMultipleOpenZipFs() throws Exception {
         Path zipFile = IO.toPath(ZipUtilTest.class.getResource("example.zip").toURI());
@@ -89,6 +91,7 @@ public class ZipUtilTest {
             }
         }
     }
+
     @Test
     public void testOpenZipFsVirtualFS() throws Exception {
         final Path srcZipFile = Paths.get(ZipUtilTest.class.getResource("example.zip").toURI());

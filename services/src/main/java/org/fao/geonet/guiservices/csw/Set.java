@@ -26,6 +26,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -45,10 +46,11 @@ import java.util.List;
 
 public class Set implements Service {
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	public Element exec(Element params, ServiceContext context) throws Exception {
-	    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
         // Save values in settings
         saveCswServerConfig(params, gc.getBean(SettingManager.class));
@@ -58,10 +60,10 @@ public class Set implements Service {
 
         // Build response
         return new Element(Jeeves.Elem.RESPONSE).setText("ok");
-	}
+    }
 
     private void saveCswServerConfig(Element params, SettingManager settingManager)
-            throws Exception {
+        throws Exception {
 
         String cswEnableValue = Util.getParam(params, "csw.enable", "");
         settingManager.setValue(Settings.SYSTEM_CSW_ENABLE, cswEnableValue.equals("on"));
@@ -76,7 +78,7 @@ public class Set implements Service {
     }
 
     private void saveCswCapabilitiesInfo(Element params, ServiceContext serviceContext)
-            throws Exception {
+        throws Exception {
 
         List<Language> languages = serviceContext.getBean(LanguageRepository.class).findAll();
 

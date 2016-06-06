@@ -26,14 +26,13 @@
   </div>
 
 
-
   <div class="col-lg-8" data-ng-hide="virtualCSWSelected.id == null">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span data-ng-hide="virtualCSWSelected.id == ''" data-translate="">updateVirtualCSW</span>
         <span data-ng-hide="virtualCSWSelected.id != ''" data-translate="">newVirtualCSW</span>
         <strong>{{virtualCSWSelected.name}}</strong> (<a
-          href="{{getCapabilitiesUrl(virtualCSWSelected)}}" data-translate="">capabilities</a>)
+        href="{{getCapabilitiesUrl(virtualCSWSelected)}}" data-translate="">capabilities</a>)
 
         <div class="btn-toolbar">
           <button type="button" class="btn btn-primary pull-right"
@@ -44,7 +43,7 @@
           </button>
           <button type="button" class="btn btn-primary pull-right btn-danger"
                   data-ng-hide="virtualCSWSelected.id == ''"
-                  data-ng-click="deleteVirtualCSW(virtualCSWSelected.id)" >
+                  data-ng-click="deleteVirtualCSW(virtualCSWSelected.id)">
             <i class="fa fa-times"></i>&nbsp;
             {{"deleteVirtualCSW"|translate}}
           </button>
@@ -74,10 +73,14 @@
             <p class="help-block" data-translate="">virtualCSWNameDescriptionHelp</p>
 
             <label data-translate="">virtualCSWExplicitQuery</label>
-              <small><a style="cursor: pointer" data-ng-click="showExplicitQuery = !showExplicitQuery" >{{(showExplicitQuery ? 'virtualCSWHideExplicitQuery' : 'virtualCSWShowExplicitQuery') | translate}}</a></small>
+            <small><a style="cursor: pointer"
+                      data-ng-click="showExplicitQuery = !showExplicitQuery">{{(showExplicitQuery ?
+              'virtualCSWHideExplicitQuery' : 'virtualCSWShowExplicitQuery') | translate}}</a>
+            </small>
             <input data-ng-show="showExplicitQuery" name="serviceExplicitQuery" class="form-control"
-                      data-ng-model="virtualCSWSelected.explicitQuery"/>
-            <p class="help-block" data-ng-show="showExplicitQuery" data-translate="">virtualCSWExplicitQueryHelp</p>
+                   data-ng-model="virtualCSWSelected.explicitQuery"/>
+            <p class="help-block" data-ng-show="showExplicitQuery" data-translate="">
+              virtualCSWExplicitQueryHelp</p>
 
             <input type="hidden" name="classname" class="form-control"
                    value=".services.main.CswDiscoveryDispatcher"/>
@@ -93,20 +96,22 @@
               <div class="col-md-4">
                 <input type="text" class="form-control"
                        data-ng-model="key"/>
-                <input type="hidden" class="form-control" name="occur__{{key}}" value="{{value.occur}}" />
-                  <div class="well-sm">
-                      <div class="dropdown">
-                          <h5 data-toggle="dropdown" style="cursor: pointer">
-                              <small>{{'virtualcswParamOccurOpt'+value.occur | translate}}</small>
-                              <i class="fa fa-caret-down"></i>
-                          </h5>
-                          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                              <li role="presentation" data-ng-repeat="occur in occurs"
-                                  data-ng-hide="value.occur === occur">
-                                  <a role="menuitem" data-ng-click="value.occur = occur" tabindex="-1">{{'virtualcswParamOccurOpt'+occur | translate}}</a></li>
-                          </ul>
-                      </div>
+                <input type="hidden" class="form-control" name="occur__{{key}}"
+                       value="{{value.occur}}"/>
+                <div class="well-sm">
+                  <div class="dropdown">
+                    <h5 data-toggle="dropdown" style="cursor: pointer">
+                      <small>{{'virtualcswParamOccurOpt'+value.occur | translate}}</small>
+                      <i class="fa fa-caret-down"></i>
+                    </h5>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                      <li role="presentation" data-ng-repeat="occur in occurs"
+                          data-ng-hide="value.occur === occur">
+                        <a role="menuitem" data-ng-click="value.occur = occur" tabindex="-1">{{'virtualcswParamOccurOpt'+occur
+                          | translate}}</a></li>
+                    </ul>
                   </div>
+                </div>
               </div>
               <div class="col-md-4">
                 <div class="input-group">
@@ -164,20 +169,21 @@
                     </ul>
                   </div>
                 </div>
-                  <div class="well-sm">
-                      <div class="dropdown">
-                          <h5 data-toggle="dropdown" style="cursor: pointer">
-                              <small>{{'virtualcswParamOccurOpt' + newFilter.occur | translate}}</small>
-                              <i class="fa fa-caret-down"></i>
-                          </h5>
-                          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                              <li role="presentation" data-ng-repeat="occur in occurs" data-ng-hide="newFilter.occur === occur">
-                                  <a role="menuitem" data-ng-click="newFilter.occur = occur" tabindex="-1">
-                                      {{'virtualcswParamOccurOpt'+occur | translate}}
-                                  </a></li>
-                          </ul>
-                      </div>
+                <div class="well-sm">
+                  <div class="dropdown">
+                    <h5 data-toggle="dropdown" style="cursor: pointer">
+                      <small>{{'virtualcswParamOccurOpt' + newFilter.occur | translate}}</small>
+                      <i class="fa fa-caret-down"></i>
+                    </h5>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                      <li role="presentation" data-ng-repeat="occur in occurs"
+                          data-ng-hide="newFilter.occur === occur">
+                        <a role="menuitem" data-ng-click="newFilter.occur = occur" tabindex="-1">
+                          {{'virtualcswParamOccurOpt'+occur | translate}}
+                        </a></li>
+                    </ul>
                   </div>
+                </div>
               </div>
               <div class="col-md-4">
                 <input type="text" name="{{key}}" class="form-control"

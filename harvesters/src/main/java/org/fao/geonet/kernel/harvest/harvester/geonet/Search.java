@@ -35,70 +35,93 @@ import com.google.common.base.Splitter;
 
 //=============================================================================
 
-class Search
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
-	public Search() {
+class Search {
+    public String freeText;
+
+    //---------------------------------------------------------------------------
+    public String title;
+
+    //----------------------------------------------------	-----------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    public String abstrac;
+
+    //---------------------------------------------------------------------------
+    public String keywords;
+
+    //---------------------------------------------------------------------------
+    public boolean digital;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
+    public boolean hardcopy;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    public String sourceUuid;
+    public String sourceName;
+    public String anyField;
+    public String anyValue;
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
+    public Search() {
+    }
+    public Search(Element search) throws BadParameterEx {
+        freeText = Util.getParam(search, "freeText", "");
+        title = Util.getParam(search, "title", "");
+        abstrac = Util.getParam(search, "abstract", "");
+        keywords = Util.getParam(search, "keywords", "");
+        digital = Util.getParam(search, "digital", false);
+        hardcopy = Util.getParam(search, "hardcopy", false);
+        anyField = Util.getParam(search, "anyField", "");
+        anyValue = Util.getParam(search, "anyValue", "");
+
+        Element source = search.getChild("source");
+
+        sourceUuid = Util.getParam(source, "uuid", "");
+        sourceName = Util.getParam(source, "name", "");
     }
 
-	//---------------------------------------------------------------------------
+    public static Search createEmptySearch() throws BadParameterEx {
+        return new Search(new Element("search"));
+    }
 
-	public Search(Element search) throws BadParameterEx
-	{
-		freeText = Util.getParam(search, "freeText", "");
-		title    = Util.getParam(search, "title",    "");
-		abstrac  = Util.getParam(search, "abstract", "");
-		keywords = Util.getParam(search, "keywords", "");
-		digital  = Util.getParam(search, "digital",  false);
-		hardcopy = Util.getParam(search, "hardcopy", false);
-		anyField = Util.getParam(search, "anyField", "");
-		anyValue = Util.getParam(search, "anyValue", "");
-		
-		Element source = search.getChild("source");
+    public Search copy() {
+        Search s = new Search();
 
-		sourceUuid = Util.getParam(source, "uuid", "");
-		sourceName = Util.getParam(source, "name", "");
-	}
+        s.freeText = freeText;
+        s.title = title;
+        s.abstrac = abstrac;
+        s.keywords = keywords;
+        s.digital = digital;
+        s.hardcopy = hardcopy;
+        s.sourceUuid = sourceUuid;
+        s.sourceName = sourceName;
+        s.anyField = anyField;
+        s.anyValue = anyValue;
 
-	//----------------------------------------------------	-----------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+        return s;
+    }
 
-	public Search copy()
-	{
-		Search s = new Search();
+    public Element createRequest() {
+        Element req = new Element("request");
 
-		s.freeText  = freeText;
-		s.title     = title;
-		s.abstrac   = abstrac;
-		s.keywords  = keywords;
-		s.digital   = digital;
-		s.hardcopy  = hardcopy;
-		s.sourceUuid= sourceUuid;
-		s.sourceName= sourceName;
-		s.anyField  = anyField;
-		s.anyValue  = anyValue;
-
-		return s;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public Element createRequest()
-	{
-		Element req = new Element("request");
-
-		add(req, "any",      freeText);
-		add(req, "title",    title);
-		add(req, "abstract", abstrac);
-		add(req, "themekey", keywords);
-		add(req, "siteId",   sourceUuid);
+        add(req, "any", freeText);
+        add(req, "title", title);
+        add(req, "abstract", abstrac);
+        add(req, "themekey", keywords);
+        add(req, "siteId", sourceUuid);
 
         try {
             Iterable<String> fields = Splitter.on(';').split(anyField);
@@ -112,56 +135,25 @@ class Search
             }
         } catch (Exception e) {
             throw new OperationAbortedEx("Search request criteria error. " +
-                    "Check that the free criteria fields '" +
-                    anyField + "' and values '" +
-                    anyValue + "' are correct. You MUST have the same " +
-                    "number of criteria and values.", e);
+                "Check that the free criteria fields '" +
+                anyField + "' and values '" +
+                anyValue + "' are correct. You MUST have the same " +
+                "number of criteria and values.", e);
         }
 
-		if (digital)
-			Lib.element.add(req, "digital", "on");
+        if (digital)
+            Lib.element.add(req, "digital", "on");
 
-		if (hardcopy)
-			Lib.element.add(req, "paper", "on");
+        if (hardcopy)
+            Lib.element.add(req, "paper", "on");
 
-		return req;
-	}
+        return req;
+    }
 
-	//---------------------------------------------------------------------------
-
-	public static Search createEmptySearch() throws BadParameterEx
-	{
-		return new Search(new Element("search"));
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-	private void add(Element req, String name, String value)
-	{
-		if (value.length() != 0)
-			req.addContent(new Element(name).setText(value));
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String  freeText;
-	public String  title;
-	public String  abstrac;
-	public String  keywords;
-	public boolean digital;
-	public boolean hardcopy;
-	public String  sourceUuid;
-	public String  sourceName;
-	public String anyField;
-	public String anyValue;
+    private void add(Element req, String name, String value) {
+        if (value.length() != 0)
+            req.addContent(new Element(name).setText(value));
+    }
 }
 
 //=============================================================================

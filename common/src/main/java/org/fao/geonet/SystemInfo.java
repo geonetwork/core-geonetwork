@@ -64,6 +64,11 @@ public class SystemInfo {
         this.scmRevision = scmRevision;
     }
 
+    public static SystemInfo getInfo() {
+        return getInfo(null);
+    }
+
+
     /**
      * A value indicating if the server is in development mode or production mode or...
      */
@@ -102,12 +107,14 @@ public class SystemInfo {
     public String getBuildOsInfo() {
         return buildOsInfo;
     }
+
     /**
      * Return the version of java used to build the web app.
      */
     public String getBuildJavaVersion() {
         return this.buildJavaVersion;
     }
+
     /**
      * Return the jvm vendor of java used to build the web app.
      */
@@ -124,25 +131,20 @@ public class SystemInfo {
 
     public Element toXml() {
         return new Element("systemInfo").addContent(Arrays.asList(
-                new Element("stagingProfile").setText(this.stagingProfile),
-                new Element("buildOsInfo").setText(this.buildOsInfo),
-                new Element("buildJavaVendor").setText(this.buildJavaVendor),
-                new Element("buildJavaVersion").setText(this.buildJavaVersion),
-                new Element("buildDate").setText(this.buildDate),
-                new Element("scmRevision").setText(this.scmRevision)
+            new Element("stagingProfile").setText(this.stagingProfile),
+            new Element("buildOsInfo").setText(this.buildOsInfo),
+            new Element("buildJavaVendor").setText(this.buildJavaVendor),
+            new Element("buildJavaVersion").setText(this.buildJavaVersion),
+            new Element("buildDate").setText(this.buildDate),
+            new Element("scmRevision").setText(this.scmRevision)
         ));
     }
 
-    public static SystemInfo getInfo() {
-        return getInfo(null);
-    }
     public static SystemInfo getInfo(SystemInfo defaultInfo) {
         SystemInfo actualInfo = defaultInfo;
         if (actualInfo == null && ApplicationContextHolder.get() != null) {
             actualInfo = ApplicationContextHolder.get().getBean(SystemInfo.class);
         }
-
-
         return actualInfo;
     }
 

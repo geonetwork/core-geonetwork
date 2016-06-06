@@ -25,7 +25,9 @@ package org.fao.geonet.services.category;
 
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
+
 import jeeves.services.ReadWriteController;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
@@ -48,10 +50,10 @@ import java.util.List;
 @ReadWriteController
 public class Remove {
     @RequestMapping(value = "/{lang}/admin.category.remove", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public CategoryUpdateResponse exec(
-            @RequestParam Integer id
+        @RequestParam Integer id
     ) throws Exception {
         if (id == null) {
             throw new IllegalArgumentException("parameter id is required");

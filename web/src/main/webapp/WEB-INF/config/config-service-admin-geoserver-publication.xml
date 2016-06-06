@@ -23,9 +23,9 @@
   -->
 
 <geonet>
-	<services package="org.fao.geonet">
-		<service name="geoserver.publisher">
-			<class name=".services.publisher.Do"/>
-		</service>
-	</services>
+  <services package="org.fao.geonet">
+    <service name="geoserver.publisher">
+      <class name=".services.publisher.Do"/>
+    </service>
+  </services>
 </geonet>

@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -42,52 +43,50 @@ import java.util.List;
 
 //=============================================================================
 
-/** 
- * A simple service that returns all metadata templates that can be added.
- * User could also add search parameter in order to limit the list of templates
- * proposed to the user.
- * By default the search is restricted to template=y, extended=off and remote=off.
- * 
+/**
+ * A simple service that returns all metadata templates that can be added. User could also add
+ * search parameter in order to limit the list of templates proposed to the user. By default the
+ * search is restricted to template=y, extended=off and remote=off.
+ *
  * see search parameters
  */
 
-public class Get implements Service
-{
-	private String arParams[] =
-	{
-		"extended", "off",
-		"remote",   "off",
-		"attrset",  "geo",
-		"template", "y"
-	};
+public class Get implements Service {
+    private String arParams[] =
+        {
+            "extended", "off",
+            "remote", "off",
+            "attrset", "geo",
+            "template", "y"
+        };
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- API
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element exec(Element params, ServiceContext context) throws Exception {
 
-		SchemaManager schemaMan = gc.getBean(SchemaManager.class);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		Element result = search(params, context).setName(Jeeves.Elem.RESPONSE);
+        SchemaManager schemaMan = gc.getBean(SchemaManager.class);
 
-		@SuppressWarnings("unchecked")
+        Element result = search(params, context).setName(Jeeves.Elem.RESPONSE);
+
+        @SuppressWarnings("unchecked")
         List<Element> list = result.getChildren();
 
-		Element response = new Element("dummy");
+        Element response = new Element("dummy");
 
         // heikki: geonovum: first build the list of response records
         List<Element> responseRecords = new ArrayList<Element>();
@@ -99,10 +98,10 @@ public class Get implements Service
                 continue;
             }
 
-            String template     = elem.getChildText("isTemplate");
+            String template = elem.getChildText("isTemplate");
             String displayOrder = elem.getChildText("displayOrder");
-						String schema = info.getChildText("schema");
-            String id     = info.getChildText(Edit.Info.Elem.ID);
+            String schema = info.getChildText("schema");
+            String id = info.getChildText(Edit.Info.Elem.ID);
 
             if (template.equals("y") && schemaMan.existsSchema(schema)) {
                 // heikki, GeoNovum: added displayOrder
@@ -114,8 +113,8 @@ public class Get implements Service
         for (Element record : responseRecords) {
             String displayOrder = record.getChildText("displayorder");
             if (displayOrder == null ||
-                    displayOrder.equals("") ||
-                    displayOrder.equals("null")) {
+                displayOrder.equals("") ||
+                displayOrder.equals("null")) {
                 displayOrder = "-1";
             }
             Integer displayOrderI = Integer.parseInt(displayOrder);
@@ -137,26 +136,25 @@ public class Get implements Service
             record.getChild("displayorder").setText(displayOrderI.toString());
             response.addContent(record);
         }
-		return response;
-	}
+        return response;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //--------------------------------------------------------------------------
 
-	private Element search(Element par, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    private Element search(Element par, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		context.info("Creating searcher");
+        context.info("Creating searcher");
 
-		Element       params = buildParams(par);
-		ServiceConfig config = new ServiceConfig();
+        Element params = buildParams(par);
+        ServiceConfig config = new ServiceConfig();
 
-		SearchManager searchMan = gc.getBean(SearchManager.class);
-		try (MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+        SearchManager searchMan = gc.getBean(SearchManager.class);
+        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
             searcher.search(context, params, config);
 
@@ -166,39 +164,38 @@ public class Get implements Service
 
             return searcher.present(context, params, config);
         }
-	}
+    }
 
-	//--------------------------------------------------------------------------
-	/**
-	 * Adding default params (i.e. force template search) to all other input parameters
-	 */
-	private Element buildParams(Element par)
-	{
-		Element params = new Element(Jeeves.Elem.REQUEST);
-		@SuppressWarnings("unchecked")
-        List<Element> in =  par.getChildren();
-		for (Element el : in)
-			params.addContent(new Element(el.getName()).setText(el.getText()));
-		
-		for(int i=0; i<arParams.length/2; i++)
-			params.addContent(new Element(arParams[i*2]).setText(arParams[i*2 +1]));
+    //--------------------------------------------------------------------------
 
-		return params;
-	}
+    /**
+     * Adding default params (i.e. force template search) to all other input parameters
+     */
+    private Element buildParams(Element par) {
+        Element params = new Element(Jeeves.Elem.REQUEST);
+        @SuppressWarnings("unchecked")
+        List<Element> in = par.getChildren();
+        for (Element el : in)
+            params.addContent(new Element(el.getName()).setText(el.getText()));
 
-	//--------------------------------------------------------------------------
+        for (int i = 0; i < arParams.length / 2; i++)
+            params.addContent(new Element(arParams[i * 2]).setText(arParams[i * 2 + 1]));
+
+        return params;
+    }
+
+    //--------------------------------------------------------------------------
     // heikki, GeoNovum: added displayOrder
-	private Element buildRecord(String id, String name, String schema, String displayOrder)
-	{
-		Element el = new Element("record");
+    private Element buildRecord(String id, String name, String schema, String displayOrder) {
+        Element el = new Element("record");
 
-		el.addContent(new Element("id")  .setText(id));
-		el.addContent(new Element("name").setText(name));
-		el.addContent(new Element("schema").setText(schema));
+        el.addContent(new Element("id").setText(id));
+        el.addContent(new Element("name").setText(name));
+        el.addContent(new Element("schema").setText(schema));
         el.addContent(new Element("displayorder").setText(displayOrder));
 
-		return el;
-	}
+        return el;
+    }
 }
 
 //=============================================================================

@@ -41,97 +41,99 @@ import java.util.Map;
  * Class to parse GetCapabilities document.
  */
 public class CswServer {
-	public static final String GET_RECORDS      = "GetRecords";
-	public static final String GET_RECORD_BY_ID = "GetRecordById";
+    public static final String GET_RECORDS = "GetRecords";
+    public static final String GET_RECORD_BY_ID = "GetRecordById";
+    private Map<String, CswOperation> operations = new HashMap<String, CswOperation>();
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    private List<String> logs = new ArrayList<String>();
+
+    //---------------------------------------------------------------------------
+    private String preferredServerVersion = Csw.CSW_VERSION;
 
     /**
      * Constructor.
-     *
-     * @param capab
      */
-	public CswServer(Element capab) {
-		parse(capab);
-	}
+    public CswServer(Element capab) {
+        parse(capab);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public void parse(Element capab) {
-		logs.clear();
-		operations.clear();
+    public void parse(Element capab) {
+        logs.clear();
+        operations.clear();
 
         parseVersions(capab);
-		parseOperations(capab);
-	}
+        parseOperations(capab);
+    }
 
-	//---------------------------------------------------------------------------
+    public CswOperation getOperation(String name) {
+        return operations.get(name);
+    }
 
-	public CswOperation getOperation(String name) { return operations.get(name); }
-
-    public String getPreferredServerVersion() { return preferredServerVersion; }
-    
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-    /**
-     * Get available operations in the GetCapabilities document.
-     *
-     * @param capabil
-     */
-	private void parseOperations(Element capabil) {
-		Element operMd = capabil.getChild("OperationsMetadata", Csw.NAMESPACE_OWS);
-
-		if (operMd == null)
-			log("Missing 'ows:OperationsMetadata' element");
-
-		else
-			for(Object e : operMd.getChildren()) {
-				Element elem = (Element) e;
-
-				if ("Operation".equals(elem.getName())) {
-					CswOperation oper = extractOperation(elem);
-
-					if (oper != null)
-                        operations.put(oper.getName(), oper);
-				}
-			}
+    public String getPreferredServerVersion() {
+        return preferredServerVersion;
     }
 
     /**
-     * Get operations name and properties needed for futur operation calls.
-     *
-     * @param oper
-     * @return
+     * Get available operations in the GetCapabilities document.
      */
-	private CswOperation extractOperation(Element oper) {
-		String name = oper.getAttributeValue("name");
+    private void parseOperations(Element capabil) {
+        Element operMd = capabil.getChild("OperationsMetadata", Csw.NAMESPACE_OWS);
 
-		if (name == null) {
-			log("Operation has no 'name' attribute");
-			return null;
-		}
+        if (operMd == null)
+            log("Missing 'ows:OperationsMetadata' element");
 
-		CswOperation op = new CswOperation();
-		op.setName(name);
-		
-		@SuppressWarnings("unchecked")
+        else
+            for (Object e : operMd.getChildren()) {
+                Element elem = (Element) e;
+
+                if ("Operation".equals(elem.getName())) {
+                    CswOperation oper = extractOperation(elem);
+
+                    if (oper != null)
+                        operations.put(oper.getName(), oper);
+                }
+            }
+    }
+
+    //---------------------------------------------------------------------------
+
+    /**
+     * Get operations name and properties needed for futur operation calls.
+     */
+    private CswOperation extractOperation(Element oper) {
+        String name = oper.getAttributeValue("name");
+
+        if (name == null) {
+            log("Operation has no 'name' attribute");
+            return null;
+        }
+
+        CswOperation op = new CswOperation();
+        op.setName(name);
+
+        @SuppressWarnings("unchecked")
         List<Element> dcp = oper.getChildren("DCP", Csw.NAMESPACE_OWS);
-		evaluateUrl(dcp, op);
+        evaluateUrl(dcp, op);
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> parameters = oper.getChildren("Parameter", Csw.NAMESPACE_OWS);
-		log("Found " + parameters.size() + " parameters for operation: " + name);
-		List<Element> outputSchemas = null;
+        log("Found " + parameters.size() + " parameters for operation: " + name);
+        List<Element> outputSchemas = null;
         List<Element> typeNames = null;
         List<Element> outputFormats = null;
         List<Element> constraintLanguages = null;
-        
+
         for (Element parameter : parameters) {
             String parameterName = parameter.getAttributeValue("name");
             log("Processing parameter: " + parameterName);
@@ -162,44 +164,42 @@ public class CswServer {
                 outputFormats = tmp;
                 log("Found " + outputFormats.size() + " outputFormats for operation: " + name);
             }
-            
+
             if (parameterName != null &&
-                    parameterName.equalsIgnoreCase("CONSTRAINTLANGUAGE")) {
-                    @SuppressWarnings("unchecked")
-                    List<Element> tmp = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
-                    constraintLanguages = tmp;
-                    log("Found " + constraintLanguages.size() + " constraintLanguage for operation: " + name);
+                parameterName.equalsIgnoreCase("CONSTRAINTLANGUAGE")) {
+                @SuppressWarnings("unchecked")
+                List<Element> tmp = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                constraintLanguages = tmp;
+                log("Found " + constraintLanguages.size() + " constraintLanguage for operation: " + name);
             }
         }
 
-        if(outputSchemas != null) {
+        if (outputSchemas != null) {
             for (Element outputSchema : outputSchemas) {
                 String outputSchemaValue = outputSchema.getValue();
                 log("Adding outputSchema: " + outputSchemaValue + " to operation: " + name);
                 op.getOutputSchemaList().add(outputSchemaValue);
             }
             op.choosePreferredOutputSchema();
-        }
-        else {
-        	log("No outputSchema for operation: " + name);
+        } else {
+            log("No outputSchema for operation: " + name);
         }
 
-        if(constraintLanguages != null) {
+        if (constraintLanguages != null) {
             for (Element constraintLanguage : constraintLanguages) {
                 String constraintLanguageValue = constraintLanguage.getValue().toLowerCase();
                 log("Adding constraintLanguage : " + constraintLanguageValue + " to operation: " + name);
-                if ("cql".equals(constraintLanguageValue)){
+                if ("cql".equals(constraintLanguageValue)) {
                     log(" Some implementation use CQL instead of CQL_TEXT for the CQL constraint language value.");
                     constraintLanguageValue = "cql_text";
                 }
                 op.getConstraintLanguage().add(constraintLanguageValue);
             }
-        }
-        else {
+        } else {
             log("No constraintLanguage for operation: " + name);
         }
 
-        if(typeNames != null) {
+        if (typeNames != null) {
             for (Element typeName : typeNames) {
                 String typeNameValue = typeName.getValue();
                 log("Adding typeName: " + typeNameValue + " to operation: " + name);
@@ -210,33 +210,35 @@ public class CswServer {
                     log("  Unsupported typeName found: " + typeNameValue + ".");
                 }
             }
-		}
-		else {
-			log("No typeNames for operation: " + name);
-		}
+        } else {
+            log("No typeNames for operation: " + name);
+        }
 
-        if(outputFormats != null) {
+        if (outputFormats != null) {
             for (Element outputFormat : outputFormats) {
                 String outputFormatValue = outputFormat.getValue();
                 log("Adding outputFormat: " + outputFormatValue + " to operation: " + name);
                 op.getOutputFormatList().add(outputFormatValue);
             }
-			op.choosePreferredOutputFormat();
-		}
-		else {
+            op.choosePreferredOutputFormat();
+        } else {
             op.setPreferredOutputFormat(Csw.OUTPUT_FORMAT_APPLICATION_XML);
-			log("No outputFormat for operation: " + name);
-		}
+            log("No outputFormat for operation: " + name);
+        }
 
         op.setPreferredServerVersion(preferredServerVersion);
 
         return op;
     }
 
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+
     /**
      * Gets server supported versions.
-     *
-     * @param capabil
      */
     private void parseVersions(Element capabil) {
         List<String> serverVersions = new ArrayList<String>();
@@ -244,8 +246,7 @@ public class CswServer {
 
         if (serviceIdentificationMd == null) {
             log("Missing 'ows:ServiceTypeVersion' element");
-        }
-        else {
+        } else {
             @SuppressWarnings(value = "unchecked")
             List<Element> serviceIdentificationMdElems = serviceIdentificationMd.getChildren();
             for (Element value : serviceIdentificationMdElems) {
@@ -275,53 +276,52 @@ public class CswServer {
     }
 
     /**
-     * Search for valid POST or GET URL and check that service is available using GET method or POST/XML.
+     * Search for valid POST or GET URL and check that service is available using GET method or
+     * POST/XML.
      *
      * SOAP services are not supported (TODO ?).
-     * @param dcps
-     * @param op
      */
-	private void evaluateUrl(List<Element> dcps, CswOperation op) {
-		if (dcps == null) {
-			log("Missing 'ows:DCP' element in operation");
-			return;
-		}
-		
-		Namespace ns = Namespace.getNamespace("http://www.w3.org/1999/xlink");
-		
-		for (Element dcp : dcps) {
-			Element http = dcp.getChild("HTTP", Csw.NAMESPACE_OWS);
-			
-			if (http == null) {
-				log ("Missing 'ows:HTTP' element in operation/DCP");
-				continue;
-			}
-		
-			// GET method
-			Element getUrl = http.getChild("Get",  Csw.NAMESPACE_OWS);
-			
-			if (getUrl == null) {
-				log ("No GET url found in current DCP. Checking POST ...");
-			} else {
-				String tmpGetUrl = getUrl.getAttributeValue("href", ns);
+    private void evaluateUrl(List<Element> dcps, CswOperation op) {
+        if (dcps == null) {
+            log("Missing 'ows:DCP' element in operation");
+            return;
+        }
 
-				if (tmpGetUrl != null && op.getGetUrl() == null) {
-					try	{
-						op.setGetUrl(new URL(tmpGetUrl));
-						log ("Found URL (GET method): " + tmpGetUrl);
-					} catch (MalformedURLException e) {
-						log ("Malformed 'xlink:href' attribute in operation's http method");
-					}
-				}
-			}
-			
-			// POST method
+        Namespace ns = Namespace.getNamespace("http://www.w3.org/1999/xlink");
+
+        for (Element dcp : dcps) {
+            Element http = dcp.getChild("HTTP", Csw.NAMESPACE_OWS);
+
+            if (http == null) {
+                log("Missing 'ows:HTTP' element in operation/DCP");
+                continue;
+            }
+
+            // GET method
+            Element getUrl = http.getChild("Get", Csw.NAMESPACE_OWS);
+
+            if (getUrl == null) {
+                log("No GET url found in current DCP. Checking POST ...");
+            } else {
+                String tmpGetUrl = getUrl.getAttributeValue("href", ns);
+
+                if (tmpGetUrl != null && op.getGetUrl() == null) {
+                    try {
+                        op.setGetUrl(new URL(tmpGetUrl));
+                        log("Found URL (GET method): " + tmpGetUrl);
+                    } catch (MalformedURLException e) {
+                        log("Malformed 'xlink:href' attribute in operation's http method");
+                    }
+                }
+            }
+
+            // POST method
             @SuppressWarnings(value = "unchecked")
-			List<Element> postUrlList = http.getChildren("Post", Csw.NAMESPACE_OWS);
+            List<Element> postUrlList = http.getChildren("Post", Csw.NAMESPACE_OWS);
 
-            for(Element postUrl: postUrlList) {
+            for (Element postUrl : postUrlList) {
                 if (postUrl == null) {
-                    log ("No POST url found in current DCP.");
+                    log("No POST url found in current DCP.");
                 } else {
                     String tmpPostUrl = postUrl.getAttributeValue("href", ns);
 
@@ -335,45 +335,31 @@ public class CswServer {
                             if (methodConstraint != null) {
                                 Element value = methodConstraint.getChild("Value", Csw.NAMESPACE_OWS);
                                 if (value != null && value.getText().equals("SOAP")) {
-                                    log ("The URL " + tmpPostUrl + " using POST/SOAP method is not supported for harvesting.");
+                                    log("The URL " + tmpPostUrl + " using POST/SOAP method is not supported for harvesting.");
                                     continue;
                                 }
                             }
 
-                            try	{
+                            try {
                                 op.setPostUrl(new URL(tmpPostUrl));
-                                log ("Found URL (POST method):" + tmpPostUrl);
+                                log("Found URL (POST method):" + tmpPostUrl);
                                 break;
                             } catch (MalformedURLException e) {
-                                log ("Malformed 'xlink:href' attribute in operation's http method");
+                                log("Malformed 'xlink:href' attribute in operation's http method");
                             }
                         }
                     }
                 }
             }
-		}
-	}
+        }
+    }
 
-	//---------------------------------------------------------------------------
-
-	private void log(String message) {
-		logs.add(message);
+    private void log(String message) {
+        logs.add(message);
         if (Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, message);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private Map<String, CswOperation> operations = new HashMap<String, CswOperation>();
-
-	private List<String> logs = new ArrayList<String>();
-
-    private String preferredServerVersion = Csw.CSW_VERSION; 
-	//---------------------------------------------------------------------------
+    }
+    //---------------------------------------------------------------------------
 }
 
 //=============================================================================

@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
@@ -44,75 +45,75 @@ import java.util.Set;
 
 //=============================================================================
 
-/** Returns all status values.
-  */
+/**
+ * Returns all status values.
+ */
 
-public class PrepareBatchUpdateStatus implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class PrepareBatchUpdateStatus implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dataMan = gc.getBean(DataManager.class);
-		AccessManager am = gc.getBean(AccessManager.class);
-		UserSession us = context.getUserSession();
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataMan = gc.getBean(DataManager.class);
+        AccessManager am = gc.getBean(AccessManager.class);
+        UserSession us = context.getUserSession();
 
-		context.info("Get selected metadata");
-		SelectionManager sm = SelectionManager.getManager(us);
+        context.info("Get selected metadata");
+        SelectionManager sm = SelectionManager.getManager(us);
 
-		Set<Integer> ids = new HashSet<Integer>();
+        Set<Integer> ids = new HashSet<Integer>();
 
-		//-----------------------------------------------------------------------
-		//--- run through the selected set of metadata records 
-		synchronized(sm.getSelection("metadata")) {
-		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
-			String uuid = (String) iter.next();
-			String id   = dataMan.getMetadataId(uuid);
+        //-----------------------------------------------------------------------
+        //--- run through the selected set of metadata records
+        synchronized (sm.getSelection("metadata")) {
+            for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext(); ) {
+                String uuid = (String) iter.next();
+                String id = dataMan.getMetadataId(uuid);
 
-			//--- check access, if owner then process 
-			
-			if (am.isOwner(context, id)) {
-				ids.add(Integer.valueOf(id));
-			}
-		}
-		}
+                //--- check access, if owner then process
 
-		//-----------------------------------------------------------------------
-		//--- retrieve status values
-		Element elStatus = gc.getBean(StatusValueRepository.class).findAllAsXml();
-		@SuppressWarnings("unchecked")
+                if (am.isOwner(context, id)) {
+                    ids.add(Integer.valueOf(id));
+                }
+            }
+        }
+
+        //-----------------------------------------------------------------------
+        //--- retrieve status values
+        Element elStatus = gc.getBean(StatusValueRepository.class).findAllAsXml();
+        @SuppressWarnings("unchecked")
         List<Element> list = elStatus.getChildren();
 
-		for (Element el : list) {
-			el.setName(Geonet.Elem.STATUS);
-		}
+        for (Element el : list) {
+            el.setName(Geonet.Elem.STATUS);
+        }
 
-		//-----------------------------------------------------------------------
-		//--- get the list of content reviewers for this metadata record
-		Element cRevs = am.getContentReviewers(context, ids);
-		cRevs.setName("contentReviewers");
+        //-----------------------------------------------------------------------
+        //--- get the list of content reviewers for this metadata record
+        Element cRevs = am.getContentReviewers(context, ids);
+        cRevs.setName("contentReviewers");
 
-		//-----------------------------------------------------------------------
-		//--- put all together
-		Element elRes = new Element(Jeeves.Elem.RESPONSE)
-										.addContent(elStatus)
-										.addContent(cRevs);
+        //-----------------------------------------------------------------------
+        //--- put all together
+        Element elRes = new Element(Jeeves.Elem.RESPONSE)
+            .addContent(elStatus)
+            .addContent(cRevs);
 
-		return elRes;
-	}
+        return elRes;
+    }
 }
 
 //=============================================================================

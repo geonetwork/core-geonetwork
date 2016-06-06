@@ -28,6 +28,7 @@ import org.fao.geonet.domain.SchematronCriteriaGroupId;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import javax.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -36,13 +37,12 @@ import java.util.List;
  * @author delawen
  */
 public interface SchematronCriteriaGroupRepository extends
-        GeonetRepository<SchematronCriteriaGroup, SchematronCriteriaGroupId>,
-		JpaSpecificationExecutor<SchematronCriteriaGroup> {
+    GeonetRepository<SchematronCriteriaGroup, SchematronCriteriaGroupId>,
+    JpaSpecificationExecutor<SchematronCriteriaGroup> {
     /**
      * Look up a schematrons by its schema
      *
-     * @param schematronId
-     *            the id of the schematron
+     * @param schematronId the id of the schematron
      */
     @Nonnull
     public List<SchematronCriteriaGroup> findAllById_SchematronId(@Nonnull int schematronId);

@@ -40,35 +40,31 @@ import java.util.HashSet;
 
 //==============================================================================
 
-public class MakeISO
-{
-	public static void main(String args[]) throws Exception
-	{
-		// check args
-		if (args.length != 1)
-		{
-			System.err.println("usage: makeISO file");
-			System.exit(1);
-		}
+public class MakeISO {
+    public static void main(String args[]) throws Exception {
+        // check args
+        if (args.length != 1) {
+            System.err.println("usage: makeISO file");
+            System.exit(1);
+        }
 
-		FileInputStream  is = new FileInputStream(new File(args[0]));
-		FileOutputStream os = new FileOutputStream(new File(args[0]+".sql"));
+        FileInputStream is = new FileInputStream(new File(args[0]));
+        FileOutputStream os = new FileOutputStream(new File(args[0] + ".sql"));
 
-		BufferedReader ir = new BufferedReader(new InputStreamReader(is, Constants.ENCODING));
+        BufferedReader ir = new BufferedReader(new InputStreamReader(is, Constants.ENCODING));
 //		BufferedWriter ow = new BufferedWriter(new OutputStreamWriter(os));
 
-		String line;
+        String line;
 
 //		DbmsPool pool = Util.getDbmsPool("../config.xml");
 //		Dbms     dbms = (Dbms)pool.open();
 
-		Element root = new Element("mapping");
+        Element root = new Element("mapping");
 
-		HashSet<String> set = new HashSet<String>();
+        HashSet<String> set = new HashSet<String>();
 
-		while ((line = ir.readLine()) != null)
-		{
-			FullTokenizer ft = new FullTokenizer(line, "|");
+        while ((line = ir.readLine()) != null) {
+            FullTokenizer ft = new FullTokenizer(line, "|");
 
 //			String code = ft.nextToken();
 //			ft.nextToken();
@@ -90,35 +86,33 @@ public class MakeISO
 //			dbms.execute("INSERT INTO IsoLanguagesDes(idDes, langId, label) VALUES (?,?,?)", id, "fr", up(fraDes));
 //			dbms.commit();
 
-			String longCode = ft.nextToken();
-			ft.nextToken();
-			String shortCode = ft.nextToken();
+            String longCode = ft.nextToken();
+            ft.nextToken();
+            String shortCode = ft.nextToken();
 
-			if (shortCode.length() == 2)
-			{
-				if (set.contains(shortCode))
-					System.out.println("Skipped short code : "+shortCode);
-				else
-				{
-					set.add(shortCode);
+            if (shortCode.length() == 2) {
+                if (set.contains(shortCode))
+                    System.out.println("Skipped short code : " + shortCode);
+                else {
+                    set.add(shortCode);
 
-					Element elem = new Element("map");
-					elem.setAttribute("longCode",  longCode);
-					elem.setAttribute("shortCode", shortCode);
-					root.addContent(elem);
-				}
-			}
+                    Element elem = new Element("map");
+                    elem.setAttribute("longCode", longCode);
+                    elem.setAttribute("shortCode", shortCode);
+                    root.addContent(elem);
+                }
+            }
 //			id++;
-		}
+        }
 
-		String xml = Xml.getString(new Document(root));
-		BufferedWriter ow = new BufferedWriter(new OutputStreamWriter(os, Constants.ENCODING));
-		ow.write(xml);
+        String xml = Xml.getString(new Document(root));
+        BufferedWriter ow = new BufferedWriter(new OutputStreamWriter(os, Constants.ENCODING));
+        ow.write(xml);
 
 //		pool.close(dbms);
-		ir.close();
-		ow.close();
-	}
+        ir.close();
+        ow.close();
+    }
 
 }
 

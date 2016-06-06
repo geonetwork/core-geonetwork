@@ -54,13 +54,12 @@ import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
 
 /**
- * Delete an uploaded file from the data directory and remote its
- * reference in the metadata record.
+ * Delete an uploaded file from the data directory and remote its reference in the metadata record.
  */
 @ReadWriteController
 @Controller("resource.del.and.detach")
 @Deprecated
-public class RemoveAndProcess  {
+public class RemoveAndProcess {
 
     @Autowired
     private DataManager dm;
@@ -69,16 +68,18 @@ public class RemoveAndProcess  {
     @Autowired
     private ServiceManager serviceManager;
 
-	@RequestMapping(value = {"/{lang}/resource.del.and.detach"}, produces = {
-			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody IdResponse serviceSpecificExec(@PathVariable String lang,
-                                                        HttpServletRequest request,
-                                                        @RequestParam(value=Params.URL) String url,
-                                                        @RequestParam(defaultValue="") String id,
-                                                        @RequestParam(defaultValue="") String uuid)
-            throws Exception {
+    @RequestMapping(value = {"/{lang}/resource.del.and.detach"}, produces = {
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
+    IdResponse serviceSpecificExec(@PathVariable String lang,
+                                   HttpServletRequest request,
+                                   @RequestParam(value = Params.URL) String url,
+                                   @RequestParam(defaultValue = "") String id,
+                                   @RequestParam(defaultValue = "") String uuid)
+        throws Exception {
         ServiceContext context = serviceManager.createServiceContext("resource.del.and.detach", lang, request);
-        if(id.trim().isEmpty()) {
+        if (id.trim().isEmpty()) {
             id = dm.getMetadataId(uuid);
         }
         Lib.resource.checkEditPrivilege(context, id);
@@ -117,11 +118,11 @@ public class RemoveAndProcess  {
         try {
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
             processedMetadata = XslProcessUtils.process(context, id, process,
-                    true, report, siteURL, allParams);
+                true, report, siteURL, allParams);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
-                        + report.getNumberOfRecordNotFound() + ", Not owner:" + report.getNumberOfRecordsNotEditable()
-                        + ", No process found:" + report.getNoProcessFoundCount() + ".");
+                    + report.getNumberOfRecordNotFound() + ", Not owner:" + report.getNumberOfRecordsNotEditable()
+                    + ", No process found:" + report.getNoProcessFoundCount() + ".");
             }
         } catch (Exception e) {
             throw e;

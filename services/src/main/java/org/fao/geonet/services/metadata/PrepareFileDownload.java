@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ReservedOperation;
@@ -47,88 +48,89 @@ import java.util.List;
 
 //=============================================================================
 
-/** Retrieves download links from metadata and adds certain info to
- *  prepare a list of online resources for the user. Access is restricted
-  */
+/**
+ * Retrieves download links from metadata and adds certain info to prepare a list of online
+ * resources for the user. Access is restricted
+ */
 
-public class PrepareFileDownload implements Service
-{
-	private Path appPath;
+public class PrepareFileDownload implements Service {
+    private Path appPath;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception
-	{
-		this.appPath = appPath;
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        this.appPath = appPath;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Element response = new Element("response");
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        Element response = new Element("response");
 
-		//--- check access
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataManager = gc.getBean(DataManager.class);
+        //--- check access
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataManager = gc.getBean(DataManager.class);
 
-		boolean addEdit = false;
-		
-		//--- the request should contain an ID or UUID
-		String id = Utils.getIdentifierFromParameters(params, context);
+        boolean addEdit = false;
 
-		if (id == null) {
-			throw new MetadataNotFoundEx("No record has this UUID");
-		}
-		
-		//--- check download access
-		Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
+        //--- the request should contain an ID or UUID
+        String id = Utils.getIdentifierFromParameters(params, context);
 
-		//--- get metadata
+        if (id == null) {
+            throw new MetadataNotFoundEx("No record has this UUID");
+        }
+
+        //--- check download access
+        Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
+
+        //--- get metadata
         boolean withValidationErrors = false, keepXlinkAttributes = false;
         Element elMd = dataManager.getMetadata(context, id, addEdit, withValidationErrors, keepXlinkAttributes);
 
-		if (elMd == null) {
-			throw new MetadataNotFoundEx("Metadata not found - deleted?");
+        if (elMd == null) {
+            throw new MetadataNotFoundEx("Metadata not found - deleted?");
         }
 
-		response.addContent(new Element("id").setText(id));
+        response.addContent(new Element("id").setText(id));
 
-		//--- transform record into brief version
+        //--- transform record into brief version
         Path briefXslt = appPath.resolve("xsl/metadata-brief.xsl");
-		Element elBrief = Xml.transform(elMd, briefXslt);
+        Element elBrief = Xml.transform(elMd, briefXslt);
 
-		XPath xp;
-		//--- process links to a file (have name field not blank)
-		//--- if they are a reference to a downloadable local file then get size 
-		//--- and date modified, if not then set local to false 
-		xp = XPath.newInstance ("link[starts-with(@protocol,'WWW:DOWNLOAD') and @name!='']");
-		@SuppressWarnings("unchecked")
+        XPath xp;
+        //--- process links to a file (have name field not blank)
+        //--- if they are a reference to a downloadable local file then get size
+        //--- and date modified, if not then set local to false
+        xp = XPath.newInstance("link[starts-with(@protocol,'WWW:DOWNLOAD') and @name!='']");
+        @SuppressWarnings("unchecked")
         List<Element> downloadLinks = xp.selectNodes(elBrief);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         response = processDownloadLinks(context, id, siteURL, downloadLinks, response);
 
-		//--- now process web links so that they can be displayed as well
-		xp = XPath.newInstance ("link[starts-with(@protocol,'WWW:LINK')]");
-		@SuppressWarnings("unchecked")
+        //--- now process web links so that they can be displayed as well
+        xp = XPath.newInstance("link[starts-with(@protocol,'WWW:LINK')]");
+        @SuppressWarnings("unchecked")
         List<Element> webLinks = xp.selectNodes(elBrief);
-		response = processWebLinks(webLinks, response);
+        response = processWebLinks(webLinks, response);
 
-		return response;
-	}
+        return response;
+    }
 
-	//--------------------------------------------------------------------------
-	/** Process the links to downloadable files */
-	private Element processDownloadLinks( ServiceContext context, String id, String siteURL, List<Element> elems, Element response ) throws IOException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    //--------------------------------------------------------------------------
+
+    /**
+     * Process the links to downloadable files
+     */
+    private Element processDownloadLinks(ServiceContext context, String id, String siteURL, List<Element> elems, Element response) throws IOException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         for (Element elem : elems) {
             elem = (Element) elem.clone();
@@ -178,13 +180,15 @@ public class PrepareFileDownload implements Service
             }
         }
 
-		return response;
-	}
+        return response;
+    }
 
-	//--------------------------------------------------------------------------
-	/** Process web links (actually just add them in) */
-	private Element processWebLinks( List<Element> elems, Element response )
-	{
+    //--------------------------------------------------------------------------
+
+    /**
+     * Process web links (actually just add them in)
+     */
+    private Element processWebLinks(List<Element> elems, Element response) {
 
         for (Element elem : elems) {
             elem = (Element) elem.clone();
@@ -192,8 +196,8 @@ public class PrepareFileDownload implements Service
             elem.setAttribute("weblink", "true");
             response.addContent(elem);
         }
-		return response;
-	}
+        return response;
+    }
 
 }
 

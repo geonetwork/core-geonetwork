@@ -693,7 +693,7 @@
           return {
             restrict: 'AE',
             scope: {
-              crs: '=',
+              crs: '=?',
               value: '=',
               map: '='
             },
@@ -701,7 +701,7 @@
                 'partials/bboxInput.html',
 
             link: function(scope, element, attrs) {
-              scope.crs = scope.crs || 'EPSG:4326';
+              var crs = scope.crs || 'EPSG:4326';
               scope.extent = extentFromValue(scope.value);
 
               var style = new ol.style.Style({
@@ -714,10 +714,6 @@
                 })
               });
 
-              var dragboxInteraction = new ol.interaction.DragBox({
-                style: style
-              });
-              scope.map.addInteraction(dragboxInteraction);
 
               // Create overlay to show bbox
               var layer = new ol.layer.Vector({
@@ -728,7 +724,12 @@
                 updateWhileAnimating: true,
                 updateWhileInteracting: true
               });
-              scope.map.addLayer(layer);
+
+              var dragboxInteraction = new ol.interaction.DragBox({
+                className: 'gnbbox-dragbox'
+              });
+              scope.map.addInteraction(dragboxInteraction);
+              layer.setMap(scope.map);
 
               var clearMap = function() {
                 layer.getSource().clear();
@@ -752,7 +753,7 @@
                 var coordinates, geom, f;
                 coordinates = gnMap.getPolygonFromExtent(scope.extent);
                 geom = new ol.geom.Polygon(coordinates)
-                    .transform(scope.crs, scope.map.getView().getProjection());
+                    .transform(crs, scope.map.getView().getProjection());
                 f = new ol.Feature();
                 f.setGeometry(geom);
                 layer.getSource().addFeature(f);
@@ -761,8 +762,8 @@
               dragboxInteraction.on('boxend', function() {
                 dragboxInteraction.active = false;
                 var g = dragboxInteraction.getGeometry().clone();
-                var geom = g.clone()
-                    .transform(scope.map.getView().getProjection(), scope.crs);
+                var geom = g.transform(scope.map.getView().getProjection(),
+                    crs);
                 var extent = geom.getExtent();
                 scope.extent = extent.map(function(coord) {
                   return Math.round(coord * 10000) / 10000;

@@ -26,6 +26,7 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -40,45 +41,43 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** 
- *  
- *  Download one thesaurus file
+/**
+ * Download one thesaurus file
  */
-public class Download implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Download implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception	{}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- API
+    //---
+    //--------------------------------------------------------------------------
 
-	/**
-	 *  @param params must contain
-	 */
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
-		
-		String name  = Util.getParam(params, Params.REF);
-		
-		Thesaurus directory = manager.getThesaurusByName(name);
-		if (directory == null)
-			throw new IllegalArgumentException("Thesaurus not found --> " + name);
-		
-		Path directoryFile = directory.getFile();
-		if (!Files.exists(directoryFile))
-			throw new IllegalArgumentException("Thesaurus file not found --> " + name);
+    /**
+     * @param params must contain
+     */
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
 
-		return BinaryFile.encode(200,directoryFile).getElement();
-	}
+        String name = Util.getParam(params, Params.REF);
+
+        Thesaurus directory = manager.getThesaurusByName(name);
+        if (directory == null)
+            throw new IllegalArgumentException("Thesaurus not found --> " + name);
+
+        Path directoryFile = directory.getFile();
+        if (!Files.exists(directoryFile))
+            throw new IllegalArgumentException("Thesaurus file not found --> " + name);
+
+        return BinaryFile.encode(200, directoryFile).getElement();
+    }
 
 }

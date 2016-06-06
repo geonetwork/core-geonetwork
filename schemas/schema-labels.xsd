@@ -179,7 +179,7 @@
       <xs:attribute name="displayIf" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-          <![CDATA[
+            <![CDATA[
           Conditional helpers which may define an xpath expression to evaluate if the xpath match.
 
         The scope of the expression is defined by a variable named "$p1" whitch is the current node.

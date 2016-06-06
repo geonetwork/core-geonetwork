@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,6 +38,7 @@ import javax.annotation.Nullable;
  */
 public class MemoryPersistentStore implements PersistentStore {
     Map<Key, StoreInfoAndData> dataMap = new HashMap<>();
+
     @Override
     public StoreInfoAndData get(@Nonnull Key key) {
         return dataMap.get(key);

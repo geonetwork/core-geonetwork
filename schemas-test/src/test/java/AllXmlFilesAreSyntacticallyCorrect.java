@@ -23,6 +23,7 @@
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.JDOMException;
@@ -49,12 +50,12 @@ public class AllXmlFilesAreSyntacticallyCorrect {
     public void testWellformedXmlFiles() throws Exception {
         Path classFile = AbstractCoreIntegrationTest.getClassFile(getClass()).toPath();
         Path tmp = classFile;
-        while(tmp != null && !Files.exists(tmp.resolve("schemas/dublin-core"))) {
+        while (tmp != null && !Files.exists(tmp.resolve("schemas/dublin-core"))) {
             tmp = tmp.getParent();
         }
         final List<String> badXmlFiles = Lists.newArrayList();
 
-        if(tmp == null) {
+        if (tmp == null) {
             throw new RuntimeException("Check schemas data directory!");
         }
         Path resolve = tmp.resolve("schemas");
@@ -62,7 +63,7 @@ public class AllXmlFilesAreSyntacticallyCorrect {
             for (Path path : paths) {
                 Path pluginDir = path.resolve("src/main/plugin");
                 if (Files.exists(pluginDir)) {
-                    Files.walkFileTree(pluginDir, new SimpleFileVisitor<Path>(){
+                    Files.walkFileTree(pluginDir, new SimpleFileVisitor<Path>() {
                         @Override
                         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                             if (file.toString().endsWith(".xml") || file.toString().endsWith(".html") ||

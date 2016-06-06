@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -70,51 +71,45 @@ import static org.fao.geonet.kernel.mef.MEFConstants.MD_DIR;
 import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
 
 class MEF2Exporter {
-	/**
-	 * Create a MEF2 file in ZIP format.
-	 * 
-	 * @param context
-	 * @param uuids
-	 *            List of records to export.
-	 * @param format
-	 *            {@link Format} to export.
-	 * @param skipUUID
-	 * @param stylePath
-	 * @return MEF2 File
-	 * @throws Exception
-	 */
-	public static Path doExport(ServiceContext context, Set<String> uuids,
-			Format format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+    /**
+     * Create a MEF2 file in ZIP format.
+     *
+     * @param uuids  List of records to export.
+     * @param format {@link Format} to export.
+     * @return MEF2 File
+     */
+    public static Path doExport(ServiceContext context, Set<String> uuids,
+                                Format format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 
-		Path file = Files.createTempFile("mef-", ".mef");
+        Path file = Files.createTempFile("mef-", ".mef");
         SearchManager searchManager = context.getBean(SearchManager.class);
         String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
         try (
-                FileSystem zipFs = ZipUtil.createZipFs(file);
-                IndexAndTaxonomy indexReaderAndTaxonomy = searchManager.getNewIndexReader(contextLang);
+            FileSystem zipFs = ZipUtil.createZipFs(file);
+            IndexAndTaxonomy indexReaderAndTaxonomy = searchManager.getNewIndexReader(contextLang);
         ) {
             StringBuilder csvBuilder = new StringBuilder("\"schema\";\"uuid\";\"id\";\"type\";\"isHarvested\";\"title\";\"abstract\"\n");
             Element html = new Element("html").addContent(new Element("head").addContent(Arrays.asList(
-                    new Element("title").setText("Export Index"),
-                    new Element("link").setAttribute("rel", "stylesheet").
-                            setAttribute("href", "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"),
-                    new Element("style").setText("body {\n"
-                                                 + "  padding-left: 10px;\n"
-                                                 + "}\n"
-                                                 + "p.abstract {\n"
-                                                 + "  font-style: italic;\n"
-                                                 + "}\n"
-                                                 + ".entry {\n"
-                                                 + "  padding: 20px;\n"
-                                                 + "  margin: 20px 0;\n"
-                                                 + "  border: 1px solid #eee;\n"
-                                                 + "  border-left-width: 5px;\n"
-                                                 + "  border-radius: 3px;\n"
-                                                 + "  border-left-color: #1b809e;\n"
-                                                 + "}\n"
-                                                 + ".entry:hover {\n"
-                                                 + "  background-color: #f5f5f5;\n"
-                                                 + "}\n")
+                new Element("title").setText("Export Index"),
+                new Element("link").setAttribute("rel", "stylesheet").
+                    setAttribute("href", "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"),
+                new Element("style").setText("body {\n"
+                    + "  padding-left: 10px;\n"
+                    + "}\n"
+                    + "p.abstract {\n"
+                    + "  font-style: italic;\n"
+                    + "}\n"
+                    + ".entry {\n"
+                    + "  padding: 20px;\n"
+                    + "  margin: 20px 0;\n"
+                    + "  border: 1px solid #eee;\n"
+                    + "  border-left-width: 5px;\n"
+                    + "  border-radius: 3px;\n"
+                    + "  border-left-color: #1b809e;\n"
+                    + "}\n"
+                    + ".entry:hover {\n"
+                    + "  background-color: #f5f5f5;\n"
+                    + "}\n")
             )));
             Element body = new Element("body");
             html.addContent(body);
@@ -157,43 +152,43 @@ class MEF2Exporter {
                     mdType = MetadataType.METADATA;
                 }
                 csvBuilder.append('"').append(cleanForCsv(mdSchema)).append("\";\"").
-                        append(cleanForCsv(uuid)).append("\";\"").
-                        append(cleanForCsv(id)).append("\";\"").
-                        append(mdType.toString()).append("\";\"").
-                        append(cleanForCsv(isHarvested)).append("\";\"").
-                        append(cleanForCsv(mdTitle)).append("\";\"").
-                        append(cleanForCsv(mdAbstract)).append("\"\n");
+                    append(cleanForCsv(uuid)).append("\";\"").
+                    append(cleanForCsv(id)).append("\";\"").
+                    append(mdType.toString()).append("\";\"").
+                    append(cleanForCsv(isHarvested)).append("\";\"").
+                    append(cleanForCsv(mdTitle)).append("\";\"").
+                    append(cleanForCsv(mdAbstract)).append("\"\n");
 
                 body.addContent(new Element("div").setAttribute("class", "entry").addContent(Arrays.asList(
-                        new Element("h4").setAttribute("class", "title").addContent(
-                                new Element("a").setAttribute("href", uuid).setText(cleanXml(mdTitle))),
-                        new Element("p").setAttribute("class", "abstract").setText(cleanXml(mdAbstract)),
-                        new Element("table").setAttribute("class", "table").addContent(Arrays.asList(
-                                new Element("thead").addContent(
-                                        new Element("tr").addContent(Arrays.asList(
-                                                new Element("th").setText("ID"),
-                                                new Element("th").setText("UUID"),
-                                                new Element("th").setText("Type"),
-                                                new Element("th").setText("isHarvested")
-                                        ))),
-                                new Element("tbody").addContent(
-                                        new Element("tr").addContent(Arrays.asList(
-                                                new Element("td").setAttribute("class", "id").setText(id),
-                                                new Element("td").setAttribute("class", "uuid").setText(xmlContentEscaper().escape
-                                                        (uuid)),
-                                                new Element("td").setAttribute("class", "type").setText(mdType.toString()),
-                                                new Element("td").setAttribute("class", "isHarvested").setText(isHarvested)
-                                        )))
-                        ))
+                    new Element("h4").setAttribute("class", "title").addContent(
+                        new Element("a").setAttribute("href", uuid).setText(cleanXml(mdTitle))),
+                    new Element("p").setAttribute("class", "abstract").setText(cleanXml(mdAbstract)),
+                    new Element("table").setAttribute("class", "table").addContent(Arrays.asList(
+                        new Element("thead").addContent(
+                            new Element("tr").addContent(Arrays.asList(
+                                new Element("th").setText("ID"),
+                                new Element("th").setText("UUID"),
+                                new Element("th").setText("Type"),
+                                new Element("th").setText("isHarvested")
+                            ))),
+                        new Element("tbody").addContent(
+                            new Element("tr").addContent(Arrays.asList(
+                                new Element("td").setAttribute("class", "id").setText(id),
+                                new Element("td").setAttribute("class", "uuid").setText(xmlContentEscaper().escape
+                                    (uuid)),
+                                new Element("td").setAttribute("class", "type").setText(mdType.toString()),
+                                new Element("td").setAttribute("class", "isHarvested").setText(isHarvested)
+                            )))
+                    ))
                 )));
                 createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,
-                        format, resolveXlink, removeXlinkAttribute);
+                    format, resolveXlink, removeXlinkAttribute);
             }
             Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
             Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
         }
-		return file;
-	}
+        return file;
+    }
 
     private static String cleanXml(String xmlTextContent) {
         if (xmlTextContent != null) {
@@ -210,41 +205,32 @@ class MEF2Exporter {
     }
 
     /**
-	 * Create a metadata folder according to MEF {@link Version} 2
-	 * specification. If current record is based on an ISO profil, the
-	 * stylesheet /convert/to19139.xsl is used to map to ISO. Both files are
-	 * included in MEF file. Export relevant information according to format
-	 * parameter.
-	 * 
-	 * @param context
-	 * @param uuid
-	 *            Metadata record to export
-	 * @param zipFs
-	 *            Zip file to add new record
-	 * @param skipUUID
-	 * @param stylePath
-	 * @param format
-	 * @throws Exception
-	 */
-	private static void createMetadataFolder(ServiceContext context,
-			String uuid, FileSystem zipFs, boolean skipUUID,
-			Path stylePath, Format format, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+     * Create a metadata folder according to MEF {@link Version} 2 specification. If current record
+     * is based on an ISO profil, the stylesheet /convert/to19139.xsl is used to map to ISO. Both
+     * files are included in MEF file. Export relevant information according to format parameter.
+     *
+     * @param uuid  Metadata record to export
+     * @param zipFs Zip file to add new record
+     */
+    private static void createMetadataFolder(ServiceContext context,
+                                             String uuid, FileSystem zipFs, boolean skipUUID,
+                                             Path stylePath, Format format, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 
         final Path metadataRootDir = zipFs.getPath(uuid);
         Files.createDirectories(metadataRootDir);
 
-		Pair<Metadata, String> recordAndMetadataForExport =
-				MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
-		Metadata record = recordAndMetadataForExport.one();
-		String xmlDocumentAsString = recordAndMetadataForExport.two();
+        Pair<Metadata, String> recordAndMetadataForExport =
+            MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
+        Metadata record = recordAndMetadataForExport.one();
+        String xmlDocumentAsString = recordAndMetadataForExport.two();
 
-		String id = "" + record.getId();
-		String isTemp = record.getDataInfo().getType().codeString;
+        String id = "" + record.getId();
+        String isTemp = record.getDataInfo().getType().codeString;
 
-		if (!"y".equals(isTemp) && !"n".equals(isTemp))
-			throw new Exception("Cannot export sub template");
+        if (!"y".equals(isTemp) && !"n".equals(isTemp))
+            throw new Exception("Cannot export sub template");
 
-		Path pubDir = Lib.resource.getDir(context, "public", id);
+        Path pubDir = Lib.resource.getDir(context, "public", id);
         Path priDir = Lib.resource.getDir(context, "private", id);
 
         final Path metadataXmlDir = metadataRootDir.resolve(MD_DIR);
@@ -254,67 +240,64 @@ class MEF2Exporter {
             Files.write(metadataXmlDir.resolve(output.one()), output.two().getBytes(CHARSET));
         }
 
-		// --- save native metadata
+        // --- save native metadata
         Files.write(metadataXmlDir.resolve(FILE_METADATA), xmlDocumentAsString.getBytes(CHARSET));
 
 
-		// --- save Feature Catalog
-		String ftUUID = getFeatureCatalogID(context, record.getId());
-		if (!ftUUID.equals("")) {
-			Pair<Metadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
+        // --- save Feature Catalog
+        String ftUUID = getFeatureCatalogID(context, record.getId());
+        if (!ftUUID.equals("")) {
+            Pair<Metadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
             Path featureMdDir = metadataRootDir.resolve(SCHEMA);
             Files.createDirectories(featureMdDir);
             Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));
         }
 
 
-		// --- save info file
-		byte[] binData = MEFLib.buildInfoFile(context, record, format, pubDir,
-				priDir, skipUUID).getBytes(Constants.ENCODING);
+        // --- save info file
+        byte[] binData = MEFLib.buildInfoFile(context, record, format, pubDir,
+            priDir, skipUUID).getBytes(Constants.ENCODING);
 
         Files.write(metadataRootDir.resolve(FILE_INFO), binData);
 
-		// --- save thumbnails and maps
+        // --- save thumbnails and maps
 
-		if (format == Format.PARTIAL || format == Format.FULL) {
+        if (format == Format.PARTIAL || format == Format.FULL) {
             IO.copyDirectoryOrFile(pubDir, metadataRootDir, true);
         }
 
-		if (format == Format.FULL) {
-			try {
+        if (format == Format.FULL) {
+            try {
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
                 IO.copyDirectoryOrFile(priDir, metadataRootDir, true);
-			} catch (Exception e) {
-				// Current user could not download private data
-			}
-		}
-	}
+            } catch (Exception e) {
+                // Current user could not download private data
+            }
+        }
+    }
 
-	/**
-	 * Get Feature Catalog ID if exists using relation table.
-	 * 
-	 * @param context
-	 * @param metadataId
-	 *            Metadata record id to search for feature catalogue for.
-	 * @return String Feature catalogue uuid.
-	 * @throws Exception
-	 */
-	private static String getFeatureCatalogID(ServiceContext context, int metadataId) throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dm = gc.getBean(DataManager.class);
+    /**
+     * Get Feature Catalog ID if exists using relation table.
+     *
+     * @param metadataId Metadata record id to search for feature catalogue for.
+     * @return String Feature catalogue uuid.
+     */
+    private static String getFeatureCatalogID(ServiceContext context, int metadataId) throws Exception {
+        GeonetContext gc = (GeonetContext) context
+            .getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getBean(DataManager.class);
 
         List<MetadataRelation> relations = context.getBean(MetadataRelationRepository.class).findAllById_MetadataId(metadataId);
 
-		if (relations.isEmpty()) {
-			return "";
+        if (relations.isEmpty()) {
+            return "";
         }
 
-		// Assume only one feature catalogue is available for a metadata record.
-		int ftId =  relations.get(0).getId().getRelatedId();
+        // Assume only one feature catalogue is available for a metadata record.
+        int ftId = relations.get(0).getId().getRelatedId();
 
         String ftUuid = dm.getMetadataUuid("" + ftId);
 
-		return ftUuid != null ? ftUuid : "";
-	}
+        return ftUuid != null ? ftUuid : "";
+    }
 }

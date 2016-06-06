@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+
 import org.apache.xalan.xsltc.runtime.AttributeList;
 import org.fao.geonet.SystemInfo;
 import org.xml.sax.Attributes;
@@ -33,20 +34,19 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * A "Template Node". A node in the template render tree.  A TNode defines how a section of a template is rendered.  For example
- * a node might be an nonEmpty node where the node will only be rendered if the attribute is nonEmpty
- * (non-empty/non-null string or collection).
+ * A "Template Node". A node in the template render tree.  A TNode defines how a section of a
+ * template is rendered.  For example a node might be an nonEmpty node where the node will only be
+ * rendered if the attribute is nonEmpty (non-empty/non-null string or collection).
  *
  * @author Jesse on 11/29/2014.
  */
 public abstract class TNode {
+    protected static final Attributes EMPTY_ATTRIBUTES = new AttributeList();
     protected final TextBlock attributes, end;
     protected final String qName;
     protected final SystemInfo info;
     protected final TextContentParser textContentParser;
-
     private List<TNode> children = Lists.newArrayList();
-    protected static final Attributes EMPTY_ATTRIBUTES = new AttributeList();
     private long unparsedSize;
 
     public TNode(SystemInfo info, TextContentParser textContentParser, String qName, Attributes attributes) throws IOException {
@@ -117,7 +117,8 @@ public abstract class TNode {
     }
 
     /**
-     * If true and canRender then the attributes defined on the element will be on the element definition. Otherwise no attributes will be written.
+     * If true and canRender then the attributes defined on the element will be on the element
+     * definition. Otherwise no attributes will be written.
      */
     protected boolean writeAttributes(TRenderContext context) {
         return true;

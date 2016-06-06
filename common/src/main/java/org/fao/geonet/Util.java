@@ -36,37 +36,35 @@ import org.jdom.Element;
 
 //=============================================================================
 
-/** Generic utility class (static methods)
-  */
+/**
+ * Generic utility class (static methods)
+ */
 
-public final class Util
-{
-	/**
-	 * Default constructor.
-	 * Builds a Util.
-	 */
-	private Util() {}
-	
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+public final class Util {
+    /**
+     * Default constructor. Builds a Util.
+     */
+    private Util() {
+    }
 
-	public static Element getChild(Element el, String name) throws MissingParameterEx
-	{
-		Element param = el.getChild(name);
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-		if (param == null)
-			throw new MissingParameterEx(name, el);
+    public static Element getChild(Element el, String name) throws MissingParameterEx {
+        Element param = el.getChild(name);
 
-		return param;
-	}
+        if (param == null)
+            throw new MissingParameterEx(name, el);
+
+        return param;
+    }
 
     //--------------------------------------------------------------------------
 
-    public static String getParam(Element el, String name) throws BadInputEx
-    {
+    public static String getParam(Element el, String name) throws BadInputEx {
         if (el == null)
             throw new MissingParameterEx(name);
 
@@ -82,219 +80,200 @@ public final class Util
 
         return value;
     }
-    
+
     //--------------------------------------------------------------------------
 
-    public static List<String> getParams(Element el, String name) throws BadInputEx
-    {
+    public static List<String> getParams(Element el, String name) throws BadInputEx {
         if (el == null)
             throw new MissingParameterEx(name);
 
         List<String> values = new LinkedList<String>();
-        
-        for(Object obj : el.getChildren(name)) {
+
+        for (Object obj : el.getChildren(name)) {
             Element param = (Element) obj;
-    
+
             String value = param.getTextTrim();
-    
+
             if (value.length() == 0)
                 throw new BadParameterEx(name, value);
-    
+
             values.add(value);
         }
-        
+
         return values;
     }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public static String getParam(Element el, String name, String defValue)
-	{
-		if (el == null)
-			return defValue;
+    public static String getParam(Element el, String name, String defValue) {
+        if (el == null)
+            return defValue;
 
-		Element param = el.getChild(name);
+        Element param = el.getChild(name);
 
-		if (param == null)
-			return defValue;
+        if (param == null)
+            return defValue;
 
-		String value = param.getTextTrim();
+        String value = param.getTextTrim();
 
-		if (value.length() == 0)
-			return defValue;
+        if (value.length() == 0)
+            return defValue;
 
-		return value;
-	}
+        return value;
+    }
 
     //--------------------------------------------------------------------------
 
-    public static int getParamAsInt(Element el, String name) throws BadInputEx
-    {
+    public static int getParamAsInt(Element el, String name) throws BadInputEx {
         String value = getParam(el, name);
 
-        try
-        {
+        try {
             return Integer.parseInt(value);
-        }
-        catch(NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             throw new BadParameterEx(name, value);
         }
     }
 
     //--------------------------------------------------------------------------
 
-    public static List<Integer> getParamsAsInt(Element el, String name) throws BadInputEx
-    {
-        
+    public static List<Integer> getParamsAsInt(Element el, String name) throws BadInputEx {
+
         List<Integer> values = new LinkedList<Integer>();
-        for(String value : getParams(el, name)) {
-            try
-            {
+        for (String value : getParams(el, name)) {
+            try {
                 values.add(Integer.parseInt(value));
-            }
-            catch(NumberFormatException e)
-            {
+            } catch (NumberFormatException e) {
                 throw new BadParameterEx(name, value);
             }
         }
-        
+
         return values;
     }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public static int getParam(Element el, String name, int defValue) throws BadParameterEx
-	{
-		String value = getParam(el, name, null);
+    public static int getParam(Element el, String name, int defValue) throws BadParameterEx {
+        String value = getParam(el, name, null);
 
-		if (value == null)
-			return defValue;
+        if (value == null)
+            return defValue;
 
-		try
-		{
-			return Integer.parseInt(value);
-		}
-		catch(NumberFormatException e)
-		{
-			throw new BadParameterEx(name, value);
-		}
-	}
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            throw new BadParameterEx(name, value);
+        }
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public static boolean getParam(Element el, String name, boolean defValue) throws BadParameterEx
-	{
-		String value = getParam(el, name, null);
+    public static boolean getParam(Element el, String name, boolean defValue) throws BadParameterEx {
+        String value = getParam(el, name, null);
 
-		if (value == null)
-			return defValue;
+        if (value == null)
+            return defValue;
 
-		value = value.toLowerCase();
+        value = value.toLowerCase();
 
-		if (value.equals("true") || value.equals("on") || value.equals("yes"))
-			return true;
+        if (value.equals("true") || value.equals("on") || value.equals("yes"))
+            return true;
 
-		if (value.equals("false") || value.equals("off") || value.equals("no"))
-			return false;
+        if (value.equals("false") || value.equals("off") || value.equals("no"))
+            return false;
 
-		throw new BadParameterEx(name, value);
-	}
+        throw new BadParameterEx(name, value);
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public static String getAttrib(Element el, String name) throws BadInputEx
-	{
-		String value = el.getAttributeValue(name);
+    public static String getAttrib(Element el, String name) throws BadInputEx {
+        String value = el.getAttributeValue(name);
 
-		if (value == null)
-			throw new MissingParameterEx("attribute:"+ name, el);
+        if (value == null)
+            throw new MissingParameterEx("attribute:" + name, el);
 
-		value = value.trim();
+        value = value.trim();
 
-		if (value.length() == 0)
-			throw new BadParameterEx("attribute:"+name, value);
+        if (value.length() == 0)
+            throw new BadParameterEx("attribute:" + name, value);
 
-		return value;
-	}
+        return value;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public static String getAttrib(Element el, String name, String defValue)
-	{
-		if (el == null)
-			return defValue;
+    public static String getAttrib(Element el, String name, String defValue) {
+        if (el == null)
+            return defValue;
 
-		String value = el.getAttributeValue(name);
+        String value = el.getAttributeValue(name);
 
-		if (value == null)
-			return defValue;
+        if (value == null)
+            return defValue;
 
-		value = value.trim();
+        value = value.trim();
 
-		if (value.length() == 0)
-			return defValue;
+        if (value.length() == 0)
+            return defValue;
 
-		return value;
-	}
+        return value;
+    }
 
-	/**
-	 * Retrieve the value of a named header.
-	 * 
-	 * @param headers The map of HTTP headers.
-	 * @param name The name of the header to be retrieved.
-	 * @param defValue The default value to be used if the header is not present.
- 	 * @return The header's value
-	 */
-	public static String getHeader(Map<String, String> headers, String name, String defValue)
-	{
-		if (headers == null)
-			return defValue;
+    /**
+     * Retrieve the value of a named header.
+     *
+     * @param headers  The map of HTTP headers.
+     * @param name     The name of the header to be retrieved.
+     * @param defValue The default value to be used if the header is not present.
+     * @return The header's value
+     */
+    public static String getHeader(Map<String, String> headers, String name, String defValue) {
+        if (headers == null)
+            return defValue;
 
-		String value = headers.get(name);
+        String value = headers.get(name);
 
-		if (value == null)
-			return defValue;
+        if (value == null)
+            return defValue;
 
-		if (value.length() == 0)
-			return defValue;
+        if (value.length() == 0)
+            return defValue;
 
-		return value;
-	}
-	
-	//--------------------------------------------------------------------------
-	/** replace occurrences of <p> in <s> with <r> */
+        return value;
+    }
 
-	public static String replaceString(String s, String pattern, String replacement)
-	{
-		StringBuffer result = new StringBuffer();
-		int i;
+    //--------------------------------------------------------------------------
 
-		while ((i = s.indexOf(pattern)) != -1)
-		{
-			result.append(s.substring(0, i));
-			result.append(replacement);
-			s = s.substring(i + pattern.length());
-		}
+    /**
+     * replace occurrences of <p> in <s> with <r>
+     */
 
-		result.append(s);
-		return result.toString();
-	}
+    public static String replaceString(String s, String pattern, String replacement) {
+        StringBuffer result = new StringBuffer();
+        int i;
 
-	//--------------------------------------------------------------------------
+        while ((i = s.indexOf(pattern)) != -1) {
+            result.append(s.substring(0, i));
+            result.append(replacement);
+            s = s.substring(i + pattern.length());
+        }
 
-	public static String getStackTrace(Throwable e)
-	{
-		StringWriter sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
+        result.append(s);
+        return result.toString();
+    }
 
-		return sw.toString();
-	}
+    //--------------------------------------------------------------------------
 
-    public static String getParamText(Element params, String desired)
-    {
+    public static String getStackTrace(Throwable e) {
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+
+        return sw.toString();
+    }
+
+    public static String getParamText(Element params, String desired) {
         String value = getParam(params, desired, "");
-        if(value.length() == 0) {
+        if (value.length() == 0) {
             return null;
         }
         return value;
@@ -308,7 +287,7 @@ public final class Util
             }
         }
     }
-	
+
 }
 
 //=============================================================================

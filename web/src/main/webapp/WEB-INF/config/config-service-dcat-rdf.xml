@@ -26,13 +26,15 @@
   <services package="org.fao.geonet">
 
     <service name="rdf.metadata.get">
-      <documentation> Return a metadata in DCAT format. See
-        http://trac.osgeo.org/geonetwork/wiki/proposals/DCATandRDFServices </documentation>
+      <documentation>Return a metadata in DCAT format. See
+        http://trac.osgeo.org/geonetwork/wiki/proposals/DCATandRDFServices
+      </documentation>
       <class name=".services.metadata.Show">
         <param name="addRefs" value="n"/>
         <param name="cache" value="y"/>
       </class>
-      <output sheet="../xslt/services/dcat/rdf.xsl" contentType="application/rdf+xml; charset=UTF-8">
+      <output sheet="../xslt/services/dcat/rdf.xsl"
+              contentType="application/rdf+xml; charset=UTF-8">
         <call name="relation" class=".guiservices.metadata.GetRelated"/>
         <call name="isoLang" class=".guiservices.isolanguages.Get"/>
         <call name="thesaurus" class=".services.thesaurus.GetList"/>
@@ -42,17 +44,18 @@
 
 
     <service name="rdf.search">
-      <documentation> Search the catalogue and return results in RDF/DCAT format. </documentation>
+      <documentation>Search the catalogue and return results in RDF/DCAT format.</documentation>
       <class name=".services.main.XmlSearch">
         <!-- rdf.xsl requires the full metadata, returned only if fast=false in the searcher -->
-        <param name="fast" value="false" />
+        <param name="fast" value="false"/>
       </class>
-      <output sheet="../xslt/services/dcat/rdf.xsl" contentType=" application/rdf+xml; charset=UTF-8"/>
+      <output sheet="../xslt/services/dcat/rdf.xsl"
+              contentType=" application/rdf+xml; charset=UTF-8"/>
       <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
     </service>
 
     <service name="rdf.metadata.public.get">
-      <documentation> Return all public metadata in RDF/DCAT format.</documentation>
+      <documentation>Return all public metadata in RDF/DCAT format.</documentation>
       <class name="org.fao.geonet.services.rdf.GetPublicMetadataAsRdf">
       </class>
       <output file="true" contentType="application/rdf+xml; charset=UTF-8"/>

@@ -25,6 +25,7 @@ package org.fao.geonet.services.operation;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Operation;
@@ -34,27 +35,27 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+
 import javax.annotation.Nonnull;
 
 public class Update extends NotInReadOnlyModeService {
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         final OperationRepository operationRepository = context.getBean(OperationRepository.class);
 
-        for (Object o : params.getChildren("operation"))
-		{
-			Element operationEl = (Element) o;
+        for (Object o : params.getChildren("operation")) {
+            Element operationEl = (Element) o;
 
-			String  id    = Util.getAttrib(operationEl, Params.ID);
-			final Element label = Util.getChild (operationEl, "label");
+            String id = Util.getAttrib(operationEl, Params.ID);
+            final Element label = Util.getChild(operationEl, "label");
 
             operationRepository.update(Integer.valueOf(id), new Updater<Operation>() {
                 @Override
@@ -62,8 +63,8 @@ public class Update extends NotInReadOnlyModeService {
                     entity.setLabelTranslations(label.getChildren());
                 }
             });
-		}
+        }
 
-		return new Element("ok");
-	}
+        return new Element("ok");
+    }
 }

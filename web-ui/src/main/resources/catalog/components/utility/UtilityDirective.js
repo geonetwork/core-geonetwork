@@ -624,6 +624,22 @@
       };
     }]);
 
+  module.directive('gnFocusOn', ['$timeout', function($timeout) {
+    return {
+      restrict: 'A',
+      link: function($scope, $element, $attr) {
+        $scope.$watch($attr.gnFocusOn, function(o, n) {
+          if (o != n) {
+            $timeout(function() {
+              o ? $element.focus() :
+                  $element.blur();
+            });
+          }
+        });
+      }
+    };
+  }]);
+
   /**
    * Use to initialize bootstrap datepicker
    */
@@ -870,16 +886,19 @@
     };
   }]);
 
-  module.directive('gnCollapse', ['$compile', function($compile) {
+
+  module.directive('gnCollapsible', ['$parse', function($parse) {
     return {
       restrict: 'A',
-      scope: true,
+      scope: false,
       link: function(scope, element, attrs) {
-        var next = element.next();
+        var getter = $parse(attrs['gnCollapsible']);
+        var setter = getter.assign;
+
         element.on('click', function(e) {
           scope.$apply(function() {
-            scope.collapsed = !scope.collapsed;
-            next.slideToggle();
+            var collapsed = getter(scope);
+            setter(scope, !collapsed);
           });
         });
       }

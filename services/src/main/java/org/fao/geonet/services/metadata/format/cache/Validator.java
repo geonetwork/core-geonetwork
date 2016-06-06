@@ -24,8 +24,8 @@
 package org.fao.geonet.services.metadata.format.cache;
 
 /**
- * A strategy for checking if a value in the cache is still valid (For example, if the change date is the same in the cache as
- * in the database or index).
+ * A strategy for checking if a value in the cache is still valid (For example, if the change date
+ * is the same in the cache as in the database or index).
  *
  * @author Jesse on 3/5/2015.
  */

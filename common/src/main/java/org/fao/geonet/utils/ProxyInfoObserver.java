@@ -26,6 +26,6 @@
 package org.fao.geonet.utils;
 
 interface ProxyInfoObserver {
-	public void update(ProxyInfo proxyInfo);
+    public void update(ProxyInfo proxyInfo);
 }
 

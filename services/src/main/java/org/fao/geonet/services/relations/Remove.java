@@ -26,6 +26,7 @@ package org.fao.geonet.services.relations;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataRelationId;
 import org.fao.geonet.repository.MetadataRelationRepository;
@@ -39,30 +40,30 @@ import java.nio.file.Path;
  * Removes a user from the system. It removes the relationship to a group too.
  */
 public class Remove extends NotInReadOnlyModeService {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service to delete a related resource
-	//--- 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service to delete a related resource
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		int parentId = Integer.parseInt(Utils.getIdentifierFromParameters(
-                params, context, Params.PARENT_UUID, Params.PARENT_ID));
-		int childId = Integer.parseInt(Utils.getIdentifierFromParameters(
-				params, context, Params.CHILD_UUID, Params.CHILD_ID));
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        int parentId = Integer.parseInt(Utils.getIdentifierFromParameters(
+            params, context, Params.PARENT_UUID, Params.PARENT_ID));
+        int childId = Integer.parseInt(Utils.getIdentifierFromParameters(
+            params, context, Params.CHILD_UUID, Params.CHILD_ID));
 
         final MetadataRelationRepository relationRepository = context.getBean(MetadataRelationRepository.class);
         relationRepository.delete(new MetadataRelationId(parentId, childId));
 
-		return new Element(Jeeves.Elem.RESPONSE);
-	}
+        return new Element(Jeeves.Elem.RESPONSE);
+    }
 }

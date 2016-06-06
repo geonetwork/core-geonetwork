@@ -28,11 +28,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 
 /**
- * When a class contains only one property of type list,
- * use this interface to simplify it in JSON as an array only.
+ * When a class contains only one property of type list, use this interface to simplify it in JSON
+ * as an array only.
  *
- * eg. in XML /parent/item/title
- * in JSON {parent: []} instead of {parent: {item: []}}
+ * eg. in XML /parent/item/title in JSON {parent: []} instead of {parent: {item: []}}
  */
 @JsonSerialize(using = ListOnlyClassSerializer.class)
 public interface IListOnlyClassToArray {

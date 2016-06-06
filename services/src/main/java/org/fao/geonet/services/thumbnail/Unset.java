@@ -24,8 +24,10 @@
 package org.fao.geonet.services.thumbnail;
 
 import org.fao.geonet.exceptions.OperationAbortedEx;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -40,100 +42,96 @@ import java.io.File;
 import java.nio.file.Path;
 
 public class Unset extends NotInReadOnlyModeService {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    private static final String FNAME_PARAM = "fname=";
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-		String id      = Util.getParam(params, Params.ID);
-		String type    = Util.getParam(params, Params.TYPE);
-		String version = Util.getParam(params, Params.VERSION);
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-		Lib.resource.checkEditPrivilege(context, id);
+    //--------------------------------------------------------------------------
 
-		//-----------------------------------------------------------------------
-		//--- extract thumbnail filename
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        String id = Util.getParam(params, Params.ID);
+        String type = Util.getParam(params, Params.TYPE);
+        String version = Util.getParam(params, Params.VERSION);
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        Lib.resource.checkEditPrivilege(context, id);
 
-		DataManager dataMan = gc.getBean(DataManager.class);
+        //-----------------------------------------------------------------------
+        //--- extract thumbnail filename
 
-		//--- check if the metadata has been modified from last time
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		if (version != null && !dataMan.getVersion(id).equals(version))
-			throw new ConcurrentUpdateEx(id);
+        DataManager dataMan = gc.getBean(DataManager.class);
 
-		Element result = dataMan.getThumbnails(context, id);
+        //--- check if the metadata has been modified from last time
 
-		if (result == null)
-			throw new OperationAbortedEx("Metadata not found", id);
+        if (version != null && !dataMan.getVersion(id).equals(version))
+            throw new ConcurrentUpdateEx(id);
 
-		result = result.getChild(type);
+        Element result = dataMan.getThumbnails(context, id);
 
-		if (result == null)
-			throw new OperationAbortedEx("Metadata has no thumbnail", id);
+        if (result == null)
+            throw new OperationAbortedEx("Metadata not found", id);
 
-		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
+        result = result.getChild(type);
 
-		//-----------------------------------------------------------------------
-		//--- remove thumbnail
+        if (result == null)
+            throw new OperationAbortedEx("Metadata has no thumbnail", id);
 
-		dataMan.unsetThumbnail(context, id, type.equals("small"), true);
-		
-		
-		File thumbnail = new File(file);
-		if (thumbnail.exists()) {
-			if (!thumbnail.delete()) {
-				context.error("Error while deleting thumbnail: " + file);
-			}
-		} else {
-            if(context.isDebugEnabled())
-			    context.debug("Thumbnail does not exist: " + file);
-		}
-		
-		//-----------------------------------------------------------------------
+        String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
 
-		Element response = new Element("a");
-		response.addContent(new Element("id").setText(id));
-		response.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
+        //-----------------------------------------------------------------------
+        //--- remove thumbnail
 
-		return response;
-	}
-	
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * Return file name from full url thumbnail formated as
-	 * http://wwwmyCatalogue.com:8080/srv/eng/resources.get?uuid=34baff6e-3880-4589-a5e9-4aa376ecd2a5&fname=snapshot3.png
-	 * @param file
-	 * @return
-	 */
-	private String getFileName(String file)
-	{
-		if(file.indexOf(FNAME_PARAM) < 0) {
-			return file;
-		}
-		else {
-			return file.substring(file.lastIndexOf(FNAME_PARAM)+FNAME_PARAM.length());
-		}
-	}
-	
-	//--------------------------------------------------------------------------
-		//---
-		//--- Variables
-		//---
-		//--------------------------------------------------------------------------
+        dataMan.unsetThumbnail(context, id, type.equals("small"), true);
 
-		private static final String FNAME_PARAM   = "fname=";
+
+        File thumbnail = new File(file);
+        if (thumbnail.exists()) {
+            if (!thumbnail.delete()) {
+                context.error("Error while deleting thumbnail: " + file);
+            }
+        } else {
+            if (context.isDebugEnabled())
+                context.debug("Thumbnail does not exist: " + file);
+        }
+
+        //-----------------------------------------------------------------------
+
+        Element response = new Element("a");
+        response.addContent(new Element("id").setText(id));
+        response.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
+
+        return response;
+    }
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //--------------------------------------------------------------------------
+
+    /**
+     * Return file name from full url thumbnail formated as http://wwwmyCatalogue.com:8080/srv/eng/resources.get?uuid=34baff6e-3880-4589-a5e9-4aa376ecd2a5&fname=snapshot3.png
+     */
+    private String getFileName(String file) {
+        if (file.indexOf(FNAME_PARAM) < 0) {
+            return file;
+        } else {
+            return file.substring(file.lastIndexOf(FNAME_PARAM) + FNAME_PARAM.length());
+        }
+    }
 
 }

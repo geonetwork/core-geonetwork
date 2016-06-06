@@ -36,42 +36,38 @@ import java.util.List;
 
 //==============================================================================
 
-class AttributeGroupEntry
-{
-	public String  name;
-	public String  ref;
+class AttributeGroupEntry {
+    public String name;
+    public String ref;
 
-	public ArrayList<AttributeEntry> alAttrs = new ArrayList<AttributeEntry>();
-	public ArrayList<AttributeGroupEntry> alAttrGrps = new ArrayList<AttributeGroupEntry>();
+    public ArrayList<AttributeEntry> alAttrs = new ArrayList<AttributeEntry>();
+    public ArrayList<AttributeGroupEntry> alAttrGrps = new ArrayList<AttributeGroupEntry>();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public AttributeGroupEntry(Element el, Path file, String targetNS, String targetNSPrefix)
-	{
-		this(new ElementInfo(el, file, targetNS, targetNSPrefix));
-	}
+    public AttributeGroupEntry(Element el, Path file, String targetNS, String targetNSPrefix) {
+        this(new ElementInfo(el, file, targetNS, targetNSPrefix));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public AttributeGroupEntry(ElementInfo ei)
-	{
-		handleAttribs(ei);
-		handleChildren(ei);
-	}
+    public AttributeGroupEntry(ElementInfo ei) {
+        handleAttribs(ei);
+        handleChildren(ei);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	private void handleAttribs(ElementInfo ei)
-	{
-		@SuppressWarnings("unchecked")
+    private void handleAttribs(ElementInfo ei) {
+        @SuppressWarnings("unchecked")
         List<Attribute> attribs = ei.element.getAttributes();
 
         for (Attribute at : attribs) {
@@ -84,24 +80,20 @@ class AttributeGroupEntry
                 }
 
                 //System.out.println("-- name is "+name);
-            }
-            else if (attrName.equals("ref")) {
+            } else if (attrName.equals("ref")) {
                 ref = at.getValue();
 
                 //System.out.println("-- ref is "+ref);
-            }
-
-            else {
+            } else {
                 Logger.log();
             }
         }
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private void handleChildren(ElementInfo ei)
-	{
-		@SuppressWarnings("unchecked")
+    private void handleChildren(ElementInfo ei) {
+        @SuppressWarnings("unchecked")
         List<Element> children = ei.element.getChildren();
 
         for (Element elChild : children) {
@@ -110,20 +102,16 @@ class AttributeGroupEntry
             if (elName.equals("attribute")) {
                 AttributeEntry at = new AttributeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
                 alAttrs.add(at);
-            }
-            else if (elName.equals("attributeGroup")) {
+            } else if (elName.equals("attributeGroup")) {
                 AttributeGroupEntry age = new AttributeGroupEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
                 alAttrGrps.add(age);
-            }
-            else if (elName.equals("annotation")) {
-                
-            }
+            } else if (elName.equals("annotation")) {
 
-            else {
+            } else {
                 Logger.log();
             }
         }
-	}
+    }
 }
 
 //==============================================================================

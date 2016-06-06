@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
 
@@ -35,31 +36,29 @@ import java.nio.file.Path;
 //=============================================================================
 
 /**
- * 
  * Retrieve Thesauri list.
- * 
- * @author mcoudert
  *
+ * @author mcoudert
  */
 public class GetList implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		Element response = new Element(Jeeves.Elem.RESPONSE);
-		
-		ThesaurusManager th = context.getBean(ThesaurusManager.class);
-		response.addContent(th.buildResultfromThTable(context));
-		
-		return response;
-	}
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
+        Element response = new Element(Jeeves.Elem.RESPONSE);
+
+        ThesaurusManager th = context.getBean(ThesaurusManager.class);
+        response.addContent(th.buildResultfromThTable(context));
+
+        return response;
+    }
 
 }
 

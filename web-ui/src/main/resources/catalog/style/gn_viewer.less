@@ -5,9 +5,20 @@
 
 @gn-popup-max-width: 1200px;
 
+
 [gn-main-viewer],
 .gn-main-viewer {
   position: relative;
+
+  .gn-layertree-filter {
+    margin: 0 0 15px 0px;
+    position:relative;
+    .clear {
+      right: 1em;
+      position: absolute;
+      top: 7px;
+    }
+  }
 
   .wrapper {
     width: 100%;
@@ -172,6 +183,9 @@
           margin-top: 1em;
         }
       }
+    }
+    .btn-group.gn-layer-btn {
+      display: inherit;
     }
     .btn-group {
       display: flex;
@@ -394,57 +408,6 @@
     font-size: @font-size-small;
   }
 
-  [gn-gfi] {
-
-    .results {
-      position: absolute;
-      bottom: 1em;
-      left: 1em;
-      width: 35em;
-      background: rgba(255,255,255,.8);
-      margin-bottom: 0;
-      max-height: 40em;
-      overflow: auto;
-      .panel-heading,
-      .panel-footer {
-        background: transparent;
-        padding: .25em 1em;
-      }
-      .panel-heading {
-        background: #fff;
-        position: sticky;
-        top: 0;
-        z-index: 3;
-      }
-      .list-group {
-        ul {
-          padding-left: 0;
-          list-style: none;
-        }
-        h5 {
-          padding-left: 1em;
-        }
-      }
-      span {
-        display: inline-block;
-        max-width: 20em;
-        vertical-align: top;
-        .text-overflow();
-      }
-      b {
-        text-transform: capitalize;
-        display: inline-block;
-        width: 12em;
-        text-align: right;
-      }
-      .close {
-        padding-top: .3em;
-        &:hover {
-          background: transparent;
-        }
-      }
-    }
-  }
   [gn-localisation-input] {
     .dropdown-menu {
       padding-bottom: 0;
@@ -472,6 +435,20 @@
         margin-top: 2px;
         margin-bottom: 8px;
       }
+    }
+  }
+
+
+  [gn-data-filter-view],
+  [data-gn-data-filter-view],
+  .gn-data-filter-view {
+    table {
+      font-size: 80%;
+    }
+    .gn-btn-data-download {
+      position: absolute;
+      right: 0px;
+      top: 18px;
     }
   }
 }
@@ -546,3 +523,93 @@
     }
   }
 }
+
+
+
+[data-gn-wfs-filter-facets], [gn-wfs-filter-facets] {
+  font-size:12px;
+  .gn-facet {
+    .list-group {
+      border-left: 1px dotted rgba(0, 0, 0, 0.2);
+      margin-left: .5em;
+      padding-left: 1em;
+      margin-bottom: 0;
+      overflow: auto;
+      max-height: 10em;
+    }
+
+    .list-group-item:hover {
+      cursor: pointer;
+    }
+    .fa {
+      margin-right: .3em;
+      font-size: 14px;
+    }
+  }
+
+  .btn-group {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: inline-block !important;
+  }
+
+  .close {
+    font-size: 14px;
+  }
+
+}
+
+gn-features-tables {
+  display          : block;
+  position         : absolute;
+  bottom           : 1em;
+  left             : 1em;
+  right            : 3.8em;
+  background-color : rgba(255,255,255, .6);
+  border-radius    : 3px;
+  .nav li a {
+    background  : rgba(255, 255, 255, .5);
+    text-shadow : 0 0 1px white;
+    .badge {
+      text-shadow : none;
+    }
+  }
+  .tab-content {
+    background : white;
+    min-height : 5em;
+    padding    : 1em;
+  }
+  .gn-features-table {
+    padding          : .25em;
+  }
+  .layername {
+    display        : inline-block;
+    max-width      : 10em;
+    text-overflow  : ellipsis;
+    white-space    : nowrap;
+    overflow       : hidden;
+    vertical-align : middle;
+  }
+  .close {
+    font-size : 24px;
+    margin    : .25em .4em 0 0;
+  }
+}
+
+gn-wps-process-form {
+  .popover-parent {
+    position: relative;
+    .dropdown-menu {
+      padding:5px;
+    }
+  }
+
+  ul {
+    list-style: none;
+  }
+}
+
+.ol-dragbox, .gnbbox-dragbox {
+   background-color: rgba(255,255,255,0.4);
+   border: solid 2px red;
+ }
