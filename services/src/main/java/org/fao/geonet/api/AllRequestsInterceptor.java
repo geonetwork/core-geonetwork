@@ -54,10 +54,11 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         createSessionForAllButNotCrawlers(request);
 
-        if (request.getPathInfo().startsWith("/api")) {
-            // TODO: Language resolution
-
-        }
+//        String path = request.getPathInfo();
+//        if (path != null && path.startsWith("/api")) {
+//            // TODO: Language resolution
+//
+//        }
 
         return super.preHandle(request, response, handler);
     }
