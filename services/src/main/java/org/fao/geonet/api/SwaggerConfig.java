@@ -101,7 +101,7 @@ public class SwaggerConfig {
 //                                .message("500 message")
 //                                .responseModel(new ModelRef("Error"))
 //                                .build()))
-            .securitySchemes(newArrayList(new BasicAuth("ba")))
+            .securitySchemes(newArrayList(new BasicAuth("basicAuth")))
 //                .securityContexts(newArrayList(securityContext()))
 //                .enableUrlTemplating(true)
 //                .globalOperationParameters(

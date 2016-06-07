@@ -80,6 +80,7 @@ public class GlobalExceptionController {
         HttpMessageNotReadableException.class
     })
     public Object runtimeExceptionHandler(final Exception exception) {
+        exception.printStackTrace();
         return new LinkedHashMap<String, String>() {{
             put("code", "runtime_exception");
             put("message", exception.getClass().getSimpleName());

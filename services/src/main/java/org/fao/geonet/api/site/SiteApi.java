@@ -183,7 +183,7 @@ public class SiteApi {
         notes = "",
         nickname = "getInformation")
     @RequestMapping(
-        path = "/information",
+        path = "/info",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
@@ -202,21 +202,22 @@ public class SiteApi {
         notes = "",
         nickname = "isCasEnabled")
     @RequestMapping(
-        path = "/cas",
+        path = "/info/isCasEnabled",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public boolean isCasEnabled(
+        HttpServletRequest request
     ) throws Exception {
-        // TODO-API: Always return true due to null ServiceContext.
+        ApiUtils.createServiceContext(request);
         return ProfileManager.isCasEnabled();
     }
 
     @ApiOperation(
         value = "Is in read-only mode?",
         notes = "",
-        nickname = "isReadOnly")
+        nickname = "/info/isReadOnly")
     @RequestMapping(
         path = "/readonly",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -232,7 +233,7 @@ public class SiteApi {
     @ApiOperation(
         value = "Is indexing?",
         notes = "",
-        nickname = "isIndexing")
+        nickname = "/info/isIndexing")
     @RequestMapping(
         path = "/indexing",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -240,7 +241,9 @@ public class SiteApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public boolean isIndexing(
+        HttpServletRequest request
     ) throws Exception {
+        ApiUtils.createServiceContext(request);
         return ApplicationContextHolder.get().getBean(DataManager.class).isIndexing();
     }
 
@@ -249,7 +252,7 @@ public class SiteApi {
         notes = "To know when and how this version of the application was built.",
         nickname = "getSystemInfo")
     @RequestMapping(
-        path = "/buildinfo",
+        path = "/info/build",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)

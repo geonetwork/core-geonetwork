@@ -58,6 +58,8 @@ import javax.servlet.http.HttpServletRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.AuthorizationScope;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
@@ -138,6 +140,12 @@ public class DirectoryApi {
 
     @ApiOperation(value = "Extracts directory entries from records",
         nickname = "extractEntries",
+        authorizations = {
+            @Authorization(value = "basicAuth", scopes =
+            @AuthorizationScope(
+                scope = "hasRole('Reviewer') or hasRole('Administrator')",
+                description = "desc"))
+        },
         notes = API_COLLECT_ENTRIES_NOTE)
     @RequestMapping(
         value = APIURL_ACTIONS_ENTRIES_COLLECT,
