@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.operations;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.repository.OperationRepository;
@@ -62,7 +63,6 @@ public class OperationsApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<Operation> getOperations() throws Exception {
-        ServiceContext context = ServiceContext.get();
-        return context.getBean(OperationRepository.class).findAll();
+        return ApplicationContextHolder.get().getBean(OperationRepository.class).findAll();
     }
 }

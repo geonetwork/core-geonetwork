@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.processing;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
@@ -31,6 +32,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.services.metadata.XslProcessing;
 import org.fao.geonet.utils.Log;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -112,8 +114,7 @@ public class XslProcessApi {
         @ApiIgnore
             HttpServletRequest request) throws Exception {
 
-        ServiceContext context = ServiceContext.get();
-        UserSession session = context.getUserSession();
+        UserSession session = ApiUtils.getUserSession(httpSession);
         Profile profile = session.getProfile();
         if (profile == null) {
             throw new SecurityException(
@@ -125,7 +126,7 @@ public class XslProcessApi {
 
         try {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, session);
-
+            ApplicationContext context = ApplicationContextHolder.get();
             DataManager dataMan = context.getBean(DataManager.class);
             XslProcessing xslProcessing = context.getBean(XslProcessing.class);
 
@@ -133,7 +134,8 @@ public class XslProcessApi {
 
             xslProcessingReport.setTotalRecords(records.size());
 
-            BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(context,
+            BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(
+                ApiUtils.createServiceContext(request),
                 dataMan, records, process, xslProcessing, httpSession, siteURL,
                 xslProcessingReport, request);
             m.process();

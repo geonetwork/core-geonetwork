@@ -23,7 +23,9 @@
 
 package org.fao.geonet.api.records;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.api.records.model.related.RelatedResponse;
@@ -64,6 +66,7 @@ import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
     "/api/records",
@@ -93,17 +96,13 @@ public class MetadataApi implements ApplicationContextAware {
         nickname = "get")
     @RequestMapping(value = "/{metadataUuid}",
         method = RequestMethod.GET,
-        consumes = {
-            MediaType.APPLICATION_XML_VALUE,
-            MediaType.TEXT_HTML_VALUE
-        },
         produces = {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.TEXT_HTML_VALUE
         })
     public
     @ResponseBody
-    Element serviceSpecificExec(
+    Object serviceSpecificExec(
         @ApiParam(value = "Record UUID.",
             required = true)
         @PathVariable
@@ -116,17 +115,19 @@ public class MetadataApi implements ApplicationContextAware {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
             boolean increasePopularity,
-        @ApiParam(hidden = true)
-            HttpServletResponse response,
+        HttpServletResponse response,
+        HttpServletRequest request,
+        @ApiIgnore
         @RequestHeader(
-            value = HttpHeaders.CONTENT_TYPE,
+            value = HttpHeaders.ACCEPT,
             defaultValue = MediaType.APPLICATION_XML_VALUE
         )
-        String contentType)
+        String contentType
+    )
         throws Exception {
-        ServiceContext context = ServiceContext.get();
-        DataManager dataManager = context.getBean(DataManager.class);
-        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        DataManager dataManager = appContext.getBean(DataManager.class);
+        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
         Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
         if (metadata == null) {
             // TODO: i18n
@@ -135,6 +136,9 @@ public class MetadataApi implements ApplicationContextAware {
                 metadataUuid
             ));
         }
+
+
+        ServiceContext context = ApiUtils.createServiceContext(request);
         try {
             Lib.resource.checkPrivilege(context,
                 metadata.getId() + "",
@@ -153,12 +157,12 @@ public class MetadataApi implements ApplicationContextAware {
         }
 
         if (contentType.equals(MediaType.TEXT_HTML_VALUE)) {
-            // use formatter
             Element xml = new Element("mode");
             response.setHeader("Content-Disposition", String.format(
                 "inline; filename=\"%s.html\"",
                 metadata.getUuid()
             ));
+            // TODO: use formatter
             return xml;
         } else {
             Element xml = metadata.getXmlData(false);

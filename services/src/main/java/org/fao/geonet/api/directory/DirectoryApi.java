@@ -287,9 +287,7 @@ public class DirectoryApi {
             required = false,
             example = "groupPublished:IFREMER")
         @RequestParam(required = false)
-            String fq,
-        @ApiIgnore
-            HttpServletRequest httpRequest
+            String fq
     ) throws Exception {
         return updateRecordEntries(uuids, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, false, fq);
     }

@@ -28,6 +28,7 @@ import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -67,6 +68,20 @@ public class GlobalExceptionController {
     public Object maxFileExceededHandler(final Exception exception) {
         return new LinkedHashMap<String, String>() {{
             put("code", "max_file_exceeded");
+            put("message", exception.getClass().getSimpleName());
+            put("description", exception.getMessage());
+        }};
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({
+        RuntimeException.class,
+        HttpMessageNotReadableException.class
+    })
+    public Object runtimeExceptionHandler(final Exception exception) {
+        return new LinkedHashMap<String, String>() {{
+            put("code", "runtime_exception");
             put("message", exception.getClass().getSimpleName());
             put("description", exception.getMessage());
         }};

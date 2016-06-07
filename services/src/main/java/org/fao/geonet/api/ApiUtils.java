@@ -27,6 +27,7 @@ import com.google.common.collect.Sets;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.SelectionManager;
+import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -83,9 +84,13 @@ public class ApiUtils {
      */
     static public UserSession getUserSession(HttpSession httpSession) {
         if (httpSession == null) {
-            throw new RuntimeException("The service requested is not available for crawlers");
+            throw new SecurityException("The service requested is not available for crawlers. HTTP session is not activated for bots.");
         }
-        return (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
+        UserSession userSession = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
+        if (userSession == null) {
+            throw new SecurityException("The service requested is not available for crawlers. Catalog session is null.");
+        }
+        return userSession;
     }
 
     /**

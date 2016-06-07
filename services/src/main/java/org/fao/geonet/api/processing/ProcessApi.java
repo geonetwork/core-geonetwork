@@ -46,11 +46,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
 
 import static org.fao.geonet.api.ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION;
@@ -79,10 +81,10 @@ public class ProcessApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    List<ProcessingReport> get() throws Exception {
-        ServiceContext context = ServiceContext.get();
-        UserSession session = context.getUserSession();
-        Profile profile = session.getProfile();
+    List<ProcessingReport> get(
+        @ApiIgnore HttpSession session
+    ) throws Exception {
+        Profile profile = ApiUtils.getUserSession(session).getProfile();
         if (profile == null) {
             throw new SecurityException(
                 "You are not allowed to retrieve processing reports.");
@@ -101,10 +103,10 @@ public class ProcessApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    void delete() throws Exception {
-        ServiceContext context = ServiceContext.get();
-        UserSession session = context.getUserSession();
-        Profile profile = session.getProfile();
+    void delete(
+        @ApiIgnore HttpSession session
+    ) throws Exception {
+        Profile profile = ApiUtils.getUserSession(session).getProfile();
         if (profile == null) {
             throw new SecurityException(
                 "You are not allowed to retrieve processing reports.");
@@ -158,11 +160,14 @@ public class ProcessApi {
             String vacuumMode,
         @ApiIgnore
         @RequestParam
-            Map<String, String> allParams
+            Map<String, String> allParams,
+        @ApiIgnore
+            HttpSession session,
+        @ApiIgnore
+            HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ServiceContext.get();
-        UserSession session = context.getUserSession();
-        Profile profile = session.getProfile();
+        UserSession userSession = ApiUtils.getUserSession(session);
+        Profile profile = userSession.getProfile();
         if (profile == null) {
             throw new SecurityException(
                 "You are not allowed to run a search and replace process.");
@@ -174,7 +179,7 @@ public class ProcessApi {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
             DataManager dataMan = applicationContext.getBean(DataManager.class);
 
-            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, context.getUserSession());
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, userSession);
 
             report.setTotalRecords(records.size());
             MetadataSearchAndReplace m = new MetadataSearchAndReplace(
@@ -182,7 +187,7 @@ public class ProcessApi {
                 process,
                 isTesting, isCaseInsensitive, vacuumMode,
                 allParams,
-                context, records, report);
+                ApiUtils.createServiceContext(request), records, report);
             m.process();
         } catch (Exception e) {
             throw e;

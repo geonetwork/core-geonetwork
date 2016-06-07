@@ -54,11 +54,11 @@ import java.util.*;
  */
 @Service
 @RequestMapping(value = {
-        "/api/metadata/{metadataUuid}",
-        "/api/" + API.VERSION_0_1 + "/metadata/{metadataUuid}"
+        "/api/records/{metadataUuid}",
+        "/api/" + API.VERSION_0_1 + "/records/{metadataUuid}"
 })
-@Api(value = "metadata",
-        tags= "metadata",
+@Api(value = "records",
+        tags= "records",
         description = "Metadata operations")
 public class MetadataSavedQueryApi {
     private static final String LOG_MODULE = "MetadataApi";
