@@ -1,0 +1,73 @@
+<div class="md-feedback"
+	data-ng-controller="mdFeedbackController">
+  <a href data-ng-click="toggle()" class="btn btn-link btn-sm">
+    <i class="fa fa-fw fa-comments-o"></i>
+    Terugmelden
+  </a>
+	<div class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+          <h3>Terugmelden
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button></h3>
+				</div>
+        <form class="form-horizontal" role="form" id="gn-contact-md-form">
+				  <div class="modal-body">
+					
+						<div class="form-group">
+							<label class="col-sm-3 control-label" data-translate="">name</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" name="name"
+									value="{{user.name}}" required="required" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" data-translate="">email</label>
+							<div class="col-sm-9">
+								<input type="email" class="form-control" name="email"
+									value="{{user.email[0]}}" required="required" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" data-translate="">organization</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" name="org"
+									required="required" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" data-translate="">phone</label>
+							<div class="col-sm-9">
+								<input type="tel" class="form-control" name="phone"
+									data-gn-autogrow=""></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" data-translate="">comments</label>
+							<div class="col-sm-9">
+								<textarea class="form-control" name="comments"
+									data-gn-autogrow="" required="required"></textarea>
+							</div>
+						</div>
+						
+						<p class="alert alert-info" data-ng-if="success" data-translate="">feebackSent</p>
+					
+				  </div>
+          <div class="modal-footer">
+            <input type="hidden" name="uuid" value="{{md.getUuid()}}" /> <input
+              type="hidden" name="title" value="{{md.defaultTitle}}" /> <input
+              type="hidden" name="metadataEmail"
+              value="{{md.allContacts.metadata[0].email || md.allContacts.resource[0].email }}" />
+            <input type="hidden" name="metadataOrganization"
+              value="{{md.allContacts.metadata[0].org || md.allContacts.resource[0].org}}" />
+            <button class="btn btn-primary pull-right"
+              data-ng-click="send('#gn-contact-md-form')">
+              <i class="fa fa-envelope"></i>&nbsp;<span data-translate="">send</span>
+            </button>
+          </div>
+        </form>
+			</div>
+		</div>
+	</div>
+</div>
