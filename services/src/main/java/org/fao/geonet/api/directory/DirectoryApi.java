@@ -40,6 +40,7 @@ import org.jdom.Element;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -113,6 +114,7 @@ public class DirectoryApi {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('Reviewer') or hasRole('Administrator')")
     public ResponseEntity<Object> previewExtractedEntries(
         @ApiParam(value = ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
@@ -141,6 +143,7 @@ public class DirectoryApi {
         value = APIURL_ACTIONS_ENTRIES_COLLECT,
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('Reviewer') or hasRole('Administrator')")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Object> extractEntries(
         @ApiParam(value = ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION,
@@ -173,13 +176,6 @@ public class DirectoryApi {
         boolean save, String directoryFilterQuery) throws Exception {
         ServiceContext context = ServiceContext.get();
         UserSession session = context.getUserSession();
-        Profile profile = session.getProfile();
-        if (profile != Profile.Administrator && profile != Profile.Reviewer) {
-            // TODO: i18n
-            throw new SecurityException(
-                "Only administrator and reviewer can extract directory entries.");
-        }
-
 
         // Check which records to analyse
         final Set<String> setOfUuidsToEdit = ApiUtils.getUuidsParameterOrSelection(uuids, session);
