@@ -44,7 +44,7 @@
         <level value="WARN" />
     </logger>
     <logger name="geonetwork.schemamanager">
-        <level value="WARN" />
+        <level value="ERROR" />
     </logger>
     <logger name="geonetwork.thesaurus-man">
         <level value="WARN" />
