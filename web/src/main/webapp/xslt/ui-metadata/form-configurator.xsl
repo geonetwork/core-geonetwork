@@ -390,7 +390,7 @@
               <xsl:with-param name="isExisting" select="true()"/>
               <xsl:with-param name="template" select="$templateCombinedWithNode"/>
               <xsl:with-param name="keyValues" select="$keyValues"/>
-              <xsl:with-param name="refToDelete" select="$refToDelete"/>
+              <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
               <xsl:with-param name="isFirst" select="$forceLabel or position() = 1"/>
             </xsl:call-template>
           </xsl:for-each>
