@@ -24,7 +24,7 @@
       "dut" : "nl"
     };
     var lang = specialCases[threeCharLang];
-    if (angular.isDefined) {
+    if (angular.isDefined(lang)) {
       return lang;
     }
 
