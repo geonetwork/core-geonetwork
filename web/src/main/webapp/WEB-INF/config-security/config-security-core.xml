@@ -218,6 +218,7 @@
   <bean id="accessDeniedHandler"
         class="jeeves.config.springutil.JeevesAccessDeniedHandler">
     <property name="errorPage" value="/accessDenied.jsp"/>
+    <property name="onlyStatusResponsePages" value="/api/**" />
   </bean>
 
   <!-- TODO remember me.
@@ -315,4 +316,6 @@
   <bean class="org.fao.geonet.kernel.security.listener.UpdateTimestampListener"
         id="updateTimestampListener">
   </bean>
+
+
 </beans>
