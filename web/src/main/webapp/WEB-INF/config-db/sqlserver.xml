@@ -15,7 +15,7 @@
     </bean>
 
     <bean id="jdbcURL" class="java.lang.String">
-        <constructor-arg value="jdbc:sqlserver://SERVER;database=${jdbc.database};integratedSecurity=false;"/>
+        <constructor-arg value="jdbc:sqlserver://${jdbc.host};database=${jdbc.database};integratedSecurity=false;"/>
     </bean>
 
 </beans>
