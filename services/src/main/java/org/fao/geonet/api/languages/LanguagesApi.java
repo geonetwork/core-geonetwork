@@ -25,6 +25,7 @@ package org.fao.geonet.api.languages;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
@@ -50,10 +51,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
     "/api/languages",
@@ -76,32 +82,34 @@ public class LanguagesApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<Language> getLanguages() throws Exception {
-        ServiceContext context = ServiceContext.get();
-        return context.getBean(LanguageRepository.class).findAll();
+        return ApplicationContextHolder.get().getBean(LanguageRepository.class).findAll();
     }
 
 
     @ApiOperation(
         value = "Add a language",
         notes = "Add all translations from all *Desc tables in the database.",
-        nickname = "deleteLanguage")
+        nickname = "addLanguage")
     @RequestMapping(
         value = "/{langCode}",
         method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity deleteLanguages(
+    public ResponseEntity addLanguages(
         @ApiParam(value = "ISO 3 letter code",
             required = true)
         @PathVariable
-            String langCode
+            String langCode,
+        @ApiIgnore
+            HttpSession session,
+        @ApiIgnore
+            HttpServletRequest request
     ) throws ResourceNotFoundEx, IOException {
-        // TODO: null context
-        ServiceContext context = ServiceContext.get();
-        if (context.getUserSession().getProfile() != Profile.Administrator) {
+        if (ApiUtils.getUserSession(session).getProfile() != Profile.Administrator) {
             throw new SecurityException("Only administrator can add languages.");
         }
 
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        ServiceManager serviceManager = applicationContext.getBean(ServiceManager.class);
 
         LanguageRepository languageRepository = applicationContext.getBean(LanguageRepository.class);
         Language lang = languageRepository.findOne(langCode);
@@ -120,6 +128,7 @@ public class LanguagesApi {
                     }
                 }
                 if (data.size() > 0) {
+                    ServiceContext context = ApiUtils.createServiceContext(request);
                     Lib.db.runSQL(context, data);
                     return new ResponseEntity(HttpStatus.CREATED);
                 }
@@ -142,15 +151,19 @@ public class LanguagesApi {
         value = "/{langCode}",
         method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity addLanguages(
+    public ResponseEntity deleteLanguages(
         @ApiParam(value = "ISO 3 letter code",
             required = true)
         @PathVariable
-            String langCode
+            String langCode,
+        @ApiIgnore
+            HttpSession session,
+        @ApiIgnore
+            HttpServletRequest request
     ) throws ResourceNotFoundEx, IOException {
         // TODO: null context
-        ServiceContext context = ServiceContext.get();
-        if (context.getUserSession().getProfile() != Profile.Administrator) {
+
+        if (ApiUtils.getUserSession(session).getProfile() != Profile.Administrator) {
             throw new SecurityException("Only administrator can remove languages.");
         }
 
@@ -177,6 +190,7 @@ public class LanguagesApi {
                     }
                 }
                 if (data.size() > 0) {
+                    ServiceContext context = ApiUtils.createServiceContext(request);
                     Lib.db.runSQL(context, data);
                     return new ResponseEntity(HttpStatus.NO_CONTENT);
                 }

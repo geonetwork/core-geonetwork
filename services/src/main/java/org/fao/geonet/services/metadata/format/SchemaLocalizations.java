@@ -119,7 +119,7 @@ public class SchemaLocalizations {
         ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
         HttpServletRequest request = attributes.getRequest();
 
-        ServletContext context = request.getSession().getServletContext();
+        ServletContext context = request.getSession(false).getServletContext();
         final ApplicationContext appContext = getApplicationContextFromServletContext(context);
         final String lang3 = ServiceRequestFactory.extractLanguage(request.getPathInfo());
         final String lang2 = appContext.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(lang3);

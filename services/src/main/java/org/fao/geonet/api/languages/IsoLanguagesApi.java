@@ -23,9 +23,11 @@
 
 package org.fao.geonet.api.languages;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.repository.IsoLanguageRepository;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -60,7 +62,6 @@ public class IsoLanguagesApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<IsoLanguage> getIsoLanguages() throws Exception {
-        ServiceContext context = ServiceContext.get();
-        return context.getBean(IsoLanguageRepository.class).findAll();
+        return ApplicationContextHolder.get().getBean(IsoLanguageRepository.class).findAll();
     }
 }

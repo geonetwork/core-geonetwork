@@ -25,6 +25,7 @@ package org.fao.geonet.api.groups;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Group_;
 import org.fao.geonet.domain.Profile;
@@ -52,11 +53,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
     "/api/groups",
@@ -97,20 +101,21 @@ public class GroupsApi {
         @RequestParam(
             required = false
         )
-        String profile
+        String profile,
+        @ApiIgnore
+        HttpSession httpSession
     ) throws Exception {
-        ServiceContext context = ServiceContext.get();
-        UserSession session = context.getUserSession();
+        UserSession session = ApiUtils.getUserSession(httpSession);
 
         if (!session.isAuthenticated() || profile == null) {
             return getGroups(
-                context,
+                session,
                 null,
                 withReservedGroup,
                 !withReservedGroup);
         } else {
             return getGroups(
-                context,
+                session,
                 Profile.findProfileIgnoreCase(profile),
                 false, false);
         }
@@ -125,17 +130,16 @@ public class GroupsApi {
      *                              belongs to
      */
     private List<Group> getGroups(
-        ServiceContext context,
+        UserSession session,
         Profile profile,
         boolean includingSystemGroups,
         boolean all)
         throws SQLException {
-
-        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
-        final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        final GroupRepository groupRepository = applicationContext.getBean(GroupRepository.class);
+        final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
         final Sort sort = SortUtils.createSort(Group_.id);
 
-        UserSession session = context.getUserSession();
         if (all || !session.isAuthenticated() || Profile.Administrator == session.getProfile()) {
             if (includingSystemGroups) {
                 return groupRepository.findAll(null, sort);

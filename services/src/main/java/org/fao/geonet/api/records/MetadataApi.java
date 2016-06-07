@@ -41,9 +41,11 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -91,8 +93,13 @@ public class MetadataApi implements ApplicationContextAware {
         nickname = "get")
     @RequestMapping(value = "/{metadataUuid}",
         method = RequestMethod.GET,
+        consumes = {
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.TEXT_HTML_VALUE
+        },
         produces = {
-            MediaType.APPLICATION_XML_VALUE
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.TEXT_HTML_VALUE
         })
     public
     @ResponseBody
@@ -110,7 +117,12 @@ public class MetadataApi implements ApplicationContextAware {
         @RequestParam(required = false, defaultValue = "true")
             boolean increasePopularity,
         @ApiParam(hidden = true)
-            HttpServletResponse response)
+            HttpServletResponse response,
+        @RequestHeader(
+            value = HttpHeaders.CONTENT_TYPE,
+            defaultValue = MediaType.APPLICATION_XML_VALUE
+        )
+        String contentType)
         throws Exception {
         ServiceContext context = ServiceContext.get();
         DataManager dataManager = context.getBean(DataManager.class);
@@ -136,32 +148,43 @@ public class MetadataApi implements ApplicationContextAware {
             ));
         }
 
-        Element xml = metadata.getXmlData(false);
-        if (addSchemaLocation) {
-            Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
-                metadata.getDataInfo().getSchemaId(), context);
-
-            if (schemaLocAtt != null) {
-                if (xml.getAttribute(
-                    schemaLocAtt.getName(),
-                    schemaLocAtt.getNamespace()) == null) {
-                    xml.setAttribute(schemaLocAtt);
-                    // make sure namespace declaration for schemalocation is present -
-                    // remove it first (does nothing if not there) then add it
-                    xml.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
-                    xml.addNamespaceDeclaration(schemaLocAtt.getNamespace());
-                }
-            }
-        }
         if (increasePopularity) {
             dataManager.increasePopularity(context, metadata.getId() + "");
         }
 
-        response.setHeader("Content-Disposition", String.format(
-            "inline; filename=\"%s.xml\"",
-            metadata.getUuid()
-        ));
-        return xml;
+        if (contentType.equals(MediaType.TEXT_HTML_VALUE)) {
+            // use formatter
+            Element xml = new Element("mode");
+            response.setHeader("Content-Disposition", String.format(
+                "inline; filename=\"%s.html\"",
+                metadata.getUuid()
+            ));
+            return xml;
+        } else {
+            Element xml = metadata.getXmlData(false);
+            if (addSchemaLocation) {
+                Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
+                    metadata.getDataInfo().getSchemaId(), context);
+
+                if (schemaLocAtt != null) {
+                    if (xml.getAttribute(
+                        schemaLocAtt.getName(),
+                        schemaLocAtt.getNamespace()) == null) {
+                        xml.setAttribute(schemaLocAtt);
+                        // make sure namespace declaration for schemalocation is present -
+                        // remove it first (does nothing if not there) then add it
+                        xml.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                        xml.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                    }
+                }
+            }
+
+            response.setHeader("Content-Disposition", String.format(
+                "inline; filename=\"%s.xml\"",
+                metadata.getUuid()
+            ));
+            return xml;
+        }
     }
 
 

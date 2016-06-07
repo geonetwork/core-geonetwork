@@ -60,11 +60,13 @@
   </bean>
 
   <bean id="readWriteMvcInterceptor" class="jeeves.config.springutil.ReadOnlyMvcInterceptor"/>
+  <bean id="apiMvcInterceptor" class="org.fao.geonet.api.AllRequestsInterceptor"/>
 
   <mvc:interceptors>
     <ref bean="localeChangeInterceptor"/>
     <ref bean="urlLocaleChangeInterceptor"/>
     <ref bean="readWriteMvcInterceptor"/>
+    <ref bean="apiMvcInterceptor"/>
   </mvc:interceptors>
 
   <bean id="cnManager"

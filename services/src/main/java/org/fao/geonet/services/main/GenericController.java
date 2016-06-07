@@ -52,11 +52,6 @@ import jeeves.server.sources.ServiceRequestFactory;
 public class GenericController {
     public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
 
-    /**
-     * Detect crawlers. Useful to avoid creating sessions for them.
-     */
-    private Pattern regex = Pattern.compile(ServiceManager.BOT_REGEXP, Pattern.CASE_INSENSITIVE);
-
     @RequestMapping(value = "/{lang}/{service}")
     @ResponseBody
     public void dispatch(@PathVariable String lang,
@@ -64,20 +59,6 @@ public class GenericController {
                          HttpServletResponse response)
         throws Exception {
         HttpSession httpSession = request.getSession(false);
-
-        String userAgent = request.getHeader("user-agent");
-
-        Matcher m = regex.matcher(userAgent);
-        boolean notCrawler = !m.find();
-
-
-        if (httpSession == null && notCrawler) {
-            httpSession = request.getSession(true);
-        } else if (httpSession != null && !notCrawler) {
-            //Shouldn't get here, but in any case, free the memory
-            request.getSession().invalidate();
-            httpSession = null;
-        }
 
         String ip = request.getRemoteAddr();
         // if we do have the optional x-forwarded-for request header then

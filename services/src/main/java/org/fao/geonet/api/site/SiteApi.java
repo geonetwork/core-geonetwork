@@ -28,6 +28,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.constants.Geonet;
@@ -135,9 +136,7 @@ public class SiteApi {
     ) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         SettingManager sm = appContext.getBean(SettingManager.class);
-
-        ServiceContext context = ServiceContext.get();
-        UserSession session = context.getUserSession();
+        UserSession session = ApiUtils.getUserSession(httpSession);
         Profile profile = session == null ? null : session.getProfile();
 
         List<String> settingList = new ArrayList<>();
