@@ -42,6 +42,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Controller("admin.logo.upload")
+@Deprecated
 public class Add implements ApplicationContextAware {
     private volatile Path logoDirectory;
 

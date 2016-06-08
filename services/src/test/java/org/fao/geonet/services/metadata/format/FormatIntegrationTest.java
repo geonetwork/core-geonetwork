@@ -162,6 +162,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             final String formatterName = "full_view";
 
             MockHttpServletRequest request = new MockHttpServletRequest();
+            request.getSession();
             request.addParameter("h2IdentInfo", "true");
 
             MockHttpServletResponse response = new MockHttpServletResponse();
@@ -172,6 +173,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             assertNotNull(viewString);
 
             request = new MockHttpServletRequest();
+            request.getSession();
             request.setMethod("GET");
             response = new MockHttpServletResponse();
 
@@ -189,6 +191,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             dataManager.indexMetadata(Lists.newArrayList("" + this.id));
 
             request = new MockHttpServletRequest();
+            request.getSession();
             request.setMethod("GET");
             response = new MockHttpServletResponse();
 
@@ -202,7 +205,9 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Test(expected = AssertionError.class)
     public void testGroovyUseEnvDuringConfigStage() throws Exception {
-        final ServletWebRequest webRequest = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
+        MockHttpServletRequest r = new MockHttpServletRequest();
+        r.getSession();
+        final ServletWebRequest webRequest = new ServletWebRequest(r, new MockHttpServletResponse());
         final FormatterParams fparams = new FormatterParams();
         fparams.context = this.serviceContext;
         fparams.webRequest = webRequest;
@@ -228,8 +233,9 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         Level level = logger.getLevel();
         logger.setLevel(Level.ALL);
         try {
-            final ServletWebRequest request = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
-
+            MockHttpServletRequest webRequest = new MockHttpServletRequest();
+            webRequest.getSession();
+            final ServletWebRequest request = new ServletWebRequest(webRequest, new MockHttpServletResponse());
             final FormatterParams fparams = new FormatterParams();
             fparams.context = this.serviceContext;
             fparams.webRequest = request;
@@ -260,6 +266,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final ListFormatters.FormatterDataResponse formatters = listService.exec(null, null, schema, false, false);
         for (ListFormatters.FormatterData formatter : formatters.getFormatters()) {
             MockHttpServletRequest request = new MockHttpServletRequest();
+            request.getSession();
             request.setPathInfo("/eng/blahblah");
             MockHttpServletResponse response = new MockHttpServletResponse();
             final String srvAppContext = "srvAppContext";
@@ -293,6 +300,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     public void testExecXslt() throws Exception {
         final ServletContext context = _applicationContext.getBean(ServletContext.class);
         MockHttpServletRequest request = new MockHttpServletRequest(context, "GET", "http://localhost:8080/geonetwork/srv/eng/md.formatter");
+        request.getSession();
         request.setPathInfo("/eng/md.formatter");
 
         final String applicationContextAttributeKey = "srv";
@@ -323,6 +331,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final Element element = Xml.selectElement(sampleMetadataXml, "*//gmd:MD_Format", Lists.newArrayList(ISO19139Namespaces.GMD));
 
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         MockHttpServletResponse response = new MockHttpServletResponse();
         formatService.execXml("eng", "xml", "partial_view", Xml.getString(element), null, "iso19139", _100, null,
             new ServletWebRequest(request, response));
@@ -340,6 +349,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             Lists.newArrayList(Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2")));
 
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         MockHttpServletResponse response = new MockHttpServletResponse();
         formatService.execXml("eng", "xml", "partial_view", Xml.getString(sampleMetadataXml), null, "iso19139", _100, "gmd:MD_Metadata",
             new ServletWebRequest(request, response));
@@ -359,6 +369,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         requestFactory.registerRequest(true, mockRequest.getHost(), mockRequest.getPort(), mockRequest.getProtocol(), mockRequest);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         MockHttpServletResponse response = new MockHttpServletResponse();
         formatService.execXml("eng", "xml", "partial_view", null, url, "iso19139", _100, null, new ServletWebRequest(request, response));
 
@@ -379,6 +390,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         requestFactory.registerRequest(true, mockRequest.getHost(), mockRequest.getPort(), mockRequest.getProtocol(), mockRequest);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         MockHttpServletResponse response = new MockHttpServletResponse();
         formatService.execXml("eng", "xml", "partial_view", null, "request", "iso19139", _100, null, new ServletWebRequest(request, response));
 
@@ -392,6 +404,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final String formatterName = configureGroovyTestFormatter();
 
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         request.addParameter("h2IdentInfo", "true");
 
         final MockHttpServletResponse response = new MockHttpServletResponse();

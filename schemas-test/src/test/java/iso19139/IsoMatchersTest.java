@@ -52,6 +52,7 @@ public class IsoMatchersTest extends AbstractFormatterTest {
     @Test
     public void testTextMatcher() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         request.addParameter("html", "true");
 
         final String formatterId = "full_view";

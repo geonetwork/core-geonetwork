@@ -33,9 +33,22 @@ import java.util.Arrays;
  * @author Jesse on 10/21/2014.
  */
 public class SystemInfo {
-    public static final String STAGE_TESTING = "testing";
-    public static final String STAGE_DEVELOPMENT = "development";
-    public static final String STAGE_PRODUCTION = "production";
+    public enum Staging {
+        STAGE_TESTING("testing"),
+        STAGE_DEVELOPMENT("development"),
+        STAGE_PRODUCTION("production");
+
+        private String name;
+        Staging(String name){
+            this.name = name;
+        }
+        public String toString() {
+            return name;
+        }
+    }
+    public static final String STAGE_TESTING = Staging.STAGE_TESTING.toString();
+    public static final String STAGE_DEVELOPMENT = Staging.STAGE_DEVELOPMENT.toString();
+    public static final String STAGE_PRODUCTION = Staging.STAGE_PRODUCTION.toString();
     private String stagingProfile = STAGE_PRODUCTION;
     private String buildDate;
     private String version;

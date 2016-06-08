@@ -105,17 +105,24 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, one != null), true);
 
         if (one != null) {
+            SERVLET_REQUEST.getSession();
             publish.unpublish("eng", SERVLET_REQUEST, metadataId, false);
             assertPublished(key, false);
         }
 
-        publish.publish("eng", new MockHttpServletRequest("GET", "requesturi"), metadataId, false);
+        MockHttpServletRequest r = new MockHttpServletRequest("GET", "requesturi");
+        r.getSession();
+        publish.publish("eng", r, metadataId, false);
         assertPublished(key, true);
 
-        publish.unpublish("eng", new MockHttpServletRequest("GET", "requesturi"), metadataId, false);
+        MockHttpServletRequest r1 = new MockHttpServletRequest("GET", "requesturi");
+        r1.getSession();
+        publish.unpublish("eng", r1, metadataId, false);
         assertPublished(key, false);
 
-        publish.publish("eng", new MockHttpServletRequest("GET", "requesturi"), metadataId, false);
+        MockHttpServletRequest r2 = new MockHttpServletRequest("GET", "requesturi");
+        r2.getSession();
+        publish.publish("eng", r2, metadataId, false);
         assertPublished(key, true);
     }
 

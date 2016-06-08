@@ -26,11 +26,6 @@ package org.fao.geonet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import jeeves.constants.ConfigFile;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.sources.ServiceRequest;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
@@ -76,6 +71,12 @@ import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpSession;
+
+import jeeves.constants.ConfigFile;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.ServiceRequest;
 
 import static java.lang.Math.round;
 import static org.junit.Assert.assertTrue;

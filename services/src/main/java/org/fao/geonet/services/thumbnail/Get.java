@@ -39,7 +39,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 //=============================================================================
-
+@Deprecated
 public class Get implements Service {
     private Update update = new Update();
 

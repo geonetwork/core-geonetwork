@@ -51,6 +51,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
     public void testBasicFormat() throws Exception {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         request.addParameter("html", "true");
 
         final String formatterId = "full_view";
