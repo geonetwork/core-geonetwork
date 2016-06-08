@@ -80,10 +80,10 @@
       $scope.systemInfo = {
         'stagingProfile': 'production'
       };
-      $scope.stagingProfiles = ['production', 'development', 'integration'];
+      $scope.stagingProfiles = ['production', 'development', 'testing'];
       $scope.updateProfile = function() {
 
-        $http.get('systeminfo/staging?newProfile=' +
+        $http.put('../api/site/info/staging/' +
             $scope.systemInfo.stagingProfile)
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
@@ -111,7 +111,7 @@
          */
       function loadSettings() {
 
-        $http.get('../api/site/buildinfo')
+        $http.get('../api/site/info/build')
             .success(function(data) {
               $scope.systemInfo = data;
             });

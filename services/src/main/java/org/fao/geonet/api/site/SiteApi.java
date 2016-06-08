@@ -232,7 +232,7 @@ public class SiteApi {
 
     @ApiOperation(
         value = "Update staging profile",
-        notes = "",
+        notes = "TODO: Needs doc",
         nickname = "updateStagingProfile")
     @RequestMapping(
         path = "/info/staging/{profile}",
@@ -321,7 +321,7 @@ public class SiteApi {
             defaultValue = "false",
             required = false
         )
-            boolean withFavicon
+            boolean asFavicon
 
     ) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
@@ -336,20 +336,20 @@ public class SiteApi {
         try {
             Path logoFilePath = logoDirectory.resolve(file);
             Path nodeLogoDirectory = dataDirectory.getResourcesDir()
-                .resolve("images").resolve("harvesting");
+                .resolve("images");
             if (!Files.exists(logoFilePath)) {
-                logoFilePath = nodeLogoDirectory.resolve(file);
+                logoFilePath = nodeLogoDirectory.resolve("harvesting").resolve(file);
             }
             try (InputStream inputStream = Files.newInputStream(logoFilePath)) {
                 BufferedImage source = ImageIO.read(inputStream);
 
-                if (withFavicon) {
+                if (asFavicon) {
                     ApiUtils.createFavicon(
                         source,
                         dataDirectory.getResourcesDir().resolve("images").resolve("favicon.png"));
                 } else {
-                    Path logo = nodeLogoDirectory.resolve(nodeUuid + ".png");
-                    Path defaultLogo = nodeLogoDirectory.resolve("logo.png");
+                    Path logo = nodeLogoDirectory.resolve("logos").resolve(nodeUuid + ".png");
+                    Path defaultLogo = nodeLogoDirectory.resolve("images").resolve("logo.png");
 
                     if (!file.endsWith(".png")) {
                         try (

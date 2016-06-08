@@ -27,10 +27,8 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.IO;
 import org.springframework.context.ApplicationContext;
@@ -47,13 +45,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,15 +65,30 @@ import io.swagger.annotations.ApiParam;
  */
 
 @RequestMapping(value = {
-    "/api/site/logos",
+    "/api/logos",
     "/api/" + API.VERSION_0_1 +
         "/logos"
 })
-@Api(value = "site",
-    tags = "site",
+@Api(value = "logos",
+    tags = "logos",
     description = "Logos operations")
 @Controller("siteLogos")
 public class LogosApi {
+    private static final String iconExt[] = {".gif", ".png", ".jpg", ".jpeg"};
+    private DirectoryStream.Filter<Path> iconFilter = new DirectoryStream.Filter<Path>() {
+        @Override
+        public boolean accept(Path file) throws IOException {
+            if (file == null || !Files.isRegularFile(file))
+                return false;
+            if (file.getFileName() != null) {
+                String name = file.getFileName().toString();
+                for (String ext : iconExt)
+                    if (name.endsWith(ext))
+                        return true;
+            }
+            return false;
+        }
+    };
 
     @ApiOperation(
         value = "Get logos",
@@ -83,12 +99,19 @@ public class LogosApi {
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public SettingsListResponse get(
+    public Set<String> get(
+        HttpServletRequest request
     ) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
-        SettingManager sm = appContext.getBean(SettingManager.class);
-
-        return null;
+        Set<Path> icons = Resources.listFiles(
+            ApiUtils.createServiceContext(request),
+            "harvesting",
+            iconFilter);
+        Set<String> iconsList = new HashSet<>(icons.size());
+        for (Path i : icons) {
+            iconsList.add(i.getFileName().toString());
+        }
+        return iconsList;
     }
 
     private volatile Path logoDirectory;
@@ -169,7 +192,7 @@ public class LogosApi {
         notes = "",
         nickname = "removeLogo")
     @RequestMapping(
-        path = "/{file}",
+        path = "/{file:.+}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
@@ -180,17 +203,13 @@ public class LogosApi {
         @PathVariable
             String file
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        Path logoDir;
-        synchronized (this) {
-            if (this.logoDirectory == null) {
-                this.logoDirectory = Resources.locateHarvesterLogosDirSMVC(appContext);
-            }
-            logoDir = this.logoDirectory;
-        }
-
         checkFileName(file);
-        Path logoFile = logoDirectory.resolve(file);
+
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
+        Path nodeLogoDirectory = dataDirectory.getResourcesDir()
+            .resolve("images").resolve("harvesting");
+        Path logoFile = nodeLogoDirectory.resolve(file);
         if (Files.exists(logoFile)) {
             Files.delete(logoFile);
         } else {

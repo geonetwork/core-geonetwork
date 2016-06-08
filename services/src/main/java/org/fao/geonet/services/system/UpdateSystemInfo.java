@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Jesse on 1/23/2015.
  */
 @Controller("systeminfo/")
+@Deprecated
 public class UpdateSystemInfo {
     @Autowired
     private SystemInfo info;

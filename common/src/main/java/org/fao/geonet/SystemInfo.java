@@ -34,21 +34,13 @@ import java.util.Arrays;
  */
 public class SystemInfo {
     public enum Staging {
-        STAGE_TESTING("testing"),
-        STAGE_DEVELOPMENT("development"),
-        STAGE_PRODUCTION("production");
-
-        private String name;
-        Staging(String name){
-            this.name = name;
-        }
-        public String toString() {
-            return name;
-        }
+        testing,
+        development,
+        production;
     }
-    public static final String STAGE_TESTING = Staging.STAGE_TESTING.toString();
-    public static final String STAGE_DEVELOPMENT = Staging.STAGE_DEVELOPMENT.toString();
-    public static final String STAGE_PRODUCTION = Staging.STAGE_PRODUCTION.toString();
+    public static final String STAGE_TESTING = Staging.testing.toString();
+    public static final String STAGE_DEVELOPMENT = Staging.development.toString();
+    public static final String STAGE_PRODUCTION = Staging.production.toString();
     private String stagingProfile = STAGE_PRODUCTION;
     private String buildDate;
     private String version;
