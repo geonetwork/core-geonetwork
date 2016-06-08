@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -81,15 +82,8 @@ public class ProcessApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    List<ProcessingReport> get(
-        @ApiIgnore HttpSession session
-    ) throws Exception {
-        Profile profile = ApiUtils.getUserSession(session).getProfile();
-        if (profile == null) {
-            throw new SecurityException(
-                "You are not allowed to retrieve processing reports.");
-        }
-
+    @PreAuthorize("isAuthenticated()")
+    List<ProcessingReport> get() throws Exception {
         return registry.get();
     }
 
@@ -103,15 +97,8 @@ public class ProcessApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    void delete(
-        @ApiIgnore HttpSession session
-    ) throws Exception {
-        Profile profile = ApiUtils.getUserSession(session).getProfile();
-        if (profile == null) {
-            throw new SecurityException(
-                "You are not allowed to retrieve processing reports.");
-        }
-
+    @PreAuthorize("isAuthenticated()")
+    void delete() throws Exception {
         registry.clear();
     }
 
@@ -136,6 +123,7 @@ public class ProcessApi {
     )
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
     public MetadataReplacementProcessingReport searchAndReplace(
         @RequestParam(defaultValue = "massive-content-update")
             String process,
@@ -167,11 +155,6 @@ public class ProcessApi {
             HttpServletRequest request
     ) throws Exception {
         UserSession userSession = ApiUtils.getUserSession(session);
-        Profile profile = userSession.getProfile();
-        if (profile == null) {
-            throw new SecurityException(
-                "You are not allowed to run a search and replace process.");
-        }
 
         MetadataReplacementProcessingReport report =
             new MetadataReplacementProcessingReport("massive-content-update");

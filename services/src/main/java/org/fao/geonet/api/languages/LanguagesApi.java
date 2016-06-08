@@ -36,6 +36,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,6 +94,7 @@ public class LanguagesApi {
     @RequestMapping(
         value = "/{langCode}",
         method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity addLanguages(
         @ApiParam(value = "ISO 3 letter code",
@@ -104,9 +106,6 @@ public class LanguagesApi {
         @ApiIgnore
             HttpServletRequest request
     ) throws ResourceNotFoundEx, IOException {
-        if (ApiUtils.getUserSession(session).getProfile() != Profile.Administrator) {
-            throw new SecurityException("Only administrator can add languages.");
-        }
 
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceManager serviceManager = applicationContext.getBean(ServiceManager.class);
@@ -150,6 +149,7 @@ public class LanguagesApi {
     @RequestMapping(
         value = "/{langCode}",
         method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity deleteLanguages(
         @ApiParam(value = "ISO 3 letter code",
@@ -160,10 +160,6 @@ public class LanguagesApi {
             HttpServletRequest request
     ) throws ResourceNotFoundEx, IOException {
         // TODO: null context
-
-        if (ApiUtils.getUserSession(session).getProfile() != Profile.Administrator) {
-            throw new SecurityException("Only administrator can remove languages.");
-        }
 
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
 
