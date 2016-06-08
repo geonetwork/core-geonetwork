@@ -126,10 +126,7 @@
                 <xsl:value-of select="$escapedName"/>
               </label>
             </element>
-            <xsl:message>gn-fn-metadata:getLabel | missing translation in schema
-              <xsl:value-of
-                select="$schema"/> for <xsl:value-of select="$name"/>.
-            </xsl:message>
+            <xsl:message>gn-fn-metadata:getLabel | missing translation in schema <xsl:value-of select="$schema"/> for <xsl:value-of select="$name"/>.</xsl:message>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:otherwise>

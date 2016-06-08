@@ -33,6 +33,7 @@
     "batchProcess": "Batch process",
     "testMailConfiguration": "Test mail configuration",
     "keywordCreationError": "Error creating keyword",
+    "categoryDeleteError": "Error while removing category",
     "batchProcessParameters": "Process parameters",
     "batchProcessTypeUnsupported": "Process type {{type}} unsupported",
     "batchreplacer-addReplacement": "Add replacement",

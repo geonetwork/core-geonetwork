@@ -21,6 +21,7 @@
     "UserAdmin": "User administrator",
     "_cat": "Category",
     "categories": "Categories",
+    "learnTheApi": "Learn how to use the catalog REST API.",
     "category": "Category",
     "_groupOwner": "Group",
     "_groupPublished": "Published in that group",
