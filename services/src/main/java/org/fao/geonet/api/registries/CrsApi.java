@@ -30,6 +30,7 @@ import org.fao.geonet.api.registries.model.CrsType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -136,6 +137,7 @@ public class CrsApi {
             MediaType.APPLICATION_XML_VALUE
         })
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity<Crs> getCrs(
         @ApiParam(

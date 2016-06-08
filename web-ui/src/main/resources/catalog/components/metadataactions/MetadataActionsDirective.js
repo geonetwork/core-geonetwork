@@ -115,7 +115,7 @@
             'metadatacategoryupdater.html',
         scope: {
           currentCategories: '=gnMetadataCategoryUpdater',
-          metadataId: '=',
+          metadataUuid: '=',
           groupOwner: '=gnGroupOwner'
         },
         link: function(scope) {
@@ -161,16 +161,19 @@
             return c.label[scope.lang];
           };
 
+
           // Remove or add category to the set of ids
           scope.assign = function(c, event) {
             event.stopPropagation();
-            var existIndex = scope.ids.indexOf(c.id);
+            var existIndex = scope.ids.indexOf(c.id), method = '';
             if (existIndex === -1) {
               scope.ids.push(c.id);
+              method = 'put';
             } else {
               scope.ids.splice(existIndex, 1);
+              method = 'delete';
             }
-            gnMetadataActions.assignCategories(scope.metadataId, scope.ids)
+            $http[method]('../api/records/' + scope.metadataUuid + '/tags?id=' + c.id)
                 .then(function() {
                   scope.currentCategories.push(c.name);
                 }, function(response) {

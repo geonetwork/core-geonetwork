@@ -336,11 +336,8 @@
       };
 
       this.assignCategories = function(metadataId, categories) {
-        var defer = $q.defer(), ids = '';
-        angular.forEach(categories, function(value) {
-          ids += '&_' + value + '=on';
-        });
-        $http.get('md.category.update?id=' + metadataId + ids)
+        var defer = $q.defer();
+        $http.get('../records/' + metadataId + '/tags?id=' + categories.join('&id='))
             .success(function(data) {
               defer.resolve(data);
             })

@@ -46,6 +46,7 @@ import java.util.List;
 /**
  * Stores all operations allowed for a metadata. Called by the metadata.admin service.
  */
+@Deprecated
 public class UpdateCategories extends NotInReadOnlyModeService {
 
     /**

@@ -26,6 +26,7 @@ import com.google.common.collect.Sets;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.processing.report.IProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.BatchEditParameter;
@@ -98,7 +99,7 @@ public class BatchEditsApi implements ApplicationContextAware {
     public
     @ResponseBody
     IProcessingReport serviceSpecificExec(
-        @ApiParam(value = "Record UUIDs. If null current selection is used.",
+        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "iso19139")
         @RequestParam(required = false) String[] uuids,

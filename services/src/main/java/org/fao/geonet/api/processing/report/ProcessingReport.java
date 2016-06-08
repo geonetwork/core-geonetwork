@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "report")
 @XmlType(propOrder = {
-    "uuid", "startIsoDateTime", "endIsoDateTime", "running",
+    "uuid", "startIsoDateTime", "endIsoDateTime",
     "ellapsedTimeInSeconds", "totalTimeInSeconds"
 })
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)

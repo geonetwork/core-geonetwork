@@ -75,19 +75,15 @@
           scope.save = function(replace) {
             scope.report = null;
             var defer = $q.defer();
-            var params = {};
-            var url = 'md.category.batch.update?_content_type=json';
-
-            if (replace) {
-              url += '&mode=add';
-            }
+            var params = [];
+            var url = '../api/records/tags?' + (replace ? 'clear=true&id=' : 'id=');
 
             angular.forEach(scope.categories, function(c) {
               if (c.checked === true) {
-                params['_' + c.id] = 'on';
+                params.push(c.id);
               }
             });
-            $http.get(url, {params: params})
+            $http.put(url + params.join('&id='))
                 .success(function(data) {
                   scope.report = data;
                   defer.resolve(data);

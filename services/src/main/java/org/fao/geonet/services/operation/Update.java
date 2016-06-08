@@ -60,7 +60,7 @@ public class Update extends NotInReadOnlyModeService {
             operationRepository.update(Integer.valueOf(id), new Updater<Operation>() {
                 @Override
                 public void apply(@Nonnull Operation entity) {
-                    entity.setLabelTranslations(label.getChildren());
+                    entity.setLabelTranslationsFromElement(label.getChildren());
                 }
             });
         }

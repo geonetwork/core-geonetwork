@@ -122,7 +122,7 @@ public class MetadataApi implements ApplicationContextAware {
             value = HttpHeaders.ACCEPT,
             defaultValue = MediaType.APPLICATION_XML_VALUE
         )
-        String contentType
+            String contentType
     )
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();

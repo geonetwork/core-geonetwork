@@ -25,11 +25,18 @@ package org.fao.geonet.api;
 
 import com.google.common.collect.Sets;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SelectionManager;
-import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -78,8 +85,7 @@ public class ApiUtils {
     /**
      * Return the Jeeves user session.
      *
-     * If session is null, it's probably a bot due to
-     * {@link AllRequestsInterceptor#createSessionForAllButNotCrawlers(HttpServletRequest)}.
+     * If session is null, it's probably a bot due to {@link AllRequestsInterceptor#createSessionForAllButNotCrawlers(HttpServletRequest)}.
      * In such case return an exception.
      */
     static public UserSession getUserSession(HttpSession httpSession) {
@@ -94,8 +100,8 @@ public class ApiUtils {
     }
 
     /**
-     * If you really need a ServiceContext use this. Try to avoid
-     * in order to reduce dependency on Jeeves.
+     * If you really need a ServiceContext use this. Try to avoid in order to reduce dependency on
+     * Jeeves.
      */
     static public ServiceContext createServiceContext(HttpServletRequest request) {
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
@@ -113,5 +119,34 @@ public class ApiUtils {
         });
 
         return size[0] / 1024;
+    }
+
+    /**
+     * Check if the current user can edit this record.
+     */
+    static public Metadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
+        Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
+        AccessManager accessManager = appContext.getBean(AccessManager.class);
+        if (!accessManager.canEdit(createServiceContext(request), String.valueOf(metadata.getId()))) {
+            throw new SecurityException("You can't edit this record");
+        }
+        return metadata;
+    }
+
+    /**
+     * Check if the current user can view this record.
+     */
+    public static Metadata canViewRecord(String metadataUuid, HttpServletRequest request) {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
+        Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
+        try {
+            Lib.resource.checkPrivilege(createServiceContext(request), String.valueOf(metadata.getId()), ReservedOperation.view);
+        } catch (Exception e) {
+            throw new SecurityException("You can't view this record");
+        }
+        return metadata;
     }
 }

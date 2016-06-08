@@ -56,8 +56,7 @@
        * Delete a category
        */
       $scope.deleteCategory = function(id) {
-        $http.get('admin.category.remove?id=' +
-            id)
+        $http.delete('../api/tags/'+ id)
             .success(function(data) {
               $scope.unselectCategory();
               loadCategories();
@@ -74,9 +73,9 @@
       /**
        * Save a category
        */
-      $scope.saveCategory = function(formId) {
-        $http.get('admin.category.update?' + $(formId).serialize())
-            .success(function(data) {
+      $scope.saveCategory = function() {
+        $http.put('../api/tags/' + $scope.categorySelected.id,
+          $scope.categorySelected).success(function(data) {
               $scope.unselectCategory();
               loadCategories();
               $rootScope.$broadcast('StatusUpdated', {
@@ -96,19 +95,19 @@
       $scope.addCategory = function() {
         $scope.unselectCategory();
         $scope.categorySelected = {
-          '@id': '',
-          name: ''
+          'id': '',
+          name: '',
+          // label: {
+            // TODO: Should define default language
+            // based on catalog languages
+          // }
         };
         $timeout(function() {
           $('#categoryname').focus();
         }, 100);
       };
-
       $scope.unselectCategory = function() {
         $scope.categorySelected = {};
-      };
-      $scope.updatingCategory = function() {
-        $scope.categoryUpdated = true;
       };
 
       function loadCategories() {
@@ -118,5 +117,4 @@
       }
       loadCategories();
     }]);
-
 })();

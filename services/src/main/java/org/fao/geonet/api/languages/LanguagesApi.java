@@ -156,9 +156,7 @@ public class LanguagesApi {
             required = true)
         @PathVariable
             String langCode,
-        @ApiIgnore
             HttpSession session,
-        @ApiIgnore
             HttpServletRequest request
     ) throws ResourceNotFoundEx, IOException {
         // TODO: null context
