@@ -40,7 +40,7 @@ import java.nio.file.Path;
 /**
  * Returns a specific group given its id
  */
-
+@Deprecated
 public class Get implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

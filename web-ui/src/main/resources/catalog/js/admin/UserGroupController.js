@@ -105,7 +105,7 @@
 
       function loadGroups() {
         $scope.isLoadingGroups = true;
-        $http.get('admin.group.list?_content_type=json').
+        $http.get('../api/groups').
             success(function(data) {
               $scope.groups = data !== 'null' ? data : null;
               //Fixing true not equal to "true" and
@@ -124,7 +124,7 @@
                 }
                 //FIXME this should be already on the previous list
                 if (u.defaultcategory) {
-                  $http.get('admin.group.get?_content_type=json&id=' + u.id).
+                  $http.get('../api/groups/' + u.id).
                       success(function(data) {
                         if (data && data[0] && data[0].defaultcategory &&
                             data[0].defaultcategory[0]) {
@@ -479,7 +479,7 @@
       };
 
       $scope.deleteGroup = function(formId) {
-        $http.get('admin.group.remove?id=' +
+        $http.delete('../api/groups/' +
                 $scope.groupSelected.id)
             .success(function(data) {
               $scope.unselectGroup();

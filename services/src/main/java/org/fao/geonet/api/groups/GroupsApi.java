@@ -23,43 +23,40 @@
 
 package org.fao.geonet.api.groups;
 
+import com.google.common.base.Functions;
+import com.google.common.collect.Lists;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Group_;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.GroupSpecs;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
@@ -72,6 +69,9 @@ import springfox.documentation.annotations.ApiIgnore;
     description = "Groups operations")
 @Controller("groups")
 public class GroupsApi {
+
+    @Autowired
+    LanguageUtils languageUtils;
 
     @ApiOperation(
         value = "Get groups",
@@ -119,6 +119,80 @@ public class GroupsApi {
                 Profile.findProfileIgnoreCase(profile),
                 false, false);
         }
+    }
+
+    @ApiOperation(
+        value = "Get group",
+        notes = "Return catalog group .",
+        nickname = "getGroup")
+    @RequestMapping(value = "/{groupIdentifier}",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public Group getGroup(
+        @ApiParam(
+            value = "Group identifier"
+        )
+        @PathVariable
+            Integer groupIdentifier
+    ) throws Exception {
+        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
+
+        final Group group = groupRepository.findOne(groupIdentifier);
+
+        if (group == null) {
+            throw new ResourceNotFoundException(String.format("Group not found"));
+        }
+
+        return group;
+
+    }
+
+    @ApiOperation(
+        value = "Delete a group",
+        notes = "Deletes a catalog group by identifier.",
+        nickname = "deleteGroup")
+    @RequestMapping(value = "/{groupIdentifier}",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.DELETE)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<String> deleteGroup(
+        @ApiParam(
+            value = "Group identifier."
+        )
+        @PathVariable
+            Integer groupIdentifier,
+        @ApiIgnore
+        ServletRequest request
+    ) throws Exception {
+        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
+
+        Group group = groupRepository.findOne(groupIdentifier);
+
+        if (group != null) {
+            OperationAllowedRepository operationAllowedRepo = ApplicationContextHolder.get().getBean(OperationAllowedRepository.class);
+            UserGroupRepository userGroupRepo = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
+
+            List<Integer> reindex = operationAllowedRepo.findAllIds(OperationAllowedSpecs.hasGroupId(groupIdentifier),
+                OperationAllowedId_.metadataId);
+
+            operationAllowedRepo.deleteAllByIdAttribute(OperationAllowedId_.groupId, groupIdentifier);
+            userGroupRepo.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(groupIdentifier));
+            groupRepository.delete(groupIdentifier);
+
+            //--- reindex affected metadata
+            DataManager dm = ApplicationContextHolder.get().getBean(DataManager.class);
+            dm.indexMetadata(Lists.transform(reindex, Functions.toStringFunction()));
+
+        } else {
+            throw new ResourceNotFoundException(String.format(
+                "Group with id '%d' does not exist.",
+                groupIdentifier
+            ));
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     /**
