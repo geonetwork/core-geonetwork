@@ -21591,6 +21591,17 @@ yx-axis
 .g [gn-popup] {
   max-height: none;
 }
+.gn .gn-features-table::before,
+.g .gn-features-table::before {
+  content: ' ';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 5em;
+  background: white;
+  z-index: 0;
+}
 .portlet-borderless-container [gn-metadata-display].sxt-scroll {
   position: relative;
   margin-top: -4em;
