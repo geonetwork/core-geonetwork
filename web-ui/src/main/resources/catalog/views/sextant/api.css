@@ -21602,6 +21602,10 @@ yx-axis
   background: white;
   z-index: 0;
 }
+.gn .gn-features-table .dropdown-menu,
+.g .gn-features-table .dropdown-menu {
+  line-height: 2.5em;
+}
 .portlet-borderless-container [gn-metadata-display].sxt-scroll {
   position: relative;
   margin-top: -4em;

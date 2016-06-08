@@ -131,15 +131,20 @@
     max-height: none;
   }
 
-  .gn-features-table::before {
-    content: ' ';
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    height: 5em;
-    background: white;
-    z-index: 0;
+  .gn-features-table {
+    &::before {
+      content: ' ';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      height: 5em;
+      background: white;
+      z-index: 0;
+    }
+    .dropdown-menu {
+      line-height: 2.5em;
+    }
   }
 
 }
