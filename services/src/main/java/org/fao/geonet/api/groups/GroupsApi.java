@@ -157,6 +157,7 @@ public class GroupsApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity<String> deleteGroup(
         @ApiParam(

@@ -88,6 +88,7 @@ public class Update {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
+    @Deprecated
     OkResponse resetPassword(
         HttpSession session,
         @RequestParam(value = Params.ID) String id,
