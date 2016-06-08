@@ -59,6 +59,7 @@ import static org.fao.geonet.repository.HarvesterSettingRepository.SEPARATOR;
  * @author Jesse on 2/3/2015.
  */
 @Controller("source")
+@Deprecated
 public class SourcesController {
 
     public static final String PREFIX = "translations-";

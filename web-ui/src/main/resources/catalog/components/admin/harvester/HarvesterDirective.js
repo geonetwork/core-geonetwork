@@ -47,15 +47,14 @@
         link: function(scope, element, attrs) {
           scope.lang = 'eng'; // FIXME
           scope.openTranslationModal = function() {
-            var translations = scope.harvester.site.translations;
-            if (translations === undefined || angular.isArray(translations)) {
-              translations = {};
-              scope.harvester.site.translations = translations;
-            }
-
-            for (var i = 0; i < scope.languages.length; i++) {
-              if (translations[scope.languages[i].id] === undefined) {
-                translations[scope.languages[i].id] = scope.harvester.site.name;
+            if (scope.harvester.site.translations === undefined) {
+              scope.harvester.site.translations = {};
+              for (var i = 0; i < scope.languages.length; i++) {
+                if (scope.harvester.site.translations[scope.languages[i].id] ===
+                    undefined) {
+                  scope.harvester.site.translations[scope.languages[i].id] =
+                    scope.harvester.site.name;
+                }
               }
             }
             $('#translationModal').modal('show');

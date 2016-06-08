@@ -12,19 +12,14 @@
 
           <table class="table table-striped">
             <tr
-              data-ng-repeat="(key, value) in sourcesSelected.label">
+              data-ng-repeat="(key, value) in harvester.site.translations">
               <td>{{key | translate}}</td>
               <td><input type="text" class="form-control"
                          value="{{value}}"
-                         data-ng-model="sourcesSelected.label[key]"
+                         data-ng-model="harvester.site.translations[key]"
               /></td>
             </tr>
           </table>
-
-          <div data-ng-repeat="lang in languages | orderBy : 'name'">
-            <label class="control-label">{{lang.name}}</label>
-            <input class="form-control" data-ng-model="harvester.site.translations[lang.id]"/>
-          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

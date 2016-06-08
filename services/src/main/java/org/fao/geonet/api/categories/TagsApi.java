@@ -192,21 +192,16 @@ public class TagsApi {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    private void updateCategory(@ApiParam(
-        value = "Tag identifier",
-        required = true
-    ) @PathVariable int categoryIdentifier, @ApiParam(
-        name = "category"
-    ) @RequestBody final MetadataCategory category, MetadataCategoryRepository categoryRepository) {
-        categoryRepository.update(categoryIdentifier, new Updater<MetadataCategory>() {
-            @Override
-            public void apply(@Nonnull MetadataCategory entity) {
-                entity.setName(category.getName());
-                Map<String, String> labelTranslations = category.getLabelTranslations();
-                if (labelTranslations != null) {
-                    entity.getLabelTranslations().clear();
-                    entity.getLabelTranslations().putAll(labelTranslations);
-                }
+    private void updateCategory(
+        int categoryIdentifier,
+        final MetadataCategory category,
+        MetadataCategoryRepository categoryRepository) {
+        categoryRepository.update(categoryIdentifier, entity -> {
+            entity.setName(category.getName());
+            Map<String, String> labelTranslations = category.getLabelTranslations();
+            if (labelTranslations != null) {
+                entity.getLabelTranslations().clear();
+                entity.getLabelTranslations().putAll(labelTranslations);
             }
         });
     }

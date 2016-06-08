@@ -23,23 +23,37 @@
 
 package org.fao.geonet.api.sources;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.Source_;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.Updater;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
@@ -56,7 +70,7 @@ public class SourcesApi {
 
     @ApiOperation(
         value = "Get sources",
-        notes = "",
+        notes = "A source is created for each harvester.",
         nickname = "getSources")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -67,5 +81,58 @@ public class SourcesApi {
         ServiceContext context = ServiceContext.get();
         // TODO-API: Check if site is added to normal sources ?
         return context.getBean(SourceRepository.class).findAll(SortUtils.createSort(Source_.name));
+    }
+
+
+    @ApiOperation(
+        value = "Update a source",
+        notes = "",
+        nickname = "updateSource")
+    @RequestMapping(
+        value = "/{sourceIdentifier}",
+        method = RequestMethod.PUT)
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('UserAdmin')")
+    @ResponseBody
+    public ResponseEntity updateSource(
+        @ApiParam(
+            value = "Source identifier",
+            required = true
+        )
+        @PathVariable
+            String sourceIdentifier,
+        @ApiParam(
+            name = "source"
+        )
+        @RequestBody
+            Source source
+    ) throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        SourceRepository sourceRepository =
+            appContext.getBean(SourceRepository.class);
+
+        Source existingSource = sourceRepository.findOne(sourceIdentifier);
+        if (existingSource != null) {
+            updateSource(sourceIdentifier, source, sourceRepository);
+        } else {
+            throw new ResourceNotFoundException(String.format(
+                "Source with uuid '%d' does not exist.",
+                sourceIdentifier
+            ));
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    private void updateSource(String sourceIdentifier,
+                              final Source source,
+                              SourceRepository sourceRepository) {
+        sourceRepository.update(sourceIdentifier, entity -> {
+            entity.setName(source.getName());
+            Map<String, String> labelTranslations = source.getLabelTranslations();
+            if (labelTranslations != null) {
+                entity.getLabelTranslations().clear();
+                entity.getLabelTranslations().putAll(labelTranslations);
+            }
+        });
     }
 }
