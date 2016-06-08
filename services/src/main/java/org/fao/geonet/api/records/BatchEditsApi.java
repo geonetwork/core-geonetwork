@@ -47,6 +47,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -96,6 +97,7 @@ public class BatchEditsApi implements ApplicationContextAware {
             MediaType.APPLICATION_JSON_VALUE
         })
     public
+    @PreAuthorize("hasRole('Editor') or hasRole('Reviewer') or hasRole('Administrator') ")
     @ResponseBody
     IProcessingReport serviceSpecificExec(
         @ApiParam(value = "Record UUIDs. If null current selection is used.",
@@ -104,10 +106,6 @@ public class BatchEditsApi implements ApplicationContextAware {
         @RequestParam(required = false) String[] uuids,
         @RequestBody BatchEditParameter[] edits)
         throws Exception {
-        Profile profile = ServiceContext.get().getUserSession().getProfile();
-        if (profile == null) {
-            throw new SecurityException("Only Editors can run batch edits.");
-        }
 
         List<BatchEditParameter> listOfUpdates = Arrays.asList(edits);
         if (listOfUpdates.size() == 0) {

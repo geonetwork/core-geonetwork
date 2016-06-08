@@ -305,6 +305,7 @@ public class DirectoryApi {
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
+    @PreAuthorize("hasRole('Reviewer') or hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity<Object> updateRecordEntries(
         @ApiParam(value = ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION,
@@ -351,12 +352,6 @@ public class DirectoryApi {
         ServiceContext context = ServiceContext.get();
         UserSession session = context.getUserSession();
         Profile profile = session.getProfile();
-        if (profile != Profile.Administrator && profile != Profile.Reviewer) {
-            // TODO: i18n
-            throw new SecurityException(
-                "Only administrator and reviewer can extract directory entries.");
-        }
-
 
         // Check which records to analyse
         final Set<String> setOfUuidsToEdit = ApiUtils.getUuidsParameterOrSelection(uuids, session);

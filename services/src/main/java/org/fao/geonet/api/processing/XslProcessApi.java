@@ -35,6 +35,7 @@ import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,6 +101,7 @@ public class XslProcessApi {
         })
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
     public XsltMetadataProcessingReport serviceSpecificExec(
         @ApiParam(value = "Process identifier")
         @PathVariable
@@ -115,11 +117,6 @@ public class XslProcessApi {
             HttpServletRequest request) throws Exception {
 
         UserSession session = ApiUtils.getUserSession(httpSession);
-        Profile profile = session.getProfile();
-        if (profile == null) {
-            throw new SecurityException(
-                "You are not allowed to run a search and replace process.");
-        }
 
         XsltMetadataProcessingReport xslProcessingReport =
             new XsltMetadataProcessingReport(process);
