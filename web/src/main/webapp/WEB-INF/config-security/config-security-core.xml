@@ -74,6 +74,7 @@
     </constructor-arg>
   </bean>
 
+
   <bean id="coreFilterChain" class="org.springframework.security.web.DefaultSecurityFilterChain">
     <constructor-arg>
       <bean class="org.springframework.security.web.util.AntPathRequestMatcher">
@@ -137,7 +138,12 @@
     <property name="usernameParameter" value="username"/>
     <property name="passwordParameter" value="password"/>
     <property name="authenticationManager" ref="authenticationManager"/>
-    <property name="filterProcessesUrl" value="/j_spring_security_check"/>
+    <!--<property name="filterProcessesUrl" value="/signin"/>-->
+    <property name="requiresAuthenticationRequestMatcher">
+      <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+        <constructor-arg name="pattern" value="/signin"/>
+      </bean>
+    </property>
     <property name="authenticationDetailsSource" ref="authenticationDetailsSource"/>
     <property name="authenticationFailureHandler">
       <bean
@@ -193,7 +199,7 @@
         </bean>
       </list>
     </constructor-arg>
-    <property name="filterProcessesUrl" value="/j_spring_security_logout"/>
+    <property name="filterProcessesUrl" value="/signout"/>
   </bean>
 
   <bean id="logoutSuccessHandler"

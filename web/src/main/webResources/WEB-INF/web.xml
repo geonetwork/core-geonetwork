@@ -71,7 +71,7 @@
     <filter-class>jeeves.config.springutil.JeevesDelegatingFilterProxy</filter-class>
     <init-param>
       <param-name>loginService</param-name>
-      <param-value>j_spring_security_check</param-value>
+      <param-value>signin</param-value>
     </init-param>
     <init-param>
       <param-name>trustedHost</param-name>
@@ -91,6 +91,10 @@
   <filter-mapping>
     <filter-name>SessionTimeoutCookieFilter</filter-name>
     <url-pattern>/srv/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>SessionTimeoutCookieFilter</filter-name>
+    <url-pattern>/test/*</url-pattern>
   </filter-mapping>
 
   <!-- url rewrite filter -->
@@ -382,6 +386,10 @@
   <servlet-mapping>
     <servlet-name>spring</servlet-name>
     <url-pattern>/srv/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>spring</servlet-name>
+    <url-pattern>/test/*</url-pattern>
   </servlet-mapping>
 
 

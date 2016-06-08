@@ -70,7 +70,7 @@ import jeeves.server.context.ServiceContext;
 @Api(value = "users",
     tags = "users",
     description = "User operations")
-public class AccountCreationApi {
+public class RegisterApi {
 
     @Autowired
     LanguageUtils languageUtils;
