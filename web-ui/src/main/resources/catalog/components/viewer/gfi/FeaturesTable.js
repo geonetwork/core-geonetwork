@@ -43,8 +43,8 @@
           ctrl: 'gnFeaturesTable'
         },
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
-          'featurestable.html',
-        link: function (scope, element, attrs, ctrls) {
+            'featurestable.html',
+        link: function(scope, element, attrs, ctrls) {
           ctrls.ctrl.initTable(element.find('table'));
         }
       };
@@ -69,7 +69,8 @@
                   // Hackish over event from:
                   // https://github.com/wenzhixin/bootstrap-table/issues/782
                   var row = $(e.currentTarget).parents('table')
-                    .data()['bootstrap.table'].data[$(e.currentTarget).data('index')];
+                    .data()['bootstrap.table']
+                    .data[$(e.currentTarget).data('index')];
                   if (!row) { return; }
                   var feature = this.loader.getFeatureFromRow(row);
                   var source = this.featuresTablesCtrl.fOverlay.getSource();
@@ -81,13 +82,14 @@
                   // Hackish over event from:
                   // https://github.com/wenzhixin/bootstrap-table/issues/782
                   var row = $(e.currentTarget).parents('table')
-                      .data()['bootstrap.table'].data[$(e.currentTarget).data('index')];
+                      .data()['bootstrap.table']
+                    .data[$(e.currentTarget).data('index')];
                   if (!row) { return; }
                   var source = this.featuresTablesCtrl.fOverlay.getSource();
                   source.clear();
                 }.bind(this));
 
-              };
+              }
             }.bind(this),
             onDblClickRow: function(row, elt) {
               if (!this.map) {
@@ -101,15 +103,15 @@
                 });
                 this.map.beforeRender(pan);
                 this.map.getView().fit(
-                  feature.getGeometry(),
-                  this.map.getSize(),
-                  { minResolution: 40 }
+                    feature.getGeometry(),
+                    this.map.getSize(),
+                    { minResolution: 40 }
                 );
               }
 
             }.bind(this),
             showExport: true,
-            exportTypes: [ 'csv' ],
+            exportTypes: ['csv'],
             exportDataType: 'all'
           },bstConfig));
     }.bind(this));

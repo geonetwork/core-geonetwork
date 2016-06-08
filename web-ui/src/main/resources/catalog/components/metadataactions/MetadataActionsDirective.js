@@ -173,7 +173,8 @@
               scope.ids.splice(existIndex, 1);
               method = 'delete';
             }
-            $http[method]('../api/records/' + scope.metadataUuid + '/tags?id=' + c.id)
+            $http[method]('../api/records/' +
+                          scope.metadataUuid + '/tags?id=' + c.id)
                 .then(function() {
                   scope.currentCategories.push(c.name);
                 }, function(response) {
@@ -220,9 +221,9 @@
 
           scope.init = function(event) {
             return $http.get('../api/groups?profile=Editor', {cache: true}).
-            success(function(groups) {
-              scope.groups = groups;
-            });
+                success(function(groups) {
+                  scope.groups = groups;
+                });
           };
 
           scope.sortByLabel = function(group) {

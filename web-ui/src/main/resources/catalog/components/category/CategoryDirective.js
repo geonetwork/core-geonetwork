@@ -76,7 +76,8 @@
             scope.report = null;
             var defer = $q.defer();
             var params = [];
-            var url = '../api/records/tags?' + (replace ? 'clear=true&id=' : 'id=');
+            var url = '../api/records/tags?' +
+                      (replace ? 'clear=true&id=' : 'id=');
 
             angular.forEach(scope.categories, function(c) {
               if (c.checked === true) {

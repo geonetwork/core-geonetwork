@@ -266,7 +266,10 @@
   geonetwork.GnSolrRequest.prototype.search_ =
       function(qParams, solrParams, quiet) {
 
-    var url = this.getRequestUrl_(qParams, angular.extend({}, this.page, solrParams))
+    var url = this.getRequestUrl_(
+        qParams,
+        angular.extend({}, this.page, solrParams)
+        );
 
     return this.$http.get(url).then(angular.bind(this,
         function(solrResponse) {
@@ -507,13 +510,13 @@
    * @param {object} qParams all element that helps to build the `q` param
    * @param {object} solrParams a map with all params name and value for solr
    * @param {undefined|object} state of `this.requestParams`
-   * @returns {string} The merged url
+   * @return {string} The merged url
    */
   geonetwork.GnSolrRequest.prototype.getMergedUrl =
       function(qParams_, solrParams_, state) {
 
-        var p = this.getMergedParams_(qParams_, solrParams_, state);
-        return this.getRequestUrl_(p.qParams, p.solrParams);
+    var p = this.getMergedParams_(qParams_, solrParams_, state);
+    return this.getRequestUrl_(p.qParams, p.solrParams);
   };
 
   /**
@@ -523,17 +526,17 @@
    * @param {object} qParams all element that helps to build the `q` param
    * @param {object} solrParams a map with all params name and value for solr
    * @param {undefined|object} state of `this.requestParams`
-   * @returns {string} The merged url
+   * @return {string} The merged url
    */
   geonetwork.GnSolrRequest.prototype.getMergedParams_ =
       function(qParams_, solrParams_, state) {
 
-        var baseObj = state || this.requestParams;
-        return {
-          qParams: this.getMergedQParams_(qParams_, baseObj),
-          solrParams:   this.getMergedSolrParams_(solrParams_, baseObj)
-        }
-      };
+    var baseObj = state || this.requestParams;
+    return {
+      qParams: this.getMergedQParams_(qParams_, baseObj),
+      solrParams: this.getMergedSolrParams_(solrParams_, baseObj)
+    };
+  };
 
   //TODO: confusing types, qParams is an object with (params,any,geometry) keys,
   //TODO: while this.requestParams.qParams is just the params object
@@ -541,28 +544,28 @@
   geonetwork.GnSolrRequest.prototype.getMergedQParams_ =
       function(qParams_, baseObj) {
 
-        return  {
-          params: angular.extend({}, baseObj.qParams, qParams_.params),
-          any: qParams_.any || baseObj.any,
-          geometry: qParams_.geometry || baseObj.geometry
-        }
-      };
+    return {
+      params: angular.extend({}, baseObj.qParams, qParams_.params),
+      any: qParams_.any || baseObj.any,
+      geometry: qParams_.geometry || baseObj.geometry
+    };
+  };
 
   geonetwork.GnSolrRequest.prototype.getMergedSolrParams_ =
       function(solrParams_, baseObj) {
-        return angular.extend({}, baseObj.solrParams, solrParams_);
-      };
+    return angular.extend({}, baseObj.solrParams, solrParams_);
+  };
 
   geonetwork.GnSolrRequest.prototype.getRequestUrl_ =
       function(qParams, solrParams) {
-        return this.baseUrl + this.buildUrlParams_(qParams, solrParams);
-      };
+    return this.baseUrl + this.buildUrlParams_(qParams, solrParams);
+  };
 
   geonetwork.GnSolrRequest.prototype.buildUrlParams_ =
       function(qParams, solrParams) {
-        return this.buildQParam_(qParams) +
+    return this.buildQParam_(qParams) +
                this.parseKeyValue_(solrParams);
-      };
+  };
 
   /**
    * Build the qParams string from
@@ -692,7 +695,7 @@
     return this.states_.pop();
   };
   geonetwork.GnSolrRequest.prototype.getState = function(idx) {
-    var idx_ = idx || this.states_.length-1;
+    var idx_ = idx || this.states_.length - 1;
     return idx_ >= 0 && this.states_[idx_] || null;
   };
 

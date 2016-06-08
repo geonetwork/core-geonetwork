@@ -9,6 +9,18 @@
           <h4 class="modal-title" id="translationModalLabel" translate>harvesterName</h4>
         </div>
         <div class="modal-body">
+
+          <table class="table table-striped">
+            <tr
+              data-ng-repeat="(key, value) in sourcesSelected.label">
+              <td>{{key | translate}}</td>
+              <td><input type="text" class="form-control"
+                         value="{{value}}"
+                         data-ng-model="sourcesSelected.label[key]"
+              /></td>
+            </tr>
+          </table>
+
           <div data-ng-repeat="lang in languages | orderBy : 'name'">
             <label class="control-label">{{lang.name}}</label>
             <input class="form-control" data-ng-model="harvester.site.translations[lang.id]"/>

@@ -56,7 +56,7 @@
        * Delete a category
        */
       $scope.deleteCategory = function(id) {
-        $http.delete('../api/tags/'+ id)
+        $http.delete('../api/tags/' + id)
             .success(function(data) {
               $scope.unselectCategory();
               loadCategories();
@@ -75,14 +75,14 @@
        */
       $scope.saveCategory = function() {
         $http.put('../api/tags/' + $scope.categorySelected.id,
-          $scope.categorySelected).success(function(data) {
-              $scope.unselectCategory();
-              loadCategories();
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('categoryUpdated'),
-                timeout: 2,
-                type: 'success'});
-            })
+            $scope.categorySelected).success(function(data) {
+          $scope.unselectCategory();
+          loadCategories();
+          $rootScope.$broadcast('StatusUpdated', {
+            msg: $translate('categoryUpdated'),
+            timeout: 2,
+            type: 'success'});
+        })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('categoryUpdateError'),
@@ -96,10 +96,10 @@
         $scope.unselectCategory();
         $scope.categorySelected = {
           'id': '',
-          name: '',
+          name: ''
           // label: {
-            // TODO: Should define default language
-            // based on catalog languages
+          // TODO: Should define default language
+          // based on catalog languages
           // }
         };
         $timeout(function() {

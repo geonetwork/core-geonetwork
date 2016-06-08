@@ -44,8 +44,31 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_baselayerswitcher');
   goog.require('gn_draw');
+  goog.require('gn_featurestable');
   goog.require('gn_graticule');
   goog.require('gn_layermanager');
   goog.require('gn_localisation');
@@ -62,10 +85,9 @@
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
   goog.require('gn_wfs');
-  goog.require('gn_wps');
   goog.require('gn_wfsfilter');
   goog.require('gn_wmsimport');
-  goog.require('gn_featurestable');
+  goog.require('gn_wps');
 
   /**
    * @ngdoc overview

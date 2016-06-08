@@ -543,19 +543,19 @@
         load: function() {
           return $http.get('../api/site/settings', {cache: true})
             .then(function(response) {
-            angular.extend(gnConfig, response.data);
-            // Replace / by . in settings name
-            angular.forEach(gnConfig, function (value, key) {
-              if(key.indexOf('/') !== -1) {
-                gnConfig[key.replace(/\//g, '.')] = value;
-                delete gnConfig[key];
-              }
-            });
-            // Override parameter if set in URL
-            if (window.location.search.indexOf('with3d') !== -1) {
-              gnConfig['map.is3DModeAllowed'] = true;
-            }
-          });
+                angular.extend(gnConfig, response.data);
+                // Replace / by . in settings name
+                angular.forEach(gnConfig, function(value, key) {
+                  if (key.indexOf('/') !== -1) {
+                    gnConfig[key.replace(/\//g, '.')] = value;
+                    delete gnConfig[key];
+                  }
+                });
+                // Override parameter if set in URL
+                if (window.location.search.indexOf('with3d') !== -1) {
+                  gnConfig['map.is3DModeAllowed'] = true;
+                }
+              });
         },
 
         /**
