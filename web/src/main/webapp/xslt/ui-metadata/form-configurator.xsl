@@ -375,9 +375,12 @@
               </xsl:call-template>
             </xsl:variable>
 
+            <xsl:variable name="originalNode"
+                          select="gn-fn-metadata:getOriginalNode($metadata, .)"/>
+
             <xsl:variable name="refToDelete">
               <xsl:call-template name="get-ref-element-to-delete">
-                <xsl:with-param name="node" select="$currentNode"/>
+                <xsl:with-param name="node" select="$originalNode"/>
                 <xsl:with-param name="delXpath" select="$del"/>
               </xsl:call-template>
             </xsl:variable>
