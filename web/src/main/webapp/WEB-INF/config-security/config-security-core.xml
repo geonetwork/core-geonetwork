@@ -41,7 +41,6 @@
         <sec:filter-chain pattern="/srv/swagger-resources/**" filters=""/>
         <sec:filter-chain pattern="/srv/v2/**" filters=""/>
         <sec:filter-chain pattern="/doc/**" filters=""/>
-        <sec:filter-chain pattern="/api-doc/**" filters=""/>
         <sec:filter-chain pattern="/proxy**" filters=""/>
         <!-- wroAPI is protected for admin only -->
         <sec:filter-chain pattern="/static/(!wroAPI)" filters=""/>
