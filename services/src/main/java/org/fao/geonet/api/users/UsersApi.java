@@ -192,7 +192,7 @@ public class UsersApi {
         value = "Resets user password",
         notes = "Resets the user password.",
         nickname = "resetUserPassword")
-    @RequestMapping(value = "/resetpassword/{userIdentifier}",
+    @RequestMapping(value = "/{userIdentifier}/actions/forget-password",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)

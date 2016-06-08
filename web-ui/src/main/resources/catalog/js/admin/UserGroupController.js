@@ -285,7 +285,8 @@
           password2: $scope.resetPassword2
         };
 
-        $http.post('../api/users/resetpassword/' + $scope.userSelected.id, null, {params: params})
+        $http.post('../api/users/' + $scope.userSelected.id + 
+          '/actions/forget-password' , null, {params: params})
             .success(function(data) {
               $scope.resetPassword1 = null;
               $scope.resetPassword2 = null;
