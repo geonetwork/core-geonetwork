@@ -24,6 +24,7 @@
 package org.fao.geonet.api.users;
 
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.users.model.MeResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import javax.servlet.http.HttpSession;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -58,12 +61,10 @@ public class MeApi {
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public MeResponse getMe() throws Exception {
-        ServiceContext context = ServiceContext.get();
-        if (context == null) {
-            return null;
-        }
-        UserSession userSession = context.getUserSession();
+    public MeResponse getMe(
+        HttpSession session
+    ) throws Exception {
+        UserSession userSession = ApiUtils.getUserSession(session);
         return userSession.isAuthenticated() ?
             new MeResponse()
                 .setId(userSession.getUserId())
