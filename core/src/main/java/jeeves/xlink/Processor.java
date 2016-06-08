@@ -211,6 +211,7 @@ public final class Processor {
         }
         Element remoteFragment = null;
         try {
+            // TODO-API: Support local protocol on /api/registries/
             if (uri.startsWith(XLink.LOCAL_PROTOCOL)) {
                 LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
                 request.setDebug(false);

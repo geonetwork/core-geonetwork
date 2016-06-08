@@ -43,6 +43,7 @@ import java.util.List;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasType;
 
+@Deprecated
 public class GetTypes implements Service {
 
     private static String[] elementNames = {"label", "description"};

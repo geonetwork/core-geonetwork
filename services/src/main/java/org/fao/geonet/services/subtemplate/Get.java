@@ -54,6 +54,7 @@ import java.util.List;
  *
  * @author francois
  */
+@Deprecated
 public class Get implements Service {
 
     public static final char SEPARATOR = '~';
