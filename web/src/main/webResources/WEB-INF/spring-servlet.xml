@@ -95,11 +95,11 @@
     <mvc:message-converters>
       <bean class="org.fao.geonet.api.DOMElementMessageConverter"/>
 
-      <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+      <!--<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
         <property name="objectMapper">
           <bean class="org.fao.geonet.util.spring.HibernateAwareObjectMapper" />
         </property>
-      </bean>
+      </bean>-->
     </mvc:message-converters>
   </mvc:annotation-driven>
 </beans>
