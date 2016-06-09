@@ -59,11 +59,11 @@ import io.swagger.annotations.ApiParam;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/api/registries",
+    "/api/registries/entries",
     "/api/" + API.VERSION_0_1 +
-        "/registries"
+        "/registries/entries"
 })
-public class DirectoryApi {
+public class DirectoryEntriesApi {
     private static final char SEPARATOR = '~';
 
     @ApiOperation(value = "Get a directory entry",
@@ -72,7 +72,7 @@ public class DirectoryApi {
             "inserted in metadata records using XLinks. XLinks can be remote or " +
             "local (TODO: support local XLink in API).")
     @RequestMapping(
-        value = "/entries/{uuid}",
+        value = "/{uuid}",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE
