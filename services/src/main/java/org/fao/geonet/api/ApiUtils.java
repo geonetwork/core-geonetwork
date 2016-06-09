@@ -35,7 +35,10 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.springframework.context.ApplicationContext;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -45,6 +48,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -148,5 +152,31 @@ public class ApiUtils {
             throw new SecurityException("You can't view this record");
         }
         return metadata;
+    }
+
+    /**
+     *
+     * @param img
+     * @param outFile
+     * @throws IOException
+     */
+    public static void createFavicon(Image img, Path outFile) throws IOException {
+        int width = 32;
+        int height = 32;
+        String type = "png";
+
+        Image thumb = img.getScaledInstance(width, height,
+            BufferedImage.SCALE_SMOOTH);
+
+        BufferedImage bimg = new BufferedImage(width, height,
+            BufferedImage.TRANSLUCENT);
+
+        Graphics2D g = bimg.createGraphics();
+        g.drawImage(thumb, 0, 0, null);
+        g.dispose();
+
+        try (OutputStream out = Files.newOutputStream(outFile)) {
+            ImageIO.write(bimg, type, out);
+        }
     }
 }

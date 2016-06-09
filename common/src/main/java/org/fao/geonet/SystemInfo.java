@@ -33,9 +33,14 @@ import java.util.Arrays;
  * @author Jesse on 10/21/2014.
  */
 public class SystemInfo {
-    public static final String STAGE_TESTING = "testing";
-    public static final String STAGE_DEVELOPMENT = "development";
-    public static final String STAGE_PRODUCTION = "production";
+    public enum Staging {
+        testing,
+        development,
+        production;
+    }
+    public static final String STAGE_TESTING = Staging.testing.toString();
+    public static final String STAGE_DEVELOPMENT = Staging.development.toString();
+    public static final String STAGE_PRODUCTION = Staging.production.toString();
     private String stagingProfile = STAGE_PRODUCTION;
     private String buildDate;
     private String version;

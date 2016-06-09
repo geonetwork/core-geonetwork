@@ -153,6 +153,7 @@ public abstract class AbstractFullViewFormatterTest extends AbstractFormatterTes
         public Format invoke() throws Exception {
             view = null;
             MockHttpServletRequest request = new MockHttpServletRequest();
+            request.getSession();
             MockHttpServletResponse response = new MockHttpServletResponse();
 //            measureFormatterPerformance(request, formatterId);
 

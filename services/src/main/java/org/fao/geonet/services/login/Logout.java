@@ -36,7 +36,7 @@ import java.nio.file.Path;
 /**
  * Logout the user
  */
-
+@Deprecated
 public class Logout implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

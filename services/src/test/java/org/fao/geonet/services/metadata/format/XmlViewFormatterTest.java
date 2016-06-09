@@ -64,6 +64,7 @@ public class XmlViewFormatterTest extends AbstractFormatterTest {
     @SuppressWarnings("unchecked")
     public void testBasicFormat() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         request.addParameter("html", "true");
 
         final String formatterId = "xml_view";

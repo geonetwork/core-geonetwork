@@ -34,25 +34,38 @@ import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SettingRepository;
+import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.IO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -62,7 +75,8 @@ import io.swagger.annotations.ApiParam;
 import jeeves.component.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
+
+import static org.apache.commons.fileupload.util.Streams.checkFileName;
 
 /**
  *
@@ -122,7 +136,7 @@ public class SiteApi {
         @RequestParam(
             required = false
         )
-        SettingSet[] set,
+            SettingSet[] set,
         @ApiParam(
             value = "Setting key",
             required = false
@@ -130,7 +144,7 @@ public class SiteApi {
         @RequestParam(
             required = false
         )
-        String[] key,
+            String[] key,
         HttpServletRequest request,
         HttpSession httpSession
     ) throws Exception {
@@ -156,14 +170,14 @@ public class SiteApi {
                     }
                 }
             }
-            if (key != null && key.length > 0){
+            if (key != null && key.length > 0) {
                 Collections.addAll(settingList, key);
             }
             List<org.fao.geonet.domain.Setting> settings = sm.getSettings(settingList.toArray(new String[0]));
             ListIterator<org.fao.geonet.domain.Setting> iterator = settings.listIterator();
 
             // Cleanup internal settings for not authenticated users.
-            while(iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 org.fao.geonet.domain.Setting s = iterator.next();
                 if (s.isInternal() && profile == null) {
                     settings.remove(s);
@@ -175,7 +189,6 @@ public class SiteApi {
             return response;
         }
     }
-
 
 
     @ApiOperation(
@@ -212,6 +225,25 @@ public class SiteApi {
     ) throws Exception {
         ApiUtils.createServiceContext(request);
         return ProfileManager.isCasEnabled();
+    }
+
+    @Autowired
+    private SystemInfo info;
+
+    @ApiOperation(
+        value = "Update staging profile",
+        notes = "TODO: Needs doc",
+        nickname = "updateStagingProfile")
+    @RequestMapping(
+        path = "/info/staging/{profile}",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('Administrator')")
+    public ResponseEntity updateStagingProfile(
+        @PathVariable
+            SystemInfo.Staging profile) {
+        this.info.setStagingProfile(profile.toString());
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @ApiOperation(
@@ -260,5 +292,85 @@ public class SiteApi {
     public SystemInfo getSystemInfo(
     ) throws Exception {
         return ApplicationContextHolder.get().getBean(SystemInfo.class);
+    }
+
+
+    @ApiOperation(
+        value = "Set catalog logo",
+        notes = "Logos are stored in the data directory " +
+            "resources/images/harvesting as PNG or GIF images. " +
+            "When a logo is assigned to the catalog, a new " +
+            "image is created in images/logos/<catalogUuid>.png.",
+        nickname = "setLogo")
+    @RequestMapping(
+        path = "/logo",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.PUT)
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('UserAdmin')")
+    @ResponseBody
+    public ResponseEntity setLogo(
+        @ApiParam(value = "Logo to use for the catalog")
+        @RequestParam("file")
+            String file,
+        @ApiParam(
+            value = "Create favicon too",
+            required = false
+        )
+        @RequestParam(
+            defaultValue = "false",
+            required = false
+        )
+            boolean asFavicon
+
+    ) throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        Path logoDirectory = Resources.locateHarvesterLogosDirSMVC(appContext);
+
+        checkFileName(file);
+
+        SettingManager settingMan = appContext.getBean(SettingManager.class);
+        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
+        String nodeUuid = settingMan.getSiteId();
+
+        try {
+            Path logoFilePath = logoDirectory.resolve(file);
+            Path nodeLogoDirectory = dataDirectory.getResourcesDir()
+                .resolve("images");
+            if (!Files.exists(logoFilePath)) {
+                logoFilePath = nodeLogoDirectory.resolve("harvesting").resolve(file);
+            }
+            try (InputStream inputStream = Files.newInputStream(logoFilePath)) {
+                BufferedImage source = ImageIO.read(inputStream);
+
+                if (asFavicon) {
+                    ApiUtils.createFavicon(
+                        source,
+                        dataDirectory.getResourcesDir().resolve("images").resolve("favicon.png"));
+                } else {
+                    Path logo = nodeLogoDirectory.resolve("logos").resolve(nodeUuid + ".png");
+                    Path defaultLogo = nodeLogoDirectory.resolve("images").resolve("logo.png");
+
+                    if (!file.endsWith(".png")) {
+                        try (
+                            OutputStream logoOut = Files.newOutputStream(logo);
+                            OutputStream defLogoOut = Files.newOutputStream(defaultLogo);
+                        ) {
+                            ImageIO.write(source, "png", logoOut);
+                            ImageIO.write(source, "png", defLogoOut);
+                        }
+                    } else {
+                        Files.deleteIfExists(logo);
+                        IO.copyDirectoryOrFile(logoFilePath, logo, false);
+                        Files.deleteIfExists(defaultLogo);
+                        IO.copyDirectoryOrFile(logoFilePath, defaultLogo, false);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new Exception(
+                "Unable to move uploaded thumbnail to destination directory. Error: " + e.getMessage());
+        }
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }
