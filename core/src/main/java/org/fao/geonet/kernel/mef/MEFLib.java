@@ -454,11 +454,11 @@ public class MEFLib {
                 return FULL;
             // throw new MissingParameterEx("format");
 
-            if (format.equals("simple"))
+            if (format.equalsIgnoreCase("simple"))
                 return SIMPLE;
-            if (format.equals("partial"))
+            if (format.equalsIgnoreCase("partial"))
                 return PARTIAL;
-            if (format.equals("full"))
+            if (format.equalsIgnoreCase("full"))
                 return FULL;
 
             throw new BadParameterEx("format", format);
@@ -492,7 +492,7 @@ public class MEFLib {
          *      +---- all private documents and thumbnails
          * </pre>
          */
-        V1,
+        V1(Constants.MEF_V1_ACCEPT_TYPE),
         /**
          * Version 2 is composed of one or more metadata records. Each records are stored in a
          * directory named using record's uuid.
@@ -513,9 +513,38 @@ public class MEFLib {
          *          +---- all private documents and thumbnails
          * </pre>
          */
-        V2
-    }
+        V2(Constants.MEF_V2_ACCEPT_TYPE);
 
+        String acceptType;
+
+        Version(String acceptType) {
+            this.acceptType = acceptType;
+        }
+
+        /**
+         * Return version 2 by default.
+         * @param acceptType
+         * @return
+         */
+        static public Version find(String acceptType) {
+            for (Version v : values()) {
+                if (v.acceptType.equalsIgnoreCase(acceptType)) {
+                    return v;
+                }
+            }
+            return V2;
+        }
+
+        @Override
+        public String toString() {
+            return this.acceptType;
+        }
+
+        public static class Constants {
+            public static final String MEF_V1_ACCEPT_TYPE = "application/x-gn-mef-1-zip";
+            public static final String MEF_V2_ACCEPT_TYPE = "application/x-gn-mef-2-zip";
+        }
+    }
 }
 
 // =============================================================================

@@ -27,6 +27,7 @@ import com.google.common.collect.Sets;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
@@ -133,8 +134,14 @@ public class ApiUtils {
         MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
         Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
         AccessManager accessManager = appContext.getBean(AccessManager.class);
+        if (metadata == null) {
+            throw new ResourceNotFoundException(String.format(
+                "Record with UUID %s not found in this catalog",
+                metadataUuid));
+        }
         if (!accessManager.canEdit(createServiceContext(request), String.valueOf(metadata.getId()))) {
-            throw new SecurityException("You can't edit this record");
+            throw new SecurityException(String.format(
+                "You can't view record with UUID %S", metadataUuid));
         }
         return metadata;
     }
@@ -142,14 +149,20 @@ public class ApiUtils {
     /**
      * Check if the current user can view this record.
      */
-    public static Metadata canViewRecord(String metadataUuid, HttpServletRequest request) {
+    public static Metadata canViewRecord(String metadataUuid, HttpServletRequest request) throws ResourceNotFoundException {
         ApplicationContext appContext = ApplicationContextHolder.get();
         MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
         Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
+        if (metadata == null) {
+            throw new ResourceNotFoundException(String.format(
+                "Record with UUID %s not found in this catalog",
+                metadataUuid));
+        }
         try {
             Lib.resource.checkPrivilege(createServiceContext(request), String.valueOf(metadata.getId()), ReservedOperation.view);
         } catch (Exception e) {
-            throw new SecurityException("You can't view this record");
+            throw new SecurityException(String.format(
+                "You can't view record with UUID %S", metadataUuid));
         }
         return metadata;
     }

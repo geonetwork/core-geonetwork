@@ -59,9 +59,9 @@ import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.config.LogUtils;
-import org.fao.geonet.services.metadata.format.Format;
-import org.fao.geonet.services.metadata.format.FormatType;
-import org.fao.geonet.services.metadata.format.FormatterWidth;
+import org.fao.geonet.api.records.formatters.FormatterApi;
+import org.fao.geonet.api.records.formatters.FormatType;
+import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -93,7 +93,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import java.io.File;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -221,17 +220,17 @@ public class Geonetwork implements ApplicationHandler {
         try {
 				  String[] configs = { Geonet.File.JZKITAPPLICATIONCONTEXT };
           ApplicationContext app_context = new  ClassPathXmlApplicationContext( configs, _applicationContext );
-    
+
           // to have access to the GN context in spring-managed objects
           ContextContainer cc = (ContextContainer)_applicationContext.getBean("ContextGateway");
           cc.setSrvctx(context);
 
-    
+
         } catch (Exception e) {
           logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + e.getMessage());
           e.printStackTrace();
         }
-    
+
         //------------------------------------------------------------------------
         //--- initialize SchemaManager
 
@@ -424,7 +423,7 @@ public class Geonetwork implements ApplicationHandler {
     }
 
     private void fillCaches(final ServiceContext context) {
-        final Format formatService = context.getBean(Format.class); // this will initialize the formatter
+        final FormatterApi formatService = context.getBean(FormatterApi.class); // this will initialize the formatter
 
         Thread fillCaches = new Thread(new Runnable() {
             @Override

@@ -3,19 +3,19 @@ import jeeves.server.context.ServiceContext
 import org.fao.geonet.constants.Geonet
 import org.fao.geonet.guiservices.metadata.GetRelated
 import org.fao.geonet.kernel.GeonetworkDataDirectory
-import org.fao.geonet.services.metadata.format.FormatType
-import org.fao.geonet.services.metadata.format.groovy.Environment
-import org.fao.geonet.services.metadata.format.groovy.util.AssociatedLink
-import org.fao.geonet.services.metadata.format.groovy.util.Direction
-import org.fao.geonet.services.metadata.format.groovy.util.LinkBlock
-import org.fao.geonet.services.metadata.format.groovy.util.LinkType
-import org.fao.geonet.services.metadata.format.groovy.util.NavBarItem
+import org.fao.geonet.api.records.formatters.FormatType
+import org.fao.geonet.api.records.formatters.groovy.Environment
+import org.fao.geonet.api.records.formatters.groovy.util.AssociatedLink
+import org.fao.geonet.api.records.formatters.groovy.util.Direction
+import org.fao.geonet.api.records.formatters.groovy.util.LinkBlock
+import org.fao.geonet.api.records.formatters.groovy.util.LinkType
+import org.fao.geonet.api.records.formatters.groovy.util.NavBarItem
 import org.fao.geonet.utils.Xml
 import org.jdom.Element
 
 public class Handlers {
-    private org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
-    private org.fao.geonet.services.metadata.format.groovy.Functions f
+    private org.fao.geonet.api.records.formatters.groovy.Handlers handlers;
+    private org.fao.geonet.api.records.formatters.groovy.Functions f
     private Environment env
 
     common.Matchers matchers

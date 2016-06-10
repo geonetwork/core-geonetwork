@@ -53,6 +53,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -63,6 +64,9 @@ import io.swagger.annotations.ApiParam;
     "/api/" + API.VERSION_0_1 +
         "/registries/entries"
 })
+@Api(value = "registries",
+    tags = "registries",
+    description = "Registries related operations")
 public class DirectoryEntriesApi {
     private static final char SEPARATOR = '~';
 

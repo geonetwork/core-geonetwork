@@ -23,20 +23,22 @@
 
 package org.fao.geonet.api.records;
 
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -53,9 +55,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,10 +69,12 @@ import javax.servlet.http.HttpServletResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
-import springfox.documentation.annotations.ApiIgnore;
+
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 
 @RequestMapping(value = {
     "/api/records",
@@ -79,6 +87,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Controller("records")
 @ReadWriteController
 public class MetadataApi implements ApplicationContextAware {
+
     @Autowired
     SchemaManager _schemaManager;
 
@@ -93,21 +102,94 @@ public class MetadataApi implements ApplicationContextAware {
 
 
     @ApiOperation(value = "Get a metadata record",
+        notes = "Depending on the accept header the appropriate formatter is used. " +
+            "When requesting a ZIP, a MEF version 2 file is returned. " +
+            "When requesting HTML, the default formatter is used.",
         nickname = "get")
     @RequestMapping(value = "/{metadataUuid}",
         method = RequestMethod.GET,
+        consumes = {
+            MediaType.ALL_VALUE
+        },
         produces = {
+            MediaType.TEXT_HTML_VALUE,
             MediaType.APPLICATION_XML_VALUE,
-            MediaType.TEXT_HTML_VALUE
+            MediaType.APPLICATION_XHTML_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE,
+            "application/pdf",
+            "application/zip",
+            MEF_V1_ACCEPT_TYPE,
+            MEF_V2_ACCEPT_TYPE
         })
     public
     @ResponseBody
-    Object serviceSpecificExec(
+    void getRecord(
         @ApiParam(value = "Record UUID.",
             required = true)
         @PathVariable
             String metadataUuid,
-        @ApiParam(value = "Add XSD schema location based on standard configuration",
+        @ApiParam(value = "Accept header should indicate which is the appropriate format " +
+            "to return. It could be text/html, application/xml, application/zip, ..." +
+            "If no appropriate Accept header found, the XML format is returned.",
+            required = true)
+        @RequestHeader(
+            value = HttpHeaders.ACCEPT,
+            defaultValue = MediaType.APPLICATION_XML_VALUE,
+            required = false
+        )
+            String acceptHeader,
+        HttpServletResponse response,
+        HttpServletRequest request
+    )
+        throws Exception {
+        ApiUtils.canViewRecord(metadataUuid, request);
+
+        List<String> accept = Arrays.asList(acceptHeader.split(","));
+
+        String defaultFormatter = "xsl-view";
+        if (accept.contains(MediaType.TEXT_HTML_VALUE) ||
+            accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE) ||
+            accept.contains("application/pdf")) {
+            response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
+        } else if (
+            accept.contains(MediaType.APPLICATION_XML_VALUE) ||
+            accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+            response.sendRedirect(metadataUuid + "/formatters/xml");
+        } else if (
+            accept.contains("application/zip") ||
+                accept.contains(MEF_V1_ACCEPT_TYPE) ||
+                accept.contains(MEF_V2_ACCEPT_TYPE)) {
+            response.setHeader(HttpHeaders.ACCEPT, MEF_V2_ACCEPT_TYPE);
+            response.sendRedirect(metadataUuid + "/formatters/zip");
+        } else {
+            response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
+            response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
+        }
+    }
+
+
+    @ApiOperation(value = "Get a metadata record as XML",
+        notes = "",
+        nickname = "getRecordAsXml")
+    @RequestMapping(value =
+        {
+            "/{metadataUuid}/formatters/xml",
+            "/{metadataUuid}/formatters/json"
+        },
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    public
+    @ResponseBody
+    Object getRecordAsXML(
+        @ApiParam(value = "Record UUID.",
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(value = "Add XSD schema location based on standard configuration " +
+            "(see schema-ident.xml).",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
             boolean addSchemaLocation,
@@ -115,39 +197,29 @@ public class MetadataApi implements ApplicationContextAware {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
             boolean increasePopularity,
-        HttpServletResponse response,
-        HttpServletRequest request,
-        @ApiIgnore
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = MediaType.APPLICATION_XML_VALUE
         )
-            String contentType
+            String acceptHeader,
+        HttpServletResponse response,
+        HttpServletRequest request
     )
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataManager = appContext.getBean(DataManager.class);
-        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
-        Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
-        if (metadata == null) {
-            // TODO: i18n
-            throw new ResourceNotFoundException(String.format(
-                "Metadata with UUID '%s' not found in this catalog.",
-                metadataUuid
-            ));
-        }
-
+        Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
 
         ServiceContext context = ApiUtils.createServiceContext(request);
         try {
             Lib.resource.checkPrivilege(context,
-                metadata.getId() + "",
+                String.valueOf(metadata.getId()),
                 ReservedOperation.view);
         } catch (Exception e) {
             // TODO: i18n
             // TODO: Report exception in JSON format
             throw new SecurityException(String.format(
-                "Metadata with UUID '%s' not shared with you.",
+                "Metadata with UUID '%s' is not shared with you.",
                 metadataUuid
             ));
         }
@@ -156,39 +228,153 @@ public class MetadataApi implements ApplicationContextAware {
             dataManager.increasePopularity(context, metadata.getId() + "");
         }
 
-        if (contentType.equals(MediaType.TEXT_HTML_VALUE)) {
-            Element xml = new Element("mode");
-            response.setHeader("Content-Disposition", String.format(
-                "inline; filename=\"%s.html\"",
-                metadata.getUuid()
-            ));
-            // TODO: use formatter
-            return xml;
-        } else {
-            Element xml = metadata.getXmlData(false);
-            if (addSchemaLocation) {
-                Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
-                    metadata.getDataInfo().getSchemaId(), context);
+        Element xml = metadata.getXmlData(false);
+        if (addSchemaLocation) {
+            Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
+                metadata.getDataInfo().getSchemaId(), context);
 
-                if (schemaLocAtt != null) {
-                    if (xml.getAttribute(
-                        schemaLocAtt.getName(),
-                        schemaLocAtt.getNamespace()) == null) {
-                        xml.setAttribute(schemaLocAtt);
-                        // make sure namespace declaration for schemalocation is present -
-                        // remove it first (does nothing if not there) then add it
-                        xml.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
-                        xml.addNamespaceDeclaration(schemaLocAtt.getNamespace());
-                    }
+            if (schemaLocAtt != null) {
+                if (xml.getAttribute(
+                    schemaLocAtt.getName(),
+                    schemaLocAtt.getNamespace()) == null) {
+                    xml.setAttribute(schemaLocAtt);
+                    // make sure namespace declaration for schemalocation is present -
+                    // remove it first (does nothing if not there) then add it
+                    xml.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                    xml.addNamespaceDeclaration(schemaLocAtt.getNamespace());
                 }
             }
-
-            response.setHeader("Content-Disposition", String.format(
-                "inline; filename=\"%s.xml\"",
-                metadata.getUuid()
-            ));
-            return xml;
         }
+
+        boolean isJson = acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE);
+
+        response.setHeader("Content-Disposition", String.format(
+            "inline; filename=\"%s.%s\"",
+            metadata.getUuid(),
+            isJson ? "json" : "xml"
+        ));
+        return isJson ? Xml.getJSON(xml) : xml;
+    }
+
+    @ApiOperation(
+        value = "Get a metadata record as ZIP",
+        notes = "Metadata Exchange Format (MEF) is returned. MEF is a ZIP file containing " +
+            "the metadata as XML and some others files depending on the version requested. " +
+            "See http://geonetwork-opensource.org/manuals/trunk/eng/users/annexes/mef-format.html.",
+        nickname = "getRecordAsZip")
+    @RequestMapping(value = "/{metadataUuid}/formatters/zip",
+        method = RequestMethod.GET,
+        consumes = {
+            MediaType.ALL_VALUE
+        },
+        produces = {
+            "application/zip"
+        })
+    public
+    @ResponseBody
+    void getRecordAsZip(
+        @ApiParam(
+            value = "Record UUID.",
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(
+            value = "MEF file format.",
+            required = true)
+        @RequestParam(
+            required = false,
+            defaultValue = "full")
+            MEFLib.Format format,
+        @ApiParam(
+            value = "With related records (parent and service).",
+            required = false)
+        @RequestParam(
+            required = false,
+            defaultValue = "true")
+            boolean withRelated,
+        @ApiParam(
+            value = "Resolve XLinks in the records.",
+            required = false)
+        @RequestParam(
+            required = false,
+            defaultValue = "true")
+            boolean withXLinksResolved,
+        @ApiParam(
+            value = "Preserve XLink URLs in the records.",
+            required = false)
+        @RequestParam(
+            required = false,
+            defaultValue = "false")
+            boolean withXLinkAttribute,
+        @RequestHeader(
+            value = HttpHeaders.ACCEPT,
+            defaultValue = "application/x-gn-mef-2-zip"
+        )
+            String acceptHeader,
+        HttpServletResponse response,
+        HttpServletRequest request
+    )
+        throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
+        Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
+        Path file = null;
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        MEFLib.Version version = MEFLib.Version.find(acceptHeader);
+        if (version == MEFLib.Version.V1) {
+            // This parameter is deprecated in v2.
+            boolean skipUUID = false;
+            file = MEFLib.doExport(
+                context, metadataUuid, format.toString(),
+                skipUUID, withXLinksResolved, withXLinkAttribute
+            );
+        } else {
+            Set<String> tmpUuid = new HashSet<String>();
+            tmpUuid.add(metadataUuid);
+            // MEF version 2 support multiple metadata record by file.
+            if (withRelated) {
+                // Adding children in MEF file
+
+                // Creating request for services search
+                Element childRequest = new Element("request");
+                childRequest.addContent(new Element("parentUuid").setText(metadataUuid));
+                childRequest.addContent(new Element("to").setText("1000"));
+
+                // Get children to export - It could be better to use GetRelated service TODO
+                Set<String> childs = MetadataUtils.getUuidsToExport(
+                    metadataUuid, request, childRequest);
+                if (childs.size() != 0) {
+                    tmpUuid.addAll(childs);
+                }
+
+                // Creating request for services search
+                Element servicesRequest = new Element(Jeeves.Elem.REQUEST);
+                servicesRequest.addContent(new Element(
+                    org.fao.geonet.constants.Params.OPERATES_ON)
+                    .setText(metadataUuid));
+                servicesRequest.addContent(new Element(
+                    org.fao.geonet.constants.Params.TYPE)
+                    .setText("service"));
+
+                // Get linked services for export
+                Set<String> services = MetadataUtils.getUuidsToExport(
+                    metadataUuid, request, servicesRequest);
+                if (services.size() != 0) {
+                    tmpUuid.addAll(services);
+                }
+            }
+            Log.info(Geonet.MEF, "Building MEF2 file with " + tmpUuid.size()
+                + " records.");
+
+            file = MEFLib.doMEF2Export(context, tmpUuid, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute);
+        }
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
+            "inline; filename=\"%s.zip\"",
+            metadata.getUuid()
+        ));
+        response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
+        FileUtils.copyFile(file.toFile(), response.getOutputStream());
     }
 
 
@@ -224,25 +410,13 @@ public class MetadataApi implements ApplicationContextAware {
             int rows,
         HttpServletRequest request) throws Exception {
 
-        final ServiceContext context = ServiceContext.get();
-        ServiceManager serviceManager = context.getBean(ServiceManager.class);
-        GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
-        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        // TODO: Move to Utils
-        Metadata md = metadataRepository.findOneByUuid(metadataUuid);
-        if (md == null) {
-            md = metadataRepository.findOne(metadataUuid);
-            if (md == null) {
-                throw new IllegalArgumentException(String.format(
-                    "No Metadata found with uuid or id '%s'.", metadataUuid
-                ));
-            }
-        }
+        Metadata md = ApiUtils.canViewRecord(metadataUuid, request);
 
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
 
         // TODO PERF: ByPass XSL processing and create response directly
         // At least for related metadata and keep XSL only for links
+        final ServiceContext context = ApiUtils.createServiceContext(request);
         Element raw = new Element("root").addContent(Arrays.asList(
             new Element("gui").addContent(Arrays.asList(
                 new Element("language").setText(language.getISO3Language()),
@@ -250,6 +424,7 @@ public class MetadataApi implements ApplicationContextAware {
             )),
             MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
         ));
+        GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
 
         final Element transform = Xml.transform(raw, relatedXsl);

@@ -23,14 +23,14 @@
 
 package dublincore
 
-import org.fao.geonet.services.metadata.format.groovy.Environment
-import org.fao.geonet.services.metadata.format.groovy.util.*
+import org.fao.geonet.api.records.formatters.groovy.Environment
+import org.fao.geonet.api.records.formatters.groovy.util.*
 
 public class Handlers {
     public static final String TITLE_EL_NAME = 'dc:title'
     public static final String DESC_EL_NAME = 'dc:description'
-    protected org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
-    protected org.fao.geonet.services.metadata.format.groovy.Functions f
+    protected org.fao.geonet.api.records.formatters.groovy.Handlers handlers;
+    protected org.fao.geonet.api.records.formatters.groovy.Functions f
     protected Environment env
     common.Handlers commonHandlers
     public String rootEl

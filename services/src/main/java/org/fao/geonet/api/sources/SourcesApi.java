@@ -78,7 +78,7 @@ public class SourcesApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<Source> getSources() throws Exception {
-        ServiceContext context = ServiceContext.get();
+        ApplicationContext context = ApplicationContextHolder.get();
         // TODO-API: Check if site is added to normal sources ?
         return context.getBean(SourceRepository.class).findAll(SortUtils.createSort(Source_.name));
     }

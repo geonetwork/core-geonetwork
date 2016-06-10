@@ -25,7 +25,7 @@ package dublincore;
 
 import com.google.common.collect.Lists;
 
-import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
+import org.fao.geonet.api.records.formatters.AbstractFormatterTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -40,7 +40,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
-import static org.fao.geonet.services.metadata.format.FormatterWidth._100;
+import static org.fao.geonet.api.records.formatters.FormatterWidth._100;
 
 /**
  * @author Jesse on 10/17/2014.

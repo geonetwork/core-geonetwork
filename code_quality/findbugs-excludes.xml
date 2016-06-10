@@ -129,7 +129,7 @@
     <Method name="serviceSpecificExec"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.metadata.format.cache.StoreInfoAndData"/>
+    <Class name="org.fao.geonet.api.records.formatters.cache.StoreInfoAndData"/>
     <Bug pattern="EI_EXPOSE_REP2"/>
   </Match>
   <Match>
@@ -207,7 +207,7 @@
   <Match>
     <Or>
       <Class name="org.fao.geonet.wro4j.DiskbackedCache"/>
-      <Class name="org.fao.geonet.services.metadata.format.cache.FilesystemStore"/>
+      <Class name="org.fao.geonet.api.records.formatters.cache.FilesystemStore"/>
     </Or>
     <Bug pattern="DMI_EMPTY_DB_PASSWORD"/>
   </Match>
@@ -246,17 +246,17 @@
     <Method name="exec"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.metadata.format.ImageReplacedElementFactory"/>
+    <Class name="org.fao.geonet.api.records.formatters.ImageReplacedElementFactory"/>
     <Bug pattern="DC_DOUBLECHECK"/>
     <Method name="getSupportedExts"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.metadata.format.groovy.util.AssociatedLink"/>
+    <Class name="org.fao.geonet.api.records.formatters.groovy.util.AssociatedLink"/>
     <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
     <Method name="equals"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.metadata.format.groovy.util.LinkType"/>
+    <Class name="org.fao.geonet.api.records.formatters.groovy.util.LinkType"/>
     <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
   </Match>
   <Match>
