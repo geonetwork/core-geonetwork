@@ -518,7 +518,7 @@
       };
 
       $scope.clearFormatterCache = function() {
-      };,
+      };
       return $http.delete('../api/formatters/cache')
         .success(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
