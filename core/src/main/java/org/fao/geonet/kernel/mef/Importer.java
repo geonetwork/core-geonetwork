@@ -349,7 +349,7 @@ public class Importer {
                 String uuidAction = Util.getParam(params, Params.UUID_ACTION,
                     Params.NOTHING);
 
-                importRecord(uuid, uuidAction, md, schema, index,
+                importRecord(uuid, MEFLib.UuidAction.parse(uuidAction), md, schema, index,
                     source, sourceName, sourceTranslations, context, metadataIdMap, createDate,
                     changeDate, groupId, isTemplate);
 
@@ -485,7 +485,7 @@ public class Importer {
     }
 
     public static void importRecord(String uuid,
-                                    String uuidAction, List<Element> md, String schema, int index,
+                                    MEFLib.UuidAction uuidAction, List<Element> md, String schema, int index,
                                     String source, String sourceName, Map<String, String> sourceTranslations, ServiceContext context,
                                     List<String> id, String createDate, String changeDate,
                                     String groupId, MetadataType isTemplate) throws Exception {
@@ -495,7 +495,7 @@ public class Importer {
 
 
         if (uuid == null || uuid.equals("")
-            || uuidAction.equals(Params.GENERATE_UUID)) {
+            || uuidAction == MEFLib.UuidAction.GENERATEUUID) {
             String newuuid = UUID.randomUUID().toString();
             source = null;
 
@@ -520,7 +520,7 @@ public class Importer {
         }
 
         try {
-            if (dm.existsMetadataUuid(uuid) && !uuidAction.equals(Params.NOTHING)) {
+            if (dm.existsMetadataUuid(uuid) && uuidAction != MEFLib.UuidAction.NOTHING) {
                 // user has privileges to replace the existing metadata
                 if (dm.getAccessManager().canEdit(context, dm.getMetadataId(uuid))) {
                     if (Log.isDebugEnabled(Geonet.MEF)) {

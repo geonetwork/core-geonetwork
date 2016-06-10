@@ -36,6 +36,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.mef.Importer;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -287,7 +288,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         ArrayList<String> id = new ArrayList<String>(1);
         String createDate = new ISODate().getDateAndTime();
         Importer.importRecord(uuid,
-            uuidAction, Lists.newArrayList(metadata), schema, 0,
+            MEFLib.UuidAction.parse(uuidAction), Lists.newArrayList(metadata), schema, 0,
             source.getUuid(), source.getName(), Maps.<String, String>newHashMap(), context,
             id, createDate, createDate,
             "" + groupId, metadataType);

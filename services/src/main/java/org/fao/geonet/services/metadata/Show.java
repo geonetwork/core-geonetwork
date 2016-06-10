@@ -49,7 +49,7 @@ import java.nio.file.Path;
 /**
  * Retrieves a particular metadata. Access is restricted
  */
-
+@Deprecated
 public class Show extends ShowViewBaseService {
     //--------------------------------------------------------------------------
     //---

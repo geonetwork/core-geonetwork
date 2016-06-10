@@ -43,7 +43,7 @@ import java.nio.file.Path;
 /**
  * Search for unused metadata to allow the possibility to view/remove them
  */
-
+@Deprecated
 public class SearchUnused implements Service {
     //--------------------------------------------------------------------------
     //---

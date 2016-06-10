@@ -433,6 +433,24 @@ public class MEFLib {
         throw new Exception("File not found in info.xml : " + fileName);
     }
 
+    public enum UuidAction {
+        GENERATEUUID("generateUUID"),
+        NOTHING("nothing"),
+        OVERWRITE("overwrite");
+        String name;
+        UuidAction(String name) {
+            this.name = name;
+        }
+        public static UuidAction parse(String value) {
+            for (UuidAction v : values()) {
+                if (v.name.equalsIgnoreCase(value)) {
+                    return v;
+                }
+            }
+            return UuidAction.NOTHING;
+        }
+
+    }
     public enum Format {
         /**
          * Only metadata record and infomation

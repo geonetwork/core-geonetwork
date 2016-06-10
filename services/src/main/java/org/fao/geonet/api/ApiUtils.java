@@ -32,14 +32,19 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.XmlRequest;
 import org.springframework.context.ApplicationContext;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -161,6 +166,24 @@ public class ApiUtils {
         });
 
         return size[0] / 1024;
+    }
+
+    public static Path downloadUrlInTemp(String url) throws IOException, URISyntaxException {
+
+        URI uri = new URI(url);
+        Path file = Files.createTempFile("file-from-url", ".rdf");
+
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        XmlRequest httpReq = applicationContext
+            .getBean(GeonetHttpRequestFactory.class)
+            .createXmlRequest(uri.toURL());
+
+        httpReq.setAddress(uri.getPath());
+
+        Lib.net.setupProxy(applicationContext.getBean(SettingManager.class), httpReq);
+
+        httpReq.executeLarge(file);
+        return file;
     }
 
     /**

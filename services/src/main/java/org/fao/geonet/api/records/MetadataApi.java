@@ -168,7 +168,7 @@ public class MetadataApi implements ApplicationContextAware {
     }
 
 
-    @ApiOperation(value = "Get a metadata record as XML",
+    @ApiOperation(value = "Get a metadata record",
         notes = "",
         nickname = "getRecordAsXml")
     @RequestMapping(value =
