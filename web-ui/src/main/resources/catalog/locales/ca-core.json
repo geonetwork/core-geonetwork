@@ -12,6 +12,9 @@
     "Reviewer": "Revisor",
     "SUB_TEMPLATE": "Entrada de Directori",
     "TEMPLATE": "Plantilla",
+    "indexWFSFeatures": "Index data",
+    "reindexWFSFeatures": "Clean and index data",
+    "docTypeNotIndexed": "Features not indexed.",
     "recordType-y": "Plantilla",
     "recordType-n": "Metadada",
     "recordType-s": "Entrada de Directori",
@@ -199,6 +202,7 @@
     "weblink": "Enllaços",
     "downloads": "Descarregar",
     "maps": "Mapes",
+    "spatialExtent": "Spatial extent",
     "sessionIsAboutToBeCancelled": "La vostra sessió és a punt de cancel·lar-se!",
     "sessionAlertMsg": "L'última activitat es va registrar a {{startedAt}} i la teva sessió expira el {{willBeCancelledIn}} s (el temps màxim d'inactivitat és de {{length}} s). Hauries de desar el teu treball si tens canvis sense desar. Si no, et desconnectaràs aviat.",
     "sessionWillExpireIn": "La teva sessió acabarà en {{RemainingTime}} s. Desa la teva feina!",
@@ -276,5 +280,6 @@
     "ImportRecord": "Importa noves entrades",
     "directoryManager": "Administrar directori",
     "typeOfRecord": "Tipus d'entrada",
-    "load": "Carregar"
+    "load": "Carregar",
+    "solrAccessError": "Error during Solr access."
 }

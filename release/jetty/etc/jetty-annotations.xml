@@ -12,6 +12,8 @@
       <Arg>
         <Array type="String">
           <Item>org.eclipse.jetty.annotations.AnnotationConfiguration</Item>
+          <Item>org.eclipse.jetty.plus.webapp.EnvConfiguration</Item>
+          <Item>org.eclipse.jetty.plus.webapp.PlusConfiguration</Item>
         </Array>
       </Arg>
     </Call>

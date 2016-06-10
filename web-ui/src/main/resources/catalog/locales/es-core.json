@@ -12,6 +12,9 @@
     "Reviewer": "Revisor",
     "SUB_TEMPLATE": "Entrada de Directorio",
     "TEMPLATE": "Plantilla",
+    "indexWFSFeatures": "Index data",
+    "reindexWFSFeatures": "Clean and index data",
+    "docTypeNotIndexed": "Features not indexed.",
     "recordType-y": "Plantilla",
     "recordType-n": "Metadato",
     "recordType-s": "Entrada de Directorio",
@@ -199,6 +202,7 @@
     "weblink": "Enlaces",
     "downloads": "Descargar",
     "maps": "Mapas",
+    "spatialExtent": "Spatial extent",
     "sessionIsAboutToBeCancelled": "¡Tu sesión se va a cancelar!",
     "sessionAlertMsg": "La última actividad se registró {{startedAt}} y tu sesión expirará en {{willBeCancelledIn}}s (el tiempo máximo de inactividad es de {{length}}s). Deberías guardar tu trabajo si tienes cambios sin guardar. Si no, te desconectarás pronto.",
     "sessionWillExpireIn": "Tu sesión terminará en {{remainingTime}}s. ¡Guarda tu trabajo!",
@@ -276,5 +280,6 @@
     "ImportRecord": "Importar nuevas entradas",
     "directoryManager": "Administrar directorio",
     "typeOfRecord": "Tipo de entrada",
-    "load": "Cargar"
+    "load": "Cargar",
+    "solrAccessError": "Error during Solr access."
 }

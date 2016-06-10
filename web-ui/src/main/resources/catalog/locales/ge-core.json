@@ -12,6 +12,9 @@
     "Reviewer": "Reviewer",
     "SUB_TEMPLATE": "Verzeichniseintrag",
     "TEMPLATE": "Vorlage",
+    "indexWFSFeatures": "Index data",
+    "reindexWFSFeatures": "Clean and index data",
+    "docTypeNotIndexed": "Features not indexed.",
     "recordType-y": "Vorlage",
     "recordType-n": "Metadaten",
     "recordType-s": "Verzeichniseintrag",
@@ -199,6 +202,7 @@
     "weblink": "Links",
     "downloads": "Herunterladen",
     "maps": "Karten",
+    "spatialExtent": "Spatial extent",
     "sessionIsAboutToBeCancelled": "Ihre Sitzung wird in Kürze ablaufen!",
     "sessionAlertMsg": "Die letzte Aktivität wurde {{startedAt}} festgestellt und Ihre Sitzung wird in {{willBeCancelledIn}}s ablaufen (die maximale inaktive Zeit beträgt {{length}}s). Sie sollten ihre Arbeit speichern falls sie ungesicherte Änderungen haben! Andernfalls werden Sie bald abgemeldet.",
     "sessionWillExpireIn": "Ihre Sitzung wird in {{remainingTime}}s ablaufen. Speichern Sie ihre Arbeit!",
@@ -276,5 +280,6 @@
     "ImportRecord": "Metadaten importieren",
     "directoryManager": "Verzeichnis verwalten",
     "typeOfRecord": "Datensatz-Typ",
-    "load": "Lade"
+    "load": "Lade",
+    "solrAccessError": "Error during Solr access."
 }
