@@ -23,25 +23,19 @@
 
 package org.fao.geonet.api.users;
 
-import com.google.common.base.Functions;
-import com.google.common.collect.Lists;
 import com.vividsolutions.jts.util.Assert;
 import io.swagger.annotations.ApiParam;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
-import org.fao.geonet.domain.responses.OkResponse;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.*;
-import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
-import org.fao.geonet.services.user.Update;
 import org.fao.geonet.util.PasswordUtil;
-import org.jdom.Element;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,16 +46,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
@@ -86,38 +77,77 @@ public class UsersApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
     @ResponseBody
-    public List<User> getUsers() throws Exception {
-        ServiceContext context = ServiceContext.get();
-        UserSession session = context.getUserSession();
-        if (session.isAuthenticated()) {
-            Profile profile = session.getProfile();
-            UserRepository userRepository = context.getBean(UserRepository.class);
-            if (profile == Profile.Administrator) {
-                return userRepository.findAll(SortUtils.createSort(User_.name));
-            } else if (profile != Profile.UserAdmin) {
-                return userRepository.findAll(UserSpecs.hasUserId(session.getUserIdAsInt()));
-            } else if (profile == Profile.UserAdmin) {
-                int userId = session.getUserIdAsInt();
-                final List<Integer> userGroupIds =
-                    getGroupIds(userId);
+    public List<User> getUsers(
+        @ApiIgnore
+            HttpSession httpSession
+    ) throws Exception {
+        UserSession session = ApiUtils.getUserSession(httpSession);
+        Profile profile = session.getProfile();
 
-                List<User> allUsers = userRepository.findAll(SortUtils.createSort(User_.name));
+        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
 
-                // Filter users which are not in current user admin groups
-                allUsers.removeIf(u -> userGroupIds.containsAll(getGroupIds(u.getId())));
+        if (profile == Profile.Administrator) {
+            return userRepository.findAll(SortUtils.createSort(User_.name));
+        } else if (profile != Profile.UserAdmin) {
+            return userRepository.findAll(UserSpecs.hasUserId(session.getUserIdAsInt()));
+        } else if (profile == Profile.UserAdmin) {
+            int userId = session.getUserIdAsInt();
+            final List<Integer> userGroupIds =
+                getGroupIds(userId);
+
+            List<User> allUsers = userRepository.findAll(SortUtils.createSort(User_.name));
+
+            // Filter users which are not in current user admin groups
+            allUsers.removeIf(u -> userGroupIds.containsAll(getGroupIds(u.getId())));
 //              TODO-API: Check why there was this check on profiles ?
 //                    if (!profileSet.contains(profile))
 //                        alToRemove.add(elRec);
 
-                return allUsers;
-            }
-        } else {
-            return null;
+            return allUsers;
         }
+
         return null;
     }
 
+
+    @ApiOperation(
+        value = "Get user",
+        notes = "",
+        nickname = "getUser")
+    @RequestMapping(
+        value = "/{userIdentifier}",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    public User getUser(
+        @ApiParam(
+            value = "User identifier."
+        )
+        @PathVariable
+            Integer userIdentifier,
+        @ApiIgnore
+            HttpSession httpSession
+
+    ) throws Exception {
+        UserSession session = ApiUtils.getUserSession(httpSession);
+        Profile myProfile = session.getProfile();
+        String myUserId = session.getUserId();
+
+        if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin || myUserId.equals(userIdentifier)) {
+            UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+
+            User user = userRepository.findOne(Integer.valueOf(userIdentifier));
+
+            return user;
+        } else {
+            throw new IllegalArgumentException("You don't have rights to do this");
+        }
+
+    }
 
     @ApiOperation(
         value = "Delete a user",
@@ -238,9 +268,92 @@ public class UsersApi {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    @ApiOperation(
+        value = "Retrieve user groups",
+        notes = "Retrieve the user groups.",
+        nickname = "retrieveUserGroups")
+    @RequestMapping(value = "/{userIdentifier}/groups",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    public List<UserGroup> retrieveUserGroups(
+        @ApiParam(
+            value = "User identifier."
+        )
+        @PathVariable
+            Integer userIdentifier,
+        @ApiIgnore
+            ServletRequest request,
+        @ApiIgnore
+            HttpSession httpSession
+    ) throws Exception {
+        UserSession session = ApiUtils.getUserSession(httpSession);
+        Profile myProfile = session.getProfile();
+        String myUserId = session.getUserId();
+
+        final UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+        final UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
+
+        if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin || myUserId.equals(userIdentifier)) {
+            // -- get the profile of the user id supplied
+            User user = userRepository.findOne(userIdentifier);
+            if (user == null) {
+                throw new IllegalArgumentException("user " + userIdentifier + " doesn't exist");
+            }
+
+            String userProfile = user.getProfile().name();
+
+            List<UserGroup> userGroups;
+
+            if (myProfile == Profile.Administrator && userProfile.equals(Profile.Administrator.name())) {
+                // Return all groups for administrator.
+                // TODO: Check if a better option returning instead of UserGroup a customised GroupDTO
+                // containing all group properties and user profile
+                userGroups = new ArrayList<UserGroup>();
+                final GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
+
+                List<Group> groups = groupRepository.findAll();
+
+                for (Group g : groups) {
+                    UserGroup ug = new UserGroup();
+                    UserGroupId ugId = new UserGroupId();
+                    ugId.setProfile(Profile.Administrator);
+                    ugId.setGroupId(g.getId());
+                    ugId.setUserId(userIdentifier);
+
+                    ug.setGroup(g);
+                    ug.setUser(user);
+                    ug.setProfile(Profile.Administrator);
+                    ug.setId(ugId);
+
+                    userGroups.add(ug);
+                }
+            } else {
+                if (!(myUserId.equals(userIdentifier)) && myProfile == Profile.UserAdmin) {
+
+                    //--- retrieve session user groups and check to see whether this user is
+                    //--- allowed to get this info
+                    List<Integer> adminList = userGroupRepository.findGroupIds(where(UserGroupSpecs.hasUserId(Integer.valueOf(myUserId)))
+                        .or(UserGroupSpecs.hasUserId(Integer.valueOf(userIdentifier))));
+                    if (adminList.isEmpty()) {
+                        throw new OperationNotAllowedEx("You don't have rights to do this because the user you want is not part of your group");
+                    }
+                }
+
+                //--- retrieve user groups of the user id supplied
+                userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(Integer.valueOf(userIdentifier)));
+            }
+
+            return userGroups;
+        } else {
+            throw new IllegalArgumentException("You don't have rights to do get the groups for this user");
+        }
+    }
+
     private List<Integer> getGroupIds(int userId) {
-        ServiceContext context = ServiceContext.get();
-        return context.getBean(UserGroupRepository.class)
+        return ApplicationContextHolder.get().getBean(UserGroupRepository.class)
             .findGroupIds(hasUserId(userId));
     }
 }

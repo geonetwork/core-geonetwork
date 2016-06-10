@@ -154,8 +154,8 @@
       }
       function loadUsers() {
         $scope.isLoadingUsers = true;
-        $http.get('admin.user.list?_content_type=json').success(function(data) {
-          $scope.users = data.users;
+        $http.get('../api/users').success(function(data) {
+          $scope.users = data;
           $scope.isLoadingUsers = false;
         }).error(function(data) {
           // TODO
@@ -166,8 +166,8 @@
           if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
             angular.forEach($scope.users, function(u) {
 
-              if (u.value.username === $routeParams.userOrGroup ||
-                  $routeParams.userOrGroupId === u.value.id.toString()) {
+              if (u.username === $routeParams.userOrGroup ||
+                  $routeParams.userOrGroupId === u.id.toString()) {
                 $scope.selectUser(u);
               }
             });
@@ -233,7 +233,7 @@
         $scope.userSelected = null;
         $scope.userGroups = null;
 
-        $http.get('admin.user?_content_type=json&id=' + u.value.id)
+        $http.get('../api/users/' + u.id)
             .success(function(data) {
               $scope.userSelected = data;
               $scope.userIsAdmin =
@@ -242,8 +242,7 @@
               $scope.userIsEnabled = (data.enabled === 'true');
 
               // Load user group and then select user
-              $http.get('admin.usergroups.list?_content_type=json&id=' +
-                  u.value.id)
+              $http.get('../api/users/' + u.id + '/groups')
               .success(function(groups) {
                     $scope.userGroups = groups;
                   }).error(function(data) {
@@ -258,7 +257,7 @@
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {
           template: 'y or n',
-          _owner: u.value.id,
+          _owner: u.id,
           sortBy: 'title'
         });
 
@@ -279,13 +278,12 @@
       };
 
       $scope.saveNewPassword = function() {
-        var params = {operation: 'resetpw',
-          id: $scope.userSelected.id,
+        var params = {
           password: $scope.resetPassword1,
           password2: $scope.resetPassword2
         };
 
-        $http.post('../api/users/' + $scope.userSelected.id + 
+        $http.post('../api/users/' + $scope.userSelected.id +
           '/actions/forget-password' , null, {params: params})
             .success(function(data) {
               $scope.resetPassword1 = null;
@@ -308,8 +306,8 @@
       $scope.isUserGroup = function(groupId, profile) {
         if ($scope.userGroups) {
           for (var i = 0; i < $scope.userGroups.length; i++) {
-            if ($scope.userGroups[i].id == groupId &&
-                $scope.userGroups[i].profile == profile) {
+            if ($scope.userGroups[i].id.groupId == groupId &&
+                $scope.userGroups[i].id.profile == profile) {
               return true;
             }
           }
