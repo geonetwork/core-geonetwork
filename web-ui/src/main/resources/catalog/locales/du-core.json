@@ -12,6 +12,9 @@
     "Reviewer": "Reviewer",
     "SUB_TEMPLATE": "Vermelding in adressenboek",
     "TEMPLATE": "Sjabloon",
+    "indexWFSFeatures": "Index data",
+    "reindexWFSFeatures": "Clean and index data",
+    "docTypeNotIndexed": "Features not indexed.",
     "recordType-y": "Template",
     "recordType-n": "Metadata",
     "recordType-s": "Addressenboek instantie",
@@ -199,6 +202,7 @@
     "weblink": "Links",
     "downloads": "Download",
     "maps": "Kaarten",
+    "spatialExtent": "Spatial extent",
     "sessionIsAboutToBeCancelled": "Uw sessie is bijna verlopen",
     "sessionAlertMsg": "Last activity was tracked {{startedAt}} and your session will expire in {{willBeCancelledIn}}s (max inactivity time is {{length}}s). You should save your work if you have any unsaved changes! If not, you'll be disconnected soon.",
     "sessionWillExpireIn": "Uw sessie zal aflopen in {{remainingTime}}s. Sla uw werk op.",
@@ -276,5 +280,6 @@
     "ImportRecord": "Importeer nieuwe records",
     "directoryManager": "Beheer adressenboek",
     "typeOfRecord": "Type record",
-    "load": "Laden"
+    "load": "Laden",
+    "solrAccessError": "Error during Solr access."
 }

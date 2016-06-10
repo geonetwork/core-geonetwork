@@ -12,6 +12,9 @@
     "Reviewer": "검토자",
     "SUB_TEMPLATE": "디렉터리 엔트리",
     "TEMPLATE": "템플릿",
+    "indexWFSFeatures": "Index data",
+    "reindexWFSFeatures": "Clean and index data",
+    "docTypeNotIndexed": "Features not indexed.",
     "recordType-y": "템플릿",
     "recordType-n": "메타데이타",
     "recordType-s": "디렉토리 목록",
@@ -199,6 +202,7 @@
     "weblink": "링크",
     "downloads": "다운로드",
     "maps": "지도",
+    "spatialExtent": "Spatial extent",
     "sessionIsAboutToBeCancelled": "당신의 세션은 취소되어집니다.",
     "sessionAlertMsg": "마지막 활동이  {{startedAt}} 에 추적되었고ㅍ 그리고 당신의 세션은 {{willBeCancelledIn}}s (max inactivity time is {{length}}s) 안에 만료 될것입니다.저장하지 않은 변경이 있다면 당신의 작업을 저장하십시요!. 그렇지 않으면 곧 연결이 끊어질 것입니다.",
     "sessionWillExpireIn": "당신의 세션은  {{remainingTime}}s 안에 만료되어질 것입니다. 작업을 저장하십시요!",
@@ -276,5 +280,6 @@
     "ImportRecord": "새로운 레코드 가져오기",
     "directoryManager": "디렉토리 관리",
     "typeOfRecord": "레코드의 형태",
-    "load": "로드"
+    "load": "로드",
+    "solrAccessError": "Error during Solr access."
 }
