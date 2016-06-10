@@ -47,6 +47,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
 
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
+
 /**
  * Select a list of elements stored in session.
  */
@@ -144,7 +146,8 @@ public class SelectionsApi {
             example = "metadata")
         @PathVariable
             String bucket,
-        @ApiParam(value = "One or more record UUIDs",
+        @ApiParam(
+            value = API_PARAM_RECORD_UUIDS,
             required = false)
         @RequestParam(required = false)
             String[] uuid,

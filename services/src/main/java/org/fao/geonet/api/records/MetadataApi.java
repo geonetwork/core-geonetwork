@@ -26,6 +26,7 @@ package org.fao.geonet.api.records;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.api.records.model.related.RelatedResponse;
@@ -73,6 +74,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 
@@ -83,7 +85,7 @@ import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_T
 })
 @Api(value = "records",
     tags = "records",
-    description = "Metadata record operations")
+    description = ApiParams.API_CLASS_RECORD_OPS)
 @Controller("records")
 @ReadWriteController
 public class MetadataApi implements ApplicationContextAware {
@@ -124,7 +126,7 @@ public class MetadataApi implements ApplicationContextAware {
     public
     @ResponseBody
     void getRecord(
-        @ApiParam(value = "Record UUID.",
+        @ApiParam(value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
@@ -184,7 +186,8 @@ public class MetadataApi implements ApplicationContextAware {
     public
     @ResponseBody
     Object getRecordAsXML(
-        @ApiParam(value = "Record UUID.",
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
@@ -274,7 +277,7 @@ public class MetadataApi implements ApplicationContextAware {
     @ResponseBody
     void getRecordAsZip(
         @ApiParam(
-            value = "Record UUID.",
+            value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
@@ -391,7 +394,8 @@ public class MetadataApi implements ApplicationContextAware {
         })
     @ResponseBody
     public RelatedResponse getRelated(
-        @ApiParam(value = "Record UUID.",
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,

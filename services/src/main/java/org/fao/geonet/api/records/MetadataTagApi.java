@@ -62,6 +62,8 @@ import io.swagger.annotations.ApiParam;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+
 @RequestMapping(value = {
     "/api/records",
     "/api/" + API.VERSION_0_1 +
@@ -89,7 +91,8 @@ public class MetadataTagApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public Set<MetadataCategory> getTags(
-        @ApiParam(value = "Record UUID.",
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
@@ -112,7 +115,8 @@ public class MetadataTagApi {
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public ResponseEntity updateTags(
-        @ApiParam(value = "Record UUID.",
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
@@ -171,7 +175,8 @@ public class MetadataTagApi {
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public ResponseEntity deleteTags(
-        @ApiParam(value = "Record UUID.",
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,

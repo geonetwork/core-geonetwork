@@ -23,15 +23,15 @@
 
 package org.fao.geonet.api.records;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.Util;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -62,8 +62,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +83,8 @@ import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+
 @RequestMapping(value = {
     "/api/records",
     "/api/" + API.VERSION_0_1 +
@@ -91,9 +98,22 @@ import jeeves.services.ReadWriteController;
 @ReadWriteController
 public class MetadataInsertDeleteApi {
 
+    private final String API_PARAP_RECORD_GROUP = "The group the record is attached to.";
+    private final String API_PARAM_RECORD_UUID_PROCESSING = "Record identifier processing.";
+    private final String API_PARAM_RECORD_TAGS = "Tags to assign to the record.";
+    private final String API_PARAM_RECORD_VALIDATE = "Validate the record first and reject it if not valid.";
+    private final String API_PARAM_RECORD_XSL = "XSL transformation to apply to the record.";
+    private final String API_PARAM_FORCE_SCHEMA = "Force the schema of the record. If not set, schema autodetection " +
+        "is used (and is the preferred method).";
+    private final String API_PARAM_BACKUP_FIRST = "Backup first the record as MEF in the metadata removed folder.";
+    private final String API_PARAM_RECORD_TYPE = "The type of record.";
+
     @ApiOperation(
-        value = "Delete a metadata record",
-        notes = "",
+        value = "Delete a record",
+        notes = "User MUST be able to edit the record to delete it. " +
+            "By default, a backup is made in ZIP format. After that, " +
+            "the record attachments are removed, the document removed " +
+            "from the index and then from the database.",
         nickname = "delete")
     @RequestMapping(value = "/{metadataUuid}",
         method = RequestMethod.DELETE
@@ -102,12 +122,12 @@ public class MetadataInsertDeleteApi {
     @ResponseBody
     ResponseEntity deleteRecord(
         @ApiParam(
-            value = "Record UUID.",
+            value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
         @ApiParam(
-            value = "Backup first the record as MEF in the metadata removed folder.",
+            value = API_PARAM_BACKUP_FIRST,
             required = false)
         @RequestParam(
             required = false,
@@ -137,12 +157,15 @@ public class MetadataInsertDeleteApi {
 
     @ApiOperation(
         value = "Add a record",
-        notes = "An XML fragment or a URL MUST be provided.",
+        notes =
+            "Add one or more record from an XML fragment, " +
+            "URL or file in a folder on the catalog server. When loading" +
+            "from the catalog server folder, it might be faster to use a " +
+            "local filesystem harvester.",
         nickname = "insert")
     @RequestMapping(
         method = {
-            RequestMethod.PUT,
-            RequestMethod.POST,
+            RequestMethod.PUT
         },
         produces = {
             MediaType.APPLICATION_JSON_VALUE
@@ -155,7 +178,7 @@ public class MetadataInsertDeleteApi {
     @ResponseBody
     ResponseEntity<Object> insert(
         @ApiParam(
-            value = "The type of the record.",
+            value = API_PARAM_RECORD_TYPE,
             required = false,
             defaultValue = "METADATA"
         )
@@ -180,7 +203,30 @@ public class MetadataInsertDeleteApi {
         )
             String[] url,
         @ApiParam(
-            value = "Record identifier processing.",
+            value = "Server folder where to look for files.",
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String serverFolder,
+        @ApiParam(
+            value = "(Server folder import only) Recursive search in folder.",
+            required = false)
+        @RequestParam(
+            required = false,
+            defaultValue = "false"
+        )
+        final boolean recursiveSearch,
+        @ApiParam(
+            value = "(MEF file only) Assign to current catalog.",
+            required = false)
+        @RequestParam(
+            required = false,
+            defaultValue = "false"
+        )
+        final boolean assignToCatalog,
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID_PROCESSING,
             required = false,
             defaultValue = "NOTHING"
         )
@@ -190,7 +236,7 @@ public class MetadataInsertDeleteApi {
         )
         final MEFLib.UuidAction uuidProcessing,
         @ApiParam(
-            value = "The group the record is attached to.",
+            value = API_PARAP_RECORD_GROUP,
             required = false
         )
         @RequestParam(
@@ -198,14 +244,14 @@ public class MetadataInsertDeleteApi {
         )
         final String group,
         @ApiParam(
-            value = "Tags to assign to the record.",
+            value = API_PARAM_RECORD_TAGS,
             required = false)
         @RequestParam(
             required = false
         )
         final String[] category,
         @ApiParam(
-            value = "Validate the record first and reject it if not valid.",
+            value = API_PARAM_RECORD_VALIDATE,
             required = false)
         @RequestParam(
             required = false,
@@ -213,7 +259,7 @@ public class MetadataInsertDeleteApi {
         )
         final boolean rejectIfInvalid,
         @ApiParam(
-            value = "XSL transformation to apply to the record.",
+            value = API_PARAM_RECORD_XSL,
             required = false,
             defaultValue = "_none_"
         )
@@ -223,8 +269,7 @@ public class MetadataInsertDeleteApi {
         )
         final String transformWith,
         @ApiParam(
-            value = "Force the schema of the record. If not set, schema autodetection " +
-                "is used (and is the preferred method).",
+            value = API_PARAM_FORCE_SCHEMA,
             required = false)
         @RequestParam(
             required = false
@@ -240,9 +285,9 @@ public class MetadataInsertDeleteApi {
         HttpServletRequest request
     )
         throws Exception {
-        if (url == null && xml == null) {
+        if (url == null && xml == null && serverFolder == null) {
             throw new IllegalArgumentException(String.format(
-                "XML fragment or a URL MUST be provided."));
+                "XML fragment or a URL or a server folder MUST be provided."));
         }
 
         if (xml != null) {
@@ -257,13 +302,60 @@ public class MetadataInsertDeleteApi {
                     uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
             }
         }
+        if (serverFolder != null) {
+            Path serverFolderPath = IO.toPath(serverFolder);
+
+            final List<Path> files = Lists.newArrayList();
+            final MEFLib.MefOrXmlFileFilter predicate = new MEFLib.MefOrXmlFileFilter();
+            if (recursiveSearch) {
+                Files.walkFileTree(serverFolderPath, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        if (predicate.accept(file)) {
+                            files.add(file);
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            } else {
+                try (DirectoryStream<Path> paths = Files.newDirectoryStream(serverFolderPath, predicate)) {
+                    for (Path file : paths) {
+                        files.add(file);
+                    }
+                }
+            }
+
+            if (files.size() == 0) {
+                throw new Exception(String.format(
+                    "No XML or MEF or ZIP file found in server folder '%s'.",
+                    serverFolder
+                ));
+            }
+            SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+            ServiceContext context = ApiUtils.createServiceContext(request);
+            for (Path f : files) {
+                if (MEFLib.isValidArchiveExtensionForMEF(f.getFileName().toString())) {
+                    List<String> id = MEFLib.doImport(
+                        "mef2", uuidProcessing, transformWith,
+                        settingManager.getSiteId(),
+                        metadataType, category, group, rejectIfInvalid,
+                        assignToCatalog, context, f);
+                } else {
+                    loadRecord(
+                        metadataType, Xml.loadFile(f),
+                        uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+                }
+
+            }
+
+        }
         // TODO: Add a report
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation(
-        value = "Add a record from XML or MEF file",
-        notes = "",
+        value = "Add a record from XML or MEF/ZIP file",
+        notes = "Add record in the catalog by uploading files.",
         nickname = "insertFile")
     @RequestMapping(
         method = {
@@ -271,16 +363,13 @@ public class MetadataInsertDeleteApi {
         },
         produces = {
             MediaType.APPLICATION_JSON_VALUE
-        },
-        consumes = {
-            MediaType.APPLICATION_XML_VALUE
         }
     )
     public
     @ResponseBody
     ResponseEntity<Object> insertFile(
         @ApiParam(
-            value = "The type of the record.",
+            value = API_PARAM_RECORD_TYPE,
             required = false,
             defaultValue = "METADATA"
         )
@@ -299,7 +388,7 @@ public class MetadataInsertDeleteApi {
         )
             MultipartFile[] file,
         @ApiParam(
-            value = "Record identifier processing.",
+            value = API_PARAM_RECORD_UUID_PROCESSING,
             required = false,
             defaultValue = "NOTHING"
         )
@@ -309,7 +398,7 @@ public class MetadataInsertDeleteApi {
         )
         final MEFLib.UuidAction uuidProcessing,
         @ApiParam(
-            value = "The group the record is attached to.",
+            value = API_PARAP_RECORD_GROUP,
             required = false
         )
         @RequestParam(
@@ -317,14 +406,14 @@ public class MetadataInsertDeleteApi {
         )
         final String group,
         @ApiParam(
-            value = "Tags to assign to the record.",
+            value = API_PARAM_RECORD_TAGS,
             required = false)
         @RequestParam(
             required = false
         )
         final String[] category,
         @ApiParam(
-            value = "Validate the record first and reject it if not valid.",
+            value = API_PARAM_RECORD_VALIDATE,
             required = false)
         @RequestParam(
             required = false,
@@ -332,7 +421,15 @@ public class MetadataInsertDeleteApi {
         )
         final boolean rejectIfInvalid,
         @ApiParam(
-            value = "XSL transformation to apply to the record.",
+            value = "(MEF file only) Assign to current catalog.",
+            required = false)
+        @RequestParam(
+            required = false,
+            defaultValue = "false"
+        )
+        final boolean assignToCatalog,
+        @ApiParam(
+            value = API_PARAM_RECORD_XSL,
             required = false,
             defaultValue = "_none_"
         )
@@ -342,8 +439,7 @@ public class MetadataInsertDeleteApi {
         )
         final String transformWith,
         @ApiParam(
-            value = "Force the schema of the record. If not set, schema autodetection " +
-                "is used (and is the preferred method).",
+            value = API_PARAM_FORCE_SCHEMA,
             required = false)
         @RequestParam(
             required = false
@@ -364,10 +460,27 @@ public class MetadataInsertDeleteApi {
                 "A file MUST be provided."));
         }
         if (file != null) {
+            ServiceContext context = ApiUtils.createServiceContext(request);
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
             for (MultipartFile f : file) {
-                loadRecord(
-                    metadataType, Xml.loadStream(f.getInputStream()),
-                    uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+                if (MEFLib.isValidArchiveExtensionForMEF(f.getOriginalFilename())) {
+                    Path tempFile = Files.createTempFile("mef-import", ".zip");
+                    try {
+                        FileUtils.copyInputStreamToFile(f.getInputStream(), tempFile.toFile());
+                        List<String> id = MEFLib.doImport(
+                            "mef2", uuidProcessing, transformWith,
+                            settingManager.getSiteId(),
+                            metadataType, category, group, rejectIfInvalid,
+                            assignToCatalog, context, tempFile);
+                    } finally {
+                        IO.deleteFile(tempFile, false, Geonet.MEF);
+                    }
+                } else {
+                    loadRecord(
+                        metadataType, Xml.loadStream(f.getInputStream()),
+                        uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+                }
             }
         }
         // TODO: Add a report

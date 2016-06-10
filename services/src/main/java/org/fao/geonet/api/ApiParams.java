@@ -27,6 +27,11 @@ package org.fao.geonet.api;
  * A set of static variables describing API parameters.
  */
 public class ApiParams {
+    public static final String API_CLASS_RECORD_tag = "Metadata record operations";
+    public static final String API_CLASS_RECORD_OPS = "Metadata record operations";
+
+    public static final String API_PARAM_RECORD_UUID = "Record UUID.";
+    public static final String API_PARAM_RECORD_UUIDS = "One or more record UUIDs";
     public static final String APIPARAM_RECORD_UUIDS_OR_SELECTION =
         "Record UUIDs. If null current selection is used.";
     public static final String API_PARAM_RECORD_UUIDS_OR_SELECTION = "Record UUIDs. If null current selection is used.";

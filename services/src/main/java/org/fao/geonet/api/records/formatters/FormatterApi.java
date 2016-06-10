@@ -123,6 +123,7 @@ import jeeves.server.dispatchers.ServiceManager;
 import springfox.documentation.annotations.ApiIgnore;
 
 import static com.google.common.io.Files.getNameWithoutExtension;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
@@ -227,7 +228,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             value = "formatterId"
         )
         final String formatterId,
-        @ApiParam(value = "Record UUID.",
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
