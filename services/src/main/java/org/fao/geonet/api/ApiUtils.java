@@ -25,12 +25,12 @@ package org.fao.geonet.api;
 
 import com.google.common.collect.Sets;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
@@ -40,7 +40,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -88,6 +87,44 @@ public class ApiUtils {
     }
 
     /**
+     * Search if a record match the UUID on its UUID or an internal identifier
+     */
+    public static String getInternalId(String uuidOrInternalId)
+        throws Exception {
+        String id;
+        DataManager dm = ApplicationContextHolder.get().getBean(DataManager.class);
+
+        id = dm.getMetadataId(uuidOrInternalId);
+        if (id == null) {
+            String checkingId = dm.getMetadataUuid(id);
+            if (checkingId == null) {
+                throw new ResourceNotFoundException(String.format(
+                    "Record with UUID '%s' not found in this catalog",
+                    uuidOrInternalId));
+            }
+        }
+        return id;
+    }
+    public static Metadata getRecord(String uuidOrInternalId)
+        throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
+        Metadata metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
+        if (metadata == null) {
+            metadata = metadataRepository.findOne(uuidOrInternalId);
+            if (metadata == null) {
+                throw new ResourceNotFoundException(String.format(
+                    "Record with UUID '%s' not found in this catalog",
+                    uuidOrInternalId));
+            } else {
+                return metadata;
+            }
+        } else {
+            return metadata;
+        }
+    }
+
+    /**
      * Return the Jeeves user session.
      *
      * If session is null, it's probably a bot due to {@link AllRequestsInterceptor#createSessionForAllButNotCrawlers(HttpServletRequest)}.
@@ -131,14 +168,8 @@ public class ApiUtils {
      */
     static public Metadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
-        Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
+        Metadata metadata = getRecord(metadataUuid);
         AccessManager accessManager = appContext.getBean(AccessManager.class);
-        if (metadata == null) {
-            throw new ResourceNotFoundException(String.format(
-                "Record with UUID %s not found in this catalog",
-                metadataUuid));
-        }
         if (!accessManager.canEdit(createServiceContext(request), String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
                 "You can't view record with UUID %S", metadataUuid));
@@ -149,15 +180,9 @@ public class ApiUtils {
     /**
      * Check if the current user can view this record.
      */
-    public static Metadata canViewRecord(String metadataUuid, HttpServletRequest request) throws ResourceNotFoundException {
+    public static Metadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
-        Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
-        if (metadata == null) {
-            throw new ResourceNotFoundException(String.format(
-                "Record with UUID %s not found in this catalog",
-                metadataUuid));
-        }
+        Metadata metadata = getRecord(metadataUuid);
         try {
             Lib.resource.checkPrivilege(createServiceContext(request), String.valueOf(metadata.getId()), ReservedOperation.view);
         } catch (Exception e) {

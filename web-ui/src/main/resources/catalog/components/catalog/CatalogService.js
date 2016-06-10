@@ -66,12 +66,7 @@
            * @return {HttpPromise} Future object
            */
         remove: function(id) {
-          var url = gnUrlUtils.append('md.delete?_content_type=json&',
-              gnUrlUtils.toKeyValue({
-                id: id
-              })
-              );
-          return $http.get(url);
+          return $http.delete('../api/records/' + id);
         },
 
         /**

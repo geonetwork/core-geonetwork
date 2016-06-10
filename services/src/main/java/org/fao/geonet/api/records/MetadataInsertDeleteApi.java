@@ -36,6 +36,8 @@ import org.fao.geonet.utils.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,7 +75,51 @@ public class MetadataInsertDeleteApi {
     )
     public
     @ResponseBody
-    void getRecord(
+    ResponseEntity deleteRecord(
+        @ApiParam(
+            value = "Record UUID.",
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(
+            value = "Backup first the record as MEF in the metadata removed folder.",
+            required = false)
+        @RequestParam(
+            required = false,
+            defaultValue = "true")
+            boolean withBackup,
+        HttpServletRequest request
+    )
+        throws Exception {
+        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        DataManager dataManager = appContext.getBean(DataManager.class);
+
+        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && withBackup) {
+            MetadataUtils.backupRecord(metadata, context);
+        }
+
+        IO.deleteFileOrDirectory(
+            Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class),
+                String.valueOf(metadata.getId())));
+
+        dataManager.deleteMetadata(context, metadataUuid);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+    @ApiOperation(
+        value = "Insert a metadata record",
+        notes = "",
+        nickname = "insert")
+    @RequestMapping(
+        method = RequestMethod.PUT
+    )
+    public
+    @ResponseBody
+    void insert(
         @ApiParam(
             value = "Record UUID.",
             required = true)
