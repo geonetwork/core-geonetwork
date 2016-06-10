@@ -45,21 +45,23 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
- * Stores all operations allowed for a metadata for each groups. 
- * 
+ * Stores all operations allowed for a metadata for each groups.
+ *
  * In order to set a value for a group use _<groupId>_<operationId>.
- * 
+ *
  * By default, all operations are removed and then added according to the parameter.
  * In order to set or unset existing operations, add the update parameter
  * with value true and set the off/on status for each operations (eg. _<groupId>_<operationId>=<off|on>.
- * 
+ *
  * Called by the metadata.admin service (ie. privileges panel).
- * 
+ *
  * Sample URL: http://localhost:8080/geonetwork/srv/eng/metadata.admin?update=true&id=13962&_1_0=off&_1_1=off&_1_5=off&_1_6=off
- * 
+ *
  */
 public class UpdateAdminOper extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
@@ -98,7 +100,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 
 		boolean skip = false;
 
-		//--- in case of owner, privileges for groups 0,1 and GUEST are disabled 
+		//--- in case of owner, privileges for groups 0,1 and GUEST are disabled
 		//--- and are not sent to the server. So we cannot remove them
 
 		boolean isAdmin   = Profile.Administrator == us.getProfile();
@@ -112,22 +114,20 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		if (!update) {
 			dm.deleteMetadataOper(context, id, skip);
 		}
-		
+
 		//-----------------------------------------------------------------------
 		//--- set new ones
 
 		@SuppressWarnings("unchecked")
         List<Element> list = params.getChildren();
 
+        Pattern opParamPatter = Pattern.compile("_([0-9]+)_([0-9]+)");
 		for (Element el : list) {
 			String name  = el.getName();
-
-			if (name.startsWith("_") &&
-                    !Params.CONTENT_TYPE.equals(name)) {
-				StringTokenizer st = new StringTokenizer(name, "_");
-
-				String groupId = st.nextToken();
-				String operId  = st.nextToken();
+            Matcher matcher = opParamPatter.matcher(name);
+			if (matcher.matches()) {
+				String groupId = matcher.group(1);
+				String operId  = matcher.group(2);
 
                 // Never set editing for reserved group
                 if (Integer.parseInt(operId) == ReservedOperation.editing.getId() &&
