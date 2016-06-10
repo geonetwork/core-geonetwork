@@ -21531,10 +21531,10 @@ yx-axis
 .g ul.gn-resultview li.gn-grid .gn-md-links .dropdown-menu {
   max-width: 195px;
 }
-.gn ul.gn-resultview li.gn-grid .gn-md-relations .btn-group button,
-.g ul.gn-resultview li.gn-grid .gn-md-relations .btn-group button,
-.gn ul.gn-resultview li.gn-grid .gn-md-links .btn-group button,
-.g ul.gn-resultview li.gn-grid .gn-md-links .btn-group button {
+.gn ul.gn-resultview li.gn-grid .gn-md-relations button,
+.g ul.gn-resultview li.gn-grid .gn-md-relations button,
+.gn ul.gn-resultview li.gn-grid .gn-md-links button,
+.g ul.gn-resultview li.gn-grid .gn-md-links button {
   height: 2.3em;
 }
 .gn .metadata.panel-default,
