@@ -35,8 +35,7 @@
         require: '^ngSearchForm',
         scope: {
           config: '=gnPagination',
-          values: '=hitsValues',
-          enableHotKeys: '@'
+          values: '=hitsValues'
         },
         templateUrl: '../../catalog/components/search/pagination/partials/' +
             'pagination.html',
@@ -94,15 +93,18 @@
             scope.config.currentPage = scope.config.pages;
             scope.updateSearch();
           };
-          var events = ['first', 'previous', 'next', 'last'];
-          angular.forEach(events, function (key) {
-            scope.$on(key + 'Page', function(evt, cbFn) {
-              scope[key]();
-              if (angular.isFunction(cbFn)) {
-                cbFn();
-              }
+
+          if (angular.isDefined(attrs.enableEvents)) {
+            var events = ['first', 'previous', 'next', 'last'];
+            angular.forEach(events, function (key) {
+              scope.$on(key + 'Page', function (evt, cbFn) {
+                scope[key]();
+                if (angular.isFunction(cbFn)) {
+                  cbFn();
+                }
+              });
             });
-          });
+          }
           controller.activatePagination();
 
           if (angular.isDefined(attrs.enableHotKeys)) {
