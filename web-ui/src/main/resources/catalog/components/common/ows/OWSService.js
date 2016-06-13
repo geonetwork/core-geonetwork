@@ -30,8 +30,8 @@
 
   module.provider('gnOwsCapabilities', function() {
     this.$get = ['$http', '$q',
-      'gnUrlUtils', 'gnGlobalSettings',
-      function($http, $q, gnUrlUtils, gnGlobalSettings) {
+      'gnUrlUtils', 'gnGlobalSettings', 'gnViewerSettings',
+      function($http, $q, gnUrlUtils, gnGlobalSettings, viewerSettings) {
 
         var displayFileContent = function(data) {
           var parser = new ol.format.WMSCapabilities();
@@ -116,7 +116,7 @@
 
               //send request and decode result
               if (gnUrlUtils.isValid(url)) {
-                var proxyUrl = gnGlobalSettings.proxyUrl +
+                var proxyUrl = viewerSettings.hasCORS(url)?url:gnGlobalSettings.proxyUrl +
                     encodeURIComponent(url);
                 $http.get(proxyUrl, {
                   cache: true
@@ -146,7 +146,7 @@
 
               if (gnUrlUtils.isValid(url)) {
 
-                var proxyUrl = gnGlobalSettings.proxyUrl +
+                var proxyUrl = viewerSettings.hasCORS(url)?url:gnGlobalSettings.proxyUrl +
                     encodeURIComponent(url);
                 $http.get(proxyUrl, {
                   cache: true

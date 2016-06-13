@@ -203,7 +203,7 @@
                 return;
               }
 
-              var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+              var proxyUrl = viewerSettings.hasCORS(url)?url:'../../proxy?url=' + encodeURIComponent(url);
               $http.get(proxyUrl).then(function(response) {
                 var kmlSource = new ol.source.Vector();
                 kmlSource.addFeatures(

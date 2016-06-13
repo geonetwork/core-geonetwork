@@ -236,7 +236,7 @@
       this.loadContextFromUrl = function(url, map) {
         var self = this;
         if (/^(f|ht)tps?:\/\//i.test(url)) {
-          url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
+          url = viewerSettings.hasCORS(url)?url:gnGlobalSettings.proxyUrl + encodeURIComponent(url);
         }
         $http.get(url).success(function(data) {
           self.loadContext(data, map);

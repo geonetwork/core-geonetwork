@@ -449,7 +449,7 @@
               return;
             }
 
-            var proxyUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
+            var proxyUrl = viewerSettings.hasCORS(url)?url:gnGlobalSettings.proxyUrl + encodeURIComponent(url);
             var kmlSource = new ol.source.KML({
               projection: map.getView().getProjection(),
               url: proxyUrl
@@ -512,7 +512,7 @@
             // This is optional if the WMS provides CORS
             if (viewerSettings.cesiumProxy) {
               source.set('olcs.proxy', function(url) {
-                return '../../proxy?url=' + encodeURIComponent(url);
+                return viewerSetting.hasCORS(url)?url:'../../proxy?url=' + encodeURIComponent(url);
               });
             }
 
@@ -818,16 +818,34 @@
 
                   var parts = url.split('?');
 
-                  var proxyUrl = gnGlobalSettings.proxyUrl +
-                      encodeURIComponent(gnUrlUtils.append(parts[0],
-                      gnUrlUtils.toKeyValue({
+      var mergeDefaultParams = function(url, defaultParams) {
+          //merge URL parameters with default ones
+          var parts = url.split('?');
+          var urlParams = angular.isDefined(parts[1]) ?
+              gnUrlUtils.parseKeyValue(parts[1]) : {};
+          for (var p in urlParams) {
+            defaultParams[p] = urlParams[p];
+            if (defaultParams.hasOwnProperty(p.toLowerCase()) &&
+                p != p.toLowerCase()) {
+              delete defaultParams[p.toLowerCase()];
+            }
+          }
+          return gnUrlUtils.append(parts[0],
+              gnUrlUtils.toKeyValue(defaultParams));
+        };
+
+        //todo: check if server supports 1.1.0, else move to 1.3.0
+        var featureURL = mergeDefaultParams(url,{
                         service: 'WFS',
                         request: 'GetFeature',
                         version: '1.1.0',
                         srsName: map.getView().getProjection().getCode(),
                         bbox: extent.join(','),
                         typename: getCapLayer.name.prefix + ':' +
-                                   getCapLayer.name.localPart})));
+                                   getCapLayer.name.localPart});
+
+                  var proxyUrl = viewerSettings.hasCORS?url:gnGlobalSettings.proxyUrl +
+                      encodeURIComponent(url);
 
                   $.ajax({
                     url: proxyUrl
