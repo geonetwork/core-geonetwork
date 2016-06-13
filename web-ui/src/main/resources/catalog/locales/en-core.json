@@ -27,6 +27,8 @@
     "_indexingError": "Indexing error",
     "_source": "Catalog",
     "previousKeywords": "Previous",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
     "topConcepts": "Top Concept(s)",
     "add": "Add",
     "address": "Address",

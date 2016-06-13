@@ -94,6 +94,15 @@
             scope.config.currentPage = scope.config.pages;
             scope.updateSearch();
           };
+          var events = ['first', 'previous', 'next', 'last'];
+          angular.forEach(events, function (key) {
+            scope.$on(key + 'Page', function(evt, cbFn) {
+              scope[key]();
+              if (angular.isFunction(cbFn)) {
+                cbFn();
+              }
+            });
+          });
           controller.activatePagination();
 
           if (angular.isDefined(attrs.enableHotKeys)) {
