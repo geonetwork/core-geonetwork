@@ -2,7 +2,7 @@
 	data-ng-controller="mdFeedbackController">
   <a href data-ng-click="toggle()" class="btn btn-link btn-sm">
     <i class="fa fa-fw fa-comments-o"></i>
-    <span data-translate="">fbFeedback</span>
+    <span class="hidden-xs" data-translate="">fbFeedback</span>
   </a>
 	<div class="modal fade">
 		<div class="modal-dialog">
@@ -14,101 +14,96 @@
 				</div>
         <form class="form-horizontal" role="form" id="gn-contact-md-form">
 				  <div class="modal-body">
-					 <h4 data-translate="">fbContact</h4>
-						<div class="form-group">
-							<label class="col-sm-3 control-label ngr-md-label" data-translate="">fbName</label>
-							<div class="col-sm-9">
-								<input type="text" class="form-control" name="name"
-									value="{{user.name}}" required="required" />
-							</div>
-						</div>
-						<div class="form-group">
-<<<<<<< HEAD
-							<label class="col-sm-3 control-label" data-translate="">email</label>
-							<div class="col-sm-9">
-								<input type="email" class="form-control" name="email"
-									value="{{user.email[0]}}" required="required" />
-							</div>
-						</div>
-=======
-              <label class="col-sm-3 control-label"></label>
-              <div class="col-sm-9">
-                <label class="radio-inline">
-                  <input type="radio" name="gender" value="{{user.gender}}"> M
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="gender" value="{{user.gender}}"> V
-                </label>
+            <div class="ngr-margin-bottom">
+  					  <h4 data-translate="">fbContact</h4>
+  						<div class="form-group">
+  							<label class="col-sm-3 control-label ngr-md-label" data-translate="">fbName</label>
+  							<div class="col-sm-9">
+  								<input type="text" class="form-control" name="name"
+  									value="{{user.name}}" required="required" />
+  							</div>
+  						</div>
+  						<div class="form-group">
+                <label class="col-sm-3 control-label"></label>
+                <div class="col-sm-9">
+                  <label class="radio-inline">
+                    <input type="radio" name="gender" value="{{user.gender}}"> M
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" name="gender" value="{{user.gender}}"> V
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label ngr-md-label" data-translate="">fbFunction</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" name="name"
+                    value="{{user.function}}" required="required" />
+                </div>
+              </div>
+  						<div class="form-group">
+  							<label class="col-sm-3 control-label ngr-md-label" data-translate="">organization</label>
+  							<div class="col-sm-9">
+  								<input type="text" class="form-control" name="org"
+  									required="required" />
+  							</div>
+  						</div>
+  						<div class="form-group">
+  							<label class="col-sm-3 control-label ngr-md-label" data-translate="">fbPhone</label>
+  							<div class="col-sm-9">
+  								<input type="tel" class="form-control" name="phone"
+  									data-gn-autogrow=""></input>
+  							</div>
+  						</div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label ngr-md-label" data-translate="">email</label>
+                <div class="col-sm-9">
+                  <input type="email" class="form-control" name="email"
+                    value="{{user.email|empty}}" required="required" />
+                </div>
               </div>
             </div>
-            <div class="form-group">
-              <label class="col-sm-3 control-label ngr-md-label" data-translate="">fbFunction</label>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" name="name"
-                  value="{{user.function}}" required="required" />
+            <div class="ngr-margin-top">
+              <h4 data-translate="">fbFeedback</h4>
+              <div class="form-group">
+                <label class="col-sm-3 control-label ngr-md-label" data-translate="">fbFunction</label>
+                <div class="col-sm-9">
+                  <select class="form-control" name="type" required="required">
+                    <option value="question" data-translate="">Vraag</option>
+                    <option value="error" data-translate="">Fout</option>
+                    <option value="comment" data-translate="">Opmerking</option>
+                    <option value="contact" data-translate="">Contact</option>
+                  </select>
+                </div>
               </div>
-            </div>
->>>>>>> e82fa06... Styling of the feedback form:
-						<div class="form-group">
-							<label class="col-sm-3 control-label ngr-md-label" data-translate="">organization</label>
-							<div class="col-sm-9">
-								<input type="text" class="form-control" name="org"
-									required="required" />
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label ngr-md-label" data-translate="">fbPhone</label>
-							<div class="col-sm-9">
-								<input type="tel" class="form-control" name="phone"
-									data-gn-autogrow=""></input>
-							</div>
-						</div>
-            <div class="form-group">
-              <label class="col-sm-3 control-label ngr-md-label" data-translate="">email</label>
-              <div class="col-sm-9">
-                <input type="email" class="form-control" name="email"
-                  value="{{user.email|empty}}" required="required" />
+              <div class="form-group">
+                <label class="col-sm-3 control-label ngr-md-label" data-translate="">category</label>
+                <div class="col-sm-9">
+                  <select class="form-control" name="category" required="required">
+                    <option>Metadata inhoud</option>
+                    <option>Data inhoud</option>
+                    <option>Service inhoud</option>
+                    <option>Support</option>
+                    <option>Kaartviewer</option>
+                    <option>Zoeken</option>
+                    <option>Organisaties</option>
+                    <option>Contentbeheer</option>
+                    <option>Metadata importeren</option>
+                    <option>Metadata bewerken</option>
+                    <option>Harvesting</option>
+                    <option>Validator</option>
+                    <option>Anders</option>
+                  </select>
+                </div>
               </div>
+  						<div class="form-group">
+  							<label class="col-sm-3 control-label ngr-md-label" data-translate="">comments</label>
+  							<div class="col-sm-9">
+  								<textarea class="form-control" name="comments"
+  									data-gn-autogrow="" required="required"></textarea>
+  							</div>
+  						</div>
             </div>
-            <h4 data-translate="">fbFeedback</h4>
-            <div class="form-group">
-              <label class="col-sm-3 control-label ngr-md-label" data-translate="">fbFunction</label>
-              <div class="col-sm-9">
-                <select class="form-control" name="type" required="required">
-                  <option value="question" data-translate="">Vraag</option>
-                  <option value="error" data-translate="">Fout</option>
-                  <option value="comment" data-translate="">Opmerking</option>
-                  <option value="contact" data-translate="">Contact</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-3 control-label ngr-md-label" data-translate="">category</label>
-              <div class="col-sm-9">
-                <select class="form-control" name="category" required="required">
-                  <option>Metadata inhoud</option>
-                  <option>Data inhoud</option>
-                  <option>Service inhoud</option>
-                  <option>Support</option>
-                  <option>Kaartviewer</option>
-                  <option>Zoeken</option>
-                  <option>Organisaties</option>
-                  <option>Contentbeheer</option>
-                  <option>Metadata importeren</option>
-                  <option>Metadata bewerken</option>
-                  <option>Harvesting</option>
-                  <option>Validator</option>
-                  <option>Anders</option>
-                </select>
-              </div>
-            </div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label ngr-md-label" data-translate="">comments</label>
-							<div class="col-sm-9">
-								<textarea class="form-control" name="comments"
-									data-gn-autogrow="" required="required"></textarea>
-							</div>
-						</div>
 						
 						<p class="alert alert-info" data-ng-if="success" data-translate="">feebackSent</p>
 					
