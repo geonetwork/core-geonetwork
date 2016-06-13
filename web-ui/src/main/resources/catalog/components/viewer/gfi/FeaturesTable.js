@@ -58,51 +58,60 @@
   GnFeaturesTableController.prototype.initTable = function(element, scope) {
 
     this.loader.getBsTableConfig().then(function(bstConfig) {
+      var once = true;
       element.bootstrapTable('destroy');
       element.bootstrapTable(
-          angular.extend({
-            height: 250,
-            sortable: true,
-            onPostBody: function() {
-              var trs = element.find('tbody').children();
-              for (var i = 0; i < trs.length; i++) {
-                $(trs[i]).mouseenter(function(e) {
-                  // Hackish over event from:
-                  // https://github.com/wenzhixin/bootstrap-table/issues/782
-                  var row = $(e.currentTarget)
-                      .parents('table')
-                      .data()['bootstrap.table']
-                      .data[$(e.currentTarget).data('index')];
-                  if (!row) { return; }
-                  var feature = this.loader.getFeatureFromRow(row);
-                  var source = this.featuresTablesCtrl.fOverlay.getSource();
-                  source.clear();
-                  if (feature && feature.getGeometry()) {
-                    source.addFeature(feature);
-                  }
-                }.bind(this));
-                $(trs[i]).mouseleave(function(e) {
-                  this.featuresTablesCtrl.fOverlay.getSource().clear();
-                }.bind(this));
-              }
-            }.bind(this),
-            onDblClickRow: function(row, elt) {
-              if (!this.map) {
-                return;
-              }
-              var feature = this.loader.getFeatureFromRow(row);
-              if (feature && feature.getGeometry()) {
-                var pan = ol.animation.pan({
-                  duration: 500,
-                  source: this.map.getView().getCenter()
-                });
-                this.map.beforeRender(pan);
-                this.map.getView().fit(
-                    feature.getGeometry(),
-                    this.map.getSize(),
-                    { minResolution: 40 }
-                );
-              }
+        angular.extend({
+          height: 250,
+          sortable: true,
+          onPostBody: function() {
+            var trs = element.find('tbody').children();
+            for (var i = 0; i < trs.length; i++) {
+              $(trs[i]).mouseenter(function(e) {
+                // Hackish over event from:
+                // https://github.com/wenzhixin/bootstrap-table/issues/782
+                var row = $(e.currentTarget)
+                  .parents('table')
+                  .data()['bootstrap.table']
+                  .data[$(e.currentTarget).data('index')];
+                if (!row) { return; }
+                var feature = this.loader.getFeatureFromRow(row);
+                var source = this.featuresTablesCtrl.fOverlay.getSource();
+                source.clear();
+                if (feature && feature.getGeometry()) {
+                  source.addFeature(feature);
+                }
+              }.bind(this));
+              $(trs[i]).mouseleave(function(e) {
+                this.featuresTablesCtrl.fOverlay.getSource().clear();
+              }.bind(this));
+            }
+            element.parents('gn-features-table').find('.clearfix')
+              .addClass('sxt-clearfix')
+              .removeClass('clearfix');
+          }.bind(this),
+          onPostHeader: function() { // avoid resizing issue on page change
+            if (!once) { return; }
+            element.bootstrapTable('resetView');
+            once = false;
+          },
+          onDblClickRow: function(row, elt) {
+            if (!this.map) {
+              return;
+            }
+            var feature = this.loader.getFeatureFromRow(row);
+            if (feature && feature.getGeometry()) {
+              var pan = ol.animation.pan({
+                duration: 500,
+                source: this.map.getView().getCenter()
+              });
+              this.map.beforeRender(pan);
+              this.map.getView().fit(
+                feature.getGeometry(),
+                this.map.getSize(),
+                { minResolution: 40 }
+              );
+            }
 
             }.bind(this),
             showExport: true,
