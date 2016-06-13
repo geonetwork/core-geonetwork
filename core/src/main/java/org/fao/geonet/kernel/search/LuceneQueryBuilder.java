@@ -1079,8 +1079,10 @@ public class LuceneQueryBuilder {
                                       boolean maxExclusive, String luceneIndexField, boolean required) {
         if (min != null && max != null) {
             String type = _numericFieldSet.get(luceneIndexField).getType();
+            int precisionStep = _numericFieldSet.get(luceneIndexField).getPrecisionStep();
 
-            NumericRangeQuery<? extends Number> rangeQuery = buildNumericRangeQueryForType(luceneIndexField, min, max, minInclusive, maxExclusive, type);
+            NumericRangeQuery<? extends Number> rangeQuery = buildNumericRangeQueryForType(luceneIndexField, min, max,
+                    minInclusive, maxExclusive, type, precisionStep);
 
             BooleanClause.Occur denoOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(required, false);
             BooleanClause rangeClause = new BooleanClause(rangeQuery, denoOccur);
@@ -1090,29 +1092,29 @@ public class LuceneQueryBuilder {
     }
 
     public static NumericRangeQuery<? extends Number> buildNumericRangeQueryForType(String fieldName, String min, String max,
-                                                                  boolean minInclusive, boolean maxInclusive, String type) {
+                                                                  boolean minInclusive, boolean maxInclusive, String type, int precisionStep) {
         NumericRangeQuery<? extends Number> rangeQuery;
         if ("double".equals(type)) {
-            rangeQuery = NumericRangeQuery.newDoubleRange(fieldName,
+            rangeQuery = NumericRangeQuery.newDoubleRange(fieldName, precisionStep,
                     (min == null ? Double.MIN_VALUE : Double.parseDouble(min)),
                     (max == null ? Double.MAX_VALUE : Double.parseDouble(max)),
                     true, true);
 
         }
         else if ("float".equals(type)) {
-            rangeQuery = NumericRangeQuery.newFloatRange(fieldName,
+            rangeQuery = NumericRangeQuery.newFloatRange(fieldName, precisionStep,
                     (min == null ? Float.MIN_VALUE : Float.parseFloat(min)),
                     (max == null ? Float.MAX_VALUE : Float.parseFloat(max)), true,
                     true);
         }
         else if ("long".equals(type)) {
-            rangeQuery = NumericRangeQuery.newLongRange(fieldName,
+            rangeQuery = NumericRangeQuery.newLongRange(fieldName, precisionStep,
                     (min == null ? Long.MIN_VALUE : Long.parseLong(min)),
                     (max == null ? Long.MAX_VALUE : Long.parseLong(max)), true,
                     true);
         }
         else {
-            rangeQuery = NumericRangeQuery.newIntRange(fieldName,
+            rangeQuery = NumericRangeQuery.newIntRange(fieldName, precisionStep,
                     (min == null ? Integer.MIN_VALUE : Integer.parseInt(min)),
                     (max == null ? Integer.MAX_VALUE : Integer.parseInt(max)),
                     true, true);
