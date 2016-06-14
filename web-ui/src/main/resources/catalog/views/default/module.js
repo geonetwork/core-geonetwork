@@ -170,11 +170,23 @@
         gnMdView.removeLocationUuid();
       };
       $scope.nextRecord = function() {
-        // TODO: When last record of page reached, go to next page...
-        $scope.openRecord(mdView.current.index + 1);
+        var nextRecordId = mdView.current.index + 1;
+        if (nextRecordId === mdView.records.length) {
+          // When last record of page reached, go to next page...
+          // Not the most elegant way to do it, but it will
+          // be easier using Solr search components
+          $scope.$broadcast('nextPage');
+        } else {
+          $scope.openRecord(nextRecordId);
+        }
       };
       $scope.previousRecord = function() {
-        $scope.openRecord(mdView.current.index - 1);
+        var prevRecordId = mdView.current.index - 1;
+        if (prevRecordId === -1) {
+          $scope.$broadcast('previousPage');
+        } else {
+          $scope.openRecord(prevRecordId);
+        }
       };
 
       $scope.infoTabs = {
@@ -190,7 +202,7 @@
         }};
 
       // Set the default browse mode for the home page
-      $scope.$watch('searchInfo', function () {
+      $scope.$watch('searchInfo', function (n, o) {
         if (angular.isDefined($scope.searchInfo.facet)) {
           if ($scope.searchInfo.facet['inspireThemes'].length > 0) {
             $scope.browse = 'inspire';

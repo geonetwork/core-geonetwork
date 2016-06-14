@@ -2179,12 +2179,6 @@ public class LuceneQueryTest {
         Element extended = factory.element("extended");
         extended.addContent("off");
         request.addContent(extended);
-        Element remote = factory.element("remote");
-        remote.addContent("off");
-        request.addContent(remote);
-        Element timeout = factory.element("timeout");
-        timeout.addContent("20");
-        request.addContent(timeout);
         Element hitsPerPage = factory.element("hitsPerPage");
         hitsPerPage.addContent("10");
         request.addContent(hitsPerPage);

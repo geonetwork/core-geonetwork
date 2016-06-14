@@ -12,6 +12,9 @@
     "Reviewer": "Recenzent",
     "SUB_TEMPLATE": "Slovníkový záznam",
     "TEMPLATE": "Šablona",
+    "indexWFSFeatures": "Index data",
+    "reindexWFSFeatures": "Clean and index data",
+    "docTypeNotIndexed": "Features not indexed.",
     "recordType-y": "Šablona",
     "recordType-n": "Metadata",
     "recordType-s": "Adresářový záznam",
@@ -199,6 +202,7 @@
     "weblink": "Odkazy",
     "downloads": "Stáhnout",
     "maps": "Mapy",
+    "spatialExtent": "Spatial extent",
     "sessionIsAboutToBeCancelled": "Vaše relace bude brzy zrušena!",
     "sessionAlertMsg": "Poslední aktivita byla zjištěna {{startedAt}} a vaše relace brzy skončí {{willBeCancelledIn}}s (max. doba nečinnosti je {{length}}s). Máte-li neuložené změny, měli byste si svou práci uložit! V opačném případě budete brzy odpojeni.",
     "sessionWillExpireIn": "Vaše relace skončí v {{remainingTime}}s. Uložte si práci!",
@@ -276,5 +280,6 @@
     "ImportRecord": "Importovat nové záznamy",
     "directoryManager": "Spravovat adresář",
     "typeOfRecord": "Typ záznamu",
-    "load": "Načíst"
+    "load": "Načíst",
+    "solrAccessError": "Error during Solr access."
 }

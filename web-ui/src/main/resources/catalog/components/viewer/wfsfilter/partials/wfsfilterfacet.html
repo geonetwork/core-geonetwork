@@ -105,7 +105,8 @@
         <i class="fa fa-cog"></i>
         <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" data-ng-if="::(user.canEditRecord(md) || md.isHarvested == 'y')">
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"
+          data-ng-show="user.canEditRecord(md) || md.isHarvested == 'y'">
         <li>
           <a href="" data-ng-click="indexWFSFeatures()">
             <i class="fa fa-codiepie"></i>&nbsp;

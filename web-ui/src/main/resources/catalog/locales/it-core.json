@@ -12,6 +12,9 @@
     "Reviewer": "Reviewer",
     "SUB_TEMPLATE": "Directory entry",
     "TEMPLATE": "Modello",
+    "indexWFSFeatures": "Index data",
+    "reindexWFSFeatures": "Clean and index data",
+    "docTypeNotIndexed": "Features not indexed.",
     "recordType-y": "Template",
     "recordType-n": "Metadata",
     "recordType-s": "Directory entry",
@@ -199,6 +202,7 @@
     "weblink": "Links",
     "downloads": "Scaricare",
     "maps": "Maps",
+    "spatialExtent": "Spatial extent",
     "sessionIsAboutToBeCancelled": "Your session is about to be cancelled!",
     "sessionAlertMsg": "Last activity was tracked {{startedAt}} and your session will expire in {{willBeCancelledIn}}s (max inactivity time is {{length}}s). You should save your work if you have any unsaved changes! If not, you'll be disconnected soon.",
     "sessionWillExpireIn": "Your session will expire in {{remainingTime}}s. Save your work!",
@@ -276,5 +280,6 @@
     "ImportRecord": "Import new records",
     "directoryManager": "Manage directory",
     "typeOfRecord": "Type of record",
-    "load": "Load"
+    "load": "Load",
+    "solrAccessError": "Error during Solr access."
 }

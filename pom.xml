@@ -690,6 +690,13 @@
         <groupId>org.geotools</groupId>
         <artifactId>gt-xml</artifactId>
         <version>${geotools.version}</version>
+        <exclusions>
+          <exclusion>
+					<!-- org.apache.xml:xml-commons-resolver:jar:1.2 -->
+            <groupId>org.apache.xml</groupId>
+            <artifactId>xml-commons-resolver</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.geotools.xsd</groupId>

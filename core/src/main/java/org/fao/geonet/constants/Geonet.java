@@ -46,9 +46,7 @@ public final class Geonet {
 
     public static final String CC_API_REST_URL = "http://api.creativecommons.org/rest/1.5/simple/chooser";
     public static final String LUCENE_LOCALE_KEY = "_locale";
-    //
-    //--- logging
-    //
+    
     /**
      * Container for file names.
      */
@@ -78,7 +76,6 @@ public final class Geonet {
         public static final String SCHEMA_OASIS = "oasis-catalog.xml";
         public static final String SCHEMA_PLUGINS_CATALOG = "schemaplugin-uri-catalog.xml";
         public static final String SORT_HARVESTERS = "sort-harvesters.xsl";
-        public static final String JZKITCONFIG_TEMPLATE = "JZKitConfig.xml.tem";
         public static final String JZKITAPPLICATIONCONTEXT = "JZkitApplicationContext.xml";
 
         /**
@@ -381,27 +378,6 @@ public final class Geonet {
          * org.fao.geonet.constants.Geonet.Text#OFF} (default)
          */
         public static final String EXTENDED = "extended";
-
-        /**
-         * Parameter name: {@value #REMOTE} - Boolean that indicates if search is done on the local
-         * repository or using Z39.50 for on the fly searches in remote catalogs. Values are {@value
-         * org.fao.geonet.constants.Geonet.Text#ON} or {@value org.fao.geonet.constants.Geonet.Text#OFF}
-         * (default)
-         */
-        public static final String REMOTE = "remote";
-
-        /**
-         * Parameter name: {@value #TIMEOUT} - Time in seconds the Z39.50 search waits for responses
-         * from remote servers before timing out. Default is 20 seconds
-         */
-        public static final String TIMEOUT = "timeout";
-
-        /**
-         * Parameter name: {@value #SERVERHTML} - Boolean that indicates whether remote Z39.50
-         * server should return HTML or XML. Values are {@value org.fao.geonet.constants.Geonet.Text#ON}
-         * or {@value org.fao.geonet.constants.Geonet.Text#OFF} (default)
-         */
-        public static final String SERVERHTML = "serverhtml";
 
         /**
          * Parameter name: {@value #HITS_PER_PAGE} - Number of results returned by the search
