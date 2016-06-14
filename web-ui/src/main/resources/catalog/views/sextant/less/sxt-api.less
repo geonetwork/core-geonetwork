@@ -71,7 +71,7 @@
         .dropdown-menu {
           max-width: 195px;
         }
-        .btn-group button {
+        button {
           height: 2.3em;
         }
       }
@@ -131,6 +131,22 @@
     max-height: none;
   }
 
+  .gn-features-table {
+    &::before {
+      content: ' ';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      height: 5em;
+      background: white;
+      z-index: 0;
+    }
+    .dropdown-menu {
+      line-height: 2.5em;
+    }
+  }
+
 }
 
 .portlet-borderless-container [gn-metadata-display].sxt-scroll {
@@ -164,6 +180,9 @@
   }
   & > div:only-child {
     position : absolute;
+  }
+  #panierModal {
+    display: block;
   }
 }
 

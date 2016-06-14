@@ -16202,10 +16202,6 @@ yx-axis
 }
 .gn [sxt-main-viewer] gn-features-tables .export button,
 .g [sxt-main-viewer] gn-features-tables .export button {
-  /* .btn-primary; */
-  /* .btn-sm; */
-  /* padding: 3px 8px; */
-  /* margin-right: .15em; */
   display: none;
 }
 .gn [sxt-main-viewer] gn-features-tables .export ul,
@@ -21535,10 +21531,10 @@ yx-axis
 .g ul.gn-resultview li.gn-grid .gn-md-links .dropdown-menu {
   max-width: 195px;
 }
-.gn ul.gn-resultview li.gn-grid .gn-md-relations .btn-group button,
-.g ul.gn-resultview li.gn-grid .gn-md-relations .btn-group button,
-.gn ul.gn-resultview li.gn-grid .gn-md-links .btn-group button,
-.g ul.gn-resultview li.gn-grid .gn-md-links .btn-group button {
+.gn ul.gn-resultview li.gn-grid .gn-md-relations button,
+.g ul.gn-resultview li.gn-grid .gn-md-relations button,
+.gn ul.gn-resultview li.gn-grid .gn-md-links button,
+.g ul.gn-resultview li.gn-grid .gn-md-links button {
   height: 2.3em;
 }
 .gn .metadata.panel-default,
@@ -21594,6 +21590,21 @@ yx-axis
 .gn [gn-popup],
 .g [gn-popup] {
   max-height: none;
+}
+.gn .gn-features-table::before,
+.g .gn-features-table::before {
+  content: ' ';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 5em;
+  background: white;
+  z-index: 0;
+}
+.gn .gn-features-table .dropdown-menu,
+.g .gn-features-table .dropdown-menu {
+  line-height: 2.5em;
 }
 .portlet-borderless-container [gn-metadata-display].sxt-scroll {
   position: relative;
@@ -21673,6 +21684,9 @@ yx-axis
 }
 .g > div:only-child {
   position: absolute;
+}
+.g #panierModal {
+  display: block;
 }
 .modal-open {
   overflow: visible;

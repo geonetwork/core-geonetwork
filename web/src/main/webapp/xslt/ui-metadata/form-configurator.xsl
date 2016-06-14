@@ -375,13 +375,15 @@
               </xsl:call-template>
             </xsl:variable>
 
+            <xsl:variable name="originalNode"
+                          select="gn-fn-metadata:getOriginalNode($metadata, .)"/>
+
             <xsl:variable name="refToDelete">
               <xsl:call-template name="get-ref-element-to-delete">
-                <xsl:with-param name="node" select="$currentNode"/>
+                <xsl:with-param name="node" select="$originalNode"/>
                 <xsl:with-param name="delXpath" select="$del"/>
               </xsl:call-template>
             </xsl:variable>
-
 
             <!-- If the element exist, use the _X<ref> mode which
                   insert the snippet for the element if not use the
@@ -394,7 +396,7 @@
               <xsl:with-param name="isExisting" select="true()"/>
               <xsl:with-param name="template" select="$templateCombinedWithNode"/>
               <xsl:with-param name="keyValues" select="$keyValues"/>
-              <xsl:with-param name="refToDelete" select="$refToDelete"/>
+              <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
               <xsl:with-param name="isFirst" select="$forceLabel or position() = 1"/>
             </xsl:call-template>
           </xsl:for-each>

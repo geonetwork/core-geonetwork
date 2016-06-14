@@ -1150,7 +1150,6 @@
 
       <xsl:variable name="elementToRemove" select="if ($parentEditInfo) then
         $parentEditInfo else $editInfo"/>
-
       <a class="btn pull-right"
          data-gn-click-and-spin="remove({$elementToRemove/@ref}, {$elementToRemove/@parent}, {$editInfo/@ref})"
          data-gn-field-highlight-remove="{$editInfo/@ref}"

@@ -538,11 +538,11 @@
             </xsl:otherwise>
           </xsl:choose>
           &#13;
-          <xsl:if test="contains($mail, '@')">
-            <a href="mailto:{$mail}">
+          <xsl:for-each select="$mail[contains(text(), '@')]">
+            <a href="mailto:{.}" title="{.}">
               <img src="{root/url}/geonetwork/images/mail.png"/>
             </a>
-          </xsl:if>
+          </xsl:for-each>
           <xsl:if test="position() != last()"><br/></xsl:if>
         </xsl:for-each>
       </td>
