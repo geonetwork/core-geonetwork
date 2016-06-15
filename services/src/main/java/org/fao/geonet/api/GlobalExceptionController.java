@@ -37,10 +37,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
-import org.w3c.dom.xpath.XPathException;
 
 import java.io.FileNotFoundException;
-import java.util.LinkedHashMap;
 import java.util.MissingResourceException;
 
 /**
@@ -48,7 +46,7 @@ import java.util.MissingResourceException;
 @ControllerAdvice
 public class GlobalExceptionController {
 
-    @ResponseBody
+/*    @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({
         SecurityException.class
@@ -59,84 +57,57 @@ public class GlobalExceptionController {
             put("message", exception.getClass().getSimpleName());
             put("description", exception.getMessage());
         }};
-    }
+    }*/
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
         MaxUploadSizeExceededException.class
     })
-    public Object maxFileExceededHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "max_file_exceeded");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError maxFileExceededHandler(final Exception exception) {
+        return new ApiError("max_file_exceeded", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-        RuntimeException.class,
-        HttpMessageNotReadableException.class,
-        XPathException.class
+        HttpMessageNotReadableException.class
     })
-    public Object runtimeExceptionHandler(final Exception exception) {
-        exception.printStackTrace();
-        return new LinkedHashMap<String, String>() {{
-            put("code", "runtime_exception");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError runtimeExceptionHandler(final Exception exception) {
+        return new ApiError("runtime_exception", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
-            FileNotFoundException.class,
-            NoResultsFoundException.class})
-    public Object NotFoundHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "not_found");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+        FileNotFoundException.class,
+        NoResultsFoundException.class})
+    public ApiError NotFoundHandler(final Exception exception) {
+        return new ApiError("not_found", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
         UserNotFoundEx.class,
         ResourceNotFoundException.class})
-    public Object resourceNotFoundHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "resource_not_found");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError resourceNotFoundHandler(final Exception exception) {
+        return new ApiError("resource_not_found", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
         ResourceAlreadyExistException.class})
-    public Object resourceAlreadyExistHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "resource_already_exist");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError resourceAlreadyExistHandler(final Exception exception) {
+        return new ApiError("resource_already_exist", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public Object missingParameterHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "required_parameter_missing");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError missingParameterHandler(final Exception exception) {
+        return new ApiError("required_parameter_missing", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
@@ -146,12 +117,9 @@ public class GlobalExceptionController {
         IllegalArgumentException.class,
         MultipartException.class
     })
-    public Object unsatisfiedParameterHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "unsatisfied_request_parameter");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError unsatisfiedParameterHandler(final Exception exception) {
+        return new ApiError("unsatisfied_request_parameter", exception.getClass().getSimpleName(),
+            exception.getMessage());
     }
 
     @ResponseBody
@@ -159,11 +127,8 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         MissingResourceException.class
     })
-    public Object missingResourceHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "missing_resource_parameter");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError missingResourceHandler(final Exception exception) {
+        return new ApiError("missing_resource_parameter", exception.getClass().getSimpleName(),
+            exception.getMessage());
     }
 }

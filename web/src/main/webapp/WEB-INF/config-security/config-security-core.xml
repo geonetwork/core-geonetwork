@@ -217,15 +217,30 @@
     <property name="accessDeniedHandler" ref="accessDeniedHandler"/>
   </bean>
 
-  <bean id="authenticationEntryPoint"
+  <bean id="defaultAuthenticationEntryPoint"
         class="jeeves.config.springutil.JeevesNodeAwareLoginUrlEntryPoint">
-    <constructor-arg index="0" value="${loginForm}"/>
+    <constructor-arg name="loginFormUrl" value="${loginForm}"/>
+  </bean>
+
+  <bean id="ajaxEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" />
+
+  <bean id="authenticationEntryPoint"
+        class="org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint">
+    <constructor-arg>
+      <map>
+        <entry key-ref="apiRequestMatcher" value-ref="ajaxEntryPoint"/>
+      </map>
+    </constructor-arg>
+    <property name="defaultEntryPoint" ref="defaultAuthenticationEntryPoint" />
+  </bean>
+  <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher" id="apiRequestMatcher">
+    <constructor-arg name="pattern" value="/*/api/**" />
   </bean>
 
   <bean id="accessDeniedHandler"
         class="jeeves.config.springutil.JeevesAccessDeniedHandler">
     <property name="errorPage" value="/accessDenied.jsp"/>
-    <property name="onlyStatusResponsePages" value="/api/**" />
+    <property name="onlyStatusResponsePages" value="/*/api/**" />
   </bean>
 
   <!-- TODO remember me.
