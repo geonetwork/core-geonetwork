@@ -74,27 +74,27 @@
              gnSearchManagerService,
              gnUtilityService, gnSearchSettings, gnGlobalSettings) {
       $scope.modelOptions =
-        angular.copy(gnGlobalSettings.modelOptions);
+          angular.copy(gnGlobalSettings.modelOptions);
 
       $scope.pageMenu = {
         folder: 'tools/',
         defaultTab: 'index',
         tabs:
-          [{
-            type: 'index',
-            label: 'indexAdmin',
-            icon: 'fa-search',
-            href: '#/tools/index'
-          },{
-            type: 'batch',
-            label: 'batchProcess',
-            icon: 'fa-medkit',
-            href: '#/tools/batch'
-          },{
-            type: 'transferownership',
-            label: 'transfertPrivs',
-            href: '#/tools/transferownership'
-          }]
+            [{
+              type: 'index',
+              label: 'indexAdmin',
+              icon: 'fa-search',
+              href: '#/tools/index'
+            },{
+              type: 'batch',
+              label: 'batchProcess',
+              icon: 'fa-medkit',
+              href: '#/tools/batch'
+            },{
+              type: 'transferownership',
+              label: 'transfertPrivs',
+              href: '#/tools/transferownership'
+            }]
       };
 
       /**
@@ -156,13 +156,13 @@
 
       gnSearchSettings.resultViewTpls = [{
         tplUrl: '../../catalog/components/search/resultsview/' +
-                'partials/viewtemplates/titlewithselection.html',
+            'partials/viewtemplates/titlewithselection.html',
         tooltip: 'List',
         icon: 'fa-list'
       }];
 
       gnSearchSettings.resultTemplate =
-        gnSearchSettings.resultViewTpls[0].tplUrl;
+          gnSearchSettings.resultViewTpls[0].tplUrl;
 
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = 'manager';
 
@@ -186,38 +186,38 @@
       function loadEditors() {
         $http.get('admin.ownership.editors?_content_type=json')
           .success(function(data) {
-            $scope.editors = data;
-          });
+              $scope.editors = data;
+            });
       }
       $scope.selectUser = function(id) {
         $scope.editorSelectedId = id;
         $http.get('admin.usergroups.list?_content_type=json&id=' + id)
           .success(function(data) {
-            var uniqueGroup = {};
-            angular.forEach(data, function(value) {
-              if (!uniqueGroup[value.id]) {
-                uniqueGroup[value.id] = value;
-              }
+              var uniqueGroup = {};
+              angular.forEach(data, function(value) {
+                if (!uniqueGroup[value.id]) {
+                  uniqueGroup[value.id] = value;
+                }
+              });
+              $scope.editorGroups = uniqueGroup;
+            }).error(function(data) {
             });
-            $scope.editorGroups = uniqueGroup;
-          }).error(function(data) {
-        });
 
         $http.get('admin.ownership.groups?_content_type=json&id=' + id)
           .success(function(data) {
-            // If user does not have group and only one
-            // target group, a simple object is returned
-            // and it should be a target group ? FIXME
-            if (!data.group && !data.targetGroup) {
-              data.group = data;
-              data.targetGroup = data;
-            }
-            // Make all group and targetGroup arrays.
-            $scope.groupinfo = {
-              group: [].concat(data.group),
-              targetGroup: [].concat(data.targetGroup)
-            };
-          });
+              // If user does not have group and only one
+              // target group, a simple object is returned
+              // and it should be a target group ? FIXME
+              if (!data.group && !data.targetGroup) {
+                data.group = data;
+                data.targetGroup = data;
+              }
+              // Make all group and targetGroup arrays.
+              $scope.groupinfo = {
+                group: [].concat(data.group),
+                targetGroup: [].concat(data.targetGroup)
+              };
+            });
       };
       $scope.transfertList = {};
 
@@ -238,7 +238,9 @@
         }).success(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
             msg: $translate('transfertPrivilegesFinished',
-                            {privileges: data.privileges, metadata: data.metadata}),
+                            {
+                              privileges: data.privileges,
+                              metadata: data.metadata}),
             timeout: 2,
             type: 'success'});
           params.running = false;
@@ -254,36 +256,36 @@
       function loadProcessConfig() {
         $http.get($scope.base + 'config/batch-process-cfg.json')
           .success(function(data) {
-            $scope.batchProcesses = data.config;
+              $scope.batchProcesses = data.config;
 
-            $timeout(initProcessByRoute);
-          });
+              $timeout(initProcessByRoute);
+            });
       }
 
       function loadGroups() {
         $http.get('admin.group.list?_content_type=json').
-        success(function(data) {
-          $scope.batchSearchGroups = data;
-        }).error(function(data) {
-          // TODO
-        });
+            success(function(data) {
+              $scope.batchSearchGroups = data;
+            }).error(function(data) {
+              // TODO
+            });
       }
       function loadUsers() {
         $http.get('admin.user.list?_content_type=json').
-        success(function(data) {
-          $scope.batchSearchUsers = data;
-        }).error(function(data) {
-          // TODO
-        });
+            success(function(data) {
+              $scope.batchSearchUsers = data;
+            }).error(function(data) {
+              // TODO
+            });
       }
 
       function loadCategories() {
         $http.get('../api/tags').
-        success(function(data) {
-          $scope.batchSearchCategories = data;
-        }).error(function(data) {
-          // TODO
-        });
+            success(function(data) {
+              $scope.batchSearchCategories = data;
+            }).error(function(data) {
+              // TODO
+            });
       }
 
       /**
@@ -295,17 +297,17 @@
       function checkLastBatchProcessReport() {
         // Check if processing
         return $http.get('../api/processes').
-        success(function(data, status) {
-          // TODO: Assume one process is running
-          // Should use the process ID to register and retrieve a process
-          $scope.processReport = data[0];
-          $scope.numberOfRecordsProcessed =
-            $scope.processReport.numberOfRecordsProcessed;
-          if ($scope.processReport &&
-              $scope.processReport.running) {
-            $timeout(checkLastBatchProcessReport, processCheckInterval);
-          }
-        });
+            success(function(data, status) {
+              // TODO: Assume one process is running
+              // Should use the process ID to register and retrieve a process
+              $scope.processReport = data[0];
+              $scope.numberOfRecordsProcessed =
+                 $scope.processReport.numberOfRecordsProcessed;
+              if ($scope.processReport &&
+                 $scope.processReport.running) {
+                $timeout(checkLastBatchProcessReport, processCheckInterval);
+              }
+            });
       }
 
       $scope.runProcess = function(formId) {
@@ -328,28 +330,28 @@
         $http.post(service + '?' +
                    formParams)
           .success(function(data) {
-            $scope.processReport = data;
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: $translate('processFinished'),
-              timeout: 2,
-              type: 'success'});
-            $scope.processing = false;
+              $scope.processReport = data;
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('processFinished'),
+                timeout: 2,
+                type: 'success'});
+              $scope.processing = false;
 
-            // Turn off batch report checking for search and replace mode
-            // AFA as report is not properly set in session
-            // https://github.com/geonetwork/core-geonetwork/issues/828
-            // if (service.indexOf('search-and-replace') === -1) {
-            //   checkLastBatchProcessReport();
-            // }
-          })
+              // Turn off batch report checking for search and replace mode
+              // AFA as report is not properly set in session
+              // https://github.com/geonetwork/core-geonetwork/issues/828
+              // if (service.indexOf('search-and-replace') === -1) {
+              //   checkLastBatchProcessReport();
+              // }
+            })
           .error(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('processError'),
-              error: data,
-              timeout: 0,
-              type: 'danger'});
-            $scope.processing = false;
-          });
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('processError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+              $scope.processing = false;
+            });
 
         // gnUtilityService.scrollTo('#gn-batch-process-report');
         // FIXME
@@ -421,18 +423,18 @@
       function checkIsIndexing() {
         // Check if indexing
         return $http.get('../api/site/indexing').
-        success(function(data, status) {
-          $scope.isIndexing = data;
-          if ($scope.isIndexing) {
-            $timeout(checkIsIndexing, indexCheckInterval);
-          }
-          // Get the number of records (template, records, subtemplates)
-          $http.get('qi?_content_type=json&' +
-                    'template=y or n or s&summaryOnly=true').
-          success(function(data, status) {
-            $scope.numberOfIndexedRecords = data[0]['@count'];
-          });
-        });
+            success(function(data, status) {
+              $scope.isIndexing = data;
+              if ($scope.isIndexing) {
+                $timeout(checkIsIndexing, indexCheckInterval);
+              }
+              // Get the number of records (template, records, subtemplates)
+              $http.get('qi?_content_type=json&' +
+                 'template=y or n or s&summaryOnly=true').
+                 success(function(data, status) {
+                   $scope.numberOfIndexedRecords = data[0]['@count'];
+                 });
+            });
       }
 
       checkIsIndexing();
@@ -440,99 +442,99 @@
       $scope.rebuildIndex = function() {
         return $http.get('admin.index.rebuild?reset=yes')
           .success(function(data) {
-            checkIsIndexing();
-          })
+              checkIsIndexing();
+            })
           .error(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('rebuildIndexError'),
-              error: data,
-              timeout: 0,
-              type: 'danger'});
-          });
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('rebuildIndexError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
 
       $scope.optimizeIndex = function() {
         return $http.get('admin.index.optimize')
           .success(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: $translate('indexOptimizationInProgress'),
-              timeout: 2,
-              type: 'success'});
-            // TODO: Does this is asynch and make the search unavailable?
-          })
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('indexOptimizationInProgress'),
+                timeout: 2,
+                type: 'success'});
+              // TODO: Does this is asynch and make the search unavailable?
+            })
           .error(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('rebuildIndexError'),
-              error: data,
-              timeout: 0,
-              type: 'danger'});
-          });
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('rebuildIndexError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
 
       $scope.reloadLuceneConfig = function() {
         return $http.get('admin.index.config.reload')
           .success(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: $translate('luceneConfigReloaded'),
-              timeout: 2,
-              type: 'success'});
-          })
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('luceneConfigReloaded'),
+                timeout: 2,
+                type: 'success'});
+            })
           .error(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('rebuildIndexError'),
-              error: data,
-              timeout: 0,
-              type: 'danger'});
-          });
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('rebuildIndexError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
 
       $scope.clearXLinkCache = function() {
         return $http.get('admin.index.rebuildxlinks')
           .success(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: $translate('xlinkCacheCleared'),
-              timeout: 2,
-              type: 'success'});
-            // TODO: Does this is asynch and make the search unavailable?
-          })
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('xlinkCacheCleared'),
+                timeout: 2,
+                type: 'success'});
+              // TODO: Does this is asynch and make the search unavailable?
+            })
           .error(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('rebuildIndexError'),
-              error: data,
-              timeout: 0,
-              type: 'danger'});
-          });
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('rebuildIndexError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
 
       $scope.clearJsCache = function() {
         return $http.get('../../static/wroAPI/reloadModel')
           .success(function(data) {
-            $http.get('../../static/wroAPI/reloadCache')
+              $http.get('../../static/wroAPI/reloadCache')
               .success(function(data) {
-                $rootScope.$broadcast('StatusUpdated', {
-                  msg: $translate('jsCacheCleared'),
-                  timeout: 2,
-                  type: 'success'});
-              });
-          });
+                   $rootScope.$broadcast('StatusUpdated', {
+                     msg: $translate('jsCacheCleared'),
+                     timeout: 2,
+                     type: 'success'});
+                 });
+            });
       };
 
       $scope.clearFormatterCache = function() {
       };
       return $http.delete('../api/formatters/cache')
         .success(function(data) {
-          $rootScope.$broadcast('StatusUpdated', {
-            msg: $translate('formatterCacheCleared'),
-            timeout: 2,
-            type: 'success'});
-        })
+            $rootScope.$broadcast('StatusUpdated', {
+              msg: $translate('formatterCacheCleared'),
+              timeout: 2,
+              type: 'success'});
+          })
         .error(function(data) {
-          $rootScope.$broadcast('StatusUpdated', {
-            title: $translate('formatCacheClearFailure'),
-            error: data,
-            timeout: 0,
-            type: 'danger'});
-        });
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate('formatCacheClearFailure'),
+              error: data,
+              timeout: 0,
+              type: 'danger'});
+          });
 
 
 
@@ -551,11 +553,11 @@
           $scope.replacer.replacements = [];
         }
         $scope.replacer.replacements.push({
-                                            'package': $scope.replacer.group,
-                                            'element': $scope.replacer.element,
-                                            'searchval': $scope.replacer.searchval,
-                                            'replaceval': $scope.replacer.replaceval
-                                          });
+          'package': $scope.replacer.group,
+          'element': $scope.replacer.element,
+          'searchval': $scope.replacer.searchval,
+          'replaceval': $scope.replacer.replaceval
+        });
 
         $scope.replacer.group = '';
         $scope.replacer.element = '';
@@ -565,13 +567,13 @@
 
       $scope.removeReplacement = function(replacement) {
         $scope.replacer.replacements.splice(
-          $scope.replacer.replacements.indexOf(replacement), 1);
+            $scope.replacer.replacements.indexOf(replacement), 1);
       };
 
       $scope.loadReplacementConfig = function() {
         try {
           $scope.replacer.replacements =
-            angular.fromJson($scope.data.replacementsConfig);
+              angular.fromJson($scope.data.replacementsConfig);
         } catch (e) {
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate('error'),
@@ -584,7 +586,7 @@
       $scope.downloadReplacementConfig = function($event) {
         var content = 'data:text/json;charset=utf-8,' +
                       encodeURIComponent(
-                        JSON.stringify(
+            JSON.stringify(
                           $scope.replacer.replacements));
         $($event.target).parent('a')
           .attr('download', 'config.json')
@@ -601,7 +603,7 @@
         }
 
         $scope.replacer.elements =
-          $scope.selectedProcess.config[newValue].elements;
+            $scope.selectedProcess.config[newValue].elements;
       });
 
 

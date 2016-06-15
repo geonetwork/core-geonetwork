@@ -123,7 +123,7 @@
               headers: {
                 Accept: 'text/html'
               }
-            })
+            });
           });
         }
       };

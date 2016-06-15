@@ -335,7 +335,7 @@
     mdEditSaveandclose: 'md.edit.save.and.close?_content_type=json&',
     mdEditCancel: 'md.edit.cancel?_content_type=json&',
     suggestionsList: 'md.suggestion?_content_type=json&',
-    
+
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
     mdGetMEF: 'mef.export',

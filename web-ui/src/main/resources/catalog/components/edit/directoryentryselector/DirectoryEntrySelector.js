@@ -111,9 +111,9 @@
                   // Define type of XLinks: local:// or http:// based on
                   // catalog configuration.
                   var url =
-                    (gnConfig[gnConfig.key.isXLinkLocal] === true ?
+                 (gnConfig[gnConfig.key.isXLinkLocal] === true ?
                       'local://' : gnConfigService.getServiceURL()) +
-                    'api/registries/entries/';
+                 'api/registries/entries/';
                   scope.gnConfig = gnConfig;
                   // If true, display button to add the element
                   // without using the subtemplate selector.

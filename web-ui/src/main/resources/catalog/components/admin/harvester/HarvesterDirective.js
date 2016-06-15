@@ -53,7 +53,7 @@
                 if (scope.harvester.site.translations[scope.languages[i].id] ===
                     undefined) {
                   scope.harvester.site.translations[scope.languages[i].id] =
-                    scope.harvester.site.name;
+                      scope.harvester.site.name;
                 }
               }
             }

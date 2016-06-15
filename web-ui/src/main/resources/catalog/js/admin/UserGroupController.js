@@ -284,7 +284,7 @@
         };
 
         $http.post('../api/users/' + $scope.userSelected.id +
-          '/actions/forget-password' , null, {params: params})
+            '/actions/forget-password' , null, {params: params})
             .success(function(data) {
               $scope.resetPassword1 = null;
               $scope.resetPassword2 = null;
@@ -393,7 +393,7 @@
        */
       $scope.deleteUser = function(formId) {
         $http.delete('../api/users/' +
-          $scope.userSelected.id)
+            $scope.userSelected.id)
             .success(function(data) {
               $scope.unselectUser();
               loadUsers();
