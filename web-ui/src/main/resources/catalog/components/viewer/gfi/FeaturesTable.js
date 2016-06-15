@@ -43,8 +43,8 @@
           ctrl: 'gnFeaturesTable'
         },
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
-          'featurestable.html',
-        link: function (scope, element, attrs, ctrls) {
+            'featurestable.html',
+        link: function(scope, element, attrs, ctrls) {
           ctrls.ctrl.initTable(element.find('table'));
         }
       };
@@ -87,7 +87,7 @@
                   source.clear();
                 }.bind(this));
 
-              };
+              }
             }.bind(this),
             onDblClickRow: function(row, elt) {
               if (!this.map) {
@@ -101,15 +101,15 @@
                 });
                 this.map.beforeRender(pan);
                 this.map.getView().fit(
-                  feature.getGeometry(),
-                  this.map.getSize(),
-                  { minResolution: 40 }
+                    feature.getGeometry(),
+                    this.map.getSize(),
+                    { minResolution: 40 }
                 );
               }
 
             }.bind(this),
             showExport: true,
-            exportTypes: [ 'csv' ],
+            exportTypes: ['csv'],
             exportDataType: 'all'
           },bstConfig));
     }.bind(this));

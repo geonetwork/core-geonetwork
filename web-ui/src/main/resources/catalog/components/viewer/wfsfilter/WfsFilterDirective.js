@@ -250,7 +250,7 @@
               }
               appProfilePromise.then(loadFields);
             }, function(error) {
-              scope.status = error.data ? 'solrAccessError': error.statusText;
+              scope.status = error.data ? 'solrAccessError' : error.statusText;
               scope.statusTitle = error.statusText;
             });
           };
@@ -330,10 +330,10 @@
           function refreshHeatmap() {
             if (scope.isFeaturesIndexed && scope.isHeatMapVisible) {
               heatmapsRequest.searchWithFacets({
-                    params: scope.output,
-                    any: scope.searchInput
-                  },
-                  gnSolrService.getHeatmapParams(scope.map)).
+                params: scope.output,
+                any: scope.searchInput
+              },
+              gnSolrService.getHeatmapParams(scope.map)).
                   then(function(resp) {
                     scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
                   });
@@ -354,7 +354,7 @@
             scope.resetSLDFilters();
 
             var boxElt = element.find('.gn-bbox-input');
-            if(boxElt.length) {
+            if (boxElt.length) {
               angular.element(boxElt).scope().clear();
             }
 
@@ -384,7 +384,7 @@
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             solrObject.pushState();
-            if(!extentFilter) {
+            if (!extentFilter) {
               scope.layer.setExtent();
             }
             else {
@@ -484,7 +484,7 @@
             if (scope.source) {
               scope.source.clear();
             }
-            while(hmEventKeys.length) {
+            while (hmEventKeys.length) {
               map.unByKey(hmEventKeys.pop());
             }
           }

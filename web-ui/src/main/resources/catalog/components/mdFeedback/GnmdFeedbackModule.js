@@ -22,36 +22,12 @@
  */
 
 (function() {
-  goog.provide('md_feedback_controller');
+  goog.provide('gn_md_feedback');
 
-  var module = angular.module('md_feedback_controller', []);
+  goog.require('gn_md_feedback_controller');
+  goog.require('gn_md_feedback_directive');
 
-  module.controller('mdFeedbackController', [
-    '$scope', '$http',
-    function($scope, $http) {
-      $scope.mdFeedbackOpen = false;
-      $scope.toggle = function() {
-        $scope.mdFeedbackOpen = !$scope.mdFeedbackOpen;
-      };
-
-      $scope.send = function(formId) {
-        $http({
-          url: 'contact.send?_content_type=json',
-          method: 'POST',
-          data: $(formId).serialize(),
-          headers: {
-            'Content-Type' : 'application/x-www-form-urlencoded'
-          }
-        }).then(function(response) {
-          // TODO: report no email sent
-          if (response.status === 200) {
-            $scope.success = true;
-          } else {
-            $scope.success = false;
-          }
-        });
-      };
-    }
-  ]);
+  var module = angular.module('gn_md_feedback', ['gn_md_feedback_controller',
+    'gn_md_feedback_directive']);
 
 })();

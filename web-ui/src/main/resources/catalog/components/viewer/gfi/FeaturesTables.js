@@ -26,22 +26,22 @@
 
   var module = angular.module('gn_featurestables_directive', []);
 
-  module.directive('gnFeaturesTables', [ function() {
+  module.directive('gnFeaturesTables', [function() {
 
-      return {
-        restrict: 'E',
-        scope: {
-          map: '<gnFeaturesTablesMap'
-        },
-        controllerAs: 'ctrl',
-        bindToController: true,
-        controller: 'gnFeaturesTablesController',
-        templateUrl: '../../catalog/components/viewer/gfi/partials/' +
+    return {
+      restrict: 'E',
+      scope: {
+        map: '<gnFeaturesTablesMap'
+      },
+      controllerAs: 'ctrl',
+      bindToController: true,
+      controller: 'gnFeaturesTablesController',
+      templateUrl: '../../catalog/components/viewer/gfi/partials/' +
           'featurestables.html'
-        // link: function (scope, element, attrs, controller) {
-        //   controller.tableElt = element.find('table');
-        // }
-      };
+          // link: function (scope, element, attrs, controller) {
+          //   controller.tableElt = element.find('table');
+          // }
+    };
 
   }]);
 

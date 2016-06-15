@@ -22,35 +22,36 @@
  */
 
 (function() {
-  goog.provide('md_feedback_directive');
+  goog.provide('gn_md_feedback_controller');
 
-  var module = angular.module('md_feedback_directive', []);
+  var module = angular.module('gn_md_feedback_controller', []);
 
-  module
-      .directive(
-          'mdfeedback',
-          function() {
-            return {
-              restrict: 'EC',
-              replace: true,
-              templateUrl:
-              '../../catalog/components/mdFeedback/partials/mdFeedback.html',
-              link: function postLink(scope, element, attrs) {
+  module.controller('gnMdFeedbackController', [
+    '$scope', '$http',
+    function($scope, $http) {
+      $scope.mdFeedbackOpen = false;
+      $scope.toggle = function() {
+        $scope.mdFeedbackOpen = !$scope.mdFeedbackOpen;
+      };
 
-                $(element).find('.modal').on('hidden.bs.modal', function() {
-                  scope.$apply(function() {
-                    scope.mdFeedbackOpen = false;
-                  });
-                });
-
-                scope.$watch('mdFeedbackOpen', function(value) {
-                  if (value == true)
-                    $(element).find('.modal').modal('show');
-                  else
-                    $(element).find('.modal').modal('hide');
-                });
-              }
-            };
-          });
+      $scope.send = function(formId) {
+        $http({
+          url: 'contact.send?_content_type=json',
+          method: 'POST',
+          data: $(formId).serialize(),
+          headers: {
+            'Content-Type' : 'application/x-www-form-urlencoded'
+          }
+        }).then(function(response) {
+          // TODO: report no email sent
+          if (response.status === 200) {
+            $scope.success = true;
+          } else {
+            $scope.success = false;
+          }
+        });
+      };
+    }
+  ]);
 
 })();

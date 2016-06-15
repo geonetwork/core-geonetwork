@@ -71,7 +71,7 @@
 
   module.service('gnFeaturesTableManager',
       ['gnFeaturesTableLoader', GnFeaturesTableManager]);
-  
+
   module.service('gnFeaturesTableService', GnFeaturesTableService);
 
 })();
