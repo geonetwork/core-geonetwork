@@ -105,18 +105,21 @@
            */
         copy: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, metadataUuid) {
-          var url = gnUrlUtils.append('md.create',
-              gnUrlUtils.toKeyValue({
-                _content_type: 'json',
+          var url = gnUrlUtils.toKeyValue({
+                metadataType: isTemplate ?
+                                (isTemplate === 'SUB_TEMPLATE' ? 'SUB_TEMPLATE' : 'TEMPLATE') :
+                              'METADATA',
+                sourceUuid: id,
+                isChildOfSource: isChild,
                 group: groupId,
-                id: id,
-                template: isTemplate ? (isTemplate === 's' ? 's' : 'y') : 'n',
-                child: isChild ? 'y' : 'n',
-                fullPrivileges: withFullPrivileges ? 'true' : 'false',
-                metadataUuid: metadataUuid
-              })
-              );
-          return $http.get(url);
+                isVisibleByAllGroupMembers: withFullPrivileges,
+                targetUuid: metadataUuid
+              });
+          return $http.put('../api/records/actions/create?' + url, {
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
         },
 
         /**
@@ -215,14 +218,13 @@
             isTemplate, isChild, tab, metadataUuid) {
 
           return this.copy(id, groupId, withFullPrivileges,
-              isTemplate, isChild, metadataUuid).success(function(data) {
-            var path = '/metadata/' + data.id;
+              isTemplate, isChild, metadataUuid).success(function(id) {
+            var path = '/metadata/' + id;
             if (tab) {
               path += '/tab/' + tab;
             }
             $location.path(path);
           });
-          // TODO : handle creation error
         },
 
         /**

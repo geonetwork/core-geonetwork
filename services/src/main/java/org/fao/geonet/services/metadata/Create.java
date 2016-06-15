@@ -59,6 +59,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 /**
  * Creates a metadata copying data from a given template.
  */
+@Deprecated
 public class Create extends NotInReadOnlyModeService {
     boolean useEditTab = false;
 

@@ -27,15 +27,19 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -43,14 +47,19 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -84,6 +93,7 @@ import javax.servlet.http.HttpSession;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -92,6 +102,7 @@ import static org.fao.geonet.api.ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 @RequestMapping(value = {
     "/api/records",
@@ -420,6 +431,186 @@ public class MetadataInsertDeleteApi {
         }
         // TODO: Add a report
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+
+    @ApiOperation(
+        value = "Create a new record",
+        notes =
+            "Create a record from a template or by copying an existing record." +
+            "Return the UUID of the newly created record. Existing links in the " +
+            "source record are preserved, this means that the new record may " +
+            "contains link to the source attachements. They need to be manually " +
+            "updated after creation.",
+        nickname = "create")
+    @RequestMapping(
+        value = "/actions/create",
+        method = {
+            RequestMethod.PUT
+        },
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        },
+        consumes = {
+            MediaType.APPLICATION_JSON_VALUE
+        }
+    )
+    public
+    @ResponseBody
+    ResponseEntity<String> create(
+        @ApiParam(
+            value = API_PARAM_RECORD_TYPE,
+            required = false,
+            defaultValue = "METADATA"
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = "METADATA"
+        )
+        final MetadataType metadataType,
+        @ApiParam(
+            value = "UUID of the source record to copy.",
+            required = true
+        )
+        @RequestParam(
+            required = true
+        )
+            String sourceUuid,
+        @ApiParam(
+            value = "Assign a custom UUID. If this UUID already exist an error is returned. " +
+                "This is enabled only if metadata create / generate UUID settings is activated.",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            String targetUuid,
+        @ApiParam(
+            value = API_PARAP_RECORD_GROUP,
+            required = true
+        )
+        @RequestParam(
+            required = true
+        )
+        final String group,
+        @ApiParam(
+            value = "Is published to all user group members? " +
+                "If not, only the author and administrator can edit the record.",
+            required = false,
+            defaultValue = "false"
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = "false"
+        )
+        // TODO: Would be more flexible to add a privilege object ?
+        final boolean isVisibleByAllGroupMembers,
+        @ApiParam(
+            value = API_PARAM_RECORD_TAGS,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+        final String[] category,
+        @ApiParam(
+        value = "Is child of the record to copy?",
+        required = false,
+        defaultValue = "false"
+    )
+        @RequestParam(
+            required = false,
+            defaultValue = "false"
+        )
+        final boolean isChildOfSource,
+        @ApiIgnore
+        @ApiParam(hidden = true)
+        HttpSession httpSession,
+        HttpServletRequest request
+    )
+        throws Exception {
+
+        Metadata sourceMetadata = ApiUtils.getRecord(sourceUuid);
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+
+        SettingManager sm = applicationContext.getBean(SettingManager.class);
+        boolean generateUuid = sm.getValueAsBool(Settings.SYSTEM_METADATACREATE_GENERATE_UUID);
+
+
+        // User assigned uuid: check if already exists
+        String metadataUuid = null;
+        if (generateUuid) {
+            if (StringUtils.isEmpty(targetUuid)) {
+                // Create a random UUID
+                metadataUuid = UUID.randomUUID().toString();
+            } else {
+                // Check if the UUID exists
+                try {
+                    Metadata checkRecord = ApiUtils.getRecord(targetUuid);
+                    if (checkRecord != null) {
+                        throw new BadParameterEx(String.format(
+                            "You can't create a new record with the UUID '%s' because a record already exist with this UUID.",
+                            targetUuid), targetUuid);
+                    }
+                } catch (ResourceNotFoundException e) {
+                    // Ignore. Ok to create a new record with the requested UUID.
+                }
+            }
+        } else {
+            metadataUuid = UUID.randomUUID().toString();
+        }
+
+
+        // TODO : Check user can create a metadata in that group
+        UserSession user = ApiUtils.getUserSession(httpSession);
+        if (user.getProfile() != Profile.Administrator) {
+            final Specifications<UserGroup> spec = where(UserGroupSpecs.hasProfile(Profile.Editor))
+                .and(UserGroupSpecs.hasUserId(user.getUserIdAsInt()))
+                .and(UserGroupSpecs.hasGroupId(Integer.valueOf(group)));
+
+            final List<UserGroup> userGroups = applicationContext.getBean(UserGroupRepository.class).findAll(spec);
+
+            if (userGroups.size() == 0) {
+                throw new SecurityException(String.format(
+                    "You can't create a record in this group. User MUST be an Editor in that group"
+                ));
+            }
+        }
+
+        DataManager dataManager = applicationContext.getBean(DataManager.class);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        String newId = dataManager.createMetadata(context,
+            String.valueOf(sourceMetadata.getId()),
+            group,
+            sm.getSiteId(),
+            context.getUserSession().getUserIdAsInt(),
+            isChildOfSource ? sourceMetadata.getUuid() : null,
+            metadataType.toString(),
+            isVisibleByAllGroupMembers,
+            metadataUuid);
+
+        dataManager.activateWorkflowIfConfigured(context, newId, group);
+
+        try {
+            copyDataDir(context, sourceMetadata.getId(), newId, Params.Access.PUBLIC);
+            copyDataDir(context, sourceMetadata.getId(), newId, Params.Access.PRIVATE);
+        } catch (IOException e) {
+            Log.warning(Geonet.DATA_MANAGER, String.format(
+                "Error while copying metadata resources. Error is %s. " +
+                    "Metadata is created but without resources from the source record with id '%d':",
+                    e.getMessage(), newId));
+        }
+
+        return new ResponseEntity<>(newId, HttpStatus.CREATED);
+    }
+
+
+    private void copyDataDir(ServiceContext context, int oldId, String newId, String access) throws IOException {
+        final Path sourceDir = Lib.resource.getDir(context, access, oldId);
+        final Path destDir = Lib.resource.getDir(context, access, newId);
+
+        if (Files.exists(sourceDir)) {
+            IO.copyDirectoryOrFile(sourceDir, destDir, false);
+        }
     }
 
     @ApiOperation(
