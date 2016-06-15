@@ -73,7 +73,11 @@
         $scope.currentFormatter = f;
         if (f) {
           gnMdFormatter.getFormatterUrl(f.url, $scope).then(function(url) {
-            $http.get(url).then(
+            $http.get(url, {
+              headers: {
+                Accept: 'text/html'
+              }
+            }).then(
                 function(response) {
                   var snippet = response.data.replace(
                       '<?xml version="1.0" encoding="UTF-8"?>', '');
@@ -104,8 +108,5 @@
       $scope.$watch('gnMdViewObj.from', function(v) {
         $scope.fromView = v ? v.substring(1) : v;
       });
-
-
     }]);
-
 })();

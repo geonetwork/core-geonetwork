@@ -318,5 +318,6 @@
     "currentConcept":"Current concept",
     "parentConcept":"Parent concept",
     "moreSpecificConcept":"More specific concepts",
-    "associatedConcept":"Associated concepts"
+    "associatedConcept":"Associated concepts",
+    "xsd": "Schema validation"
 }

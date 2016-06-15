@@ -81,12 +81,7 @@
          * @return {HttpPromise} Future object
          */
         validate: function(id) {
-          var url = gnUrlUtils.append('md.validate?_content_type=json&',
-              gnUrlUtils.toKeyValue({
-                id: id
-              })
-              );
-          return $http.get(url);
+          return $http.put('../api/records/' + id + '/validate');
         },
 
         /**
@@ -307,8 +302,6 @@
    * documentation-config-ui-metadataxml_-service-mdeditcancel mdEditCancel}
    * {@link service/config-ui-metadata#services-
    * documentation-config-ui-metadataxml_-service-mdsuggestion suggestionsList}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdvalidate getValidation}
    *
    * {@link service/config-service-admin-batchprocess
    * #services-documentation-config-service-admin-
@@ -342,8 +335,7 @@
     mdEditSaveandclose: 'md.edit.save.and.close?_content_type=json&',
     mdEditCancel: 'md.edit.cancel?_content_type=json&',
     suggestionsList: 'md.suggestion?_content_type=json&',
-    getValidation: 'md.validate?_content_type=json&',
-
+    
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
     mdGetMEF: 'mef.export',
@@ -352,7 +344,6 @@
 
     mdPrivileges: 'md.privileges.update?_content_type=json&',
     mdPrivilegesBatch: 'md.privileges.batch.update?_content_type=json&',
-    mdValidateBatch: 'md.validation',
     publish: 'md.publish',
     unpublish: 'md.unpublish',
 

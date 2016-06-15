@@ -46,7 +46,7 @@ import java.util.List;
 /**
  * Given a metadata id returns all associated categories. Called by the metadata.category service
  */
-
+@Deprecated
 public class GetCategories implements Service {
     //--------------------------------------------------------------------------
     //---

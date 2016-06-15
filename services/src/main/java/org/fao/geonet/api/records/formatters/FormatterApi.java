@@ -223,7 +223,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             defaultValue = MediaType.TEXT_HTML_VALUE
         )
             String acceptHeader,
-//        @PathVariable final String type,
         @PathVariable(
             value = "formatterId"
         )
@@ -253,8 +252,11 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         // if text/html > xsl_view
         // if application/pdf > xsl_view and PDF output
         // if application/x-gn-<formatterId>+(xml|html|pdf|text)
-        FormatType formatType =
-            acceptHeader.equals("text/html") ? FormatType.html : FormatType.txt;
+        FormatType formatType = FormatType.find(acceptHeader);
+        if (formatType == null) {
+            formatType = FormatType.xml;
+        }
+
         final ServiceContext context = createServiceContext(locale.getISO3Language(),
             formatType, request.getNativeRequest(HttpServletRequest.class));
         Metadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
@@ -300,26 +302,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             if (!skipPopularityBool) {
                 context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
             }
-
             writeOutResponse(context, locale.getISO3Language(), request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
-//
-//        if (mdPath != null) {
-//            final List<Namespace> namespaces = applicationContext.getBean(SchemaManager.class)
-//                .getSchema(metadata.getDataInfo().getSchemaId()).getNamespaces();
-//            metadataXml = Xml.selectElement(metadataXml, mdPath, namespaces);
-//            metadataXml.detach();
-//        }
-////        Metadata metadataInfo = new Metadata().setData(metadata).setId(1).setUuid("uuid");
-////        metadataInfo.getDataInfo().setType(MetadataType.METADATA).setRoot(metadataXml.getQualifiedName()).setSchemaId(schema);
-//
-//        Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(
-//            locale.getISO3Language(), formatType, xslid, width,
-//            request, context, metadataXml, metadata);
-//        final String formattedMetadata = result.one().format(result.two());
-//        byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
-//
-//        writeOutResponse(context, locale.getISO3Language(), request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
     }
 
 

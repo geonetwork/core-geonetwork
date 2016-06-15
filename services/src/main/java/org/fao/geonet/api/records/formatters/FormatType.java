@@ -23,6 +23,9 @@
 
 package org.fao.geonet.api.records.formatters;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Enumerates the support output types.
  *
@@ -34,5 +37,23 @@ public enum FormatType {
 
     private FormatType(String contentType) {
         this.contentType = contentType;
+    }
+
+    /**
+     * Find the best format matching the list of Accept header.
+     * If not found, return null
+     */
+    public static FormatType find(String acceptHeader) {
+        if (acceptHeader != null) {
+            List<String> accept = Arrays.asList(acceptHeader.toLowerCase().split(","));
+            for (String h : accept) {
+                for (FormatType c : values()) {
+                    if (h.startsWith(c.contentType)) {
+                        return c;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

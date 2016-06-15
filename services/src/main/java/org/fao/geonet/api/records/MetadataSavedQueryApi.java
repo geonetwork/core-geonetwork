@@ -49,6 +49,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+
 /**
  * Created by francois on 29/01/16.
  */
@@ -57,9 +60,9 @@ import java.util.*;
         "/api/records/{metadataUuid}",
         "/api/" + API.VERSION_0_1 + "/records/{metadataUuid}"
 })
-@Api(value = "records",
-        tags= "records",
-        description = "Metadata operations")
+@Api(value = API_CLASS_RECORD_TAG,
+    tags = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
 public class MetadataSavedQueryApi {
     private static final String LOG_MODULE = "MetadataApi";
 

@@ -74,6 +74,8 @@ import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
@@ -83,9 +85,9 @@ import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_T
     "/api/" + API.VERSION_0_1 +
         "/records"
 })
-@Api(value = "records",
-    tags = "records",
-    description = ApiParams.API_CLASS_RECORD_OPS)
+@Api(value = API_CLASS_RECORD_TAG,
+    tags = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
 @Controller("records")
 @ReadWriteController
 public class MetadataApi implements ApplicationContextAware {

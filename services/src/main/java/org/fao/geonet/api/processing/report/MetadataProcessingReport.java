@@ -148,6 +148,10 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
         this.metadata.add(metadataId);
     }
 
+    public synchronized Set<Integer> getMetadata() {
+        return this.metadata;
+    }
+
     public synchronized void addNotFoundMetadataId(int metadataId) {
         this.notFound.add(metadataId);
     }

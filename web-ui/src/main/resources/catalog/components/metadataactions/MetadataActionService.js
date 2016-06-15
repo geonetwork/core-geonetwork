@@ -41,12 +41,13 @@
     'gnAlertService',
     'gnSearchSettings',
     'gnPopup',
+    'gnMdFormatter',
     '$translate',
     '$q',
     '$http',
     function($rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
-             gnPopup,
+             gnPopup, gnMdFormatter,
              $translate, $q, $http) {
 
       var windowName = 'geonetwork';
@@ -114,16 +115,16 @@
           if (params.sortOrder) {
             url += '&sortOrder=' + params.sortOrder;
           }
-        }
-        else if (angular.isString(params)) {
-          // TODO: May depend on schema
-          url = gnSearchSettings.formatter.defaultPdfUrl + params;
-        }
-        if (url) {
           location.replace(url);
         }
-        else {
-          console.error('Error while exporting PDF');
+        else if (angular.isString(params)) {
+          gnMdFormatter.getFormatterUrl(null, null, params).then(function(url) {
+            $http.get(url, {
+              headers: {
+                Accept: 'text/html'
+              }
+            })
+          });
         }
       };
 
@@ -160,7 +161,11 @@
           });
         }
         else {
-          return callBatch('mdValidateBatch').then(function() {
+          return gnHttp.callService('../api/processes/validate', null,
+                                    {
+                                      method: 'PUT'
+                                    }).then(function(data) {
+            alertResult(data.data);
             $rootScope.$broadcast('mdSelectNone');
             $rootScope.$broadcast('search');
           });

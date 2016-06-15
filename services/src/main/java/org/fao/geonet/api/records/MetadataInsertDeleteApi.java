@@ -31,11 +31,13 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.mef.Importer;
@@ -72,17 +74,23 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import springfox.documentation.annotations.ApiIgnore;
 
+import static org.fao.geonet.api.ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
 @RequestMapping(value = {
@@ -90,9 +98,9 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
     "/api/" + API.VERSION_0_1 +
         "/records"
 })
-@Api(value = "records",
-    tags = "records",
-    description = "Metadata record operations")
+@Api(value = API_CLASS_RECORD_TAG,
+    tags = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
 @Controller("recordInsertOrDelete")
 @PreAuthorize("hasRole('Editor')")
 @ReadWriteController
@@ -152,6 +160,67 @@ public class MetadataInsertDeleteApi {
         dataManager.deleteMetadata(context, metadataUuid);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @ApiOperation(
+        value = "Delete one or more records",
+        notes = "User MUST be able to edit the record to delete it. " +
+            "",
+        nickname = "deleteRecords")
+    @RequestMapping(
+        method = RequestMethod.DELETE
+    )
+    public
+    @ResponseBody
+    ResponseEntity<SimpleMetadataProcessingReport> deleteRecords(
+        @ApiParam(value = APIPARAM_RECORD_UUIDS_OR_SELECTION,
+            required = false,
+            example = "")
+        @RequestParam(required = false)
+            String[] uuids,
+        @ApiParam(
+            value = API_PARAM_BACKUP_FIRST,
+            required = false)
+        @RequestParam(
+            required = false,
+            defaultValue = "true")
+            boolean withBackup,
+        @ApiIgnore
+            HttpSession session,
+        HttpServletRequest request
+    )
+        throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        DataManager dataManager = appContext.getBean(DataManager.class);
+        AccessManager accessMan = appContext.getBean(AccessManager.class);
+
+        Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, ApiUtils.getUserSession(session));
+
+        final MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
+        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
+        for (String uuid : records) {
+            Metadata metadata = metadataRepository.findOneByUuid(uuid);
+            if (metadata == null) {
+                report.incrementNullRecords();
+            } else if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
+                report.addNotEditableMetadataId(metadata.getId());
+            } else {
+                if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && withBackup) {
+                    MetadataUtils.backupRecord(metadata, context);
+                }
+
+                IO.deleteFileOrDirectory(
+                    Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class),
+                        String.valueOf(metadata.getId())));
+
+                dataManager.deleteMetadata(context, metadata.getUuid());
+
+                report.incrementProcessedRecords();
+                report.addMetadataId(metadata.getId());
+            }
+        }
+        return new ResponseEntity<>(report, HttpStatus.NO_CONTENT);
     }
 
 

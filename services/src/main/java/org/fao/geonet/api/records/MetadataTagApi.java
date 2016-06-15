@@ -62,6 +62,8 @@ import io.swagger.annotations.ApiParam;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
 @RequestMapping(value = {
@@ -69,9 +71,9 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
     "/api/" + API.VERSION_0_1 +
         "/records"
 })
-@Api(value = "records",
-    tags = "records",
-    description = "Metadata record operations")
+@Api(value = API_CLASS_RECORD_TAG,
+    tags = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
 @Controller("tagRecords")
 @ReadWriteController
 public class MetadataTagApi {

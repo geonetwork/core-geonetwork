@@ -63,6 +63,7 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
  * When a remote rating is applied, the local rating is not updated. It will be updated on the next
  * harvest run (FIXME ?).
  */
+@Deprecated
 public class Rate extends NotInReadOnlyModeService {
 
     //--------------------------------------------------------------------------

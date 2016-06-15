@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
+import org.w3c.dom.xpath.XPathException;
 
 import java.io.FileNotFoundException;
 import java.util.LinkedHashMap;
@@ -77,7 +78,8 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
         RuntimeException.class,
-        HttpMessageNotReadableException.class
+        HttpMessageNotReadableException.class,
+        XPathException.class
     })
     public Object runtimeExceptionHandler(final Exception exception) {
         exception.printStackTrace();
