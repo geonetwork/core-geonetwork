@@ -63,6 +63,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
@@ -114,8 +115,7 @@ public class MetadataSocialApi {
             required = true
         )
             Integer rating,
-        HttpServletRequest request,
-        HttpSession session
+        HttpServletRequest request
     )
         throws Exception {
         Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
