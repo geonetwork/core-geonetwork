@@ -43,8 +43,9 @@
     'gnMap',
     'gnUrlUtils',
     'gnOwsCapabilities',
+    'gnViewerSettings',
     '$http',
-    function(gnMap, gnUrlUtils, gnOwsCapabilities, $http) {
+    function(gnMap, gnUrlUtils, gnOwsCapabilities, viewerSettings, $http) {
 
       /**
        * @ngdoc method
@@ -87,7 +88,7 @@
        */
       this.feedOlLayer = function(layer) {
         var url = this.getMetadataUrl(layer);
-        var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+        var proxyUrl = viewerSettings.hasCORS?url:'../../proxy?url=' + encodeURIComponent(url);
 
         $http.get(proxyUrl)
             .success(function(json) {
@@ -255,7 +256,7 @@
         var url = gnUrlUtils.append(layer.getSource().getUrls(),
                   gnUrlUtils.toKeyValue(p));
 
-        var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+        var proxyUrl = viewerSettings.hasCORS?url:'../../proxy?url=' + encodeURIComponent(url);
         return $http.get(proxyUrl);
       };
     }

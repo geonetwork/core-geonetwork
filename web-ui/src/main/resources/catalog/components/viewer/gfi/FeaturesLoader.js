@@ -50,6 +50,7 @@
     this.$injector = $injector;
     this.$http = this.$injector.get('$http');
     this.gnProxyUrl =  this.$injector.get('gnGlobalSettings').proxyUrl;
+    this.hasCORS =  this.$injector.get('gnViewerSettings').hasCORS;
 
     this.layer = config.layer;
     this.map = config.map;
@@ -65,7 +66,7 @@
   };
 
   geonetwork.GnFeaturesLoader.prototype.proxyfyUrl = function(url){
-    return this.gnProxyUrl + encodeURIComponent(url);
+    return this.hasCORS(url)?url:this.gnProxyUrl + encodeURIComponent(url);
   };
 
   /**

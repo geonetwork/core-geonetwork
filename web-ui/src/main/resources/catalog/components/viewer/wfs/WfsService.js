@@ -77,8 +77,9 @@
     'gnOwsCapabilities',
     'gnUrlUtils',
     'gnGlobalSettings',
+    'gnViewerSettings',
     '$q',
-    function($http, gnOwsCapabilities, gnUrlUtils, gnGlobalSettings, $q) {
+    function($http, gnOwsCapabilities, gnUrlUtils, gnGlobalSettings, viewerSettings, $q) {
 
       /**
        * Do a getCapabilies request to the url (service) given in parameter.
@@ -97,7 +98,7 @@
           });
 
           if (gnUrlUtils.isValid(url)) {
-            var proxyUrl = gnGlobalSettings.proxyUrl +
+            var proxyUrl = viewerSettings.hasCORS(url)?url:gnGlobalSettings.proxyUrl +
                 encodeURIComponent(url);
             $http.get(proxyUrl, {
               cache: true
