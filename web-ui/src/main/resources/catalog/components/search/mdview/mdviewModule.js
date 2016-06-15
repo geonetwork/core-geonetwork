@@ -27,10 +27,12 @@
 
   goog.require('gn_mdview_directive');
   goog.require('gn_mdview_service');
+  goog.require('md_feedback');
 
   var module = angular.module('gn_mdview', [
     'gn_mdview_service',
-    'gn_mdview_directive'
+    'gn_mdview_directive',
+    'md_feedback'
   ]);
 
   module.controller('GnMdViewController', [
