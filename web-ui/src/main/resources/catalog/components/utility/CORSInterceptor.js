@@ -28,77 +28,74 @@
 
   /**
    * CORS Interceptor
-   * 
+   *
    * This interceptor checks if each AJAX call made in AngularJS needs a proxy
    * or not.
    */
 
   module.config([
-      '$httpProvider', function($httpProvider) {
-        $httpProvider.interceptors.push([
-            '$q', '$injector', 'gnGlobalSettings', 
-            function($q, $injector, gnGlobalSettings) {
-              return {
-                request : function(config) {   
-                  
-                  if(config.url.startsWith("http")) {
-                    var url = config.url.split("/");
-                    url = url[0] + "/" + url[1] + "/" + url[2] + "/";
-                    
-                    if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
-                      // require proxy
-                      config.url = gnGlobalSettings.proxyUrl + encodeURI(config.url);
-                    }
-                  }
+    '$httpProvider', function($httpProvider) {
+      $httpProvider.interceptors.push([
+        '$q', '$injector', 'gnGlobalSettings',
+        function($q, $injector, gnGlobalSettings) {
+          return {
+            request: function(config) {
 
-                  return $q.when(config);
-                },
-                responseError : function(response) {
-                  var config = response.config;
+              if (config.url.startsWith('http')) {
+                var url = config.url.split('/');
+                url = url[0] + '/' + url[1] + '/' + url[2] + '/';
 
-                  if (config.nointercept) {
-                    return $q.when(config);
-                    // let it pass
-                  } else if (config.status = -1) {
-                    var defer = $q.defer();
-                    
-                    
-                    if(config.url.startsWith("http")) {
-                      var url = config.url.split("/");
-                      url = url[0] + "/" + url[1] + "/" + url[2] + "/";
-                      
-                      if ($.inArray(url, gnGlobalSettings.requireProxy) == -1) {
-                        gnGlobalSettings.requireProxy.push(url);
-                      }
-                      
-                      $injector.invoke(function($http) {
-                        // This modification prevents interception (infinite
-                        // loop):
-                        config.nointercept = true;
-                        // It failed and there was no response, let's try with the
-                        // proxy
-                        config.requireProxy = true;
-
-                        // retry again
-                        $http(config).then(function(resp) {
-                          defer.resolve(resp);
-                        }, function(resp) {
-                          defer.reject(resp);
-                        });
-                      });
-
-                    } else {
-                      defer.resolve(response);
-                    }
-
-                    return defer.promise;
-                  }
+                if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
+                  // require proxy
+                  config.url = gnGlobalSettings.proxyUrl + encodeURI(config.url);
                 }
-              };
+              }
 
+              return $q.when(config);
+            },
+            responseError: function(response) {
+              var config = response.config;
+
+              if (config.nointercept) {
+                return $q.when(config);
+              // let it pass
+              } else if (config.status = -1) {
+                var defer = $q.defer();
+
+
+                if (config.url.startsWith('http')) {
+                  var url = config.url.split('/');
+                  url = url[0] + '/' + url[1] + '/' + url[2] + '/';
+
+                  if ($.inArray(url, gnGlobalSettings.requireProxy) == -1) {
+                    gnGlobalSettings.requireProxy.push(url);
+                  }
+
+                  $injector.invoke(function($http) {
+                    // This modification prevents interception (infinite
+                    // loop):
+                    config.nointercept = true;
+
+                    // retry again
+                    $http(config).then(function(resp) {
+                      defer.resolve(resp);
+                    }, function(resp) {
+                      defer.reject(resp);
+                    });
+                  });
+
+                } else {
+                  defer.resolve(response);
+                }
+
+                return defer.promise;
+              }
             }
-        ]);
-      }
+          };
+
+        }
+      ]);
+    }
   ]);
 
 })();
