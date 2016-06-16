@@ -34,9 +34,12 @@
    */
 
   module.config([
-    '$httpProvider', function($httpProvider) {
+    '$httpProvider',
+    function($httpProvider) {
       $httpProvider.interceptors.push([
-        '$q', '$injector', 'gnGlobalSettings',
+        '$q',
+        '$injector',
+        'gnGlobalSettings',
         function($q, $injector, gnGlobalSettings) {
           return {
             request: function(config) {
@@ -47,7 +50,8 @@
 
                 if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
                   // require proxy
-                  config.url = gnGlobalSettings.proxyUrl + encodeURI(config.url);
+                  config.url = gnGlobalSettings.proxyUrl +
+                      encodeURI(config.url);
                 }
               }
 
@@ -61,7 +65,6 @@
               // let it pass
               } else if (config.status = -1) {
                 var defer = $q.defer();
-
 
                 if (config.url.startsWith('http')) {
                   var url = config.url.split('/');
