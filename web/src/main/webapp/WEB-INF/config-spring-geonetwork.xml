@@ -44,6 +44,11 @@
   <!-- Import the versioning configuration (subversion etc...) -->
   <import resource="config-versioning.xml"/>
 
+  <bean name="statusActionFactory"
+        class="org.fao.geonet.kernel.metadata.StatusActionsFactory">
+    <constructor-arg name="className" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
+  </bean>
+
 
   <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
@@ -78,7 +83,6 @@
     <value>spa</value>
     <value>tur</value>
   </util:set>
-
 
   <util:map id="jpaPropertyMap">
     <entry key="shared-cache-mode" value="ENABLE_SELECTIVE"/>

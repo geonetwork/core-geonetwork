@@ -183,7 +183,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         final HashMap<String, Object> contexts = new HashMap<String, Object>();
         final Constructor<?> constructor = GeonetContext.class.getDeclaredConstructors()[0];
         constructor.setAccessible(true);
-        GeonetContext gc = new GeonetContext(_applicationContext, false, null);
+        GeonetContext gc = new GeonetContext(_applicationContext, false);
         contexts.put(Geonet.CONTEXT_NAME, gc);
         final ServiceContext context = new ServiceContext("mockService", _applicationContext, contexts, _entityManager);
         context.setAsThreadLocal();

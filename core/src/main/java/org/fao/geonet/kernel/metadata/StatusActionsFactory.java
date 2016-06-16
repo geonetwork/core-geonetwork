@@ -23,23 +23,46 @@
 
 package org.fao.geonet.kernel.metadata;
 
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
+
 import jeeves.server.context.ServiceContext;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.Set;
 
 public class StatusActionsFactory {
 
     Class<StatusActions> statusRules;
 
+    private String className;
+    private static final String DEFAULT_STATUS_ACTION_CLASS = "org.fao.geonet.kernel.metadata.DefaultStatusActions";
+
     /**
      * Constructor.
      *
-     * @param statusRules Class defined in WEB-INF/config.xml that defines status actions
      */
-    public StatusActionsFactory(Class<StatusActions> statusRules) {
-        this.statusRules = statusRules;
+    public StatusActionsFactory() {
+    }
+    public StatusActionsFactory(String className) {
+        this.className = className;
+        try {
+            statusRules = (Class<StatusActions>) Class.forName(this.className);
+        } catch (ClassNotFoundException e) {
+            Log.error(Geonet.DATA_MANAGER, String.format(
+                "Class name '%s' is not found. You MUST use a valid class name loaded in the classpath. " +
+                    "The default status action class is used (ie. %s)",
+                this.className
+            ));
+            try {
+                statusRules = (Class<StatusActions>) Class.forName(DEFAULT_STATUS_ACTION_CLASS);
+            } catch (ClassNotFoundException e1) {
+                Log.error(Geonet.DATA_MANAGER, String.format(
+                    "Default class name '%s' is not found. This should not happen.",
+                    DEFAULT_STATUS_ACTION_CLASS
+                ));
+            }
+        }
+
     }
 
     /**
@@ -54,4 +77,11 @@ public class StatusActionsFactory {
         return sa;
     }
 
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
 }

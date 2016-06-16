@@ -45,6 +45,7 @@ import java.util.Set;
  *
  * @author m.coudert
  */
+@Deprecated
 public class UpdateChildren extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---

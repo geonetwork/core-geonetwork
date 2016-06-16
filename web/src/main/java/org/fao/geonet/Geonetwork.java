@@ -183,11 +183,6 @@ public class Geonetwork implements ApplicationHandler {
 
         importDatabaseData(context);
 
-        // Status actions class - load it
-        String statusActionsClassName = handlerConfig.getMandatoryValue(Geonet.Config.STATUS_ACTIONS_CLASS);
-        @SuppressWarnings("unchecked")
-        Class<StatusActions> statusActionsClass = (Class<StatusActions>) Class.forName(statusActionsClassName);
-
         JeevesJCS.setConfigFilename(appPath.resolve("WEB-INF/classes/cache.ccf"));
 
         // force caches to be config'd so shutdown hook works correctly
@@ -337,7 +332,7 @@ public class Geonetwork implements ApplicationHandler {
         OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(settingMan, schemaMan);
 
 
-        GeonetContext gnContext = new GeonetContext(_applicationContext, false, statusActionsClass);
+        GeonetContext gnContext = new GeonetContext(_applicationContext, false);
 
         //------------------------------------------------------------------------
         //--- return application context

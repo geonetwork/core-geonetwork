@@ -207,10 +207,8 @@
       };
 
       this.startWorkflow = function(md, scope) {
-        return $http.get('md.status.update?' +
-            '_content_type=json&id=' + md.getId() +
-            '&changeMessage=Enable workflow' +
-            '&status=1').then(
+        return $http.put('../api/records/' + md.getId() +
+            '/status?status=1&comment=Enable workflow').then(
             function(data) {
               gnMetadataManager.updateMdObj(md);
               scope.$emit('metadataStatusUpdated', true);

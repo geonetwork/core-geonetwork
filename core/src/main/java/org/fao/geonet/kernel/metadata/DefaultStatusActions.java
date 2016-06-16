@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.metadata;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -47,6 +48,7 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.MailSender;
 import org.fao.geonet.util.XslUtil;
+import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -88,11 +90,11 @@ public class DefaultStatusActions implements StatusActions {
     public void init(ServiceContext context) throws Exception {
 
         this.context = context;
-        this._statusValueRepository = context.getBean(StatusValueRepository.class);
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        this._statusValueRepository = applicationContext.getBean(StatusValueRepository.class);
         this.language = context.getLanguage();
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SettingManager sm = gc.getBean(SettingManager.class);
+        SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         siteName = sm.getSiteName();
         host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
@@ -118,7 +120,7 @@ public class DefaultStatusActions implements StatusActions {
             emailNotes = false;
         }
 
-        fromDescr = siteName + LangUtils.translate(context.getApplicationContext(), "statusTitle").get(this.language);
+        fromDescr = siteName + LangUtils.translate(applicationContext, "statusTitle").get(this.language);
 
         session = context.getUserSession();
         replyTo = session.getEmailAddr();
@@ -129,8 +131,8 @@ public class DefaultStatusActions implements StatusActions {
             replyToDescr = fromDescr;
         }
 
-        dm = gc.getBean(DataManager.class);
-        siteUrl = context.getBean(SettingManager.class).getSiteURL(context);
+        dm = applicationContext.getBean(DataManager.class);
+        siteUrl = sm.getSiteURL(context);
     }
 
     /**
@@ -301,6 +303,7 @@ public class DefaultStatusActions implements StatusActions {
 
         String translatedStatusName = getTranslatedStatusName(status);
         // --- get metadata owners (sorted on owner userid)
+        // TODO-API: Move to Messages instead of XML loc file
         String subject = String.format(LangUtils.translate(context.getApplicationContext(), "statusInform").get(this.language), siteName,
             translatedStatusName, replyToDescr, replyTo, changeDate);
         String mdChanged = buildMetadataChangedMessage(metadataIds);

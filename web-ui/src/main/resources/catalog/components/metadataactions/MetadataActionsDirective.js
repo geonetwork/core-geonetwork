@@ -63,10 +63,10 @@
           };
 
           scope.updateStatus = function() {
-            return $http.get('md.status.update?' +
-                '_content_type=json&id=' + metadataId +
-                '&changeMessage=' + scope.changeMessage +
-                '&status=' + scope.newStatus.value).then(
+            return $http.put('../api/records/' + metadataId +
+                 '/status?status=' + scope.newStatus.value +
+                 '&comment=' + scope.changeMessage
+                ).then(
                 function(data) {
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit('metadataStatusUpdated', true);

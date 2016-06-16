@@ -27,6 +27,7 @@ import com.google.common.collect.Sets;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
@@ -37,6 +38,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.XmlRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.awt.*;
@@ -51,6 +53,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -66,6 +69,11 @@ import jeeves.server.dispatchers.ServiceManager;
  * API utilities mainly to deal with parameters.
  */
 public class ApiUtils {
+
+    @Autowired
+    static
+    LanguageUtils languageUtils;
+
     /**
      * Return a set of UUIDs based on the input UUIDs array or based on the current selection.
      */
@@ -151,8 +159,12 @@ public class ApiUtils {
      * Jeeves.
      */
     static public ServiceContext createServiceContext(HttpServletRequest request) {
+        return createServiceContext(request, "");
+    }
+
+    static public ServiceContext createServiceContext(HttpServletRequest request, String iso3langCode) {
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
-        return serviceManager.createServiceContext("Api", "", request);
+        return serviceManager.createServiceContext("Api", iso3langCode, request);
     }
 
     public static long sizeOfDirectory(Path lDir) throws IOException {
