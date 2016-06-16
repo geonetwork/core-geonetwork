@@ -39,14 +39,16 @@
             '$q', '$injector', 'gnGlobalSettings', 
             function($q, $injector, gnGlobalSettings) {
               return {
-                request : function(config) {
-                  if (!gnGlobalSettings.requireProxy) {
-                    gnGlobalSettings.requireProxy = [];
-                  }
+                request : function(config) {   
                   
-                  if ($.inArray(config.url, gnGlobalSettings.requireProxy) != -1) {
-                    // require proxy
-                    config.url = gnGlobalSettings.proxyUrl + encodeURI(config.url);
+                  if(config.url.startsWith("http")) {
+                    var url = config.url.split("/");
+                    url = url[0] + "/" + url[1] + "/" + url[2] + "/";
+                    
+                    if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
+                      // require proxy
+                      config.url = gnGlobalSettings.proxyUrl + encodeURI(config.url);
+                    }
                   }
 
                   return $q.when(config);
@@ -59,25 +61,36 @@
                     // let it pass
                   } else if (config.status = -1) {
                     var defer = $q.defer();
-                    if ($.inArray(config.url, gnGlobalSettings.requireProxy) == -1) {
-                      gnGlobalSettings.requireProxy.push(config.url);
+                    
+                    
+                    if(config.url.startsWith("http")) {
+                      var url = config.url.split("/");
+                      url = url[0] + "/" + url[1] + "/" + url[2] + "/";
+                      
+                      if ($.inArray(url, gnGlobalSettings.requireProxy) == -1) {
+                        gnGlobalSettings.requireProxy.push(url);
+                      }
+                      
+                      $injector.invoke(function($http) {
+                        // This modification prevents interception (infinite
+                        // loop):
+                        config.nointercept = true;
+                        // It failed and there was no response, let's try with the
+                        // proxy
+                        config.requireProxy = true;
+
+                        // retry again
+                        $http(config).then(function(resp) {
+                          defer.resolve(resp);
+                        }, function(resp) {
+                          defer.reject(resp);
+                        });
+                      });
+
+                    } else {
+                      defer.resolve(response);
                     }
 
-                    $injector.invoke(function($http) {
-                      // This modification prevents interception (infinite
-                      // loop):
-                      config.nointercept = true;
-                      // It failed and there was no response, let's try with the
-                      // proxy
-                      config.requireProxy = true;
-
-                      // retry again
-                      $http(config).then(function(resp) {
-                        defer.resolve(resp);
-                      }, function(resp) {
-                        defer.reject(resp);
-                      });
-                    });
                     return defer.promise;
                   }
                 }
