@@ -76,6 +76,8 @@
     <jsSource webappPath="/catalog/lib/zip/zip.js"/>
     <jsSource webappPath="/catalog/lib/zip/include.js"/>
     <jsSource webappPath="/catalog/lib/base64.js"/>
+    <jsSource webappPath="/catalog/views/sextant/settings.js"/>
+    <jsSource webappPath="/catalog/views/sextant/jquerypluginsnoconflict.js"/>
   </declarative>
   <!-- Same as previous + ol3cesium -->
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
