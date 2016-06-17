@@ -207,7 +207,7 @@ public class ApiUtils {
         AccessManager accessManager = appContext.getBean(AccessManager.class);
         if (!accessManager.canEdit(createServiceContext(request), String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
-                "You can't view record with UUID %S", metadataUuid));
+                "You can't edit record with UUID %s", metadataUuid));
         }
         return metadata;
     }
@@ -222,7 +222,7 @@ public class ApiUtils {
             Lib.resource.checkPrivilege(createServiceContext(request), String.valueOf(metadata.getId()), ReservedOperation.view);
         } catch (Exception e) {
             throw new SecurityException(String.format(
-                "You can't view record with UUID %S", metadataUuid));
+                "You can't view record with UUID %s", metadataUuid));
         }
         return metadata;
     }

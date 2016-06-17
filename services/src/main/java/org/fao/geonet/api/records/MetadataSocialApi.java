@@ -78,7 +78,7 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
 @Api(value = API_CLASS_RECORD_TAG,
     tags = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
-@Controller("recordSharing")
+@Controller("recordSocial")
 @ReadWriteController
 public class MetadataSocialApi {
 
@@ -177,33 +177,5 @@ public class MetadataSocialApi {
         }
 
         return Integer.parseInt(response.getText());
-    }
-
-
-    @ApiOperation(
-        value = "Share a record",
-        notes = "Define privileges per operations and groups of user.",
-        nickname = "share")
-    @RequestMapping(value = "/{metadataUuid}/share",
-        method = RequestMethod.PUT
-    )
-    public
-    @ResponseBody
-    ResponseEntity shareRecord(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
-            required = true)
-        @PathVariable
-            String metadataUuid,
-        HttpServletRequest request,
-        HttpSession session
-    )
-        throws Exception {
-        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        DataManager dataManager = appContext.getBean(DataManager.class);
-
-        return null;
     }
 }
