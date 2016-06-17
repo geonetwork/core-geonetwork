@@ -63,7 +63,7 @@
               if (config.nointercept) {
                 return $q.when(config);
               // let it pass
-              } else if (config.status = -1) {
+              } else if (config.status == -1) {
                 var defer = $q.defer();
 
                 if (config.url.startsWith('http')) {
