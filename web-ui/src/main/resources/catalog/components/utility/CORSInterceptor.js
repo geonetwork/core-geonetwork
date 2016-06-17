@@ -51,7 +51,7 @@
                 if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
                   // require proxy
                   config.url = gnGlobalSettings.proxyUrl +
-                      encodeURI(config.url);
+                      encodeURIComponent(config.url);
                 }
               }
 
