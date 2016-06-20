@@ -32,11 +32,9 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.api.records.model.GroupPrivilege;
-import org.fao.geonet.api.records.model.PrivilegeParameter;
-import org.fao.geonet.api.records.model.SharingParameter;
-import org.fao.geonet.api.records.model.SharingResponse;
+import org.fao.geonet.api.records.model.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Operation;
@@ -56,6 +54,7 @@ import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
@@ -170,19 +169,31 @@ public class MetadataSharingApi {
             dataManager.deleteMetadataOper(context, String.valueOf(metadata.getId()), skip);
         }
 
-        List<PrivilegeParameter> privileges = sharing.getPrivileges();
-        if (privileges != null) {
-            for (PrivilegeParameter p : privileges) {
-                // Never set editing for reserved group
-                if (p.getOperation() == ReservedOperation.editing.getId() &&
-                    ReservedGroup.isReserved(p.getGroup())) {
-                    continue;
-                }
+        OperationRepository operationRepository = appContext.getBean(OperationRepository.class);
+        List<Operation> operationList = operationRepository.findAll();
+        Map<String, Integer> operationMap = new HashMap<>(operationList.size());
+        for (Operation o : operationList) {
+            operationMap.put(o.getName(), o.getId());
+        }
 
-                if (p.isPublished()) {
-                    dataManager.setOperation(context, metadata.getId(), p.getGroup(), p.getOperation());
-                } else if (!sharing.isClear() && !p.isPublished()) {
-                    dataManager.unsetOperation(context, metadata.getId(), p.getGroup(), p.getOperation());
+        List<GroupOperations> privileges = sharing.getPrivileges();
+        if (privileges != null) {
+            for (GroupOperations p : privileges) {
+                for (Map.Entry<String, Boolean> o : p.getOperations().entrySet()) {
+                    Integer opId = operationMap.get(o.getKey());
+                    // Never set editing for reserved group
+                    if (opId == ReservedOperation.editing.getId() &&
+                        ReservedGroup.isReserved(p.getGroup())) {
+                        continue;
+                    }
+
+                    if (o.getValue()) {
+                        dataManager.setOperation(
+                            context, metadata.getId(), p.getGroup(), opId);
+                    } else if (!sharing.isClear() && !o.getValue()) {
+                        dataManager.unsetOperation(
+                            context, metadata.getId(), p.getGroup(), opId);
+                    }
                 }
             }
         }
@@ -223,6 +234,10 @@ public class MetadataSharingApi {
 
         SharingResponse sharingResponse = new SharingResponse();
         sharingResponse.setOwner(userSession.getUserId());
+        Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
+        if (groupOwner != null) {
+            sharingResponse.setGroupOwner(String.valueOf(groupOwner));
+        }
         // Not used ?
         // Element hasOwner = new Element("owner").setText("true");
 
@@ -244,8 +259,9 @@ public class MetadataSharingApi {
             for (Group g : elGroup) {
                 GroupPrivilege groupPrivilege = new GroupPrivilege();
                 groupPrivilege.setGroup(g.getId());
+                groupPrivilege.setReserved(g.isReserved());
                 // TODO: Restrict to user group only in response depending on settings?
-                groupPrivilege.setUserGroup(userGroups.contains(g));
+                groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
 
                 // TODO: Collecting all those info is probably a bit slow when having lots of groups
                 final Specification<UserGroup> hasGroupId = UserGroupSpecs.hasGroupId(g.getId());

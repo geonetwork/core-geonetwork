@@ -2121,11 +2121,18 @@ public class DataManager implements ApplicationEventPublisherAware {
     /**
      * Removes all operations stored for a metadata.
      */
-    public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllIntranet) throws Exception {
+    public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllReservedGroup) throws Exception {
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
 
-        if (skipAllIntranet) {
-            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), ReservedGroup.intranet.getId());
+        if (skipAllReservedGroup) {
+            int[] exclude = new int[] {
+                ReservedGroup.all.getId(),
+                    ReservedGroup.intranet.getId(),
+                    ReservedGroup.guest.getId()
+            };
+            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(
+                Integer.parseInt(metadataId), exclude
+            );
         } else {
             operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(metadataId));
         }

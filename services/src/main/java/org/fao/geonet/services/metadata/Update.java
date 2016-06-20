@@ -90,7 +90,7 @@ public class Update extends NotInReadOnlyModeService {
 
             //--- use StatusActionsFactory and StatusActions class to possibly
             //--- change status as a result of this edit (use onEdit method)
-            StatusActionsFactory saf = new StatusActionsFactory();
+            StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
             StatusActions sa = saf.createStatusActions(context);
             sa.onEdit(iLocalId, minor.equals("true"));
 

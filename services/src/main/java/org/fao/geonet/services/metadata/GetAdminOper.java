@@ -54,7 +54,7 @@ import java.util.Set;
 /**
  * Given a metadata id returns all operation allowed on it. Called by the metadata.admin service
  */
-
+@Deprecated
 public class GetAdminOper implements Service {
     //--------------------------------------------------------------------------
     //---

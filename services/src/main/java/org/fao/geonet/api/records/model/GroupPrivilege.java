@@ -8,28 +8,10 @@ import java.util.Map;
 /**
  * Created by francois on 16/06/16.
  */
-public class GroupPrivilege {
-    private Integer group;
+public class GroupPrivilege extends GroupOperations {
     private List<Profile> userProfiles;
     private boolean userGroup;
-
-    public Map<String, Boolean> getOperations() {
-        return operations;
-    }
-
-    public void setOperations(Map<String, Boolean> operations) {
-        this.operations = operations;
-    }
-
-    Map<String, Boolean> operations;
-
-    public Integer getGroup() {
-        return group;
-    }
-
-    public void setGroup(Integer group) {
-        this.group = group;
-    }
+    private boolean reserved;
 
     public List<Profile> getUserProfiles() {
         return userProfiles;
@@ -45,5 +27,13 @@ public class GroupPrivilege {
 
     public void setUserGroup(boolean userGroup) {
         this.userGroup = userGroup;
+    }
+
+    public boolean isReserved() {
+        return reserved;
+    }
+
+    public void setReserved(boolean reserved) {
+        this.reserved = reserved;
     }
 }

@@ -6,7 +6,7 @@ import java.util.List;
  * Created by francois on 16/06/16.
  */
 public class SharingParameter {
-    private List<PrivilegeParameter> privileges;
+    private List<GroupOperations> privileges;
     private boolean clear;
 
     public boolean isClear() {
@@ -17,11 +17,11 @@ public class SharingParameter {
         this.clear = clear;
     }
 
-    public List<PrivilegeParameter> getPrivileges() {
+    public List<GroupOperations> getPrivileges() {
         return privileges;
     }
 
-    public void setPrivileges(List<PrivilegeParameter> privileges) {
+    public void setPrivileges(List<GroupOperations> privileges) {
         this.privileges = privileges;
     }
 }

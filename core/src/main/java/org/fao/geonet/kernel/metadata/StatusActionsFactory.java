@@ -42,11 +42,12 @@ public class StatusActionsFactory {
      *
      */
     public StatusActionsFactory() {
+        new StatusActionsFactory(DEFAULT_STATUS_ACTION_CLASS);
     }
     public StatusActionsFactory(String className) {
         this.className = className;
         try {
-            statusRules = (Class<StatusActions>) Class.forName(this.className);
+            this.statusRules = (Class<StatusActions>) Class.forName(this.className);
         } catch (ClassNotFoundException e) {
             Log.error(Geonet.DATA_MANAGER, String.format(
                 "Class name '%s' is not found. You MUST use a valid class name loaded in the classpath. " +
@@ -54,7 +55,7 @@ public class StatusActionsFactory {
                 this.className
             ));
             try {
-                statusRules = (Class<StatusActions>) Class.forName(DEFAULT_STATUS_ACTION_CLASS);
+                this.statusRules = (Class<StatusActions>) Class.forName(DEFAULT_STATUS_ACTION_CLASS);
             } catch (ClassNotFoundException e1) {
                 Log.error(Geonet.DATA_MANAGER, String.format(
                     "Default class name '%s' is not found. This should not happen.",
@@ -71,14 +72,14 @@ public class StatusActionsFactory {
      * @param context ServiceContext from Jeeves
      */
     public StatusActions createStatusActions(ServiceContext context) throws Exception {
-        Constructor<StatusActions> ct = statusRules.getConstructor();
+        Constructor<StatusActions> ct = this.statusRules.getConstructor();
         StatusActions sa = ct.newInstance();
         sa.init(context);
         return sa;
     }
 
     public String getClassName() {
-        return className;
+        return this.className;
     }
 
     public void setClassName(String className) {

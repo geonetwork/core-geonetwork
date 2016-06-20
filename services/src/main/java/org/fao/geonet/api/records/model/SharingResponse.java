@@ -8,6 +8,7 @@ import java.util.List;
 public class SharingResponse {
     private List<GroupPrivilege> privileges;
     private String owner;
+    private String groupOwner;
 
     public List<GroupPrivilege> getPrivileges() {
         return privileges;
@@ -23,5 +24,13 @@ public class SharingResponse {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public String getGroupOwner() {
+        return groupOwner;
+    }
+
+    public void setGroupOwner(String groupOwner) {
+        this.groupOwner = groupOwner;
     }
 }

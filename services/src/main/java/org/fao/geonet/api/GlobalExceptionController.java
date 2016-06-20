@@ -26,6 +26,7 @@ package org.fao.geonet.api;
 import org.fao.geonet.api.exception.NoResultsFoundException;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -46,18 +47,14 @@ import java.util.MissingResourceException;
 @ControllerAdvice
 public class GlobalExceptionController {
 
-/*    @ResponseBody
+    @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({
-        SecurityException.class
+        ServiceNotAllowedEx.class
     })
     public Object unauthorizedHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "unauthorized");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
-    }*/
+        return new ApiError("unauthorized", exception.getClass().getSimpleName(), exception.getMessage());
+    }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)

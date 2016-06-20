@@ -78,8 +78,8 @@
 
           var loadPrivileges;
           var fillGrid = function(data) {
-            scope.groups = data.groups;
-            scope.operations = data.operations;
+            scope.privileges = data.privileges;
+            // scope.operations = data.operations;
             scope.isAdminOrReviewer = data.isAdminOrReviewer;
           };
 
@@ -98,10 +98,13 @@
             loadPrivileges();
           }
 
+          scope.isAllowed = function (group, key) {
+            return true; // TODO
+          };
           scope.checkAll = function(group) {
-            angular.forEach(group.privileges, function(p) {
-              if (!p.disabled) {
-                p.value = group.isCheckedAll === true;
+            angular.forEach(group.operations, function(value, key) {
+              if (scope.isAllowed(group, key)) {
+                group.operations[key] = group.isCheckedAll === true;
               }
             });
           };
@@ -112,7 +115,7 @@
 
           scope.save = function() {
             return gnShareService.savePrivileges(scope.id,
-                                                 scope.groups,
+                                                 scope.privileges,
                                                  scope.user).then(
                 function(data) {
                   scope.$emit('PrivilegesUpdated', true);
@@ -146,7 +149,7 @@
 
           scope.sortGroups = function(g) {
             if (scope.sorter.predicate == 'g') {
-              return g.label[scope.lang];
+              return $translate(g.group);
             }
             else if (scope.sorter.predicate == 'p') {
               return g.userProfile;
