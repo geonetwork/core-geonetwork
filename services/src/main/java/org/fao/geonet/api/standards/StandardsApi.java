@@ -24,9 +24,9 @@
 package org.fao.geonet.api.standards;
 
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.kernel.Schema;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.editorconfig.BatchEditing;
@@ -118,7 +118,7 @@ public class StandardsApi implements ApplicationContextAware {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     Map<String, BatchEditing> getConfigurations(
-        @ApiParam(value = "Schema identifiers",
+        @ApiParam(value = ApiParams.API_PARAM_SCHEMA_IDENTIFIERS,
             required = false,
             example = "iso19139")
         @RequestParam(required = false)

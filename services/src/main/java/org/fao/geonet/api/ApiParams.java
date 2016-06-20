@@ -36,4 +36,5 @@ public class ApiParams {
         "Record UUIDs. If null current selection is used.";
     public static final String API_PARAM_RECORD_UUIDS_OR_SELECTION = "Record UUIDs. If null current selection is used.";
     public static final String API_PARAM_CLEAR_ALL_BEFORE_INSERT = "Clear all before adding new ones";
+    public static final String API_PARAM_SCHEMA_IDENTIFIERS = "Schema identifiers";
 }
