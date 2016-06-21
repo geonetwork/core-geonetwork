@@ -528,8 +528,16 @@
       <xsl:variable name="btnLabel" select="@btnLabel"/>
       <xsl:variable name="btnLabelTranslation" select="$strings/*[name() = $btnLabel]"/>
 
+      <!-- It tries to search using the prefix, but we can't add a prefix on $strings -->
+      <xsl:variable name="nameCleanUp">
+        <xsl:choose>
+          <xsl:when test="string($strings/*[name() = $name]) != ''"><xsl:value-of select="$name"/></xsl:when>
+          <xsl:otherwise><xsl:value-of select="replace($name, ':', '-')"/></xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      
       <xsl:call-template name="render-element-template-field">
-        <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
+        <xsl:with-param name="name" select="$strings/*[name() = $nameCleanUp]"/>
         <xsl:with-param name="id" select="concat('_X', 
           $nonExistingChildParent/*[position() = last()]/gn:element/@ref, '_', 
           $nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, 'COLON', @or)"/>
