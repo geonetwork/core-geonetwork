@@ -39,6 +39,7 @@ import java.nio.file.Path;
 /**
  * Removes a user from the system. It removes the relationship to a group too.
  */
+@Deprecated
 public class Remove extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---

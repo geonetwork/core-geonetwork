@@ -45,7 +45,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 //=============================================================================
-
+@Deprecated
 public class Get implements Service {
     /**
      * TODO : should we move relation management in DataManager or in a specific relation management

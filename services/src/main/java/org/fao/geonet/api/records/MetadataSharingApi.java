@@ -24,7 +24,12 @@
 package org.fao.geonet.api.records;
 
 import com.google.common.base.Optional;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -32,29 +37,17 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.api.records.model.*;
+import org.fao.geonet.api.records.model.GroupOperations;
+import org.fao.geonet.api.records.model.GroupPrivilege;
+import org.fao.geonet.api.records.model.SharingParameter;
+import org.fao.geonet.api.records.model.SharingResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Operation;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.OperationRepository;
-import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
-import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
@@ -62,35 +55,16 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
-import springfox.documentation.annotations.ApiIgnore;
-
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -103,6 +77,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 @Api(value = API_CLASS_RECORD_TAG,
     tags = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
+@PreAuthorize("hasRole('Editor')")
 @Controller("recordSharing")
 @ReadWriteController
 public class MetadataSharingApi {
@@ -177,6 +152,110 @@ public class MetadataSharingApi {
         }
 
         List<GroupOperations> privileges = sharing.getPrivileges();
+        setOperations(sharing, dataManager, context, metadata, operationMap, privileges);
+        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+
+    @ApiOperation(
+        value = "Set sharing settings for one or more records",
+        notes = "See record sharing for more details.",
+        nickname = "shareRecords")
+    @RequestMapping(value = "/sharing",
+        method = RequestMethod.PUT
+    )
+    public
+    @ResponseBody
+    MetadataProcessingReport share(
+        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
+            required = false)
+        @RequestParam(required = false) String[] uuids,
+        @ApiParam(
+            value = "Privileges",
+            required = true
+        )
+        @RequestBody(
+            required = true
+        )
+            SharingParameter sharing,
+        @ApiIgnore
+        @ApiParam(hidden = true)
+            HttpSession session,
+        HttpServletRequest request
+    )
+        throws Exception {
+        MetadataProcessingReport report = new SimpleMetadataProcessingReport();
+
+        try {
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, ApiUtils.getUserSession(session));
+            report.setTotalRecords(records.size());
+
+            final ApplicationContext appContext = ApplicationContextHolder.get();
+            final DataManager dataMan = appContext.getBean(DataManager.class);
+            final AccessManager accessMan = appContext.getBean(AccessManager.class);
+            final MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
+
+            UserSession us = ApiUtils.getUserSession(session);
+            boolean isAdmin = Profile.Administrator == us.getProfile();
+            boolean isReviewer = Profile.Reviewer == us.getProfile();
+
+            ServiceContext context = ApiUtils.createServiceContext(request);
+
+            List<String> listOfUpdatedRecords = new ArrayList<>();
+            for (String uuid : records) {
+                Metadata metadata = metadataRepository.findOneByUuid(uuid);
+                if (metadata == null) {
+                    report.incrementNullRecords();
+                } else if (!accessMan.canEdit(
+                    ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
+                    report.addNotEditableMetadataId(metadata.getId());
+                } else {
+                    boolean skip = false;
+                    if (us.getUserIdAsInt() == metadata.getSourceInfo().getOwner() &&
+                        !isAdmin &&
+                        !isReviewer) {
+                        skip = true;
+                    }
+
+                    if (sharing.isClear()) {
+                        dataMan.deleteMetadataOper(context,
+                            String.valueOf(metadata.getId()), skip);
+                    }
+
+                    OperationRepository operationRepository = appContext.getBean(OperationRepository.class);
+                    List<Operation> operationList = operationRepository.findAll();
+                    Map<String, Integer> operationMap = new HashMap<>(operationList.size());
+                    for (Operation o : operationList) {
+                        operationMap.put(o.getName(), o.getId());
+                    }
+
+                    List<GroupOperations> privileges = sharing.getPrivileges();
+                    setOperations(sharing, dataMan, context, metadata, operationMap, privileges);
+                    report.incrementProcessedRecords();
+                    listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                }
+            }
+            dataMan.flush();
+            dataMan.indexMetadata(listOfUpdatedRecords);
+
+        } catch (Exception exception) {
+            report.addError(exception);
+        } finally {
+            report.close();
+        }
+
+        return report;
+    }
+
+    private void setOperations(
+        SharingParameter sharing,
+        DataManager dataMan,
+        ServiceContext context,
+        Metadata metadata,
+        Map<String, Integer> operationMap,
+        List<GroupOperations> privileges) throws Exception {
         if (privileges != null) {
             for (GroupOperations p : privileges) {
                 for (Map.Entry<String, Boolean> o : p.getOperations().entrySet()) {
@@ -188,18 +267,15 @@ public class MetadataSharingApi {
                     }
 
                     if (o.getValue()) {
-                        dataManager.setOperation(
+                        dataMan.setOperation(
                             context, metadata.getId(), p.getGroup(), opId);
                     } else if (!sharing.isClear() && !o.getValue()) {
-                        dataManager.unsetOperation(
+                        dataMan.unsetOperation(
                             context, metadata.getId(), p.getGroup(), opId);
                     }
                 }
             }
         }
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
@@ -226,7 +302,7 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
-                // TODO: Restrict to user group only in response depending on settings?
+        // TODO: Restrict to user group only in response depending on settings?
         Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -238,9 +314,6 @@ public class MetadataSharingApi {
         if (groupOwner != null) {
             sharingResponse.setGroupOwner(String.valueOf(groupOwner));
         }
-        // Not used ?
-        // Element hasOwner = new Element("owner").setText("true");
-
 
         //--- retrieve groups operations
         AccessManager am = appContext.getBean(AccessManager.class);
@@ -348,6 +421,60 @@ public class MetadataSharingApi {
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+
+    @ApiOperation(
+        value = "Get record sharing settings",
+        notes = "",
+        nickname = "getSharingSettings")
+    @RequestMapping(
+        value = "/sharing",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public
+    @ResponseBody
+    SharingResponse getSharingSettings(
+        @ApiIgnore
+        @ApiParam(hidden = true)
+            HttpSession session,
+        HttpServletRequest request
+    )
+        throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        UserSession userSession = ApiUtils.getUserSession(session);
+
+        SharingResponse sharingResponse = new SharingResponse();
+        sharingResponse.setOwner(userSession.getUserId());
+
+        List<Operation> allOperations = appContext.getBean(OperationRepository.class).findAll();
+
+        //--- retrieve groups operations
+        AccessManager am = appContext.getBean(AccessManager.class);
+        Set<Integer> userGroups = am.getUserGroups(
+            context.getUserSession(),
+            context.getIpAddress(), false);
+
+        List<Group> elGroup = context.getBean(GroupRepository.class).findAll();
+        List<GroupPrivilege> groupPrivileges = new ArrayList<>(elGroup.size());
+
+        for (Group g : elGroup) {
+            GroupPrivilege groupPrivilege = new GroupPrivilege();
+            groupPrivilege.setGroup(g.getId());
+            groupPrivilege.setReserved(g.isReserved());
+            groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
+
+            Map<String, Boolean> operations = new HashMap<>(allOperations.size());
+            for (Operation o : allOperations) {
+                operations.put(o.getName(), false);
+            }
+            groupPrivilege.setOperations(operations);
+            groupPrivileges.add(groupPrivilege);
+        }
+        sharingResponse.setPrivileges(groupPrivileges);
+        return sharingResponse;
     }
 
 

@@ -226,7 +226,8 @@ public class MetadataTagApi {
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public MetadataProcessingReport updateTags(
-        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
+        @ApiParam(
+            value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
         @RequestParam(required = false) String[] uuids,
         @ApiParam(

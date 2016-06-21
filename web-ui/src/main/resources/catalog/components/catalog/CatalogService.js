@@ -106,15 +106,15 @@
         copy: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, metadataUuid) {
           var url = gnUrlUtils.toKeyValue({
-                metadataType: isTemplate ?
-                                (isTemplate === 'SUB_TEMPLATE' ? 'SUB_TEMPLATE' : 'TEMPLATE') :
-                              'METADATA',
-                sourceUuid: id,
-                isChildOfSource: isChild,
-                group: groupId,
-                isVisibleByAllGroupMembers: withFullPrivileges,
-                targetUuid: metadataUuid
-              });
+            metadataType: isTemplate ?
+                (isTemplate === 'SUB_TEMPLATE' ? 'SUB_TEMPLATE' : 'TEMPLATE') :
+                'METADATA',
+            sourceUuid: id,
+            isChildOfSource: isChild,
+            group: groupId,
+            isVisibleByAllGroupMembers: withFullPrivileges,
+            targetUuid: metadataUuid
+          });
           return $http.put('../api/records/actions/create?' + url, {
             headers: {
               'Accept': 'application/json'

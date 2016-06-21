@@ -38,6 +38,7 @@ import java.nio.file.Path;
 
 import javax.annotation.Nonnull;
 
+@Deprecated
 public class Update extends NotInReadOnlyModeService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

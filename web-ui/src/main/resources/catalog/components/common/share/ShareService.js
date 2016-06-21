@@ -57,11 +57,13 @@
   module.factory('gnShareService', [
     '$q', '$http', 'gnShareConstants',
     function($q, $http, gnShareConstants) {
-      var isAdminOrReviewer = function(userProfile, groupOwner, privileges) {
+      var isAdminOrReviewer = function(userProfile, groupOwner,
+                                       privileges, batchMode) {
         if ($.inArray(userProfile,
                       gnShareConstants.internalGroupsProfiles) === -1) {
           return false;
-        } else if (userProfile === 'Administrator') {
+        } else if (userProfile === 'Administrator' ||
+            (userProfile === 'Reviewer' && batchMode)) {
           return true;
         } else {
           // Check if user is member of groupOwner
@@ -125,9 +127,9 @@
          */
         loadPrivileges: function(metadataId, userProfile) {
           var defer = $q.defer();
-          var url = angular.isDefined(metadataId) ?
-              '../api/records/' + metadataId + '/sharing' :
-              'md.privileges.batch?_content_type=json';
+          var url = '../api/records' +
+              (angular.isDefined(metadataId) ? '/' + metadataId : '') +
+              '/sharing';
 
           $http.get(url)
               .success(function(data) {
@@ -143,7 +145,8 @@
                 defer.resolve({
                   privileges: groups,
                   isAdminOrReviewer:
-                      isAdminOrReviewer(userProfile, data.groupOwner, groups)});
+                      isAdminOrReviewer(userProfile, data.groupOwner,
+                      groups, angular.isUndefined(metadataId))});
               });
           return defer.promise;
         },
@@ -162,17 +165,12 @@
          *
          * @return {HttpPromise} Future object.
          */
-        savePrivileges: function(metadataId, privileges, user) {
+        savePrivileges: function(metadataId, privileges, user, replace) {
           var defer = $q.defer();
-          var params = {};
-          var url;
+          var url = '../api/records' + (
+              angular.isDefined(metadataId) ? '/' + metadataId : '') +
+              '/sharing';
 
-          if (angular.isDefined(metadataId)) {
-            url = '../api/records/' + metadataId + '/sharing';
-          }
-          else {
-            url = 'md.privileges.batch.update?_content_type=json';
-          }
           var ops = [];
           angular.forEach(privileges, function(g) {
             // Do not submit internal groups info
@@ -191,7 +189,7 @@
           });
 
           $http.put(url, {
-            clear: true,
+            clear: replace,
             privileges: ops
           })
               .success(function(data) {
