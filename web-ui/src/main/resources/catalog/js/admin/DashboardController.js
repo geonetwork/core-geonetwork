@@ -79,7 +79,7 @@
 
       $scope.info = {};
 
-      $http.get('../api/site/information').
+      $http.get('../api/site/info').
           success(function(data) {
             $scope.info = data;
           });
