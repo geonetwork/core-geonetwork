@@ -144,32 +144,6 @@
 
         /**
          * @ngdoc method
-         * @name gnMetadataManager#importFromDir
-         * @methodOf gnMetadataManager
-         *
-         * @description
-         * Import records from a directory on the server.
-         *
-         * @param {Object} data Params to send to md.import service
-         * @return {HttpPromise} Future object
-         */
-        importFromDir: function(data) {
-          return $http({
-            url: 'md.import?_content_type=json&' + data,
-            method: 'GET',
-            transformResponse: function(defaults) {
-              try {
-                return JSON.parse(defaults);
-              }
-              catch (e) {
-                return defaults;
-              }
-            }
-          });
-        },
-
-        /**
-         * @ngdoc method
          * @name gnMetadataManager#importFromXml
          * @methodOf gnMetadataManager
          *
@@ -179,19 +153,11 @@
          * @param {Object} data Params to send to md.insert service
          * @return {HttpPromise} Future object
          */
-        importFromXml: function(data) {
-          return $http.post('md.insert?_content_type=json', data, {
-            headers: {'Content-Type':
-                  'application/x-www-form-urlencoded'},
-            transformResponse: function(defaults) {
-              try {
-                return JSON.parse(defaults);
-              }
-              catch (e) {
-                return defaults;
-              }
+        importFromXml: function(urlParams, xml) {
+          return $http.put('../api/records?' + urlParams, xml, {
+            headers: {
+              'Content-Type': 'application/xml'
             }
-
           });
         },
 

@@ -35,12 +35,9 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -251,12 +248,14 @@ public class MetadataInsertDeleteApi {
             MediaType.APPLICATION_JSON_VALUE
         },
         consumes = {
-            MediaType.APPLICATION_XML_VALUE
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_FORM_URLENCODED_VALUE
         }
     )
     public
     @ResponseBody
-    ResponseEntity<Object> insert(
+    ResponseEntity<SimpleMetadataProcessingReport> insert(
         @ApiParam(
             value = API_PARAM_RECORD_TYPE,
             required = false,
@@ -369,17 +368,34 @@ public class MetadataInsertDeleteApi {
             throw new IllegalArgumentException(String.format(
                 "XML fragment or a URL or a server folder MUST be provided."));
         }
+        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         if (xml != null) {
-            loadRecord(
+            Pair<Integer, String> pair = loadRecord(
                 metadataType, Xml.loadString(xml, false),
                 uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+            report.addMetadataInfos(pair.one(), String.format(
+                "Metadata imported from XML with UUID '%s'", pair.two())
+            );
+            report.incrementProcessedRecords();
         }
         if (url != null) {
             for (String u : url) {
-                loadRecord(
-                    metadataType, Xml.loadFile(ApiUtils.downloadUrlInTemp(u)),
-                    uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+                Element xmlContent = null;
+                try {
+                    xmlContent = Xml.loadFile(ApiUtils.downloadUrlInTemp(u));
+                } catch (Exception e) {
+                    report.addError(e);
+                }
+                if (xmlContent != null) {
+                    Pair<Integer, String> pair = loadRecord(
+                        metadataType, xmlContent,
+                        uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+                    report.addMetadataInfos(pair.one(), String.format(
+                        "Metadata imported from URL with UUID '%s'", pair.two())
+                    );
+                }
+                report.incrementProcessedRecords();
             }
         }
         if (serverFolder != null) {
@@ -415,22 +431,35 @@ public class MetadataInsertDeleteApi {
             ServiceContext context = ApiUtils.createServiceContext(request);
             for (Path f : files) {
                 if (MEFLib.isValidArchiveExtensionForMEF(f.getFileName().toString())) {
-                    List<String> id = MEFLib.doImport(
+                    List<String> ids = MEFLib.doImport(
                         "mef2", uuidProcessing, transformWith,
                         settingManager.getSiteId(),
                         metadataType, category, group, rejectIfInvalid,
                         assignToCatalog, context, f);
+                    for (String id : ids) {
+                        report.addMetadataInfos(Integer.parseInt(id), String.format(
+                            "Metadata imported from MEF with id '%s'", id)
+                        );
+                        report.incrementProcessedRecords();
+                    }
                 } else {
-                    loadRecord(
-                        metadataType, Xml.loadFile(f),
-                        uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+                    try {
+                        Pair<Integer, String> pair = loadRecord(
+                            metadataType, Xml.loadFile(f),
+                            uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+                        report.addMetadataInfos(pair.one(), String.format(
+                            "Metadata imported from server folder with UUID '%s'", pair.two())
+                        );
+                    } catch (Exception e) {
+                        report.addError(e);
+                    }
+                    report.incrementProcessedRecords();
                 }
 
             }
-
         }
-        // TODO: Add a report
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        report.close();
+        return new ResponseEntity<>(report, HttpStatus.CREATED);
     }
 
 
@@ -627,7 +656,7 @@ public class MetadataInsertDeleteApi {
     )
     public
     @ResponseBody
-    ResponseEntity<Object> insertFile(
+    ResponseEntity<SimpleMetadataProcessingReport> insertFile(
         @ApiParam(
             value = API_PARAM_RECORD_TYPE,
             required = false,
@@ -719,10 +748,11 @@ public class MetadataInsertDeleteApi {
             throw new IllegalArgumentException(String.format(
                 "A file MUST be provided."));
         }
+        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         if (file != null) {
             ServiceContext context = ApiUtils.createServiceContext(request);
             ApplicationContext applicationContext = ApplicationContextHolder.get();
-            SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+            SettingManager settingManager = applicationContext.getBean(SettingManager.class);
             for (MultipartFile f : file) {
                 if (MEFLib.isValidArchiveExtensionForMEF(f.getOriginalFilename())) {
                     Path tempFile = Files.createTempFile("mef-import", ".zip");
@@ -737,18 +767,22 @@ public class MetadataInsertDeleteApi {
                         IO.deleteFile(tempFile, false, Geonet.MEF);
                     }
                 } else {
-                    loadRecord(
+                    Pair<Integer, String> pair = loadRecord(
                         metadataType, Xml.loadStream(f.getInputStream()),
                         uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+                    report.addMetadataInfos(pair.one(), String.format(
+                        "Metadata imported with UUID '%s'", pair.two())
+                    );
+                    report.incrementProcessedRecords();
                 }
             }
         }
-        // TODO: Add a report
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        report.close();
+        return new ResponseEntity<>(report, HttpStatus.CREATED);
     }
 
 
-    private void loadRecord(
+    private Pair<Integer, String> loadRecord(
         MetadataType metadataType,
         Element xmlElement,
         final MEFLib.UuidAction uuidProcessing,
@@ -766,7 +800,7 @@ public class MetadataInsertDeleteApi {
         if (!transformWith.equals("_none_")) {
             GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
             Path folder = dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS);
-            Path xslFile = folder.resolve(transformWith);
+            Path xslFile = folder.resolve(transformWith + ".xsl");
             if (Files.exists(xslFile)) {
                 xmlElement = Xml.transform(xmlElement, xslFile);
             } else {
@@ -781,9 +815,9 @@ public class MetadataInsertDeleteApi {
         if (schema == null) {
             schema = dataMan.autodetectSchema(xmlElement);
             if (schema == null) {
-                throw new BadParameterEx(
-                    "Can't detect schema for metadata automatically.",
-                    "schema is unknown"
+                throw new IllegalArgumentException(
+                    "Can't detect schema for metadata automatically. " +
+                        "You could try to force the schema with the schema parameter."
                 );
                 // TODO: Report what are the supported schema
             }
@@ -792,7 +826,11 @@ public class MetadataInsertDeleteApi {
         }
 
         if (rejectIfInvalid) {
-            DataManager.validateMetadata(schema, xmlElement, context);
+            try {
+                DataManager.validateMetadata(schema, xmlElement, context);
+            } catch (XSDValidationErrorEx e) {
+                throw new IllegalArgumentException(e);
+            }
         }
 
         //--- if the uuid does not exist we generate it for metadata and templates
@@ -806,6 +844,21 @@ public class MetadataInsertDeleteApi {
                 xmlElement = dataMan.setUUID(schema, uuid, xmlElement);
             }
         }
+
+
+        if (uuidProcessing == MEFLib.UuidAction.NOTHING) {
+            MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
+            Metadata md = metadataRepository.findOneByUuid(uuid);
+            if (md != null) {
+                throw new IllegalArgumentException(String.format(
+                    "A record with UUID '%s' already exist and you choose no " +
+                        "action on UUID processing. Choose to overwrite existing record " +
+                        "or to generate a new UUID.",
+                    uuid
+                ));
+            }
+        }
+
         String date = new ISODate().toString();
 
         final List<String> id = new ArrayList<String>();
@@ -825,6 +878,9 @@ public class MetadataInsertDeleteApi {
         } catch (DataIntegrityViolationException ex) {
             throw new DataIntegrityViolationException(
                 "Record can't be imported due to database constraint error.", ex);
+        }catch (Exception ex) {
+            throw new Exception(
+                "Record can't be imported due to the following error.", ex);
         }
         int iId = Integer.parseInt(id.get(0));
 
@@ -852,5 +908,6 @@ public class MetadataInsertDeleteApi {
         }
 
         dataMan.indexMetadata(id.get(0), true);
+        return Pair.read(Integer.valueOf(id.get(0)), uuid);
     }
 }

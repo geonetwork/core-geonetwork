@@ -183,7 +183,7 @@ public class ApiUtils {
     public static Path downloadUrlInTemp(String url) throws IOException, URISyntaxException {
 
         URI uri = new URI(url);
-        Path file = Files.createTempFile("file-from-url", ".rdf");
+        Path file = Files.createTempFile("file-from-url", ".xml");
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         XmlRequest httpReq = applicationContext

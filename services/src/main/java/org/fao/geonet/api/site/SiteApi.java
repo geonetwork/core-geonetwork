@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.site;
 
+import jeeves.constants.Jeeves;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -40,6 +41,7 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.IO;
+import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -58,6 +60,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -372,5 +375,37 @@ public class SiteApi {
                 "Unable to move uploaded thumbnail to destination directory. Error: " + e.getMessage());
         }
         return new ResponseEntity(HttpStatus.CREATED);
+    }
+
+
+    @ApiOperation(
+        value = "Get XSL tranformations available",
+        notes = "XSL transformations may be applied while importing or harvesting records.",
+        nickname = "getXslTransformations")
+    @RequestMapping(
+        path = "/info/transforms",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public List<String> getXslTransformations(
+    ) throws Exception {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
+
+        try (DirectoryStream<Path> sheets = Files.newDirectoryStream(
+            dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS)
+        )) {
+            List<String> list = new ArrayList<>();
+            for (Path sheet : sheets) {
+                String id = sheet.toString();
+                if (id != null && id.endsWith(".xsl")) {
+                    String name = com.google.common.io.Files.getNameWithoutExtension(
+                        sheet.getFileName().toString());
+                    list.add(name);
+                }
+            }
+            return list;
+        }
     }
 }

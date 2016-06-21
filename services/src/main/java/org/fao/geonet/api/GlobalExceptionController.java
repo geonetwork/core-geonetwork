@@ -28,6 +28,7 @@ import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -112,6 +113,7 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         UnsatisfiedServletRequestParameterException.class,
         IllegalArgumentException.class,
+        XSDValidationErrorEx.class,
         MultipartException.class
     })
     public ApiError unsatisfiedParameterHandler(final Exception exception) {

@@ -653,9 +653,9 @@
 
           link: function(scope, element, attrs) {
             scope.recordTypes = [
-              {key: 'METADATA', value: 'n'},
-              {key: 'TEMPLATE', value: 'y'},
-              {key: 'SUB_TEMPLATE', value: 's'}
+              {key: 'METADATA', value: 'METADATA'},
+              {key: 'TEMPLATE', value: 'TEMPLATE'},
+              {key: 'SUB_TEMPLATE', value: 'SUB_TEMPLATE'}
             ];
           }
         };

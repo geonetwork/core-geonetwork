@@ -40,6 +40,7 @@ import com.google.common.collect.Sets;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
+import org.eclipse.jetty.util.StringUtil;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -1562,16 +1563,16 @@ public class DataManager implements ApplicationEventPublisherAware {
         newMetadata.getSourceInfo()
             .setOwner(owner)
             .setSourceId(source);
-        if (groupOwner != null) {
+        if (StringUtils.isNotEmpty(groupOwner)) {
             newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner));
         }
-        if (category != null) {
+        if (StringUtils.isNotEmpty(category)) {
             MetadataCategory metadataCategory = getApplicationContext().getBean(MetadataCategoryRepository.class).findOneByName(category);
             if (metadataCategory == null) {
                 throw new IllegalArgumentException("No category found with name: " + category);
             }
             newMetadata.getCategories().add(metadataCategory);
-        } else if (groupOwner != null) {
+        } else if (StringUtils.isNotEmpty(groupOwner)) {
             //If the group has a default category, use it
             Group group = getApplicationContext()
                 .getBean(GroupRepository.class)
