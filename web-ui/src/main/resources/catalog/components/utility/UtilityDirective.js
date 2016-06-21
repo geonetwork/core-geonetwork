@@ -57,13 +57,14 @@
    * TODO: This could be used in other places
    * probably. Move to another common or language module ?
    */
-  module.directive('gnCountryPicker', ['gnHttp', 'gnUtilityService',
-    function(gnHttp, gnUtilityService) {
+  module.directive('gnCountryPicker', ['$http',
+    function($http) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
-          gnHttp.callService('country', {}, {
+          $http.get('../api/regions?categoryId=' +
+            'http://geonetwork-opensource.org/regions%23country', {}, {
             cache: true
           }).success(function(response) {
             var data = response.region;
@@ -221,13 +222,13 @@
    * like admin > harvesting > OGC WxS
    * probably. Move to another common or language module ?
    */
-  module.directive('gnLanguagePicker', ['gnHttp',
-    function(gnHttp) {
+  module.directive('gnLanguagePicker', ['$http',
+    function($http) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
-          gnHttp.callService('lang', {}, {
+          $http.get('../api/isolanguages', {}, {
             cache: true
           }).success(function(data) {
             // Compute default name and add a

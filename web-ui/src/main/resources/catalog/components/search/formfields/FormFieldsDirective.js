@@ -280,8 +280,8 @@
               var config = 'iso19139|gmd:protocol|||';
               gnSchemaManagerService.getElementInfo(config).then(
                   function(data) {
-                    $scope.protocols = data !== 'null' ?
-                        data[0].helper.option : null;
+                    $scope.protocols = data.helper ?
+                        data.helper.option : null;
                   });
             }]
           };
@@ -544,7 +544,7 @@
                 }
                 // Search default value
                 angular.forEach(scope.infos, function(h) {
-                  if (h['default'] == 'true') {
+                  if (h.isDefault === true) {
                     defaultValue = h.code;
                   }
                 });
@@ -575,37 +575,14 @@
                 if (scope.type == 'codelist') {
                   gnSchemaManagerService.getCodelist(config).then(
                       function(data) {
-                        if (data !== 'null') {
-                          scope.infos = [];
-                          angular.copy(data[0].entry, scope.infos);
-                        } else {
-                          scope.infos = data[0].entry;
-                        }
-
+                        scope.infos = data.entry;
                         addBlankValueAndSetDefault();
                       });
                 }
                 else if (scope.type == 'element') {
                   gnSchemaManagerService.getElementInfo(config).then(
                       function(data) {
-                        if (data !== 'null') {
-                          scope.infos = [];
-                          // Helper element may be embbeded in an option
-                          // property when attributes are defined
-                          angular.forEach(data[0].helper.option ||
-                              data[0].helper,
-                              function(h) {
-                                scope.infos.push({
-                                  code: h['@value'],
-                                  label: h['#text'],
-                                  description: h['@title'] || '',
-                                  'default': h['@default'] == '' ?
-                                     'true' : 'false'
-                                });
-                              });
-                        } else {
-                          scope.infos = null;
-                        }
+                        scope.infos = data.helper ? data.helper.option : null;
                         addBlankValueAndSetDefault();
                       });
                 }

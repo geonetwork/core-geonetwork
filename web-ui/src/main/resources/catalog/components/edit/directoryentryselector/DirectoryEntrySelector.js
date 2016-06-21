@@ -242,7 +242,7 @@
                   gnSchemaManagerService
                      .getCodelist(schemaId + '|' + 'roleCode')
                       .then(function(data) {
-                        scope.roles = data[0].entry;
+                        scope.roles = data.entry;
                       });
 
                   scope.openSelector = function() {

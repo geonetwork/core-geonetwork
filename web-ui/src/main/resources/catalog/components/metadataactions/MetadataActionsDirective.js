@@ -125,13 +125,11 @@
 
           scope.updateCategoriesAllowed = function() {
             if (angular.isDefined(scope.groupOwner)) {
-              $http.get('admin.group.get?id=' + scope.groupOwner + '&' +
-                  '_content_type=json', {cache: true}).
+              $http.get('../api/groups/' + scope.groupOwner, {cache: true}).
                   success(function(data) {
-                    scope.enableallowedcategories =
-                        (data[0].enableallowedcategories == 'true');
+                    scope.enableallowedcategories = data.enableAllowedCategories;
                     scope.allowedcategories = [];
-                    angular.forEach(data[0].allowedcategories, function(c) {
+                    angular.forEach(data.allowedcategories, function(c) {
                       scope.allowedcategories.push(c.id);
                     });
                   });

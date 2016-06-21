@@ -268,15 +268,15 @@
     </Or>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.region.ListRegionsResponse"/>
+    <Class name="org.fao.geonet.api.regions.ListRegionsResponse"/>
     <Bug pattern="URF_UNREAD_FIELD"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.region.ListRegionsResponse$CategoryResponse"/>
+    <Class name="org.fao.geonet.api.regions.ListRegionsResponse$CategoryResponse"/>
     <Bug pattern="URF_UNREAD_FIELD"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.region.ListRegionsResponse$RegionResponse"/>
+    <Class name="org.fao.geonet.api.regions.ListRegionsResponse$RegionResponse"/>
     <Bug pattern="URF_UNREAD_FIELD"/>
   </Match>
   <Match>

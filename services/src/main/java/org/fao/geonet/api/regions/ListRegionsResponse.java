@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.services.region;
+package org.fao.geonet.api.regions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -73,7 +73,7 @@ public class ListRegionsResponse {
 
     }
 
-    protected int size() {
+    public int size() {
         return region.size();
     }
 

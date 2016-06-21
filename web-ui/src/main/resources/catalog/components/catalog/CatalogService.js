@@ -319,13 +319,7 @@
     processAll: 'md.processing.batch',
     processReport: 'md.processing.batch.report',
     processXml: 'xml.metadata.processing',
-
-
-    country: 'regions.list?_content_type=json&categoryId=' +
-        'http://geonetwork-opensource.org/regions%23country',
-    regionsList: 'regions.category.list?_content_type=json&',
-    region: 'regions.list?_content_type=json&',
-
+    
     suggest: 'suggest',
 
     edit: 'md.edit',

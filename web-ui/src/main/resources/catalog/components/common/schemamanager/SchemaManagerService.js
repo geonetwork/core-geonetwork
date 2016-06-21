@@ -93,25 +93,15 @@
            },
 
            getCodelist: function(config) {
-             //<request><codelist schema="iso19139" name="gmd:CI_RoleCode"/>
              var defer = $q.defer();
              var fromCache = infoCache.get(config);
              if (fromCache) {
                defer.resolve(fromCache);
              } else {
-               var getPostRequestBody = function() {
-                 var info = config.split('|'),
-                 requestBody = '<request><codelist schema="' + info[0] +
-                 '" name="' + info[1] +
-                 '" /></request>';
-                 return requestBody;
-               };
-
-               $http.post('md.element.info?_content_type=json',
-               getPostRequestBody(), {
-                 headers: {'Content-type': 'application/xml'}
-               }).
-               success(function(data) {
+               var info = config.split('|');
+               $http.get('../api/standards/' + info[0] +
+                 '/codelists/' + info[1] + '/details')
+               .success(function(data) {
                  infoCache.put(config, data);
                  defer.resolve(data);
                });
@@ -125,40 +115,20 @@
             * Return a promise.
             */
            getElementInfo: function(config) {
-             //<request>
-             //  <element schema="iso19139"
-             //   name="gmd:geometricObjectType"
-             //   context="gmd:MD_GeometricObjects"
-             //   fullContext="xpath"
-             //   isoType="" /></request>
              var defer = $q.defer();
              var fromCache = infoCache.get(config);
              if (fromCache) {
                defer.resolve(fromCache);
              } else {
-               var getPostRequestBody = function() {
-                 var info = config.split('|');
-                 var requestBody = null;
-
-                 // Check at least element name is defined
-                 // to get information about that element.
-                 if (info[1] !== '') {
-                   requestBody = '<request><element schema="' + info[0] +
-                   '" name="' + info[1] +
-                   '" context="' + (info[2] || '') +
-                   '" fullContext="' + (info[3] || '') +
-                   '" isoType="' + (info[4] || '') + '" /></request>';
-                 }
-                 return requestBody;
-               };
-
-               var requestBody = getPostRequestBody();
-               if (requestBody === null) {
+               var info = config.split('|');
+               if (info.length === 0) {
                  defer.reject({error: 'Invalid config.', config: config});
                } else {
-                 $http.post('md.element.info?_content_type=json', requestBody, {
-                   headers: {'Content-type': 'application/xml'}
-                 }).
+                 $http.get('../api/standards/' + info[0] +
+                   '/descriptors/' + info[1] + '/details?' +
+                   'parent=' + (info[2] || '') +
+                   '&xpath=' + (info[3] || '') +
+                   '&isoType=' + (info[4] || '')).
                  success(function(data) {
                    infoCache.put(config, data);
                    defer.resolve(data);

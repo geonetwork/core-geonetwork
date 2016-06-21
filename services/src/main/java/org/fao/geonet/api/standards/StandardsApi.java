@@ -25,13 +25,17 @@ package org.fao.geonet.api.standards;
 
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.editorconfig.BatchEditing;
 import org.fao.geonet.kernel.schema.editorconfig.Editor;
+import org.fao.geonet.kernel.schema.labels.Codelists;
+import org.fao.geonet.kernel.schema.labels.Labels;
 import org.fao.geonet.services.schema.Info;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -55,7 +59,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -169,7 +173,7 @@ public class StandardsApi implements ApplicationContextAware {
     }
 
 
-    @ApiOperation(value = "List a codelist entries",
+    @ApiOperation(value = "Get codelist translations",
         nickname = "getSchemaTranslations")
     @RequestMapping(value = "/{schema}/codelists/{codelist}",
         method = RequestMethod.GET,
@@ -182,14 +186,17 @@ public class StandardsApi implements ApplicationContextAware {
             required = true,
             example = "iso19139")
         @PathVariable String schema,
+        @ApiParam(
+            value = "Codelist element name or alias"
+        )
         @PathVariable String codelist,
         @RequestParam(required = false) String parent,
         @RequestParam(required = false) String xpath,
         @RequestParam(required = false) String isoType,
-        ServletRequest request
+        HttpServletRequest request
     ) throws Exception {
         Map<String, String> response = new LinkedHashMap<String, String>();
-        final ServiceContext context = ServiceContext.get();
+        final ServiceContext context = ApiUtils.createServiceContext(request);
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         context.setLanguage(language.getISO3Language());
 
@@ -205,5 +212,80 @@ public class StandardsApi implements ApplicationContextAware {
             response.put(entry.getChildText("code"), entry.getChildText("label"));
         }
         return response;
+    }
+
+    @ApiOperation(value = "Get codelist details",
+        nickname = "getSchemaCodelistsWithDetails")
+    @RequestMapping(value = "/{schema}/codelists/{codelist}/details",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE
+        })
+    @ResponseBody
+    public Codelists.Codelist getSchemaCodelistsWithDetails(
+        @ApiParam(value = "Schema identifier",
+            required = true,
+            example = "iso19139")
+        @PathVariable String schema,
+        @ApiParam(
+            value = "Codelist element name or alias"
+        )
+        @PathVariable String codelist,
+        @RequestParam(required = false) String parent,
+        @RequestParam(required = false) String xpath,
+        @RequestParam(required = false) String isoType,
+        HttpServletRequest request
+    ) throws Exception {
+        final ServiceContext context = ApiUtils.createServiceContext(request);
+        Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
+        context.setLanguage(language.getISO3Language());
+
+        String elementName = Info.findNamespace(codelist, schemaManager, schema);
+        Element e = Info.getHelp(schemaManager, "codelists.xml",
+            schema, elementName, parent, xpath, isoType, context);
+        if (e == null) {
+            throw new ResourceNotFoundException(String.format(
+                "'%s' not found.", codelist));
+        }
+        return (Codelists.Codelist) Xml.unmarshall(e, Codelists.Codelist.class);
+    }
+
+    @ApiOperation(value = "Get descriptor details",
+        nickname = "getElementDetails")
+    @RequestMapping(value = "/{schema}/descriptors/{element}/details",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE
+        })
+    @ResponseBody
+    public org.fao.geonet.kernel.schema.labels.Element getElementDetails(
+        @ApiParam(value = "Schema identifier",
+            required = true,
+            example = "iso19139")
+        @PathVariable String schema,
+        @ApiParam(
+            value = "Descriptor name",
+            required = true
+        )
+        @PathVariable String element,
+        @RequestParam(required = false) String parent,
+        @RequestParam(required = false) String xpath,
+        @RequestParam(required = false) String isoType,
+        HttpServletRequest request
+    ) throws Exception {
+        final ServiceContext context = ApiUtils.createServiceContext(request);
+        Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
+        context.setLanguage(language.getISO3Language());
+
+        String elementName = Info.findNamespace(element, schemaManager, schema);
+        Element e = Info.getHelp(schemaManager, "labels.xml",
+            schema, elementName, parent, xpath, isoType, context);
+        if (e == null) {
+            throw new ResourceNotFoundException(String.format(
+                "'%s' not found.", element));
+        }
+        return (org.fao.geonet.kernel.schema.labels.Element) Xml.unmarshall(e, org.fao.geonet.kernel.schema.labels.Element.class);
     }
 }

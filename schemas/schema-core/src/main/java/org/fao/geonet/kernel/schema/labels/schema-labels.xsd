@@ -203,7 +203,6 @@
       <xs:attribute name="id" type="xs:NMTOKEN"/>
       <xs:attribute name="title"/>
       <xs:attribute name="value" use="required"/>
-      <xs:attribute type="xs:boolean" name="default" use="optional"/>
     </xs:complexType>
   </xs:element>
 
@@ -250,6 +249,7 @@
                     <xs:element type="xs:string" name="description"/>
                   </xs:sequence>
                   <xs:attribute type="xs:boolean" name="hideInEditMode" use="optional"/>
+                  <xs:attribute type="xs:boolean" name="default" use="optional"/>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
