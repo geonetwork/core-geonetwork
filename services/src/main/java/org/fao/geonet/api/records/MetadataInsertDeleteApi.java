@@ -95,7 +95,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
 
-import static org.fao.geonet.api.ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
@@ -181,7 +181,7 @@ public class MetadataInsertDeleteApi {
     public
     @ResponseBody
     ResponseEntity<SimpleMetadataProcessingReport> deleteRecords(
-        @ApiParam(value = APIPARAM_RECORD_UUIDS_OR_SELECTION,
+        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)

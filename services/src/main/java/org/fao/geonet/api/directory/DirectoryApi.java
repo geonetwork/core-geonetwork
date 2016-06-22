@@ -118,7 +118,7 @@ public class DirectoryApi {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('Reviewer') or hasRole('Administrator')")
     public ResponseEntity<Object> previewExtractedEntries(
-        @ApiParam(value = ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION,
+        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
@@ -154,7 +154,7 @@ public class DirectoryApi {
     @PreAuthorize("hasRole('Reviewer') or hasRole('Administrator')")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Object> extractEntries(
-        @ApiParam(value = ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION,
+        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
@@ -262,7 +262,7 @@ public class DirectoryApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<Object> previewUpdatedRecordEntries(
-        @ApiParam(value = ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION,
+        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
@@ -308,7 +308,7 @@ public class DirectoryApi {
     @PreAuthorize("hasRole('Reviewer') or hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity<Object> updateRecordEntries(
-        @ApiParam(value = ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION,
+        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)

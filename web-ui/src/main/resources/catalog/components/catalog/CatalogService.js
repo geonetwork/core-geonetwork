@@ -285,7 +285,6 @@
     mdInsert: 'md.insert?_content_type=json&',
     mdDelete: 'md.delete?_content_type=json&',
     mdDeleteBatch: 'md.delete.batch',
-    suggestionsList: 'md.suggestion?_content_type=json&',
 
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
@@ -298,7 +297,6 @@
     publish: 'md.publish',
     unpublish: 'md.unpublish',
 
-    processMd: 'md.processing',
     processAll: 'md.processing.batch',
     processReport: 'md.processing.batch.report',
     processXml: 'xml.metadata.processing',

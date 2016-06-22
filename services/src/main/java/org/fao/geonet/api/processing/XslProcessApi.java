@@ -25,9 +25,9 @@ package org.fao.geonet.api.processing;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
-import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.services.metadata.XslProcessing;
@@ -57,7 +57,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
 
-import static org.fao.geonet.api.ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata schema. Parameters sent
@@ -87,11 +88,9 @@ import static org.fao.geonet.api.ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION;
 public class XslProcessApi {
 
     @ApiOperation(
-        value = "Apply custom process",
-        nickname = "processRecordUsingXslt",
-        notes = "Process a metadata with an XSL transformation declared for " +
-            "the metadata schema. Parameters sent to the service are forwarded " +
-            "to XSL process.")
+        value = "Apply a process to one or more records",
+        nickname = "processRecordsUsingXslt",
+        notes = ApiParams.API_OP_NOTE_PROCESS)
     @RequestMapping(
         value = "/{process}",
         method = RequestMethod.POST,
@@ -102,11 +101,13 @@ public class XslProcessApi {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
-    public XsltMetadataProcessingReport serviceSpecificExec(
-        @ApiParam(value = "Process identifier")
+    public XsltMetadataProcessingReport processRecords(
+        @ApiParam(
+            value = ApiParams.API_PARAM_PROCESS_ID
+        )
         @PathVariable
             String process,
-        @ApiParam(value = APIPARAM_RECORD_UUIDS_OR_SELECTION,
+        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
@@ -125,7 +126,6 @@ public class XslProcessApi {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, session);
             ApplicationContext context = ApplicationContextHolder.get();
             DataManager dataMan = context.getBean(DataManager.class);
-            XslProcessing xslProcessing = context.getBean(XslProcessing.class);
 
             final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();
 
@@ -133,7 +133,7 @@ public class XslProcessApi {
 
             BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(
                 ApiUtils.createServiceContext(request),
-                dataMan, records, process, xslProcessing, httpSession, siteURL,
+                dataMan, records, process, httpSession, siteURL,
                 xslProcessingReport, request);
             m.process();
 
@@ -151,7 +151,6 @@ public class XslProcessApi {
         Set<String> records;
         String process;
         String siteURL;
-        XslProcessing xslProcessing;
         HttpSession session;
         XsltMetadataProcessingReport xslProcessingReport;
         HttpServletRequest request;
@@ -161,7 +160,6 @@ public class XslProcessApi {
                                          DataManager dm,
                                          Set<String> records,
                                          String process,
-                                         XslProcessing xslProcessing,
                                          HttpSession session,
                                          String siteURL,
                                          XsltMetadataProcessingReport xslProcessingReport,
@@ -172,7 +170,6 @@ public class XslProcessApi {
             this.session = session;
             this.siteURL = siteURL;
             this.request = request;
-            this.xslProcessing = xslProcessing;
             this.xslProcessingReport = xslProcessingReport;
             this.context = context;
         }
@@ -184,7 +181,8 @@ public class XslProcessApi {
                 Log.info("org.fao.geonet.services.metadata",
                     "Processing metadata with id:" + id);
 
-                XslProcessUtils.process(context, id, process, true, xslProcessingReport, siteURL, request.getParameterMap());
+                XslProcessUtils.process(context, id, process,
+                    true, xslProcessingReport, siteURL, request.getParameterMap());
             }
         }
     }

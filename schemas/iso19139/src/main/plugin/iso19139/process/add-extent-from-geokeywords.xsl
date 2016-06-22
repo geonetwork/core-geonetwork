@@ -88,9 +88,9 @@
           <xsl:value-of select="geonet:i18n($add-extent-loc, 'b', $guiLang)"/>
         </name>
         <operational>true</operational>
-        <params>{gurl:{type:'string', defaultValue:'<xsl:value-of select="$gurl"/>'},
-          lang:{type:'string', defaultValue:'<xsl:value-of select="$lang"/>'},
-          replace:{type:'boolean', defaultValue:'<xsl:value-of select="$replace"/>'}}
+        <params>{"gurl":{"type":"string", "defaultValue":"<xsl:value-of select="$gurl"/>"},
+          "lang":{"type":"string", "defaultValue":"<xsl:value-of select="$lang"/>"},
+          "replace":{"type":"boolean", "defaultValue":"<xsl:value-of select="$replace"/>"}}
         </params>
       </suggestion>
     </xsl:if>

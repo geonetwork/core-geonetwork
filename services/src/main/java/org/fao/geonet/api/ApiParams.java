@@ -32,9 +32,13 @@ public class ApiParams {
 
     public static final String API_PARAM_RECORD_UUID = "Record UUID.";
     public static final String API_PARAM_RECORD_UUIDS = "One or more record UUIDs";
-    public static final String APIPARAM_RECORD_UUIDS_OR_SELECTION =
-        "Record UUIDs. If null current selection is used.";
     public static final String API_PARAM_RECORD_UUIDS_OR_SELECTION = "Record UUIDs. If null current selection is used.";
     public static final String API_PARAM_CLEAR_ALL_BEFORE_INSERT = "Clear all before adding new ones";
     public static final String API_PARAM_SCHEMA_IDENTIFIERS = "Schema identifiers";
+    public static final String API_PARAM_PROCESS_TEST_ONLY = "Test only (ie. metadata are not saved). Return the report only.";
+    public static final String API_PARAM_PROCESS_ID = "Process identifier";
+    public static final String API_OP_NOTE_PROCESS = "Process a metadata with an XSL transformation declared for " +
+        "the metadata schema (See the process folder). " +
+        "Parameters sent to the service are forwarded " +
+        "to XSL process.";
 }

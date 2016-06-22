@@ -25,11 +25,11 @@ package org.fao.geonet.api.processing;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
 import org.fao.geonet.api.processing.report.ProcessingReport;
 import org.fao.geonet.api.processing.report.registry.IProcessingReportRegistry;
-import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.DataManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -56,7 +56,7 @@ import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
 import springfox.documentation.annotations.ApiIgnore;
 
-import static org.fao.geonet.api.ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
 @RequestMapping(value = {
     "/api/processes",
@@ -125,14 +125,16 @@ public class ProcessApi {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
     public MetadataReplacementProcessingReport searchAndReplace(
-        @RequestParam(defaultValue = "massive-content-update")
+        @RequestParam(
+            defaultValue = "massive-content-update")
             String process,
-        @ApiParam(value = APIPARAM_RECORD_UUIDS_OR_SELECTION,
+        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
             String[] uuids,
-        @ApiParam(value = "Test only (ie. metadata are not saved). Return the report only.",
+        @ApiParam(
+            value = ApiParams.API_PARAM_PROCESS_TEST_ONLY,
             required = false)
         @RequestParam(defaultValue = "false")
             boolean isTesting,
