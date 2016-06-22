@@ -34,11 +34,13 @@
   goog.require('gn_search');
   goog.require('gn_search_default_config');
   goog.require('gn_search_default_directive');
+  goog.require('gn_cors_interceptor');
 
   var module = angular.module('gn_search_default',
       ['gn_search', 'gn_search_default_config',
        'gn_search_default_directive', 'gn_related_directive',
-       'cookie_warning', 'gn_mdactions_directive']);
+       'cookie_warning', 'gn_mdactions_directive', 
+       'gn_cors_interceptor']);
 
 
   module.controller('gnsSearchPopularController', [
@@ -170,11 +172,23 @@
         gnMdView.removeLocationUuid();
       };
       $scope.nextRecord = function() {
-        // TODO: When last record of page reached, go to next page...
-        $scope.openRecord(mdView.current.index + 1);
+        var nextRecordId = mdView.current.index + 1;
+        if (nextRecordId === mdView.records.length) {
+          // When last record of page reached, go to next page...
+          // Not the most elegant way to do it, but it will
+          // be easier using Solr search components
+          $scope.$broadcast('nextPage');
+        } else {
+          $scope.openRecord(nextRecordId);
+        }
       };
       $scope.previousRecord = function() {
-        $scope.openRecord(mdView.current.index - 1);
+        var prevRecordId = mdView.current.index - 1;
+        if (prevRecordId === -1) {
+          $scope.$broadcast('previousPage');
+        } else {
+          $scope.openRecord(prevRecordId);
+        }
       };
 
       $scope.infoTabs = {
@@ -190,7 +204,7 @@
         }};
 
       // Set the default browse mode for the home page
-      $scope.$watch('searchInfo', function () {
+      $scope.$watch('searchInfo', function (n, o) {
         if (angular.isDefined($scope.searchInfo.facet)) {
           if ($scope.searchInfo.facet['inspireThemes'].length > 0) {
             $scope.browse = 'inspire';

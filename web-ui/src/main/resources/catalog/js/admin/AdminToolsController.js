@@ -510,7 +510,7 @@
         return $http.get('../../static/wroAPI/reloadModel')
           .success(function(data) {
               $http.get('../../static/wroAPI/reloadCache')
-              .success(function(data) {
+                .success(function(data) {
                    $rootScope.$broadcast('StatusUpdated', {
                      msg: $translate('jsCacheCleared'),
                      timeout: 2,

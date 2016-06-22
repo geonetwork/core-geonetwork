@@ -39,6 +39,7 @@
     proxyUrl: '../../proxy?url=',
     locale: {},
     isMapViewerEnabled: false,
+    requireProxy: [],
     is3DModeAllowed: false,
     docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
     //docUrl: '../../doc/',

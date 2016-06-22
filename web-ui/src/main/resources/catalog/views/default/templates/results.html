@@ -13,7 +13,8 @@
       <div class="pull-right"
            data-gn-pagination="paginationInfo"
            data-hits-values="searchObj.hitsperpageValues"
-           data-enable-hot-keys=""></div>
+           data-enable-hot-keys=""
+           data-enable-events=""></div>
 
       <div class="pull-right"
            data-sortby-combo=""
@@ -61,6 +62,17 @@
            data-template-url="resultTemplate"
            data-map="searchObj.searchMap"></div>
 
+    </div>
+  </div>
+
+  <div class="row"
+       data-ng-show="searchResults.records.length > 0">
+    <div class="col-md-offset-3 col-md-9">
+      <div class=""
+           data-gn-pagination="paginationInfo"
+           data-hits-values="searchObj.hitsperpageValues"
+           data-enable-hot-keys=""></div>
+      <br/>
     </div>
   </div>
 
