@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataType;
@@ -47,6 +48,7 @@ import java.nio.file.Path;
 /**
  * For editing : update leaves information. Access is restricted.
  */
+@Deprecated
 public class Update extends NotInReadOnlyModeService {
     private ServiceConfig config;
 

@@ -23,14 +23,13 @@
 
 package org.fao.geonet.services.metadata;
 
-import com.google.common.collect.Lists;
-
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Schematron;
 import org.fao.geonet.kernel.DataManager;
@@ -41,13 +40,11 @@ import org.fao.geonet.services.Utils;
 import org.fao.geonet.utils.IO;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.fao.geonet.api.records.MetadataValidateApi.restructureReportToHavePatternRuleHierarchy;

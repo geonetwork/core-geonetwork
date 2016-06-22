@@ -21,13 +21,14 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.services.metadata;
+package org.fao.geonet.api.records.editing;
 
 import com.google.common.base.Optional;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.kernel.AddElemValue;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.utils.Log;
@@ -48,8 +49,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * // -------------------------------------------------------------------------- // --- // ---
- * Embedded Metadata Update API for AJAX Editor support // --- // --------------------------------------------------------------------------
+ *
+ * Embedded Metadata Update API for AJAX Editor support
  */
 public class AjaxEditUtils extends EditUtils {
 
@@ -60,10 +61,15 @@ public class AjaxEditUtils extends EditUtils {
     /**
      * TODO javadoc.
      */
-    protected static Element getMetadataFromSession(UserSession session, String id) {
+    protected static Element getMetadataFromSession(UserSession session, String id) throws ResourceNotFoundException {
         if (Log.isDebugEnabled(Geonet.EDITOR))
             Log.debug(Geonet.EDITOR, "Retrieving metadata from session " + session.getUserId());
         Element md = (Element) session.getProperty(Geonet.Session.METADATA_EDITING + id);
+        if (md == null) {
+            throw new ResourceNotFoundException(String.format(
+                "Requested metadata with id '%s' is not available in current session. " +
+                    "Open an editing session on this record first.", id));
+        }
         md.detach();
         return md;
     }

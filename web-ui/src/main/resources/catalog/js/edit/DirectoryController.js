@@ -271,7 +271,7 @@
 
           $scope.gnCurrentEdit = gnCurrentEdit;
           $scope.editorFormUrl = gnEditor
-              .buildEditUrlPrefix('md.edit') +
+              .buildEditUrlPrefix('editor') +
               '&starteditingsession=yes&random=' + i++;
         }
       };

@@ -146,7 +146,7 @@
         } else {
           $scope.importing = true;
           gnMetadataManager.importFromXml(
-            $(formId).serialize(), $scope.params.xml).then(
+              $(formId).serialize(), $scope.params.xml).then(
               onSuccessFn, onErrorFn);
         }
       };

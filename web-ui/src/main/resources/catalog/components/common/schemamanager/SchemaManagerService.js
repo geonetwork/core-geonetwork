@@ -100,7 +100,7 @@
              } else {
                var info = config.split('|');
                $http.get('../api/standards/' + info[0] +
-                 '/codelists/' + info[1] + '/details')
+               '/codelists/' + info[1] + '/details')
                .success(function(data) {
                  infoCache.put(config, data);
                  defer.resolve(data);
@@ -125,10 +125,10 @@
                  defer.reject({error: 'Invalid config.', config: config});
                } else {
                  $http.get('../api/standards/' + info[0] +
-                   '/descriptors/' + info[1] + '/details?' +
-                   'parent=' + (info[2] || '') +
-                   '&xpath=' + (info[3] || '') +
-                   '&isoType=' + (info[4] || '')).
+                 '/descriptors/' + info[1] + '/details?' +
+                 'parent=' + (info[2] || '') +
+                 '&xpath=' + (info[3] || '') +
+                 '&isoType=' + (info[4] || '')).
                  success(function(data) {
                    infoCache.put(config, data);
                    defer.resolve(data);

@@ -28,6 +28,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -38,6 +39,7 @@ import java.nio.file.Path;
 /**
  * For editing : adds a tag to a metadata. Access is restricted.
  */
+@Deprecated
 public class AddElement extends NotInReadOnlyModeService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

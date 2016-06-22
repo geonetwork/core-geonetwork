@@ -64,9 +64,9 @@
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
           $http.get('../api/regions?categoryId=' +
-            'http://geonetwork-opensource.org/regions%23country', {}, {
-            cache: true
-          }).success(function(response) {
+              'http://geonetwork-opensource.org/regions%23country', {}, {
+                cache: true
+              }).success(function(response) {
             var data = response.region;
 
             // Compute default name and add a

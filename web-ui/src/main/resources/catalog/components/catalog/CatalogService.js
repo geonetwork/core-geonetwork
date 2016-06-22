@@ -257,18 +257,6 @@
    * {@link service/config-ui-metadata#services-
    * documentation-config-ui-metadataxml_-service-mddelete mdDelete}
    * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdedit mdEdit}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdeditsave mdEditSave}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-
-   * mdeditsaveonly mdEditSaveonly}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-
-   * mdeditsaveandclose mdEditSaveandclose}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdeditcancel mdEditCancel}
-   * {@link service/config-ui-metadata#services-
    * documentation-config-ui-metadataxml_-service-mdsuggestion suggestionsList}
    *
    * {@link service/config-service-admin-batchprocess
@@ -297,11 +285,6 @@
     mdInsert: 'md.insert?_content_type=json&',
     mdDelete: 'md.delete?_content_type=json&',
     mdDeleteBatch: 'md.delete.batch',
-    mdEdit: 'md.edit?_content_type=json&',
-    mdEditSave: 'md.edit.save?_content_type=json&',
-    mdEditSaveonly: 'md.edit.saveonly?_content_type=json&',
-    mdEditSaveandclose: 'md.edit.save.and.close?_content_type=json&',
-    mdEditCancel: 'md.edit.cancel?_content_type=json&',
     suggestionsList: 'md.suggestion?_content_type=json&',
 
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
@@ -319,10 +302,9 @@
     processAll: 'md.processing.batch',
     processReport: 'md.processing.batch.report',
     processXml: 'xml.metadata.processing',
-    
+
     suggest: 'suggest',
 
-    edit: 'md.edit',
     search: 'q',
     internalSearch: 'qi',
     subtemplate: 'subtemplate',

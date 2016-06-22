@@ -127,7 +127,8 @@
             if (angular.isDefined(scope.groupOwner)) {
               $http.get('../api/groups/' + scope.groupOwner, {cache: true}).
                   success(function(data) {
-                    scope.enableallowedcategories = data.enableAllowedCategories;
+                    scope.enableallowedcategories =
+                        data.enableAllowedCategories;
                     scope.allowedcategories = [];
                     angular.forEach(data.allowedcategories, function(c) {
                       scope.allowedcategories.push(c.id);

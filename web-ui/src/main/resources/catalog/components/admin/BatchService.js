@@ -72,7 +72,8 @@
           gnEditor.save(false, true)
               .then(function() {
                 gnHttp.callService('processMd', params).then(function(data) {
-                  gnHttp.callService('edit', params).then(function(data) {
+                  $http.get('../api/records/' + gnCurrentEdit.id + '/editor',
+                      params).then(function(data) {
                     var snippet = $(data.data);
                     gnEditor.refreshEditorForm(snippet);
                     defer.resolve(data);
