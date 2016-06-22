@@ -27,6 +27,8 @@ import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.services.ReadWriteController;
+
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroupId_;
@@ -56,14 +58,6 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 @ReadWriteController
 public class Remove {
 
-    @Autowired
-    private UserGroupRepository userGroupRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ApplicationContext applicationContext;
-    @Autowired
-    private DataManager dataMan;
 
     @RequestMapping(value = "/{lang}/admin.user.remove", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
@@ -87,6 +81,10 @@ public class Remove {
         }
 
         int iId = Integer.parseInt(id);
+
+        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+        UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
+        DataManager dataMan = ApplicationContextHolder.get().getBean(DataManager.class);
 
         if (myProfile == Profile.Administrator
                 || myProfile == Profile.UserAdmin) {

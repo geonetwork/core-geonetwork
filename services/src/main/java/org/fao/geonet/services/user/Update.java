@@ -28,6 +28,7 @@ import jeeves.server.UserSession;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.Group;
@@ -35,6 +36,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.responses.OkResponse;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -68,14 +70,6 @@ import javax.servlet.http.HttpSession;
 @ReadWriteController
 public class Update {
 
-    @Autowired
-    private UserGroupRepository userGroupRepository;
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @RequestMapping(value = "/{lang}/admin.user.resetpassword", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
@@ -87,6 +81,7 @@ public class Update {
     ) throws Exception {
         Assert.equals(password, password2);
         new LoadCurrentUserInfo(session, id).invoke();
+        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
 
         User user = userRepository.findOne(id);
         setPassword(Params.Operation.RESETPW, password, user);
@@ -138,6 +133,7 @@ public class Update {
                 }
             }
         }
+        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
 
         if (profile == Profile.Administrator) {
             // Check at least 1 administrator is enabled
@@ -155,6 +151,7 @@ public class Update {
         }
 
 
+        UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
 
         checkAccessRights(operation, id, username, myProfile, myUserId, groups, userGroupRepository);
 
@@ -240,6 +237,7 @@ public class Update {
                 user.getEmailAddresses().add(mail);
             }
         }
+        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
 
         // -- For adding new user
         if (operation.equals(Params.Operation.NEWUSER)
@@ -256,7 +254,7 @@ public class Update {
     public void setPassword(String operation, String password, User user) {
         if (password != null) {
             user.getSecurity().setPassword(
-                    PasswordUtil.encoder(applicationContext).encode(
+                    PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
                             password));
         } else if (operation.equals(Params.Operation.RESETPW)
                    || operation.equals(Params.Operation.NEWUSER)) {
@@ -330,6 +328,8 @@ public class Update {
 
     private void setUserGroups(final User user, List<GroupElem> userGroups)
             throws Exception {
+        UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
+        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
 
         Collection<UserGroup> all = userGroupRepository.findAll(UserGroupSpecs
                 .hasUserId(user.getId()));
