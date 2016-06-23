@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api;
 
+import org.fao.geonet.api.exception.GeoPublisherException;
 import org.fao.geonet.api.exception.NoResultsFoundException;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -79,6 +80,7 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
         FileNotFoundException.class,
+        GeoPublisherException.class,
         NoResultsFoundException.class})
     public ApiError NotFoundHandler(final Exception exception) {
         return new ApiError("not_found", exception.getClass().getSimpleName(), exception.getMessage());

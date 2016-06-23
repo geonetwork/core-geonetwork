@@ -40,37 +40,30 @@
         },
 
         checkNode: function(node, fileName) {
-          if (node) {
-            return $http.get('../api/mapservers/' + node, {
-              metadataId: gnCurrentEdit.id,
-              access: 'public',
-              file: fileName
-            });
-          }
+          return $http.get('../api/mapservers/' + node +
+              '/records/' + gnCurrentEdit.uuid, {
+                params: {
+                  resource: fileName
+                }});
         },
 
         publishNode: function(node, fileName,
                               title, moreInfo) {
-          if (node) {
-            return $http.put('../api/mapservers/' + node, {
-              metadataId: gnCurrentEdit.id,
-              metadataUuid: gnCurrentEdit.uuid,
-              metadataTitle: title,
-              metadataAbstract: moreInfo,
-              access: 'public',
-              file: fileName
-            });
-          }
+          return $http.put('../api/mapservers/' + node +
+              '/records/' + gnCurrentEdit.uuid, null, {
+                params: {
+                  metadataTitle: title,
+                  metadataAbstract: moreInfo,
+                  resource: fileName
+                }});
         },
 
         unpublishNode: function(node, fileName) {
-          if (node) {
-            return $http.delete('../api/mapservers/' + node, {
-              metadataId: gnCurrentEdit.id,
-              access: 'public',
-              file: fileName
-            });
-          }
+          return $http.delete('../api/mapservers/' + node +
+              '/records/' + gnCurrentEdit.uuid, {
+                params: {
+                  resource: fileName
+                }});
         }
       };
     }]);

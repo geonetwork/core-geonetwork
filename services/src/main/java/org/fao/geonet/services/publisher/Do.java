@@ -63,6 +63,7 @@ import java.util.HashMap;
  *
  * TODO : Support multi file publication
  */
+@Deprecated
 public class Do implements Service {
     /**
      * Module name

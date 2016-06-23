@@ -28,35 +28,33 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.Util;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.api.standards.StandardsUtils;
+import org.fao.geonet.api.mapservers.model.AnonymousMapserver;
+import org.fao.geonet.api.records.attachments.FilesystemStore;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.MapServer;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.schema.editorconfig.BatchEditing;
-import org.fao.geonet.kernel.schema.editorconfig.Editor;
-import org.fao.geonet.kernel.schema.labels.Codelists;
-import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MapServerRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.api.mapservers.MapServersUtils.*;
 
 /**
  *
@@ -87,13 +85,15 @@ public class MapServersApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    List<MapServer> getMapservers() throws Exception {
+    @PreAuthorize("hasRole('Editor')")
+    List<AnonymousMapserver> getMapservers() throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
 
         List<MapServer> mapServers = applicationContext.getBean(MapServerRepository.class)
             .findAll();
-        mapServers.stream().forEach(e -> anonymize(e));
-        return mapServers;
+        List<AnonymousMapserver> list = new ArrayList<>(mapServers.size());
+        mapServers.stream().forEach(e -> list.add(new AnonymousMapserver(e)));
+        return list;
     }
 
     @ApiOperation(value = "Get mapserver ",
@@ -104,7 +104,8 @@ public class MapServersApi {
             MediaType.APPLICATION_JSON_VALUE
         })
     @ResponseBody
-    public MapServer getMapserver(
+    @PreAuthorize("hasRole('Editor')")
+    public AnonymousMapserver getMapserver(
         @ApiParam(value = API_PARAM_MAPSERVER_IDENTIFIER,
             required = true,
             example = "")
@@ -114,13 +115,7 @@ public class MapServersApi {
         MapServer mapserver =
             applicationContext.getBean(MapServerRepository.class)
                 .findOneById(mapserverId);
-        return anonymize(mapserver);
-    }
-
-    private MapServer anonymize(MapServer mapserver) {
-        return mapserver
-            .setPassword("****")
-            .setUsername("****");
+        return new AnonymousMapserver(mapserver);
     }
 
 
@@ -132,6 +127,7 @@ public class MapServersApi {
             MediaType.APPLICATION_JSON_VALUE
         })
     @ResponseBody
+    @PreAuthorize("hasRole('Reviewer')")
     public ResponseEntity<Integer> addMapserver(
         @ApiParam(value = "Mapserver details",
             required = true)
@@ -161,6 +157,7 @@ public class MapServersApi {
             MediaType.APPLICATION_JSON_VALUE
         })
     @ResponseBody
+    @PreAuthorize("hasRole('Reviewer')")
     public ResponseEntity<Integer> updateMapserver(
         @ApiParam(value = API_PARAM_MAPSERVER_IDENTIFIER,
             required = true,
@@ -197,6 +194,7 @@ public class MapServersApi {
             MediaType.APPLICATION_JSON_VALUE
         })
     @ResponseBody
+    @PreAuthorize("hasRole('Reviewer')")
     public ResponseEntity updateMapserver(
         @ApiParam(
             value = API_PARAM_MAPSERVER_IDENTIFIER,
@@ -209,7 +207,7 @@ public class MapServersApi {
         @RequestParam
             String username,
         @ApiParam(
-            value = "User password",
+            value = "Password",
             required = true)
         @RequestParam
             String password
@@ -221,8 +219,8 @@ public class MapServersApi {
         MapServer existingMapserver = repository.findOneById(mapserverId);
         if (existingMapserver != null) {
             repository.update(mapserverId, entity -> {
-            entity.setUsername(username);
-            entity.setPassword(password);
+                entity.setUsername(username);
+                entity.setPassword(password);
             });
         } else {
             throw new ResourceNotFoundException(String.format(
@@ -279,30 +277,214 @@ public class MapServersApi {
     }
 
 
-
-
-    @ApiOperation(value = "Get mapserver resource",
+    @ApiOperation(value = "Check metadata resource is published ",
         nickname = "getMapserverResource")
-    @RequestMapping(value = "/{mapserverId}/resources/{resource}",
+    @RequestMapping(value = "/{mapserverId}/records/{metadataUuid}",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE
         })
     @ResponseBody
-    public boolean getMapserverResource(
+    @PreAuthorize("hasRole('Editor')")
+    public String getMapserverResource(
         @ApiParam(value = API_PARAM_MAPSERVER_IDENTIFIER,
             required = true,
             example = "")
         @PathVariable String mapserverId,
         @ApiParam(
-            value = "Layer name"
+            value = API_PARAM_RECORD_UUID,
+            required = true
         )
-        @PathVariable String resource,
+        @PathVariable String metadataUuid,
+        @ApiParam(
+            value = ApiParams.API_PARAM_MAPSERVER_RESOURCE,
+            required = true
+        )
+        @RequestParam String resource,
+        @ApiParam(
+            value = ApiParams.API_PARAM_METADATA_TITLE
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = ""
+        )
+            String metadataTitle,
+        @ApiParam(
+            value = ApiParams.API_PARAM_METADATA_ABSTRACT
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = ""
+        )
+            String metadataAbstract,
         HttpServletRequest request
     ) throws Exception {
+        final MapServersUtils.ACTION action = MapServersUtils.ACTION.GET;
+        return publishResource(mapserverId, metadataUuid, resource, metadataTitle, metadataAbstract, request, action);
+    }
 
-        return true;
+
+    @ApiOperation(value = "Publish a metadata resource",
+        nickname = "publishMapserverResource")
+    @RequestMapping(value = "/{mapserverId}/records/{metadataUuid}",
+        method = RequestMethod.PUT,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE
+        })
+    @ResponseBody
+    @PreAuthorize("hasRole('Editor')")
+    public String publishMapserverResource(
+        @ApiParam(value = API_PARAM_MAPSERVER_IDENTIFIER,
+            required = true,
+            example = "")
+        @PathVariable String mapserverId,
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true
+        )
+        @PathVariable String metadataUuid,
+        @ApiParam(
+            value = ApiParams.API_PARAM_MAPSERVER_RESOURCE,
+            required = true
+        )
+        @RequestParam String resource,
+        @ApiParam(
+            value = ApiParams.API_PARAM_METADATA_TITLE
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = ""
+        )
+            String metadataTitle,
+        @ApiParam(
+            value = ApiParams.API_PARAM_METADATA_ABSTRACT
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = ""
+        )
+            String metadataAbstract,
+        HttpServletRequest request
+    ) throws Exception {
+        final MapServersUtils.ACTION action = MapServersUtils.ACTION.CREATE;
+        return publishResource(mapserverId, metadataUuid, resource, metadataTitle, metadataAbstract, request, action);
+    }
+
+
+    @ApiOperation(value = "Delete a metadata resource",
+        nickname = "deleteMapserverResource")
+    @RequestMapping(value = "/{mapserverId}/records/{metadataUuid}",
+        method = RequestMethod.DELETE,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    @ResponseBody
+    @PreAuthorize("hasRole('Editor')")
+    public String deleteMapserverResource(
+        @ApiParam(value = API_PARAM_MAPSERVER_IDENTIFIER,
+            required = true,
+            example = "")
+        @PathVariable String mapserverId,
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true
+        )
+        @PathVariable String metadataUuid,
+        @ApiParam(
+            value = ApiParams.API_PARAM_MAPSERVER_RESOURCE,
+            required = true
+        )
+        @RequestParam String resource,
+        @ApiParam(
+            value = ApiParams.API_PARAM_METADATA_TITLE
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = ""
+        )
+            String metadataTitle,
+        @ApiParam(
+            value = ApiParams.API_PARAM_METADATA_ABSTRACT
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = ""
+        )
+            String metadataAbstract,
+        HttpServletRequest request
+    ) throws Exception {
+        final MapServersUtils.ACTION action = MapServersUtils.ACTION.DELETE;
+        return publishResource(mapserverId, metadataUuid, resource, metadataTitle, metadataAbstract, request, action);
+    }
+
+
+    private String publishResource(String mapserverId, String metadataUuid,
+                                   String resource,
+                                   String metadataTitle,
+                                   String metadataAbstract,
+                                   HttpServletRequest request,
+                                   MapServersUtils.ACTION action) throws Exception {
+        // purge \\n from metadataTitle - geoserver prefers layer titles on a single line
+        metadataTitle = metadataTitle.replace("\\n", "");
+        metadataAbstract = metadataAbstract.replace("\\n", "");
+
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        MapServerRepository repo =
+            applicationContext.getBean(MapServerRepository.class);
+        FilesystemStore store = applicationContext.getBean(FilesystemStore.class);
+        MapServer m = repo.findOneById(mapserverId);
+        GeoServerNode g = new GeoServerNode(m);
+
+
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        context.setAsThreadLocal();
+
+        String baseUrl = applicationContext.getBean(SettingManager.class)
+            .getSiteURL(context);
+        final GeonetHttpRequestFactory requestFactory =
+            applicationContext.getBean(GeonetHttpRequestFactory.class);
+        GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
+            g.getUsername(), g.getUserpassword(),
+            g.getNamespacePrefix(), baseUrl, m.pushStyleInWorkspace());
+
+//        String access = Util.getParam(params, "access");
+
+        //jdbc:postgresql://host:port/user:password@database#table
+        if (resource.startsWith("jdbc:postgresql")) {
+            String[] values = resource.split("/");
+
+            String[] serverInfo = values[2].split(":");
+            String host = serverInfo[0];
+            String port = serverInfo[1];
+
+            String[] dbUserInfo = values[3].split("@");
+
+            String[] userInfo = dbUserInfo[0].split(":");
+            String user = userInfo[0];
+            String password = userInfo[1];
+
+            String[] dbInfo = dbUserInfo[1].split("#");
+            String db = dbInfo[0];
+            String table = dbInfo[1];
+
+            return publishDbTable(action, gs,
+                "postgis", host, port, user, password, db, table, "postgis",
+                g.getNamespaceUrl(), metadataUuid, metadataTitle, metadataAbstract);
+        } else {
+            if (resource.startsWith("file://") || resource.startsWith("http://")) {
+                return addExternalFile(action, gs,
+                    resource,
+                    metadataUuid, metadataTitle, metadataAbstract);
+            } else {
+                // Get ZIP file from data directory
+                Path f = store.getResource(metadataUuid, resource);
+                return addZipFile(action, gs,
+                    f, resource,
+                    metadataUuid, metadataTitle, metadataAbstract);
+            }
+        }
     }
 
 }

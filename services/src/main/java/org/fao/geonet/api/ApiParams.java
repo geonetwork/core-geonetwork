@@ -41,4 +41,7 @@ public class ApiParams {
         "the metadata schema (See the process folder). " +
         "Parameters sent to the service are forwarded " +
         "to XSL process.";
+    public static final String API_PARAM_METADATA_TITLE = "Metadata title";
+    public static final String API_PARAM_MAPSERVER_RESOURCE = "Resource name (could be a file or a db connection)";
+    public static final String API_PARAM_METADATA_ABSTRACT = "Metadata abstract";
 }

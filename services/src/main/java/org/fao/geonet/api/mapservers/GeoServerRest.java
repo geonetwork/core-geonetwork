@@ -27,11 +27,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
@@ -44,16 +40,15 @@ import org.fao.geonet.utils.nio.PathHttpEntity;
 import org.jdom.Element;
 import org.springframework.http.client.ClientHttpResponse;
 
+import javax.annotation.CheckReturnValue;
 import java.io.IOException;
 import java.nio.file.Path;
-
-import javax.annotation.CheckReturnValue;
 
 /**
  * This class uses GeoServer's management REST APIs for creating, updating and deleting data or
  * coverage store. http://docs.geoserver.org/stable/en/user/extensions/rest/rest-config-api.html
- *
- *
+ * <p>
+ * <p>
  * Similar development have been discovered at the end of that proposal patch:
  * http://code.google.com/p/gsrcj/ http://code.google.com/p/toolboxenvironment/source
  * /browse/trunk/ArchivingServer /src/java/it/intecs/pisa/archivingserver/chain/commands
@@ -72,11 +67,13 @@ public class GeoServerRest {
     private String restUrl;
     private String baseCatalogueUrl;
     private String defaultWorkspace;
-    private String response;
+    private String response = "";
     private boolean pushStyleInWorkspace;
     private int status;
 
     private GeonetHttpRequestFactory factory;
+    private String report = "";
+    private String errorCode;
 
     /**
      * Create a GeoServerRest instance to communicate with a GeoServer node and a default namespace
@@ -94,7 +91,6 @@ public class GeoServerRest {
         Log.createLogger(LOGGER_NAME);
         this.defaultWorkspace = defaultns;
     }
-
 
     /**
      * @return Return last transaction response information if set.
@@ -120,7 +116,7 @@ public class GeoServerRest {
     /**
      * Retrieve layer (feature type or coverage) information. Use @see #getResponse() to get the
      * message returned.
-     *
+     * <p>
      * TODO : Add format ?
      */
     public boolean getLayer(String layer) throws IOException {
@@ -431,7 +427,7 @@ public class GeoServerRest {
      * Create a style for the layer named {layer}_style from the provided sld content, if not empty.
      * If it fails, fallback to default style set by GeoServer (eg. polygon.sld for polygon).
      *
-     * @param sld body content
+     * @param sldbody body content
      */
     public boolean createStyle(String ws, String layer, String sldbody) {
         try {
@@ -470,12 +466,13 @@ public class GeoServerRest {
                     Log.warning(Geonet.GEOPUBLISH, "The sld file was probably not valid, falling back to default");
             }
             if (sldbody.isEmpty() || (!sldbody.isEmpty() && status != 200)) {
-                Element layerProperties = Xml.loadString(getLayerInfo(layer), false);
+                String info = getLayerInfo(layer);
+                Element layerProperties = Xml.loadString(info, false);
                 String styleName = layerProperties.getChild("defaultStyle")
                     .getChild("name").getText();
 
                 Log.debug(Geonet.GEOPUBLISH, "Getting default style for " + styleName + " to apply to layer " + layer + " in workspace " + ws);
-				/* get the default style (polygon, line, point) from the global styles */
+                /* get the default style (polygon, line, point) from the global styles */
                 status = sendREST(GeoServerRest.METHOD_GET, "/styles/" + styleName
                     + ".sld?quietOnNotFound=true", null, null, null, true);
 
@@ -517,8 +514,10 @@ public class GeoServerRest {
     private void checkResponseCode(int status2) {
         if (status2 > 399) {
             Log.warning(Geonet.GEOPUBLISH, "Warning a bad response code to message was returned:" + status2);
-            if (!response.isEmpty())
+            if (!response.isEmpty()) {
                 Log.warning(Geonet.GEOPUBLISH, "Response content:" + response);
+                setReport(response);
+            }
         }
     }
 
@@ -688,4 +687,19 @@ public class GeoServerRest {
         return status;
     }
 
+    public String getReport() {
+        return report;
+    }
+
+    public void setReport(String report) {
+        this.report = report;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
+    }
 }

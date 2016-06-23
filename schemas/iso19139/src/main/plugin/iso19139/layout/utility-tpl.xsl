@@ -80,8 +80,8 @@
               <xsl:value-of select="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="gmd:CI_OnlineResource/gmd:name/gmx:MimeFileType|
-                gmd:CI_OnlineResource/gmd:name/gco:CharacterString"/>
+              <xsl:value-of select="substring-after(
+              gmd:CI_OnlineResource/gmd:linkage/gmd:URL, 'attachments/')"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>

@@ -82,7 +82,7 @@
       };
       $scope.saveMapServer = function() {
         $http.put('../api/mapservers' +
-        ($scope.isUpdate ? '/' +
+            ($scope.isUpdate ? '/' +
             $scope.mapserverSelected.id : ''),
             $scope.mapserverSelected)
             .success(function(data) {
@@ -111,11 +111,11 @@
 
       $scope.saveNewPassword = function() {
         $http.post('../api/mapservers/' +
-          $scope.mapserverSelected.id + '/auth', null, {params:
-          {
-            username: $scope.resetUsername,
-            password: $scope.resetPassword
-          }})
+            $scope.mapserverSelected.id + '/auth', null, {params:
+                  {
+                    username: $scope.resetUsername,
+                    password: $scope.resetPassword
+                  }})
             .success(function(data) {
               $scope.resetPassword = null;
               $('#passwordResetModal').modal('hide');
@@ -126,7 +126,7 @@
       };
       $scope.deleteMapServer = function() {
         $http.delete('../api/mapservers/' +
-                  $scope.mapserverSelected.id)
+            $scope.mapserverSelected.id)
             .success(function(data) {
               loadMapservers();
             })
