@@ -655,7 +655,7 @@ public class MetadataEditingApi {
         gui.addContent(getSessionAsXML(userSession));
 
         ThesaurusManager th = applicationContext.getBean(ThesaurusManager.class);
-        gui.addContent(th.buildResultfromThTable(context));
+        gui.addContent(new Element("thesaurus").addContent(th.buildResultfromThTable(context)));
         // TODO: Add request parameters
 //        <output sheet="../xslt/ui-metadata/edit/edit.xsl">
 //        <call name="thesaurus" class=".services.thesaurus.GetList"/>

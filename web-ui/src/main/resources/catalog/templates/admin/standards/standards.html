@@ -6,17 +6,19 @@
       <div class="panel-body">
         <div class="list-group">
           <a class="list-group-item" data-ng-repeat="s in schemas">
-            <h4 class="list-group-item-heading">{{s.id | translate}}</h4>
-            <p> {{(s.id + '-help') | translate}} </p>
+            <h4 class="list-group-item-heading">{{s.name | translate}}</h4>
+            <p> {{(s.name + '-help') | translate}} </p>
             <p>
             <ul>
-              <li data-ng-show="s.props['@namespaces']">
+              <li data-ng-show="s.namespaces">
                 <span data-translate="">namespace</span>
-                <pre>{{s.props['@namespaces']}}</pre>
+                <ul>
+                  <li data-ng-repeat="(key, value) in s.namespaces">{{value}}</li>
+                </ul>
               </li>
             </ul>
             </p>
-            <div class="btn-toolbar">
+            <div class="btn-toolbar hidden">
               <button type="button" class="btn btn-primary pull-right"
                       data-ng-click="removeStandard(s.id)"><span class="fa fa-times"></span>
                 {{"removeStandard"|translate}}
@@ -28,6 +30,9 @@
     </div>
   </div>
   <div class="col-lg-4">
+    <div data-gn-need-help="customizing-application/implementing-a-schema-plugin.html"/>
+  </div>
+  <div class="col-lg-4 hidden">
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">addOrUpdateStandards</div>
       <div class="panel-body">

@@ -19,7 +19,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.services.schema;
+package org.fao.geonet.kernel.schema;
 
 import jeeves.server.context.ServiceContext;
 
@@ -46,6 +46,15 @@ import java.util.List;
 
 //=============================================================================
 
+/**
+ * Provides utility to load a new standard.
+ * It was supporting simple schema requiring only
+ * to be unzipped in the schema folder. This does
+ * not work with new schema generation which also
+ * declare a Bean and have a JAR file to be added
+ * in the classloader. This require the webapp
+ * to restart. TODO: Improve
+ */
 public class SchemaUtils {
 
     public Element addSchema(ServiceContext context, String schema, String fname, URL url, String uuid, SchemaManager scm) throws Exception {

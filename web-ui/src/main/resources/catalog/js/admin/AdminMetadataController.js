@@ -78,12 +78,9 @@
       $scope.sampleLoadRunning = false;
 
       function loadSchemas() {
-        $http.get('admin.schema.list?_content_type=json').
+        $http.get('../api/standards').
             success(function(data) {
-              for (var i = 0; i < data.length; i++) {
-                $scope.schemas.push(data[i]['#text'].trim());
-              }
-              $scope.schemas.sort();
+              $scope.schemas = data;
 
               // Trigger load action according to route params
               launchActions();

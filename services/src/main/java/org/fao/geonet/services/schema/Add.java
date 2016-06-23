@@ -34,6 +34,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.schema.SchemaUtils;
 import org.jdom.Element;
 
 import java.net.MalformedURLException;
@@ -41,7 +42,7 @@ import java.net.URL;
 import java.nio.file.Path;
 
 //=============================================================================
-
+@Deprecated
 public class Add implements Service {
     // --------------------------------------------------------------------------
     // ---

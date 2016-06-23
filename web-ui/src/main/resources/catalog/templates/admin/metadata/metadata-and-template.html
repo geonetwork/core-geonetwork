@@ -23,10 +23,13 @@
         </div>
 
         <div class="list-group">
-          <a href="" class="list-group-item" data-ng-repeat="s in schemas"
-             data-ng-class="isSchemaSelected(s) ? 'active' : ''" data-ng-click="selectSchema(s)">
-            <h4 class="list-group-item-heading">{{s | translate}}</h4>
-            <p> {{(s + '-help') | translate}} </p>
+          <a href=""
+             class="list-group-item"
+             data-ng-repeat="s in schemas"
+             data-ng-class="isSchemaSelected(s.name) ? 'active' : ''"
+             data-ng-click="selectSchema(s.name)">
+            <h4 class="list-group-item-heading">{{s.name | translate}}</h4>
+            <p> {{(s.name + '-help') | translate}} </p>
           </a>
         </div>
 

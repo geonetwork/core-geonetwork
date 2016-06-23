@@ -33,8 +33,6 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.editorconfig.BatchEditing;
 import org.fao.geonet.kernel.schema.editorconfig.Editor;
 import org.fao.geonet.kernel.schema.labels.Codelists;
-import org.fao.geonet.kernel.schema.labels.Labels;
-import org.fao.geonet.services.schema.Info;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,8 +198,8 @@ public class StandardsApi implements ApplicationContextAware {
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         context.setLanguage(language.getISO3Language());
 
-        String elementName = Info.findNamespace(codelist, schemaManager, schema);
-        Element e = Info.getHelp(schemaManager, "codelists.xml",
+        String elementName = StandardsUtils.findNamespace(codelist, schemaManager, schema);
+        Element e = StandardsUtils.getHelp(schemaManager, "codelists.xml",
             schema, elementName, parent, xpath, isoType, context);
         if (e == null) {
             throw new ResourceNotFoundException(String.format(
@@ -241,8 +239,8 @@ public class StandardsApi implements ApplicationContextAware {
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         context.setLanguage(language.getISO3Language());
 
-        String elementName = Info.findNamespace(codelist, schemaManager, schema);
-        Element e = Info.getHelp(schemaManager, "codelists.xml",
+        String elementName = StandardsUtils.findNamespace(codelist, schemaManager, schema);
+        Element e = StandardsUtils.getHelp(schemaManager, "codelists.xml",
             schema, elementName, parent, xpath, isoType, context);
         if (e == null) {
             throw new ResourceNotFoundException(String.format(
@@ -279,8 +277,8 @@ public class StandardsApi implements ApplicationContextAware {
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         context.setLanguage(language.getISO3Language());
 
-        String elementName = Info.findNamespace(element, schemaManager, schema);
-        Element e = Info.getHelp(schemaManager, "labels.xml",
+        String elementName = StandardsUtils.findNamespace(element, schemaManager, schema);
+        Element e = StandardsUtils.getHelp(schemaManager, "labels.xml",
             schema, elementName, parent, xpath, isoType, context);
         if (e == null) {
             throw new ResourceNotFoundException(String.format(
