@@ -20,7 +20,7 @@
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
-package org.fao.geonet.services.publisher;
+package org.fao.geonet.api.mapservers;
 
 import org.fao.geonet.ZipUtil;
 
@@ -62,7 +62,7 @@ public class GeoFile implements Closeable {
      * @param f the file from wich the <code>GeoFile</code> object is constructed
      * @throws java.io.IOException if an input/output exception occurs while opening a ZIP file
      */
-    GeoFile(Path f) throws IOException {
+    public GeoFile(Path f) throws IOException {
         file = f;
         try {
             zipFile = ZipUtil.openZipFs(file);
