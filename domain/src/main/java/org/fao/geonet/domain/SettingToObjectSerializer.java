@@ -21,33 +21,49 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.api.site.model;
+package org.fao.geonet.domain;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
-
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.domain.Setting;
-import org.fao.geonet.domain.SettingDataType;
-import org.fao.geonet.domain.SettingToObjectSerializer;
+import org.hibernate.jpamodelgen.util.StringUtil;
 
 import java.io.IOException;
 
 /**
  * Convert settings to a key : value object with proper JSON data type
  */
-public class SettingsListToObjectSerializer extends JsonSerializer<SettingsListResponse> {
+public class SettingToObjectSerializer extends JsonSerializer<Setting> {
 
     @Override
-    public void serialize(SettingsListResponse settings, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+    public void serialize(Setting s, JsonGenerator jsonGenerator,
+                          SerializerProvider serializerProvider)
+        throws IOException {
         jsonGenerator.writeStartObject();
-        for (Setting s : settings.getSettings()) {
-            jsonGenerator.writeFieldName(s.getName());
-            SettingToObjectSerializer.writeSettingValue(s, jsonGenerator);
-        }
+        jsonGenerator.writeStringField("name", s.getName());
+        jsonGenerator.writeStringField("dataType", s.getDataType() == null ? null : s.getDataType().name());
+        jsonGenerator.writeNumberField("position", s.getPosition());
+        jsonGenerator.writeFieldName("value");
+        writeSettingValue(s, jsonGenerator);
         jsonGenerator.writeEndObject();
+    }
+
+    public static void writeSettingValue(Setting s, JsonGenerator jsonGenerator) throws IOException {
+        if (StringUtils.isNotEmpty(s.getValue())) {
+            if (s.getDataType() == SettingDataType.BOOLEAN) {
+                jsonGenerator.writeBoolean(Boolean.parseBoolean(s.getValue()));
+            } else if (s.getDataType() == SettingDataType.INT) {
+                jsonGenerator.writeNumber(Integer.parseInt(s.getValue()));
+            } else if (s.getDataType() == SettingDataType.JSON) {
+                ObjectMapper mapper = new ObjectMapper();
+                jsonGenerator.writeTree(mapper.readTree(s.getValue()));
+            } else {
+                jsonGenerator.writeString(s.getValue());
+            }
+        } else {
+            jsonGenerator.writeNull();
+        }
     }
 }

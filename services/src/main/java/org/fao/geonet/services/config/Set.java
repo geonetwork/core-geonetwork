@@ -30,6 +30,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.site.SiteApi;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo_;
@@ -56,6 +57,7 @@ import javax.persistence.criteria.Root;
 /**
  * TODO javadoc.
  */
+@Deprecated
 public class Set implements Service {
     /**
      * Reload services or not once settings are updated. Some service use DoAction as forward
@@ -113,7 +115,7 @@ public class Set implements Service {
 
         // Reload services affected by updated settings
         if (reloadServices) {
-            DoActions.doActions(context);
+            SiteApi.reloadServices(context);
         }
 
         return new Element(Jeeves.Elem.RESPONSE).setText("ok");

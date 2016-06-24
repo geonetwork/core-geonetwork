@@ -24,164 +24,164 @@
   </div>
   <div class="panel-body">
     <form id="gn-settings" name="gnSettings" class="form-horizontal">
-      <fieldset data-ng-repeat="(key, section1) in sectionsLevel1 | orderObjectBy:'@position'"
+      <fieldset data-ng-repeat="(key, section1) in sectionsLevel1 | orderObjectBy:'position'"
                 id="gn-settings-spy-target">
         <h1>{{section1.name | translate}}</h1>
-        <fieldset data-ng-repeat="section2 in section1.children | orderObjectBy:'@position'"
+        <fieldset data-ng-repeat="section2 in section1.children | orderObjectBy:'position'"
                   id="{{section2.name.replace('/', '-')}}">
           <legend>{{section2.name | translate}}</legend>
           <!-- According to data type -->
-          <div data-ng-repeat="s in section2.children | hideLanguages | orderObjectBy:'@position'"
-               data-ng-switch="s['@datatype']">
+          <div data-ng-repeat="s in section2.children | hideLanguages | orderObjectBy:'position'"
+               data-ng-switch="s.dataType">
             <div data-ng-switch-when="BOOLEAN">
-              <label class="col-sm-4 control-label" for="{{s['@name']}}"> {{s['@name'] |
+              <label class="col-sm-4 control-label" for="{{s['name']}}"> {{s['name'] |
                 translate}} </label>
               <div class="col-sm-8">
-                <input type="checkbox" id="{{s['@name']}}" name="{{s.formName}}"
-                       data-ng-model="s['#text']"/>
+                <input type="checkbox" id="{{s['name']}}" name="{{s.name}}"
+                       data-ng-model="s.value"/>
 
                 <p class="help-block">
                   <span
-                    data-ng-show="(s['@name'] + '-help' | translate) !== (s['@name'] + '-help')">
-                    {{s['@name'] + '-help' | translate}}
+                    data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')">
+                    {{s['name'] + '-help' | translate}}
                   </span>
                 </p>
               </div>
             </div>
             <div data-ng-switch-default=""
-                 data-ng-class="gnSettings[s.formName].$error.required ||
-                                gnSettings[s.formName].$error.json ? 'has-error' : ''"
+                 data-ng-class="gnSettings[s.name].$error.required ||
+                                gnSettings[s.name].$error.json ? 'has-error' : ''"
                  class="form-group">
-              <label class="col-sm-4 control-label" for="{{s['@name']}}">{{s['@name'] |
+              <label class="col-sm-4 control-label" for="{{s['name']}}">{{s['name'] |
                 translate}}</label>
               <!-- According to entry -->
-              <div class="col-sm-8" data-ng-switch="s['@name']">
+              <div class="col-sm-8" data-ng-switch="s['name']">
                 <!-- List of user to be used as CSW contact -->
                 <select data-ng-switch-when="system/csw/contactId" class="form-control"
-                        name="{{s.formName}}">
+                        name="{{s.name}}">
                   <option data-ng-repeat="u in systemUsers" value="{{u.id}}"
-                          ng-selected="u.id == s['#text']">{{u.name + ' ' + u.surname}}
+                          ng-selected="u.id == s.value">{{u.name + ' ' + u.surname}}
                   </option>
                 </select>
                 <textarea
                   data-gn-autogrow=""
                   data-ng-switch-when="system/harvesting/mail/template" type="text"
-                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
-                >{{s['#text']}}</textarea>
+                  class="form-control" id="{{s['name']}}" name="{{s.name}}"
+                >{{s.value}}</textarea>
                 <textarea
                   data-gn-autogrow=""
                   data-ng-switch-when="system/harvesting/mail/templateError" type="text"
-                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
-                >{{s['#text']}}</textarea>
+                  class="form-control" id="{{s['name']}}" name="{{s.name}}"
+                >{{s.value}}</textarea>
                 <textarea
                   data-gn-autogrow=""
                   data-ng-switch-when="system/harvesting/mail/templateWarning" type="text"
-                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
-                >{{s['#text']}}</textarea>
+                  class="form-control" id="{{s['name']}}" name="{{s.name}}"
+                >{{s.value}}</textarea>
 
                 <!-- JSON configuration for map and editor -->
                 <textarea
                   data-gn-autogrow=""
                   data-gn-json-text=""
-                  data-ng-model="s['#text']"
+                  data-ng-model="s.value"
                   data-ng-switch-when="map/config" type="text"
-                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
+                  class="form-control" id="{{s['name']}}" name="{{s.name}}"
                 ></textarea>
                 <textarea
                   data-gn-autogrow=""
                   data-gn-json-text=""
-                  data-ng-model="s['#text']"
+                  data-ng-model="s.value"
                   data-ng-switch-when="metadata/editor/schemaConfig" type="text"
-                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
+                  class="form-control" id="{{s['name']}}" name="{{s.name}}"
                 ></textarea>
                 <textarea
                   data-gn-autogrow=""
                   data-gn-json-text=""
-                  data-ng-model="s['#text']"
+                  data-ng-model="s.value"
                   data-ng-switch-when="map/proj4js" type="text"
-                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
+                  class="form-control" id="{{s['name']}}" name="{{s.name}}"
                 ></textarea>
 
 
                 <select data-ng-switch-when="system/server/protocol"
                         class="form-control"
-                        name="{{s.formName}}">
+                        name="{{s.name}}">
                   <option value="http"
-                          ng-selected="'http' == s['#text']">http
+                          ng-selected="'http' == s.value">http
                   </option>
                   <option value="https"
-                          ng-selected="'https' == s['#text']">https
+                          ng-selected="'https' == s.value">https
                   </option>
                 </select>
                 <select data-ng-switch-when="system/server/log" class="form-control"
-                        name="{{s.formName}}">
+                        name="{{s.name}}">
                   <option data-ng-repeat="log in logfiles" value="{{log.file}}"
-                          ng-selected="log.file === s['#text']">{{log.name}}
+                          ng-selected="log.file === s.value">{{log.name}}
                   </option>
                 </select>
                 <select data-ng-switch-when="system/oai/mdmode" class="form-control"
-                        name="{{s.formName}}">
+                        name="{{s.name}}">
                   <option value="1"
-                          ng-selected="'1' == s['#text']">{{'system/oai/mdmode-valueTemporaExtent' |
+                          ng-selected="'1' == s.value">{{'system/oai/mdmode-valueTemporaExtent' |
                     translate}}
                   </option>
                   <option value="2"
-                          ng-selected="'2' == s['#text']">
+                          ng-selected="'2' == s.value">
                     {{'system/oai/mdmode-valueModificationDate' | translate}}
                   </option>
                 </select>
                 <select data-ng-switch-when="system/requestedLanguage/only" class="form-control"
-                        name="{{s.formName}}">
+                        name="{{s.name}}">
                   <option value="off"
-                          ng-selected="'off' == s['#text']">{{'system/requestedLanguage/only-value1'
+                          ng-selected="'off' == s.value">{{'system/requestedLanguage/only-value1'
                     | translate}}
                   </option>
                   <option value="prefer_locale"
-                          ng-selected="'prefer_locale' == s['#text']">
+                          ng-selected="'prefer_locale' == s.value">
                     {{'system/requestedLanguage/only-value2' | translate}}
                   </option>
                   <option value="prefer_docLocale"
-                          ng-selected="'prefer_docLocale' == s['#text']">
+                          ng-selected="'prefer_docLocale' == s.value">
                     {{'system/requestedLanguage/only-value3' | translate}}
                   </option>
                   <option value="only_locale"
-                          ng-selected="'only_locale' == s['#text']">
+                          ng-selected="'only_locale' == s.value">
                     {{'system/requestedLanguage/only-value4' | translate}}
                   </option>
                   <option value="only_docLocale"
-                          ng-selected="'only_docLocale' == s['#text']">
+                          ng-selected="'only_docLocale' == s.value">
                     {{'system/requestedLanguage/only-value5' | translate}}
                   </option>
                   <option value="prefer_ui_locale"
-                          ng-selected="'prefer_ui_locale' == s['#text']">
+                          ng-selected="'prefer_ui_locale' == s.value">
                     {{'system/requestedLanguage/only-value6' | translate}}
                   </option>
                   <option value="only_ui_locale"
-                          ng-selected="'only_ui_locale' == s['#text']">
+                          ng-selected="'only_ui_locale' == s.value">
                     {{'system/requestedLanguage/only-value7' | translate}}
                   </option>
                   <option value="prefer_ui_docLocale"
-                          ng-selected="'prefer_ui_docLocale' == s['#text']">
+                          ng-selected="'prefer_ui_docLocale' == s.value">
                     {{'system/requestedLanguage/only-value8' | translate}}
                   </option>
                   <option value="only_ui_docLocale"
-                          ng-selected="'only_ui_docLocale' == s['#text']">
+                          ng-selected="'only_ui_docLocale' == s.value">
                     {{'system/requestedLanguage/only-value9' | translate}}
                   </option>
                 </select>
 
                 <select data-ng-switch-when="system/inspire/atom" class="form-control"
-                        name="{{s.formName}}" data-ng-model="atomFeedType">
+                        name="{{s.name}}" data-ng-model="atomFeedType">
                   <option value="disabled"
-                          ng-selected="'disabled' == s['#text']">{{'system/inspire/atomDisabled' |
+                          ng-selected="'disabled' == s.value">{{'system/inspire/atomDisabled' |
                     translate}}
                   </option>
                   <option value="local" disabled="disabled"
-                          ng-selected="'local' == s['#text']">{{'system/inspire/atomLocal' |
+                          ng-selected="'local' == s.value">{{'system/inspire/atomLocal' |
                     translate}}
                   </option>
                   <option value="remote"
-                          ng-selected="'remote' == s['#text']">{{'system/inspire/atomRemote' |
+                          ng-selected="'remote' == s.value">{{'system/inspire/atomRemote' |
                     translate}}
                   </option>
                 </select>
@@ -245,36 +245,36 @@
                 <!-- Read only fields -->
                 <input data-ng-switch-when="system/platform/version" type="text"
                        class="form-control"
-                       id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
+                       id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
                        readonly="readonly"/>
                 <input data-ng-switch-when="system/platform/subVersion" type="text"
                        class="form-control"
-                       id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
+                       id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
                        readonly="readonly"/>
                 <input data-ng-switch-when="system/site/svnUuid" type="text" class="form-control"
-                       id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
+                       id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
                        readonly="readonly"/>
                 <input data-ng-switch-when="system/proxy/password"
                        type="password"
                        class="form-control"
-                       id="{{s['@name']}}"
-                       name="{{s.formName}}"
-                       value="{{s['#text']}}"/>
+                       id="{{s['name']}}"
+                       name="{{s.name}}"
+                       value="{{s.value}}"/>
                 <input data-ng-switch-when="system/feedback/mailServer/password"
                        type="password"
                        class="form-control"
-                       id="{{s['@name']}}"
-                       name="{{s.formName}}"
-                       value="{{s['#text']}}"/>
+                       id="{{s['name']}}"
+                       name="{{s.name}}"
+                       value="{{s.value}}"/>
                 <div data-ng-switch-when="system/feedback/mailServer/host">
                   <div class="input-group">
                     <input type="text" class="form-control"
-                           id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
-                           data-ng-model="s['#text']"/>
+                           id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
+                           data-ng-model="s.value"/>
                     <span class="input-group-btn">
                         <button type="submit"
                                 class="btn btn-default"
-                                data-ng-disabled="s['#text'] == ''"
+                                data-ng-disabled="s.value == ''"
                                 data-gn-click-and-spin="testMailConfiguration()">
                           <i class="fa fa-envelope"></i>&nbsp;
                           <span data-translate="">testMailConfiguration</span>
@@ -285,9 +285,9 @@
                 <div data-ng-switch-when="system/server/host">
                   <div data-ng-class="processName !== null ? 'input-group' : ''">
                     <input type="text" class="form-control"
-                           id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
-                           data-ng-model="s['#text']"
-                           data-ng-change="processRecommended('siteIdChange', s['@name'])"/>
+                           id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
+                           data-ng-model="s.value"
+                           data-ng-change="processRecommended('siteIdChange', s['name'])"/>
                     <span class="input-group-btn" data-ng-show="processName !== null">
                         <button type="submit" class="btn btn-warning"
                                 title="{{processTitle}}"
@@ -301,9 +301,9 @@
                 <div data-ng-switch-when="metadata/resourceIdentifierPrefix">
                   <div data-ng-class="resourceIdProcessName !== null ? 'input-group' : ''">
                     <input type="text" class="form-control"
-                           id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
-                           data-ng-model="s['#text']"
-                           data-ng-change="processRecommendedForId('resourceIdentifierChange', s['@name'])"/>
+                           id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
+                           data-ng-model="s.value"
+                           data-ng-change="processRecommendedForId('resourceIdentifierChange', s['name'])"/>
                     <span class="input-group-btn" data-ng-show="resourceIdProcessName !== null">
                         <button type="submit" class="btn btn-warning"
                                 title="{{processTitle}}"
@@ -316,18 +316,18 @@
 
                 <div data-ng-switch-when="system/server/port">
                   <input type="text" class="form-control"
-                         id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
-                         data-ng-model="s['#text']"
-                         data-ng-change="processRecommended('siteIdChange', s['@name'])"/>
+                         id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
+                         data-ng-model="s.value"
+                         data-ng-change="processRecommended('siteIdChange', s['name'])"/>
                 </div>
 
                 <!-- Default -->
                 <input data-ng-switch-default="" type="text" class="form-control"
-                       id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"/>
+                       id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"/>
 
                 <p class="help-block"
-                   data-ng-show="(s['@name'] + '-help' | translate) != (s['@name'] + '-help')">
-                  {{s['@name'] + '-help' | translate}} </p>
+                   data-ng-show="(s['name'] + '-help' | translate) != (s['name'] + '-help')">
+                  {{s['name'] + '-help' | translate}} </p>
               </div>
             </div>
           </div>

@@ -23,7 +23,14 @@
 
 package org.fao.geonet.api.site;
 
-import jeeves.constants.Jeeves;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.component.ProfileManager;
+import jeeves.config.springutil.ServerBeanPropertyUpdater;
+import jeeves.server.JeevesProxyInfo;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -33,15 +40,22 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.services.config.LogUtils;
 import org.fao.geonet.utils.IO;
-import org.jdom.Element;
+import org.fao.geonet.utils.ProxyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -50,34 +64,20 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.imageio.ImageIO;
+import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.component.ProfileManager;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.util.*;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 
@@ -95,6 +95,42 @@ import static org.apache.commons.fileupload.util.Streams.checkFileName;
     description = "Catalog operations")
 @Controller("site")
 public class SiteApi {
+
+    public static void reloadServices(ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataMan = gc.getBean(DataManager.class);
+        SettingManager settingMan = gc.getBean(SettingManager.class);
+        SettingInfo si = context.getBean(SettingInfo.class);
+
+        try {
+            if (si.getLuceneIndexOptimizerSchedulerEnabled()) {
+                dataMan.rescheduleOptimizer(si.getLuceneIndexOptimizerSchedulerAt(), si.getLuceneIndexOptimizerSchedulerInterval());
+            } else {
+                dataMan.disableOptimizer();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: " + e.getMessage());
+        }
+
+        LogUtils.refreshLogConfiguration();
+
+        try {
+            // Load proxy information into Jeeves
+            ProxyInfo pi = JeevesProxyInfo.getInstance();
+            boolean useProxy = settingMan.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
+            if (useProxy) {
+                String proxyHost = settingMan.getValue(Settings.SYSTEM_PROXY_HOST);
+                String proxyPort = settingMan.getValue(Settings.SYSTEM_PROXY_PORT);
+                String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
+                String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
+                pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
+        }
+    }
 
     @ApiOperation(
         value = "Get site description",
@@ -149,7 +185,11 @@ public class SiteApi {
         )
             String[] key,
         HttpServletRequest request,
-        HttpSession httpSession
+        @ApiIgnore
+        @ApiParam(
+            hidden = true
+        )
+            HttpSession httpSession
     ) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         SettingManager sm = appContext.getBean(SettingManager.class);
@@ -193,6 +233,137 @@ public class SiteApi {
         }
     }
 
+    @ApiOperation(
+        value = "Get settings with details",
+        notes = "Provides also setting properties.",
+        nickname = "getSettingsDetails")
+    @RequestMapping(
+        path = "/settings/details",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    @PreAuthorize("hasRole('Administrator')")
+    public List<Setting> getSettingsDetails(
+        @ApiParam(
+            value = "Setting set. A common set of settings to retrieve.",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            SettingSet[] set,
+        @ApiParam(
+            value = "Setting key",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            String[] key,
+        HttpServletRequest request,
+        @ApiIgnore
+        @ApiParam(
+            hidden = true
+        )
+            HttpSession httpSession
+    ) throws Exception {
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        SettingManager sm = appContext.getBean(SettingManager.class);
+        UserSession session = ApiUtils.getUserSession(httpSession);
+        Profile profile = session == null ? null : session.getProfile();
+
+        List<String> settingList = new ArrayList<>();
+        if (set == null && key == null) {
+            return
+                sm.getAll();
+        } else {
+            if (set != null && set.length > 0) {
+                for (SettingSet s : set) {
+                    String[] props = s.getListOfSettings();
+                    if (props != null) {
+                        Collections.addAll(settingList, props);
+                    }
+                }
+            }
+            if (key != null && key.length > 0) {
+                Collections.addAll(settingList, key);
+            }
+            List<org.fao.geonet.domain.Setting> settings = sm.getSettings(settingList.toArray(new String[0]));
+            ListIterator<org.fao.geonet.domain.Setting> iterator = settings.listIterator();
+
+            // Cleanup internal settings for not authenticated users.
+            while (iterator.hasNext()) {
+                org.fao.geonet.domain.Setting s = iterator.next();
+                if (s.isInternal() && profile == null) {
+                    settings.remove(s);
+                }
+            }
+            return settings;
+        }
+    }
+
+    @ApiOperation(
+        value = "Save settings",
+        notes = "",
+        nickname = "getSettingsDetails")
+    @RequestMapping(
+        path = "/settings",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.POST
+    )
+    @ResponseBody
+    @PreAuthorize("hasRole('Administrator')")
+    public ResponseEntity saveSettings(
+        @ApiIgnore
+        @ApiParam(hidden = true)
+        @RequestParam
+            Map<String, String> allRequestParams,
+        HttpServletRequest request,
+        @ApiIgnore
+        @ApiParam(
+            hidden = true
+        )
+            HttpSession httpSession
+    ) throws Exception {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        SettingManager sm = applicationContext.getBean(SettingManager.class);
+        String currentUuid = sm.getSiteId();
+
+        if (!sm.setValues(allRequestParams)) {
+            throw new OperationAbortedEx("Cannot set all values");
+        }
+
+        // And reload services
+        String newUuid = allRequestParams.get(Settings.SYSTEM_SITE_SITE_ID_PATH);
+
+        if (newUuid != null && !currentUuid.equals(newUuid)) {
+            final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
+            final SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
+            final Source source = sourceRepository.findOne(currentUuid);
+            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.isLocal());
+            sourceRepository.save(newSource);
+
+            PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {
+                @Override
+                public javax.persistence.criteria.Path<String> getPath(Root<Metadata> root) {
+                    return root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
+                }
+            };
+            metadataRepository.createBatchUpdateQuery(servicesPath, newUuid, MetadataSpecs.isHarvested(false));
+            sourceRepository.delete(source);
+        }
+
+        SettingInfo info = applicationContext.getBean(SettingInfo.class);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl(true) +
+                context.getBaseUrl(),
+            applicationContext);
+
+        // Reload services affected by updated settings
+        reloadServices(context);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 
     @ApiOperation(
         value = "Get site informations",
