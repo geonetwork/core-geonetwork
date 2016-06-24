@@ -119,7 +119,8 @@
         $scope.selectedThread = thread;
         $scope.threadStackTrace = 'Loading...';
         $('#stackTrace').modal('toggle');
-        $http.get('../api/site/threads/trace/' + thread.id).success(function(data) {
+        $http.get('../api/site/threads/trace/' +
+            thread.id).success(function(data) {
           $scope.threadStackTrace = data.stackTrace;
         });
       };
@@ -166,7 +167,7 @@
         });
       };
 
-      $scope.downloadLog = function () {
+      $scope.downloadLog = function() {
         $http.get('../api/site/logging/activity', null, {
           headers: {
             'Content-Type': 'application/zip'

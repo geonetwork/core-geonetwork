@@ -25,6 +25,10 @@ package org.fao.geonet.api.groups;
 
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.server.UserSession;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
@@ -46,18 +50,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.SQLException;
-import java.util.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.UserSession;
-import springfox.documentation.annotations.ApiIgnore;
+import java.sql.SQLException;
+import java.util.*;
 
 @RequestMapping(value = {
     "/api/groups",
@@ -94,16 +92,16 @@ public class GroupsApi {
             required = false,
             defaultValue = "false"
         )
-        boolean withReservedGroup,
+            boolean withReservedGroup,
         @ApiParam(
             value = "For a specific profile"
         )
         @RequestParam(
             required = false
         )
-        String profile,
+            String profile,
         @ApiIgnore
-        HttpSession httpSession
+            HttpSession httpSession
     ) throws Exception {
         UserSession session = ApiUtils.getUserSession(httpSession);
 
@@ -122,10 +120,53 @@ public class GroupsApi {
     }
 
     @ApiOperation(
+        value = "Add a group",
+        notes = "",
+        nickname = "addGroup")
+    @RequestMapping(
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.PUT
+    )
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('UserAdmin')")
+    @ResponseBody
+    public ResponseEntity<Integer> addGroup(
+        @ApiParam(
+            value = "Group details"
+        )
+        @RequestBody
+            Group group
+    ) throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        GroupRepository groupRepository = appContext.getBean(GroupRepository.class);
+        final Group existing = groupRepository.findOne(group.getId());
+        if (existing != null) {
+            throw new IllegalArgumentException(String.format(
+                "A group with id '%d' already exist.",
+                group.getId()
+            ));
+        } else {
+            // Populate languages if not already set
+            LanguageRepository langRepository = appContext.getBean(LanguageRepository.class);
+            java.util.List<Language> allLanguages = langRepository.findAll();
+            Map<String, String> labelTranslations = group.getLabelTranslations();
+            for (Language l : allLanguages) {
+                String label = labelTranslations.get(l.getId());
+                group.getLabelTranslations().put(l.getId(),
+                    label == null ? group.getName() : label);
+            }
+            groupRepository.save(group);
+        }
+        return new ResponseEntity<>(group.getId(), HttpStatus.CREATED);
+    }
+
+
+    @ApiOperation(
         value = "Get group",
         notes = "Return catalog group .",
         nickname = "getGroup")
-    @RequestMapping(value = "/{groupIdentifier}",
+    @RequestMapping(
+        value = "/{groupIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
@@ -150,6 +191,45 @@ public class GroupsApi {
     }
 
     @ApiOperation(
+        value = "Update a group",
+        notes = "",
+        nickname = "updateGroup")
+    @RequestMapping(
+        value = "/{groupIdentifier}",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.PUT
+    )
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('UserAdmin')")
+    @ResponseBody
+    public ResponseEntity updateGroup(
+        @ApiParam(
+            value = "Group identifier"
+        )
+        @PathVariable
+            Integer groupIdentifier,
+        @ApiParam(
+            value = "Group details"
+        )
+        @RequestBody
+            Group group
+    ) throws Exception {
+        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
+
+        final Group existing = groupRepository.findOne(groupIdentifier);
+        if (existing == null) {
+            throw new ResourceNotFoundException(String.format(
+                "No group found with id '%d'.",
+                groupIdentifier
+            ));
+        } else {
+            groupRepository.save(group);
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+
+    @ApiOperation(
         value = "Delete a group",
         notes = "Deletes a catalog group by identifier.",
         nickname = "deleteGroup")
@@ -166,7 +246,7 @@ public class GroupsApi {
         @PathVariable
             Integer groupIdentifier,
         @ApiIgnore
-        ServletRequest request
+            ServletRequest request
     ) throws Exception {
         GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
 

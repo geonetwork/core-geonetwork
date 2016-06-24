@@ -107,32 +107,7 @@
         $scope.isLoadingGroups = true;
         $http.get('../api/groups').
             success(function(data) {
-              $scope.groups = data !== 'null' ? data : null;
-              //Fixing true not equal to "true" and
-              //Simplifying the allowed categories list
-              angular.forEach($scope.groups, function(u) {
-                if (u.enableallowedcategories == 'true') {
-                  u.enableallowedcategories = true;
-                  u.allowedcategoriessimp = [];
-                  angular.forEach(u.allowedcategories, function(c) {
-                    if (c.id) {
-                      u.allowedcategoriessimp.push(c.id);
-                    }
-                  });
-                } else {
-                  u.enableallowedcategories = false;
-                }
-                //FIXME this should be already on the previous list
-                if (u.defaultcategory) {
-                  $http.get('../api/groups/' + u.id).
-                      success(function(data) {
-                        if (data && data[0] && data[0].defaultcategory &&
-                            data[0].defaultcategory[0]) {
-                          u.defaultcategory = data[0].defaultcategory[0];
-                        }
-                      });
-                }
-              });
+              $scope.groups = data;
               $scope.isLoadingGroups = false;
             }).error(function(data) {
               // TODO
@@ -418,10 +393,18 @@
       $scope.addGroup = function() {
         $scope.unselectGroup();
         $scope.groupSelected = {
-          id: '',
+          id: -99,
           name: '',
+          label: {},
           description: '',
-          email: ''
+          email: '',
+          enableAllowedCategories: false,
+          allowedCategories: [],
+          defaultCategory: null,
+          logo: null,
+          referrer: null,
+          website: null
+
         };
         $timeout(function() {
           $('#groupname').focus();
@@ -460,21 +443,13 @@
         fail: uploadImportMdError
       };
 
-      $scope.saveGroup = function(formId, logoUploadDivId) {
-        var uploadScope = angular.element(logoUploadDivId).scope();
-        if (uploadScope && uploadScope.queue.length > 0) {
-          uploadScope.submit();
-        } else {
-          var deleteLogo = $scope.groupSelected.logo === null &&
-              !$scope.groupSelected.logoFromHarvest ?
-              '&deleteLogo=true' : '';
-          var addLogo = $scope.groupSelected.logoFromHarvest ?
-              '&copyLogo=' + $scope.groupSelected.logoFromHarvest : '';
-          $http.get('admin.group.update?' + $(formId).serialize() +
-              deleteLogo + addLogo)
-              .success(uploadImportMdDone)
-              .error(uploadImportMdError);
-        }
+      $scope.saveGroup = function() {
+        $http.put('../api/groups' + (
+            $scope.groupSelected.id != -99 ?
+            '/' + $scope.groupSelected.id : ''
+            ), $scope.groupSelected)
+          .success(uploadImportMdDone)
+          .error(uploadImportMdError);
       };
 
       $scope.deleteGroup = function(formId) {

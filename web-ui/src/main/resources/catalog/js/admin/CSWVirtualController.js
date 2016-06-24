@@ -121,11 +121,11 @@
       };
       $scope.removeFilter = function(f) {
         angular.forEach($scope.virtualCSWSelected.parameters,
-          function (idx, o) {
-          if (o.name === f) {
-            $scope.virtualCSWSelected.parameters.splice(idx, 1);
-          }
-        })
+            function(idx, o) {
+              if (o.name === f) {
+                $scope.virtualCSWSelected.parameters.splice(idx, 1);
+              }
+            });
       };
 
       $scope.$watchCollection('virtualCSWSelected', function() {
@@ -150,8 +150,8 @@
 
         $http.put('../api/csw/virtual' + (
             $scope.virtualCSWSelected.id !== '' ?
-              '/' + $scope.virtualCSWSelected.id : ''
-          ), $scope.virtualCSWSelected)
+            '/' + $scope.virtualCSWSelected.id : ''
+            ), $scope.virtualCSWSelected)
             .then(function(r) {
               if (r.status === 400) {
                 $rootScope.$broadcast('StatusUpdated', {
