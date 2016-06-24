@@ -25,7 +25,6 @@ package org.fao.geonet.services.resources;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -49,11 +48,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 //=============================================================================
 
@@ -167,6 +165,7 @@ public class Download {
                                 sm.getValue("system/feedback/mailServer/password"),
                                 sm.getValueAsBool("system/feedback/mailServer/ssl"),
                                 sm.getValueAsBool("system/feedback/mailServer/tls"),
+                                sm.getValueAsBool("system/feedback/mailServer/ingoreSslCertificateErrors", false),
                                 from, fromDescr, email, null, subject, message);
                         } catch (Exception e) {
                             e.printStackTrace();

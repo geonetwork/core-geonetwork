@@ -26,9 +26,12 @@ package org.fao.geonet.util;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
+import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailAttachment;
@@ -36,20 +39,31 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.commons.mail.SimpleEmail;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
 
 /**
- * Utility class to send mails. Supports both html and plain text. It usually takes the settings
- * from the database, but you can also indicate all params.
+ * Utility class to send mails. Supports both html and plain text. It usually
+ * takes the settings from the database, but you can also indicate all params.
  *
  * @author delawen
+ *
  */
 public class MailUtil {
 
+    public static final String LOG_MODULE_NAME = "geonetwork";
+
     /**
-     * Send an html mail. Will look on the settings directly to know the remitent
+     * Send an html mail. Will look on the settings directly to know the
+     * remitent
+     *
+     * @param toAddress
+     * @param subject
+     * @param htmlMessage
+     * @param settings
+     * @throws EmailException
      */
     public static Boolean sendHtmlMail(List<String> toAddress, String subject,
-                                       String htmlMessage, SettingManager settings) {
+            String htmlMessage, SettingManager settings) {
         // Create data information to compose the mail
         HtmlEmail email = new HtmlEmail();
         configureBasics(settings, email);
@@ -58,7 +72,7 @@ public class MailUtil {
         try {
             email.setHtmlMsg(htmlMessage);
         } catch (EmailException e1) {
-            e1.printStackTrace();
+            Log.warning("Error setting email HTML content. Subject:" + subject, e1);
             return false;
         }
 
@@ -67,7 +81,7 @@ public class MailUtil {
             try {
                 email.addBcc(add);
             } catch (EmailException e) {
-                e.printStackTrace();
+                Log.warning(LOG_MODULE_NAME, "Error setting email BCC address " + add, e);
                 return false;
             }
         }
@@ -76,10 +90,17 @@ public class MailUtil {
     }
 
     /**
-     * Send a plain text mail. Will look on the settings directly to know the remitent
+     * Send a plain text mail. Will look on the settings directly to know the
+     * remitent
+     *
+     * @param toAddress
+     * @param subject
+     * @param message
+     * @param settings
+     * @throws EmailException
      */
     public static Boolean sendMail(List<String> toAddress, String subject,
-                                   String message, SettingManager settings) {
+            String message, SettingManager settings) {
         // Create data information to compose the mail
         Email email = new SimpleEmail();
         configureBasics(settings, email);
@@ -88,7 +109,7 @@ public class MailUtil {
         try {
             email.setMsg(message);
         } catch (EmailException e1) {
-            e1.printStackTrace();
+            Log.warning(LOG_MODULE_NAME, "Error setting email message", e1);
             return false;
         }
 
@@ -97,7 +118,7 @@ public class MailUtil {
             try {
                 email.addBcc(add);
             } catch (EmailException e) {
-                e.printStackTrace();
+                Log.warning(LOG_MODULE_NAME, "Error setting email BCC address " + add, e);
             }
         }
 
@@ -105,11 +126,20 @@ public class MailUtil {
     }
 
     /**
-     * Send a plain text mail. Will look on the settings directly to know the remitent
+     * Send a plain text mail. Will look on the settings directly to know the
+     * remitent
+     *
+     * @param toAddress
+     * @param subject
+     * @param message
+     * @param settings
+     * @param replyTo
+     * @param replyToDesc
+     * @throws EmailException
      */
     public static Boolean sendMail(List<String> toAddress, String subject,
-                                   String message, SettingManager settings, String replyTo,
-                                   String replyToDesc) {
+            String message, SettingManager settings, String replyTo,
+            String replyToDesc) {
         // Create data information to compose the mail
         Email email = new SimpleEmail();
         configureBasics(settings, email);
@@ -119,6 +149,7 @@ public class MailUtil {
             addressColl.add(new InternetAddress(replyTo, replyToDesc));
             email.setReplyTo(addressColl);
         } catch (UnsupportedEncodingException e2) {
+
             e2.printStackTrace();
             return false;
         } catch (EmailException e) {
@@ -148,15 +179,37 @@ public class MailUtil {
 
     /**
      * Send an html mail with atachments
+     *
+     * @param toAddress
+     * @param from
+     * @param subject
+     * @param htmlMessage
+     * @param attachment
+     * @throws EmailException
      */
     public static Boolean sendHtmlMailWithAttachment(List<String> toAddress,
-                                                     String hostName, Integer smtpPort, String from, String username,
-                                                     String password, String subject, String htmlMessage,
-                                                     List<EmailAttachment> attachment) {
+            String from, String subject, String htmlMessage,
+            List<EmailAttachment> attachment, SettingManager settings) {
         // Create data information to compose the mail
         HtmlEmail email = new HtmlEmail();
+        String username = settings
+            .getValue("system/feedback/mailServer/username");
+        String password = settings
+            .getValue("system/feedback/mailServer/password");
+        Boolean ssl = settings
+            .getValueAsBool("system/feedback/mailServer/ssl", false);
+        Boolean tls = settings
+            .getValueAsBool("system/feedback/mailServer/tls", false);
 
-        configureBasics(hostName, smtpPort, from, username, password, email, false, false);
+        String hostName = settings.getValue("system/feedback/mailServer/host");
+        Integer smtpPort = Integer.valueOf(settings
+            .getValue("system/feedback/mailServer/port"));
+        Boolean ignoreSslCertificateErrors = settings.getValueAsBool
+            ("system/feedback/mailServer/ingoreSslCertificateErrors", false);
+
+
+
+        configureBasics(hostName, smtpPort, from, username, password, email, ssl, tls, ignoreSslCertificateErrors);
 
         for (EmailAttachment attach : attachment) {
             try {
@@ -221,13 +274,32 @@ public class MailUtil {
 
     /**
      * Send a plain text mail
+     *
+     * @param toAddress
+     * @param from
+     * @param subject
+     * @param message
+     * @throws EmailException
      */
-    public static Boolean sendMail(List<String> toAddress, String hostName,
-                                   Integer smtpPort, String from, String username, String password,
-                                   String subject, String message) {
+    public static Boolean sendMail(List<String> toAddress, String from,
+            String subject, String message, SettingManager settings) {
 
         Email email = new SimpleEmail();
-        configureBasics(hostName, smtpPort, from, username, password, email, false, false);
+        String username = settings
+            .getValue("system/feedback/mailServer/username");
+        String password = settings
+            .getValue("system/feedback/mailServer/password");
+        Boolean ssl = settings
+            .getValueAsBool("system/feedback/mailServer/ssl", false);
+        Boolean tls = settings
+            .getValueAsBool("system/feedback/mailServer/tls", false);
+
+        String hostName = settings.getValue("system/feedback/mailServer/host");
+        Integer smtpPort = Integer.valueOf(settings
+            .getValue("system/feedback/mailServer/port"));
+        Boolean ignoreSslCertificateErrors = settings.getValueAsBool
+            ("system/feedback/mailServer/ingoreSslCertificateErrors", false);
+        configureBasics(hostName, smtpPort, from, username, password, email, ssl, tls, ignoreSslCertificateErrors);
 
         email.setSubject(subject);
         try {
@@ -252,72 +324,106 @@ public class MailUtil {
 
     /**
      * Create data information to compose the mail
+     *  @param hostName
+     * @param smtpPort
+     * @param from
+     * @param username
+     * @param password
+     * @param email
+     * @param ssl
+     * @param tls
+     * @param ignoreSslCertificateErrors
      */
     private static void configureBasics(String hostName, Integer smtpPort,
-                                        String from, String username, String password, Email email, Boolean ssl, Boolean tls) {
+                                        String from, String username, String password, Email email, Boolean ssl,
+                                        Boolean tls, Boolean ignoreSslCertificateErrors) {
         if (hostName != null) {
             email.setHostName(hostName);
         } else {
             throw new IllegalArgumentException(
-                "Missing settings in System Configuration (see Administration menu) - cannot send mail");
+                    "Missing settings in System Configuration (see Administration menu) - cannot send mail");
         }
-        if (smtpPort != null) {
+        if (StringUtils.isNotBlank(smtpPort +"")) {
             email.setSmtpPort(smtpPort);
         } else {
             throw new IllegalArgumentException(
-                "Missing settings in System Configuration (see Administration menu) - cannot send mail");
+                    "Missing settings in System Configuration (see Administration menu) - cannot send mail");
         }
         if (username != null) {
             email.setAuthenticator(new DefaultAuthenticator(username, password));
         }
 
 
-        if (tls != null) {
+        email.setDebug(true);
+
+        if (tls != null && tls) {
             email.setStartTLSEnabled(tls);
             email.setStartTLSRequired(tls);
         }
 
-        if (ssl != null) {
+        if(ssl != null && ssl) {
             email.setSSLOnConnect(ssl);
-            if (ssl) email.setSslSmtpPort(smtpPort + "");
+            if (StringUtils.isNotBlank(smtpPort + "")) {
+                email.setSslSmtpPort(smtpPort + "");
+            }
         }
 
-        if (from != null && !from.isEmpty()) {
+        if (ignoreSslCertificateErrors != null && ignoreSslCertificateErrors) {
+            try {
+                Session mailSession = email.getMailSession();
+                Properties p = mailSession.getProperties();
+                p.setProperty("mail.smtp.ssl.trust", "*");
+
+            } catch (EmailException e) {
+                // Ignore the exception. Can't be reached because the host name is always set above or an
+                // IllegalArgumentException is thrown.
+            }
+        }
+
+        if (StringUtils.isNotBlank(from)) {
             try {
                 email.setFrom(from);
             } catch (EmailException e) {
-                e.printStackTrace();
+                throw new IllegalArgumentException(
+                    "Invalid 'from' email setting in System Configuration (see Administration menu) - cannot send " +
+                        "mail", e);
             }
         } else {
             throw new IllegalArgumentException(
-                "Missing settings in System Configuration (see Administration menu) - cannot send mail");
+                    "Missing settings in System Configuration (see Administration menu) - cannot send mail");
         }
     }
 
     /**
      * Configure the basics (hostname, port, username, password,...)
+     *
+     * @param settings
+     * @param email
      */
     private static void configureBasics(SettingManager settings, Email email) {
         String username = settings
-            .getValue("system/feedback/mailServer/username");
+                .getValue("system/feedback/mailServer/username");
         String password = settings
-            .getValue("system/feedback/mailServer/password");
+                .getValue("system/feedback/mailServer/password");
         Boolean ssl = settings
-            .getValueAsBool("system/feedback/mailServer/ssl");
+                .getValueAsBool("system/feedback/mailServer/ssl", false);
         Boolean tls = settings
-            .getValueAsBool("system/feedback/mailServer/tls");
+                .getValueAsBool("system/feedback/mailServer/tls", false);
 
         String hostName = settings.getValue("system/feedback/mailServer/host");
         Integer smtpPort = Integer.valueOf(settings
-            .getValue("system/feedback/mailServer/port"));
+                .getValue("system/feedback/mailServer/port"));
 
         String from = settings.getValue("system/feedback/email");
+        Boolean ignoreSslCertificateErrors =
+            settings.getValueAsBool("system/feedback/mailServer/ignoreSslCertificateErrors", false);
 
-        configureBasics(hostName, smtpPort, from, username, password, email, ssl, tls);
+
+        configureBasics(hostName, smtpPort, from, username, password, email, ssl, tls, ignoreSslCertificateErrors);
     }
 
     public static Boolean sendMail(String email, String subject,
-                                   String message, SettingManager sm) {
+            String message, SettingManager sm) {
         List<String> to = new ArrayList<String>(1);
         to.add(email);
         return sendMail(to, subject, message, sm);
@@ -325,22 +431,22 @@ public class MailUtil {
 
 
     public static Boolean sendMail(String to, String subject, String message,
-                                   SettingManager sm, String replyTo, String replyToDescr) {
+            SettingManager sm, String replyTo, String replyToDescr) {
         List<String> to_ = new ArrayList<String>(1);
         to_.add(to);
         return sendMail(to_, subject, message, sm, replyTo, replyToDescr);
     }
 
     public static void testSendMail(String to, String subject, String message,
-                                    SettingManager sm, String replyTo, String replyToDescr) throws Exception {
+                                   SettingManager sm, String replyTo, String replyToDescr) throws Exception {
         List<String> to_ = new ArrayList<String>(1);
         to_.add(to);
         testSendMail(to_, subject, message, sm, replyTo, replyToDescr);
     }
 
     public static void testSendMail(List<String> toAddress, String subject,
-                                    String message, SettingManager settings, String replyTo,
-                                    String replyToDesc) throws Exception {
+                                   String message, SettingManager settings, String replyTo,
+                                   String replyToDesc) throws Exception {
         // Create data information to compose the mail
         Email email = new SimpleEmail();
         configureBasics(settings, email);
