@@ -185,10 +185,40 @@ public class GroupsApi {
         if (group == null) {
             throw new ResourceNotFoundException(String.format("Group not found"));
         }
-
         return group;
-
     }
+
+
+    @ApiOperation(
+        value = "Get group users",
+        notes = "",
+        nickname = "getGroupUsers")
+    @RequestMapping(
+        value = "/{groupIdentifier}/users",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('UserAdmin')")
+    @ResponseBody
+    public List<User> getGroupUsers(
+        @ApiParam(
+            value = "Group identifier"
+        )
+        @PathVariable
+            Integer groupIdentifier
+    ) throws Exception {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        GroupRepository groupRepository = applicationContext.getBean(GroupRepository.class);
+        final Group group = groupRepository.findOne(groupIdentifier);
+
+        if (group == null) {
+            throw new ResourceNotFoundException(String.format("Group not found"));
+        }
+        UserRepository userRepository = applicationContext.getBean(UserRepository.class);
+        return userRepository.findAllUsersInUserGroups(
+            UserGroupSpecs.hasGroupId(groupIdentifier));
+    }
+
 
     @ApiOperation(
         value = "Update a group",

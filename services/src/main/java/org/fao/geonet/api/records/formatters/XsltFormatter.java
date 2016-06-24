@@ -53,7 +53,7 @@ import static org.fao.geonet.api.records.formatters.SchemaLocalizations.loadSche
  * name of the URL parameter eg. <xsl:param name="view"/> </p>
  *
  * @author Jesse on 10/15/2014.
- * @author Francois on 06/01/2015: Add request parameters transfert to XSLT and metadata info.
+ * @author Francois on 06/01/2015: Add request parameters transfer to XSLT and metadata info.
  */
 @Component
 public class XsltFormatter implements FormatterImpl {

@@ -464,7 +464,7 @@
                var switchWithElementCtrl = $(switchWithElement
                 .find(findExp).get(0)).children();
 
-               // For each existing up/down control transfert
+               // For each existing up/down control transfer
                // the hidden class between the two elements.
                angular.forEach(switchWithElementCtrl, function(ctrl, idx) {
                  var ctrl2 = currentElementCtrl[idx];

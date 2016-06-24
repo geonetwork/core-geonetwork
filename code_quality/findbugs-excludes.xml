@@ -184,7 +184,7 @@
     <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.ownership.OwnershipUtils$1"/>
+    <Class name="org.fao.geonet.api.users.transfer.OwnershipUtils$1"/>
   </Match>
   <Match>
     <Class name="org.fao.geonet.wro4j.TemplatesUriLocator"/>

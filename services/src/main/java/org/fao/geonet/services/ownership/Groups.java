@@ -54,7 +54,7 @@ import static org.springframework.data.jpa.domain.Specifications.not;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 //=============================================================================
-
+@Deprecated
 public class Groups implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

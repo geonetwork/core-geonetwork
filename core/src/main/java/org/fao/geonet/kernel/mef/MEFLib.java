@@ -518,9 +518,9 @@ public class MEFLib {
      * MEF file version.
      *
      * MEF file is composed of one or more metadata record with extra information managed by
-     * GeoNetwork. Metadata is in XML format. An information file (info.xml) is used to transfert
+     * GeoNetwork. Metadata is in XML format. An information file (info.xml) is used to transfer
      * general informations, categories, privileges and file references information. A public and
-     * private directories allows data transfert (eg. thumbnails, data upload).
+     * private directories allows data transfer (eg. thumbnails, data upload).
      */
     public enum Version {
         /**

@@ -28,6 +28,7 @@ import io.swagger.annotations.ApiParam;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
@@ -36,6 +37,7 @@ import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.PasswordUtil;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -270,11 +272,12 @@ public class UsersApi {
 
     @ApiOperation(
         value = "Retrieve user groups",
-        notes = "Retrieve the user groups.",
+        notes = "",
         nickname = "retrieveUserGroups")
     @RequestMapping(value = "/{userIdentifier}/groups",
         produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.GET)
+        method = RequestMethod.GET
+    )
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
@@ -338,7 +341,7 @@ public class UsersApi {
                     List<Integer> adminList = userGroupRepository.findGroupIds(where(UserGroupSpecs.hasUserId(Integer.valueOf(myUserId)))
                         .or(UserGroupSpecs.hasUserId(Integer.valueOf(userIdentifier))));
                     if (adminList.isEmpty()) {
-                        throw new OperationNotAllowedEx("You don't have rights to do this because the user you want is not part of your group");
+                        throw new SecurityException("You don't have rights to do this because the user you want is not part of your group");
                     }
                 }
 
@@ -348,7 +351,7 @@ public class UsersApi {
 
             return userGroups;
         } else {
-            throw new IllegalArgumentException("You don't have rights to do get the groups for this user");
+            throw new SecurityException("You don't have rights to do get the groups for this user");
         }
     }
 

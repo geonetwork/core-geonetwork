@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.services.ownership;
+package org.fao.geonet.api.users.transfer;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -29,6 +29,7 @@ import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
@@ -68,6 +69,7 @@ public class OwnershipUtils {
         return getUsers(context, us, users);
     }
 
+    @Deprecated
     public static List<Element> getUsers(ServiceContext context, UserSession us, List<User> users) throws SQLException {
 
         int id = us.getUserIdAsInt();
@@ -110,13 +112,7 @@ public class OwnershipUtils {
         return newList;
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //--------------------------------------------------------------------------
-
-    private static Set<String> getUserGroups(ServiceContext context, int id) throws SQLException {
+    protected static Set<String> getUserGroups(ServiceContext context, int id) throws SQLException {
         HashSet<String> groupIds = new HashSet<String>();
 
         final List<UserGroup> users = context.getBean(UserGroupRepository.class).findAll(UserGroupSpecs.hasUserId(id));
@@ -127,6 +123,3 @@ public class OwnershipUtils {
         return groupIds;
     }
 }
-
-//=============================================================================
-
