@@ -37,7 +37,7 @@
         return this.props.uri;
       },
       getLabel: function() {
-        return this.props.value['#text'];
+        return this.props.value['#text'] || this.props.value;
       }
     };
 
@@ -73,17 +73,15 @@
           'Keyword',
           'Thesaurus',
           function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus) {
-            var getKeywordsSearchUrl = function(filter, 
+            var getKeywordsSearchUrl = function(filter,
                 thesaurus, max, typeSearch) {
-              return gnUrlUtils.append('keywords',
+              return gnUrlUtils.append('../api/registries/vocabularies/search',
                   gnUrlUtils.toKeyValue({
-                    pNewSearch: 'true',
-                    pTypeSearch: typeSearch || 1,
-                    pThesauri: thesaurus,
-                    pMode: 'searchBox',
-                    maxResults: max,
-                    pKeyword: filter || '',
-                    pUri: ('*' + filter + '*') || ''
+                    type: typeSearch || 'CONTAINS',
+                    thesaurus: thesaurus,
+                    rows: max,
+                    q: filter || '',
+                    uri: ('*' + filter + '*') || ''
                   })
               );
             };
@@ -91,8 +89,8 @@
 
             var parseKeywordsResponse = function(data, dataToExclude) {
               var listOfKeywords = [];
-              angular.forEach(data[0], function(k) {
-                if (k.value['#text']) {
+              angular.forEach(data, function(k) {
+                if (k.value) {
                   listOfKeywords.push(new Keyword(k));
                 }
               });
@@ -202,7 +200,7 @@
                *
                * eg. to-iso19139-keyword for default form.
                */
-              getXML: function(thesaurus, 
+              getXML: function(thesaurus,
                   keywordUris, transformation, lang, textgroupOnly) {
                 // http://localhost:8080/geonetwork/srv/eng/
                 // xml.keyword.get?thesaurus=external.place.regions&id=&

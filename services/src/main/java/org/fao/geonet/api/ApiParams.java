@@ -31,6 +31,8 @@ public class ApiParams {
     public static final String API_CLASS_RECORD_OPS = "Metadata record operations";
     public static final String API_CLASS_CATALOG_OPS = "Catalog operations";
     public static final String API_CLASS_CATALOG_TAG = "site";
+    public static final String API_CLASS_REGISTRIES_OPS = "Registries related operations";
+    public static final String API_CLASS_REGISTRIES_TAG = "registries";
 
     public static final String API_PARAM_RECORD_UUID = "Record UUID.";
     public static final String API_PARAM_RECORD_UUIDS = "One or more record UUIDs";

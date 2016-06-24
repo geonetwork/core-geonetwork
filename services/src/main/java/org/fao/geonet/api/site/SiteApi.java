@@ -54,7 +54,6 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.services.config.LogUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.ProxyInfo;
 import org.springframework.beans.factory.annotation.Autowired;

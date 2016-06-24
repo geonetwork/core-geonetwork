@@ -380,7 +380,8 @@ public class MetadataSharingApi {
         value = "Set record group",
         notes = "",
         nickname = "setRecordGroup")
-    @RequestMapping(value = "/{metadataUuid}/group",
+    @RequestMapping(
+        value = "/{metadataUuid}/group",
         method = RequestMethod.PUT
     )
     public

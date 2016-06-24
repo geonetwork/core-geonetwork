@@ -24,6 +24,7 @@
 package org.fao.geonet.api.registries;
 
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.registries.model.Crs;
 import org.fao.geonet.api.registries.model.CrsType;
@@ -54,9 +55,9 @@ import io.swagger.annotations.ApiParam;
     "/api/" + API.VERSION_0_1 +
         "/registries"
 })
-@Api(value = "registries",
-    tags = "registries",
-    description = "Registries related operations")
+@Api(value = ApiParams.API_CLASS_REGISTRIES_TAG,
+    tags = ApiParams.API_CLASS_REGISTRIES_TAG,
+    description = ApiParams.API_CLASS_REGISTRIES_OPS)
 public class CrsApi {
 
     public static final String DEFAULT_PARAMS_ROWS = "100";

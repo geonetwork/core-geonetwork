@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.services.config;
+package org.fao.geonet.api.site;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.fao.geonet.ApplicationContextHolder;
@@ -29,6 +29,7 @@ import org.fao.geonet.domain.Setting;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SettingRepository;
+import org.fao.geonet.services.config.DoActions;
 
 import java.net.URL;
 
