@@ -413,8 +413,6 @@
 
 
       var uploadImportMdDone = function() {
-        angular.element('#group-logo-upload').scope().queue = [];
-
         $scope.unselectGroup();
         loadGroups();
         $rootScope.$broadcast('StatusUpdated', {

@@ -57,11 +57,15 @@
        * Callback when error uploading file.
        */
       loadLogoError = function(e, data) {
-        $rootScope.$broadcast('StatusUpdated', {
-          title: $translate('logoUploadError'),
-          error: data.jqXHR.responseJSON,
-          timeout: 0,
-          type: 'danger'});
+        if (data.jqXHR.status !== 201) {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate('logoUploadError'),
+            error: data.jqXHR.responseJSON,
+            timeout: 0,
+            type: 'danger'});
+        } else {
+          loadLogo();
+        }
       };
 
       /**

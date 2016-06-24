@@ -607,8 +607,9 @@ public class MetadataEditingApi {
         // This flag is used to generate top tool bar or not
         gui.addContent(
             new Element("reqService").setText("md.edit"));
+        String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
         gui.addContent(
-            new Element("language").setText(request.getLocale().getISO3Language()));
+            new Element("language").setText(iso3langCode));
         gui.addContent(
             getSchemaStrings(schema, context)
         );

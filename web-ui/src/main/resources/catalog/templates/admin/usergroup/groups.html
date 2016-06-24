@@ -65,8 +65,8 @@
 
 
       <div class="panel-body">
-        <form id="gn-group-edit" name="gnGroupEdit" data-ng-keypress="updatingGroup()" method="POST"
-              action="admin.group.update?_content_type=json"
+        <form id="gn-group-edit" name="gnGroupEdit"
+              data-ng-keypress="updatingGroup()" method="POST"
               data-file-upload="mdImportUploadOptions" role="form">
           <fieldset>
             <input type="hidden" name="id" data-ng-model="groupSelected.id"
@@ -142,26 +142,12 @@
                   </div>
                 </div>
 
-                <!--Display logo upload input-->
-                <div class="row" data-ng-show="!groupSelected.logo"
-                     id="group-logo-upload">
-                  <div class="col-md-5" translate>upload</div>
-                  <div class="col-md-7 panel panel-default">
-                    <div class="panel-body">
-
-                        <span class="btn btn-success btn-block fileinput-button">
-                            <i class="fa fa-plus fa-white"></i>
-                            <span data-translate="">chooseOrDropResource</span>
-                            <input type="file" id="group-logo" name="logofile" multiple="false">
-                        </span>
-                      <ul style="list-style: none">
-                        <li data-ng-repeat="file in queue">
-                          <div class="preview" data-file-upload-preview="file"></div>
-                          {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
-                          <i class="fa fa-trash-o" data-ng-click="clear(file)"></i>
-                        </li>
-                      </ul>
-                    </div>
+                <div class="row" data-ng-show="!groupSelected.logo">
+                  <div class="col-md-5">
+                    <a href="#/settings/logo">
+                      <i class="fa fa-plus"></i>&nbsp;
+                      <span data-translate="">addNewLogo</span>
+                    </a>
                   </div>
                 </div>
               </div>

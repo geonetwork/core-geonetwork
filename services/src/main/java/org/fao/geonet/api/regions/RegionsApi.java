@@ -147,7 +147,7 @@ public class RegionsApi {
     public List<Category> getRegionTypes(
         HttpServletRequest request) throws Exception {
 
-        Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
+        String language = languageUtils.getIso3langCode(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request);
         Collection<RegionsDAO> daos = ApplicationContextHolder.get().getBeansOfType(RegionsDAO.class).values();
         List<Category> response = new ArrayList<>();
@@ -159,7 +159,7 @@ public class RegionsApi {
                     for (KeywordBean k : keywords) {
                         Category c = new Category(
                             k.getUriCode(),
-                            k.getPreferredLabel(language.getISO3Language())
+                            k.getPreferredLabel(language)
                         );
                         response.add(c);
                     }

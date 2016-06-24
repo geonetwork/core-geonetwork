@@ -34,6 +34,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
@@ -43,6 +44,7 @@ import org.fao.geonet.kernel.search.keyword.*;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,10 +56,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @EnableWebMvc
 @Service
@@ -72,6 +71,9 @@ import java.util.Map;
     tags = ApiParams.API_CLASS_REGISTRIES_TAG,
     description = ApiParams.API_CLASS_REGISTRIES_OPS)
 public class KeywordsApi {
+
+    @Autowired
+    LanguageUtils languageUtils;
 
     /**
      * TODO: There was some caching mechanism in previous implementation.
@@ -178,6 +180,8 @@ public class KeywordsApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         UserSession session = ApiUtils.getUserSession(httpSession);
 
+//        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+//        lang = locale.getISO3Language();
 
         KeywordsSearcher searcher;
         // perform the search and save search result into session

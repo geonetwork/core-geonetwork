@@ -159,8 +159,9 @@ public class ApiUtils {
      * Jeeves.
      */
     static public ServiceContext createServiceContext(HttpServletRequest request) {
-        return createServiceContext(request,
-            request.getLocale().getISO3Language());
+        String iso3langCode = ApplicationContextHolder.get().getBean(LanguageUtils.class)
+            .getIso3langCode(request.getLocales());
+        return createServiceContext(request, iso3langCode);
     }
 
     static public ServiceContext createServiceContext(HttpServletRequest request, String iso3langCode) {

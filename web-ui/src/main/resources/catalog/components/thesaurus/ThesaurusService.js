@@ -74,14 +74,15 @@
           'Thesaurus',
           function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus) {
             var getKeywordsSearchUrl = function(filter,
-                thesaurus, max, typeSearch) {
+                thesaurus, lang, max, typeSearch) {
               return gnUrlUtils.append('../api/registries/vocabularies/search',
                   gnUrlUtils.toKeyValue({
                     type: typeSearch || 'CONTAINS',
                     thesaurus: thesaurus,
                     rows: max,
                     q: filter || '',
-                    uri: ('*' + filter + '*') || ''
+                    uri: ('*' + filter + '*') || '',
+                    lang: lang || 'eng'
                   })
               );
             };
@@ -185,6 +186,7 @@
                     wildcard: 'QUERY',
                     url: this.getKeywordsSearchUrl('QUERY',
                         config.thesaurusKey || '',
+                        config.lang,
                         config.max || this.DEFAULT_NUMBER_OF_RESULTS),
                     filter: function(data) {
                       return parseKeywordsResponse(data, config.dataToExclude);
@@ -263,10 +265,10 @@
                * Filter element if dataToExclude parameter defined.
                */
               parseKeywordsResponse: parseKeywordsResponse,
-              getKeywords: function(filter, thesaurus, max, typeSearch) {
+              getKeywords: function(filter, thesaurus, lang, max, typeSearch) {
                 var defer = $q.defer();
                 var url = getKeywordsSearchUrl(filter,
-                    thesaurus, max, typeSearch);
+                    thesaurus, lang, max, typeSearch);
                 $http.get(url, { cache: true }).
                     success(function(data, status) {
                       defer.resolve(parseKeywordsResponse(data));
