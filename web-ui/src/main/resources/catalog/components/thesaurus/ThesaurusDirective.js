@@ -279,23 +279,24 @@
                  angular.forEach(scope.initialKeywords, function(keyword) {
                    // One keyword only and exact match search
                    gnThesaurusService.getKeywords(keyword,
-                   scope.thesaurusKey, 1, 'MATCH').then(function(listOfKeywords) {
-                      counter++;
+                   scope.thesaurusKey, 1, 'MATCH')
+                     .then(function(listOfKeywords) {
+                     counter++;
 
-                      listOfKeywords[0] &&
+                     listOfKeywords[0] &&
                      scope.selected.push(listOfKeywords[0]);
-                      // Init done when all keywords are selected
-                      if (counter === scope.initialKeywords.length) {
-                        scope.isInitialized = true;
-                        scope.invalidKeywordMatch =
+                     // Init done when all keywords are selected
+                     if (counter === scope.initialKeywords.length) {
+                       scope.isInitialized = true;
+                       scope.invalidKeywordMatch =
                        scope.selected.length !== scope.initialKeywords.length;
 
-                        // Get the matching XML snippet for
-                        // the initial set of keywords
-                        // once the loaded keywords are all selected.
-                        checkState();
-                      }
-                    });
+                       // Get the matching XML snippet for
+                       // the initial set of keywords
+                       // once the loaded keywords are all selected.
+                       checkState();
+                     }
+                   });
                  });
                }
 

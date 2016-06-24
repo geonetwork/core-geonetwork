@@ -70,9 +70,9 @@
               .success(function(data) {
                 scope.languages = data;
               });
-          $http.get('admin.group.list@json', {cache: true})
+          $http.get('../api/groups', {cache: true})
               .success(function(data) {
-                scope.groups = data !== 'null' ? data : null;
+                scope.groups = data;
               });
         }
       };

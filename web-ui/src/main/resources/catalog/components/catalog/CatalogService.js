@@ -123,26 +123,6 @@
         },
 
         /**
-           * @ngdoc method
-           * @name gnMetadataManager#import
-           * @methodOf gnMetadataManager
-           *
-           * @description
-           * Import a new from metadata from an XML snippet.
-           *
-           * @param {Object} data Params to send to md.insert service
-           * @return {HttpPromise} Future object
-           */
-        importMd: function(data) {
-          return $http({
-            url: 'md.insert?_content_type=json',
-            method: 'POST',
-            data: $.param(data),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-          });
-        },
-
-        /**
          * @ngdoc method
          * @name gnMetadataManager#importFromXml
          * @methodOf gnMetadataManager
@@ -243,47 +223,9 @@
    * @description
    * The `gnHttpServices` service provides KVP for all geonetwork
    * services used in the UI.
-   *
-   *  FIXME : links are too long for JSLint.
-   *
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdcreate mdCreate}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdview mdView}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdcreate mdCreate}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdinsert mdInsert}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mddelete mdDelete}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdsuggestion suggestionsList}
-   *
-   * {@link service/config-service-admin-batchprocess
-   * #services-documentation-config-service-admin-
-   * batchprocessxml_-service-mdprocessing processMd}
-   * {@link service/config-service-admin-batchprocess
-   * #services-documentation-config-service-admin-
-   * batchprocessxml_-service-mdprocessingbatch processAll}
-   * {@link service/config-service-admin-batchprocess
-   * #services-documentation-config-service-admin-
-   * batchprocessxml_-service-mdprocessingbatchreport processReport}
-   *
-   * {@link service/config-service-admin#services-
-   * documentation-config-service-adminxml_-service-info info}
-   *
-   * {@link service/config-service-region#services-
-   * documentation-config-service-regionxml_-
-   * service-regionscategory regionsList}
-   * {@link service/config-service-region#services-
-   * documentation-config-service-regionxml_-service-regionslist region}
    */
 
   module.value('gnHttpServices', {
-    mdCreate: 'md.create?_content_type=json&',
-    mdView: 'md.view?_content_type=json&',
-    mdInsert: 'md.insert?_content_type=json&',
-    mdDelete: 'md.delete?_content_type=json&',
     mdDeleteBatch: 'md.delete.batch',
 
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
@@ -292,8 +234,6 @@
     mdGetXML19139: 'xml_iso19139',
     csv: 'csv.search',
 
-    mdPrivileges: 'md.privileges.update?_content_type=json&',
-    mdPrivilegesBatch: 'md.privileges.batch.update?_content_type=json&',
     publish: 'md.publish',
     unpublish: 'md.unpublish',
 
@@ -314,7 +254,6 @@
     selectionLayers: 'selection.layers',
 
     // wfs indexing
-    generateSLD: 'generateSLD',
     solrproxy: '../api/0.1/search'
   });
 

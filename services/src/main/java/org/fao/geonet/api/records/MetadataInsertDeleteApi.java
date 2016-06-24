@@ -54,6 +54,7 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.input.JDOMParseException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specifications;
@@ -371,6 +372,15 @@ public class MetadataInsertDeleteApi {
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         if (xml != null) {
+            Element element = null;
+            try {
+                element = Xml.loadString(xml, false);
+            } catch (JDOMParseException ex) {
+                throw new IllegalArgumentException(String.format(
+                    "XML fragment is invalid. Error is %s",
+                    ex.getMessage()
+                ));
+            }
             Pair<Integer, String> pair = loadRecord(
                 metadataType, Xml.loadString(xml, false),
                 uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);

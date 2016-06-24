@@ -327,8 +327,8 @@
 
       this.assignGroup = function(metadataId, groupId) {
         var defer = $q.defer();
-        $http.put('../../api/records/' + metadataId +
-            '/owner', groupId)
+        $http.put('../api/records/' + metadataId +
+            '/group', groupId)
             .success(function(data) {
               defer.resolve(data);
             })

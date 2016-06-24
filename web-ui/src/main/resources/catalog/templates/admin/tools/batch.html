@@ -151,12 +151,11 @@
           <select class="form-control"
                   data-ng-disabled="selection.length == 0"
                   data-ng-model="data.selectedProcess"
-                  data-ng-options="p.key | translate for p in batchProcesses">
+                  data-ng-options="p as (p.key | translate) for p in batchProcesses">
           </select>
-
           <!-- ng-options set only a index for the select value,
           bound the process name in a hidden field -->
-          <input type="hidden" name="process" value="{{selectedProcess.key}}"/>
+          <input type="hidden" name="process" value="{{data.selectedProcess.key}}"/>
           <fieldset data-ng-hide="!selectedProcess">
             <legend data-translate=""
                     data-ng-hide="selectedProcess.params.length == 0">batchProcessParameters
@@ -185,7 +184,8 @@
                   <button type="button" class="btn btn-primary btn-lg pull-right"
                           data-ng-disabled="!selectedProcess"
                           data-ng-click="runProcess('#gn-batch-process')">
-                    <span class="fa fa-play"></span><span data-translate="">runProcess</span>
+                    <i class="fa fa-play"></i>&nbsp;
+                    <span data-translate="">runProcess</span>
                   </button>
                 </div>
               </div>

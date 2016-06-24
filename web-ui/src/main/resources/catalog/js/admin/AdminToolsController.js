@@ -263,7 +263,7 @@
       }
 
       function loadGroups() {
-        $http.get('admin.group.list?_content_type=json').
+        $http.get('../api/groups').
             success(function(data) {
               $scope.batchSearchGroups = data;
             }).error(function(data) {
@@ -271,7 +271,7 @@
             });
       }
       function loadUsers() {
-        $http.get('admin.user.list?_content_type=json').
+        $http.get('../api/users').
             success(function(data) {
               $scope.batchSearchUsers = data;
             }).error(function(data) {
@@ -388,7 +388,7 @@
                     param.value = urlParam;
                   }
                 });
-                $scope.data.selectedProcess = p;
+                $scope.selectedProcess = p;
               }
             });
           }
@@ -520,22 +520,21 @@
       };
 
       $scope.clearFormatterCache = function() {
+        return $http.delete('../api/formatters/cache')
+          .success(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('formatterCacheCleared'),
+                timeout: 2,
+                type: 'success'});
+            })
+          .error(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('formatCacheClearFailure'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
-      return $http.delete('../api/formatters/cache')
-        .success(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: $translate('formatterCacheCleared'),
-              timeout: 2,
-              type: 'success'});
-          })
-        .error(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('formatCacheClearFailure'),
-              error: data,
-              timeout: 0,
-              type: 'danger'});
-          });
-
 
 
 
@@ -607,14 +606,11 @@
       });
 
 
-      $scope.$watch('data.selectedProcess', function(newValue, oldValue) {
-        // Ignore empty value: in initial setup and
-        // if form already mirrors new value.
-        if ((newValue === '') || (newValue === oldValue)) {
-          return;
+      $scope.$watch('data.selectedProcess', function(n, o) {
+        if (n !== o) {
+          $scope.processReport = null;
+          $scope.selectedProcess = $scope.data.selectedProcess;
         }
-        $scope.selectedProcess = newValue;
-        $scope.processReport = null;
       });
 
     }]);
