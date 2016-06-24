@@ -223,7 +223,7 @@ public class MetadataInsertDeleteApi {
                     Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class),
                         String.valueOf(metadata.getId())));
 
-                dataManager.deleteMetadata(context, metadata.getUuid());
+                dataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
 
                 report.incrementProcessedRecords();
                 report.addMetadataId(metadata.getId());

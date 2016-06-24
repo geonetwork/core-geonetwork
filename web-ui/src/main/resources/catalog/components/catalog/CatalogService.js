@@ -226,8 +226,6 @@
    */
 
   module.value('gnHttpServices', {
-    mdDeleteBatch: 'md.delete.batch',
-
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
     mdGetMEF: 'mef.export',

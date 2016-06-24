@@ -183,9 +183,8 @@
           });
         }
         else {
-          return callBatch('mdDeleteBatch').then(function() {
+          return $http.delete('../api/records').then(function() {
             $rootScope.$broadcast('mdSelectNone');
-            // TODO: Same here.
             $rootScope.$broadcast('search');
           });
         }
