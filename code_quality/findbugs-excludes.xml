@@ -237,7 +237,7 @@
     <Bug pattern="SS_SHOULD_BE_STATIC"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.log.ListLogFilesResponse$LogFileResponse"/>
+    <Class name="org.fao.geonet.api.site.model.ListLogFilesResponse$LogFileResponse"/>
     <Bug pattern="URF_UNREAD_FIELD"/>
   </Match>
   <Match>

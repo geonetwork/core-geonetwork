@@ -116,9 +116,9 @@
               $scope.systemInfo = data;
             });
         // load log files
-        $http.get('admin.logfile.list?_content_type=json')
+        $http.get('../api/site/logging')
             .success(function(data) {
-              $scope.logfiles = data.logFile;
+              $scope.logfiles = data;
             });
         $http.get('../api/site/settings/details')
             .success(function(data) {

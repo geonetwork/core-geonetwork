@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.services.log;
+package org.fao.geonet.api.site.model;
 
 import java.util.Collection;
 import java.util.List;

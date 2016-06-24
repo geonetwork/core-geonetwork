@@ -57,7 +57,10 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 @EnableWebMvc
 @Configuration
 @Service
-@ComponentScan(basePackages = {"org.fao.geonet.api"})
+@ComponentScan(basePackages = {
+    "org.fao.geonet.api",
+    "org.fao.geonet.monitor.service"
+})
 @EnableSwagger2 //Loads the spring beans required by the framework
 public class SwaggerConfig {
     @Autowired

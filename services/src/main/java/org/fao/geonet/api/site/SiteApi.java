@@ -36,6 +36,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
@@ -80,6 +81,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
+import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 
 /**
  *
@@ -90,9 +92,9 @@ import static org.apache.commons.fileupload.util.Streams.checkFileName;
     "/api/" + API.VERSION_0_1 +
         "/site"
 })
-@Api(value = "site",
-    tags = "site",
-    description = "Catalog operations")
+@Api(value = API_CLASS_CATALOG_TAG,
+    tags = API_CLASS_CATALOG_TAG,
+    description = ApiParams.API_CLASS_CATALOG_OPS)
 @Controller("site")
 public class SiteApi {
 
@@ -423,9 +425,9 @@ public class SiteApi {
     @ApiOperation(
         value = "Is in read-only mode?",
         notes = "",
-        nickname = "/info/isReadOnly")
+        nickname = "isReadOnly")
     @RequestMapping(
-        path = "/readonly",
+        path = "/info/readonly",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
@@ -439,7 +441,7 @@ public class SiteApi {
     @ApiOperation(
         value = "Is indexing?",
         notes = "",
-        nickname = "/info/isIndexing")
+        nickname = "isIndexing")
     @RequestMapping(
         path = "/indexing",
         produces = MediaType.APPLICATION_JSON_VALUE,
