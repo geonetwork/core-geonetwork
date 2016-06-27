@@ -65,6 +65,7 @@
   goog.require('gn_search_form_controller');
   goog.require('gn_search_manager');
   goog.require('gn_utility');
+  goog.require('gn_cors_interceptor');
 
   /**
    * GnModule just manage angular injection with
@@ -88,7 +89,8 @@
     'gn_search_form_controller',
     'gn_needhelp',
     'gn_alert',
-    'gn_admin_menu'
+    'gn_admin_menu', 
+    'gn_cors_interceptor'
   ]);
 
 })();
