@@ -964,7 +964,6 @@
   <xsl:template name="translateInspireThemeToEnglish">
     <xsl:param name="keyword"/>
     <xsl:param name="inspireThemes"/>
-
     <xsl:value-of select="$inspireThemes/skos:prefLabel[@xml:lang='en' and ../skos:prefLabel = $keyword]/text()"/>
   </xsl:template>
 

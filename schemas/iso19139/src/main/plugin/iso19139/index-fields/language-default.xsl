@@ -138,7 +138,7 @@
             it is nested in a SV_ServiceIdentification class -->
 
         <xsl:for-each select="gmd:identificationInfo/*">
-        
+
 
 
             <xsl:for-each select="gmd:citation/gmd:CI_Citation">
@@ -191,7 +191,7 @@
                 <Field name="abstract" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-            
+
             <xsl:for-each select="*/gmd:EX_Extent">
                 <xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="latLon"/>
 
@@ -535,6 +535,10 @@
             <Field name="parentUuid" string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
         <Field name="isChild" string="{exists(gmd:parentIdentifier)}" store="true" index="true"/>
+
+        <xsl:for-each select="gmd:metadataStandardName/gco:CharacterString">
+          <Field name="standardName" string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- === Reference system info === -->
