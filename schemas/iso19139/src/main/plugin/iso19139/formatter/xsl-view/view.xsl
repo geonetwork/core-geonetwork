@@ -157,9 +157,11 @@
                 match="*[gmd:CI_ResponsibleParty]"
                 priority="100">
     <xsl:variable name="email">
-      <xsl:apply-templates mode="render-value"
-                           select="*/gmd:contactInfo/
-                                      */gmd:address/*/gmd:electronicMailAddress"/>
+      <xsl:for-each select="*/gmd:contactInfo/
+                                      */gmd:address/*/gmd:electronicMailAddress">
+        <xsl:apply-templates mode="render-value"
+                             select="."/><xsl:if test="position() != last()">, </xsl:if>
+      </xsl:for-each>
     </xsl:variable>
 
     <!-- Display name is <org name> - <individual name> (<position name> -->

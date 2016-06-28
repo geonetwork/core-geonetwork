@@ -298,7 +298,7 @@
     "yearAndMonthMode": "Year and month",
     "yearMode": "Year only",
     "uploadFileByUrl": "Upload a file from URL",
-    "noFileSelected": "No file selected.",
+    "noFileSelected": "Choose a file to load!",
     "yourMetadata": "Your metadata",
     "searchKeyword": "Search ...",
     "searchOrTypeKeyword": "Type or search ...",
