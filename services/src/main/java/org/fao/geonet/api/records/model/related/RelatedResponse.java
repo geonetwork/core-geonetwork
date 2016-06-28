@@ -480,7 +480,6 @@ public class RelatedResponse {
     @XmlType(name = "", propOrder = {
         "item"
     })
-    @JsonIgnoreType
     public static class Children implements IListOnlyClassToArray {
 
         protected List<RelatedMetadataItem> item;
