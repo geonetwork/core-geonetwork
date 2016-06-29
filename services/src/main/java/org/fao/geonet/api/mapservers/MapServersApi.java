@@ -23,9 +23,7 @@
 
 package org.fao.geonet.api.mapservers;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -72,11 +70,23 @@ import static org.fao.geonet.api.mapservers.MapServersUtils.*;
 public class MapServersApi {
 
     public static final String API_PARAM_MAPSERVER_IDENTIFIER = "Mapserver identifier";
+    public static final String API_PARAM_MAPSERVER_DETAILS = "Mapserver details";
+    public static final String MSG_MAPSERVER_WITH_ID_NOT_FOUND = "Mapserver with id '%d' not found.";
     @Autowired
     LanguageUtils languageUtils;
 
-    @ApiOperation(value = "Get mapservers",
-        nickname = "getMapservers")
+    @ApiOperation(
+        value = "Get mapservers",
+        notes = "Mapservers are used by the catalog to publish record attachements " +
+            "(eg. ZIP file with shape) or record associated resources (eg. " +
+            "database table, file on the local network) in a remote mapserver like " +
+            "GeoServer or MapServer. The catalog communicate with the mapserver using " +
+            "GeoServer REST API.",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "getMapservers"
+    )
     @RequestMapping(
         method = RequestMethod.GET,
         produces = {
@@ -86,6 +96,9 @@ public class MapServersApi {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
     List<AnonymousMapserver> getMapservers() throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
 
@@ -96,8 +109,13 @@ public class MapServersApi {
         return list;
     }
 
-    @ApiOperation(value = "Get mapserver ",
-        nickname = "getMapserver")
+    @ApiOperation(
+        value = "Get a mapserver",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "getMapserver"
+    )
     @RequestMapping(value = "/{mapserverId}",
         method = RequestMethod.GET,
         produces = {
@@ -105,6 +123,10 @@ public class MapServersApi {
         })
     @ResponseBody
     @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND) ,
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
     public AnonymousMapserver getMapserver(
         @ApiParam(value = API_PARAM_MAPSERVER_IDENTIFIER,
             required = true,
@@ -115,22 +137,43 @@ public class MapServersApi {
         MapServer mapserver =
             applicationContext.getBean(MapServerRepository.class)
                 .findOneById(mapserverId);
-        return new AnonymousMapserver(mapserver);
+        if (mapserver == null) {
+            throw new ResourceNotFoundException(String.format(
+                MSG_MAPSERVER_WITH_ID_NOT_FOUND,
+                mapserverId
+            ));
+        } else {
+            return new AnonymousMapserver(mapserver);
+        }
     }
 
 
-    @ApiOperation(value = "Add a mapserver",
-        nickname = "addMapserver")
+    @ApiOperation(
+        value = "Add a mapserver",
+        notes = "Return the id of the newly created mapserver.",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "addMapserver"
+    )
     @RequestMapping(
         method = RequestMethod.PUT,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @ResponseBody
     @PreAuthorize("hasRole('Reviewer')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Mapserver created."),
+        @ApiResponse(code = 404, message = "Bad parameters.") ,
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+    })
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
     public ResponseEntity<Integer> addMapserver(
-        @ApiParam(value = "Mapserver details",
-            required = true)
+        @ApiParam(
+            value = API_PARAM_MAPSERVER_DETAILS,
+            required = true
+        )
         @RequestBody
             MapServer mapserver
     ) throws Exception {
@@ -140,30 +183,44 @@ public class MapServersApi {
 
         MapServer existingMapserver = repo.findOneById(mapserver.getId());
         if (existingMapserver != null) {
-
+            throw new IllegalArgumentException(String.format(
+                "Mapserver with id '%d' already exists.",
+                mapserver.getId()
+            ));
         } else {
-            MapServer m = repo.save(mapserver);
+            repo.save(mapserver);
         }
         return new ResponseEntity<>(mapserver.getId(), HttpStatus.CREATED);
     }
 
 
-    @ApiOperation(value = "Update a mapserver",
-        nickname = "updateMapserver")
+    @ApiOperation(
+        value = "Update a mapserver",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "updateMapserver"
+    )
     @RequestMapping(
         value = "/{mapserverId}",
         method = RequestMethod.PUT,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @ResponseBody
     @PreAuthorize("hasRole('Reviewer')")
-    public ResponseEntity<Integer> updateMapserver(
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Mapserver updated."),
+        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND) ,
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public void updateMapserver(
         @ApiParam(value = API_PARAM_MAPSERVER_IDENTIFIER,
             required = true,
             example = "")
         @PathVariable Integer mapserverId,
-        @ApiParam(value = "Mapserver details",
+        @ApiParam(value = API_PARAM_MAPSERVER_DETAILS,
             required = true)
         @RequestBody
             MapServer mapserver
@@ -177,15 +234,20 @@ public class MapServersApi {
             updateMapserver(mapserverId, mapserver, repo);
         } else {
             throw new ResourceNotFoundException(String.format(
-                "Mapserver with id '%d' does not exist.",
+                MSG_MAPSERVER_WITH_ID_NOT_FOUND,
                 mapserverId
             ));
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
-    @ApiOperation(value = "Update a mapserver authentication",
+    @ApiOperation(
+        value = "Update a mapserver authentication",
+        notes = "The remote mapserver REST API may require basic authentication. " +
+            "This operation set the username and password.",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "updateMapserverAuth")
     @RequestMapping(
         value = "/{mapserverId}/auth",
@@ -193,9 +255,14 @@ public class MapServersApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @ResponseBody
     @PreAuthorize("hasRole('Reviewer')")
-    public ResponseEntity updateMapserver(
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Mapserver updated."),
+        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND) ,
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateMapserver(
         @ApiParam(
             value = API_PARAM_MAPSERVER_IDENTIFIER,
             required = true,
@@ -224,11 +291,10 @@ public class MapServersApi {
             });
         } else {
             throw new ResourceNotFoundException(String.format(
-                "Mapserver with id '%d' does not exist.",
+                MSG_MAPSERVER_WITH_ID_NOT_FOUND,
                 mapserverId
             ));
         }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 
@@ -251,7 +317,11 @@ public class MapServersApi {
     }
 
 
-    @ApiOperation(value = "Delete a mapserver",
+    @ApiOperation(
+        value = "Remove a mapserver",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "deleteMapserver")
     @RequestMapping(
         value = "/{mapserverId}",
@@ -259,11 +329,17 @@ public class MapServersApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @ResponseBody
-    public ResponseEntity deleteMapserver(
+    @PreAuthorize("hasRole('Reviewer')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Mapserver removed."),
+        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND) ,
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMapserver(
         @ApiParam(value = API_PARAM_MAPSERVER_IDENTIFIER,
-            required = true,
-            example = "")
+            required = true
+        )
         @PathVariable Integer mapserverId
     ) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -272,13 +348,22 @@ public class MapServersApi {
         MapServer m = repo.findOneById(mapserverId);
         if (m != null) {
             repo.delete(m);
+        } else {
+            throw new ResourceNotFoundException(String.format(
+                MSG_MAPSERVER_WITH_ID_NOT_FOUND,
+                mapserverId
+            ));
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
-    @ApiOperation(value = "Check metadata resource is published ",
-        nickname = "getMapserverResource")
+    @ApiOperation(
+        value = "Check metadata mapserver resource is published ",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "getMapserverResource"
+    )
     @RequestMapping(value = "/{mapserverId}/records/{metadataUuid}",
         method = RequestMethod.GET,
         produces = {
@@ -287,6 +372,9 @@ public class MapServersApi {
         })
     @ResponseBody
     @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
     public String getMapserverResource(
         @ApiParam(value = API_PARAM_MAPSERVER_IDENTIFIER,
             required = true,
@@ -325,16 +413,24 @@ public class MapServersApi {
     }
 
 
-    @ApiOperation(value = "Publish a metadata resource",
-        nickname = "publishMapserverResource")
+    @ApiOperation(
+        value = "Publish a metadata resource in a mapserver",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "publishMapserverResource"
+    )
     @RequestMapping(value = "/{mapserverId}/records/{metadataUuid}",
         method = RequestMethod.PUT,
         produces = {
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE
         })
-    @ResponseBody
     @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
+    @ResponseBody
     public String publishMapserverResource(
         @ApiParam(value = API_PARAM_MAPSERVER_IDENTIFIER,
             required = true,
@@ -373,15 +469,23 @@ public class MapServersApi {
     }
 
 
-    @ApiOperation(value = "Delete a metadata resource",
+    @ApiOperation(
+        value = "Remove a metadata mapserver resource",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "deleteMapserverResource")
-    @RequestMapping(value = "/{mapserverId}/records/{metadataUuid}",
+    @RequestMapping(
+        value = "/{mapserverId}/records/{metadataUuid}",
         method = RequestMethod.DELETE,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @ResponseBody
     @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
+    @ResponseBody
     public String deleteMapserverResource(
         @ApiParam(value = API_PARAM_MAPSERVER_IDENTIFIER,
             required = true,
@@ -486,5 +590,4 @@ public class MapServersApi {
             }
         }
     }
-
 }

@@ -23,18 +23,19 @@
 
 package org.fao.geonet.api.records.formatters;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.records.formatters.cache.FormatterCache;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import jeeves.services.ReadWriteController;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RequestMapping(value = {
     "/api/formatters",
@@ -49,15 +50,28 @@ import jeeves.services.ReadWriteController;
 public class CacheApi {
 
 
-    @ApiOperation(value = "Clear formatter cache",
-        nickname = "clearCache")
+    @ApiOperation(
+        value = "Clear formatter cache",
+        notes = "Formatters are used to render records in various format (HTML, PDF, ...). " +
+            "When a record is rendered a cache is populated for better performance. " +
+            "By default the cache is an H2 database with files on the filesystems " +
+            "(See <dataDirectory>/resources/htmlcache/formatter-cache folder).",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "clearFormatterCache")
     @RequestMapping(
         value = "/cache",
         method = RequestMethod.DELETE
     )
-    public ResponseEntity clear() throws Exception {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('Administrator')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Cache cleared."),
+        @ApiResponse(code = 403, message = "Operation not allowed. Only Administrator can access it.")
+    })
+    public void clearFormatterCache() throws Exception {
         FormatterCache formatterCache = ApplicationContextHolder.get().getBean(FormatterCache.class);
         formatterCache.clear();
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

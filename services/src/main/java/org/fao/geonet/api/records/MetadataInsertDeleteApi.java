@@ -26,10 +26,12 @@ package org.fao.geonet.api.records;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import io.swagger.annotations.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
@@ -63,12 +65,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -88,9 +85,6 @@ import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
@@ -135,9 +129,12 @@ public class MetadataInsertDeleteApi {
     @RequestMapping(value = "/{metadataUuid}",
         method = RequestMethod.DELETE
     )
-    public
-    @ResponseBody
-    ResponseEntity deleteRecord(
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Record deleted."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRecord(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -167,8 +164,6 @@ public class MetadataInsertDeleteApi {
                 String.valueOf(metadata.getId())));
 
         dataManager.deleteMetadata(context, metadataUuid);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation(
@@ -179,9 +174,14 @@ public class MetadataInsertDeleteApi {
     @RequestMapping(
         method = RequestMethod.DELETE
     )
-    public
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Report about deleted records."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    ResponseEntity<SimpleMetadataProcessingReport> deleteRecords(
+    public SimpleMetadataProcessingReport deleteRecords(
         @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
@@ -229,7 +229,7 @@ public class MetadataInsertDeleteApi {
                 report.addMetadataId(metadata.getId());
             }
         }
-        return new ResponseEntity<>(report, HttpStatus.NO_CONTENT);
+        return report;
     }
 
 
@@ -254,9 +254,14 @@ public class MetadataInsertDeleteApi {
             MediaType.APPLICATION_FORM_URLENCODED_VALUE
         }
     )
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Report about imported records."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.CREATED)
     public
-    @ResponseBody
-    ResponseEntity<SimpleMetadataProcessingReport> insert(
+    @ResponseBody SimpleMetadataProcessingReport insert(
         @ApiParam(
             value = API_PARAM_RECORD_TYPE,
             required = false,
@@ -469,7 +474,7 @@ public class MetadataInsertDeleteApi {
             }
         }
         report.close();
-        return new ResponseEntity<>(report, HttpStatus.CREATED);
+        return report;
     }
 
 
@@ -494,9 +499,15 @@ public class MetadataInsertDeleteApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Return the internal id of the newly created record."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
-    ResponseEntity<String> create(
+    String create(
         @ApiParam(
             value = API_PARAM_RECORD_TYPE,
             required = false,
@@ -639,7 +650,7 @@ public class MetadataInsertDeleteApi {
                     e.getMessage(), newId));
         }
 
-        return new ResponseEntity<>(newId, HttpStatus.CREATED);
+        return newId;
     }
 
 

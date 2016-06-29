@@ -23,8 +23,10 @@
 
 package org.fao.geonet.api.site;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -55,10 +57,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 /**
  *
@@ -91,8 +89,16 @@ public class LogosApi {
     };
 
     @ApiOperation(
-        value = "Get logos",
-        notes = "Logos are used for groups and harvester icons",
+        value = "Get all logos",
+        notes = "Logos are used for the catalog, the groups logos, and harvester icons. " +
+            "Logos are stored in the data directory in " +
+            "<dataDirectory>/resources/images/harvesting.<br/> " +
+            "Records are attached to a source. A source can be the local catalog " +
+            "or a harvester node. When a source is created, its logo is located " +
+            "in the images/logos folder with the source UUID as filename. For some " +
+            "sources the logo can be automatically retrieved (eg. when harvesting GeoNetwork " +
+            "catalogs). For others, the logo is usually manually defined when configuring the " +
+            "harvester.",
         nickname = "getLogos")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -102,7 +108,6 @@ public class LogosApi {
     public Set<String> get(
         HttpServletRequest request
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
         Set<Path> icons = Resources.listFiles(
             ApiUtils.createServiceContext(request),
             "harvesting",
@@ -119,12 +124,19 @@ public class LogosApi {
     @ApiOperation(
         value = "Add a logo",
         notes = "",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "addLogo")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST)
     @PreAuthorize("hasRole('UserAdmin')")
-    @ResponseStatus(value = HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Logo added.") ,
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
+    @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity addLogo(
         @ApiParam(value = "The logo image to upload")
@@ -190,15 +202,23 @@ public class LogosApi {
     @ApiOperation(
         value = "Remove a logo",
         notes = "",
-        nickname = "removeLogo")
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "deleteLogo")
     @RequestMapping(
         path = "/{file:.+}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('UserAdmin')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Logo removed.") ,
+        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND) ,
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
     @ResponseBody
-    public ResponseEntity removeLogo(
+    public void deleteLogo(
         @ApiParam(value = "The logo filename to delete")
         @PathVariable
             String file
@@ -216,6 +236,5 @@ public class LogosApi {
             throw new ResourceNotFoundException(String.format(
                 "No logo found with filename '%s'.", file));
         }
-        return new ResponseEntity(HttpStatus.CREATED);
     }
 }

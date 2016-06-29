@@ -65,7 +65,7 @@
        */
       function loadCSWVirtual() {
         $scope.virtualCSWSelected = {};
-        $http.get('../api/csw/virtual').
+        $http.get('../api/csw/virtuals').
             success(function(data) {
               $scope.cswVirtual = data;
             });
@@ -87,7 +87,7 @@
 
       $scope.selectVirtualCSW = function(v) {
         operation = 'updateservice';
-        $http.get('../api/csw/virtual/' + v.id)
+        $http.get('../api/csw/virtuals/' + v.id)
             .success(function(data) {
               var params = [], formParams = ['abstract', 'title',
                 '_source', '_cat', 'any', '_groupPublished', 'keyword',
@@ -148,7 +148,7 @@
       };
       $scope.saveVirtualCSW = function() {
 
-        $http.put('../api/csw/virtual' + (
+        $http.put('../api/csw/virtuals' + (
             $scope.virtualCSWSelected.id !== '' ?
             '/' + $scope.virtualCSWSelected.id : ''
             ), $scope.virtualCSWSelected)
@@ -176,7 +176,7 @@
       };
 
       $scope.deleteVirtualCSW = function() {
-        $http.delete('../api/csw/virtual/' +
+        $http.delete('../api/csw/virtuals/' +
             $scope.virtualCSWSelected.id)
             .success(function(data) {
               loadCSWVirtual();

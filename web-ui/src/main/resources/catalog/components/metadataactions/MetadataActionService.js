@@ -161,7 +161,7 @@
           });
         }
         else {
-          return gnHttp.callService('../api/processes/validate', null,
+          return gnHttp.callService('../api/records/validate', null,
                                     {
                                       method: 'PUT'
                                     }).then(function(data) {

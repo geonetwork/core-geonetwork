@@ -23,9 +23,7 @@
 
 package org.fao.geonet.api.csw;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import jeeves.server.JeevesEngine;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -36,32 +34,42 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequestMapping(value = {
-    "/api/csw/virtual",
+    "/api/csw/virtuals",
     "/api/" + API.VERSION_0_1 +
-        "/csw/virtual"
+        "/csw/virtuals"
 })
 @Api(value = "csw",
     tags = "csw",
-    description = "CSW operations")
+    description = "Virtual CSW operations")
 @Controller("cswVirtual")
 public class VirtualCswApi {
 
+    public static final String API_PARAM_CSW_SERVICE_IDENTIFIER = "Service identifier";
+    public static final String API_PARAM_CSW_SERVICE_DETAILS = "Service details";
+
     @ApiOperation(
         value = "Get virtual CSW services",
-        notes = "",
-        nickname = "getVirtualCsws")
+        notes = "Virtual CSWs are created to easily setup services " +
+            "providing access to records without the need to define filters. For example, " +
+            "in Europe, local, regional and national organizations define entry point " +
+            "for records in the scope of the INSPIRE directive. Those services can then be " +
+            "easily harvested to exchange information. " +
+            "Virtual CSWs do not support transaction. For this use the main " +
+            "catalog CSW service.",
+        nickname = "getAllVirtualCsw")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public List<Service> getVirtualCsw() throws Exception {
+    public List<Service> getAllVirtualCsw() throws Exception {
         ServiceRepository serviceRepository =
             ApplicationContextHolder.get().getBean(ServiceRepository.class);
         return serviceRepository.findAll();
@@ -76,10 +84,13 @@ public class VirtualCswApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 404, message = "Resource not found.")
+    })
     @ResponseBody
     public Service getVirtualCsw(
         @ApiParam(
-            name = "Service identifier",
+            value = API_PARAM_CSW_SERVICE_IDENTIFIER,
             required = true
         )
         @PathVariable
@@ -87,22 +98,41 @@ public class VirtualCswApi {
     ) throws Exception {
         ServiceRepository serviceRepository =
             ApplicationContextHolder.get().getBean(ServiceRepository.class);
-        return serviceRepository.findOne(identifier);
+        Service service = serviceRepository.findOne(identifier);
+        if (service == null) {
+            throw new ResourceNotFoundException(String.format(
+                "Virtual CSW with id '%d' does not exist.",
+                identifier
+            ));
+        } else {
+            return service;
+        }
     }
 
 
     @ApiOperation(
         value = "Add a virtual CSW",
-        notes = "",
+        notes = "The service name MUST be unique. " +
+            "An exception is returned if not the case.",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "addVirtualCsw")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.PUT)
-    @ResponseStatus(value = HttpStatus.OK)
+        method = RequestMethod.PUT
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('Administrator')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Return the identifier of the newly created service"),
+        @ApiResponse(code = 404, message = "A service already exist with this name") ,
+        @ApiResponse(code = 403, message = "Operation not allowed. Only Administrator can access it.")
+    })
     @ResponseBody
-    public ResponseEntity addVirtualCsw(
+    public ResponseEntity<Integer> addVirtualCsw(
         @ApiParam(
-            name = "Service details",
+            value = API_PARAM_CSW_SERVICE_DETAILS,
             required = true
         )
         @RequestBody
@@ -121,26 +151,38 @@ public class VirtualCswApi {
         serviceRepository.save(service);
         applicationContext.getBean(JeevesEngine.class)
             .loadConfigDB(applicationContext, service.getId());
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity<>(service.getId(), HttpStatus.CREATED);
     }
 
     @ApiOperation(
         value = "Update a virtual CSW",
         notes = "",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "updateVirtualCsw")
     @RequestMapping(
         path = "/{identifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
-    @ResponseStatus(value = HttpStatus.OK)
-    @ResponseBody
-    public ResponseEntity updateVirtualCsw(
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('Administrator')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Service updated.") ,
+        @ApiResponse(code = 404, message = "Resource not found.") ,
+        @ApiResponse(code = 403, message = "Operation not allowed. Only Administrator can access it.")
+    })
+    public void updateVirtualCsw(
         @ApiParam(
-            name = "Service identifier",
+            value = API_PARAM_CSW_SERVICE_IDENTIFIER,
             required = true
         )
         @PathVariable
             int identifier,
+        @ApiParam(
+            value = API_PARAM_CSW_SERVICE_DETAILS,
+            required = true
+        )
         @RequestBody
             Service service
     ) throws Exception {
@@ -159,23 +201,29 @@ public class VirtualCswApi {
         }
         applicationContext.getBean(JeevesEngine.class)
             .loadConfigDB(applicationContext, identifier);
-
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation(
         value = "Remove a virtual CSW",
-        notes = "",
+        notes = "After removal, all virtual CSW configuration is reloaded.",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "deleteVirtualCsw")
     @RequestMapping(
         path = "/{identifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
-    @ResponseStatus(value = HttpStatus.OK)
-    @ResponseBody
-    public ResponseEntity deleteVirtualCsw(
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('Administrator')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Service removed.") ,
+        @ApiResponse(code = 404, message = "Resource not found.") ,
+        @ApiResponse(code = 403, message = "Operation not allowed. Only Administrator can access it.")
+    })
+    public void deleteVirtualCsw(
         @ApiParam(
-            name = "Service identifier",
+            value = API_PARAM_CSW_SERVICE_IDENTIFIER,
             required = true
         )
         @PathVariable
@@ -184,10 +232,17 @@ public class VirtualCswApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceRepository serviceRepository =
             applicationContext.getBean(ServiceRepository.class);
-        serviceRepository.delete(identifier);
+        Service existing = serviceRepository.findOne(identifier);
+        if (existing != null) {
+            serviceRepository.delete(identifier);
 
-        applicationContext.getBean(JeevesEngine.class)
-            .loadConfigDB(applicationContext, Integer.valueOf(identifier));
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+            applicationContext.getBean(JeevesEngine.class)
+                .loadConfigDB(applicationContext, Integer.valueOf(identifier));
+        } else {
+            throw new ResourceNotFoundException(String.format(
+                "Virtual CSW with id '%d' does not exist.",
+                identifier
+            ));
+        }
     }
 }

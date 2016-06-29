@@ -53,7 +53,7 @@
           $scope.cswTests = data;
         });
 
-        $http.get('../api/csw/virtual').
+        $http.get('../api/csw/virtuals').
             success(function(data) {
               $scope.cswVirtual = data;
             });

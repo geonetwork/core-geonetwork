@@ -208,7 +208,7 @@ public class TagsApi {
 
 
     @ApiOperation(
-        value = "Delete a tag",
+        value = "Remove a tag",
         notes = "",
         nickname = "deleteTag")
     @RequestMapping(
@@ -231,7 +231,7 @@ public class TagsApi {
         MetadataCategory category = categoryRepository.findOne(tagIdentifier);
         if (category != null) {
             if (category.getRecords().size() > 0) {
-                throw new RuntimeException(String.format(
+                throw new IllegalArgumentException(String.format(
                     "Tag '%s' is assigned to %d records. Update records first in order to remove that tag.",
                     category.getName(), // TODO: Return in user language
                     category.getRecords().size()

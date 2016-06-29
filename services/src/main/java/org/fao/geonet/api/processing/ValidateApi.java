@@ -23,8 +23,10 @@
 
 package org.fao.geonet.api.processing;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
@@ -56,23 +58,23 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
 @RequestMapping(value = {
-    "/api/processes",
+    "/api/records",
     "/api/" + API.VERSION_0_1 +
-        "/processes"
+        "/records"
 })
-@Api(value = "processes",
-    tags = "processes",
-    description = "Processing operations")
+@Api(
+    value = API_CLASS_RECORD_TAG,
+    tags = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
 @Controller("processValidate")
 public class ValidateApi {
 
@@ -80,9 +82,9 @@ public class ValidateApi {
     IProcessingReportRegistry registry;
 
 
-    @ApiOperation(value = "Validate records",
+    @ApiOperation(value = "Validate one or more records",
         nickname = "validateRecords",
-        notes = "")
+        notes = "Update validation status for all records.")
     @RequestMapping(
         value = "/validate",
         method = RequestMethod.PUT,
@@ -90,10 +92,14 @@ public class ValidateApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
-    @ResponseBody
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Records validated."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("isAuthenticated()")
-    public SimpleMetadataProcessingReport searchAndReplace(
+    @ResponseBody
+    public SimpleMetadataProcessingReport validateRecords(
         @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")

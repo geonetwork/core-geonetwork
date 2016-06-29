@@ -55,7 +55,10 @@ public class OperationsApi {
 
     @ApiOperation(
         value = "Get operations",
-        notes = "",
+        notes = "Return the list of operations. Operations are used to define authorization per group. " +
+            "Extending the list of default operations (ie. view, dynamic, download, editing, notify, featured) " +
+            "might be feasible but is experimental.<br/> " +
+            "Featured is not really used anymore (was used in past version for home page highlights).",
         nickname = "getOperations")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,

@@ -23,11 +23,14 @@
 
 package org.fao.geonet.api.users;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.users.model.MeResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,10 +39,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpSession;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import springfox.documentation.annotations.ApiIgnore;
+
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RequestMapping(value = {
     "/api/me",
@@ -54,26 +58,36 @@ public class MeApi {
 
     @ApiOperation(
         value = "Get information about me",
-        notes = "",
+        notes = "If not authenticated, return status 204 (NO_CONTENT), " +
+            "else return basic user information. This operation is usually used to " +
+            "know if current user is authenticated or not.",
         nickname = "getMe")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Authenticated. Return user details."),
+        @ApiResponse(code = 204, message = "Not authenticated.")
+    })
     @ResponseBody
-    public MeResponse getMe(
+    public ResponseEntity<MeResponse> getMe(
+        @ApiIgnore
+        @ApiParam(
+            hidden = true
+        )
         HttpSession session
     ) throws Exception {
         UserSession userSession = ApiUtils.getUserSession(session);
         return userSession.isAuthenticated() ?
-            new MeResponse()
+            new ResponseEntity<>(new MeResponse()
                 .setId(userSession.getUserId())
                 .setProfile(userSession.getProfile().name())
                 .setUsername(userSession.getUsername())
                 .setName(userSession.getName())
                 .setSurname(userSession.getSurname())
                 .setEmail(userSession.getEmailAddr())
-                .setOrganisation(userSession.getOrganisation()) :
-            null;
+                .setOrganisation(userSession.getOrganisation()),
+                    HttpStatus.OK) :
+            new ResponseEntity<>(NO_CONTENT);
     }
 }

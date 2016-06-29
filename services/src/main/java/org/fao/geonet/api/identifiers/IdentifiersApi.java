@@ -23,11 +23,10 @@
 
 package org.fao.geonet.api.identifiers;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.MetadataIdentifierTemplate;
 import org.fao.geonet.repository.MetadataIdentifierTemplateRepository;
 import org.fao.geonet.repository.Updater;
@@ -57,15 +56,27 @@ public class IdentifiersApi {
 
     public static final String API_PARAM_IDENTIFIER_TEMPLATE_NAME = "Identifier template name";
     private static final String API_PARAM_IDENTIFIER_TEMPLATE = "Identifier template";
+    private static final String API_PARAM_IDENTIFIER = "Identifier template identifier";
+    public static final String MSG_NO_METADATA_IDENTIFIER_FOUND_WITH_ID = "No metadata identifier found with id '%d'.";
 
     @ApiOperation(
         value = "Get identifier templates",
-        notes = "",
+        notes = "Identifier templates are used to create record UUIDs " +
+            "havind a particular structure. The template will be used " +
+            "when user creates a new record. The template identifier to " +
+            "use is defined in the administration > settings.",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "getIdentifiers")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of identifier templates.") ,
+        @ApiResponse(code = 403, message = "Operation not allowed. Only Editor can access it.")
+    })
     @ResponseBody
     public List<MetadataIdentifierTemplate> getIdentifiers(
         @ApiParam(
@@ -94,13 +105,21 @@ public class IdentifiersApi {
     @ApiOperation(
         value = "Add an identifier template",
         notes = "",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "addIdentifier")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT
     )
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Identifier template created.") ,
+        @ApiResponse(code = 403, message = "Operation not allowed. Only Editor can access it.")
+    })
     @ResponseBody
-    public ResponseEntity<Integer> addIdentifier(
+    public Integer addIdentifier(
         @ApiParam(
             value = API_PARAM_IDENTIFIER_TEMPLATE_NAME,
             required = false
@@ -131,21 +150,32 @@ public class IdentifiersApi {
         metadataIdentifierTemplate =
             metadataIdentifierTemplateRepository.save(metadataIdentifierTemplate);
 
-        return new ResponseEntity<Integer>(
-            metadataIdentifierTemplate.getId(), HttpStatus.CREATED);
+        return metadataIdentifierTemplate.getId();
     }
 
     @ApiOperation(
         value = "Update an identifier template",
         notes = "",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "updateIdentifier")
     @RequestMapping(
         path = "/{identifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT
     )
-    @ResponseBody
-    public ResponseEntity updateIdentifier(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Identifier template updated.") ,
+        @ApiResponse(code = 404, message = "Resource not found.") ,
+        @ApiResponse(code = 403, message = "Operation not allowed. Only Editor can access it.")
+    })
+    public void updateIdentifier(
+        @ApiParam(
+            value = API_PARAM_IDENTIFIER,
+            required = true
+        )
         @PathVariable
             int identifier,
         @ApiParam(
@@ -171,27 +201,50 @@ public class IdentifiersApi {
         MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository =
             appContext.getBean(MetadataIdentifierTemplateRepository.class);
 
-        metadataIdentifierTemplateRepository.update(identifier,
-            new Updater<MetadataIdentifierTemplate>() {
-                @Override
-                public void apply(@Nonnull MetadataIdentifierTemplate entity) {
-                    entity.setName(name);
-                    entity.setTemplate(template);
-                }
-            });
-        return new ResponseEntity<Integer>(HttpStatus.NO_CONTENT);
+        MetadataIdentifierTemplate existing =
+            metadataIdentifierTemplateRepository.findOne(identifier);
+        if (existing != null) {
+            throw new ResourceNotFoundException(String.format(
+                MSG_NO_METADATA_IDENTIFIER_FOUND_WITH_ID,
+                identifier
+            ));
+        } else {
+            metadataIdentifierTemplateRepository.update(identifier,
+                new Updater<MetadataIdentifierTemplate>() {
+                    @Override
+                    public void apply(@Nonnull MetadataIdentifierTemplate entity) {
+                        entity.setName(name);
+                        entity.setTemplate(template);
+                    }
+                });
+        }
     }
+
+
+
     @ApiOperation(
         value = "Remove an identifier template",
         notes = "",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "deleteIdentifier")
     @RequestMapping(
         path = "/{identifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE
     )
-    @ResponseBody
-    public ResponseEntity deleteIdentifier(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Template identifier removed.") ,
+        @ApiResponse(code = 404, message = "Resource not found.") ,
+        @ApiResponse(code = 403, message = "Operation not allowed. Only Editor can access it.")
+    })
+    public void deleteIdentifier(
+        @ApiParam(
+            value = API_PARAM_IDENTIFIER,
+            required = true
+        )
         @PathVariable
             int identifier
     ) throws Exception {
@@ -199,8 +252,15 @@ public class IdentifiersApi {
         MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository =
             appContext.getBean(MetadataIdentifierTemplateRepository.class);
 
-        metadataIdentifierTemplateRepository.delete(identifier);
-
-        return new ResponseEntity<Integer>(HttpStatus.NO_CONTENT);
+        MetadataIdentifierTemplate existing =
+            metadataIdentifierTemplateRepository.findOne(identifier);
+        if (existing != null) {
+            throw new ResourceNotFoundException(String.format(
+                MSG_NO_METADATA_IDENTIFIER_FOUND_WITH_ID,
+                identifier
+            ));
+        } else {
+            metadataIdentifierTemplateRepository.delete(identifier);
+        }
     }
 }

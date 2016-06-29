@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.processing;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -49,9 +50,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
@@ -99,8 +97,12 @@ public class XslProcessApi {
             MediaType.APPLICATION_JSON_VALUE
         })
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Report about processed records."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
     public XsltMetadataProcessingReport processRecords(
         @ApiParam(
             value = ApiParams.API_PARAM_PROCESS_ID

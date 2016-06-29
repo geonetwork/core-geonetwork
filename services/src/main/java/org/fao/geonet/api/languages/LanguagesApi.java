@@ -23,9 +23,12 @@
 
 package org.fao.geonet.api.languages;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
@@ -55,9 +58,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import springfox.documentation.annotations.ApiIgnore;
@@ -75,7 +75,9 @@ public class LanguagesApi {
 
     @ApiOperation(
         value = "Get languages",
-        notes = "Languages for the application (having translations in the database.",
+        notes = "Languages for the application having translations in the database. " +
+            "All tables with 'Desc' suffix contains translation for some domain objects " +
+            "like groups, tags, ...",
         nickname = "getLanguages")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -89,27 +91,34 @@ public class LanguagesApi {
 
     @ApiOperation(
         value = "Add a language",
-        notes = "Add all translations from all *Desc tables in the database.",
+        notes = "Add all default translations from all *Desc tables in the database. " +
+            "This operation will only add translations for a default catalog installation. " +
+            "Defaults can be customized in SQL scripts located in " +
+            "WEB-INF/classes/setup/sql/data/*.",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "addLanguage")
     @RequestMapping(
         value = "/{langCode}",
         method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('Administrator')")
-    @ResponseBody
-    public ResponseEntity addLanguages(
-        @ApiParam(value = "ISO 3 letter code",
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Language translations added.") ,
+        @ApiResponse(code = 404, message = "Resource not found. eg. No SQL file available for that langugae.") ,
+        @ApiResponse(code = 403, message = "Operation not allowed. Only Administrator can access it.")
+    })
+    public void addLanguages(
+        @ApiParam(value = ApiParams.API_PARAM_ISO_3_LETTER_CODE,
             required = true)
         @PathVariable
             String langCode,
         @ApiIgnore
-            HttpSession session,
-        @ApiIgnore
             HttpServletRequest request
-    ) throws ResourceNotFoundEx, IOException {
+    ) throws IOException, ResourceNotFoundException {
 
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceManager serviceManager = applicationContext.getBean(ServiceManager.class);
-
         LanguageRepository languageRepository = applicationContext.getBean(LanguageRepository.class);
         Language lang = languageRepository.findOne(langCode);
         if (lang == null) {
@@ -129,10 +138,10 @@ public class LanguagesApi {
                 if (data.size() > 0) {
                     ServiceContext context = ApiUtils.createServiceContext(request);
                     Lib.db.runSQL(context, data);
-                    return new ResponseEntity(HttpStatus.CREATED);
+                    return;
                 }
             }
-            throw new ResourceNotFoundEx(String.format(
+            throw new ResourceNotFoundException(String.format(
                 "Language data file '%s' not found in classes/setup/sql/data.", languageDataFile
             ));
         } else {
@@ -143,30 +152,40 @@ public class LanguagesApi {
     }
 
     @ApiOperation(
-        value = "Delete a language",
-        notes = "Delete all translations from all *Desc tables in the database.",
-        nickname = "addLanguage")
+        value = "Remove a language",
+        notes = "Delete all translations from all *Desc tables in the database. " +
+            "Warning: This will also remove all translations you may have done " +
+            "to those objects (eg. custom groups).",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "deleteLanguage")
     @RequestMapping(
         value = "/{langCode}",
         method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('Administrator')")
-    @ResponseBody
-    public ResponseEntity deleteLanguages(
-        @ApiParam(value = "ISO 3 letter code",
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Language translations removed.") ,
+        @ApiResponse(code = 404, message = "Resource not found.") ,
+        @ApiResponse(code = 403, message = "Operation not allowed. Only Administrator can access it.")
+    })
+    public void deleteLanguage(
+        @ApiParam(
+            value = ApiParams.API_PARAM_ISO_3_LETTER_CODE,
             required = true)
         @PathVariable
             String langCode,
-            HttpSession session,
             HttpServletRequest request
-    ) throws ResourceNotFoundEx, IOException {
-        // TODO: null context
-
+    ) throws IOException, ResourceNotFoundException {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
 
         LanguageRepository languageRepository = applicationContext.getBean(LanguageRepository.class);
         Language lang = languageRepository.findOne(langCode);
         if (lang == null) {
-            throw new ResourceNotFoundEx(String.format("Language '%s' not found.", langCode));
+            throw new ResourceNotFoundException(String.format(
+                "Language '%s' not found.", langCode
+            ));
         } else {
             GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
 
@@ -186,10 +205,10 @@ public class LanguagesApi {
                 if (data.size() > 0) {
                     ServiceContext context = ApiUtils.createServiceContext(request);
                     Lib.db.runSQL(context, data);
-                    return new ResponseEntity(HttpStatus.NO_CONTENT);
+                    return;
                 }
             }
-            throw new ResourceNotFoundEx(String.format(
+            throw new ResourceNotFoundException(String.format(
                 "Template file '%s' not found in classes/setup/sql/template.", LANGUAGE_DELETE_SQL
             ));
         }

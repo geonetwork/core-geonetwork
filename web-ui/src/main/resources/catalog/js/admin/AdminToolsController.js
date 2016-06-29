@@ -285,7 +285,7 @@
 
       function checkLastBatchProcessReport() {
         // Check if processing
-        return $http.get('../api/processes').
+        return $http.get('../api/processes/reports').
             success(function(data, status) {
               // TODO: Assume one process is running
               // Should use the process ID to register and retrieve a process

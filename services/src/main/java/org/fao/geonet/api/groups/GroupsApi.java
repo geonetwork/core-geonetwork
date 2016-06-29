@@ -25,12 +25,11 @@ package org.fao.geonet.api.groups;
 
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import jeeves.server.UserSession;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -68,16 +67,21 @@ import java.util.*;
 @Controller("groups")
 public class GroupsApi {
 
+    public static final String API_PARAM_GROUP_DETAILS = "Group details";
+    public static final String API_PARAM_GROUP_IDENTIFIER = "Group identifier";
+    public static final String MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND = "Group with identifier '%d' not found";
     @Autowired
     LanguageUtils languageUtils;
 
     @ApiOperation(
         value = "Get groups",
-        notes = "Return all catalog groups when not authenticated or " +
-            "administrator with or without reserved groups. " +
+        notes = "The catalog contains one or more groups. By default, there is 3 reserved groups " +
+            "(Internet, Intranet, Guest) and a sample group.<br/>" +
+            "This service returns all catalog groups when not authenticated or " +
+            "when current is user is an administrator. The list can contains or not " +
+            "reserved groups depending on the parameters.<br/>" +
             "When authenticated, return user groups " +
-            "optionnaly filtered on a specific" +
-            "user profile.",
+            "optionally filtered on a specific user profile.",
         nickname = "getGroups")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -86,7 +90,7 @@ public class GroupsApi {
     @ResponseBody
     public List<Group> getGroups(
         @ApiParam(
-            value = "Including Internet, Intranet, Guest groups"
+            value = "Including Internet, Intranet, Guest groups or not"
         )
         @RequestParam(
             required = false,
@@ -121,7 +125,10 @@ public class GroupsApi {
 
     @ApiOperation(
         value = "Add a group",
-        notes = "",
+        notes = "Return the identifier of the group created.",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "addGroup")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -129,10 +136,15 @@ public class GroupsApi {
     )
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('UserAdmin')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Group created.") ,
+        @ApiResponse(code = 404, message = "Group with that id already exist.") ,
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
     @ResponseBody
     public ResponseEntity<Integer> addGroup(
         @ApiParam(
-            value = "Group details"
+            value = API_PARAM_GROUP_DETAILS
         )
         @RequestBody
             Group group
@@ -163,27 +175,31 @@ public class GroupsApi {
 
     @ApiOperation(
         value = "Get group",
-        notes = "Return catalog group .",
+        notes = "Return the requested group details.",
         nickname = "getGroup")
     @RequestMapping(
         value = "/{groupIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
+    })
     @ResponseBody
     public Group getGroup(
         @ApiParam(
-            value = "Group identifier"
+            value = API_PARAM_GROUP_IDENTIFIER
         )
         @PathVariable
             Integer groupIdentifier
     ) throws Exception {
-        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
-
+        final GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
         final Group group = groupRepository.findOne(groupIdentifier);
 
         if (group == null) {
-            throw new ResourceNotFoundException(String.format("Group not found"));
+            throw new ResourceNotFoundException(String.format(
+                MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
+            ));
         }
         return group;
     }
@@ -192,6 +208,9 @@ public class GroupsApi {
     @ApiOperation(
         value = "Get group users",
         notes = "",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "getGroupUsers")
     @RequestMapping(
         value = "/{groupIdentifier}/users",
@@ -199,10 +218,15 @@ public class GroupsApi {
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('UserAdmin')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of users in that group.") ,
+        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND) ,
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
     @ResponseBody
     public List<User> getGroupUsers(
         @ApiParam(
-            value = "Group identifier"
+            value = API_PARAM_GROUP_IDENTIFIER
         )
         @PathVariable
             Integer groupIdentifier
@@ -212,7 +236,9 @@ public class GroupsApi {
         final Group group = groupRepository.findOne(groupIdentifier);
 
         if (group == null) {
-            throw new ResourceNotFoundException(String.format("Group not found"));
+            throw new ResourceNotFoundException(String.format(
+                MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
+            ));
         }
         UserRepository userRepository = applicationContext.getBean(UserRepository.class);
         return userRepository.findAllUsersInUserGroups(
@@ -223,23 +249,31 @@ public class GroupsApi {
     @ApiOperation(
         value = "Update a group",
         notes = "",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "updateGroup")
     @RequestMapping(
         value = "/{groupIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT
     )
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('UserAdmin')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Group updated.") ,
+        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND) ,
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
     @ResponseBody
-    public ResponseEntity updateGroup(
+    public void updateGroup(
         @ApiParam(
-            value = "Group identifier"
+            value = API_PARAM_GROUP_IDENTIFIER
         )
         @PathVariable
             Integer groupIdentifier,
         @ApiParam(
-            value = "Group details"
+            value = API_PARAM_GROUP_DETAILS
         )
         @RequestBody
             Group group
@@ -249,27 +283,34 @@ public class GroupsApi {
         final Group existing = groupRepository.findOne(groupIdentifier);
         if (existing == null) {
             throw new ResourceNotFoundException(String.format(
-                "No group found with id '%d'.",
-                groupIdentifier
+                MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         } else {
             groupRepository.save(group);
         }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 
     @ApiOperation(
-        value = "Delete a group",
-        notes = "Deletes a catalog group by identifier.",
+        value = "Remove a group",
+        notes = "Remove a group by first removing sharing settings, link to users and " +
+            "finally reindex all affected records.",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
         nickname = "deleteGroup")
     @RequestMapping(value = "/{groupIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
-    @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('UserAdmin') or hasRole('Administrator')")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('UserAdmin')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Group removed.") ,
+        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND) ,
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
     @ResponseBody
-    public ResponseEntity<String> deleteGroup(
+    public void deleteGroup(
         @ApiParam(
             value = "Group identifier."
         )
@@ -299,11 +340,9 @@ public class GroupsApi {
 
         } else {
             throw new ResourceNotFoundException(String.format(
-                "Group with id '%d' does not exist.",
-                groupIdentifier
+                MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     /**

@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.processing;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -50,9 +51,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -72,38 +70,51 @@ public class ProcessApi {
     @Autowired
     IProcessingReportRegistry registry;
 
-    @ApiOperation(value = "Get current process reports",
-        nickname = "getProcess")
+    @ApiOperation(
+        value = "Get current process reports",
+        notes = "When processing, the report is stored in memory and allows to retrieve " +
+            "progress repport during processing. Usually, process reports are returned by " +
+            "the synchronous processing operation.",
+        nickname = "getProcessReport")
     @RequestMapping(
+        path = "/reports",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    public
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of reports returned."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_AUTHENTICATED)
+    })
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
-    List<ProcessingReport> get() throws Exception {
+    public List<ProcessingReport> getProcessReport() throws Exception {
         return registry.get();
     }
 
-    @ApiOperation(value = "Clear process reports list",
+    @ApiOperation(
+        value = "Clear process reports list",
         nickname = "deleteProcess")
     @RequestMapping(
+        path = "/reports",
         method = RequestMethod.DELETE,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    public
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Report registry cleared."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_AUTHENTICATED)
+    })
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("isAuthenticated()")
-    void delete() throws Exception {
+    public void delete() throws Exception {
         registry.clear();
     }
 
 
-    @ApiOperation(value = "Search and replace process",
+    @ApiOperation(value = "Search and replace values in one or more records",
         nickname = "searchAndReplace",
         notes = "Service to apply replacements to one or more records." +
             "\n" +
@@ -113,7 +124,8 @@ public class ProcessApi {
             " * replaceValue-1398155513728=Juan\n" +
             " * searchValue-1398155513728=Jose\n\n" +
             "TODO: Would be good to provide a simple object to define list of changes " +
-            "instead of group of parameters.")
+            "instead of group of parameters.<br/>" +
+            "Batch editing can also be used for similar works.")
     @RequestMapping(
         value = "/search-and-replace",
         method = RequestMethod.POST,
@@ -123,7 +135,11 @@ public class ProcessApi {
     )
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Replacements applied."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
     public MetadataReplacementProcessingReport searchAndReplace(
         @RequestParam(
             defaultValue = "massive-content-update")
