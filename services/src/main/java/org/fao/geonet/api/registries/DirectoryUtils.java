@@ -1,4 +1,4 @@
-package org.fao.geonet.api.directory;
+package org.fao.geonet.api.registries;
 
 import com.google.common.collect.Table;
 

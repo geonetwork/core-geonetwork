@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.api.directory;
+package org.fao.geonet.api.registries;
 
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -53,8 +53,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -62,7 +60,6 @@ import io.swagger.annotations.Authorization;
 import io.swagger.annotations.AuthorizationScope;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import springfox.documentation.annotations.ApiIgnore;
 
 @EnableWebMvc
 @Service
@@ -116,7 +113,7 @@ public class DirectoryApi {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('Reviewer') or hasRole('Administrator')")
+    @PreAuthorize("hasRole('Reviewer')")
     public ResponseEntity<Object> previewExtractedEntries(
         @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
@@ -141,17 +138,14 @@ public class DirectoryApi {
     @ApiOperation(value = "Extracts directory entries from records",
         nickname = "extractEntries",
         authorizations = {
-            @Authorization(value = "basicAuth", scopes =
-            @AuthorizationScope(
-                scope = "hasRole('Reviewer') or hasRole('Administrator')",
-                description = "desc"))
+            @Authorization(value = "basicAuth")
         },
         notes = API_COLLECT_ENTRIES_NOTE)
     @RequestMapping(
         value = APIURL_ACTIONS_ENTRIES_COLLECT,
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('Reviewer') or hasRole('Administrator')")
+    @PreAuthorize("hasRole('Reviewer')")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Object> extractEntries(
         @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
@@ -305,7 +299,7 @@ public class DirectoryApi {
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PreAuthorize("hasRole('Reviewer') or hasRole('Administrator')")
+    @PreAuthorize("hasRole('Reviewer')")
     @ResponseBody
     public ResponseEntity<Object> updateRecordEntries(
         @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,

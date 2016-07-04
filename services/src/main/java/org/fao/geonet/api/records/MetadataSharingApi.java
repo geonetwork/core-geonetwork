@@ -24,9 +24,7 @@
 package org.fao.geonet.api.records;
 
 import com.google.common.base.Optional;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
@@ -95,14 +93,20 @@ public class MetadataSharingApi {
             "in catalog configuration user MUST be a member of the group.<br/>" +
             "Clear first allows to unset all operations first before setting the new ones." +
             "Clear option does not remove reserved groups operation if user is not an " +
-            "administrator, a reviewer or the owner of the record",
+            "administrator, a reviewer or the owner of the record.<br/>" +
+            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/publishing/managing-privileges.html'>More info</a>",
         nickname = "share")
-    @RequestMapping(value = "/{metadataUuid}/sharing",
+    @RequestMapping(
+        value = "/{metadataUuid}/sharing",
         method = RequestMethod.PUT
     )
-    public
-    @ResponseBody
-    ResponseEntity share(
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Settings updated."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void share(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -154,8 +158,6 @@ public class MetadataSharingApi {
         List<GroupOperations> privileges = sharing.getPrivileges();
         setOperations(sharing, dataManager, context, metadata, operationMap, privileges);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
@@ -166,6 +168,12 @@ public class MetadataSharingApi {
     @RequestMapping(value = "/sharing",
         method = RequestMethod.PUT
     )
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Report about updated privileges."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
     MetadataProcessingReport share(
@@ -281,15 +289,21 @@ public class MetadataSharingApi {
 
     @ApiOperation(
         value = "Get record sharing settings",
-        notes = "",
+        notes = "Return currnt sharing options for a record.",
         nickname = "getRecordSharingSettings")
     @RequestMapping(
         value = "/{metadataUuid}/sharing",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "The record sharing settings."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
+    public
     SharingResponse getRecordSharingSettings(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
@@ -378,15 +392,20 @@ public class MetadataSharingApi {
 
     @ApiOperation(
         value = "Set record group",
-        notes = "",
+        notes = "A record is related to one group.",
         nickname = "setRecordGroup")
     @RequestMapping(
         value = "/{metadataUuid}/group",
         method = RequestMethod.PUT
     )
-    public
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Record group updated."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
-    ResponseEntity setRecordGroup(
+    public void setRecordGroup(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -420,8 +439,6 @@ public class MetadataSharingApi {
         metadata.getSourceInfo().setGroupOwner(groupIdentifier);
         metadataRepository.save(metadata);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
@@ -434,8 +451,16 @@ public class MetadataSharingApi {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message =
+            "Return a default array of group and operations " +
+            "that can be used to set record sharing properties."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @PreAuthorize("hasRole('Editor')")
     @ResponseBody
+    public
     SharingResponse getSharingSettings(
         @ApiIgnore
         @ApiParam(hidden = true)
@@ -486,9 +511,15 @@ public class MetadataSharingApi {
     @RequestMapping(value = "/group-and-owner",
         method = RequestMethod.PUT
     )
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Record group and owner updated"),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @PreAuthorize("hasRole('Editor')")
     public
     @ResponseBody
-    ResponseEntity<MetadataProcessingReport> setGroupAndOwner(
+    MetadataProcessingReport setGroupAndOwner(
         @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
         @RequestParam(required = false)
@@ -587,7 +618,7 @@ public class MetadataSharingApi {
             report.close();
         }
 
-        return new ResponseEntity<>(report, HttpStatus.CREATED);
+        return report;
     }
 
     public static Vector<OperationAllowedId> retrievePrivileges(ServiceContext context, String id, Integer userId, Integer groupId) throws Exception {

@@ -23,9 +23,7 @@
 
 package org.fao.geonet.api.site;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import jeeves.component.ProfileManager;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.server.JeevesProxyInfo;
@@ -140,7 +138,10 @@ public class SiteApi {
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Site description.")
+    })
     @ResponseBody
     public SettingsListResponse get(
     ) throws Exception {
@@ -166,7 +167,10 @@ public class SiteApi {
         path = "/settings",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Settings.")
+    })
     @ResponseBody
     public SettingsListResponse getSettingsSet(
         @ApiParam(
@@ -242,7 +246,10 @@ public class SiteApi {
         path = "/settings/details",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Settings with details.")
+    })
     @ResponseBody
     @PreAuthorize("hasRole('Administrator')")
     public List<Setting> getSettingsDetails(
@@ -313,9 +320,13 @@ public class SiteApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST
     )
-    @ResponseBody
     @PreAuthorize("hasRole('Administrator')")
-    public ResponseEntity saveSettings(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Settings saved."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+    })
+    public void saveSettings(
         @ApiIgnore
         @ApiParam(hidden = true)
         @RequestParam
@@ -363,7 +374,6 @@ public class SiteApi {
 
         // Reload services affected by updated settings
         reloadServices(context);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation(
@@ -374,7 +384,10 @@ public class SiteApi {
         path = "/info",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Site information.")
+    })
     @ResponseBody
     public SiteInformation getInformation(
     ) throws Exception {
@@ -413,12 +426,16 @@ public class SiteApi {
         path = "/info/staging/{profile}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Staging profile saved."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+    })
     @PreAuthorize("hasRole('Administrator')")
-    public ResponseEntity updateStagingProfile(
+    public void updateStagingProfile(
         @PathVariable
             SystemInfo.Staging profile) {
         this.info.setStagingProfile(profile.toString());
-        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @ApiOperation(
@@ -462,7 +479,10 @@ public class SiteApi {
         path = "/info/build",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Build info.")
+    })
     @ResponseBody
     public SystemInfo getSystemInfo(
     ) throws Exception {
@@ -481,10 +501,13 @@ public class SiteApi {
         path = "/logo",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
-    @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('UserAdmin')")
-    @ResponseBody
-    public ResponseEntity setLogo(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Logo set."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
+    public void setLogo(
         @ApiParam(value = "Logo to use for the catalog")
         @RequestParam("file")
             String file,
@@ -546,7 +569,6 @@ public class SiteApi {
             throw new Exception(
                 "Unable to move uploaded thumbnail to destination directory. Error: " + e.getMessage());
         }
-        return new ResponseEntity(HttpStatus.CREATED);
     }
 
 
@@ -558,7 +580,10 @@ public class SiteApi {
         path = "/info/transforms",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "XSLT available.")
+    })
     @ResponseBody
     public List<String> getXslTransformations(
     ) throws Exception {

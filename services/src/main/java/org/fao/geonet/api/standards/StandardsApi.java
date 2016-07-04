@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.standards;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -59,9 +60,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 
 /**
@@ -102,6 +100,9 @@ public class StandardsApi implements ApplicationContextAware {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of standards.")
+    })
     List<MetadataSchema> getConfigurations() throws Exception {
         Set<String> schemaIds = schemaManager.getSchemas();
         List<MetadataSchema> schemaList = new ArrayList<>(schemaIds.size());
@@ -111,14 +112,17 @@ public class StandardsApi implements ApplicationContextAware {
 
     @ApiOperation(value = "Get batch editor configuration for standards",
         nickname = "getBatchConfigurations")
-    @RequestMapping(value = "/actions/batchconfiguration",
+    @RequestMapping(value = "/batchconfiguration",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Batch editor configuration.")
+    })
     public
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     Map<String, BatchEditing> getConfigurations(
         @ApiParam(value = ApiParams.API_PARAM_SCHEMA_IDENTIFIERS,
             required = false,
@@ -145,7 +149,7 @@ public class StandardsApi implements ApplicationContextAware {
 
     @ApiOperation(value = "Get batch editor configuration for a standard",
         nickname = "getBatchConfiguration")
-    @RequestMapping(value = "/{schema}/actions/batchconfiguration",
+    @RequestMapping(value = "/{schema}/batchconfiguration",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_JSON_VALUE

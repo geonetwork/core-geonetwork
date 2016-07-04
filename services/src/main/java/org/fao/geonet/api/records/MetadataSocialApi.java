@@ -23,8 +23,10 @@
 
 package org.fao.geonet.api.records;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
@@ -47,20 +49,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -96,12 +91,18 @@ public class MetadataSocialApi {
             "When a remote rating is applied, the local rating is not updated. It will be updated on the next " +
             "harvest run (FIXME ?).",
         nickname = "rate")
-    @RequestMapping(value = "/{metadataUuid}/rate",
+    @RequestMapping(
+        value = "/{metadataUuid}/rate",
         method = RequestMethod.PUT
     )
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "New rating value."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
     public
     @ResponseBody
-    ResponseEntity<Integer> rateRecord(
+    Integer rateRecord(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -152,7 +153,7 @@ public class MetadataSocialApi {
                 rating = -1;
             }
         }
-        return new ResponseEntity<>(rating, HttpStatus.CREATED);
+        return rating;
     }
 
     /**

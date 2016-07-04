@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.records;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -56,9 +57,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -82,7 +80,8 @@ public class MetadataTagApi {
 
     @ApiOperation(
         value = "Get record tags",
-        notes = "",
+        notes = "Tags are used to classify information.<br/>" +
+            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/tag-information/tagging-with-categories.html'>More info</a>",
         nickname = "getTags")
     @RequestMapping(
         value = "/{metadataUuid}/tags",
@@ -91,6 +90,10 @@ public class MetadataTagApi {
         },
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Record tags."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
     @ResponseBody
     public Set<MetadataCategory> getTags(
         @ApiParam(
@@ -113,10 +116,14 @@ public class MetadataTagApi {
     @RequestMapping(
         value = "/{metadataUuid}/tags",
         method = RequestMethod.PUT)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Record tags added."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
-    public ResponseEntity updateTags(
+    public void updateTags(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -163,7 +170,6 @@ public class MetadataTagApi {
         }
 
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
-        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @ApiOperation(
@@ -174,9 +180,13 @@ public class MetadataTagApi {
         value = "/{metadataUuid}/tags",
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Record tags removed."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
-    public ResponseEntity deleteTags(
+    public void deleteTags(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -208,7 +218,6 @@ public class MetadataTagApi {
         }
 
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 
@@ -222,7 +231,11 @@ public class MetadataTagApi {
             MediaType.APPLICATION_JSON_VALUE
         },
         method = RequestMethod.PUT)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Report about updated records."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public MetadataProcessingReport updateTags(
@@ -314,7 +327,11 @@ public class MetadataTagApi {
             MediaType.APPLICATION_JSON_VALUE
         },
         method = RequestMethod.DELETE)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Report about removed records."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public MetadataProcessingReport updateTags(

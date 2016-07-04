@@ -25,12 +25,11 @@ package org.fao.geonet.api.regions;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.regions.model.Category;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -41,6 +40,7 @@ import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.services.region.ThesaurusBasedRegionsDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -82,6 +82,10 @@ public class RegionsApi {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE
         })
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of regions.")
+    })
     @ResponseBody
     public ListRegionsResponse getRegions(
         @RequestParam(required = false)
@@ -143,6 +147,10 @@ public class RegionsApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of region types.")
+    })
     @ResponseBody
     public List<Category> getRegionTypes(
         HttpServletRequest request) throws Exception {

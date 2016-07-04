@@ -23,12 +23,14 @@
 
 package org.fao.geonet.api.records.editing;
 
+import io.swagger.annotations.*;
 import jeeves.server.UserSession;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.model.Direction;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -63,9 +65,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -104,6 +103,11 @@ public class MetadataEditingApi {
             MediaType.APPLICATION_XML_VALUE
         })
     @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "The editor form."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseBody
     public Element startEditing(
         @ApiParam(value = API_PARAM_RECORD_UUID,
@@ -134,14 +138,6 @@ public class MetadataEditingApi {
 
         boolean showValidationErrors = false;
         boolean starteditingsession = true;
-
-//        String sessionTabProperty = useEditTab ? Geonet.Session.METADATA_EDITING_TAB : Geonet.Session.METADATA_SHOW;
-
-        // Set current tab for new editing session if defined.
-//        Element elCurrTab = params.getChild(Params.CURRTAB);
-//        if (elCurrTab != null) {
-//            context.getUserSession().setProperty(sessionTabProperty, elCurrTab.getText());
-//        }
 
         ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -175,6 +171,11 @@ public class MetadataEditingApi {
             MediaType.APPLICATION_XML_VALUE
         })
     @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "The editor form."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseBody
     public Element saveEdits(
         @ApiParam(value = API_PARAM_RECORD_UUID,
@@ -328,8 +329,13 @@ public class MetadataEditingApi {
             MediaType.APPLICATION_XML_VALUE
         })
     @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Editing session cancelled."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseBody
-    public HttpEntity cancelEdits(
+    public void cancelEdits(
         @ApiParam(value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
@@ -349,8 +355,6 @@ public class MetadataEditingApi {
         DataManager dataMan = applicationContext.getBean(DataManager.class);
         ServiceContext context = ApiUtils.createServiceContext(request);
         dataMan.cancelEditingSession(context, String.valueOf(metadata.getId()));
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
@@ -368,6 +372,11 @@ public class MetadataEditingApi {
             MediaType.APPLICATION_XML_VALUE
         })
     @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Element added."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseBody
     public Element addElement(
         @ApiParam(value = API_PARAM_RECORD_UUID,
@@ -448,8 +457,13 @@ public class MetadataEditingApi {
             MediaType.APPLICATION_XML_VALUE
         })
     @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Element reordered."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseBody
-    public ResponseEntity addElement(
+    public void addElement(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -482,7 +496,6 @@ public class MetadataEditingApi {
             String.valueOf(metadata.getId()),
             ref,
             direction == Direction.down);
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
@@ -501,8 +514,13 @@ public class MetadataEditingApi {
             MediaType.APPLICATION_XML_VALUE
         })
     @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Element removed."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseBody
-    public ResponseEntity deleteElement(
+    public void deleteElement(
         @ApiParam(value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
@@ -532,7 +550,6 @@ public class MetadataEditingApi {
                 ApiUtils.getUserSession(httpSession),
                 id, ref[i], parent);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "Delete attribute",
@@ -547,8 +564,13 @@ public class MetadataEditingApi {
             MediaType.APPLICATION_XML_VALUE
         })
     @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Attribute removed."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseBody
-    public ResponseEntity deleteAttribute(
+    public void deleteAttribute(
         @ApiParam(value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
@@ -570,8 +592,6 @@ public class MetadataEditingApi {
             ApiUtils.getUserSession(httpSession),
             String.valueOf(metadata.getId()),
             ref);
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private Element findRoot(Element element) {

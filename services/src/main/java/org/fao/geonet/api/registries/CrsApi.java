@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.registries;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -43,10 +44,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Arrays;
 import java.util.List;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 @EnableWebMvc
 @Service
@@ -74,7 +71,10 @@ public class CrsApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of CRS types.")
+    })
     @ResponseBody
     public List<CrsType> getCrsTypes()
         throws Exception {
@@ -85,7 +85,8 @@ public class CrsApi {
     /**
      * Search coordinate reference system.
      */
-    @ApiOperation(value = "Search coordinate reference system (CRS)",
+    @ApiOperation(
+        value = "Search coordinate reference system (CRS)",
         nickname = "searchCrs",
         notes = "Based on GeoTools EPSG database. If phrase query, each words " +
             "are searched separately.")
@@ -95,9 +96,12 @@ public class CrsApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of CRS.")
+    })
     @ResponseBody
-    public ResponseEntity<List<Crs>> getCrs(
+    public List<Crs> getCrs(
         @ApiParam(
             value = "Search value",
             required = false)
@@ -120,14 +124,15 @@ public class CrsApi {
         final int rows)
         throws Exception {
         List<Crs> crsList = CrsUtils.search(q.split(" "), type, rows);
-        return new ResponseEntity<>(crsList, HttpStatus.OK);
+        return crsList;
     }
 
 
     /**
      * Get coordinate reference system.
      */
-    @ApiOperation(value = "Get CRS",
+    @ApiOperation(
+        value = "Get CRS",
         nickname = "getCrsById",
         notes = "")
     @RequestMapping(
@@ -137,10 +142,13 @@ public class CrsApi {
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE
         })
-    @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('Administrator')")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "CRS details."),
+        @ApiResponse(code = 404, message = "CRS not found.")
+    })
     @ResponseBody
-    public ResponseEntity<Crs> getCrs(
+    public Crs getCrs(
         @ApiParam(
             value = "CRS identifier",
             required = true)
@@ -149,7 +157,7 @@ public class CrsApi {
         throws Exception {
         Crs crs = CrsUtils.getById(id);
         if (crs != null) {
-            return new ResponseEntity<>(crs, HttpStatus.OK);
+            return crs;
         } else {
             throw new ResourceNotFoundException(String.format(
                 "CRS with id '%s' not found in EPSG database", id));

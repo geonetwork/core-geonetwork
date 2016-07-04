@@ -26,6 +26,7 @@ package org.fao.geonet.api.registries;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -54,10 +55,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
@@ -82,7 +79,11 @@ public class DirectoryEntriesApi {
         produces = {
             MediaType.APPLICATION_XML_VALUE
         })
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Directory entry."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
     @ResponseBody
     public Element getEntry(
         @ApiParam(

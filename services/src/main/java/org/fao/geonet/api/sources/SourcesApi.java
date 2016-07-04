@@ -23,8 +23,10 @@
 
 package org.fao.geonet.api.sources;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.Source;
@@ -51,9 +53,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
@@ -75,7 +74,10 @@ public class SourcesApi {
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of sources.")
+    })
     @ResponseBody
     public List<Source> getSources() throws Exception {
         ApplicationContext context = ApplicationContextHolder.get();
@@ -91,9 +93,13 @@ public class SourcesApi {
     @RequestMapping(
         value = "/{sourceIdentifier}",
         method = RequestMethod.PUT)
-    @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('UserAdmin')")
-    @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Source updated."),
+        @ApiResponse(code = 404, message = "Source not found."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
     public ResponseEntity updateSource(
         @ApiParam(
             value = "Source identifier",

@@ -232,7 +232,7 @@
         }, scope, 'PrivilegesUpdated');
       };
       this.openBatchEditing = function(scope) {
-        $location.path('/batchedit');
+        $location.path('/batchediting');
       };
       this.openCategoriesBatchPanel = function(scope) {
         openModal({

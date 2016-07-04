@@ -24,13 +24,12 @@
 package org.fao.geonet.api.records;
 
 import com.google.common.collect.Lists;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -51,10 +50,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,7 +71,7 @@ import static org.fao.geonet.api.ApiParams.*;
 @Api(value = API_CLASS_RECORD_TAG,
     tags = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
-@Controller("recordSampleAndTemplate")
+@Controller("samplesAndTemplates")
 @ReadWriteController
 public class MetadataSampleApi {
 
@@ -92,10 +88,15 @@ public class MetadataSampleApi {
     @RequestMapping(value = "/samples",
         method = RequestMethod.PUT
     )
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Return a report of what has been done."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+    })
     @PreAuthorize("hasRole('Administrator')")
+    @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
-    ResponseEntity<SimpleMetadataProcessingReport> addSamples(
+    SimpleMetadataProcessingReport addSamples(
         @ApiParam(value = API_PARAM_SCHEMA_IDENTIFIERS,
             required = true,
             example = "iso19139")
@@ -157,8 +158,8 @@ public class MetadataSampleApi {
                 "%d record(s) added for schema '%s'.",
                 schemaCount, schemaName));
         }
-
-        return new ResponseEntity<>(report, HttpStatus.CREATED);
+        report.close();
+        return report;
     }
 
     @ApiOperation(
@@ -170,10 +171,15 @@ public class MetadataSampleApi {
     @RequestMapping(value = "/templates",
         method = RequestMethod.PUT
     )
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Return a report of what has been done."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+    })
     @PreAuthorize("hasRole('Administrator')")
+    @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
-    ResponseEntity<SimpleMetadataProcessingReport> addSamples(
+    SimpleMetadataProcessingReport addSamples(
         @ApiParam(value = API_PARAM_SCHEMA_IDENTIFIERS,
             required = true,
             example = "iso19139")
@@ -273,6 +279,7 @@ public class MetadataSampleApi {
                 "%d record(s) added for schema '%s'.",
                 schemaCount, schemaName));
         }
-        return new ResponseEntity<>(report, HttpStatus.CREATED);
+        report.close();
+        return report;
     }
 }

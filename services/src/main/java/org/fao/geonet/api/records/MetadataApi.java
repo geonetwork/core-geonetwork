@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.records;
 
+import io.swagger.annotations.*;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -47,14 +48,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -67,9 +64,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
@@ -125,6 +119,10 @@ public class MetadataApi implements ApplicationContextAware {
             MEF_V1_ACCEPT_TYPE,
             MEF_V2_ACCEPT_TYPE
         })
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Return the record."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
     public
     @ResponseBody
     void getRecord(
@@ -185,6 +183,10 @@ public class MetadataApi implements ApplicationContextAware {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE
         })
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Return the record."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
     public
     @ResponseBody
     Object getRecordAsXML(
@@ -275,6 +277,10 @@ public class MetadataApi implements ApplicationContextAware {
         produces = {
             "application/zip"
         })
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Return the record."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
     public
     @ResponseBody
     void getRecordAsZip(
@@ -387,13 +393,19 @@ public class MetadataApi implements ApplicationContextAware {
         value = "Get record related resources",
         nickname = "get",
         notes = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
-            "to this records.")
+            "to this records.<br/>" +
+            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
     @RequestMapping(value = "/{metadataUuid}/related",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE
         })
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Return the associated resources."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
     @ResponseBody
     public RelatedResponse getRelated(
         @ApiParam(

@@ -25,8 +25,10 @@ package org.fao.geonet.api.records;
 
 import com.google.common.collect.Lists;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.model.validation.Reports;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -52,10 +54,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -69,9 +68,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -110,9 +106,15 @@ public class MetadataValidateApi {
             MediaType.APPLICATION_XML_VALUE
         }
     )
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Validation report."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     public
     @ResponseBody
-    ResponseEntity<Reports> validateRecord(
+    Reports validateRecord(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -202,7 +204,7 @@ public class MetadataValidateApi {
 
         Reports response = (Reports) Xml.unmarshall(transform, Reports.class);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return response;
     }
 
     public static final String EL_ACTIVE_PATTERN = "active-pattern";

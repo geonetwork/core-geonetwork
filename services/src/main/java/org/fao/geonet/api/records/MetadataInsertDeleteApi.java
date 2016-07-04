@@ -109,6 +109,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 @ReadWriteController
 public class MetadataInsertDeleteApi {
 
+    public static final String API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS = "Report about imported records.";
     private final String API_PARAP_RECORD_GROUP = "The group the record is attached to.";
     private final String API_PARAM_RECORD_UUID_PROCESSING = "Record identifier processing.";
     private final String API_PARAM_RECORD_TAGS = "Tags to assign to the record.";
@@ -255,7 +256,7 @@ public class MetadataInsertDeleteApi {
         }
     )
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Report about imported records."),
+        @ApiResponse(code = 201, message = API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
     @PreAuthorize("hasRole('Editor')")
@@ -488,7 +489,7 @@ public class MetadataInsertDeleteApi {
             "updated after creation.",
         nickname = "create")
     @RequestMapping(
-        value = "/actions/create",
+        value = "/duplicate",
         method = {
             RequestMethod.PUT
         },
@@ -675,9 +676,14 @@ public class MetadataInsertDeleteApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
-    public
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    ResponseEntity<SimpleMetadataProcessingReport> insertFile(
+    public SimpleMetadataProcessingReport insertFile(
         @ApiParam(
             value = API_PARAM_RECORD_TYPE,
             required = false,
@@ -799,7 +805,7 @@ public class MetadataInsertDeleteApi {
             }
         }
         report.close();
-        return new ResponseEntity<>(report, HttpStatus.CREATED);
+        return report;
     }
 
 

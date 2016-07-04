@@ -23,8 +23,10 @@
 
 package org.fao.geonet.api.records;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.ISODate;
@@ -51,9 +53,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
@@ -85,9 +84,11 @@ public class MetadataWorkflowApi {
         method = RequestMethod.PUT
     )
     @PreAuthorize("hasRole('Editor')")
-    public
-    @ResponseBody
-    ResponseEntity status(
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Status updated."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    public void status(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -113,7 +114,7 @@ public class MetadataWorkflowApi {
         HttpServletRequest request
     )
         throws Exception {
-        Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
@@ -143,7 +144,5 @@ public class MetadataWorkflowApi {
         //--- reindex metadata
         DataManager dataManager = appContext.getBean(DataManager.class);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

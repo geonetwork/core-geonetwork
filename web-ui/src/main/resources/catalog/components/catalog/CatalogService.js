@@ -115,7 +115,7 @@
             isVisibleByAllGroupMembers: withFullPrivileges,
             targetUuid: metadataUuid
           });
-          return $http.put('../api/records/actions/create?' + url, {
+          return $http.put('../api/records/duplicate?' + url, {
             headers: {
               'Accept': 'application/json'
             }

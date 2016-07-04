@@ -82,7 +82,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
         final BatchEditParameter[] parameters = new BatchEditParameter[]{};
 
         try {
-            batchEditsService.serviceSpecificExec(
+            batchEditsService.batchEdit(
                 new String[]{firstMetadataId},
                 parameters);
         } catch (java.lang.IllegalArgumentException exception) {
@@ -110,7 +110,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
             )
         };
 
-        batchEditsService.serviceSpecificExec(
+        batchEditsService.batchEdit(
             new String[]{firstMetadataId},
             listOfupdates);
         Metadata updatedRecord = repository.findOneByUuid(firstMetadataId);

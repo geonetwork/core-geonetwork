@@ -23,9 +23,7 @@
 
 package org.fao.geonet.api.records;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
@@ -52,10 +50,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Files;
@@ -85,7 +80,8 @@ public class MetadataProcessApi {
 
     @ApiOperation(
         value = "Get suggestions",
-        notes = "Analyze the record an suggest processes to improve the quality of the record.",
+        notes = "Analyze the record an suggest processes to improve the quality of the record.<br/>" +
+            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/workflow/batchupdate-xsl.html'>More info</a>",
         nickname = "getSuggestions")
     @RequestMapping(
         value = "/{metadataUuid}/processes",
@@ -93,9 +89,14 @@ public class MetadataProcessApi {
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Record suggestions."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     public
     @ResponseBody
-    ResponseEntity<List<SuggestionType>> getSuggestions(
+    List<SuggestionType> getSuggestions(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -132,7 +133,7 @@ public class MetadataProcessApi {
             Element xmlSuggestions = Xml.transform(md, xslProcessing, xslParameter);
             SuggestionsType suggestions = (SuggestionsType) Xml.unmarshall(xmlSuggestions, SuggestionsType.class);
 
-            return new ResponseEntity<>(suggestions.getSuggestion(), HttpStatus.CREATED);
+            return suggestions.getSuggestion();
         } else {
             throw new ResourceNotFoundException(String.format(
                 "No %s files available in schema '%s'. No suggestion to provides.",
@@ -142,7 +143,7 @@ public class MetadataProcessApi {
     }
 
     @ApiOperation(
-        value = "Apply a process",
+        value = "Preview (GET) or apply (POST) a process",
         notes = API_OP_NOTE_PROCESS,
         nickname = "processRecord")
     @RequestMapping(
@@ -154,6 +155,12 @@ public class MetadataProcessApi {
         produces = MediaType.APPLICATION_XML_VALUE
     )
     @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "A preview of the processed record (if method is not POST)."),
+        @ApiResponse(code = 204, message = "Record processed and saved."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     public
     @ResponseBody
     ResponseEntity<Element> processRecord(
@@ -195,8 +202,8 @@ public class MetadataProcessApi {
         } catch (Exception e) {
             throw e;
         }
-        return new ResponseEntity<Element>(
+        return new ResponseEntity<>(
             save ? null : processedMetadata,
-            save ? HttpStatus.CREATED : HttpStatus.OK);
+            save ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 }

@@ -24,6 +24,7 @@ package org.fao.geonet.api.records.editing;
 
 import com.google.common.collect.Sets;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -47,30 +48,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
 @RequestMapping(value = {
-    "/api/records/actions",
+    "/api/records",
     "/api/" + API.VERSION_0_1 +
-        "/records/actions"
+        "/records"
 })
 @Api(value = "records",
     tags = "records",
@@ -90,17 +85,22 @@ public class BatchEditsApi implements ApplicationContextAware {
     /**
      * The service edits to the current selection or a set of uuids.
      */
-    @ApiOperation(value = "Edit a set of records by XPath expression",
-        nickname = "get")
-    @RequestMapping(value = "/batchedit",
+    @ApiOperation(value = "Edit a set of records by XPath expressions",
+        nickname = "batchEdit")
+    @RequestMapping(value = "/batchediting",
         method = RequestMethod.PUT,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    public
-    @PreAuthorize("hasRole('Editor') or hasRole('Reviewer') or hasRole('Administrator') ")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Return a report of what has been done."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    IProcessingReport serviceSpecificExec(
+    public
+    IProcessingReport batchEdit(
         @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "iso19139")

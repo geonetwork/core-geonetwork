@@ -23,8 +23,10 @@
 
 package org.fao.geonet.api.categories;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.MetadataCategory;
@@ -49,10 +51,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-
 @RequestMapping(value = {
     "/api/tags",
     "/api/" + API.VERSION_0_1 +
@@ -71,7 +69,10 @@ public class TagsApi {
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of tags.")
+    })
     @ResponseBody
     public List<org.fao.geonet.domain.MetadataCategory> getTags(
     ) throws Exception {
@@ -93,6 +94,11 @@ public class TagsApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Tag created. Return the new tag identifier."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
     @PreAuthorize("hasRole('UserAdmin')")
     public ResponseEntity<Integer> putTag(
         @ApiParam(
@@ -108,19 +114,12 @@ public class TagsApi {
         MetadataCategory existingCategory = categoryRepository.findOne(category.getId());
         if (existingCategory != null) {
             updateCategory(category.getId(), category, categoryRepository);
+            return new ResponseEntity(null, HttpStatus.NO_CONTENT);
         } else {
-            // Populate languages if not already set
-            LanguageRepository langRepository = appContext.getBean(LanguageRepository.class);
-            java.util.List<Language> allLanguages = langRepository.findAll();
-            Map<String, String> labelTranslations = category.getLabelTranslations();
-            for (Language l : allLanguages) {
-                String label = labelTranslations.get(l.getId());
-                category.getLabelTranslations().put(l.getId(),
-                    label == null ? category.getName() : label);
-            }
-            categoryRepository.save(category);
+            throw new IllegalArgumentException(String.format(
+                "A tag with id '%d' already exist", category.getId()
+            ));
         }
-        return new ResponseEntity(category.getId(), HttpStatus.CREATED);
     }
 
     @ApiOperation(
@@ -133,7 +132,10 @@ public class TagsApi {
             MediaType.APPLICATION_JSON_VALUE
         },
         method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Tag details.")
+    })
     @ResponseBody
     public org.fao.geonet.domain.MetadataCategory getTag(
         @ApiParam(
@@ -160,8 +162,12 @@ public class TagsApi {
     @RequestMapping(
         value = "/{tagIdentifier}",
         method = RequestMethod.PUT)
-    @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('UserAdmin')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Tag updated."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
     @ResponseBody
     public ResponseEntity updateTag(
         @ApiParam(
@@ -214,7 +220,11 @@ public class TagsApi {
     @RequestMapping(
         value = "/{tagIdentifier}",
         method = RequestMethod.DELETE)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Tag removed."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
     @PreAuthorize("hasRole('UserAdmin')")
     public ResponseEntity deleteTag(
         @ApiParam(
