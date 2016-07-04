@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="suggestions" type="suggestionsType"/>
+  <xs:complexType name="suggestionType">
+    <xs:sequence>
+      <xs:element name="name">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Keyword field contains place keywords (ie.World). Try to compute metadata extent using thesaurus."/>
+            <xs:enumeration value="Current record does not contain resource identifier. Add the
+      following identifier:
+      http://localhost:8080/geonetwork/srv/metadata/8f089c32-d0ca-4af1-a56a-4cbf34ddcc75."/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="xs:string" name="operational"/>
+      <xs:element type="xs:string" name="params" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="process" use="optional"/>
+    <xs:attribute type="xs:string" name="id" use="optional"/>
+    <xs:attribute type="xs:string" name="category" use="optional"/>
+    <xs:attribute type="xs:string" name="target" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="suggestionsType">
+    <xs:sequence>
+      <xs:element type="suggestionType" name="suggestion" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

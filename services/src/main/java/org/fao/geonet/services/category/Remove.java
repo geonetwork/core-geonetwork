@@ -48,6 +48,7 @@ import java.util.List;
  */
 @Controller("admin.category.remove")
 @ReadWriteController
+@Deprecated
 public class Remove {
     @RequestMapping(value = "/{lang}/admin.category.remove", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})

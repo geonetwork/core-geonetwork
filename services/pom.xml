@@ -47,7 +47,6 @@
       <artifactId>harvesters</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
       <artifactId>csw-server</artifactId>
@@ -126,8 +125,6 @@
       <groupId>org.geotools</groupId>
       <artifactId>gt-brewer</artifactId>
     </dependency>
-
-
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger2</artifactId>

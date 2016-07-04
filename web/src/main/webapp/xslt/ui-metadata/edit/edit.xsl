@@ -21,7 +21,6 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/"
                 xmlns:gn="http://www.fao.org/geonetwork" xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 version="2.0"
@@ -108,7 +107,6 @@
         <xsl:with-param name="pattern" select="$layerMatchingPattern"/>
         <xsl:with-param name="id" select="'layerConfig'"/>
       </xsl:call-template>
-
 
       <!-- Dispatch to profile mode -->
       <xsl:if test="$service != 'md.element.add'">

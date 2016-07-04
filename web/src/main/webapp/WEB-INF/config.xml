@@ -133,10 +133,6 @@
     <!-- Define if the schema catalog should be updated on startup.
         Default is true. -->
     <param name="createOrUpdateSchemaCatalog" value="true"/>
-
-    <!-- Define the class to use when metadata status change
-        -->
-    <param name="statusActionsClass" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
   </appHandler>
 
   <!-- ====================================================================== -->

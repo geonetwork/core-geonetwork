@@ -38,6 +38,7 @@ import java.nio.file.Path;
 
 import javax.annotation.Nonnull;
 
+@Deprecated
 public class XmlUpdate extends NotInReadOnlyModeService {
     public void init(final Path appPath, final ServiceConfig params) throws Exception {
     }

@@ -25,13 +25,17 @@ package org.fao.geonet.monitor.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
+import org.fao.geonet.api.API;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
@@ -39,20 +43,23 @@ import java.lang.management.ThreadMXBean;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  * Services related to thread monitoring and activity.
  *
  * @author Jesse on 2/4/2015.
  */
+@RequestMapping(value = {
+    "/api/site/threads",
+    "/api/" + API.VERSION_0_1 + "/site/threads"
+})
 @Controller("/thread")
 public class Threads {
-    @RequestMapping(value = "/{lang}/thread/status", produces = {
-        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(
+        value = "/status",
+        produces = {
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE
+        })
     @ResponseBody
     public ThreadResponse status() {
         ThreadMXBean bean = ManagementFactory.getThreadMXBean();
@@ -83,8 +90,12 @@ public class Threads {
         return response;
     }
 
-    @RequestMapping(value = "/{lang}/thread/trace/{threadid}", produces = {
-        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(
+        value = "/trace/{threadid}",
+        produces = {
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE
+        })
     @ResponseBody
     public StackTrace trace(@PathVariable String threadid) {
         ThreadMXBean bean = ManagementFactory.getThreadMXBean();
@@ -93,8 +104,12 @@ public class Threads {
     }
 
 
-    @RequestMapping(value = "/{lang}/thread/debugging/{contention}/{enablement}", produces = {
-        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(
+        value = "/debugging/{contention}/{enablement}",
+        produces = {
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE
+        })
     @ResponseBody
     public ThreadResponse debugging(
         @PathVariable(value = "contention") boolean threadContentionMonitoring,
@@ -112,7 +127,7 @@ public class Threads {
     }
 
 
-    @XmlRootElement(name = "response")
+    @XmlRootElement(name = "threads")
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class ThreadResponse implements Serializable {
 

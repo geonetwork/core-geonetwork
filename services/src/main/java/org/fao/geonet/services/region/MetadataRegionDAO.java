@@ -33,7 +33,7 @@ import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.services.region.metadata.MetadataRegionSearchRequest;
+import org.fao.geonet.api.regions.metadata.MetadataRegionSearchRequest;
 import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Parser;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;

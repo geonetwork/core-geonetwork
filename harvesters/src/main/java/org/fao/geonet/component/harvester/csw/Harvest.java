@@ -25,8 +25,6 @@ package org.fao.geonet.component.harvester.csw;
 
 import com.google.common.base.Function;
 
-import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -52,6 +50,7 @@ import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.harvesting.Util;
 import org.fao.geonet.util.ISOPeriod;
@@ -63,10 +62,6 @@ import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -78,7 +73,16 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  * CSW Harvest operation.
@@ -96,6 +100,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
     private ApplicationContext applicationContext;
     private String operationId = NAME;
     private Protocol protocol;
+
     public Harvest() {
     }
 
@@ -446,7 +451,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
         // no privileges settings supported in csw harvest; use GN-specific setting (if enabled, make metadata public)
         GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = geonetContext.getBean(SettingManager.class);
-        boolean metadataPublic = sm.getValueAsBool("system/csw/metadataPublic", false);
+        boolean metadataPublic = sm.getValueAsBool(Settings.SYSTEM_CSW_METADATA_PUBLIC, false);
         if (metadataPublic) {
             // <privileges>
             //   <group id="1">
@@ -845,15 +850,15 @@ public class Harvest extends AbstractOperation implements CatalogService {
         private void sendByEmail(String harvestResponse) {
             GeonetContext geonetContext = (GeonetContext) serviceContext.getHandlerContext(Geonet.CONTEXT_NAME);
             SettingManager settingManager = geonetContext.getBean(SettingManager.class);
-            String host = settingManager.getValue("system/feedback/mailServer/host");
-            String port = settingManager.getValue("system/feedback/mailServer/port");
+            String host = settingManager.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+            String port = settingManager.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
             String to = responseHandler.substring(Protocol.EMAIL.toString().length());
             MailSender sender = new MailSender(serviceContext);
             sender.send(host, Integer.parseInt(port),
-                settingManager.getValue("system/feedback/mailServer/username"),
-                settingManager.getValue("system/feedback/mailServer/password"),
-                settingManager.getValueAsBool("system/feedback/mailServer/ssl"),
-                settingManager.getValueAsBool("system/feedback/mailServer/tls"),
+                settingManager.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME),
+                settingManager.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD),
+                settingManager.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL),
+                settingManager.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS),
                 "noreply@geonetwork.org",
                 "GeoNetwork CSW Server", to, null, "Asynchronous CSW Harvest results delivery", harvestResponse);
         }

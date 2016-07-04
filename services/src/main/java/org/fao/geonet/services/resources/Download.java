@@ -36,6 +36,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -121,11 +122,11 @@ public class Download {
             dm.increasePopularity(context, id);
 
         //--- send email notification
-
         if (doNotify) {
-            String host = sm.getValue("system/feedback/mailServer/host");
-            String port = sm.getValue("system/feedback/mailServer/port");
-            String from = sm.getValue("system/feedback/email");
+            String host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+            String port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
+            String from = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+
 
             String fromDescr = "GeoNetwork administrator";
 
@@ -163,10 +164,10 @@ public class Download {
                         try {
                             MailSender sender = new MailSender(context);
                             sender.send(host, Integer.parseInt(port),
-                                sm.getValue("system/feedback/mailServer/username"),
-                                sm.getValue("system/feedback/mailServer/password"),
-                                sm.getValueAsBool("system/feedback/mailServer/ssl"),
-                                sm.getValueAsBool("system/feedback/mailServer/tls"),
+                                sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME),
+                                sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD),
+                                sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL),
+                                sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS),
                                 from, fromDescr, email, null, subject, message);
                         } catch (Exception e) {
                             e.printStackTrace();

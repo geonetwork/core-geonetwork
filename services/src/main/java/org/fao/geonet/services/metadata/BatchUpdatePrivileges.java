@@ -54,6 +54,7 @@ import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
 /**
  * Stores all operations allowed for a metadata.
  */
+@Deprecated
 public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---

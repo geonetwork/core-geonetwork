@@ -50,6 +50,7 @@ import jeeves.server.context.ServiceContext;
  * Retrieves all groups in the system
  */
 
+@Deprecated
 public class List implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

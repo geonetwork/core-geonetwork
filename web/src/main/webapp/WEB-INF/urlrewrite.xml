@@ -141,7 +141,7 @@
     <to type="permanent-redirect" last="true">%{context-path}/home</to>
   </rule>
   <rule>
-    <from>^/(?!home$)(?!monitor$)(?!\w*healthcheck$)(?!swagger-resources.*$)([a-zA-Z0-9_\-]+)$
+    <from>^/(?!signin$)(?!signout$)(?!home$)(?!monitor$)(?!\w*healthcheck$)(?!swagger-resources.*$)([a-zA-Z0-9_\-]+)$
     </from>
     <to type="permanent-redirect" last="true">%{context-path}/home?node=$1</to>
   </rule>
@@ -240,7 +240,7 @@
       map the old xml.user.login to the new login url
     </note>
     <from>^.*/.*/xml.user.login(\?.*)</from>
-    <to type="permanent-redirect" last="true">%{context-path}/j_spring_security_check$1</to>
+    <to type="permanent-redirect" last="true">%{context-path}/signin$1</to>
   </rule>
 
   <!-- Rule for rss.latest to rss.search?sortBt=changeDate -->

@@ -51,6 +51,7 @@ import java.util.UUID;
  * A simple service that add all metadata templates available from schemas being handled in the
  * SchemaManager
  */
+@Deprecated
 public class AddDefault implements Service {
 
     public void init(Path appPath, ServiceConfig params) throws Exception {

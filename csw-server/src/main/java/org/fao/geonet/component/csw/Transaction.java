@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -255,7 +256,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
         // Set metadata as public if setting enabled
         SettingManager sm = gc.getBean(SettingManager.class);
-        boolean metadataPublic = sm.getValueAsBool("system/csw/metadataPublic", false);
+        boolean metadataPublic = sm.getValueAsBool(Settings.SYSTEM_CSW_METADATA_PUBLIC, false);
 
         if (metadataPublic) {
             dataMan.setOperation(context, id, "" + ReservedGroup.all.getId(), ReservedOperation.view);
@@ -378,7 +379,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
                 EditLib editLib = new EditLib(_schemaManager);
 
                 MetadataSchema metadataSchema = _schemaManager.getSchema(schemaId);
-                final String settingId = SettingManager.CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
+                final String settingId = Settings.SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
                 boolean createXpathNodeIfNotExists = gc.getBean(SettingManager.class).getValueAsBool(settingId);
 
                 // Process properties to update

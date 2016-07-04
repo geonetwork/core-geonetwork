@@ -29,12 +29,12 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.guiservices.metadata.GetRelated;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
-import org.fao.geonet.services.metadata.format.FormatType;
-import org.fao.geonet.services.metadata.format.FormatterParams;
-import org.fao.geonet.services.metadata.format.groovy.Environment;
-import org.fao.geonet.services.metadata.format.groovy.EnvironmentImpl;
-import org.fao.geonet.services.metadata.format.groovy.Functions;
+import org.fao.geonet.api.records.formatters.AbstractFormatterTest;
+import org.fao.geonet.api.records.formatters.FormatType;
+import org.fao.geonet.api.records.formatters.FormatterParams;
+import org.fao.geonet.api.records.formatters.groovy.Environment;
+import org.fao.geonet.api.records.formatters.groovy.EnvironmentImpl;
+import org.fao.geonet.api.records.formatters.groovy.Functions;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Content;
@@ -50,7 +50,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
-import static org.fao.geonet.services.metadata.format.FormatterWidth._100;
+import static org.fao.geonet.api.records.formatters.FormatterWidth._100;
 
 /**
  * @author Jesse on 10/17/2014.
@@ -153,6 +153,7 @@ public abstract class AbstractFullViewFormatterTest extends AbstractFormatterTes
         public Format invoke() throws Exception {
             view = null;
             MockHttpServletRequest request = new MockHttpServletRequest();
+            request.getSession();
             MockHttpServletResponse response = new MockHttpServletResponse();
 //            measureFormatterPerformance(request, formatterId);
 

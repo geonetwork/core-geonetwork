@@ -23,6 +23,8 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.fao.geonet.entitylistener.IsoLanguageEntityListenerManager;
 
 import java.util.Map;

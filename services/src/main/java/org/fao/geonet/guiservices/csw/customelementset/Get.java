@@ -26,6 +26,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.CustomElementSet;
 import org.fao.geonet.domain.responses.CustomElementSetsListResponse;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.CustomElementSetRepository;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
@@ -56,7 +57,7 @@ public class Get {
         CustomElementSetRepository customElementSetRepository = context.getBean(CustomElementSetRepository.class);
         SettingManager sm = context.getBean(SettingManager.class);
 
-        boolean cswEnabled = sm.getValueAsBool("system/csw/enable");
+        boolean cswEnabled = sm.getValueAsBool(Settings.SYSTEM_CSW_ENABLE);
 
         CustomElementSetsListResponse response = new CustomElementSetsListResponse();
         List<String> xpaths = new ArrayList<String>();

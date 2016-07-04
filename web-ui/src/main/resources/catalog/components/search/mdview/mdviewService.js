@@ -228,7 +228,7 @@
 
         return promiseMd.then(function(md) {
           if (angular.isString(fUrl)) {
-            url = fUrl + md.getUuid();
+            url = fUrl.replace('{{uuid}}', md.getUuid());
           }
           else if (angular.isFunction(fUrl)) {
             url = fUrl(md);
@@ -249,7 +249,11 @@
 
         this.getFormatterUrl(gnSearchSettings.formatter.defaultUrl,
             newscope, uuid).then(function(url) {
-          $http.get(url).then(function(response) {
+          $http.get(url, {
+            headers: {
+              Accept: 'text/html'
+            }
+          }).then(function(response) {
             $rootScope.$broadcast('mdLoadingEnd');
 
             var newscope = scope ? scope.$new() :

@@ -178,6 +178,7 @@ public class TranslationApi implements ApplicationContextAware {
             while (operationIterator.hasNext()) {
                 Operation entity = operationIterator.next();
                 response.put("op-" + entity.getId() + "", entity.getLabel(language));
+                response.put("op-" + entity.getName() + "", entity.getLabel(language));
             }
         }
 

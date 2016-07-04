@@ -1,6 +1,5 @@
 package org.fao.geonet.api.records.model.related;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
 
 import java.util.ArrayList;
 import java.util.List;

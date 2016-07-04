@@ -38,14 +38,9 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
-import jeeves.xlink.Processor;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
+import org.eclipse.jetty.util.StringUtil;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -97,6 +92,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.GroupRepository;
@@ -175,6 +171,12 @@ import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Root;
+
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
+import jeeves.xlink.Processor;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -673,7 +675,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 final Group group = groupRepository.findOne(groupOwner);
                 if (group != null) {
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner), true, true));
-                    final boolean preferGroup = getSettingManager().getValueAsBool(SettingManager.SYSTEM_PREFER_GROUP_LOGO, true);
+                    final boolean preferGroup = getSettingManager().getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true);
                     if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
                         moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite(), true, false));
                     }
@@ -1561,16 +1563,16 @@ public class DataManager implements ApplicationEventPublisherAware {
         newMetadata.getSourceInfo()
             .setOwner(owner)
             .setSourceId(source);
-        if (groupOwner != null) {
+        if (StringUtils.isNotEmpty(groupOwner)) {
             newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner));
         }
-        if (category != null) {
+        if (StringUtils.isNotEmpty(category)) {
             MetadataCategory metadataCategory = getApplicationContext().getBean(MetadataCategoryRepository.class).findOneByName(category);
             if (metadataCategory == null) {
                 throw new IllegalArgumentException("No category found with name: " + category);
             }
             newMetadata.getCategories().add(metadataCategory);
-        } else if (groupOwner != null) {
+        } else if (StringUtils.isNotEmpty(groupOwner)) {
             //If the group has a default category, use it
             Group group = getApplicationContext()
                 .getBean(GroupRepository.class)
@@ -2120,11 +2122,18 @@ public class DataManager implements ApplicationEventPublisherAware {
     /**
      * Removes all operations stored for a metadata.
      */
-    public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllIntranet) throws Exception {
+    public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllReservedGroup) throws Exception {
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
 
-        if (skipAllIntranet) {
-            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), ReservedGroup.intranet.getId());
+        if (skipAllReservedGroup) {
+            int[] exclude = new int[] {
+                ReservedGroup.all.getId(),
+                    ReservedGroup.intranet.getId(),
+                    ReservedGroup.guest.getId()
+            };
+            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(
+                Integer.parseInt(metadataId), exclude
+            );
         } else {
             operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(metadataId));
         }
@@ -2171,8 +2180,8 @@ public class DataManager implements ApplicationEventPublisherAware {
         env.addContent(new Element("file").setText(file));
         env.addContent(new Element("ext").setText(ext));
 
-        String host = getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
-        String port = getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
+        String host = getSettingManager().getValue(Settings.SYSTEM_SERVER_HOST);
+        String port = getSettingManager().getValue(Settings.SYSTEM_SERVER_PORT);
         String baseUrl = context.getBaseUrl();
 
         env.addContent(new Element("host").setText(host));
@@ -2241,9 +2250,8 @@ public class DataManager implements ApplicationEventPublisherAware {
     private void transformMd(ServiceContext context, String metadataId, Element md, Element env, String schema, String styleSheet, boolean indexAfterChange) throws Exception {
 
         if (env.getChild("host") == null) {
-            String host = getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
-            String port = getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
-
+            String host = getSettingManager().getValue(Settings.SYSTEM_SERVER_HOST);
+            String port = getSettingManager().getValue(Settings.SYSTEM_SERVER_PORT);
             env.addContent(new Element("host").setText(host));
             env.addContent(new Element("port").setText(port));
         }
@@ -2426,7 +2434,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                             + "Reviewer of any group.");
                     }
                 } else {
-                    String userGroupsOnly = getSettingManager().getValue("system/metadataprivs/usergrouponly");
+                    String userGroupsOnly = getSettingManager().getValue(Settings.SYSTEM_METADATAPRIVS_USERGROUPONLY);
                     if (userGroupsOnly.equals("true")) {
                         // If user is member of the group, user can set operation
 
@@ -2624,7 +2632,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
         String groupMatchingRegex =
             getApplicationContext().getBean(SettingManager.class).
-                getValue("metadata/workflow/draftWhenInGroup");
+                getValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP);
         if (!StringUtils.isEmpty(groupMatchingRegex)) {
             final Group group = getApplicationContext().getBean(GroupRepository.class)
                 .findOne(Integer.valueOf(groupOwner));
@@ -2737,10 +2745,11 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @param updateDatestamp FIXME ? updateDatestamp is not used when running XSL transformation
      */
     public Element updateFixedInfo(String schema, Optional<Integer> metadataId, String uuid, Element md, String parentUuid, UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
-        boolean autoFixing = getSettingManager().getValueAsBool("system/autofixing/enable", true);
+        boolean autoFixing = getSettingManager().getValueAsBool(Settings.SYSTEM_AUTOFIXING_ENABLE, true);
         if (autoFixing) {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, trying update-fixed-info (updateDatestamp: " + updateDatestamp.name() + ")");
+            }
 
             Metadata metadata = null;
             if (metadataId.isPresent()) {
@@ -2994,9 +3003,9 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
 
         // add baseUrl of this site (from settings)
-        String protocol = getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL);
-        String host = getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
-        String port = getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
+        String protocol = getSettingManager().getValue(Settings.SYSTEM_SERVER_PROTOCOL);
+        String host = getSettingManager().getValue(Settings.SYSTEM_SERVER_HOST);
+        String port = getSettingManager().getValue(Settings.SYSTEM_SERVER_PORT);
         if (port.equals("80")) {
             port = "";
         } else {

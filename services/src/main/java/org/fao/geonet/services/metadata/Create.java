@@ -38,6 +38,7 @@ import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -58,6 +59,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 /**
  * Creates a metadata copying data from a given template.
  */
+@Deprecated
 public class Create extends NotInReadOnlyModeService {
     boolean useEditTab = false;
 
@@ -82,7 +84,7 @@ public class Create extends NotInReadOnlyModeService {
         boolean haveAllRights = Boolean.valueOf(Util.getParam(params, Params.FULL_PRIVILEGES, "false"));
 
         SettingManager sm = gc.getBean(SettingManager.class);
-        boolean generateUuid = sm.getValueAsBool("system/metadatacreate/generateUuid");
+        boolean generateUuid = sm.getValueAsBool(Settings.SYSTEM_METADATACREATE_GENERATE_UUID);
 
         // does the request contain a UUID ?
         try {

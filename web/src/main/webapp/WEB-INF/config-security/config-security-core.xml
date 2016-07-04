@@ -41,10 +41,11 @@
         <sec:filter-chain pattern="/srv/swagger-resources/**" filters=""/>
         <sec:filter-chain pattern="/srv/v2/**" filters=""/>
         <sec:filter-chain pattern="/doc/**" filters=""/>
-        <sec:filter-chain pattern="/api-doc/**" filters=""/>
         <sec:filter-chain pattern="/proxy**" filters=""/>
-        <!-- wroAPI is protected for admin only -->
-        <sec:filter-chain pattern="/static/(!wroAPI)" filters=""/>
+        <!-- wroAPI is protected for admin only
+        This is causing issue on node-change-warning page.
+        <sec:filter-chain pattern="/static/wroAPI" filters=""/>-->
+        <sec:filter-chain pattern="/static/**" filters=""/>
         <sec:filter-chain pattern="/catalog/**" filters=""/>
         <sec:filter-chain pattern="/test/**" filters=""/>
         <sec:filter-chain pattern="/" filters=""/>
@@ -74,6 +75,7 @@
       </list>
     </constructor-arg>
   </bean>
+
 
   <bean id="coreFilterChain" class="org.springframework.security.web.DefaultSecurityFilterChain">
     <constructor-arg>
@@ -138,7 +140,12 @@
     <property name="usernameParameter" value="username"/>
     <property name="passwordParameter" value="password"/>
     <property name="authenticationManager" ref="authenticationManager"/>
-    <property name="filterProcessesUrl" value="/j_spring_security_check"/>
+    <!--<property name="filterProcessesUrl" value="/signin"/>-->
+    <property name="requiresAuthenticationRequestMatcher">
+      <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+        <constructor-arg name="pattern" value="/signin"/>
+      </bean>
+    </property>
     <property name="authenticationDetailsSource" ref="authenticationDetailsSource"/>
     <property name="authenticationFailureHandler">
       <bean
@@ -194,7 +201,7 @@
         </bean>
       </list>
     </constructor-arg>
-    <property name="filterProcessesUrl" value="/j_spring_security_logout"/>
+    <property name="filterProcessesUrl" value="/signout"/>
   </bean>
 
   <bean id="logoutSuccessHandler"
@@ -210,14 +217,30 @@
     <property name="accessDeniedHandler" ref="accessDeniedHandler"/>
   </bean>
 
-  <bean id="authenticationEntryPoint"
+  <bean id="defaultAuthenticationEntryPoint"
         class="jeeves.config.springutil.JeevesNodeAwareLoginUrlEntryPoint">
-    <constructor-arg index="0" value="${loginForm}"/>
+    <constructor-arg name="loginFormUrl" value="${loginForm}"/>
+  </bean>
+
+  <bean id="ajaxEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" />
+
+  <bean id="authenticationEntryPoint"
+        class="org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint">
+    <constructor-arg>
+      <map>
+        <entry key-ref="apiRequestMatcher" value-ref="ajaxEntryPoint"/>
+      </map>
+    </constructor-arg>
+    <property name="defaultEntryPoint" ref="defaultAuthenticationEntryPoint" />
+  </bean>
+  <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher" id="apiRequestMatcher">
+    <constructor-arg name="pattern" value="/*/api/**" />
   </bean>
 
   <bean id="accessDeniedHandler"
         class="jeeves.config.springutil.JeevesAccessDeniedHandler">
     <property name="errorPage" value="/accessDenied.jsp"/>
+    <property name="onlyStatusResponsePages" value="/*/api/**" />
   </bean>
 
   <!-- TODO remember me.
@@ -315,4 +338,6 @@
   <bean class="org.fao.geonet.kernel.security.listener.UpdateTimestampListener"
         id="updateTimestampListener">
   </bean>
+
+
 </beans>

@@ -78,8 +78,8 @@
 
           var loadPrivileges;
           var fillGrid = function(data) {
-            scope.groups = data.groups;
-            scope.operations = data.operations;
+            scope.privileges = data.privileges;
+            // scope.operations = data.operations;
             scope.isAdminOrReviewer = data.isAdminOrReviewer;
           };
 
@@ -98,11 +98,15 @@
             loadPrivileges();
           }
 
+          scope.isAllowed = function(group, key) {
+            return true; // TODO
+          };
           scope.checkAll = function(group) {
-            angular.forEach(group.privileges, function(p) {
-              if (!p.disabled) {
-                p.value = group.isCheckedAll === true;
+            angular.forEach(group.operations, function(value, key) {
+              if (scope.isAllowed(group, key)) {
+                group.operations[key] = group.isCheckedAll === true;
               }
+              $('[name=' + group.group + '-' + key + ']').addClass('ng-dirty');
             });
           };
 
@@ -110,10 +114,35 @@
             return group.label[scope.lang];
           };
 
-          scope.save = function() {
+          scope.reset = function() {
+            $('#opsForm').find('input.ng-dirty').each(function(idx, el) {
+              el.checked = false;
+              $(el).removeClass('ng-dirty');
+            });
+          };
+
+          scope.save = function(replace) {
+
+            if (!replace) {
+              var updateCheckBoxes = [];
+              $('#opsForm input.ng-dirty[type=checkbox][data-ng-model]')
+                .each(function(c, el) {
+                    updateCheckBoxes.push($(el).attr('name'));
+                  });
+              angular.forEach(scope.privileges, function(value, group) {
+                var keyPrefix = value.group + '-';
+                angular.forEach(value.operations, function(value, op) {
+                  var key = keyPrefix + op;
+                  if ($.inArray(key, updateCheckBoxes) === -1) {
+                    delete scope.privileges[group].operations[op];
+                  }
+                });
+              });
+            }
             return gnShareService.savePrivileges(scope.id,
-                                                 scope.groups,
-                                                 scope.user).then(
+                                                 scope.privileges,
+                                                 scope.user,
+                                                 replace).then(
                 function(data) {
                   scope.$emit('PrivilegesUpdated', true);
                   scope.$emit('StatusUpdated', {
@@ -146,7 +175,7 @@
 
           scope.sortGroups = function(g) {
             if (scope.sorter.predicate == 'g') {
-              return g.label[scope.lang];
+              return $translate(g.group);
             }
             else if (scope.sorter.predicate == 'p') {
               return g.userProfile;

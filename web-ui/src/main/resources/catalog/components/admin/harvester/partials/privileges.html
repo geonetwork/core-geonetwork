@@ -29,8 +29,8 @@
       </div>
     </li>
     <li data-ng-repeat="g in groups | filter:groupSearch | orderBy:'name'" class="list-group-item">
-      <input type="checkbox" id="group-{{g['@id']}}" data-ng-model="selectedPrivileges[g['@id']]"/>
-      <label for="group-{{g['@id']}}">{{g.label[lang]|empty:g.name}}</label>
+      <input type="checkbox" id="group-{{g.id}}" data-ng-model="selectedPrivileges[g.id]"/>
+      <label for="group-{{g.id}}">{{g.label[lang]|empty:g.name}}</label>
     </li>
   </ul>
 </fieldset>

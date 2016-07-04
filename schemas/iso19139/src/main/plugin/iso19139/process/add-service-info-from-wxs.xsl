@@ -117,10 +117,10 @@
           /><xsl:value-of select="geonet:i18n($wxs-info-loc, 'b', $guiLang)"/>.
           </name>
           <operational>true</operational>
-          <params>{ setAndReplaceOperations:{type:'boolean', defaultValue:'<xsl:value-of
-            select="$setAndReplaceOperations"/>'},
-            wxsServiceUrl:{type:'string', defaultValue:'<xsl:value-of
-              select="normalize-space(gmd:linkage/gmd:URL)"/>'}
+          <params>{ "setAndReplaceOperations":{"type":"boolean", "defaultValue":"<xsl:value-of
+            select="$setAndReplaceOperations"/>"},
+            "wxsServiceUrl":{"type":"string", "defaultValue":"<xsl:value-of
+              select="normalize-space(gmd:linkage/gmd:URL)"/>"}
             }
           </params>
         </suggestion>

@@ -23,12 +23,6 @@
 
 package org.fao.geonet.util;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.mail.internet.InternetAddress;
-
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailAttachment;
@@ -36,6 +30,13 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.commons.mail.SimpleEmail;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.mail.internet.InternetAddress;
 
 /**
  * Utility class to send mails. Supports both html and plain text. It usually takes the settings
@@ -299,19 +300,19 @@ public class MailUtil {
      */
     private static void configureBasics(SettingManager settings, Email email) {
         String username = settings
-            .getValue("system/feedback/mailServer/username");
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME);
         String password = settings
-            .getValue("system/feedback/mailServer/password");
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD);
         Boolean ssl = settings
-            .getValueAsBool("system/feedback/mailServer/ssl");
+            .getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL);
         Boolean tls = settings
-            .getValueAsBool("system/feedback/mailServer/tls");
+            .getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS);
 
-        String hostName = settings.getValue("system/feedback/mailServer/host");
+        String hostName = settings.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
         Integer smtpPort = Integer.valueOf(settings
-            .getValue("system/feedback/mailServer/port"));
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT));
 
-        String from = settings.getValue("system/feedback/email");
+        String from = settings.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
         configureBasics(hostName, smtpPort, from, username, password, email, ssl, tls);
     }

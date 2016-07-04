@@ -18,6 +18,12 @@
           </div>
           <div class="radio">
             <label>
+              <input type="radio" data-ng-model="importMode" value="uploadFileByUrl"/>
+              <span data-translate="">uploadFileByUrl</span>
+            </label>
+          </div>
+          <div class="radio">
+            <label>
               <input type="radio" data-ng-model="importMode" value="copyPaste"
                      name="insert_mode" value="0"/>
               <span data-translate="">copyPaste</span>
@@ -44,11 +50,14 @@
                 <input type="text"
                        class="form-control"
                        id="gn-io-directory"
-                       name="dir"
+                       name="serverFolder"
+                       data-ng-model="params.serverFolder"
                        placeholder="/tmp/metadata/to/import">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" name="recurse"/>
+                    <input type="checkbox"
+                           name="recursiveSearch"
+                           data-ng-model="params.recursiveSearch"/>
                     <span data-translate="">recursive</span>
                   </label>
                 </div>
@@ -67,7 +76,10 @@
                 <span class="btn btn-success btn-block fileinput-button">
                   <i class="fa fa-plus fa-white"/>
                   <span data-translate="">chooseOnlinesrc</span>
-                  <input type="file" id="md-import-file" name="mefFile"/>
+                  <input type="file"
+                         multiple="true"
+                         id="md-import-file"
+                         name="file"/>
                 </span>
 
                     <ul>
@@ -93,34 +105,26 @@
                      class="col-sm-5 control-label"
                      data-translate="">metadataContent</label>
               <div class="col-sm-7">
-            <textarea class="form-control" rows="8" id="gn-md-content"
-                      placeholder="content"
-                      name="data"
-                      data-ng-model="md_content">
-            </textarea>
+                <textarea class="form-control" rows="8" id="gn-md-content"
+                          placeholder="<xml..."
+                          data-ng-model="params.xml">
+                </textarea>
               </div>
             </div>
 
-            <!-- Import file type XML/MEF -->
-            <div class="form-group" data-ng-if="importMode !== 'copyPaste'">
-              <label for="gn-io-directory"
+            <div class="form-group" data-ng-if="importMode === 'uploadFileByUrl'">
+              <label for="gn-md-content"
                      class="col-sm-5 control-label"
-                     data-translate="">fileType</label>
+                     data-translate="">metadataContent</label>
               <div class="col-sm-7">
-                <label class="radio-inline">
-                  <input type="radio" name="file_type"
-                         data-ng-model="file_type"
-                         value="single"/>
-                  <span data-translate="">singleFile</span>
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="file_type"
-                         data-ng-model="file_type"
-                         value="mef"/>
-                  <span data-translate="">mefFile</span>
-                </label>
+                <input class="form-control" type="text"
+                       placeholder="http://"
+                       name="url"
+                       data-ng-model="params.url">
+                </input>
               </div>
             </div>
+
 
             <!--Type of record-->
             <div class="form-group">
@@ -128,9 +132,12 @@
                      class="col-sm-5 control-label"
                      data-translate="">typeOfRecord</label>
               <div class="col-sm-7">
-                <div id="gn-typeOfRecord" gn-recordtypes-combo="template"></div>
+                <div id="gn-typeOfRecord"
+                     gn-recordtypes-combo="params.metadataType"></div>
 
-                <input type="text" class="hidden" name="template" data-ng-model="template">
+                <input type="text" class="hidden"
+                       name="metadataType"
+                       data-ng-model="params.metadataType">
               </div>
             </div>
 
@@ -141,23 +148,25 @@
               <div class="col-sm-7" id="batchAction">
                 <div class="radio">
                   <label>
-                    <input type="radio" name="uuidAction"
-                           data-ng-model="uuidAction"
-                           value="nothing"/>
+                    <input type="radio" name="uuidProcessing"
+                           data-ng-model="params.uuidProcessing"
+                           value="NOTHING"/>
                     <span data-translate="">none</span>
                   </label>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="uuidAction"
-                           data-ng-model="uuidAction"
-                           value="overwrite"/>
+                    <input type="radio" name="uuidProcessing"
+                           data-ng-model="params.uuidProcessing"
+                           value="OVERWRITE"/>
                     <span data-translate="">overwrite</span>
                   </label>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="uuidAction" value="generateUUID"/>
+                    <input type="radio" name="uuidProcessing"
+                           data-ng-model="params.uuidProcessing"
+                           value="GENERATEUUID"/>
                     <span data-translate="">generateUUID</span>
                   </label>
                 </div>
@@ -169,9 +178,10 @@
                      class="col-sm-5 control-label"
                      data-translate="">xsltToApply</label>
               <div class="col-sm-7">
-                <div data-gn-import-xsl="importXslt"/>
-                <input type="text" data-ng-model="importXslt"
-                       name="styleSheet"
+                <div data-gn-import-xsl="params.transformWith"/>
+                <input type="text"
+                       data-ng-model="params.transformWith"
+                       name="transformWith"
                        class="form-control hidden"/>
               </div>
             </div>
@@ -180,7 +190,9 @@
               <div class="col-sm-offset-5 col-sm-7">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" name="validate"/>
+                    <input type="checkbox"
+                           name="rejectIfInvalid"
+                           data-ng-model="params.rejectIfInvalid"/>
                     <span data-translate="">validate</span>
                   </label>
                 </div>
@@ -192,7 +204,9 @@
               <div class="col-sm-offset-5 col-sm-7">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" name="assign"/>
+                    <input type="checkbox"
+                           name="assignToCatalog"
+                           data-ng-model="params.assignToCatalog"/>
                     <span data-translate="">assignToCatalog</span>
                   </label>
                 </div>
@@ -204,10 +218,11 @@
                      data-translate="">assignToGroup</label>
               <div class="col-sm-7">
                 <div data-groups-combo=""
-                     data-owner-group="ownerGroup"
+                     data-owner-group="params.group"
                      lang="lang"
                      data-groups="groups" data-exclude-special-groups="true"/>
-                <input type="text" data-ng-model="ownerGroup"
+                <input type="text"
+                       data-ng-model="params.group"
                        name="group" id="md-import-group"
                        class="form-control hidden"/>
               </div>
@@ -217,9 +232,10 @@
               <label class="col-sm-5 control-label" for="md-import-cat"
                      data-translate="">assignToCategory</label>
               <div class="col-sm-7">
-                <div data-gn-category="category"
+                <div data-gn-category="params.category"
                      data-lang="{{lang}}"/>
-                <input type="text" data-ng-model="category" id="md-import-cat"
+                <input type="text"
+                       data-ng-model="params.category" id="md-import-cat"
                        name="category"
                        class="form-control hidden"/>
               </div>
@@ -243,8 +259,8 @@
 
 
       <div data-ng-repeat="report in reports track by $index">
-        <div class="panel panel-default" data-ng-class="report.exceptions || report.exception ||
-         (!report.success && report.message) ?
+        <div class="panel panel-default"
+             data-ng-class="report.code || (report.errors && report.errors.length > 0) ?
                           'panel-danger' : 'panel-success'">
           <div class="panel-heading" data-translate="">importReport</div>
           <div class="panel-body">
@@ -254,33 +270,17 @@
             </p>
             <p>
               <!--id and uuid from single import-->
-            <div data-ng-show="report.id">
-            <span translate
-                  translate-values="{id: '{{report.id}}', uuid: '{{report.uuid}}'}">importCPResult</span>
-              <a href='#/metadata/{{report.id}}' title="{{'edit' | translate}}">
-                <i class='fa fa-pencil'></i>
-              </a>
-            </div>
-
-            <!--Error message-->
-          <span ng-show="!report.message && report.records" translate
-                translate-values="{records: '{{report.records}}', success: '{{report.success}}', time: '{{report.time}}'}">importFromDirReport</span>
-
-            <!--Exception report-->
-            <table class="table table-striped" data-ng-show="report.exceptions">
-              <tr>
-                <th data-translate="">file</th>
-                <th data-translate="">error</th>
-              </tr>
-              <tr data-ng-repeat="e in report.exceptions.exception">
-                <td>{{e['@file']}}</td>
-                <td>{{e['#text']}}</td>
-              </tr>
-            </table>
-
-            <!--Only one exception from single import-->
-            <span ng-show="report.exception">{{report.exception}}</span>
-
+              <div data-ng-repeat="(key, value) in report.metadataInfos">
+                <span>{{value[0].message}}</span>
+                <a href='#/metadata/{{key}}' title="{{'edit' | translate}}">
+                  <i class='fa fa-pencil'></i>
+                </a>
+              </div>
+              <div data-ng-repeat="(key, value) in report.errors">
+                <span>{{value.message}}</span>
+              </div>
+              <!--Only one exception from single import-->
+              <span ng-show="report.code">{{report.description}}</span>
             </p>
           </div>
         </div>

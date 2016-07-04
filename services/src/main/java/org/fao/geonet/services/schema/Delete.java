@@ -41,7 +41,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 //=============================================================================
-
+@Deprecated
 public class Delete implements Service {
     // --------------------------------------------------------------------------
     // ---

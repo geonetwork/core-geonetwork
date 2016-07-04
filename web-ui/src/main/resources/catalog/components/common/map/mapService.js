@@ -1017,6 +1017,7 @@
                   olL.get('errors').push(errors);
 
                   gnWmsQueue.error(o);
+                  o.layer = olL;
                   defer.reject(o);
                 } else {
                   olL = $this.createOlWMSFromCap(map, capL, url);

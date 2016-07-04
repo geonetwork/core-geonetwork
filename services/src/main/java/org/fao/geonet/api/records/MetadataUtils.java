@@ -25,12 +25,19 @@ package org.fao.geonet.api.records;
 
 import com.google.common.base.Joiner;
 
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
@@ -38,16 +45,31 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.services.relations.Get;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
@@ -243,6 +265,53 @@ public class MetadataUtils {
         }
     }
 
+    /**
+     * Run an XML query and return a list of UUIDs.
+     *
+     * @param uuid    Metadata identifier
+     * @param query XML Request to run which will search for related metadata records to export
+     * @return List of related UUIDs to export
+     */
+    public static Set<String> getUuidsToExport(String uuid,
+                                         HttpServletRequest request,
+                                         Element query) throws Exception {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        SearchManager searchMan = applicationContext.getBean(SearchManager.class);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        ServiceConfig _config = new ServiceConfig();
+        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+
+            Set<String> uuids = new HashSet<>();
+
+            // perform the search
+            searcher.search(context, query, _config);
+
+            // If element type found, then get their uuid
+            if (searcher.getSize() != 0) {
+                Element elt = searcher.present(context, query, _config);
+
+                // Get ISO records only
+                @SuppressWarnings("unchecked")
+                List<Element> isoElt = elt.getChildren();
+                for (Element md : isoElt) {
+                    // -- Only metadata record should be processed
+                    if (!md.getName().equals("summary")) {
+                        String mdUuid = md.getChild(Edit.RootChild.INFO,
+                            Edit.NAMESPACE).getChildText(Edit.Info.Elem.UUID);
+                        if (Log.isDebugEnabled(Geonet.MEF))
+                            Log.debug(Geonet.MEF, "    Adding: " + mdUuid);
+                        uuids.add(mdUuid);
+                    }
+                }
+            }
+            Log.info(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
+            return uuids;
+        }
+    }
+
+    /**
+     * TODO-API : replace by ApiUtils.
+     */
     private static Element getRecord(String uuid, ServiceContext context, DataManager dm) {
         Element content = null;
         try {
@@ -254,5 +323,35 @@ public class MetadataUtils {
                 Log.debug(Geonet.SEARCH_ENGINE, "Metadata " + uuid + " record is not visible for user.");
         }
         return content;
+    }
+
+    public static void backupRecord(Metadata metadata, ServiceContext context) {
+        Path outDir = Lib.resource.getRemovedDir(metadata.getId());
+        Path outFile;
+        try {
+            // When metadata records contains character not supported by filesystem
+            // it may be an issue. eg. acri-st.fr/96443
+            outFile = outDir.resolve(URLEncoder.encode(metadata.getUuid(), Constants.ENCODING) + ".zip");
+        } catch (UnsupportedEncodingException e1) {
+            outFile = outDir.resolve(String.format(
+                "backup-%s-%s.mef",
+                new Date(), metadata.getUuid()));
+        }
+
+        Path file = null;
+        try {
+            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false);
+            Files.createDirectories(outDir);
+            try (InputStream is = IO.newInputStream(file);
+                 OutputStream os = Files.newOutputStream(outFile)) {
+                BinaryFile.copy(is, os);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (file == null) {
+                IO.deleteFile(file, false, Geonet.MEF);
+            }
+        }
     }
 }

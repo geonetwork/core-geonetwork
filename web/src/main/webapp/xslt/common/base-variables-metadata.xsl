@@ -66,7 +66,6 @@
 
 
   <!-- The labels, codelists and profiles specific strings -->
-  <!-- TODO : label inheritance between profiles - maybe in Java ? -->
   <xsl:variable name="schemaInfo" select="/root/gui/schemas/*[name(.)=$schema]"/>
   <xsl:variable name="labels" select="$schemaInfo/labels"/>
   <xsl:variable name="codelists" select="$schemaInfo/codelists"/>

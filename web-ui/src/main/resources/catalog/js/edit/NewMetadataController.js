@@ -40,7 +40,7 @@
     'gnConfigService',
     'gnConfig',
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
-            gnSearchManagerService, 
+            gnSearchManagerService,
             gnUtilityService,
             gnMetadataManager,
             gnConfigService,
@@ -109,7 +109,7 @@
 
 
           // TODO: Better handling of lots of templates
-          gnSearchManagerService.search('qi@json?' +
+          gnSearchManagerService.search('qi?_content_type=json&' +
               query + '&fast=index&from=1&to=200').
               then(function(data) {
 

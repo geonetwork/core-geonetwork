@@ -25,33 +25,29 @@
 
 package org.fao.geonet.api.records.attachments;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.lib.Lib;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.nio.file.Path;
 
 import javax.annotation.PostConstruct;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.Example;
-import io.swagger.annotations.ExampleProperty;
 import jeeves.server.context.ServiceContext;
+
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
 @EnableWebMvc
 @Controller
@@ -87,27 +83,25 @@ public class AttachmentsActionsApi {
     }
 
 
-    @ApiOperation(value = "Create a metadata overview using the mapprint module",
-        notes = "Notes",
+    @ApiOperation(
+        value = "Create an overview using the map print module",
+        notes = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/linking-thumbnail.html#generating-a-thumbnail-using-wms-layers'>More info</a>",
         response = MetadataResource.class,
         nickname = "createMetadataOverview")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "Successful retrieval of user detail", response = User.class),
-//            @ApiResponse(code = 404, message = "User with given username does not exist"),
-//            @ApiResponse(code = 500, message = "Internal server error")}
-//    )
-    @RequestMapping(value = "/api/" + API.VERSION_0_1 +
-        "/records/{metadataUuid}/attachments/actions/save-thumbnail",
+    @RequestMapping(
+        value = "/api/" + API.VERSION_0_1 +
+        "/records/{metadataUuid}/attachments/print-thumbnail",
         method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Thumbnail created."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseBody
     public MetadataResource saveThumbnail(
-        @ApiParam(value = "The metadata UUID",
-            required = true,
-            examples = @Example(value = {
-                @ExampleProperty(
-                    mediaType = "string",
-                    value = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-            })
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true
         )
         @PathVariable
             String metadataUuid,

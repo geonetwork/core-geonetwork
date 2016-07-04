@@ -44,6 +44,7 @@ import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.OperationAllowed_;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -110,13 +111,13 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         DataSource _dataSource = ApplicationContextHolder.get().getBean(DataSource.class);
 
         this._enabled = true;
-        String uuid = _settingManager.getValue("system/site/svnUuid");
+        String uuid = _settingManager.getValue(Settings.SYSTEM_SITE_SVNUUID);
 
         boolean dbCreated = false;
         if (StringUtils.isEmpty(uuid)) {
             dbCreated = true;
             uuid = UUID.randomUUID().toString();
-            _settingManager.setValue("system/site/svnUuid", uuid);
+            _settingManager.setValue(Settings.SYSTEM_SITE_SVNUUID, uuid);
         }
 
         File subFile = new File(subversionPath);

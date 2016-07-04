@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0">
 
+  <!-- All URL parameters could be available as params -->
   <xsl:param name="view" select="'default'"/>
 
   <!-- TODO: schema is not part of the XML -->

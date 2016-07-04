@@ -54,7 +54,7 @@ import static org.springframework.data.jpa.domain.Specifications.*;
 /**
  * Retrieves the groups for a particular user
  */
-
+@Deprecated
 public class UserGroups implements Service {
     //--------------------------------------------------------------------------
     //---

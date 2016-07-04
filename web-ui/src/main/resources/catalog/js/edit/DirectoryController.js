@@ -39,14 +39,16 @@
     'gnSearchManagerService',
     'gnUtilityService',
     'gnEditor',
+    'gnUrlUtils',
     'gnCurrentEdit',
     'gnMetadataManager',
     'gnGlobalSettings',
-    function($scope, $routeParams, $http, 
+    function($scope, $routeParams, $http,
         $rootScope, $translate, $compile,
-            gnSearchManagerService, 
+            gnSearchManagerService,
             gnUtilityService,
             gnEditor,
+            gnUrlUtils,
             gnCurrentEdit,
             gnMetadataManager,
             gnGlobalSettings) {
@@ -97,9 +99,9 @@
       };
 
       var init = function() {
-        $http.get('admin.group.list?_content_type=json', {cache: true}).
+        $http.get('../api/users', {cache: true}).
             success(function(data) {
-              $scope.groups = data !== 'null' ? data : null;
+              $scope.groups = data;
 
               // Select by default the first group.
               if ($scope.ownerGroup === null && data) {
@@ -271,38 +273,37 @@
 
           $scope.gnCurrentEdit = gnCurrentEdit;
           $scope.editorFormUrl = gnEditor
-              .buildEditUrlPrefix('md.edit') +
+              .buildEditUrlPrefix('editor') +
               '&starteditingsession=yes&random=' + i++;
         }
       };
 
       $scope.isImporting = false;
-      $scope.importData = {
-        data: null,
-        insert_mode: 0,
-        template: 's',
-        fullPrivileges: 'y'
-      };
-
-
+      $scope.xml = '';
       $scope.startImportEntry = function() {
         $scope.selectEntry(null);
         $scope.isImporting = true;
         $scope.importData = {
-          data: null,
-          insert_mode: 0,
-          template: 's',
-          fullPrivileges: 'y',
+          metadataType: 'SUB_TEMPLATE',
           group: $scope.groups[0].id
         };
       };
 
-      $scope.importEntry = function(formId) {
-        gnMetadataManager.importMd($scope.importData).then(
-            function() {
-              searchEntries();
-              $scope.isImporting = false;
-              $scope.importData = null;
+      $scope.importEntry = function(xml) {
+        gnMetadataManager.importFromXml(
+            gnUrlUtils.toKeyValue($scope.importData), xml).then(
+            function(r) {
+              if (r.status === 400) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate('saveMetadataError'),
+                  error: r.data,
+                  timeout: 0,
+                  type: 'danger'});
+              } else {
+                searchEntries();
+                $scope.isImporting = false;
+                $scope.xml = null;
+              }
             }
         );
       };

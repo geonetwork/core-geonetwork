@@ -80,8 +80,8 @@
           <xsl:value-of select="geonet:i18n($related-metadata-checker-loc, 'b', $guiLang)"/>
         </name>
         <operational>true</operational>
-        <params>{ uuidToRemove:{type:'string', defaultValue:'<xsl:value-of
-          select="normalize-space($uuid)"/>'}
+        <params>{ "uuidToRemove":{"type":"string", "defaultValue":"<xsl:value-of
+          select="normalize-space($uuid)"/>"}
           }
         </params>
       </suggestion>

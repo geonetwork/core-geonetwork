@@ -53,6 +53,7 @@ import java.util.*;
 /**
  * Assigns categories to metadata.
  */
+@Deprecated
 public class BatchUpdateCategories extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---

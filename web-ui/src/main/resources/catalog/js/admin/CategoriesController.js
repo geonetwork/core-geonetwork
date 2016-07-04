@@ -56,8 +56,7 @@
        * Delete a category
        */
       $scope.deleteCategory = function(id) {
-        $http.get('admin.category.remove?id=' +
-            id)
+        $http.delete('../api/tags/' + id)
             .success(function(data) {
               $scope.unselectCategory();
               loadCategories();
@@ -74,16 +73,16 @@
       /**
        * Save a category
        */
-      $scope.saveCategory = function(formId) {
-        $http.get('admin.category.update?' + $(formId).serialize())
-            .success(function(data) {
-              $scope.unselectCategory();
-              loadCategories();
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('categoryUpdated'),
-                timeout: 2,
-                type: 'success'});
-            })
+      $scope.saveCategory = function() {
+        $http.put('../api/tags/' + $scope.categorySelected.id,
+            $scope.categorySelected).success(function(data) {
+          $scope.unselectCategory();
+          loadCategories();
+          $rootScope.$broadcast('StatusUpdated', {
+            msg: $translate('categoryUpdated'),
+            timeout: 2,
+            type: 'success'});
+        })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('categoryUpdateError'),
@@ -96,29 +95,26 @@
       $scope.addCategory = function() {
         $scope.unselectCategory();
         $scope.categorySelected = {
-          '@id': '',
+          'id': '',
           name: ''
+          // label: {
+          // TODO: Should define default language
+          // based on catalog languages
+          // }
         };
         $timeout(function() {
           $('#categoryname').focus();
         }, 100);
       };
-
       $scope.unselectCategory = function() {
         $scope.categorySelected = {};
       };
-      $scope.updatingCategory = function() {
-        $scope.categoryUpdated = true;
-      };
 
       function loadCategories() {
-        $http.get('info@json?type=categories').success(function(data) {
-          $scope.categories = data.metadatacategory;
-        }).error(function(data) {
-          // TODO
+        $http.get('../api/tags').success(function(data) {
+          $scope.categories = data;
         });
       }
       loadCategories();
     }]);
-
 })();

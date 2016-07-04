@@ -38,8 +38,8 @@
       <li class="divider" data-ng-if="user.isConnected()"></li>
       <li ng-if="user.isEditorOrMore()">
         <a href="" ng-click="mdService.openPrivilegesBatchPanel(getCatScope())">
-          <i class="fa fa-key"></i>&nbsp;<span translate>updatePrivileges</span></a></li>
-      <li ng-if="user.isEditorOrMore()">
+        <i class="fa fa-key"></i>&nbsp;<span translate>updatePrivileges</span></a></li>
+      <li ng-if="v.service === 'catalog.edit' && user.isEditorOrMore()">
         <a href="" ng-click="mdService.openBatchEditing(getCatScope())">
           <i class="fa fa-pencil"></i>&nbsp;<span translate>editRecords</span></a></li>
       <li ng-if="user.isReviewerOrMore()" class="disabgit led">

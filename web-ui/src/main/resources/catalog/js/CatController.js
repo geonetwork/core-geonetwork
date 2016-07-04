@@ -187,15 +187,14 @@
         // Retrieve site information
         // TODO: Add INSPIRE, harvester, ... information
         var catInfo = promiseStart.then(function(value) {
-          var url = $scope.url + 'info?_content_type=json&type=site&type=auth';
-          return $http.get(url).
+          return $http.get('../api/site').
               success(function(data, status) {
                 $scope.info = data;
                 // Add the last time catalog info where updated.
                 // That could be useful to append to catalog image URL
                 // in order to trigger a reload of the logo when info are
                 // reloaded.
-                $scope.info.site.lastUpdate = new Date().getTime();
+                $scope.info['system/site/lastUpdate'] = new Date().getTime();
                 $scope.initialized = true;
               }).
               error(function(data, status, headers, config) {
@@ -212,13 +211,13 @@
         // Utility functions for user
         var userFn = {
           isAnonymous: function() {
-            return this['@authenticated'] === 'false';
+            return angular.isUndefined(this);
           },
           isConnected: function() {
             return !this.isAnonymous();
           },
           canEditRecord: function(md) {
-            if (!md || this['@authenticated'] == 'false') {
+            if (!md || this.isAnonymous()) {
               return false;
             }
 
@@ -258,19 +257,16 @@
 
         // Retrieve user information if catalog is online
         var userLogin = catInfo.then(function(value) {
-          var url = $scope.url + 'info?_content_type=json&type=me';
-          return $http.get(url).
-              success(function(data, status) {
-                angular.extend($scope.user, data.me);
-                angular.extend($scope.user, userFn);
-
-                $scope.authenticated = data.me['@authenticated'] !== 'false';
-              }).
-              error(function(data, status, headers, config) {
-                // TODO : translate
-                $rootScope.$broadcast('StatusUpdated',
-                   {msg: $translate('msgNoUserInfo')}
-                );
+          return $http.get('../api/me').
+              success(function(me, status) {
+                if (angular.isObject(me)) {
+                  angular.extend($scope.user, me);
+                  angular.extend($scope.user, userFn);
+                  $scope.authenticated = true;
+                } else {
+                  $scope.authenticated = false;
+                  $scope.user = undefined;
+                }
               });
         });
 

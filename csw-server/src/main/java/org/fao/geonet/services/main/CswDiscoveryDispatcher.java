@@ -23,23 +23,22 @@
 
 package org.fao.geonet.services.main;
 
-import jeeves.constants.Jeeves;
-
-import org.fao.geonet.Logger;
-
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.component.csw.CatalogDispatcher;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.jdom.Element;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Accepts CSW Discovery operations.
@@ -62,12 +61,13 @@ public class CswDiscoveryDispatcher implements Service {
         cswServiceSpecificContraint = config.getValue(Geonet.Elem.FILTER);
     }
 
+
     public Element exec(Element params, ServiceContext context) throws Exception {
         logger = context.getLogger();
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager settingMan = gc.getBean(SettingManager.class);
-        boolean cswEnable = settingMan.getValueAsBool("system/csw/enable", false);
+        boolean cswEnable = settingMan.getValueAsBool(Settings.SYSTEM_CSW_ENABLE, false);
 
         Element response = new Element(Jeeves.Elem.RESPONSE);
 

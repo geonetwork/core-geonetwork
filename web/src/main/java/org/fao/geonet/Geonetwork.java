@@ -42,13 +42,13 @@ import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
-import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.lib.DbLib;
@@ -57,10 +57,10 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.services.config.LogUtils;
-import org.fao.geonet.services.metadata.format.Format;
-import org.fao.geonet.services.metadata.format.FormatType;
-import org.fao.geonet.services.metadata.format.FormatterWidth;
+import org.fao.geonet.api.site.LogUtils;
+import org.fao.geonet.api.records.formatters.FormatterApi;
+import org.fao.geonet.api.records.formatters.FormatType;
+import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -92,7 +92,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import java.io.File;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -183,11 +182,6 @@ public class Geonetwork implements ApplicationHandler {
 
         importDatabaseData(context);
 
-        // Status actions class - load it
-        String statusActionsClassName = handlerConfig.getMandatoryValue(Geonet.Config.STATUS_ACTIONS_CLASS);
-        @SuppressWarnings("unchecked")
-        Class<StatusActions> statusActionsClass = (Class<StatusActions>) Class.forName(statusActionsClassName);
-
         JeevesJCS.setConfigFilename(appPath.resolve("WEB-INF/classes/cache.ccf"));
 
         // force caches to be config'd so shutdown hook works correctly
@@ -214,24 +208,23 @@ public class Geonetwork implements ApplicationHandler {
         }
 
         //------------------------------------------------------------------------
-        //--- initialize SRU 
 
         logger.info("  - SRU...");
 
         try {
 				  String[] configs = { Geonet.File.JZKITAPPLICATIONCONTEXT };
           ApplicationContext app_context = new  ClassPathXmlApplicationContext( configs, _applicationContext );
-    
+
           // to have access to the GN context in spring-managed objects
           ContextContainer cc = (ContextContainer)_applicationContext.getBean("ContextGateway");
           cc.setSrvctx(context);
 
-    
+
         } catch (Exception e) {
           logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + e.getMessage());
           e.printStackTrace();
         }
-    
+
         //------------------------------------------------------------------------
         //--- initialize SchemaManager
 
@@ -338,7 +331,7 @@ public class Geonetwork implements ApplicationHandler {
         OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(settingMan, schemaMan);
 
 
-        GeonetContext gnContext = new GeonetContext(_applicationContext, false, statusActionsClass);
+        GeonetContext gnContext = new GeonetContext(_applicationContext, false);
 
         //------------------------------------------------------------------------
         //--- return application context
@@ -379,22 +372,22 @@ public class Geonetwork implements ApplicationHandler {
         //--- load proxy information from settings into Jeeves for observers such
         //--- as jeeves.utils.XmlResolver to use
         ProxyInfo pi = JeevesProxyInfo.getInstance();
-        boolean useProxy = settingMan.getValueAsBool("system/proxy/use", false);
+        boolean useProxy = settingMan.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
         if (useProxy) {
-            String proxyHost = settingMan.getValue("system/proxy/host");
-            String proxyPort = settingMan.getValue("system/proxy/port");
-            String username = settingMan.getValue("system/proxy/username");
-            String password = settingMan.getValue("system/proxy/password");
+            String proxyHost = settingMan.getValue(Settings.SYSTEM_PROXY_HOST);
+            String proxyPort = settingMan.getValue(Settings.SYSTEM_PROXY_PORT);
+            String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
+            String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
             pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
         }
 
 
-        boolean inspireEnable = settingMan.getValueAsBool("system/inspire/enable", false);
+        boolean inspireEnable = settingMan.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE, false);
 
         if (inspireEnable) {
 
-            String atomType = settingMan.getValue("system/inspire/atom");
-            String atomSchedule = settingMan.getValue("system/inspire/atomSchedule");
+            String atomType = settingMan.getValue(Settings.SYSTEM_INSPIRE_ATOM);
+            String atomSchedule = settingMan.getValue(Settings.SYSTEM_INSPIRE_ATOM_SCHEDULE);
 
 
             if (StringUtils.isNotEmpty(atomType) && StringUtils.isNotEmpty(atomSchedule)
@@ -424,7 +417,7 @@ public class Geonetwork implements ApplicationHandler {
     }
 
     private void fillCaches(final ServiceContext context) {
-        final Format formatService = context.getBean(Format.class); // this will initialize the formatter
+        final FormatterApi formatService = context.getBean(FormatterApi.class); // this will initialize the formatter
 
         Thread fillCaches = new Thread(new Runnable() {
             @Override

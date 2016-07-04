@@ -34,6 +34,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -122,7 +123,7 @@ public abstract class XmlSerializer {
             return false;
         }
 
-        String xlR = _settingManager.getValue("system/xlinkResolver/enable");
+    String xlR = _settingManager.getValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE);
         if (xlR != null) {
             boolean isEnabled = xlR.equals("true");
             if (isEnabled) Log.debug(Geonet.DATA_MANAGER, "XLink Resolver enabled.");
@@ -141,7 +142,7 @@ public abstract class XmlSerializer {
             return false;
         }
 
-        String enableLogging = _settingManager.getValue("system/hidewithheldelements/enableLogging");
+        String enableLogging = _settingManager.getValue(Settings.SYSTEM_HIDEWITHHELDELEMENTS_ENABLE_LOGGING);
         if (enableLogging != null) {
             return enableLogging.equals("true");
         } else {

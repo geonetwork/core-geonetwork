@@ -236,36 +236,30 @@
           },
 
           link: function(scope, element, attrs) {
-            var url = 'info?_content_type=json' +
-                '&type=groupsIncludingSystemGroups';
+            var url = '../api/groups?withReservedGroup=true';
             if (attrs.profile) {
-              url = 'info?_content_type=json' +
-                  '&type=groups&profile=' + attrs.profile;
+              url = '../api/groups?profile=' + attrs.profile;
             }
             $http.get(url, {cache: true}).
                 success(function(data) {
-
                   //data-ng-if is not correctly updating groups.
                   //So we do the filter here
                   if (scope.excludeSpecialGroups) {
                     scope.groups = [];
-                    angular.forEach(data.group, function(g) {
-                      if (g['@id'] > 1) {
+                    angular.forEach(data, function(g) {
+                      if (g.id > 1) {
                         scope.groups.push(g);
                       }
                     });
                   } else {
-                    scope.groups = data !== 'null' ? data.group : null;
+                    scope.groups = data;
                   }
 
                   // Select by default the first group.
                   if ((angular.isUndefined(scope.ownerGroup) ||
-                      scope.ownerGroup === '') && data.group) {
-                    scope.ownerGroup = data.group[0]['@id'];
+                      scope.ownerGroup === '') && data) {
+                    scope.ownerGroup = data[0].id;
                   }
-
-
-
                 });
           }
 
@@ -286,8 +280,8 @@
               var config = 'iso19139|gmd:protocol|||';
               gnSchemaManagerService.getElementInfo(config).then(
                   function(data) {
-                    $scope.protocols = data !== 'null' ?
-                        data[0].helper.option : null;
+                    $scope.protocols = data.helper ?
+                        data.helper.option : null;
                   });
             }]
           };
@@ -550,7 +544,7 @@
                 }
                 // Search default value
                 angular.forEach(scope.infos, function(h) {
-                  if (h['default'] == 'true') {
+                  if (h.isDefault === true) {
                     defaultValue = h.code;
                   }
                 });
@@ -581,37 +575,14 @@
                 if (scope.type == 'codelist') {
                   gnSchemaManagerService.getCodelist(config).then(
                       function(data) {
-                        if (data !== 'null') {
-                          scope.infos = [];
-                          angular.copy(data[0].entry, scope.infos);
-                        } else {
-                          scope.infos = data[0].entry;
-                        }
-
+                        scope.infos = data.entry;
                         addBlankValueAndSetDefault();
                       });
                 }
                 else if (scope.type == 'element') {
                   gnSchemaManagerService.getElementInfo(config).then(
                       function(data) {
-                        if (data !== 'null') {
-                          scope.infos = [];
-                          // Helper element may be embbeded in an option
-                          // property when attributes are defined
-                          angular.forEach(data[0].helper.option ||
-                              data[0].helper,
-                              function(h) {
-                                scope.infos.push({
-                                  code: h['@value'],
-                                  label: h['#text'],
-                                  description: h['@title'] || '',
-                                  'default': h['@default'] == '' ?
-                                     'true' : 'false'
-                                });
-                              });
-                        } else {
-                          scope.infos = null;
-                        }
+                        scope.infos = data.helper ? data.helper.option : null;
                         addBlankValueAndSetDefault();
                       });
                 }
@@ -659,11 +630,10 @@
 
           link: function(scope, element, attrs) {
             scope.recordTypes = [
-              {key: 'METADATA', value: 'n'},
-              {key: 'TEMPLATE', value: 'y'},
-              {key: 'SUB_TEMPLATE', value: 's'}
+              {key: 'METADATA', value: 'METADATA'},
+              {key: 'TEMPLATE', value: 'TEMPLATE'},
+              {key: 'SUB_TEMPLATE', value: 'SUB_TEMPLATE'}
             ];
-
           }
         };
       }])

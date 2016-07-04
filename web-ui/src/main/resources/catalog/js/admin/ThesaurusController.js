@@ -130,17 +130,17 @@
       searchThesaurusKeyword = function() {
         if ($scope.thesaurusSelected) {
           $scope.recordsRelatedToThesaurus = 0;
-          $http.get('keywords@json?pNewSearch=true&pTypeSearch=1' +
-              '&pThesauri=' + $scope.thesaurusSelected.key +
-                      '&pMode=searchBox' +
-                      '&pUri=*' +
+          $http.get('../api/registries/vocabularies/search?type=CONTAINS' +
+              '&thesaurus=' + $scope.thesaurusSelected.key +
+                      '&uri=*' +
                       encodeURIComponent($scope.keywordFilter) + '*' +
-                      '&maxResults=' +
+                      '&rows=' +
                       ($scope.maxNumberOfKeywords ||
                               defaultMaxNumberOfKeywords) +
-                      '&pKeyword=' + (encodeURI($scope.keywordFilter) || '*')
+                      '&q=' + (encodeURI($scope.keywordFilter) || '*') +
+            '&lang=' + $scope.lang
           ).success(function(data) {
-            $scope.keywords = data[0];
+            $scope.keywords = data;
             gnSearchManagerService.gnSearch({
               summaryOnly: 'true',
               thesaurusIdentifier: $scope.thesaurusSelected.key}).
@@ -337,7 +337,7 @@
       searchRelation = function(k) {
         $scope.keywordSelectedRelation = {};
         $.each(relationTypes, function(index, value) {
-          $http.get('thesaurus.keyword.links@json?' +
+          $http.get('thesaurus.keyword.links?_content_type=json&' +
               'request=' + value +
                       '&thesaurus=' + $scope.thesaurusSelected.key +
                       '&id=' + encodeURIComponent(k.uri))
@@ -352,7 +352,16 @@
        * Edit an existing keyword, open the modal, search relations
        */
       $scope.editKeyword = function(k) {
-        $scope.keywordSelected = k;
+        if (k.value['#text']) {
+          $scope.keywordSelected = k;
+        } else {
+          $scope.keywordSelected = {
+            'uri': k.uri,
+            'value': {'@language': $scope.lang, '#text': k.value},
+            'definition': {'@language': $scope.lang, '#text': k.definition},
+            'defaultLang': $scope.lang
+          };
+        }
         // Add current language labels if not set in keywords
         if (!$scope.keywordSelected.value['#text']) {
           $scope.keywordSelected.value['#text'] = '';

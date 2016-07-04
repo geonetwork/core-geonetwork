@@ -25,8 +25,10 @@
 
 package org.fao.geonet.api.records.attachments;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
@@ -56,10 +58,6 @@ import java.nio.file.Path;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 /**
  * Metadata resource related operations.
@@ -135,7 +133,9 @@ public class AttachmentsApi {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(MetadataResourceVisibility.class, new MetadataResourceVisibilityConverter());
+        binder.registerCustomEditor(
+            MetadataResourceVisibility.class,
+            new MetadataResourceVisibilityConverter());
         binder.registerCustomEditor(Sort.class, new SortConverter());
     }
 
@@ -143,12 +143,18 @@ public class AttachmentsApi {
         return null;
     }
 
-    @ApiOperation(value = "List all metadata resources",
+    @ApiOperation(
+        value = "List all metadata attachments",
+        notes = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/using-filestore.html'>More info</a>",
         nickname = "getAllMetadataResources")
-//    @PreAuthorize("permitAll")
-    @RequestMapping(method = RequestMethod.GET,
+    @RequestMapping(
+        method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Return the record attachments."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
     @ResponseBody
     public List<MetadataResource> getAllResources(
         @ApiParam(value = "The metadata UUID",
@@ -170,11 +176,17 @@ public class AttachmentsApi {
         return list;
     }
 
-    @ApiOperation(value = "Delete all uploaded metadata resources",
+    @ApiOperation(
+        value = "Delete all uploaded metadata resources",
         nickname = "deleteAllMetadataResources")
-    @RequestMapping(method = RequestMethod.DELETE,
+    @RequestMapping(
+        method = RequestMethod.DELETE,
         produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasRole('Editor')") // FIXME: Does not work - check is made by the Store
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Attachment added."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delResources(@ApiParam(value = "The metadata UUID",
         required = true,
@@ -184,12 +196,18 @@ public class AttachmentsApi {
         store.delResource(metadataUuid);
     }
 
-    @ApiOperation(value = "Create a new resource for a given metadata",
+    @ApiOperation(
+        value = "Create a new resource for a given metadata",
         nickname = "putResourceFromFile")
     @PreAuthorize("hasRole('Editor')")
-    @RequestMapping(method = RequestMethod.POST,
+    @RequestMapping(
+        method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Attachment uploaded."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseBody
     public MetadataResource putResource(
         @ApiParam(value = "The metadata UUID",
@@ -209,12 +227,17 @@ public class AttachmentsApi {
         return store.putResource(metadataUuid, file, visibility);
     }
 
-    @ApiOperation(value = "Create a new resource from a URL for a given metadata",
+    @ApiOperation(
+        value = "Create a new resource from a URL for a given metadata",
         nickname = "putResourcesFromURL",
         produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasRole('Editor')")
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Attachment added."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseBody
     public MetadataResource putResourceFromURL(
         @ApiParam(value = "The metadata UUID",
@@ -234,12 +257,18 @@ public class AttachmentsApi {
         return store.putResource(metadataUuid, url, visibility);
     }
 
-    @ApiOperation(value = "Get a metadata resource",
+    @ApiOperation(
+        value = "Get a metadata resource",
         nickname = "getResource")
 //    @PreAuthorize("permitAll")
     @RequestMapping(value = "/{resourceId:.+}",
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Record attachment."),
+        @ApiResponse(code = 403, message = "Operation not allowed. " +
+            "User needs to be able to download the resource.")
+    })
     @ResponseBody
     public HttpEntity<byte[]> getResource(
         @ApiParam(value = "The metadata UUID",
@@ -266,13 +295,18 @@ public class AttachmentsApi {
         return new HttpEntity<>(Files.readAllBytes(file), headers);
     }
 
-    @ApiOperation(value = "Update the metadata resource visibility",
+    @ApiOperation(
+        value = "Update the metadata resource visibility",
         nickname = "patchMetadataResourceVisibility")
-//    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Attachment visibility updated."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @RequestMapping(value = "/{resourceId:.+}",
         method = RequestMethod.PATCH,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public MetadataResource patchResource(@ApiParam(value = "The metadata UUID",
         required = true,
@@ -291,11 +325,17 @@ public class AttachmentsApi {
         return store.patchResourceStatus(metadataUuid, resourceId, visibility);
     }
 
-    @ApiOperation(value = "Delete a metadata resource",
+    @ApiOperation(
+        value = "Delete a metadata resource",
         nickname = "deleteMetadataResource")
-//    @PreAuthorize("hasRole('Editor')")
-    @RequestMapping(value = "/{resourceId:.+}",
+    @PreAuthorize("hasRole('Editor')")
+    @RequestMapping(
+        value = "/{resourceId:.+}",
         method = RequestMethod.DELETE)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Attachment visibility removed."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delResource(@ApiParam(value = "The metadata UUID",
         required = true,

@@ -41,7 +41,7 @@ import java.nio.file.Path;
 /**
  * Given a metadata id returns all associated status records.
  */
-
+@Deprecated
 public class Get implements Service {
     //--------------------------------------------------------------------------
     //---

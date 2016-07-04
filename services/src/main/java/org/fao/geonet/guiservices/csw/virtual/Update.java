@@ -48,6 +48,7 @@ import java.util.Map;
  */
 
 @Controller("admin.config.virtualcsw.update")
+@Deprecated
 public class Update {
 
     public static final String OCCUR_PREFIX = "occur__";

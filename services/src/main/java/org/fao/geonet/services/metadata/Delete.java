@@ -49,6 +49,7 @@ import java.nio.file.Path;
 /**
  * Removes a metadata from the system.
  */
+@Deprecated
 public class Delete extends BackupFileService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

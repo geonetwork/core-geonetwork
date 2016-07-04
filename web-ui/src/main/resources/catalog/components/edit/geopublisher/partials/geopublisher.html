@@ -21,11 +21,8 @@
     <div class="panel-heading">
       <span data-translate="" data-translate-values="{layer: '{{name}}'}">publishIn</span>
 
-      <select data-ng-model="nodeId"
-              data-ng-change="selectNode(nodeId)">
-        <option data-ng-repeat="node in nodes track by $index" value="{{node.id}}">
-          {{node.name}}
-        </option>
+      <select data-ng-model="gsNode"
+              data-ng-options="value.name for (key, value) in nodes">
       </select>
     </div>
     <div class="panel-body">
@@ -34,23 +31,23 @@
         <div class="form-group" class="col-sm-12 inline">
           <div class="btn-toolbar">
             <button class="btn btn-lin btn-xs"
-                    data-ng-click="checkNode(nodeId)"
-                    data-ng-class="{'disabled': (!nodeId)}">
+                    data-ng-click="checkNode()"
+                    data-ng-class="{'disabled': (!gsNode)}">
               <i class="fa fa-chain"></i>&nbsp;<span data-translate="">check</span>
             </button>
-            <button class="btn btn-link btn-xs" data-ng-click="publish(nodeId)"
-                    data-ng-class="{'disabled': (isPublished || !nodeId)}">
+            <button class="btn btn-link btn-xs" data-ng-click="publish()"
+                    data-ng-class="{'disabled': (isPublished || !gsNode)}">
               <i class="fa fa-globe"></i>&nbsp;<span data-translate="">publish</span>
             </button>
-            <button class="btn btn-link btn-xs" data-ng-click="unpublish(nodeId)"
-                    data-ng-class="{'disabled': (!isPublished || !nodeId)}">
+            <button class="btn btn-link btn-xs" data-ng-click="unpublish()"
+                    data-ng-class="{'disabled': (!isPublished || !gsNode)}">
               <i class="fa fa-globe text-danger"></i>&nbsp;<span
               data-translate="">unpublish</span>
             </button>
             <!-- DROP DOWN CHECKBOX -->
             <div class="dropdown">
               <button class="btn btn-link btn-xs" data-toggle="dropdown"
-                      data-ng-class="{'disabled': (!isPublished || !nodeId)}">
+                      data-ng-class="{'disabled': (!isPublished || !gsNode)}">
                 <i class="fa fa-clipboard"></i>&nbsp;<span data-translate="">linkService</span>
                 <span class="caret"></span>
               </button>
@@ -86,8 +83,8 @@
               </ul>
             </div>
           </div>
-          <button class="btn btn-link btn-xs" data-ng-click="openStyler(nodeId)"
-                  data-ng-class="hasStyler ? ((isPublished || !nodeId) ? '': 'disabled') : 'hidden'">
+          <button class="btn btn-link btn-xs" data-ng-click="openStyler()"
+                  data-ng-class="hasStyler ? ((isPublished || !gsNode) ? '': 'disabled') : 'hidden'">
             <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">style</span>
           </button>
         </div>

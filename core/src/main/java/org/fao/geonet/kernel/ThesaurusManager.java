@@ -24,9 +24,6 @@ package org.fao.geonet.kernel;
 
 import com.google.common.collect.Maps;
 
-import jeeves.server.context.ServiceContext;
-import jeeves.xlink.Processor;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Constants;
@@ -34,6 +31,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.ThesaurusActivationRepository;
@@ -55,9 +53,9 @@ import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -66,6 +64,9 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 
 import static com.google.common.io.Files.getNameWithoutExtension;
 
@@ -308,12 +309,9 @@ public class ThesaurusManager implements ThesaurusFinder {
         return thesauriDirectory;
     }
 
-    // =============================================================================
-    // PUBLIC SERVICES
-
     @Override
     public Map<String, Thesaurus> getThesauriMap() {
-        if (this.settingManager.getValueAsBool(SettingManager.ENABLE_ALL_THESAURUS)) {
+        if (this.settingManager.getValueAsBool(Settings.SYSTEM_ENABLE_ALL_THESAURUS)) {
             final HashMap<String, Thesaurus> all = Maps.newHashMap(this.thesauriMap);
             all.put(this.allThesaurus.getKey(), this.allThesaurus);
             return all;
@@ -364,7 +362,6 @@ public class ThesaurusManager implements ThesaurusFinder {
      * @return id of thesaurus created/updated
      */
     public String createUpdateThesaurusFromRegister(String uuid, String type, ServiceContext context) throws Exception {
-
         String root = Geonet.CodeList.REGISTER;
 
         // check whether we have created a thesaurus for this register already

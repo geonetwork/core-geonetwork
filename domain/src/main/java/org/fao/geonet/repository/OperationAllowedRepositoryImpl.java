@@ -100,12 +100,19 @@ public class OperationAllowedRepositoryImpl implements OperationAllowedRepositor
 
     @Transactional
     @Override
-    public int deleteAllByMetadataIdExceptGroupId(int metadataId, int groupId) {
+    public int deleteAllByMetadataIdExceptGroupId(int metadataId, int[] groupId) {
         final String opAllowedEntityName = OperationAllowed.class.getSimpleName();
         final String metadataIdPath = SortUtils.createPath(OperationAllowed_.id, OperationAllowedId_.metadataId);
         final String groupIdPath = SortUtils.createPath(OperationAllowed_.id, OperationAllowedId_.groupId);
+        StringBuffer groupExcluded = new StringBuffer();
+        for (int g : groupId) {
+            groupExcluded.append(" and ");
+            groupExcluded.append(groupIdPath);
+            groupExcluded.append(" != ");
+            groupExcluded.append(g);
+        }
         final Query query = _entityManager.createQuery("DELETE FROM " + opAllowedEntityName + " where " + metadataIdPath + " = "
-            + metadataId + "and " + groupIdPath + " != " + groupId);
+            + metadataId + groupExcluded.toString());
 
         final int affected = query.executeUpdate();
         _entityManager.flush();

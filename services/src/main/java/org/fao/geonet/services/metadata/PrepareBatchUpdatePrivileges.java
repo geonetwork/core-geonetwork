@@ -46,7 +46,7 @@ import java.util.Set;
 /**
  * Return all groups of the current user with operations included.
  */
-
+@Deprecated
 public class PrepareBatchUpdatePrivileges implements Service {
     //--------------------------------------------------------------------------
     //---

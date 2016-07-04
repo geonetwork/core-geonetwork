@@ -72,6 +72,7 @@ import jeeves.services.ReadWriteController;
  */
 @Controller("metadata.processing")
 @ReadWriteController
+@Deprecated
 public class XslProcessing {
 
     @RequestMapping(value = {"/{lang}/md.processing", "/{lang}/xml.metadata.processing", "/{lang}/metadata.processing.new"}, produces = {

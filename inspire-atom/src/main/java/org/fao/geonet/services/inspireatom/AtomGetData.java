@@ -39,6 +39,7 @@ import org.fao.geonet.domain.InspireAtomFeed;
 import org.fao.geonet.domain.InspireAtomFeedEntry;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -83,7 +84,7 @@ public class AtomGetData implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         SettingManager sm = context.getBean(SettingManager.class);
 
-        boolean inspireEnable = sm.getValueAsBool("system/inspire/enable");
+        boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
 
         if (!inspireEnable) {
             Log.info(Geonet.ATOM, "Inspire is disabled");

@@ -52,6 +52,7 @@ import java.util.*;
  * Export one or more metadata records in Metadata Exchange Format (MEF) file format. See http
  * ://trac.osgeo.org/geonetwork/wiki/MEF for more details.
  */
+@Deprecated
 public class Export implements Service {
     private Path stylePath;
     private ServiceConfig _config;

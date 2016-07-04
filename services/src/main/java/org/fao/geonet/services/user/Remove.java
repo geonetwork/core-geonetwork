@@ -53,6 +53,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 
 @Controller("admin.user.remove")
 @ReadWriteController
+@Deprecated
 public class Remove {
 
 

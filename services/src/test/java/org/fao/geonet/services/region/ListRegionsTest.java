@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.region;
 
+import org.fao.geonet.api.regions.ListRegionsResponse;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.json.JSONArray;

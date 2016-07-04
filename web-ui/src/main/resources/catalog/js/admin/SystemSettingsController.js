@@ -32,7 +32,7 @@
     return function(input) {
       var filtered = [];
       angular.forEach(input, function(el) {
-        if (el['@name'].indexOf('system/site/labels/') === -1) {
+        if (el.name.indexOf('system/site/labels/') === -1) {
           filtered.push(el);
         }
       });
@@ -67,7 +67,7 @@
   module.controller('GnSystemSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', '$location',
     'gnUtilityService',
-    function($scope, $http, $rootScope, $translate, $location, 
+    function($scope, $http, $rootScope, $translate, $location,
         gnUtilityService) {
 
       $scope.settings = [];
@@ -75,15 +75,15 @@
       $scope.sectionsLevel1 = {};
       $scope.systemUsers = null;
       $scope.processTitle = '';
-      $scope.orderProperty = '@position';
+      $scope.orderProperty = 'position';
       $scope.reverse = false;
       $scope.systemInfo = {
         'stagingProfile': 'production'
       };
-      $scope.stagingProfiles = ['production', 'development', 'integration'];
+      $scope.stagingProfiles = ['production', 'development', 'testing'];
       $scope.updateProfile = function() {
 
-        $http.get('systeminfo/staging?newProfile=' +
+        $http.put('../api/site/info/staging/' +
             $scope.systemInfo.stagingProfile)
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
@@ -111,29 +111,26 @@
          */
       function loadSettings() {
 
-        $http.get('info?type=systeminfo&_content_type=json')
+        $http.get('../api/site/info/build')
             .success(function(data) {
-              $scope.systemInfo = data.systemInfo;
+              $scope.systemInfo = data;
             });
         // load log files
-        $http.get('admin.logfile.list?_content_type=json')
+        $http.get('../api/site/logging')
             .success(function(data) {
-              $scope.logfiles = data.logFile;
+              $scope.logfiles = data;
             });
-        $http.get('admin.config.list?asTree=false&_content_type=json')
+        $http.get('../api/site/settings/details')
             .success(function(data) {
 
               var sectionsLevel1 = [];
               var sectionsLevel2 = [];
-              gnUtilityService.parseBoolean(data);
               $scope.settings = data;
               angular.copy(data, $scope.initalSettings);
 
 
               for (var i = 0; i < $scope.settings.length; i++) {
-                var tokens = $scope.settings[i]['@name'].split('/');
-                $scope.settings[i].formName =
-                    $scope.settings[i]['@name'].replace(/\//g, '.');
+                var tokens = $scope.settings[i].name.split('/');
                 // Extract level 1 and 2 sections
                 if (tokens) {
                   var level1name = tokens[0];
@@ -141,7 +138,7 @@
                     sectionsLevel1.push(level1name);
                     $scope.sectionsLevel1[level1name] = {
                       'name': level1name,
-                      '@position': $scope.settings[i]['@position'],
+                      'position': $scope.settings[i].position,
                       children: []
                     };
                   }
@@ -150,7 +147,7 @@
                     sectionsLevel2.push(level2name);
                     $scope.sectionsLevel1[level1name].children.push({
                       'name': level2name,
-                      '@position': $scope.settings[i]['@position'],
+                      'position': $scope.settings[i].position,
                       'children': filterBySection($scope.settings, level2name)
                     });
                   }
@@ -162,7 +159,7 @@
       }
 
       function loadUsers() {
-        $http.get('admin.user.list?_content_type=json').success(function(data) {
+        $http.get('../api/users').success(function(data) {
           $scope.systemUsers = data;
         });
       }
@@ -175,7 +172,7 @@
         var regexp = new RegExp('^' + section);
         for (var i = 0; i < elements.length; i++) {
           var s = elements[i];
-          if (regexp.test(s['@name'])) {
+          if (regexp.test(s.name)) {
             settings.push(s);
           }
         }
@@ -188,7 +185,7 @@
          */
       $scope.saveSettings = function(formId) {
 
-        $http.post($scope.url + 'admin.config.save',
+        $http.post('../api/site/settings',
             gnUtilityService.serialize(formId), {
               headers: {'Content-Type':
                     'application/x-www-form-urlencoded'}
@@ -241,10 +238,10 @@
             });
       };
       var buildUrl = function(settings) {
-        var port = filterBySection(settings, 'system/server/port')[0]['#text'];
-        var host = filterBySection(settings, 'system/server/host')[0]['#text'];
+        var port = filterBySection(settings, 'system/server/port')[0].value;
+        var host = filterBySection(settings, 'system/server/host')[0].value;
         var protocol = filterBySection(settings,
-            'system/server/protocol')[0]['#text'];
+            'system/server/protocol')[0].value;
 
         return protocol + '://' + host + (port == '80' ? '' : ':' + port);
       };

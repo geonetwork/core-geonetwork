@@ -22,6 +22,8 @@
 
 package org.fao.geonet.kernel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.eclipse.jetty.util.URIUtil;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.exceptions.LabelNotFoundException;
@@ -98,6 +100,7 @@ public class KeywordBean {
      *
      * @return a complex iso19139 representation of the keyword
      */
+    @JsonIgnore
     public static Element getComplexIso19139Elt(List<KeywordBean> kbList) {
         Element root = new Element("MD_Keywords", Namespaces.GMD);
 
@@ -217,6 +220,7 @@ public class KeywordBean {
         return this;
     }
 
+    @JsonIgnore
     public boolean isSelected() {
         return selected;
     }
@@ -235,6 +239,7 @@ public class KeywordBean {
         return this;
     }
 
+    @JsonIgnore
     public String getThesaurusTitle() {
         return thesaurusTitle;
     }
@@ -243,6 +248,7 @@ public class KeywordBean {
         this.thesaurusTitle = thesaurusTitle;
     }
 
+    @JsonIgnore
     public String getThesaurusDate() {
         return thesaurusDate;
     }
@@ -251,6 +257,7 @@ public class KeywordBean {
         this.thesaurusDate = thesaurusDate;
     }
 
+    @JsonIgnore
     public String getKeywordUrl() {
         return keywordUrl;
     }
@@ -267,6 +274,7 @@ public class KeywordBean {
      *
      * @return the default language
      */
+    @JsonIgnore
     public String getDefaultLang() {
         return defaultLang;
     }
@@ -282,6 +290,7 @@ public class KeywordBean {
      *
      * @return return default value
      */
+    @JsonProperty("value")
     public String getDefaultValue() {
         return values.get(defaultLang);
     }
@@ -291,7 +300,7 @@ public class KeywordBean {
      *
      * @return preferredLabel
      */
-
+    @JsonIgnore
     public String getPreferredLabel(String langCode) {
         String preferredLabel = values.get(langCode);
 
@@ -340,6 +349,7 @@ public class KeywordBean {
      *
      * @return return default definition
      */
+    @JsonProperty("definition")
     public String getDefaultDefinition() {
         return definitions.get(defaultLang);
     }
@@ -368,6 +378,7 @@ public class KeywordBean {
         return this;
     }
 
+    @JsonIgnore
     public int getId() {
         return id;
     }
@@ -380,6 +391,7 @@ public class KeywordBean {
     /**
      * Returns the URI of the keyword concept.
      */
+    @JsonProperty("uri")
     public String getUriCode() {
         return code;
     }
@@ -392,6 +404,7 @@ public class KeywordBean {
     /**
      * TODO javadoc.
      */
+    @JsonIgnore
     public String getRelativeCode() {
         if (code == null) {
             return "";
@@ -415,6 +428,7 @@ public class KeywordBean {
     /**
      * TODO javadoc.
      */
+    @JsonIgnore
     public String getNameSpaceCode() {
         if (code == null) {
             return "#";
@@ -469,11 +483,13 @@ public class KeywordBean {
     /**
      * TODO javadoc.
      */
+    @JsonIgnore
     public String getType() {
         int tmpDotIndex = thesaurusKey.indexOf('.');
         return thesaurusKey.substring(tmpDotIndex + 1, thesaurusKey.indexOf(".", tmpDotIndex + 1));
     }
 
+    @JsonIgnore
     public String getThesaurusType() {
         return org.apache.commons.lang.StringUtils.substringBefore(thesaurusKey, ".");
     }
@@ -510,6 +526,7 @@ public class KeywordBean {
      *
      * @return an iso19139 representation of the keyword
      */
+    @JsonIgnore
     public Element getIso19139() {
         Element ele = new Element("MD_Keywords", Namespaces.GMD);
         Element el = new Element("keyword", Namespaces.GMD);
@@ -620,6 +637,7 @@ public class KeywordBean {
         return elKeyword;
     }
 
+    @JsonIgnore
     public String getDownloadUrl() {
         return downloadUrl;
     }
@@ -633,6 +651,7 @@ public class KeywordBean {
         return getIsoLanguageMapper().iso639_1_to_iso639_2(lang.toLowerCase(), lang.toLowerCase());
     }
 
+    @JsonIgnore
     public IsoLanguagesMapper getIsoLanguageMapper() {
         return isoLanguageMapper;
     }
