@@ -20606,10 +20606,6 @@ yx-axis
 .g .tab-pane .container-fluid .gn-md-side:after {
   clear: both;
 }
-.gn .sxt-md-container,
-.g .sxt-md-container {
-  background: url(http://sextant.ifremer.fr/record/images/bg_page.gif) top left repeat;
-}
 .gn .gn-md-view,
 .g .gn-md-view {
   padding: 25px;
