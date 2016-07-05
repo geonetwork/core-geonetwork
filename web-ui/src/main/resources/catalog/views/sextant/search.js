@@ -593,7 +593,7 @@
       var status = md.mdStatus;
       var user = scope.user;
       scope.cantStatus = ((status == 4 || status == 2 || status == 3)
-          && !user.isReviewerOrMore());
+          && user.isReviewerOrMore && !user.isReviewerOrMore());
 
 
       scope.links = md.getLinksByType('LINK');
