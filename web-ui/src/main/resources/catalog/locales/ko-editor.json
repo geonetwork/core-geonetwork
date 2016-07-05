@@ -38,6 +38,7 @@
     "beforeUnloadEditor": "마지막 저장 {{timeAgo}} 이후로 변경 내용을 저장하지 않았습니다.",
     "batchEditing": "일괄 편집",
     "fieldIsRemoved": "이 필드가 제거됩니다",
+    "editRecords": "Edit selection",
     "removeField": "이 필드 제거",
     "addXpath-help": "XPath를 이용하는 레코드 갱신은 변경에 대한 세심한 정의가 필요합니다. 변경은 다음에 의해 정의됩니다:",
     "addXpathTitle": "선택사양 타일",
@@ -293,6 +294,8 @@
     "xsltToApply": "XSLT 변환 적용",
     "yearAndMonthMode": "년과 월",
     "yearMode": "년 만",
+    "uploadFileByUrl": "Upload a file from URL",
+    "noFileSelected": "Choose a file to load!",
     "yourMetadata": "메타데이터",
     "searchKeyword": "검색...",
     "searchOrTypeKeyword": "입력하거나 검색 ...",
@@ -314,5 +317,6 @@
     "currentConcept": "현재 개념",
     "parentConcept": "상위 개념",
     "moreSpecificConcept": "더 구체적인 개념",
-    "associatedConcept": "연관 개념"
+    "associatedConcept": "연관 개념",
+    "xsd": "Schema validation"
 }

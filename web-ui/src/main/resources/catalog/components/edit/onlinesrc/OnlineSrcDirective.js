@@ -1412,7 +1412,8 @@
                           scope.alertMsg =
                               $translate('linkToServiceWithoutURLError');
                         }
-                      } else {
+                      }
+                      else {
                         scope.srcParams.uuidDS = md.getUuid();
                       }
                     }
