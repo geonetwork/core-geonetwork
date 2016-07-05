@@ -359,5 +359,7 @@
   "fbCatMetadataEditing": "Metadata Editing",
   "fbCatHarvesting": "Harvesting",
   "fbCatValidator": "Validator",
-  "fbCatOthers": "Others"
+  "fbCatOthers": "Others",
+  "validate": "Validate",
+  "editRecords": "Edit"
 }
