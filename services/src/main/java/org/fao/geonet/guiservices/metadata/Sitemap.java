@@ -66,8 +66,8 @@ public class Sitemap implements Service {
     private static final String FORMAT_XML = "xml";
     private static final String FORMAT_HTML = "html";
 
-    // Max. items in page defined in spec
-    private static final int MAX_ITEMS_PER_PAGE = 50000;
+    // Max. items in page defined in spec 50000; set lower because of memory issues
+    private static final int MAX_ITEMS_PER_PAGE = 1000;
 
     private int _maxItemsPage;
 
