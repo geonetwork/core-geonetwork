@@ -26,7 +26,7 @@ class SxtSummary extends Summary {
     public FileResult getResult() throws Exception {
         HashMap<String, Object> params = Maps.newHashMap();
 
-        params.put("logo", logo);
+        params.put("logo", logo != null ? logo : "");
         params.put("title", title != null ? title : "");
         params.put("pageTitle", title != null ? title.replace('"', '\'') : "");
         params.put("abstract", abstr);
