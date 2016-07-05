@@ -133,10 +133,10 @@
       </ul>
     </div>
 
-    <div data-ng-if="hmActive">
+    <div data-ng-show="hmActive">
       <label data-ng-show="map" data-ng-show="source.getFeatures().length > 0">
         <input type="checkbox"
-        data-ng-model="isHeatMapVisible"/>
+               data-ng-model="isHeatMapVisible"/>
         <span data-translate="">displayHeatMap</span>
       </label>
     </div>
