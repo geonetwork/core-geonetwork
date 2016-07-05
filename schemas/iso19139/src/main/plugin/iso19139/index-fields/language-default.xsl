@@ -418,13 +418,6 @@
               <Field name="format" string="{string(.)}" store="true" index="true"/>
           </xsl:for-each>
 
-
-
-    <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
-      <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name//gmd:LocalisedCharacterString[@locale=$langId]">
-        <Field name="format" string="{string(.)}" store="true" index="true"/>
-      </xsl:for-each>
-
       <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
         <xsl:variable name="tPosition" select="position()"></xsl:variable>
         <xsl:for-each select="gmd:onLine/gmd:CI_OnlineResource[
@@ -502,7 +495,6 @@
           </xsl:if>
         </xsl:for-each>
       </xsl:for-each>
-    </xsl:for-each>
 
         <!-- Service version        -->
         <xsl:for-each select="gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString|
