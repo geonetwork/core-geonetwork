@@ -12,7 +12,7 @@ public class SimpleMetadata {
     public SimpleMetadata(Integer id, String uuid, org.fao.geonet.domain.ISODate date, char isTemplate) {
         this.id = id.toString();
         this.uuid = uuid;
-        this.date = date.getDateAsString();
+        this.date = date.getDateAndTime();
         this.isTemplate = String.valueOf(isTemplate);
     }
     
