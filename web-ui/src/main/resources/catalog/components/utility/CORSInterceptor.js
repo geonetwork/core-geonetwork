@@ -73,10 +73,12 @@
                   if ($.inArray(url, gnGlobalSettings.requireProxy) == -1) {
                     gnGlobalSettings.requireProxy.push(url);
                   }
-
-                  $injector.invoke(function($http) {
+                  
+                  $injector.invoke(['$http', function($http) {
                     // This modification prevents interception (infinite
                     // loop):
+                    
+                    console.log($http);
                     config.nointercept = true;
 
                     // retry again
@@ -85,7 +87,7 @@
                     }, function(resp) {
                       defer.reject(resp);
                     });
-                  });
+                  }]);
 
                 } else {
                   defer.resolve(response);
