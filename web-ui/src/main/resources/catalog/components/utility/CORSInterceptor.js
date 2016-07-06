@@ -48,11 +48,11 @@
                 var url = config.url.split('/');
                 url = url[0] + '/' + url[1] + '/' + url[2] + '/';
 
-                // if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
+                if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
                 // require proxy
-                config.url = gnGlobalSettings.proxyUrl +
+                  config.url = gnGlobalSettings.proxyUrl +
                     encodeURIComponent(config.url);
-                // }
+                }
               }
 
               return $q.when(config);
