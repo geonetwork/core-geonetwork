@@ -78,7 +78,6 @@
                     // This modification prevents interception (infinite
                     // loop):
                     
-                    console.log($http);
                     config.nointercept = true;
 
                     // retry again
