@@ -36,5 +36,4 @@
     'gn_login_controller',
     'gn_cat_controller'
   ]);
-
 })();

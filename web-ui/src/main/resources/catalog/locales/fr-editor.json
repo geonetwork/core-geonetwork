@@ -38,6 +38,7 @@
     "beforeUnloadEditor": "Vous pourriez avoir des modifications non sauvées depuis la dernière sauvegarde {{timeAgo}}.",
     "batchEditing": "Édition en série",
     "fieldIsRemoved": "Ce champ sera supprimé",
+    "editRecords": "Edit selection",
     "removeField": "Supprimé ce champ",
     "addXpath-help": "Mettre à jour une fiche via XPath demande une définition précise des modifications. Un changement est défini par :",
     "addXpathTitle": "un titre optionel",
@@ -293,6 +294,8 @@
     "xsltToApply": "Appliquer une conversion XSLT",
     "yearAndMonthMode": "Année et mois",
     "yearMode": "Année",
+    "uploadFileByUrl": "Upload a file from URL",
+    "noFileSelected": "Choose a file to load!",
     "yourMetadata": "Vos métadonnées",
     "searchKeyword": "Rechercher dans le thésaurus ...",
     "searchOrTypeKeyword": "Saisir ou rechercher ...",
@@ -314,5 +317,6 @@
     "currentConcept": "Current concept",
     "parentConcept": "Parent concept",
     "moreSpecificConcept": "More specific concepts",
-    "associatedConcept": "Associated concepts"
+    "associatedConcept": "Associated concepts",
+    "xsd": "Schema validation"
 }

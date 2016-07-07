@@ -377,6 +377,7 @@ public class ServiceManager {
         final HttpSession httpSession = request.getSession(false);
         UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
         if (session != null) {
+
             context.setUserSession(session);
         }
 

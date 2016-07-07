@@ -48,11 +48,11 @@
                 var url = config.url.split('/');
                 url = url[0] + '/' + url[1] + '/' + url[2] + '/';
 
-                // if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
+                if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
                 // require proxy
-                config.url = gnGlobalSettings.proxyUrl +
+                  config.url = gnGlobalSettings.proxyUrl +
                     encodeURIComponent(config.url);
-                // }
+                }
               }
 
               return $q.when(config);
@@ -73,10 +73,11 @@
                   if ($.inArray(url, gnGlobalSettings.requireProxy) == -1) {
                     gnGlobalSettings.requireProxy.push(url);
                   }
-
-                  $injector.invoke(function($http) {
+                  
+                  $injector.invoke(['$http', function($http) {
                     // This modification prevents interception (infinite
                     // loop):
+                    
                     config.nointercept = true;
 
                     // retry again
@@ -85,7 +86,7 @@
                     }, function(resp) {
                       defer.reject(resp);
                     });
-                  });
+                  }]);
 
                 } else {
                   defer.resolve(response);

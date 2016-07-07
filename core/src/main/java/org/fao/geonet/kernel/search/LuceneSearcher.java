@@ -536,14 +536,36 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
                 returnValue = TermRangeQuery.newStringRange(fld, lowerTxt, upperTxt, inclusive, inclusive);
             }
-        } else if (name.equals("DateRangeQuery")) {
-            String fld = xmlQuery.getAttributeValue("fld");
-            String lowerTxt = xmlQuery.getAttributeValue("lowerTxt");
-            String upperTxt = xmlQuery.getAttributeValue("upperTxt");
-            String sInclusive = xmlQuery.getAttributeValue("inclusive");
-            returnValue = new DateRangeQuery(fld, lowerTxt, upperTxt, sInclusive);
-        } else if (name.equals("BooleanQuery")) {
-            BooleanQuery query = new BooleanQuery();
+		}
+		else if (name.equals("RangeQuery"))
+		{
+			String  fld        = xmlQuery.getAttributeValue("fld");
+			String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
+			String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
+			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
+			boolean inclusive  = "true".equals(sInclusive);
+
+			LuceneConfigNumericField fieldConfig = numericFieldSet .get(fld);
+			if (fieldConfig != null) {
+				returnValue = LuceneQueryBuilder.buildNumericRangeQueryForType(fld, lowerTxt, upperTxt, inclusive, inclusive, fieldConfig.getType(), fieldConfig.getPrecisionStep());
+			} else {
+				lowerTxt = (lowerTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet));
+				upperTxt = (upperTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet));
+
+				returnValue = TermRangeQuery.newStringRange(fld, lowerTxt, upperTxt, inclusive, inclusive);
+			}
+		}
+		else if (name.equals("DateRangeQuery"))
+		{
+			String  fld        = xmlQuery.getAttributeValue("fld");
+			String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
+			String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
+			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
+			returnValue = new DateRangeQuery(fld, lowerTxt, upperTxt, sInclusive);
+		}
+		else if (name.equals("BooleanQuery"))
+		{
+			BooleanQuery query = new BooleanQuery();
             for (Object o : xmlQuery.getChildren()) {
                 Element xmlBooleanClause = (Element) o;
                 String sRequired = xmlBooleanClause.getAttributeValue("required");

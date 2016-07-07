@@ -112,6 +112,7 @@
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
       $scope.langs = gnLangs.langs;
+
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
