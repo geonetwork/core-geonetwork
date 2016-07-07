@@ -279,6 +279,7 @@
     "attributeName": "Nom de l'attribut",
     "attributeDefinition": "Définition",
     "attributeValues": "Liste de valeurs possibles",
+    "validate": "Valider",
     "valueName": "Nom",
     "valueDefinition": "Définition",
     "valueCode": "Code",

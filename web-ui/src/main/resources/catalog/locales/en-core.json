@@ -243,6 +243,7 @@
     "west": "West",
     "year": "Year",
     "zip": "ZIP",
+    "validate": "Validate",
     "delete": "Delete",
     "edit" : "Edit",
     "duplicate": "Duplicate",
