@@ -346,7 +346,7 @@
       function loadMetadataIdentifierTemplates() {
         $scope.mdIdentifierTemplateSelected = {};
 
-        $http.get('metadataIdentifierTemplates?_content_type=json')
+        $http.get('../api/identifiers')
             .success(function(data) {
               $scope.mdIdentifierTemplates = data;
 
