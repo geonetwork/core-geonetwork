@@ -140,10 +140,11 @@
       };
 
       $scope.selectAllSchemas = function(selectAll) {
+        $scope.selectedSchemas = [];
         if (selectAll) {
-          $scope.selectedSchemas = $scope.schemas;
-        } else {
-          $scope.selectedSchemas = [];
+          $.each($scope.schemas, function(index, value) {
+            selectSchema(value.name);
+          });
         }
         $scope.loadReport = null;
         $scope.loadTplReport = null;
