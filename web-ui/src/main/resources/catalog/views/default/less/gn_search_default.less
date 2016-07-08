@@ -566,3 +566,25 @@ html, body {
   padding-right: 4px !important;
   color: #777;
 }
+.minimap-button {
+  padding: 7px;
+  background-color: @brand-primary !important;
+  color: white !important;
+  -webkit-border-radius: 25px;
+  border-width: 0px;
+  right: 0px;
+  bottom: 52px;
+  &:hover {
+    background-color: darken(@link-color, 15%)!important;
+    color: white !important;
+  }
+}
+.minimap-text {
+  text-decoration: blink;
+  transform: translate(100%) rotate(270deg);
+  transform-origin: left bottom;
+  bottom: 87px;
+  color: @brand-primary;
+  right:0;
+  text-transform: uppercase;
+}
