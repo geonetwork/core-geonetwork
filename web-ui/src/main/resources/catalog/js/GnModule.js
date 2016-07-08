@@ -25,7 +25,6 @@
   goog.provide('gn_module');
 
 
-
   goog.require('gn');
   goog.require('gn_admin_menu');
   goog.require('gn_alert');
@@ -41,7 +40,6 @@
   goog.require('gn_search_form_controller');
   goog.require('gn_search_manager');
   goog.require('gn_utility');
-  goog.require('gn_cors_interceptor');
 
   /**
    * GnModule just manage angular injection with

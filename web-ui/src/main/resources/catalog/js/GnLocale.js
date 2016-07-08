@@ -33,18 +33,18 @@
 
   module.constant('$LOCALE_MAP', function(threeCharLang) {
     var specialCases = {
-      "spa" : "es",
-      "ger" : "de",
-      "bra" : "pt_BR",
-      "swe" : "sv",
-      "tur" : "tr",
-      "por" : "pt",
-      "gre" : "el",
-      "per" : "fa",
-      "chi" : "zh",
-      "pol" : "pl",
-      "wel" : "cy",
-      "dut" : "nl"
+      'spa' : 'es',
+      'ger' : 'de',
+      'bra' : 'pt_BR',
+      'swe' : 'sv',
+      'tur' : 'tr',
+      'por' : 'pt',
+      'gre' : 'el',
+      'per' : 'fa',
+      'chi' : 'zh',
+      'pol' : 'pl',
+      'wel' : 'cy',
+      'dut' : 'nl'
     };
     var lang = specialCases[threeCharLang];
     if (angular.isDefined(lang)) {

@@ -984,7 +984,13 @@
           return ioFn(input, 'parse');
         }
         function out(input) {
-          return ioFn(input, 'stringify');
+          // If model value is a string
+          // No need to stringify it.
+          if (attr['gnJsonIsJson']) {
+            return ioFn(input, 'stringify');
+          } else {
+            return input;
+          }
         }
         function ioFn(input, method) {
           var json;

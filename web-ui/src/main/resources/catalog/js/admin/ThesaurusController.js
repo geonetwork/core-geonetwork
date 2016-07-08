@@ -138,7 +138,7 @@
                       ($scope.maxNumberOfKeywords ||
                               defaultMaxNumberOfKeywords) +
                       '&q=' + (encodeURI($scope.keywordFilter) || '*') +
-            '&lang=' + $scope.lang
+              '&lang=' + $scope.lang
           ).success(function(data) {
             $scope.keywords = data;
             gnSearchManagerService.gnSearch({

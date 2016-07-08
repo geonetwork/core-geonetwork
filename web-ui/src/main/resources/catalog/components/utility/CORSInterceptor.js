@@ -49,9 +49,9 @@
                 url = url[0] + '/' + url[1] + '/' + url[2] + '/';
 
                 if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
-                // require proxy
+                  // require proxy
                   config.url = gnGlobalSettings.proxyUrl +
-                    encodeURIComponent(config.url);
+                      encodeURIComponent(config.url);
                 }
               }
 
@@ -77,7 +77,7 @@
                   $injector.invoke(['$http', function($http) {
                     // This modification prevents interception (infinite
                     // loop):
-                    
+
                     config.nointercept = true;
 
                     // retry again
