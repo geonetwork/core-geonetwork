@@ -34,13 +34,11 @@
   goog.require('gn_search');
   goog.require('gn_search_default_config');
   goog.require('gn_search_default_directive');
-  goog.require('gn_cors_interceptor');
 
   var module = angular.module('gn_search_default',
       ['gn_search', 'gn_search_default_config',
        'gn_search_default_directive', 'gn_related_directive',
-       'cookie_warning', 'gn_mdactions_directive', 
-       'gn_cors_interceptor']);
+       'cookie_warning', 'gn_mdactions_directive']);
 
 
   module.controller('gnsSearchPopularController', [
@@ -107,6 +105,7 @@
       $scope.location = gnSearchLocation;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
+        $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
       };
       hotkeys.bindTo($scope)
         .add({

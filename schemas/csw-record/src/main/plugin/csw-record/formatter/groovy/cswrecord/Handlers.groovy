@@ -23,7 +23,7 @@
 
 package cswrecord
 
-import org.fao.geonet.services.metadata.format.FormatType
+import org.fao.geonet.api.records.formatters.FormatType
 import org.geotools.geometry.jts.ReferencedEnvelope
 import org.geotools.referencing.CRS
 

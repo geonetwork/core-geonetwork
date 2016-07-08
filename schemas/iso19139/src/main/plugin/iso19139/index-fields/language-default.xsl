@@ -23,14 +23,17 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+<xsl:stylesheet version="2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:java="java:org.fao.geonet.util.XslUtil"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="1.0"
->
+                exclude-result-prefixes="#all">
 
   <!--This file defines what parts of the metadata are indexed by Lucene
       Searches can be conducted on indexes defined here.
@@ -43,6 +46,7 @@
 
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="no"/>
   <xsl:include href="../convert/functions.xsl"/>
+  <xsl:include href="../../../xsl/utils-fn.xsl"/>
 
   <!-- ========================================================================================= -->
   <xsl:variable name="isoDocLangId">
@@ -436,17 +440,88 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- === Distribution === -->
 
+
     <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
-      <xsl:for-each
-        select="gmd:distributionFormat/gmd:MD_Format/gmd:name//gmd:LocalisedCharacterString[@locale=$langId]">
+      <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name//gmd:LocalisedCharacterString[@locale=$langId]">
         <Field name="format" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
 
-      <!-- index online protocol -->
+      <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+        <xsl:variable name="tPosition" select="position()"></xsl:variable>
+        <xsl:for-each select="gmd:onLine/gmd:CI_OnlineResource[
+        gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] or
+        gmd:description/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]
+        ]">
+          <xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
+          <xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
+          <xsl:variable name="title"
+                        select="if (gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] != '')
+                                then normalize-space(gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId])
+                                else normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)"/>
+          <xsl:variable name="desc"
+                        select="if (gmd:description/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] != '')
+                                then normalize-space(gmd:description/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId])
+                                else normalize-space(gmd:description/gco:CharacterString)"/>
+          <xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
+          <xsl:variable name="applicationProfile" select="normalize-space(gmd:applicationProfile/gco:CharacterString)"/>
+          <xsl:variable name="mimetype" select="if ($linkage != '') then geonet:protocolMimeType($linkage, $protocol, gmd:name/gmx:MimeFileType/@type) else ''"/>
 
-      <xsl:for-each
-        select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol//gmd:LocalisedCharacterString[@locale=$langId]">
-        <Field name="protocol" string="{string(.)}" store="true" index="true"/>
+          <!-- If the linkage points to WMS service and no protocol specified, manage as protocol OGC:WMS -->
+          <xsl:variable name="wmsLinkNoProtocol" select="contains(lower-case($linkage), 'service=wms') and not(string($protocol))" />
+
+          <!-- ignore empty downloads -->
+          <xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">
+            <Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
+          </xsl:if>
+
+          <xsl:if test="string($title)!='' and string($desc)!='' and not(contains($linkage,$download_check))">
+            <Field name="linkage_name_des" string="{string(concat($title, ':::', $desc))}" store="true" index="true"/>
+          </xsl:if>
+
+          <xsl:if test="normalize-space($mimetype)!=''">
+            <Field name="mimetype" string="{$mimetype}" store="true" index="true"/>
+          </xsl:if>
+
+          <xsl:if test="contains($protocol, 'WWW:DOWNLOAD') or contains($protocol, 'DB')
+           or contains($protocol, 'FILE')  or contains($protocol, 'WFS')  or contains($protocol, 'WCS')  or contains($protocol, 'COPYFILE')">
+            <Field name="download" string="true" store="false" index="true"/>
+          </xsl:if>
+
+          <xsl:if test="contains($protocol, 'OGC:WMS') or contains($protocol, 'OGC:WMC') or contains($protocol, 'OGC:OWS')
+                    or contains($protocol, 'OGC:OWS-C') or $wmsLinkNoProtocol">
+            <Field name="dynamic" string="true" store="false" index="true"/>
+          </xsl:if>
+
+          <!-- ignore WMS links without protocol (are indexed below with mimetype application/vnd.ogc.wms_xml) -->
+          <xsl:if test="not($wmsLinkNoProtocol)">
+            <Field name="link" string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype, '|', $tPosition, '|', $applicationProfile)}" store="true" index="false"/>
+          </xsl:if>
+
+          <!-- Add KML link if WMS -->
+          <xsl:if test="starts-with($protocol,'OGC:WMS') and
+                        string($linkage)!='' and string($title)!=''">
+            <!-- FIXME : relative path -->
+            <Field name="link" string="{concat($title, '|', $desc, '|',
+              '../../srv/en/google.kml?uuid=', /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title,
+              '|application/vnd.google-earth.kml+xml|application/vnd.google-earth.kml+xml', '|', $tPosition, '|', $applicationProfile)}" store="true" index="false"/>
+          </xsl:if>
+
+          <!-- Try to detect Web Map Context by checking protocol or file extension -->
+          <xsl:if test="starts-with($protocol,'OGC:WMC') or contains($linkage,'.wmc')">
+            <Field name="link" string="{concat($title, '|', $desc, '|',
+              $linkage, '|application/vnd.ogc.wmc|application/vnd.ogc.wmc', '|', $tPosition, '|', $applicationProfile)}" store="true" index="false"/>
+          </xsl:if>
+          <!-- Try to detect OWS Context by checking protocol or file extension -->
+          <xsl:if test="starts-with($protocol,'OGC:OWS-C') or contains($linkage,'.ows')">
+            <Field name="link" string="{concat($title, '|', $desc, '|',
+            $linkage, '|application/vnd.ogc.ows|application/vnd.ogc.ows', '|', $tPosition, '|', $applicationProfile)}" store="true" index="false"/>
+          </xsl:if>
+
+          <xsl:if test="$wmsLinkNoProtocol">
+            <Field name="link" string="{concat($title, '|', $desc, '|',
+            $linkage, '|OGC:WMS|application/vnd.ogc.wms_xml', '|', $tPosition, '|', $applicationProfile)}" store="true" index="false"/>
+          </xsl:if>
+        </xsl:for-each>
       </xsl:for-each>
     </xsl:for-each>
 
@@ -517,7 +592,7 @@
     <!-- === Free text search === -->
     <Field name="any" store="false" index="true">
       <xsl:attribute name="string">
-        <xsl:value-of select="normalize-space(//node()[@locale=$langId])"/>
+        <xsl:value-of select="string-join(//node()[@locale = $langId]/normalize-space(), ' ')"/>
         <xsl:text> </xsl:text>
         <xsl:for-each select="//@codeListValue">
           <xsl:value-of select="concat(., ' ')"/>

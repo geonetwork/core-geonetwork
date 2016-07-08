@@ -33,9 +33,14 @@ import java.util.Arrays;
  * @author Jesse on 10/21/2014.
  */
 public class SystemInfo {
-    public static final String STAGE_TESTING = "testing";
-    public static final String STAGE_DEVELOPMENT = "development";
-    public static final String STAGE_PRODUCTION = "production";
+    public enum Staging {
+        testing,
+        development,
+        production;
+    }
+    public static final String STAGE_TESTING = Staging.testing.toString();
+    public static final String STAGE_DEVELOPMENT = Staging.development.toString();
+    public static final String STAGE_PRODUCTION = Staging.production.toString();
     private String stagingProfile = STAGE_PRODUCTION;
     private String buildDate;
     private String version;
@@ -43,9 +48,16 @@ public class SystemInfo {
     private String buildOsInfo;
     private String buildJavaVersion;
     private String buildJavaVendor;
+    private String scmUrl;
+    private String scmRevision;
+
+    public static SystemInfo createForTesting(String stagingProfile) {
+        return new SystemInfo(stagingProfile, "testing", "3.0.0", "SNAPSHOT", "testing", "testing", "testing", "", "");
+    }
 
     public SystemInfo(String stagingProfile, String buildDate, String version, String subVersion,
-                      String buildOsInfo, String buildJavaVersion, String buildJavaVendor) {
+                      String buildOsInfo, String buildJavaVersion, String buildJavaVendor,
+                      String scmUrl, String scmRevision) {
         this.stagingProfile = stagingProfile;
         this.buildDate = buildDate;
         this.version = version;
@@ -53,25 +65,14 @@ public class SystemInfo {
         this.buildOsInfo = buildOsInfo;
         this.buildJavaVersion = buildJavaVersion;
         this.buildJavaVendor = buildJavaVendor;
-    }
-
-    public static SystemInfo createForTesting(String stagingProfile) {
-        return new SystemInfo(stagingProfile, "testing", "3.0.0", "SNAPSHOT", "testing", "testing", "testing");
+        this.scmUrl = scmUrl;
+        this.scmRevision = scmRevision;
     }
 
     public static SystemInfo getInfo() {
         return getInfo(null);
     }
 
-    public static SystemInfo getInfo(SystemInfo defaultInfo) {
-        SystemInfo actualInfo = defaultInfo;
-        if (actualInfo == null && ApplicationContextHolder.get() != null) {
-            actualInfo = ApplicationContextHolder.get().getBean(SystemInfo.class);
-        }
-
-
-        return actualInfo;
-    }
 
     /**
      * A value indicating if the server is in development mode or production mode or...
@@ -139,7 +140,32 @@ public class SystemInfo {
             new Element("buildOsInfo").setText(this.buildOsInfo),
             new Element("buildJavaVendor").setText(this.buildJavaVendor),
             new Element("buildJavaVersion").setText(this.buildJavaVersion),
-            new Element("buildDate").setText(this.buildDate)
+            new Element("buildDate").setText(this.buildDate),
+            new Element("scmRevision").setText(this.scmRevision)
         ));
+    }
+
+    public static SystemInfo getInfo(SystemInfo defaultInfo) {
+        SystemInfo actualInfo = defaultInfo;
+        if (actualInfo == null && ApplicationContextHolder.get() != null) {
+            actualInfo = ApplicationContextHolder.get().getBean(SystemInfo.class);
+        }
+        return actualInfo;
+    }
+
+    public String getScmRevision() {
+        return scmRevision;
+    }
+
+    public void setScmRevision(String scmRevision) {
+        this.scmRevision = scmRevision;
+    }
+
+    public String getScmUrl() {
+        return scmUrl;
+    }
+
+    public void setScmUrl(String scmUrl) {
+        this.scmUrl = scmUrl;
     }
 }

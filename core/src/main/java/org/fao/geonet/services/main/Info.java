@@ -25,13 +25,6 @@ package org.fao.geonet.services.main;
 
 import com.google.common.collect.Maps;
 
-import jeeves.component.ProfileManager;
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Edit;
@@ -52,6 +45,7 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.IsoLanguageRepository;
@@ -83,10 +77,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
-import static org.fao.geonet.kernel.setting.SettingManager.SYSTEM_SITE_LABEL_PREFIX;
+import jeeves.component.ProfileManager;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
+import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
+
+@Deprecated
 public class Info implements Service {
+    private static final String READ_ONLY = "readonly";
+    private static final String INDEX = "index";
+    private static final String SCHEMAS = "schemas";
     public static final String SYSTEMINFO = "systeminfo";
     public static final String STATUS = "status";
     public static final String AUTH = "auth";
@@ -107,9 +111,6 @@ public class Info implements Service {
     public static final String INSPIRE = "inspire";
     public static final String CONFIG = "config";
     public static final String SITE = "site";
-    private static final String READ_ONLY = "readonly";
-    private static final String INDEX = "index";
-    private static final String SCHEMAS = "schemas";
     private static final String STAGING_PROFILE = "stagingProfile";
 
     private Path xslPath;
@@ -171,11 +172,11 @@ public class Info implements Service {
             if (type.equals(SITE)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(
                     new String[]{
-                        SettingManager.SYSTEM_SITE_NAME_PATH,
-                        "system/site/organization",
-                        SettingManager.SYSTEM_SITE_SITE_ID_PATH,
-                        "system/platform/version",
-                        "system/platform/subVersion"
+                        Settings.SYSTEM_SITE_NAME_PATH,
+                        Settings.SYSTEM_SITE_ORGANIZATION,
+                        Settings.SYSTEM_SITE_SITE_ID_PATH,
+                        Settings.SYSTEM_PLATFORM_VERSION,
+                        Settings.SYSTEM_PLATFORM_SUBVERSION
                     }));
             } else if (type.equals(CONFIG)) {
                 // Return a set of properties which define what
@@ -189,7 +190,7 @@ public class Info implements Service {
                 Element settingsElement = gc.getBean(SettingManager.class).getValues(
                     publicSettingsKey.toArray(new String[0]));
 
-                String mailServerHost = gc.getBean(SettingManager.class).getValue("system/feedback/mailServer/host");
+                String mailServerHost = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
                 Element mailServerElement = new Element("setting");
                 mailServerElement.setAttribute("name", "system/mail/enable");
                 mailServerElement.setAttribute("value", !StringUtils.isEmpty(mailServerHost) + "");
@@ -208,7 +209,7 @@ public class Info implements Service {
 
             } else if (type.equals(USER_GROUP_ONLY)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(
-                    new String[]{"system/metadataprivs/usergrouponly"}));
+                    new String[]{Settings.SYSTEM_METADATAPRIVS_USERGROUPONLY}));
 
             } else if (type.equals(CATEGORIES)) {
                 result.addContent(context.getBean(MetadataCategoryRepository.class).findAllAsXml());
@@ -449,10 +450,10 @@ public class Info implements Service {
             String siteName = sm.getSiteName();
 
             final SettingRepository settingRepository = context.getBean(SettingRepository.class);
-            final List<Setting> labelSettings = settingRepository.findAll(SettingSpec.nameStartsWith(SYSTEM_SITE_LABEL_PREFIX));
+            final List<Setting> labelSettings = settingRepository.findAll(SettingSpec.nameStartsWith(Settings.SYSTEM_SITE_LABEL_PREFIX));
             Map<String, String> labels = Maps.newHashMap();
             for (Setting setting : labelSettings) {
-                labels.put(setting.getName().substring(SYSTEM_SITE_LABEL_PREFIX.length()), setting.getValue());
+                labels.put(setting.getName().substring(Settings.SYSTEM_SITE_LABEL_PREFIX.length()), setting.getValue());
             }
             element.addContent(buildRecord(siteId, siteName, labels, null, null));
         }

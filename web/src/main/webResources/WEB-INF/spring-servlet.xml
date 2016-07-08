@@ -25,14 +25,18 @@
        xmlns:context="http://www.springframework.org/schema/context"
        default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans"
+       xmlns:sec="http://www.springframework.org/schema/security"
        xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.2.xsd
 	    http://www.springframework.org/schema/mvc
-	    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+	    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+	    http://www.springframework.org/schema/security
+	    http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
+  <sec:global-method-security pre-post-annotations="enabled"/>
 
   <context:component-scan base-package="org.fao.geonet"/>
 
@@ -60,11 +64,13 @@
   </bean>
 
   <bean id="readWriteMvcInterceptor" class="jeeves.config.springutil.ReadOnlyMvcInterceptor"/>
+  <bean id="apiMvcInterceptor" class="org.fao.geonet.api.AllRequestsInterceptor"/>
 
   <mvc:interceptors>
     <ref bean="localeChangeInterceptor"/>
     <ref bean="urlLocaleChangeInterceptor"/>
     <ref bean="readWriteMvcInterceptor"/>
+    <ref bean="apiMvcInterceptor"/>
   </mvc:interceptors>
 
   <bean id="cnManager"
@@ -88,6 +94,12 @@
   <mvc:annotation-driven content-negotiation-manager="cnManager">
     <mvc:message-converters>
       <bean class="org.fao.geonet.api.DOMElementMessageConverter"/>
+
+      <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="objectMapper">
+          <bean class="org.fao.geonet.util.spring.HibernateAwareObjectMapper" />
+        </property>
+      </bean>
     </mvc:message-converters>
   </mvc:annotation-driven>
 </beans>

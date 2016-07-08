@@ -30,6 +30,10 @@ package org.fao.geonet.kernel.schema;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -47,10 +51,6 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -59,13 +59,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
+
 //==============================================================================
 
+@JsonPropertyOrder({
+    "name", "targetNamespace", "namespaces",
+    "readwriteUUID", "schematronRules"
+})
 public class MetadataSchema {
     public static final String SCHEMATRON_DIR = "schematron";
     private static final String XSL_FILE_EXTENSION = ".xsl";
@@ -133,6 +141,7 @@ public class MetadataSchema {
         this.schemaPlugin = SchemaManager.getSchemaPlugin(schemaName);
     }
 
+    @JsonIgnore
     public Editor getConfigEditor() {
         Path metadataSchemaConfig =
             getSchemaDir().resolve("layout").resolve("config-editor.xml");
@@ -152,6 +161,7 @@ public class MetadataSchema {
     /**
      * Get schema directory
      */
+    @JsonIgnore
     public Path getSchemaDir() {
         return schemaDir;
     }
@@ -164,7 +174,7 @@ public class MetadataSchema {
     }
 
     //---------------------------------------------------------------------------
-
+    @JsonProperty(value = "targetNamespace")
     public String getPrimeNS() {
         return primeNS;
     }
@@ -323,7 +333,7 @@ public class MetadataSchema {
     }
 
     //---------------------------------------------------------------------------
-
+    @JsonIgnore
     public String getNS(String targetNSPrefix) {
         Namespace ns = hmNameSpaces.get(targetNSPrefix);
         if (ns != null) {
@@ -333,9 +343,11 @@ public class MetadataSchema {
         }
     }
 
+
     /**
      * Return the list of namespaces for the schema.
      */
+    @JsonIgnore
     public List<Namespace> getNamespaces() {
         List<Namespace> list = new ArrayList<Namespace>(hmNameSpaces.size());
         for (Namespace ns : hmNameSpaces.values()) {
@@ -356,11 +368,12 @@ public class MetadataSchema {
     }
 
     //---------------------------------------------------------------------------
-
+    @JsonIgnore
     public List<Namespace> getSchemaNS() {
         return new ArrayList<Namespace>(hmPrefixes.values());
     }
 
+    @JsonProperty(value = "namespaces")
     public Map<String, String> getSchemaNSWithPrefix() {
         Map<String, String> mapNs = new HashMap<String, String>();
         List<Namespace> schemaNsList = getSchemaNS();
@@ -503,6 +516,7 @@ public class MetadataSchema {
         return hmOperationFilters.get(operation.name());
     }
 
+    @JsonIgnore
     public SchemaPlugin getSchemaPlugin() {
         return schemaPlugin;
     }
@@ -529,7 +543,7 @@ public class MetadataSchema {
     }
 
     // -- this info for profile detection methods
-
+    @JsonIgnore
     public List<Element> getSchemaAppInfoElements() {
         return rootAppInfoElements;
     }

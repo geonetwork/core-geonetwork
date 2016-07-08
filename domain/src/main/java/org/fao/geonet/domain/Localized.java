@@ -25,6 +25,9 @@ package org.fao.geonet.domain;
 
 import com.google.common.collect.Maps;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.jdom.Element;
 
 import java.util.HashMap;
@@ -81,6 +84,7 @@ public abstract class Localized extends GeonetEntity {
      * @return the map of langid -> label
      */
     @Nonnull
+    @JsonProperty(value = "label")
     public Map<String, String> getLabelTranslations() {
         return _labelTranslations;
     }
@@ -90,7 +94,8 @@ public abstract class Localized extends GeonetEntity {
      * The translations elements have the form: <code>&lt;langId&gt;labelTranslation&lt;/langId&gt;</code>
      * <p> For example: <code>&lt;eng&gt;Catalog Group&lt;/eng&gt;</code> </p> </p>
      */
-    public void setLabelTranslations(List<Element> translations) {
+    @JsonIgnore
+    public void setLabelTranslationsFromElement(List<Element> translations) {
         getLabelTranslations().clear();
         getLabelTranslations().putAll(translationXmlToLangMap(translations));
     }
@@ -113,7 +118,7 @@ public abstract class Localized extends GeonetEntity {
      *
      * @param localizedTranslations the translation map
      */
-    protected void setLabelTranslations(@Nonnull Map<String, String> localizedTranslations) {
+    public void setLabelTranslations(@Nonnull Map<String, String> localizedTranslations) {
         this._labelTranslations = localizedTranslations;
     }
 }

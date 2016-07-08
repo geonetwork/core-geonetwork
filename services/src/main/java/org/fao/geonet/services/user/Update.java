@@ -32,6 +32,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.responses.OkResponse;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -67,6 +68,7 @@ public class Update {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
+    @Deprecated
     OkResponse resetPassword(
         HttpSession session,
         @RequestParam(value = Params.ID) String id,

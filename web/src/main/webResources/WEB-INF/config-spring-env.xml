@@ -34,5 +34,7 @@
     <constructor-arg value="${os.name} ${os.version} ${os.arch}"/>
     <constructor-arg value="${java.version}"/>
     <constructor-arg value="${java.vm.vendor}"/>
+    <constructor-arg value="${parent.scm.url}"/>
+    <constructor-arg value="${buildNumber}"/>
   </bean>
 </beans>

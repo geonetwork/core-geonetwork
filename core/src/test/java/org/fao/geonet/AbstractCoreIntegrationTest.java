@@ -26,11 +26,6 @@ package org.fao.geonet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import jeeves.constants.ConfigFile;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.sources.ServiceRequest;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
@@ -41,6 +36,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.mef.Importer;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -76,6 +72,12 @@ import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpSession;
+
+import jeeves.constants.ConfigFile;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.ServiceRequest;
 
 import static java.lang.Math.round;
 import static org.junit.Assert.assertTrue;
@@ -181,7 +183,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         final HashMap<String, Object> contexts = new HashMap<String, Object>();
         final Constructor<?> constructor = GeonetContext.class.getDeclaredConstructors()[0];
         constructor.setAccessible(true);
-        GeonetContext gc = new GeonetContext(_applicationContext, false, null);
+        GeonetContext gc = new GeonetContext(_applicationContext, false);
         contexts.put(Geonet.CONTEXT_NAME, gc);
         final ServiceContext context = new ServiceContext("mockService", _applicationContext, contexts, _entityManager);
         context.setAsThreadLocal();
@@ -286,7 +288,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         ArrayList<String> id = new ArrayList<String>(1);
         String createDate = new ISODate().getDateAndTime();
         Importer.importRecord(uuid,
-            uuidAction, Lists.newArrayList(metadata), schema, 0,
+            MEFLib.UuidAction.parse(uuidAction), Lists.newArrayList(metadata), schema, 0,
             source.getUuid(), source.getName(), Maps.<String, String>newHashMap(), context,
             id, createDate, createDate,
             "" + groupId, metadataType);

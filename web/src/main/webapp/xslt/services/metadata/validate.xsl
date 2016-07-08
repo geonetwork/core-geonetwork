@@ -34,18 +34,19 @@
                 exclude-result-prefixes="geonet srv gco gmd xlink gml sch svrl">
 
   <xsl:include href="validate-fn.xsl"/>
+  <xsl:param name="rootTag" select="'rules'"/>
 
   <!-- Retrieve GUI language first 2 letters
   for multilingual schematron using xml:lang attribute. -->
-  <xsl:variable name="language" select="substring(/root/gui/language, 1, 2)"/>
-  <xsl:variable name="metadataSchema" select="/root/response/schema"/>
+  <xsl:variable name="language" select="substring(/root/language, 1, 2)"/>
+  <xsl:variable name="metadataSchema" select="/root/schema"/>
 
   <xsl:template match="/">
-    <rules>
+    <xsl:element name="{$rootTag}">
       <xsl:call-template name="metadata-validation-report">
-        <xsl:with-param name="report" select="/root/response/geonet:report"/>
+        <xsl:with-param name="report" select="/root/geonet:report"/>
       </xsl:call-template>
-    </rules>
+    </xsl:element>
   </xsl:template>
 
 
@@ -58,9 +59,6 @@
       <report>
         <id>Error</id>
         <displayPriority>-100</displayPriority>
-        <label>
-          <xsl:value-of select="/root/gui/strings/xsdReport"/>
-        </label>
         <error>1</error>
         <success>0</success>
         <total>1</total>
@@ -94,9 +92,6 @@
     <xsl:param name="xsdErrors"/>
     <id>xsd</id>
     <displayPriority>0</displayPriority>
-    <label>
-      <xsl:value-of select="/root/gui/strings/xsdError"/>
-    </label>
     <error>
       <xsl:value-of select="count($xsdErrors/geonet:error)"/>
     </error>
@@ -109,8 +104,8 @@
           <title>
             <xsl:value-of select="geonet:parse-xsd-error(geonet:message,
                         $metadataSchema,
-                        /root/gui/schemas/*[name() = $metadataSchema]/labels,
-                        /root/gui/schemas/*[name() = $metadataSchema]/strings)"/>
+                        /root/*[name() = $metadataSchema]/labels,
+                        /root/*[name() = $metadataSchema]/strings)"/>
           </title>
           <rules>
             <rule group="xsd" type="error" id="xsd#{geonet:errorNumber}">
@@ -140,7 +135,7 @@
       </displayPriority>
       <label>
         <xsl:variable name="translatedTitle"
-                      select="/root/response/schematronTranslations/*[name() = $rulename]/strings/schematron.title"/>
+                      select="/response/schematronTranslations/*[name() = $rulename]/strings/schematron.title"/>
         <xsl:variable name="defaultTitle"
                       select="svrl:schematron-output/@title"/>
         <xsl:choose>

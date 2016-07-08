@@ -129,7 +129,7 @@
     <Method name="serviceSpecificExec"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.metadata.format.cache.StoreInfoAndData"/>
+    <Class name="org.fao.geonet.api.records.formatters.cache.StoreInfoAndData"/>
     <Bug pattern="EI_EXPOSE_REP2"/>
   </Match>
   <Match>
@@ -184,7 +184,7 @@
     <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.ownership.OwnershipUtils$1"/>
+    <Class name="org.fao.geonet.api.users.transfer.OwnershipUtils$1"/>
   </Match>
   <Match>
     <Class name="org.fao.geonet.wro4j.TemplatesUriLocator"/>
@@ -207,7 +207,7 @@
   <Match>
     <Or>
       <Class name="org.fao.geonet.wro4j.DiskbackedCache"/>
-      <Class name="org.fao.geonet.services.metadata.format.cache.FilesystemStore"/>
+      <Class name="org.fao.geonet.api.records.formatters.cache.FilesystemStore"/>
     </Or>
     <Bug pattern="DMI_EMPTY_DB_PASSWORD"/>
   </Match>
@@ -237,7 +237,7 @@
     <Bug pattern="SS_SHOULD_BE_STATIC"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.log.ListLogFilesResponse$LogFileResponse"/>
+    <Class name="org.fao.geonet.api.site.model.ListLogFilesResponse$LogFileResponse"/>
     <Bug pattern="URF_UNREAD_FIELD"/>
   </Match>
   <Match>
@@ -246,17 +246,17 @@
     <Method name="exec"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.metadata.format.ImageReplacedElementFactory"/>
+    <Class name="org.fao.geonet.api.records.formatters.ImageReplacedElementFactory"/>
     <Bug pattern="DC_DOUBLECHECK"/>
     <Method name="getSupportedExts"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.metadata.format.groovy.util.AssociatedLink"/>
+    <Class name="org.fao.geonet.api.records.formatters.groovy.util.AssociatedLink"/>
     <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
     <Method name="equals"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.metadata.format.groovy.util.LinkType"/>
+    <Class name="org.fao.geonet.api.records.formatters.groovy.util.LinkType"/>
     <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
   </Match>
   <Match>
@@ -268,15 +268,15 @@
     </Or>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.region.ListRegionsResponse"/>
+    <Class name="org.fao.geonet.api.regions.ListRegionsResponse"/>
     <Bug pattern="URF_UNREAD_FIELD"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.region.ListRegionsResponse$CategoryResponse"/>
+    <Class name="org.fao.geonet.api.regions.ListRegionsResponse$CategoryResponse"/>
     <Bug pattern="URF_UNREAD_FIELD"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.region.ListRegionsResponse$RegionResponse"/>
+    <Class name="org.fao.geonet.api.regions.ListRegionsResponse$RegionResponse"/>
     <Bug pattern="URF_UNREAD_FIELD"/>
   </Match>
   <Match>

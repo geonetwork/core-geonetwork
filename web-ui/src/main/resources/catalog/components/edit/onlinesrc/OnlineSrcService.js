@@ -657,7 +657,7 @@
           for (var p in protocols) {
             if (protocols.hasOwnProperty(p) && protocols[p].checked === true) {
               // TODO : define default description
-              var key = p + 'Url';
+              var key = p + 'url';
               xml +=
                   this.buildOnLineResource(node[key], protocols[p].label,
                   layerName, title + ' (' + protocols[p].label + ')') +

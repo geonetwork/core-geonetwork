@@ -59,6 +59,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import static org.fao.geonet.api.records.MetadataSharingApi.retrievePrivileges;
 import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
@@ -70,6 +71,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  */
 @ReadWriteController
 @Controller
+@Deprecated
 public class BatchNewOwner {
 
     @RequestMapping(value = "/{lang}/metadata.batch.newowner", produces = {
@@ -170,27 +172,6 @@ public class BatchNewOwner {
     }
 
     //--------------------------------------------------------------------------
-
-    private Vector<OperationAllowedId> retrievePrivileges(ServiceContext context, String id, Integer userId, Integer groupId) throws Exception {
-
-        OperationAllowedRepository opAllowRepo = context.getBean(OperationAllowedRepository.class);
-
-        int iMetadataId = Integer.parseInt(id);
-        Specifications<OperationAllowed> spec =
-            where(hasMetadataId(iMetadataId));
-        if (groupId != null) {
-            spec = spec.and(hasGroupId(groupId));
-        }
-
-        List<OperationAllowed> operationsAllowed = opAllowRepo.findAllWithOwner(userId, Optional.of((Specification<OperationAllowed>) spec));
-
-        Vector<OperationAllowedId> result = new Vector<OperationAllowedId>();
-        for (OperationAllowed operationAllowed : operationsAllowed) {
-            result.add(operationAllowed.getId());
-        }
-
-        return result;
-    }
 
 
     @XmlRootElement(name = "response")

@@ -38,7 +38,7 @@ import java.nio.file.Path;
 /**
  * Retrieves all categories in the system
  */
-
+@Deprecated
 public class List implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

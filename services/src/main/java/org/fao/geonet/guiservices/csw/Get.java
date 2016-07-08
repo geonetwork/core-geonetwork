@@ -26,6 +26,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.CswCapabilitiesInfoField;
 import org.fao.geonet.domain.responses.CswConfigurationResponse;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
@@ -46,7 +47,7 @@ public class Get {
 
         CswConfigurationResponse response = new CswConfigurationResponse();
 
-        String cswContactIdValue = sm.getValue("system/csw/contactId");
+        String cswContactIdValue = sm.getValue(Settings.SYSTEM_CSW_CONTACT_ID);
         if (cswContactIdValue == null) {
             cswContactIdValue = "-1";
         }
@@ -54,8 +55,8 @@ public class Get {
         final CswCapabilitiesInfoFieldRepository infoFieldRepository = applicationContext.getBean(CswCapabilitiesInfoFieldRepository.class);
         java.util.List<CswCapabilitiesInfoField> capabilitiesInfoFields = infoFieldRepository.findAll(); //AsXml();
 
-        response.setCswEnabled(sm.getValueAsBool("system/csw/enable"));
-        response.setCswMetadataPublic(sm.getValueAsBool("system/csw/metadataPublic"));
+        response.setCswEnabled(sm.getValueAsBool(Settings.SYSTEM_CSW_ENABLE));
+        response.setCswMetadataPublic(sm.getValueAsBool(Settings.SYSTEM_CSW_METADATA_PUBLIC));
         response.setCswContactId(Integer.parseInt(cswContactIdValue));
         response.setCapabilitiesInfoFields(capabilitiesInfoFields);
 

@@ -33,6 +33,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.InspireAtomFeed;
 import org.fao.geonet.inspireatom.InspireAtomService;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Edit;
@@ -75,7 +76,7 @@ public class AtomSearch implements Service {
         DataManager dm = context.getBean(DataManager.class);
         InspireAtomService service = context.getBean(InspireAtomService.class);
 
-        boolean inspireEnable = sm.getValueAsBool("system/inspire/enable");
+        boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
 
         if (!inspireEnable) {
             Log.info(Geonet.ATOM, "Inspire is disabled");
@@ -112,7 +113,7 @@ public class AtomSearch implements Service {
 
 
         // Depending on INSPIRE atom format decide which service use.
-        String atomFormat = sm.getValue("system/inspire/atom");
+        String atomFormat = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM);
 
         search.exec(params, context);
 

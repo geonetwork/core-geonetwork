@@ -70,7 +70,7 @@
     </constructor-arg>
   </bean>
   <bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
-    <property name="service" value="${geonetwork.https.url}/j_spring_cas_security_check"/>
+    <property name="service" value="${geonetwork.https.url}/signin-cas"/>
     <property name="sendRenew" value="false"/>
     <property name="artifactParameter" value="ticket"/>
     <property name="authenticateAllArtifacts" value="true"/>
@@ -81,7 +81,7 @@
     <property name="authenticationManager" ref="authenticationManager"/>
     <property name="proxyGrantingTicketStorage" ref="pgtStorage"/>
     <property name="proxyReceptorUrl"
-              value="${geonetwork.https.url}/j_spring_cas_security_proxyreceptor"/>
+              value="${geonetwork.https.url}/cas-security-proxyreceptor"/>
     <property name="serviceProperties" ref="serviceProperties"/>
     <property name="authenticationDetailsSource">
       <bean
@@ -133,7 +133,7 @@
           class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
       </array>
     </constructor-arg>
-    <property name="filterProcessesUrl" value="/j_spring_security_logout"/>
+    <property name="filterProcessesUrl" value="/signout"/>
   </bean>
   <bean id="logoutSuccessHandler"
         class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">

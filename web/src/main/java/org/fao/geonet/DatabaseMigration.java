@@ -31,6 +31,7 @@ import jeeves.server.sources.http.ServletPathFinder;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.DatabaseType;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
@@ -316,8 +317,8 @@ public class DatabaseMigration implements BeanPostProcessor {
         String subversion = null;
 
         try {
-            version = newLookup(statement, Geonet.Settings.VERSION);
-            subversion = newLookup(statement, Geonet.Settings.SUBVERSION);
+            version = newLookup(statement, Settings.SYSTEM_PLATFORM_VERSION);
+            subversion = newLookup(statement, Settings.SYSTEM_PLATFORM_SUBVERSION);
 
             if (version == null) {
                 // Before 2.11, settings was a tree. Check using keys

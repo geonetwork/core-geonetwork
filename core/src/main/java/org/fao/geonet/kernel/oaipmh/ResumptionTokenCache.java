@@ -23,20 +23,20 @@
 
 package org.fao.geonet.kernel.oaipmh;
 
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
+import org.fao.oaipmh.responses.GeonetworkResumptionToken;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.fao.geonet.utils.Log;
-
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.oaipmh.responses.GeonetworkResumptionToken;
-
 public class ResumptionTokenCache extends Thread {
+
 
     public final static int CACHE_EXPUNGE_DELAY = 10 * 1000; // 10 seconds
 

@@ -39,6 +39,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.Importer;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
@@ -57,6 +58,7 @@ import javax.annotation.Nonnull;
 /**
  * Inserts a new metadata to the system (data is validated).
  */
+@Deprecated
 public class Insert extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---
@@ -136,7 +138,7 @@ public class Insert extends NotInReadOnlyModeService {
 
         // Import record
         Map<String, String> sourceTranslations = Maps.newHashMap();
-        Importer.importRecord(uuid, uuidAction, md, schema, 0,
+        Importer.importRecord(uuid, MEFLib.UuidAction.parse(uuidAction), md, schema, 0,
             gc.getBean(SettingManager.class).getSiteId(), gc.getBean(SettingManager.class).getSiteName(),
             sourceTranslations, context, id, date, date, group, metadataType);
 

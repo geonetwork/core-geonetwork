@@ -71,7 +71,7 @@
     <filter-class>jeeves.config.springutil.JeevesDelegatingFilterProxy</filter-class>
     <init-param>
       <param-name>loginService</param-name>
-      <param-value>j_spring_security_check</param-value>
+      <param-value>signin</param-value>
     </init-param>
     <init-param>
       <param-name>trustedHost</param-name>

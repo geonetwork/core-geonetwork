@@ -81,7 +81,7 @@ public interface OperationAllowedRepositoryCustom {
      * @param groupId    the group id
      */
     @Nonnegative
-    int deleteAllByMetadataIdExceptGroupId(int metadataId, int groupId);
+    int deleteAllByMetadataIdExceptGroupId(int metadataId, int[] groupId);
 
     /**
      * Delete all the {@link OperationAllowed} with the given id in the id component selected by the

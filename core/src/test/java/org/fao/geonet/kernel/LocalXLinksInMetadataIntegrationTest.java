@@ -36,6 +36,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -99,7 +100,7 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegratio
         ServiceContext context = createServiceContext();
         context.setAsThreadLocal();
         loginAsAdmin(context);
-        _settingManager.setValue(SettingManager.SYSTEM_XLINKRESOLVER_ENABLE, true);
+        _settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
 
         String schema = _dataManager.autodetectSchema(metadata);
         String uuid = UUID.randomUUID().toString();

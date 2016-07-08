@@ -36,6 +36,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
@@ -57,6 +58,7 @@ import java.util.Calendar;
  */
 @Deprecated
 public class Change extends NotInReadOnlyModeService {
+
 
     // --------------------------------------------------------------------------
     // ---
@@ -95,6 +97,7 @@ public class Change extends NotInReadOnlyModeService {
             throw new UserNotFoundEx(username);
         }
 
+
         // only let registered users change their password this way
         if (elUser.getProfile() != Profile.RegisteredUser) {
             throw new OperationNotAllowedEx("Only users with profile RegisteredUser can change their password using this option");
@@ -123,6 +126,7 @@ public class Change extends NotInReadOnlyModeService {
 
         elUser.getSecurity().setPassword(PasswordUtil.encode(context, password));
         userRepository.save(elUser);
+
 
         // generate email details using customisable stylesheet
         //TODO: allow internationalised emails

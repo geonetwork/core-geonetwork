@@ -792,7 +792,7 @@
                 scope.generateThumbnail = function() {
                   return $http.put('../api/0.1/records/' +
                       scope.gnCurrentEdit.uuid +
-                      '/attachments/actions/save-thumbnail', null, {
+                      '/attachments/print-thumbnail', null, {
                         params: {
                           jsonConfig: angular.fromJson(scope.jsonSpec)
                         }
@@ -1412,7 +1412,8 @@
                           scope.alertMsg =
                               $translate('linkToServiceWithoutURLError');
                         }
-                      } else {
+                      }
+                      else {
                         scope.srcParams.uuidDS = md.getUuid();
                       }
                     }
@@ -1472,6 +1473,7 @@
               return {
                 pre: function preLink(scope) {
                   scope.searchObj = {
+                    any: '',
                     params: {}
                   };
                   scope.modelOptions =
@@ -1481,6 +1483,13 @@
                   scope.mode = iAttrs['gnLinkToMetadata'];
                   scope.popupid = '#linkto' + scope.mode + '-popup';
                   scope.btn = {};
+
+
+                  // Append * for like search
+                  scope.updateParams = function() {
+                    scope.searchObj.params.any =
+                      '*' + scope.searchObj.any + '*';
+                  };
 
                   /**
                    * Register a method on popup open to reset

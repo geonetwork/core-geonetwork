@@ -49,6 +49,7 @@ import java.nio.file.Path;
  *
  * For batch update see BatchNewOwner.
  */
+@Deprecated
 public class UpdateGroupOwner extends NotInReadOnlyModeService {
 
     /**

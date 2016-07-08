@@ -26,9 +26,11 @@ package jeeves.config.springutil;
 import com.google.common.escape.Escaper;
 import com.google.common.net.UrlEscapers;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -46,11 +48,16 @@ public class JeevesAccessDeniedHandler implements AccessDeniedHandler {
 
     private String _errorPage;
     private Escaper _escaper = UrlEscapers.urlPathSegmentEscaper();
+    private AntPathRequestMatcher matcher;
+
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws
         IOException, ServletException {
         if (!response.isCommitted()) {
+            if (matcher != null && matcher.matches(request)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage());
+            }
             if (_errorPage != null) {
                 request.setAttribute(WebAttributes.ACCESS_DENIED_403, accessDeniedException);
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -65,5 +72,16 @@ public class JeevesAccessDeniedHandler implements AccessDeniedHandler {
 
     public void setErrorPage(String errorPage) {
         this._errorPage = errorPage;
+    }
+
+    /**
+     * The URLs matching this pattern will only receive the HTTP error code and an empty body, even if the errorPage is
+     * set.
+     * @param pattern
+     */
+    public void setOnlyStatusResponsePages(String pattern) {
+        if (StringUtils.isNotBlank(pattern)) {
+            this.matcher = new AntPathRequestMatcher(pattern);
+        }
     }
 }

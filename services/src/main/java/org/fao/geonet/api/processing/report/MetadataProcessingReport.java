@@ -33,10 +33,15 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  * A report related to metadata records.
  */
+@XmlType(propOrder = {
+    "uuid", "startIsoDateTime", "endIsoDateTime",
+    "ellapsedTimeInSeconds", "totalTimeInSeconds", "infos", "errors"
+})
 public abstract class MetadataProcessingReport extends ProcessingReport {
     /**
      * The total number of records to process
@@ -141,6 +146,10 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
 
     public synchronized void addMetadataId(int metadataId) {
         this.metadata.add(metadataId);
+    }
+
+    public synchronized Set<Integer> getMetadata() {
+        return this.metadata;
     }
 
     public synchronized void addNotFoundMetadataId(int metadataId) {

@@ -26,6 +26,7 @@ package org.fao.geonet.util;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.*;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 
 import javax.annotation.Nonnull;
@@ -188,19 +189,19 @@ public class MailUtil {
         // Create data information to compose the mail
         HtmlEmail email = new HtmlEmail();
         String username = settings
-            .getValue("system/feedback/mailServer/username");
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME);
         String password = settings
-            .getValue("system/feedback/mailServer/password");
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD);
         Boolean ssl = settings
-            .getValueAsBool("system/feedback/mailServer/ssl", false);
+            .getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL, false);
         Boolean tls = settings
-            .getValueAsBool("system/feedback/mailServer/tls", false);
+            .getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS, false);
 
-        String hostName = settings.getValue("system/feedback/mailServer/host");
+        String hostName = settings.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
         Integer smtpPort = Integer.valueOf(settings
-            .getValue("system/feedback/mailServer/port"));
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT));
         Boolean ignoreSslCertificateErrors = settings.getValueAsBool
-            ("system/feedback/mailServer/ingoreSslCertificateErrors", false);
+            (Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS, false);
 
 
         configureBasics(hostName, smtpPort, from, username, password, email, ssl, tls, ignoreSslCertificateErrors);
@@ -282,19 +283,19 @@ public class MailUtil {
 
         Email email = new SimpleEmail();
         String username = settings
-            .getValue("system/feedback/mailServer/username");
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME);
         String password = settings
-            .getValue("system/feedback/mailServer/password");
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD);
         Boolean ssl = settings
-            .getValueAsBool("system/feedback/mailServer/ssl", false);
+            .getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL, false);
         Boolean tls = settings
-            .getValueAsBool("system/feedback/mailServer/tls", false);
+            .getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS, false);
 
-        String hostName = settings.getValue("system/feedback/mailServer/host");
+        String hostName = settings.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
         Integer smtpPort = Integer.valueOf(settings
-            .getValue("system/feedback/mailServer/port"));
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT));
         Boolean ignoreSslCertificateErrors = settings.getValueAsBool
-            ("system/feedback/mailServer/ingoreSslCertificateErrors", false);
+            (Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS, false);
         configureBasics(hostName, smtpPort, from, username, password, email, ssl, tls, ignoreSslCertificateErrors);
 
         email.setSubject(subject);
@@ -399,21 +400,21 @@ public class MailUtil {
      */
     private static void configureBasics(SettingManager settings, Email email) {
         String username = settings
-            .getValue("system/feedback/mailServer/username");
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME);
         String password = settings
-            .getValue("system/feedback/mailServer/password");
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD);
         Boolean ssl = settings
-            .getValueAsBool("system/feedback/mailServer/ssl", false);
+            .getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL, false);
         Boolean tls = settings
-            .getValueAsBool("system/feedback/mailServer/tls", false);
+            .getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS, false);
 
-        String hostName = settings.getValue("system/feedback/mailServer/host");
+        String hostName = settings.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
         Integer smtpPort = Integer.valueOf(settings
-            .getValue("system/feedback/mailServer/port"));
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT));
 
-        String from = settings.getValue("system/feedback/email");
+        String from = settings.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         Boolean ignoreSslCertificateErrors =
-            settings.getValueAsBool("system/feedback/mailServer/ignoreSslCertificateErrors", false);
+            settings.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS, false);
 
 
         configureBasics(hostName, smtpPort, from, username, password, email, ssl, tls, ignoreSslCertificateErrors);

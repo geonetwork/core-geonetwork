@@ -34,6 +34,7 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.Updater;
 import org.jdom.JDOMException;
@@ -350,19 +351,19 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
 
     private void setSearchSettings(final SettingInfo.SearchRequestLanguage searchSetting, final Boolean sorted,
                                    final Boolean autoDetectSearchLanguage) {
-        _settingRepository.update(SettingManager.SYSTEM_REQUESTED_LANGUAGE_ONLY, new Updater<Setting>() {
+        _settingRepository.update(Settings.SYSTEM_REQUESTED_LANGUAGE_ONLY, new Updater<Setting>() {
             @Override
             public void apply(@Nonnull Setting entity) {
                 entity.setValue(searchSetting.databaseValue);
             }
         });
-        _settingRepository.update(SettingManager.SYSTEM_REQUESTED_LANGUAGE_SORTED, new Updater<Setting>() {
+        _settingRepository.update(Settings.SYSTEM_REQUESTED_LANGUAGE_SORTED, new Updater<Setting>() {
             @Override
             public void apply(@Nonnull Setting entity) {
                 entity.setValue(sorted.toString());
             }
         });
-        _settingRepository.update(SettingManager.SYSTEM_AUTODETECT_ENABLE, new Updater<Setting>() {
+        _settingRepository.update(Settings.SYSTEM_AUTODETECT_ENABLE, new Updater<Setting>() {
             @Override
             public void apply(@Nonnull Setting entity) {
                 entity.setValue(autoDetectSearchLanguage.toString());

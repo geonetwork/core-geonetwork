@@ -36,7 +36,7 @@ import org.jdom.Element;
 import java.nio.file.Path;
 
 //=============================================================================
-
+@Deprecated
 public class Get implements Service {
     //--------------------------------------------------------------------------
     //---

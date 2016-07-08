@@ -34,6 +34,7 @@ import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.JeevesJCS;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -210,6 +211,7 @@ public final class Processor {
         }
         Element remoteFragment = null;
         try {
+            // TODO-API: Support local protocol on /api/registries/
             if (uri.startsWith(XLink.LOCAL_PROTOCOL)) {
                 LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
                 request.setDebug(false);
@@ -463,7 +465,7 @@ public final class Processor {
         // Don't process XLink for configured elements
         List<String> excludedXlinkElements = new ArrayList<String>();
         SettingManager sm = ApplicationContextHolder.get().getBean(SettingManager.class);
-        String xlinkElementNamesToIgnore = sm.getValue("system/xlinkResolver/ignore");
+        String xlinkElementNamesToIgnore = sm.getValue(Settings.SYSTEM_XLINK_RESOLVER_IGNORE);
         if (StringUtils.isNotEmpty(xlinkElementNamesToIgnore)) {
             for (String el : xlinkElementNamesToIgnore.split(",")) {
                 excludedXlinkElements.add(el.trim());

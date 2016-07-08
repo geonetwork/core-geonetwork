@@ -24,7 +24,7 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.api.records.BatchEditsApi;
+import org.fao.geonet.api.records.editing.BatchEditsApi;
 import org.fao.geonet.api.records.model.BatchEditParameter;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.Metadata;
@@ -82,7 +82,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
         final BatchEditParameter[] parameters = new BatchEditParameter[]{};
 
         try {
-            batchEditsService.serviceSpecificExec(
+            batchEditsService.batchEdit(
                 new String[]{firstMetadataId},
                 parameters);
         } catch (java.lang.IllegalArgumentException exception) {
@@ -110,7 +110,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
             )
         };
 
-        batchEditsService.serviceSpecificExec(
+        batchEditsService.batchEdit(
             new String[]{firstMetadataId},
             listOfupdates);
         Metadata updatedRecord = repository.findOneByUuid(firstMetadataId);

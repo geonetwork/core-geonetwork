@@ -1,7 +1,7 @@
 <div>
-  <div class="alert alert-info">{{currentSuggestion.name['#text'] || currentSuggestion.name}}</div>
+  <div class="alert alert-info">{{currentSuggestion.name}}</div>
   <form class="form-horizontal" role="form">
-    <div class="form-group" data-ng-repeat="(key,param) in gnSuggestion.getCurrent().params">
+    <div class="form-group" data-ng-repeat="(key,param) in processParams">
       <label
         data-ng-if="param.type == 'string' || param.type == 'expression' || param.type == 'codelist'"
         class="col-sm-4 control-label">

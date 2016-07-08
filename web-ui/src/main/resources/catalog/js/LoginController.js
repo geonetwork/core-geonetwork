@@ -41,10 +41,10 @@
       ['$scope', '$http', '$rootScope', '$translate',
        '$location', '$window', '$timeout',
        'gnUtilityService', 'gnConfig',
-       function($scope, $http, $rootScope, $translate, 
+       function($scope, $http, $rootScope, $translate,
            $location, $window, $timeout,
                gnUtilityService, gnConfig) {
-          $scope.formAction = '../../j_spring_security_check#' +
+          $scope.formAction = '../../signin#' +
          $location.path();
           $scope.registrationStatus = null;
           $scope.sendPassword = false;
@@ -157,7 +157,7 @@
          };
 
          $scope.nodeChangeRedirect = function(redirectTo) {
-           $http.get('../../j_spring_security_logout')
+           $http.get('../../signout')
            .success(function(data) {
                   window.location.href = redirectTo;
            });

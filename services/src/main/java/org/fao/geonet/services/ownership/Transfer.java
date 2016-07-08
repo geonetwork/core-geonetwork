@@ -50,6 +50,7 @@ import java.util.*;
 /**
  *
  */
+@Deprecated
 public class Transfer extends NotInReadOnlyModeService {
     /**
      *

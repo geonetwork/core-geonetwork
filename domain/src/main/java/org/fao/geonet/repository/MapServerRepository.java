@@ -33,7 +33,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @author Francois
  */
 public interface MapServerRepository
-    extends GeonetRepository<MapServer, String>,
+    extends GeonetRepository<MapServer, Integer>,
     MapServerRepositoryCustom,
     JpaSpecificationExecutor<MapServer> {
     MapServer findOneById(int id);

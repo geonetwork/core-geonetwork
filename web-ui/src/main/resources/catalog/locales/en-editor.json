@@ -38,6 +38,7 @@
     "beforeUnloadEditor": "You may have unsaved changes since last save {{timeAgo}}.",
     "batchEditing": "Batch editing",
     "fieldIsRemoved": "This field will be removed",
+    "editRecords": "Edit selection",
     "removeField": "Remove this field",
     "addXpath-help": "Updating records using XPath need careful definition of the changes. A change is defined by:",
     "addXpathTitle": "an optional tile",
@@ -286,7 +287,6 @@
     "unsupportedSchemaAlert": "Metadata <strong>{{title}}</strong> is using <strong>{{schema}}</strong> standard. This is not supported by the editor. <a href='#'>Return to editor board</a>.",
     "uploadFile": "Upload a file from your computer",
     "uuidAction": "Record identifier processing",
-    "validate": "Validate",
     "validate-help": "Check record against standard validation rules",
     "validationReport": "Validation",
     "runValidation": "Run validation check",
@@ -296,6 +296,8 @@
     "xsltToApply": "Apply XSLT conversion",
     "yearAndMonthMode": "Year and month",
     "yearMode": "Year only",
+    "uploadFileByUrl": "Upload a file from URL",
+    "noFileSelected": "Choose a file to load!",
     "yourMetadata": "Your metadata",
     "searchKeyword": "Search ...",
     "searchOrTypeKeyword": "Type or search ...",
@@ -317,5 +319,6 @@
     "currentConcept":"Current concept",
     "parentConcept":"Parent concept",
     "moreSpecificConcept":"More specific concepts",
-    "associatedConcept":"Associated concepts"
+    "associatedConcept":"Associated concepts",
+    "xsd": "Schema validation"
 }

@@ -260,7 +260,7 @@
                 // appending a random int in order to avoid
                 // caching by route.
                 $scope.editorFormUrl = gnEditor
-                    .buildEditUrlPrefix('md.edit') +
+                    .buildEditUrlPrefix('editor') +
                     '&starteditingsession=yes&' +
                     '_random=' + Math.floor(Math.random() * 10000);
 
@@ -456,7 +456,7 @@
       };
 
       $scope.close = function() {
-        var promise = gnEditor.save(false)
+        var promise = gnEditor.save(false, null, true)
             .then(function(form) {
               closeEditor();
             }, function(error) {

@@ -38,6 +38,7 @@ import java.nio.file.Path;
 
 import javax.annotation.Nonnull;
 
+@Deprecated
 public class Update extends NotInReadOnlyModeService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
@@ -60,7 +61,7 @@ public class Update extends NotInReadOnlyModeService {
             operationRepository.update(Integer.valueOf(id), new Updater<Operation>() {
                 @Override
                 public void apply(@Nonnull Operation entity) {
-                    entity.setLabelTranslations(label.getChildren());
+                    entity.setLabelTranslationsFromElement(label.getChildren());
                 }
             });
         }

@@ -26,7 +26,7 @@ package org.fao.geonet.services.region;
 import com.vividsolutions.jts.geom.Geometry;
 
 import org.fao.geonet.kernel.region.Region;
-import org.fao.geonet.services.region.metadata.MetadataRegionSearchRequest.Id;
+import org.fao.geonet.api.regions.metadata.MetadataRegionSearchRequest.Id;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;

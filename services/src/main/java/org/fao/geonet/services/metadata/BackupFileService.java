@@ -42,6 +42,7 @@ import java.nio.file.Path;
 /**
  * @author heikki doeleman
  */
+@Deprecated
 public abstract class BackupFileService extends NotInReadOnlyModeService {
 
     /**

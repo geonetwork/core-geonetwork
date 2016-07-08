@@ -28,7 +28,7 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:tr="java:org.fao.geonet.services.metadata.format.SchemaLocalizations"
+                xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:saxon="http://saxon.sf.net/"
                 version="2.0"
@@ -157,9 +157,11 @@
                 match="*[gmd:CI_ResponsibleParty]"
                 priority="100">
     <xsl:variable name="email">
-      <xsl:apply-templates mode="render-value"
-                           select="*/gmd:contactInfo/
-                                      */gmd:address/*/gmd:electronicMailAddress"/>
+      <xsl:for-each select="*/gmd:contactInfo/
+                                      */gmd:address/*/gmd:electronicMailAddress">
+        <xsl:apply-templates mode="render-value"
+                             select="."/><xsl:if test="position() != last()">, </xsl:if>
+      </xsl:for-each>
     </xsl:variable>
 
     <!-- Display name is <org name> - <individual name> (<position name> -->

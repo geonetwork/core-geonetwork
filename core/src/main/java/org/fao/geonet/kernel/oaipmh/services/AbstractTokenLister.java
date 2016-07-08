@@ -23,10 +23,6 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.SchemaManager;
@@ -35,23 +31,29 @@ import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.utils.Log;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.fao.oaipmh.exceptions.BadResumptionTokenException;
 import org.fao.oaipmh.exceptions.NoRecordsMatchException;
 import org.fao.oaipmh.requests.AbstractRequest;
 import org.fao.oaipmh.requests.TokenListRequest;
 import org.fao.oaipmh.responses.AbstractResponse;
-import org.fao.oaipmh.responses.ListResponse;
 import org.fao.oaipmh.responses.GeonetworkResumptionToken;
+import org.fao.oaipmh.responses.ListResponse;
 import org.fao.oaipmh.util.SearchResult;
 import org.jdom.Element;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import jeeves.server.context.ServiceContext;
+
+
 public abstract class AbstractTokenLister implements OaiPmhService {
 
     protected ResumptionTokenCache cache;
+
     private SettingManager settingMan;
     private SchemaManager schemaMan;
 
@@ -65,7 +67,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
      * @return the mode
      */
     public int getMode() {
-        return settingMan.getValueAsInt("system/oai/mdmode");
+        return settingMan.getValueAsInt(Settings.SYSTEM_OAI_MDMODE);
     }
 
     /**
@@ -73,7 +75,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
      * @return
      */
     public int getMaxRecords() {
-        return settingMan.getValueAsInt("system/oai/maxrecords");
+        return settingMan.getValueAsInt(Settings.SYSTEM_OAI_MAXRECORDS);
     }
 
     /**

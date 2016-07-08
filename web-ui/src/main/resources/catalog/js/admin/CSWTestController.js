@@ -53,9 +53,9 @@
           $scope.cswTests = data;
         });
 
-        $http.get('admin.config.virtualcsw.list?_content_type=json').
+        $http.get('../api/csw/virtuals').
             success(function(data) {
-              $scope.cswVirtual = data != 'null' ? data.record : [];
+              $scope.cswVirtual = data;
             });
       }
 

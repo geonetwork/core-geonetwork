@@ -203,12 +203,13 @@
       <xs:attribute name="id" type="xs:NMTOKEN"/>
       <xs:attribute name="title"/>
       <xs:attribute name="value" use="required"/>
+      <xs:attribute type="xs:boolean" name="default" use="optional"/>
     </xs:complexType>
   </xs:element>
 
   <xs:element name="inspireInfo" type="xs:string"/>
 
-  <xs:element name="codelists" type="codelistsType">
+  <xs:element name="codelists">
     <xs:annotation>
       <xs:documentation>* Hide in edit mode : If some codelist needs to be
         hidden
@@ -236,31 +237,27 @@
         7 entries.
       </xs:documentation>
     </xs:annotation>
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded" minOccurs="0">
+        <xs:element name="codelist">
+          <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+              <xs:element name="entry">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="code"/>
+                    <xs:element type="xs:string" name="label"/>
+                    <xs:element type="xs:string" name="description"/>
+                  </xs:sequence>
+                  <xs:attribute type="xs:boolean" name="hideInEditMode" use="optional"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="optional"/>
+            <xs:attribute type="xs:string" name="alias" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
   </xs:element>
-  <xs:complexType name="codelistType">
-    <xs:sequence>
-      <xs:element type="entryType" name="entry" maxOccurs="unbounded"
-                  minOccurs="0"/>
-    </xs:sequence>
-    <xs:attribute type="xs:string" name="name" use="optional"/>
-    <xs:attribute type="xs:string" name="alias" use="optional"/>
-  </xs:complexType>
-  <xs:complexType name="entryType">
-    <xs:choice maxOccurs="unbounded" minOccurs="0">
-      <xs:element type="xs:string" name="code"/>
-      <xs:element type="xs:string" name="label"/>
-      <xs:element type="xs:string" name="description"/>
-    </xs:choice>
-    <xs:attribute type="xs:string" name="hideInEditMode" use="optional"/>
-  </xs:complexType>
-  <xs:complexType name="codelistsType">
-    <xs:sequence>
-      <xs:element type="codelistType" name="codelist" maxOccurs="unbounded"
-                  minOccurs="0">
-        <xs:annotation>
-          <xs:documentation></xs:documentation>
-        </xs:annotation>
-      </xs:element>
-    </xs:sequence>
-  </xs:complexType>
 </xs:schema>
