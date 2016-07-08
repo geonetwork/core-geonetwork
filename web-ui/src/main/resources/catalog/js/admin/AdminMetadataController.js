@@ -64,7 +64,7 @@
               href: '#/metadata/schematron'
             },{
               type: 'metadata-identifier-templates',
-              icon: 'fa-icon-list',
+              icon: 'fa-key',
               label: 'manageMetadataIdentifierTemplates',
               href: '#/metadata/metadata-identifier-templates'
             }]
