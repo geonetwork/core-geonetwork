@@ -1473,6 +1473,7 @@
               return {
                 pre: function preLink(scope) {
                   scope.searchObj = {
+                    any: '',
                     params: {}
                   };
                   scope.modelOptions =
@@ -1482,6 +1483,13 @@
                   scope.mode = iAttrs['gnLinkToMetadata'];
                   scope.popupid = '#linkto' + scope.mode + '-popup';
                   scope.btn = {};
+
+
+                  // Append * for like search
+                  scope.updateParams = function() {
+                    scope.searchObj.params.any =
+                      '*' + scope.searchObj.any + '*';
+                  };
 
                   /**
                    * Register a method on popup open to reset
