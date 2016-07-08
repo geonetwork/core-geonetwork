@@ -52,6 +52,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.util.MailUtil;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -114,6 +115,7 @@ public class MailApi {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_config_test_success"), to), HttpStatus.CREATED);
         } catch (Exception ex) {
+            Log.error("geonetwork.api", "Error sending test email", ex);
             String error = ex.getMessage();
             if (ex.getCause() != null) error = error + ". " + ex.getCause().getMessage();
             return new ResponseEntity<>(String.format(
