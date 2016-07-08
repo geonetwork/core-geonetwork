@@ -526,8 +526,7 @@
                     </xsl:variable>
                     <xsl:variable name="protocol" select="normalize-space($p)"/>
                     <xsl:variable name="mimetype" select="geonet:protocolMimeType($linkage, $protocol, gmd:name/gmx:MimeFileType/@type)"/>
-                    <xsl:message>title: <xsl:value-of select="$title" /></xsl:message>
-                    <xsl:message>title2: <xsl:value-of select="gmd:name//gmd:LocalisedCharacterString[@locale=$langId]" /></xsl:message>
+
                     <!-- If the linkage points to WMS service and no protocol specified, manage as protocol OGC:WMS -->
                     <xsl:variable name="wmsLinkNoProtocol" select="contains(lower-case($linkage), 'service=wms') and not(string($protocol))" />
 
