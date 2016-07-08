@@ -25,17 +25,11 @@ package org.fao.geonet.kernel.metadata;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.User_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -47,20 +41,11 @@ import org.fao.geonet.util.MailSender;
 import org.fao.geonet.util.XslUtil;
 import org.springframework.context.ApplicationContext;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DefaultStatusActions implements StatusActions {
 
@@ -75,6 +60,7 @@ public class DefaultStatusActions implements StatusActions {
     private String host, port, username, password, from, fromDescr, replyTo, replyToDescr;
     private boolean useSSL;
     private boolean useTLS;
+    private boolean ignoreSslCertificateErrors;
     private StatusValueRepository _statusValueRepository;
 
     /**
@@ -103,6 +89,7 @@ public class DefaultStatusActions implements StatusActions {
         password = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD);
         useSSL = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL);
         useTLS = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS);
+        ignoreSslCertificateErrors = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS);
 
         if (host == null || host.length() == 0) {
             context.error("Mail server host not configure");
@@ -360,8 +347,8 @@ public class DefaultStatusActions implements StatusActions {
             context.info("Would send email \nTo: " + sendTo + "\nSubject: " + subject + "\n Message:\n" + message);
         } else {
             MailSender sender = new MailSender(context);
-            sender.sendWithReplyTo(host, Integer.parseInt(port), username, password, useSSL, useTLS, from, fromDescr,
-                sendTo, null, replyTo, replyToDescr, subject, message);
+            sender.sendWithReplyTo(host, Integer.parseInt(port), username, password, useSSL, useTLS,
+                ignoreSslCertificateErrors, from, fromDescr, sendTo, null, replyTo, replyToDescr, subject, message);
         }
     }
 }

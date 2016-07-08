@@ -24,7 +24,7 @@
 package org.fao.geonet.component.harvester.csw;
 
 import com.google.common.base.Function;
-
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -63,6 +63,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,20 +75,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.RunnableFuture;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import jeeves.server.context.ServiceContext;
+import java.util.concurrent.*;
 
 /**
  * CSW Harvest operation.
- *
+ * <p>
  * OGC 07-006: "This is the pull mechanism that 'pulls' data into the catalogue. That is, this
  * operation only references the data to be inserted or updated in the catalogue, and it is the job
  * of the catalogue service to resolve the reference, fetch that data, and process it into the
@@ -222,7 +215,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
     /**
      * Polls periodically whether the harvester is still running and when not, creates a
      * HarvestResponse and sends it to the url in responseHandler.
-     *
+     * <p>
      * This method must not block the execute() method, therefore it starts a separate thread.
      *
      * @param harvester       - the harvester
@@ -239,7 +232,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
     /**
      * Verifies ResourceType is supported.
-     *
+     * <p>
      * OGC 07-006 10.12.4.2 : The ResourceType parameter references a document that defines the
      * structure of the resource being harvested. For high interoperability, this resource should be
      * an XML document, and the ResourceType parameter string value should be a URI that references
@@ -275,7 +268,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
     /**
      * Verifies ResourceFormat is supported.
-     *
+     * <p>
      * OGC 07-006 10.12.4.3 : The ResourceFormat parameter is used to indicate the encoding used for
      * the resource being harvested. This parameter is included to support the harvesting of
      * metadata resources available in various formats such as plain text, XML or HTML. The values
@@ -296,7 +289,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
     /**
      * Verifies Source parameter is present and well-formed.
-     *
+     * <p>
      * OGC 07-006 10.12.4.1 : The Source parameter is used to specify a URI reference to the
      * metadata resource to be harvested.
      *
@@ -331,7 +324,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
     /**
      * Creates request from KVP GET request parameters.
-     *
+     * <p>
      * See OGC 07-006 10.12.2.
      *
      * @param params - params
@@ -569,7 +562,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
     /**
      * Creates exception report.
-     *
+     * <p>
      * OGC 07-006 section 10.3.7 : In the event that a catalogue service encounters an error while
      * processing a request or receives an unrecognised request, it shall generate an XML document
      * indicating that an error has occurred. The format of the XML error response is specified by,
@@ -611,7 +604,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
     /**
      * Creates Acknowledge response for asynchronous CSW requests.
-     *
+     * <p>
      * OGC 07-006 section 10.8.4.14 : The acknowledgment message shall echo the exact XML text of
      * the client's request, using the <EchoedRequest> element, and may include an optionally
      * generated request identifier using the <RequestId> element. The echoed request is used to
@@ -859,7 +852,8 @@ public class Harvest extends AbstractOperation implements CatalogService {
                 settingManager.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD),
                 settingManager.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL),
                 settingManager.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS),
-                "noreply@geonetwork.org",
+                settingManager.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS),
+                settingManager.getValue(Settings.SYSTEM_FEEDBACK_EMAIL),
                 "GeoNetwork CSW Server", to, null, "Asynchronous CSW Harvest results delivery", harvestResponse);
         }
 
@@ -988,7 +982,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
         /**
          * Sends a HarvestResponse to the destination specified in responseHandler. Supports http,
          * email and ftp.
-         *
+         * <p>
          * OGC 07-006 10.12.5: .. send it to the URI specified by the ResponseHandler parameter
          * using the protocol encoded therein. Common protocols are ftp for sending the response to
          * a ftp server and mailto which may be used to send the response to an email address.

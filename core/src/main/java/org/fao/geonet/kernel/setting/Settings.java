@@ -67,6 +67,8 @@ public class Settings {
     public static final String SYSTEM_FEEDBACK_MAILSERVER_PASSWORD = "system/feedback/mailServer/password";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_SSL = "system/feedback/mailServer/ssl";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_TLS = "system/feedback/mailServer/tls";
+    public static final String SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS =
+        "system/feedback/mailServer/ignoreSslCertificateErrors";
     public static final String SYSTEM_ENABLE_ALL_THESAURUS = "system/metadata/allThesaurus";
     public static final String SYSTEM_SITE_SVNUUID = "system/site/svnUuid";
     public static final String SYSTEM_INTRANET_NETWORK = "system/intranet/network";
