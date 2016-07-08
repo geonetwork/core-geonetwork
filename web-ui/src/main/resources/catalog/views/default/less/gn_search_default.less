@@ -395,13 +395,6 @@ ul.gn-resultview {
   }
 }
 
-.gn-minimap-toggle {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  z-index: 999;
-}
-
 .gn-results-switch {
   float: left;
 }
@@ -566,7 +559,15 @@ html, body {
   padding-right: 4px !important;
   color: #777;
 }
-.minimap-button {
+
+.gn-minimap-toggle {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 999;
+}
+
+.gn-minimap-button {
   padding: 7px;
   background-color: @brand-primary !important;
   color: white !important;
@@ -579,7 +580,7 @@ html, body {
     color: white !important;
   }
 }
-.minimap-text {
+.gn-minimap-text {
   text-decoration: blink;
   transform: translate(100%) rotate(270deg);
   transform-origin: left bottom;
