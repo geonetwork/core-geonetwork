@@ -78,6 +78,10 @@
     <xsl:value-of select="$value/gco:CharacterString"/>
   </xsl:template>
 
+  <xsl:template mode="getMetadataHierarchyLevel" match="gmd:MD_Metadata">
+    <xsl:value-of select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue"/>
+  </xsl:template>
+
   <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata">
   </xsl:template>
 
@@ -193,7 +197,9 @@
       </h3>
       <div class="row">
         <div class="col-md-6">
-          <address>
+          <address itemprop="author"
+                   itemscope="itemscope"
+                   itemtype="http://schema.org/Organization">
             <strong>
               <xsl:choose>
                 <xsl:when test="$email">
@@ -208,10 +214,36 @@
             </strong>
             <br/>
             <xsl:for-each select="*/gmd:contactInfo/*">
-              <xsl:for-each select="gmd:address/*/(
-                                          gmd:deliveryPoint|gmd:city|
-                                          gmd:administrativeArea|gmd:postalCode|gmd:country)">
-                <xsl:apply-templates mode="render-value" select="."/>
+              <xsl:for-each select="gmd:address/*">
+                <div itemprop="address"
+                      itemscope="itemscope"
+                      itemtype="http://schema.org/PostalAddress">
+                  <xsl:for-each select="gmd:deliveryPoint">
+                    <span itemprop="streetAddress">
+                      <xsl:apply-templates mode="render-value" select="."/>
+                    </span>
+                  </xsl:for-each>
+                  <xsl:for-each select="gmd:city">
+                    <span itemprop="addressLocality">
+                      <xsl:apply-templates mode="render-value" select="."/>
+                    </span>
+                  </xsl:for-each>
+                  <xsl:for-each select="gmd:administrativeArea">
+                    <span itemprop="addressRegion">
+                      <xsl:apply-templates mode="render-value" select="."/>
+                    </span>
+                  </xsl:for-each>
+                  <xsl:for-each select="gmd:postalCode">
+                    <span itemprop="postalCode">
+                      <xsl:apply-templates mode="render-value" select="."/>
+                    </span>
+                  </xsl:for-each>
+                  <xsl:for-each select="gmd:country">
+                    <span itemprop="addressCountry">
+                      <xsl:apply-templates mode="render-value" select="."/>
+                    </span>
+                  </xsl:for-each>
+                </div>
                 <br/>
               </xsl:for-each>
             </xsl:for-each>
@@ -221,13 +253,20 @@
           <address>
             <xsl:for-each select="*/gmd:contactInfo/*">
               <xsl:for-each select="gmd:phone/*/gmd:voice[normalize-space(.) != '']">
-                <xsl:variable name="phoneNumber">
-                  <xsl:apply-templates mode="render-value" select="."/>
-                </xsl:variable>
-                <i class="fa fa-phone"></i>
-                <a href="tel:{$phoneNumber}">
-                  <xsl:value-of select="$phoneNumber"/>
-                </a>
+                <div itemprop="contactPoint"
+                      itemscope="itemscope"
+                      itemtype="http://schema.org/ContactPoint">
+                  <meta itemprop="contactType"
+                        content="{ancestor::gmd:CI_ResponsibleParty/*/gmd:role/*/@codeListValue}"/>
+
+                  <xsl:variable name="phoneNumber">
+                    <xsl:apply-templates mode="render-value" select="."/>
+                  </xsl:variable>
+                  <i class="fa fa-phone"></i>
+                  <a href="tel:{$phoneNumber}">
+                    <xsl:value-of select="$phoneNumber"/>
+                  </a>
+                </div>
               </xsl:for-each>
               <xsl:for-each select="gmd:phone/*/gmd:facsimile[normalize-space(.) != '']">
                 <xsl:variable name="phoneNumber">
@@ -239,8 +278,17 @@
                 </a>
               </xsl:for-each>
 
+              <xsl:for-each select="gmd:hoursOfService">
+                <span itemprop="hoursAvailable"
+                      itemscope="itemscope"
+                      itemtype="http://schema.org/OpeningHoursSpecification">
+                  <xsl:apply-templates mode="render-field"
+                                       select="."/>
+                </span>
+              </xsl:for-each>
+
               <xsl:apply-templates mode="render-field"
-                                   select="gmd:hoursOfService|gmd:contactInstructions"/>
+                                   select="gmd:contactInstructions"/>
               <xsl:apply-templates mode="render-field"
                                    select="gmd:onlineResource"/>
 
@@ -275,7 +323,10 @@
   <xsl:template mode="render-field"
                 match="*[gmd:CI_OnlineResource and */gmd:linkage/gmd:URL != '']"
                 priority="100">
-    <dl class="gn-link">
+    <dl class="gn-link"
+        itemprop="distribution"
+        itemscope="itemscope"
+        itemtype="http://schema.org/DataDownload">
       <dt>
         <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
       </dt>
