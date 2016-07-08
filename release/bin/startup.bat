@@ -1,10 +1,12 @@
-cd ..
+
+set JETTY_HOME=../jetty
+set JETTY_BASE=../jetty
+cd %JETTY_HOME
+
 del logs\*request.log*
 del logs\output.log
 move logs\geonetwork.log.* logs\archive
 move logs\geoserver.log.* logs\archive
-
-set JETTY_HOME=jetty
 
 java -Dmime-mappings=..\web\geonetwork\WEB-INF\mime-types.properties -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork -jar start.jar
 

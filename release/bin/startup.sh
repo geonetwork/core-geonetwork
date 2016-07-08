@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-cd ..
-export JETTY_HOME=jetty
+export JETTY_HOME=../jetty
 export JETTY_FOREGROUND=0
+export JETTY_BASE=$JETTY_HOME
+cd $JETTY_HOME
 
 for i in "$@"
 do
