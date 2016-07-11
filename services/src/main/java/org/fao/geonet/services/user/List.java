@@ -64,6 +64,7 @@ import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
  * Retrieves all users in the system
  */
 @Controller("admin.user.list")
+@Deprecated
 public class List {
 
 

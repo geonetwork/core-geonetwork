@@ -102,7 +102,6 @@
             $scope.categories = data;
           });
 
-
       function loadGroups() {
         $scope.isLoadingGroups = true;
         $http.get('../api/groups').
@@ -166,19 +165,25 @@
           name: '',
           surname: '',
           profile: 'RegisteredUser',
-          address: '',
-          city: '',
-          state: '',
-          zip: '',
-          country: '',
-          email: '',
+          addresses: [
+            {
+              address: '',
+              city: '',
+              state: '',
+              zip: '',
+              country: ''
+            }
+          ],
+          emailAddresses: [
+            ''
+          ],
           organisation: '',
-          groups: [],
           enabled: true
         };
         $scope.userGroups = null;
         $scope.userIsAdmin = false;
         $scope.userIsEnabled = true;
+
         $timeout(function() {
           $scope.setUserProfile();
           $('#username').focus();
@@ -214,7 +219,7 @@
               $scope.userIsAdmin =
                   (data.profile === 'Administrator');
 
-              $scope.userIsEnabled = (data.enabled === 'true');
+              $scope.userIsEnabled = data.enabled;
 
               // Load user group and then select user
               $http.get('../api/users/' + u.id + '/groups')
@@ -344,20 +349,79 @@
        * Save a user.
        */
       $scope.saveUser = function(formId) {
-        $http.get('admin.user.update?' + $(formId).serialize() +
-                '&enabled=' + $scope.userIsEnabled)
-            .success(function(data) {
+
+        var selectedRegisteredUserGroups = [],
+            selectedEditorGroups = [], selectedReviewerGroups = [],
+            selectedUserAdminGroups = [];
+
+        var registeredUserGroups = $('#groups_RegisteredUser')[0];
+        for (var j = 0; j < registeredUserGroups.options.length; j++) {
+          if (registeredUserGroups.options[j].selected) {
+            selectedRegisteredUserGroups.push(
+                registeredUserGroups.options[j].value);
+          }
+        }
+
+        var editorGroups = $('#groups_Editor')[0];
+        for (var j = 0; j < editorGroups.options.length; j++) {
+          if (editorGroups.options[j].selected) {
+            selectedEditorGroups.push(
+                editorGroups.options[j].value);
+          }
+        }
+
+        var reviewerGroups = $('#groups_Reviewer')[0];
+        for (var j = 0; j < reviewerGroups.options.length; j++) {
+          if (reviewerGroups.options[j].selected) {
+            selectedReviewerGroups.push(
+                reviewerGroups.options[j].value);
+          }
+        }
+
+        var userAdminGroups = $('#groups_UserAdmin')[0];
+        for (var j = 0; j < userAdminGroups.options.length; j++) {
+          if (userAdminGroups.options[j].selected) {
+            selectedUserAdminGroups.push(
+                userAdminGroups.options[j].value);
+          }
+        }
+
+
+        var data = angular.extend({}, $scope.userSelected, {
+          groupsRegisteredUser: selectedRegisteredUserGroups,
+          groupsEditor: selectedEditorGroups,
+          groupsReviewer: selectedReviewerGroups,
+          groupsUserAdmin: selectedUserAdminGroups
+        });
+
+        data.enabled = $scope.userIsEnabled;
+
+        delete data.lastLoginDate;
+        delete data.security;
+
+        var url = '';
+
+        if ($scope.userSelected.id) {
+          url = '../api/users/' + $scope.userSelected.id;
+        } else {
+          url = '../api/users';
+        }
+
+        $http.put(url,
+            data)
+            .then(
+            function(r) {
               $scope.unselectUser();
               loadUsers();
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('userUpdated'),
                 timeout: 2,
                 type: 'success'});
-            })
-            .error(function(data) {
+            },
+            function(r) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('userUpdateError'),
-                error: data,
+                error: r.data,
                 timeout: 0,
                 type: 'danger'});
             });
@@ -446,8 +510,8 @@
             $scope.groupSelected.id != -99 ?
             '/' + $scope.groupSelected.id : ''
             ), $scope.groupSelected)
-          .success(uploadImportMdDone)
-          .error(uploadImportMdError);
+            .success(uploadImportMdDone)
+            .error(uploadImportMdError);
       };
 
       $scope.deleteGroup = function(formId) {

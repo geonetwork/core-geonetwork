@@ -61,6 +61,7 @@ import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 
 @Controller("admin.user.update")
 @ReadWriteController
+@Deprecated
 public class Update {
 
 
@@ -473,6 +474,7 @@ public class Update {
     }
 }
 
+@Deprecated
 class GroupElem {
 
     private String profile;
