@@ -52,7 +52,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -508,12 +507,12 @@ public class MetadataSharingApi {
         value = "Set group and owner for one or more records",
         notes = "",
         nickname = "setGroupAndOwner")
-    @RequestMapping(value = "/group-and-owner",
+    @RequestMapping(value = "/ownership",
         method = RequestMethod.PUT
     )
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Record group and owner updated"),
+        @ApiResponse(code = 201, message = "Records group and owner updated"),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasRole('Editor')")
@@ -562,52 +561,9 @@ public class MetadataSharingApi {
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
-                Metadata metadata = metadataRepository.findOneByUuid(uuid);
-                if (metadata == null) {
-                    report.incrementNullRecords();
-                } else if (!accessMan.canEdit(
-                    serviceContext, String.valueOf(metadata.getId()))) {
-                    report.addNotEditableMetadataId(metadata.getId());
-                } else {
-                    //-- Get existing owner and privileges for that owner - note that
-                    //-- owners don't actually have explicit permissions - only their
-                    //-- group does which is why we have an ownerGroup (parameter groupid)
-                    Integer sourceUsr = metadata.getSourceInfo().getOwner();
-                    Integer sourceGrp = metadata.getSourceInfo().getGroupOwner();
-                    Vector<OperationAllowedId> sourcePriv =
-                        retrievePrivileges(serviceContext, String.valueOf(metadata.getId()), sourceUsr, sourceGrp);
-
-                    // -- Set new privileges for new owner from privileges of the old
-                    // -- owner, if none then set defaults
-                    if (sourcePriv.size() == 0) {
-                        dataManager.copyDefaultPrivForGroup(
-                            serviceContext,
-                            String.valueOf(metadata.getId()),
-                            String.valueOf(groupIdentifier),
-                            false);
-                        report.addMetadataInfos(metadata.getId(), String.format(
-                            "No privileges for user '%s' on metadata '%s', so setting default privileges",
-                            sourceUsr, metadata.getUuid()
-                        ));
-                    } else {
-                        for (OperationAllowedId priv : sourcePriv) {
-                            if (sourceGrp != null) {
-                                dataManager.unsetOperation(serviceContext,
-                                    metadata.getId(),
-                                    sourceGrp,
-                                    priv.getOperationId());
-                            }
-                            dataManager.setOperation(serviceContext,
-                                metadata.getId(),
-                                groupIdentifier,
-                                priv.getOperationId());
-                        }
-                    }
-                    // -- set the new owner into the metadata record
-                    dataManager.updateMetadataOwner(metadata.getId(), String.valueOf(userIdentifier), String.valueOf(groupIdentifier));
-                    report.addMetadataId(metadata.getId());
-                    report.incrementProcessedRecords();
-                }
+                updateOwnership(groupIdentifier, userIdentifier,
+                    report, dataManager, accessMan, metadataRepository,
+                    serviceContext, listOfUpdatedRecords, uuid);
             }
             dataManager.flush();
             dataManager.indexMetadata(listOfUpdatedRecords);
@@ -617,9 +573,144 @@ public class MetadataSharingApi {
         } finally {
             report.close();
         }
-
         return report;
     }
+
+
+
+    @ApiOperation(
+        value = "Set record group and owner",
+        notes = "",
+        nickname = "setRecordOwnership")
+    @RequestMapping(
+        value = "/{metadataUuid}/ownership",
+        method = RequestMethod.PUT
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Record group and owner updated"),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @PreAuthorize("hasRole('Editor')")
+    public
+    @ResponseBody
+    MetadataProcessingReport setRecordOwnership(
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(
+            value = "Group identifier",
+            required = true
+        )
+        @RequestParam(
+            required = true
+        )
+            Integer groupIdentifier,
+        @ApiParam(
+            value = "User identifier",
+            required = true
+        )
+        @RequestParam(
+            required = true
+        )
+            Integer userIdentifier,
+        @ApiIgnore
+        @ApiParam(hidden = true)
+            HttpSession session,
+        HttpServletRequest request
+    )
+        throws Exception {
+        MetadataProcessingReport report = new SimpleMetadataProcessingReport();
+
+        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        try {
+            report.setTotalRecords(1);
+
+            final ApplicationContext context = ApplicationContextHolder.get();
+            final DataManager dataManager = context.getBean(DataManager.class);
+            final AccessManager accessMan = context.getBean(AccessManager.class);
+            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+
+            ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+            List<String> listOfUpdatedRecords = new ArrayList<>();
+            updateOwnership(groupIdentifier, userIdentifier,
+                report, dataManager, accessMan, metadataRepository,
+                serviceContext, listOfUpdatedRecords, metadataUuid);
+            dataManager.flush();
+            dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+
+        } catch (Exception exception) {
+            report.addError(exception);
+        } finally {
+            report.close();
+        }
+        return report;
+    }
+
+
+
+    private void updateOwnership(Integer groupIdentifier,
+                                 Integer userIdentifier,
+                                 MetadataProcessingReport report,
+                                 DataManager dataManager,
+                                 AccessManager accessMan,
+                                 MetadataRepository metadataRepository,
+                                 ServiceContext serviceContext,
+                                 List<String> listOfUpdatedRecords, String uuid) throws Exception {
+        Metadata metadata = metadataRepository.findOneByUuid(uuid);
+        if (metadata == null) {
+            report.incrementNullRecords();
+        } else if (!accessMan.canEdit(
+            serviceContext, String.valueOf(metadata.getId()))) {
+            report.addNotEditableMetadataId(metadata.getId());
+        } else {
+            //-- Get existing owner and privileges for that owner - note that
+            //-- owners don't actually have explicit permissions - only their
+            //-- group does which is why we have an ownerGroup (parameter groupid)
+            Integer sourceUsr = metadata.getSourceInfo().getOwner();
+            Integer sourceGrp = metadata.getSourceInfo().getGroupOwner();
+            Vector<OperationAllowedId> sourcePriv =
+                retrievePrivileges(serviceContext, String.valueOf(metadata.getId()), sourceUsr, sourceGrp);
+
+            // -- Set new privileges for new owner from privileges of the old
+            // -- owner, if none then set defaults
+            if (sourcePriv.size() == 0) {
+                dataManager.copyDefaultPrivForGroup(
+                    serviceContext,
+                    String.valueOf(metadata.getId()),
+                    String.valueOf(groupIdentifier),
+                    false);
+                report.addMetadataInfos(metadata.getId(), String.format(
+                    "No privileges for user '%s' on metadata '%s', so setting default privileges",
+                    sourceUsr, metadata.getUuid()
+                ));
+            } else {
+                for (OperationAllowedId priv : sourcePriv) {
+                    if (sourceGrp != null) {
+                        dataManager.unsetOperation(serviceContext,
+                            metadata.getId(),
+                            sourceGrp,
+                            priv.getOperationId());
+                    }
+                    dataManager.setOperation(serviceContext,
+                        metadata.getId(),
+                        groupIdentifier,
+                        priv.getOperationId());
+                }
+            }
+            // -- set the new owner into the metadata record
+            dataManager.updateMetadataOwner(metadata.getId(),
+                String.valueOf(userIdentifier),
+                String.valueOf(groupIdentifier));
+            report.addMetadataId(metadata.getId());
+            report.incrementProcessedRecords();
+            listOfUpdatedRecords.add(metadata.getId() + "");
+        }
+    }
+
+
 
     public static Vector<OperationAllowedId> retrievePrivileges(ServiceContext context, String id, Integer userId, Integer groupId) throws Exception {
 

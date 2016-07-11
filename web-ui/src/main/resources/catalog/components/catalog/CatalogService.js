@@ -504,6 +504,9 @@
       getOwnerId: function() {
         return this['geonet:info'].ownerId;
       },
+      getGroupOwner: function() {
+        return this['geonet:info'].owner;
+      },
       getSchema: function() {
         return this['geonet:info'].schema;
       },

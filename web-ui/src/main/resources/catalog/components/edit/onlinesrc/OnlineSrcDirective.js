@@ -1488,7 +1488,7 @@
                   // Append * for like search
                   scope.updateParams = function() {
                     scope.searchObj.params.any =
-                      '*' + scope.searchObj.any + '*';
+                        '*' + scope.searchObj.any + '*';
                   };
 
                   /**

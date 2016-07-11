@@ -403,7 +403,7 @@
               $(elem).trigger(event);
             });
             $(this).find('i').toggleClass(
-              'fa-angle-double-up fa-angle-double-down');
+                'fa-angle-double-up fa-angle-double-down');
           });
         }
       };
