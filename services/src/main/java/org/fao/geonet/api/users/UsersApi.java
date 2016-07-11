@@ -39,6 +39,7 @@ import org.fao.geonet.domain.User_;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
 import org.fao.geonet.domain.UserGroupId_;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -169,6 +170,10 @@ public class UsersApi {
 
             User user = userRepository.findOne(userIdentifier);
 
+            if (user == null) {
+                throw new UserNotFoundEx(Integer.toString(userIdentifier));
+            }
+
             if (!(myUserId.equals(userIdentifier)) && myProfile == Profile.UserAdmin) {
 
                 //--- retrieve session user groups and check to see whether this user is
@@ -250,7 +255,12 @@ public class UsersApi {
 
         userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId,
             Arrays.asList(userIdentifier));
-        userRepository.delete(userIdentifier);
+
+        try {
+            userRepository.delete(userIdentifier);
+        } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+            throw new UserNotFoundEx(Integer.toString(userIdentifier));
+        }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
