@@ -51,7 +51,7 @@ import java.util.HashMap;
 })
 @Api(value = "workers",
         tags= "workers",
-        description = "Metadata resource related operations")
+        description = "Workers related operations")
 public class WFSHarvesterApi {
     @Autowired
     private JMSMessager jmsMessager;
