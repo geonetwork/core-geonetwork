@@ -104,7 +104,11 @@
 
       function loadGroups() {
         $scope.isLoadingGroups = true;
-        $http.get('../api/groups').
+        // If not send profile, all groups are returned
+        var profile = ($scope.user.profile)?
+            "?profile=" +$scope.user.profile:"";
+
+        $http.get('../api/groups' + profile).
             success(function(data) {
               $scope.groups = data;
               $scope.isLoadingGroups = false;
