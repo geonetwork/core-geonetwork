@@ -25,6 +25,7 @@ package org.fao.geonet.api.users;
 
 import com.vividsolutions.jts.util.Assert;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -227,11 +228,13 @@ public class UsersApi {
 
         if (myProfile == Profile.UserAdmin) {
             final Integer iMyUserId = Integer.parseInt(myUserId);
-            final List<Integer> groupIds = userGroupRepository
-                .findGroupIds(where(hasUserId(iMyUserId)).or(
-                    hasUserId(userIdentifier)));
+            final List<Integer> groupIdsSessionUser = userGroupRepository
+                .findGroupIds(where(hasUserId(iMyUserId)));
 
-            if (groupIds.isEmpty()) {
+            final List<Integer> groupIdsUserToDelete = userGroupRepository
+                .findGroupIds(where(hasUserId(userIdentifier)));
+
+            if (CollectionUtils.intersection(groupIdsSessionUser, groupIdsUserToDelete).isEmpty()) {
                 throw new IllegalArgumentException(
                     "You don't have rights to delete this user because the user is not part of your group");
             }
@@ -502,7 +505,10 @@ public class UsersApi {
         @ApiIgnore
             HttpSession httpSession
     ) throws Exception {
-        Assert.equals(password, password2);
+
+        if (!password.equals(password2)) {
+            throw new IllegalArgumentException("Passwords should be equal");
+        }
 
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
@@ -516,8 +522,7 @@ public class UsersApi {
 
         User user = userRepository.findOne(userIdentifier);
         if (user == null) {
-            throw new IllegalArgumentException("No user found with id: "
-                + userIdentifier);
+            throw new UserNotFoundEx(Integer.toString(userIdentifier));
         }
 
         user.getSecurity().setPassword(
