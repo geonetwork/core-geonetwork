@@ -284,7 +284,6 @@
     "unsupportedSchemaAlert": "La metadada <strong>{{title}}</strong> fa servir l'estàndard <strong>{{schema}}</strong>. Aquest estàndard no està suportat per l'editor. <a href='#'>Tornar a la pàgina principal de l'editor</a>.",
     "uploadFile": "Carregueu un arxiu des del vostre ordinador",
     "uuidAction": "Processat identificador del registre",
-    "validate": "Validar",
     "validate-help": "Comprovar el registre amb les regles de validació estàndard",
     "validationReport": "Validació",
     "runValidation": "Executar validació",

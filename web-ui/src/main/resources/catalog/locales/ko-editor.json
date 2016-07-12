@@ -284,7 +284,6 @@
     "unsupportedSchemaAlert": "메타데이터 <strong>{{title}}</strong>은 <strong>{{schema}}</strong> 표준을 사용하고 있습니다. 현재 편집기에서 지원되지 않습니다. <a href='#'>에디터 보드로 돌아가기</a>.",
     "uploadFile": "로컬 컴퓨터에서 파일 업로드",
     "uuidAction": "레코드 식별자 처리",
-    "validate": "유효성 검사",
     "validate-help": "표준 유효성검사 규칙에 대한 레코드 확인",
     "validationReport": "유효성 검사",
     "runValidation": "유효성 검사 실행",
