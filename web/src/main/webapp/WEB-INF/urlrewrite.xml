@@ -41,6 +41,40 @@
 
 -->
 <urlrewrite use-query-string="true" use-context="false">
+  <rule>
+    <note>In the catalog, one dataset is equivalent to one record</note>
+    <from>^(.*)/catalogs/datasets/(.*)$</from>
+    <to type="forward">$1/api/records/$2</to>
+  </rule>
+  <rule>
+    <note>
+      Redirect catalog resources scheme to the underlying API.
+      This was introduce to resolve RDF resources. Usually, it is
+      recommended to set a resource identifier prefix in the settings
+      and set a reverse proxy to properly resolve resources
+      described in the catalog.
+
+      By default, resource identifier prefix is set to
+      'http://localhost:8080/geonetwork/srv' and a such
+      'http://localhost:8080/geonetwork/srv/catalog/records/{{uuid}}' is redirected to the API
+      'http://localhost:8080/geonetwork/srv/api/records/{{uuid}}'.
+
+      User may prefer to have custom resources links, eg.
+      'http://data.geonetwork-opensource.org/records/{{uuid}}'. In that case,
+      set the resource identifier to 'http://data.geonetwork-opensource.org/'.
+
+      Resources URI scheme is the following:
+      * /catalogs/{{uuid}}: Not resolvable
+      * /catalogs/records/{{uuid}}
+      * /catalogs/datasets/{{uuid}}
+      * /catalogs/organizations/{{name}}: Not resolvable
+      * /catalogs/registries/vocabularies/{{thesaurusIdentifier}}:
+      * /catalogs/registries/vocabularies/{{thesaurusIdentifier}}/keywords/{{keywordName}}
+
+    </note>
+    <from>^(.*)/catalogs/(.*)$</from>
+    <to type="forward">$1/api/$2</to>
+  </rule>
 
   <!-- Rule to redirect old deprecated @json requests -->
   <rule>

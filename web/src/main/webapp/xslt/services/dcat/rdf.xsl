@@ -51,6 +51,7 @@
     $env/system/server/host,
     if ($port='80') then '' else concat(':', $port),
     /root/gui/url)"/>
+  <xsl:variable name="resourcePrefix" select="$env/system/site/resourcePrefix"/>
 
   <!-- TODO: should use Java language code mapper -->
   <xsl:variable name="iso2letterLanguageCode" select="substring(/root/gui/language, 1, 2)"/>
@@ -82,7 +83,7 @@
       "Typically, a web-based data catalog is represented as a single instance of this class."
       ... also describe harvested catalogues if harvested records are in the current dump.
     -->
-    <dcat:Catalog rdf:about="{$url}">
+    <dcat:Catalog rdf:about="{$resourcePrefix}/catalogs/{$env/system/site/id}">
 
       <!-- A name given to the catalog. -->
       <dct:title xml:lang="{$iso2letterLanguageCode}">
@@ -110,12 +111,12 @@
 
 
       <!-- The entity responsible for making the catalog online. -->
-      <dct:publisher rdf:resource="{$url}/organization/0"/>
+      <dct:publisher rdf:resource="{$resourcePrefix}/organization/0"/>
 
       <!-- The knowledge organization system (KOS) used to classify catalog's datasets.
       -->
       <xsl:for-each select="/root/gui/thesaurus/thesauri/thesaurus">
-        <dcat:themes rdf:resource="{$url}/thesaurus/{key}"/>
+        <dcat:themes rdf:resource="{$resourcePrefix}/thesaurus/{key}"/>
       </xsl:for-each>
 
 
@@ -157,7 +158,7 @@
 
     <!-- Organization in charge of the catalogue defined in the administration
     > system configuration -->
-    <foaf:Organization rdf:about="{$url}/organization/0">
+    <foaf:Organization rdf:about="{$resourcePrefix}/organization/0">
       <foaf:name>
         <xsl:value-of select="$env/system/site/organization"></xsl:value-of>
       </foaf:name>
@@ -167,7 +168,7 @@
       * Resource identifier is a local identifier for local thesaurus or public URI if external
     -->
     <xsl:for-each select="/root/gui/thesaurus/thesauri/thesaurus">
-      <skos:ConceptScheme rdf:about="{$url}/thesaurus/{key}">
+      <skos:ConceptScheme rdf:about="{$resourcePrefix}/thesaurus/{key}">
         <dct:title>
           <xsl:value-of select="title"/>
         </dct:title>
@@ -197,8 +198,8 @@
   <xsl:template mode="references" match="gui|request|metadata"/>
 
   <xsl:template mode="record-reference" match="metadata" priority="2">
-    <dcat:dataset rdf:resource="{$url}/resource/{geonet:info/uuid}"/>
-    <dcat:record rdf:resource="{$url}/metadata/{geonet:info/uuid}"/>
+    <dcat:dataset rdf:resource="{$resourcePrefix}/resource/{geonet:info/uuid}"/>
+    <dcat:record rdf:resource="{$resourcePrefix}/metadata/{geonet:info/uuid}"/>
   </xsl:template>
 
 
