@@ -39,6 +39,7 @@ import org.fao.geonet.domain.User_;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
 import org.fao.geonet.domain.UserGroupId_;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -51,7 +52,6 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -169,6 +169,10 @@ public class UsersApi {
 
             User user = userRepository.findOne(userIdentifier);
 
+            if (user == null) {
+                throw new UserNotFoundEx(Integer.toString(userIdentifier));
+            }
+
             if (!(myUserId.equals(userIdentifier)) && myProfile == Profile.UserAdmin) {
 
                 //--- retrieve session user groups and check to see whether this user is
@@ -250,7 +254,12 @@ public class UsersApi {
 
         userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId,
             Arrays.asList(userIdentifier));
-        userRepository.delete(userIdentifier);
+
+        try {
+            userRepository.delete(userIdentifier);
+        } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+            throw new UserNotFoundEx(Integer.toString(userIdentifier));
+        }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
