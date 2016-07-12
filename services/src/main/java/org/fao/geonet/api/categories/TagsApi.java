@@ -113,12 +113,13 @@ public class TagsApi {
 
         MetadataCategory existingCategory = categoryRepository.findOne(category.getId());
         if (existingCategory != null) {
-            updateCategory(category.getId(), category, categoryRepository);
-            return new ResponseEntity(null, HttpStatus.NO_CONTENT);
-        } else {
             throw new IllegalArgumentException(String.format(
                 "A tag with id '%d' already exist", category.getId()
             ));
+        } else {
+            categoryRepository.save(category);
+            return new ResponseEntity(null, HttpStatus.NO_CONTENT);
+
         }
     }
 
