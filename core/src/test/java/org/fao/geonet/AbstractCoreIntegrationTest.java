@@ -53,6 +53,7 @@ import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
@@ -84,6 +85,8 @@ import jeeves.server.sources.ServiceRequest;
 
 import static java.lang.Math.round;
 import static org.junit.Assert.assertTrue;
+import static org.owasp.esapi.crypto.CryptoToken.ANONYMOUS_USER;
+import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
 /**
  * A helper class for testing services.  This super-class loads in the spring beans for Spring-data
@@ -263,6 +266,21 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         UserSession userSession = new UserSession();
         userSession.loginAs(user);
+        session.setAttribute(Jeeves.Elem.SESSION, userSession);
+        userSession.setsHttpSession(session);
+
+        return session;
+    }
+
+    public MockHttpSession loginAsAnonymous() {
+        MockHttpSession session = new MockHttpSession();
+
+        AnonymousAuthenticationToken auth = new AnonymousAuthenticationToken( ANONYMOUS_USER, ANONYMOUS_USER,
+            createAuthorityList( "ROLE_ANONYMOUS" ) );
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        UserSession userSession = new UserSession();
         session.setAttribute(Jeeves.Elem.SESSION, userSession);
         userSession.setsHttpSession(session);
 
