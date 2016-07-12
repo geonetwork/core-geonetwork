@@ -1,7 +1,7 @@
 
 set JETTY_HOME=../jetty
 set JETTY_BASE=../jetty
-cd %JETTY_HOME
+cd %JETTY_HOME%
 
 del logs\*request.log*
 del logs\output.log
