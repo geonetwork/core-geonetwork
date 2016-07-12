@@ -408,6 +408,8 @@ public class SiteApi {
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
+    // This service returns a boolean, not encapsulated in json
+    // TODO: Review to return a valid JSON, check also similar methods
     public boolean isCasEnabled(
         HttpServletRequest request
     ) throws Exception {
