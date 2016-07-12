@@ -1,5 +1,4 @@
-<select class="form-control" data-ng-model="element">
-  <option data-ng-repeat="c in stylesheets | orderBy" value="{{c}}"
-          data-ng-selected="c == element">{{c | translate}}
-  </option>
+<select class="form-control"
+        data-ng-model="element"
+        data-ng-options="(c | translate) for c in stylesheets | orderBy: c">
 </select>
