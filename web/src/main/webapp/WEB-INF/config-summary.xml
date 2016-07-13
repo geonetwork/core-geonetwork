@@ -108,6 +108,7 @@
     <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
+    <facet name="anylight" indexKey="anylight" label="anylight"/>
     <!--
     Example configuration for hierarchical facet based on
     the GeoNetwork region thesaurus or GEMET.
@@ -228,17 +229,7 @@
       <item facet="createDateYear" sortOrder="asc" max="40"/>
     </summaryType>
     <summaryType name="suggestions">
-      <item facet="keyword"/>
-      <item facet="title" sortOrder="desc" max="100"/>
-      <item facet="inspireTheme" sortBy="value" sortOrder="asc"/>
-      <item facet="denominator" sortBy="value" sortOrder="asc"/>
-      <item facet="spatialRepresentationType"
-            translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-      <item facet="orgName" max="100"/>
-      <item facet="metadataPOC"/>
-      <item facet="serviceType"/>
-      <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
-      <item facet="createDateYear" sortOrder="asc"/>
+      <item facet="anylight" max="-1"/>
     </summaryType>
   </summaryTypes>
 
