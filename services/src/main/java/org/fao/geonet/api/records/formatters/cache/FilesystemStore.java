@@ -137,6 +137,7 @@ public class FilesystemStore implements PersistentStore {
 
     @PreDestroy
     synchronized void close() throws ClassNotFoundException, SQLException {
+        Log.info(Geonet.FORMATTER, "Stopping the FileSystemStore");
         if (metadataDb != null) {
             metadataDb.close();
         }

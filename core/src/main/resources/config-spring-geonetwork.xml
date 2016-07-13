@@ -25,10 +25,12 @@
 <beans
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://www.springframework.org/schema/beans"
+  xmlns:context="http://www.springframework.org/schema/context"
   xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     ">
-
+  <context:annotation-config/>
   <bean id="ProfileManager" class="jeeves.component.ProfileManager" lazy-init="true"/>
   <bean id="MonitorManager" class="jeeves.monitor.MonitorManager" lazy-init="true"/>
   <bean id="JeevesEngine" class="jeeves.server.JeevesEngine" lazy-init="true"/>

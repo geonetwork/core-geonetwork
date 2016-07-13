@@ -289,7 +289,7 @@ public class SpatialIndexWriter implements FeatureListener {
             _transaction.close();
             _index = null;
             _featureStore.setTransaction(Transaction.AUTO_COMMIT);
-            SpatialFilter.getJCSCache().clear();
+            // Done by JCSServletContextListener: SpatialFilter.getJCSCache().clear();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

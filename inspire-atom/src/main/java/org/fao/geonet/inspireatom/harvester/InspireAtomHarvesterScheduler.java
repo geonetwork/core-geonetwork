@@ -124,4 +124,11 @@ public class InspireAtomHarvesterScheduler {
         return QuartzSchedulerUtils.getScheduler(SCHEDULER_ID, true);
     }
 
+    public static void shutdown() {
+        try {
+            getScheduler().shutdown(true);
+        } catch (SchedulerException e) {
+            Log.warning(Geonet.ATOM, "Error stopping the scheduler", e);
+        }
+    }
 }
