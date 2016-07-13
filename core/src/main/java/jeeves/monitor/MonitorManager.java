@@ -36,6 +36,7 @@ import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import javax.servlet.ServletContext;
 
 import java.util.HashMap;
@@ -297,7 +298,9 @@ public class MonitorManager {
         return resourceTracker;
     }
 
+    @PreDestroy
     public void shutdown() {
+        Log.info(Log.ENGINE, "MonitorManager#shutdown");
         if (resourceTracker != null) {
             resourceTracker.clean();
         }

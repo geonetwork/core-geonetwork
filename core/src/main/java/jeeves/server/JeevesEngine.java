@@ -526,18 +526,8 @@ public class JeevesEngine {
         try {
             info("=== Stopping system ========================================");
 
-            info("Shutting down monitor manager...");
-            ApplicationContext app = ApplicationContextHolder.get();
-            if (app != null) {
-                MonitorManager m = app.getBean(MonitorManager.class);
-                if (m != null) {
-                    m.shutdown();
-                } else {
-                    error("Unable to get MonitorManager bean (already destroyed ?)");
-                }
-            } else {
-                error("Unable to get a hook on the ApplicationContext.");
-            }
+            // The monitor manager will be stopped by the ApplicationContextHolder when it is closed
+
             info("Stopping handlers...");
             stopHandlers();
 

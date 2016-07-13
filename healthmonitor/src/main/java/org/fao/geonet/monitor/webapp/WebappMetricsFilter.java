@@ -107,7 +107,7 @@ public abstract class WebappMetricsFilter implements Filter {
     }
 
     public void destroy() {
-
+        Metrics.defaultRegistry().shutdown();
     }
 
     public void doFilter(ServletRequest request,
