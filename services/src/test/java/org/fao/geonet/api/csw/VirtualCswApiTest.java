@@ -22,10 +22,10 @@
  */
 package org.fao.geonet.api.csw;
 
-import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import junit.framework.Assert;
+import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.Service;
 import org.fao.geonet.repository.ServiceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
@@ -38,7 +38,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -135,7 +134,7 @@ public class VirtualCswApiTest extends AbstractServiceIntegrationTest {
 
 
         Gson gson = new GsonBuilder()
-            .setFieldNamingStrategy(new ServiceFieldNamingStrategy())
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
             .create();
         String json = gson.toJson(service);
 
@@ -164,7 +163,7 @@ public class VirtualCswApiTest extends AbstractServiceIntegrationTest {
         serviceToAdd.setExplicitQuery("query");
 
         Gson gson = new GsonBuilder()
-            .setFieldNamingStrategy(new ServiceFieldNamingStrategy())
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
             .create();
         String json = gson.toJson(serviceToAdd);
 
@@ -190,7 +189,7 @@ public class VirtualCswApiTest extends AbstractServiceIntegrationTest {
         service.setExplicitQuery("query");
 
         Gson gson = new GsonBuilder()
-            .setFieldNamingStrategy(new ServiceFieldNamingStrategy())
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
             .create();
         String json = gson.toJson(service);
 
@@ -217,7 +216,7 @@ public class VirtualCswApiTest extends AbstractServiceIntegrationTest {
         serviceToUpdate.setExplicitQuery("query");
 
         Gson gson = new GsonBuilder()
-            .setFieldNamingStrategy(new ServiceFieldNamingStrategy())
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
             .create();
         String json = gson.toJson(serviceToUpdate);
 
@@ -246,16 +245,5 @@ public class VirtualCswApiTest extends AbstractServiceIntegrationTest {
         service2.setDescription("A CSW test endpoint - 2");
 
         _serviceRepo.save(service2);
-    }
-
-    /**
-     * Strategy for Gson to remove _ from field names when serializing to JSON.
-     */
-    private class ServiceFieldNamingStrategy implements FieldNamingStrategy {
-        @Override
-        public String translateName(Field field) {
-            return field.getName().replace("_", "");
-        }
-
     }
 }
